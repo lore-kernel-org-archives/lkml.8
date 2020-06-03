@@ -2,135 +2,113 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F311DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9AE320772
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591188301;
-	bh=wznEth5LdDyFT2k6Sw+uElZFtO2dV9GyNCqcSvMWmiU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oNGQNTy38O2syZlvmDBH+Vu6xT7OWTGHj7BuaEsI+jBjJ2R2eMcQdUxiZ9kD54GgB
-	 MXFAJ/AE6odjhR+2CPGGJEjQ3fX0ujimNYjB2ipsKcMF8zYWm/GzuxkPbfk+LjinbM
-	 NQ2gGxesHSM0tSXKSWXScSYomarrHC2iEWrHoHN4=
+	by mail.kernel.org (Postfix) with ESMTP id F1D5220772
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:46:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nxmb/mIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbgFCMpB (ORCPT
+        id S1726068AbgFCMqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725859AbgFCMpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:45:00 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9684920678;
-        Wed,  3 Jun 2020 12:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591188299;
-        bh=wznEth5LdDyFT2k6Sw+uElZFtO2dV9GyNCqcSvMWmiU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TqJZLS5KZ9qZJvkMiMjiz8zauZtj59/mrNXISG8AqBgMaf8/TuF8N+oZrprg8teTI
-         4UID6E/9spmMnTEyVpOI9wvGbKsF36T3yX1UJtK7385ZNLwGPoz0I+aM7PPH4UnVoB
-         4R8DDi7tJvwRzWGeYlcOU/FHpmjL9zY+rndY/WeQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jgSlO-00HS6q-6J; Wed, 03 Jun 2020 13:44:58 +0100
+        Wed, 3 Jun 2020 08:46:23 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20050 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725833AbgFCMqW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:46:22 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 053CgD4B004142;
+        Wed, 3 Jun 2020 14:46:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=zWShjHdtkDP9KEzM3tiXokZkb+o6dSeLDNYRf6d3oDE=;
+ b=nxmb/mIrDMRgEFlxZzjDRPIQLRaHmG/XYTkZaHIphD+5bSr30D6uvz5pXEK+AIByCwY3
+ sAlxXOxBBImp0/VrkVgnc/EIKxov/S4A2UNrA74TM8TG/oeoykThJuGghBibMHJH7Gsz
+ udccshrbY2SdFt4ZwC3V4mq2i1ZIWu9vjaZPmr63cnHnpomcgvjOoE2qqsjd4HV4WhLj
+ yHkfPT2Uhb8oSQ4tTwxk/XGd+SxDOG2c6QpG4QoxWctle1TdC4Fq/oFYROoFXZ7Z6lfe
+ nTKZdGgE/iHbY/GO5VXryoLWiKCcEYfWWzM3H6muY7FDsQqkUJrQDi7vnZzZFpLAqc4R Nw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31bcm94qen-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 Jun 2020 14:46:08 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D0E2C10002A;
+        Wed,  3 Jun 2020 14:46:05 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C09A22CB37B;
+        Wed,  3 Jun 2020 14:46:05 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 3 Jun 2020 14:46:05
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <linux-media@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
+        <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2 1/3] dt-bindings: media: stm32-dcmi: Add DCMI min frequency property
+Date:   Wed, 3 Jun 2020 14:45:57 +0200
+Message-ID: <20200603124559.22652-2-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200603124559.22652-1-benjamin.gaignard@st.com>
+References: <20200603124559.22652-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 03 Jun 2020 13:44:58 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>, jason@lakedaemon.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Zilberman, Zeev" <zeev@amazon.com>,
-        "Machulsky, Zorik" <zorik@amazon.com>
-Subject: Re: [PATCH] irqchip/gic-v3-its: Don't try to move a disabled irq
-In-Reply-To: <87y2p5fatl.fsf@nanos.tec.linutronix.de>
-References: <20200529015501.15771-1-alisaidi@amazon.com>
- <8c3be990888ecfb7cca9503853dc4aac@kernel.org>
- <2C4F431F-8140-4C82-B4BD-E51DE618FC08@amazon.com>
- <20200530174929.7bf6d5d7@why> <eed907d48de84c96e3ceb27c1ed6f622@kernel.org>
- <37e55e71faf76dc3db76d89c20c1bdfff942e380.camel@amazon.com>
- <87y2p5fatl.fsf@nanos.tec.linutronix.de>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <d08bd61ffffe59091f6542b4f75292d1@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, benh@amazon.com, alisaidi@amazon.com, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dwmw@amazon.co.uk, zeev@amazon.com, zorik@amazon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-03_12:2020-06-02,2020-06-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-02 21:54, Thomas Gleixner wrote:
-> "Herrenschmidt, Benjamin" <benh@amazon.com> writes:
->> On Sun, 2020-05-31 at 12:09 +0100, Marc Zyngier wrote:
->>> > The semantic of activate/deactivate (which maps to started/shutdown
->>> > in the IRQ code) is that the HW resources for a given interrupt are
->>> > only committed when the interrupt is activated. Trying to perform
->>> > actions involving the HW on an interrupt that isn't active cannot be
->>> > guaranteed to take effect.
->>> >
->>> > I'd rather address it in the core code, by preventing set_affinity (and
->>> > potentially others) to take place when the interrupt is not in the
->>> > STARTED state. Userspace would get an error, which is perfectly
->>> > legitimate, and which it already has to deal with it for plenty of
->>> > other
->>> > reasons.
->> 
->> So I finally found time to dig a bit in there :) Code has changed a 
->> bit
->> since last I looked. But I have memories of the startup code messing
->> around with the affinity, and here it is. In irq_startup() :
->> 
->> 
->> 		switch (__irq_startup_managed(desc, aff, force)) {
->> 		case IRQ_STARTUP_NORMAL:
->> 			ret = __irq_startup(desc);
->> 			irq_setup_affinity(desc);
->> 			break;
->> 		case IRQ_STARTUP_MANAGED:
->> 			irq_do_set_affinity(d, aff, false);
->> 			ret = __irq_startup(desc);
+Document st,stm32-dcmi-min-frequency property which is used to
+request CPUs minimum frequency when streaming frames.
 
-Grump. Nice catch. In hindsight, this is obvious, as managed interrupts
-may have been allocated to target CPUs that have been hot-plugged off.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
->> 			break;
->> 		case IRQ_STARTUP_ABORT:
->> 			irqd_set_managed_shutdown(d);
->> 			return 0;
->> 
->> So we have two cases here. Normal and managed.
->> 
->> In the managed case, we set the affinity before startup. I feel like 
->> your
->> patch might break that or am I missing something ?
-> 
-> It will break stuff because the affinity is not stored in case that the
-> interrupt is not started.
-> 
-> I think we can fix this in the core code but that needs more thought.
-> __irq_can_set_affinity() is definitely the wrong place.
-
-Indeed. I completely missed the above. Back to square one.
-
-Thanks,
-
-         M.
+diff --git a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+index 3fe778cb5cc3..05ca85a2411a 100644
+--- a/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
++++ b/Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml
+@@ -44,6 +44,13 @@ properties:
+       bindings defined in
+       Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
++  st,stm32-dcmi-min-frequency:
++    description: DCMI minimum CPUs frequency requirement (in KHz).
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - default: 0
++
+ required:
+   - compatible
+   - reg
+@@ -71,6 +78,7 @@ examples:
+         clock-names = "mclk";
+         dmas = <&dmamux1 75 0x400 0x0d>;
+         dma-names = "tx";
++        st,stm32-dcmi-min-frequency = <650000>;
+ 
+         port {
+              dcmi_0: endpoint {
 -- 
-Jazz is not dead. It just smells funny...
+2.15.0
+
