@@ -2,99 +2,118 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8576AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9352DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D05420734
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7784E2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:29:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3ilaOYF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgFCS2M (ORCPT
+        id S1726024AbgFCS27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:28:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:36694 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgFCS2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:28:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9DF931B;
-        Wed,  3 Jun 2020 11:28:10 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.135])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9073D3F305;
-        Wed,  3 Jun 2020 11:28:08 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 19:28:05 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200603182805.GD23722@bogus>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200519012927.GT2165@builder.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519012927.GT2165@builder.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 3 Jun 2020 14:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgFCS27 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 14:28:59 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AB8C08C5C0;
+        Wed,  3 Jun 2020 11:28:57 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id a13so3528366ilh.3;
+        Wed, 03 Jun 2020 11:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3NGIVu2o5ZfD238nU7EioWKtwbHFSnlq8NDGe0k+Ao4=;
+        b=k3ilaOYF8Zi0ElPbQJ/D49l1sxfzgbs2aELXse9DU/MINXIppqkdvBI8IRGXkt7qnr
+         YYF3d7PfHOOFB+hGrxZ3+xPRdzQU6XMqlx9T38qqrfKVoP64G+ZP4jO5wUMxTHl8sVhS
+         cTJIPP/Q/q3qVd/z5hd/6Of2I0zkRaYEO0Z7YG2BOh+yG84ubkHJDtAHlttRRrV18rqD
+         6X5ezQCYJ9TFzK4NOjPnaGDjgL1OfSlWRI0KRsAwMaDAIJY0CKKCJmptYGerKyak8Eud
+         VNWoH3Z8z2mFwedGksqyvg03pOBIA90ohxYaa7prO8d+ShBZ3ixbSd3YzdNuJUYaEL/3
+         qzUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3NGIVu2o5ZfD238nU7EioWKtwbHFSnlq8NDGe0k+Ao4=;
+        b=LaK+7v3zgpTuq1rrTGZyxqNzjVGk8YJ05HaZYuH3m7ZecAPlbBElqczPoBg4lvNElK
+         jR1dHLJ/RMBR36QoaF7pAmK7gWibA6buSCuw5CeHQOhG/Kz5BCOjDeZYLxcXl4jpRaRn
+         itd7yMCP/prlvve8Uw/A6PbRyaKIX3TJIdmfuHXNShQGQ37KeiS+7JEVE9StUlJMSGlb
+         QQ60nDDN/OGDAlQIjljZlDjs2QijZByZJ8oCfuH2VDNyQjPKjRBgYf5qR36v41kTOtO5
+         bqJj2Ki3I7Oc7nenl0XZ1UIFnwA5F3SCC5RUcYoynMf0ZmCfgJph//OHlOQjdKNc6iaK
+         f/iQ==
+X-Gm-Message-State: AOAM530Le5wLL+/h8ERvFD35nLz6w+GXcg968De7VQKHxy3fSe7rpCnw
+        5u1gP01pDZyqYXhpfw3vzKA=
+X-Google-Smtp-Source: ABdhPJxloba1LOqTexHUXjZhHas0R9a8NLk9aQarShAtzLkMpIQM5Zn2/I2esN8JN1+SF46qVDdTtQ==
+X-Received: by 2002:a92:5e59:: with SMTP id s86mr843617ilb.104.1591208937224;
+        Wed, 03 Jun 2020 11:28:57 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id y2sm152329ilg.69.2020.06.03.11.28.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 11:28:56 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] dmaengine: stm32-mdma: call pm_runtime_put if pm_runtime_get_sync fails
+Date:   Wed,  3 Jun 2020 13:28:50 -0500
+Message-Id: <20200603182850.66692-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-Thanks for the details response.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/dma/stm32-mdma.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On Mon, May 18, 2020 at 06:29:27PM -0700, Bjorn Andersson wrote:
-> On Thu 14 May 22:17 PDT 2020, Viresh Kumar wrote:
->
+diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+index 5469563703d1..79bee1bb73f6 100644
+--- a/drivers/dma/stm32-mdma.c
++++ b/drivers/dma/stm32-mdma.c
+@@ -1449,8 +1449,10 @@ static int stm32_mdma_alloc_chan_resources(struct dma_chan *c)
+ 	}
+ 
+ 	ret = pm_runtime_get_sync(dmadev->ddev.dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dmadev->ddev.dev);
+ 		return ret;
++	}
+ 
+ 	ret = stm32_mdma_disable_chan(chan);
+ 	if (ret < 0)
+@@ -1718,8 +1720,10 @@ static int stm32_mdma_pm_suspend(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_sync(dev);
+ 		return ret;
++	}
+ 
+ 	for (id = 0; id < dmadev->nr_channels; id++) {
+ 		ccr = stm32_mdma_read(dmadev, STM32_MDMA_CCR(id));
+-- 
+2.17.1
 
-[...]
-
-I find this part nicely summarise your response.
-
-> > - With serialization, if we use only one channel as today at every
-> >   priority, if there are 5 requests to send signal to the receiver and
-> >   the dvfs request is the last one in queue (which may be called from
-> >   scheduler's hot path with fast switching), it unnecessarily needs to
-> >   wait for the first four transfers to finish due to the software
-> >   locking imposed by the mailbox framework. This adds additional delay,
-> >   maybe of few ms only, which isn't required by the hardware but just by
-> >   the software and few ms can be important in scheduler's hotpath.
-> >
->
-> So these 5 requests, are they conveyed by the signals [1,2,3,4,5] or
-> [BIT(0), BIT(1), BIT(2), BIT(3), BIT(4)]?
->
-
-Latter in this case. IMO it is platform choice on how to use it. It is
-equally possible to send 2^31 different signals. But the receiver must
-also interpret it in the *exact* same way. In this case, the receiver
-which is platform firmware interprets as individual bit signals.
-
-> In the first case you have to serialize things given that e.g. signal 1
-> immediately followed by 2 is indistinguishable from 3.
->
-
-Agree and we are not proposing to break that use case. It exists in the
-driver/binding today and will continue as is.
-
-> If you signals are single-bit notifications then you don't need any
-> serialization.
->
-
-Indeed, we are making use of that.
-
---
-Regards,
-Sudeep
