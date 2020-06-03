@@ -2,86 +2,164 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E628EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C793F206A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p07Rgq4Y"
+	by mail.kernel.org (Postfix) with ESMTP id C5057207D0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 12:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591186577;
+	bh=SFfD7rjQgMSgbL8bRzZJf0ZisuK+c3EJzF7HL2U+4s4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AEXSdx9F/DMRJF86t3nHkIxupKyaouHxwLMIY8YXeaQTwEWjPCaGbMJePEawcWmzO
+	 vM4R6CXer/Al0N2uzMFQhT0sTblr0JdSG3EWZHauDQVKMmf+mQTV7A14I04plg8PTP
+	 PP+siy+8H5gIueRG9ab72zoAfDoHShxjjCAPLo/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgFCMPk (ORCPT
+        id S1726217AbgFCMQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 08:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgFCMPj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 08:15:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58912C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 05:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=f1FnoPxb145EbSYlJUrHoV56rrWGOqUPLJKVSr5+ovA=; b=p07Rgq4YmULU6SWcQLwlM2zbyv
-        lb74GTDdkulMV+MUA91/kFXaTx2Aj4UrOPF8wjtE3L++s7zC3MgoRwXXQE5rgBBsj/meOgkG7i+b6
-        G3nvSiCq0vB3Xbiro8XhfmfYqmKIZFtDLuUXm91hJlmNJ2OvqZkD64wKp51/V/3EqL0cJ7yXWEQu3
-        mf12lh+bnu1YTbFozGyLU83KzpxUJMSwMMn+2WtcRnJ2eai6oPFujFNY3vVktCHRu8JEczHmlwzQn
-        g5SLveh3cbVCJxuYJB6ZG5cfQ5Zp6f11WiIubMZ72tvwqykm1JEEeAbxuYPQsTMwzQbE7Zqq1u0yh
-        Z4EWpV8A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgSIu-0003bs-A1; Wed, 03 Jun 2020 12:15:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 3 Jun 2020 08:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725859AbgFCMQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 08:16:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A365B304BDF;
-        Wed,  3 Jun 2020 14:15:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8B886209C23E0; Wed,  3 Jun 2020 14:15:30 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 14:15:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     vincent.donnefort@arm.com, mingo@redhat.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        patrick.bellasi@matbug.net, dietmar.eggemann@arm.com,
-        qais.yousef@arm.com
-Subject: Re: [PATCH] sched/debug: Add new tracepoints to track util_est
-Message-ID: <20200603121530.GB2570@hirez.programming.kicks-ass.net>
-References: <1590597554-370150-1-git-send-email-vincent.donnefort@arm.com>
- <jhjlfl4icdx.mognet@arm.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA86A20772;
+        Wed,  3 Jun 2020 12:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591186575;
+        bh=SFfD7rjQgMSgbL8bRzZJf0ZisuK+c3EJzF7HL2U+4s4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CP+LvbJAwXvzFCN3wDOem5l94RPsCUTr0n4cOquKAB6Er8utvuoz4fMwcADi5QsQ0
+         ww+3CuG/VKjMIfCLmmGZnKCv3T5Kq1PzLgQxi2AIwlg/KhZD7fc9bv7hYobbAARVf6
+         eGCY6PD/SxBswyO2cbkwezisnBCGaxhcpaaDxUOU=
+Date:   Wed, 3 Jun 2020 14:16:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200603121613.GA1488883@kroah.com>
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520>
+ <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com>
+ <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <jhjlfl4icdx.mognet@arm.com>
+In-Reply-To: <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:04:26PM +0100, Valentin Schneider wrote:
+On Wed, Jun 03, 2020 at 04:51:18AM -0700, Rajat Jain wrote:
+> Hello,
 > 
-> On 27/05/20 17:39, vincent.donnefort@arm.com wrote:
-> > From: Vincent Donnefort <vincent.donnefort@arm.com>
 > >
-> > The util_est signals are key elements for EAS task placement and
-> > frequency selection. Having tracepoints to track these signals enables
-> > load-tracking and schedutil testing and/or debugging by a toolkit.
+> > > Thanks for the pointer! I'm still looking at the details yet, but a
+> > > quick look (usb_dev_authorized()) seems to suggest that this API is
+> > > "device based". The multiple levels of "authorized" seem to take shape
+> > > from either how it is wired or from userspace choice. Once authorized,
+> > > USB device or interface is authorized to be used by *anyone* (can be
+> > > attached to any drivers). Do I understand it right that it does not
+> > > differentiate between drivers?
 > >
-> > Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
-> >
+> > Yes, and that is what you should do, don't fixate on drivers.  Users
+> > know how to control and manage devices.  Us kernel developers are
+> > responsible for writing solid drivers and getting them merged into the
+> > kernel tree and maintaining them over time.  Drivers in the kernel
+> > should always be trusted, ...
 > 
-> To put it more bluntly, we can't really do task placement / load tracking
-> testing if util_est is enabled (which reminds me we may want to get rid of
-> the SCHED_FEAT at some point, it's been default on since ~v4.17), since
-> there can be noticeable gaps between util_avg and util_est.
-> 
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> 1) Yes, I agree that this would be ideal, and this should be our
+> mission. I should clarify that I may have used the wrong term
+> "Trusted/Certified drivers". I didn't really mean that the drivers may
+> be malicious by intent. What I really meant is that a driver may have
+> an attack surface, which is a vulnerability that may be exploited.
 
-Thanks!
+Any code has such a thing, proving otherwise is a tough problem :)
+
+> Realistically speaking, finding vulnerabilities in drivers, creating
+> attacks to exploit them, and fixing them is a never ending cat and
+> mouse game. At Least "identifying the vulnerabilities" part is better
+> performed by security folks rather than driver writers.
+
+Are you sure about that?  It's hard to prove a negative :)
+
+> Earlier in the
+> thread I had mentioned certain studies/projects that identified and
+> exploited such vulnerabilities in the drivers. I should have used the
+> term "Vetted Drivers" maybe to convey the intent better - drivers that
+> have been vetted by a security focussed team (admin). What I'm
+> advocating here is an administrator's right to control the drivers
+> that he wants to allow for external ports on his systems.
+
+That's an odd thing, but sure, if you want to write up such a policy for
+your systems, great.  But that policy does not belong in the kernel, it
+belongs in userspace.
+
+> 2) In addition to the problem of driver negligences / vulnerabilities
+> to be exploited, we ran into another problem with the "whitelist
+> devices only" approach. We did start with the "device based" approach
+> only initially - but quickly realized that anything we use to
+> whitelist an external device can only be based on the info provided by
+> *that device* itself. So until we have devices that exchange
+> certificates with kernel [1], it is easy for a malicious device to
+> spoof a whitelisted device (by presenting the same VID:DID or any
+> other data that is used by us to whitelist it).
+> 
+> [1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
+> 
+> I hope that helps somewhat clarify how / why we reached here?
+
+Kind of, I still think all you need to do is worry about controling the
+devices and if a driver should bind to it or not.  Again, much like USB
+has been doing for a very long time now.  The idea of "spoofing" ids
+also is not new, and has been around for a very long time as well, and
+again, the controls that the USB core gives you allows you to make any
+type of policy decision you want to, in userspace.
+
+So please, in summary:
+	- don't think this is some new type of thing, it's an old issue
+	  transferred to yet-another-hardware-bus.  Not to say this is
+	  not important, just please look at the work that others have
+	  done in the past to help mitigate and solve this (reading the
+	  Wireless USB spec should help you out here too, as they
+	  detailed all of this.)
+	- do copy what USB did, by moving that logic into the driver
+	  core so that all busses who want to take advantage of this
+	  type of functionality, easily can do so.
+
+thanks,
+
+greg k-h
