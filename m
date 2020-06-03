@@ -2,152 +2,129 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC3520674
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC7820674
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 17:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdX+JwtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgFCRTO (ORCPT
+        id S1726214AbgFCRTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 13:19:14 -0400
-Received: from mga04.intel.com ([192.55.52.120]:3011 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgFCRTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 13:19:14 -0400
-IronPort-SDR: mKUhwtlLroAp9Ag7qOtEg2o3PgeLNTsGyTlmKPS1HxMami9ahHMG9OJ0tKNiitP6T4JZl/GavH
- Q/csbAbwjQ2Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 10:19:12 -0700
-IronPort-SDR: MzOE+KYvjsurdtBt1fKpp5/p3jcbNgYXm8z4ZI4g5qxZR5/dNOLRvPFZN52dgDoMSX7cYc8P28
- ZY4yWvBzmlRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,468,1583222400"; 
-   d="scan'208";a="445188184"
-Received: from lkp-server01.sh.intel.com (HELO 8bb2cd163565) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2020 10:19:11 -0700
-Received: from kbuild by 8bb2cd163565 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jgX2k-00009S-Je; Wed, 03 Jun 2020 17:19:10 +0000
-Date:   Thu, 04 Jun 2020 01:18:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- cc7a4a02564c6cc8dc981fb0a37313830ee8c2d4
-Message-ID: <5ed7db52.GEWmWrV0MSo0Lda5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 3 Jun 2020 13:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgFCRTT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 13:19:19 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD581C08C5C0;
+        Wed,  3 Jun 2020 10:19:18 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id k22so2700482qtm.6;
+        Wed, 03 Jun 2020 10:19:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding:content-disposition;
+        bh=c3PA6afDzT37PULo8XPopHFW72TeaOHGUdh70JjkqiQ=;
+        b=sdX+JwtTOcSHDVPHCkMe3RL2Avi5w5XjmGvJTDmBiuSiH/lVHfjf06rb/McSeB2f1y
+         6n0wM9n93BczgqRcmt4tjBHKbNOJr/w6dU91qnY8TUo2+EJTzWlauPLMwCS3Q0fnq71u
+         br5f7+wBAnq6Ry84pbxwpMKmrb0AatZQijY+yvLGQ0Bjj8YUmayw9mgsBiWwLYPgqE2C
+         Rzh041ULMdM5eoEQCUW0xdslGONs74PEPTLu2BZG2GScWoaOuPffn8TZqxBF9yhG/R0W
+         NJYaKHhG4gTs34oPNKj8GjMJPSJNoh8iSCc7zCn71dpURbCfLY0OhYQHXvVDEQgV0S9e
+         I31A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding
+         :content-disposition;
+        bh=c3PA6afDzT37PULo8XPopHFW72TeaOHGUdh70JjkqiQ=;
+        b=EcRPKYRU5XxCoC/IVVgga06Zx/gN6SC7V3CJ60DeM971HgtGhIv6fBUzSf9qtXgZyF
+         AQ65+CSCnxdz3iPDVwzhT+a938N2oX+Ny6ddwMFUiE7UiFJgM3up7Z17eupXLHBjLMZ9
+         reVM9uhf2kvOkV2vJpEwtbHBDRzAJ9U5vxo2nX/H07GyXBK+HZD1g2su06kyhUaYk1zZ
+         k8K3M4LgWeW4Bxlg0eIkt4MOhtz6YN1fIT/V2KwgXvK3K0D6vHAygeK9beHeHo0ne0tw
+         6k4/YqgucjhZFO/e+X88ynWURbEy8UYv7YcZl0AQGsnGHT7ISm00UH8NAlwVNBo9xOFV
+         nEKQ==
+X-Gm-Message-State: AOAM530laInOWj3rXs8BxLYF8TdWFt78gKKjwb+q8KxJadU5RHWxttGx
+        5MI+ytRkfkawS6FrFLkmoDNU3WGbR2g=
+X-Google-Smtp-Source: ABdhPJx/268/0e/0dxYlk5ju8LFOP+rpnP7Zq32iFPqUjNzVKdGOt7cuVBFRIvNO0CVYSpgbyp8jFA==
+X-Received: by 2002:ac8:450a:: with SMTP id q10mr358265qtn.328.1591204757842;
+        Wed, 03 Jun 2020 10:19:17 -0700 (PDT)
+Received: from dwls-dell ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id u205sm2019632qka.81.2020.06.03.10.19.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 03 Jun 2020 10:19:17 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 14:19:12 -0300
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     "=?utf-8?Q?mchehab+huawei=40kernel.org?=" <mchehab+huawei@kernel.org>,
+        "=?utf-8?Q?sean=40mess.org?=" <sean@mess.org>,
+        "=?utf-8?Q?kstewart=40linuxfoundation.org?=" 
+        <kstewart@linuxfoundation.org>,
+        "=?utf-8?Q?allison=40lohutok.net?=" <allison@lohutok.net>,
+        "=?utf-8?Q?tglx=40linutronix.de?=" <tglx@linutronix.de>,
+        "=?utf-8?Q?linux-media=40vger.kernel.org?=" 
+        <linux-media@vger.kernel.org>,
+        "=?utf-8?Q?linux-kernel-mentees=40lists.linuxfoundation.org?=" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "=?utf-8?Q?linux-kernel=40vger.kernel.org?=" 
+        <linux-kernel@vger.kernel.org>
+Message-ID: <3273ABE6-71E6-4FCE-9901-E02A87B3F48F@getmailspring.com>
+In-Reply-To: <deb6b49a-5f50-1d40-6577-84fe787150ec@linuxfoundation.org>
+References: <deb6b49a-5f50-1d40-6577-84fe787150ec@linuxfoundation.org>
+Subject: Re: [RFC, WIP, v6 02/10] media: vidtv: implement a tuner driver
+X-Mailer: Mailspring
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: cc7a4a02564c6cc8dc981fb0a37313830ee8c2d4  Merge branch 'core/urgent'
+Hi Shuah, thanks for reviewing this!
 
-elapsed time: 481m
+>> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> Are you using git send-email to send patches. Why do have this
+> From line in here? Same comment on all other patches in this series.
 
-configs tested: 85
-configs skipped: 1
+I am using 'git format-patch --to=[...] --cc=[...]' and then 'git send-email'.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Git format-patch usually adds these two lines for every patch it generates:
+  1 From f966b0ea574a36b96ddfb8a8a716b174bc150eba Mon Sep 17 00:00:00 2001
+  2 From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a014-20200603
-i386                 randconfig-a015-20200603
-i386                 randconfig-a011-20200603
-i386                 randconfig-a016-20200603
-i386                 randconfig-a012-20200603
-i386                 randconfig-a013-20200603
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+I have no idea whether these are necessary, so I just leave them there :)
+The first line is specially weird.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+As for this:
+
+>> +	switch (c->delivery_system) {
+> 
+> Add indetation for the below:
+> 
+>> +	case SYS_DVBT:
+>> +	case SYS_DVBT2:
+>> +		valid_freqs = config.vidtv_valid_dvb_t_freqs;
+>> +		array_sz    = ARRAY_SIZE(config.vidtv_valid_dvb_t_freqs);
+>> +		break;
+
+I am not sure I understand. Indenting the case statements leads to a
+checkpatch complaint: 
+
+>SWITCH_CASE_INDENT_LEVEL: switch and case should be at the
+>same indent
+
+And the actual statements under 'case' are already indented.
+
+Thanks
+- Daniel
