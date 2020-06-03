@@ -2,81 +2,102 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97138C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F642C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C59C20679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B0220679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 10:42:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S2YISU/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbgFCKlA (ORCPT
+        id S1725854AbgFCKmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 06:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgFCKlA (ORCPT
+        Wed, 3 Jun 2020 06:42:37 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15743 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgFCKmg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 06:41:00 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A33BC08C5C0;
-        Wed,  3 Jun 2020 03:41:00 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id AEA5728B; Wed,  3 Jun 2020 12:40:56 +0200 (CEST)
-Date:   Wed, 3 Jun 2020 12:40:55 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 24/75] x86/boot/compressed/64: Unmap GHCB page before
- booting the kernel
-Message-ID: <20200603104055.GB20099@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-25-joro@8bytes.org>
- <20200513111340.GD4025@zn.tnic>
- <20200513113011.GG18353@8bytes.org>
- <20200513114633.GE4025@zn.tnic>
+        Wed, 3 Jun 2020 06:42:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed77e3b0001>; Wed, 03 Jun 2020 03:40:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 03 Jun 2020 03:42:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 03 Jun 2020 03:42:36 -0700
+Received: from [10.26.72.154] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 3 Jun
+ 2020 10:42:33 +0000
+Subject: Re: [PATCH 4.9 00/55] 4.9.226-rc3 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200602181325.420361863@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4eaf333a-e497-d39e-338e-a790b116dc62@nvidia.com>
+Date:   Wed, 3 Jun 2020 11:42:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513114633.GE4025@zn.tnic>
+In-Reply-To: <20200602181325.420361863@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591180859; bh=TE8Gwf6AAmn6VLqDVd/fvaL76PxZrwx9Q6AdZb2E0t8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=S2YISU/PTe1VzJHpuSe46DNmIdxmOu8rGPvJKPM0QF0zZcFylw6OG+qerrJHvFDVi
+         TrXCDh0TDyNnqOx5wteJQoS66dH2IAb8EEufgprMJmcwc46dg/CFnkV23nYy2aU3kN
+         2oDanUp+DIiVpJkS/cpFzzTdF+W09XQ4HtDJr21ACbWz6f6g6UBJC3kyAJ6tfkSqHM
+         YPrTskfq5Z6Keu4G5DzR8dm9POAT67j0Z7TPtG0chYkjlBUwHvNwg9HvEtLSdFiY4c
+         UwN2HLT1IJkSqRI4PqrE1HuYfdHKXF+H7KiHZ+irMtooZP86Rwx1+1dQOQ48Dvmq7F
+         IV0YCJzY5gIJQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 01:46:33PM +0200, Borislav Petkov wrote:
-> On Wed, May 13, 2020 at 01:30:11PM +0200, Joerg Roedel wrote:
-> > Yeah, I had this this way in v2, but changed it upon you request[1] :)
+
+On 02/06/2020 19:13, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.226 release.
+> There are 55 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Yeah, I was wondering why this isn't a separate function - you like them
-> so much. :-P
+> Responses should be made by Thu, 04 Jun 2020 18:12:28 +0000.
+> Anything received after that time might be too late.
 > 
-> > [1] https://lore.kernel.org/lkml/20200402114941.GA9352@zn.tnic/
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.226-rc3.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
 > 
-> But that one didn't have the ghcb_fault check. Maybe it was being added
-> later... :)
-
-Yes, it was :)
-
-I changed it back, first in the patch adding the page-fault handler and
-also updated this patch.
+> thanks,
+> 
+> greg k-h
 
 
-	Joerg
+All tests are passing for Tegra. Seems that our test gremlins are still
+at large and I cannot pull the report yet. However, I can see that
+everything is passing fine.
+
+Cheers
+Jon
+
+-- 
+nvpublic
