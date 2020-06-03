@@ -2,70 +2,143 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C579CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE52C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A870F206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B87620734
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 01:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgFCBsR (ORCPT
+        id S1728346AbgFCBu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 21:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgFCBsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:48:17 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFB1C08C5C0;
-        Tue,  2 Jun 2020 18:48:17 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jgIVr-002FlG-NT; Wed, 03 Jun 2020 01:48:15 +0000
-Date:   Wed, 3 Jun 2020 02:48:15 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Message-ID: <20200603014815.GR23230@ZenIV.linux.org.uk>
-References: <20200602084257.134555-1-mst@redhat.com>
+        Tue, 2 Jun 2020 21:50:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:21751 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgFCBu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 21:50:58 -0400
+IronPort-SDR: TwPbWURlaHIX3uYqKWMMhw8vxk5cWkTnTvJ9zG3pyITWd0hRlBQipWPtkxBbiiiIY74DjbDYFv
+ BfeGgxqAoI+w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 18:50:57 -0700
+IronPort-SDR: j2Z7viKCmsJU1mmomZoW5W19MWXUDbXzOkZI2L6v04CNK37pFgWeML/DJI4IXGVojnfCED6FW9
+ DszEeHsj77Cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,466,1583222400"; 
+   d="scan'208";a="286862705"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga002.jf.intel.com with ESMTP; 02 Jun 2020 18:50:54 -0700
+Date:   Tue, 2 Jun 2020 21:40:58 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
+ VFIO_IRQ_TYPE_REMAP_BAR_REGION
+Message-ID: <20200603014058.GA12300@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+ <20200518025245.14425-1-yan.y.zhao@intel.com>
+ <20200529154547.19a6685f@x1.home>
+ <20200601065726.GA5906@joy-OptiPlex-7040>
+ <20200601104307.259b0fe1@x1.home>
+ <20200602082858.GA8915@joy-OptiPlex-7040>
+ <20200602133435.1ab650c5@x1.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602084257.134555-1-mst@redhat.com>
+In-Reply-To: <20200602133435.1ab650c5@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:45:05AM -0400, Michael S. Tsirkin wrote:
-> So vhost needs to poke at userspace *a lot* in a quick succession.  It
-> is thus benefitial to enable userspace access, do our thing, then
-> disable. Except access_ok has already been pre-validated with all the
-> relevant nospec checks, so we don't need that.  Add an API to allow
-> userspace access after access_ok and barrier_nospec are done.
+On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:
+> I'm not at all happy with this.  Why do we need to hide the migration
+> sparse mmap from the user until migration time?  What if instead we
+> introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
+> where the existing capability is the normal runtime sparse setup and
+> the user is required to use this new one prior to enabled device_state
+> with _SAVING.  The vendor driver could then simply track mmap vmas to
+> the region and refuse to change device_state if there are outstanding
+> mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
+> required, no new irqfds, an incremental change to the protocol,
+> backwards compatible to the extent that a vendor driver requiring this
+> will automatically fail migration.
+> 
+right. looks we need to use this approach to solve the problem.
+thanks for your guide.
+so I'll abandon the current remap irq way for dirty tracking during live
+migration.
+but anyway, it demos how to customize irq_types in vendor drivers.
+then, what do you think about patches 1-5?
 
-BTW, what are you going to do about vq->iotlb != NULL case?  Because
-you sure as hell do *NOT* want e.g. translate_desc() under STAC.
-Disable it around the calls of translate_desc()?
+> > > What happens if the mmap re-evaluation occurs asynchronous to the
+> > > device_state write?  The vendor driver can track outstanding mmap vmas
+> > > to areas it's trying to revoke, so the vendor driver can know when
+> > > userspace has reached an acceptable state (assuming we require
+> > > userspace to munmap areas that are no longer valid).  We should also
+> > > consider what we can accomplish by invalidating user mmaps, ex. can we
+> > > fault them back in on a per-page basis and continue to mark them dirty
+> > > in the migration state, re-invalidating on each iteration until they've
+> > > finally been closed.   It seems the vendor driver needs to handle
+> > > incrementally closing each mmap anyway, there's no requirement to the
+> > > user to stop the device (ie. block all access), make these changes,
+> > > then restart the device.  So perhaps the vendor driver can "limp" along
+> > > until userspace completes the changes.  I think we can assume we are in
+> > > a cooperative environment here, userspace wants to perform a migration,
+> > > disabling direct access to some regions is for mediating those accesses
+> > > during migration, not for preventing the user from accessing something
+> > > they shouldn't have access to, userspace is only delaying the migration
+> > > or affecting the state of their device by not promptly participating in
+> > > the protocol.
+> > >   
+> > the problem is that the mmap re-evaluation has to be done before
+> > device_state is successfully set to SAVING. otherwise, the QEMU may
+> > have left save_setup stage and it's too late to start dirty tracking.
+> > And the reason for us to trap the BAR regions is not because there're
+> > dirty data in this region, it is because we want to know when the device
+> > registers mapped in the BARs are written, so we can do dirty page track
+> > of system memory in software way.
+> 
+> I think my proposal above resolves this.
+>
+yes.
 
-How widely do you hope to stretch the user_access areas, anyway?
+> > > Another problem I see though is what about p2p DMA?  If the vendor
+> > > driver invalidates an mmap we're removing it from both direct CPU as
+> > > well as DMA access via the IOMMU.  We can't signal to the guest OS that
+> > > a DMA channel they've been using is suddenly no longer valid.  Is QEMU
+> > > going to need to avoid ever IOMMU mapping device_ram for regions
+> > > subject to mmap invalidation?  That would introduce an undesirable need
+> > > to choose whether we want to support p2p or migration unless we had an
+> > > IOMMU that could provide dirty tracking via p2p, right?  Thanks,  
+> > 
+> > yes, if there are device memory mapped in the BARs to be remapped, p2p
+> > DMA would be affected. Perhaps it is what vendor driver should be aware
+> > of and know what it is doing before sending out the remap irq ?
+> > in i40e vf's case, the BAR 0 to be remapped is only for device registers,
+> > so is it still good?
+> 
+> No, we can't design the interface based on one vendor driver's
+> implementation of the interface or the requirements of a single device.
+> If we took the approach above where the user is provided both the
+> normal sparse mmap and the _SAVING sparse mmap, perhaps QEMU could
+> avoid DMA mapping portions that don't exist in the _SAVING version, at
+> least then the p2p DMA mappings would be consistent across the
+> transition.  QEMU might be able to combine the sparse mmap maps such
+> that it can easily drop ranges not present during _SAVING.  QEMU would
+> need to munmap() the dropped ranges rather than simply mark the
+> MemoryRegion disabled though for the vendor driver to have visibility
+> of the vm_ops.close callback.  Thanks,
+>
+ok. got it! thanks you!
 
-BTW, speaking of possible annotations: looks like there's a large
-subset of call graph that can be reached only from vhost_worker()
-or from several ioctls, with all uaccess limited to that subgraph
-(thankfully).  Having that explicitly marked might be a good idea...
-
-Unrelated question, while we are at it: is there any point having
-vhost_get_user() a polymorphic macro?  In all callers the third
-argument is __virtio16 __user * and the second one is an explicit
-*<something> where <something> is __virtio16 *.  Similar for
-vhost_put_user(): in all callers the third arugment is
-__virtio16 __user * and the second - cpu_to_vhost16(vq, something).
-
-Incidentally, who had come up with the name __vhost_get_user?
-Makes for lovey WTF moment for readers - esp. in vhost_put_user()...
+Yan
