@@ -2,102 +2,146 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C053BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0092074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387C32074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 18:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTHETujJ"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="C0+b3DJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726095AbgFCSlM (ORCPT
+        id S1726166AbgFCSla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 14:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39018 "EHLO
+        Wed, 3 Jun 2020 14:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCSlM (ORCPT
+        with ESMTP id S1725821AbgFCSl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 14:41:12 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF18C08C5C0;
-        Wed,  3 Jun 2020 11:41:12 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d7so3464108ioq.5;
-        Wed, 03 Jun 2020 11:41:12 -0700 (PDT)
+        Wed, 3 Jun 2020 14:41:29 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 730A2C08C5C2
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 11:41:29 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id e2so3235023eje.13
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 11:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4UZn1m8i+GTVFcPn+YVw+OUlQUVxZ68JK29N9qiN5LA=;
-        b=jTHETujJmL8bdrqtHjJvJU0L8J+NhAyERxefQFrox2Z1sbmr241SO8FEYrhD1wSw0o
-         CN5XRTwkEPPSRpmp8pdm/EuGz/hw8/MfIFyoUBMxRZ1BFhhX4en1Wb99NL8cYNlZOJbS
-         GqNh51yWI9JOM5/IluSMK2mVSv+/WajRh1zhCxs7dN1Lhk3dbN05w1xF4TMLeIRADo0o
-         BnTlLL5ll30st0reT7bTOf62hXaIctPSUjhdO9l5WUH+iftJrtfa4ABRRVVfuV+sIgxq
-         f6s6nk5MZ4CknQQBF1JWOzmc/bSq7yDh2O0BbltOQgFs1c+FbX+IS5YCPRtUjckA+IZz
-         AGdQ==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=S0TgVRaqXvLo/zqjh6Bua71lJw4suwzv026W+P/Naw8=;
+        b=C0+b3DJ7FfEDQKaieP18CwiGEkvjteY8TXKD0hCkYxGC6+7gm7AmFxZW15fIQkRLIM
+         Kh5Jm7ok0fzu9poY7ZLIhZ58/u5sJAzW/bQRxIwpy3VQkbCpomTVIyqSRH154MdLzXX5
+         YK/+gOw8xoGKlM2oPEYWWp+ER6BVIWaY9o4JNWbYF9snmgSbjVOjxeEIbCRpEK+ieMsn
+         dNHlym5awwcmUDb/tuJ5D309AkhWFct4ouZ0rQ28LCNE2tcZduzokMTHY+TUJim9+DBc
+         fQj29FDGhJlHjJsvspR0d0qb+Sk70NpBKh87gEJiND8QB+0g8SxdDuGN/LadFwZH0YLO
+         wpLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4UZn1m8i+GTVFcPn+YVw+OUlQUVxZ68JK29N9qiN5LA=;
-        b=Jx5ZRFP7QD7u8ANjxJGHhX7Z405ahy0YEueyMYt8BUXLr7Th0s4u28nrPXu5t+OsQd
-         NqL90EDYeFoNcelYRhwtENQS1q/xTfyNCLGl4DW3CXD6gB4xiPVLa7RbWhpLiWASk10I
-         MOIzXYv8Xr5l5mAsClGzPQCqXrOfvIx5AERNHHuq2/zX0qtF36FG/6rH5d68wWd++kXD
-         8AE8EJkLWA0B5tqWLH036Mmdezy3UaxWkd6LziW4Z5rmTSmeYN9ViRvsFg9/0rUZIdBI
-         cbKXWLlqwWiEDuchIOkv2ZeVSt2ecn+TzTdQYkt0nEToKo0DwprXuPNN57/I8LIKWIiM
-         NHfg==
-X-Gm-Message-State: AOAM533gGYSIssPFUDMllx3SZIGcwbmPW7JsdyKdXs8S1xAPG4xK/OdR
-        grVRBYLgt194GKrxcARCZwE=
-X-Google-Smtp-Source: ABdhPJxT+Z+BosqqjpESxL62YHg0quvbIdfbSdkdLQeITvgOAij2bpfXodxRSygCGgbCItBvVFxHbA==
-X-Received: by 2002:a5d:9310:: with SMTP id l16mr1006638ion.194.1591209671520;
-        Wed, 03 Jun 2020 11:41:11 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id q15sm985488ioh.45.2020.06.03.11.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 11:41:11 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S0TgVRaqXvLo/zqjh6Bua71lJw4suwzv026W+P/Naw8=;
+        b=FE7m3JGsSFRb8OBQE74MJOqTEZea3VG61RYZNS4rDYjW8o+TU2ABWrVdce1Ts2KNqD
+         OkcXgN1RSbt6nFuFROU7YFJsSyR+u5w/AyBbskoI9PBT+qvM/hGcaJYlJtb0Tq154CZE
+         BFQq8NPl3p+pWeVXCRKvOzlFctrNbXRbGAPayfbXBRxb31bf18dE8DwSJgxxD1k/idsL
+         DXLQ1/FypX7H4eC3XlG0Zv5DZ1e+on53iEbP7cMsxbejO3+MLeZcrnNNBXun/tMu6V5p
+         NzZjnLqgglLwZ9xqXNAoYKD5Nu2LVsfCvRdD7yXAX4ZJKmFSRGKLQH8kIT8yj0pjiPJ2
+         Dy7w==
+X-Gm-Message-State: AOAM53144wfOdYGzWbPmgtmSATitGIPDvRX/Kv39A5S2g+yutqq7d0RH
+        TbRsd+ZQ72p5ZWA2yqjNzOc0FwhB3uvtYg==
+X-Google-Smtp-Source: ABdhPJyIkqyDZdhScRe/cVgZz1DArjOSJB1ZOuF91yiG6bL5ZYJWLlB1HCb8yyyo1znlBZLda+63rg==
+X-Received: by 2002:a17:907:2162:: with SMTP id rl2mr522768ejb.365.1591209687728;
+        Wed, 03 Jun 2020 11:41:27 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([79.132.248.22])
+        by smtp.gmail.com with ESMTPSA id l18sm196629eds.46.2020.06.03.11.41.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 11:41:27 -0700 (PDT)
+Subject: Re: [PATCH bpf] bpf: fix unused-var without NETDEVICES
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Ferenc Fejes <fejes@inf.elte.hu>, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] dmaengine: tegra210-adma: fix pm_runtime_get_sync failure
-Date:   Wed,  3 Jun 2020 13:41:04 -0500
-Message-Id: <20200603184104.4475-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+References: <20200603081124.1627600-1-matthieu.baerts@tessares.net>
+ <CAAej5NZZNg+0EbZsa-SrP0S_sOPMqdzgQ9hS8z6DYpQp9G+yhw@mail.gmail.com>
+ <1cb3266c-7c8c-ebe6-0b6e-6d970e0adbd1@tessares.net>
+ <20200603181455.4sajgdyat7rkxxnf@ast-mbp.dhcp.thefacebook.com>
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <3573c0dd-baa8-5313-067a-eec6b04f0f36@tessares.net>
+Date:   Wed, 3 Jun 2020 20:41:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <20200603181455.4sajgdyat7rkxxnf@ast-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+Hi Alexei,
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/dma/tegra210-adma.c | 1 +
- 1 file changed, 1 insertion(+)
+On 03/06/2020 20:14, Alexei Starovoitov wrote:
+> On Wed, Jun 03, 2020 at 11:12:01AM +0200, Matthieu Baerts wrote:
+>> Hi Ferenc,
+>>
+>> On 03/06/2020 10:56, Ferenc Fejes wrote:
+>>> Matthieu Baerts <matthieu.baerts@tessares.net> ezt írta (időpont:
+>>> 2020. jún. 3., Sze, 10:11):
+>>>>
+>>>> A recent commit added new variables only used if CONFIG_NETDEVICES is
+>>>> set.
+>>>
+>>> Thank you for noticing and fixed this!
+>>>
+>>>> A simple fix is to only declare these variables if the same
+>>>> condition is valid.
+>>>>
+>>>> Other solutions could be to move the code related to SO_BINDTODEVICE
+>>>> option from _bpf_setsockopt() function to a dedicated one or only
+>>>> declare these variables in the related "case" section.
+>>>
+>>> Yes thats indeed a cleaner way to approach this. I will prepare a fix for that.
+>>
+>> I should have maybe added that I didn't take this approach because in the
+>> rest of the code, I don't see that variables are declared only in a "case"
+>> section (no "{" ... "}" after "case") and code is generally not moved into a
+>> dedicated function in these big switch/cases. But maybe it makes sense here
+>> because of the #ifdef!
+>> At the end, I took the simple approach because it is for -net.
+>>
+>> In other words, I don't know what maintainers would prefer here but I am
+>> happy to see any another solutions implemented to remove these compiler
+>> warnings :)
+> 
+> since CONFIG_NETDEVICES doesn't change anything in .h
+> I think the best is to remove #ifdef CONFIG_NETDEVICES from net/core/filter.c
+> and rely on sock_bindtoindex() returning ENOPROTOOPT
+> in the extreme case of oddly configured kernels.
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index c4ce5dfb149b..e8c749cd3fe8 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -659,6 +659,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
- 		free_irq(tdc->irq, tdc);
-+		pm_runtime_put(tdc2dev(tdc));
- 		return ret;
- 	}
- 
+Good idea, thank you!
+I can send a patch implementing that.
+
+And sorry for the oddly configured kernels :)
+It's just used to test the compilation of the code related to MPTCP.
+
+Cheers,
+Matt
 -- 
-2.17.1
-
+Matthieu Baerts | R&D Engineer
+matthieu.baerts@tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
