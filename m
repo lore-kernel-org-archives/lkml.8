@@ -2,148 +2,115 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20668C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81691204EF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4E820679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 14:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltpV/5Fx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CFQxCtsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgFCOzn (ORCPT
+        id S1726088AbgFCO7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 10:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60588 "EHLO
+        Wed, 3 Jun 2020 10:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgFCOzn (ORCPT
+        with ESMTP id S1725954AbgFCO7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 10:55:43 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1C42C08C5C0;
-        Wed,  3 Jun 2020 07:55:42 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k26so2406873wmi.4;
-        Wed, 03 Jun 2020 07:55:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GmSNSg3YXvvUzlfhKudE+w98HhJvZWAxIZMMgzoIw9U=;
-        b=ltpV/5FxWNRh7EZYO/1DcV+Yl1LSmCheEXrf5TzJu+KuLgK4t29/tyzoelxppeDjEf
-         q+Eg2kPgsHcdslW2KD4qa71hhBMiQ3FAkHixeywcrW+AgdEsJNPIg9hDBPBTHJm35bDq
-         EGjFOvSiQklY3NncbDbTHMnT6HxR1X2G4KUFlnvHZHOiP+mFVtifiJAAwACCvOxCTzUf
-         FGk9FVhuF+PrinbPKudRBALNiokhFboMpyGupeCT/QMGBs92uNKQyxh0jUaxeTI75QYv
-         Vt6Nf4KuyAvGzDi73sU5NlEFYlMhma/mKSsgAiCPd+NoSC6hvsjzAx0mcIiBp74TRkgM
-         6ZgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GmSNSg3YXvvUzlfhKudE+w98HhJvZWAxIZMMgzoIw9U=;
-        b=IYNURTbiCfiRLZWNC74xDe86LjQ5LwoM7RuC3EcopnUSGSa1sAdyHd0iXJQTyYmV69
-         uxOjQOqPFfufa7fWaPMuxspq8WbM2LSsZqBZipG9C7+N7IjFh0Jqb/FpiEYLB71tnqhE
-         exujw9af74xVsUYXWx5vgSurVBuvKPIXoUPkA71FFxcP5C+QHykaca+ssP3aGyCcGloD
-         Y8bZEElHZPqcmUgY5GSlGrYediwN62+pfv9ilS16a4YEvaewIp+DQ2VAJZt/TerwEuye
-         rhZCGH9vU5H15Rv6M9vOisnPNBSLXlK6/iteL1D0fGZOY8hExNOTgTl2mOt1XVDAbfR4
-         Wqdw==
-X-Gm-Message-State: AOAM531ZBRNpg/8UNAHF3kAh5YcAbMq+QEawhmwGHIE6Ce26tV2bPIM4
-        wRFTNy0MYVkiPLA42PZlfyJfXfLl
-X-Google-Smtp-Source: ABdhPJwavCCFm1jZ5ZnavYiEcIXHrkJ58oKMTONm75gc/AeMWKfqi/bS3WQxyk9Geh1UUNUSmcPzig==
-X-Received: by 2002:a7b:c5d4:: with SMTP id n20mr9622295wmk.106.1591196141383;
-        Wed, 03 Jun 2020 07:55:41 -0700 (PDT)
-Received: from [192.168.43.154] ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id c143sm4494857wmd.1.2020.06.03.07.55.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 07:55:40 -0700 (PDT)
-Subject: Re: [PATCH v2 0/4] forbid fix {SQ,IO}POLL
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        Wed, 3 Jun 2020 10:59:09 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE17EC08C5C0;
+        Wed,  3 Jun 2020 07:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MtuKNw2pgwAhO9cB5wELdMt4OQ9HRQi1RszYbDAANfo=; b=CFQxCtsdhBH+Gn+g/+1aQuw+w
+        /1Q060iK8zSrMm0PISy8jCuZjeSbRuC3qWJ4sS5Btp1z+cJuqMx3+qJk40ZiPglHtdCNv0WBJpGP3
+        dA7F8U9Dj+q9zQ8vtBUOr5O830OZ1bp00XiX6nkvlb4n5AVSU9dcjbxdeDRoBcHNYXAdCobz9Yp5S
+        8EEqSieVbAl1zx8x3m1Wl4uNco7Tc4uG4SfPP/XCWlKqgwKA6qazc4/7UIAZV3shJeJSQDexgPfDM
+        y0uD5nqYNFHlwIVQIaiAUnbO1SWQ2EAB3rdi/GNSpmGEwy4eHjihoTHt7uyun2pi4jCWVHDu6vZM0
+        +T92XR1XQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38388)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jgUr6-0005gy-0Q; Wed, 03 Jun 2020 15:59:00 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jgUr2-0005TW-NB; Wed, 03 Jun 2020 15:58:56 +0100
+Date:   Wed, 3 Jun 2020 15:58:56 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <cover.1591190471.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
- bdwSHrhOWdW61pmfMbDYbTj6ZvGRvhoLWfGkzujB2wjNcbNTXIoOzJEGISHaPf6E2IQx1ik9
- 6uqVkK1OMb7qRvKH0i7HYP4WJzYbEWVyLiAxUj611mC9tgd73oqZ2pLYzGTqF2j6a/obaqha
- +hXuWTvpDQXqcOZJXIW43atprH03G1tQs7VwR21Q1eq6Yvy2ESLdc38EqCszBfQRMmKy+cfp
- W3U9Mb1w0L680pXrONcnlDBCN7/sghGeMHjGKfNANjPc+0hzz3rApPxpoE7HC1uRiwC4et83
- CKnncH1l7zgeBT9Oa3qEiBlaa1ZCBqrA4dY+z5fWJYjMpwI1SNp37RtF8fKXbKQg+JuUjAa9
- Y6oXeyEvDHMyJYMcinl6xCqCBAXPHnHmawkMMgjr3BBRzODmMr+CPVvnYe7BFYfoajzqzq+h
- EyXSl3aBf0IDPTqSUrhbmjj5OEOYgRW5p+mdYtY1cXeK8copmd+fd/eTkghok5li58AojCba
- jRjp7zVOLOjDlpxxiKhuFmpV4yWNh5JJaTbwCRSd04sCcDNlJj+TehTr+o1QiORzc2t+N5iJ
- NbILft19Izdn8U39T5oWiynqa1qCLgbuFtnYx1HlUq/HvAm+kwARAQABtDFQYXZlbCBCZWd1
- bmtvdiAoc2lsZW5jZSkgPGFzbWwuc2lsZW5jZUBnbWFpbC5jb20+iQJOBBMBCAA4FiEE+6Ju
- PTjTbx479o3OWt5b1Glr+6UFAlmKBOQCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ
- Wt5b1Glr+6WxZA//QueaKHzgdnOikJ7NA/Vq8FmhRlwgtP0+E+w93kL+ZGLzS/cUCIjn2f4Q
- Mcutj2Neg0CcYPX3b2nJiKr5Vn0rjJ/suiaOa1h1KzyNTOmxnsqE5fmxOf6C6x+NKE18I5Jy
- xzLQoktbdDVA7JfB1itt6iWSNoOTVcvFyvfe5ggy6FSCcP+m1RlR58XxVLH+qlAvxxOeEr/e
- aQfUzrs7gqdSd9zQGEZo0jtuBiB7k98t9y0oC9Jz0PJdvaj1NZUgtXG9pEtww3LdeXP/TkFl
- HBSxVflzeoFaj4UAuy8+uve7ya/ECNCc8kk0VYaEjoVrzJcYdKP583iRhOLlZA6HEmn/+Gh9
- 4orG67HNiJlbFiW3whxGizWsrtFNLsSP1YrEReYk9j1SoUHHzsu+ZtNfKuHIhK0sU07G1OPN
- 2rDLlzUWR9Jc22INAkhVHOogOcc5ajMGhgWcBJMLCoi219HlX69LIDu3Y34uIg9QPZIC2jwr
- 24W0kxmK6avJr7+n4o8m6sOJvhlumSp5TSNhRiKvAHB1I2JB8Q1yZCIPzx+w1ALxuoWiCdwV
- M/azguU42R17IuBzK0S3hPjXpEi2sK/k4pEPnHVUv9Cu09HCNnd6BRfFGjo8M9kZvw360gC1
- reeMdqGjwQ68o9x0R7NBRrtUOh48TDLXCANAg97wjPoy37dQE7e5Ag0EWYoE5AEQAMWS+aBV
- IJtCjwtfCOV98NamFpDEjBMrCAfLm7wZlmXy5I6o7nzzCxEw06P2rhzp1hIqkaab1kHySU7g
- dkpjmQ7Jjlrf6KdMP87mC/Hx4+zgVCkTQCKkIxNE76Ff3O9uTvkWCspSh9J0qPYyCaVta2D1
- Sq5HZ8WFcap71iVO1f2/FEHKJNz/YTSOS/W7dxJdXl2eoj3gYX2UZNfoaVv8OXKaWslZlgqN
- jSg9wsTv1K73AnQKt4fFhscN9YFxhtgD/SQuOldE5Ws4UlJoaFX/yCoJL3ky2kC0WFngzwRF
- Yo6u/KON/o28yyP+alYRMBrN0Dm60FuVSIFafSqXoJTIjSZ6olbEoT0u17Rag8BxnxryMrgR
- dkccq272MaSS0eOC9K2rtvxzddohRFPcy/8bkX+t2iukTDz75KSTKO+chce62Xxdg62dpkZX
- xK+HeDCZ7gRNZvAbDETr6XI63hPKi891GeZqvqQVYR8e+V2725w+H1iv3THiB1tx4L2bXZDI
- DtMKQ5D2RvCHNdPNcZeldEoJwKoA60yg6tuUquvsLvfCwtrmVI2rL2djYxRfGNmFMrUDN1Xq
- F3xozA91q3iZd9OYi9G+M/OA01husBdcIzj1hu0aL+MGg4Gqk6XwjoSxVd4YT41kTU7Kk+/I
- 5/Nf+i88ULt6HanBYcY/+Daeo/XFABEBAAGJAjYEGAEIACAWIQT7om49ONNvHjv2jc5a3lvU
- aWv7pQUCWYoE5AIbDAAKCRBa3lvUaWv7pfmcEACKTRQ28b1y5ztKuLdLr79+T+LwZKHjX++P
- 4wKjEOECCcB6KCv3hP+J2GCXDOPZvdg/ZYZafqP68Yy8AZqkfa4qPYHmIdpODtRzZSL48kM8
- LRzV8Rl7J3ItvzdBRxf4T/Zseu5U6ELiQdCUkPGsJcPIJkgPjO2ROG/ZtYa9DvnShNWPlp+R
- uPwPccEQPWO/NP4fJl2zwC6byjljZhW5kxYswGMLBwb5cDUZAisIukyAa8Xshdan6C2RZcNs
- rB3L7vsg/R8UCehxOH0C+NypG2GqjVejNZsc7bgV49EOVltS+GmGyY+moIzxsuLmT93rqyII
- 5rSbbcTLe6KBYcs24XEoo49Zm9oDA3jYvNpeYD8rDcnNbuZh9kTgBwFN41JHOPv0W2FEEWqe
- JsCwQdcOQ56rtezdCJUYmRAt3BsfjN3Jn3N6rpodi4Dkdli8HylM5iq4ooeb5VkQ7UZxbCWt
- UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
- m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
- OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
-Message-ID: <fa8f2884-771c-78e0-5169-126fa9566610@gmail.com>
-Date:   Wed, 3 Jun 2020 17:54:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
+ 1000BaseX/2500BaseX ports
+Message-ID: <20200603145856.GA1551@shell.armlinux.org.uk>
+References: <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
+ <20200528144805.GW1551@shell.armlinux.org.uk>
+ <20200528204312.df9089425162a22e89669cf1@suse.de>
+ <20200528220420.GY1551@shell.armlinux.org.uk>
+ <20200529130539.3fe944fed7228e2b061a1e46@suse.de>
+ <20200529145928.GF869823@lunn.ch>
+ <20200529175225.a3be1b4faaa0408e165435ad@suse.de>
+ <20200529163340.GI869823@lunn.ch>
+ <20200602225016.GX1551@shell.armlinux.org.uk>
+ <20200603132147.GW869823@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <cover.1591190471.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603132147.GW869823@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Something went wrong, don't mind it
+On Wed, Jun 03, 2020 at 03:21:47PM +0200, Andrew Lunn wrote:
+> On Tue, Jun 02, 2020 at 11:50:17PM +0100, Russell King - ARM Linux admin wrote:
+> > On Fri, May 29, 2020 at 06:33:40PM +0200, Andrew Lunn wrote:
+> > > Given the current code, you cannot. Now we understand the
+> > > requirements, we can come up with some ideas how to do this properly.
+> > 
+> > Okay, I've been a little quiet because of sorting out the ARM tree
+> > for merging with Linus (now done) and I've been working on a solution
+> > to this problem.
+> > 
+> > The good news is, I have an implementation in phylink to use the sync
+> > status reported from a PCS, and to appropriately enable sync status
+> > reporting.  I'm quite nervous about having that enabled as a matter of
+> > routine as I've seen some Marvell hardware end up with interrupt storms
+> > from it - presumably due to noise pickup on the serdes lines being
+> > interpreted as an intermittently valid signal.
+> 
+> Hi Russell
+> 
+> I have seen similar with an SFP without link. I think squelch is
+> optional, so noise gets passed through, which is enough to get and
+> loose sync.
+> 
+> I think we probably need to only enable the interrupt when the LOS
+> signal indicates there is at least some power coming into the SFP.
 
-On 03/06/2020 16:29, Pavel Begunkov wrote:
-> The first one adds checks {SQPOLL,IOPOLL}. IOPOLL check can be
-> moved in the common path later, or rethinked entirely, e.g.
-> not io_iopoll_req_issued()'ed for unsupported opcodes.
-> 
-> 3 others are just cleanups on top.
-> 
-> 
-> v2: add IOPOLL to the whole bunch of opcodes in [1/4].
->     dirty and effective.
-> 
-> Pavel Begunkov (4):
->   io_uring: fix {SQ,IO}POLL with unsupported opcodes
->   io_uring: do build_open_how() only once
->   io_uring: deduplicate io_openat{,2}_prep()
->   io_uring: move send/recv IOPOLL check into prep
-> 
->  fs/io_uring.c | 94 ++++++++++++++++++++++++++-------------------------
->  1 file changed, 48 insertions(+), 46 deletions(-)
-> 
+This doesn't help in Thomas' case, there is no LOS signal.  I was
+proposing that Thomas uses fixed-link to describe the setup (because
+that's exactly what it is) but use the serdes sync status as an
+additional gate for "link up".
+
+Given that we have platforms that hammer the CPU with interrupts
+when AN bypass is enabled, I think that setup is also a non-starter
+for the mainline kernel without some way for firmware to tell the
+kernel that it's okay to use it.
 
 -- 
-Pavel Begunkov
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
