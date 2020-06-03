@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE76C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6AAC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81200207D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DA720678
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 08:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgFCIy4 (ORCPT
+        id S1726644AbgFCIzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 04:54:56 -0400
-Received: from mx.socionext.com ([202.248.49.38]:18827 "EHLO mx.socionext.com"
+        Wed, 3 Jun 2020 04:55:11 -0400
+Received: from mx.socionext.com ([202.248.49.38]:18852 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgFCIyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 04:54:53 -0400
+        id S1726312AbgFCIyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 04:54:55 -0400
 Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 03 Jun 2020 17:54:51 +0900
+  by mx.socionext.com with ESMTP; 03 Jun 2020 17:54:53 +0900
 Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id E9ADB60057;
-        Wed,  3 Jun 2020 17:54:51 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 3 Jun 2020 17:54:51 +0900
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 02E8860057;
+        Wed,  3 Jun 2020 17:54:54 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 3 Jun 2020 17:54:54 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 40D0F1A12AD;
-        Wed,  3 Jun 2020 17:54:51 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 616C01A12AD;
+        Wed,  3 Jun 2020 17:54:53 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -41,9 +41,9 @@ Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 3/6] dt-bindings: PCI: uniphier: Add iATU register description
-Date:   Wed,  3 Jun 2020 17:54:38 +0900
-Message-Id: <1591174481-13975-4-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v3 6/6] PCI: uniphier: Use devm_platform_ioremap_resource_byname()
+Date:   Wed,  3 Jun 2020 17:54:41 +0900
+Message-Id: <1591174481-13975-7-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -52,27 +52,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the dt-bindings, "atu" reg-names is required to get the register space
-for iATU in Synopsys DWC version 4.80 or later.
+Use devm_platform_ioremap_resource_byname() to simplify the code a bit.
 
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/uniphier-pcie.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-uniphier.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-index 1fa2c59..c4b7381 100644
---- a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
-@@ -16,6 +16,7 @@ Required properties:
-     "dbi"    - controller configuration registers
-     "link"   - SoC-specific glue layer registers
-     "config" - PCIe configuration space
-+    "atu"    - iATU registers for DWC version 4.80 or later
- - clocks: A phandle to the clock gate for PCIe glue layer including
- 	the host controller.
- - resets: A phandle to the reset line for PCIe glue layer including
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index 3b51561..ce47622 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -452,8 +452,7 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->pci.atu_base))
+ 		priv->pci.atu_base = NULL;
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
+-	priv->base = devm_ioremap_resource(dev, res);
++	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
+ 
 -- 
 2.7.4
 
