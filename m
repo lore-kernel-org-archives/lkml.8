@@ -2,155 +2,106 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E18C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 687D62068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6968F2074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 09:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ofod8KOH"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="miOa7SgT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgFCJSf (ORCPT
+        id S1726706AbgFCJSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 05:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgFCJSf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 05:18:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC135C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 02:18:34 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h5so1517328wrc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 02:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lC+yaFN5vqc/aVbyNoEXwYFQWDaby68sSTwiOnwtwTs=;
-        b=ofod8KOHtXbZVUwpsoXnjSbVzBlN/vkZpExe7bFZ1xIu+y4lSTiShRRrKsVXaQpjet
-         jRerdIe5syxoF6sVqjNYbtId0YU5Fd33uYYWuXbjaFMw5O8eLoLxSXXdAyIdZ/byK2ut
-         OEStls5AAOJUYPSBY4fDoNlgiTwc2tCtOJeDu/NklMeMnEUwF6yThRuLsovJAuaTpoQK
-         QIsnyyEjcDY44PvQZezVmWSbF0POjccEZz0AJraZ9tLnN3nsq42RYSvDe0B3eHlmeumb
-         FHqMlqbjZEHqWJke3IMxb8gZeyqAn4Ydzt/CjrQ/Y1r36HkjVa3RvVnWmsn0IsKND17k
-         /m4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lC+yaFN5vqc/aVbyNoEXwYFQWDaby68sSTwiOnwtwTs=;
-        b=Za4m28ZEvEJgdAhzoBFKx3dqRVayupmtNuvmLdf9GImjUSo6Z6cNQh/L1JEgBlHeAV
-         3cnRhuNkX/6BM0+Z9++elxiWDN8y0OL414epL53X/QcquGCe0vnA15xDvAH8tdIWn8La
-         QCIh5l6YPvV8t6N2ZSBrp0b85yzHOpyHkiKAdvH+Vhmv72bZqwBvvo43dJztb+m7iVsM
-         rz/wkaMGVgXW2X0imZi5mWEAQ2qbQXL4p08slG9GtfQU3U6FxAKYa1NrbAP3QcqsLkgQ
-         n08mXRoYQ65llFK3Z6kuCOcJqR2CmqVYn+q2PNeSRC4OP+pO4eIEulkApED3S8W37tFp
-         /jcQ==
-X-Gm-Message-State: AOAM531emWkoxCbadk+r3evbdCuQn1ts+djXJG5h49czvkBhtFyFlqx8
-        /uOeMdXIepf0fw4QsjKnpqrOeQ==
-X-Google-Smtp-Source: ABdhPJzrjB3ao0sWWKCA+EfaW/ASvKGJcBR3ptKjutcrPJXvUzAYEGSsczu/mQTJYdlBKssj7rSPKQ==
-X-Received: by 2002:adf:f389:: with SMTP id m9mr28272738wro.195.1591175913374;
-        Wed, 03 Jun 2020 02:18:33 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id d191sm1619668wmd.44.2020.06.03.02.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 02:18:32 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 10:18:30 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, jason.wessel@windriver.com,
-        dianders@chromium.org, sergey.senozhatsky@gmail.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] kdb: Switch to use safer dbg_io_ops over console
- APIs
-Message-ID: <20200603091830.azwneja736lvqo4n@holly.lan>
-References: <1591168935-6382-1-git-send-email-sumit.garg@linaro.org>
- <1591168935-6382-5-git-send-email-sumit.garg@linaro.org>
- <20200603082503.GD14855@linux-b0ei>
+        Wed, 3 Jun 2020 05:18:40 -0400
+Received: from mail-eopbgr70073.outbound.protection.outlook.com ([40.107.7.73]:61017
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbgFCJSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 05:18:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xp6taVVLz8G6S4rvzA4wT3xE5xaF5Y2gfflPYvmqKH0JD033TcfUwVrCQ/u8z52P1QvayZR7Z4rMhltsFx3ZJQDzbJGfdzXJYldNwN6w+wAq2y3qt947iCi/J8X6ZE4tPq2pJUUFMN/TcBpJHWbAY3m6MZJz3uL3PD2YgK/1JJLkgSBEBQZJegP3pTgZLBJES8WIoiVqNa4FUOJQw42+7R3QtS0gCj1qElQXbAWdca3266hmeGXO1fNuc14eusT6aTRDsIduizblii64zjmA4tvqX9Zl/75Fdyxq4dPPOiF/0Ln7CISnNqwTnO+npioU/wXBn3rlE3tbVcANxC4XIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z8cRooJiwqJdO/ka8RVuSrn10RfPFXn7N311zL32yOs=;
+ b=KRfhrHOyZydqS5HCqYkM1jIBSzHHZAZvJLd0rxdwPjLf5CEgLWlSipPwDH8GHM4NCDUm0Xd7GdAqjdV7N6biMI3tXT9UulCTEA3HqH9M2dBZ4ccgJH0JzngYXIlk9l70x2P0xgLUCKXMZJ9mBTkb1XHSaRLb+OcrvqaZjITxYwFyCPpZh8/AVY0E+mJrZA2bc4+6Z3vYsC1u9a6T+3DIYegE9oEz1IF85FE4SJEGDosXgbfsQYU2EM6BogCJL81DShHzXDjomohrellCWY/pjgAFp3lT3amGiHaKJ6KirufiONI4mc4TbPZkwpoM0O1JA5TZ+AvH7s6jcmT1FzCCLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z8cRooJiwqJdO/ka8RVuSrn10RfPFXn7N311zL32yOs=;
+ b=miOa7SgTAEhInOUNntY4cxFUheK1gBhlfAI3+4vxJiO9C44HkrPLM+bWg7WLLJkci0biY+y6Fp0gGoEDixyfezHDFhgV9KlAI7I4ljDSAO7XUDpByigy+8/7Ar/ruLx5TuJNrPgY9Q1p8S5teSWCig8fBGfxlTB5r4qURQyabeE=
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
+ by VI1PR04MB5854.eurprd04.prod.outlook.com (2603:10a6:803:e2::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Wed, 3 Jun
+ 2020 09:18:33 +0000
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3066.018; Wed, 3 Jun 2020
+ 09:18:32 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+CC:     "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        Hemantkumar Suthar <shemant@marvell.com>,
+        Rakesh Parmar <rakeshp@marvell.com>,
+        Zhaoyang Liu <liuzy@marvell.com>, Cathy Luo <cluo@marvell.com>
+Subject: RE: [EXT] [PATCH 2/4] mwifiex: Fix firmware filename for sd8997
+ chipset
+Thread-Topic: [EXT] [PATCH 2/4] mwifiex: Fix firmware filename for sd8997
+ chipset
+Thread-Index: AQHWOYAwo3xstiho302SqwhGSyA3w6jGnMOA
+Date:   Wed, 3 Jun 2020 09:18:32 +0000
+Message-ID: <VI1PR04MB43663C312C48DE85B29EBD6F8F880@VI1PR04MB4366.eurprd04.prod.outlook.com>
+References: <20200603082229.15043-1-pali@kernel.org>
+ <20200603082229.15043-3-pali@kernel.org>
+In-Reply-To: <20200603082229.15043-3-pali@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [103.54.18.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8f54c377-b782-4a50-e16c-08d8079f1665
+x-ms-traffictypediagnostic: VI1PR04MB5854:
+x-microsoft-antispam-prvs: <VI1PR04MB5854D9729CABB13353BDC7528F880@VI1PR04MB5854.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 04238CD941
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ICLAuHDW7Q+xmu6Kb1AXZgo6EntPwN99JrJcCarQXNZhHe86V8eCsqzWpVXeWcjKYqOPfo2aEMW4/8pXGOjt4sz5Hoj7Rs1t2u9MXRvAy8HT/GK8+4zDUJ5IgMTa7Om5aVvxSdbT25DKO0AcfrNvR8oJOe66gdM/r++zcF+o4+jQsaqg1qBzCyrkA7IbnexNd7lI98tc0yqeIp/N+r1KwXRRubq547qv4PE3xr1hPY7DfiruhYS0n7LxKChkuFISaY/DJT7t6E1UrKDVVhJ4XprhdLgkL7D7dF617MzwI7AK1X4b/dbYTi/HrwN2Dw5czpUvdPC3jxgHSj7a1cSxBA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(396003)(346002)(366004)(478600001)(4326008)(44832011)(86362001)(6506007)(66446008)(8676002)(2906002)(5660300002)(19618925003)(66476007)(26005)(33656002)(8936002)(52536014)(55016002)(66946007)(76116006)(4270600006)(64756008)(66556008)(186003)(558084003)(7696005)(9686003)(54906003)(316002)(7416002)(71200400001)(110136005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: M/aWDsG89RXfSW+bd46srDVcC6O2iFh92VZNALHKRnOG1EP9gM5E1ygnauHOnltklCSZCY7W9Q3l6s0ND8GecSajJOXC0sl/4ciyghH+fMRkvoAp7X39lKPanpkDxcF8WF7gVXSOOIqCcRedRifJLOEcJovaI5V7+zT6YiW2g5APdRhQzvx8plPAGfrfkuHdGE3f+cq3QWfvghJwvQJPZxPyKIvyu37GI5G+sYTRgPziOirci5h/04WtLtEqVYqQUdLz6noFalOjcBP/qYO9+JA/LXiPoH7e4DLV2OzV2ZGGIw3dzOaqbS+gYCcQYAlp5gP/KpNnsRI0oNAr96TzKxIWbcgTJ8akpy17H1jV3aPi0wSmCw3AUhEIfdSb4ajggrzHm+QJSSb+GRCBYifOHrcmwp6XO5hb/EzC0yOMvxb9pocKNVMGd8gQYgOf9PNWGpKI/zh+YYHnFdt19X1/kDQgwufTHSXYYxhB7qqmdIs=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603082503.GD14855@linux-b0ei>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f54c377-b782-4a50-e16c-08d8079f1665
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2020 09:18:32.8586
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XdmTj3sWgQqB9vnRmNvzkz/MXT/5E51kS4S99vrhNUvSac2VFvN6HuRUaEcLJd8RMdLsrHNsueMU+v/RZxhQDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5854
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 10:25:04AM +0200, Petr Mladek wrote:
-> On Wed 2020-06-03 12:52:15, Sumit Garg wrote:
-> > In kgdb context, calling console handlers aren't safe due to locks used
-> > in those handlers which could in turn lead to a deadlock. Although, using
-> > oops_in_progress increases the chance to bypass locks in most console
-> > handlers but it might not be sufficient enough in case a console uses
-> > more locks (VT/TTY is good example).
-> > 
-> > Currently when a driver provides both polling I/O and a console then kdb
-> > will output using the console. We can increase robustness by using the
-> > currently active polling I/O driver (which should be lockless) instead
-> > of the corresponding console. For several common cases (e.g. an
-> > embedded system with a single serial port that is used both for console
-> > output and debugger I/O) this will result in no console handler being
-> > used.
-> > 
-> > In order to achieve this we need to reverse the order of preference to
-> > use dbg_io_ops (uses polling I/O mode) over console APIs. So we just
-> > store "struct console" that represents debugger I/O in dbg_io_ops and
-> > while emitting kdb messages, skip console that matches dbg_io_ops
-> > console in order to avoid duplicate messages. After this change,
-> > "is_console" param becomes redundant and hence removed.
-> > 
-> > diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> > index 4139698..6e182aa 100644
-> > --- a/drivers/tty/serial/kgdboc.c
-> > +++ b/drivers/tty/serial/kgdboc.c
-> > @@ -558,6 +557,7 @@ static int __init kgdboc_earlycon_init(char *opt)
-> >  	}
-> >  
-> >  	earlycon = con;
-> > +	kgdboc_earlycon_io_ops.cons = con;
-> >  	pr_info("Going to register kgdb with earlycon '%s'\n", con->name);
-> >  	if (kgdb_register_io_module(&kgdboc_earlycon_io_ops) != 0) {
-> >  		earlycon = NULL;
-> 
-> Should we clear kgdboc_earlycon_io_ops.cons here when
-> kgdb_register_io_module() failed?
-> 
-> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> > index c62d764..529116b 100644
-> > --- a/include/linux/kgdb.h
-> > +++ b/include/linux/kgdb.h
-> > @@ -276,8 +276,7 @@ struct kgdb_arch {
-> >   * the I/O driver.
-> >   * @post_exception: Pointer to a function that will do any cleanup work
-> >   * for the I/O driver.
-> > - * @is_console: 1 if the end device is a console 0 if the I/O device is
-> > - * not a console
-> > + * @cons: valid if the I/O device is a console; else NULL.
-> >   */
-> >  struct kgdb_io {
-> >  	const char		*name;
-> > @@ -288,7 +287,7 @@ struct kgdb_io {
-> >  	void			(*deinit) (void);
-> >  	void			(*pre_exception) (void);
-> >  	void			(*post_exception) (void);
-> > -	int			is_console;
-> > +	struct console		*cons;
-> 
-> Nit: I would call it "con". The trailing 's' makes me feel that that the
->      variable points to an array or list of consoles.
-
-How strongly do you feel about it?
-
-
-I'd probably agree with you except that the uart subsystem, which is by
-far the most prolific supplier of consoles for kgdb to use, calls
-pointers to single consoles "cons" so I'd prefer to be aligned on
-terminology.
-
-
-Daniel.
+QWNrZWQtYnk6IEdhbmFwYXRoaSBCaGF0IDxnYW5hcGF0aGkuYmhhdEBueHAuY29tPg0KDQo=
