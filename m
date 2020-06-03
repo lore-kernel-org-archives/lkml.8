@@ -2,382 +2,180 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC976C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69703C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88FE6207D0
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591152076;
-	bh=Q6VdOzzqxNWWdSRMS4LSbBsF6UrFfYP7QFU82mSZZuY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SfDJ9240mJseR5dbq36TbNhF361ip8t8/mn3P8+NoAD97DB1eE1t2Ow0EAleIOrSi
-	 tAORpfUBXA2SH/ANp82uz4z7h2Y7ntScxrWSBID51u5fU18vFEbr2h0xXOWhNoO3ZH
-	 q91nLvEE6a35sUQFnmORAXTSVHGLgnXSGsebfSwo=
+	by mail.kernel.org (Postfix) with ESMTP id 4622E20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 02:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9WYIlS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbgFCClQ (ORCPT
+        id S1725968AbgFCCmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 2 Jun 2020 22:41:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgFCClP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 2 Jun 2020 22:41:15 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B4BC20738;
-        Wed,  3 Jun 2020 02:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591152072;
-        bh=Q6VdOzzqxNWWdSRMS4LSbBsF6UrFfYP7QFU82mSZZuY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJMSufGRjT1Vp5ZaEydeTE/Fqu09JDeFvZ9tCeG36H4CJP4fsR2b5cGJbII3s7yig
-         1avA7ZIhEfy/+BK2Dpe3QYn/3olnjwOJF0YkAS28uVdW+snbpZmHo0sSLvASnr9Ow5
-         lXvT/S5jzLj2b4FlR4kYBWRcH/IeBttRUIhGinZc=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v3 7/7] selftests/ftrace: Support ":README" suffix for requires
-Date:   Wed,  3 Jun 2020 11:41:09 +0900
-Message-Id: <159115206918.70027.1738167402917824125.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159115200085.70027.6141550347953439240.stgit@devnote2>
-References: <159115200085.70027.6141550347953439240.stgit@devnote2>
-User-Agent: StGit/0.19
+        Tue, 2 Jun 2020 22:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgFCCmU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 2 Jun 2020 22:42:20 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA37C08C5C0;
+        Tue,  2 Jun 2020 19:42:19 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a25so786343ljp.3;
+        Tue, 02 Jun 2020 19:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CFI1m1bXGZYKZMu3ppASc24ioDiu36YQQGgUMSxsWQI=;
+        b=c9WYIlS6PxKJJ2EHnd7jvE8gIGL2qlHjjyJRJqsFW73FDRISPapGPm0n74iGH/I4BU
+         BOXAPIcDN6qJr0qSGyzl6+8oMsT/KkwWX5jwqCDzBQJGaCkLX4G3tfe80xrRw5j80mlk
+         hzK6BK48EzBqJoAnYOyIFixwCozmdGOhNwMLYeR3DYPJAIhJVniL8FyKoOhXbOBLjZb4
+         DmjKSaXgs89smvy8HhmU874l0UAIG+junoxNOS7b9FPQd6+Prwk/Xvam6+MXOHMZu3BP
+         lCl0QHMTfFhYGdnZDvd8UTzJprcJON1qgei9L33eU857V4TmXKOiarWKlZV20k9Sj1w4
+         B9QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CFI1m1bXGZYKZMu3ppASc24ioDiu36YQQGgUMSxsWQI=;
+        b=mb8mUKHT3pQRmod/Gh9sS4pof60qbcdIzDdLCm/7aGXm+PNEG/9rqIjdWfkiETBYB5
+         aQ4c5B221QnunFwGG2gIAzAnhLt4LTmJEhvp8iTI7eTJhplTJIyF/1RTIT6E3CuJrzAx
+         zBKbDhFXgAAJYubCG/U0wuFEb7AtkV5Nx0J+7NwQvxpDZCyiCidM/hFEUwSzPlwB2lQo
+         CqHD20kICKEx3Fj2Hwq3n1M91ainprzbHkxwr/R4T03m7Z5sgZiyy9cFHFh6AsRxBkEN
+         8noTUkL4b/jMWtbSw/Qx/oihhkQikqbGu7dCfoprgPUiS4UFMyanBOy5kljB5K+0xwXf
+         VaHA==
+X-Gm-Message-State: AOAM530R4TmAiHNaG/iEo7zZq0P/qNNHmE5NrO/JiLhkPCBmKvMJHiIr
+        8n9mKXm7iLQSgep8WsfTmASCW8GvM211Vvo/PrE=
+X-Google-Smtp-Source: ABdhPJxG/g7d0SUPOlZylX53KWmJNDyAVmymN8J4HcFlAbXLbRDKEHmAsJ988BdjbI452PhbZv7i4Lvt8WifPjLg50o=
+X-Received: by 2002:a2e:750d:: with SMTP id q13mr892413ljc.448.1591152137654;
+ Tue, 02 Jun 2020 19:42:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+ <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+ <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com> <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
+In-Reply-To: <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
+From:   Jason Xing <kerneljasonxing@gmail.com>
+Date:   Wed, 3 Jun 2020 10:41:41 +0800
+Message-ID: <CAL+tcoDn_=T--uB0CRymfTGvD022PPDk5Yw2yCxvqOOpZ4G_dQ@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ":README" suffix support for the requires list, so that
-the testcase can list up the required string for README file
-to the requires list.
+I agree with you. The upstream has already dropped and optimized this
+part (commit 864e5c090749), so it would not happen like that. However
+the old kernels like LTS still have the problem which causes
+large-scale crashes on our thousands of machines after running for a
+long while. I will send the fix to the correct tree soon :)
 
-Note that the required string is treated as a fixed string,
-instead of regular expression. Also, the testcase can specify
-a string containing spaces with quotes. E.g.
+Thanks again,
+Jason
 
-# requires: "place: [<module>:]<symbol>":README
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
----
-  Changes in v3:
-   - Update template according to the previous change in the series.
-  Changes in v2:
-   - Convert README check in kprobe/kprobe_args_user.tc
----
- tools/testing/selftests/ftrace/ftracetest          |    3 ++-
- .../ftrace/test.d/dynevent/add_remove_kprobe.tc    |    5 +----
- .../ftrace/test.d/dynevent/add_remove_synth.tc     |    4 +---
- .../ftrace/test.d/dynevent/clear_select_events.tc  |    7 +------
- .../ftrace/test.d/dynevent/generic_clear_event.tc  |    7 +------
- tools/testing/selftests/ftrace/test.d/functions    |    8 +++++++-
- .../ftrace/test.d/kprobe/kprobe_args_syntax.tc     |    4 +---
- .../ftrace/test.d/kprobe/kprobe_args_type.tc       |    4 +---
- .../ftrace/test.d/kprobe/kprobe_args_user.tc       |    3 +--
- .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |    4 +---
- .../ftrace/test.d/kprobe/kretprobe_maxactive.tc    |    4 +---
- tools/testing/selftests/ftrace/test.d/template     |    4 +++-
- .../inter-event/trigger-action-hist-xfail.tc       |    4 +---
- .../inter-event/trigger-onchange-action-hist.tc    |    4 +---
- .../inter-event/trigger-snapshot-action-hist.tc    |    6 +-----
- .../inter-event/trigger-trace-action-hist.tc       |    4 +---
- 16 files changed, 25 insertions(+), 50 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index cdf7940b6610..8ec1922e974e 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -269,7 +269,8 @@ testcase() { # testfile
- 
- checkreq() { # testfile
-   requires=`grep "^#[ \t]*requires:" $1 | cut -f2- -d:`
--  check_requires $requires
-+  # Use eval to pass quoted-patterns correctly.
-+  eval check_requires "$requires"
- }
- 
- test_on_instance() { # testfile
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_kprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_kprobe.tc
-index 1a8c56b197a8..68550f97d3c3 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_kprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_kprobe.tc
-@@ -1,10 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Generic dynamic event - add/remove kprobe events
--# requires: dynamic_events
--
--grep -q "place: \[<module>:\]<symbol>" README || exit_unsupported
--grep -q "place (kretprobe): \[<module>:\]<symbol>" README || exit_unsupported
-+# requires: dynamic_events "place: [<module>:]<symbol>":README "place (kretprobe): [<module>:]<symbol>":README
- 
- echo 0 > events/enable
- echo > dynamic_events
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_synth.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_synth.tc
-index f5018b3afb39..2b94611e1a28 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_synth.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_synth.tc
-@@ -1,9 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Generic dynamic event - add/remove synthetic events
--# requires: dynamic_events
--
--grep -q "s:\[synthetic/\]" README || exit_unsupported
-+# requires: dynamic_events "s:[synthetic/]":README
- 
- echo 0 > events/enable
- echo > dynamic_events
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/clear_select_events.tc b/tools/testing/selftests/ftrace/test.d/dynevent/clear_select_events.tc
-index e2484445ddec..c969be9eb7de 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/clear_select_events.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/clear_select_events.tc
-@@ -1,12 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Generic dynamic event - selective clear (compatibility)
--# requires: dynamic_events kprobe_events synthetic_events
--
--grep -q "place: \[<module>:\]<symbol>" README || exit_unsupported
--grep -q "place (kretprobe): \[<module>:\]<symbol>" README || exit_unsupported
--
--grep -q "s:\[synthetic/\]" README || exit_unsupported
-+# requires: dynamic_events kprobe_events synthetic_events "place: [<module>:]<symbol>":README "place (kretprobe): [<module>:]<symbol>":README "s:[synthetic/]":README
- 
- echo 0 > events/enable
- echo > dynamic_events
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/generic_clear_event.tc b/tools/testing/selftests/ftrace/test.d/dynevent/generic_clear_event.tc
-index e56cb60b4e56..16d543eaac88 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/generic_clear_event.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/generic_clear_event.tc
-@@ -1,12 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Generic dynamic event - generic clear event
--# requires: dynamic_events
--
--grep -q "place: \[<module>:\]<symbol>" README || exit_unsupported
--grep -q "place (kretprobe): \[<module>:\]<symbol>" README || exit_unsupported
--
--grep -q "s:\[synthetic/\]" README || exit_unsupported
-+# requires: dynamic_events "place: [<module>:]<symbol>":README "place (kretprobe): [<module>:]<symbol>":README "s:[synthetic/]":README
- 
- echo 0 > events/enable
- echo > dynamic_events
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 35de6bc9613b..c5dec55b7d95 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -107,13 +107,19 @@ initialize_ftrace() { # Reset ftrace to initial-state
- }
- 
- check_requires() { # Check required files and tracers
--    for i in $* ; do
-+    for i in "$@" ; do
-+        r=${i%:README}
-         t=${i%:tracer}
-         if [ $t != $i ]; then
-             if ! grep -wq $t available_tracers ; then
-                 echo "Required tracer $t is not configured."
-                 exit_unsupported
-             fi
-+        elif [ $r != $i ]; then
-+            if ! grep -Fq "$r" README ; then
-+                echo "Required feature pattern \"$r\" is not in README."
-+                exit_unsupported
-+            fi
-         elif [ ! -e $i ]; then
-             echo "Required feature interface $i doesn't exist."
-             exit_unsupported
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-index f06c1477f00f..474ca1a9a088 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-@@ -1,9 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Kprobe event argument syntax
--# requires: kprobe_events
--
--grep "x8/16/32/64" README > /dev/null || exit_unsupported # version issue
-+# requires: kprobe_events "x8/16/32/64":README
- 
- PROBEFUNC="vfs_read"
- GOODREG=
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-index d599d6f544d4..0610e0b5587c 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
-@@ -1,9 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Kprobes event arguments with types
--# requires: kprobe_events
--
--grep "x8/16/32/64" README > /dev/null || exit_unsupported # version issue
-+# requires: kprobe_events "x8/16/32/64":README
- 
- gen_event() { # Bitsize
-   echo "p:testprobe _do_fork \$stack0:s$1 \$stack0:u$1 \$stack0:x$1 \$stack0:b4@4/$1"
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-index a9b3a788183f..a30a9c07290d 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-@@ -1,9 +1,8 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Kprobe event user-memory access
--# requires: kprobe_events
-+# requires: kprobe_events '$arg<N>':README
- 
--grep -q '\$arg<N>' README || exit_unsupported # depends on arch
- grep -A10 "fetcharg:" README | grep -q 'ustring' || exit_unsupported
- grep -A10 "fetcharg:" README | grep -q '\[u\]<offset>' || exit_unsupported
- 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
-index 8205d588bed4..366b7e1b6718 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
-@@ -1,9 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Create/delete multiprobe on kprobe event
--# requires: kprobe_events
--
--grep -q "Create/append/" README || exit_unsupported
-+# requires: kprobe_events "Create/append/":README
- 
- # Choose 2 symbols for target
- SYM1=_do_fork
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_maxactive.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_maxactive.tc
-index 0f96a45010d1..4f0b268c1233 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_maxactive.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_maxactive.tc
-@@ -1,9 +1,7 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Kretprobe dynamic event with maxactive
--# requires: kprobe_events
--
--grep -q 'r\[maxactive\]' README || exit_unsupported # this is older version
-+# requires: kprobe_events 'r[maxactive]':README
- 
- # Test if we successfully reject unknown messages
- if echo 'a:myprobeaccept inet_csk_accept' > kprobe_events; then false; else true; fi
-diff --git a/tools/testing/selftests/ftrace/test.d/template b/tools/testing/selftests/ftrace/test.d/template
-index b1c2f1920897..2cd8947edf72 100644
---- a/tools/testing/selftests/ftrace/test.d/template
-+++ b/tools/testing/selftests/ftrace/test.d/template
-@@ -1,8 +1,10 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: %HERE DESCRIBE WHAT THIS DOES%
--# requires: %HERE LIST THE REQUIRED FILES OR TRACERS%
-+# requires: %HERE LIST THE REQUIRED FILES, TRACERS OR README-STRINGS%
- # The required tracer needs :tracer suffix, e.g. function:tracer
-+# The required README string needs :README suffix, e.g. "x8/16/32/64":README
-+# and the README string is treated as a fixed-string instead of regexp pattern.
- # you have to add ".tc" extention for your testcase file
- # Note that all tests are run with "errexit" option.
- 
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-index 07093bbd9816..1590d6bfb857 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-@@ -1,15 +1,13 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger expected fail actions
--# requires: set_event snapshot
-+# requires: set_event snapshot "snapshot()":README
- 
- fail() { #msg
-     echo $1
-     exit_fail
- }
- 
--grep -q "snapshot()" README || exit_unsupported # version issue
--
- echo "Test expected snapshot action failure"
- 
- echo 'hist:keys=comm:onmatch(sched.sched_wakeup).snapshot()' >> events/sched/sched_waking/trigger && exit_fail
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-index 2366a8f8f8f2..adaabb873ed4 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-@@ -1,15 +1,13 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger onchange action
--# requires: set_event
-+# requires: set_event "onchange(var)":README
- 
- fail() { #msg
-     echo $1
-     exit_fail
- }
- 
--grep -q "onchange(var)" README || exit_unsupported # version issue
--
- echo "Test onchange action"
- 
- echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> events/sched/sched_waking/trigger
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-index 2902a897255f..67fa328b830f 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-@@ -1,17 +1,13 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger snapshot action
--# requires: set_event snapshot events/sched/sched_process_fork/hist
-+# requires: set_event snapshot events/sched/sched_process_fork/hist "onchange(var)":README "snapshot()":README
- 
- fail() { #msg
-     echo $1
-     exit_fail
- }
- 
--grep -q "onchange(var)" README || exit_unsupported # version issue
--
--grep -q "snapshot()" README || exit_unsupported # version issue
--
- echo "Test snapshot action"
- 
- echo 1 > events/sched/enable
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-trace-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-trace-action-hist.tc
-index e2ef5268b7e9..c126d2350a6d 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-trace-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-trace-action-hist.tc
-@@ -1,15 +1,13 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: event trigger - test inter-event histogram trigger trace action
--# requires: set_event synthetic_events events/sched/sched_process_fork/hist
-+# requires: set_event synthetic_events events/sched/sched_process_fork/hist "trace(<synthetic_event>":README
- 
- fail() { #msg
-     echo $1
-     exit_fail
- }
- 
--grep -q "trace(<synthetic_event>" README || exit_unsupported # version issue
--
- echo "Test create synthetic event"
- 
- echo 'wakeup_latency  u64 lat pid_t pid char comm[16]' > synthetic_events
-
+On Wed, Jun 3, 2020 at 10:29 AM Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Tue, Jun 2, 2020 at 6:53 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
+> >
+> > Hi Eric,
+> >
+> > I'm sorry that I didn't write enough clearly. We're running the
+> > pristine 4.19.125 linux kernel (the latest LTS version) and have been
+> > haunted by such an issue. This patch is high-important, I think. So
+> > I'm going to resend this email with the [patch 4.19] on the headline
+> > and cc Greg.
+>
+> Yes, please always give for which tree a patch is meant for.
+>
+> Problem is that your patch is not correct.
+> In these old kernels, tcp_internal_pacing() is called _after_ the
+> packet has been sent.
+> It is too late to 'give up pacing'
+>
+> The packet should not have been sent if the pacing timer is queued
+> (otherwise this means we do not respect pacing)
+>
+> So the bug should be caught earlier. check where tcp_pacing_check()
+> calls are missing.
+>
+>
+>
+> >
+> >
+> > Thanks,
+> > Jason
+> >
+> > On Tue, Jun 2, 2020 at 9:05 PM Eric Dumazet <edumazet@google.com> wrote:
+> > >
+> > > On Tue, Jun 2, 2020 at 1:05 AM <kerneljasonxing@gmail.com> wrote:
+> > > >
+> > > > From: Jason Xing <kerneljasonxing@gmail.com>
+> > > >
+> > > > TCP socks cannot be released because of the sock_hold() increasing the
+> > > > sk_refcnt in the manner of tcp_internal_pacing() when RTO happens.
+> > > > Therefore, this situation could increase the slab memory and then trigger
+> > > > the OOM if the machine has beening running for a long time. This issue,
+> > > > however, can happen on some machine only running a few days.
+> > > >
+> > > > We add one exception case to avoid unneeded use of sock_hold if the
+> > > > pacing_timer is enqueued.
+> > > >
+> > > > Reproduce procedure:
+> > > > 0) cat /proc/slabinfo | grep TCP
+> > > > 1) switch net.ipv4.tcp_congestion_control to bbr
+> > > > 2) using wrk tool something like that to send packages
+> > > > 3) using tc to increase the delay in the dev to simulate the busy case.
+> > > > 4) cat /proc/slabinfo | grep TCP
+> > > > 5) kill the wrk command and observe the number of objects and slabs in TCP.
+> > > > 6) at last, you could notice that the number would not decrease.
+> > > >
+> > > > Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
+> > > > Signed-off-by: liweishi <liweishi@kuaishou.com>
+> > > > Signed-off-by: Shujin Li <lishujin@kuaishou.com>
+> > > > ---
+> > > >  net/ipv4/tcp_output.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > > > index cc4ba42..5cf63d9 100644
+> > > > --- a/net/ipv4/tcp_output.c
+> > > > +++ b/net/ipv4/tcp_output.c
+> > > > @@ -969,7 +969,8 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
+> > > >         u64 len_ns;
+> > > >         u32 rate;
+> > > >
+> > > > -       if (!tcp_needs_internal_pacing(sk))
+> > > > +       if (!tcp_needs_internal_pacing(sk) ||
+> > > > +           hrtimer_is_queued(&tcp_sk(sk)->pacing_timer))
+> > > >                 return;
+> > > >         rate = sk->sk_pacing_rate;
+> > > >         if (!rate || rate == ~0U)
+> > > > --
+> > > > 1.8.3.1
+> > > >
+> > >
+> > > Hi Jason.
+> > >
+> > > Please do not send patches that do not apply to current upstream trees.
+> > >
+> > > Instead, backport to your kernels the needed fixes.
+> > >
+> > > I suspect that you are not using a pristine linux kernel, but some
+> > > heavily modified one and something went wrong in your backports.
+> > > Do not ask us to spend time finding what went wrong.
+> > >
+> > > Thank you.
