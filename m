@@ -2,57 +2,51 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC13EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B445220738
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591197059;
-	bh=3MPsv1f0boeVtrXpwRMj3TVYK6WQy/4p6Q+AEX6nQrg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=jdPuwbffmT6IHW4Btd+2MEZB9WXKRsJl2DcWpV8tqP7Eyh73ABXi6R6SDE/iM78CY
-	 0tzoD3g95lzfyP6OxQCE8+oHssDrs1Pw8BBzjOyhvC8/bxPxAEt/zlrP8GRdqaQQ2w
-	 /ucf0AWzcSU7a3LyiycqgXPlX8m0cAYnCpWSwV2U=
+	by mail.kernel.org (Postfix) with ESMTP id 0CB9C20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 15:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgFCPK7 (ORCPT
+        id S1726210AbgFCPLH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 11:10:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgFCPK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 11:10:58 -0400
-Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 942A4206E6;
-        Wed,  3 Jun 2020 15:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591197058;
-        bh=3MPsv1f0boeVtrXpwRMj3TVYK6WQy/4p6Q+AEX6nQrg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qHUJkL/GWdKG8cz+qBXbh+ADpRnxGM4ySLLOdKMvPBlAGU7zPx0qkcwLuy56teSZl
-         bRk/idYBxSTuEUyGxGsSAs3zh8L+A+4/ZQZurYYruIuVzORXt094otTQyL+binNDcl
-         TS0AkwMhQMOMSURrdzhn/o2gC+QIuG9GkhREhr0g=
-Message-ID: <71bcd300a32c0ddde8473625ba81bad3ba6f5dfe.camel@kernel.org>
-Subject: Re: linux-next: build failure after merge of the ftrace tree
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Date:   Wed, 03 Jun 2020 10:10:56 -0500
-In-Reply-To: <20200603174253.60deace5@canb.auug.org.au>
-References: <20200603174253.60deace5@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Jun 2020 11:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgFCPLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 11:11:05 -0400
+Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A44B6C08C5C0;
+        Wed,  3 Jun 2020 08:11:04 -0700 (PDT)
+Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=roelofs-mbp.fritz.box); authenticated
+        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jgV2Y-0000Ec-QM; Wed, 03 Jun 2020 17:10:50 +0200
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] lan743x: Added fixed link and RGMII support / Options for
+ proceeding ?
+From:   Roelof Berg <rberg@berg-solutions.de>
+In-Reply-To: <08FC216E-BBCA-40E6-8251-FA1EB3EF9F99@berg-solutions.de>
+Date:   Wed, 3 Jun 2020 17:10:49 +0200
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Bryan Whitehead <bryan.whitehead@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <95EAD2D0-1996-49FF-9C03-DC5AD4000E71@berg-solutions.de>
+References: <20200529193003.3717-1-rberg@berg-solutions.de>
+ <08FC216E-BBCA-40E6-8251-FA1EB3EF9F99@berg-solutions.de>
+To:     "rberg@berg-solutions.de" <rberg@berg-solutions.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1591197064;d2a39fce;
+X-HE-SMSGID: 1jgV2Y-0000Ec-QM
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,32 +54,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On Wed, 2020-06-03 at 17:42 +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the ftrace tree, today's linux-next build (htmldocs)
-> failed like this:
-> 
-> 
-> Sphinx parallel build error:
-> docutils.utils.SystemMessage:
-> /home/sfr/next/next/Documentation/trace/histogram-design.rst:219:
-> (SEVERE/4) Unexpected section title.
-> 
-> .
-> .
-> 
-> Caused by commit
-> 
->   16b585fe7192 ("tracing: Add histogram-design document")
-> 
-> I am running a slightly out of date version os sphynx (2.4.3) ...
-> 
+we need to decide how to continue with the lan743x patch for fixed phy support. Thanks everyone for the valuable time.
 
-Apparently sphynx doesn't like my funky ascii-art.  I'll post a patch
-fixing this shortly.
+Summary of the development steps so far:
+The patch initially had low influence on the installed base, but lacked some compatibility to Linux best practices. During the review process we found improvement potential. We decided to make the patch more similar to the majority of Linux drivers, by avoiding a special autodetection silicon feature that is unique. However, now, with more test hardware available, this road becomes more difficult than we initially assumed.
 
-Thanks,
+Would it be ok to split the topics into two distinct patches ?
 
-Tom
+Topic a: New feature: Add fixed link and RGMII support in a minimal invasive way. (Including fixing a reboot-issue that the last patch fixed.)
+
+Topic b: Refactor old driver: Understand, and if possible remove, the silicon’s Mac-Phy auto-negotiation feature.
+
+Maybe splitting distinct features into distinct patches is the most defensive approach, now that device testing disconfirmed our promising approach ?
+
+Thanks everyone for cooperating on this feature,
+Roelof
+
+
+> Roelof Berg <rberg@berg-solutions.de>:
+> 
+> Testing note [...]
+> - Different from prior approaches it affects the installed base. So we need some more testing (with hardware I don’t have available yet) and I’m in contact with Microchip already.
+> 
+> Thanks for guiding us to a proper solution,
+> Roelof Berg
+> 
+>> . The automatic speed and duplex detection of the lan743x silicon
+>> between mac and phy is disabled.
 
