@@ -2,152 +2,128 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C473AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F97C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7CD620679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4B820679
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 16:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgFCQwH (ORCPT
+        id S1726225AbgFCQwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 12:52:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:35692 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgFCQwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 12:52:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20F3A31B;
-        Wed,  3 Jun 2020 09:52:06 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A6C83F305;
-        Wed,  3 Jun 2020 09:52:03 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 17:52:00 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
- <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200529100806.GA3070@suse.de>
- <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
- <87v9k84knx.derkling@matbug.net>
- <20200603101022.GG3070@suse.de>
- <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
+        Wed, 3 Jun 2020 12:52:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbgFCQwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 12:52:09 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206ADC08C5C0;
+        Wed,  3 Jun 2020 09:52:08 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jgWcX-002Z8R-Io; Wed, 03 Jun 2020 16:52:05 +0000
+Date:   Wed, 3 Jun 2020 17:52:05 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Message-ID: <20200603165205.GU23230@ZenIV.linux.org.uk>
+References: <20200602084257.134555-1-mst@redhat.com>
+ <20200603014815.GR23230@ZenIV.linux.org.uk>
+ <20200603011810-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200603011810-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/20 16:59, Vincent Guittot wrote:
-> When I want to stress the fast path i usually use "perf bench sched pipe -T "
-> The tip/sched/core on my arm octo core gives the following results for
-> 20 iterations of perf bench sched pipe -T -l 50000
+On Wed, Jun 03, 2020 at 01:29:00AM -0400, Michael S. Tsirkin wrote:
+> On Wed, Jun 03, 2020 at 02:48:15AM +0100, Al Viro wrote:
+> > On Tue, Jun 02, 2020 at 04:45:05AM -0400, Michael S. Tsirkin wrote:
+> > > So vhost needs to poke at userspace *a lot* in a quick succession.  It
+> > > is thus benefitial to enable userspace access, do our thing, then
+> > > disable. Except access_ok has already been pre-validated with all the
+> > > relevant nospec checks, so we don't need that.  Add an API to allow
+> > > userspace access after access_ok and barrier_nospec are done.
+> > 
+> > BTW, what are you going to do about vq->iotlb != NULL case?  Because
+> > you sure as hell do *NOT* want e.g. translate_desc() under STAC.
+> > Disable it around the calls of translate_desc()?
+> > 
+> > How widely do you hope to stretch the user_access areas, anyway?
 > 
-> all uclamp config disabled  50035.4(+/- 0.334%)
-> all uclamp config enabled  48749.8(+/- 0.339%)   -2.64%
+> So ATM I'm looking at adding support for the packed ring format.
+> That does something like:
 > 
-> It's quite easy to reproduce and probably easier to study the impact
+> get_user(flags, desc->flags)
+> smp_rmb()
+> if (flags & VALID)
+> copy_from_user(&adesc, desc, sizeof adesc);
+> 
+> this would be a good candidate I think.
 
-Thanks Vincent. This is very useful!
+Perhaps, once we get stac/clac out of raw_copy_from_user() (coming cycle,
+probably).  BTW, how large is the structure and how is it aligned?
 
-I could reproduce that on my Juno.
+> > BTW, speaking of possible annotations: looks like there's a large
+> > subset of call graph that can be reached only from vhost_worker()
+> > or from several ioctls, with all uaccess limited to that subgraph
+> > (thankfully).  Having that explicitly marked might be a good idea...
+> 
+> Sure. What's a good way to do that though? Any examples to follow?
+> Or do you mean code comments?
 
-One of the codepath I was suspecting seems to affect it.
+Not sure...  FWIW, the part of call graph from "known to be only
+used by vhost_worker" (->handle_kick/vhost_work_init callback/
+vhost_poll_init callback) and "part of ->ioctl()" to actual uaccess
+primitives is fairly large - the longest chain is
+handle_tx_net ->
+  handle_tx ->
+    handle_tx_zerocopy ->
+      get_tx_bufs ->
+	vhost_net_tx_get_vq_desc ->
+	  vhost_tx_batch ->
+	    vhost_net_signal_used ->
+	      vhost_add_used_and_signal_n ->
+		vhost_signal ->
+		  vhost_notify ->
+		    vhost_get_avail_flags ->
+		      vhost_get_avail ->
+			vhost_get_user ->
+			  __get_user()
+i.e. 14 levels deep and the graph doesn't factorize well...
 
+Something along the lines of "all callers of thus annotated function
+must be annotated the same way themselves, any implicit conversion
+of pointers to such functions to anything other than boolean yields
+a warning, explicit cast is allowed only with __force", perhaps?
+Then slap such annotations on vhost_{get,put,copy_to,copy_from}_user(),
+on ->handle_kick(), a force-cast in the only caller of ->handle_kick()
+and force-casts in the 3 callers in ->ioctl().
 
+And propagate the annotations until the warnings stop, basically...
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0464569f26a7..9f48090eb926 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1063,10 +1063,12 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
-         * e.g. due to future modification, warn and fixup the expected value.
-         */
-        SCHED_WARN_ON(bucket->value > rq_clamp);
-+#if 0
-        if (bucket->value >= rq_clamp) {
-                bkt_clamp = uclamp_rq_max_value(rq, clamp_id, uc_se->value);
-                WRITE_ONCE(uc_rq->value, bkt_clamp);
-        }
-+#endif
- }
+Shouldn't be terribly hard to teach sparse that kind of stuff and it
+might be useful elsewhere.  It would act as a qualifier on function
+pointers, with syntax ultimately expanding to __attribute__((something)).
+I'll need to refresh my memories of the parser, but IIRC that shouldn't
+require serious modifications.  Most of the work would be in
+evaluate_call(), just before calling evaluate_symbol_call()...
+I'll look into that; not right now, though.
 
- static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+BTW, __vhost_get_user() might be better off expanded in both callers -
+that would get their structure similar to vhost_copy_{to,from}_user(),
+especially if you expand __vhost_get_user_slow() as well.
 
-
-
-uclamp_rq_max_value() could be expensive as it loops over all buckets.
-Commenting this whole path out strangely doesn't just 'fix' it, but produces
-better results to no-uclamp kernel :-/
-
-
-
-# ./perf bench -r 20 sched pipe -T -l 50000
-Without uclamp:		5039
-With uclamp:		4832
-With uclamp+patch:	5729
-
-
-
-It might be because schedutil gets biased differently by uclamp..? If I move to
-performance governor these numbers almost double.
-
-I don't know. But this promoted me to look closer and I think I spotted a bug
-where in the if condition we check for '>=' instead of '>', causing us to take
-the supposedly impossible fail safe path.
-
-Mind trying with the below patch please?
-
-
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0464569f26a7..50d66d4016ff 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1063,7 +1063,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
-         * e.g. due to future modification, warn and fixup the expected value.
-         */
-        SCHED_WARN_ON(bucket->value > rq_clamp);
--       if (bucket->value >= rq_clamp) {
-+       if (bucket->value > rq_clamp) {
-                bkt_clamp = uclamp_rq_max_value(rq, clamp_id, uc_se->value);
-                WRITE_ONCE(uc_rq->value, bkt_clamp);
-        }
+Not sure I understand what's going with ->meta_iotlb[] - what are the
+lifetime rules for struct vhost_iotlb_map and what prevents the pointers
+from going stale?
 
 
-
-Thanks
-
---
-Qais Yousef
