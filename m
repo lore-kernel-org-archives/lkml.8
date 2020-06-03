@@ -2,146 +2,201 @@ Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C40C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34665C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A63EF2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001B42077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JmlTRC4P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EY+mnY8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgFCXif (ORCPT
+        id S1726239AbgFCXii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:38:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
+        Wed, 3 Jun 2020 19:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgFCXie (ORCPT
+        with ESMTP id S1725876AbgFCXig (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:38:34 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E538C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:38:34 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id u5so2678149pgn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:38:34 -0700 (PDT)
+        Wed, 3 Jun 2020 19:38:36 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EA4C08C5C0;
+        Wed,  3 Jun 2020 16:38:35 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id j1so2338046pfe.4;
+        Wed, 03 Jun 2020 16:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=261RUT31PuSmoranObguIYWCcctoAaPL9LPaG28MbCU=;
-        b=JmlTRC4P+LHl2wjuekNmYIKEnD04fMoCLlZ0I/bKxc3s+wrPgOMkQpUa8tCRZWYVNQ
-         RQk3XFYW9ggapHPcpi7C+gFEFykC6RpngWkj5aT8DTc3UV5kh++XlU2i9BHpur85EIrw
-         qn2qk8wLyFnfBMQK0k7qez5Jl+psaL0sRQYXI=
+        bh=SUOSMdyRcBZ5Xy8FVna5RTAeLBpLZtiqmspjCBJ9jr0=;
+        b=EY+mnY8rdtsWINgGun3b/e+EpjZjihsmGQpwkUGb1yukgTpop7At2xrJtCGfl++U/4
+         cPvPL1WbZyVfxgWtuUxwnhi5oBPCLYPjKQJfo8RQuDePxevFbybMtCOfeewgLXFg22AG
+         0zZrMstt1mbrl9xUo2MCHqJT2r0DyeY7wfxgo6tcrGezn2B30LaF+gvMtRpmvDqs8otF
+         v+u5pQ3+QHQb2O6X/MukWUB3YW70CHHiIqR390WopWQZMBEEOcVQ1lML4tlNWCeFJL8N
+         ywaal83ZXX+K8LsE8m9Iz2c4UVu01QPyJrCwNnC8G7Xv0ttm2trlUJ3LQn3UMOsOTTCO
+         /gLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=261RUT31PuSmoranObguIYWCcctoAaPL9LPaG28MbCU=;
-        b=WSOYQlRUbxgVc5xhTRLRyq3+8NRHR4zDqupV/c5guRLqx6+68rffOcZllgrLsj/Jtm
-         f0Tj8m9GDLojlbkWXUqNclZQEjoud9eYXh+uMqsnDtNQT3W5VtaFIGnu77GNpkAg8LSW
-         hUM78Oqgfyb+Vt4J1L8cjXhF/ByLJx71dVYiK89VKeRGulzbMwH4JSa1RtOsOSnZVKkp
-         aEncloHbzTMR3vFGbJU2fEWT0Xyj9ayNZg3nSEKsvi4I9j43U9++0XqBQgTFRK9gn2U1
-         i9nHZPlL+QELAGqz8ZtXZUbliPUyTp50dXvxRBVkm/xQTlHlxCVnjOn40TKqQbSFxvXI
-         YBnA==
-X-Gm-Message-State: AOAM532yO3nTLgT7ucqpYy7PzkSVxKTQEl0MhsTiaRVMBji+vsNkSOXa
-        rbFh5gwu9Z8UdgfOeY61sGJyAw==
-X-Google-Smtp-Source: ABdhPJwu4vjgHI/sr/02FzeDWVOfrsTIi4ohngcW7RRLaBTVoASPovhFX0qIFpsYzUJ7p8kB3zlO7Q==
-X-Received: by 2002:a62:1a0f:: with SMTP id a15mr1545975pfa.177.1591227514055;
-        Wed, 03 Jun 2020 16:38:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g17sm2431622pgg.43.2020.06.03.16.38.32
+        bh=SUOSMdyRcBZ5Xy8FVna5RTAeLBpLZtiqmspjCBJ9jr0=;
+        b=aPRlHUo3DN+u9TTDAm9iWP0Q7swWgTLrs1CC2S0wiRXqhXkkQcZDxyCb2ZsnTLqUna
+         AbOkhFpsn3OfeggdyjYZG1Ar3rLAlsX2/Info5KAYiBvoOH9+fYTg0udg0VIM+oN2+R+
+         P7wzdo/BAOvRUFsGDuxO0Xs/KRB11g/y1EHMGEuRkVyRWL3StxaAdTDMNpzXs1Jy0knb
+         d3Cb43oNBenuOEHsNtxldsUup9m/m0FX2rPVzJRi60sHVJIvOwbgGM+u0YRXXm3QrpZP
+         y0IMvbC7uE6fzDn1Ge6q8kJn9nXAQSGYMGS4DYt4WiPtq+PYiRDyhthPB1HV0Kc/mgVB
+         PIlw==
+X-Gm-Message-State: AOAM533bj6Y+LZD2BINfQefUS3pLobkMk3GLBQ8ghWc+jgmGHTNFfAyo
+        iZYGr/z9JxlxvHqyqlrURvY=
+X-Google-Smtp-Source: ABdhPJyCrU53Sgx/T0I/gCbu00L6R2xyVW+WwO6d/guvguxvEGVU2X639wYa5rkp4DgqzK9CsYsQ+Q==
+X-Received: by 2002:aa7:9052:: with SMTP id n18mr1521387pfo.319.1591227515336;
+        Wed, 03 Jun 2020 16:38:35 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:514a])
+        by smtp.gmail.com with ESMTPSA id t4sm2335943pgp.2.2020.06.03.16.38.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 16:38:33 -0700 (PDT)
+        Wed, 03 Jun 2020 16:38:34 -0700 (PDT)
 Date:   Wed, 3 Jun 2020 16:38:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] pwm: Add missing "CONFIG_" prefix
-Message-ID: <202006031634.477F65AC53@keescook>
-References: <202006031539.4198EA6@keescook>
- <b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Moore <paul@paul-moore.com>, selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] SELinux patches for v5.8
+Message-ID: <20200603233832.n6lgfyp7t36nmxpd@ast-mbp.dhcp.thefacebook.com>
+References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
+ <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
+ <290017a8-d943-570f-1f90-acecf1c075a1@schaufler-ca.com>
+ <CAHk-=wgkZROyMpBa8EKPDVK=SvurnrzJXgphQ8Fstx8rrfO6MQ@mail.gmail.com>
+ <20200603210202.thwuv2ye672ifwim@ast-mbp.dhcp.thefacebook.com>
+ <d0ce1c02-4838-4299-457e-bf5e63875873@schaufler-ca.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com>
+In-Reply-To: <d0ce1c02-4838-4299-457e-bf5e63875873@schaufler-ca.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 04:04:31PM -0700, Joe Perches wrote:
-> more odd uses (mostly in comments)
+On Wed, Jun 03, 2020 at 03:00:05PM -0700, Casey Schaufler wrote:
+> On 6/3/2020 2:02 PM, Alexei Starovoitov wrote:
+> > On Wed, Jun 03, 2020 at 10:37:47AM -0700, Linus Torvalds wrote:
+> >> On Wed, Jun 3, 2020 at 10:20 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >>> We could have inode->i_security be the blob, rather than a pointer to it.
+> >>> That will have its own performance issues.
+> >> It wouldn't actually really fix anything, because the inode is so big
+> >> and sparsely accessed that it doesn't even really help the cache
+> >> density issue. Yeah, it gets rid of the pointer access, but that's
+> >> pretty much it. The fact that we randomize the order means that we
+> >> can't even really try to aim for any cache density.
+> >>
+> >> And it would actually not be possible with the current layered
+> >> security model anyway, since those blob sizes are dynamic at runtime.
+> >>
+> >> If we had _only_ SELinux, we could perhaps have hidden the
+> >> sid/sclass/task_sid directly in the inode (it would be only slightly
+> >> larger than the pointer is, anyway), but even that ship sailed long
+> >> long ago due to the whole "no security person can ever agree with
+> >> another one on fundamentals".
+> > Also there is bpf_lsm now that we're going to run it in production, 
+> > so performance is as important as ever.
+> > Traditional lsm-s have per-lsm per-inode blob.
+> > For bpf that doesn't work, since progs come and go at run-time and
+> > independent from each other.
 > 
-> $ git grep -P -oh '\bIS_ENABLED\s*\(\s*\w+\s*\)'| \
->   sed -r 's/\s+//g'| \
->   grep -v '(CONFIG_' | \
->   sort | uniq -c | sort -rn
+> The inode blob is for attributes associated with the filesystem object.
+> There are cred and task blobs for program information.
+> If you need separate per-task data you should put it there.
 
-I think a missed a bunch because my grep was messy. :) This is much
-easier to scan.
+task_struct will have its own member for bpf local storage as I explained.
+For most structs we won't be adding new member or even reusing lsm's security
+blob pointer, because existing bpf hash table approach is fast enough and
+flexible, since it can key based on anything. Any pointer and any struct can
+have additional scratch area available to bpf progs. We're adding
+*_local_storage only to kernel objects where performance is critical. Like
+'struct sock'.
 
->       7 IS_ENABLED(DEBUG)
->       4 IS_ENABLED(cfg)
->       2 IS_ENABLED(opt_name)
->       2 IS_ENABLED(DEBUG_PRINT_TRIE_GRAPHVIZ)
->       2 IS_ENABLED(config)
->       2 IS_ENABLED(cond)
->       2 IS_ENABLED(__BIG_ENDIAN)
->       1 IS_ENABLED(x)
->       1 IS_ENABLED(PWM_DEBUG)
->       1 IS_ENABLED(option)
->       1 IS_ENABLED(DEBUG_RANDOM_TRIE)
->       1 IS_ENABLED(DEBUG_CHACHA20POLY1305_SLOW_CHUNK_TEST)
-
-These seem to be "as expected".
-
->       4 IS_ENABLED(DRM_I915_SELFTEST)
->       1 IS_ENABLED(STRICT_KERNEL_RWX)
->       1 IS_ENABLED(ETHTOOL_NETLINK)
-
-But these are not.
-
+> > So we need per-program per-inode blob.
+> > To maintain good performance we've proposed:
+> > @@ -740,6 +741,10 @@  struct inode {
+> >  	struct fsverity_info	*i_verity_info;
+> >  #endif
+> >  
+> > +#ifdef CONFIG_BPF_SYSCALL
+> > +	struct bpf_local_storage __rcu	*inode_bpf_storage;
+> > +#endif
+> >
+> > https://patchwork.ozlabs.org/project/netdev/patch/20200526163336.63653-3-kpsingh@chromium.org/
+> >
+> > but got pushback, so we're going to use lsm style for now:
+> > +static inline struct bpf_lsm_storage *bpf_inode(const struct inode *inode)
+> > +{
+> > +       if (unlikely(!inode->i_security))
+> > +               return NULL;
+> > +
+> > +       return inode->i_security + bpf_lsm_blob_sizes.lbs_inode;
+> > +}
+> >
+> > which means extra kmalloc for every inode, extra pointer deref, global var
+> > access, and additional math just to get to 'inode_bpf_storage' pointer.
+> >
+> > We have similar pointer in 'struct sock' already:
+> > #ifdef CONFIG_BPF_SYSCALL
+> >         struct bpf_sk_storage __rcu     *sk_bpf_storage;
+> > #endif
+> > that is used by variety of networking bpf programs.
+> > The commit 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
+> > has benchmarking data for it:
+> >   hash table with 8-byte key -> 152ns per bpf run 
+> >   sk_bpf_storage -> 66ns per bpf run
+> > Hashtable suppose to be O(1) with L1$ hit, but it turned out
+> > to be noticeably slower than sk_bpf_storage.
+> > We expect to see similar performance gains for inode_bpf_storage
+> > vs hashtable approach that people use now.
+> > Eventually we'll add task_bpf_storage as well.
+> > Right now every other bpf tracing script is using pid as a key
+> > in a separate hash table to store per-task data. For high frequency
+> > events that adds up. task_bpf_storage will accelerate that.
 > 
-> STRICT_KERNEL_RWX is misused here in ppc
+> Why aren't you using a task blob? We have support for what
+> you need. 
 > 
-> ---
+> > Another way to look at it is shared inode->i_security across
+> > different inodes won't work for us. We need something really
+> > cheap like single 'inode_bpf_storage' pointer that is zero
+> > most of the time and for few inodes bpf progs will keep their
+> > scratch data in there.
+> > For now lsm style bpf_inode() approach is ok-ish.
+> > But we will come back when we collect perf numbers to justify
+> > why direct pointer in the 'struct inode' is a win.
 > 
-> Fix pr_warn without newline too.
-> 
->  arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-> index 51e3c15f7aff..dd60c5f2b991 100644
-> --- a/arch/powerpc/mm/book3s64/hash_utils.c
-> +++ b/arch/powerpc/mm/book3s64/hash_utils.c
-> @@ -660,11 +660,10 @@ static void __init htab_init_page_sizes(void)
->  		 * Pick a size for the linear mapping. Currently, we only
->  		 * support 16M, 1M and 4K which is the default
->  		 */
-> -		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
-> +		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
->  		    (unsigned long)_stext % 0x1000000) {
->  			if (mmu_psize_defs[MMU_PAGE_16M].shift)
-> -				pr_warn("Kernel not 16M aligned, "
-> -					"disabling 16M linear map alignment");
-> +				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
->  			aligned = false;
->  		}
+> It would be really helpful if instead of "the regular mechanism
+> is too slow, so we abandoned it" we could do "the regular mechanism
+> was to slow, so we made it better". I appreciate that every bit of
+> performance matters. That's true for all of the security modules,
+> which is why I object to special case tricks to boost the performance
+> of one module at the expense of everything else.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+It's not about lsm and not about bpf_lsm.
+The *_local_storage infrastructure is generic and available to
+bpf program types where it can be done safely.
+Like sk_local_storage is avaiable to ~25% of networking bpf prog types.
+(not to 100% because bpf progs run in a many different contexts
+and in some sock pointer is not accessibly safely).
+Similarly inode_local_storage will be available to different types
+of progs. Including tracing progs where it's safe.
 
-
--- 
-Kees Cook
+To rephrase bpf's *_local_storage could have been used by selinux
+and other lsm instead of current infra and likely would have been
+faster. In that sense selinux would be seen as another bpf program.
+It's not a program, of course, but it could have accessed it through
+the same mechanism.
+So, no, we're not "abandoning existing mechanism because it's too slow"
+we've created a new mechanism because it's generic (not related
+to lsm-s and security) and made it faster for all, so other kernel
+bits (including lsm-s) are welcome to use it.
