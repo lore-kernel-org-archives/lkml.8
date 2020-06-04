@@ -2,115 +2,72 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3407C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFCBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 942992065C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pys6LcCC"
+	by mail.kernel.org (Postfix) with ESMTP id 80A5320738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgFDJSN (ORCPT
+        id S1726729AbgFDJUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:18:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28423 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726465AbgFDJSN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:18:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591262292;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VKRvnA2ntagIiR78RlbOmGx0PU/n/EP0BCi9aIW6b1E=;
-        b=Pys6LcCCTdFHzl7/4VM19JGr738AfiScHClNzK8F18cx7LoiiyEzYRLToBdiNEseGA43SC
-        W5m6mYKN2YWwbSYBNUwD/2s2Xzy7pE9ag4Iv+ARtpUhGTQDHRck8qyGc9Y7ao0AGM2lON7
-        v5O7d+BT3lMjopysOvpieNknnX53Sjw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-2rCnZHGmOECqZrGO79PghQ-1; Thu, 04 Jun 2020 05:18:10 -0400
-X-MC-Unique: 2rCnZHGmOECqZrGO79PghQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80BD9107ACF3;
-        Thu,  4 Jun 2020 09:18:09 +0000 (UTC)
-Received: from [10.72.13.104] (ovpn-13-104.pek2.redhat.com [10.72.13.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C943160CD1;
-        Thu,  4 Jun 2020 09:18:01 +0000 (UTC)
-Subject: Re: [PATCH RFC 07/13] vhost: format-independent API for used buffers
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-References: <20200602130543.578420-1-mst@redhat.com>
- <20200602130543.578420-8-mst@redhat.com>
- <6d98f2cc-2084-cde0-c938-4ca01692adf9@redhat.com>
- <20200604050135-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b39e6fb8-a59a-2b3f-a1eb-1ccea2fe1b86@redhat.com>
-Date:   Thu, 4 Jun 2020 17:18:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200604050135-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Thu, 4 Jun 2020 05:20:02 -0400
+Received: from 8bytes.org ([81.169.241.247]:46182 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbgFDJUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:20:02 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id D206E26F; Thu,  4 Jun 2020 11:20:00 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH] iommu: Check for deferred attach in iommu_group_do_dma_attach()
+Date:   Thu,  4 Jun 2020 11:19:44 +0200
+Message-Id: <20200604091944.26402-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joerg Roedel <jroedel@suse.de>
 
-On 2020/6/4 下午5:03, Michael S. Tsirkin wrote:
->>>    static bool vhost_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
->>>    {
->>>    	__u16 old, new;
->>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
->>> index a67bda9792ec..6c10e99ff334 100644
->>> --- a/drivers/vhost/vhost.h
->>> +++ b/drivers/vhost/vhost.h
->>> @@ -67,6 +67,13 @@ struct vhost_desc {
->>>    	u16 id;
->>>    };
->>> +struct vhost_buf {
->>> +	u32 out_len;
->>> +	u32 in_len;
->>> +	u16 descs;
->>> +	u16 id;
->>> +};
->> So it looks to me the struct vhost_buf can work for both split ring and
->> packed ring.
->>
->> If this is true, we'd better make struct vhost_desc work for both.
->>
->> Thanks
-> Both vhost_desc and vhost_buf can work for split and packed.
->
-> Do you mean we should add packed ring support based on this?
-> For sure, this is one of the motivators for the patchset.
->
+The iommu_group_do_dma_attach() must not attach devices which have
+deferred_attach set. Otherwise devices could cause IOMMU faults when
+re-initialized in a kdump kernel.
 
-Somehow. But the reason I ask is that I see "split" suffix is used in 
-patch 1 as:
+Fixes: deac0b3bed26 ("iommu: Split off default domain allocation from group assignment")
+Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/iommu.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-peek_split_desc()
-pop_split_desc()
-push_split_desc()
-
-But that suffix is not used for the new used ring API invented in this 
-patch.
-
-Thanks
-
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index b5ea203f6c68..5a6d509f72b6 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1680,8 +1680,12 @@ static void probe_alloc_default_domain(struct bus_type *bus,
+ static int iommu_group_do_dma_attach(struct device *dev, void *data)
+ {
+ 	struct iommu_domain *domain = data;
++	int ret = 0;
+ 
+-	return __iommu_attach_device(domain, dev);
++	if (!iommu_is_attach_deferred(group->domain, dev))
++		ret = __iommu_attach_device(group->domain, dev);
++
++	return ret;
+ }
+ 
+ static int __iommu_group_dma_attach(struct iommu_group *group)
+-- 
+2.26.2
 
