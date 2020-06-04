@@ -2,129 +2,228 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCB0207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67852207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgFDNul (ORCPT
+        id S1728717AbgFDNur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:50:41 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43459 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728337AbgFDNuk (ORCPT
+        Thu, 4 Jun 2020 09:50:47 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:34694 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728685AbgFDNur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:50:40 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c12so3631740lfc.10;
-        Thu, 04 Jun 2020 06:50:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9/mS/crSG/SbKgPicMind4lrkGlCDOUOSlUrNN+bfdo=;
-        b=PSK1YejsJgXfe2XYxbsgFP7Ka63S0ZMXy2Xva+kS1Mrnsj1USFa3KHkX9+ICOMro9W
-         TQxEzs5DpLM268+yoXKixRbPWzTLPLnQTRkGoErzwvXU8TzfV7jCzlPPJE3h232e/RwH
-         xf9kgNBNzgISQ0IGRdxbu9cm9GBPPOwSPLLffyq638cB2IVuM80j2YQSDhffWbCTgWXT
-         6JGj++0QYtaqHB2YY96uH3K5/wQre5RReORFx0ro4nfQ+QlwLbOPE640AiVtZ26+0nRL
-         ylpgUQEfHHQuSGrJpwpZF20vjMgto6PA4KH6bX4I5yvnm7aaWqeuYfcrHR/Ol0tujZP+
-         y2eA==
-X-Gm-Message-State: AOAM530Koi5yJBKRa4RPTviDDu3OZtzToQ7eIiejWY18iUuEG2mktZJ4
-        ahhBUguKNpDfqU57Kaluunk=
-X-Google-Smtp-Source: ABdhPJwrdWT6y2CL2LWAPgdgslvxxxcX+HXve/twLqm1KvVhxEovjWNPGDhPf/+ZcjY/tapJBcnulg==
-X-Received: by 2002:a05:6512:20d:: with SMTP id a13mr2649191lfo.36.1591278637579;
-        Thu, 04 Jun 2020 06:50:37 -0700 (PDT)
-Received: from localhost.localdomain ([185.248.161.177])
-        by smtp.gmail.com with ESMTPSA id u16sm1202140lji.58.2020.06.04.06.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 06:50:36 -0700 (PDT)
-From:   Alexander Popov <alex.popov@linux.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org
-Cc:     notify@kernel.org
-Subject: [PATCH 0/5] Improvements of the stackleak gcc plugin
-Date:   Thu,  4 Jun 2020 16:49:52 +0300
-Message-Id: <20200604134957.505389-1-alex.popov@linux.com>
-X-Mailer: git-send-email 2.25.2
+        Thu, 4 Jun 2020 09:50:47 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 613EF1C0BD2; Thu,  4 Jun 2020 15:50:45 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 15:50:45 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     jacek.anaszewski@gmail.com, matthias.bgg@gmail.com, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+Subject: Re: [PATCH] leds: mt6360: Add LED driver for MT6360
+Message-ID: <20200604135045.GH7222@duo.ucw.cz>
+References: <1591252004-12681-1-git-send-email-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gTtJ75FAzB1T2CN6"
+Content-Disposition: inline
+In-Reply-To: <1591252004-12681-1-git-send-email-gene.chen.richtek@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In this patch series I collected various improvements of the stackleak
-gcc plugin.
 
-The first patch excludes alloca() from the stackleak instrumentation logic
-to make it simpler.
+--gTtJ75FAzB1T2CN6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The second patch is the main improvement. It eliminates an unwanted
-side-effect of kernel code instrumentation. This patch is a deep
-reengineering of the idea described on grsecurity blog:
-  https://grsecurity.net/resolving_an_unfortunate_stackleak_interaction
+Hi!
 
-The third patch adds 'verbose' plugin parameter for printing additional
-info about the kernel code instrumentation.
+> +
+> +#define MT6360_LED_DESC(_id)  {						\
+> +	.cdev =3D {							\
+> +		.name =3D "mt6360_isink" #_id,				\
+> +		.max_brightness =3D MT6360_SINKCUR_MAX##_id,		\
+> +		.brightness_set_blocking =3D mt6360_led_brightness_set,	\
+> +		.brightness_get =3D mt6360_led_brightness_get,		\
+> +		.blink_set =3D mt6360_led_blink_set,			\
+> +	},								\
+> +	.index =3D MT6360_LED_ISINK##_id,					\
+> +	.currsel_reg =3D MT6360_CURRSEL_REG##_id,				\
+> +	.currsel_mask =3D MT6360_CURRSEL_MASK##_id,			\
+> +	.enable_mask =3D MT6360_LEDEN_MASK##_id,				\
+> +	.mode_reg =3D MT6360_LEDMODE_REG##_id,				\
+> +	.mode_mask =3D MT6360_LEDMODE_MASK##_id,				\
+> +	.pwmduty_reg =3D MT6360_PWMDUTY_REG##_id,				\
+> +	.pwmduty_mask =3D MT6360_PWMDUTY_MASK##_id,			\
+> +	.pwmfreq_reg =3D MT6360_PWMFREQ_REG##_id,				\
+> +	.pwmfreq_mask =3D MT6360_PWMFREQ_MASK##_id,			\
+> +	.breath_regbase =3D MT6360_BREATH_REGBASE##_id,			\
+> +}
+> +
+> +/* ISINK 1/2/3 for RGBLED, ISINK4 for MoonLight */
+> +static const struct mt6360_led_classdev def_led_classdev[MT6360_LED_MAX]=
+ =3D {
+> +	MT6360_LED_DESC(1),
+> +	MT6360_LED_DESC(2),
+> +	MT6360_LED_DESC(3),
+> +	MT6360_LED_DESC(4),
+> +};
 
-Two other patches disable unneeded stackleak instrumentation for some
-files.
+While this is pretty interesting abuse of the macros, please get rid
+of it. I'm sure code will look better as a result.
 
-I would like to thank Alexander Monakov <amonakov@ispras.ru> for his
-advisory on gcc internals.
+> +static int mt6360_fled_strobe_set(
+> +			       struct led_classdev_flash *fled_cdev, bool state)
+> +{
+> +	struct led_classdev *led_cdev =3D &fled_cdev->led_cdev;
+> +	struct mt6360_led_data *mld =3D dev_get_drvdata(led_cdev->dev->parent);
+> +	struct mt6360_fled_classdev *mtfled_cdev =3D (void *)fled_cdev;
+> +	int id =3D mtfled_cdev->index, ret;
+> +
+> +	if (!(state ^ test_bit(id, &mld->fl_strobe_flags)))
+> +		return 0;
 
-This patch series was tested for gcc version 4.8, 5, 6, 7, 8, 9, and 10
-on x86_64, i386 and arm64.
-That was done using the project 'kernel-build-containers':
-  https://github.com/a13xp0p0v/kernel-build-containers
+Yup, and you can abuse xor operator too. Don't do that. I believe you
+wanted to say:
+
++	if (state =3D=3D test_bit(id, &mld->fl_strobe_flags))
++		return 0;
 
 
-Alexander Popov (5):
-  gcc-plugins/stackleak: Exclude alloca() from the instrumentation logic
-  gcc-plugins/stackleak: Use asm instrumentation to avoid useless
-    register saving
-  gcc-plugins/stackleak: Add 'verbose' plugin parameter
-  gcc-plugins/stackleak: Don't instrument itself
-  gcc-plugins/stackleak: Don't instrument vgettimeofday.c in arm64 VDSO
+> +	if (mt6360_fled_check_flags_if_any(&mld->fl_torch_flags)) {
+> +		dev_err(led_cdev->dev,
+> +			"Disable all leds torch [%lu]\n", mld->fl_torch_flags);
+> +		return -EINVAL;
+> +	}
+> +	ret =3D regmap_update_bits(mld->regmap, mtfled_cdev->cs_enable_reg,
+> +				 mtfled_cdev->cs_enable_mask, state ? 0xff : 0);
+> +	if (ret < 0) {
+> +		dev_err(led_cdev->dev, "Fail to set cs enable [%d]\n", state);
+> +		goto out_strobe_set;
+> +	}
 
- arch/arm64/kernel/vdso/Makefile        |   3 +-
- include/linux/compiler_attributes.h    |  13 ++
- kernel/Makefile                        |   1 +
- kernel/stackleak.c                     |  16 +-
- scripts/Makefile.gcc-plugins           |   2 +
- scripts/gcc-plugins/stackleak_plugin.c | 260 ++++++++++++++++++++-----
- 6 files changed, 232 insertions(+), 63 deletions(-)
+Just return ret; no need for goto. (Please fix globally).
 
--- 
-2.25.2
+> +static int mt6360_fled_brightness_set(struct led_classdev *led_cdev,
+> +				      enum led_brightness brightness)
+> +{
+> +	struct led_classdev_flash *lcf =3D lcdev_to_flcdev(led_cdev);
+> +	struct mt6360_led_data *mld =3D dev_get_drvdata(led_cdev->dev->parent);
+> +	struct mt6360_fled_classdev *mtfled_cdev =3D (void *)lcf;
+> +	int id =3D mtfled_cdev->index, shift, keep, ret;
+> +
+> +	if (mt6360_fled_check_flags_if_any(&mld->fl_strobe_flags)) {
+> +		dev_err(led_cdev->dev,
+> +		       "Disable all leds strobe [%lu]\n", mld->fl_strobe_flags);
+> +		return -EINVAL;
+> +	}
+> +	if (brightness =3D=3D LED_OFF) {
+> +		clear_bit(id, &mld->fl_torch_flags);
+> +		keep =3D mt6360_fled_check_flags_if_any(&mld->fl_torch_flags);
+> +		ret =3D regmap_update_bits(mld->regmap,
+> +					 mtfled_cdev->torch_enable_reg,
+> +					 mtfled_cdev->torch_enable_mask,
+> +					 keep ? 0xff : 0);
+> +		if (ret < 0) {
+> +			dev_err(led_cdev->dev, "Fail to set torch disable\n");
+> +			goto out_bright_set;
+> +		}
+> +		ret =3D regmap_update_bits(mld->regmap,
+> +					 mtfled_cdev->cs_enable_reg,
+> +					 mtfled_cdev->cs_enable_mask, 0);
+> +		if (ret < 0)
+> +			dev_err(led_cdev->dev, "Fail to set torch disable\n");
+> +		goto out_bright_set;
+> +	}
 
+Should turning off the led go to separate function?
+
+
+
+> +#define MT6360_FLED_DESC(_id)  {					\
+> +	.fl_cdev =3D {							\
+> +	 .led_cdev =3D {							\
+> +		.name =3D "mt6360_fled_ch" #_id,				\
+> +		.max_brightness =3D MT6360_TORBRIGHT_MAX##_id,		\
+> +		.brightness_set_blocking =3D  mt6360_fled_brightness_set,	\
+> +		.brightness_get =3D mt6360_fled_brightness_get,		\
+> +		.flags =3D LED_DEV_CAP_FLASH,				\
+> +	 },								\
+> +	 .brightness =3D {						\
+> +		.min =3D MT6360_STROBECUR_MIN,				\
+> +		.step =3D MT6360_STROBECUR_STEP,				\
+> +		.max =3D MT6360_STROBECUR_MAX,				\
+> +		.val =3D MT6360_STROBECUR_MIN,				\
+> +	 },								\
+> +	 .timeout =3D {							\
+> +		.min =3D MT6360_STRBTIMEOUT_MIN,				\
+> +		.step =3D MT6360_STRBTIMEOUT_STEP,			\
+> +		.max =3D MT6360_STRBTIMEOUT_MAX,				\
+> +		.val =3D MT6360_STRBTIMEOUT_MIN,				\
+> +	 },								\
+> +	 .ops =3D &mt6360_fled_ops,					\
+> +	},								\
+> +	.index =3D MT6360_FLED_CH##_id,					\
+> +	.cs_enable_reg =3D MT6360_CSENABLE_REG##_id,			\
+> +	.cs_enable_mask =3D MT6360_CSENABLE_MASK##_id,			\
+> +	.torch_bright_reg =3D MT6360_TORBRIGHT_REG##_id,			\
+> +	.torch_bright_mask =3D MT6360_TORBRIGHT_MASK##_id,		\
+> +	.torch_enable_reg =3D MT6360_TORENABLE_REG##_id,			\
+> +	.torch_enable_mask =3D MT6360_TORENABLE_MASK##_id,		\
+> +	.strobe_bright_reg =3D MT6360_STRBRIGHT_REG##_id,			\
+> +	.strobe_bright_mask =3D MT6360_STRBRIGHT_MASK##_id,		\
+> +	.strobe_enable_reg =3D MT6360_STRBENABLE_REG##_id,		\
+> +	.strobe_enable_mask =3D MT6360_STRBENABLE_MASK##_id,		\
+> +}
+> +
+> +static const struct mt6360_fled_classdev def_fled_classdev[MT6360_FLED_M=
+AX] =3D {
+> +	MT6360_FLED_DESC(1),
+> +	MT6360_FLED_DESC(2),
+> +};
+
+Yeah, well, no.
+
+> @@ -236,5 +241,4 @@ struct mt6360_pmu_data {
+>  #define CHIP_VEN_MASK				(0xF0)
+>  #define CHIP_VEN_MT6360				(0x50)
+>  #define CHIP_REV_MASK				(0x0F)
+> -
+>  #endif /* __MT6360_H__ */
+
+This one is unrelated and not really an improvement.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--gTtJ75FAzB1T2CN6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtj8NQAKCRAw5/Bqldv6
+8tGJAKCk/tQlh2dphyQmGz3W4P1KLZfCFgCfW2DcYsCMqf6HOjZrQg7Tw9n6pDg=
+=oa9M
+-----END PGP SIGNATURE-----
+
+--gTtJ75FAzB1T2CN6--
