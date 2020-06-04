@@ -2,159 +2,185 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D69C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF3B5206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246CF206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="I3ELH3x/"
+	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="hO14UI19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgFDFnv (ORCPT
+        id S1726364AbgFDFsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 01:43:51 -0400
-Received: from mout.web.de ([212.227.17.11]:48187 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbgFDFnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 01:43:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591249403;
-        bh=3MkFD5u516RHMXs9tkq7u9K3YawNQbXNaeFLtPqnKtQ=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=I3ELH3x/3D6qSmpDrl6cD8y2KG2tp5tbMj+Qfv9YpzGMIIwVe972QmH57+VgAQkYh
-         bSCsyUCtVOO20dU4qAnDsGWf8YOojtRy7uyVToqZY814GDfKw/j5Yupune1uBzydMm
-         mKUa10L1rXvME15InwNqd8ht3s2Kue7pi/iIvULA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mhnw2-1j307X1kG0-00drys; Thu, 04
- Jun 2020 07:43:23 +0200
-Subject: Re: dmaengine: stm32-mdma: call pm_runtime_put if pm_runtime_get_sync
- fails
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
- <CAMuHMdU3wMT_pnh4NE9W9Su6qip_oObgd6OiRCwfuvouqjXKHA@mail.gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <3eca8df2-22ae-06e0-5809-c11e459915d5@web.de>
-Date:   Thu, 4 Jun 2020 07:43:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 4 Jun 2020 01:48:08 -0400
+Received: from mail-bn8nam11on2102.outbound.protection.outlook.com ([40.107.236.102]:11008
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725959AbgFDFsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 01:48:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=juK1PDugEsbEztneHnUtZgaBThRH2hWcyaOquc2ojkqK+dkG/QajtXSigr1CbffavSYbyfcpuwnZl9iJwT2PvVVXZcXO6cr+8nTg5q1FLGRn2CRRGJMazUrDt80JXcqGwaWSS6CwOA8x1y4W23C0tCjMuwcsUdw5x3X3jmkqKkyVLB16m5YBwYprPk3fjs8XzoHjmEtQRf1GrGIo6jEPKqcaWpvFG89Zs9LgOWqjZFB0oWRWtdxsEKUwIqvCZIFJET4ikIKezJCNuXhWcDNJtFaA3oGawaH851yOfofXFDQvwz9pvOugCq+Av834S2Nm6LNwX95zE/wdeu8JsMwBzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vc+zknLvdPhgXi6ikB0cvs+Wx+AShXJvSY7GeUphE5o=;
+ b=iiSmUD06XpADupUXrUDJM3B2qrVcSreovzoKznopCFvYhE9qPcfQ+mza7rU19j9vP3LJMggrdWtj1oaGYdA17ZIgVIR7/JRnhCWL0UzT5qFJfZZW/z/1oNJ7W3+NCL/pajeo/Kf/PdTk0bEKXuFtPZ303rP5ej08duk0FPkaTe3Xp/4hsku1A2NhcLRpQu7QC5LVIC22wWEFmSEefa1h5AgcYhMfomM26hw1bWjBn+CjyUi81eMsp8hzehnLeU0iwzjyyOXhNXethMPjjYYM3mdcOQb8S8cgURks9Mk1xUggqUv6dk3EGfk6eDC0QjrOl2/Ft6N/fBXi+6XISahSwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
+ header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=maximintegrated.onmicrosoft.com;
+ s=selector2-maximintegrated-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vc+zknLvdPhgXi6ikB0cvs+Wx+AShXJvSY7GeUphE5o=;
+ b=hO14UI19WbPCBQlZ64JzIQWzw4GL4scQEQd4R0JLg46J/6vrNx2TrWNWHfYMY7yjaDK9Wovf2Y0HLRv71KOzCnEDaFqsLVvFHbDq706/AqjtodOO04dJAz5kbhJ7yvzaPmv5Lk6qejWb8cCqO90dSnL1+clHSbCR4nAaXvd6xV0=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none
+ header.from=maximintegrated.com;
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
+ by MWHPR11MB1344.namprd11.prod.outlook.com (2603:10b6:300:23::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 4 Jun
+ 2020 05:48:01 +0000
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363]) by MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::994e:6a48:f660:f363%5]) with mapi id 15.20.3066.018; Thu, 4 Jun 2020
+ 05:48:01 +0000
+From:   Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
+        nuno.sa@analog.com, steves.lee@maximintegrated.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
+        steves.lee.maxim@gmail.com
+Subject: [v2 PATCH] ASoC: max98390: Fix potential crash during param fw loading
+Date:   Thu,  4 Jun 2020 14:47:31 +0900
+Message-Id: <20200604054731.21140-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SL2P216CA0019.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:18::29) To MWHPR11MB2047.namprd11.prod.outlook.com
+ (2603:10b6:300:2a::12)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdU3wMT_pnh4NE9W9Su6qip_oObgd6OiRCwfuvouqjXKHA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KynnLDi6KBJoEMNje4oN1eTT3NNOBiFU90Q69446fFG5stNUo72
- FmPpM60Wdq/d742po5l185fsNTdEDnhKVsx7aalLxglMhzAV90r4HJIuNIXyDynopO8z3cO
- rSQX0gMpluWTpgfluIkxagVEvTHi5/jehR6PUJ27joHQ+P/nnEHIVLBgzdLIdNjGirWpTop
- L+EIi5rZtfUcE6YQgH6lA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qeH4pHbZvq8=:jmti1En2s8gckqqZeTZkwb
- S2shioru5R/hBxKDoGZEIcnMw/SwoBEyEPX059DjUeanDvCc7Fac9WiLMWPBD8AJQUSPGuKCk
- CDDxPa8qm2v90HBzoLF92WP64GNbts+YMlr8bjCcCdh695FEjG1lIiVC3sRvPiWn0+Du931ui
- Fc93bAeZ1RJKoEa+eXUzqCihuCA2Qz5ztiEE33lsfWcp7K+yQqeSxf7VlIlfOkLJTeRuzQwW8
- OStLEkZ9W5WOYscIZs8ETeG4nO9ydJWWU1btmxy4Ec7tZ4VPSAQMg2sFUET7c7ET0TgDZq7xf
- I0eZTkLk5qMx8LBtCHqZpK+1pTBEJQ/rqdhncwjgpdN95tCJMYGg+ShhPZbHtIe2V7c8Suka6
- Dm9jvBe8SPEhv3eI3JLAFf6jdnk5KcWsNzfPGqVKaar+/u9j1Y6JYyQ5bbJNxP6IcUpdWwnZ9
- cTG7tXpX4GjH5ZTGzHbLt4Qv7ZWRxT4y9OEeqiaDBXGLMMU+Q0JUxv+4WaVg1NDHX0zl3MTtn
- RLeV8vsBuIoaqOyowaC0eRaDtK87AbVtNxMl3JUZDzSVRB2CrK44HXXaufPqxYNmBspRqRRIH
- E9PzeatfbiLycom1n9IsyDLiTtDoIB5aX+OmRtwlCoN5HgfVKQL8qYDJ+fVcJI8kmaKRzI+Re
- Bx336G8dL+2iEjO7QoK5OtoEpmP9raxiivSBRUjTlDG7bfjs9G8QcMOWWApTMU8JoXtC2ItFi
- RcdPdFbO8Ire1AXb5qsh9qkouwcYqNv5s0Nz0B/71LCAsOP2vHlo9HYEtrwtNWNmvwhU1jNf8
- vm+Q/EEBUHuNZ8FIZhFM0+fyve7dLAoCyTyWvMgSd3C7LoeEsd28BlF+H+ubwTlzuQ7sv6x1D
- cFUF/gaF/PqL13J78WEXIu/OzIHvEhkXZqCT5gksVHT2c9d+qKgwXXwSt4NQMqj1rPavqqEMG
- yCHyi4RAyQ0ODjosyaRSavc60sRq95c5pmzfrEKKIP6pJ7uMFZsY7dolAPSF2b/M9K9zd2+I7
- UgzRX06sH1ZCiGQBTju0A4P04qVZjnnZyF1R9B/eE45meR+AgcQQb3c94sKFLloRj7MW+ac6Y
- /Q10piqqruZ/1Z7ae91DnKbn7gGsUnqQl+vC1yj2Gh1uvQFeNUXKA9zOYH3xPpA+8EHBi/c/8
- jinOPQC/S4lk4yUyY20RCgt3WNwTDlc+RAwzuBVvezI38NmgmZ1I+iE2zC0969K48rC+WTY04
- 0PvWapH4m8KRnD3AY
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (2001:2d8:e99b:e5ac:d447:7247:839:5c8e) by SL2P216CA0019.KORP216.PROD.OUTLOOK.COM (2603:1096:100:18::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Thu, 4 Jun 2020 05:47:56 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:2d8:e99b:e5ac:d447:7247:839:5c8e]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9abf8731-5286-4192-1e58-08d8084ad7d7
+X-MS-TrafficTypeDiagnostic: MWHPR11MB1344:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR11MB1344D68C87B22DA20BCEAED892890@MWHPR11MB1344.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:663;
+X-Forefront-PRVS: 04244E0DC5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YrujvaBmEEafSvE73lhwaU8xYZJbpFJbaIC/oNQ1lIQamqOUfqNqSXNOzQ4zemelBzqHvXmrwFMFLR0kY6yQOWG6hjXC7YYrPJonwx0gUblNE8ebPoRfvGKYJIopSmctUJBP3C6YdX8JsLvSMVWYf+SricCillwisESMGV0j6LxhuV/bwkB/2X1J/MFhWuavVYf/IFoSV2Jbu4lz6U3c0yMDUyFookKbfdXvvbBMzWKdDvaTiFuW3OYPcljqdDGoZg5pEKLcgTd60VF9i9Hf8P4K6NK9qJB+OCEYL82Gv/NMAoqORSQZxgbqsNIRTw2WRMVy4IhvaPzMrGjrJWf2OuTmvrlmZ9cZ8JuD241LFBy6Lrhb/PA00xK7eIJ5kyMSLhVzSJevMjFtQAHn4R1+Pg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(52116002)(4326008)(7416002)(478600001)(16526019)(2906002)(186003)(69590400007)(6666004)(1076003)(5660300002)(6486002)(86362001)(2616005)(36756003)(316002)(66946007)(6506007)(8936002)(66556008)(6512007)(66476007)(8676002)(83380400001)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: zeQfNQwgKkVvbo1/NO+oWPY7vDCII+7T2U8CiPYe7CvA/3ithh5vRAlnJKUb5/VQE3k88TAwsdwoWWhje8TC+NM2aPYQt9gZ+VgJZELeRIYJmZxUhN2xN6I8M73Lr0+3+8Tzh+TpeKXQmhBCBfvA1cgbh2kJFH4QdcGHqT+TR8A1Yj95YFmlPyQN6skXLavKqOW0nWgZFbKwLmPP0PqiEjOo4IqOQf1zeAufnCQi+yTuOHLSv6wBEfjwYhmS2BP3vEcC5g07/WkvXhWtaf0L361WwkWLkNq6dM7nUPPEOdKQDExpB+N2LZUXeFTxPJCXaxy++dzfLnndW1bwJSrmjvU5lZjwnaGrKDhzmf+Z/OvFu6ly+6pBE7LL2WbDjYk7+oYAVpyhu/WvmBnH1j6OJTFu3Uf/96WVgDB7PT0jZTafne4e8kUSoysxxmKybwB3C3YVY8IRYE05liXHIXjfSgG2ZPUit6UTfs6TP366mWH9bkKMK+nPXABb4GbIBbJaMy6Ox4lH51RvWOjKr1CCe0YbHTXoWztFrq2TNErdU+E=
+X-OriginatorOrg: maximintegrated.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9abf8731-5286-4192-1e58-08d8084ad7d7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2020 05:48:01.7115
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TlOAgVwHNq58OnbmesxImYglRls+j2ejrJMwsP/73dKEiTj4P+8eCkK5a+ijhVcOsc4ch1/3PBn7wykZJHcWqgX9tNbXToon/VoPVC7Gojg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1344
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> Calling pm_runtime_get_sync increments the counter even in case of
->>> failure, causing incorrect ref count. Call pm_runtime_put if
->>> pm_runtime_get_sync fails.
->>
->> Is it appropriate to copy a sentence from the change description
->> into the patch subject?
->>
->> How do you think about a wording variant like the following?
->>
->>    The PM runtime reference counter is generally incremented by a call =
-of
->>    the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D.
->>    Thus call the function =E2=80=9Cpm_runtime_put=E2=80=9D also in two =
-error cases
->>    to keep the reference counting consistent.
->
-> IMHO the important part is "even in case of failure", which you dropped.
-> Missing that point was the root cause of the issue being fixed.
-> Hence I prefer the original description, FWIW.
+ malformed firmware file can cause out-of-bound access and crash
+ during dsm_param bin loading.
+  - add MIN/MAX param size to avoid out-of-bound access.
+  - read start addr and size of param and check bound.
+  - add condition that fw->size > param_size + _PAYLOAD_OFFSET
+    to confirm enough data.
 
-Would you like to comment any more of the presented patch review concerns?
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
 
-Can it make sense to combine any adjustments into a single patch
-according to the discussed software transformation pattern?
-https://lore.kernel.org/patchwork/project/lkml/list/?submitter=3D26544&sta=
-te=3D*&q=3Dengine%3A+stm32&archive=3Dboth
+Change log v2:
+	* add condtion that param_size + _PAYLOAD_OFFSET is less than fw->size
+	  to confirm enough data
+	* remove unintended code
 
-Regards,
-Markus
+ sound/soc/codecs/max98390.c | 24 ++++++++++++++++++++----
+ sound/soc/codecs/max98390.h |  3 ++-
+ 2 files changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
+index be7cd0aeb6a6..0d63ebfbff2f 100644
+--- a/sound/soc/codecs/max98390.c
++++ b/sound/soc/codecs/max98390.c
+@@ -754,6 +754,7 @@ static struct snd_soc_dai_driver max98390_dai[] = {
+ static int max98390_dsm_init(struct snd_soc_component *component)
+ {
+ 	int ret;
++	int param_size, param_start_addr;
+ 	char filename[128];
+ 	const char *vendor, *product;
+ 	struct max98390_priv *max98390 =
+@@ -780,14 +781,29 @@ static int max98390_dsm_init(struct snd_soc_component *component)
+ 	dev_dbg(component->dev,
+ 		"max98390: param fw size %zd\n",
+ 		fw->size);
++	if (fw->size < MAX98390_DSM_PARAM_MIN_SIZE) {
++		dev_err(component->dev,
++			"param fw is invalid.\n");
++		goto err_alloc;
++	}
+ 	dsm_param = (char *)fw->data;
++	param_start_addr = (dsm_param[0] & 0xff) | (dsm_param[1] & 0xff) << 8;
++	param_size = (dsm_param[2] & 0xff) | (dsm_param[3] & 0xff) << 8;
++	if (param_size > MAX98390_DSM_PARAM_MAX_SIZE ||
++		param_start_addr < DSM_STBASS_HPF_B0_BYTE0 ||
++		fw->size < param_size + MAX98390_DSM_PAYLOAD_OFFSET) {
++		dev_err(component->dev,
++			"param fw is invalid.\n");
++		goto err_alloc;
++	}
++	regmap_write(max98390->regmap, MAX98390_R203A_AMP_EN, 0x80);
+ 	dsm_param += MAX98390_DSM_PAYLOAD_OFFSET;
+-	regmap_bulk_write(max98390->regmap, DSM_EQ_BQ1_B0_BYTE0,
+-		dsm_param,
+-		fw->size - MAX98390_DSM_PAYLOAD_OFFSET);
+-	release_firmware(fw);
++	regmap_bulk_write(max98390->regmap, param_start_addr,
++		dsm_param, param_size);
+ 	regmap_write(max98390->regmap, MAX98390_R23E1_DSP_GLOBAL_EN, 0x01);
+ 
++err_alloc:
++	release_firmware(fw);
+ err:
+ 	return ret;
+ }
+diff --git a/sound/soc/codecs/max98390.h b/sound/soc/codecs/max98390.h
+index f59cb114d957..5f444e7779b0 100644
+--- a/sound/soc/codecs/max98390.h
++++ b/sound/soc/codecs/max98390.h
+@@ -650,7 +650,8 @@
+ 
+ /* DSM register offset */
+ #define MAX98390_DSM_PAYLOAD_OFFSET 16
+-#define MAX98390_DSM_PAYLOAD_OFFSET_2 495
++#define MAX98390_DSM_PARAM_MAX_SIZE 770
++#define MAX98390_DSM_PARAM_MIN_SIZE 670
+ 
+ struct max98390_priv {
+ 	struct regmap *regmap;
+-- 
+2.17.1
+
