@@ -2,141 +2,108 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514D9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F070C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBC22075B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FAB2075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:36:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ETG3c85b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbgFDTfy (ORCPT
+        id S1729532AbgFDTgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:35:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23274 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728420AbgFDTfy (ORCPT
+        Thu, 4 Jun 2020 15:36:36 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37402 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbgFDTgg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:35:54 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054JZcWQ180917;
-        Thu, 4 Jun 2020 15:35:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31c542sjs7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 15:35:46 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 054JZcEd181711;
-        Thu, 4 Jun 2020 15:35:38 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31c542sjj2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 15:35:38 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054JWcf1012568;
-        Thu, 4 Jun 2020 19:35:24 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 31bf482mxp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 19:35:24 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054JZMnY54395258
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jun 2020 19:35:22 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF48811C052;
-        Thu,  4 Jun 2020 19:35:21 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E915C11C04A;
-        Thu,  4 Jun 2020 19:35:20 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.133.34])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jun 2020 19:35:20 +0000 (GMT)
-Message-ID: <1591299320.5146.53.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/2] ima: Call ima_calc_boot_aggregate() in
- ima_eventdigest_init()
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Bruno Meneguele <bmeneg@redhat.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, tiwai@suse.de,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Thu, 04 Jun 2020 15:35:20 -0400
-In-Reply-To: <20200604191207.GR2970@glitch>
-References: <20200603150821.8607-1-roberto.sassu@huawei.com>
-         <20200603150821.8607-2-roberto.sassu@huawei.com>
-         <1591221815.5146.31.camel@linux.ibm.com> <20200604191207.GR2970@glitch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-04_12:2020-06-04,2020-06-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- mlxlogscore=999 cotscore=-2147483648 mlxscore=0 adultscore=0 spamscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006040132
+        Thu, 4 Jun 2020 15:36:36 -0400
+Received: from jorhand-sb2.corp.microsoft.com (unknown [76.104.235.235])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4919820B7185;
+        Thu,  4 Jun 2020 12:36:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4919820B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1591299395;
+        bh=Wj3IFzpGg4vQIux2KK5gfmytqMUrK5JDeB2oZyK7nZ0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ETG3c85b67XW691yPa3rhCXvFbCy28ekwVUI/3jsxQXpMF+RNf2bQlWPcPS7PflRy
+         umsrgGkv6fO7SIpnQxXH+MFZLOmsh2WU6cIlJoq8XbRi7CsRcWGk6DsKBWGAlHI9rP
+         xNU1On31vVlDKuYro63toACMcMZKqnP9a1S2mXWI=
+From:   jorhand@linux.microsoft.com
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        Jordan Hand <jorhand@linux.microsoft.com>
+Subject: [PATCH] software node: recursively unregister child swnodes
+Date:   Thu,  4 Jun 2020 12:36:23 -0700
+Message-Id: <20200604193623.16946-1-jorhand@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-04 at 16:12 -0300, Bruno Meneguele wrote:
-> On Wed, Jun 03, 2020 at 06:03:35PM -0400, Mimi Zohar wrote:
-> > Hi Roberto,
-> > 
-> > On Wed, 2020-06-03 at 17:08 +0200, Roberto Sassu wrote:
-> > > If the template field 'd' is chosen and the digest to be added to the
-> > > measurement entry was not calculated with SHA1 or MD5, it is
-> > > recalculated with SHA1, by using the passed file descriptor. However, this
-> > > cannot be done for boot_aggregate, because there is no file descriptor.
-> > > 
-> > > This patch adds a call to ima_calc_boot_aggregate() in
-> > > ima_eventdigest_init(), so that the digest can be recalculated also for the
-> > > boot_aggregate entry.
-> > > 
-> > > Cc: stable@vger.kernel.org # 3.13.x
-> > > Fixes: 3ce1217d6cd5d ("ima: define template fields library and new helpers")
-> > > Reported-by: Takashi Iwai <tiwai@suse.de>
-> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > Thanks, Roberto.
-> > 
-> > I've pushed both patches out to the next-integrity branch and would
-> > appreciate some additional testing.
-> > 
-> > thanks,
-> > 
-> > Mimi
-> > 
-> 
-> Hi Mimi and Roberto,
-> 
-> FWIW, I've tested this patch manually and things went fine, with no
-> unexpected behavior or results. 
+From: Jordan Hand <jorhand@linux.microsoft.com>
 
-Thanks, Bruno!
+If a child swnode is unregistered after it's parent, it can lead to
+undefined behavior.
 
-> However, wouldn't it be worth add a note in kmsg about the
-> ima_calc_boot_aggregate() being called with an algo different from the
-> system's default? Just to let the user know he won't find a sha256 when
-> check the measurement. But that's something we can add later too.
+When a swnode is unregistered, recursively free it's children to avoid
+this condition.
 
-There's no guarantees that the IMA default crypto algorithm will be
-used for calculating the boot_aggregate.  The algorithm is dependent
-on the TPM.  For example, the default IMA algorithm could be sha256,
-but on a system with TPM 1.2, the boot_aggregate would have to be
-sha1.
+Signed-off-by: Jordan Hand <jorhand@linux.microsoft.com>
+---
+ drivers/base/swnode.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-This patch addresses a mismatch between the template format field ('d'
-field) and the larger digest.  We could require the "ima_template_fmt"
-specified on the boot command line define an appropriate format, but
-Roberto decided to support the situation where both "d" and "d-ng" are
-defined.
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index e5eb27375416..e63093b1542b 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -619,6 +619,8 @@ static void software_node_release(struct kobject *kobj)
+ 		property_entries_free(swnode->node->properties);
+ 		kfree(swnode->node);
+ 	}
++
++	list_del(&kobj->entry);
+ 	ida_destroy(&swnode->child_ids);
+ 	kfree(swnode);
+ }
+@@ -712,11 +714,6 @@ EXPORT_SYMBOL_GPL(software_node_register_nodes);
+  * @nodes: Zero terminated array of software nodes to be unregistered
+  *
+  * Unregister multiple software nodes at once.
+- *
+- * NOTE: Be careful using this call if the nodes had parent pointers set up in
+- * them before registering.  If so, it is wiser to remove the nodes
+- * individually, in the correct order (child before parent) instead of relying
+- * on the sequential order of the list of nodes in the array.
+  */
+ void software_node_unregister_nodes(const struct software_node *nodes)
+ {
+@@ -839,10 +836,16 @@ EXPORT_SYMBOL_GPL(fwnode_create_software_node);
+ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
+ {
+ 	struct swnode *swnode = to_swnode(fwnode);
++	struct swnode *child = NULL;
+ 
+ 	if (!swnode)
+ 		return;
+ 
++	while (!list_empty(&swnode->children)) {
++		child = list_first_entry_or_null(&swnode->children, struct swnode, entry);
++		fwnode_remove_software_node(&child->fwnode);
++	}
++
+ 	kobject_put(&swnode->kobj);
+ }
+ EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
+-- 
+2.17.1
 
-Mimi
