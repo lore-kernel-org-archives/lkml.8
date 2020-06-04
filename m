@@ -2,117 +2,146 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5286BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA1B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527C52072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ib7Wc1Gn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ub4mWTHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbgFDQkV (ORCPT
+        id S1729883AbgFDQmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45528 "EHLO
+        Thu, 4 Jun 2020 12:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729657AbgFDQkT (ORCPT
+        with ESMTP id S1729115AbgFDQmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:40:19 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D251C08C5C0;
-        Thu,  4 Jun 2020 09:40:19 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 5so1420863pjd.0;
-        Thu, 04 Jun 2020 09:40:19 -0700 (PDT)
+        Thu, 4 Jun 2020 12:42:13 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B57EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 09:42:13 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id f187so8655866ybc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:42:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A3i1Y/uWZjvOKPJmr6UpXk+ssrbNL04u8CPNIJtcrUM=;
-        b=Ib7Wc1GnX3qN2AImWV6NMbcrCTmw3Q2G02/8t7+ZAdbp5pnq9zar82fav50SR9V44Z
-         bHjAdfvge/2orXyJV5wgsojwuGWWeM8BgfXjl8HSXxmLvi+1qEokqYWq7UmS1fhwRdLr
-         elmkEava9W0hOtXbWzHrlRGI17+TdRAKuAL94+RbdHYU3oQBIM8UkNzUBmPd6WOV1QpC
-         OxLxBZeLEdsfu+h1pDPd9m26bbqadt8vw+l3N2zfGSLoVqLR0QfzZ/inWMB6FTkxcD33
-         WalkNDwcneAwdvMp+8b6LeV/4ICyRepKs/T5hOcVuQFGKLaH3ok60zkF8ci34OXkMZYT
-         1B/A==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=pofY5UnHBtE2yEYmKDPS6cR9bq/E80+ZeaPnrnMNK98=;
+        b=ub4mWTHgAmvJMZjGWw+3krHG/dMMay/tEALCX2G/rPbqjl75Y1uFKqie5t1rgrrhON
+         mSo60E/ut95d77LLkZkje/FzRws70wUBRcAvqqI6aATgZOEQANEMIjEbyhsrSIwC/se1
+         +gGkOGCIm1IyRrH4kWj4cbjTNvz6C+D4ft584XFWfpJ7iRrH7vNHTY3oULr4Z6pRVU6G
+         BavBT5hfTMSMPCNrPtuEOHmz9ygqHX4Urzmv6tacLepDNsToQeLuvQr0aZV2GY+d7uvc
+         FqYz0BricpkB/+MN9552QQhFDDWbsbpx/QxKWrc7keuS8FBrMpqkSeSwwHcn2IhJ2wAB
+         UILw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=A3i1Y/uWZjvOKPJmr6UpXk+ssrbNL04u8CPNIJtcrUM=;
-        b=bGWV9GVGhYXXtpHeaGORX5GFm4vdiX4VQ/ynERJhX6t43q2J4ezNlZEIplpxqJSjhm
-         MeCynOvWNeJFHhlJP4u7/VlVtzRYqVDREXA/SmlYWv30Z4ZhbIu55FL/VjX4PoKxUhac
-         7svMPQD2yMYWrWiatv4Bd1FwZiMD6h7RWLq4zw8vHAYxdGa0y2MSzK/KWaxlXKuG616K
-         +Qb5impTU7Ag5pMVXeaCagzmyR7CAkd4RHqyano+4CRWu0peoi5Ub8+l+BGQ7QvDweBX
-         I2LhLYNa+xkixinB12fJHFnqYNenl8v2kNKMqLzpZW1HW6nO01qlzRiB7Nefqp28JdP9
-         GdGQ==
-X-Gm-Message-State: AOAM533yiivvByCAZnAUMswxsodNH4Tfngu+1spVOO+uXDy0GqwRZ3+1
-        4RnLBWY0IVS6CoMRi8rLios=
-X-Google-Smtp-Source: ABdhPJwHCqIPELRZMH+m8w5zHxSff7d/Jnxr6zWedksxAa4bE5qv/P/51TM6EZ2sLGPMS2V0vMUnJA==
-X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr7093309pjb.4.1591288818763;
-        Thu, 04 Jun 2020 09:40:18 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id j8sm5807508pjw.11.2020.06.04.09.40.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 09:40:16 -0700 (PDT)
-Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
- strings
-To:     Lukas Wunner <lukas@wunner.de>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-3-f.fainelli@gmail.com>
- <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <15c3995e-87de-0f2b-3424-5dd698b181d3@gmail.com>
-Date:   Thu, 4 Jun 2020 09:40:12 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=pofY5UnHBtE2yEYmKDPS6cR9bq/E80+ZeaPnrnMNK98=;
+        b=jNkDN7oAxMaBI8Gq4xoNAM0w9kZVbjTjtyLX0K0oQSRPodaLpDKf32Wy6PRjCbV5QW
+         zZqsu5KHkqAdSQn/h2a+wTQ2wGVGHnOoL6GprBQzavyQwim0zm4MNTVZSzxqDI7wyg0b
+         xQHXva95fe2futZggOBim/Jjy53/i1VCW2Vm6oZs2aTSTMjmx0xNVW4eSsaMHcTEpHN8
+         7N2ZF862v8XTgmR+OU3OQLOloALlfWe4ckJVfNIckU2A61bUh3b3m0fOosDuLvxRZbfA
+         sviZhfK7AL0OR53axMB/u4Uz/vuhKM9ikyhXnosJ85B5ozroutt82IyBOSRFcS+4mXsu
+         ATwg==
+X-Gm-Message-State: AOAM532gGESV17o3QKlIMxrLEewKOGwNL5sytSkVLo9PAftyG+caEEGJ
+        BxCCRhClUFSCgCg3SX+GYrt2Ak38cXVcD77cGz5HHturxaPoXV+rZ7Lw1G5h35qmrCawVuZOfAm
+        jR0nVI/tBejd00GL/czCV8sY+rwlL1cw9lavtlfMklPVUWGXRmt9fyXANooph9CZTHD06+2g6Q+
+        w=
+X-Google-Smtp-Source: ABdhPJzuB/YAm+byvdwGw2WfFvD+78kMp/xSR/rtbn2s7vqMXsI0/43mdS+H2sOvX7lbvdCDP2L90nRRZYLC1A==
+X-Received: by 2002:a25:5804:: with SMTP id m4mr9094629ybb.488.1591288932392;
+ Thu, 04 Jun 2020 09:42:12 -0700 (PDT)
+Date:   Thu,  4 Jun 2020 18:41:45 +0200
+Message-Id: <20200604164145.173925-1-maennich@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
+Subject: [PATCH] scripts: add dummy report mode to add_namespace.cocci
+From:   Matthias Maennich <maennich@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, maennich@google.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
+        cocci@systeme.lip6.fr, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When running `make coccicheck` in report mode using the
+add_namespace.cocci file, it will fail for files that contain
+MODULE_LICENSE. Those match the replacement precondition, but spatch
+errors out as virtual.ns is not set.
 
+In order to fix that, add the virtual rule nsdeps and only do search and
+replace if that rule has been explicitly requested.
 
-On 6/3/2020 9:20 PM, Lukas Wunner wrote:
-> On Wed, Jun 03, 2020 at 08:46:54PM -0700, Florian Fainelli wrote:
->> The BCM2711 SoC features 5 SPI controllers which all share the same
->> interrupt line, the SPI driver needs to support interrupt sharing,
->> therefore use the chip specific compatible string to help with that.
-> 
-> You're saying above that the 5 controllers all share the interrupt
-> but below you're only changing the compatible string of 4 controllers.
-> 
-> So I assume spi0 still has its own interrupt and only the additional
-> 4 controllers present on the BCM2711/BCM7211 share their interrupt?
+In order to make spatch happy in report mode, we also need a dummy rule,
+as otherwise it errors out with "No rules apply". Using a script:python
+rule appears unrelated and odd, but this is the shortest I could come up
+with.
 
-Correct, there are 5 instances, but only the 4 that were added for 2711
-actually share the interrupt line, I will correct that in the next patch
-version.
+Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
+`make nsdeps`.
+
+Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: jeyu@kernel.org
+Cc: cocci@systeme.lip6.fr
+Cc: stable@vger.kernel.org
+Signed-off-by: Matthias Maennich <maennich@google.com>
+---
+ scripts/coccinelle/misc/add_namespace.cocci | 8 +++++++-
+ scripts/nsdeps                              | 2 +-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
+index 99e93a6c2e24..cbf1614163cb 100644
+--- a/scripts/coccinelle/misc/add_namespace.cocci
++++ b/scripts/coccinelle/misc/add_namespace.cocci
+@@ -6,6 +6,7 @@
+ /// add a missing namespace tag to a module source file.
+ ///
+ 
++virtual nsdeps
+ virtual report
+ 
+ @has_ns_import@
+@@ -16,10 +17,15 @@ MODULE_IMPORT_NS(ns);
+ 
+ // Add missing imports, but only adjacent to a MODULE_LICENSE statement.
+ // That ensures we are adding it only to the main module source file.
+-@do_import depends on !has_ns_import@
++@do_import depends on !has_ns_import && nsdeps@
+ declarer name MODULE_LICENSE;
+ expression license;
+ identifier virtual.ns;
+ @@
+ MODULE_LICENSE(license);
+ + MODULE_IMPORT_NS(ns);
++
++// Dummy rule for report mode that would otherwise be empty and make spatch
++// fail ("No rules apply.")
++@script:python depends on report@
++@@
+diff --git a/scripts/nsdeps b/scripts/nsdeps
+index 03a8e7cbe6c7..dab4c1a0e27d 100644
+--- a/scripts/nsdeps
++++ b/scripts/nsdeps
+@@ -29,7 +29,7 @@ fi
+ 
+ generate_deps_for_ns() {
+ 	$SPATCH --very-quiet --in-place --sp-file \
+-		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
++		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D nsdeps -D ns=$1 $2
+ }
+ 
+ generate_deps() {
 -- 
-Florian
+2.27.0.rc2.251.g90737beb825-goog
+
