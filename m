@@ -2,109 +2,221 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2711C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58897C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932452087D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591289314;
-	bh=1tvXkKNxw2IZ812QyeEYAT+Bv1CjvnZY+yuGta1P37s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WZxzyStPNM0X2V+BmhIOnqmXoiOUQ2AFAY1G7GLLwbWFw6dn8GaFBvkTuFdMroFdg
-	 wffN6/7TNZDCNYHinV81/+zCq6xQK5CRwHZxOWUlhPfKTqy+LqzoSj2J/brLXkW1h3
-	 ujItagXGA7yIlAIajlZVyit39x/FlIgURTphpMak=
+	by mail.kernel.org (Postfix) with ESMTP id 2545F2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kKv/L7vB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgFDQsd (ORCPT
+        id S1729962AbgFDQtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbgFDQsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:48:32 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4D820738;
-        Thu,  4 Jun 2020 16:48:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591289312;
-        bh=1tvXkKNxw2IZ812QyeEYAT+Bv1CjvnZY+yuGta1P37s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zUHDWalXh8BlYCBZXK69+PCY4h+MaDXE97U23oyjhD9FX6R2AmkK4UD4xXgpuel1i
-         zZhC2owU17wv9cpNz545bWkwqd0qLB1md6urDAs/3DzpshMAwO9053xWewynWaAIed
-         BbNcM2yenFgubVooLYNB9EILAa+k7ZiY20P/DOck=
-Date:   Thu, 4 Jun 2020 09:48:29 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay
- configuration
-Message-ID: <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
-References: <20200604111410.17918-1-dmurphy@ti.com>
-        <20200604111410.17918-5-dmurphy@ti.com>
-        <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
+        Thu, 4 Jun 2020 12:49:20 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16418 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729115AbgFDQtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:49:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed925b70001>; Thu, 04 Jun 2020 09:47:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 04 Jun 2020 09:49:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 04 Jun 2020 09:49:19 -0700
+Received: from [10.2.160.11] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Jun
+ 2020 16:49:14 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        <linux-mm@kvack.org>, <hughd@google.com>,
+        <daniel.m.jordan@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] mm/vmstat: Add events for THP migration without split
+Date:   Thu, 4 Jun 2020 12:49:11 -0400
+X-Mailer: MailMate (1.13.1r5690)
+Message-ID: <2735DD7E-0DBF-428B-AAD8-FC6DAAA9CB1E@nvidia.com>
+In-Reply-To: <20200604163657.GV19604@bombadil.infradead.org>
+References: <1591243245-23052-1-git-send-email-anshuman.khandual@arm.com>
+ <20200604113421.GU19604@bombadil.infradead.org>
+ <CBF71911-6BB7-4AA7-AC0F-95AADBB45569@nvidia.com>
+ <20200604163657.GV19604@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_A4ED6843-C123-4162-A906-90C702BB03B0_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591289271; bh=9jxqYKYmUi9T0lPIKiYfQvc0KSyKz1JyLr8UsgVX//U=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=kKv/L7vBPBk/l0nuxQ5lowYaWiWMkd5IZAdWsHsnLGwjCX8nhvkvd/e6jMBgGYx9a
+         X/KL22UIparl4xy1Fn2WKXAIX7si0cH8oomJGB41zCHir5soIDK9SLqyno5+kntpZ7
+         DIF1YZHKPyBEkOMWXPb66+ylN1YVnrNA6ZZboiFcRPMUAGL1yD1Mz1d2wS+Jz1R8oI
+         cBY9u3XtYoGDEmlFyr7372w4u6GbEBF/oXtQZldBfZZeWXjX/+4K5ADBRNFqVtRXk8
+         jZDh4nVnLGLCUGrYr6epvArrR/534qDIijE3FdUrBhZP18r2tGekEwIyElYpcA6Ifp
+         aLPolhPycoppQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 11:38:14 -0500 Dan Murphy wrote:
-> Jakub
->=20
-> On 6/4/20 11:25 AM, Jakub Kicinski wrote:
-> > On Thu, 4 Jun 2020 06:14:10 -0500 Dan Murphy wrote: =20
-> >> Add RGMII internal delay configuration for Rx and Tx.
-> >>
-> >> Signed-off-by: Dan Murphy <dmurphy@ti.com> =20
-> > Hi Dan, please make sure W=3D1 C=3D1 build is clean:
-> >
-> > drivers/net/phy/dp83869.c:103:18: warning: =C3=A2=E2=82=AC=CB=9Cdp83869=
-_internal_delay=C3=A2=E2=82=AC=E2=84=A2 defined but not used [-Wunused-cons=
-t-variable=3D]
-> >    103 | static const int dp83869_internal_delay[] =3D {250, 500, 750, =
-1000, 1250, 1500,
-> >        |                  ^~~~~~~~~~~~~~~~~~~~~~ =20
->=20
-> I built with W=3D1 and C=3D1 and did not see this warning.
->=20
-> What defconfig are you using?
+--=_MailMate_A4ED6843-C123-4162-A906-90C702BB03B0_=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-allmodconfig with gcc-10
+On 4 Jun 2020, at 12:36, Matthew Wilcox wrote:
 
-> Can you check if CONFIG_OF_MDIO is set or not?=C2=A0 That would be the on=
-ly=20
-> way that warning would come up.
+> On Thu, Jun 04, 2020 at 09:51:10AM -0400, Zi Yan wrote:
+>> On 4 Jun 2020, at 7:34, Matthew Wilcox wrote:
+>>> On Thu, Jun 04, 2020 at 09:30:45AM +0530, Anshuman Khandual wrote:
+>>>> +Quantifying Migration
+>>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>> +Following events can be used to quantify page migration.
+>>>> +
+>>>> +- PGMIGRATE_SUCCESS
+>>>> +- PGMIGRATE_FAIL
+>>>> +- THP_MIGRATION_SUCCESS
+>>>> +- THP_MIGRATION_FAILURE
+>>>> +
+>>>> +THP_MIGRATION_FAILURE in particular represents an event when a THP =
+could not be
+>>>> +migrated as a single entity following an allocation failure and end=
+ed up getting
+>>>> +split into constituent normal pages before being retried. This even=
+t, along with
+>>>> +PGMIGRATE_SUCCESS and PGMIGRATE_FAIL will help in quantifying and a=
+nalyzing THP
+>>>> +migration events including both success and failure cases.
+>>>
+>>> First, I'd suggest running this paragraph through 'fmt'.  That way yo=
+u
+>>> don't have to care about line lengths.
+>>>
+>>> Second, this paragraph doesn't really explain what I need to know to
+>>> understand the meaning of these numbers.  When Linux attempts to migr=
+ate
+>>> a THP, one of three things can happen:
+>>>
+>>>  - It is migrated as a single THP
+>>>  - It is migrated, but had to be split
+>>>  - Migration fails
+>>>
+>>> How do I turn these four numbers into an understanding of how often e=
+ach
+>>> of those three situations happen?  And why do we need four numbers to=
 
-Hm. I don't have the config from this particular build but just running
-allmodconfig makes it CONFIG_OF_MDIO=3Dm
+>>> report three situations?
+>>>
+>>> Or is there something else that can happen?  If so, I'd like that exp=
+lained
+>>> here too ;-)
+>>
+>> PGMIGRATE_SUCCESS and PGMIGRATE_FAIL record a combination of different=
+ events,
+>> so it is not easy to interpret them. Let me try to explain them.
+>
+> Thanks!  Very helpful explanation.
+>
+>> 1. migrating only base pages: PGMIGRATE_SUCCESS and PGMIGRATE_FAIL jus=
+t mean
+>> these base pages are migrated and fail to migrate respectively.
+>> THP_MIGRATION_SUCCESS and THP_MIGRATION_FAILURE should be 0 in this ca=
+se.
+>> Simple.
+>>
+>> 2. migrating only THPs:
+>> 	- PGMIGRATE_SUCCESS means THPs that are migrated and base pages
+>> 	(from the split of THPs) that are migrated,
+>>
+>> 	- PGMIGRATE_FAIL means THPs that fail to migrate and base pages that =
+fail to migrated.
+>>
+>> 	- THP_MIGRATION_SUCCESS means THPs that are migrated.
+>>
+>> 	- THP_MIGRATION_FAILURE means THPs that are split.
+>>
+>> So PGMIGRATE_SUCCESS - THP_MIGRATION_SUCCESS means the number of migra=
+ted base pages,
+>> which are from the split of THPs.
+>
+> Are you sure about that?  If I split a THP and each of those subpages
+> migrates, won't I then see PGMIGRATE_SUCCESS increase by 512?
 
-> > Also net-next is closed right now, you can post RFCs but normal patches
-> > should be deferred until after net-next reopens. =20
->=20
-> I know net-next is closed.
->=20
-> I pinged David M when it was open about what is meant by "new" patches=20
-> in the net-dev FAQ.=C2=A0 So I figured I would send the patches to see wh=
-at=20
-> the response was.
->=20
-> To me these are not new they are in process patches.=C2=A0 My understand =
-is=20
-> New is v1 patchesets.
->=20
-> But now I have the answer.
+That is what I mean. I guess my words did not work. I should have used su=
+bpages.
 
-Oh sorry, I may be wrong in this case, I haven't tracked this series.
+>
+>> When it comes to analyze failed migration, PGMIGRATE_FAIL - THP_MIGRAT=
+ION_FAILURE
+>> means the number of pages that are failed to migrate, but we cannot te=
+ll how many
+>> are base pages and how many are THPs.
+>>
+>> 3. migrating base pages and THP:
+>>
+>> The math should be very similar to the second case, except that
+>> a) from PGMIGRATE_SUCCESS - THP_MIGRATION_SUCCESS, we cannot tell how =
+many are pages begin
+>> as base pages and how many are pages begin as THPs but become base pag=
+es after split;
+>> b) from PGMIGRATE_FAIL - THP_MIGRATION_FAILURE, an additional case,
+>> base pages that begin as base pages fail to migrate, is mixed into the=
+ number and we
+>> cannot tell three cases apart.
+>
+> So why don't we just expose PGMIGRATE_SPLIT?  That would be defined as
+> the number of times we succeeded in migrating a THP but had to split it=
 
+> to succeed.
+
+It might need extra code to get that number. Currently, the subpages from=
+ split
+THPs are appended to the end of the original page list, so we might need =
+a separate
+page list for these subpages to count PGMIGRATE_SPLIT. Also what if some =
+of the
+subpages fail to migrate? Do we increase PGMIGRATE_SPLIT or not?
+
+
+
+--
+Best Regards,
+Yan Zi
+
+--=_MailMate_A4ED6843-C123-4162-A906-90C702BB03B0_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl7ZJgcPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKufkP/3J8Y37r2ENRwdN/0rs8ooTU6ZNJfhnmKoPA
+pPHcJkXZQrJSYULulx/9lbEuH/dpCM5o917iQQz6eWO+ZCAsRMjkJZ3mEVOXcOka
+fd8/d6/d3fE8BxcKe1E4xwDWNQFv1xwaDJl/OBQqeuHNjFz5Dy8zl4a1o3AqVDwu
+WePQA+rrzQXNnFwxJuFtujSJGxR+KZAuDFipoBVJ3hu2hLQgCg0zV8rC7HgkSo/V
+kddiqdahY+jvDaNCsK69bSLXEBWjzO7tpcMGEaXkrMAS2wOjrt1Hr15FyD4n33t8
+r4R+Te9hbxtedTaxCEuIPk9ZaYkGiG2dHBVyMCEYWQZpKJ73Z+KnVzYu3thHu5PK
+eh4fmU6swgUISSvBvZ7MAKviKTSWYvvKuOauLHYuKF8EeZ1ByhFga73DsybJJA4P
+bKrFQi0a/v1fbh41BOvXrriZawxUtTXedfjKnc/TYDKJrzKKsKjpJ0DSyvUTblX/
+c6waIJIsfRrnFvwHee0oe0332bk0h1lrurxudM4L8qhYGlr13Nm3epukeID6YxR8
+V+QU4NcUiVWE64UchjIl2BinZ7gu2QE3KAd+O0EFSG8D0vaqVtZnwqPrxfxWt2AF
+Yi2PFQxTZ73HHPWpZ93jxpBRWcviWjXffjgkiis/NT7wyBrfWvgB8Vf3Z3DtPiqr
+uTIsy4Cn
+=U2ps
+-----END PGP SIGNATURE-----
+
+--=_MailMate_A4ED6843-C123-4162-A906-90C702BB03B0_=--
