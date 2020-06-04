@@ -2,286 +2,326 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C97C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8ACE2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 311282074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591255149;
-	bh=nCkSZ5YI8jHz/QYFJheERHTTJHELbWC5BLEjucaQ9dc=;
+	s=default; t=1591255168;
+	bh=T6Bc2L9AYNU0jyTMPo3DyvjA3SVK+2ZQMZr6CoJQSNE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lQCiNpRVC8ue7IO5PhLAFk643qQ7evshtYTcyp9+omIL8mv5qz8+HdIennJmOU+1e
-	 VsZYiD0j4riQestQaHU1xS2iv8LC4fZhyavX2YADLDbJNdZMA6lohHC/2P18jMPizR
-	 yxM8nkM4EOlNjr43WLTxlWJMPtOXaFefECo7aCgc=
+	b=aalM3VF6L1QIOS7MIb/xTzj8jnM81EwZuFPrzLC4vRx5pNgLS3aQYm0dCFzsptoyG
+	 FAfx8tdamFZpDMt51Rlf8gcK/oEX2QpX8Cgl7i6QzuqnWxiE5mqE1rY7jjSIdvUscU
+	 f8AXSVEo7jpuhrLfkb3727AcRsXen0gQNU4jzKK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgFDHTI (ORCPT
+        id S1727909AbgFDHT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbgFDHTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:19:07 -0400
-Received: from localhost (unknown [122.179.53.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DFF3206DC;
-        Thu,  4 Jun 2020 07:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591255146;
-        bh=nCkSZ5YI8jHz/QYFJheERHTTJHELbWC5BLEjucaQ9dc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MeXPWyDH7J9jG4fhQpfPg/I89NkjW170cIj6TEKj1Gy8E4bbhSDxec5FPn/jXuQGj
-         AKd6o3Tnj2qDlAjxOEMXCm7+Hemp0D6eMu/N56HGSceFVM4rfcLe3+V93f/AAh6JqH
-         iDEzrbcE86JD4QauX+JMe4LHC+a3tNZ0LCc8Tpr8=
-Date:   Thu, 4 Jun 2020 12:48:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for
- LT9611
-Message-ID: <20200604071859.GD3521@vkoul-mobl>
-References: <20200513100533.42996-1-vkoul@kernel.org>
- <20200513100533.42996-3-vkoul@kernel.org>
- <20200528014837.GD4670@pendragon.ideasonboard.com>
+        Thu, 4 Jun 2020 03:19:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbgFDHT1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 03:19:27 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E67AC05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 00:19:26 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id c71so4135711wmd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 00:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Rp/QbeXXw67UXV/kySLbw5yk27PtZEjldICdCw8doXg=;
+        b=EBqLJlfC/hr2WIC6bfpF4H18QPiaSx655liBSud772R2p6t1kJFjWmC0XunNfLiU59
+         nsmxxXF+tXcuLOfEDXN+iHDD2UcXqEUjMOZq/iyQQLtskQPW86/Zj9NCQOnWd9K0Cg6I
+         SFWfZ55W0lftmFnyjqep2K0iIPSB74RCnf6s6UykxevRD+GutZ5+MMwR1Sl8c4rwsDhd
+         RmsmDph7TRfYGMZDF2mMQzT6G0rMQzwxg7/feMaGBAln0gWhV9F9ZM3v24tMhVVJ/1ZQ
+         COfCLROovZ69IvvvEZTNKBRVY0wa6EyB32AJYwsQA3L0DpOr5U+AaPYOVTp1tobVce8F
+         AZMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Rp/QbeXXw67UXV/kySLbw5yk27PtZEjldICdCw8doXg=;
+        b=RzTNPfA7k7Hbr+nqwN1nJpoUOmSY/U/ZkFmwwmsI9tESFghn252dP/i3PBSQqKvAf5
+         KA4UQJXf63HncMctE0ZJS6Io4ac2XxeaW7aIkCQfH4IJA+f2dopmAytOuUNUiCYsDVWm
+         1Rz9xznbxo4c4qKwP4FlEQcr8rMtt9JMRdskTejOMRdz8eIQ9DDooAYfhY6/xPIpYfQY
+         DrTGUqo9uAs3h0wTPgdssB0N/9hpIVLTQ91zsbcIMF1Jfwno/Q15eEKt1UEyuZM/zV8m
+         B64rSX/vndzvSH+9yKcBSXUlRuGGb434pxgdJ5rmlEKPNTEzuz2deCQawriVAQM/MSp4
+         KBQQ==
+X-Gm-Message-State: AOAM533E6LUZsL6AxSrmwBDKKbzUZTGfSE3kjENHXLXDLb93bTgmNK/s
+        KUj1V6xpdxWyzCHBrO2MLda0hkw0
+X-Google-Smtp-Source: ABdhPJwq8fZFrxOjZSNbzzOEBd89aH3ZeaCRFwtZgFs4ELnWuighVx+a8MhKgrHIvS89Ye/vA59+1Q==
+X-Received: by 2002:a1c:4302:: with SMTP id q2mr2668083wma.54.1591255164550;
+        Thu, 04 Jun 2020 00:19:24 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id b18sm6269749wrn.88.2020.06.04.00.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 00:19:23 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 09:19:21 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] compiler.h: Move instrumentation_begin()/end() into new
+ <linux/instrumentation.h> header
+Message-ID: <20200604071921.GA1361070@gmail.com>
+References: <20200601130806.GA746506@gmail.com>
+ <CAHk-=wgmXOFyiu6jZ8Dj8OAU7c0T0q-6RLygKC2tMiNfL7MQjQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528014837.GD4670@pendragon.ideasonboard.com>
+In-Reply-To: <CAHk-=wgmXOFyiu6jZ8Dj8OAU7c0T0q-6RLygKC2tMiNfL7MQjQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
 
-Sorry for late reply, I was out last week.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On 28-05-20, 04:48, Laurent Pinchart wrote:
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: interrupt line for the chip
+> On Mon, Jun 1, 2020 at 6:08 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >  include/linux/compiler.h            | 53 +++++++++++++++++++++++
 > 
-> I think you could drop the descriptions for the reg and interrupt
-> properties, they don't add much.
-
-Sure, will do
-
-> > +  reset-gpios:
-> > +    maxItems: 1
-> > +    description: GPIO connected to active high RESET pin.
-> > +
-> > +  vdd-supply:
-> > +    description: Regulator for 1.8V MIPI phy power.
-> > +
-> > +  vcc-supply:
-> > +    description: Regulator for 3.3V IO power.
-> > +
-> > +  ports:
-> > +    type: object
-> > +
-> > +    properties:
-> > +      "#address-cells":
-> > +        const: 1
-> > +
-> > +      "#size-cells":
-> > +        const: 0
-> > +
-> > +      port@0:
-> > +        type: object
-> > +        additionalProperties: false
-> > +
-> > +        description: |
-> > +          HDMI port for HDMI output
+> I have pulled this, but do we really want to add this to a header file
+> that is _so_ core that it gets included for basically every single
+> file built?
 > 
-> The usual practice is to have the input ports first, followed by the
-> output ports. Is there a reason not to follow that rule ?
-
-I was not aware of this rule, is it documented somewhere?
-Nevertheless will update..
-
-> > +
-> > +        properties:
-> > +          reg:
-> > +            const: 0
-> > +
-> > +        patternProperties:
-> > +          endpoint:
+> I don't even see those instrumentation_begin/end() things used
+> anywhere right now.
 > 
-> If you want to use patternProperties, this should be
+> It seems excessive. That 53 lines is maybe not a lot, but it pushed
+> that header file to over 12kB, and while it's mostly comments, it's
+> extra IO and parsing basically for _every_ single file compiled in the
+> kernel.
 > 
->           "^endpoint@[0-9]+$":
+> For what appears to be absolutely zero upside right now, and I really
+> don't see why this should be in such a core header file!
 > 
-> (including the quotes). Same below.
+> I don't even see this as having anything at all to do with
+> "compiler.h" in the first place.
+> 
+> I really think we should think twice about making core header files
+> bigger like this. No, we're nowhere the disaster that C++ project
+> headers are, but tokenization and parsing is actually a pretty big
+> part of the build costs (which may surprise some people who think it's
+> all the fancy optimizations that cost a lot of CPU time).
 
-Ok
+Fully agreed - and I made the attached patch to address this.
 
-> 
-> > +            type: object
-> > +            additionalProperties: false
-> > +
-> > +            properties:
-> > +              remote-endpoint: true
-> 
-> How about
-> 
->               remote-endpoint:
->                 $ref: /schemas/types.yaml#/definitions/phandle
-> 
-> and the same below ?
+The code got cleaner and better structured, but it didn't help much in 
+terms of inclusion count:
 
-Ok
+   2616  total .o files
 
-> 
-> You also need a reg property if multiple endpoints are present.
+   2447  <linux/types.h>
+   2436  <linux/compiler.h>
+   2404  <linux/bug.h>
 
-Will update
-> 
-> > +
-> > +        required:
-> > +          - reg
-> > +
-> > +      port@1:
-> > +        type: object
-> > +        additionalProperties: false
-> > +
-> > +        description: |
-> > +          MIPI port-1 for MIPI input
-> > +
-> > +        properties:
-> > +          reg:
-> > +            const: 1
-> > +
-> > +        patternProperties:
-> > +          endpoint:
-> > +            type: object
-> > +            additionalProperties: false
-> > +
-> > +            properties:
-> > +              remote-endpoint: true
-> > +
-> > +        required:
-> > +          - reg
-> > +
-> > +      port@2:
-> > +        type: object
-> > +        additionalProperties: false
-> > +
-> > +        description: |
-> > +          MIPI port-2 for MIPI input
-> 
-> A description of how the two MIPI inputs differ would be useful. In
-> particular, are both mandatory, or is it valid to connect only one of
-> the two ? If using a single input is supported, can it be either, or
-> does it have to be the first one ? When using both inputs, what should
-> be connected to them ?
+The reason is that <linux/bug.h> is included almost everywhere as 
+well, and the instrumentation_begin()/end() annotations affect the 
+BUG*() and WARN*() primitives as well.
 
-Sure I will add details. port-1 is mandatory and port-2 optional. port-2
-is used in combination with port-1 to drive displays for higher
-resolution like 4k
+At least non-x86 would have less instrumentation related noise, for 
+now at least.
 
-> > +
-> > +        properties:
-> > +          reg:
-> > +            const: 2
-> > +
-> > +        patternProperties:
-> > +          endpoint:
-> > +            type: object
-> > +            additionalProperties: false
-> > +
-> > +            properties:
-> > +              remote-endpoint: true
-> > +
-> > +        required:
-> > +          - reg
-> > +
-> > +    required:
-> > +      - "#address-cells"
-> > +      - "#size-cells"
-> > +      - port@0
-> > +      - port@1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - vdd-supply
-> > +  - vcc-supply
-> > +  - ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c10 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      lt9611_codec: hdmi-bridge@3b {
-> 
-> Please drop unused labels.
+Thanks,
 
-ok
+	Ingo
 
-> 
-> > +        compatible = "lontium,lt9611";
-> > +        reg = <0x3b>;
-> > +
-> > +        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
-> > +        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
-> > +
-> > +        vdd-supply = <&lt9611_1v8>;
-> > +        vcc-supply = <&lt9611_3v3>;
-> > +
-> > +        ports {
-> > +          #address-cells = <1>;
-> > +          #size-cells = <0>;
-> > +
-> > +          port@0 {
-> > +            reg = <0>;
-> > +            lt9611_out: endpoint {
-> > +              remote-endpoint = <&hdmi_con>;
-> > +            };
-> > +          };
-> > +
-> > +          port@1 {
-> > +            reg = <1>;
-> > +            lt9611_a: endpoint {
-> > +              remote-endpoint = <&dsi0_out>;
-> > +            };
-> > +          };
-> > +
-> > +          port@2 {
-> > +            reg = <2>;
-> > +            lt9611_b: endpoint {
-> > +              remote-endpoint = <&dsi1_out>;
-> > +            };
-> > +          };
-> > +        };
-> > +      };
-> > +    };
-> 
-> It's customary to end YAML schema files with ... on a separate line.
+==========================>
+From: Ingo Molnar <mingo@kernel.org>
+Date: Thu, 4 Jun 2020 08:36:22 +0200
+Subject: [PATCH] compiler.h: Move instrumentation_begin()/end() into new <linux/instrumentation.h> header
 
-Will update
+Linus pointed out that compiler.h - which is a key header that gets included in every
+single of the 28,000+ kernel files files being built - was unnecessarily bloated in:
 
-Thanks for the review
--- 
-~Vinod
+  655389666643: ("vmlinux.lds.h: Create section for protection against instrumentation")
+
+Move these primitives into a new header: <linux/instrumentation.h>, and include that
+header in context_tracking.h and x86/asm/bug.h, which makes use of it.
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/include/asm/bug.h       |  1 +
+ include/linux/compiler.h         | 53 -------------------------------------
+ include/linux/context_tracking.h |  2 ++
+ include/linux/instrumentation.h  | 57 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 60 insertions(+), 53 deletions(-)
+
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index facba9bc30ca..37e4480dba75 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -3,6 +3,7 @@
+ #define _ASM_X86_BUG_H
+ 
+ #include <linux/stringify.h>
++#include <linux/instrumentation.h>
+ 
+ /*
+  * Despite that some emulators terminate on UD2, we use it for WARN().
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 6325d64e3c3b..448c91bf543b 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -120,65 +120,12 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+ /* Annotate a C jump table to allow objtool to follow the code flow */
+ #define __annotate_jump_table __section(.rodata..c_jump_table)
+ 
+-#ifdef CONFIG_DEBUG_ENTRY
+-/* Begin/end of an instrumentation safe region */
+-#define instrumentation_begin() ({					\
+-	asm volatile("%c0:\n\t"						\
+-		     ".pushsection .discard.instr_begin\n\t"		\
+-		     ".long %c0b - .\n\t"				\
+-		     ".popsection\n\t" : : "i" (__COUNTER__));		\
+-})
+-
+-/*
+- * Because instrumentation_{begin,end}() can nest, objtool validation considers
+- * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
+- * When the value is greater than 0, we consider instrumentation allowed.
+- *
+- * There is a problem with code like:
+- *
+- * noinstr void foo()
+- * {
+- *	instrumentation_begin();
+- *	...
+- *	if (cond) {
+- *		instrumentation_begin();
+- *		...
+- *		instrumentation_end();
+- *	}
+- *	bar();
+- *	instrumentation_end();
+- * }
+- *
+- * If instrumentation_end() would be an empty label, like all the other
+- * annotations, the inner _end(), which is at the end of a conditional block,
+- * would land on the instruction after the block.
+- *
+- * If we then consider the sum of the !cond path, we'll see that the call to
+- * bar() is with a 0-value, even though, we meant it to happen with a positive
+- * value.
+- *
+- * To avoid this, have _end() be a NOP instruction, this ensures it will be
+- * part of the condition block and does not escape.
+- */
+-#define instrumentation_end() ({					\
+-	asm volatile("%c0: nop\n\t"					\
+-		     ".pushsection .discard.instr_end\n\t"		\
+-		     ".long %c0b - .\n\t"				\
+-		     ".popsection\n\t" : : "i" (__COUNTER__));		\
+-})
+-#endif /* CONFIG_DEBUG_ENTRY */
+-
+ #else
+ #define annotate_reachable()
+ #define annotate_unreachable()
+ #define __annotate_jump_table
+ #endif
+ 
+-#ifndef instrumentation_begin
+-#define instrumentation_begin()		do { } while(0)
+-#define instrumentation_end()		do { } while(0)
+-#endif
+-
+ #ifndef ASM_UNREACHABLE
+ # define ASM_UNREACHABLE
+ #endif
+diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
+index 8cac62ee6add..ad6241c8003d 100644
+--- a/include/linux/context_tracking.h
++++ b/include/linux/context_tracking.h
+@@ -5,6 +5,8 @@
+ #include <linux/sched.h>
+ #include <linux/vtime.h>
+ #include <linux/context_tracking_state.h>
++#include <linux/instrumentation.h>
++
+ #include <asm/ptrace.h>
+ 
+ 
+diff --git a/include/linux/instrumentation.h b/include/linux/instrumentation.h
+new file mode 100644
+index 000000000000..19cba99342c2
+--- /dev/null
++++ b/include/linux/instrumentation.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_INSTRUMENTATION_H
++#define __LINUX_INSTRUMENTATION_H
++
++#if defined(CONFIG_DEBUG_ENTRY) && defined(CONFIG_STACK_VALIDATION)
++
++/* Begin/end of an instrumentation safe region */
++#define instrumentation_begin() ({					\
++	asm volatile("%c0:\n\t"						\
++		     ".pushsection .discard.instr_begin\n\t"		\
++		     ".long %c0b - .\n\t"				\
++		     ".popsection\n\t" : : "i" (__COUNTER__));		\
++})
++
++/*
++ * Because instrumentation_{begin,end}() can nest, objtool validation considers
++ * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
++ * When the value is greater than 0, we consider instrumentation allowed.
++ *
++ * There is a problem with code like:
++ *
++ * noinstr void foo()
++ * {
++ *	instrumentation_begin();
++ *	...
++ *	if (cond) {
++ *		instrumentation_begin();
++ *		...
++ *		instrumentation_end();
++ *	}
++ *	bar();
++ *	instrumentation_end();
++ * }
++ *
++ * If instrumentation_end() would be an empty label, like all the other
++ * annotations, the inner _end(), which is at the end of a conditional block,
++ * would land on the instruction after the block.
++ *
++ * If we then consider the sum of the !cond path, we'll see that the call to
++ * bar() is with a 0-value, even though, we meant it to happen with a positive
++ * value.
++ *
++ * To avoid this, have _end() be a NOP instruction, this ensures it will be
++ * part of the condition block and does not escape.
++ */
++#define instrumentation_end() ({					\
++	asm volatile("%c0: nop\n\t"					\
++		     ".pushsection .discard.instr_end\n\t"		\
++		     ".long %c0b - .\n\t"				\
++		     ".popsection\n\t" : : "i" (__COUNTER__));		\
++})
++#else
++# define instrumentation_begin()	do { } while(0)
++# define instrumentation_end()		do { } while(0)
++#endif
++
++#endif /* __LINUX_INSTRUMENTATION_H */
+
