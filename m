@@ -2,319 +2,139 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88619C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5603C206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6B8206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oak36e2K"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="qBOwYG5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgFDTFe (ORCPT
+        id S1729683AbgFDTIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:05:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28076 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728967AbgFDTFd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:05:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591297530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ul0Gd1q39xy/+znscqHyGd+HqqENFH8nbxN3dnuntWk=;
-        b=Oak36e2KlmppIKtOkJDxzMWuMhtKX/JDX2bQpHQcw+50GW45Kh7JmFJHcgm47XMyoTPhHs
-        KoROONCrrF2H0lUWUFOea/g9+NEOTw+9l4KIZim6+GnNQcKzoN5uHNvGwNATARkIiu2jD4
-        eFdX45oFQIKAdyH1oCyw/ht0dFZx2ng=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-488-s3PjYCXEMQG1SSVh1xVDSg-1; Thu, 04 Jun 2020 15:05:29 -0400
-X-MC-Unique: s3PjYCXEMQG1SSVh1xVDSg-1
-Received: by mail-wr1-f72.google.com with SMTP id a4so2791985wrp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:05:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ul0Gd1q39xy/+znscqHyGd+HqqENFH8nbxN3dnuntWk=;
-        b=GM8wW/PqwVvPdXXWQXosMHdaGAAr/gUhFaT503W++LwiWhwM1bC6k7BeDmNOAkdEdF
-         cFcF9E2/TUcfeeEKehIxWO6XwvWM1aHEutfTGf5OIvQQs0bPcyLwIoQfWVjnk40kDSKg
-         Iia5hVh5wvkduMan1tsqLVClmmteqY4mGYYhR4NbzCBvgNQ7SOTivLdmc6yuNMqB3yN1
-         r/aCwo90vBYVmTh3FRAH5g71pwAGWeiUEcLd6JJ4xhMyOQUSM/3ncLNF1Rd4jiwg2DAi
-         6rvyiYnuxBTcFb3pc1MMODyh7I93QwWr55JbDvt3C7IF6yXa4vm1AjojwqRtloLZrDQ9
-         owNg==
-X-Gm-Message-State: AOAM532dz3d/SD/1NFixvsT7xPmQk4ZS0rmLSgc/DFrsFGsFKu9d1Sv2
-        QyVP0YLM1D+7JKBngVNegmCCnSdphMVS/2r4v/QGMhR6lGcIRd0bDeK6prfmPy3U9CxetE/rBHg
-        cvI74bEHGw8okqDIW+hvLf/2b
-X-Received: by 2002:a7b:cb0a:: with SMTP id u10mr4956116wmj.146.1591297528015;
-        Thu, 04 Jun 2020 12:05:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyilb2EQmaD9XeUNkwrvnyHI7PCfvokVhncmnDFTklSZwJ5vM0u4I0Afx8vNqV5lpNVQn4Mag==
-X-Received: by 2002:a7b:cb0a:: with SMTP id u10mr4956100wmj.146.1591297527751;
-        Thu, 04 Jun 2020 12:05:27 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id j190sm8467500wmb.33.2020.06.04.12.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 12:05:27 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 15:05:23 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Stevens <stevensd@chromium.org>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
-Message-ID: <20200604145620-mutt-send-email-mst@kernel.org>
-References: <20200526105811.30784-1-stevensd@chromium.org>
- <20200526105811.30784-2-stevensd@chromium.org>
+        Thu, 4 Jun 2020 15:08:21 -0400
+Received: from mout.web.de ([212.227.17.12]:57747 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729310AbgFDTIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 15:08:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591297676;
+        bh=JbzMdzFOzCTsibWwfsPpxK0BShMK2VsDXLIYdKprY00=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=qBOwYG5gxDn5aB9WWdq9lQ95XfJKD231xBcY1NSN9+Mam2M9ZpJr2T9T1CT9Xqwu9
+         rEX81vUCk1c98mK2oUEiqqjXKDzpq2ptH6iAncHwjQQm/HPAw7hh+N4TETULCKnbLP
+         NXUm9j02x18HWONoBlK5LjeagXXfatqwdRv8BpYw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MsrhK-1io0DE25No-00t6Da; Thu, 04
+ Jun 2020 21:07:56 +0200
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Yi Zhang <yi.zhang@huawei.com>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: imx6: add missing put_device() call in
+ imx6q_suspend_init()
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Yu Kuai <yukuai3@huawei.com>, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <cf810c93-297c-c02c-9bba-8c3d097b8e31@web.de>
+Date:   Thu, 4 Jun 2020 21:07:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526105811.30784-2-stevensd@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:XFGsV0QKIXJfaz2i0ga3WHMhzuzk6lKF+KUAnTOGnoBnphAbrMV
+ nyx1x1gvgaCb41DMh90xa/ORO29oOH7RG46fya33Wz+wa6qnrqVKG1bNnxvhF3/8NlT1yKX
+ YiSynMk/6NZskf7lr/s0whnQsxu/MkNedXcZ8u3uA3TD7pS8/Gi0kg8IB2iwYZ0mxZ+PqXh
+ uytUaPMiiZrkC3HkI8DCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eKr1vF7wTfk=:4U46qkCn9wPU67wuYyaE0S
+ jUWXai863XDATWGg4zj3PE+M0j9LvdKQtwibK4EI9e2tSZeoz6ryYsuQaSWWigw5/1Y5bYQIN
+ zOTf5ntbm78cMxZU/j9wfx7MVbvtO7I/0mYtGFYGXtZfkuEz+NCTSMG7MVboKDCo+AUpArctG
+ lQhQvYaWf0vpEaoLMe0/7vejgIWuEh79iYsL67HTW1CLiJq7JGzLDKQ8UVM11fYf9xngAZOIg
+ XBUkwuu/8yicEnDl8trP1YTfmLhb0ykJcUXuI+TqwbhxB8ecjlpdCO/fPg5rwR2rRgty7OsxG
+ lvkfBTFnCOE6/XkqQL7OsvSdNrgyoFoJI1mq7KC2wUdBuLevzUtuP5S34VG9blibRI76D+WBR
+ Af1eD7vsKZPDabjq4l8tba3tE7iHDolJtePMT1QqL45wVdo7Aa1OQjtuihOik+Q7B/Aed4F1i
+ s9AtPPUhYdJjpNI5RSB6klvjr34WQvIh8blMb+JeP+jd0N3wHPkyYkvhoScB1KVMiNRsWkA8x
+ wC8yQhHyAs+d6HkZJNkahcM50QIrGYYebwyB4Q6/2ovQ2ymnO+1FSCBptFndiHzsJsDc6J3K5
+ yCbXYpFirKyS/BrpGy/8lNrN6Mh6eqMUo3XdRxjBe4PANrhoYDzFIwl0tCIXKMTssRLyt1iY2
+ fZ0aKHyxdcOpC4xrXQjx42nFhMR9iwmPl/6LwMHd4+NSFw6sjRHbfmJBN1MDgiLQAhpg1ip8r
+ DwHNodCTZMWhQYUIoFHzUVbJItuSSa0oKc6XZ4IcUddSINVuK87zZrZZ0mNmjaaGU3p8Rd9uP
+ Frl6NW2rZCraq1H6wkc8W8tYZWXtRCRZU5xeUARC5S2T+LAUvlFVkqzrp7xrjwde6hOAjR2BL
+ 1d2MWg3/Ar2zzHTAOE5f0GpWveBj6rN5nwAxxir8ju1Z86dRw0IUWR6Kyn93WL/QX7Yvb4j5H
+ uq9LFZOfS78JSc/8T2bPH5YDCdrBsqikiIFYoTF28PrHsxbkeevYYrQruq8bbItIBn7Pdioid
+ QREe0V9J7E/rcd9RPnlY+7CoPu6iqpU9caqr6bK1vrv+IgpOdUk8uNRVJLquBbzuWGm9YaOo3
+ kufJ6cR4OCArj3pA/9J2rkd34rPV9q0Oe4eEsm/oaMFbKU3XpU8DWSlrS41l35TN3LSoUGWPt
+ 9gx0zqVkWrFtUjRdJDW6MDoqJGEddOrvPQO6GZOx818/p9e1ewdEsKVAgYpAnDsydPQD5XwcF
+ UeqzIX6m3nLNzRWL9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
-> This change adds a new flavor of dma-bufs that can be used by virtio
-> drivers to share exported objects. A virtio dma-buf can be queried by
-> virtio drivers to obtain the UUID which identifies the underlying
-> exported object.
-> 
-> Signed-off-by: David Stevens <stevensd@chromium.org>
+> if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
+> corresponding put_device(). Thus add a jump target to fix the exception
+> handling for this function implementation.
 
-Is this just for graphics? If yes I'd rather we put it in the graphics
-driver. We can always move it later ...
+Do you find a previous update suggestion useful?
 
-> ---
->  drivers/virtio/Makefile         |  2 +-
->  drivers/virtio/virtio.c         |  6 +++
->  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
->  include/linux/virtio.h          |  1 +
->  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
->  5 files changed, 155 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/virtio/virtio_dma_buf.c
->  create mode 100644 include/linux/virtio_dma_buf.h
-> 
-> diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-> index 29a1386ecc03..ecdae5b596de 100644
-> --- a/drivers/virtio/Makefile
-> +++ b/drivers/virtio/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
-> +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
->  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
->  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
->  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
-> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> index a977e32a88f2..5d46f0ded92d 100644
-> --- a/drivers/virtio/virtio.c
-> +++ b/drivers/virtio/virtio.c
-> @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
->  }
->  EXPORT_SYMBOL_GPL(register_virtio_device);
->  
-> +bool is_virtio_device(struct device *dev)
-> +{
-> +	return dev->bus == &virtio_bus;
-> +}
-> +EXPORT_SYMBOL_GPL(is_virtio_device);
-> +
->  void unregister_virtio_device(struct virtio_device *dev)
->  {
->  	int index = dev->index; /* save for after device release */
-> diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
-> new file mode 100644
-> index 000000000000..23e3399b11ed
-> --- /dev/null
-> +++ b/drivers/virtio/virtio_dma_buf.c
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * dma-bufs for virtio exported objects
-> + *
-> + * Copyright (C) 2020 Google, Inc.
-> + */
-> +
-> +#include <linux/virtio_dma_buf.h>
-> +
-> +/**
-> + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
-> + *
-> + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
-> + * for an virtio exported object that can be queried by other virtio drivers
-> + * for the object's UUID.
-> + */
-> +struct dma_buf *virtio_dma_buf_export(
-> +		const struct virtio_dma_buf_export_info *virtio_exp_info)
-> +{
-> +	struct dma_buf_export_info exp_info;
-> +
-> +	if (!virtio_exp_info->ops
-> +		|| virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
-> +		|| !virtio_exp_info->ops->get_uuid) {
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	exp_info.exp_name = virtio_exp_info->exp_name;
-> +	exp_info.owner = virtio_exp_info->owner;
-> +	exp_info.ops = &virtio_exp_info->ops->ops;
-> +	exp_info.size = virtio_exp_info->size;
-> +	exp_info.flags = virtio_exp_info->flags;
-> +	exp_info.resv = virtio_exp_info->resv;
-> +	exp_info.priv = virtio_exp_info->priv;
-> +	BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
-> +		     != sizeof(struct dma_buf_export_info));
+ARM: imx6: Add missing put_device() call in imx6q_suspend_init()
+https://lore.kernel.org/linux-arm-kernel/5acd7308-f6e1-4b1e-c744-bb2e5fdca1be@web.de/
+https://lore.kernel.org/patchwork/patch/1151158/
+https://lkml.org/lkml/2019/11/9/125
 
-This is the only part that gives me pause. Why do we need this hack?
-What's wrong with just using dma_buf_export_info directly,
-and if you want the virtio ops, just using container_off?
-
-
-
-> +
-> +	return dma_buf_export(&exp_info);
-> +}
-> +EXPORT_SYMBOL(virtio_dma_buf_export);
-> +
-> +/**
-> + * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
-> + */
-> +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
-> +			  struct dma_buf_attachment *attach)
-> +{
-> +	int ret;
-> +	const struct virtio_dma_buf_ops *ops = container_of(
-> +			dma_buf->ops, const struct virtio_dma_buf_ops, ops);
-> +
-> +	if (ops->device_attach) {
-> +		ret = ops->device_attach(dma_buf, attach);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(virtio_dma_buf_attach);
-> +
-> +/**
-> + * is_virtio_dma_buf - returns true if the given dma-buf is a virtio dma-buf
-> + * @dma_buf: buffer to query
-> + */
-> +bool is_virtio_dma_buf(struct dma_buf *dma_buf)
-> +{
-> +	return dma_buf->ops->attach == &virtio_dma_buf_attach;
-> +}
-> +EXPORT_SYMBOL(is_virtio_dma_buf);
-> +
-> +/**
-> + * virtio_dma_buf_get_uuid - gets the uuid of the virtio dma-buf's exported object
-> + * @dma_buf: [in] buffer to query
-> + * @uuid: [out] the uuid
-> + *
-> + * Returns: 0 on success, negative on failure.
-> + */
-> +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf,
-> +			    uuid_t *uuid)
-> +{
-> +	const struct virtio_dma_buf_ops *ops = container_of(
-> +			dma_buf->ops, const struct virtio_dma_buf_ops, ops);
-> +
-> +	if (!is_virtio_dma_buf(dma_buf))
-> +		return -EINVAL;
-> +
-> +	return ops->get_uuid(dma_buf, uuid);
-> +}
-> +EXPORT_SYMBOL(virtio_dma_buf_get_uuid);
-> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> index 15f906e4a748..9397e25616c4 100644
-> --- a/include/linux/virtio.h
-> +++ b/include/linux/virtio.h
-> @@ -128,6 +128,7 @@ static inline struct virtio_device *dev_to_virtio(struct device *_dev)
->  void virtio_add_status(struct virtio_device *dev, unsigned int status);
->  int register_virtio_device(struct virtio_device *dev);
->  void unregister_virtio_device(struct virtio_device *dev);
-> +bool is_virtio_device(struct device *dev);
->  
->  void virtio_break_device(struct virtio_device *dev);
->  
-> diff --git a/include/linux/virtio_dma_buf.h b/include/linux/virtio_dma_buf.h
-> new file mode 100644
-> index 000000000000..29fee167afbd
-> --- /dev/null
-> +++ b/include/linux/virtio_dma_buf.h
-> @@ -0,0 +1,58 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * dma-bufs for virtio exported objects
-> + *
-> + * Copyright (C) 2020 Google, Inc.
-> + */
-> +
-> +#ifndef _LINUX_VIRTIO_DMA_BUF_H
-> +#define _LINUX_VIRTIO_DMA_BUF_H
-> +
-> +#include <linux/dma-buf.h>
-> +#include <linux/uuid.h>
-> +#include <linux/virtio.h>
-> +
-> +/**
-> + * struct virtio_dma_buf_ops - operations possible on exported object dma-buf
-> + * @ops: the base dma_buf_ops. ops.attach MUST be virtio_dma_buf_attach.
-> + * @device_attach: [optional] callback invoked by virtio_dma_buf_attach during
-> + *		   all attach operations.
-> + * @get_uid: [required] callback to get the uuid of the exported object.
-> + */
-> +struct virtio_dma_buf_ops {
-> +	struct dma_buf_ops ops;
-> +	int (*device_attach)(struct dma_buf *dma_buf,
-> +			     struct dma_buf_attachment *attach);
-> +	int (*get_uuid)(struct dma_buf *dma_buf, uuid_t *uuid);
-> +};
-> +
-> +/**
-> + * struct virtio_dma_buf_export_info - see struct dma_buf_export_info
-> + */
-> +struct virtio_dma_buf_export_info {
-> +	const char *exp_name;
-> +	struct module *owner;
-> +	const struct virtio_dma_buf_ops *ops;
-> +	size_t size;
-> +	int flags;
-> +	struct dma_resv *resv;
-> +	void *priv;
-> +};
-> +
-> +/**
-> + * DEFINE_VIRTIO_DMA_BUF_EXPORT_INFO - helper macro for exporters
-> + */
-> +#define DEFINE_VIRTIO_DMA_BUF_EXPORT_INFO(name)	\
-> +	struct virtio_dma_buf_export_info name = { \
-> +		.exp_name = KBUILD_MODNAME, \
-> +		.owner = THIS_MODULE }
-> +
-> +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
-> +			  struct dma_buf_attachment *attach);
-> +
-> +struct dma_buf *virtio_dma_buf_export(
-> +		const struct virtio_dma_buf_export_info *virtio_exp_info);
-> +bool is_virtio_dma_buf(struct dma_buf *dma_buf);
-> +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf, uuid_t *uuid);
-> +
-> +#endif /* _LINUX_VIRTIO_DMA_BUF_H */
-> -- 
-> 2.27.0.rc0.183.gde8f92d652-goog
-
+Regards,
+Markus
