@@ -2,115 +2,64 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF51C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0F42075B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IVRMdF5J"
+	by mail.kernel.org (Postfix) with ESMTP id EFE4F204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgFDIe0 (ORCPT
+        id S1728016AbgFDIfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:34:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44115 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726802AbgFDIe0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:34:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591259664;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MY7gosntZyRVCAkzfX2AHr3cS9sWbmmToluAIV7gnzA=;
-        b=IVRMdF5JTU1oj/U1CEmZXs7HaIQsU6RJBsy1u5T1xAj1+lECA8tVqiTnPqlICeqEiD0Kp7
-        NSdamYuVmeLPt+2zAOcXKoDeNXxMfxE+WFEtWTKHvJMlGyHmZgzCxjCwB92MEmP+SIfahu
-        s1nySAnSEqwXjNJ2G9TAN7Frq4wccx0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-JVyp_s-RPnCG6EDEN2Hufw-1; Thu, 04 Jun 2020 04:34:22 -0400
-X-MC-Unique: JVyp_s-RPnCG6EDEN2Hufw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F29A464;
-        Thu,  4 Jun 2020 08:34:21 +0000 (UTC)
-Received: from krava (unknown [10.40.192.62])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AA0C06111F;
-        Thu,  4 Jun 2020 08:34:17 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 10:34:16 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 1/2] perf tools: check libasan and libubsan in
- Makefile.config
-Message-ID: <20200604083416.GA1283757@krava>
-References: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
- <20200602141551.GC1169993@krava>
- <35e55bec-1f8a-0e8f-798b-bab51ad30797@loongson.cn>
+        Thu, 4 Jun 2020 04:35:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59466 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726802AbgFDIfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 04:35:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 09FFAAC46;
+        Thu,  4 Jun 2020 08:35:18 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 10:35:12 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/vmalloc: track which page-table levels were modified
+Message-ID: <20200604083512.GN6857@suse.de>
+References: <20200603232311.GA205619@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <35e55bec-1f8a-0e8f-798b-bab51ad30797@loongson.cn>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200603232311.GA205619@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 10:01:27AM +0800, Tiezhu Yang wrote:
+Hi Guenter,
 
-SNIP
+On Wed, Jun 03, 2020 at 04:23:11PM -0700, Guenter Roeck wrote:
+> This patch causes crashes with all my ppc64 boot tests, in various
+> locations depending on the platform. Reverting it together with its
+> companion "mm/ioremap: track which page-table levels were modified"
+> fixes the problem.
+> 
+> Various logs are at
+> https://kerneltests.org/builders/qemu-ppc64-master/builds/1442/steps/qemubuildcommand/logs/stdio
 
-> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > > index 12a8204..b699d21 100644
-> > > --- a/tools/perf/Makefile.config
-> > > +++ b/tools/perf/Makefile.config
-> > > @@ -387,6 +387,12 @@ else
-> > >         NO_LIBBPF := 1
-> > >         NO_JVMTI := 1
-> > >       else
-> > > +      ifneq ($(shell ldconfig -p | grep libasan >/dev/null 2>&1; echo $$?), 0)
-> > > +        msg := $(error No libasan found, please install libasan);
-> > > +      endif
-> > > +      ifneq ($(shell ldconfig -p | grep libubsan >/dev/null 2>&1; echo $$?), 0)
-> > > +        msg := $(error No libubsan found, please install libubsan);
-> > > +      endif
-> > hum, would it be better to have check for this in tools/build/features?
-> 
-> Hi Jiri,
-> 
-> Thanks for your suggestion.
-> 
-> Do you mean that it is better to add this check at the end of file
-> tools/build/Makefile.feature?
+I posted the fix for this already:
 
-we usualy detect installed libraries via tools/build/features framework,
-this looks like it could fit in there
+	https://lore.kernel.org/lkml/20200604074446.23944-1-joro@8bytes.org/
 
-jirka
+Regards,
 
-> 
-> > 
-> > jirka
-> > 
-> > >         ifneq ($(filter s% -static%,$(LDFLAGS),),)
-> > >           msg := $(error No static glibc found, please install glibc-static);
-> > >         else
-> > > -- 
-> > > 2.1.0
-> > > 
-> 
+	Joerg
 
