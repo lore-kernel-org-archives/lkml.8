@@ -2,90 +2,113 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E29C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1A4206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68AB2064C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cMNc4UTx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z/jlrBjK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgFDIB2 (ORCPT
+        id S1726604AbgFDIFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:01:28 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:63815 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725950AbgFDIB2 (ORCPT
+        Thu, 4 Jun 2020 04:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgFDIFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:01:28 -0400
-X-UUID: 23c42885bc43477493215089ebc73e9a-20200604
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=PTiPt0eASFWtTJtbLfkkvOk+F6XVglwV/gBrDeSnaHA=;
-        b=cMNc4UTx0vMHrdXBgLAdVyXYk2I9SFbEurepxOERT1dVpu2jWPEll+ah54uIJaXrFXqjtsK/4B18kVq1pjEPRGmySH3q6jt/jpWNbEh6JmreBdlQzYcuhDMgHRO8tkfetzHBLAHp2Fojg26t/e87P8zWJ8/fKiOYz7doqO6GI+s=;
-X-UUID: 23c42885bc43477493215089ebc73e9a-20200604
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 564593313; Thu, 04 Jun 2020 16:01:24 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 4 Jun 2020 16:01:21 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Jun 2020 16:01:18 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        David Hildenbrand <david@redhat.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>
-Subject: [PATCH] iommu/mediatek: Use totalram_pages to setup enable_4GB
-Date:   Thu, 4 Jun 2020 16:01:20 +0800
-Message-ID: <20200604080120.2628-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 4 Jun 2020 04:05:36 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1BCBC05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KNW9NL3uD47FUjnpw82UUardVK7E6+mLshnuYV72GPY=; b=Z/jlrBjKW0MRevBunVgGpP3jxt
+        9zJmaTnmIvj7HFbmAOIvv4XWEeGYATe/HU2elxWGE8vfdjJ72zSzTDkJf9JFeEGGpDoKpo/wC7X/e
+        v9nahNm2MloAxtMNgTskxxRt9vBYLkiXLVOxnPjPoS6ngb3v8QktpPl99X3camS3Z59VJQA00+VJq
+        8g/yIJ4zUwgPF7yn5ziabEvp4J/meFJdJbTG8zAhNqcsMvSXOc1EBfE43GLLzienRwx2sltACZs1i
+        9W3b+bljl/zwWevxmETiS7pbqgbOhzotTwrN+KtCsQJUbgqhZPi/6t+S62Y+lLQUp2ZkS0lSdc91q
+        J4DsKyQQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgksE-0000Go-TI; Thu, 04 Jun 2020 08:05:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 45B8D301DFD;
+        Thu,  4 Jun 2020 10:05:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 31B5620CC68B2; Thu,  4 Jun 2020 10:05:12 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 10:05:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     tglx@linutronix.de, x86@kernel.org, elver@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        will@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com
+Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
+Message-ID: <20200604080512.GA2587@hirez.programming.kicks-ass.net>
+References: <20200603114014.152292216@infradead.org>
+ <20200603114051.896465666@infradead.org>
+ <20200603164600.GQ29598@paulmck-ThinkPad-P72>
+ <20200603171320.GE2570@hirez.programming.kicks-ass.net>
+ <20200604033409.GX29598@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 302719ED3089E2DF6B542E554C0642AB15FA15964EDC318E0CE26D1C0920F5F82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604033409.GX29598@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VG8gYnVpbGQgdGhpcyBkcml2ZXIgYXMgYSBrZXJuZWwgbW9kdWxlLCB3ZSBjYW5ub3QgdXNlDQp0
-aGUgdW5leHBvcnRlZCBzeW1ib2wgIm1heF9wZm4iIHRvIHNldHVwIGVuYWJsZV80R0IuDQoNClVz
-ZSB0b3RhbHJhbV9wYWdlcygpIGluc3RlYWQgdG8gc2V0dXAgZW5hYmxlXzRHQi4NCg0KU3VnZ2Vz
-dGVkLWJ5OiBNaWtlIFJhcG9wb3J0IDxycHB0QGxpbnV4LmlibS5jb20+DQpTaWduZWQtb2ZmLWJ5
-OiBNaWxlcyBDaGVuIDxtaWxlcy5jaGVuQG1lZGlhdGVrLmNvbT4NCkNjOiBEYXZpZCBIaWxkZW5i
-cmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT4NCkNjOiBZb25nIFd1IDx5b25nLnd1QG1lZGlhdGVrLmNv
-bT4NCkNjOiBDaGFvIEhhbyA8Y2hhby5oYW9AbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9p
-b21tdS9tdGtfaW9tbXUuYyB8IDUgKystLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9tdGtfaW9t
-bXUuYyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCmluZGV4IDVmNGQ2ZGY1OWNmNi4uYzI3
-OThhNmUwZTM4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KKysrIGIv
-ZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KQEAgLTMsNyArMyw2IEBADQogICogQ29weXJpZ2h0
-IChjKSAyMDE1LTIwMTYgTWVkaWFUZWsgSW5jLg0KICAqIEF1dGhvcjogWW9uZyBXdSA8eW9uZy53
-dUBtZWRpYXRlay5jb20+DQogICovDQotI2luY2x1ZGUgPGxpbnV4L21lbWJsb2NrLmg+DQogI2lu
-Y2x1ZGUgPGxpbnV4L2J1Zy5oPg0KICNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCiAjaW5jbHVkZSA8
-bGludXgvY29tcG9uZW50Lmg+DQpAQCAtNjI2LDggKzYyNSw4IEBAIHN0YXRpYyBpbnQgbXRrX2lv
-bW11X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQlyZXR1cm4gLUVOT01F
-TTsNCiAJZGF0YS0+cHJvdGVjdF9iYXNlID0gQUxJR04odmlydF90b19waHlzKHByb3RlY3QpLCBN
-VEtfUFJPVEVDVF9QQV9BTElHTik7DQogDQotCS8qIFdoZXRoZXIgdGhlIGN1cnJlbnQgZHJhbSBp
-cyBvdmVyIDRHQiAqLw0KLQlkYXRhLT5lbmFibGVfNEdCID0gISEobWF4X3BmbiA+IChCSVRfVUxM
-KDMyKSA+PiBQQUdFX1NISUZUKSk7DQorCS8qIFdoZXRoZXIgdGhlIGN1cnJlbnQgZHJhbSBpcyBv
-dmVyIDRHQiwgbm90ZTogRFJBTSBzdGFydCBhdCAxR0IgICovDQorCWRhdGEtPmVuYWJsZV80R0Ig
-PSAhISh0b3RhbHJhbV9wYWdlcygpID4gKChTWl8yRyArIFNaXzFHKSA+PiBQQUdFX1NISUZUKSk7
-DQogCWlmICghZGF0YS0+cGxhdF9kYXRhLT5oYXNfNGdiX21vZGUpDQogCQlkYXRhLT5lbmFibGVf
-NEdCID0gZmFsc2U7DQogDQotLSANCjIuMTguMA0K
+On Wed, Jun 03, 2020 at 08:34:09PM -0700, Paul E. McKenney wrote:
+> On Wed, Jun 03, 2020 at 07:13:20PM +0200, Peter Zijlstra wrote:
+> > On Wed, Jun 03, 2020 at 09:46:00AM -0700, Paul E. McKenney wrote:
 
+> > > > @@ -313,7 +313,7 @@ static __always_inline bool rcu_dynticks
+> > > >  {
+> > > >  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > > >  
+> > > > -	return !(atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
+> > > > +	return !(arch_atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
+> > 
+> > The above is actually instrumented by KCSAN, due to arch_atomic_read()
+> > being a READ_ONCE() and it now understanding volatile.
+> > 
+> > > Also instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks)) as
+> 
+> Right, this should instead be instrument_read(...).
+> 
+> Though if KCSAN is unconditionally instrumenting volatile, how does
+> this help?  Or does KCSAN's instrumentation of volatile somehow avoid
+> causing trouble?
+
+As Marco already explained, when used inside noinstr no instrumentation
+will be emitted, when used outside noinstr it will emit the right
+instrumentation.
+
+> > > o	In theory in rcu_irq_exit_preempt(), but as this generates code
+> > > 	only in lockdep builds, it might not be worth worrying about.
+> > > 
+> > > o	Ditto for rcu_irq_exit_check_preempt().
+> > > 
+> > > o	Ditto for __rcu_irq_enter_check_tick().
+> > 
+> > Not these, afaict they're all the above arch_atomic_read(), which is
+> > instrumented due to volatile in these cases.
+
+I this case, the above call-sites are all not noinstr (double negative!)
+and will thus cause instrumentation to be emitted.
+
+This is all a 'special' case for arch_atomic_read() (and _set()),
+because they're basically READ_ONCE() (and WRITE_ONCE() resp.). The
+normal atomics are asm() and it doesn't do anything for those (although
+I suppose clang could, since it has this internal assembler to parse the
+inline asm, but afaiu that's not something GCC ever wants to do).
