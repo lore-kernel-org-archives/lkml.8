@@ -2,198 +2,158 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EB2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88223206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WeEuDoa8"
+	by mail.kernel.org (Postfix) with ESMTP id 4555220738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591265499;
+	bh=P44bAU+xwGFOgLsCT7QfTlM8tbyumARHwDqBHLn5mDE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vcaEvVgPZt/CPtmjzof63Z4Lv4+4Z+Hvb8a84LY6ufHUyyWUBOO6aB2BsRHrhi4x/
+	 RJrVe5zRX0dmYmzEe/vm2IK2+aYXr6F6qsb3Qvk9bYxrBDaYUuz1JaI0QCd5ozRxKg
+	 S4aFLZCxt/uAAei15cIQ1TwgScPMQ4ReDCYMra6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgFDKKc (ORCPT
+        id S1727928AbgFDKLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:10:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23575 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725959AbgFDKKc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:10:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591265430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zGlJ8O4yA/W7bete/cF7FQcgVbI9QLdgYqKnnIFMKJ0=;
-        b=WeEuDoa8OiPxB16TXP+9ii33NDIdKJKthW+81pVi63d1Gu3bBhjtkQCVEHMxBX5ruZfkzh
-        iL+wV4K/QUInfOseiPHOlaYvUQ/dCn0wI2o0Pbpt3XUqo/UhoI66JYw7jrPGYAioW1lOQW
-        7OfhJUwj1M1Q9EeR6G/Yq0pRXqLk454=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-Rl7dM3-9MUW8UxWrEaulHA-1; Thu, 04 Jun 2020 06:10:28 -0400
-X-MC-Unique: Rl7dM3-9MUW8UxWrEaulHA-1
-Received: by mail-wr1-f70.google.com with SMTP id c14so2212203wrm.15
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 03:10:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zGlJ8O4yA/W7bete/cF7FQcgVbI9QLdgYqKnnIFMKJ0=;
-        b=GBwIS40Y8ewoKySitsuwE9gKqJ08crzlsrR9yCS/aLai5ZHzkw3r7BPbrM+4MIFSmB
-         oF5t0qNu9SOpC+L66SXIGg5Npr/jwFr+vkZhoVhDX/NNOtX1Y8on3k8A58q0gFaRIXC5
-         f4e/5EQgA2mNQtZa26SMKbxPf8AUgwALflRvGgXPXSQXjRKB8iGQ9p9dpfeVb3YFJOIm
-         zncqbEstPsGZppzXMu7IiWdVZp9ejCpivJfp2Ez8PTlHUhu3UeCDuJ6QaFo4NfPqt2BB
-         ExgIEk+eL1MT+yN2axiYSA3oIP0xoU4jClXroR7HqXGcRW1IeA2cE8ee40dF89Zz101s
-         LMZA==
-X-Gm-Message-State: AOAM532cY5wXamJyvJcJzxhPrmwz7y3L8Mw2cF3LMr/VqLNZ1SDBSfBl
-        HwrCgfI/lG5fjolzSe8grJu+2H9DyKnglTuRYzzb3sz1O6mvG9Ty1fMibwim4auysajNxdLv3un
-        BYq8oL8YA8KcIudDkF5bW08LW
-X-Received: by 2002:adf:a491:: with SMTP id g17mr3959308wrb.132.1591265427253;
-        Thu, 04 Jun 2020 03:10:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzijAVv5VHzZzhMi12UtVYg+WDrXlw/h6wDpYasdoiFD2bcBzxkW4hQDmgITXHqbv7FeNCrHw==
-X-Received: by 2002:adf:a491:: with SMTP id g17mr3959287wrb.132.1591265426992;
-        Thu, 04 Jun 2020 03:10:26 -0700 (PDT)
-Received: from redhat.com ([2a00:a040:185:f65:9a3b:8fff:fed3:ad8d])
-        by smtp.gmail.com with ESMTPSA id b187sm7095817wmd.26.2020.06.04.03.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 03:10:26 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 06:10:23 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Message-ID: <20200604054516-mutt-send-email-mst@kernel.org>
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <20200603011810-mutt-send-email-mst@kernel.org>
- <20200603165205.GU23230@ZenIV.linux.org.uk>
+        Thu, 4 Jun 2020 06:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbgFDKLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 06:11:37 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B352206DC;
+        Thu,  4 Jun 2020 10:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591265496;
+        bh=P44bAU+xwGFOgLsCT7QfTlM8tbyumARHwDqBHLn5mDE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SrQtJzCf1AJtitsKraIknR/lnhU0YiRvyRmRccq4pZYIyrxLx+HqWi5HrYNsNZPnH
+         DOm4RMEJG2Y7SjqNIxy8lWcmbkoRQHZFv9H0wmXyRn8feHqHFURucKZfNw2sBt+qYI
+         1+mNyTbBPSVZvHyBH7GB9aUTz+T+ftxLSzcW8W7c=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jgmqV-000Dcl-4B; Thu, 04 Jun 2020 11:11:35 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603165205.GU23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 04 Jun 2020 11:11:34 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+In-Reply-To: <2e07d3d3-515b-57e1-0a36-8892bc38bb7b@socionext.com>
+References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
+ <2e07d3d3-515b-57e1-0a36-8892bc38bb7b@socionext.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <9cbfdacba32c5e351fd9e14444768666@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 05:52:05PM +0100, Al Viro wrote:
-> On Wed, Jun 03, 2020 at 01:29:00AM -0400, Michael S. Tsirkin wrote:
-> > On Wed, Jun 03, 2020 at 02:48:15AM +0100, Al Viro wrote:
-> > > On Tue, Jun 02, 2020 at 04:45:05AM -0400, Michael S. Tsirkin wrote:
-> > > > So vhost needs to poke at userspace *a lot* in a quick succession.  It
-> > > > is thus benefitial to enable userspace access, do our thing, then
-> > > > disable. Except access_ok has already been pre-validated with all the
-> > > > relevant nospec checks, so we don't need that.  Add an API to allow
-> > > > userspace access after access_ok and barrier_nospec are done.
-> > > 
-> > > BTW, what are you going to do about vq->iotlb != NULL case?  Because
-> > > you sure as hell do *NOT* want e.g. translate_desc() under STAC.
-> > > Disable it around the calls of translate_desc()?
-> > > 
-> > > How widely do you hope to stretch the user_access areas, anyway?
-> > 
-> > So ATM I'm looking at adding support for the packed ring format.
-> > That does something like:
-> > 
-> > get_user(flags, desc->flags)
-> > smp_rmb()
-> > if (flags & VALID)
-> > copy_from_user(&adesc, desc, sizeof adesc);
-> > 
-> > this would be a good candidate I think.
+On 2020-06-04 10:43, Kunihiko Hayashi wrote:
+
+[...]
+
+>>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
+>>>  {
+>>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>>      struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>      struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
+>>> -    unsigned long reg;
+>>> -    u32 val, bit, virq;
+>>> +    u32 val, virq;
+>>> 
+>>> -    /* INT for debug */
+>>>      val = readl(priv->base + PCL_RCV_INT);
+>>> 
+>>>      if (val & PCL_CFG_BW_MGT_STATUS)
+>>>          dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>>> +
+>>>      if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>>          dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>> -        dev_dbg(pci->dev, "Root Error\n");
+>>> -    if (val & PCL_CFG_PME_MSI_STATUS)
+>>> -        dev_dbg(pci->dev, "PME Interrupt\n");
+>>> +
+>>> +    if (pci_msi_enabled()) {
+>> 
+>> This checks whether the kernel supports MSIs. Not that they are
+>> enabled in your controller. Is that really what you want to do?
 > 
-> Perhaps, once we get stac/clac out of raw_copy_from_user() (coming cycle,
-> probably).
-
-That sounds good. Presumably raw_copy_from_user will be smart enough
-to optimize aligned 2 byte accesses for flags above?
-
->  BTW, how large is the structure and how is it aligned?
-
-It's a batch of 16 byte structures, aligned to 16 bytes.
-At the moment I used batch size of 64 which seems enough.
-Ideally we'd actually read the whole batch like this
-without stac/clac back and forth. E.g.
-
-	struct vring_desc adesc[64] = {};
-
-	stac()
-	for (i = 0; i < 64; ++i) {
-	 get_user(flags, desc[i].flags)
-	 smp_rmb()
-	 if (!(flags & VALID))
-		break;
-	 copy_from_user(&adesc[i], desc + i, sizeof adesc[i]);
-	}
-	clac()
-
-
-
-
-> > > BTW, speaking of possible annotations: looks like there's a large
-> > > subset of call graph that can be reached only from vhost_worker()
-> > > or from several ioctls, with all uaccess limited to that subgraph
-> > > (thankfully).  Having that explicitly marked might be a good idea...
-> > 
-> > Sure. What's a good way to do that though? Any examples to follow?
-> > Or do you mean code comments?
+> The below two status bits are valid when the interrupt for MSI is 
+> asserted.
+> That is, pci_msi_enabled() is wrong.
 > 
-> Not sure...  FWIW, the part of call graph from "known to be only
-> used by vhost_worker" (->handle_kick/vhost_work_init callback/
-> vhost_poll_init callback) and "part of ->ioctl()" to actual uaccess
-> primitives is fairly large - the longest chain is
-> handle_tx_net ->
->   handle_tx ->
->     handle_tx_zerocopy ->
->       get_tx_bufs ->
-> 	vhost_net_tx_get_vq_desc ->
-> 	  vhost_tx_batch ->
-> 	    vhost_net_signal_used ->
-> 	      vhost_add_used_and_signal_n ->
-> 		vhost_signal ->
-> 		  vhost_notify ->
-> 		    vhost_get_avail_flags ->
-> 		      vhost_get_avail ->
-> 			vhost_get_user ->
-> 			  __get_user()
-> i.e. 14 levels deep and the graph doesn't factorize well...
+> I'll modify the function to check the two bits only if this function is
+> called from MSI handler.
 > 
-> Something along the lines of "all callers of thus annotated function
-> must be annotated the same way themselves, any implicit conversion
-> of pointers to such functions to anything other than boolean yields
-> a warning, explicit cast is allowed only with __force", perhaps?
-> Then slap such annotations on vhost_{get,put,copy_to,copy_from}_user(),
-> on ->handle_kick(), a force-cast in the only caller of ->handle_kick()
-> and force-casts in the 3 callers in ->ioctl().
+>> 
+>>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
+>>> +            dev_dbg(pci->dev, "Root Error Status\n");
+>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
+>>> +            generic_handle_irq(virq);
+>>> +        }
+>>> +
+>>> +        if (val & PCL_CFG_PME_MSI_STATUS) {
+>>> +            dev_dbg(pci->dev, "PME Interrupt\n");
+>>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
+>>> +            generic_handle_irq(virq);
+>>> +        }
+>> 
+>> These two cases do the exact same thing, calling the same interrupt.
+>> What is the point of dealing with them independently?
 > 
-> And propagate the annotations until the warnings stop, basically...
-> 
-> Shouldn't be terribly hard to teach sparse that kind of stuff and it
-> might be useful elsewhere.  It would act as a qualifier on function
-> pointers, with syntax ultimately expanding to __attribute__((something)).
-> I'll need to refresh my memories of the parser, but IIRC that shouldn't
-> require serious modifications.  Most of the work would be in
-> evaluate_call(), just before calling evaluate_symbol_call()...
-> I'll look into that; not right now, though.
+> Both PME and AER are asserted from MSI-0, and each handler checks its 
+> own
+> status bit in the PCIe register (aer_irq() in pcie/aer.c and 
+> pcie_pme_irq()
+> in pcie/pme.c).
+> So I think this handler calls generic_handle_irq() for the same MSI-0.
 
+So what is wrong with
 
-Thanks, that does sound useful!
+         if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+                    PCL_CFG_PME_MSI_STATUS)) {
+                 // handle interrupt
+         }
 
-> BTW, __vhost_get_user() might be better off expanded in both callers -
-> that would get their structure similar to vhost_copy_{to,from}_user(),
-> especially if you expand __vhost_get_user_slow() as well.
+?
 
-I agree, that does sound like a good cleanup.
+If you have two handlers for the same interrupt, this is a shared
+interrupt and each handler will be called in turn.
 
-> Not sure I understand what's going with ->meta_iotlb[] - what are the
-> lifetime rules for struct vhost_iotlb_map and what prevents the pointers
-> from going stale?
-
-It can be zeroed at any point.
-We just try to call __vhost_vq_meta_reset whenever anything can go
-stale.
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
