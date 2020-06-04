@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E69C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8CDD2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852DB20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJSd+ZW6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yjk9E/lb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbgFDQjv (ORCPT
+        id S1729886AbgFDQjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:39:51 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42050 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729582AbgFDQjt (ORCPT
+        Thu, 4 Jun 2020 12:39:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26896 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729789AbgFDQjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jun 2020 12:39:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591288787;
+        s=mimecast20190719; t=1591288788;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iVvEBKYL9SiRyrwTcQNMfs37AyJatE6ZkmtZGf9Ce7M=;
-        b=QJSd+ZW6vhQbUjRgpcYf32QxVrRYQDZRY8CLDNqLegKyxY18f0uwi6OL2yqTspqIJn6IUf
-        G17r0MjDW1/h39gD2M/FbKsvsaJHxGVQiJCgWTqlh7rKaHQQzJ2oCcN65iik69hqTQ9Y2Z
-        Gduna1y+uNJ27jZau+K01PvfyYm3PNI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-425-_gCegx7jPyiR4pUofirpiw-1; Thu, 04 Jun 2020 12:39:45 -0400
-X-MC-Unique: _gCegx7jPyiR4pUofirpiw-1
-Received: by mail-wr1-f72.google.com with SMTP id n6so2651361wrv.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:39:45 -0700 (PDT)
+        bh=MeNHDufylgfgT2BEBGZ7dMeWJwugUdwUrhiENouAjaA=;
+        b=Yjk9E/lbvmUcPfajfjEe2TaGWEqPQadh0YSHoxHrtT6T68+2hROC/jEdc9o5gfQzDyUNfu
+        dm2C8LXfsPAOXJcHLyzb+aLr2392wEF3VMWj0h42bCa98n/yIF8YFOEBLRhCm+CUFWqVfl
+        jgPqRA1tIpHOKA7tF9oNgLpDkPTigIg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-P4D0NHrZPaC69uUufPuP0w-1; Thu, 04 Jun 2020 12:39:47 -0400
+X-MC-Unique: P4D0NHrZPaC69uUufPuP0w-1
+Received: by mail-wm1-f71.google.com with SMTP id b65so2174938wmb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:39:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iVvEBKYL9SiRyrwTcQNMfs37AyJatE6ZkmtZGf9Ce7M=;
-        b=E8ABZQ85JSu7eiy4SJw1LqXYL80b6KxT1qJVpaNpYVWsiNMy/IJsu6emrF5AJuTcxa
-         RS/m6k9SLWJdGtKL0/v66Ikx0oaK0YKKt69UzEfywL7iI4m+K/gg+55YATP5vkfrinSU
-         uyQ/27/eewpfsoqd2DhvfeT7eFjEtJGLnGMiigIFlSoWv7rEY1w3kDdJFv+F/Ff53GCW
-         AgdbtLAsZbJHNQHHtDPIbho38h0SY4f0CyWAkHoHEPIX7UQIwsmppEt6sLAWsXZWUYoy
-         RfplbqoT0bsuh7qHRlwAJtGCqb++6aXOyAdQ7kNk7TKxH/PMjnUPExQTGVjZLMtHCwOf
-         BzJQ==
-X-Gm-Message-State: AOAM531JGq8129wJAYanlBusr43KVf3oB5NPW3Rh0QtRnkrQgyxoAHy4
-        shVvCftCSrpsToH+YWeb1NXcdVwEhrgczol2kSjSTnkl0kXQV7XP6nUu0nfER67QuCOExHhrWRZ
-        A9WzFixL2MJS8pAcnehudO89A
-X-Received: by 2002:a5d:4404:: with SMTP id z4mr5404018wrq.189.1591288784459;
-        Thu, 04 Jun 2020 09:39:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyA42SCXjHMtpFFKMGN0tQbnQVH4JgF3B76YKdjIkcIdWpMU7lnZZ2rujAEA2vN9B1wfxNLOg==
-X-Received: by 2002:a5d:4404:: with SMTP id z4mr5404009wrq.189.1591288784282;
-        Thu, 04 Jun 2020 09:39:44 -0700 (PDT)
+        bh=MeNHDufylgfgT2BEBGZ7dMeWJwugUdwUrhiENouAjaA=;
+        b=Yp22vqkwOkaS3+QSeuQTvu49xKif0frZzKD8vxsIM2Q53M5HnunShjGide+F02oMDP
+         Pqx1KBInCcP8H7MLFcV/CPcq6rSirs0Aw8fYpgu/zr2Cvlfgrxp2x3zfGb7qF+x8HNON
+         tBev+ZURBZGcy5kve5dl1PR9CmRiJjUGhbIGqLaGJjQ8fEMGSDwzYXk1GvB7d7TeRQo5
+         FrvySsFwt2hx4Cu/PPp2fsVvI3hJMg4YkWs2HqU5dCJ4AaxNn0Pr7O5lOoRXUYkseN79
+         o+c4ylaRWhtn+4Th1oTCLoKxdvsQHf7JFukulzxArscgZT6PflK74plnPYsBsMhuzupM
+         /fqA==
+X-Gm-Message-State: AOAM531fFp9xxYKMn6TNXaDf+akvP6O2Ks+1NomzjsxxbDBwB+SXoh21
+        9tm5qwmBJgFOnnTYzRuATmX24ib6zeLi41XGKQ9nn8MUU2GKqNgLw9S+XX5jKCR814UvTel8aNH
+        aIocwQTWimeRtO4GvWvBL4emw
+X-Received: by 2002:adf:e751:: with SMTP id c17mr4988643wrn.134.1591288785738;
+        Thu, 04 Jun 2020 09:39:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxccHrZexfZGNOsrR7uQGN1fRdp8e4dG3x3GnMWq9Faj9TbycCm/wbLRRWwASvuulzWjF1FYA==
+X-Received: by 2002:adf:e751:: with SMTP id c17mr4988628wrn.134.1591288785541;
+        Thu, 04 Jun 2020 09:39:45 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id p9sm7881636wma.48.2020.06.04.09.39.43
+        by smtp.gmail.com with ESMTPSA id p9sm7881636wma.48.2020.06.04.09.39.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 09:39:43 -0700 (PDT)
+        Thu, 04 Jun 2020 09:39:45 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, mhelsley@vmware.com,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 2/4] objtool: Move orc outside of check
-Date:   Thu,  4 Jun 2020 17:39:36 +0100
-Message-Id: <20200604163938.21660-3-jthierry@redhat.com>
+Subject: [PATCH 3/4] objtool: orc: Skip setting orc_entry for non-text sections
+Date:   Thu,  4 Jun 2020 17:39:37 +0100
+Message-Id: <20200604163938.21660-4-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200604163938.21660-1-jthierry@redhat.com>
 References: <20200604163938.21660-1-jthierry@redhat.com>
@@ -79,126 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the objtool_file can be obtained outside of the check function,
-orc generation builtin no longer requires check to explicitly call its
-orc related functions.
+Orc generation is only done for text sections, but some instructions
+can be found in non-text sections (e.g. .discard.text sections).
+
+Skip setting their orc sections since their whole sections will be
+skipped for orc generation.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/builtin-check.c |  2 +-
- tools/objtool/builtin-orc.c   | 18 +++++++++++++++++-
- tools/objtool/check.c         | 16 +---------------
- tools/objtool/objtool.h       |  2 +-
- tools/objtool/weak.c          |  2 +-
- 5 files changed, 21 insertions(+), 19 deletions(-)
+ tools/objtool/orc_gen.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 9f525d497308..2bd520446ef8 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -58,5 +58,5 @@ int cmd_check(int argc, const char **argv)
- 	if (!file)
- 		return 1;
+diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
+index c9549988121a..e74578640705 100644
+--- a/tools/objtool/orc_gen.c
++++ b/tools/objtool/orc_gen.c
+@@ -18,6 +18,9 @@ int create_orc(struct objtool_file *file)
+ 		struct cfi_reg *cfa = &insn->cfi.cfa;
+ 		struct cfi_reg *bp = &insn->cfi.regs[CFI_BP];
  
--	return check(file, false);
-+	return check(file);
- }
-diff --git a/tools/objtool/builtin-orc.c b/tools/objtool/builtin-orc.c
-index 3b700f477a11..833ce587c3d4 100644
---- a/tools/objtool/builtin-orc.c
-+++ b/tools/objtool/builtin-orc.c
-@@ -32,6 +32,7 @@ int cmd_orc(int argc, const char **argv)
- 
- 	if (!strncmp(argv[0], "gen", 3)) {
- 		struct objtool_file *file;
-+		int ret;
- 
- 		argc = parse_options(argc, argv, check_options, orc_usage, 0);
- 		if (argc != 1)
-@@ -43,7 +44,22 @@ int cmd_orc(int argc, const char **argv)
- 		if (!file)
- 			return 1;
- 
--		return check(file, true);
-+		ret = check(file);
-+		if (ret)
-+			return ret;
++		if (!insn->sec->text)
++			continue;
 +
-+		if (list_empty(&file->insn_list))
-+			return 0;
-+
-+		ret = create_orc(file);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = create_orc_sections(file);
-+		if (ret < 0)
-+			return ret;
-+
-+		return elf_write(file->elf);
- 	}
+ 		orc->end = insn->cfi.end;
  
- 	if (!strcmp(argv[0], "dump")) {
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 1638428df454..3fbb60fe94df 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2709,7 +2709,7 @@ static int validate_reachable_instructions(struct objtool_file *file)
- 	return 0;
- }
- 
--int check(struct objtool_file *file, bool orc)
-+int check(struct objtool_file *file)
- {
- 	int ret, warnings = 0;
- 
-@@ -2756,20 +2756,6 @@ int check(struct objtool_file *file, bool orc)
- 		warnings += ret;
- 	}
- 
--	if (orc) {
--		ret = create_orc(file);
--		if (ret < 0)
--			goto out;
--
--		ret = create_orc_sections(file);
--		if (ret < 0)
--			goto out;
--
--		ret = elf_write(file->elf);
--		if (ret < 0)
--			goto out;
--	}
--
- out:
- 	if (ret < 0) {
- 		/*
-diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
-index e4f0ab5a4094..be526f3d294d 100644
---- a/tools/objtool/objtool.h
-+++ b/tools/objtool/objtool.h
-@@ -21,7 +21,7 @@ struct objtool_file {
- 
- struct objtool_file *objtool_setup_file(const char *_objname, bool writable);
- 
--int check(struct objtool_file *file, bool orc);
-+int check(struct objtool_file *file);
- int orc_dump(const char *objname);
- int create_orc(struct objtool_file *file);
- int create_orc_sections(struct objtool_file *file);
-diff --git a/tools/objtool/weak.c b/tools/objtool/weak.c
-index 82698319f008..29180d599b08 100644
---- a/tools/objtool/weak.c
-+++ b/tools/objtool/weak.c
-@@ -17,7 +17,7 @@
- 	return ENOSYS;							\
- })
- 
--int __weak check(struct objtool_file *file, bool orc)
-+int __weak check(struct objtool_file *file)
- {
- 	UNSUPPORTED("check subcommand");
- }
+ 		if (cfa->base == CFI_UNDEFINED) {
 -- 
 2.21.1
 
