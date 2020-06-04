@@ -2,150 +2,151 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDA5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55864C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317C4207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5522072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:08:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="WmMiVkZN"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="a1QKMWej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgFDQIQ (ORCPT
+        id S1729715AbgFDQIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:08:16 -0400
-Received: from mout.web.de ([212.227.17.11]:45287 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgFDQIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:08:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591286886;
-        bh=pETVOrwMewilbon2Kkzk73yrGNcVCxiSROPPm8A1Nsg=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=WmMiVkZNPqxzF640OmaGcGsdi61daoih07Hayb6aiUy4UrvCwi1EKOnhfZfsPZaxY
-         5mcO9rmM7wHrfQx+FSjmhituBZpbxUU8T558yFHz61YLx8j/vbErUtiY+qaumw1uIM
-         kYN0uNg5W/s9kwWMIF5TZQi9jEHD7bumIEuuzA7o=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LsyRS-1ixSou2sCw-012bnM; Thu, 04
- Jun 2020 18:08:06 +0200
-Subject: Re: coccinelle: api: add kzfree script
-To:     Julia Lawall <julia.lawall@inria.fr>,
-        Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <96653281-3812-8b44-0dd8-6e7540a26a89@web.de>
- <alpine.DEB.2.21.2006041755360.2577@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e814fbbe-37a9-a059-fcbb-64cebba4c8e2@web.de>
-Date:   Thu, 4 Jun 2020 18:08:05 +0200
+        Thu, 4 Jun 2020 12:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgFDQIs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:08:48 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2F5C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 09:08:48 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id v79so6531150qkb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CvC1fr9DHUx1eySPx6Z5ziIOx+iRh9HidbAiYXl9oUc=;
+        b=a1QKMWejX4JXFneJkps82Y7XMEYg/+9HaO+iVTyst3zuIW5K7Zi/jDz4vb31Kw4bDW
+         ZyL9+zL3rQFnefPvBZayEPCwBoZg1SC5RvZ3mILl+p7O2stJBWzcPpfXOc8Ep33xSNwz
+         2Q8HCUij8VEPGRtDR7j7xkDwM0QL7dw2WJ9qoP5Jz+LYVys2D7TxF9gtgdTuby0VvL+F
+         nn1ApHIzP6u3v9bbdS38K9Sv7EQTmwXPYguNllWpzoqcX0MC3C/xUGsNCWC7FjZ6gaxt
+         hee/SsuivwYYcJJ2PcNOQ5iF0UfPV+xN1u9+HMFjDYTFwNJ4fT0YUEkPVMqynWToHUJF
+         0o9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CvC1fr9DHUx1eySPx6Z5ziIOx+iRh9HidbAiYXl9oUc=;
+        b=RLBhhCsg/+oboOtCo3jdspSGKf5CEY7BNEu+PVmC7TcSUwyg3siWPJWDp5A6e65nln
+         KDiMnm+STm6ejOMfjRwub/+b9tKnvO4wJcBYdtUmlcWm76HUVN030TVdh89iiiUFZ3WD
+         XBBvUSXbPsgbJm8U/CEsqb07WegoplKQ09MOsBQJO2Wn+1OuwwwLwUP7E6e1OAXgx10g
+         l7wvHQVb7W/+xeNeYjejVU/cepcoOmR7mWe479MQRth543S3lnnupikNQBvekkS+vLiL
+         zaLuAClCPECw6lbS9i9v/tPxsuDYKIkuqXxXMBrr/1EnBvdGe6bitkEgsqYJpn3pMZqT
+         tp0w==
+X-Gm-Message-State: AOAM5303y7atDmCdfSaVXUyqjxvWZYayXLqypwUhYjtcs6zlwauCq3fj
+        +E+erdgmjlfjHUi5tJ1KoHeZzw==
+X-Google-Smtp-Source: ABdhPJxNi7acIYvvdOAj4Iemrb5EcFB3U4dSwhOTCOTWDkvx1IWZ7y8LSlmXC2IGY+9DLow8U7/YpQ==
+X-Received: by 2002:a37:9d52:: with SMTP id g79mr5391209qke.331.1591286927657;
+        Thu, 04 Jun 2020 09:08:47 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id 185sm4614162qke.92.2020.06.04.09.08.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 09:08:46 -0700 (PDT)
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
+ dts
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200604135221.GH16719@Mani-XPS-13-9360>
+ <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
+ <20200604155825.GI16719@Mani-XPS-13-9360>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <ae48475d-c51f-f355-e809-365a6ddb82e2@marek.ca>
+Date:   Thu, 4 Jun 2020 12:09:09 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2006041755360.2577@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:H7KrQdVcf7Y7qO/hqy7nQpY7+jnzWKTRxLgu1fgUTDlrk7hzlkr
- kBUMoGh6/47t5icJEKC48S/ZecN1D9eBf6Nr7/pvoKibNA8BlPFzddfJzTmhGV5VwrbFzMG
- iOBsh2kDFXkuVfnCkEhds2uobzEW3x1rHp78oN3O1ZfxcW00adfulQJ0NNQPyj1ODOqIfI/
- APXBrBXbt4/xGrqbSA/PA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8fihY4PaWVc=:mnj5ghreCfBCSfuR+mUjLr
- z3GCthogMBTnVaoVKezMn9T7CrhSRxglf5Im4Tw1Y8oWbDKaEG8op7G6MknvfHMG0o39mu4E4
- sKhjKmlrNBoy1fCfBaWQqKmaYVZscdYt/lUroSQHUy6CsTGfDcLizzcaCHrFSLXwTFi3bHuYz
- RSwPHcVQX/FixDqvq5oqd39eUcgLE4Zl37bWRODOTBNaCU+pb3yb9biGKBpCbIcYlBq4Rai8d
- dkw4S3pb3jBZPxnCR4qBMaNgIBimvOzrxxv1Puu7zNfcmN3KbnJfi90TRUDY2GkS4wSe5eBzx
- pXVsLQXX/e2HSE5duhc9sGCwvyxa3dKAxl5uZxDx94anvFB/cT7lbuN/aXxP7+/Ok5L/2Pp8Q
- 0Y0MQNyBZEOevmiNvHh5Q3V+WYGLweVH46fWn8ua2TgZTHuD40bF0JXOoxYgH2Zz6gsW+UDoU
- Up/nDiVTy2oWAatmWhSQ7LCht3Uzw6T/ycSObTCHHEasLpx9Sy/SuKcQyViiZxfWPASXFd6Ge
- 5ICOZ5J5A2eohCVibz6Q56YQR5sUSak9wm9EiekCSQ+/yscrHBlG5Dc2ZrBPIJFcsFrjzWoRn
- V8Ljsce47tD5GCxFXJ+Gl6Q5wgaCqUIvef6w1FK7HPq+kqIuTMu/9HCRIGMclwf1DCCPkj0p/
- jBZ8r5i5nrTyeMWprgidRc8idbg48/SuKrKD1ByzCjVQN70CZTILaOH3JCs8dGjGqRQIVfuzB
- 0bYYii6FxF7YLHqYGHbwDzyuuWwWVkAeJhVYnuhzJ3SnC2HAsZnpB+4Wle1dHOmEbEDCu3pWF
- FvKXtrlyfGPLe5P6EqBv5mF+FUekL9PdQud3Yp1a/Kf3RdRX47MfSG9YV9QGk5may4nFz2Bsn
- LfUqK3laSuP0Suf6c78S3k21dZmWSO0hejHXYrOQUQGq8d7rYhv2mmmgsnXN++4zjaw5zreRU
- ePKlEd6C4cq92SC/4FasIPm/Wiy5mf/lOkxsQfr33GuGL1N+EP2VTOprMPzPNHaB5x9Xtb05k
- kAaEVflaFhOzxNgnkJgLzJbVrGeDGUuG57jMSvqfPZIBn61xHPrALZXoWVxkNk77WLVB5/zs7
- tDt/sDaYvX9sJBVe5GeNMSnMXrrKxZMpkPxTDaGf+UKOp8GEFXatKAZp72jBEcrE5ZJ1EoFxO
- ztEOBhKSReEZVt597aUtyg+gzCaleKRtmRd5iFJ8QqDs68/ehAat82OtZhT8W3HkH1e0IPjnS
- HXSMUOz6bfxR3Gdo2
+In-Reply-To: <20200604155825.GI16719@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> +virtual context
->>> +virtual org
->>> +virtual report
->>> +virtual patch
+On 6/4/20 11:58 AM, Manivannan Sadhasivam wrote:
+> On Thu, Jun 04, 2020 at 10:06:19AM -0400, Jonathan Marek wrote:
+>> On 6/4/20 9:52 AM, Manivannan Sadhasivam wrote:
+>>> Hi,
+>>>
+>>> On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
+>>>> Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
+>>>>
+>>>
+>>> I've tested this series on an SM8250 based board and able to get Type C (USB0)
+>>> working. There are also couple of Type A ports (USB1) on that board behind a
+>>> USB hub. It is probing fine but I don't see any activity while connecting a
+>>> USB device. Will continue to debug and once I get them working, I'll add my
+>>> Tested-by tag.
+>>>
 >>
->> +virtual context, org, report, patch
->
-> This is pointless.
+>> HDK865 also has a couple Type A ports, I am using them with devices already
+>> plugged in during boot and I haven't hit a problem like that, but I think
+>> I've seen the same issue when hotplugging. IIRC the behavior was a bit
+>> weird, like plugging a device in the Type A port (USB1) nothing would
+>> happen, but unplugging/replugging the type C port (USB0) would cause the
+>> Type A port device to start working..
+>>
+>> Have you tried with the devices already plugged in before booting?
+>>
+> 
+> Tried it but no luck :/ Also plugging and removing Type C doesn't make any
+> difference.
+> 
 
-I find the proposed SmPL code variant more succinct.
+This one might be obvious, but do you have 5V power coming out of the 
+type A ports?
 
-
->> How does the SmPL asterisk functionality fit to the operation
->> modes =E2=80=9Corg=E2=80=9D and =E2=80=9Creport=E2=80=9D?
->
-> make coccicheck uses the option --no-show-diff for the org and report mo=
-des.
-
-Can it be nicer to avoid the usage of specific functionality
-in the SmPL script directly?
-Should the corresponding SmPL rule dependencies become clearer?
-
-Regards,
-Markus
+> Thanks,
+> Mani
+> 
+>>> Thanks,
+>>> Mani
+>>>
+>>>> Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
+>>>> few changes. Notably, the HDK865 dts has regulator config changed a bit based
+>>>> on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
+>>>>
+>>>> Jonathan Marek (6):
+>>>>     arm64: dts: qcom: sm8150: add apps_smmu node
+>>>>     arm64: dts: qcom: sm8250: add apps_smmu node
+>>>>     arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+>>>>     arm64: dts: qcom: sm8250: Add USB and PHY device nodes
+>>>>     arm64: dts: qcom: add sm8150 hdk dts
+>>>>     arm64: dts: qcom: add sm8250 hdk dts
+>>>>
+>>>>    arch/arm64/boot/dts/qcom/Makefile       |   2 +
+>>>>    arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
+>>>>    arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
+>>>>    arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
+>>>>    arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
+>>>>    5 files changed, 1384 insertions(+)
+>>>>    create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+>>>>    create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+>>>>
+>>>> -- 
+>>>> 2.26.1
+>>>>
