@@ -2,151 +2,174 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B31C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083F62072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0423C20734
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591251189;
-	bh=ELubEYedLnFO0+uLYeRyxu6ZG/oqFjiB5RTNPuP1v1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Qt4rMG/fPhmHmMwyuu0M8ipNVey38gQXKBM7pNXQT7RI2kS2yVyGe10jhjv4fQ9mF
-	 /575H4HE7dR6r6HsTTGMR5KVfkcdYwTyeOKH5+Y4ExptAdR/WiInoKLLNwc89qIocO
-	 uaAS/pTRnojhWsB9nPEV+arlTXQhHNe+IR50i2+Y=
+	s=default; t=1591251505;
+	bh=b58Vy5SwtTbyRgwDB1JjnKDC7odtYPgt+t7MvV6fCOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bQAC3zO5dQ4Q4q8roMRyWA7j9PGDDdkCRf5uOycwobPXqqjRx5ToEN1mz1F0JAKeI
+	 9zxAltFMFEWw2Lr4tz7Kza5lpRFZybdFT67K+4xBRuHMZGNscP8ZWLO2v1DZnPj4VS
+	 pLRMNMkaGeSBIcBrQsMyIkofbDvVqNYOHxFtzmm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgFDGNI (ORCPT
+        id S1726979AbgFDGSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56900 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 02:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgFDGNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:13:07 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        id S1725959AbgFDGSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 02:18:23 -0400
+Received: from kernel.org (unknown [87.71.78.142])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CFFB2072E;
-        Thu,  4 Jun 2020 06:13:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E3962072E;
+        Thu,  4 Jun 2020 06:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591251186;
-        bh=ELubEYedLnFO0+uLYeRyxu6ZG/oqFjiB5RTNPuP1v1w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sPuO+2+8k0wlpBMQ0gUj9HR/SXvl5+CrXld8p776D/G+4DfcdbkRFCd+yDKEIDnQd
-         u67XTmCbj/LaBggwgqI9xRIM02zrIWlJsTNWXrLAK8/375V+hGIn9oityzFiTpv2Yk
-         /Hg7P+WLRMINiOVr5OIbdtloV71Pb4h8cKC9VKP8=
-Date:   Thu, 4 Jun 2020 08:13:02 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        s=default; t=1591251502;
+        bh=b58Vy5SwtTbyRgwDB1JjnKDC7odtYPgt+t7MvV6fCOU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IXkqPQoOU3wscqIXXMWt/Y5TkOrwtwnMx8e1GDO3arwp37wF3YS5TWw1he9VyaSeS
+         89Vf2ok0AEsO6njQmNORJH1sdCn3SOZLBx7rtKo7/9alOdMNqSdhDlvkldurNoZnBT
+         iW2UzmfH4Spawe1NKyJhKCr9TIFG31X5xIMnk6Lw=
+Date:   Thu, 4 Jun 2020 09:18:05 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL for v5.8-rc1] media updates
-Message-ID: <20200604081302.1a36f358@coco.lan>
-In-Reply-To: <CAHk-=wg=CTtNrxPeFzkDw053dY3urchiyxevHnUXHhTGbK=9OQ@mail.gmail.com>
-References: <20200603100559.2718efba@coco.lan>
-        <CAHk-=wg=CTtNrxPeFzkDw053dY3urchiyxevHnUXHhTGbK=9OQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
+ pagefault/preempt twice
+Message-ID: <20200604061805.GA202650@kernel.org>
+References: <20200518184843.3029640-1-ira.weiny@intel.com>
+ <20200519165422.GA5838@roeck-us.net>
+ <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
+ <20200519194215.GA71941@roeck-us.net>
+ <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
+ <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
+ <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
+ <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
+ <20200603211416.GA1740285@iweiny-DESK2.sc.intel.com>
+ <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 3 Jun 2020 21:13:21 -0700
-Linus Torvalds <torvalds@linux-foundation.org> escreveu:
+On Wed, Jun 03, 2020 at 04:44:17PM -0700, Guenter Roeck wrote:
+> On 6/3/20 2:14 PM, Ira Weiny wrote:
+> > On Wed, Jun 03, 2020 at 01:57:36PM -0700, Andrew Morton wrote:
+> >> On Thu, 21 May 2020 10:42:50 -0700 Ira Weiny <ira.weiny@intel.com> wrote:
+> >>
+> >>>>>
+> >>>>> Actually it occurs to me that the patch consolidating kmap_prot is odd for
+> >>>>> sparc 32 bit...
+> >>>>>
+> >>>>> Its a long shot but could you try reverting this patch?
+> >>>>>
+> >>>>> 4ea7d2419e3f kmap: consolidate kmap_prot definitions
+> >>>>>
+> >>>>
+> >>>> That is not easy to revert, unfortunately, due to several follow-up patches.
+> >>>
+> >>> I have gotten your sparc tests to run and they all pass...
+> >>>
+> >>> 08:10:34 > ../linux-build-test/rootfs/sparc/run-qemu-sparc.sh 
+> >>> Build reference: v5.7-rc4-17-g852b6f2edc0f
+> >>>
+> >>> Building sparc32:SPARCClassic:nosmp:scsi:hd ... running ......... passed
+> >>> Building sparc32:SPARCbook:nosmp:scsi:cd ... running ......... passed
+> >>> Building sparc32:LX:nosmp:noapc:scsi:hd ... running ......... passed
+> >>> Building sparc32:SS-4:nosmp:initrd ... running ......... passed
+> >>> Building sparc32:SS-5:nosmp:scsi:hd ... running ......... passed
+> >>> Building sparc32:SS-10:nosmp:scsi:cd ... running ......... passed
+> >>> Building sparc32:SS-20:nosmp:scsi:hd ... running ......... passed
+> >>> Building sparc32:SS-600MP:nosmp:scsi:hd ... running ......... passed
+> >>> Building sparc32:Voyager:nosmp:noapc:scsi:hd ... running ......... passed
+> >>> Building sparc32:SS-4:smp:scsi:hd ... running ......... passed
+> >>> Building sparc32:SS-5:smp:scsi:cd ... running ......... passed
+> >>> Building sparc32:SS-10:smp:scsi:hd ... running ......... passed
+> >>> Building sparc32:SS-20:smp:scsi:hd ... running ......... passed
+> >>> Building sparc32:SS-600MP:smp:scsi:hd ... running ......... passed
+> >>> Building sparc32:Voyager:smp:noapc:scsi:hd ... running ......... passed
+> >>>
+> >>> Is there another test I need to run?
+> >>
+> >> This all petered out, but as I understand it, this patchset still might
+> >> have issues on various architectures.
+> >>
+> >> Can folks please provide an update on the testing status?
+> > 
+> > I believe the tests were failing for Guenter due to another patch set...[1]
+> > 
+> > My tests with just this series are working.
+> > 
+> >>From my understanding the other failures were unrelated.[2]
+> > 
+> > 	<quote Mike Rapoport>
+> > 	I've checked the patch above on top of the mmots which already has
+> > 	Ira's patches and it booted fine. I've used sparc32_defconfig to build
+> > 	the kernel and qemu-system-sparc with default machine and CPU.
+> > 	</quote>
+> > 
+> > Mike, am I wrong?  Do you think the kmap() patches are still causing issues?
 
-> On Wed, Jun 3, 2020 at 1:06 AM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > PS.: The diffstat is so big that I almost dropped it, as it is almost
-> > useless for humans to read. I ended by not doing it just because perhaps
-> > you could be using some sort of script to check diffstat.  
+sparc32 UP and microblaze work for me with next-20200603, but I didn't
+test other architectures. 
+ 
+> For my part, all I can say is that -next is in pretty bad shape right now.
+> The summary of my tests says:
 > 
-> No, but I do compare the basics, and you don't have to more than scan
-> it to see that "ok, it only touches area xyz".
+> Build results:
+> 	total: 151 pass: 130 fail: 21
+> Qemu test results:
+> 	total: 430 pass: 375 fail: 55
+> 
+> sparc32 smp images in next-20200603 still crash for me with a spinlock
+> recursion.
 
-Ok.
+I think this is because Will's fixes [1] are not yet in -next.
 
-> And it turns out that it is huge for you partly because you have the
-> default (fairly low) git rename detection limits, in order to avoid
-> using a lot of CPU or memory for rename detection.
+> s390 images hang early in boot. Several others (alpha, arm64,
+> various ppc) don't even compile. I can run some more bisects over time,
+> but this is becoming a full-time job :-(.
 > 
-> So you get:
-> 
-> >  2181 files changed, 260633 insertions(+), 106012 deletions(-)  
-> 
-> while I get
-> 
->  1698 files changed, 161922 insertions(+), 7301 deletions(-)
-> 
-> which is a noticeable difference. Still a big diffstat, but quite a
-> bit smaller than yours.
-> 
-> You also get a _lot_ more noise in the form of "create mode xyz" and
-> "delete mode abc" notices, while for me a lot of them are just "rename
-> abc => xyz". So there's a double whammy for you.
-> 
-> The reason is that your diff only has renames for the 100% matches like this:
-> 
-> >  rename Documentation/{media/v4l-drivers => admin-guide/media}/au0828-cardlist.rst (100%)  
-> 
-> which git can detect purely by seeing "oh, same exact SHA1".
-> 
-> But you don't have any non-100% renames.
-> 
-> In contrast, the diffstat I see also has the inexact renames like
-> 
->  rename Documentation/{media/v4l-drivers =>
-> admin-guide/media}/bttv-cardlist.rst (99%)
->  rename Documentation/{media/v4l-drivers => admin-guide/media}/bttv.rst (79%)
-> 
-> because I have done
-> 
->    git config diff.renamelimit 0
-> 
-> to make the rename detection limit be infinite (alternatively, just
-> edit your ~/.gitconfig file manually - it's often easier than
-> remembering what the "git config" syntax is).
-> 
-> You want to see
-> 
->   [diff]
->         renamelimit = 0
-> 
-> in your ~/.gitconfig file (or, alternatively, if you want the setting
-> to be per-repo, in your .git/config file in your repository).
-> 
-> The default git limits for "should I spend CPU time and memory on
-> detecting inexact renames" are fairly low, because people use git on
-> fairly low-end machines.
+> Guenter
 
-I'm using renamelimit = 0 on one of my trees (the one I'm using for
-the ReST conversion), and I even use -M1 there when sending patches
-to docs (as some of the conversions require lots of indentation 
-changes, for example, on files with lots of ascii artwork), but on
-my merge tree, I was using some limit, as it is not common to have
-this huge amount of changes.
-
-> I bet your development machine isn't some kind of low-end toy, and
-> rename detection is not _that_ expensive.
-
-Probably not as nice as yours, but it is a comfortable machine,
-with 32 GB RAM, an i7-8705G CPU and a fast SSD disk. 
-
-Changing it to unlimited limit costed almost nothing here:
-
-	real	0m1,210s
-	user	0m1,009s
-	sys	0m0,190s
-
-I'll use this from now on. Thanks for the tip!
-
-Thanks,
-Mauro
+[1] https://lore.kernel.org/lkml/20200526173302.377-1-will@kernel.org
+-- 
+Sincerely yours,
+Mike.
