@@ -2,138 +2,132 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA26C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC69206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:29:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qNWdjuwt"
+	by mail.kernel.org (Postfix) with ESMTP id 9561D206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgFDT3b (ORCPT
+        id S1729389AbgFDTbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728809AbgFDT3a (ORCPT
+        Thu, 4 Jun 2020 15:31:25 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:56336
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726666AbgFDTbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:29:30 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDEAC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:29:29 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y11so2601293plt.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BN0NA5oXxaJmgloA0bV1VuRl7DweslwGb9BXC5tlSZI=;
-        b=qNWdjuwtEh3SepeFF9fNagsbBVKMOdC+i2KqVDopsH6dlehq61YjmGsjU3zQ6/6Sm+
-         RI59y6nTt3iJaugOaLxusXHriKBWVNJCrzHeENeqAGVpHLkPMQooCck+j2xRNg4QVbq2
-         U7Aga0bTxqeYSMNSshjefDdYD9kzqlGJMlmXX3yAeOrKcPi394fVJzn+N+UEYVrgLikW
-         PJ80Ob/zePEkwKogqqleJVCwqC4lBAXZfyFsOJ1Q71OHbRbc0fyAs9RyF+VvGzxb6jyN
-         PR+j0XjbkYKBjIdoJN78dsQ95HeKy3QSGz7aES9jpi6oH42fz2hvJ1Opql+7AsV4VMb8
-         cVyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BN0NA5oXxaJmgloA0bV1VuRl7DweslwGb9BXC5tlSZI=;
-        b=R08jV7wB+I0yk6fU4+HPbtdyLAhfxmmGfwXbob2lUyQZWWM8Yy8w4jiTqybScrq9bM
-         vMQmSK44NhR8PmKtDSXsJuf2Bg710DZm0fri07L6oNe3JtEgXAcWHqkU0aRCINLIGpAe
-         AMtdhGtcrPuOzOh/wFeDKZliYUWvz2CtEbqqmEikguG9pTXoduvGfsoOjmxJ2BR+Rwjw
-         0mcrTnfYhYNMkUTKSsS0RYirnlfLQqMK1ph/8jdT66KehXKqyk1DxmDEVQDhW7u1y+eP
-         zHkuAHsw25B1Fzgjk4bnOCSl7P/ywHKuQFJeZyFMds+BRV8yist2c22zj7Nvy6VMeXH3
-         ldvA==
-X-Gm-Message-State: AOAM5336wvTsrytYpL147CrXTN2UHbxvhG4eycsM9Aq1aNccU14+EXRj
-        9ZXnXUnYN7vEml31oD58+TnO/c9FHxFH/UczaYiWgOlme2w=
-X-Google-Smtp-Source: ABdhPJzSzKsiHc4z7LwcmpkgMu0NbAbDQYhYcnmTB/97B33m/EUjE6lKfBun6ZCLEkmHQ8gJwyD1p9mb5gkpJj8C3R0=
-X-Received: by 2002:a17:902:724a:: with SMTP id c10mr6119344pll.223.1591298968901;
- Thu, 04 Jun 2020 12:29:28 -0700 (PDT)
+        Thu, 4 Jun 2020 15:31:25 -0400
+X-IronPort-AV: E=Sophos;i="5.73,472,1583190000"; 
+   d="scan'208";a="350624709"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 21:31:22 +0200
+Date:   Thu, 4 Jun 2020 21:31:21 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Matthias Maennich <maennich@google.com>
+cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
+        cocci@systeme.lip6.fr, stable@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
+In-Reply-To: <20200604164145.173925-1-maennich@google.com>
+Message-ID: <alpine.DEB.2.21.2006042130080.2577@hadrien>
+References: <20200604164145.173925-1-maennich@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200603233203.1695403-1-keescook@chromium.org> <20200603233203.1695403-6-keescook@chromium.org>
-In-Reply-To: <20200603233203.1695403-6-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 4 Jun 2020 12:29:17 -0700
-Message-ID: <CAKwvOdm5zDide5RuppY_jG=r46=UMdVJBrkBqD5x=dOMTG9cZg@mail.gmail.com>
-Subject: Re: [PATCH 05/10] ide: Remove uninitialized_var() usage
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> "unused variable"). If the compiler thinks it is uninitialized, either
-> simply initialize the variable or make compiler changes. As a precursor
-> to removing[2] this[3] macro[4], just remove this variable since it was
-> actually unused:
->
-> drivers/ide/ide-taskfile.c:232:34: warning: unused variable 'flags' [-Wunused-variable]
->         unsigned long uninitialized_var(flags);
->                                         ^
->
-> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Fixes ce1e518190ea ("ide: don't disable interrupts during kmap_atomic()")
+
+On Thu, 4 Jun 2020, Matthias Maennich wrote:
+
+> When running `make coccicheck` in report mode using the
+> add_namespace.cocci file, it will fail for files that contain
+> MODULE_LICENSE. Those match the replacement precondition, but spatch
+> errors out as virtual.ns is not set.
+>
+> In order to fix that, add the virtual rule nsdeps and only do search and
+> replace if that rule has been explicitly requested.
+>
+> In order to make spatch happy in report mode, we also need a dummy rule,
+> as otherwise it errors out with "No rules apply". Using a script:python
+> rule appears unrelated and odd, but this is the shortest I could come up
+> with.
+>
+> Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
+> `make nsdeps`.
+>
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
+> Cc: YueHaibing <yuehaibing@huawei.com>
+> Cc: jeyu@kernel.org
+> Cc: cocci@systeme.lip6.fr
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Matthias Maennich <maennich@google.com>
+
+Acked-by: Julia Lawall <julia.lawall@inria.fr>
+
+Shuah reported the problem to me, so you could add
+
+Reported-by: Shuah Khan <skhan@linuxfoundation.org>
+
 
 > ---
->  drivers/ide/ide-taskfile.c | 1 -
->  1 file changed, 1 deletion(-)
+>  scripts/coccinelle/misc/add_namespace.cocci | 8 +++++++-
+>  scripts/nsdeps                              | 2 +-
+>  2 files changed, 8 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/ide/ide-taskfile.c b/drivers/ide/ide-taskfile.c
-> index aab6a10435b6..a26f85ab58a9 100644
-> --- a/drivers/ide/ide-taskfile.c
-> +++ b/drivers/ide/ide-taskfile.c
-> @@ -229,7 +229,6 @@ void ide_pio_bytes(ide_drive_t *drive, struct ide_cmd *cmd,
->         ide_hwif_t *hwif = drive->hwif;
->         struct scatterlist *sg = hwif->sg_table;
->         struct scatterlist *cursg = cmd->cursg;
-> -       unsigned long uninitialized_var(flags);
->         struct page *page;
->         unsigned int offset;
->         u8 *buf;
-> --
-> 2.25.1
+> diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
+> index 99e93a6c2e24..cbf1614163cb 100644
+> --- a/scripts/coccinelle/misc/add_namespace.cocci
+> +++ b/scripts/coccinelle/misc/add_namespace.cocci
+> @@ -6,6 +6,7 @@
+>  /// add a missing namespace tag to a module source file.
+>  ///
 >
+> +virtual nsdeps
+>  virtual report
+>
+>  @has_ns_import@
+> @@ -16,10 +17,15 @@ MODULE_IMPORT_NS(ns);
+>
+>  // Add missing imports, but only adjacent to a MODULE_LICENSE statement.
+>  // That ensures we are adding it only to the main module source file.
+> -@do_import depends on !has_ns_import@
+> +@do_import depends on !has_ns_import && nsdeps@
+>  declarer name MODULE_LICENSE;
+>  expression license;
+>  identifier virtual.ns;
+>  @@
+>  MODULE_LICENSE(license);
+>  + MODULE_IMPORT_NS(ns);
+> +
+> +// Dummy rule for report mode that would otherwise be empty and make spatch
+> +// fail ("No rules apply.")
+> +@script:python depends on report@
+> +@@
+> diff --git a/scripts/nsdeps b/scripts/nsdeps
+> index 03a8e7cbe6c7..dab4c1a0e27d 100644
+> --- a/scripts/nsdeps
+> +++ b/scripts/nsdeps
+> @@ -29,7 +29,7 @@ fi
+>
+>  generate_deps_for_ns() {
+>  	$SPATCH --very-quiet --in-place --sp-file \
+> -		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
+> +		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D nsdeps -D ns=$1 $2
+>  }
+>
+>  generate_deps() {
 > --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200603233203.1695403-6-keescook%40chromium.org.
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> 2.27.0.rc2.251.g90737beb825-goog
+>
+>
