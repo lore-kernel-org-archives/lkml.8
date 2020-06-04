@@ -2,171 +2,109 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35334C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2711C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11EA220738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932452087D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591289308;
-	bh=Oz7w8Vy9BhqBNcFPLUtkFBwlNSjLFu/N//zwBWU6z1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RTQMGWITJGXFyxWSbGrCDRXlyUjSG0/i+/IcDliwaxq9oWsA43m2ogfk4FC5gtI57
-	 z7qwcE6kO6QPgoyo7qEigTsUv9nK2Y2A/rEqw23uLccgL6Ooq/c5eWIqPBa4n8lj9O
-	 YgFvxmblPfdMYbDMJ2V4N+hTO0WjKj3v/aWox3eg=
+	s=default; t=1591289314;
+	bh=1tvXkKNxw2IZ812QyeEYAT+Bv1CjvnZY+yuGta1P37s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WZxzyStPNM0X2V+BmhIOnqmXoiOUQ2AFAY1G7GLLwbWFw6dn8GaFBvkTuFdMroFdg
+	 wffN6/7TNZDCNYHinV81/+zCq6xQK5CRwHZxOWUlhPfKTqy+LqzoSj2J/brLXkW1h3
+	 ujItagXGA7yIlAIajlZVyit39x/FlIgURTphpMak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgFDQs1 (ORCPT
+        id S1729956AbgFDQsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:48:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58374 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 12:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729860AbgFDQs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:48:26 -0400
-Received: from kernel.org (unknown [87.71.78.142])
+        id S1729860AbgFDQsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:48:32 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 785802072E;
-        Thu,  4 Jun 2020 16:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C4D820738;
+        Thu,  4 Jun 2020 16:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591289305;
-        bh=Oz7w8Vy9BhqBNcFPLUtkFBwlNSjLFu/N//zwBWU6z1E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bpAs4zNrGftDH+mfIB6aH7FBHvii0eyFF4eGfjNke4KBrTczckrLCgkHoW5LOpXab
-         zMovWEZ1cKUI1IRRf1GxOef/x+71d/03HlotOfi7JHLcWxCSSw/A7XESVjnbIVd0DK
-         VihEcbNVmahz/dpMfM+c4PiM52AoOgpr7v341OcA=
-Date:   Thu, 4 Jun 2020 19:48:14 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, peterz@infradead.org,
-        jroedel@suse.de, Andy Lutomirski <luto@kernel.org>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        manvanth@linux.vnet.ibm.com, linux-next@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linuxppc-dev@lists.ozlabs.org, hch@lst.de,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] mm: Fix pud_alloc_track()
-Message-ID: <20200604164814.GA7600@kernel.org>
-References: <20200604074446.23944-1-joro@8bytes.org>
+        s=default; t=1591289312;
+        bh=1tvXkKNxw2IZ812QyeEYAT+Bv1CjvnZY+yuGta1P37s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zUHDWalXh8BlYCBZXK69+PCY4h+MaDXE97U23oyjhD9FX6R2AmkK4UD4xXgpuel1i
+         zZhC2owU17wv9cpNz545bWkwqd0qLB1md6urDAs/3DzpshMAwO9053xWewynWaAIed
+         BbNcM2yenFgubVooLYNB9EILAa+k7ZiY20P/DOck=
+Date:   Thu, 4 Jun 2020 09:48:29 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+Message-ID: <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
+References: <20200604111410.17918-1-dmurphy@ti.com>
+        <20200604111410.17918-5-dmurphy@ti.com>
+        <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604074446.23944-1-joro@8bytes.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:44:46AM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The pud_alloc_track() needs to do different checks based on whether
-> __ARCH_HAS_5LEVEL_HACK is defined, like it already does in
-> pud_alloc(). Otherwise it causes boot failures on PowerPC.
-> 
-> Provide the correct implementations for both possible settings of
-> __ARCH_HAS_5LEVEL_HACK to fix the boot problems.
+On Thu, 4 Jun 2020 11:38:14 -0500 Dan Murphy wrote:
+> Jakub
+>=20
+> On 6/4/20 11:25 AM, Jakub Kicinski wrote:
+> > On Thu, 4 Jun 2020 06:14:10 -0500 Dan Murphy wrote: =20
+> >> Add RGMII internal delay configuration for Rx and Tx.
+> >>
+> >> Signed-off-by: Dan Murphy <dmurphy@ti.com> =20
+> > Hi Dan, please make sure W=3D1 C=3D1 build is clean:
+> >
+> > drivers/net/phy/dp83869.c:103:18: warning: =C3=A2=E2=82=AC=CB=9Cdp83869=
+_internal_delay=C3=A2=E2=82=AC=E2=84=A2 defined but not used [-Wunused-cons=
+t-variable=3D]
+> >    103 | static const int dp83869_internal_delay[] =3D {250, 500, 750, =
+1000, 1250, 1500,
+> >        |                  ^~~~~~~~~~~~~~~~~~~~~~ =20
+>=20
+> I built with W=3D1 and C=3D1 and did not see this warning.
+>=20
+> What defconfig are you using?
 
-There is a patch in mmotm [1] that completely removes
-__ARCH_HAS_5LEVEL_HACK which is a part of the series [2] that updates
-p4d folding accross architectures. This should fix boot on PowerPC and
-the addition of pXd_alloc_track() for __ARCH_HAS_5LEVEL_HACK wouldn't be
-necessary.
+allmodconfig with gcc-10
 
+> Can you check if CONFIG_OF_MDIO is set or not?=C2=A0 That would be the on=
+ly=20
+> way that warning would come up.
 
-[1] https://github.com/hnaz/linux-mm/commit/cfae68792af3731ac902ea6ba5ed8df5a0f6bd2f
-[2] https://lore.kernel.org/kvmarm/20200414153455.21744-1-rppt@kernel.org/
+Hm. I don't have the config from this particular build but just running
+allmodconfig makes it CONFIG_OF_MDIO=3Dm
 
-> Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-> Tested-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-> Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> Fixes: d8626138009b ("mm: add functions to track page directory modifications")
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  include/asm-generic/5level-fixup.h |  5 +++++
->  include/linux/mm.h                 | 26 +++++++++++++-------------
->  2 files changed, 18 insertions(+), 13 deletions(-)
-> 
-> diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
-> index 58046ddc08d0..afbab31fbd7e 100644
-> --- a/include/asm-generic/5level-fixup.h
-> +++ b/include/asm-generic/5level-fixup.h
-> @@ -17,6 +17,11 @@
->  	((unlikely(pgd_none(*(p4d))) && __pud_alloc(mm, p4d, address)) ? \
->  		NULL : pud_offset(p4d, address))
->  
-> +#define pud_alloc_track(mm, p4d, address, mask)					\
-> +	((unlikely(pgd_none(*(p4d))) &&						\
-> +	  (__pud_alloc(mm, p4d, address) || ({*(mask)|=PGTBL_P4D_MODIFIED;0;})))?	\
-> +	  NULL : pud_offset(p4d, address))
-> +
->  #define p4d_alloc(mm, pgd, address)		(pgd)
->  #define p4d_alloc_track(mm, pgd, address, mask)	(pgd)
->  #define p4d_offset(pgd, start)			(pgd)
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 66e0977f970a..ad3b31c5bcc3 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2088,35 +2088,35 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
->  		NULL : pud_offset(p4d, address);
->  }
->  
-> -static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-> +static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
->  				     unsigned long address,
->  				     pgtbl_mod_mask *mod_mask)
-> -
->  {
-> -	if (unlikely(pgd_none(*pgd))) {
-> -		if (__p4d_alloc(mm, pgd, address))
-> +	if (unlikely(p4d_none(*p4d))) {
-> +		if (__pud_alloc(mm, p4d, address))
->  			return NULL;
-> -		*mod_mask |= PGTBL_PGD_MODIFIED;
-> +		*mod_mask |= PGTBL_P4D_MODIFIED;
->  	}
->  
-> -	return p4d_offset(pgd, address);
-> +	return pud_offset(p4d, address);
->  }
->  
-> -#endif /* !__ARCH_HAS_5LEVEL_HACK */
-> -
-> -static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-> +static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
->  				     unsigned long address,
->  				     pgtbl_mod_mask *mod_mask)
-> +
->  {
-> -	if (unlikely(p4d_none(*p4d))) {
-> -		if (__pud_alloc(mm, p4d, address))
-> +	if (unlikely(pgd_none(*pgd))) {
-> +		if (__p4d_alloc(mm, pgd, address))
->  			return NULL;
-> -		*mod_mask |= PGTBL_P4D_MODIFIED;
-> +		*mod_mask |= PGTBL_PGD_MODIFIED;
->  	}
->  
-> -	return pud_offset(p4d, address);
-> +	return p4d_offset(pgd, address);
->  }
->  
-> +#endif /* !__ARCH_HAS_5LEVEL_HACK */
-> +
->  static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
->  {
->  	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
-> -- 
-> 2.26.2
-> 
+> > Also net-next is closed right now, you can post RFCs but normal patches
+> > should be deferred until after net-next reopens. =20
+>=20
+> I know net-next is closed.
+>=20
+> I pinged David M when it was open about what is meant by "new" patches=20
+> in the net-dev FAQ.=C2=A0 So I figured I would send the patches to see wh=
+at=20
+> the response was.
+>=20
+> To me these are not new they are in process patches.=C2=A0 My understand =
+is=20
+> New is v1 patchesets.
+>=20
+> But now I have the answer.
 
--- 
-Sincerely yours,
-Mike.
+Oh sorry, I may be wrong in this case, I haven't tracked this series.
+
