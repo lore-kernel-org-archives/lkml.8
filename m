@@ -2,157 +2,131 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC05C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96BAE206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC25207D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SIWTnYeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgFDHiE (ORCPT
+        id S1728115AbgFDHin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:38:04 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:12570 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726422AbgFDHiD (ORCPT
+        Thu, 4 Jun 2020 03:38:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgFDHim (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:38:03 -0400
-X-IronPort-AV: E=Sophos;i="5.73,471,1583164800"; 
-   d="scan'208";a="93814171"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 04 Jun 2020 15:37:58 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id 4E00950A9975;
-        Thu,  4 Jun 2020 15:37:58 +0800 (CST)
-Received: from [10.167.225.141] (10.167.225.141) by
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Thu, 4 Jun 2020 15:37:58 +0800
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogUmU6IFtSRkMgUEFUQ0ggMC84XSBkYXg6IEFkZCBh?=
- =?UTF-8?Q?_dax-rmap_tree_to_support_reflink?=
-To:     Dave Chinner <david@fromorbit.com>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
-        "Qi, Fuli" <qi.fuli@fujitsu.com>,
-        "Gotou, Yasunori" <y-goto@fujitsu.com>
-References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
- <20200427122836.GD29705@bombadil.infradead.org>
- <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
- <20200428064318.GG2040@dread.disaster.area>
-From:   Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
-Message-ID: <153e13e6-8685-fb0d-6bd3-bb553c06bf51@cn.fujitsu.com>
-Date:   Thu, 4 Jun 2020 15:37:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 03:38:42 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BEEC05BD1E;
+        Thu,  4 Jun 2020 00:38:42 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B661A29B;
+        Thu,  4 Jun 2020 09:38:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1591256317;
+        bh=Ia+q/Q+BfL6tHkvCBFgK10jhset8KFeCNrnvPfoBk6o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SIWTnYeZ0/5gCWJqKEDGMMICDb2Q5FP8/+6+lMgm1XppsiWoorRuIQ36s2kiIpWid
+         1UOECcAivjKfGd3yuvYTH3SPR05Vy1k5CuMW3xHQIJxheqaPcTbpSgDblqDEKXHjcQ
+         cGV+uESgypZ58Vn7x77BJYNoHFFSCbr3860AfxBM=
+Date:   Thu, 4 Jun 2020 10:38:20 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 3/3] drm/bridge: Introduce LT9611 DSI to HDMI bridge
+Message-ID: <20200604073820.GB5828@pendragon.ideasonboard.com>
+References: <20200513100533.42996-1-vkoul@kernel.org>
+ <20200513100533.42996-4-vkoul@kernel.org>
+ <20200528015205.GE4670@pendragon.ideasonboard.com>
+ <20200604072548.GE3521@vkoul-mobl>
 MIME-Version: 1.0
-In-Reply-To: <20200428064318.GG2040@dread.disaster.area>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.225.141]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204)
-X-yoursite-MailScanner-ID: 4E00950A9975.AB7F6
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200604072548.GE3521@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vinod,
 
-
-On 2020/4/28 下午2:43, Dave Chinner wrote:
-> On Tue, Apr 28, 2020 at 06:09:47AM +0000, Ruan, Shiyang wrote:
->>
->> 在 2020/4/27 20:28:36, "Matthew Wilcox" <willy@infradead.org> 写道:
->>
->>> On Mon, Apr 27, 2020 at 04:47:42PM +0800, Shiyang Ruan wrote:
->>>>   This patchset is a try to resolve the shared 'page cache' problem for
->>>>   fsdax.
->>>>
->>>>   In order to track multiple mappings and indexes on one page, I
->>>>   introduced a dax-rmap rb-tree to manage the relationship.  A dax entry
->>>>   will be associated more than once if is shared.  At the second time we
->>>>   associate this entry, we create this rb-tree and store its root in
->>>>   page->private(not used in fsdax).  Insert (->mapping, ->index) when
->>>>   dax_associate_entry() and delete it when dax_disassociate_entry().
->>>
->>> Do we really want to track all of this on a per-page basis?  I would
->>> have thought a per-extent basis was more useful.  Essentially, create
->>> a new address_space for each shared extent.  Per page just seems like
->>> a huge overhead.
->>>
->> Per-extent tracking is a nice idea for me.  I haven't thought of it
->> yet...
->>
->> But the extent info is maintained by filesystem.  I think we need a way
->> to obtain this info from FS when associating a page.  May be a bit
->> complicated.  Let me think about it...
+On Thu, Jun 04, 2020 at 12:55:48PM +0530, Vinod Koul wrote:
+> On 28-05-20, 04:52, Laurent Pinchart wrote:
 > 
-> That's why I want the -user of this association- to do a filesystem
-> callout instead of keeping it's own naive tracking infrastructure.
-> The filesystem can do an efficient, on-demand reverse mapping lookup
-> from it's own extent tracking infrastructure, and there's zero
-> runtime overhead when there are no errors present.
-
-Hi Dave,
-
-I ran into some difficulties when trying to implement the per-extent 
-rmap tracking.  So, I re-read your comments and found that I was 
-misunderstanding what you described here.
-
-I think what you mean is: we don't need the in-memory dax-rmap tracking 
-now.  Just ask the FS for the owner's information that associate with 
-one page when memory-failure.  So, the per-page (even per-extent) 
-dax-rmap is needless in this case.  Is this right?
-
-Based on this, we only need to store the extent information of a fsdax 
-page in its ->mapping (by searching from FS).  Then obtain the owners of 
-this page (also by searching from FS) when memory-failure or other rmap 
-case occurs.
-
-So, a fsdax page is no longer associated with a specific file, but with 
-a FS(or the pmem device).  I think it's easier to understand and implement.
-
-
---
-Thanks,
-Ruan Shiyang.
+> > > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
+> > > +				enum drm_bridge_attach_flags flags)
+> > > +{
+> > > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
+> > > +	int ret;
+> > > +
+> > > +	dev_dbg(lt9611->dev, "bridge attach\n");
+> > 
+> > 
+> > Connector creation in bridge drivers is deprecated. Please at least add
 > 
-> At the moment, this "dax association" is used to "report" a storage
-> media error directly to userspace. I say "report" because what it
-> does is kill userspace processes dead. The storage media error
-> actually needs to be reported to the owner of the storage media,
-> which in the case of FS-DAX is the filesytem.
-> 
-> That way the filesystem can then look up all the owners of that bad
-> media range (i.e. the filesystem block it corresponds to) and take
-> appropriate action. e.g.
-> 
-> - if it falls in filesytem metadata, shutdown the filesystem
-> - if it falls in user data, call the "kill userspace dead" routines
->    for each mapping/index tuple the filesystem finds for the given
->    LBA address that the media error occurred.
-> 
-> Right now if the media error is in filesystem metadata, the
-> filesystem isn't even told about it. The filesystem can't even shut
-> down - the error is just dropped on the floor and it won't be until
-> the filesystem next tries to reference that metadata that we notice
-> there is an issue.
-> 
-> Cheers,
-> 
-> Dave.
-> 
+> Okay what is the right way for connector creation? I can add support for
+> that.
 
+Historically bridge drivers have created connectors. With support for
+bridge chaining, this approach was considered not to scale. For
+instance, I have a board where the SoC has an internal LVDS encoder, and
+the board itself has an LVDS-to-DPI decoder followed by a DPI-to-HDMI
+encoder. All three components are supported by bridge drivers, and only
+the last one should create a connector. Furthermore, different
+operations of the connector may be implemented by different bridges, for
+instance with one bridge connected to the DDC lines to read EDID, and
+another bridge connected to the HPD line to detect hotplug.
 
+To support these systems, we have deprecated connector creation in
+bridges, in favour of implementing new bridge callback functions for
+connector-related operations (see .get_modes(), .get_edid() and
+.detect() in struct drm_bridge_funcs). With this new model, each bridge
+implements the operations it supports, and the display controller driver
+binds the bridges together to create a connector that delegates the
+connector operations to the appropriate bridge. A helper function,
+drm_bridge_connector_init(), can be used to automate that.
+
+To transition to this model, we require all new bridge to at least
+optionally support disabling connector creation (as requested by the
+DRM_BRIDGE_ATTACH_NO_CONNECTOR), and implement the drm_bridge_funcs
+functions related to connector operations. Existing bridges are also
+converted to the new model. Once all bridges used by a display
+controller support the new model, the display controller is then
+converted to use DRM_BRIDGE_ATTACH_NO_CONNECTOR and
+drm_bridge_connector_init() (or implement the latter manually if the
+helper doesn't support all the display controller's needs). Once all
+display controllers using a bridge have been converted to the new model,
+support for creating a connector (the !DRM_BRIDGE_ATTACH_NO_CONNECTOR
+case) is removed from the bridge driver. Finally, once everybody will
+use the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag, we will simply drop it.
+
+> > support for the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag, to make connector
+> > creation optional. Ideally the !DRM_BRIDGE_ATTACH_NO_CONNECTOR case
+> 
+> will add that
+> 
+> > should not be implemented at all. This will require the display
+> > controller driver to use DRM_BRIDGE_ATTACH_NO_CONNECTOR. Which display
+> > controller(s) do you use this driver with ?
+> 
+> I am using with msm display driver, this was tested on dragon-board
+> db845c board.
+
+-- 
+Regards,
+
+Laurent Pinchart
