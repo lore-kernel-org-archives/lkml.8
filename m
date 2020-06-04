@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827B220823
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5010207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bTpVL1yf"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XyuF7akh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgFDNxd (ORCPT
+        id S1728920AbgFDNxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:53:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47838 "EHLO
+        Thu, 4 Jun 2020 09:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728740AbgFDNxb (ORCPT
+        with ESMTP id S1728903AbgFDNxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:53:31 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB22C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:53:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e1so6221135wrt.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:53:30 -0700 (PDT)
+        Thu, 4 Jun 2020 09:53:33 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86412C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:53:32 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r15so5719882wmh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:53:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Fs26md6QbBGAquJwpk095GGSGBX/m/yeaPP+lwPf4x8=;
-        b=bTpVL1yfwhHL564oV9oXTuVi5bwYohXzTpcKvqoytnCDbbMUIAeZsrdq92E0qwRRSg
-         UfSDj3lzKt+diIWgtJqYc2UKsOBY/ArWO+KMdr64+3lR8Puu98hTn/h1lbs8pZD3z0a5
-         6ShQ9QS2p4Zr3km9dLUyszhnICzksvQjbCrHKAfOpH8DBiP7RsMzrXzBw1bJT3KiwTm3
-         9xZUp0uS871oMpIXbSrQ/0KnqXJ/ZEg8yRFTESmOv1jd2O4crFzKduVGLDXRc8vcZgCD
-         uUtou4MeMzMCIRxtSYLva3dOgaRLMh0YBcvkdPYbchEEWfISZiUqH0diRmCqtZ42LoKm
-         G+jA==
+        bh=WTN9hKVRvS3SB3HTMfGE7UGBs+9KNxbyg3Yusfgv+rE=;
+        b=XyuF7akhxZYqkjEdda9jL2OlbN0kGPXJPHJ0ss5AJZFIm7yaqkJ70UFt397DKdBTTy
+         LkysXfSu9XsXPGq1ID7H1auU1t3o5k0fJr+9ipc5zC1uDNIVS9a6lO7HiJSMM5ke/Vyh
+         U4IPCGpq3r09LTUCHE/F46tvaQJWRMqsdWCzlzPW6KYO/505VDb/T7Q42z23eGQE7z6Z
+         72ekSvLROK+9p6ZCe38kEP+yGRvhGpOsD8lrv4WBaqHrAnYrxmr2Tn9T2oRvMg/H8LnU
+         igUmQBOWOMLCuTbzTJ8RUUrZiJqr3vm3VVIfo/NiZePI42xwckDiJmy4cK4CdbrEplxc
+         4BPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Fs26md6QbBGAquJwpk095GGSGBX/m/yeaPP+lwPf4x8=;
-        b=VHDsCFM3LhGGpfQ7mFAkn5Rrdu9pFOYHjnkCaNk+81xd52mGObU1aHanpOAVHSvE7L
-         6UlVOMXRcks/6SHVOwZ1emfn5EqgGbap9dp6TUfIqgB98tFf/DbK0HmIz2fJhhYjbV9L
-         P4WbqyCyH2Fnp3Akpj5ks9vrV3f3LCiHTd7DgkgWv2kKGOSKcX2AHtLEc2ZZOKKSQQxT
-         ztxk4ISqLSWUbCUTBabx21PG3nNq5mKco/MT6jUAt32DN780JQZudk7sHeDnNqiw6QgW
-         F3BGU8We3Po6V/j06vIJpDMGg4L5kdL1Y/VSaVVE0OpGMbEQErW1Q0mr8WWkkZHXqfD/
-         MXwQ==
-X-Gm-Message-State: AOAM530jOPKfoUYI8nVmSHnH8ql8LvWqvKyi3RQTQKJnLj3S/lfu6mJ1
-        2ACryeaLrVwfVkmK1tgGXDOe2Q==
-X-Google-Smtp-Source: ABdhPJwqpOH22rRrTWj54Pu3JjP2wensOE1kRwQ6BI5hptsY6t27TXlnHJBKfdM8GJs/L3uqecz/Pw==
-X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr4441675wru.407.1591278809353;
-        Thu, 04 Jun 2020 06:53:29 -0700 (PDT)
+        bh=WTN9hKVRvS3SB3HTMfGE7UGBs+9KNxbyg3Yusfgv+rE=;
+        b=b+tgEhDHm2rPqBNmdXStJSXLRYlV7WLyMgOLD9+eazYiw//EJvq1GZ31IXkS+mWu3i
+         Lb7d3wz1R7vnhYNO7reczFVbK6YGQzTm8Y8Xm9mnlpXj/Ssx19tvl4hSVg/GUGURPbG6
+         wCAwNbtB2zqbb4hyf1GCmH5my9vWm3Fk/ikH9khoaEz5X7UhU51vmD84cLKynhJ0jVG9
+         jdsirhgKrOnaiGz4TyTx60KBdZHZLFia5pUlPUFe2tIPLtlN0zZ+zR2YrK5fSdkk1EnP
+         sZ9RLl/IteKYcHjUvBwCemtJKaW9h4yfcPwoIR+53uq7VdLp3BE0zaM1mH5ap/SWVtyL
+         +eXQ==
+X-Gm-Message-State: AOAM533FDbDbH6oghI9NLRAHZNC/xY17NjYm/9QPPeSpGJqskkmokr6/
+        DNuzhaspFsnd89OMNnzAcMu2DQ==
+X-Google-Smtp-Source: ABdhPJwd9WGnr6Q/FV1RFyKfSIpbxLo2wXPQ8ohJw62dgXc/LSq0+CrfVHbTBTa4n1Fkmh1H7CwwIg==
+X-Received: by 2002:a1c:9d53:: with SMTP id g80mr4410607wme.13.1591278811002;
+        Thu, 04 Jun 2020 06:53:31 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:22:5867:d2c6:75f4])
-        by smtp.gmail.com with ESMTPSA id i74sm8185599wri.49.2020.06.04.06.53.27
+        by smtp.gmail.com with ESMTPSA id i74sm8185599wri.49.2020.06.04.06.53.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 06:53:28 -0700 (PDT)
+        Thu, 04 Jun 2020 06:53:30 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     hverkuil-cisco@xs4all.nl
 Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Maxime Jourdan <mjourdan@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel formats
-Date:   Thu,  4 Jun 2020 15:53:13 +0200
-Message-Id: <20200604135317.9235-2-narmstrong@baylibre.com>
+Subject: [PATCH 2/5] media: meson: vdec: handle bitdepth on source change
+Date:   Thu,  4 Jun 2020 15:53:14 +0200
+Message-Id: <20200604135317.9235-3-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200604135317.9235-1-narmstrong@baylibre.com>
 References: <20200604135317.9235-1-narmstrong@baylibre.com>
@@ -80,57 +80,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Jourdan <mjourdan@baylibre.com>
 
-Add two generic Compressed Framebuffer pixel formats to be used
-with a modifier when imported back in another subsystem like DRM/KMS.
+In order to handle Compressed Framebuffer support, we need to handle
+the switch between 8bit and 10bit frame output.
 
-These pixel formats represents generic 8bits and 10bits compressed buffers
-with a vendor specific layout.
-
-These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_YUV420_10BIT
-used to describe the underlying compressed buffers used for ARM Framebuffer
-Compression. In the Amlogic case, the compression is different but the
-underlying buffer components is the same.
+This handles the bitdepth in the codec amvdec_src_change() call to handle
+a source change/decode resume when the stream bitdepth changes.
 
 Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
- include/uapi/linux/videodev2.h       | 9 +++++++++
- 2 files changed, 11 insertions(+)
+ drivers/staging/media/meson/vdec/codec_h264.c   |  3 ++-
+ drivers/staging/media/meson/vdec/codec_vp9.c    |  3 ++-
+ drivers/staging/media/meson/vdec/vdec.h         |  1 +
+ drivers/staging/media/meson/vdec/vdec_helpers.c | 10 ++++++----
+ drivers/staging/media/meson/vdec/vdec_helpers.h |  3 ++-
+ 5 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 2322f08a98be..8f14adfd5bc5 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
- 		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
- 		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
- 		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
-+		case V4L2_PIX_FMT_YUV420_8BIT:	descr = "Compressed YUV 4:2:0 8-bit Format"; break;
-+		case V4L2_PIX_FMT_YUV420_10BIT:	descr = "Compressed YUV 4:2:0 10-bit Format"; break;
- 		default:
- 			if (fmt->description[0])
- 				return;
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index c3a1cf1c507f..90b9949acb8a 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -705,6 +705,15 @@ struct v4l2_pix_format {
- #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /* Fast Walsh Hadamard Transform (vicodec) */
- #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W', 'H') /* Stateless FWHT (vicodec) */
+diff --git a/drivers/staging/media/meson/vdec/codec_h264.c b/drivers/staging/media/meson/vdec/codec_h264.c
+index c61128fc4bb9..d53c9a464bde 100644
+--- a/drivers/staging/media/meson/vdec/codec_h264.c
++++ b/drivers/staging/media/meson/vdec/codec_h264.c
+@@ -353,7 +353,8 @@ static void codec_h264_src_change(struct amvdec_session *sess)
+ 		frame_width, frame_height, crop_right, crop_bottom);
  
-+/*
-+ * Compressed Luminance+Chrominance meta-formats
-+ * In these formats, the component ordering is specified (Y, followed by U
-+ * then V), but the exact Linear layout is undefined.
-+ * These formats can only be used with a non-Linear modifier.
-+ */
-+#define V4L2_PIX_FMT_YUV420_8BIT	v4l2_fourcc('Y', 'U', '0', '8') /* 1-plane YUV 4:2:0 8-bit */
-+#define V4L2_PIX_FMT_YUV420_10BIT	v4l2_fourcc('Y', 'U', '1', '0') /* 1-plane YUV 4:2:0 10-bit */
-+
- /*  Vendor-specific formats   */
- #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
- #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
+ 	codec_h264_set_par(sess);
+-	amvdec_src_change(sess, frame_width, frame_height, h264->max_refs + 5);
++	amvdec_src_change(sess, frame_width, frame_height,
++			  h264->max_refs + 5, 8);
+ }
+ 
+ /*
+diff --git a/drivers/staging/media/meson/vdec/codec_vp9.c b/drivers/staging/media/meson/vdec/codec_vp9.c
+index 897f5d7a6aad..4c6a644ab1a7 100644
+--- a/drivers/staging/media/meson/vdec/codec_vp9.c
++++ b/drivers/staging/media/meson/vdec/codec_vp9.c
+@@ -2132,7 +2132,8 @@ static irqreturn_t codec_vp9_threaded_isr(struct amvdec_session *sess)
+ 
+ 	codec_vp9_fetch_rpm(sess);
+ 	if (codec_vp9_process_rpm(vp9)) {
+-		amvdec_src_change(sess, vp9->width, vp9->height, 16);
++		amvdec_src_change(sess, vp9->width, vp9->height, 16,
++				  vp9->is_10bit ? 10 : 8);
+ 
+ 		/* No frame is actually processed */
+ 		vp9->cur_frame = NULL;
+diff --git a/drivers/staging/media/meson/vdec/vdec.h b/drivers/staging/media/meson/vdec/vdec.h
+index f95445ac0658..e3e4af73447a 100644
+--- a/drivers/staging/media/meson/vdec/vdec.h
++++ b/drivers/staging/media/meson/vdec/vdec.h
+@@ -234,6 +234,7 @@ struct amvdec_session {
+ 	u32 width;
+ 	u32 height;
+ 	u32 colorspace;
++	u32 bitdepth;
+ 	u8 ycbcr_enc;
+ 	u8 quantization;
+ 	u8 xfer_func;
+diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
+index 7f07a9175815..eed7a929c5d0 100644
+--- a/drivers/staging/media/meson/vdec/vdec_helpers.c
++++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
+@@ -436,7 +436,7 @@ void amvdec_set_par_from_dar(struct amvdec_session *sess,
+ EXPORT_SYMBOL_GPL(amvdec_set_par_from_dar);
+ 
+ void amvdec_src_change(struct amvdec_session *sess, u32 width,
+-		       u32 height, u32 dpb_size)
++		       u32 height, u32 dpb_size, u32 bitdepth)
+ {
+ 	static const struct v4l2_event ev = {
+ 		.type = V4L2_EVENT_SOURCE_CHANGE,
+@@ -451,7 +451,8 @@ void amvdec_src_change(struct amvdec_session *sess, u32 width,
+ 	if (sess->streamon_cap &&
+ 	    sess->width == width &&
+ 	    sess->height == height &&
+-	    dpb_size <= sess->num_dst_bufs) {
++	    dpb_size <= sess->num_dst_bufs &&
++	    sess->bitdepth == bitdepth) {
+ 		sess->fmt_out->codec_ops->resume(sess);
+ 		return;
+ 	}
+@@ -460,9 +461,10 @@ void amvdec_src_change(struct amvdec_session *sess, u32 width,
+ 	sess->width = width;
+ 	sess->height = height;
+ 	sess->status = STATUS_NEEDS_RESUME;
++	sess->bitdepth = bitdepth;
+ 
+-	dev_dbg(sess->core->dev, "Res. changed (%ux%u), DPB size %u\n",
+-		width, height, dpb_size);
++	dev_dbg(sess->core->dev, "Res. changed (%ux%u), DPB %u, bitdepth %u\n",
++		width, height, dpb_size, bitdepth);
+ 	v4l2_event_queue_fh(&sess->fh, &ev);
+ }
+ EXPORT_SYMBOL_GPL(amvdec_src_change);
+diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.h b/drivers/staging/media/meson/vdec/vdec_helpers.h
+index cfaed52ab526..f059cf195cca 100644
+--- a/drivers/staging/media/meson/vdec/vdec_helpers.h
++++ b/drivers/staging/media/meson/vdec/vdec_helpers.h
+@@ -76,9 +76,10 @@ void amvdec_set_par_from_dar(struct amvdec_session *sess,
+  * @width: picture width detected by the hardware
+  * @height: picture height detected by the hardware
+  * @dpb_size: Decoded Picture Buffer size (= amount of buffers for decoding)
++ * @bitdepth: Bit depth (usually 10 or 8) of the coded content
+  */
+ void amvdec_src_change(struct amvdec_session *sess, u32 width,
+-		       u32 height, u32 dpb_size);
++		       u32 height, u32 dpb_size, u32 bitdepth);
+ 
+ /**
+  * amvdec_abort() - Abort the current decoding session
 -- 
 2.22.0
 
