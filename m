@@ -2,145 +2,96 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7465C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE846C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B9C206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:15:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591283731;
-	bh=ehTRmixmctGTG2rIendMHkrDCa4Xx6HZ+HL+iKOW2Es=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=D3wfsH3LelnOU+BoYTqlWRocTrknQ/55wtpJZGf7M8pDMZ3HOJ5ksOQ6KRBy2E1oa
-	 lQu99rWKtwIKXGEbOvLIRLwyKBHe9Jnzz6AqcXK9QhZQJdX4+pxS+yMCgz10aYs0AI
-	 yDH26ye5lk8sUmgP5aZOZUmw6e7lfLPsuYkYwKEc=
+	by mail.kernel.org (Postfix) with ESMTP id BBC3B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAh/zEHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgFDPPa (ORCPT
+        id S1729378AbgFDPQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729215AbgFDPP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:15:27 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C92422072E;
-        Thu,  4 Jun 2020 15:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591283726;
-        bh=ehTRmixmctGTG2rIendMHkrDCa4Xx6HZ+HL+iKOW2Es=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AzUKdjZsEdsVO/muRW82FLhh+tkqkBsCTIvWLS4USDM3sS+PhXlEGhYN2AoO3MUky
-         qDeDLwPPklB8HVdpx6QGGwSpl3gGSmN9oUfIKPqJ/Ztn2YzdX4ywZKxBWeBlNPpgZf
-         sx/8OtL/Acm09hxo47MoGY/XB+VhUBS7XO8orxq8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jgraX-000HRX-9N; Thu, 04 Jun 2020 16:15:25 +0100
-Date:   Thu, 4 Jun 2020 16:15:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        kernel-team@android.com, will@kernel.org
-Subject: Re: [RFC 00/16] KVM protected memory extension
-Message-ID: <20200604161523.39962919@why>
-In-Reply-To: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 4 Jun 2020 11:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729215AbgFDPQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 11:16:01 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A67BC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:16:00 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id l6so6446193ilo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AHhQRFD5dXLk3tEs66mKWpDieuiW+fGGAlwHvRQW7yM=;
+        b=XAh/zEHbGqVyZrM2oX8y+oTOMy45mOF1/MZlf3g1SNEcYwSLiz31nwMYMImLTU7hHQ
+         ArnxLj+f5CKk2sTOGxe8pE6IGwURQxx7curAh3RrVHQzE1TWJoYHifXv3rwQXMECnyoB
+         CysC0s0Eu0EOYgd3Vi+N94qBkjR9+3tmM5MmfgYAS3jdyyVPLTKSPCPDqzLK4nPF0bHw
+         /BN4WVQHL4IxVc9t4s+AuDg7TbyASMZIwZlOTRZSbghBIzbj1+NtC3xaXsf8XG33YcGY
+         8KKKCrJMRdeofjD11fzx2DG+1DmXBsV2T3BTBDBNF45Uj9ccecJ7Xjad9AzY5WgJ+rEt
+         oWkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AHhQRFD5dXLk3tEs66mKWpDieuiW+fGGAlwHvRQW7yM=;
+        b=ehqCrFgwdSQGk1n/VCv65VEO3XDB6tI6cx4QGAWEjoCaXOuk9ZyJ6Q3dLE9xVCMtoo
+         8sdsSTS2q9b2Gu6YO1SzWw0WK5tHqCFFCWQ9ASvEo9BIZgmQ+YQp+rDC7AM6Sld/OMya
+         uotRWzIUTtghLu8oKjtLwVGeFzVrcowcZGm/tI7mrUbMJcrfM/govnjrj3yq+gSo20Kw
+         znK0NMrAJD1V/Y9XSwanZE62aBpRIpKKQ6Kwv6R7ks1ZRZuAMZ0Vui3Wsrk52B78tBAe
+         IPnOVveSEIIfW6STkffMwmO3K6IM7gSUouOe7WMpY3sZpo7T1l13Ed0VmR1c8Zz2yhq4
+         uFjw==
+X-Gm-Message-State: AOAM530WLThKQ4L8YL+i+W+r1XIo7534qPw2aHtYYeXUlTGVRNkMbww/
+        Aj57vczrUsDaL8Z2QiEgoSPR7OblmIb5RaK7Pg0=
+X-Google-Smtp-Source: ABdhPJzkVPqhXVmoY1skaPXsZIWDQ+EAQ6FvWbKKIu+LD3tCklbO+QT85Ay4tm7zgFdr+vudymZBkXSCuIvaqLUtsjs=
+X-Received: by 2002:a92:af44:: with SMTP id n65mr4152893ili.61.1591283759746;
+ Thu, 04 Jun 2020 08:15:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: kirill@shutemov.name, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, pbonzini@redhat.com, sean.j.christopherson@intel.com, vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org, rientjes@google.com, aarcange@redhat.com, keescook@chromium.org, wad@chromium.org, rick.p.edgecombe@intel.com, andi.kleen@intel.com, x86@kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com, kernel-team@android.com, will@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
+ <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com>
+In-Reply-To: <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com>
+From:   Zeno Davatz <zdavatz@gmail.com>
+Date:   Thu, 4 Jun 2020 17:15:48 +0200
+Message-ID: <CAOkhzLV+suVNAoyiaHKOkbwP-KKgTLEa7S8kp8+GSTLm_-wWFw@mail.gmail.com>
+Subject: Re: [Nouveau] NVIDIA GP107 (137000a1) - acr: failed to load firmware
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     nouveau <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill,
+On Thu, Jun 4, 2020 at 4:36 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
+>
+> Starting with kernel 5.6, loading nouveau without firmware (for GPUs
+> where it is required, such as yours) got broken.
+>
+> You are loading nouveau without firmware, so it fails.
+>
+> The firmware needs to be available to the kernel at the time of nouveau loading.
 
-Thanks for this.
+Ok, I am now trying this:
 
-On Fri, 22 May 2020 15:51:58 +0300
-"Kirill A. Shutemov" <kirill@shutemov.name> wrote:
+/usr/src/linux> grep FIRMWARE /usr/src/linux/.config
+CONFIG_FIRMWARE_MEMMAP=y
+# CONFIG_GOOGLE_FIRMWARE is not set
+CONFIG_PREVENT_FIRMWARE_BUILD=y
+CONFIG_EXTRA_FIRMWARE="nvidia/gp107/gr/sw_nonctx.bin"
+# CONFIG_CYPRESS_FIRMWARE is not set
+# CONFIG_DRM_LOAD_EDID_FIRMWARE is not set
+# CONFIG_FIRMWARE_EDID is not set
+# CONFIG_TEST_FIRMWARE is not set
 
-> =3D=3D Background / Problem =3D=3D
->=20
-> There are a number of hardware features (MKTME, SEV) which protect guest
-> memory from some unauthorized host access. The patchset proposes a purely
-> software feature that mitigates some of the same host-side read-only
-> attacks.
->=20
->=20
-> =3D=3D What does this set mitigate? =3D=3D
->=20
->  - Host kernel =E2=80=9Daccidental=E2=80=9D access to guest data (think s=
-peculation)
->=20
->  - Host kernel induced access to guest data (write(fd, &guest_data_ptr, l=
-en))
->=20
->  - Host userspace access to guest data (compromised qemu)
->=20
-> =3D=3D What does this set NOT mitigate? =3D=3D
->=20
->  - Full host kernel compromise.  Kernel will just map the pages again.
->=20
->  - Hardware attacks
-
-Just as a heads up, we (the Android kernel team) are currently
-involved in something pretty similar for KVM/arm64 in order to bring
-some level of confidentiality to guests.
-
-The main idea is to de-privilege the host kernel by wrapping it in its
-own nested set of page tables which allows us to remove memory
-allocated to guests on a per-page basis. The core hypervisor runs more
-or less independently at its own privilege level. It still is KVM
-though, as we don't intend to reinvent the wheel.
-
-Will has written a much more lingo-heavy description here:
-https://lore.kernel.org/kvmarm/20200327165935.GA8048@willie-the-truck/
-
-This works for one of the virtualization modes that arm64 can use (what
-we call non-VHE, or nVHE for short). The other mode (VHE), is much more
-similar to what happens on other architectures, where the kernel and
-the hypervisor are one single entity. In this case, we cannot use the
-same trick with nested page tables, and have to rely on something that
-would very much look like what you're proposing.
-
-Note that the two modes of the architecture would benefit from this
-work anyway, as I'd like the host to know that we've pulled memory
-from under its feet. Since you have done most of the initial work, I
-intend to give it a go on arm64 shortly and see what sticks.
-
-Thanks,
-
-	M.
---=20
-Jazz is not dead. It just smells funny...
+Best
+Zeno
