@@ -2,116 +2,171 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F186CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70327207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ptx/FA/q"
+	by mail.kernel.org (Postfix) with ESMTP id CF746207DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591277991;
+	bh=a8wHNkwWkFqf5+XQaD/hLiY3eO+xKNajms4eYM3X5Kg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pmEI02SlB/CjA9qHBT95nrmZ+rgZkN3gg+qY7XJVJ7EvL7dmQczJMzbqZppF1eHO8
+	 IpVSwH2qwJ9oFo9zsMX8/02UCEbdYncZTlKF5OGHHJr14iV3HcTYFdcgd4CFR2nwRw
+	 xAF04ZSy77zhnp3BWSaoBbxjpZRzCFjuYxuknHE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgFDNjs (ORCPT
+        id S1728632AbgFDNjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:39:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbgFDNjr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jun 2020 09:39:47 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293B8C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:39:47 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so2208485plk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=xdNQxpJtISS4o6vSnha6RqnWoqxwne3xIxfhUtiWq4E=;
-        b=ptx/FA/q9YK7emZal29VXFiq66Cn4ubmP6hwI1j4dhV3pxqqiLfOUbMobRWvthzHZb
-         cxRSI1jNNmFd2mZklBhaBtQRD9dRF51IKgNb7cYHHhg/ahGEkSbMZRMMy8eJmPjndFkI
-         yqFUTixfSpF4hhHVpdDRJ+J42RKcnJ7L1VDzzvOHN+xb9yDpEqH5Z+KeXGZUXLMY7OfK
-         qpffryyj4QpWRsPzhboYUn64kraRv16xhPtE1PGBUKWEsSRxJ9tRN+BsFOqI+u32uR/S
-         bOXNCVMBSO7vF7uItTIZit2rpUYVvBWkaAZ2U2rZMN5LcP4gSY34WsMWcOzFTHNMcITU
-         umTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=xdNQxpJtISS4o6vSnha6RqnWoqxwne3xIxfhUtiWq4E=;
-        b=CsNGwHVqvlWu6LM6DHON1nLOTVxmz+gKRBi0jxkvgH8C/bMbJZsrkR5bqU4+M7r9xt
-         E3ZPKTF1y3BEzDFFV2+q8xhQo/qsmCP7Sy3F0jMLe3jlPNuGg/xwNIztDkxOX2Pr8Hm2
-         WyRkE/oSQ20rVKys7+wqe7+Bjvq3jQECgtxQPEAlyah24Vt/3prnn5zUloi4IhMZU4bi
-         +d/T2WJQpwIK9gwhVIE/IYxnPeL6wyk49KHrfr+ceiEFO/K4ZnjVVHOWFUNCwQSFBLbm
-         xAjp9Xvbm25hepbK5mPG1VaeRgNc1ozGROV5s3UIo8WLOrpVGhAnGw4OTXkORV808eGC
-         VBNQ==
-X-Gm-Message-State: AOAM532GZFxXD+CuemQTZzR51IoOatM5Qj/5sdC+9g51jfksMDRrwxtu
-        ZFVksRpUr/83K2DE/i/MUJTQkDxJ
-X-Google-Smtp-Source: ABdhPJyBfnbbCHIbmuWMniemDoympvaIcAtkiJiRkKf1Fxtt+P7S3ZcDVwGn7XVdmSCe/cyz3YASow==
-X-Received: by 2002:a17:902:a714:: with SMTP id w20mr4957921plq.125.1591277986510;
-        Thu, 04 Jun 2020 06:39:46 -0700 (PDT)
-Received: from cosmos ([122.171.238.207])
-        by smtp.gmail.com with ESMTPSA id o25sm4069265pgn.84.2020.06.04.06.39.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jun 2020 06:39:46 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 19:09:42 +0530
-From:   Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/memory_hotplug: fix default_zone_for_pfn() to include
- highmem zone range
-Message-ID: <20200604133938.GA1513@cosmos>
+Received: from mail.kernel.org ([198.145.29.99]:38206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgFDNjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:39:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2D0B206E6;
+        Thu,  4 Jun 2020 13:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591277986;
+        bh=a8wHNkwWkFqf5+XQaD/hLiY3eO+xKNajms4eYM3X5Kg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zwdC6HrVD8bGrwrQZZr5uLGot92oYLSbeHZrBiWEVTv3OpEUSA94yK6rIRMaK31xh
+         YDTq6srJeMsUYylPDg27kY820ipoxkJ9+mcY8OSvZIi5E322iSR+zv9unnBeE3MMs3
+         GcFuchpIvNQXNVI7neT42ZSFZWTcZh5dvMK74Xwg=
+Date:   Thu, 4 Jun 2020 14:39:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     matthias.bgg@gmail.com, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+Subject: Re: [PATCH] regulator: mt6360: Add support for MT6360 regulator
+Message-ID: <20200604133943.GE6644@sirena.org.uk>
+References: <1591254387-10304-1-git-send-email-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WK3l2KTTmXPVedZ6"
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1591254387-10304-1-git-send-email-gene.chen.richtek@gmail.com>
+X-Cookie: VMS version 2.0 ==>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On x86_32, while onlining highmem sections, the func default_zone_for_pfn()
-defaults target zone to ZONE_NORMAL (movable_node_enabled = 0). Onlining of
-pages is successful, and these highmem pages are moved into zone_normal.
 
-As a consequence, these pages are treated as low mem, and page addresses
-are calculated using lowmem_page_address() which effectively overflows the
-32 bit virtual addresses, leading to kernel panics and system becomes
-unusable.
+--WK3l2KTTmXPVedZ6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Change default_kernel_zone_for_pfn() to intersect highmem pfn range, and
-calculate the default zone accordingly.
+On Thu, Jun 04, 2020 at 03:06:27PM +0800, Gene Chen wrote:
 
-Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
----
- mm/memory_hotplug.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+This looks nice and simple, a few fairly small comments below but high
+level it's basically fine.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index c4d5c45..30f101a 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -725,8 +725,13 @@ static struct zone *default_kernel_zone_for_pfn(int nid, unsigned long start_pfn
- {
- 	struct pglist_data *pgdat = NODE_DATA(nid);
- 	int zid;
-+	int nr_zones = ZONE_NORMAL;
- 
--	for (zid = 0; zid <= ZONE_NORMAL; zid++) {
-+#ifdef CONFIG_HIGHMEM
-+	nr_zones = ZONE_HIGHMEM;
-+#endif
-+
-+	for (zid = 0; zid <= nr_zones; zid++) {
- 		struct zone *zone = &pgdat->node_zones[zid];
- 
- 		if (zone_intersects(zone, start_pfn, nr_pages))
--- 
-2.7.4
+> --- /dev/null
+> +++ b/drivers/regulator/mt6360-regulator.c
+> @@ -0,0 +1,571 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020 MediaTek Inc.
 
+Please make the entire comment a C++ one so things look more
+intentional.
+
+> +	for (i = 0; i < devdata->num_irq_descs; i++) {
+> +		irq_desc = devdata->irq_descs + i;
+> +		if (unlikely(!irq_desc->name))
+> +			continue;
+
+Do we really need an unlikely here?  This shouldn't be a hot path.
+
+> +static int mt6360_regulator_set_mode(
+> +				  struct regulator_dev *rdev, unsigned int mode)
+> +{
+
+> +	switch (1 << (ffs(mode) - 1)) {
+> +	case REGULATOR_MODE_NORMAL:
+
+I don't understand why this isn't just a straight switch on mode?
+
+> +static unsigned int mt6360_regulator_get_mode(struct regulator_dev *rdev)
+> +{
+> +	const struct mt6360_regulator_desc *desc =
+> +			       (const struct mt6360_regulator_desc *)rdev->desc;
+> +	int shift = ffs(desc->mode_get_mask) - 1, ret;
+> +	unsigned int val = 0;
+> +
+> +	default:
+> +		ret = 0;
+> +	}
+
+If we can't parse a valid value from the hardware then that's an error.
+
+> +static int mt6360_regulator_reg_write(void *context,
+> +				      unsigned int reg, unsigned int val)
+> +{
+> +	struct mt6360_regulator_data *mrd = context;
+> +	u8 chunk[4] = {0};
+> +
+> +	/* chunk 0 ->i2c addr, 1 -> reg_addr, 2 -> reg_val 3-> crc8 */
+> +	chunk[0] = (mrd->i2c->addr & 0x7f) << 1;
+> +	chunk[1] = reg & 0x3f;
+> +	chunk[2] = (u8)val;
+> +	chunk[3] = crc8(mrd->crc8_table, chunk, 3, 0);
+> +	/* also dummy one byte */
+> +	return i2c_smbus_write_i2c_block_data(mrd->i2c, chunk[1], 3, chunk + 2);
+> +}
+
+Oh, wow - that's a fun I/O interface!
+
+> +static const struct of_device_id __maybe_unused mt6360_regulator_of_id[] = {
+> +	{
+> +		.compatible = "mediatek,mt6360_pmic",
+> +		.data = (void *)&mt6360_pmic_devdata,
+> +	},
+> +	{
+> +		.compatible = "mediatek,mt6360_ldo",
+> +		.data = (void *)&mt6360_ldo_devdata,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6360_regulator_of_id);
+
+I don't see any DT bindings documentation for this, documentation is
+required for all new bindings.
+
+> +	mrd->regmap = devm_regmap_init(&(mrd->i2c->dev),
+> +				       NULL, mrd, devdata->regmap_config);
+> +	if (IS_ERR(mrd->regmap)) {
+> +		dev_err(&pdev->dev, "Failed to register regmap\n");
+> +		return PTR_ERR(mrd->regmap);
+> +	}
+
+This looks like a MFD so it's surprising to see us defining a regmap at
+this level.  Why are we doing this?
+
+--WK3l2KTTmXPVedZ6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y+Z8ACgkQJNaLcl1U
+h9DRUgf/Q07BCU3NVKHL/ESM60sLn9muFqxQNcAmFlGBR5bDLKsDToWTKNlTLQuv
+W2REKAvgWpj9dLzCIWOnMEJob8jsw3SSx5fzUNDq+WJLlzhf4MPQkG+/B5kOs7A8
+aCE35WQGvrfMs8zbQmA9VJxUVOHqnyoaUK86E73iUPAWShBSxH2AaVsi1WUqN53g
+LPnVfJ2MvnJLE3z6nmcMof9PXxdA48vrM2Wes0XL3rVUQkuxz9xPKThmtGUUqDoe
+Rx7F5rOP4r8Rq1lT1ac/U1X3AvqMyTK+9jniD9efE6zlLzlquzOjHyMxul1Z6Ok1
+MusCOVNvor+RxHuCDiY2mnZXflShXQ==
+=4cA0
+-----END PGP SIGNATURE-----
+
+--WK3l2KTTmXPVedZ6--
