@@ -2,150 +2,137 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59CB92067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1795A20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jInMOd/b"
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="cIwUViir";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S8YKghCe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgFDB3p (ORCPT
+        id S1726482AbgFDBat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbgFDB3o (ORCPT
+        Wed, 3 Jun 2020 21:30:49 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:45699 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725983AbgFDBas (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:29:44 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14680C03E96D;
-        Wed,  3 Jun 2020 18:29:44 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cp9K3xn0z9sRN;
-        Thu,  4 Jun 2020 11:29:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591234182;
-        bh=2KHuzZQ+RXbR0wHAx6Mzf1ntNTqMB1evvaLV+unE6SM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jInMOd/bs3ql88HiEtcxMyYGci1n6EP7ak52X5WJuc344KUNT+yIXWESxV9YGuUBL
-         aSOm5Pif+/q8OnkPV/A2iQxuob9cqpF+OoQBHfsWgLglWyM62xyzLyuSjva2HZ1b1n
-         WeOFGacVn5TifZHHq2SD7135PwKju7o23dCdehUjUSLbr6GWOlvBTMurY8DkoNE8nz
-         v7wKyM7Ub/p4LX1pMTtWdeFjDhczLwAQS/tbqA7jgpId1DddsGHu/PCWRq1pZkv5P/
-         +t5xiSYCmnJj72VZxPUqPZEd52dcm42J/pNBJN9w/4EX3JkUU9IkjA9QtlZR8+Otr1
-         lk1QLSm7TGnCg==
-Date:   Thu, 4 Jun 2020 11:29:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: linux-next: manual merge of the net-next tree with the clk tree
-Message-ID: <20200604112940.560978f3@canb.auug.org.au>
-In-Reply-To: <20200602120957.1351bda0@canb.auug.org.au>
-References: <20200602120957.1351bda0@canb.auug.org.au>
+        Wed, 3 Jun 2020 21:30:48 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 11BAD5C0106;
+        Wed,  3 Jun 2020 21:30:47 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 03 Jun 2020 21:30:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=4vipdXWneTcdQDAu6JbWhyQeuEq
+        wMDjkliQKHSJwEH8=; b=cIwUViirQ9aI81E1h0bKidmTFtjoZ3LThdQfLivnDXP
+        2btgd5UtvVfYduXrqevolSErnEYP2HZnQbdnc61HbLzpZdUJc/RvgQpiMGH+bOlb
+        6Ivkzm0h2a4JS6qL+aRABncNgBWPKrHvbb+lkJblhT43dkmDPk1Ddf5MBjZdf+BH
+        ww74xt8wIMuMw8/aBBQUF0FM3jsARRUK96SqIA+AoX929SoDHZb910EXEchb/2nf
+        JaLfrJPWdHt9vuWjtQGARoNXfeE/4QaoMaUi5MxH0tGt7plBif2Yi7tUHTIZ52rC
+        EdsfjCMdnHkVk8KWGWBk4XwevOM1KbHD+PVZEbs+xDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=4vipdX
+        WneTcdQDAu6JbWhyQeuEqwMDjkliQKHSJwEH8=; b=S8YKghCehYdlM9NUVAcy4B
+        VSjw0fBXZl7sAnCD5BS8WoUavWx0V3IfVv39aT+ViY8jH3ezW1RJPupIUm5m6NSZ
+        4Obj2dJVtVZBSWrh89ONFFxa2U9F833qfyVEnAagdSAF2oryyD4YAMnPYRdF68F/
+        nCHzGOnlAx1uXOAgTsfoJPiLGxHC0kMTdBPQlUkoIc050N4blHTk6tlPutvHLlhA
+        dGAbC8V54HSB+ElKNShotd9H9NiI0g8ghKxf/PaKkRJ+LmXkm2PYenjhrAPwZM73
+        SYx3r+yNZEd0unJs0GEfXMpoorV+t+QJmIp9WwtIp4Uig3F2VGGPx821uhu1Z48A
+        ==
+X-ME-Sender: <xms:xk7YXjotCgMhjSg8JiQBr5kfok2z4dhwN3EOhuifuvkNSLoi2bpy3w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudegtddggeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
+    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucggtffrrg
+    htthgvrhhnpedukefhkeelueegveetheelffffjeegleeuudelfeefuedtleffueejfffh
+    ueffudenucfkphepieejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdr
+    uggv
+X-ME-Proxy: <xmx:xk7YXtp5ZbUUly9jsELG0yos269NcSSsK1HdpmB3g1LP1-g26LItDA>
+    <xmx:xk7YXgMWB8CbJkqyi3wxyO0gtFnStxLx-DmUlnyDcFOxFnAf5qiNpQ>
+    <xmx:xk7YXm59ckpYdEnpybu9o4jOV5b-3Q4f7_YWHalDsufJgdx6eV2ZXw>
+    <xmx:x07YXiGlKa4Q0ask8n5CAbddDBD-iVvpYiyku3egEYkhUiyFskOWTg>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 504183280065;
+        Wed,  3 Jun 2020 21:30:46 -0400 (EDT)
+Date:   Wed, 3 Jun 2020 18:30:45 -0700
+From:   Andres Freund <andres@anarazel.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+Message-ID: <20200604013045.7gu7xopreusbdea2@alap3.anarazel.de>
+References: <20200526195123.29053-1-axboe@kernel.dk>
+ <20200604005916.niy2mejjcsx4sv6t@alap3.anarazel.de>
+ <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/G52KOylxla=mZaaf.Z88kBx";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/G52KOylxla=mZaaf.Z88kBx
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+On 2020-06-03 19:04:17 -0600, Jens Axboe wrote:
+> > The workload that triggers the bug within a few seconds is postgres
+> > doing a parallel sequential scan of a large table (and aggregating the
+> > data, but that shouldn't matter). In the triggering case that boils down
+> > to 9 processes sequentially reading a number of 1GB files (we chunk
+> > tables internally into smaller files). Each process will read a 512kB
+> > chunk of the file on its own, and then claim the next 512kB from a
+> > shared memory location. Most of the IO will be READV requests, reading
+> > 16 * 8kB into postgres' buffer pool (which may or may not be neighboring
+> > 8kB pages).
+> 
+> I'll try and reproduce this, any chance you have a test case that can
+> be run so I don't have to write one from scratch? The more detailed
+> instructions the better.
 
-On Tue, 2 Jun 2020 12:09:57 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Hi all,
->=20
-> Today's linux-next merge of the net-next tree got a conflict in:
->=20
->   Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
->=20
-> between commit:
->=20
->   7b9e111a5216 ("dt-bindings: clock: mediatek: document clk bindings for =
-Mediatek MT6765 SoC")
->=20
-> from the clk tree and commit:
->=20
->   9f9d1e63dc55 ("dt-bindings: convert the binding document for mediatek P=
-ERICFG to yaml")
->=20
-> from the net-next tree.
->=20
-> I fixed it up (I deleted the file and added the following patch) and
-> can carry the fix as necessary. This is now fixed as far as linux-next
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the conflicting
-> tree to minimise any particularly complex conflicts.
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 2 Jun 2020 12:07:03 +1000
-> Subject: [PATCH] dt-bindings: fix up for "dt-bindings: clock: mediatek:
->  document clk bindings for Mediatek MT6765 SoC"
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  .../devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml       | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,peri=
-cfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.=
-yaml
-> index 55209a2baedc..e271c4682ebc 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
-> @@ -20,6 +20,7 @@ properties:
->          - enum:
->            - mediatek,mt2701-pericfg
->            - mediatek,mt2712-pericfg
-> +          - mediatek,mt6765-pericfg
->            - mediatek,mt7622-pericfg
->            - mediatek,mt7629-pericfg
->            - mediatek,mt8135-pericfg
-> --=20
-> 2.26.2
+It shouldn't be too hard to write you a detailed script for reproducing
+the issue. But it'd not be an all that minimal reproducer, unless it
+also triggers on smaller scale (it's a 130GB database that triggers the
+problem reliably, and small tables don't seem to do so reliably).
 
-This merge resolution patch is now needed when the clk tree merges with
-Linus' tree
+I'll try to write that up after I set up kvm / repro there.
 
---=20
-Cheers,
-Stephen Rothwell
+One thing I forgot in the earlier email: I ran the benchmark using 'perf
+stat -a -e ...'. I'm fairly, but not absolutely, certain that it also
+triggered without that. I don't think it's related, but I thought I
+better mention it.
 
---Sig_/G52KOylxla=mZaaf.Z88kBx
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+> I have a known issue with request starvation, wonder if that could be it.
+> I'm going to rebase the branch on top of the aops->readahead() changes
+> shortly, and fix that issue. Hopefully that's what's plaguing your run
+> here, but if not, I'll hunt that one down.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YToQACgkQAVBC80lX
-0Gxv/Af+K9A0Q6zKBH6ugExa7GwKENxQJT/iToQ98ZH8PoinDOXsdp1Cqo1scS+l
-RmUg1EHf1c5OgbB0w5YK722d9rXtI9CW83Si97cJIUoqjVJjT05i+F78c2x0i5dk
-dmfsCxW2k36av9D4ecWJL8isD9qF0DLTs3cueEuzx/0dH1vvgNEOoXS7d3ESEDtm
-3vHjWh0uYNIQG33VBJ5YBNGHfAj4Cgg0wat7eailhEuDLODnemCLQj4c6IxLV7rN
-5taHLd7I8m8nVVda80GoHePv44CsQ5qC6zFHmGgp0uyyfsRWptyivmOkTxBYHX9T
-UNdzwMD2rAFPAii7fNomWZ83ukawIg==
-=iPus
------END PGP SIGNATURE-----
+FWIW, I had iostat -xm /dev/nvme1n1 1 running during this. Shortly
+before the crash I see:
 
---Sig_/G52KOylxla=mZaaf.Z88kBx--
+Device            r/s     rMB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wMB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dMB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+nvme1n1       6221.00    956.09  3428.00  35.53    0.24   157.38    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    1.48  99.00
+
+Device            r/s     rMB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wMB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dMB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+nvme1n1       6456.00    978.83  3439.00  34.75    0.21   155.25    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    1.38  98.70
+
+It's maybe also worth noting that in this workload the results are
+*worse* than when using 5.7-rc7 io_uring. So perhaps request starvation
+isn't the worst guess...
+
+Greetings,
+
+Andres Freund
