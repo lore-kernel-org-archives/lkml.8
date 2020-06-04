@@ -6,62 +6,60 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18626C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB9CE207F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FC12075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591295122;
-	bh=Ri46w9aH+hcb5dojslGGxtuTxDP3Ok5w9s2kHVDFIFM=;
+	s=default; t=1591295132;
+	bh=4ZbWLrY2SFwlyNm8arlgBezHXz+WAK+PDnPLbtZJjbI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=IDy6uNZzibMFJ1vp+ccomZjS0Vg5K5CEz/8j4dv9suc5OSMUZxnPTVQ1XItINhoC9
-	 /fm156Hux7MjQydb/q5N3DgbtTL90HjUUbBlQL8XmR79LNGlJAJz+78fl0vofZn+d3
-	 TLP5HUjlq1pUx92NhMXpNPutomJBTR4peKFgZqtE=
+	b=sUe7B9lM6ivN+I1iTdZO3KZ9SUW6cdOqmPt0q1vm2rOIep2DinfYTGDNgjx6ro5XV
+	 Xq5uaI81gwyPnQU0F6XbI/ZbbHJCPrBW36AstASXFOZ16oY0lUNLvOqDSpWd7wL3p4
+	 qtB4Q0tpwS6WiA4ocQaUievFqLMAnpZ1zuLqac3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730856AbgFDSZV (ORCPT
+        id S1730880AbgFDSZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44770 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 14:25:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730434AbgFDSZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:25:15 -0400
-Subject: Re: [GIT PULL] LEDs changes for v5.8-rc1
+        id S1730831AbgFDSZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 14:25:16 -0400
+Subject: Re: [GIT PULL] pcmcia updates for v5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591295115;
-        bh=Ri46w9aH+hcb5dojslGGxtuTxDP3Ok5w9s2kHVDFIFM=;
+        s=default; t=1591295116;
+        bh=4ZbWLrY2SFwlyNm8arlgBezHXz+WAK+PDnPLbtZJjbI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Mp1HNkzf9M/Vts2udph5HfXoQURJIGWg7voQktq8f84KtYU8u8+bubIeP1U+F/m2F
-         xmthWHunz4Du2lS7oWz9hteXpO6EQdk04Ussz0Izyl2Fj81OCseW1nkbYfX+VOhwMt
-         dNdjWea0n7DGHYIzbNsBK5oDwxv+ZVdQ8xdTHcU4=
+        b=Nq2cM27UpRt7fzUkSXfphjtjZPYYxto529ULUrCWJFqaccOtSbhuN51KbXTUVszj3
+         R3+uJ5P9eZofLXq+qVeG5jPJYV1OanrS2jFs0Mm3wxul6hiAI2iLIbZ0vuzlVKzFpN
+         Ws7bTbet91E0tkCAhdEnG30aK7n+X93RK9pqmhic=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200604121905.GA4931@duo.ucw.cz>
-References: <20200604121905.GA4931@duo.ucw.cz>
+In-Reply-To: <20200604165233.GA167431@light.dominikbrodowski.net>
+References: <20200604165233.GA167431@light.dominikbrodowski.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200604121905.GA4931@duo.ucw.cz>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/
- tags/leds-5.8-rc1
-X-PR-Tracked-Commit-Id: 59ea3c9faf3235b66bc31ca883d59ce58b8b2b27
+X-PR-Tracked-Message-Id: <20200604165233.GA167431@light.dominikbrodowski.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/brodo/linux.git pcmcia-next
+X-PR-Tracked-Commit-Id: 46d0797906633d82bd50ef26780ee39fac5d27d6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 86c67ce20d080bdfefafd461d3068cad0a49a66b
-Message-Id: <159129511534.18772.2353289185245530089.pr-tracker-bot@kernel.org>
-Date:   Thu, 04 Jun 2020 18:25:15 +0000
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
+X-PR-Merge-Commit-Id: a0a4d17e02a80a74a63c7cbb7bc8cea2f0b7d8b1
+Message-Id: <159129511618.18772.11924071820503131097.pr-tracker-bot@kernel.org>
+Date:   Thu, 04 Jun 2020 18:25:16 +0000
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        gustavoars@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 4 Jun 2020 14:19:05 +0200:
+The pull request you sent on Thu, 4 Jun 2020 18:52:33 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/leds-5.8-rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/brodo/linux.git pcmcia-next
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/86c67ce20d080bdfefafd461d3068cad0a49a66b
+https://git.kernel.org/torvalds/c/a0a4d17e02a80a74a63c7cbb7bc8cea2f0b7d8b1
 
 Thank you!
 
