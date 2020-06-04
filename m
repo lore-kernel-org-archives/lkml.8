@@ -2,83 +2,89 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05047C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C094C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F88206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8B5206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1lVXrMr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6Eho2Oy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgFDCzI (ORCPT
+        id S1726775AbgFDC4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
+        Wed, 3 Jun 2020 22:56:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgFDCzH (ORCPT
+        with ESMTP id S1725946AbgFDC4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:55:07 -0400
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AEA5C03E96D;
-        Wed,  3 Jun 2020 19:55:06 -0700 (PDT)
-Received: by mail-qv1-xf35.google.com with SMTP id dp10so2242509qvb.10;
-        Wed, 03 Jun 2020 19:55:06 -0700 (PDT)
+        Wed, 3 Jun 2020 22:56:30 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28561C03E96D;
+        Wed,  3 Jun 2020 19:56:30 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id w7so3449190edt.1;
+        Wed, 03 Jun 2020 19:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+1jRoXPXgHZDeP30eSxZAHFvGE75NHGQIpkr64zYlkM=;
-        b=R1lVXrMrRkN5dJ9c9Gf4SVMey4upZtT7TTmyU8YbdCr3ys/MRnbFTcU59mS/kYCvwe
-         teBRlNniR4dXRyEZ8hEjsl/wnTHquMaJ8kG041pZqE0bPrOWjMWdp6+oC8cAISiVPSs7
-         +3XSzvMnk+pdchMn5kGSWcUZPwAquB042joawQEJLEnuQlnqD9S2d3yBzPW3SoQw7bR/
-         fsbDEdk8lkCom2p6I/ybc+AYHcM5yWCX1nSg6fMGd0jcAXJgbvEk2oSzkgMQ1blrpOdN
-         hczyhbdRfcExp1arcxkHqZ3Sa2Z4qFruyUsKu8dWOVFmO1wrCIOtIwVB2U+/4oOaYRpo
-         1/qw==
+        bh=CgBPhORK8BDXStxy7iglUZzxBGtxWPV9iURqby3XwmE=;
+        b=N6Eho2OyzAmXXGuG63SRWOa9R4QlHG+qpRjZ6daDg1hO9NR0aet2gMbSke29k7O1qw
+         6mIdM6yoQ7NJoj/6gokTPrfn/Zg7Taqn+z57cXmLydYwi1b5WoxyMtGHh5BRkNQTkafp
+         VGLrMH63C6swkwg9ITCBxBnkpsNQP0JiJGnzN020O8Abl++Y6HxRPazJRioyx0KFcadE
+         knj1KUm0SSjKU9aV+M1bWMl0IHEuR2qj/qjMbCdtB5wyUZ71lUEXI7+7bM0Tx0REczI3
+         Rrv1eY1gHseAJ8KSn1t5aMMXtHoSpT6tOzd+TWAweQvKu+cWHZZIYnQy3nHXXd1x+b/W
+         MrYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=+1jRoXPXgHZDeP30eSxZAHFvGE75NHGQIpkr64zYlkM=;
-        b=aDPCvKH/WiuYzu5ZMYEOqXZbcFYFLYhbP1uXiYNrUsYFwfD6N3/RMrRv1IsFNxvp6r
-         Y6MWCLd/+jLFDDwg1lSr2YuS/gUojkVvnsVn4Ie76RvO/o5im+5j3BxMU8fWM74QEson
-         +WsH2O/DZZDFnjWS7srFqNLXUAmOZGixKkxziLqW53ynoN/iD+PQAz9kN3+9QMiTY0XW
-         6Y3v8I/3btuhvzL5NMPnPiVWV+p6gB6SWbqz6x4Galz+4XQuZ1AXWlBxuT9sIJbJk/F4
-         A3yngglh1k1fbsiA/2ixNLBkKXrNXlt1wB2WzZ1pYUzu1wNn3FeY33w5aQQrhL6h+7gd
-         /qKg==
-X-Gm-Message-State: AOAM532Z3U+fEY4+Pvv2uLqLCPinAJY9iaTbh6SbJ6pb29A/Zm9iP31R
-        Cqrlpm3WdR6mknd2MY1zje4M1hNz
-X-Google-Smtp-Source: ABdhPJyIDAXNVCLtGLiCOQRfgeDTiTBFb5hpg3eBjY/sEby1L01RBGH3tpC45346bLXn17yZF7D3oA==
-X-Received: by 2002:ad4:4f23:: with SMTP id fc3mr2912897qvb.25.1591239305499;
-        Wed, 03 Jun 2020 19:55:05 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:1172:51aa:9d42:fe87? ([2601:282:803:7700:1172:51aa:9d42:fe87])
-        by smtp.googlemail.com with ESMTPSA id h50sm3907956qte.25.2020.06.03.19.55.03
+        bh=CgBPhORK8BDXStxy7iglUZzxBGtxWPV9iURqby3XwmE=;
+        b=UYHpHzwju+ucgNqW4YnusbfdBGGSA/shjdU98PQryg3q2VrcJvic++ISK2o7bHU4Zz
+         3ioTzDjSwAB9Dc5QROhQYZkrgVIko25xzm7r3Ce8jjhMnb8SFv0VFVMuX7b9l4zHJMDu
+         ejmzOHCbqttZss6WMWMVSuyulworszrvBtBJo5N9HoDuLGRvl0alxdFuy6GsxJC04hzm
+         int6Iv764WHWlCe/8rTICvd3D9a75qgEvJ2aQqYUvemAaMKpUGH6upALGTQnxnRI03TQ
+         I6EeJg3PHgz/YsfGcO2lPrI8DFtAqWknXBMc+Kfzx8muV/7CGkjJ/WUHJE+lBOdBVAsV
+         AQKw==
+X-Gm-Message-State: AOAM533UbnUYTJWccJTXcC0za0Jx3SaAYwbbvW4mPBaei3IQiphv5u5b
+        5YmeYhKIAALHI9cKtf2/pQ+IAP1K
+X-Google-Smtp-Source: ABdhPJztfvBspyA3sbFNMMaWRB9lVRm2xItqVmhoCIGh0cVoE0Jd1GUVN3hEHHCI3E/71BWMBrZVuw==
+X-Received: by 2002:a50:8707:: with SMTP id i7mr2289118edb.180.1591239388635;
+        Wed, 03 Jun 2020 19:56:28 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id j31sm946828edb.12.2020.06.03.19.56.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 19:55:04 -0700 (PDT)
-Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-References: <20200511130015.37103884@canb.auug.org.au>
- <20200602092040.5ef52300@canb.auug.org.au>
- <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
- <20200604112606.25ffde35@canb.auug.org.au>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
-Date:   Wed, 3 Jun 2020 20:55:01 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Wed, 03 Jun 2020 19:56:27 -0700 (PDT)
+Subject: Re: [PATCH v3 11/13] PCI: brcmstb: Accommodate MSI for older chips
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200603192058.35296-1-james.quinlan@broadcom.com>
+ <20200603192058.35296-12-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <9c35053c-22b5-c9bc-13fd-1e83e980d56d@gmail.com>
+Date:   Wed, 3 Jun 2020 19:56:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200604112606.25ffde35@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200603192058.35296-12-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,11 +92,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/20 7:26 PM, Stephen Rothwell wrote:
-> 
-> And now the net-next tree has been merged into Linus' tree without this fix :-(
-> 
 
-I took a look earlier and I think it is fine. Some code was moved around
-in ipsec-next and I think the merge is good. I'll run the test cases
-later this week and double check. Thanks for the reminder
+
+On 6/3/2020 12:20 PM, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> Older BrcmSTB chips do not have a separate register for MSI interrupts; the
+> MSIs are in a register that also contains unrelated interrupts.  In
+> addition, the interrupts lie in bits [31..24] for these legacy chips.  This
+> commit provides common code for both legacy and non-legacy MSI interrupt
+> registers.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
