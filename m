@@ -2,77 +2,158 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322C7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538A12067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1B42067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591310432;
+	bh=ptcsxwZQPV7H3RurRqMNggQRlk0a8nJXWzh3Vwtimvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B5GE2VSmqe5nlKnmWuci5RYLKlngCWz2SStfslPLTbn3Tjg1eotzNgXMPpVbTmyYq
+	 V1d1pmjYNw84mV//PuAxBJTODHPSYIF9QSJDn3NnduJ1clhEKVBSEHfPqW8o4mekDi
+	 /6XM6Fl2eH09tUAPTgef19/WV8sKLbb+jIhv6Wu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgFDWkX (ORCPT
+        id S1728372AbgFDWkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgFDWkW (ORCPT
+        Thu, 4 Jun 2020 18:40:31 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46814 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgFDWk3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:40:22 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39986C08C5C0;
-        Thu,  4 Jun 2020 15:40:22 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2874511F5F8D1;
-        Thu,  4 Jun 2020 15:40:21 -0700 (PDT)
-Date:   Thu, 04 Jun 2020 15:40:20 -0700 (PDT)
-Message-Id: <20200604.154020.1609247845922031946.davem@davemloft.net>
-To:     ahabdels@gmail.com
-Cc:     kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, yuehaibing@huawei.com, eric.dumazet@gmail.com,
-        david.lebrun@uclouvain.be
-Subject: Re: [net] seg6: fix seg6_validate_srh() to avoid slab-out-of-bounds
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200603065442.2745-1-ahabdels@gmail.com>
-References: <20200603065442.2745-1-ahabdels@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 04 Jun 2020 15:40:21 -0700 (PDT)
+        Thu, 4 Jun 2020 18:40:29 -0400
+Received: by mail-il1-f194.google.com with SMTP id h3so7678882ilh.13;
+        Thu, 04 Jun 2020 15:40:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QSWJtBAUksQhYjVR4MqtPJiG9vZ0QWl17k304282+yo=;
+        b=nOMuXFccSwTQbDtjhyHRtBosOpzmpFrlcodz/o8tmbmvEWMD0GAmUNnI9zqfSKZxZQ
+         GvCet3wJPlQpe14Se+tYZhI8BQ54uSijNf2qMHynHUBlDZibin05A8QEr2R+hoOemST6
+         +yiWyN72x4YlE4Pue61g/PBimwoABudL6IiXUPfPgvUF/VLl+gMKD60yCo3j+Pl/24K+
+         RJwRaIwrC0D/N4uk1TAnimPJDMCv8+CGMLLuuaGnhiXr4Q1+JGA58h4ZPRoxYl5gVd8v
+         2fU2ANiyBCV0n/8oE20FrjhR6XyG8C2Np71pmr7E6EouvW2t5gOZqtkIYDNzM1xjGpLv
+         no5g==
+X-Gm-Message-State: AOAM531sHEyS8ChPgfCnw+//J/JfK3dwFW9t+aZ6bNUEAlzVWJvvophe
+        XZ1hWTXqmU6ReXXvWxXr5A==
+X-Google-Smtp-Source: ABdhPJxSU/8J1NfPj12uv47E8987Ap2yupPj3T/Vh7G4ZPwcM0DtSmCtJunelRjPYxjuO0JY+H/r7A==
+X-Received: by 2002:a05:6e02:4a7:: with SMTP id e7mr6028078ils.180.1591310428449;
+        Thu, 04 Jun 2020 15:40:28 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id p15sm2014072ilj.15.2020.06.04.15.40.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 15:40:27 -0700 (PDT)
+Received: (nullmailer pid 4174434 invoked by uid 1000);
+        Thu, 04 Jun 2020 22:40:26 -0000
+Date:   Thu, 4 Jun 2020 16:40:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v26 01/15] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200604224026.GA4153787@bogus>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-2-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604120504.32425-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQWhtZWQgQWJkZWxzYWxhbSA8YWhhYmRlbHNAZ21haWwuY29tPg0KRGF0ZTogV2VkLCAg
-MyBKdW4gMjAyMCAwNjo1NDo0MiArMDAwMA0KDQo+IFRoZSBzZWc2X3ZhbGlkYXRlX3NyaCgpIGlz
-IHVzZWQgdG8gdmFsaWRhdGUgU1JIIGZvciB0aHJlZSBjYXNlczoNCj4gDQo+IGNhc2UxOiBTUkgg
-b2YgZGF0YS1wbGFuZSBTUnY2IHBhY2tldHMgdG8gYmUgcHJvY2Vzc2VkIGJ5IHRoZSBMaW51eCBr
-ZXJuZWwuDQo+IENhc2UyOiBTUkggb2YgdGhlIG5ldGxpbmsgbWVzc2FnZSByZWNlaXZlZCAgZnJv
-bSB1c2VyLXNwYWNlIChpcHJvdXRlMikNCj4gQ2FzZTM6IFNSSCBpbmplY3RlZCBpbnRvIHBhY2tl
-dHMgdGhyb3VnaCBzZXRzb2Nrb3B0DQo+IA0KPiBJbiBjYXNlMSwgdGhlIFNSSCBjYW4gYmUgZW5j
-b2RlZCBpbiB0aGUgUmVkdWNlZCB3YXkgKGkuZS4sIGZpcnN0IFNJRCBpcw0KPiBjYXJyaWVkIGlu
-IERBIG9ubHkgYW5kIG5vdCByZXByZXNlbnRlZCBhcyBTSUQgaW4gdGhlIFNSSCkgYW5kIHRoZQ0K
-PiBzZWc2X3ZhbGlkYXRlX3NyaCgpIG5vdyBoYW5kbGVzIHRoaXMgY2FzZSBjb3JyZWN0bHkuDQo+
-IA0KPiBJbiBjYXNlMiBhbmQgY2FzZTMsIHRoZSBTUkggc2hvdWxkbqJ0IGJlIGVuY29kZWQgaW4g
-dGhlIFJlZHVjZWQgd2F5DQo+IG90aGVyd2lzZSB3ZSBsb3NlIHRoZSBmaXJzdCBzZWdtZW50IChp
-LmUuLCB0aGUgZmlyc3QgaG9wKS4NCj4gDQo+IFRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIG9m
-IHRoZSBzZWc2X3ZhbGlkYXRlX3NyaCgpIGFsbG93IFNSSCBvZiBjYXNlMg0KPiBhbmQgY2FzZTMg
-dG8gYmUgZW5jb2RlZCBpbiB0aGUgUmVkdWNlZCB3YXkuIFRoaXMgbGVhZHMgYSBzbGFiLW91dC1v
-Zi1ib3VuZHMNCj4gcHJvYmxlbS4NCj4gDQo+IFRoaXMgcGF0Y2ggdmVyaWZpZXMgU1JIIG9mIGNh
-c2UxLCBjYXNlMiBhbmQgY2FzZTMuIEFsbG93aW5nIGNhc2UxIHRvIGJlDQo+IHJlZHVjZWQgd2hp
-bGUgcHJldmVudGluZyBTUkggb2YgY2FzZTIgYW5kIGNhc2UzIGZyb20gYmVpbmcgcmVkdWNlZCAu
-DQo+IA0KPiBSZXBvcnRlZC1ieTogc3l6Ym90K2U4YzAyOGI2MjQzOWVhYzQyMDczQHN5emthbGxl
-ci5hcHBzcG90bWFpbC5jb20NCj4gUmVwb3J0ZWQtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdA
-aHVhd2VpLmNvbT4NCj4gRml4ZXM6IDBjYjc0OThmMjM0ZSAoInNlZzY6IGZpeCBTUkggcHJvY2Vz
-c2luZyB0byBjb21wbHkgd2l0aCBSRkM4NzU0IikNCj4gU2lnbmVkLW9mZi1ieTogQWhtZWQgQWJk
-ZWxzYWxhbSA8YWhhYmRlbHNAZ21haWwuY29tPg0KDQpBcHBsaWVkLCB0aGFua3MuDQo=
+On Thu, Jun 04, 2020 at 07:04:50AM -0500, Dan Murphy wrote:
+> Add DT bindings for the LEDs multicolor class framework.
+> Add multicolor ID to the color ID list for device tree bindings.
+> 
+> CC: Rob Herring <robh@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../bindings/leds/leds-class-multicolor.yaml  | 39 +++++++++++++++++++
+>  include/dt-bindings/leds/common.h             |  3 +-
+>  2 files changed, 41 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> new file mode 100644
+> index 000000000000..6cab2a1405e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common properties for the multicolor LED class.
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  Bindings for multi color LEDs show how to describe current outputs of
+> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
+> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
+> +  modules. This is achieved by adding multi-led nodes layer to the
+> +  monochrome LED bindings.
+> +  The nodes and properties defined in this document are unique to the multicolor
+> +  LED class.  Common LED nodes and properties are inherited from the common.txt
+> +  within this documentation directory.
+> +
+> +patternProperties:
+> +  "^multi-led@([0-9a-f])$":
+> +    type: object
+> +    description: Represents the LEDs that are to be grouped.
+> +    properties:
+> +      #allOf:
+> +        #- $ref: "common.yaml#"
+
+Why is this commented out? Other than it is wrong. Uncommented, this 
+would be defining a DT property called 'allOf'.
+
+You can drop 'allOf' now. '$ref' should be at the level of 'properties'.
+
+> +
+> +      color:
+> +        $ref: /schemas/types.yaml#definitions/uint32
+
+common.yaml already defines the type, so drop this.
+
+> +        const: 8  # LED_COLOR_ID_MULTI
+> +        description: |
+> +          For multicolor LED support this property should be defined as
+> +          LED_COLOR_ID_MULTI which can be found in include/linux/leds/common.h.
+> +
+> +    required:
+> +      - color
+> +...
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> index 0ce7dfc00dcb..a463ce6a8794 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -30,7 +30,8 @@
+>  #define LED_COLOR_ID_VIOLET	5
+>  #define LED_COLOR_ID_YELLOW	6
+>  #define LED_COLOR_ID_IR		7
+> -#define LED_COLOR_ID_MAX	8
+> +#define LED_COLOR_ID_MULTI	8
+> +#define LED_COLOR_ID_MAX	9
+>  
+>  /* Standard LED functions */
+>  /* Keyboard LEDs, usually it would be input4::capslock etc. */
+> -- 
+> 2.26.2
+> 
