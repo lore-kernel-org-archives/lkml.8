@@ -2,571 +2,215 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB00AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE94E20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591312372;
-	bh=O6vSSsxjrpYfaF5ZvA36ngrkXSb23upJsXFuMNDaOXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0ByyRZdq7fKIRfeE87q5osB4xsoV4zMIxikckp570+oE0IqmtAqoduH+keBfxbBwg
-	 Dxjwf1q17kJsy6qeJGhi06F/4azONNxQJVQkQO2bMQeYqhNDtbvCzFvQHv1Fgb+xsP
-	 Ji8dy57HgkCzQ2wh+bpxVS4mZJkBf6cfkTVL38xA=
+	by mail.kernel.org (Postfix) with ESMTP id D71D920663
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgFDXMw (ORCPT
+        id S1726144AbgFDXNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 19:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgFDXMt (ORCPT
+        Thu, 4 Jun 2020 19:13:08 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:59759 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725943AbgFDXNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 19:12:49 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A44C08C5C0;
-        Thu,  4 Jun 2020 16:04:59 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id d7so8290448ioq.5;
-        Thu, 04 Jun 2020 16:04:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XZ6QwmQKh/x8sp9WHw70YKItII5inqqXGpYPEjPSWcE=;
-        b=qYZ1/EzU36LKJRRzYEyl3T1U9tQkndzUi2JLpNV17V41z/xgVfHL6NSab7KSliiwNt
-         dMhojKSYkwZz5JjGGKL2E5+2wX30Yx7BcaznpZUM6GAz0AThId1dJ+M0NfBT/K4F3G49
-         XmjNxPuduhHWzyK93WAc+lIIWGJ5RN47KPN+2l9opXpH2d/ak11X6nnEmriBSysU8Slt
-         AAnOPIRcfa317e5+AkZCFegh4cVUk3Vy/pP+/fzkwFShqKlkTeQiF1QnatIKCdQAVhAk
-         pfL+cKHDp2tCxHRxepAlULToZm6nZwO0B2Q8YkoKFMvBqMuqRykhZ+RR0r7MZ6hTVE7x
-         WBQQ==
-X-Gm-Message-State: AOAM532xKSd5w98tqMA2g1tXuZeA5i2BPeJltDx/II7voiZN2MA7+M9q
-        idRN6jv6LVUDFKZ2v/AQdg==
-X-Google-Smtp-Source: ABdhPJxUoeU61sbAtJFVkqzNpF5WanwnOrnBSSYaL+EUXqUzkfHIO4ekZDeh2QyoY0KLg8uu72/v9Q==
-X-Received: by 2002:a05:6602:2437:: with SMTP id g23mr6092019iob.5.1591311898399;
-        Thu, 04 Jun 2020 16:04:58 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id v20sm2162770ilc.1.2020.06.04.16.04.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 16:04:57 -0700 (PDT)
-Received: (nullmailer pid 13118 invoked by uid 1000);
-        Thu, 04 Jun 2020 23:04:56 -0000
-Date:   Thu, 4 Jun 2020 17:04:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v26 06/15] dt-bindings: leds: Convert leds-lp55xx to yaml
-Message-ID: <20200604230456.GA6520@bogus>
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200604120504.32425-7-dmurphy@ti.com>
+        Thu, 4 Jun 2020 19:13:07 -0400
+Received: from callcc.thunk.org (pool-100-0-195-244.bstnma.fios.verizon.net [100.0.195.244])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 054NCxeT012058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 4 Jun 2020 19:13:00 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id B8E4B4200DD; Thu,  4 Jun 2020 19:12:59 -0400 (EDT)
+Date:   Thu, 4 Jun 2020 19:12:59 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org
+Subject: [GIT PULL] ext4 changes for 5.8-rc1
+Message-ID: <20200604231259.GA1992367@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200604120504.32425-7-dmurphy@ti.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:04:55AM -0500, Dan Murphy wrote:
-> Convert the leds-lp55xx.txt to yaml binding.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/leds/leds-lp55xx.txt  | 228 ------------------
->  .../devicetree/bindings/leds/leds-lp55xx.yaml | 220 +++++++++++++++++
->  2 files changed, 220 insertions(+), 228 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-> deleted file mode 100644
-> index 1b66a413fb9d..000000000000
-> --- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-> +++ /dev/null
-> @@ -1,228 +0,0 @@
-> -Binding for TI/National Semiconductor LP55xx Led Drivers
-> -
-> -Required properties:
-> -- compatible: one of
-> -	national,lp5521
-> -	national,lp5523
-> -	ti,lp55231
-> -	ti,lp5562
-> -	ti,lp8501
-> -
-> -- reg: I2C slave address
-> -- clock-mode: Input clock mode, (0: automode, 1: internal, 2: external)
-> -
-> -Each child has own specific current settings
-> -- led-cur: Current setting at each led channel (mA x10, 0 if led is not connected)
-> -- max-cur: Maximun current at each led channel.
-> -
-> -Optional properties:
-> -- enable-gpio: GPIO attached to the chip's enable pin
-> -- label: Used for naming LEDs
-> -- pwr-sel: LP8501 specific property. Power selection for output channels.
-> -         0: D1~9 are connected to VDD
-> -         1: D1~6 with VDD, D7~9 with VOUT
-> -         2: D1~6 with VOUT, D7~9 with VDD
-> -         3: D1~9 are connected to VOUT
-> -
-> -Alternatively, each child can have a specific channel name and trigger:
-> -- chan-name (optional): name of channel
-> -- linux,default-trigger (optional): see
-> -  Documentation/devicetree/bindings/leds/common.txt
-> -
-> -example 1) LP5521
-> -3 LED channels, external clock used. Channel names are 'lp5521_pri:channel0',
-> -'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
-> -on channel 0.
-> -
-> -lp5521@32 {
-> -	compatible = "national,lp5521";
-> -	reg = <0x32>;
-> -	label = "lp5521_pri";
-> -	clock-mode = /bits/ 8 <2>;
-> -
-> -	chan0 {
-> -		led-cur = /bits/ 8 <0x2f>;
-> -		max-cur = /bits/ 8 <0x5f>;
-> -		linux,default-trigger = "heartbeat";
-> -	};
-> -
-> -	chan1 {
-> -		led-cur = /bits/ 8 <0x2f>;
-> -		max-cur = /bits/ 8 <0x5f>;
-> -	};
-> -
-> -	chan2 {
-> -		led-cur = /bits/ 8 <0x2f>;
-> -		max-cur = /bits/ 8 <0x5f>;
-> -	};
-> -};
-> -
-> -example 2) LP5523
-> -9 LED channels with specific name. Internal clock used.
-> -The I2C slave address is configurable with ASEL1 and ASEL0 pins.
-> -Available addresses are 32/33/34/35h.
-> -
-> -ASEL1    ASEL0    Address
-> --------------------------
-> - GND      GND       32h
-> - GND      VEN       33h
-> - VEN      GND       34h
-> - VEN      VEN       35h
-> -
-> -lp5523@32 {
-> -	compatible = "national,lp5523";
-> -	reg = <0x32>;
-> -	clock-mode = /bits/ 8 <1>;
-> -
-> -	chan0 {
-> -		chan-name = "d1";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan1 {
-> -		chan-name = "d2";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan2 {
-> -		chan-name = "d3";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan3 {
-> -		chan-name = "d4";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan4 {
-> -		chan-name = "d5";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan5 {
-> -		chan-name = "d6";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan6 {
-> -		chan-name = "d7";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan7 {
-> -		chan-name = "d8";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan8 {
-> -		chan-name = "d9";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -};
-> -
-> -example 3) LP5562
-> -4 channels are defined.
-> -
-> -lp5562@30 {
-> -	compatible = "ti,lp5562";
-> -	reg = <0x30>;
-> -	clock-mode = /bits/8 <2>;
-> -
-> -	chan0 {
-> -		chan-name = "R";
-> -		led-cur = /bits/ 8 <0x20>;
-> -		max-cur = /bits/ 8 <0x60>;
-> -	};
-> -
-> -	chan1 {
-> -		chan-name = "G";
-> -		led-cur = /bits/ 8 <0x20>;
-> -		max-cur = /bits/ 8 <0x60>;
-> -	};
-> -
-> -	chan2 {
-> -		chan-name = "B";
-> -		led-cur = /bits/ 8 <0x20>;
-> -		max-cur = /bits/ 8 <0x60>;
-> -	};
-> -
-> -	chan3 {
-> -		chan-name = "W";
-> -		led-cur = /bits/ 8 <0x20>;
-> -		max-cur = /bits/ 8 <0x60>;
-> -	};
-> -};
-> -
-> -example 4) LP8501
-> -9 channels are defined. The 'pwr-sel' is LP8501 specific property.
-> -Others are same as LP5523.
-> -
-> -lp8501@32 {
-> -	compatible = "ti,lp8501";
-> -	reg = <0x32>;
-> -	clock-mode = /bits/ 8 <2>;
-> -	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
-> -
-> -	chan0 {
-> -		chan-name = "d1";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan1 {
-> -		chan-name = "d2";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan2 {
-> -		chan-name = "d3";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan3 {
-> -		chan-name = "d4";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan4 {
-> -		chan-name = "d5";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan5 {
-> -		chan-name = "d6";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan6 {
-> -		chan-name = "d7";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan7 {
-> -		chan-name = "d8";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -
-> -	chan8 {
-> -		chan-name = "d9";
-> -		led-cur = /bits/ 8 <0x14>;
-> -		max-cur = /bits/ 8 <0x20>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-> new file mode 100644
-> index 000000000000..9d6ded5fbc14
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
-> @@ -0,0 +1,220 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-lp55xx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI/National Semiconductor LP55xx and LP8501 LED Drivers
-> +
-> +maintainers:
-> +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> +  - Pavel Machek <pavel@ucw.cz>
-> +
-> +description: |
-> +  Bindings for the TI/National Semiconductor LP55xx and LP8501 multi channel
-> +  LED Drivers.
-> +
-> +  For more product information please see the link below:
-> +    https://www.ti.com/lit/gpn/lp5521
-> +    https://www.ti.com/lit/gpn/lp5523
-> +    https://www.ti.com/lit/gpn/lp55231
-> +    https://www.ti.com/lit/gpn/lp5562
-> +    https://www.ti.com/lit/gpn/lp8501
-> +
-> +properties:
-> +  #allOf:
-> +    #- $ref: "common.yaml#"
-> +    #- $ref: "leds-class-multicolor.yaml#"
-> +
-> +  compatible:
-> +    enum:
-> +      - national,lp5521
-> +      - national,lp5523
-> +      - ti,lp55231
-> +      - ti,lp5562
-> +      - ti,lp8501
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: I2C slave address
-> +
-> +  clock-mode:
-> +    $ref: /schemas/types.yaml#definitions/uint8
-> +    maxItems: 1
+The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
 
-'maxItems' is for an array. This is a scalar, so drop.
+  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
 
-> +    description: |
-> +      Input clock mode
-> +      0 - automode
-> +      1 - internal
-> +      2 - external
+are available in the Git repository at:
 
-enum: 
-  - 0  # automode
-  - 1
-  - 2
+  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus
 
+for you to fetch changes up to 6b8ed62008a49751fc71fefd2a4f89202a7c2d4d:
 
-> +
-> +  enable-gpio:
-> +    maxItems: 1
-> +    description: |
-> +      GPIO attached to the chip's enable pin
-> +
-> +  pwr-sel:
-> +    $ref: /schemas/types.yaml#definitions/uint8
-> +    maxItems: 1
-> +    description: |
-> +      LP8501 specific property. Power selection for output channels.
-> +         0 - D1~9 are connected to VDD
-> +         1 - D1~6 with VDD, D7~9 with VOUT
-> +         2 - D1~6 with VOUT, D7~9 with VDD
-> +         3 - D1~9 are connected to VOUT
+  ext4: avoid unnecessary transaction starts during writeback (2020-06-03 23:16:56 -0400)
 
-Similarly here, make this a schema.
+----------------------------------------------------------------
+A lot of bug fixes and cleanups for ext4, including:
 
-> +
-> +  child-node:
+* Fix performance problems found in dioread_nolock now that it is the
+  default, caused by transaction leaks.
+* Clean up fiemap handling in ext4
+* Clean up and refactor multiple block allocator (mballoc) code
+* Fix a problem with mballoc with a smaller file systems running out
+  of blocks because they couldn't properly use blocks that had been
+  reserved by inode preallocation.
+* Fixed a race in ext4_sync_parent() versus rename()
+* Simplify the error handling in the extent manipulation code
+* Make sure all metadata I/O errors are felected to ext4_ext_dirty()'s and
+  ext4_make_inode_dirty()'s callers.
+* Avoid passing an error pointer to brelse in ext4_xattr_set()
+* Fix race which could result to freeing an inode on the dirty last
+  in data=journal mode.
+* Fix refcount handling if ext4_iget() fails
+* Fix a crash in generic/019 caused by a corrupted extent node
 
-This needs to be a pattern matching the child nodes' names.
+----------------------------------------------------------------
+Carlos Guerrero Álvarez (1):
+      ext4: fix a style issue in fs/ext4/acl.c
 
-> +    type: object
-> +    properties:
-> +      led-cur:
-> +        $ref: /schemas/types.yaml#definitions/uint8
-> +        maxItems: 1
+Christoph Hellwig (10):
+      ext4: fix fiemap size checks for bitmap files
+      ext4: split _ext4_fiemap
+      ext4: remove the call to fiemap_check_flags in ext4_fiemap
+      fs: mark __generic_block_fiemap static
+      fs: move the fiemap definitions out of fs.h
+      iomap: fix the iomap_fiemap prototype
+      fs: move fiemap range validation into the file systems instances
+      fs: handle FIEMAP_FLAG_SYNC in fiemap_prep
+      fs: remove the access_ok() check in ioctl_fiemap
+      ext4: remove the access_ok() check in ext4_ioctl_get_es_cache
 
-Not an array.
+Christophe JAILLET (1):
+      ext4: fix a typo in a comment
 
-> +        description: |
-> +          Current setting at each LED channel (mA x10, 0 if LED is not connected)
+Eric Biggers (2):
+      ext4: fix race between ext4_sync_parent() and rename()
+      ext4: add casefold flag to EXT4_INODE_* flags
 
-0-255 are valid values?
+Eric Whitney (7):
+      ext4: remove EXT4_GET_BLOCKS_KEEP_SIZE flag
+      ext4: translate a few more map flags to strings in tracepoints
+      ext4: remove dead GET_BLOCKS_ZERO code
+      ext4: remove redundant GET_BLOCKS_CONVERT code
+      ext4: clean up GET_BLOCKS_PRE_IO error handling
+      ext4: clean up ext4_ext_convert_to_initialized() error handling
+      ext4: rework map struct instantiation in ext4_ext_map_blocks()
 
-> +
-> +      max-cur:
-> +        $ref: /schemas/types.yaml#definitions/uint8
-> +        maxItems: 1
-> +        description: Maximun current at each LED channel.
-> +
-> +      reg:
-> +        maxItems: 1
-> +        description: |
-> +          Output channel for the LED.  This is zero based channel identifier and
-> +          the data sheet is a one based channel identifier.
-> +          reg value to output to LED output number
-> +          D1 = reg value is 0
-> +          D2 = reg value is 1
-> +          D3 = reg value is 2
-> +          D4 = reg value is 3
-> +          D5 = reg value is 4
-> +          D6 = reg value is 5
-> +          D7 = reg value is 6
-> +          D8 = reg value is 7
-> +          D9 = reg value is 8
-> +
-> +      chan-name:
-> +        $ref: /schemas/types.yaml#definitions/string
-> +        description: name of channel
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/leds/common.h>
-> +
-> +   i2c {
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       led-controller@32 {
-> +           #address-cells = <1>;
-> +           #size-cells = <0>;
-> +           compatible = "ti,lp8501";
-> +           reg = <0x32>;
-> +           clock-mode = /bits/ 8 <2>;
-> +           pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
-> +
-> +           led@0 {
-> +               reg = <0>;
-> +               chan-name = "d1";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@1 {
-> +               reg = <1>;
-> +               chan-name = "d2";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@2 {
-> +               reg = <2>;
-> +               chan-name = "d3";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@3 {
-> +               reg = <3>;
-> +               chan-name = "d4";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@4 {
-> +               reg = <4>;
-> +               chan-name = "d5";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@5 {
-> +               reg = <5>;
-> +               chan-name = "d6";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@6 {
-> +               reg = <6>;
-> +               chan-name = "d7";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@7 {
-> +               reg = <7>;
-> +               chan-name = "d8";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +
-> +           led@8 {
-> +               reg = <8>;
-> +               chan-name = "d9";
-> +               led-cur = /bits/ 8 <0x14>;
-> +               max-cur = /bits/ 8 <0x20>;
-> +           };
-> +        };
-> +
-> +       led-controller@33 {
-> +           #address-cells = <1>;
-> +           #size-cells = <0>;
-> +           compatible = "national,lp5523";
-> +           reg = <0x33>;
-> +           clock-mode = /bits/ 8 <0>;
-> +
-> +           multi-led@2 {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               reg = <0x2>;
-> +               color = <LED_COLOR_ID_MULTI>;
-> +               function = LED_FUNCTION_STANDBY;
-> +               linux,default-trigger = "heartbeat";
-> +
-> +               led@0 {
-> +                   led-cur = /bits/ 8 <50>;
-> +                   max-cur = /bits/ 8 <100>;
-> +                   reg = <0x0>;
-> +                   color = <LED_COLOR_ID_GREEN>;
-> +               };
-> +
-> +               led@1 {
-> +                   led-cur = /bits/ 8 <50>;
-> +                   max-cur = /bits/ 8 <100>;
-> +                   reg = <0x1>;
-> +                   color = <LED_COLOR_ID_BLUE>;
-> +               };
-> +
-> +               led@6 {
-> +                   led-cur = /bits/ 8 <50>;
-> +                   max-cur = /bits/ 8 <100>;
-> +                   reg = <0x6>;
-> +                   color = <LED_COLOR_ID_RED>;
-> +               };
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.26.2
-> 
+Harshad Shirwadkar (3):
+      ext4: fix EXT_MAX_EXTENT/INDEX to check for zeroed eh_max
+      ext4: handle ext4_mark_inode_dirty errors
+      ext4: don't ignore return values from ext4_ext_dirty()
+
+Jan Kara (5):
+      writeback: Export inode_io_list_del()
+      ext4: Avoid freeing inodes on dirty list
+      ext4: drop ext4_journal_free_reserved()
+      jbd2: avoid leaking transaction credits when unreserving handle
+      ext4: avoid unnecessary transaction starts during writeback
+
+Jason Yan (1):
+      ext4: remove unnecessary comparisons to bool
+
+Jeffle Xu (1):
+      ext4: fix error pointer dereference
+
+Jens Axboe (1):
+      ext4: don't block for O_DIRECT if IOCB_NOWAIT is set
+
+Jonathan Grant (1):
+      add comment for ext4_dir_entry_2 file_type member
+
+Kaixu Xia (2):
+      ext4: remove unnecessary test_opt for DIOREAD_NOLOCK
+      ext4: remove redundant variable has_bigalloc in ext4_fill_super
+
+Ritesh Harjani (21):
+      ext4: mballoc: print bb_free info even when it is 0
+      ext4: mballoc: refactor ext4_mb_show_ac()
+      ext4: mballoc: add more mb_debug() msgs
+      ext4: mballoc: correct the mb_debug() format specifier for pa_len var
+      ext4: mballoc: fix few other format specifier in mb_debug()
+      ext4: mballoc: simplify error handling in ext4_init_mballoc()
+      ext4: mballoc: make ext4_mb_use_preallocated() return type as bool
+      ext4: mballoc: refactor code inside DOUBLE_CHECK into separate function
+      ext4: mballoc: fix possible NULL ptr & remove BUG_ONs from DOUBLE_CHECK
+      ext4: balloc: use task_pid_nr() helper
+      ext4: use BIT() macro for BH_** state bits
+      ext4: improve ext_debug() msg in case of block allocation failure
+      ext4: replace EXT_DEBUG with __maybe_unused in ext4_ext_handle_unwritten_extents()
+      ext4: mballoc: make mb_debug() implementation to use pr_debug()
+      ext4: make ext_debug() implementation to use pr_debug()
+      ext4: mballoc: add blocks to PA list under same spinlock after allocating blocks
+      ext4: mballoc: refactor ext4_mb_discard_preallocations()
+      ext4: mballoc: introduce pcpu seqcnt for freeing PA to improve ENOSPC handling
+      ext4: mballoc: refactor ext4_mb_good_group()
+      ext4: mballoc: use lock for checking free blocks while retrying
+      ext4: fix EXT4_MAX_LOGICAL_BLOCK macro
+
+Theodore Ts'o (1):
+      ext4: avoid ext4_error()'s caused by ENOMEM in the truncate path
+
+Xiyu Yang (1):
+      ext4: fix buffer_head refcnt leak when ext4_iget() fails
+
+ Documentation/filesystems/fiemap.txt |  12 +-
+ fs/bad_inode.c                       |   1 +
+ fs/btrfs/extent_io.h                 |   1 +
+ fs/btrfs/inode.c                     |   4 +-
+ fs/cifs/inode.c                      |   1 +
+ fs/cifs/smb2ops.c                    |   6 +-
+ fs/ext2/inode.c                      |   1 +
+ fs/ext4/Kconfig                      |   3 +-
+ fs/ext4/acl.c                        |   5 +-
+ fs/ext4/balloc.c                     |   5 +-
+ fs/ext4/ext4.h                       |  42 +++--
+ fs/ext4/ext4_extents.h               |   9 +-
+ fs/ext4/ext4_jbd2.h                  |  11 +-
+ fs/ext4/extents.c                    | 473 ++++++++++++++++++++++++++++++------------------------
+ fs/ext4/extents_status.c             |   2 +-
+ fs/ext4/file.c                       |  17 +-
+ fs/ext4/fsync.c                      |  28 ++--
+ fs/ext4/ialloc.c                     |   1 +
+ fs/ext4/indirect.c                   |   4 +-
+ fs/ext4/inline.c                     |   6 +-
+ fs/ext4/inode.c                      | 108 +++++++------
+ fs/ext4/ioctl.c                      |  41 +----
+ fs/ext4/mballoc.c                    | 512 ++++++++++++++++++++++++++++++++++++++---------------------
+ fs/ext4/mballoc.h                    |  16 +-
+ fs/ext4/migrate.c                    |  12 +-
+ fs/ext4/namei.c                      |  76 +++++----
+ fs/ext4/super.c                      |  27 ++--
+ fs/ext4/xattr.c                      |  13 +-
+ fs/f2fs/data.c                       |   3 +-
+ fs/f2fs/inline.c                     |   1 +
+ fs/fs-writeback.c                    |   1 +
+ fs/gfs2/inode.c                      |   1 +
+ fs/hpfs/file.c                       |   1 +
+ fs/internal.h                        |   2 -
+ fs/ioctl.c                           |  82 ++++------
+ fs/iomap/fiemap.c                    |  11 +-
+ fs/jbd2/transaction.c                |  14 +-
+ fs/nilfs2/inode.c                    |   3 +-
+ fs/ocfs2/extent_map.c                |   4 +-
+ fs/overlayfs/inode.c                 |   5 +-
+ fs/xfs/xfs_iops.c                    |   1 +
+ include/linux/fiemap.h               |  25 +++
+ include/linux/fs.h                   |  23 +--
+ include/linux/iomap.h                |   2 +-
+ include/linux/writeback.h            |   1 +
+ include/trace/events/ext4.h          |   9 +-
+ include/uapi/linux/fiemap.h          |   6 +-
+ 47 files changed, 938 insertions(+), 694 deletions(-)
+ create mode 100644 include/linux/fiemap.h
