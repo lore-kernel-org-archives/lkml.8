@@ -2,151 +2,276 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A532C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3655BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02D5B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:05:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vr/I6zf9"
+	by mail.kernel.org (Postfix) with ESMTP id 04123207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbgFDQFv (ORCPT
+        id S1729661AbgFDQHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgFDQFu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:05:50 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF0BC08C5C0;
-        Thu,  4 Jun 2020 09:05:50 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i12so1311929pju.3;
-        Thu, 04 Jun 2020 09:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HAWfVJ/MMzDDKipytKTsDnZ0G7qcc8KGtxLvXJOdNtk=;
-        b=Vr/I6zf9wpjvEwDaJRBX1+2aezi8wRyFreAa10APW8X1OHOEJVUF5Q7ARa3lfsQxV5
-         PonhEHPXMbOZ92Hv3xwguR8YsivIs6B6pm4J5X1yPTPMefCXweIlZEILCdduTmW+yxyw
-         OhnEBT4jsdV70Qrr/oA/Ze0IpOOH9DdR2SA5hFnhkya/j7r/2psfkWCwVhcqQIt/xwQy
-         shgoaSohosf7QXYHzM2Sp3IzNFwxzNG2HrlEmLya+hN+YPiSKSe2J76DTQQC9iYlPsjv
-         N7o0wJbseIrr7hrSLutCvvD3KwHNTA/MPX1Ln8fg20ENbh/0qci1FwGRVgYfXf/irWnd
-         uUeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HAWfVJ/MMzDDKipytKTsDnZ0G7qcc8KGtxLvXJOdNtk=;
-        b=KXLP2vJl/fBSDRxvPujOop52zkcrCnQu4buv448yjXQJZ6alvaj4MoGWYBFWpljZSy
-         +I2uT1214BZ0h6Xm+yr7tg3rOZbnbkIZ0Rhl0FkffL9SXNY9Tyb0nu1DGrABJl2N7FV8
-         4RNNkZpsnrk5cFJ9GgOSQOQ2Ln5f2s3oj9Vg/a5VRXW137E1O0quLAjc1kqsRykoAf2L
-         gmQpTZAy60aeWS55kvQ98njQ9A+xWPYeHfh3W62yqaB9VRB36KdjIq6lyz0+/4ErUI8A
-         1DGsWwjG0pBl0+/ESv4AEA/Qkw0GELaxyloIBDJaVZz5BGCeUcYD3pXmhBjXsAutiF6m
-         2tGg==
-X-Gm-Message-State: AOAM532NjU0I5ExazNOQXGtNEvVtDAMdJancwdvnNbSYn/s9Icdxb3Hg
-        sxUzi7BlZCloEvakxtAFiDc=
-X-Google-Smtp-Source: ABdhPJzDmXwGbLzqmN4JtHAm4tslIFeo872mF9VRUt+Ly23GpPsGhckeyoYK7qV6BFeOQmVssm8UQQ==
-X-Received: by 2002:a17:90a:5806:: with SMTP id h6mr7122674pji.66.1591286749669;
-        Thu, 04 Jun 2020 09:05:49 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id n8sm5559105pjq.49.2020.06.04.09.05.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 09:05:48 -0700 (PDT)
-Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
-To:     Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>, lukas@wunner.de
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-4-f.fainelli@gmail.com>
- <20200604123220.GD6644@sirena.org.uk>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <21772111-fa1f-7a50-aa92-e44b09cff4eb@gmail.com>
-Date:   Thu, 4 Jun 2020 09:05:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        Thu, 4 Jun 2020 12:07:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:43565 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgFDQHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:07:47 -0400
+IronPort-SDR: mlKH+omNX5LrNMWlA2Fr55rWDK03/qkfQiil7nqTI7ss90ZYCokPNTT1g8ZDFQdBhF62ZXq6yN
+ n22s9BoD82fA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 09:07:46 -0700
+IronPort-SDR: 1EN9NwfgtLqzYUyJv5VYYmg+kJgoSEK2Z71XFDHu3Jw1PiJVssbC1HQJKDR7asl+KJhB9bq0Ju
+ leRxn0dRbw5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
+   d="scan'208";a="471468504"
+Received: from lkp-server02.sh.intel.com (HELO 6de3076d9aaa) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 04 Jun 2020 09:07:45 -0700
+Received: from kbuild by 6de3076d9aaa with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jgsPA-000029-OC; Thu, 04 Jun 2020 16:07:44 +0000
+Date:   Fri, 05 Jun 2020 00:07:01 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:WIP.x86/mm] BUILD SUCCESS
+ c30a3e465817f0c5a3c94678edf0fd15585cadd9
+Message-ID: <5ed91c25.hJwl4gY2kFnzQUh5%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200604123220.GD6644@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.x86/mm
+branch HEAD: c30a3e465817f0c5a3c94678edf0fd15585cadd9  Merge branch 'linus' into WIP.x86/mm, to resolve conflict
 
+i386-tinyconfig vmlinux size:
 
-On 6/4/2020 5:32 AM, Mark Brown wrote:
-> On Wed, Jun 03, 2020 at 08:46:55PM -0700, Florian Fainelli wrote:
->> The SPI controller found in the BCM2711 and BCM7211 SoCs is instantiated
->> 5 times, with all instances sharing the same interrupt line. We
->> specifically match the two compatible strings here to determine whether
->> it is necessary to request the interrupt with the IRQF_SHARED flag and
->> to use an appropriate interrupt handler capable of returning IRQ_NONE.
-> 
->> For the BCM2835 case which is deemed performance critical, there is no
->> overhead since a dedicated handler that does not assume sharing is used.
-> 
-> This feels hacky - it's essentially using the compatible string to set a
-> boolean flag which isn't really about the IP but rather the platform
-> integration.  It might cause problems if we do end up having to quirk
-> this version of the IP for some other reason.
++-------+------------------------------------+------------------------------------------------------------------------+
+| DELTA |               SYMBOL               |                                 COMMIT                                 |
++-------+------------------------------------+------------------------------------------------------------------------+
+| +8899 | TOTAL                              | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+| +4241 | TEXT                               | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+| +4563 | DATA                               | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -65 | RODATA                             | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+| +4096 | doublefault_stack                  | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+| +3904 | sha1_transform()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+| +1238 | generic_file_buffered_read()       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +859 | zhaoxin_pmu_init()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +827 | free_area_init_node()              | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +683 | init.text                          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +538 | internal_get_user_pages_fast()     | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +463 | do_tee()                           | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +405 | __ia32_sys_setns()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +405 | zhaoxin_pmu_handle_irq()           | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +336 | zxd_hw_cache_event_ids()           | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +336 | zxe_hw_cache_event_ids()           | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +333 | cp_statx()                         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +324 | page_cache_readahead_unbounded()   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +313 | memblock_add_range.isra()          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +296 | zhaoxin_pmu_enable_event()         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +288 | map_kernel_range_noflush()         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +275 | doublefault_shim()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +259 | arch_sync_kernel_mappings()        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +256 | lru_pvecs                          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +210 | try_enable_new_console()           | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +204 | unmap_kernel_range_noflush()       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +168 | arch/x86/built-in.*                | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +160 | zxd_event_constraints              | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +157 | free_area_init()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +140 | zhaoxin_pmu_disable_event()        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +132 | bdi_alloc()                        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +128 | time64_str()                       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +124 | cpu_vuln_whitelist()               | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +121 | memmap_init                        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +121 | __dump_page()                      | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +116 | copy_xstate_to_kernel()            | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +104 | altinstructions                    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +104 | fillonedir()                       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +104 | do_double_fault()                  | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  +102 | shrink_page_list()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +99 | page_cache_pipe_buf_try_steal()    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +96 | copy_part()                        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +95 | lru_note_cost()                    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +91 | check_free_page()                  | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +90 | delay_halt()                       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +87 | do_statx()                         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +85 | sanitize_restored_user_xstate()    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +80 | zx_pmon_event_map                  | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +80 | zxc_event_constraints              | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +78 | arch/x86/kernel/built-in.*         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +76 | arch/x86/events/built-in.*         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +76 | __vmalloc_node()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +76 | try_invoke_on_locked_down_task()   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +75 | vfs_statx()                        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +71 | do_splice_from()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +71 | set_df_gdt_entry()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +70 | zhaoxin_arch_events_quirk()        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +69 | fpu__init_system_xstate()          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +68 | put_nsset()                        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +66 | zhaoxin_get_event_constraints()    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   +64 | lru_rotate                         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -64 | lru_add_pvec                       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -64 | lru_deactivate_file_pvecs          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -64 | lru_deactivate_pvecs               | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -64 | lru_lazyfree_pvecs                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -64 | lru_rotate_pvecs                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -65 | bdi_register_owner()               | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -65 | validate_xstate_header()           | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -67 | __vmalloc_node()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -79 | memblock_set_node()                | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -80 | forbidden_sb_flag                  | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -84 | init.data                          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -84 | memblock_dump()                    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -84 | vmalloc_user_node_flags()          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -85 | sanitize_restored_xstate()         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -87 | __do_sys_statx()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -89 | get_cpu_cap()                      | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -91 | free_pages_check()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -92 | find_min_pfn_for_node()            | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|   -98 | fpu__clear()                       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -102 | page_cache_pipe_buf_steal()        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -103 | free_bootmem_with_active_regions() | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -119 | vmalloc_sync()                     | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -121 | vmalloc_sync_one()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -122 | delay_mwaitx()                     | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -128 | register_console()                 | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -132 | bdi_alloc_node()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -140 | vmalloc_fault()                    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -157 | vunmap_page_range()                | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -176 | free_area_init_nodes()             | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -188 | __do_page_cache_readahead()        | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -241 | vmap_page_range_noflush()          | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -313 | cp_statx()                         | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -337 | memblock_add_range()               | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -458 | __ia32_sys_tee()                   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -512 | memblock_memory_init_regions()     | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -512 | memblock_reserved_init_regions()   | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -538 | gup_pgd_range()                    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+|  -826 | free_area_init_node()              | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+| -1238 | generic_file_buffered_read()       | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
+| -3904 | sha_transform()                    | c30a3e465817 Merge branch 'linus' into WIP.x86/mm, to resolve conflict |
++-------+------------------------------------+------------------------------------------------------------------------+
 
-I am not sure why it would be a problem, when you describe a piece of
-hardware with Device Tree, even with the IP block being strictly the
-same, its very integration into a new SoC (with details like shared
-interrupt lines) do warrant a different compatible string. Maybe this is
-more of a philosophical question.
+elapsed time: 514m
 
-> I'm also looking at the
-> code and wondering if the overhead of checking to see if the interrupt
-> is flagged is really that severe, it's just a check to see if a bit is
-> set in a register which we already read so should be a couple of
-> instructions (which disassembly seems to confirm).  It *is* overhead so
-> there's some value in it, I'm just surprised that it's such a hot path
-> especially with a reasonably deep FIFO like this device has.
+configs tested: 101
+configs skipped: 2
 
-If it was up to me, we would just add the check on BCM2835_SPI_CS_INTR
-not being set and return IRQ_NONE and be done with it. I appreciate that
-Lukas has spent some tremendous amount of time working on this
-controller driver and he has a sensitivity for performance.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> I guess ideally genirq would provide a way to figure out if an interrupt
-> is actually shared in the present system, and better yet we'd have a way
-> for drivers to say they aren't using the interrupt ATM, but that might
-> be more effort than it's really worth.  If this is needed and there's no
-> better way of figuring out if the interrupt is really shared then I'd
-> suggest a boolean flag rather than a compatible string, it's still a
-> hack but it's less likely to store up trouble for the future.
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                       aspeed_g4_defconfig
+arc                          axs101_defconfig
+arc                        vdk_hs38_defconfig
+parisc                           allyesconfig
+arc                        nsimosci_defconfig
+arm                         hackkit_defconfig
+sh                         apsh4a3a_defconfig
+arm                            mmp2_defconfig
+arm                        neponset_defconfig
+arm                         orion5x_defconfig
+sh                          r7780mp_defconfig
+riscv                            allyesconfig
+mips                        bcm47xx_defconfig
+arm                           tegra_defconfig
+mips                           ci20_defconfig
+arm                         ebsa110_defconfig
+arm                          moxart_defconfig
+arm                     eseries_pxa_defconfig
+arm                           stm32_defconfig
+arm                     am200epdkit_defconfig
+powerpc                    gamecube_defconfig
+nios2                            alldefconfig
+arm                              zx_defconfig
+microblaze                    nommu_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-Instead of counting the number of SPI devices we culd request the
-interrupt first with flags = IRQF_PROBE_SHARED, if this works, good we
-have a single SPI master enabled, if it returns -EBUSY, try again with
-flags = IRQF_SHARED and set-up the bcm2835_spi_sh_interrupt interrupt
-handler to manage the sharing.
-
-This would not require DT changes, which is probably better anyway.
--- 
-Florian
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
