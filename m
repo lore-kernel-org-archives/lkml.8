@@ -2,120 +2,150 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED34C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB13B206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACD2206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RoPAhc92"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J5RJ6b1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgFDLOq (ORCPT
+        id S1726906AbgFDLQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:14:46 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43458 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgFDLOV (ORCPT
+        Thu, 4 Jun 2020 07:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgFDLQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:14:21 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054BEDLt073808;
-        Thu, 4 Jun 2020 06:14:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591269253;
-        bh=eShyx82GLaQ3xsgsj9ve463coidBb5dHGAfrzfcrN0w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RoPAhc92UDGStfxgErcbVwPEqnt4fpppTeHI4NTOepc4t2ZWU6PAOpmQ1sEa8EiDT
-         uNqNZM3Sx5vWHhi0OHxIrm8BhlV4OGqrF67c8p78/JPPXfEVf60CmRl8+X36pjn7RR
-         /gm2YNebGWOP2edl3yx0SitS7vBp9CZIVGY3DLNs=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054BECS5099395
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Jun 2020 06:14:12 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
- 2020 06:14:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 4 Jun 2020 06:14:12 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054BEC5V074087;
-        Thu, 4 Jun 2020 06:14:12 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v6 3/4] dt-bindings: net: Add RGMII internal delay for DP83869
-Date:   Thu, 4 Jun 2020 06:14:09 -0500
-Message-ID: <20200604111410.17918-4-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200604111410.17918-1-dmurphy@ti.com>
-References: <20200604111410.17918-1-dmurphy@ti.com>
+        Thu, 4 Jun 2020 07:16:35 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D88FC03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 04:16:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n9so2080382plk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 04:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=DEKbfIfXEu9wF9Z0rkW5J6S6e0LP/FIn5jqzqOD5wDs=;
+        b=J5RJ6b1svg73OcukZzTb62hfadQTam8cpOe6CX7zl/Yqm9toweh+CzSVUszQVZxgHc
+         MrzJlzQHPZiB/HszI+VdlKy0lFN8QKlDyAJ3lMMe45FqOCuMua5MMXQT/dYiM298BrDS
+         PwTgQO5xtayqQSu3nBzYBqxLzKEoVkKZOC5iQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=DEKbfIfXEu9wF9Z0rkW5J6S6e0LP/FIn5jqzqOD5wDs=;
+        b=IHGDD+7MHpb1MTZNnoZLuQqRYuxdL5/3jGcJB8ALjW7elAzadptFe2SSQkxwwdk1Sd
+         RJlrC3CHcL0y++k1che1I+HJ+zXieTS6D3IfTZuuWNaJzPp9qRSkP7VhdhHbQJxiby66
+         APPq9R4tDBnQRGG5YwWzl4oeM3YnUuiYpmJIPinqb3p9QejpzMfbBzSfzNOiMR8Xp84V
+         lzRVDUQlLzAd27xn6qj/rhRVCyqaRXfwlVWz/Ldnd7ezd06nDg8GYqKZVbDEBO2t4Yj8
+         tMILLKnb+k21B4dRRwVFitT6llWvUzisS2wYI75mRljHVGRmMLR15OoixVbKi1bo33dA
+         7EcA==
+X-Gm-Message-State: AOAM532lmsU2Vf/DVb53zK7SRRQxKiL4P6wzIypqoyEaGCxn2nJcPxPC
+        q/ATlFrZAQrqDx6F3sWkSmwPAQ==
+X-Google-Smtp-Source: ABdhPJxCCivBhK/hg9K6wT5AEXVQ71u0Uha04pdnmjNrV/7G1HqPOOjkbI98CsYtuP81QhefKr6diQ==
+X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr4478787plr.128.1591269393407;
+        Thu, 04 Jun 2020 04:16:33 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a19sm4510338pfd.165.2020.06.04.04.16.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 04:16:32 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com> <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram (Temp) <sanm@codeaurora.org>
+Date:   Thu, 04 Jun 2020 04:16:31 -0700
+Message-ID: <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the internal delay values into the header and update the binding
-with the internal delay properties.
+Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
+>=20
+> On 6/3/2020 11:06 PM, Stephen Boyd wrote:
+> > Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
+> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom=
+.c
+> >> index 1dfd024..d33ae86 100644
+> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> >> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qc=
+om)
+> >>          return 0;
+> >>   }
+> >>  =20
+> >> +
+> >> +/**
+> >> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+> >> + * @qcom:                      Pointer to the concerned usb core.
+> >> + *
+> >> + */
+> >> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+> >> +{
+> >> +       struct device *dev =3D qcom->dev;
+> >> +       int ret;
+> >> +
+> >> +       if (!device_is_bound(&qcom->dwc3->dev))
+> >> +               return -EPROBE_DEFER;
+> > How is this supposed to work? I see that this was added in an earlier
+> > revision of this patch series but there isn't any mention of why
+> > device_is_bound() is used here. It would be great if there was a comment
+> > detailing why this is necessary. It sounds like maximum_speed is
+> > important?
+> >
+> > Furthermore, dwc3_qcom_interconnect_init() is called by
+> > dwc3_qcom_probe() which is the function that registers the device for
+> > qcom->dwc3->dev. If that device doesn't probe between the time it is
+> > registered by dwc3_qcom_probe() and this function is called then we'll
+> > fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
+> > qcom->dwc3->dev device from the platform bus because we call
+> > of_platform_depopulate() on the error path of dwc3_qcom_probe().
+> >
+> > So isn't this whole thing racy and can potentially lead us to a driver
+> > probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
+> > and we're trying to time it just right so that driver for dwc3 binds
+> > before we setup interconnects? I don't know if dwc3 can communicate to
+> > the wrapper but that would be more of a direct way to do this. Or maybe
+> > the wrapper should try to read the DT property for maximum speed and
+> > fallback to a worst case high bandwidth value if it can't figure it out
+> > itself without help from dwc3 core.
+> >
+> This was added in V4 to address comments from Matthias in V3
+>=20
+> https://patchwork.kernel.org/patch/11148587/
+>=20
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../devicetree/bindings/net/ti,dp83869.yaml      | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Yes, that why I said:
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-index 5b69ef03bbf7..71e90a3e4652 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-+++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-@@ -8,7 +8,7 @@ $schema: "http://devicetree.org/meta-schemas/core.yaml#"
- title: TI DP83869 ethernet PHY
- 
- allOf:
--  - $ref: "ethernet-controller.yaml#"
-+  - $ref: "ethernet-phy.yaml#"
- 
- maintainers:
-   - Dan Murphy <dmurphy@ti.com>
-@@ -64,6 +64,18 @@ properties:
-        Operational mode for the PHY.  If this is not set then the operational
-        mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
- 
-+  rx-internal-delay-ps:
-+    description: Delay is in pico seconds
-+    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
-+            3250, 3500, 3750, 4000 ]
-+    default: 2000
-+
-+  tx-internal-delay-ps:
-+    description: Delay is in pico seconds
-+    enum: [ 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000,
-+            3250, 3500, 3750, 4000 ]
-+    default: 2000
-+
- required:
-   - reg
- 
-@@ -80,5 +92,7 @@ examples:
-         ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
-         ti,max-output-impedance = "true";
-         ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
-+        rx-internal-delay-ps = <2000>;
-+        tx-internal-delay-ps = <2000>;
-       };
-     };
--- 
-2.26.2
+"I see that this was added in an earlier
+ revision of this patch series but there isn't any mention of why
+ device_is_bound() is used here. It would be great if there was a comment
+ detailing why this is necessary. It sounds like maximum_speed is
+ important?"
 
+Can you please respond to the rest of my email?
