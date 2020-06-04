@@ -2,245 +2,124 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5DBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82501C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 737C92072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFCF20663
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aw6aE6YY"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NzJSIF5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgFDHa1 (ORCPT
+        id S1728148AbgFDH3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgFDHaZ (ORCPT
+        Thu, 4 Jun 2020 03:29:40 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2854 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728082AbgFDH3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:30:25 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D24C05BD1E;
-        Thu,  4 Jun 2020 00:30:25 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id m81so5258334ioa.1;
-        Thu, 04 Jun 2020 00:30:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=4MlBFAtCKoBGLDCt0vFCazTJmxySzwKV/mzAX+mxpRo=;
-        b=Aw6aE6YYs1vf0ZvytGCmTJpEgnyDebpotilnLdgL3gggKOORLyLfAYTfAcccvZ6fbF
-         x8D0PdYwL/MyWj5u28x0I8LxEy62SSRs2txlF3um3Qig61Km3qtetfwrdTk2D8q8fi9V
-         fXNvaKchPhyMY+uA5281jIIxrwoY4U9MlWRomYvxgTDDbo7mj8XJSiBRZDpl6Bp8fXly
-         6q+2ttw4kv9AE59v/u42Y8Pfiyg4hFkyuxLNpuByg3jg0cdm/56iFqs/8Cv8OzMaKq8l
-         qsFm8KvTzovAq9DwjOYIDMdzysqPpKv5qvmqCQ/JEaTmo0iNxsniJUV/iXS4Qmp2Uqw/
-         Xc1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=4MlBFAtCKoBGLDCt0vFCazTJmxySzwKV/mzAX+mxpRo=;
-        b=AB70GWUGaDVb+5wMAolIRCdighINhKHzZJFt/AXeAcz4gEHvYpLPf/8erDMCUu6Eer
-         WsG00NBT8QoZNvXEOEhg6t/1RG9aQXbLlKeGSp2YY8UCfkGvIIsXbW1O6DlV6qFD58Pc
-         MAfTr8dd+iYtWQbEgpojLXKdZIvy/7caYsJebnQsyCjTwqhe1l68LIyDa+uHyWT2YtyG
-         e1gl11dJ3fJlnBsaCAxNQdXGAVTamFniy+RAJOMSoeOtlj+rgx32+K+mMj2kDfFSrKPW
-         /41R0LfexkO6xRtipWKHh0T/6tx8fz3CcRg57n8Z2uTMepvO/qoeB5Uf1yERbAF65ozu
-         0rNg==
-X-Gm-Message-State: AOAM5334iEx/Nx6sdomgUZvJ8ZISY/rvCV35rpCmUKxJtuDD0rMGr29M
-        BMfxJwKTR8uDyh1zMtav9FeyXxiTF64ZBGCFP78=
-X-Google-Smtp-Source: ABdhPJxBgqjQl2KLHWQAdSszXSVQnbUmbEFSXhlhTk5cB6cT1BQC/J42JPcUgI56K8MtsC891r7tTSIXhJA+tn6x/c0=
-X-Received: by 2002:a05:6602:2c45:: with SMTP id x5mr2921898iov.80.1591255824895;
- Thu, 04 Jun 2020 00:30:24 -0700 (PDT)
+        Thu, 4 Jun 2020 03:29:32 -0400
+X-UUID: 9bfaac2ad71347b680132c77002fca6c-20200604
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=HJ9S6rma+vnVa5gCVUNR3+hSMzVhPDu4Fw67Ls/8Gl8=;
+        b=NzJSIF5bN+da1jo14qB36TQHxrJ0uZwJbrLQiHG+FIxt5Az2I1UJPQbJVZHvshuctE8g4QiiB/6DC4CLdgNmntIZJ+27AF9ZJX28Sp18ahX2JNvSpmp17adZ6VixeQlQv6i4TeFxIWQs41wN2lHnxg6kCFn1NsSryppjd3YYQvE=;
+X-UUID: 9bfaac2ad71347b680132c77002fca6c-20200604
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 869931923; Thu, 04 Jun 2020 15:29:28 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 4 Jun 2020 15:29:26 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 4 Jun 2020 15:29:24 +0800
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
+        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
+        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
+        Xia Jiang <xia.jiang@mediatek.com>
+Subject: [PATCH v9 10/18] media: platform: Stylistic changes for improving code quality
+Date:   Thu, 4 Jun 2020 15:27:00 +0800
+Message-ID: <20200604072708.9468-11-xia.jiang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200604072708.9468-1-xia.jiang@mediatek.com>
+References: <20200604072708.9468-1-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-References: <20200602132702.y3tjwvqdbww7oy5i@treble> <20200602193100.229287-1-inglorion@google.com>
-In-Reply-To: <20200602193100.229287-1-inglorion@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 4 Jun 2020 09:30:13 +0200
-Message-ID: <CA+icZUWe3ezev3rQJO4rJ5trSPoSfUX+eOBqPXbJhRe-EZQ6-w@mail.gmail.com>
-Subject: Re: [PATCH v2] x86_64: fix jiffies ODR violation
-To:     Bob Haarman <inglorion@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Alistair Delva <adelva@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andi Kleen <ak@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        Ross Zwisler <zwisler@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 9:31 PM 'Bob Haarman' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> 'jiffies' and 'jiffies_64' are meant to alias (two different symbols
-> that share the same address).  Most architectures make the symbols alias
-> to the same address via linker script assignment in their
-> arch/<arch>/kernel/vmlinux.lds.S:
->
-> jiffies = jiffies_64;
->
-> which is effectively a definition of jiffies.
->
-> jiffies and jiffies_64 are both forward declared for all arch's in:
-> include/linux/jiffies.h.
->
-> jiffies_64 is defined in kernel/time/timer.c for all arch's.
->
-> x86_64 was peculiar in that it wasn't doing the above linker script
-> assignment, but rather was:
-> 1. defining jiffies in arch/x86/kernel/time.c instead via linker script.
-> 2. overriding the symbol jiffies_64 from kernel/time/timer.c in
-> arch/x86/kernel/vmlinux.lds.s via 'jiffies_64 = jiffies;'.
->
-> As Fangrui notes:
->
->   In LLD, symbol assignments in linker scripts override definitions in
->   object files. GNU ld appears to have the same behavior. It would
->   probably make sense for LLD to error "duplicate symbol" but GNU ld
->   is unlikely to adopt for compatibility reasons.
->
-> So we have an ODR violation (UB), which we seem to have gotten away
-> with thus far. Where it becomes harmful is when we:
->
-> 1. Use -fno-semantic-interposition.
->
-> As Fangrui notes:
->
->   Clang after LLVM commit 5b22bcc2b70d
->   ("[X86][ELF] Prefer to lower MC_GlobalAddress operands to .Lfoo$local")
->   defaults to -fno-semantic-interposition similar semantics which help
->   -fpic/-fPIC code avoid GOT/PLT when the referenced symbol is defined
->   within the same translation unit. Unlike GCC
->   -fno-semantic-interposition, Clang emits such relocations referencing
->   local symbols for non-pic code as well.
->
-> This causes references to jiffies to refer to '.Ljiffies$local' when
-> jiffies is defined in the same translation unit. Likewise, references
-> to jiffies_64 become references to '.Ljiffies_64$local' in translation
-> units that define jiffies_64.  Because these differ from the names
-> used in the linker script, they will not be rewritten to alias one
-> another.
->
-> Combined with ...
->
-> 2. Full LTO effectively treats all source files as one translation
-> unit, causing these local references to be produced everywhere.  When
-> the linker processes the linker script, there are no longer any
-> references to jiffies_64' anywhere to replace with 'jiffies'.  And
-> thus '.Ljiffies$local' and '.Ljiffies_64$local' no longer alias
-> at all.
->
-> In the process of porting patches enabling Full LTO from arm64 to
-> x86_64, we observe spooky bugs where the kernel appeared to boot, but
-> init doesn't get scheduled.
->
-> Instead, we can avoid the ODR violation by matching other arch's by
-> defining jiffies only by linker script.  For -fno-semantic-interposition
-> + Full LTO, there is no longer a global definition of jiffies for the
-> compiler to produce a local symbol which the linker script won't ensure
-> aliases to jiffies_64.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/852
-> Fixes: 40747ffa5aa8 ("asmlinkage: Make jiffies visible")
-> Cc: stable@vger.kernel.org
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Reported-by: Alistair Delva <adelva@google.com>
-> Suggested-by: Fangrui Song <maskray@google.com>
-> Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
-> Debugged-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Bob Haarman <inglorion@google.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> ---
-> v2:
-> * Changed commit message as requested by Josh Poimboeuf
->   (no code change)
->
+Q2hhbmdlIHJlZ2lzdGVyIG9mZnNldCBoZXggbnVtZXJhbHMgZnJvbSB1cHBlcmNhc2UgdG8gbG93
+ZXJjYXNlLg0KQ2hhbmdlIGRhdGEgdHlwZSBvZiBtYXgvbWluIHdpZHRoL2hlaWdodCBmcm9tIGlu
+dGVnZXIgdG8gdW5zaWduZWQNCmludGVnZXIuDQoNClNpZ25lZC1vZmYtYnk6IFhpYSBKaWFuZyA8
+eGlhLmppYW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0Kdjk6IG1vdmUgY2hhbmdpbmcgZGF0YSB0eXBl
+IG9mIG1heC9taW4gd2lkdGgvaGVpZ2h0IHRvIHRoaXMgcGF0Y2gNCi0tLQ0KIC4uLi9tZWRpYS9w
+bGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmggICAgfCAgOCArKysrLS0tLQ0KIGRyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfcmVnLmggfCAxOCArKysrKysrKyst
+LS0tLS0tLS0NCiAyIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9u
+cygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtf
+anBlZ19jb3JlLmggYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2Nv
+cmUuaA0KaW5kZXggOTk5YmQxNDI3ODA5Li4yOGU5YjMwYWQ1YzMgMTAwNjQ0DQotLS0gYS9kcml2
+ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuaA0KKysrIGIvZHJpdmVy
+cy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmgNCkBAIC0yMSwxMCArMjEs
+MTAgQEANCiAjZGVmaW5lIE1US19KUEVHX0ZNVF9UWVBFX09VVFBVVAkxDQogI2RlZmluZSBNVEtf
+SlBFR19GTVRfVFlQRV9DQVBUVVJFCTINCiANCi0jZGVmaW5lIE1US19KUEVHX01JTl9XSURUSAkz
+Mg0KLSNkZWZpbmUgTVRLX0pQRUdfTUlOX0hFSUdIVAkzMg0KLSNkZWZpbmUgTVRLX0pQRUdfTUFY
+X1dJRFRICTgxOTINCi0jZGVmaW5lIE1US19KUEVHX01BWF9IRUlHSFQJODE5Mg0KKyNkZWZpbmUg
+TVRLX0pQRUdfTUlOX1dJRFRICTMyVQ0KKyNkZWZpbmUgTVRLX0pQRUdfTUlOX0hFSUdIVAkzMlUN
+CisjZGVmaW5lIE1US19KUEVHX01BWF9XSURUSAk4MTkyVQ0KKyNkZWZpbmUgTVRLX0pQRUdfTUFY
+X0hFSUdIVAk4MTkyVQ0KIA0KICNkZWZpbmUgTVRLX0pQRUdfREVGQVVMVF9TSVpFSU1BR0UJKDEg
+KiAxMDI0ICogMTAyNCkNCiANCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210
+ay1qcGVnL210a19qcGVnX3JlZy5oIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9t
+dGtfanBlZ19yZWcuaA0KaW5kZXggOTRkYjA0ZTljZGI2Li4yOTQ1ZGE4NDJkZmEgMTAwNjQ0DQot
+LS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX3JlZy5oDQorKysg
+Yi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX3JlZy5oDQpAQCAtMjAs
+MjkgKzIwLDI5IEBADQogI2RlZmluZSBCSVRfSU5RU1RfTUFTS19BTExJUlEJCTB4MzcNCiANCiAj
+ZGVmaW5lIEpQR0RFQ19SRUdfUkVTRVQJCTB4MDA5MA0KLSNkZWZpbmUgSlBHREVDX1JFR19CUlpf
+RkFDVE9SCQkweDAwRjgNCi0jZGVmaW5lIEpQR0RFQ19SRUdfRFVfTlVNCQkweDAwRkMNCisjZGVm
+aW5lIEpQR0RFQ19SRUdfQlJaX0ZBQ1RPUgkJMHgwMGY4DQorI2RlZmluZSBKUEdERUNfUkVHX0RV
+X05VTQkJMHgwMGZjDQogI2RlZmluZSBKUEdERUNfUkVHX0RFU1RfQUREUjBfWQkJMHgwMTQwDQog
+I2RlZmluZSBKUEdERUNfUkVHX0RFU1RfQUREUjBfVQkJMHgwMTQ0DQogI2RlZmluZSBKUEdERUNf
+UkVHX0RFU1RfQUREUjBfVgkJMHgwMTQ4DQotI2RlZmluZSBKUEdERUNfUkVHX0RFU1RfQUREUjFf
+WQkJMHgwMTRDDQorI2RlZmluZSBKUEdERUNfUkVHX0RFU1RfQUREUjFfWQkJMHgwMTRjDQogI2Rl
+ZmluZSBKUEdERUNfUkVHX0RFU1RfQUREUjFfVQkJMHgwMTUwDQogI2RlZmluZSBKUEdERUNfUkVH
+X0RFU1RfQUREUjFfVgkJMHgwMTU0DQogI2RlZmluZSBKUEdERUNfUkVHX1NUUklERV9ZCQkweDAx
+NTgNCi0jZGVmaW5lIEpQR0RFQ19SRUdfU1RSSURFX1VWCQkweDAxNUMNCisjZGVmaW5lIEpQR0RF
+Q19SRUdfU1RSSURFX1VWCQkweDAxNWMNCiAjZGVmaW5lIEpQR0RFQ19SRUdfSU1HX1NUUklERV9Z
+CQkweDAxNjANCiAjZGVmaW5lIEpQR0RFQ19SRUdfSU1HX1NUUklERV9VVgkweDAxNjQNCi0jZGVm
+aW5lIEpQR0RFQ19SRUdfV0RNQV9DVFJMCQkweDAxNkMNCisjZGVmaW5lIEpQR0RFQ19SRUdfV0RN
+QV9DVFJMCQkweDAxNmMNCiAjZGVmaW5lIEpQR0RFQ19SRUdfUEFVU0VfTUNVX05VTQkweDAxNzAN
+Ci0jZGVmaW5lIEpQR0RFQ19SRUdfT1BFUkFUSU9OX01PREUJMHgwMTdDDQorI2RlZmluZSBKUEdE
+RUNfUkVHX09QRVJBVElPTl9NT0RFCTB4MDE3Yw0KICNkZWZpbmUgSlBHREVDX1JFR19GSUxFX0FE
+RFIJCTB4MDIwMA0KLSNkZWZpbmUgSlBHREVDX1JFR19DT01QX0lECQkweDAyMEMNCisjZGVmaW5l
+IEpQR0RFQ19SRUdfQ09NUF9JRAkJMHgwMjBjDQogI2RlZmluZSBKUEdERUNfUkVHX1RPVEFMX01D
+VV9OVU0JMHgwMjEwDQogI2RlZmluZSBKUEdERUNfUkVHX0NPTVAwX0RBVEFfVU5JVF9OVU0JMHgw
+MjI0DQotI2RlZmluZSBKUEdERUNfUkVHX0RVX0NUUkwJCTB4MDIzQw0KKyNkZWZpbmUgSlBHREVD
+X1JFR19EVV9DVFJMCQkweDAyM2MNCiAjZGVmaW5lIEpQR0RFQ19SRUdfVFJJRwkJCTB4MDI0MA0K
+ICNkZWZpbmUgSlBHREVDX1JFR19GSUxFX0JSUAkJMHgwMjQ4DQotI2RlZmluZSBKUEdERUNfUkVH
+X0ZJTEVfVE9UQUxfU0laRQkweDAyNEMNCisjZGVmaW5lIEpQR0RFQ19SRUdfRklMRV9UT1RBTF9T
+SVpFCTB4MDI0Yw0KICNkZWZpbmUgSlBHREVDX1JFR19RVF9JRAkJMHgwMjcwDQogI2RlZmluZSBK
+UEdERUNfUkVHX0lOVEVSUlVQVF9TVEFUVVMJMHgwMjc0DQogI2RlZmluZSBKUEdERUNfUkVHX1NU
+QVRVUwkJMHgwMjc4DQotLSANCjIuMTguMA0K
 
-Hi,
-
-I have tested v2 with my local patch-series together.
-
-Feel free to add my...
-
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot on
-Debian/testing AMD64 with selfmade llvm-toolchain v10.0.1-rc1+
-
-Thanks.
-
-Regards,
-- Sedat -
-
-> ---
->  arch/x86/kernel/time.c        | 4 ----
->  arch/x86/kernel/vmlinux.lds.S | 4 ++--
->  2 files changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/kernel/time.c b/arch/x86/kernel/time.c
-> index 371a6b348e44..e42faa792c07 100644
-> --- a/arch/x86/kernel/time.c
-> +++ b/arch/x86/kernel/time.c
-> @@ -25,10 +25,6 @@
->  #include <asm/hpet.h>
->  #include <asm/time.h>
->
-> -#ifdef CONFIG_X86_64
-> -__visible volatile unsigned long jiffies __cacheline_aligned_in_smp = INITIAL_JIFFIES;
-> -#endif
-> -
->  unsigned long profile_pc(struct pt_regs *regs)
->  {
->         unsigned long pc = instruction_pointer(regs);
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index 1bf7e312361f..7c35556c7827 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -40,13 +40,13 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
->  #ifdef CONFIG_X86_32
->  OUTPUT_ARCH(i386)
->  ENTRY(phys_startup_32)
-> -jiffies = jiffies_64;
->  #else
->  OUTPUT_ARCH(i386:x86-64)
->  ENTRY(phys_startup_64)
-> -jiffies_64 = jiffies;
->  #endif
->
-> +jiffies = jiffies_64;
-> +
->  #if defined(CONFIG_X86_64)
->  /*
->   * On 64-bit, align RODATA to 2MB so we retain large page mappings for
-> --
-> 2.27.0.rc2.251.g90737beb825-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200602193100.229287-1-inglorion%40google.com.
