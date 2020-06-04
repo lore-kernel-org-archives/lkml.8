@@ -2,334 +2,300 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67326C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA9020738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A12D20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuRXwz68"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="adnHoZp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgFDLzj (ORCPT
+        id S1728107AbgFDMAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
+        Thu, 4 Jun 2020 08:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgFDLzi (ORCPT
+        with ESMTP id S1727988AbgFDMAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:55:38 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C34C03E96D;
-        Thu,  4 Jun 2020 04:55:38 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e12so4474254eds.2;
-        Thu, 04 Jun 2020 04:55:38 -0700 (PDT)
+        Thu, 4 Jun 2020 08:00:00 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70481C03E97D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:00:00 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id d21so2975846vsh.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=VNvL6qj9PpdUoXieIESpwDHwBx71xWimJ6Ek1i5K4xM=;
-        b=HuRXwz68OAb6bq4Slobbg0rrqLp3WpPcRZfw0HnIhej++01bcIwbMVr/rRx9IRq1wI
-         TXgd++T1n9NHCV4rosQhMNFk0H2lMBk3BcFlxzY2QIk7R1BdD7ItNuA+rd3tQyA7eHlm
-         VzHZEroVYFve9vfhLva0NFm8VYl5V0KHWH115tUi+1r1QPJmeF52Fcybl8DPEsiyZYiu
-         n0U05yEFktqlkIi1yVsoh/XFGJAeHVo3YTlZm/UQRKr+eNrozw/XFtweCeXY6YoIxHFA
-         rBTMknMho/7zd0cER/BvF0NZ2Lmrx8zdA5YOGw73qO7t4oIxj9LUGq2cd+2DzWf5OwHA
-         f2YQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DMjslBjEBERxtatQhlSIiUhzA2KXK0/Y8TnVtILLkmY=;
+        b=adnHoZp39ynF5T96eE3g+mFFfIxDxnxEmBjFoHuIXaeW/FzCb0vSP/xWr/de6QsCqA
+         FwI3RGJvzZfMMLw8+nBdoswtmMAtvqAQDeOTBVSzpxqUcfnp+hj8gzOWJEqTJ7WcnHXh
+         5sVxtyBUgUx9uesTVCtK7b/LYYM8o3FwVt6opTw0yVRj9U2o7TqXpBd09ZMKbfwDYUCo
+         TuD+sMROMxlc1XhCMBfZJu2fvtqPfzLk7Kog/1soFsC9TN1fOFX3mj34hfacKq1eMmYi
+         KheCpa4afVK2CQGwGHS60azeW/SZlRYcO3drndif3isSIOySjpBNeCH2HU6/XNtKx4yK
+         sgNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VNvL6qj9PpdUoXieIESpwDHwBx71xWimJ6Ek1i5K4xM=;
-        b=dFvF3aeJk3docJnETfSaXdcgaQwe/2FQXidMKsvuy9cWs+MRUkMtXUlTPQPh8BOp5H
-         H4l1sQwRTA3Ak5TvpbMLpJEVFSgz/q72RxqKDKb73+sk6DwaBLqke1s6LvzoXWptWeYn
-         TCOBh12z2hb2E37cMBhdUm/UHSXF5aUmw39Tr6AT5LkdBVWSNZ/O5Q3QuCZ9H+jCayCL
-         5l3A+8C4uDEnpuhK5vH2eYpIpUT11BN3s4xIZShdYBnhgf7NFinlCjmSOeumCaA0ELEV
-         2a6Vs3DX9MEPnsNq98Gl/sLKdtGUaBZrDvaBEHzweeGBNTsQgJGr0T0RACjIbpo9stJZ
-         zkAw==
-X-Gm-Message-State: AOAM531VMN9N1rPhPPdQ+lRAUdy6V4uZqxRNtucbkn0cvuFQgGwnzWHC
-        Nb2S76D9b4lQszP60QiP4ITgzBuDPAB6ZA==
-X-Google-Smtp-Source: ABdhPJwtpikAndjsNUczVp6QgZI6ZgJcOVIjWXngep/wotDspF03FiMQYpWlrzNbZcJkEd5ebmoaog==
-X-Received: by 2002:a50:e08c:: with SMTP id f12mr3902261edl.233.1591271736777;
-        Thu, 04 Jun 2020 04:55:36 -0700 (PDT)
-Received: from ubuntu-laptop.micron.com ([165.225.203.62])
-        by smtp.gmail.com with ESMTPSA id m23sm2205709edr.86.2020.06.04.04.55.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 04:55:36 -0700 (PDT)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] scsi: ufs: Add SPDX GPL-2.0 to replace GPL v2 boilerplate
-Date:   Thu,  4 Jun 2020 13:55:35 +0200
-Message-Id: <20200604115535.16334-1-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DMjslBjEBERxtatQhlSIiUhzA2KXK0/Y8TnVtILLkmY=;
+        b=HgtHP/L6peryY8P44cx5GgDMVFKlJP0bzCKOXMM7NN2sPp240qfgSbVyFwuw6xwH18
+         NVzwbf0+j97cPZbdtPCl8LUo/oFxhX/k/nczOnRgNx5MlgNUaaaQbIRSfWSfgFI7XOr/
+         Uhlg1oYeIFfQ10caiV6RDn3ZGOTal9zY8gHNi4SOyL1/6K38fY2xaAZbhLdUiGpkdMyn
+         yj+WaCxIWLLMXZO6PqS5RsdI4t42gt/dL0VJuYfxRYnXJHYM0yWh50YbXO85z+RopW+Q
+         B2GCmiFXybVbNhOIKjE26Fi//4VHU+G0Hzlp3UxlgngxfYvaa9UBVyzM6aHMV2h3tiTn
+         HhNA==
+X-Gm-Message-State: AOAM532p46UDJik/pyo7UoAFTClLtN9d1WRehXCWVsG2PNQtHAIs5Jrb
+        oQ5FlO/xFptRXR8YyAPLQeNPM/BpXFePIJVvKC0iFg==
+X-Google-Smtp-Source: ABdhPJy53yij9hLVZQInjDMggnHCY+ZoIl+RK9fVuU0aDUMo54S9IKMKjuYwTe3P4sismwEwI7SXg2hZFH7caykkc+Q=
+X-Received: by 2002:a67:b42:: with SMTP id 63mr2998773vsl.182.1591271999245;
+ Thu, 04 Jun 2020 04:59:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200504110344.17560-1-eesposit@redhat.com> <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 4 Jun 2020 17:29:36 +0530
+Message-ID: <CAHLCerM5Fcyyo2p-3_4X=4EYZmjsWxfbD64Pu+1GcsKmaa+nKQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     David Rientjes <rientjes@google.com>
+Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        Jonathan Adams <jwadams@google.com>, kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Tue, May 5, 2020 at 3:07 AM David Rientjes <rientjes@google.com> wrote:
+>
+> On Mon, 4 May 2020, Emanuele Giuseppe Esposito wrote:
+>
+> > There is currently no common way for Linux kernel subsystems to expose
+> > statistics to userspace shared throughout the Linux kernel; subsystems
+> > have to take care of gathering and displaying statistics by themselves,
+> > for example in the form of files in debugfs. For example KVM has its ow=
+n
+> > code section that takes care of this in virt/kvm/kvm_main.c, where it s=
+ets
+> > up debugfs handlers for displaying values and aggregating them from
+> > various subfolders to obtain information about the system state (i.e.
+> > displaying the total number of exits, calculated by summing all exits o=
+f
+> > all cpus of all running virtual machines).
+> >
+> > Allowing each section of the kernel to do so has two disadvantages. Fir=
+st,
+> > it will introduce redundant code. Second, debugfs is anyway not the rig=
+ht
+> > place for statistics (for example it is affected by lockdown)
+> >
+> > In this patch series I introduce statsfs, a synthetic ram-based virtual
+> > filesystem that takes care of gathering and displaying statistics for t=
+he
+> > Linux kernel subsystems.
+> >
+>
+> This is exciting, we have been looking in the same area recently.  Adding
+> Jonathan Adams <jwadams@google.com>.
+>
+> In your diffstat, one thing I notice that is omitted: an update to
+> Documentation/* :)  Any chance of getting some proposed Documentation/
+> updates with structure of the fs, the per subsystem breakdown, and best
+> practices for managing the stats from the kernel level?
+>
+> > The file system is mounted on /sys/kernel/stats and would be already us=
+ed
+> > by kvm. Statsfs was initially introduced by Paolo Bonzini [1].
+> >
+> > Statsfs offers a generic and stable API, allowing any kind of
+> > directory/file organization and supporting multiple kind of aggregation=
+s
+> > (not only sum, but also average, max, min and count_zero) and data type=
+s
+> > (all unsigned and signed types plus boolean). The implementation, which=
+ is
+> > a generalization of KVM=E2=80=99s debugfs statistics code, takes care o=
+f gathering
+> > and displaying information at run time; users only need to specify the
+> > values to be included in each source.
+> >
+> > Statsfs would also be a different mountpoint from debugfs, and would no=
+t
+> > suffer from limited access due to the security lock down patches. Its m=
+ain
+> > function is to display each statistics as a file in the desired folder
+> > hierarchy defined through the API. Statsfs files can be read, and possi=
+bly
+> > cleared if their file mode allows it.
+> >
+> > Statsfs has two main components: the public API defined by
+> > include/linux/statsfs.h, and the virtual file system which should end u=
+p
+> > in /sys/kernel/stats.
+> >
+> > The API has two main elements, values and sources. Kernel subsystems li=
+ke
+> > KVM can use the API to create a source, add child
+> > sources/values/aggregates and register it to the root source (that on t=
+he
+> > virtual fs would be /sys/kernel/statsfs).
+> >
+> > Sources are created via statsfs_source_create(), and each source become=
+s a
+> > directory in the file system. Sources form a parent-child relationship;
+> > root sources are added to the file system via statsfs_source_register()=
+.
+> > Every other source is added to or removed from a parent through the
+> > statsfs_source_add_subordinate and statsfs_source_remote_subordinate AP=
+Is.
+> > Once a source is created and added to the tree (via add_subordinate), i=
+t
+> > will be used to compute aggregate values in the parent source.
+> >
+> > Values represent quantites that are gathered by the statsfs user. Examp=
+les
+> > of values include the number of vm exits of a given kind, the amount of
+> > memory used by some data structure, the length of the longest hash tabl=
+e
+> > chain, or anything like that. Values are defined with the
+> > statsfs_source_add_values function. Each value is defined by a struct
+> > statsfs_value; the same statsfs_value can be added to many different
+> > sources. A value can be considered "simple" if it fetches data from a
+> > user-provided location, or "aggregate" if it groups all values in the
+> > subordinates sources that include the same statsfs_value.
+> >
+>
+> This seems like it could have a lot of overhead if we wanted to
+> periodically track the totality of subsystem stats as a form of telemetry
+> gathering from userspace.  To collect telemetry for 1,000 different stats=
+,
+> do we need to issue lseek()+read() syscalls for each of them individually
+> (or, worse, open()+read()+close())?
+>
+> Any thoughts on how that can be optimized?  A couple of ideas:
+>
+>  - an interface that allows gathering of all stats for a particular
+>    interface through a single file that would likely be encoded in binary
+>    and the responsibility of userspace to disseminate, or
+>
+>  - an interface that extends beyond this proposal and allows the reader t=
+o
+>    specify which stats they are interested in collecting and then the
+>    kernel will only provide these stats in a well formed structure and
+>    also be binary encoded.
 
-Add SPDX GPL-2.0 to replace GPL v2 boilerplate, and remove wrapper
-function ufshcd_setup_clocks()
+Something akin to how ftrace allows you specify the list of functions
+in /sys/kernel/debug/tracing/set_ftrace_filter would make this a lot
+easier to use than the one-file-per-stat interface.
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufshcd-pltfrm.c | 26 +-------------
- drivers/scsi/ufs/ufshcd.c        | 62 +++++++-------------------------
- drivers/scsi/ufs/ufshcd.h        | 27 +-------------
- 3 files changed, 15 insertions(+), 100 deletions(-)
+That would be useful, e.g. in capturing correlated stats periodically
+e.g. scheduler, power and thermal stats
 
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index 76f9be71c31b..8b76a2acc80c 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -1,36 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Universal Flash Storage Host controller Platform bus based glue driver
-- *
-  * This code is based on drivers/scsi/ufs/ufshcd-pltfrm.c
-  * Copyright (C) 2011-2013 Samsung India Software Operations
-  *
-  * Authors:
-  *	Santosh Yaraganavi <santosh.sy@samsung.com>
-  *	Vinayak Holikatti <h.vinayak@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * as published by the Free Software Foundation; either version 2
-- * of the License, or (at your option) any later version.
-- * See the COPYING file in the top-level directory or visit
-- * <http://www.gnu.org/licenses/gpl-2.0.html>
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * This program is provided "AS IS" and "WITH ALL FAULTS" and
-- * without warranty of any kind. You are solely responsible for
-- * determining the appropriateness of using and distributing
-- * the program and assume all risks associated with your exercise
-- * of rights with respect to the program, including but not limited
-- * to infringement of third party rights, the risks and costs of
-- * program errors, damage to or loss of data, programs or equipment,
-- * and unavailability or interruption of operations. Under no
-- * circumstances will the contributor of this Program be liable for
-- * any damages of any kind arising from your use or distribution of
-- * this program.
-  */
- 
- #include <linux/platform_device.h>
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index f283b9eb97ac..e5ec68fc9fc7 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1,40 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Universal Flash Storage Host controller driver Core
-- *
-- * This code is based on drivers/scsi/ufs/ufshcd.c
-  * Copyright (C) 2011-2013 Samsung India Software Operations
-  * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
-  *
-  * Authors:
-  *	Santosh Yaraganavi <santosh.sy@samsung.com>
-  *	Vinayak Holikatti <h.vinayak@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * as published by the Free Software Foundation; either version 2
-- * of the License, or (at your option) any later version.
-- * See the COPYING file in the top-level directory or visit
-- * <http://www.gnu.org/licenses/gpl-2.0.html>
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * This program is provided "AS IS" and "WITH ALL FAULTS" and
-- * without warranty of any kind. You are solely responsible for
-- * determining the appropriateness of using and distributing
-- * the program and assume all risks associated with your exercise
-- * of rights with respect to the program, including but not limited
-- * to infringement of third party rights, the risks and costs of
-- * program errors, damage to or loss of data, programs or equipment,
-- * and unavailability or interruption of operations. Under no
-- * circumstances will the contributor of this Program be liable for
-- * any damages of any kind arising from your use or distribution of
-- * this program.
-- *
-- * The Linux Foundation chooses to take subject only to the GPLv2
-- * license terms, and distributes only under these terms.
-  */
- 
- #include <linux/async.h>
-@@ -243,9 +215,7 @@ static int ufshcd_eh_host_reset_handler(struct scsi_cmnd *cmd);
- static int ufshcd_clear_tm_cmd(struct ufs_hba *hba, int tag);
- static void ufshcd_hba_exit(struct ufs_hba *hba);
- static int ufshcd_probe_hba(struct ufs_hba *hba, bool async);
--static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
--				 bool skip_ref_clk);
--static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on);
-+static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on, bool skip_ref_clk);
- static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba);
- static inline void ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba);
- static int ufshcd_host_reset_and_restore(struct ufs_hba *hba);
-@@ -1525,7 +1495,7 @@ static void ufshcd_ungate_work(struct work_struct *work)
- 	}
- 
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
--	ufshcd_setup_clocks(hba, true);
-+	ufshcd_setup_clocks(hba, true, false);
- 
- 	ufshcd_enable_irq(hba);
- 
-@@ -1683,10 +1653,10 @@ static void ufshcd_gate_work(struct work_struct *work)
- 	ufshcd_disable_irq(hba);
- 
- 	if (!ufshcd_is_link_active(hba))
--		ufshcd_setup_clocks(hba, false);
-+		ufshcd_setup_clocks(hba, false, false);
- 	else
- 		/* If link is active, device ref_clk can't be switched off */
--		__ufshcd_setup_clocks(hba, false, true);
-+		ufshcd_setup_clocks(hba, false, true);
- 
- 	/*
- 	 * In case you are here to cancel this work the gating state
-@@ -7600,8 +7570,7 @@ static int ufshcd_init_hba_vreg(struct ufs_hba *hba)
- 	return 0;
- }
- 
--static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
--					bool skip_ref_clk)
-+static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on, bool skip_ref_clk)
- {
- 	int ret = 0;
- 	struct ufs_clk_info *clki;
-@@ -7664,11 +7633,6 @@ static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
- 	return ret;
- }
- 
--static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on)
--{
--	return  __ufshcd_setup_clocks(hba, on, false);
--}
--
- static int ufshcd_init_clocks(struct ufs_hba *hba)
- {
- 	int ret = 0;
-@@ -7775,7 +7739,7 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
- 	if (err)
- 		goto out_disable_hba_vreg;
- 
--	err = ufshcd_setup_clocks(hba, true);
-+	err = ufshcd_setup_clocks(hba, true, false);
- 	if (err)
- 		goto out_disable_hba_vreg;
- 
-@@ -7797,7 +7761,7 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
- out_disable_vreg:
- 	ufshcd_setup_vreg(hba, false);
- out_disable_clks:
--	ufshcd_setup_clocks(hba, false);
-+	ufshcd_setup_clocks(hba, false, false);
- out_disable_hba_vreg:
- 	ufshcd_setup_hba_vreg(hba, false);
- out:
-@@ -7813,7 +7777,7 @@ static void ufshcd_hba_exit(struct ufs_hba *hba)
- 		if (ufshcd_is_clkscaling_supported(hba))
- 			if (hba->devfreq)
- 				ufshcd_suspend_clkscaling(hba);
--		ufshcd_setup_clocks(hba, false);
-+		ufshcd_setup_clocks(hba, false, false);
- 		ufshcd_setup_hba_vreg(hba, false);
- 		hba->is_powered = false;
- 		ufs_put_device_desc(hba);
-@@ -8176,10 +8140,10 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 	ufshcd_disable_irq(hba);
- 
- 	if (!ufshcd_is_link_active(hba))
--		ufshcd_setup_clocks(hba, false);
-+		ufshcd_setup_clocks(hba, false, false);
- 	else
- 		/* If link is active, device ref_clk can't be switched off */
--		__ufshcd_setup_clocks(hba, false, true);
-+		ufshcd_setup_clocks(hba, false, true);
- 
- 	hba->clk_gating.state = CLKS_OFF;
- 	trace_ufshcd_clk_gating(dev_name(hba->dev), hba->clk_gating.state);
-@@ -8238,7 +8202,7 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 
- 	ufshcd_hba_vreg_set_hpm(hba);
- 	/* Make sure clocks are enabled before accessing controller */
--	ret = ufshcd_setup_clocks(hba, true);
-+	ret = ufshcd_setup_clocks(hba, true, false);
- 	if (ret)
- 		goto out;
- 
-@@ -8321,7 +8285,7 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 	ufshcd_disable_irq(hba);
- 	if (hba->clk_scaling.is_allowed)
- 		ufshcd_suspend_clkscaling(hba);
--	ufshcd_setup_clocks(hba, false);
-+	ufshcd_setup_clocks(hba, false, false);
- out:
- 	hba->pm_op_in_progress = 0;
- 	if (ret)
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 2b62869fa459..ee14fb997803 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -1,37 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Universal Flash Storage Host controller driver
-- *
-- * This code is based on drivers/scsi/ufs/ufshcd.h
-  * Copyright (C) 2011-2013 Samsung India Software Operations
-  * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
-  *
-  * Authors:
-  *	Santosh Yaraganavi <santosh.sy@samsung.com>
-  *	Vinayak Holikatti <h.vinayak@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * as published by the Free Software Foundation; either version 2
-- * of the License, or (at your option) any later version.
-- * See the COPYING file in the top-level directory or visit
-- * <http://www.gnu.org/licenses/gpl-2.0.html>
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * This program is provided "AS IS" and "WITH ALL FAULTS" and
-- * without warranty of any kind. You are solely responsible for
-- * determining the appropriateness of using and distributing
-- * the program and assume all risks associated with your exercise
-- * of rights with respect to the program, including but not limited
-- * to infringement of third party rights, the risks and costs of
-- * program errors, damage to or loss of data, programs or equipment,
-- * and unavailability or interruption of operations. Under no
-- * circumstances will the contributor of this Program be liable for
-- * any damages of any kind arising from your use or distribution of
-- * this program.
-  */
- 
- #ifndef _UFSHCD_H
--- 
-2.17.1
-
+> We've found that the one-file-per-stat method is pretty much a show
+> stopper from the performance view and we always must execute at least two
+> syscalls to obtain a single stat.
+>
+> Since this is becoming a generic API (good!!), maybe we can discuss
+> possible ways to optimize gathering of stats in mass?
+>
+> > For more information, please consult the kerneldoc documentation in pat=
+ch
+> > 2 and the sample uses in the kunit tests and in KVM.
+> >
+> > This series of patches is based on my previous series "libfs: group and
+> > simplify linux fs code" and the single patch sent to kvm "kvm_host: uni=
+fy
+> > VM_STAT and VCPU_STAT definitions in a single place". The former
+> > simplifies code duplicated in debugfs and tracefs (from which statsfs i=
+s
+> > based on), the latter groups all macros definition for statistics in kv=
+m
+> > in a single common file shared by all architectures.
+> >
+> > Patch 1 adds a new refcount and kref destructor wrappers that take a
+> > semaphore, as those are used later by statsfs. Patch 2 introduces the
+> > statsfs API, patch 3 provides extensive tests that can also be used as
+> > example on how to use the API and patch 4 adds the file system support.
+> > Finally, patch 5 provides a real-life example of statsfs usage in KVM.
+> >
+> > [1] https://lore.kernel.org/kvm/5d6cdcb1-d8ad-7ae6-7351-3544e2fa366d@re=
+dhat.com/?fbclid=3DIwAR18LHJ0PBcXcDaLzILFhHsl3qpT3z2vlG60RnqgbpGYhDv7L43n0Z=
+XJY8M
+> >
+> > Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+> >
+> > v1->v2 remove unnecessary list_foreach_safe loops, fix wrong indentatio=
+n,
+> > change statsfs in stats_fs
+> >
+> > Emanuele Giuseppe Esposito (5):
+> >   refcount, kref: add dec-and-test wrappers for rw_semaphores
+> >   stats_fs API: create, add and remove stats_fs sources and values
+> >   kunit: tests for stats_fs API
+> >   stats_fs fs: virtual fs to show stats to the end-user
+> >   kvm_main: replace debugfs with stats_fs
+> >
+> >  MAINTAINERS                     |    7 +
+> >  arch/arm64/kvm/Kconfig          |    1 +
+> >  arch/arm64/kvm/guest.c          |    2 +-
+> >  arch/mips/kvm/Kconfig           |    1 +
+> >  arch/mips/kvm/mips.c            |    2 +-
+> >  arch/powerpc/kvm/Kconfig        |    1 +
+> >  arch/powerpc/kvm/book3s.c       |    6 +-
+> >  arch/powerpc/kvm/booke.c        |    8 +-
+> >  arch/s390/kvm/Kconfig           |    1 +
+> >  arch/s390/kvm/kvm-s390.c        |   16 +-
+> >  arch/x86/include/asm/kvm_host.h |    2 +-
+> >  arch/x86/kvm/Kconfig            |    1 +
+> >  arch/x86/kvm/Makefile           |    2 +-
+> >  arch/x86/kvm/debugfs.c          |   64 --
+> >  arch/x86/kvm/stats_fs.c         |   56 ++
+> >  arch/x86/kvm/x86.c              |    6 +-
+> >  fs/Kconfig                      |   12 +
+> >  fs/Makefile                     |    1 +
+> >  fs/stats_fs/Makefile            |    6 +
+> >  fs/stats_fs/inode.c             |  337 ++++++++++
+> >  fs/stats_fs/internal.h          |   35 +
+> >  fs/stats_fs/stats_fs-tests.c    | 1088 +++++++++++++++++++++++++++++++
+> >  fs/stats_fs/stats_fs.c          |  773 ++++++++++++++++++++++
+> >  include/linux/kref.h            |   11 +
+> >  include/linux/kvm_host.h        |   39 +-
+> >  include/linux/refcount.h        |    2 +
+> >  include/linux/stats_fs.h        |  304 +++++++++
+> >  include/uapi/linux/magic.h      |    1 +
+> >  lib/refcount.c                  |   32 +
+> >  tools/lib/api/fs/fs.c           |   21 +
+> >  virt/kvm/arm/arm.c              |    2 +-
+> >  virt/kvm/kvm_main.c             |  314 ++-------
+> >  32 files changed, 2772 insertions(+), 382 deletions(-)
+> >  delete mode 100644 arch/x86/kvm/debugfs.c
+> >  create mode 100644 arch/x86/kvm/stats_fs.c
+> >  create mode 100644 fs/stats_fs/Makefile
+> >  create mode 100644 fs/stats_fs/inode.c
+> >  create mode 100644 fs/stats_fs/internal.h
+> >  create mode 100644 fs/stats_fs/stats_fs-tests.c
+> >  create mode 100644 fs/stats_fs/stats_fs.c
+> >  create mode 100644 include/linux/stats_fs.h
+> >
+> > --
+> > 2.25.2
+> >
+> >
