@@ -2,123 +2,108 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15233C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 241722072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE6532074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:47:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U/1Y6fc0"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XpSqX/ok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgFDElp (ORCPT
+        id S1726996AbgFDErR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgFDElp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:41:45 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C73C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 21:41:44 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id bg4so1649255plb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8WDlsjrMlty5dE62ZezIYU+NL84xC3Chb0nBV1myZPA=;
-        b=U/1Y6fc0FsAR9q/fDRBBbl4f4ErUS4R91YBctvPmeCyz4QlZMRhbPe4f3+74RBGRWd
-         dDgiXGgYoKG17vzZO21zRqkMlPQ/6TUV4Q71GTsjSjlr6Q2dLJNH8A34GhmXD74O8+EZ
-         JDkIItQE0Tv6jEgvHP5H5CHgsGZ8cShuYQuNKk4GcxBLssCRu/T6Tb2ZCAJI8yy0w6Yj
-         QMNEX9HsXX0bGHCinzKIUrSGirJxIanJ+uVuEtVjq/zxV3JCBaIzLh83xWD0aJYjQAE0
-         /e3WnZwWiZAIpHKSLhRejOEOE9ZrbjOUFCGZORu6AVHywzoxSv6NsdHF2grmh8Q4sv7Q
-         T1Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8WDlsjrMlty5dE62ZezIYU+NL84xC3Chb0nBV1myZPA=;
-        b=FYZ/SfQLXy79cQQdnImWGKbRdekvKtUffHBgRQSYzYIOEzQMkw/RSJH2U1Uzen9Wz0
-         6zOAzarYCu4dNudxrkzB1Eo68hjcYi19CdYJmyKV3ILMppkP2dEtVQFp99/Or7Hv73t4
-         nbPsNjlRIFw2NPqnoFSfO7Lc7xWJlyHDeVizWRTgeiegSsFjXzCFeuhdlt1Sx6oelEsd
-         XSoCz3/JGxlQtTJ37mX7SXJG+O+YdkONTjATGMQnPgFS+ZBJjojfT01ph1pxUlM/MLbJ
-         bq6otvNOkVYYTSFCEWYaTdUqGkBEojjfF1VLFqydlf93JKsI7Qlprut3slEjjxzi/V6v
-         nmug==
-X-Gm-Message-State: AOAM530/aVkB6sL5HoAIKbDemyeF8E6/5dnoOofiLAKI1QvMx0SjAKCS
-        38FC6clsi8N9t1uiQ0Edea0yyw==
-X-Google-Smtp-Source: ABdhPJy4dhvsU8hpYj5pyPZ5zOBHdPM95AWZsa5qnxKP/WfKDaOyJnU6DFKxxSDRmg6+YaD28vtaPA==
-X-Received: by 2002:a17:90b:2042:: with SMTP id ji2mr3896276pjb.68.1591245704073;
-        Wed, 03 Jun 2020 21:41:44 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id p14sm4185557pju.7.2020.06.03.21.41.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jun 2020 21:41:43 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 10:11:40 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-Message-ID: <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
- <20200603075200.hbyofgcyiwocl565@vireshk-i7>
- <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
- <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com>
+        Thu, 4 Jun 2020 00:47:17 -0400
+Received: from mail-eopbgr150054.outbound.protection.outlook.com ([40.107.15.54]:8928
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725950AbgFDErQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 00:47:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W4mzbMxzLVvDxEWq0AEBTMayIsaMSNNRK+mZbyv4xG5oEpOSl/iULstFQto7JJu12EKh7AIQDXXKCsBeUO94BtyLz/YFM5BYMU3DO2Zm3U5XU7dPctKFtAX4KHP/Z2yfFsiox5XajM8TNvFRwIN0vlCU2V4SOR5x4VcHcFlu7Axbyutwwukd01vsewninpVx7/vYaRXThp/1pqc9h+9PAlPFfZKqRE6Zkqd3Lssz+vp+8pO69fX72Sbs4xQJH4VMR7uWDjanPh3zlTnuqOHg6emUaap9O2KEJBfO/waO5DSTodTq1t46DKU2kRn1zZxTjc6WTu5Orgep98Tw83bjaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=noaHx6GA4sE4qeUfjrXWLwrGBpPZ5dHA5aXa4jYsxnM=;
+ b=IiqIZE0lg8re64RbTul7O4zn1gZuM/bq/XP05HtDkjRj/sdVMuoOIMPonGQYLVQ4A9VrT4fILzqJ2GXhDxMfZAOoAkYu7HFAmThIs3nmdNCL1Zv+z+G0gTRIFgfpSDWybPYPp7yK2+2vvPG5NVwmJMpBkW4SFQ+vwYX8twkvBiYqdxM4agqUxuv+QP30VRwQFS+IgKj4MZt/B+3tUDV/2Pm8mq/y/sxDblNL3WY94ltUZ0yxBr/M0xBrbIRLVuzTJmNp0PedrYdb+EI+tFPvTr2Ey6rtKRS24J7BYKR57134HT0cFVtjIbHvdsC4qDMs3nFJ79OHurwJuuOu0xjFBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=noaHx6GA4sE4qeUfjrXWLwrGBpPZ5dHA5aXa4jYsxnM=;
+ b=XpSqX/okyK1pY4VS1QASa0xHk6vWzMX3c5zCvEseeDR+pEWG8/jakF08VLO3Vesd0OkoSAjQL0GZd1vSghw9WlvD4tODUT4wG/9jMNoYGKU0nidltR91yPYuDC6Gd2qVC8y0DwN2s2K74AJ8ksMptz6Nbw4N8mpaWyJFbCgBcUs=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
+ by VI1PR05MB6688.eurprd05.prod.outlook.com (2603:10a6:800:131::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 4 Jun
+ 2020 04:47:13 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::2405:4594:97a:13c]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::2405:4594:97a:13c%2]) with mapi id 15.20.3045.024; Thu, 4 Jun 2020
+ 04:47:13 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "efremov@linux.com" <efremov@linux.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        Alex Vesker <valex@mellanox.com>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net/mlx5: DR, Fix freeing in dr_create_rc_qp()
+Thread-Topic: [PATCH] net/mlx5: DR, Fix freeing in dr_create_rc_qp()
+Thread-Index: AQHWODQW08Et5AyQukqYq107OQeR4qjH5gKA
+Date:   Thu, 4 Jun 2020 04:47:13 +0000
+Message-ID: <71eddd29fce960fed5556083548d68368315f6c3.camel@mellanox.com>
+References: <20200601164526.19430-1-efremov@linux.com>
+In-Reply-To: <20200601164526.19430-1-efremov@linux.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+authentication-results: linux.com; dkim=none (message not signed)
+ header.d=none;linux.com; dmarc=none action=none header.from=mellanox.com;
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f599eb7f-4e5b-4dd7-18ed-08d8084259ba
+x-ms-traffictypediagnostic: VI1PR05MB6688:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB6688861F81343A19710EA2ADBE890@VI1PR05MB6688.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 04244E0DC5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: a4prBYqFb+5pssA7glNlr8ux+Ayz6VsdKYGua+ZBmdtETiR5TRzvwZOJOxsZG3CBQXGzRH7OW3NptBiCxLrXauKLUkQ4Ioryd066mAeqojrwTTTPrBgEh32HHkcx5Zz7o0D0Z/krN8wD8dd603zC9W6EmoyjNp5Nf70hJP+xDRdsAroKKIyeDF0RXJxw4sEcpvBDVeWWyBf1QoG57g2rUfFsGV2a0BqL1djaeiT+sT7OZb/2Vzq+EmRvs0uid3rbeMZNrJSYzFLXgBI/L2sAp8JJKkc61VDMFvrqITCAoMQWAGyWMicFKkd2/yHXWHyAfB2pSvsIFoYk8t6r0kgXSA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(76116006)(6486002)(5660300002)(478600001)(71200400001)(4744005)(2906002)(8676002)(8936002)(36756003)(6636002)(26005)(110136005)(4326008)(6506007)(91956017)(6512007)(186003)(66476007)(64756008)(66946007)(54906003)(86362001)(2616005)(66446008)(66556008)(316002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: q727Na69tJDNxZUCAthSHI77Qw21KIViDB+TuTaYP04Qi2LxiucFelHkkGxdrdWrq+UpCGJMeZC8hoAcELbSj0loxlDlIXzlQ5sEvVZ/xxKpYQR1QHW0Aumb+8Q6OYrL2gGrJ48tsujSwL36HXq29p0lCOG6VMUwNRKHjU6dGD0idLQqFQpA3FHTqj5OO8hB+O/FBbJahy2sWLYDhYg5bGP4Y8nOUCfS4NMXX/rrJdOmqaqlcgj04+EAKRob5ZXaGDFWjHFw6UYKdxfo9cUqApgMHTIESB4Ys7TMubKxxe4VJR0lficdEO/bES8PJRODaNy9LdyDvUZaKVCmMrU+wxp3ENLmwQEnyhSLc/3VYQ3LqSwzwbXoboLuuz3nqzFOnCur8+zlmQobAHSCOWhRj4OtPSNXIwjVAb8haq3SSvfrmOSIJkikk3gOew4LR8UatdJ3SuQ++hMvu2wtBhmGjL4r5d3WMjol7WuAcz90XVM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D670B1CD12B599478A49F8D3DCB91643@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f599eb7f-4e5b-4dd7-18ed-08d8084259ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 04:47:13.6598
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nrYTWcJ9EiYoHogJnnjB04U63p5XRd9CfiGFXTYH0dPriHW3jdflOLZHoHqBJL7a6CD1QZlKHbeenMUmrmd/Mg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6688
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-06-20, 09:32, Xiongfeng Wang wrote:
-> On 2020/6/3 21:39, Rafael J. Wysocki wrote:
-> > The frequency value obtained by kicking the CPU out of idle
-> > artificially is bogus, though.  You may as well return a random number
-> > instead.
-> 
-> Yes, it may return a randowm number as well.
-> 
-> > 
-> > The frequency of a CPU in an idle state is in fact unknown in the case
-> > at hand, so returning 0 looks like the cleanest option to me.
-> 
-> I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
-> return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
-> zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
-> idle, I will get a non-zero value. The user may feel odd about
-> 'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
-> may hope it can return the frequency when the CPU execute instructions, namely
-> in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
-
-This is what I was worried about as well. The interface to sysfs needs
-to be robust. Returning frequency on some readings and 0 on others
-doesn't look right to me as well. This will break scripts (I am not
-sure if some scripts are there to look for these values) with the
-randomness of values returned by it.
-
-On reading values locally from the CPU, I thought about the case where
-userspace can prevent a CPU going into idle just by reading its
-frequency from sysfs (and so waste power), but the same can be done by
-userspace to run arbitrary load on the CPUs.
-
-Can we do some sort of caching of the last frequency the CPU was
-running at before going into idle ? Then we can just check if cpu is
-idle and so return cached value.
-
--- 
-viresh
+T24gTW9uLCAyMDIwLTA2LTAxIGF0IDE5OjQ1ICswMzAwLCBEZW5pcyBFZnJlbW92IHdyb3RlOg0K
+PiBWYXJpYWJsZSAiaW4iIGluIGRyX2NyZWF0ZV9yY19xcCgpIGlzIGFsbG9jYXRlZCB3aXRoIGt2
+emFsbG9jKCkgYW5kDQo+IHNob3VsZCBiZSBmcmVlZCB3aXRoIGt2ZnJlZSgpLg0KPiANCj4gRml4
+ZXM6IDI5N2NjY2ViZGM1YSAoIm5ldC9tbHg1OiBEUiwgRXhwb3NlIGFuIGludGVybmFsIEFQSSB0
+byBpc3N1ZQ0KPiBSRE1BIG9wZXJhdGlvbnMiKQ0KPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9y
+Zw0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5pcyBFZnJlbW92IDxlZnJlbW92QGxpbnV4LmNvbT4NCj4g
+DQoNCkFwcGxpZWQgdG8gbmV0LW1seDUsDQpUaGFua3MsDQpTYWVlZC4NCg==
