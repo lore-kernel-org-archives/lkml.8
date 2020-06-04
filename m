@@ -2,117 +2,125 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A72FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB054C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B8F206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:03:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SGe6Nt4I"
+	by mail.kernel.org (Postfix) with ESMTP id 7E5942077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgFDVD0 (ORCPT
+        id S1726565AbgFDVDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 17:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgFDVDZ (ORCPT
+        Thu, 4 Jun 2020 17:03:44 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35770 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgFDVDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:03:25 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68D25C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 14:03:24 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id q8so7946816iow.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xVcHrfKW+EZLK5WlvWHRmcrAcLbjRGuWUSEv5Qrs1B4=;
-        b=SGe6Nt4I1FoJ2ANC8HuzMuezUuGCeu8KucBq8Rf8YAAzjJ4WCCfTCSJDkBTI5MPby7
-         olZ3xVaPwehMaSwNyhEU+fpeczpSyIA/hDSC4zLF4GWwLB3nX1siy6Wfqyd5oCZb4tex
-         /ziFT9YowW6F6ToyhHZje6eivMjWP1rVKYNzqA84rhlVKpwXUMNxWPgqCfoqSNITOn2i
-         0I9nKK0BsJ/fBdtLlHabEsaKunPvKpO8EMC4np1uz2KMOMhc2Rs+fke+5WTlS/fjh4sx
-         Mbdx3TTMQ0C+YfPvnrV8GrZ/GJyAoITjJ53BYhYBfzVa7qKrxy5vdZLXzA2PhbQkrv86
-         8vsw==
+        Thu, 4 Jun 2020 17:03:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 82so4478166lfh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:03:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xVcHrfKW+EZLK5WlvWHRmcrAcLbjRGuWUSEv5Qrs1B4=;
-        b=XPtgVYr2ws6JBiA1HaCfF+kJE2AO6Qsl+2KtXJ1aZg26777txgE1Zi70cbEAGyfnbG
-         CDYQOo9K41H3B2azIa2nd0LHUcIIReVXY3jDMuvezFUQTKwb+U67XP/0UYrCkZJAgdAp
-         cqgcSHdSmpCH8yescWatViBkUV3EQqiFn5jz2qNnSoDUp8+1Gn2P0rFjkgGigtG6tHZH
-         nLTu+j7jUv5f0lulWK4Pio4n9yw4Ik9ciOjn1EcGSgs9F90TFifAn1vROdqbsPI7aTdX
-         L/xnUrnNT6gfPLHpcljWdQg2W2OTThihR1v5KF+g2zCJ+NrN4hO+h0Ld3PokgV5GIPD2
-         Yl+A==
-X-Gm-Message-State: AOAM533XGY6NbllgJiNy+HUxV6wP5ucTm1zL55819ehuDH84DyZUfMtV
-        Dd/tlE0vW6iIG5Zml4VI/WqXT8xiv8x0txasnJbmag==
-X-Google-Smtp-Source: ABdhPJydaD55JsS0MoPoYnaMrMN3IUQdB136AuNz0druLAaVYc+jwbiq3WE0o9kEigoUYDae316q2Oi5uZR3js1Jn6s=
-X-Received: by 2002:a02:390b:: with SMTP id l11mr6074699jaa.54.1591304603645;
- Thu, 04 Jun 2020 14:03:23 -0700 (PDT)
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Qj/mH6Ksi1py8PwVFzxrK4/3Imgc5IGEgSu++hptVZE=;
+        b=itWu9wsfDUIp5QsM46vIqJ9vx2NXPdjs7yqggU4b/8+pRD25LrAYfzRJwHcoScWvM5
+         f8KxPKLRsb7G1BISzDU808daaAgbCTh/gK+wh8gTMbpYq1XdiWDHQiTMw5SOqLwHN/Sd
+         jOFGKfvCwbnt+mVKvzvoYJ4JTqmO2Ve9AoffszmpaxRUCjnj5Z1ix5cILWG4Uo7Iwe0r
+         LBbxlPNVV4W694AnfgL/BJuqaRB0QICtvcIyLJvoPPCOikz9rQLqxcRYaprL/lo/+jIK
+         LdAiUfn86bYhcUSxCsYTSw/kzTqDrkd5jX2WIHbitrrYf75Ddhb8Nxt/zQzoi/eJVTTJ
+         l+Bg==
+X-Gm-Message-State: AOAM531/9Sfw74DRVf8jJrJ7ZSi6Oy9SUFl7vhipLtBJODTXsCDxsEIg
+        0XN5R/yBfMJvAPxFtWCfUUn+44WW
+X-Google-Smtp-Source: ABdhPJz+0Z2VChW84TupUu4D9YxuKU9FBRmsVqWZaCZJ/HTnkJp+BWCMR1k+yo+Rl7ManP6GvEbEOQ==
+X-Received: by 2002:a19:6554:: with SMTP id c20mr3484373lfj.140.1591304620300;
+        Thu, 04 Jun 2020 14:03:40 -0700 (PDT)
+Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.gmail.com with ESMTPSA id a12sm133071ljb.92.2020.06.04.14.03.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 14:03:39 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [Cocci] [PATCH v2] coccinelle: api: add kzfree script
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Joe Perches <joe@perches.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+References: <20200604140805.111613-1-efremov@linux.com>
+ <20200604204846.15897-1-efremov@linux.com>
+ <alpine.DEB.2.21.2006042254240.2577@hadrien>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Message-ID: <b79cb999-5b9d-4e05-a1d9-b89c025cd8c2@linux.com>
+Date:   Fri, 5 Jun 2020 00:03:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200604161523.39962919@why> <20200604154835.GE30223@linux.intel.com>
- <20200604163532.GE3650@willie-the-truck> <6DBAB6A4-A1F9-40E9-B81B-74182DDCF939@intel.com>
-In-Reply-To: <6DBAB6A4-A1F9-40E9-B81B-74182DDCF939@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 4 Jun 2020 14:03:12 -0700
-Message-ID: <CALMp9eRN-zkvmkYQ0a600SyLA_0ymznBG8jmriTsYMcXkK77Qg@mail.gmail.com>
-Subject: Re: [RFC 00/16] KVM protected memory extension
-To:     "Nakajima, Jun" <jun.nakajima@intel.com>
-Cc:     Will Deacon <will@kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "kernel-team@android.com" <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <alpine.DEB.2.21.2006042254240.2577@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 12:09 PM Nakajima, Jun <jun.nakajima@intel.com> wrot=
-e:
+On 6/4/20 11:57 PM, Julia Lawall wrote:
+> On the other hand, do you really require E to be a pointer?  If you do
+> that, it will have to find the type of E.  If E refers to a structure
+> field, then the type might not be available in the current function, and
+> you may need command line argments like --all-includes or
+> --recursive-includes.  Is avoiding transforming the case where E is not
+> verified to be a pointer a concern?
 
-> We (Intel virtualization team) are also working on a similar thing, proto=
-typing to meet such requirements, i..e "some level of confidentiality to gu=
-ests=E2=80=9D. Linux/KVM is the host, and the Kirill=E2=80=99s patches are =
-helpful when removing the mappings from the host to achieve memory isolatio=
-n of a guest. But, it=E2=80=99s not easy to prove there are no other mappin=
-gs.
->
-> To raise the level of security, our idea is to de-privilege the host kern=
-el just to enforce memory isolation using EPT (Extended Page Table) that vi=
-rtualizes guest (the host kernel in this case) physical memory; almost ever=
-ything is passthrough. And the EPT for the host kernel excludes the memory =
-for the guest(s) that has confidential info. So, the host kernel shouldn=E2=
-=80=99t cause VM exits as long as it=E2=80=99s behaving well (CPUID still c=
-auses a VM exit, though).
+It's save to use "expression E;" in this rule. Do you want me to send v3?
 
-You're Intel. Can't you just change the CPUID intercept from required
-to optional? It seems like this should be in the realm of a small
-microcode patch.
+Any thoughts about commented lines in "patch"? Maybe I do something wrong
+trying to use "..." it in r2?
+
+Thanks,
+Denis
