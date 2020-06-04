@@ -2,86 +2,136 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52CC1206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE7D2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FuK4e6zw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgFDMG0 (ORCPT
+        id S1728513AbgFDMGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:06:26 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42200 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728452AbgFDMGX (ORCPT
+        Thu, 4 Jun 2020 08:06:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58322 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728476AbgFDMG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:06:23 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7EB4D1C0BD2; Thu,  4 Jun 2020 14:06:21 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 14:06:21 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     jacek.anaszewski@gmail.com, matthias.bgg@gmail.com, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: Re: [PATCH] leds: mt6360: Add LED driver for MT6360
-Message-ID: <20200604120621.GA3560@duo.ucw.cz>
-References: <1591252004-12681-1-git-send-email-gene.chen.richtek@gmail.com>
+        Thu, 4 Jun 2020 08:06:27 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054C6FN8052250;
+        Thu, 4 Jun 2020 07:06:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591272375;
+        bh=Jf6MKK966/6Olzk1qJChUoSjiHhXr8OEtTXC2DBLRbo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FuK4e6zwE8g/1Pp1NYlm3ZBhjKf7oQxWZFEli5z9K3z8Y3sZlUFL85quDHccHZB+l
+         PUNYAxnfbcoh0cEgjeZXAVMgDITt7upRLT/64vDsTalBzhSsgwpFFsjegOVVv0J73U
+         oBdAfczsD+qTzi+klPzLrUiN5VoJ7tSLzQiUgDY8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C6FXY059916;
+        Thu, 4 Jun 2020 07:06:15 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 07:06:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 07:06:15 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C6FIl016929;
+        Thu, 4 Jun 2020 07:06:15 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v26 08/15] ARM: dts: imx6dl-yapp4: Add reg property to the lp5562 channel node
+Date:   Thu, 4 Jun 2020 07:04:57 -0500
+Message-ID: <20200604120504.32425-9-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200604120504.32425-1-dmurphy@ti.com>
+References: <20200604120504.32425-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Content-Disposition: inline
-In-Reply-To: <1591252004-12681-1-git-send-email-gene.chen.richtek@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the reg property to each channel node.  This update is
+to accommodate the multicolor framework.  In addition to the
+accommodation this allows the LEDs to be placed on any channel
+and allow designs to skip channels as opposed to requiring
+sequential order.
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
+---
+ arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-Hi!
+diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+index 2b9423d55c37..77aa90640052 100644
+--- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
++++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+@@ -258,29 +258,35 @@ leds: led-controller@30 {
+ 		reg = <0x30>;
+ 		clock-mode = /bits/ 8 <1>;
+ 		status = "disabled";
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 
+-		chan0 {
++		chan@0 {
+ 			chan-name = "R";
+ 			led-cur = /bits/ 8 <0x20>;
+ 			max-cur = /bits/ 8 <0x60>;
++			reg = <0>;
+ 		};
+ 
+-		chan1 {
++		chan@1 {
+ 			chan-name = "G";
+ 			led-cur = /bits/ 8 <0x20>;
+ 			max-cur = /bits/ 8 <0x60>;
++			reg = <1>;
+ 		};
+ 
+-		chan2 {
++		chan@2 {
+ 			chan-name = "B";
+ 			led-cur = /bits/ 8 <0x20>;
+ 			max-cur = /bits/ 8 <0x60>;
++			reg = <2>;
+ 		};
+ 
+-		chan3 {
++		chan@3 {
+ 			chan-name = "W";
+ 			led-cur = /bits/ 8 <0x0>;
+ 			max-cur = /bits/ 8 <0x0>;
++			reg = <3>;
+ 		};
+ 	};
+ 
+-- 
+2.26.2
 
-> Add MT6360 LED driver include 2-channel Flash LED with torch/strobe mode,
-> and 3-channel RGB LED support Register/Flash/Breath Mode
->=20
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> base-commit: 098c4adf249c198519a4abebe482b1e6b8c50e47
-
-Does this need device tree binding, too?
-
-> +++ b/drivers/leds/leds-mt6360.c
-> @@ -0,0 +1,1061 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-Could we get GPL 2.0 or later?
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtjjvQAKCRAw5/Bqldv6
-8uu2AJ94mDQBXm5GCB+DGTjiC5seurSDSgCaA35bqtIrtU4tkebxxxG9yKvSs5E=
-=/E8n
------END PGP SIGNATURE-----
-
---uAKRQypu60I7Lcqm--
