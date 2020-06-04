@@ -2,147 +2,398 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7A2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 353B7207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26B5207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Yl67+OzG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dnkopTmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgFDMnK (ORCPT
+        id S1727966AbgFDMnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:43:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36860 "EHLO
+        Thu, 4 Jun 2020 08:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFDMnJ (ORCPT
+        with ESMTP id S1725601AbgFDMnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:43:09 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C17EC08C5C0;
-        Thu,  4 Jun 2020 05:43:09 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49d56M3DNLz9sSc;
-        Thu,  4 Jun 2020 22:43:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1591274587;
-        bh=c+fR+Wk8wg6/dMhQWZlcmNgpSzbn+tow0KvBgGVU/eM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Yl67+OzGPoDggkr27FQmgShUI/8MC2dI5y1gc6QuUE7I8uAOK4NEt4t6AfAgZysm5
-         Zj1wFT8ovE72SqiB2umXioszuoBZEy0KjB5hrqmiPGu0w4+M4OZXc5s7sjIIAyg/Nr
-         GclqZAStzoJcUkNjpBqxjSbGn+xzY8awJKZQQEALjnc1NNrSkruvMZJBB9VHYneyEk
-         ao1eGQTKm5kzGMokyaLbwUZlAuBj60l/2beuRrqqKrP/z8gkWuFRuxZJfCktvcbtLw
-         A2T4jP/0u9xnwH8sNSHhvHw84RWnoN8qNuFzq6LVwUs5nyrfCoHqyn0h9sAbucnyc9
-         L1KxZPTfQ/keA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: linux-next: fix ups for clashes between akpm and powerpc trees
-In-Reply-To: <20200604184501.1ea5ba36@canb.auug.org.au>
-References: <20200603202655.0ad0eacc@canb.auug.org.au> <20200604165246.436f02ba@canb.auug.org.au> <20200604184501.1ea5ba36@canb.auug.org.au>
-Date:   Thu, 04 Jun 2020 22:43:31 +1000
-Message-ID: <87o8pzgfws.fsf@mpe.ellerman.id.au>
+        Thu, 4 Jun 2020 08:43:20 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CABC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:43:20 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w1so5772070qkw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AAk4apw0tPkpx+v42w8OxrwItXcj6jJnR/oP+5jlPEo=;
+        b=dnkopTmgMhziXOlRGGOw+IrcSBzXoNLVw3dMgoS3pEDafR7B6C2v7vvcPfndTbmSLx
+         pzMBJCAxbOyIx87FxGVnY9LL6lAnyQa6l29LsVCQMgOMDoI+2qhk75G5DDZXZMorx7GJ
+         mRXtEihTsiojPM9rZpmZTHSMkPZWoAoZ/00Silx6MnuDXNAklzHI9fUprYvbWYwzSb12
+         3vjvAdKrQwI7c7E9P6rFNYWXE+cPROhNKRcHYnarBfAGBOQcyqm9gRU+LsYuLjxpeO9C
+         6LJEK8cTJjoVpiAL8G2nOLVgoeOFDTk0C2xEmDy1D764xnZxZS/0qw9xEGuhADYEe7Dt
+         roWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AAk4apw0tPkpx+v42w8OxrwItXcj6jJnR/oP+5jlPEo=;
+        b=MO12FrN01IefjDCGMv9xWsCX0b5xHtX22XCuheqzZOkkDbTbKxm2nYpOmLkhmX45C4
+         kytlCb7/8ViLW7xL0n0iJzc+wUkc1uacyYxm8e5V4i+1FbLg6dGvfT2PjtWdVAwbT1Qa
+         JOKlXRbaoIjKHj8las1lLFyC87IFtxsWzStC1j8JERH9QFsusCvz470UBEq5RRNEzHZn
+         q+ZAgmF2GOJVWyUmV+IDoxTUBHkXaiwVhq3OMj0Jan9eAR+i7zOMTpNncZyeeQJ/rWfA
+         9ifowosit3HJhMLA8au5OPVKdnNPvWkc+lm7D9teAaj/ZbK8xIlTyZtUpEUGjFdv06Qw
+         l9FA==
+X-Gm-Message-State: AOAM532GhtKrZ7JLPUyBFH0yfoNCQ/Dk9b4KQt2AF9pIMIw3JIFT7N7t
+        dV0fb6pqnPLROFa/sV4HGqk8UsXxgO1RDn0LPsZm7/Bs
+X-Google-Smtp-Source: ABdhPJzP4ul/j9n//MCcyYjMQgizKb4I6M9itO5F/T4etTotiMHO/vX+d15z0UhKzyoQoBKrkbrtZfk47kbC0dF2YtE=
+X-Received: by 2002:a37:dd6:: with SMTP id 205mr4273510qkn.323.1591274599280;
+ Thu, 04 Jun 2020 05:43:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200516064507.19058-1-warthog618@gmail.com>
+In-Reply-To: <20200516064507.19058-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 4 Jun 2020 14:43:08 +0200
+Message-ID: <CAMpxmJUbC4qmUGM0Z-6hXsYPRSpEpNM7iXgc7XbMcf_epi0Lig@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
-> Hi all,
+sob., 16 maj 2020 o 08:45 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
+):
 >
-> On Thu, 4 Jun 2020 16:52:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>
->> diff --git a/arch/powerpc/mm/kasan/8xx.c b/arch/powerpc/mm/kasan/8xx.c
->> index db4ef44af22f..569d98a41881 100644
->> --- a/arch/powerpc/mm/kasan/8xx.c
->> +++ b/arch/powerpc/mm/kasan/8xx.c
->> @@ -10,7 +10,7 @@
->>  static int __init
->>  kasan_init_shadow_8M(unsigned long k_start, unsigned long k_end, void *block)
->>  {
->> -	pmd_t *pmd = pmd_ptr_k(k_start);
->> +	pmd_t *pmd = pmd_off_k(k_start);
->>  	unsigned long k_cur, k_next;
->>  
->>  	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd += 2, block += SZ_8M) {
->> @@ -59,7 +59,7 @@ int __init kasan_init_region(void *start, size_t size)
->>  		return ret;
->>  
->>  	for (; k_cur < k_end; k_cur += PAGE_SIZE) {
->> -		pmd_t *pmd = pmd_ptr_k(k_cur);
->> +		pmd_t *pmd = pmd_off_k(k_cur);
->>  		void *va = block + k_cur - k_start;
->>  		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
->>  
->> diff --git a/arch/powerpc/mm/kasan/book3s_32.c b/arch/powerpc/mm/kasan/book3s_32.c
->> index 4bc491a4a1fd..a32b4640b9de 100644
->> --- a/arch/powerpc/mm/kasan/book3s_32.c
->> +++ b/arch/powerpc/mm/kasan/book3s_32.c
->> @@ -46,7 +46,7 @@ int __init kasan_init_region(void *start, size_t size)
->>  	kasan_update_early_region(k_start, k_cur, __pte(0));
->>  
->>  	for (; k_cur < k_end; k_cur += PAGE_SIZE) {
->> -		pmd_t *pmd = pmd_ptr_k(k_cur);
->> +		pmd_t *pmd = pmd_off_k(k_cur);
->>  		void *va = block + k_cur - k_start;
->>  		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
->>  
->> diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
->> index 286441bbbe49..92e8929cbe3e 100644
->> --- a/arch/powerpc/mm/nohash/8xx.c
->> +++ b/arch/powerpc/mm/nohash/8xx.c
->> @@ -74,7 +74,7 @@ static pte_t __init *early_hugepd_alloc_kernel(hugepd_t *pmdp, unsigned long va)
->>  static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
->>  					     pgprot_t prot, int psize, bool new)
->>  {
->> -	pmd_t *pmdp = pmd_ptr_k(va);
->> +	pmd_t *pmdp = pmd_off_k(va);
->>  	pte_t *ptep;
->>  
->>  	if (WARN_ON(psize != MMU_PAGE_512K && psize != MMU_PAGE_8M))
->> diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
->> index 45a0556089e8..1136257c3a99 100644
->> --- a/arch/powerpc/mm/pgtable.c
->> +++ b/arch/powerpc/mm/pgtable.c
->> @@ -264,7 +264,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->>  #if defined(CONFIG_PPC_8xx)
->>  void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte)
->>  {
->> -	pmd_t *pmd = pmd_ptr(mm, addr);
->> +	pmd_t *pmd = pmd_off(mm, addr);
->>  	pte_basic_t val;
->>  	pte_basic_t *entry = &ptep->pte;
->>  	int num = is_hugepd(*((hugepd_t *)pmd)) ? 1 : SZ_512K / SZ_4K;
->> diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
->> index e2d054c9575e..6eb4eab79385 100644
->> --- a/arch/powerpc/mm/pgtable_32.c
->> +++ b/arch/powerpc/mm/pgtable_32.c
->> @@ -40,7 +40,7 @@ notrace void __init early_ioremap_init(void)
->>  {
->>  	unsigned long addr = ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE);
->>  	pte_t *ptep = (pte_t *)early_fixmap_pagetable;
->> -	pmd_t *pmdp = pmd_ptr_k(addr);
->> +	pmd_t *pmdp = pmd_off_k(addr);
->>  
->>  	for (; (s32)(FIXADDR_TOP - addr) > 0;
->>  	     addr += PGDIR_SIZE, ptep += PTRS_PER_PTE, pmdp++)
+> Add a new version of the uAPI to address existing 32/64bit alignment
+> issues, add support for debounce, and provide some future proofing by
+> adding padding reserved for future use.
 >
-> I have added the above hunks as to linux-next for tomorrow as a fix for
-> mm-pgtable-add-shortcuts-for-accessing-kernel-pmd-and-pte.
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+>
 
-Looks good. Thanks.
+I'm a bit late to the party but here's my review.
 
-cheers
+>
+>  include/uapi/linux/gpio.h | 204 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 197 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index 0206383c0383..3db7e0bc1312 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -14,6 +14,9 @@
+>  #include <linux/ioctl.h>
+>  #include <linux/types.h>
+>
+> +/* The maximum size of name and label arrays */
+> +#define GPIO_MAX_NAME_SIZE 32
+> +
+>  /**
+>   * struct gpiochip_info - Information about a certain GPIO chip
+>   * @name: the Linux kernel name of this GPIO chip
+> @@ -27,6 +30,184 @@ struct gpiochip_info {
+>         __u32 lines;
+>  };
+>
+> +/* Maximum number of requested lines */
+> +#define GPIOLINES_MAX 64
+> +
+> +enum gpioline_direction {
+> +       GPIOLINE_DIRECTION_INPUT        =3D 1,
+> +       GPIOLINE_DIRECTION_OUTPUT       =3D 2,
+> +};
+> +
+> +enum gpioline_drive {
+> +       GPIOLINE_DRIVE_PUSH_PULL        =3D 0,
+> +       GPIOLINE_DRIVE_OPEN_DRAIN       =3D 1,
+> +       GPIOLINE_DRIVE_OPEN_SOURCE      =3D 2,
+> +};
+> +
+> +enum gpioline_bias {
+> +       GPIOLINE_BIAS_DISABLE           =3D 0,
+> +       GPIOLINE_BIAS_PULL_UP           =3D 1,
+> +       GPIOLINE_BIAS_PULL_DOWN         =3D 2,
+> +};
+> +
+> +enum gpioline_edge {
+> +       GPIOLINE_EDGE_NONE              =3D 0,
+> +       GPIOLINE_EDGE_RISING            =3D 1,
+> +       GPIOLINE_EDGE_FALLING           =3D 2,
+> +       GPIOLINE_EDGE_BOTH              =3D 3,
+> +};
+
+I would skip the names of the enum types if we're not reusing them anywhere=
+.
+
+> +
+> +/* Line flags - V2 */
+> +#define GPIOLINE_FLAG_V2_KERNEL                (1UL << 0) /* Line used b=
+y the kernel */
+
+In v1 this flag is also set if the line is used by user-space. Maybe a
+simple GPIOLINE_FLAG_V2_USED would be better?
+
+> +#define GPIOLINE_FLAG_V2_ACTIVE_LOW    (1UL << 1)
+> +#define GPIOLINE_FLAG_V2_DIRECTION     (1UL << 2)
+> +#define GPIOLINE_FLAG_V2_DRIVE         (1UL << 3)
+> +#define GPIOLINE_FLAG_V2_BIAS          (1UL << 4)
+> +#define GPIOLINE_FLAG_V2_EDGE_DETECTION        (1UL << 5)
+> +#define GPIOLINE_FLAG_V2_DEBOUNCE      (1UL << 6)
+> +
+> +/**
+> + * struct gpioline_config - Configuration for GPIO lines
+> + * @default_values: if the direction is GPIOLINE_DIRECTION_OUTPUT, this
+> + * specifies the default output value, should be 0 (low) or 1 (high),
+> + * anything else than 0 or 1 will be interpreted as 1 (high)
+> + * @flags: flags for the GPIO lines, such as GPIOLINE_FLAG_V2_ACTIVE_LOW=
+,
+> + * GPIOLINE_FLAG_V2_DIRECTION etc, OR:ed together
+> + * @direction: if GPIOLINE_FLAG_V2_DIRECTION is set in flags, the desire=
+d
+> + * direction for the requested lines, with a value from enum
+> + * gpioline_direction
+> + * @drive: if GPIOLINE_FLAG_V2_DRIVE is set in flags, the desired drive =
+for
+> + * the requested lines, with a value from enum gpioline_drive
+> + * @bias: if GPIOLINE_FLAG_V2_BIAS is set in flags, the desired bias for
+> + * the requested lines, with a value from enum gpioline_bias
+> + * @edge_detection: if GPIOLINE_FLAG_V2_EDGE_DETECTION is set in flags, =
+the
+> + * desired edge_detection for the requested lines, with a value from enu=
+m
+> + * gpioline_edge
+> + * @debounce: if GPIOLINE_FLAG_V2_DEBOUNCE is set in flags, the desired
+> + * debounce period for the requested lines, in microseconds
+> + * @padding: reserved for future use and should be zero filled
+> + */
+> +struct gpioline_config {
+> +       __u8 default_values[GPIOLINES_MAX];
+
+As I said elsewhere - bitfield is fine here for me: for instance a single u=
+64.
+
+> +       __u32 flags;
+> +       __u8 direction;
+> +       __u8 drive;
+> +       __u8 bias;
+> +       __u8 edge_detection;
+> +       __u32 debounce;
+
+Maybe debounce_time for clarity?
+
+> +       __u32 padding[7]; /* for future use */
+> +};
+> +
+> +/**
+> + * struct gpioline_request - Information about a request for GPIO lines
+> + * @offsets: an array of desired lines, specified by offset index for th=
+e
+> + * associated GPIO device
+> + * @consumer: a desired consumer label for the selected GPIO lines such
+> + * as "my-bitbanged-relay"
+> + * @config: Requested configuration for the requested lines. Note that
+> + * even if multiple lines are requested, the same configuration must be
+> + * applicable to all of them. If you want lines with individual
+> + * configuration, request them one by one. It is possible to select a
+> + * batch of input or output lines, but they must all have the same
+> + * configuration, i.e. all inputs or all outputs, all active low etc
+> + * @lines: number of lines requested in this request, i.e. the number of
+> + * valid fields in the GPIOLINES_MAX sized arrays, set to 1 to request a
+> + * single line
+> + * @padding: reserved for future use and should be zero filled
+> + * @fd: if successful this field will contain a valid anonymous file han=
+dle
+> + * after a GPIO_GET_LINE_IOCTL operation, zero or negative value means
+> + * error
+> + */
+> +struct gpioline_request {
+> +       __u32 offsets[GPIOLINES_MAX];
+> +       char consumer[GPIO_MAX_NAME_SIZE];
+> +       struct gpioline_config config;
+> +       __u32 lines;
+
+Maybe num_lines would be clearer?
+
+> +       __u32 padding[4]; /* for future use */
+> +       __s32 fd;
+> +};
+> +
+> +/**
+> + * struct gpioline_values - Values of GPIO lines
+> + * @values: when getting the state of lines this contains the current
+> + * state of a line, when setting the state of lines these should contain
+> + * the desired target state
+> + */
+> +struct gpioline_values {
+> +       __u8 values[GPIOLINES_MAX];
+
+Same here for bitfield. And maybe reuse this structure in
+gpioline_config for default values?
+
+> +};
+> +
+> +/**
+> + * struct gpioline_info_v2 - Information about a certain GPIO line
+> + * @name: the name of this GPIO line, such as the output pin of the line=
+ on
+> + * the chip, a rail or a pin header name on a board, as specified by the
+> + * gpio chip, may be empty
+> + * @consumer: a functional name for the consumer of this GPIO line as se=
+t
+> + * by whatever is using it, will be empty if there is no current user bu=
+t
+> + * may also be empty if the consumer doesn't set this up
+> + * @offset: the local offset on this GPIO device, fill this in when
+> + * requesting the line information from the kernel
+> + * @flags: various flags for this line
+> + * @direction: if GPIOLINE_FLAG_V2_DIRECTION is set in flags, the direct=
+ion
+> + * of the line, with a value from enum gpioline_direction
+> + * @drive: if GPIOLINE_FLAG_V2_DRIVE is set in flags, the drive for the
+> + * line, with a value from enum gpioline_drive
+> + * @bias: if GPIOLINE_FLAG_V2_BIAS is set in flags, the bias for the lin=
+e,
+> + * with a value from enum gpioline_bias
+> + * @edge_detection: if GPIOLINE_FLAG_V2_EDGE_DETECTION is set in flags, =
+the
+> + * edge_detection for the line, with a value from enum gpioline_edge
+> + * @debounce: if GPIOLINE_FLAG_V2_DEBOUNCE is set in flags, the debounce
+> + * period for the line, in microseconds
+> + * @padding: reserved for future use
+> + */
+> +struct gpioline_info_v2 {
+> +       char name[GPIO_MAX_NAME_SIZE];
+> +       char consumer[GPIO_MAX_NAME_SIZE];
+> +       __u32 offset;
+> +       __u32 flags;
+> +       __u8 direction;
+> +       __u8 drive;
+> +       __u8 bias;
+> +       __u8 edge_detection;
+> +       __u32 debounce;
+> +       __u32 padding[12]; /* for future use */
+> +};
+> +
+> +/**
+> + * struct gpioline_info_changed_v2 - Information about a change in statu=
+s
+> + * of a GPIO line
+> + * @info: updated line information
+> + * @timestamp: estimate of time of status change occurrence, in nanoseco=
+nds
+> + * and GPIOLINE_CHANGED_CONFIG
+> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELE=
+ASED
+> + * @padding: reserved for future use
+> + */
+> +struct gpioline_info_changed_v2 {
+> +       struct gpioline_info_v2 info;
+> +       __u64 timestamp;
+> +       __u32 event_type;
+> +       __u32 padding[5]; /* for future use */
+> +};
+> +
+> +enum gpioline_event_id {
+> +       GPIOLINE_EVENT_RISING_EDGE      =3D 1,
+> +       GPIOLINE_EVENT_FALLING_EDGE     =3D 2,
+> +};
+> +
+> +/**
+> + * struct gpioline_event - The actual event being pushed to userspace
+> + * @timestamp: best estimate of time of event occurrence, in nanoseconds
+> + * @id: event identifier with value from enum gpioline_event_id
+> + * @offset: the offset of the line that triggered the event
+> + * @padding: reserved for future use
+> + */
+> +struct gpioline_event {
+> +       __u64 timestamp;
+
+I'd specify in the comment the type of clock used for the timestamp.
+
+> +       __u32 id;
+> +       __u32 offset;
+> +       __u32 padding[2]; /* for future use */
+> +};
+> +
+>  /* Informational flags */
+>  #define GPIOLINE_FLAG_KERNEL           (1UL << 0) /* Line used by the ke=
+rnel */
+>  #define GPIOLINE_FLAG_IS_OUT           (1UL << 1)
+> @@ -144,8 +325,6 @@ struct gpiohandle_config {
+>         __u32 padding[4]; /* padding for future use */
+>  };
+>
+> -#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_=
+config)
+> -
+>  /**
+>   * struct gpiohandle_data - Information of values on a GPIO handle
+>   * @values: when getting the state of lines this contains the current
+> @@ -156,9 +335,6 @@ struct gpiohandle_data {
+>         __u8 values[GPIOHANDLES_MAX];
+>  };
+>
+> -#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpioha=
+ndle_data)
+> -#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpioha=
+ndle_data)
+> -
+>  /* Eventrequest flags */
+>  #define GPIOEVENT_REQUEST_RISING_EDGE  (1UL << 0)
+>  #define GPIOEVENT_REQUEST_FALLING_EDGE (1UL << 1)
+> @@ -202,11 +378,25 @@ struct gpioevent_data {
+>         __u32 id;
+>  };
+>
+> +/* V1 and V2 */
+>  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
+> +#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0C, __u32)
+> +
+> +/* V1 */
+>  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+> -#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_=
+info)
+> -#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
+>  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_re=
+quest)
+>  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_requ=
+est)
+> +#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpioha=
+ndle_data)
+> +#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpioha=
+ndle_data)
+> +#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0A, struct gpiohandle_=
+config)
+> +#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0B, struct gpioline_=
+info)
+> +
+> +/* V2 */
+> +#define GPIO_GET_LINEINFO_V2_IOCTL _IOWR(0xB4, 0x0D, struct gpioline_inf=
+o_v2)
+> +#define GPIO_GET_LINEINFO_WATCH_V2_IOCTL _IOWR(0xB4, 0x0E, struct gpioli=
+ne_info_v2)
+> +#define GPIO_GET_LINE_IOCTL _IOWR(0xB4, 0x0F, struct gpioline_request)
+> +#define GPIOLINE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x10, struct gpioline_conf=
+ig)
+> +#define GPIOLINE_GET_VALUES_IOCTL _IOWR(0xB4, 0x11, struct gpioline_valu=
+es)
+> +#define GPIOLINE_SET_VALUES_IOCTL _IOWR(0xB4, 0x12, struct gpioline_valu=
+es)
+>
+>  #endif /* _UAPI_GPIO_H_ */
+> --
+> 2.26.2
+>
+
+Bartosz
