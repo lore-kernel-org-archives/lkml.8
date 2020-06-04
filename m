@@ -2,221 +2,105 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A266C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA61C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFA82206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401AF206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GjxtAOQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgFDTeE (ORCPT
+        id S1729174AbgFDTfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:34:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28524 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726666AbgFDTeD (ORCPT
+        Thu, 4 Jun 2020 15:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728895AbgFDTfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:34:03 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054J5H01032168;
-        Thu, 4 Jun 2020 15:34:00 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31f6hcgyra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 15:33:59 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054JWX5W030638;
-        Thu, 4 Jun 2020 19:33:58 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf482mjs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 19:33:58 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054JXtgd53215486
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jun 2020 19:33:56 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D07CFAE058;
-        Thu,  4 Jun 2020 19:33:55 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 885FDAE056;
-        Thu,  4 Jun 2020 19:33:54 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.82.189])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jun 2020 19:33:54 +0000 (GMT)
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     hbathini@linux.ibm.com, mahesh@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
-Subject: [PATCH v4] powerpc/fadump: fix race between pstore write and fadump crash trigger
-Date:   Fri,  5 Jun 2020 01:03:51 +0530
-Message-Id: <20200604193351.65317-1-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 4 Jun 2020 15:35:19 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32727C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:35:19 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id e2so7345787eje.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=oyFcjly3iI3BI3+x8EJy7gBmUy6FOed1sXbAZssuOGo=;
+        b=GjxtAOQpLRjZNmSyUueh+o5GYU/a2WnPWJ6lUemF++gMlaOuL43n5nkyCy1JOOntFQ
+         N5IG9D54Qy0ztQrXQWRSzHY0sM73WSKhqiNtQ6KuMUwOi7+uVXbfp64AR+O9JXuEKwb6
+         LXL0lOS4/jEZkRYhN6FORL6w0jcd96qtmEh4k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=oyFcjly3iI3BI3+x8EJy7gBmUy6FOed1sXbAZssuOGo=;
+        b=shduVYBXKXPrngTLDJfS3q9B0pMwANGrD4xvFsTlLyNd8iWmKHoZAkKQ3zu/6xJrzq
+         lIo+LbAYaCwd/shm+AboM3FaH5PlZCNv/vn/pedocEdLenKRK4LDZdLT5bC/Rxr3FTIp
+         fCiG1hhR3u1si5BQjLKCHz5yxUVoikzUdqjNA6nS9dA+3KmaksO2JUI939e76fb0Y6o8
+         Mr1qJVwgjU1NLbKdJHcd48anfNWaa/XKQt8ObWmREiprji00R4olrC/kcokawTTDmMT/
+         fhMQ03w1rNAdhYq0ntIWtrYyTzfG4EvT3M6uahbGCE0nV9n2BTnEAwQNPkuqnc7YHFye
+         /PRQ==
+X-Gm-Message-State: AOAM532JYuJB/Gvccus2GWCNu/0GMYUtqpuIlO+pU7zwS+8bwVKJV+W+
+        DtDFrIwTCqGAaWMedSxPCUtI/6+ghCHnFwUd3C8WAw==
+X-Google-Smtp-Source: ABdhPJyPugwFVDV6AFxPuiXuVnUxIjbCmjXK1NRb4zaJGKhfuG6BzP+CkKC8JEeaZLgBDICeXdLhDSKGf2RflapIHsg=
+X-Received: by 2002:a17:906:8253:: with SMTP id f19mr5433964ejx.470.1591299317595;
+ Thu, 04 Jun 2020 12:35:17 -0700 (PDT)
+From:   Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
+ <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com> <4779a72c878774e4e3525aae8932feda@mail.gmail.com>
+ <20200604155009.63mhbsoaoq6yra77@suse.com>
+In-Reply-To: <20200604155009.63mhbsoaoq6yra77@suse.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-04_12:2020-06-04,2020-06-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- cotscore=-2147483648 mlxscore=0 lowpriorityscore=0 phishscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1011 malwarescore=0 spamscore=0 bulkscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006040129
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJb9Wzm0098wwdcUnfhuPbO5i84ZwGnJavmAYBmkM8CEG/qNaeTocBQ
+Date:   Fri, 5 Jun 2020 01:05:13 +0530
+Message-ID: <4285a7ff366d7f5cfb5cae582dadf878@mail.gmail.com>
+Subject: RE: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by JBOD
+To:     Kai Liu <kai.liu@suse.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Xiaoming Gao <newtongao@tencent.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>, xiakaixu1987@gmail.com,
+        jejb@linux.ibm.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we enter into fadump crash path via system reset we fail to update
-the pstore.
+>Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused
+>by JBOD
+>
+>On 2020/06/04 Thu 16:39, Chandrakanth Patil wrote:
+>>
+>>Hi Martin, Xiaoming Gao, Kai Liu,
+>>
+>>It is a known firmware issue and has been fixed. Please update to the
+>>latest firmware available in the Broadcom support website.
+>>Please let me know if you need any further information.
+>
+>Hi Chandrakanth,
+>
+>Could you let me know which megaraid based controllers are affected by this
+>issue? All or
+>some models or some generations?
+>
+>Best regards,
+>Kai Liu
 
-On the system reset path we first update the pstore then we go for fadump
-crash. But the problem here is when all the CPUs try to get the pstore
-lock to initiate the pstore write, only one CPUs will acquire the lock
-and proceed with the pstore write. Since it in NMI context CPUs that fail
-to get lock do not wait for their turn to write to the pstore and simply
-proceed with the next operation which is fadump crash. One of the CPU who
-proceeded with fadump crash path triggers the crash and does not wait for
-the CPU who gets the pstore lock to complete the pstore update.
+Hi Kai Liu,
 
-Timeline diagram to depicts the sequence of events that leads to an
-unsuccessful pstore update when we hit fadump crash path via system reset.
+Gen3 (Invader) and Gen3.5 (Ventura/Aero) generations of controllers are
+affected.
 
-                 1    2     3    ...      n   CPU Threads
-                 |    |     |             |
-                 |    |     |             |
- Reached to   -->|--->|---->| ----------->|
- system reset    |    |     |             |
- path            |    |     |             |
-                 |    |     |             |
- Try to       -->|--->|---->|------------>|
- acquire the     |    |     |             |
- pstore lock     |    |     |             |
-                 |    |     |             |
-                 |    |     |             |
- Got the      -->| +->|     |             |<-+
- pstore lock     | |  |     |             |  |-->  Didn't get the
-                 | --------------------------+     lock and moving
-                 |    |     |             |        ahead on fadump
-                 |    |     |             |        crash path
-                 |    |     |             |
-  Begins the  -->|    |     |             |
-  process to     |    |     |             |<-- Got the chance to
-  update the     |    |     |             |    trigger the crash
-  pstore         | -> |     |    ... <-   |
-                 | |  |     |         |   |
-                 | |  |     |         |   |<-- Triggers the
-                 | |  |     |         |   |    crash
-                 | |  |     |         |   |      ^
-                 | |  |     |         |   |      |
-  Writing to  -->| |  |     |         |   |      |
-  pstore         | |  |     |         |   |      |
-                   |                  |          |
-       ^           |__________________|          |
-       |               CPU Relax                 |
-       |                                         |
-       +-----------------------------------------+
-                          |
-                          v
-            Race: crash triggered before pstore
-                  update completes
-
-To avoid this race condition a barrier is added on crash_fadump path, it
-prevents the CPU to trigger the crash until all the online CPUs completes
-their task.
-
-A barrier is added to make sure all the secondary CPUs hit the
-crash_fadump function before we initiates the crash. A timeout is kept to
-ensure the primary CPU (one who initiates the crash) do not wait for
-secondary CPUs indefinitely.
-
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/kernel/fadump.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
- ---
-Chanagelog:
-
-v1 -> v3:
-   - https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-April/208267.html
-
-v3 -> v4:
-
-   - Now the primary CPU (one who triggers dump) waits for all secondary
-     CPUs to enter and then initiates the crash.
-
- ---
-
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 59e60a9a9f5c..4953f3246220 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -32,6 +32,14 @@
- #include <asm/fadump-internal.h>
- #include <asm/setup.h>
- 
-+/*
-+ * The CPU who acquired the lock to trigger the fadump crash should
-+ * wait for other CPUs to enter.
-+ *
-+ * The timeout is in milliseconds.
-+ */
-+#define CRASH_TIMEOUT		500
-+
- static struct fw_dump fw_dump;
- 
- static void __init fadump_reserve_crash_area(u64 base);
-@@ -46,6 +54,8 @@ struct fadump_mrange_info reserved_mrange_info = { "reserved", NULL, 0, 0, 0 };
- #ifdef CONFIG_CMA
- static struct cma *fadump_cma;
- 
-+static atomic_t cpus_in_crash;
-+
- /*
-  * fadump_cma_init() - Initialize CMA area from a fadump reserved memory
-  *
-@@ -596,8 +606,10 @@ early_param("fadump_reserve_mem", early_fadump_reserve_mem);
- 
- void crash_fadump(struct pt_regs *regs, const char *str)
- {
-+	unsigned int msecs;
- 	struct fadump_crash_info_header *fdh = NULL;
- 	int old_cpu, this_cpu;
-+	unsigned int ncpus = num_online_cpus() - 1; /* Do not include first CPU */
- 
- 	if (!should_fadump_crash())
- 		return;
-@@ -613,6 +625,8 @@ void crash_fadump(struct pt_regs *regs, const char *str)
- 	old_cpu = cmpxchg(&crashing_cpu, -1, this_cpu);
- 
- 	if (old_cpu != -1) {
-+		atomic_inc(&cpus_in_crash);
-+
- 		/*
- 		 * We can't loop here indefinitely. Wait as long as fadump
- 		 * is in force. If we race with fadump un-registration this
-@@ -636,6 +650,16 @@ void crash_fadump(struct pt_regs *regs, const char *str)
- 
- 	fdh->online_mask = *cpu_online_mask;
- 
-+	/*
-+	 * If we came in via system reset, wait a while for the secondary
-+	 * CPUs to enter.
-+	 */
-+	if (TRAP(&(fdh->regs)) == 0x100) {
-+		msecs = CRASH_TIMEOUT;
-+		while ((atomic_read(&cpus_in_crash) < ncpus) && (--msecs > 0))
-+			mdelay(1);
-+	}
-+
- 	fw_dump.ops->fadump_trigger(fdh, str);
- }
- 
--- 
-2.25.4
-
+Thanks,
+Chandrakanth Patil
