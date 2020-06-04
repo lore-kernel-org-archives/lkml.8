@@ -2,158 +2,165 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D730C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4555220738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591265499;
-	bh=P44bAU+xwGFOgLsCT7QfTlM8tbyumARHwDqBHLn5mDE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vcaEvVgPZt/CPtmjzof63Z4Lv4+4Z+Hvb8a84LY6ufHUyyWUBOO6aB2BsRHrhi4x/
-	 RJrVe5zRX0dmYmzEe/vm2IK2+aYXr6F6qsb3Qvk9bYxrBDaYUuz1JaI0QCd5ozRxKg
-	 S4aFLZCxt/uAAei15cIQ1TwgScPMQ4ReDCYMra6E=
+	by mail.kernel.org (Postfix) with ESMTP id DDB3920814
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="Lg19Xjia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgFDKLi (ORCPT
+        id S1727973AbgFDKNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgFDKLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:11:37 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B352206DC;
-        Thu,  4 Jun 2020 10:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591265496;
-        bh=P44bAU+xwGFOgLsCT7QfTlM8tbyumARHwDqBHLn5mDE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SrQtJzCf1AJtitsKraIknR/lnhU0YiRvyRmRccq4pZYIyrxLx+HqWi5HrYNsNZPnH
-         DOm4RMEJG2Y7SjqNIxy8lWcmbkoRQHZFv9H0wmXyRn8feHqHFURucKZfNw2sBt+qYI
-         1+mNyTbBPSVZvHyBH7GB9aUTz+T+ftxLSzcW8W7c=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jgmqV-000Dcl-4B; Thu, 04 Jun 2020 11:11:35 +0100
+        Thu, 4 Jun 2020 06:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbgFDKNI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 06:13:08 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E47C03E96E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 03:13:07 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z9so6511546ljh.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 03:13:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=ZZVPaeD6pafUVZlGgrGYpBNjojdk0ld5/Ukhpgln068=;
+        b=Lg19XjiaIStU/45Aokk3jdAKSEAxz1u/TC55Qx/tOh05DuScCZwfQf29WiE0m3mq/d
+         RqXdntbuLjFZhfOVgw2FM8KIv74eVobECT3sGQpxnyKhAEl1QPv9sT7hFZwjpnGKRlf5
+         6cTVPy+Tv9TCR0tPhYrgU70y0gSm7XDYwEOiA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=ZZVPaeD6pafUVZlGgrGYpBNjojdk0ld5/Ukhpgln068=;
+        b=Y1dwVWkQOoptnmOOsiE5BY1ReVte51FaXjpYK9SV4fsO2e/RndmQp1ioem3GPJ9TOH
+         BG+dY0dLL0/IHXB/Se0ZOFBc4dSesqHTnU91y3wyircBdK1om5N3UbKLm6An8XIgHk4/
+         K4AzCBu2owTGjB7RiCVzCJw180RBa+qr1dP2rAgJSsX9gTVTQPekqgPwZ/CRTqnXCBVC
+         lhqe+OD3bbfs0PeqU8y2DPJePC872+wDslLl8tArxwANvqwZCvcxeaD7HkFd20DJl03x
+         yLWNMAc+yAzc9Y1e4NAFBCYk3BpuGa203WDzKHcROGvqxFYB0T8MME4wgh0KCSJNgNyV
+         qYzw==
+X-Gm-Message-State: AOAM530B+DkjeOIVBNl4eye9Z3ylVuTyMIkLgcwtoBAGMbtdv9zvmBlG
+        ZJ3qbaG569IRzAhiWuCS8VPM6g==
+X-Google-Smtp-Source: ABdhPJyoMv/UljqcbfMr3TmJJ2V+jZ4DDPzKGoMgnLz3G6jRojSqBemSop3+XUqhZR3Q9hTTOY5jIg==
+X-Received: by 2002:a2e:b6c5:: with SMTP id m5mr1698155ljo.94.1591265585804;
+        Thu, 04 Jun 2020 03:13:05 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id w144sm1363270lff.67.2020.06.04.03.13.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 03:13:05 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 12:12:42 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: [PATCH v7 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200604121142.2964437-0-mholenko@antmicro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 04 Jun 2020 11:11:34 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-In-Reply-To: <2e07d3d3-515b-57e1-0a36-8892bc38bb7b@socionext.com>
-References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
- <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
- <2e07d3d3-515b-57e1-0a36-8892bc38bb7b@socionext.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <9cbfdacba32c5e351fd9e14444768666@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-04 10:43, Kunihiko Hayashi wrote:
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-[...]
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
->>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
->>>  {
->>> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
->>>      struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>      struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->>> -    struct irq_chip *chip = irq_desc_get_chip(desc);
->>> -    unsigned long reg;
->>> -    u32 val, bit, virq;
->>> +    u32 val, virq;
->>> 
->>> -    /* INT for debug */
->>>      val = readl(priv->base + PCL_RCV_INT);
->>> 
->>>      if (val & PCL_CFG_BW_MGT_STATUS)
->>>          dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
->>> +
->>>      if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->>>          dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
->>> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->>> -        dev_dbg(pci->dev, "Root Error\n");
->>> -    if (val & PCL_CFG_PME_MSI_STATUS)
->>> -        dev_dbg(pci->dev, "PME Interrupt\n");
->>> +
->>> +    if (pci_msi_enabled()) {
->> 
->> This checks whether the kernel supports MSIs. Not that they are
->> enabled in your controller. Is that really what you want to do?
-> 
-> The below two status bits are valid when the interrupt for MSI is 
-> asserted.
-> That is, pci_msi_enabled() is wrong.
-> 
-> I'll modify the function to check the two bits only if this function is
-> called from MSI handler.
-> 
->> 
->>> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
->>> +            dev_dbg(pci->dev, "Root Error Status\n");
->>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->>> +            generic_handle_irq(virq);
->>> +        }
->>> +
->>> +        if (val & PCL_CFG_PME_MSI_STATUS) {
->>> +            dev_dbg(pci->dev, "PME Interrupt\n");
->>> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->>> +            generic_handle_irq(virq);
->>> +        }
->> 
->> These two cases do the exact same thing, calling the same interrupt.
->> What is the point of dealing with them independently?
-> 
-> Both PME and AER are asserted from MSI-0, and each handler checks its 
-> own
-> status bit in the PCIe register (aer_irq() in pcie/aer.c and 
-> pcie_pme_irq()
-> in pcie/pme.c).
-> So I think this handler calls generic_handle_irq() for the same MSI-0.
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
 
-So what is wrong with
+Changes in v7:
+    - added missing include directive in UART's driver
 
-         if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
-                    PCL_CFG_PME_MSI_STATUS)) {
-                 // handle interrupt
-         }
+Changes in v6:
+    - changed accessors in SoC Controller's driver
+    - reworked UART driver
 
-?
+Changes in v5:
+    - added Reviewed-by tag
+    - removed custom accessors from SoC Controller's driver
+    - fixed error checking in SoC Controller's driver
 
-If you have two handlers for the same interrupt, this is a shared
-interrupt and each handler will be called in turn.
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml 
+    - simplified SoC Controller's driver
 
-         M.
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
+
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  15 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 197 +++++++++
+ drivers/tty/serial/Kconfig                    |  31 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 405 ++++++++++++++++++
+ include/linux/litex.h                         |  45 ++
+ 13 files changed, 787 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
+
 -- 
-Jazz is not dead. It just smells funny...
+2.25.1
+
