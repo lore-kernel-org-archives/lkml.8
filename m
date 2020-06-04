@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4093DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B60C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D1520772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0B620772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kUvM5lhA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FjgCGe7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgFDNxo (ORCPT
+        id S1728948AbgFDNxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47872 "EHLO
+        Thu, 4 Jun 2020 09:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728903AbgFDNxh (ORCPT
+        with ESMTP id S1728906AbgFDNxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:53:37 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 875B0C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:53:37 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r7so6228917wro.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:53:37 -0700 (PDT)
+        Thu, 4 Jun 2020 09:53:34 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C627C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:53:34 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id c71so5315174wmd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lGj2UMyH8lsz5cePu8qdjRLQp4Cv58ojSEdB01leLf4=;
-        b=kUvM5lhA0X5A2xJgJf7Kx6ruICrlB1Lu2504upwpyDnwS32Swa5tp1GIls0pD9VZoo
-         8bLhHT+Q0pojf5xrwFfO0+nESF089bvwl3TbvCNKxyg86ytL8urGhj3NTLKIbilWTTbY
-         qb+iYcoIpGXUWad0EyS4IyE58Wgg3NB2qij5dVL/CWjgPJdfycgL5rOUqU2x/nhqGOZA
-         cy7vkUybM5STb8o64YfRtWFvYWjMhUTJZpqs1BhdjYKiMZmMc+oa0qINif1NtiKtLmCr
-         WSPCRxYJuVzURhrZVwrwIHQ64e7xDUfPHP2DxUeF3+QB04lYG42va4p1rGSugGdjv/WB
-         tS6w==
+        bh=+BSw9RksbOmCX0ZiZaPq1aouN2XnZSd2sB8Ac6JkINs=;
+        b=FjgCGe7hkzS3/mzxrmhspP75KvYPTn74cr+q/XOubxsiXcIa51+V1mFZhPk60V5h4b
+         SELKDRXZ6u5XyDDYJ9dWRMhYXJEXj7xsdpKT747vV9Aw7xNNQUjH5qUaNBBe4UGn3Ypa
+         58XafZtYVrEogQZm0CmV//h+MEKYVJJKLGO86pT48Js9WX10i4i/ekraB55kyJ2lnL4L
+         RrzoTFjQO3zK1PyyKWJhM4gV7ajnUyTs6KI34PmKFX+O1BAZiTIek3BZt93f9SGU+vkK
+         2DBuun9mkK+kHiCdg+5MI/vhdQmH9vyNHA6+Lv6t4uJREwuwQSwZc238lw6sLXpYLEuB
+         Lpzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lGj2UMyH8lsz5cePu8qdjRLQp4Cv58ojSEdB01leLf4=;
-        b=i7VlEDMJbCMm8R1o7fwfoKJ3vJiR9MgAlOgoC2NHj4kyirDvr2vnfkI43kC8gU5PGN
-         TOIjh++1LCmGVLAOsnR5nzPIWNrC7j4n2f0x7OzFmn3sW5/vOsERh41n8qV3aX5yYIuL
-         mJZwNsxggUh7yRJEV9MhsA60LOqmgHZJkwLXFXtCzhZvjYTGdWac9kdIOq+KhDVAh9ve
-         reWjVujog+olYF5KB6CaADb7jHbUjaL+Rx9UAF2uB0c5gsygRfxZaKz+afJEHb/TD3fh
-         siMimqt8ZLQTfDJ/zUQldYOAIoDlYbyxa5a5A4gJqpHY86DazCHqAUzuyhWb0cho5YcM
-         O5DQ==
-X-Gm-Message-State: AOAM530QQ9n4kOjKecU6dQfPKxqbF8lluZjjSAShXy4TKdh63aMZG4jw
-        OgjIkJwJYcbFLrs07+j7Urvwhg==
-X-Google-Smtp-Source: ABdhPJyMzfHyb8pTAQmMxPrEsEYW71XUGUiF6xOTjuUJnnxbQaZcY7he/oHRn21BXafwxPrX8dtpRA==
-X-Received: by 2002:adf:f6ce:: with SMTP id y14mr4801259wrp.90.1591278816084;
-        Thu, 04 Jun 2020 06:53:36 -0700 (PDT)
+        bh=+BSw9RksbOmCX0ZiZaPq1aouN2XnZSd2sB8Ac6JkINs=;
+        b=SQMjLMD/tgB3xL7tCZUmoGzUDLRohy2xTGls3ROZsJITLtoYksOlpZuNEdLTEuXw8f
+         5LJsnlqwh19mrZCAmkx4QdoRuCFzcUSiW3IWPZ3uZmqRX/P3G8xPZXuEsRwG42+wQM35
+         PR3FzUiDlobOzWTloxBVlvadp0V2PTg0RqhuFuK79ORj+Pag207fro3WxJQbzGf9k7db
+         7vnjj810oyUjArloCi8ZvV5VH+s4cQwfjYPymWIaCDks3MPkKamX7f3uHRDBHycNmefv
+         pVlLxHThE2f+RIUlAJLXuBO8K/rfL+dyoTUaN8r5Ce3+eDPLayCb2KqMnkR+7GCP/493
+         es5w==
+X-Gm-Message-State: AOAM531evoW+lPUI6O8rD+iX7HOgs6aibOE+oT7zTyu0Y4o+Cirs+CCa
+        daESFnvLieCvHGX1Fzn+Xvwwjw==
+X-Google-Smtp-Source: ABdhPJxL1i8fyC6k2QOVONJR/UbQHuoBJHrZumYxlKfi1W617c7BWZnFVAOQBYJZ+p6dKi+wb5hZ4Q==
+X-Received: by 2002:a7b:c358:: with SMTP id l24mr4402485wmj.13.1591278812670;
+        Thu, 04 Jun 2020 06:53:32 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:22:5867:d2c6:75f4])
-        by smtp.gmail.com with ESMTPSA id i74sm8185599wri.49.2020.06.04.06.53.34
+        by smtp.gmail.com with ESMTPSA id i74sm8185599wri.49.2020.06.04.06.53.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 06:53:35 -0700 (PDT)
+        Thu, 04 Jun 2020 06:53:31 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     hverkuil-cisco@xs4all.nl
 Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Maxime Jourdan <mjourdan@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 5/5] media: meson: vdec: handle compressed output pixel format negociation with consumer
-Date:   Thu,  4 Jun 2020 15:53:17 +0200
-Message-Id: <20200604135317.9235-6-narmstrong@baylibre.com>
+Subject: [PATCH 3/5] media: meson: vdec: update compressed buffer helpers
+Date:   Thu,  4 Jun 2020 15:53:15 +0200
+Message-Id: <20200604135317.9235-4-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200604135317.9235-1-narmstrong@baylibre.com>
 References: <20200604135317.9235-1-narmstrong@baylibre.com>
@@ -80,210 +80,187 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Jourdan <mjourdan@baylibre.com>
 
-Add the necessary to add support for negociating the compressed buffer
-pixel format with the V4L2 M2M consumer, and allocating the right
-buffers in this case.
+The actual compressed buffer helpers were very basic and only used
+to enabled downsampling when decoding a 10bit stream.
 
-Until a proper mechanism exists to pass a modifier along the pixel format,
-only the generic V4L2_PIX_FMT_YUV420_8BIT and V4L2_PIX_FMT_YUV420_10BIT
-format are passed in v4l2_pix_format_mplane struct for consumer.
+Update and rename these helpers to handle the complete compressed buffer
+output buffer size and alignment for 8bit and 10bit streams.
 
 Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../media/meson/vdec/codec_hevc_common.c      |  1 -
- drivers/staging/media/meson/vdec/vdec.c       | 46 +++++++++++++++++++
- drivers/staging/media/meson/vdec/vdec.h       |  3 ++
- .../staging/media/meson/vdec/vdec_helpers.c   | 23 ++++++++++
- .../staging/media/meson/vdec/vdec_platform.c  |  9 ++--
- 5 files changed, 78 insertions(+), 4 deletions(-)
+ .../media/meson/vdec/codec_hevc_common.c      | 28 ++++++++++++---
+ drivers/staging/media/meson/vdec/codec_vp9.c  |  7 ++--
+ .../staging/media/meson/vdec/vdec_helpers.c   | 35 +++++++++++++------
+ .../staging/media/meson/vdec/vdec_helpers.h   |  8 +++--
+ 4 files changed, 58 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/staging/media/meson/vdec/codec_hevc_common.c b/drivers/staging/media/meson/vdec/codec_hevc_common.c
-index 73dae40b3319..78fada7b8fa9 100644
+index 0315cc0911cd..c9bf67aa2668 100644
 --- a/drivers/staging/media/meson/vdec/codec_hevc_common.c
 +++ b/drivers/staging/media/meson/vdec/codec_hevc_common.c
-@@ -10,7 +10,6 @@
- #include "vdec_helpers.h"
- #include "hevc_regs.h"
- 
--#define MMU_COMPRESS_HEADER_SIZE 0x48000
- #define MMU_MAP_SIZE 0x4800
- 
- const u16 vdec_hevc_parser_cmd[] = {
-diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
-index 3040136ceb77..9fb075f69cb9 100644
---- a/drivers/staging/media/meson/vdec/vdec.c
-+++ b/drivers/staging/media/meson/vdec/vdec.c
-@@ -192,6 +192,7 @@ static int vdec_queue_setup(struct vb2_queue *q, unsigned int *num_buffers,
+@@ -30,8 +30,11 @@ const u16 vdec_hevc_parser_cmd[] = {
+ void codec_hevc_setup_decode_head(struct amvdec_session *sess, int is_10bit)
  {
- 	struct amvdec_session *sess = vb2_get_drv_priv(q);
- 	u32 output_size = amvdec_get_output_size(sess);
-+	u32 revision = sess->core->platform->revision;
+ 	struct amvdec_core *core = sess->core;
+-	u32 body_size = amvdec_am21c_body_size(sess->width, sess->height);
+-	u32 head_size = amvdec_am21c_head_size(sess->width, sess->height);
++	u32 use_mmu = codec_hevc_use_mmu(core->platform->revision,
++					 sess->pixfmt_cap, is_10bit);
++	u32 body_size = amvdec_amfbc_body_size(sess->width, sess->height,
++					       is_10bit, use_mmu);
++	u32 head_size = amvdec_amfbc_head_size(sess->width, sess->height);
  
- 	if (*num_planes) {
- 		switch (q->type) {
-@@ -215,6 +216,12 @@ static int vdec_queue_setup(struct vb2_queue *q, unsigned int *num_buffers,
- 				    sizes[2] < output_size / 4)
- 					return -EINVAL;
- 				break;
-+			case V4L2_PIX_FMT_YUV420_8BIT:
-+			case V4L2_PIX_FMT_YUV420_10BIT:
-+				if (*num_planes != 1 ||
-+				    sizes[0] < MMU_COMPRESS_HEADER_SIZE)
-+					return -EINVAL;
-+				break;
- 			default:
- 				return -EINVAL;
- 			}
-@@ -244,6 +251,24 @@ static int vdec_queue_setup(struct vb2_queue *q, unsigned int *num_buffers,
- 			sizes[2] = output_size / 4;
- 			*num_planes = 3;
- 			break;
-+		case V4L2_PIX_FMT_YUV420_8BIT:
-+			if (revision >= VDEC_REVISION_G12A)
-+				sizes[0] = MMU_COMPRESS_HEADER_SIZE;
-+			else
-+				sizes[0] = amvdec_amfbc_size(sess->width,
-+							     sess->height,
-+							     0, 0);
-+			*num_planes = 1;
-+			break;
-+		case V4L2_PIX_FMT_YUV420_10BIT:
-+			if (revision >= VDEC_REVISION_G12A)
-+				sizes[0] = MMU_COMPRESS_HEADER_SIZE;
-+			else
-+				sizes[0] = amvdec_amfbc_size(sess->width,
-+							     sess->height,
-+							     1, 0);
-+			*num_planes = 1;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -496,6 +521,7 @@ vdec_try_fmt_common(struct amvdec_session *sess, u32 size,
- 	struct v4l2_plane_pix_format *pfmt = pixmp->plane_fmt;
- 	const struct amvdec_format *fmts = sess->core->platform->formats;
- 	const struct amvdec_format *fmt_out = NULL;
-+	u32 revision = sess->core->platform->revision;
- 	u32 output_size = 0;
+ 	if (!codec_hevc_use_fbc(sess->pixfmt_cap, is_10bit)) {
+ 		/* Enable 2-plane reference read mode */
+@@ -154,7 +157,12 @@ void codec_hevc_free_fbc_buffers(struct amvdec_session *sess,
+ 				 struct codec_hevc_common *comm)
+ {
+ 	struct device *dev = sess->core->dev;
+-	u32 am21_size = amvdec_am21c_size(sess->width, sess->height);
++	u32 use_mmu = codec_hevc_use_mmu(sess->core->platform->revision,
++					 sess->pixfmt_cap,
++					 sess->bitdepth == 10 ? 1 : 0);
++	u32 am21_size = amvdec_amfbc_size(sess->width, sess->height,
++					  sess->bitdepth == 10 ? 1 : 0,
++					  use_mmu);
+ 	int i;
  
- 	memset(pfmt[0].reserved, 0, sizeof(pfmt[0].reserved));
-@@ -548,6 +574,26 @@ vdec_try_fmt_common(struct amvdec_session *sess, u32 size,
- 			pfmt[2].sizeimage = output_size / 2;
- 			pfmt[2].bytesperline = ALIGN(pixmp->width, 32) / 2;
- 			pixmp->num_planes = 3;
-+		} else if (pixmp->pixelformat == V4L2_PIX_FMT_YUV420_8BIT) {
-+			if (revision >= VDEC_REVISION_G12A) {
-+				pfmt[0].sizeimage = MMU_COMPRESS_HEADER_SIZE;
-+			} else {
-+				pfmt[0].sizeimage =
-+					amvdec_amfbc_size(pixmp->width,
-+							  pixmp->height, 0, 0);
-+				pfmt[0].bytesperline = pixmp->width;
-+			}
-+			pixmp->num_planes = 1;
-+		} else if (pixmp->pixelformat == V4L2_PIX_FMT_YUV420_10BIT) {
-+			if (revision >= VDEC_REVISION_G12A) {
-+				pfmt[0].sizeimage = MMU_COMPRESS_HEADER_SIZE;
-+			} else {
-+				pfmt[0].sizeimage =
-+					amvdec_amfbc_size(pixmp->width,
-+							  pixmp->height, 1, 0);
-+				pfmt[0].bytesperline = pixmp->width;
-+			}
-+			pixmp->num_planes = 1;
- 		}
- 	}
+ 	for (i = 0; i < MAX_REF_PIC_NUM; ++i) {
+@@ -173,7 +181,12 @@ static int codec_hevc_alloc_fbc_buffers(struct amvdec_session *sess,
+ {
+ 	struct device *dev = sess->core->dev;
+ 	struct v4l2_m2m_buffer *buf;
+-	u32 am21_size = amvdec_am21c_size(sess->width, sess->height);
++	u32 use_mmu = codec_hevc_use_mmu(sess->core->platform->revision,
++					 sess->pixfmt_cap,
++					 sess->bitdepth == 10 ? 1 : 0);
++	u32 am21_size = amvdec_amfbc_size(sess->width, sess->height,
++					  sess->bitdepth == 10 ? 1 : 0,
++					  use_mmu);
  
-diff --git a/drivers/staging/media/meson/vdec/vdec.h b/drivers/staging/media/meson/vdec/vdec.h
-index e3e4af73447a..1412054a70c4 100644
---- a/drivers/staging/media/meson/vdec/vdec.h
-+++ b/drivers/staging/media/meson/vdec/vdec.h
-@@ -17,6 +17,9 @@
+ 	v4l2_m2m_for_each_dst_buf(sess->m2m_ctx, buf) {
+ 		u32 idx = buf->vb.vb2_buf.index;
+@@ -280,7 +293,12 @@ void codec_hevc_fill_mmu_map(struct amvdec_session *sess,
+ 			     struct codec_hevc_common *comm,
+ 			     struct vb2_buffer *vb)
+ {
+-	u32 size = amvdec_am21c_size(sess->width, sess->height);
++	u32 use_mmu = codec_hevc_use_mmu(sess->core->platform->revision,
++					 sess->pixfmt_cap,
++					 sess->bitdepth == 10 ? 1 : 0);
++	u32 size = amvdec_amfbc_size(sess->width, sess->height,
++				     sess->bitdepth == 10 ? 1 : 0,
++				     use_mmu);
+ 	u32 nb_pages = size / PAGE_SIZE;
+ 	u32 *mmu_map = comm->mmu_map_vaddr;
+ 	u32 first_page;
+diff --git a/drivers/staging/media/meson/vdec/codec_vp9.c b/drivers/staging/media/meson/vdec/codec_vp9.c
+index 4c6a644ab1a7..a810c50f3a39 100644
+--- a/drivers/staging/media/meson/vdec/codec_vp9.c
++++ b/drivers/staging/media/meson/vdec/codec_vp9.c
+@@ -1147,6 +1147,8 @@ static void codec_vp9_set_mc(struct amvdec_session *sess,
+ 			     struct codec_vp9 *vp9)
+ {
+ 	struct amvdec_core *core = sess->core;
++	u32 use_mmu = codec_hevc_use_mmu(core->platform->revision,
++					 sess->pixfmt_cap, vp9->is_10bit);
+ 	u32 scale = 0;
+ 	u32 sz;
+ 	int i;
+@@ -1166,8 +1168,9 @@ static void codec_vp9_set_mc(struct amvdec_session *sess,
+ 		    vp9->frame_refs[i]->height != vp9->height)
+ 			scale = 1;
  
- #include "vdec_platform.h"
+-		sz = amvdec_am21c_body_size(vp9->frame_refs[i]->width,
+-					    vp9->frame_refs[i]->height);
++		sz = amvdec_amfbc_body_size(vp9->frame_refs[i]->width,
++					    vp9->frame_refs[i]->height,
++					    vp9->is_10bit, use_mmu);
  
-+/* MMU header size for codecs using the IOMMU + FBC */
-+#define MMU_COMPRESS_HEADER_SIZE 0x48000
-+
- /* 32 buffers in 3-plane YUV420 */
- #define MAX_CANVAS (32 * 3)
- 
+ 		amvdec_write_dos(core, VP9D_MPP_REFINFO_DATA,
+ 				 vp9->frame_refs[i]->width);
 diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-index 320cac1ed03e..7166605b89ae 100644
+index eed7a929c5d0..320cac1ed03e 100644
 --- a/drivers/staging/media/meson/vdec/vdec_helpers.c
 +++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-@@ -299,6 +299,22 @@ static void dst_buf_done(struct amvdec_session *sess,
- 		vbuf->vb2_buf.planes[1].bytesused = output_size / 4;
- 		vbuf->vb2_buf.planes[2].bytesused = output_size / 4;
- 		break;
-+	case V4L2_PIX_FMT_YUV420_8BIT:
-+		if (sess->core->platform->revision >= VDEC_REVISION_G12A)
-+			vbuf->vb2_buf.planes[0].bytesused =
-+				MMU_COMPRESS_HEADER_SIZE;
-+		else
-+			vbuf->vb2_buf.planes[0].bytesused =
-+			   amvdec_amfbc_size(sess->width, sess->height, 0, 0);
-+		break;
-+	case V4L2_PIX_FMT_YUV420_10BIT:
-+		if (sess->core->platform->revision >= VDEC_REVISION_G12A)
-+			vbuf->vb2_buf.planes[0].bytesused =
-+				MMU_COMPRESS_HEADER_SIZE;
-+		else
-+			vbuf->vb2_buf.planes[0].bytesused =
-+			   amvdec_amfbc_size(sess->width, sess->height, 1, 0);
-+		break;
- 	}
+@@ -50,32 +50,47 @@ void amvdec_write_parser(struct amvdec_core *core, u32 reg, u32 val)
+ }
+ EXPORT_SYMBOL_GPL(amvdec_write_parser);
  
- 	vbuf->vb2_buf.timestamp = timestamp;
-@@ -478,6 +494,13 @@ void amvdec_src_change(struct amvdec_session *sess, u32 width,
- 	sess->status = STATUS_NEEDS_RESUME;
- 	sess->bitdepth = bitdepth;
+-/* 4 KiB per 64x32 block */
+-u32 amvdec_am21c_body_size(u32 width, u32 height)
++/* AMFBC body is made out of 64x32 blocks with varying block size */
++u32 amvdec_amfbc_body_size(u32 width, u32 height, u32 is_10bit, u32 use_mmu)
+ {
+ 	u32 width_64 = ALIGN(width, 64) / 64;
+ 	u32 height_32 = ALIGN(height, 32) / 32;
++	u32 blk_size = 4096;
  
-+	if (sess->pixfmt_cap == V4L2_PIX_FMT_YUV420_8BIT &&
-+	    bitdepth == 10)
-+		sess->pixfmt_cap = V4L2_PIX_FMT_YUV420_10BIT;
-+	else if (sess->pixfmt_cap == V4L2_PIX_FMT_YUV420_10BIT &&
-+		 bitdepth == 8)
-+		sess->pixfmt_cap = V4L2_PIX_FMT_YUV420_8BIT;
+-	return SZ_4K * width_64 * height_32;
++	if (!is_10bit) {
++		if (use_mmu)
++			blk_size = 3200;
++		else
++			blk_size = 3072;
++	}
 +
- 	dev_dbg(sess->core->dev, "Res. changed (%ux%u), DPB %u, bitdepth %u\n",
- 		width, height, dpb_size, bitdepth);
- 	v4l2_event_queue_fh(&sess->fh, &ev);
-diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/staging/media/meson/vdec/vdec_platform.c
-index eabbebab2da2..efc090d2a3bb 100644
---- a/drivers/staging/media/meson/vdec/vdec_platform.c
-+++ b/drivers/staging/media/meson/vdec/vdec_platform.c
-@@ -61,7 +61,8 @@ static const struct amvdec_format vdec_formats_gxl[] = {
- 		.vdec_ops = &vdec_hevc_ops,
- 		.codec_ops = &codec_vp9_ops,
- 		.firmware_path = "meson/vdec/gxl_vp9.bin",
--		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, V4L2_PIX_FMT_YUV420_8BIT,
-+				 V4L2_PIX_FMT_YUV420_10BIT, 0 },
- 		.flags = V4L2_FMT_FLAG_COMPRESSED |
- 			 V4L2_FMT_FLAG_DYN_RESOLUTION,
- 	}, {
-@@ -149,7 +150,8 @@ static const struct amvdec_format vdec_formats_g12a[] = {
- 		.vdec_ops = &vdec_hevc_ops,
- 		.codec_ops = &codec_vp9_ops,
- 		.firmware_path = "meson/vdec/g12a_vp9.bin",
--		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, V4L2_PIX_FMT_YUV420_8BIT,
-+				 V4L2_PIX_FMT_YUV420_10BIT, 0 },
- 		.flags = V4L2_FMT_FLAG_COMPRESSED |
- 			 V4L2_FMT_FLAG_DYN_RESOLUTION,
- 	}, {
-@@ -199,7 +201,8 @@ static const struct amvdec_format vdec_formats_sm1[] = {
- 		.vdec_ops = &vdec_hevc_ops,
- 		.codec_ops = &codec_vp9_ops,
- 		.firmware_path = "meson/vdec/sm1_vp9_mmu.bin",
--		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, V4L2_PIX_FMT_YUV420_8BIT,
-+				 V4L2_PIX_FMT_YUV420_10BIT, 0 },
- 		.flags = V4L2_FMT_FLAG_COMPRESSED |
- 			 V4L2_FMT_FLAG_DYN_RESOLUTION,
- 	}, {
++	return blk_size * width_64 * height_32;
+ }
+-EXPORT_SYMBOL_GPL(amvdec_am21c_body_size);
++EXPORT_SYMBOL_GPL(amvdec_amfbc_body_size);
+ 
+ /* 32 bytes per 128x64 block */
+-u32 amvdec_am21c_head_size(u32 width, u32 height)
++u32 amvdec_amfbc_head_size(u32 width, u32 height)
+ {
+ 	u32 width_128 = ALIGN(width, 128) / 128;
+ 	u32 height_64 = ALIGN(height, 64) / 64;
+ 
+ 	return 32 * width_128 * height_64;
+ }
+-EXPORT_SYMBOL_GPL(amvdec_am21c_head_size);
++EXPORT_SYMBOL_GPL(amvdec_amfbc_head_size);
++
++u32 amvdec_amfbc_size(u32 width, u32 height, u32 is_10bit, u32 use_mmu)
++{
++	return ALIGN(amvdec_amfbc_body_size(width, height, is_10bit, use_mmu) +
++		     amvdec_amfbc_head_size(width, height), SZ_64K);
++}
++EXPORT_SYMBOL_GPL(amvdec_amfbc_size);
+ 
+-u32 amvdec_am21c_size(u32 width, u32 height)
++u32 amvdec_is_dst_fbc(struct amvdec_session *sess)
+ {
+-	return ALIGN(amvdec_am21c_body_size(width, height) +
+-		     amvdec_am21c_head_size(width, height), SZ_64K);
++	return sess->pixfmt_cap == V4L2_PIX_FMT_YUV420_8BIT ||
++	       sess->pixfmt_cap == V4L2_PIX_FMT_YUV420_10BIT;
+ }
+-EXPORT_SYMBOL_GPL(amvdec_am21c_size);
++EXPORT_SYMBOL_GPL(amvdec_is_dst_fbc);
+ 
+ static int canvas_alloc(struct amvdec_session *sess, u8 *canvas_id)
+ {
+diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.h b/drivers/staging/media/meson/vdec/vdec_helpers.h
+index f059cf195cca..c1666125fe4c 100644
+--- a/drivers/staging/media/meson/vdec/vdec_helpers.h
++++ b/drivers/staging/media/meson/vdec/vdec_helpers.h
+@@ -27,9 +27,11 @@ void amvdec_clear_dos_bits(struct amvdec_core *core, u32 reg, u32 val);
+ u32 amvdec_read_parser(struct amvdec_core *core, u32 reg);
+ void amvdec_write_parser(struct amvdec_core *core, u32 reg, u32 val);
+ 
+-u32 amvdec_am21c_body_size(u32 width, u32 height);
+-u32 amvdec_am21c_head_size(u32 width, u32 height);
+-u32 amvdec_am21c_size(u32 width, u32 height);
++/* Helpers for the Amlogic compressed framebuffer format */
++u32 amvdec_amfbc_body_size(u32 width, u32 height, u32 is_10bit, u32 use_mmu);
++u32 amvdec_amfbc_head_size(u32 width, u32 height);
++u32 amvdec_amfbc_size(u32 width, u32 height, u32 is_10bit, u32 use_mmu);
++u32 amvdec_is_dst_fbc(struct amvdec_session *sess);
+ 
+ /**
+  * amvdec_dst_buf_done_idx() - Signal that a buffer is done decoding
 -- 
 2.22.0
 
