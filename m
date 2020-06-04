@@ -2,68 +2,102 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE4A206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3526207D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:36:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hYKEptt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgFDGgE (ORCPT
+        id S1726923AbgFDGg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:36:04 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45908 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgFDGgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:36:04 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BF60B20116D;
-        Thu,  4 Jun 2020 08:36:02 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4017C201020;
-        Thu,  4 Jun 2020 08:35:58 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 25296402A5;
-        Thu,  4 Jun 2020 14:35:52 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fsl-asoc-card: Defer probe when fail to find codec device
-Date:   Thu,  4 Jun 2020 14:25:30 +0800
-Message-Id: <1591251930-4111-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 4 Jun 2020 02:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgFDGg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 02:36:28 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A80CC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 23:36:28 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d6so761571pjs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 23:36:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3OTdeVCvSUjOBcj6MS4hXMUrhdRM9CDvX4e1/CfV3A4=;
+        b=hYKEptt2qyz/b32b0YAtEha20e0sYfLCeLpb93ZQit9FI0v559hjC6QoUSoCMHMQ80
+         FyuIzbyMI9wpBSN0A+N4TmGbIr9/2WEMfeWQddlbcLfBgrIr9wxMDhyOz2MHaB2iLUaF
+         /dug2Tp5tbHXmSmHZ98Kk5UkOGLDij/L9G6vJX76bdfX6cwDM7pnb/+GxQMCDzu7tMjC
+         rCzhLJPGVZZWuXJcsPYBhISx7F5m0v9LV99iQpG15f+jLdRQLs6nvMqQ2zT8OevOehWi
+         fZlEtafJVXEn9qzHeN+ajzCewsWfUR4aVAXkIr2GIUoI/poUsT8rjdoVXQL0nm3H91ye
+         l/YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3OTdeVCvSUjOBcj6MS4hXMUrhdRM9CDvX4e1/CfV3A4=;
+        b=s9h27xUK8ErMyMrxyK9K/AvYvkCSjBPFcBDYokRFt4rYxg95+uEdtr4TzKndQA0Hg2
+         BduEG0TRea4YvwBwByFK1y8SfGWpWt6vVZlwHA157I8lNyOyx/nD0rj99+PuKeUYvG6O
+         KmH+Kcbj8p5v7zEFK8mErlAa50xHBEMmsTV9grzGqn2JE8+Y+JYKnQ5RMFzMMi4KIH0r
+         UxEte6kMBYtECLwG/crz1ukHFOHgbEZMJahQ6fyaUT33XkYbsM2K0Tu0d2cuBZstiozd
+         ItSfNDI4EICCydZKytLz7K6oCh3+lvA0JtRafixh8CDIMoS1QaH4TPp8B2+Rp6pXWZSt
+         s0VQ==
+X-Gm-Message-State: AOAM531tUT84+3gFRvdiokHuCiA0rxuJ54Fg+ysaNAOGeTRbZyoC94ep
+        4j5gwcce65WFh20AJAMkP708ueoUDA==
+X-Google-Smtp-Source: ABdhPJxZFyD9ApfGTaosPM9xnsxT2eLocjXpwskWZ/m7MbjMnO6O7YogS3uzJgd4BXSlU/GvAToGAg==
+X-Received: by 2002:a17:90a:6584:: with SMTP id k4mr4332997pjj.171.1591252587482;
+        Wed, 03 Jun 2020 23:36:27 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:6e90:f3d4:c404:4d38:8396:d1ee])
+        by smtp.gmail.com with ESMTPSA id r205sm2040767pfr.112.2020.06.03.23.36.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 23:36:26 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] scsi: ufs: Bump supported UFS HCI version to 3.0
+Date:   Thu,  4 Jun 2020 12:05:59 +0530
+Message-Id: <20200604063559.18080-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Defer probe when fail to find codec device, because the codec
-device maybe probed later than machine driver.
+UFS HCI 3.0 versions are being used in Qcom SM8250 based boards. Hence,
+adding it to the list of supported versions.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+I don't have the exact information of the additional registers supported
+in version 3.0. Hence the change just adds 0x300 to the list of supported
+versions to remove the below warning:
+
+"ufshcd-qcom 1d84000.ufshc: invalid UFS version 0x300"
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- sound/soc/fsl/fsl-asoc-card.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshci.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index cf4feb835743..00be73900888 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -581,7 +581,7 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h
+index c2961d37cc1c..f2ee81669b00 100644
+--- a/drivers/scsi/ufs/ufshci.h
++++ b/drivers/scsi/ufs/ufshci.h
+@@ -104,6 +104,7 @@ enum {
+ 	UFSHCI_VERSION_11 = 0x00010100, /* 1.1 */
+ 	UFSHCI_VERSION_20 = 0x00000200, /* 2.0 */
+ 	UFSHCI_VERSION_21 = 0x00000210, /* 2.1 */
++	UFSHCI_VERSION_30 = 0x00000300, /* 3.0 */
+ };
  
- 	if (!fsl_asoc_card_is_ac97(priv) && !codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec device\n");
--		ret = -EINVAL;
-+		ret = -EPROBE_DEFER;
- 		goto asrc_fail;
- 	}
- 
+ /*
 -- 
-2.21.0
+2.17.1
 
