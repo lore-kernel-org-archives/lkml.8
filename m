@@ -2,109 +2,115 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3407C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E6A2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942992065C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pys6LcCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgFDJRl (ORCPT
+        id S1728178AbgFDJSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:17:41 -0400
-Received: from smtprelay0175.hostedemail.com ([216.40.44.175]:59320 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726248AbgFDJRk (ORCPT
+        Thu, 4 Jun 2020 05:18:13 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28423 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726465AbgFDJSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:17:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 7FBE8837F27E;
-        Thu,  4 Jun 2020 09:17:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: lock32_040a1d426d96
-X-Filterd-Recvd-Size: 3759
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jun 2020 09:17:36 +0000 (UTC)
-Message-ID: <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>
-Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
- which is unused and broken
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Date:   Thu, 04 Jun 2020 02:17:35 -0700
-In-Reply-To: <20200604083120.GF22511@kadam>
-References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
-         <87h7vvb1s3.fsf@belgarion.home>
-         <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
-         <20200601183102.GS30374@kadam>
-         <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
-         <20200604083120.GF22511@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Thu, 4 Jun 2020 05:18:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591262292;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VKRvnA2ntagIiR78RlbOmGx0PU/n/EP0BCi9aIW6b1E=;
+        b=Pys6LcCCTdFHzl7/4VM19JGr738AfiScHClNzK8F18cx7LoiiyEzYRLToBdiNEseGA43SC
+        W5m6mYKN2YWwbSYBNUwD/2s2Xzy7pE9ag4Iv+ARtpUhGTQDHRck8qyGc9Y7ao0AGM2lON7
+        v5O7d+BT3lMjopysOvpieNknnX53Sjw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-2rCnZHGmOECqZrGO79PghQ-1; Thu, 04 Jun 2020 05:18:10 -0400
+X-MC-Unique: 2rCnZHGmOECqZrGO79PghQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80BD9107ACF3;
+        Thu,  4 Jun 2020 09:18:09 +0000 (UTC)
+Received: from [10.72.13.104] (ovpn-13-104.pek2.redhat.com [10.72.13.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C943160CD1;
+        Thu,  4 Jun 2020 09:18:01 +0000 (UTC)
+Subject: Re: [PATCH RFC 07/13] vhost: format-independent API for used buffers
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-8-mst@redhat.com>
+ <6d98f2cc-2084-cde0-c938-4ca01692adf9@redhat.com>
+ <20200604050135-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b39e6fb8-a59a-2b3f-a1eb-1ccea2fe1b86@redhat.com>
+Date:   Thu, 4 Jun 2020 17:18:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200604050135-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-04 at 11:31 +0300, Dan Carpenter wrote:
-> On Thu, Jun 04, 2020 at 12:08:49AM +0200, Linus Walleij wrote:
-[]
-> > Fixes means it fixes something that was wrong in that commit.
-> > That's all. Whether syntactic or semantic or regression or
-> > serious or not does not matter. It is also not compulsory to
-> > add it is just helpful.
-> 
-> Fixes tag should be compulsory for actual bug fixes.  We had a the
-> Bad Binder exploit last year because commit f5cb779ba163
-> ("ANDROID: binder: remove waitqueue when thread exits.") had no Fixes
-> tag and wasn't backported to Android kernels.
 
-Fixes tags IMO should be exclusively for actual bug fixes
-and should be mandatory.
+On 2020/6/4 下午5:03, Michael S. Tsirkin wrote:
+>>>    static bool vhost_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
+>>>    {
+>>>    	__u16 old, new;
+>>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+>>> index a67bda9792ec..6c10e99ff334 100644
+>>> --- a/drivers/vhost/vhost.h
+>>> +++ b/drivers/vhost/vhost.h
+>>> @@ -67,6 +67,13 @@ struct vhost_desc {
+>>>    	u16 id;
+>>>    };
+>>> +struct vhost_buf {
+>>> +	u32 out_len;
+>>> +	u32 in_len;
+>>> +	u16 descs;
+>>> +	u16 id;
+>>> +};
+>> So it looks to me the struct vhost_buf can work for both split ring and
+>> packed ring.
+>>
+>> If this is true, we'd better make struct vhost_desc work for both.
+>>
+>> Thanks
+> Both vhost_desc and vhost_buf can work for split and packed.
+>
+> Do you mean we should add packed ring support based on this?
+> For sure, this is one of the motivators for the patchset.
+>
 
-Perhaps:
----
- Documentation/process/submitting-patches.rst | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Somehow. But the reason I ask is that I see "split" suffix is used in 
+patch 1 as:
 
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index 1699b7f8e63a..285a84ae79de 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -636,12 +636,14 @@ idea was not posted in a public forum. That said, if we diligently credit our
- idea reporters, they will, hopefully, be inspired to help us again in the
- future.
- 
--A Fixes: tag indicates that the patch fixes an issue in a previous commit. It
--is used to make it easy to determine where a bug originated, which can help
--review a bug fix. This tag also assists the stable kernel team in determining
--which stable kernel versions should receive your fix. This is the preferred
--method for indicating a bug fixed by the patch. See :ref:`describe_changes`
--for more details.
-+A Fixes: tag indicates that the patch fixes a "bug". i.e.: a logic defect or
-+regression in a previous commit.  A Fixes: tag should not be used to indicate
-+that a previous commit had some trivial defect in spelling in the commit log or
-+some whitespace defect.  The Fixes: tag is used to make it easy to determine
-+where a bug originated, which can help review a bug fix. The Fixes: tag also
-+assists the stable kernel team in determining which stable kernel versions
-+should receive your fix. This is the preferred method for indicating a bug is
-+fixed by the patch.  See :ref:`describe_changes` for more details.
- 
- .. _the_canonical_patch_format:
- 
+peek_split_desc()
+pop_split_desc()
+push_split_desc()
+
+But that suffix is not used for the new used ring API invented in this 
+patch.
+
+Thanks
+
 
