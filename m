@@ -2,101 +2,89 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8338DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A4E207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634C120772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgFDNLN (ORCPT
+        id S1728456AbgFDNLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:11:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5787 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726003AbgFDNLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:11:12 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8BDEE67F332417D3604A;
-        Thu,  4 Jun 2020 21:11:10 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 4 Jun 2020
- 21:11:03 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <dinguyen@kernel.org>, <linux@armlinux.org.uk>,
-        <khilman@linaro.org>, <atull@opensource.altera.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>
-Subject: [PATCH] ARM: socfpga: add missing put_device() call in socfpga_setup_ocram_self_refresh()
-Date:   Thu, 4 Jun 2020 21:10:42 +0800
-Message-ID: <20200604131042.3926006-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 4 Jun 2020 09:11:52 -0400
+Received: from freki.datenkhaos.de ([81.7.17.101]:60592 "EHLO
+        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgFDNLv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:11:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by freki.datenkhaos.de (Postfix) with ESMTP id 619B62BBC375;
+        Thu,  4 Jun 2020 15:11:50 +0200 (CEST)
+Received: from freki.datenkhaos.de ([127.0.0.1])
+        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8PHAwIxS7RRD; Thu,  4 Jun 2020 15:11:46 +0200 (CEST)
+Received: from latitude (vpn137.rz.tu-ilmenau.de [141.24.172.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by freki.datenkhaos.de (Postfix) with ESMTPSA;
+        Thu,  4 Jun 2020 15:11:46 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 15:11:41 +0200
+From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@elte.hu,
+        Ian Rogers <irogers@google.com>,
+        "Phillips, Kim" <kim.phillips@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v2 1/5] perf/x86/rapl: move RAPL support to common x86
+ code
+Message-ID: <20200604131141.GA678989@latitude>
+References: <20200527224659.206129-1-eranian@google.com>
+ <20200527224659.206129-2-eranian@google.com>
+ <20200601123850.GA213137@latitude>
+ <CABPqkBSKF_4BpXxT=LDb786cW5euuOk7oUbnem5=P6BpMtk0ZA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CABPqkBSKF_4BpXxT=LDb786cW5euuOk7oUbnem5=P6BpMtk0ZA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh()
-doesn't have a corresponding put_device(). Thus add a jump target to fix
-the exception handling for this function implementation.
+On 2020 Jun 01, Stephane Eranian wrote:
+> On Mon, Jun 1, 2020 at 5:39 AM Johannes Hirte
+> <johannes.hirte@datenkhaos.de> wrote:
+> >
+> > On 2020 Mai 27, Stephane Eranian wrote:
+> >
+> > ...
+> > > diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
+> > > index 6f1d1fde8b2de..12c42eba77ec3 100644
+> > > --- a/arch/x86/events/Makefile
+> > > +++ b/arch/x86/events/Makefile
+> > > @@ -1,5 +1,6 @@
+> > >  # SPDX-License-Identifier: GPL-2.0-only
+> > >  obj-y                                        += core.o probe.o
+> > > +obj-$(PERF_EVENTS_INTEL_RAPL)                += rapl.o
+> > >  obj-y                                        += amd/
+> > >  obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
+> > >  obj-$(CONFIG_CPU_SUP_INTEL)          += intel/
+> >
+> > With this change, rapl won't be build. Must be:
+> >
+> > obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)                += rapl.o
+> >
+> Correct. I posted a patch last week to fix that.
+> Thanks.
 
-Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- arch/arm/mach-socfpga/pm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Yes, it just wasn't in tip when I've tested. Sorry for the noise.
 
-diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
-index 6ed887cf8dc9..7267f5da15a4 100644
---- a/arch/arm/mach-socfpga/pm.c
-+++ b/arch/arm/mach-socfpga/pm.c
-@@ -49,14 +49,14 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -67,7 +67,7 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!suspend_ocram_base) {
- 		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	/* Copy the code that puts DDR in self refresh to ocram */
-@@ -80,7 +80,12 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	     "could not copy function to ocram");
- 	if (!socfpga_sdram_self_refresh_in_ocram)
- 		ret = -EFAULT;
-+
-+	if (!ret)
-+		goto put_node;
- 
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(np);
- 
 -- 
-2.25.4
+Regards,
+  Johannes Hirte
 
