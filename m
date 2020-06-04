@@ -2,172 +2,199 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1850220885
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:55:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BLiucKUh"
+	by mail.kernel.org (Postfix) with ESMTP id 3977E2063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbgFDSze (ORCPT
+        id S1729156AbgFDSzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:55:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729141AbgFDSza (ORCPT
+        Thu, 4 Jun 2020 14:55:22 -0400
+Received: from mailoutvs25.siol.net ([185.57.226.216]:52662 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729070AbgFDSzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:55:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591296928;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ES/2U+nNlWHBaABTLa/ag7enpyI1ucrux02WSZ/I5lM=;
-        b=BLiucKUhsKRZ7XOUSL2n5lPrJRW1UKV1IyTBgjZqUj+aPIFdVga6xrySVB1tRwoIdRneh4
-        WGoONnA+LES/TmrBEp0cKDZWNXK0m788eKrAF1RgXpOBQm7ffIVVLpOJ7shyDA6qaWfOcY
-        kMlVhXHvo/s8CC4tqbbblNRvL901tgk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-OrwsKud3M9m-_4tDRjRAzg-1; Thu, 04 Jun 2020 14:55:24 -0400
-X-MC-Unique: OrwsKud3M9m-_4tDRjRAzg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C40F41083E80;
-        Thu,  4 Jun 2020 18:55:22 +0000 (UTC)
-Received: from [10.36.112.96] (ovpn-112-96.ams2.redhat.com [10.36.112.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 70A6D61985;
-        Thu,  4 Jun 2020 18:55:20 +0000 (UTC)
-Subject: Re: [PATCH] x86/mm: use max memory block size with unaligned memory
- end
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Sistare <steven.sistare@oracle.com>
-References: <20200604035443.3267046-1-daniel.m.jordan@oracle.com>
- <5827baaf-0eb5-bcea-5d98-727485683512@redhat.com>
- <20200604172213.f5lufktpqvqjkv4u@ca-dmjordan1.us.oracle.com>
- <ebc31650-9e98-f286-6fc2-aafdd3cd9272@redhat.com>
- <20200604181201.lqop72ihg5butlmz@ca-dmjordan1.us.oracle.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <34d7b03c-4f32-05c3-b5ce-521951f518e8@redhat.com>
-Date:   Thu, 4 Jun 2020 20:55:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 14:55:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id ED5AE5210C2;
+        Thu,  4 Jun 2020 20:55:15 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id i_V4WpUo9TTS; Thu,  4 Jun 2020 20:55:15 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 7D9AE521138;
+        Thu,  4 Jun 2020 20:55:15 +0200 (CEST)
+Received: from kista.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 0FD1E52118B;
+        Thu,  4 Jun 2020 20:55:13 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     paul.kocialkowski@bootlin.com, mripard@kernel.org
+Cc:     mchehab@kernel.org, wens@csie.org, hverkuil-cisco@xs4all.nl,
+        gregkh@linuxfoundation.org, jonas@kwiboo.se, nicolas@ndufresne.ca,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/3] media: uapi: h264: update reference lists
+Date:   Thu,  4 Jun 2020 20:57:43 +0200
+Message-Id: <20200604185745.23568-2-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200604185745.23568-1-jernej.skrabec@siol.net>
+References: <20200604185745.23568-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <20200604181201.lqop72ihg5butlmz@ca-dmjordan1.us.oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> E.g., on powerpc that's 16MB so they have *a lot* of memory blocks.
->> That's why that's not papering over the problem. Increasing the memory
->> block size isn't always the answer.
-> 
-> Ok.  If you don't mind, what's the purpose of hotplugging at that granularity?
-> I'm simply curious.
+When dealing with with interlaced frames, reference lists must tell if
+each particular reference is meant for top or bottom field. This info
+is currently not provided at all in the H264 related controls.
 
-On bare metal: none with that big machines AFAIKS. :)
+Make reference lists hold a structure which will also hold flags along
+index into DPB array. Flags will tell if reference is meant for top or
+bottom field.
 
-For VMs/partitions it gives you much more flexibility ("cloud", kata
-containers, memory overcommit, ...).
+Currently the only user of these lists is Cedrus which is just compile
+fixed here. Actual usage of newly introduced flags will come in
+following commit.
 
-Assume you have a VM with some initial memory size (e.g., 32GB). By
-hotplugging up to 256 DIMMs you cab grow in small steps (e.g., 128MB, up
-to 64GB, 256MB, up to 96GB, ...). And if you online all the memory
-blocks MOVABLE, you can shrink in these small steps.
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+ .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
+ .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
+ include/media/h264-ctrls.h                    | 12 +++++-
+ 3 files changed, 51 insertions(+), 7 deletions(-)
 
-Regarding PowerPC, AFAIK it also gives the OS more flexibility to find
-memory blocks that can be offlined and unplugged, especially without the
-MOVABLE zone. Finding some scattered 16MB blocks that can be offlined is
-easier than finding one bigger (e.g., 2GB) memory block that can be
-offlined. And the history of powerpc dlpar dates back to pre-MOVABLE
-days (there is a paper from 2003).
-
-> 
->>> Yeah, but of course it's not as bad as it was now that it's fully parallelized.
->>
->> Right. I also observed that computing if a zone is contiguous can be
->> expensive.
-> 
-> That's right, I remember that.  It's on my list :)
-
-I do think your change mostly affects bare metal where you do not care
-about hotplugging small memory blocks. Maybe an even better check would be
-
-if (!in_vm() {
-	bz = MAX_BLOCK_SIZE;
-	goto none;
-}
-
-because I doubt we have bare metal machines > 64 where we want to
-hot(un)plug DIMMs < 2G. But maybe there is a use case I am not aware of
-... and I don't know an easy way to check whether we are running inside
-a VM or not (like kvm_para_available() ... ).
-
--- 
-Thanks,
-
-David / dhildenb
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
+Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index d0d506a444b1..6c36d298db20 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_typ=
+e -
+     * - __u32
+       - ``slice_group_change_cycle``
+       -
+-    * - __u8
++    * - struct :c:type:`v4l2_h264_reference`
+       - ``ref_pic_list0[32]``
+       - Reference picture list after applying the per-slice modification=
+s
+-    * - __u8
++    * - struct :c:type:`v4l2_h264_reference`
+       - ``ref_pic_list1[32]``
+       - Reference picture list after applying the per-slice modification=
+s
+     * - __u32
+@@ -1926,6 +1926,42 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
+ -
+       - ``chroma_offset[32][2]``
+       -
+=20
++``Picture Reference``
++
++.. c:type:: v4l2_h264_reference
++
++.. cssclass:: longtable
++
++.. flat-table:: struct v4l2_h264_reference
++    :header-rows:  0
++    :stub-columns: 0
++    :widths:       1 1 2
++
++    * - __u16
++      - ``flags``
++      - See :ref:`Picture Reference Flags <h264_reference_flags>`
++    * - __u8
++      - ``index``
++      -
++
++.. _h264_reference_flags:
++
++``Picture Reference Flags``
++
++.. cssclass:: longtable
++
++.. flat-table::
++    :header-rows:  0
++    :stub-columns: 0
++    :widths:       1 1 2
++
++    * - ``V4L2_H264_REFERENCE_FLAG_TOP_FIELD``
++      - 0x00000001
++      -
++    * - ``V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD``
++      - 0x00000002
++      -
++
+ ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
+     Specifies the decode parameters (as extracted from the bitstream)
+     for the associated H264 slice data. This includes the necessary
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
+taging/media/sunxi/cedrus/cedrus_h264.c
+index 54ee2aa423e2..cce527bbdf86 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+@@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx=
+ *ctx,
+=20
+ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+ 				   struct cedrus_run *run,
+-				   const u8 *ref_list, u8 num_ref,
+-				   enum cedrus_h264_sram_off sram)
++				   const struct v4l2_h264_reference *ref_list,
++				   u8 num_ref, enum cedrus_h264_sram_off sram)
+ {
+ 	const struct v4l2_ctrl_h264_decode_params *decode =3D run->h264.decode_=
+params;
+ 	struct vb2_queue *cap_q;
+@@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx =
+*ctx,
+ 		int buf_idx;
+ 		u8 dpb_idx;
+=20
+-		dpb_idx =3D ref_list[i];
++		dpb_idx =3D ref_list[i].index;
+ 		dpb =3D &decode->dpb[dpb_idx];
+=20
+ 		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+index 080fd1293c42..9b1cbc9bc38e 100644
+--- a/include/media/h264-ctrls.h
++++ b/include/media/h264-ctrls.h
+@@ -140,6 +140,14 @@ struct v4l2_h264_pred_weight_table {
+ #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x04
+ #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x08
+=20
++#define V4L2_H264_REFERENCE_FLAG_TOP_FIELD		0x01
++#define V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD		0x02
++
++struct v4l2_h264_reference {
++	__u8 flags;
++	__u8 index;
++};
++
+ struct v4l2_ctrl_h264_slice_params {
+ 	/* Size in bytes, including header */
+ 	__u32 size;
+@@ -182,8 +190,8 @@ struct v4l2_ctrl_h264_slice_params {
+ 	 * Entries on each list are indices into
+ 	 * v4l2_ctrl_h264_decode_params.dpb[].
+ 	 */
+-	__u8 ref_pic_list0[32];
+-	__u8 ref_pic_list1[32];
++	struct v4l2_h264_reference ref_pic_list0[32];
++	struct v4l2_h264_reference ref_pic_list1[32];
+=20
+ 	__u32 flags;
+ };
+--=20
+2.27.0
 
