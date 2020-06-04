@@ -2,104 +2,99 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B765C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D41892077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591309395;
-	bh=XKk62AWx+65Qmd/r12udXYE4TJMz7b7cLmFVemruhWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WhXH76bF1N9hyy2vrp9x8gciOJBLT2oQ6+/5zB6X2uRkPfCmCqTnJnz3KrVn7y6ZG
-	 83MlevqC/cq+p/Elop4Iqs47kPIpeOIMCBomGrulSVTAbBifN+Z/JvcOnLpI8o8Caz
-	 6saNjd2OXnQdNGlvnYfE4RB1WnixM7gD+QHqPy9I=
+	by mail.kernel.org (Postfix) with ESMTP id 13DAF206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cTnOGZwu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgFDWXP (ORCPT
+        id S1727936AbgFDWXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:23:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40712 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgFDWXO (ORCPT
+        Thu, 4 Jun 2020 18:23:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34007 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726090AbgFDWXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:23:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id q8so8154411iow.7;
-        Thu, 04 Jun 2020 15:23:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8n1ml5PEUVdbXeAwFS38cbuqEwnnmmDCmubjqkKfwRU=;
-        b=KRG/+sQCaE+2ygYN4lBL5jMqeGiw1kOQR6QPK1xFk+Z1nytTLBk3iGgtwoQLxxCeK1
-         tC/IihOgRB7NDD+FxWuyH5rKR0JGxNmp+Md1vMiJg8kQspW1HgHoEXZTz8Qbr4gnQg4A
-         cSlx+nMPsphxH8l0FuyWIhbEiBh4tPrE6Kya7pfoEhOb/EB3XkB7c3myE87SzEFSrSyK
-         dd9bP2591OXoBIr07n6EM6GLj5S27Nv4/DHmx8FheHrW6IS6VUp1gInTnRr0pTmBgk6L
-         +bndm2Jm7HRIYQOlMqwO2gSB018I201Qw+8/m82DvzMDqeNTPLY+YgqM2H6OrPF/7E+U
-         fmSA==
-X-Gm-Message-State: AOAM530lLZkCFMT2BCLozgRJNrxHrHeb6VzgvYQAK3y7AvZf1eK16DkZ
-        mQDY2pEfmciOTksrBJcDXQ==
-X-Google-Smtp-Source: ABdhPJzKPNv71wCvaiJlPwIdg9InlDA/KS8LEZRO8xjpPMq3wbHc7c9Gx/NeNCcR4s81LqHK05++Rg==
-X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr6033750iot.44.1591309393781;
-        Thu, 04 Jun 2020 15:23:13 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id c20sm431897iot.33.2020.06.04.15.23.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 15:23:12 -0700 (PDT)
-Received: (nullmailer pid 4151873 invoked by uid 1000);
-        Thu, 04 Jun 2020 22:23:11 -0000
-Date:   Thu, 4 Jun 2020 16:23:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ooi, Joyce" <joyce.ooi@intel.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        linux-kernel@vger.kernel.org, Dinh Nguyen <dinh.nguyen@intel.com>,
-        Dalon Westergreen <dalon.westergreen@intel.com>,
-        devicetree@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>
-Subject: Re: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
- documentation
-Message-ID: <20200604222311.GA4151468@bogus>
-References: <20200604073256.25702-1-joyce.ooi@intel.com>
- <20200604073256.25702-11-joyce.ooi@intel.com>
+        Thu, 4 Jun 2020 18:23:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591309413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eACp/oLaKXsSvlY5Fq9o05NcQuVVZ80m7RkJvy6ZwkE=;
+        b=cTnOGZwusH8Nhq440eP0X/DVjUYWLv5/14ySCEDZDpYaPk3RBbxddDuzLHE11vs3Ynohd/
+        P9UHKc5oWXU5KYrjKhtc7pMEw0MaeXHD0pEa8noSW0vcv9TWP3emY+of/9Y4/4c30+TNQu
+        UVSFqa/PWVo9wQInwGIYQzf7tRrWluo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-yg5V7Y4FNu-w6SlF4XzR-w-1; Thu, 04 Jun 2020 18:23:31 -0400
+X-MC-Unique: yg5V7Y4FNu-w6SlF4XzR-w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EF74107ACCA;
+        Thu,  4 Jun 2020 22:23:30 +0000 (UTC)
+Received: from localhost (unknown [10.36.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38D3010013D7;
+        Thu,  4 Jun 2020 22:23:28 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 00:23:23 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [netfilter] e32a4dc651:
+ BUG:using_smp_processor_id()in_preemptible
+Message-ID: <20200605002323.501b1cc6@redhat.com>
+In-Reply-To: <20200603084934.GF12456@shao2-debian>
+References: <20200603084934.GF12456@shao2-debian>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604073256.25702-11-joyce.ooi@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Jun 2020 15:32:56 +0800, Ooi, Joyce wrote:
-> From: Dalon Westergreen <dalon.westergreen@intel.com>
-> 
-> Update devicetree bindings documentation to include msgdma
-> prefetcher and ptp bindings.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-> ---
-> v2: no change
-> v3: no change
-> ---
->  .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
->  1 file changed, 84 insertions(+), 19 deletions(-)
-> 
+Hi,
 
+On Wed, 3 Jun 2020 16:49:34 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+> Greeting,
+> 
+> FYI, we noticed the following commit (built with gcc-7):
+> 
+> commit: e32a4dc6512ce3c1a1920531246e7037896e510a ("netfilter: nf_tables: make sets built-in")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> in testcase: kernel-selftests
+> with following parameters:
+> 
+> 	group: kselftests-netfilter
 
-If a tag was not added on purpose, please state why and what changed.
+I couldn't find this information in the report. Would it be possible to
+have here an indication of what kselftest specifically is failing?
+There are a number of tests in that group. I have an obvious suspicion
+here (nft_concat_range.sh), but it would be nice to know, in general.
+
+> [...]
+>
+> [  165.316525] BUG: using smp_processor_id() in preemptible [00000000] code: nft/6247
+> [  165.319547] caller is nft_pipapo_insert+0x464/0x610 [nf_tables]
+
+I'll take care of this, thanks Florian for forwarding.
+
+-- 
+Stefano
 
