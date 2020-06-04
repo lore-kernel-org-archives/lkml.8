@@ -2,113 +2,154 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9148AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8B220870
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C727207D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eqp6HF10"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dTfjL6bW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgFDSwF (ORCPT
+        id S1729034AbgFDSwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbgFDSwD (ORCPT
+        Thu, 4 Jun 2020 14:52:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728986AbgFDSwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:52:03 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0962C08C5C0;
-        Thu,  4 Jun 2020 11:52:03 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a21so6007957oic.8;
-        Thu, 04 Jun 2020 11:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7wZxQ2ZYTUXj6H4A/fAYu04YU+AVtihyuBKgDVRw7Dg=;
-        b=Eqp6HF106HdaJQCMM+MYN1Iag55bBz6XgbmJ4Rm+khvXbF3EW/YGZnt5wSvXmnOXV+
-         PTG0zUud87zStyGqsE6yQ4+OYSUEwySxI/JnIzd/UJSsLBfcrV8Ozp8HdrRXMuOL7hm6
-         cKAPs5iOW6Ou+IALHz+4AjrXFUjZLxqF5a77thdclvBo5CEipnfaHAA7/iHa8hXVdSRB
-         HVCgTkhFbk5Sy4N16Lt8aPmsOu53xRuTM++U+gtRPPMAkMn95kECiKFKPweWrA+gYcCC
-         rD/QdTrM0c6/m1Pg7Nw9vxqQ9C4HqHTpGTDslhPq19VHW1Rn/QcmeGA+WUVoVuIbyLOc
-         Xx2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7wZxQ2ZYTUXj6H4A/fAYu04YU+AVtihyuBKgDVRw7Dg=;
-        b=DaWyPJTckb7qy1hZHUy/VBS5X2nfUd5jzLsZ3RigWGNsXnVBbdc74iGr8PqwaMwnhy
-         Wn6WPdUlm+e9y8Jr52hkGa2lyNvE4nUkVya18dRlBjbeVGavyqTuzvC+7UPsdYca0c1a
-         Q5xhoda6Fh+YocHawJHAMlR9gm99Qe/XuYwdvkp7bdCC0MS5Ybrtzbi7cC1CajKkTQJp
-         5x2lXjL+aMZEuwEp/Idmj24AGKrCV/Mt3lZmQ0P8LQegrMTt6O/s45azJ1Iv3fCtH/oW
-         E+puIyFbXm4gFaIIyMTmF60m2VN9Nr2z62tTwjzDXmFXNru7TQbcphEBBVFHKYATfFAu
-         HpQg==
-X-Gm-Message-State: AOAM531S2jLRZ+hPJrpjf058UMiqTdP6AVJGGAujwZVqsVoBf2jnJ4VB
-        RYaMQKONjGt3VSdOllFel27y78y4NiUzNPWE0EHMT9sY
-X-Google-Smtp-Source: ABdhPJxn3lSKV7CojeVjAyCPOlId/gXxk16z216+OIfdv+TZra7z0yINDq7DlAdQ8TogaDU/9ZC5XOvBb3vs4jP5I5M=
-X-Received: by 2002:aca:a948:: with SMTP id s69mr4146936oie.140.1591296723348;
- Thu, 04 Jun 2020 11:52:03 -0700 (PDT)
+        Thu, 4 Jun 2020 14:52:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591296732;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SsOiww58zMB8TiRbvx8d+FF7JBDwRx5PHUOX+iIdx7A=;
+        b=dTfjL6bW+YDGfmAWij/vn7mPaiCpzJVPlyQEW+ujq76Dp5dJ8nfcqGCyDJQr+IfhAKnu/x
+        1NnQtIPMWx5qllxgL+gfbn5CfIOp4Ta+eDOR5QpfahV9ArMe5DL+Yh4Z8E3h7DFq0uw1rL
+        ZdXwXruZmTJ7j7bt/uIqFY3A0cmdsks=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-11_TenfrO4GLK4lbkdXN-A-1; Thu, 04 Jun 2020 14:52:08 -0400
+X-MC-Unique: 11_TenfrO4GLK4lbkdXN-A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F9008DFFD0;
+        Thu,  4 Jun 2020 18:52:07 +0000 (UTC)
+Received: from x2.localnet (ovpn-112-220.phx2.redhat.com [10.3.112.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 170915D9D3;
+        Thu,  4 Jun 2020 18:51:56 +0000 (UTC)
+From:   Steve Grubb <sgrubb@redhat.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        eparis@parisplace.org, tgraf@infradead.org
+Subject: Re: [PATCH ghak124 v3] audit: log nftables configuration change events
+Date:   Thu, 04 Jun 2020 14:51:54 -0400
+Message-ID: <2190308.cDvYnDs5iT@x2>
+Organization: Red Hat
+In-Reply-To: <20200604175756.d3x5fy4k4urilgbp@madcap2.tricolour.ca>
+References: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com> <530434533.t1QJnzVmUA@x2> <20200604175756.d3x5fy4k4urilgbp@madcap2.tricolour.ca>
 MIME-Version: 1.0
-References: <20200326200634.222009-1-dancol@google.com> <20200401213903.182112-1-dancol@google.com>
- <alpine.LRH.2.21.2006041354381.1812@namei.org>
-In-Reply-To: <alpine.LRH.2.21.2006041354381.1812@namei.org>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 4 Jun 2020 14:51:52 -0400
-Message-ID: <CAEjxPJ4GvTXQY_BzLugnrXrPnehqwnmqxn21mjVDhpk4kYV3Aw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] SELinux support for anonymous inodes and UFFD
-To:     James Morris <jmorris@namei.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Tim Murray <timmurray@google.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Paul Moore <paul@paul-moore.com>,
-        Nick Kralevich <nnk@google.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 11:59 PM James Morris <jmorris@namei.org> wrote:
->
-> On Wed, 1 Apr 2020, Daniel Colascione wrote:
->
-> > Daniel Colascione (3):
-> >   Add a new LSM-supporting anonymous inode interface
-> >   Teach SELinux about anonymous inodes
-> >   Wire UFFD up to SELinux
-> >
-> >  fs/anon_inodes.c                    | 191 ++++++++++++++++++++++------
-> >  fs/userfaultfd.c                    |  30 ++++-
-> >  include/linux/anon_inodes.h         |  13 ++
-> >  include/linux/lsm_hooks.h           |  11 ++
-> >  include/linux/security.h            |   3 +
-> >  security/security.c                 |   9 ++
-> >  security/selinux/hooks.c            |  53 ++++++++
-> >  security/selinux/include/classmap.h |   2 +
-> >  8 files changed, 267 insertions(+), 45 deletions(-)
->
-> Applied to
-> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git secure_uffd_v5.9
-> and next-testing.
->
-> This will provide test coverage in linux-next, as we aim to get this
-> upstream for v5.9.
->
-> I had to make some minor fixups, please review.
+On Thursday, June 4, 2020 1:57:56 PM EDT Richard Guy Briggs wrote:
+> > > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+> > > index 468a23390457..3a9100e95fda 100644
+> > > --- a/kernel/auditsc.c
+> > > +++ b/kernel/auditsc.c
+> > > @@ -75,6 +75,7 @@
+> > > #include <linux/uaccess.h>
+> > > #include <linux/fsnotify_backend.h>
+> > > #include <uapi/linux/limits.h>
+> > > +#include <uapi/linux/netfilter/nf_tables.h>
+> > > 
+> > > #include "audit.h"
+> > > 
+> > > @@ -136,9 +137,26 @@ struct audit_nfcfgop_tab {
+> > > };
+> > > 
+> > > static const struct audit_nfcfgop_tab audit_nfcfgs[] = {
+> > > -       { AUDIT_XT_OP_REGISTER,         "register"      },
+> > > -       { AUDIT_XT_OP_REPLACE,          "replace"       },
+> > > -       { AUDIT_XT_OP_UNREGISTER,       "unregister"    },
+> > > +       { AUDIT_XT_OP_REGISTER,                 "xt_register"
+> > 
+> > },
+> > 
+> > > +       { AUDIT_XT_OP_REPLACE,                  "xt_replace"           
+> > >    }, +       { AUDIT_XT_OP_UNREGISTER,               "xt_unregister" 
+> > >           }, +       { AUDIT_NFT_OP_TABLE_REGISTER,         
+> > > "nft_register_table"> 
+> > },
+> > 
+> > > +       { AUDIT_NFT_OP_TABLE_UNREGISTER,        "nft_unregister_table" 
+> > >    }, +       { AUDIT_NFT_OP_CHAIN_REGISTER,         
+> > > "nft_register_chain"> 
+> > },
+> > 
+> > > +       { AUDIT_NFT_OP_CHAIN_UNREGISTER,        "nft_unregister_chain" 
+> > >    }, +       { AUDIT_NFT_OP_RULE_REGISTER,          
+> > > "nft_register_rule"> 
+> > },
+> > 
+> > > +       { AUDIT_NFT_OP_RULE_UNREGISTER,         "nft_unregister_rule"
+> > 
+> > },
+> > 
+> > > +       { AUDIT_NFT_OP_SET_REGISTER,            "nft_register_set"
+> > 
+> > },
+> > 
+> > > +       { AUDIT_NFT_OP_SET_UNREGISTER,          "nft_unregister_set"
+> > 
+> > },
+> > 
+> > > +       { AUDIT_NFT_OP_SETELEM_REGISTER,        "nft_register_setelem" 
+> > >    }, +       { AUDIT_NFT_OP_SETELEM_UNREGISTER,     
+> > > "nft_unregister_setelem"   }, +       { AUDIT_NFT_OP_GEN_REGISTER,    
+> > >        "nft_register_gen"         }, +       {
+> > > AUDIT_NFT_OP_OBJ_REGISTER,            "nft_register_obj"         }, + 
+> > >      { AUDIT_NFT_OP_OBJ_UNREGISTER,          "nft_unregister_obj"     
+> > >  }, +       { AUDIT_NFT_OP_OBJ_RESET,               "nft_reset_obj"   
+> > >         }, +       { AUDIT_NFT_OP_FLOWTABLE_REGISTER,     
+> > > "nft_register_flowtable"   }, +       {
+> > > AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,    "nft_unregister_flowtable" }, + 
+> > >      { AUDIT_NFT_OP_INVALID,                 "nft_invalid"
+> > 
+> > },
+> > 
+> > > };
+> > 
+> > I still don't like the event format because it doesn't give complete
+> > subject information. However, I thought I'd comment on this string
+> > table. Usually it's sufficient to log the number and then have the
+> > string table in user space which looks it up during interpretation.
+> 
+> That is a good idea that would help reduce kernel cycles and netlink
+> bandwidth, but the format was set in 2011 so it is a bit late to change
+> that now:
+>         fbabf31e4d48 ("netfilter: create audit records for x_tables
+> replaces")
 
-LGTM and my userfaultfd test case worked.
+Nothing searches/interprets that field name. So, you can redefine it by 
+renaming it. Or just go with what you have. My preference is push that to 
+user space. But not a showstopper "as is".
+
+-Steve
+
+
