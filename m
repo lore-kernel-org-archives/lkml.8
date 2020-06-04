@@ -2,316 +2,325 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27354C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4112C207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F26207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JUFf//Ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgFDXnJ (ORCPT
+        id S1726218AbgFDXoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 19:43:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30230 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725863AbgFDXnI (ORCPT
+        Thu, 4 Jun 2020 19:44:13 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14847 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725961AbgFDXoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 19:43:08 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054NZ0EA046616;
-        Thu, 4 Jun 2020 19:42:27 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31f90htftd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 19:42:27 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 054NaPQ3061085;
-        Thu, 4 Jun 2020 19:42:26 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31f90htfsh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 19:42:26 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054NehP9015096;
-        Thu, 4 Jun 2020 23:42:24 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf482wy3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 23:42:24 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054NgKVC66191564
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jun 2020 23:42:20 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A237A11C04C;
-        Thu,  4 Jun 2020 23:42:20 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 351DB11C052;
-        Thu,  4 Jun 2020 23:42:16 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.71.124])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Thu,  4 Jun 2020 23:42:15 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Fri, 05 Jun 2020 05:12:14 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v10 6/6] powerpc/papr_scm: Implement support for PAPR_PDSM_HEALTH
-Date:   Fri,  5 Jun 2020 05:11:36 +0530
-Message-Id: <20200604234136.253703-7-vaibhav@linux.ibm.com>
+        Thu, 4 Jun 2020 19:44:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed986f30000>; Thu, 04 Jun 2020 16:42:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 04 Jun 2020 16:44:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 04 Jun 2020 16:44:12 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Jun
+ 2020 23:44:11 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 4 Jun 2020 23:44:11 +0000
+Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ed9874a0000>; Thu, 04 Jun 2020 16:44:10 -0700
+From:   Krishna Reddy <vdumpa@nvidia.com>
+CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <treding@nvidia.com>,
+        <yhsu@nvidia.com>, <snikam@nvidia.com>, <praithatha@nvidia.com>,
+        <talho@nvidia.com>, <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
+        Krishna Reddy <vdumpa@nvidia.com>
+Subject: [PATCH v6 1/4] iommu/arm-smmu: add NVIDIA implementation for dual ARM MMU-500 usage
+Date:   Thu, 4 Jun 2020 16:44:11 -0700
+Message-ID: <20200604234414.21912-2-vdumpa@nvidia.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200604234136.253703-1-vaibhav@linux.ibm.com>
-References: <20200604234136.253703-1-vaibhav@linux.ibm.com>
+In-Reply-To: <20200604234414.21912-1-vdumpa@nvidia.com>
+References: <20200604234414.21912-1-vdumpa@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-04_13:2020-06-04,2020-06-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- cotscore=-2147483648 priorityscore=1501 mlxscore=0 impostorscore=0
- adultscore=0 suspectscore=0 malwarescore=0 spamscore=0 bulkscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006040164
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591314164; bh=XQIW6LdqRHZdrrT9TXLYFgRvS9J1pGHffvjR2zCPYYI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=JUFf//Ct21U1wk8yXzt31RTRTO4ZDm7YH6Z4XUQNdKSjddze2gRyVOrAFHfAHvJaC
+         JNv5aBYoxq2ZqhBERTXdlgnQ2qj268HI+dPAj+W7xZqsqT6hp6CF3pJ55SSJ5hdq8T
+         N2Ab4DL9pLaXr6OTpa6QJNwCkK54gdKS+W+aNRJcaPoTWltfWjeYOZpxv21suob5hv
+         KgZKAvMOLwXAl+YELF8FQbw26VQMr01/x2OHEaciNwXXnKzQIC8Bm6PA57qG80wOIO
+         ltkFikmQNx/kq9JsfpBQ8sRV1bkdK9NAS+Tik37qEhO61MqN3rc2lrsw41YpOSZesT
+         7BdbBWPR5N7qA==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements support for PDSM request 'PAPR_PDSM_HEALTH'
-that returns a newly introduced 'struct nd_papr_pdsm_health' instance
-containing dimm health information back to user space in response to
-ND_CMD_CALL. This functionality is implemented in newly introduced
-papr_pdsm_health() that queries the nvdimm health information and
-then copies this information to the package payload whose layout is
-defined by 'struct nd_papr_pdsm_health'.
+NVIDIA's Tegra194 soc uses two ARM MMU-500s together to interleave
+IOVA accesses across them.
+Add NVIDIA implementation for dual ARM MMU-500s and add new compatible
+string for Tegra194 soc.
 
-Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
 ---
-Changelog:
+ MAINTAINERS                     |   2 +
+ drivers/iommu/Makefile          |   2 +-
+ drivers/iommu/arm-smmu-impl.c   |   3 +
+ drivers/iommu/arm-smmu-nvidia.c | 161 ++++++++++++++++++++++++++++++++
+ drivers/iommu/arm-smmu.h        |   1 +
+ 5 files changed, 168 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/iommu/arm-smmu-nvidia.c
 
-v9..v10:
-* Removed code in papr_pdsm_health that performed validation on pdsm
-  payload version and corrosponding struct and defines used for
-  validation of payload version.
-* Dropped usage of struct papr_pdsm_health in 'struct
-  papr_scm_priv'. Instead papr_psdm_health() now uses
-  'papr_scm_priv.health_bitmap' to populate the pdsm payload.
-* Above change also fixes the problem where this patch was removing
-  the code that was previously introduced in this patch-series.
-  [ Ira ]
-* Introduced a new def ND_PDSM_ENVELOPE_HDR_SIZE that indicates the
-  space allocated to 'struct nd_pdsm_cmd_pkg' fields except 'struct
-  nd_cmd_pkg'. This def is useful in validating payload sizes.
-* Reworked papr_pdsm_health() to enforce a specific payload size for
-  'PAPR_PDSM_HEALTH' pdsm request.
-
-Resend:
-* Added ack from Aneesh.
-
-v8..v9:
-* s/PAPR_SCM_PDSM_HEALTH/PAPR_PDSM_HEALTH/g  [ Dan , Aneesh ]
-* s/PAPR_SCM_PSDM_DIMM_*/PAPR_PDSM_DIMM_*/g
-* Renamed papr_scm_get_health() to papr_psdm_health()
-* Updated patch description to replace papr-scm dimm with nvdimm.
-
-v7..v8:
-* None
-
-Resend:
-* None
-
-v6..v7:
-* Updated flags_show() to use seq_buf_printf(). [Mpe]
-* Updated papr_scm_get_health() to use newly introduced
-  __drc_pmem_query_health() bypassing the cache [Mpe].
-
-v5..v6:
-* Added attribute '__packed' to 'struct nd_papr_pdsm_health_v1' to
-  gaurd against possibility of different compilers adding different
-  paddings to the struct [ Dan Williams ]
-
-* Updated 'struct nd_papr_pdsm_health_v1' to use __u8 instead of
-  'bool' and also updated drc_pmem_query_health() to take this into
-  account. [ Dan Williams ]
-
-v4..v5:
-* None
-
-v3..v4:
-* Call the DSM_PAPR_SCM_HEALTH service function from
-  papr_scm_service_dsm() instead of papr_scm_ndctl(). [Aneesh]
-
-v2..v3:
-* Updated struct nd_papr_scm_dimm_health_stat_v1 to use '__xx' types
-  as its exported to the userspace [Aneesh]
-* Changed the constants DSM_PAPR_SCM_DIMM_XX indicating dimm health
-  from enum to #defines [Aneesh]
-
-v1..v2:
-* New patch in the series
----
- arch/powerpc/include/uapi/asm/papr_pdsm.h | 33 +++++++++++
- arch/powerpc/platforms/pseries/papr_scm.c | 70 +++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
-
-diff --git a/arch/powerpc/include/uapi/asm/papr_pdsm.h b/arch/powerpc/include/uapi/asm/papr_pdsm.h
-index 8b1a4f8fa316..c4c990ede5d4 100644
---- a/arch/powerpc/include/uapi/asm/papr_pdsm.h
-+++ b/arch/powerpc/include/uapi/asm/papr_pdsm.h
-@@ -71,12 +71,17 @@ struct nd_pdsm_cmd_pkg {
- 	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
- } __packed;
- 
-+/* Calculate size used by the pdsm header fields minus 'struct nd_cmd_pkg' */
-+#define ND_PDSM_ENVELOPE_HDR_SIZE \
-+	(sizeof(struct nd_pdsm_cmd_pkg) - sizeof(struct nd_cmd_pkg))
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 50659d76976b7..118da0893c964 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16572,9 +16572,11 @@ F:	drivers/i2c/busses/i2c-tegra.c
+=20
+ TEGRA IOMMU DRIVERS
+ M:	Thierry Reding <thierry.reding@gmail.com>
++R:	Krishna Reddy <vdumpa@nvidia.com>
+ L:	linux-tegra@vger.kernel.org
+ S:	Supported
+ F:	drivers/iommu/tegra*
++F:	drivers/iommu/arm-smmu-nvidia.c
+=20
+ TEGRA KBC DRIVER
+ M:	Laxman Dewangan <ldewangan@nvidia.com>
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 57cf4ba5e27cb..35542df00da72 100644
+--- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -15,7 +15,7 @@ obj-$(CONFIG_AMD_IOMMU) +=3D amd_iommu.o amd_iommu_init.o=
+ amd_iommu_quirks.o
+ obj-$(CONFIG_AMD_IOMMU_DEBUGFS) +=3D amd_iommu_debugfs.o
+ obj-$(CONFIG_AMD_IOMMU_V2) +=3D amd_iommu_v2.o
+ obj-$(CONFIG_ARM_SMMU) +=3D arm_smmu.o
+-arm_smmu-objs +=3D arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
++arm_smmu-objs +=3D arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o arm-smmu-nvi=
+dia.o
+ obj-$(CONFIG_ARM_SMMU_V3) +=3D arm-smmu-v3.o
+ obj-$(CONFIG_DMAR_TABLE) +=3D dmar.o
+ obj-$(CONFIG_INTEL_IOMMU) +=3D intel-iommu.o intel-pasid.o
+diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+index c75b9d957b702..52c84c30f83e4 100644
+--- a/drivers/iommu/arm-smmu-impl.c
++++ b/drivers/iommu/arm-smmu-impl.c
+@@ -160,6 +160,9 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_s=
+mmu_device *smmu)
+ 	 */
+ 	switch (smmu->model) {
+ 	case ARM_MMU500:
++		if (of_device_is_compatible(smmu->dev->of_node,
++					    "nvidia,tegra194-smmu-500"))
++			return nvidia_smmu_impl_init(smmu);
+ 		smmu->impl =3D &arm_mmu500_impl;
+ 		break;
+ 	case CAVIUM_SMMUV2:
+diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidi=
+a.c
+new file mode 100644
+index 0000000000000..dafc293a45217
+--- /dev/null
++++ b/drivers/iommu/arm-smmu-nvidia.c
+@@ -0,0 +1,161 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Nvidia ARM SMMU v2 implementation quirks
++// Copyright (C) 2019 NVIDIA CORPORATION.  All rights reserved.
 +
- /*
-  * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
-  * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
-  */
- enum papr_pdsm {
- 	PAPR_PDSM_MIN = 0x0,
-+	PAPR_PDSM_HEALTH,
- 	PAPR_PDSM_MAX,
- };
- 
-@@ -95,4 +100,32 @@ static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
- 		return (void *)(pcmd->payload);
- }
- 
-+/* Various nvdimm health indicators */
-+#define PAPR_PDSM_DIMM_HEALTHY       0
-+#define PAPR_PDSM_DIMM_UNHEALTHY     1
-+#define PAPR_PDSM_DIMM_CRITICAL      2
-+#define PAPR_PDSM_DIMM_FATAL         3
++#define pr_fmt(fmt) "nvidia-smmu: " fmt
 +
-+/*
-+ * Struct exchanged between kernel & ndctl in for PAPR_PDSM_HEALTH
-+ * Various flags indicate the health status of the dimm.
++#include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#include "arm-smmu.h"
++
++/* Tegra194 has three ARM MMU-500 Instances.
++ * Two of them are used together for Interleaved IOVA accesses and
++ * used by Non-Isochronous Hw devices for SMMU translations.
++ * Third one is used for SMMU translations from Isochronous HW devices.
++ * It is possible to use this Implementation to program either
++ * all three or two of the instances identically as desired through
++ * DT node.
 + *
-+ * dimm_unarmed		: Dimm not armed. So contents wont persist.
-+ * dimm_bad_shutdown	: Previous shutdown did not persist contents.
-+ * dimm_bad_restore	: Contents from previous shutdown werent restored.
-+ * dimm_scrubbed	: Contents of the dimm have been scrubbed.
-+ * dimm_locked		: Contents of the dimm cant be modified until CEC reboot
-+ * dimm_encrypted	: Contents of dimm are encrypted.
-+ * dimm_health		: Dimm health indicator. One of PAPR_PDSM_DIMM_XXXX
++ * Programming all the three instances identically comes with redundant tl=
+b
++ * invalidations as all three never need to be tlb invalidated for a HW de=
+vice.
++ *
++ * When Linux Kernel supports multiple SMMU devices, The SMMU device used =
+for
++ * Isochornous HW devices should be added as a separate ARM MMU-500 device
++ * in DT and be programmed independently for efficient tlb invalidates.
++ *
 + */
-+struct nd_papr_pdsm_health {
-+	__u8 dimm_unarmed;
-+	__u8 dimm_bad_shutdown;
-+	__u8 dimm_bad_restore;
-+	__u8 dimm_scrubbed;
-+	__u8 dimm_locked;
-+	__u8 dimm_encrypted;
-+	__u16 dimm_health;
-+} __packed;
++#define MAX_SMMU_INSTANCES 3
 +
- #endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index 05eb56ecab5e..984942be24c1 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -421,6 +421,72 @@ static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
- 	return 0;
- }
- 
-+/* Fetch the DIMM health info and populate it in provided package. */
-+static int papr_pdsm_health(struct papr_scm_priv *p,
-+			    struct nd_pdsm_cmd_pkg *pkg)
++#define TLB_LOOP_TIMEOUT		1000000	/* 1s! */
++#define TLB_SPIN_COUNT			10
++
++struct nvidia_smmu {
++	struct arm_smmu_device	smmu;
++	unsigned int		num_inst;
++	void __iomem		*bases[MAX_SMMU_INSTANCES];
++};
++
++#define to_nvidia_smmu(s) container_of(s, struct nvidia_smmu, smmu)
++
++#define nsmmu_page(smmu, inst, page) \
++	(((inst) ? to_nvidia_smmu(smmu)->bases[(inst)] : smmu->base) + \
++	((page) << smmu->pgshift))
++
++static u32 nsmmu_read_reg(struct arm_smmu_device *smmu,
++			      int page, int offset)
 +{
-+	int rc;
-+	struct nd_papr_pdsm_health health = { 0 };
-+	u16 copysize = sizeof(struct nd_papr_pdsm_health);
-+	u16 payload_size = pkg->hdr.nd_size_out - ND_PDSM_ENVELOPE_HDR_SIZE;
-+
-+	/* Ensure correct payload size that can hold struct nd_papr_pdsm_health */
-+	if (payload_size != copysize) {
-+		dev_dbg(&p->pdev->dev,
-+			"Unexpected payload-size (%u). Expected (%u)",
-+			pkg->hdr.nd_size_out, copysize);
-+		rc = -ENOSPC;
-+		goto out;
-+	}
-+
-+	/* Ensure dimm health mutex is taken preventing concurrent access */
-+	rc = mutex_lock_interruptible(&p->health_mutex);
-+	if (rc)
-+		goto out;
-+
-+	/* Always fetch upto date dimm health data ignoring cached values */
-+	rc = __drc_pmem_query_health(p);
-+	if (rc) {
-+		mutex_unlock(&p->health_mutex);
-+		goto out;
-+	}
-+
-+	/* update health struct with various flags derived from health bitmap */
-+	health = (struct nd_papr_pdsm_health) {
-+		.dimm_unarmed = p->health_bitmap & PAPR_PMEM_UNARMED_MASK,
-+		.dimm_bad_shutdown = p->health_bitmap & PAPR_PMEM_BAD_SHUTDOWN_MASK,
-+		.dimm_bad_restore = p->health_bitmap & PAPR_PMEM_BAD_RESTORE_MASK,
-+		.dimm_encrypted = p->health_bitmap & PAPR_PMEM_ENCRYPTED,
-+		.dimm_locked = p->health_bitmap & PAPR_PMEM_SCRUBBED_AND_LOCKED,
-+		.dimm_scrubbed = p->health_bitmap & PAPR_PMEM_SCRUBBED_AND_LOCKED,
-+		.dimm_health = PAPR_PDSM_DIMM_HEALTHY,
-+	};
-+
-+	/* Update field dimm_health based on health_bitmap flags */
-+	if (p->health_bitmap & PAPR_PMEM_HEALTH_FATAL)
-+		health.dimm_health = PAPR_PDSM_DIMM_FATAL;
-+	else if (p->health_bitmap & PAPR_PMEM_HEALTH_CRITICAL)
-+		health.dimm_health = PAPR_PDSM_DIMM_CRITICAL;
-+	else if (p->health_bitmap & PAPR_PMEM_HEALTH_UNHEALTHY)
-+		health.dimm_health = PAPR_PDSM_DIMM_UNHEALTHY;
-+
-+	/* struct populated hence can release the mutex now */
-+	mutex_unlock(&p->health_mutex);
-+
-+	dev_dbg(&p->pdev->dev, "Copying payload size=%u\n", copysize);
-+
-+	/* Copy the health struct to the payload */
-+	memcpy(pdsm_cmd_to_payload(pkg), &health, copysize);
-+
-+	/* Update fw size including size of struct nd_pdsm_cmd_pkg fields */
-+	pkg->hdr.nd_fw_size = copysize + ND_PDSM_ENVELOPE_HDR_SIZE;
-+
-+out:
-+	dev_dbg(&p->pdev->dev, "completion code = %d\n", rc);
-+
-+	return rc;
++	return readl_relaxed(nsmmu_page(smmu, 0, page) + offset);
 +}
 +
- /*
-  * For a given pdsm request call an appropriate service function.
-  * Note: Use 'nd_pdsm_cmd_pkg.cmd_status to report psdm servicing errors. Hence
-@@ -435,6 +501,10 @@ static void papr_scm_service_pdsm(struct papr_scm_priv *p,
- 
- 	/* Call pdsm service function */
- 	switch (pdsm) {
-+	case PAPR_PDSM_HEALTH:
-+		pkg->cmd_status = papr_pdsm_health(p, pkg);
-+		break;
++static void nsmmu_write_reg(struct arm_smmu_device *smmu,
++			    int page, int offset, u32 val)
++{
++	unsigned int i;
 +
- 	default:
- 		dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Unsupported PDSM request\n",
- 			pdsm);
--- 
++	for (i =3D 0; i < to_nvidia_smmu(smmu)->num_inst; i++)
++		writel_relaxed(val, nsmmu_page(smmu, i, page) + offset);
++}
++
++static u64 nsmmu_read_reg64(struct arm_smmu_device *smmu,
++				int page, int offset)
++{
++	return readq_relaxed(nsmmu_page(smmu, 0, page) + offset);
++}
++
++static void nsmmu_write_reg64(struct arm_smmu_device *smmu,
++				  int page, int offset, u64 val)
++{
++	unsigned int i;
++
++	for (i =3D 0; i < to_nvidia_smmu(smmu)->num_inst; i++)
++		writeq_relaxed(val, nsmmu_page(smmu, i, page) + offset);
++}
++
++static void nsmmu_tlb_sync(struct arm_smmu_device *smmu, int page,
++			   int sync, int status)
++{
++	u32 reg;
++	unsigned int i;
++	unsigned int spin_cnt, delay;
++
++	arm_smmu_writel(smmu, page, sync, 0);
++
++	for (delay =3D 1; delay < TLB_LOOP_TIMEOUT; delay *=3D 2) {
++		for (spin_cnt =3D TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
++			reg =3D 0;
++			for (i =3D 0; i < to_nvidia_smmu(smmu)->num_inst; i++) {
++				reg |=3D readl_relaxed(
++					nsmmu_page(smmu, i, page) + status);
++			}
++			if (!(reg & ARM_SMMU_sTLBGSTATUS_GSACTIVE))
++				return;
++			cpu_relax();
++		}
++		udelay(delay);
++	}
++	dev_err_ratelimited(smmu->dev,
++			    "TLB sync timed out -- SMMU may be deadlocked\n");
++}
++
++static int nsmmu_reset(struct arm_smmu_device *smmu)
++{
++	u32 reg;
++	unsigned int i;
++
++	for (i =3D 0; i < to_nvidia_smmu(smmu)->num_inst; i++) {
++		/* clear global FSR */
++		reg =3D readl_relaxed(nsmmu_page(smmu, i, ARM_SMMU_GR0) +
++				    ARM_SMMU_GR0_sGFSR);
++		writel_relaxed(reg, nsmmu_page(smmu, i, ARM_SMMU_GR0) +
++				    ARM_SMMU_GR0_sGFSR);
++	}
++
++	return 0;
++}
++
++static const struct arm_smmu_impl nvidia_smmu_impl =3D {
++	.read_reg =3D nsmmu_read_reg,
++	.write_reg =3D nsmmu_write_reg,
++	.read_reg64 =3D nsmmu_read_reg64,
++	.write_reg64 =3D nsmmu_write_reg64,
++	.reset =3D nsmmu_reset,
++	.tlb_sync =3D nsmmu_tlb_sync,
++};
++
++struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu=
+)
++{
++	unsigned int i;
++	struct nvidia_smmu *nsmmu;
++	struct resource *res;
++	struct device *dev =3D smmu->dev;
++	struct platform_device *pdev =3D to_platform_device(smmu->dev);
++
++	nsmmu =3D devm_kzalloc(smmu->dev, sizeof(*nsmmu), GFP_KERNEL);
++	if (!nsmmu)
++		return ERR_PTR(-ENOMEM);
++
++	nsmmu->smmu =3D *smmu;
++	/* Instance 0 is ioremapped by arm-smmu.c */
++	nsmmu->num_inst =3D 1;
++
++	for (i =3D 1; i < MAX_SMMU_INSTANCES; i++) {
++		res =3D platform_get_resource(pdev, IORESOURCE_MEM, i);
++		if (!res)
++			break;
++		nsmmu->bases[i] =3D devm_ioremap_resource(dev, res);
++		if (IS_ERR(nsmmu->bases[i]))
++			return (struct arm_smmu_device *)nsmmu->bases[i];
++		nsmmu->num_inst++;
++	}
++
++	nsmmu->smmu.impl =3D &nvidia_smmu_impl;
++	devm_kfree(smmu->dev, smmu);
++	pr_info("NVIDIA ARM SMMU Implementation, Instances=3D%d\n",
++		nsmmu->num_inst);
++
++	return &nsmmu->smmu;
++}
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index d172c024be618..d88374b68da31 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -451,6 +451,7 @@ static inline void arm_smmu_writeq(struct arm_smmu_devi=
+ce *smmu, int page,
+=20
+ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
+ struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
++struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu=
+);
+=20
+ int arm_mmu500_reset(struct arm_smmu_device *smmu);
+=20
+--=20
 2.26.2
 
