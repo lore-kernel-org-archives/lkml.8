@@ -2,112 +2,102 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01214C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3B8D206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E557820738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhfXAUdT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V4z9JKfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbgFDR5L (ORCPT
+        id S1730376AbgFDR5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:57:11 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60200 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730008AbgFDR5K (ORCPT
+        Thu, 4 Jun 2020 13:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730008AbgFDR5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:57:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591293429;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YRb6tBftcN4ywgPXESWRYJJkk+CvsoyUYJ93rzfhMU4=;
-        b=QhfXAUdTo/ZjQaQVePzBnjnNdpEQJ8p1VYupb16+4jN7EIQb8NBJ4uO7TjjWVJ0Yhil2MW
-        7fvzfiZc1QaEcPDgGKEdctu6/reho6aIgYH+VeKnYvbfaxyWxGuK0VLsNJnbtxcx+UVPbn
-        RkzgU2gmNnmDSq2Qf9tynK7Fus8txAE=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-Or5tijpwPeCjB1lupJcYhA-1; Thu, 04 Jun 2020 13:56:41 -0400
-X-MC-Unique: Or5tijpwPeCjB1lupJcYhA-1
-Received: by mail-wr1-f70.google.com with SMTP id p9so2724128wrx.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:56:41 -0700 (PDT)
+        Thu, 4 Jun 2020 13:57:13 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EC4C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:57:13 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t16so2486929plo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V76SN9ULYTXcj2nfE4XluNWJ/apYyE25p/aMUS5j4DU=;
+        b=V4z9JKfdEWs9MDeS/EPBuIqMb1/3Id2oYdNI6PRplwSaLTUpCWcNBTKmcMdU9XPQLz
+         VZPPPCjrTJm2TNz6/jfXB7ZbPyocg07b7HSOMxqFd4NKlQmzWIKUqhCYUuvGNWGlvi12
+         fKhvas9WXyTTn5rzMJzhq4H482u029HNUa5t0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YRb6tBftcN4ywgPXESWRYJJkk+CvsoyUYJ93rzfhMU4=;
-        b=OYtJLUW91jSg+rhtVRr9Hk59JdfuLyl52xNZdLgwE8JGqhd08QVti2y/mPhJEOSQS0
-         2FMmRsk1nqLZYAU8v9eu0oge6wReOF4Ex9a6QTbOqCOqg/WFS8LUW+KMYFyyRa5eEVje
-         qITfPCVySGSCcmyG/m7JoqDW4oJ1IBjVtGfRYiaNQMmfKK/Yiz07rEmW7QYkg5W1RMEY
-         cccDOvSl4GqYQ9WZ2d0NEPFSfVqFXWlO/3aWx9jpe/UgZ9uKSOmWUphogHTNpebG5FtD
-         XrY34unt/tsWzZoUwrfGtGMFxc71EMlfmyL2ogUXyK8pUB/PnrNQ++yALHcUU0EbvW6n
-         7/tQ==
-X-Gm-Message-State: AOAM533+3zYPvqLbu55Zjsjz5XCs1aeot4HZdfhDYg1MWP0pgLx9utaM
-        f3NsynTonpmPvyw1uNmQiScrsn4TxARvkxmLxihNRMw+EPVhMhqfCpJjxEFsOGxoXYZhba6hu5q
-        pdAPOmdoWO0KCvz3Jv1moCida
-X-Received: by 2002:a5d:548c:: with SMTP id h12mr5492271wrv.120.1591293400612;
-        Thu, 04 Jun 2020 10:56:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwlNwMQCPzZScok4aBC3SMcPaIZjURMRw+b5itxwYHzx4gbOSCjJlzT3dBoJesPlCEZMtDUEg==
-X-Received: by 2002:a5d:548c:: with SMTP id h12mr5492252wrv.120.1591293400383;
-        Thu, 04 Jun 2020 10:56:40 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:a0c0:5d2e:1d35:17bb? ([2001:b07:6468:f312:a0c0:5d2e:1d35:17bb])
-        by smtp.gmail.com with ESMTPSA id q13sm8582433wrn.84.2020.06.04.10.56.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 10:56:39 -0700 (PDT)
-Subject: Re: [PATCH v2 00/10] KVM: x86: Interrupt-based mechanism for async_pf
- 'page present' notifications
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <20200525144125.143875-1-vkuznets@redhat.com>
- <3be1df67-2e39-c7b7-b666-66cd4fe61406@redhat.com>
- <20200604174534.GB99235@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <673d2612-53d2-4f86-1b88-dd9d8d974307@redhat.com>
-Date:   Thu, 4 Jun 2020 19:56:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V76SN9ULYTXcj2nfE4XluNWJ/apYyE25p/aMUS5j4DU=;
+        b=dqUFqfKRlMJvnCy2cpkPzvn4D+3e3514YTRPm1DppRaGitNmnHKfF6TZXT3qcuPYeF
+         3zW5OmoplvlfvXKDOCuWtvXvwHIOyNTXlYmLmt7znSw7w8Mbh3Kiusj3oQ+gqCnOM27l
+         7sFNj9jcdSiBEA7jyWEdySDN5jVTLP4kLD8ydp5G83AE4/ULOOypmar9YXwyM/s48mJv
+         qwLQARHGXB+seq0Xwn07XVyL2zOwUD3dpo6kdD3bsDbqzkHGExArcRT00Rc71mQoKy4P
+         ne4tjZY8KkWAnTpe5GvzG6J4dCUhi6y1KUecGbSA95nSs2LJTxWW0Z/x5yB0dsZKS755
+         Xa0g==
+X-Gm-Message-State: AOAM533p9poKfCV4oefum93/mHxSQ6tgqWx60k+KVAIGDbGaeOKaG6FZ
+        QIPNQIDa8UYaTZ/613gFyauCbA==
+X-Google-Smtp-Source: ABdhPJyO8qGrlBRmUktz1P+Kkq0V7ss4Vc6dU/2Mx+l6qK8PjAByRudw9CWP/5XjkhsROEMzxXc8Sg==
+X-Received: by 2002:a17:90a:5d14:: with SMTP id s20mr7784264pji.9.1591293427831;
+        Thu, 04 Jun 2020 10:57:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y18sm3281756pfn.177.2020.06.04.10.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 10:57:07 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 10:57:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+Message-ID: <202006041054.874AA564@keescook>
+References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
+ <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
+ <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200604174534.GB99235@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/20 19:45, Vivek Goyal wrote:
->> I'll do another round of review and queue patches 1-7; 8-9 will be
->> queued later and separately due to the conflicts with the interrupt
->> entry rework, but it's my job and you don't need to do anything else.
-> Hi Paolo,
+On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
+> On 2020-06-04 19:18, Vlastimil Babka wrote:
+> > On 6/4/20 7:14 PM, Vegard Nossum wrote:
+> > > 
+> > > Hi all,
+> > > 
+> > > I ran into a boot problem with latest linus/master
+> > > (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests like this:
+> > 
+> > Hi, what's the .config you use?
 > 
-> I seee 1-7 got merged for 5.8. When you say patch 8-9 will be queue later,
-> you mean later in 5.8 or it will held till 5.9 merge window opens.
+> Pretty much x86_64 defconfig minus a few options (PCI, USB, ...)
 
-I hope to get them in 5.8.  They have some pretty nasty conflicts that
-are too much for Linus to resolve.  So my plan is to put 8-9 in a topic
-branch and do the merge myself.  Whether this works out depends on the
-timing of the tip pull request.
+Oh yes indeed. I immediately crash in the same way with this config. I'll
+start digging...
 
-Paolo
+(defconfig finishes boot)
 
+-Kees
+
+-- 
+Kees Cook
