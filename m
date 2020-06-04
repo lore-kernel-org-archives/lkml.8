@@ -2,123 +2,91 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3261C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E068C2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FFgTe2AK"
+	by mail.kernel.org (Postfix) with ESMTP id A7F9320772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591239985;
+	bh=YBYlP4b/eSJlaiamK5glgD4cox7LLH41b7ehnWoalMk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xDDl59zm4YcdV3rMyElCUEDewFHY1FUC2wlYgGMmYVkFR/yR/8x3oTSP80cQU6vvj
+	 L+QNTY+5J9TYiwMkUdXKEnDgIVHP3ygdIxDTp/UYxxXUXjl8r+8nVoxpgFajEcZnSQ
+	 ae9Y34PCq2GVMj8haoggtclrIILp0PDbyYWTlYwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgFDDFE (ORCPT
+        id S1727065AbgFDDGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:05:04 -0400
-Received: from ozlabs.org ([203.11.71.1]:50355 "EHLO ozlabs.org"
+        Wed, 3 Jun 2020 23:06:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgFDDFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:05:03 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726636AbgFDDGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 23:06:24 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49crHK1n9tz9sSc;
-        Thu,  4 Jun 2020 13:05:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591239901;
-        bh=oFVbgP1R1QPEnlBkINM2rOnIrnrRGtuWrg9EHyvWszI=;
+        by mail.kernel.org (Postfix) with ESMTPSA id E3978206E6;
+        Thu,  4 Jun 2020 03:06:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591239983;
+        bh=YBYlP4b/eSJlaiamK5glgD4cox7LLH41b7ehnWoalMk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FFgTe2AKhcGRnvFcCuhH4ohzoilYpjIoTU2muryt4T7fp64RfpY1RF9J6vmWUG6/3
-         wy8vwjjPapK6dB9uL9IimiYZXHjDYmArMMrQTENelXFvs3A9fJTD71y1SMdZPtmgW9
-         a+UkTF4W1RCMDYyMXyLtk1vFTbA/s34c4DDPE11RIL4bVgqpacxBV5Wbbai5tFHkL3
-         5EoQtgsoYZopxQrMqQggf5LQvGSP3Hiq9TPp+FUOIYHC1eaZVC1L60jJFXJeZyuzvD
-         F0ad2WkwlJ4tX1c/21lhF/cl7qwXTjI7i24DreQEN8CdhQnP2/YicmZrD7XCNTpiLk
-         tZhQNz8OiwLFw==
-Date:   Thu, 4 Jun 2020 13:05:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: linux-next: manual merge of the kvm tree with the s390 tree
-Message-ID: <20200604130500.5b42014e@canb.auug.org.au>
-In-Reply-To: <20200529164613.526f5865@canb.auug.org.au>
-References: <20200529164613.526f5865@canb.auug.org.au>
+        b=ORe/TH3z/ALtUPzTVEiQJD1TpU+cVnj6qKuVaetDjVBGSMIfpNnGNXmQR8Y9Lmrfh
+         b70mdZ5FGyhXA8SF12nY2ORH6G7C+zLLPMysJQ7eARsKhHl7wpYjQbwYZySaBTZ0zR
+         j2Mqo9KxGVLBg0GLFeJqwl9rl1o5FSyx7dLg9PCc=
+Date:   Wed, 3 Jun 2020 20:06:21 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Miao-chen Chou <mcchou@chromium.org>
+Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Manish Mandlik <mmandlik@chromium.org>,
+        Michael Sun <michaelfsun@google.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Yoni Shavit <yshavit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] Bluetooth: Add handler of
+ MGMT_OP_ADD_ADV_PATTERNS_MONITOR
+Message-ID: <20200603200621.52c24ee1@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200603160058.v2.3.Iea5d308a1936ac26177316c977977cdf7de42de8@changeid>
+References: <20200603160058.v2.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
+        <20200603160058.v2.3.Iea5d308a1936ac26177316c977977cdf7de42de8@changeid>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FodOnekiCk/xymcSjgVI_zB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/FodOnekiCk/xymcSjgVI_zB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed,  3 Jun 2020 16:01:46 -0700 Miao-chen Chou wrote:
+> This adds the request handler of MGMT_OP_ADD_ADV_PATTERNS_MONITOR command.
+> Note that the controller-based monitoring is not yet in place. This tracks
+> the content of the monitor without sending HCI traffic, so the request
+> returns immediately.
+> 
+> The following manual test was performed.
+> - Issue btmgmt advmon-add with valid and invalid inputs.
+> - Issue btmgmt advmon-add more the allowed number of monitors.
+> 
+> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
 
-Hi all,
+Looks like this adds new sparse warnings:
 
-On Fri, 29 May 2020 16:46:13 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the kvm tree got a conflict in:
->=20
->   arch/s390/kvm/vsie.c
->=20
-> between commit:
->=20
->   0b0ed657fe00 ("s390: remove critical section cleanup from entry.S")
->=20
-> from the s390 tree and commit:
->=20
->   d075fc3154be ("KVM: s390: vsie: Move conditional reschedule")
->=20
-> from the kvm tree.
->=20
-> diff --cc arch/s390/kvm/vsie.c
-> index 4fde24a1856e,ef05b4e167fb..000000000000
-> --- a/arch/s390/kvm/vsie.c
-> +++ b/arch/s390/kvm/vsie.c
-> @@@ -1000,9 -1000,9 +1000,6 @@@ static int do_vsie_run(struct kvm_vcpu=20
->  =20
->   	handle_last_fault(vcpu, vsie_page);
->  =20
-> - 	if (need_resched())
-> - 		schedule();
->  -	if (test_cpu_flag(CIF_MCCK_PENDING))
->  -		s390_handle_mcck();
-> --
->   	srcu_read_unlock(&vcpu->kvm->srcu, vcpu->srcu_idx);
->  =20
->   	/* save current guest state of bp isolation override */
+net/bluetooth/mgmt.c:3886:32: warning: incorrect type in assignment (different base types)
+net/bluetooth/mgmt.c:3886:32:    expected unsigned int [usertype] supported_features
+net/bluetooth/mgmt.c:3886:32:    got restricted __le32 [usertype]
+net/bluetooth/mgmt.c:3888:29: warning: incorrect type in assignment (different base types)
+net/bluetooth/mgmt.c:3888:29:    expected unsigned short [usertype] max_num_handles
+net/bluetooth/mgmt.c:3888:29:    got restricted __le16 [usertype]
+net/bluetooth/mgmt.c:3890:25: warning: incorrect type in assignment (different base types)
+net/bluetooth/mgmt.c:3890:25:    expected unsigned short [usertype] num_handles
+net/bluetooth/mgmt.c:3890:25:    got restricted __le16 [usertype]
 
-This is now a conflict between the s390 tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/FodOnekiCk/xymcSjgVI_zB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YZNwACgkQAVBC80lX
-0GwPsQf8CGKbVZ9HGrBHINGGEjuVqGkVwhAjRIZg4ZZ/n9+3Z8hPV7vCWLy3e718
-WmfsLjzh+xgKk0ixJSkwMU6MiRanKRhRpRfU4am7SsySn3XlzR8IKzhUWQhIEh90
-pA7DguWdEhRi3wlWbWkWzQm+MZgAHIq6WdQu93GZOK8F5YVAPylsxNfJE5eCzDMf
-R9roXewRjjn+jW9wLPzOwLuH5QfA0Nd6DBpd1zGqzJKuxLfKjKPVPVRw5FX9XXrg
-8gS5pkChS59bp4PXBPaH+vflqRk+OjafXEfZtnEaqXiCQ1U7JthA2UHOEnnABrUu
-G5fNnFXHhVwY3YvNeIxTxULrnlh2kg==
-=RTlh
------END PGP SIGNATURE-----
-
---Sig_/FodOnekiCk/xymcSjgVI_zB--
+Please make sure patches build cleanly with W=1 C=1 flags.
