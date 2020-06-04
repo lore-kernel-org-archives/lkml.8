@@ -2,117 +2,222 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83808C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1657EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53814206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4C42074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iZOjvqgi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HByN/Qzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgFDIkA (ORCPT
+        id S1728004AbgFDIlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:40:00 -0400
-Received: from mail-eopbgr80081.outbound.protection.outlook.com ([40.107.8.81]:49589
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726802AbgFDIkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:40:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bMVB3VealovFNoz9EvZNJS7MpPtQdR3gV6LTDiVbp+xVo6Y+r6Kpb74WLe7ITvdXoLNPHg8vLOpnwOG28ROAqwwilPi7U/0113a9NrmSHNEcTmXCiI/rLkuoL3VxB9h1i2/joGWawJ/cPV4hOOLbx+wBoVh+GZZxw7gBx96srw3p3+TtEqhP6pGymkvVxHq6MF7I/nfc5XKISfVcVJpeewN+WmCWbaHeFJyubN/P1fjlO2NVyBYWj1ydyG94jyFxwAri9qYwysna6HCkAdFmb4qyb7i7XLaBIE1HWz/9ZeSKpGnXFRgehpCZniDwq08gOLPxU7Sz5bc1awtGowjlQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WpXTRvLSyOh5s+LfCmB9GwA8m5MY+qG1HarZXQvjPOA=;
- b=eMmesKj0s3YtLbfF2gfMvZ6mo0xSe1dWHo7sQuBeGpRWpiuOKOluYWAon0ffUSr+krwSoLrQDB4ei2Eayc0CdyJ2zTJQwEGXbzfG69oLslkGawQGpeVmprkn3u6vLYyfha/D32/OqmOO+obBpRK5yIYk+hA4w1Fmmciaywb34xgq303cCumI1NjIRAkQQE0lak08QssbnfvgohqHOSXeL3vVxb91OnChbOx/ED7QkmFBy1VA6Jzhz1CoQxFceLBskc44pFtsIvIzy1V8vDqGEeojxQvaQPnscRoSuwQmFhRV8yEs8ceHN2vLNb6v5yqvFEe2umocadLPi+2mTc8fFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WpXTRvLSyOh5s+LfCmB9GwA8m5MY+qG1HarZXQvjPOA=;
- b=iZOjvqgi+RIgjc0z3G1IvwlA7z8rSP5bPzynmF4nM2aX2x1e4FBD64tp2zF3oFQ95xor2+aqdgboNkth+wKIDkGKpvwV6JfBGWpY++48BjE4Pf2z/f0i2ve0tVFCveLKu3+V/V0HEVFdoPAAFcVM0tj42kNCJXnMd4fGdriYLlY=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB5288.eurprd04.prod.outlook.com (2603:10a6:20b:5::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 4 Jun
- 2020 08:39:54 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3066.018; Thu, 4 Jun 2020
- 08:39:54 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2] dt-bindings: clock: Convert imx7ulp clock to
- json-schema
-Thread-Topic: [PATCH V2] dt-bindings: clock: Convert imx7ulp clock to
- json-schema
-Thread-Index: AQHWOhGSp3Y4XiEnqUiyMH3+78AdsqjIIyxg
-Date:   Thu, 4 Jun 2020 08:39:54 +0000
-Message-ID: <AM6PR04MB49666E9E2443378C8040F11B80890@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1591234387-15059-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1591234387-15059-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b6719837-66b0-4d2e-5f52-08d80862daca
-x-ms-traffictypediagnostic: AM6PR04MB5288:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5288BCD1EF47E3D99F0FD84C80890@AM6PR04MB5288.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 04244E0DC5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vziNgU7MTqmaf+uEswebUqIMqqYywUGemMgSXB6EQxMme2QqF3/vlPHlptXs7ycW6GznqTp0HerSAVwLEp1urr1WvgMtmHl26YsdLWzi1ihQbOWa9JgaMRmAMrpeQWaXQfKGxe8Y6PrMb6ljxftGBQsOF8H4GcX33LFDzuMq/57s2A3x5p2hi4uY74Kzpj8H/SSh7a/Yv8HvjIW3qjKLChoQ4TBdE8UhXKwJqs/OsTZ7FUmhuwgfKMsgoh6gcZr8HuzTSMb3DDdQHwqM88fvnIP6GtDl92ZGPiK+s1cZvCAzz1VKZjUSoGVxuIrnvWEbml3erdR23a3bNgKtmOm1UqG+hBnpUKO1fCKgYQ4NhDE6zr8mP23/QWQ2YF+PBxRX
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(39860400002)(396003)(136003)(478600001)(2906002)(33656002)(66946007)(5660300002)(4326008)(8936002)(7416002)(76116006)(64756008)(8676002)(4744005)(55016002)(66446008)(66476007)(66556008)(52536014)(9686003)(71200400001)(316002)(110136005)(44832011)(86362001)(83380400001)(7696005)(186003)(26005)(6506007)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: bVaxukPXJWPxQTdOUHM0e1sbye/V4dpLBvD7YbMeNk4SxtDqgfbMvuIyhxw0wRcLTF5E60FoMEg/FfiU6GSz+mD3srC0PfRLNSnLMkCJLKgxmyFLfstgQQ8PRW48QOYjlp0iwu+79VV4LiikbtpHxYNek8V1CHy8dCBVtlw8Hn7OsNxJVBgnDAoEXGg9zQIBIbnlKiNzj2up0aEE4Qpm6GP8w7M84w/iZumP1nm5jYomHGAjeiFQrpFZQJiMGXC67CURaZPVQk7nfyRKjl09h3hbui7RvkppuaaXyatEVeI23KVW2ShVcfmY7hp1OfQmKlf5fbEt0xFLEq951bGv7YFs35SaSCES5K7WPCkx5bu7CWmETX2rtSqCOCaDdokWPs404TYgljOygjqs1Hg/iOP8wCxHVgxfZjGNvUY+2slKulgvyY3v9ZHfeTcNCsxuf+CLUhjtHXVc24EIhsv3pqzeFkVJt2J8gc3JsazBZ0dhcl4C+cQCRhF2HcDCE2qG
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 4 Jun 2020 04:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgFDIlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 04:41:24 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23CC7C05BD1E;
+        Thu,  4 Jun 2020 01:41:24 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s1so6252904ljo.0;
+        Thu, 04 Jun 2020 01:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=niXbj2ikmDqITdGXIco/ydF534thB0b9rEZsBYeN5ew=;
+        b=HByN/Qzrccr9TUDTBqlH9sp5SnbAcfC6WAcWM6JKC4n811VDcHYkwm0/u3OmxAelV6
+         cZPj/gfkX9vU+Zc/qQEUepo0E2+b93MXuasEqWfIYcNap2BIxcVbpaOlGZaa0sBMZ9wN
+         gGhVbz9x+Uz7vjjpB+F5jPdJefWJsEEXEia/Cb6Qumc7TDCesy65BXxZSZnHjjO1PxvA
+         oxjRG1VCJ6YprOF5ivxlzOqAnklDDBPpUqcaoSLjwCqXv9SyIt2dWxguBKNdH/sWirDM
+         HWbi89SSdxpt7mNbObd/2Z7XbapZOYzNqP1r8KHp4pggJXtOjIcIwDrtVzb0+Srgw8Nn
+         AtFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=niXbj2ikmDqITdGXIco/ydF534thB0b9rEZsBYeN5ew=;
+        b=IoAdJYzIMHRxi24J9krpNTGJ1RemSgWpqZe/sMKvJiy0lwrCuwkSqwH5qhm+zoL/Y6
+         egthvpCORK5JHq+YSLtfbQh6h7DB5tfyGXkYpvToZSZucVNFvEjnwNyULWpCEOEHOJ90
+         vNt4TH2KjXpvPlg30Kp3hIhYQcS7q38dQcsTz7Gg0UeyCufl56G+FNfoFpM9Yg1Wm9+5
+         Sk8mHnKDIaqxPa264EqObCyRyruXc76QI76EOtr8f7Vy9SI7BqtqdAXnNbSyRdJ0TBPN
+         e7mqF0FYdqZmRwfjVnif8UGgLyViXQWqpMxqxaZEnPvGpoJIBM5aVz+bDeeUVvE2XLuy
+         y5EQ==
+X-Gm-Message-State: AOAM532/0uhB1BVM2EdbpEj7g4RaKuu3VFb6lgH9r6sgckqc+wehaGeE
+        VsEdvx9ubeyB5cMJMLBSE9Cowh4PVfeTdCnqkOo=
+X-Google-Smtp-Source: ABdhPJxoAn19QOc9KmmF9YH88U39iiAyM0/G3b+LFkZqOC2ojXIqnh6E02c4rcV6jJyrK5EhxS5oJDimhAp2e748kfs=
+X-Received: by 2002:a2e:8e64:: with SMTP id t4mr1692370ljk.414.1591260082504;
+ Thu, 04 Jun 2020 01:41:22 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6719837-66b0-4d2e-5f52-08d80862daca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 08:39:54.2158
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kaUJav8p3rOk+2KR0Fj8p3SrSOJCjo1VcAnVQUk1HHZiPbnTCMFrmsaDaLz/bqcjm9/soV0+g13Rq2FV+zJOKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5288
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+ <CANn89iLNCDuXAhj4By0PDKbuFvneVfwmwkLbRCEKLBF+pmNEPg@mail.gmail.com>
+ <CAL+tcoBjjwrkE5QbXDFADRGJfPoniLL1rMFNUkAKBN9L57UGHA@mail.gmail.com>
+ <CANn89iKDKnnW1na_F0ngGh3EEc0quuBB2XWo21oAKaHckdPK4w@mail.gmail.com>
+ <CAL+tcoDn_=T--uB0CRymfTGvD022PPDk5Yw2yCxvqOOpZ4G_dQ@mail.gmail.com>
+ <CANn89i+dPu9=qJowhRVm9d3CesY4p+zzJ0HGiCMc_yJxux6pow@mail.gmail.com>
+ <CAL+tcoC2+vYoFbujkLCF7P3evfirNSBQtJ9bPFHiU2FGOnBo+A@mail.gmail.com>
+ <CANn89iJfLM2Hz69d9qOZoRKwzzCCpgVRZ1zbTTbg4vGvSAEZ-w@mail.gmail.com>
+ <CADVnQy=RJfmzHR15DyWdydFAqSqVmFhaW4_cgYYAgnixEa5DNQ@mail.gmail.com>
+ <CANn89i+7-wE4xr5D9DpH+N-xkL1SB8oVghCKgz+CT5eG1ODQhA@mail.gmail.com> <CADVnQynXzE6_6h8w8TDyPjtQjy_uXr-+3weikTDtAbY-xPiDEw@mail.gmail.com>
+In-Reply-To: <CADVnQynXzE6_6h8w8TDyPjtQjy_uXr-+3weikTDtAbY-xPiDEw@mail.gmail.com>
+From:   Jason Xing <kerneljasonxing@gmail.com>
+Date:   Thu, 4 Jun 2020 16:40:46 +0800
+Message-ID: <CAL+tcoAn_22aJYkgDk_TodBLn-jwA1yHjB0bPXWR3RX3o2uDQw@mail.gmail.com>
+Subject: Re: [PATCH] tcp: fix TCP socks unreleased in BBR mode
+To:     Neal Cardwell <ncardwell@google.com>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        liweishi <liweishi@kuaishou.com>,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
-YXksIEp1bmUgNCwgMjAyMCA5OjMzIEFNDQo+IA0KPiBDb252ZXJ0IHRoZSBpLk1YN1VMUCBjbG9j
-ayBiaW5kaW5nIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNpbmcganNvbi1zY2hlbWEsDQo+IHRoZSBv
-cmlnaW5hbCBiaW5kaW5nIGRvYyBpcyBhY3R1YWxseSBmb3IgdHdvIGNsb2NrIG1vZHVsZXMoU0NH
-IGFuZCBQQ0MpLCBzbyBzcGxpdA0KPiBpdCB0byB0d28gYmluZGluZyBkb2NzLCBhbmQgdGhlIE1Q
-TEwobWlwaSBQTEwpIGlzIE5PVCBzdXBwb3NlZCB0byBiZSBpbiBjbG9jaw0KPiBtb2R1bGUsIHNv
-IHJlbW92ZSBpdCBmcm9tIGJpbmRpbmcgZG9jIGFzIHdlbGwuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
-OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcg
-QWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg0K
+On Wed, Jun 3, 2020 at 10:08 PM Neal Cardwell <ncardwell@google.com> wrote:
+>
+> On Wed, Jun 3, 2020 at 9:55 AM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > On Wed, Jun 3, 2020 at 5:02 AM Neal Cardwell <ncardwell@google.com> wrote:
+> > >
+> > > On Wed, Jun 3, 2020 at 1:44 AM Eric Dumazet <edumazet@google.com> wrote:
+> > > >
+> > > > On Tue, Jun 2, 2020 at 10:05 PM Jason Xing <kerneljasonxing@gmail.com> wrote:
+> > > > >
+> > > > > Hi Eric,
+> > > > >
+> > > > > I'm still trying to understand what you're saying before. Would this
+> > > > > be better as following:
+> > > > > 1) discard the tcp_internal_pacing() function.
+> > > > > 2) remove where the tcp_internal_pacing() is called in the
+> > > > > __tcp_transmit_skb() function.
+> > > > >
+> > > > > If we do so, we could avoid 'too late to give up pacing'. Meanwhile,
+> > > > > should we introduce the tcp_wstamp_ns socket field as commit
+> > > > > (864e5c090749) does?
+> > > > >
+> > > >
+> > > > Please do not top-post on netdev mailing list.
+> > > >
+> > > >
+> > > > I basically suggested double-checking which point in TCP could end up
+> > > > calling tcp_internal_pacing()
+> > > > while the timer was already armed.
+> > > >
+> > > > I guess this is mtu probing.
+> > >
+> > > Perhaps this could also happen from some of the retransmission code
+> > > paths that don't use tcp_xmit_retransmit_queue()? Perhaps
+> > > tcp_retransmit_timer() (RTO) and  tcp_send_loss_probe() TLP? It seems
+> > > they could indirectly cause a call to __tcp_transmit_skb() and thus
+> > > tcp_internal_pacing() without first checking if the pacing timer was
+> > > already armed?
+> >
+> > I feared this, (see recent commits about very low pacing rates) :/
+> >
+> > I am not sure we need to properly fix all these points for old
+> > kernels, since EDT model got rid of these problems.
+>
+> Agreed.
+>
+> > Maybe we can try to extend the timer.
+>
+> Sounds good.
+>
+> > Something like :
+> >
+> >
+> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > index cc4ba42052c21b206850594db6751810d8fc72b4..626b9f4f500f7e5270d8d59e6eb16dbfa3efbc7c
+> > 100644
+> > --- a/net/ipv4/tcp_output.c
+> > +++ b/net/ipv4/tcp_output.c
+> > @@ -966,6 +966,8 @@ enum hrtimer_restart tcp_pace_kick(struct hrtimer *timer)
+> >
+> >  static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
+> >  {
+> > +       struct tcp_sock *tp = tcp_sk(sk);
+> > +       ktime_t expire, now;
+> >         u64 len_ns;
+> >         u32 rate;
+> >
+> > @@ -977,12 +979,29 @@ static void tcp_internal_pacing(struct sock *sk,
+> > const struct sk_buff *skb)
+> >
+> >         len_ns = (u64)skb->len * NSEC_PER_SEC;
+> >         do_div(len_ns, rate);
+> > -       hrtimer_start(&tcp_sk(sk)->pacing_timer,
+> > -                     ktime_add_ns(ktime_get(), len_ns),
+> > +
+> > +       now = ktime_get();
+> > +       /* If hrtimer is already armed, then our caller has not
+> > +        * used tcp_pacing_check().
+> > +        */
+> > +       if (unlikely(hrtimer_is_queued(&tp->pacing_timer))) {
+> > +               expire = hrtimer_get_softexpires(&tp->pacing_timer);
+> > +               if (ktime_after(expire, now))
+> > +                       now = expire;
+> > +               if (hrtimer_try_to_cancel(&tp->pacing_timer) == 1)
+> > +                       __sock_put(sk);
+> > +       }
+> > +       hrtimer_start(&tp->pacing_timer, ktime_add_ns(now, len_ns),
+> >                       HRTIMER_MODE_ABS_PINNED_SOFT);
+> >         sock_hold(sk);
+> >  }
+> >
+> > +static bool tcp_pacing_check(const struct sock *sk)
+> > +{
+> > +       return tcp_needs_internal_pacing(sk) &&
+> > +              hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
+> > +}
+> > +
+> >  static void tcp_update_skb_after_send(struct tcp_sock *tp, struct sk_buff *skb)
+> >  {
+> >         skb->skb_mstamp = tp->tcp_mstamp;
+> > @@ -2117,6 +2136,9 @@ static int tcp_mtu_probe(struct sock *sk)
+> >         if (!tcp_can_coalesce_send_queue_head(sk, probe_size))
+> >                 return -1;
+> >
+> > +       if (tcp_pacing_check(sk))
+> > +               return -1;
+> > +
+> >         /* We're allowed to probe.  Build it now. */
+> >         nskb = sk_stream_alloc_skb(sk, probe_size, GFP_ATOMIC, false);
+> >         if (!nskb)
+> > @@ -2190,11 +2212,6 @@ static int tcp_mtu_probe(struct sock *sk)
+> >         return -1;
+> >  }
+> >
+> > -static bool tcp_pacing_check(const struct sock *sk)
+> > -{
+> > -       return tcp_needs_internal_pacing(sk) &&
+> > -              hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
+> > -}
+> >
+> >  /* TCP Small Queues :
+> >   * Control number of packets in qdisc/devices to two packets / or ~1 ms.
+>
+> Thanks for your fix, Eric. This fix looks good to me! I agree that
+> this fix is good enough for older kernels.
+>
+
+I just tested this patch and it worked well. So it also looks good to me :)
+Nice work!
+
+thanks,
+Jason
+
+> thanks,
+> neal
