@@ -2,108 +2,97 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F359DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBF4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E312072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CE9206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="dYZAOgRv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K9FL9hLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgFDPGS (ORCPT
+        id S1729372AbgFDPGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59200 "EHLO
+        Thu, 4 Jun 2020 11:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbgFDPGS (ORCPT
+        with ESMTP id S1729107AbgFDPGU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:06:18 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5DFC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:06:17 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f18so6333076qkh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:06:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8aPHmuODMNkghiNSE3FdfFPpmjgGhzU0Gw0NdaYDftw=;
-        b=dYZAOgRvOawHCH9hHdcGZK5ZHU37Dhdgzh27m0DwVQ4dfKmcit1D18TBIc6Rr2g43d
-         iJw8MgAlXFeV0dF+lAtfu/y/YLXG7zS7PY53Q8FSmI9aijc0cdRb5uQ5uYIj84XsTs5N
-         C+wRfBif6fInRFL5EKH2nW7QTN0S8SaeY46DD/wXZaSr7h1xd9ZB+/vRj8WPhlVP1n1S
-         BIFel6UfM0eHZtBrMzDLRB0Dv7s90mpYSn9N83e3PqJUiu5ZsnMlkEDKgCjz4eJQBmFG
-         4WgE/AsOlisf14X+rlo3ihlPQ4mpfRmxwrx/FHktx9AyILnkKU0m8SNS2385/75OaeS1
-         jyXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8aPHmuODMNkghiNSE3FdfFPpmjgGhzU0Gw0NdaYDftw=;
-        b=UCOhnCd5VuwKPu0GWCsBuIfx1k7SZBqVejSqyzIrNSoImVG/UFykYSQmx7ND1HZCer
-         WmgvywW4nDIEcTV+PWJ4AlHo5ILhOgwvG32JYDImlB7qVxGu30yF0E7lbWrvmRSWbbUf
-         3Q6VG/YZzJbVjMdWIqqqkbetqKkXzSOT/FhNb7fGXMtcsqgFPAOpyHEiFe0WRusVHCl6
-         Pr8M1gyrqW/CrW/dQ49UHQaN3UJK1sFACYXDBLA+SiHnVjAMsAfmwjB0UqQhm76KqnoD
-         X6LfR7OzO9lyYLRBkOtzLr5pM/B1CtePspPm2EEk6vEcQG8twG4eu42iVikWWjUD4nHz
-         sGsg==
-X-Gm-Message-State: AOAM530wamsdqCWW712upfICiK38ETHL26f3yJ5J6dnRwu084iVgdrPp
-        3AB47FnBILXJR/KZCSqJsLCguQ==
-X-Google-Smtp-Source: ABdhPJyzJcBQ0/65g0lhQRVZCPcGMBRt5vJr00mYqj8YRM+nqFMA/Rf49F9deE955CHjWRGqJW/7uw==
-X-Received: by 2002:a05:620a:2110:: with SMTP id l16mr5097811qkl.290.1591283176962;
-        Thu, 04 Jun 2020 08:06:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:e83c])
-        by smtp.gmail.com with ESMTPSA id x13sm3678505qtq.60.2020.06.04.08.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 08:06:15 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 11:05:39 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Joonsoo Kim <js1304@gmail.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@fb.com
-Subject: Re: [PATCH 05/14] mm: workingset: let cache workingset challenge anon
-Message-ID: <20200604150539.GA322130@cmpxchg.org>
-References: <CAAmzW4MMLw=4BHRtt=g8BHpQLTaSmhG03Ct6WMjmDxVnOkNQYA@mail.gmail.com>
- <20200527134333.GF6781@cmpxchg.org>
- <CAAmzW4NW+cv7VnNApWKJr4r9=QKaufK3y5apyNXo-M-y=q0dgg@mail.gmail.com>
- <20200528170155.GA69521@cmpxchg.org>
- <CAAmzW4NEPZRWL5PBXEWwg9kBOL9fYUNqTTzh3WRDWbaSPLv=CQ@mail.gmail.com>
- <20200529151228.GA92892@cmpxchg.org>
- <CAAmzW4Pccc4UcBThhKyqbtY=kK83Fz7k4vYR4eJN4te2E25=_A@mail.gmail.com>
- <20200601155615.GA131075@cmpxchg.org>
- <20200601204424.GA212944@cmpxchg.org>
- <561b79e8-48c7-f2eb-6081-cd82ad7e6010@suse.cz>
+        Thu, 4 Jun 2020 11:06:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B649EC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Zd0FBuiA8Z0n7i/7o4S0t2ulc9tdz69SotbM6eLluXU=; b=K9FL9hLQkO+tLh5B7JIuM2MBmw
+        nIbdRzK83zfcZjGVof4X0x0qt3CUFIY+g6OsF8VZo3aHgWY2UmiJ4V+75xn39U4CEcXF9tKC/lXa8
+        Fe4qIULKST+802LoHwj8iM+YfBct+elx+Ay6L8s26TvZxz3jSExamb0aCRsLHCCNoTzN/AY/UBYnY
+        qau/vmULtWSKYEzDF5uydu61MG9Kt36mw4e8dEeUf0V9puNsGxlJlg1fRaM9OJXdg9PP34uNc1Bwm
+        gmdZzQdBGsCe9Zxt5HEVR7g7wBcaXOHoXeOznhmJMmja3OnJDyv/Dx1ToKFxOmpBCNzD8CkcTe2ro
+        NHpWzWyQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgrRh-0007rf-MW; Thu, 04 Jun 2020 15:06:17 +0000
+Subject: Re: [PATCH] regulator: mt6360: Add support for MT6360 regulator
+To:     Gene Chen <gene.chen.richtek@gmail.com>, matthias.bgg@gmail.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+References: <1591254387-10304-1-git-send-email-gene.chen.richtek@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4135d264-6758-301a-0f19-ba2f229301c3@infradead.org>
+Date:   Thu, 4 Jun 2020 08:06:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <561b79e8-48c7-f2eb-6081-cd82ad7e6010@suse.cz>
+In-Reply-To: <1591254387-10304-1-git-send-email-gene.chen.richtek@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 03:35:27PM +0200, Vlastimil Babka wrote:
-> On 6/1/20 10:44 PM, Johannes Weiner wrote:
-> > From a8faceabc1454dfd878caee2a8422493d937a394 Mon Sep 17 00:00:00 2001
-> > From: Johannes Weiner <hannes@cmpxchg.org>
-> > Date: Mon, 1 Jun 2020 14:04:09 -0400
-> > Subject: [PATCH] mm: workingset: let cache workingset challenge anon fix
-> 
-> Looks like the whole series is now in mainline (that was quick!) without this
-> followup? As such it won't be squashed so perhaps the subject should be more
-> "standalone" now, description referencing commit 34e58cac6d8f ("mm: workingset:
-> let cache workingset challenge anon"), possibly with Fixes: tag etc...
+On 6/4/20 12:06 AM, Gene Chen wrote:
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index f4b72cb..05a3b14 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -680,6 +680,16 @@ config REGULATOR_MT6358
+>  	  This driver supports the control of different power rails of device
+>  	  through regulator interface.
+>  
+> +config REGULATOR_MT6360
+> +	tristate "MT6360 SubPMIC Regulator"
+> +	depends on MFD_MT6360
+> +	select CRC8
+> +	help
+> +	  Say Y here to enable MT6360 regulator support.
+> +	  This is support MT6360 PMIC/LDO part include
 
-Yep, I'll send a stand-alone version of this. It was a bit fat to get
-squashed last minute anyway, and I don't mind having a bit of extra
-time to quantify the actual impact of this delta.
+	  This supports the MT6300 PMIC/LDO part, which includes
 
-Thanks Vlastimil!
+> +	  2-channel buck with Thermal Shutdown and Overlord Protection
+
+	                              is that      Overload  ?
+Yes, it could be Overlord.
+
+> +	  6-channel High PSRR and Low Dropout LDO.
+> +
+>  config REGULATOR_MT6380
+>  	tristate "MediaTek MT6380 PMIC"
+>  	depends on MTK_PMIC_WRAP
+
+
+-- 
+~Randy
+
