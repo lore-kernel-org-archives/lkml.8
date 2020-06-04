@@ -2,181 +2,137 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC938C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3CFD2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045202067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="ALBLU+Fe"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ul9IqQ41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgFDUPh (ORCPT
+        id S1729842AbgFDUQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:15:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
+        Thu, 4 Jun 2020 16:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgFDUPg (ORCPT
+        with ESMTP id S1728836AbgFDUQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:15:36 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49EFFC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:15:36 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bg4so2664444plb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:15:36 -0700 (PDT)
+        Thu, 4 Jun 2020 16:16:21 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA172C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:16:20 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b5so3772607pfp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:16:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WOZaG2u1de4YEHm+yW1ep+MxAdFc9U0Z2nxdOZXGt88=;
-        b=ALBLU+FeqwQoATYy+P/2ToiUYbwkFRW+/Jy0BP6bHUmjobSR95mEC1dD80v2PySV6/
-         rAHOT3Sc4hDcUpLaxma36F1oewKiEY0bunsCrUgT1goIgubbUo2cAnpjfGjtEcQYsybi
-         /fJxPsulhJl4SvKjzIdj1Jz++udL1OK9aGiKtRhazzzA1TuA8nn97hwp7Z0a7ArYnzTA
-         7dRO9sjR7xahcXuCAxTZfSC3jfh31a+yxDko46tX1z84J+T2E+Q9b7yyr7g0tb9feNvQ
-         Aqa+yksWE+KbALJVua5NSJe5V/iVQVs4iOI4P41lOVNmwurDxDpAoDugusv2XFczMl7Z
-         raIw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pCXmYsl76J0CAlxoPdk8mPZO/WOJwZ5J1IK/xTYSvtY=;
+        b=Ul9IqQ41ZiXh1TA37NXxQoP1MYWZkk1ImeHfZoGz6a6IPTQKCTgkI4vMbYvxIt8wpE
+         ElHA9RWwTvFCaySEtclTRP/dyePJtOWdEk29ahiOH2gLk0aIx7jxMqS8sHpI0dAD9/eD
+         v2pQeh6hmu6BRKkCyhh5mYDGk/czBtEllytZVgQeNFhavoEfrbFwLLVfzZ/2XW9eqAuC
+         T6PPxSNZdkIUyyCpj3L+bHh3A58HE+YTCCyomOaAjuPFYAu7WNLA0VPJGgc8Oy3KvimW
+         enSRBgfNysV+6XPIzSx1E3hPpfiQZPkCEErtaeB8Ewgc+PLJOHksAeBzo6J1PIYEAlTL
+         B91g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=WOZaG2u1de4YEHm+yW1ep+MxAdFc9U0Z2nxdOZXGt88=;
-        b=F5dWj5uzzlrbIWmRiE4HXLwg+VcgOgzJLTKdmxoZf5DhiLS64ZznMm9E1GwyAbfUPB
-         wSBLQZbTzmd0B0hDjbHoos3OP8ogzaz+vbr1DH0O8BwEM+3zTDRvUdKCcaqGey/xuM/p
-         G+LeJTGSpvWy14tG50s0p2WCOT+ms/a4MO4yC19niz9dRLHMcM1+fv/pdWZEqF6119DJ
-         lDePsezOk+lLxlmYqwJSck61Dzz2RMK09Cw7sGXNzrBl+BdpK2n9CP71yFnbtojWWKD7
-         onaLn+pB1HRUf1DAtYbvGwpb9Sd2PU8BxAnKZAbXQGoqlUgjBfyBjuuv/RLhW5jwSoa6
-         ZulQ==
-X-Gm-Message-State: AOAM530y5ORtE99ekGkQ5QRoYIBwPRvjDDK/wn3EtYYgM7t5KayTx85P
-        HyjbZVSojIq3VPvgAT3V4Bn24C2dedNLWg==
-X-Google-Smtp-Source: ABdhPJy7+MQO7TyqSkHCQ0356mGWsvAdakxuGJB4/Vexl1NwjXd8bhEaCq1cP4gxQg0Pq6iqMXirRg==
-X-Received: by 2002:a17:90a:c905:: with SMTP id v5mr7905454pjt.39.1591301735348;
-        Thu, 04 Jun 2020 13:15:35 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id y23sm4601875pgc.78.2020.06.04.13.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:15:34 -0700 (PDT)
-Date:   Thu, 04 Jun 2020 13:15:34 -0700 (PDT)
-X-Google-Original-Date: Thu, 04 Jun 2020 13:15:31 PDT (-0700)
-Subject:     Re: [GIT PULL] RISC-V Patches for the 5.8 Merge Window, Part 1
-In-Reply-To: <CAOnJCU+jkYSVa-vMjabdnRpubK0c52VgjjVreC=07L_Vr3C64g@mail.gmail.com>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     atishp@atishpatra.org
-Message-ID: <mhng-6a5f967f-96fa-4476-ad99-50b2c3962a66@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pCXmYsl76J0CAlxoPdk8mPZO/WOJwZ5J1IK/xTYSvtY=;
+        b=PW+OKqgBIv413u6/PM/M+cvKICrtq9/rsiRoTJFGDrlCShExS8dRrjjOMFw40JbxcB
+         vDiZthpGGUF2DSo0TAbejPXmSN4ZbKN9lty8D9VFC0HP+JnM5xhyns//uyQD+5qTWCJ2
+         iCqTcUZbakwX9TdubYJh188E797XDbGkPa0I+nmeUsWHfnphTWRaGpJwT2ihBADctBpm
+         xWuhocBPNmz9ACUSPC5hHBOPGaG+gCu2ClJRhvH2SaWiCTgdzTh2IT8kWrRz2b5Do+YV
+         hk2gmXdLEwKTOL96viRVUAM0verIov6v3me7543UeJ9nYWUi5Dyup5P38kIMKVe45Fk5
+         WN1g==
+X-Gm-Message-State: AOAM532bXt25LiHiqUN5ZR7OFQReGgwcPfzfyW51Oc5lGX8drqjxTgI7
+        TMcXLNQCmzZXdWxVPWaauzN1BRgbAOiYztmckZ3GCgU9wMM=
+X-Google-Smtp-Source: ABdhPJye6FZH70P5vXHcitY46EI4rxFnZqJif4KZJI8zWDppq3cq3MmDJfiH17IwjHHvUarffuS8hk7FOMV62ymzGuM=
+X-Received: by 2002:a63:4f09:: with SMTP id d9mr5970154pgb.10.1591301780211;
+ Thu, 04 Jun 2020 13:16:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200603233203.1695403-1-keescook@chromium.org> <20200603233203.1695403-5-keescook@chromium.org>
+In-Reply-To: <20200603233203.1695403-5-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 4 Jun 2020 13:16:08 -0700
+Message-ID: <CAKwvOdnd30bcqoNXF1ugadU=KbW3aXu07+T-891amO2_b7kQdg@mail.gmail.com>
+Subject: Re: [PATCH 04/10] rtlwifi: rtl8192cu: Remove uninitialized_var() usage
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 04 Jun 2020 12:50:13 PDT (-0700), atishp@atishpatra.org wrote:
-> On Thu, Jun 4, 2020 at 11:57 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->>
->> The following changes since commit b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce:
->>
->>   Linux 5.7-rc6 (2020-05-17 16:48:37 -0700)
->>
->> are available in the Git repository at:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.8-mw0
->>
->> for you to fetch changes up to 09c0533d129ce460e6214c14f744ddbac3733889:
->>
->>   soc: sifive: l2 cache: Mark l2_get_priv_group as static (2020-05-28 15:57:49 -0700)
->>
->> ----------------------------------------------------------------
->> RISC-V Patches for the 5.8 Merge Window, Part 1
->>
->> * The remainder of the code necessary to support the Kendryte K210.
->>     * Support for building device trees into the kernel, as the K210 doesn't
->>       have a bootloader that provides one.
->>     * A K210 device tree and the associated defconfig update.
->>     * Support for skipping PMP initialization on systems that trap on PMP
->>       accesses rather than treating them as WARL.
->> * Support for KGDB.
->> * Improvements to text patching.
->> * Some cleanups to the SiFive L2 cache driver.
->>
->> I may have a second part, but I wanted to get this out earlier rather than
->> later as they've been ready to go for a while now.
->>
-> Hi Palmer,
-> Can you also add the run time cpu hotplug fix patch if it is not too late?
+On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> https://patchwork.kernel.org/patch/11581221/
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just initialize this variable to NULL,
+> and avoid sending garbage by returning.
 >
-> Without the patch, cpu hotplug will broken for 5.8-rc1 too.
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-It looks like there's enough to warrant a part 2 (that fix, the vDSO stuff,
-some Kconfig stuff, and the interrupt stuff).  Some of that was held back to
-avoid conflicts, so it'd be easier for me if this just goes in as-is and I can
-start putting together another PR based on the post-merge commit.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: dc0313f46664 ("rtlwifi: rtl8192cu: Add routine hw")
 
->> ----------------------------------------------------------------
->> Damien Le Moal (1):
->>       riscv: K210: Update defconfig
->>
->> Palmer Dabbelt (5):
->>       riscv: Allow device trees to be built into the kernel
->>       riscv: K210: Add a built-in device tree
->>       RISC-V: Skip setting up PMPs on traps
->>       soc: sifive: l2 cache: Eliminate an unsigned zero compare warning
->>       soc: sifive: l2 cache: Mark l2_get_priv_group as static
->>
->> Vincent Chen (4):
->>       kgdb: Add kgdb_has_hit_break function
->>       riscv: Add KGDB support
->>       riscv: Use the XML target descriptions to report 3 system registers
->>       riscv: Add SW single-step support for KDB
->>
->> Yash Shah (2):
->>       riscv: cacheinfo: Implement cache_get_priv_group with a generic ops structure
->>       riscv: Add support to determine no. of L2 cache way enabled
->>
->> Zong Li (3):
->>       riscv: Remove the 'riscv_' prefix of function name
->>       riscv: Use NOKPROBE_SYMBOL() instead of __krpobes annotation
->>       riscv: Use text_mutex instead of patch_lock
->>
->>  arch/riscv/Kbuild                       |   1 +
->>  arch/riscv/Kconfig                      |   7 +
->>  arch/riscv/Kconfig.socs                 |  17 +-
->>  arch/riscv/boot/dts/Makefile            |   2 +
->>  arch/riscv/boot/dts/kendryte/Makefile   |   4 +-
->>  arch/riscv/configs/nommu_k210_defconfig |   7 +-
->>  arch/riscv/include/asm/cacheinfo.h      |  15 ++
->>  arch/riscv/include/asm/gdb_xml.h        | 117 ++++++++++
->>  arch/riscv/include/asm/kdebug.h         |  12 +
->>  arch/riscv/include/asm/kgdb.h           | 112 +++++++++
->>  arch/riscv/include/asm/parse_asm.h      | 219 ++++++++++++++++++
->>  arch/riscv/include/asm/patch.h          |   4 +-
->>  arch/riscv/include/asm/soc.h            |  39 ++++
->>  arch/riscv/kernel/Makefile              |   1 +
->>  arch/riscv/kernel/cacheinfo.c           |  17 ++
->>  arch/riscv/kernel/ftrace.c              |  15 +-
->>  arch/riscv/kernel/head.S                |  11 +-
->>  arch/riscv/kernel/kgdb.c                | 390 ++++++++++++++++++++++++++++++++
->>  arch/riscv/kernel/patch.c               |  46 ++--
->>  arch/riscv/kernel/setup.c               |   4 +
->>  arch/riscv/kernel/soc.c                 |  27 +++
->>  arch/riscv/kernel/traps.c               |   5 +
->>  arch/riscv/kernel/vmlinux.lds.S         |   5 +
->>  arch/riscv/mm/init.c                    |   9 +
->>  drivers/soc/kendryte/k210-sysctl.c      |  12 +
->>  drivers/soc/sifive/sifive_l2_cache.c    |  40 +++-
->>  kernel/debug/debug_core.c               |  12 +
->>  27 files changed, 1119 insertions(+), 31 deletions(-)
->>  create mode 100644 arch/riscv/include/asm/cacheinfo.h
->>  create mode 100644 arch/riscv/include/asm/gdb_xml.h
->>  create mode 100644 arch/riscv/include/asm/kdebug.h
->>  create mode 100644 arch/riscv/include/asm/kgdb.h
->>  create mode 100644 arch/riscv/include/asm/parse_asm.h
->>  create mode 100644 arch/riscv/kernel/kgdb.c
->>
+> ---
+>  drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+> index f070f25bb735..5b071b70bc08 100644
+> --- a/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+> +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/hw.c
+> @@ -592,7 +592,7 @@ static void _rtl92cu_init_chipn_one_out_ep_priority(struct ieee80211_hw *hw,
+>                                                     bool wmm_enable,
+>                                                     u8 queue_sel)
+>  {
+> -       u16 uninitialized_var(value);
+> +       u16 value;
+>
+>         switch (queue_sel) {
+>         case TX_SELE_HQ:
+> @@ -606,7 +606,7 @@ static void _rtl92cu_init_chipn_one_out_ep_priority(struct ieee80211_hw *hw,
+>                 break;
+>         default:
+>                 WARN_ON(1); /* Shall not reach here! */
+> -               break;
+> +               return;
+>         }
+>         _rtl92c_init_chipn_reg_priority(hw, value, value, value, value,
+>                                         value, value);
+
+Whew! Nothing like passing the same value 6 times! (Other callers do
+use distinct values though, just curious seeing this instance.)
+
+-- 
+Thanks,
+~Nick Desaulniers
