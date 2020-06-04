@@ -2,95 +2,77 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE3120772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591276453;
-	bh=wQgVns7AYqWR4w7SQT/eBFlehH8s1tQ6Y1+38K2sstQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pg7LsNcOHYseLK+aoJ2TfcgQ7BbQhHWulq3qdIbTYnOpA7FXo/X3kVHpaU3grmCca
-	 I/J4KqXXd7dqfXHjsMnnjTSqMwLHZ3tNxHoxcNKKbfjA/Xj/Y7Mty37mBTTACaFMKm
-	 oFy9LCk/A+jmy2Ra/EkyheoGeA3vvzgFZSTUXN9o=
+	by mail.kernel.org (Postfix) with ESMTP id A1A88206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:16:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j78Bd4eP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgFDNOM (ORCPT
+        id S1728385AbgFDNQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbgFDNOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:14:11 -0400
-Received: from localhost (lfbn-ncy-1-324-171.w83-196.abo.wanadoo.fr [83.196.159.171])
+        Thu, 4 Jun 2020 09:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgFDNQd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:16:33 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799E0C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WVE3qPA0O7uuxoPXLbzFwIQgphyDorNlT9Drp/WwwVs=; b=j78Bd4eP3yPf0Ni1GgjgVPR16M
+        AImmiR1clxiLOn+NvhhkDmiqtFvr7PBLojAEIgPB5+Ta/Di8k4nw9cyVpbd6ZZ8e7udIWTAxvWbEV
+        apVPK16HpQEqZWXgu5E3o7+7NBVWyAjfPYGtgFMPj4a2doCST1fnX67QIS8yMzMEgPnk0HJkSsCfj
+        4FkA0qwn4XsNitVXHyTbvAVyiHXk519tC8h0DsxIwOKjnSDAujn2cyss+4oc69mz0wmZlpKjMuX0a
+        T0Ty1ioYFdMUDUt6/6u3h23LTkcL1byH8KiwSg3cA/Eipg83cm0YtgGSbpto/kYrtsb4b7SV71sWM
+        /57wLE1Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgpjR-0006y4-SH; Thu, 04 Jun 2020 13:16:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BB2E206C3;
-        Thu,  4 Jun 2020 13:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591276451;
-        bh=wQgVns7AYqWR4w7SQT/eBFlehH8s1tQ6Y1+38K2sstQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gF3vCuB1NL9722USg+0cpVofl1MvmbqORPkJ1wEBNE06D+iefH4BwIXz7/sX8MF/n
-         aXB9/h62EaMkRG/aZ2PuIxBzYtTtAkHGMPa6qkXB3Q/OVabQWmnMMUbVJlxXTnwHni
-         fYA9tWXeSWHBlS9gFaOYfE3etMALS3jd9ySS40Ps=
-Date:   Thu, 4 Jun 2020 15:14:09 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AE200301ABC;
+        Thu,  4 Jun 2020 15:16:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9855020086132; Thu,  4 Jun 2020 15:16:27 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 15:16:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
-Message-ID: <20200604131409.GB27571@lenoir>
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-9-frederic@kernel.org>
- <20200526212017.GE76276@google.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Chris Friesen <chris.friesen@windriver.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Jim Somerville <Jim.Somerville@windriver.com>
+Subject: Re: [PATCH 0/2] sched/isolation: Isolate unbound kthreads
+Message-ID: <20200604131627.GC4117@hirez.programming.kicks-ass.net>
+References: <20200527142909.23372-1-frederic@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526212017.GE76276@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200527142909.23372-1-frederic@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 05:20:17PM -0400, Joel Fernandes wrote:
-> On Wed, May 13, 2020 at 06:47:12PM +0200, Frederic Weisbecker wrote:
-> > Allow a CPU's rdp to quit the callback offlined mode.
+On Wed, May 27, 2020 at 04:29:07PM +0200, Frederic Weisbecker wrote:
+> Kthreads are harder to affine and isolate than user tasks. They can't
+> be placed inside cgroups/cpusets and the affinity for any newly
+> created kthread is always overriden from the inherited kthreadd's
+> affinity to system wide. Take that into account for nohz_full.
 > 
-> nit: s/offlined/offloaded/ ?
-
-Oh, looks like I did that everywhere :)
-
-> 
-> > The switch happens on the target with IRQs disabled and rdp->nocb_lock
-> > held to avoid races between local callbacks handling and kthread
-> > offloaded callbacks handling.
-> > nocb_cb kthread is first parked to avoid any future race with
-> > concurrent rcu_do_batch() executions. Then the cblist is set to offloaded
-> > so that the nocb_gp kthread ignores this rdp.
-> 
-> nit: you mean cblist is set to non-offloaded mode right?
-
-Ah right!
-
-> > +static void __rcu_nocb_rdp_deoffload(struct rcu_data *rdp)
-> > +{
-> > +	unsigned long flags;
-> > +	struct rcu_node *rnp = rdp->mynode;
-> > +
-> > +	printk("De-offloading %d\n", rdp->cpu);
-> 
-> nit: s/printk/pr_debug/ ?
-
-Ok.
 
 Thanks!
