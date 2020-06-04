@@ -2,99 +2,102 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B765C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA08C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DAF206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cTnOGZwu"
+	by mail.kernel.org (Postfix) with ESMTP id E0232206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591309447;
+	bh=TDOL76JWf1f6r/ZxeYlblYP7A4HnYRE4P8DKoRVJg6c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1GrHx8I1pcKuvw1LV7aGUs1e9dYJAKhFLqnk23jYXVujc0MAV2Kxz40mwKEB2ltvV
+	 G/MKCCuOdMTubgJmxRBGv+aEeq0hNTp+JastGZhwhNSwibiKm1MVyqL1TcmqjBpqS8
+	 X40Y/DLgMLlDziVKRIla39AopgVuy3HZ7F8ciR18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgFDWXf (ORCPT
+        id S1728005AbgFDWYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:23:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34007 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726090AbgFDWXe (ORCPT
+        Thu, 4 Jun 2020 18:24:07 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36284 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgFDWYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:23:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591309413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eACp/oLaKXsSvlY5Fq9o05NcQuVVZ80m7RkJvy6ZwkE=;
-        b=cTnOGZwusH8Nhq440eP0X/DVjUYWLv5/14ySCEDZDpYaPk3RBbxddDuzLHE11vs3Ynohd/
-        P9UHKc5oWXU5KYrjKhtc7pMEw0MaeXHD0pEa8noSW0vcv9TWP3emY+of/9Y4/4c30+TNQu
-        UVSFqa/PWVo9wQInwGIYQzf7tRrWluo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-yg5V7Y4FNu-w6SlF4XzR-w-1; Thu, 04 Jun 2020 18:23:31 -0400
-X-MC-Unique: yg5V7Y4FNu-w6SlF4XzR-w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EF74107ACCA;
-        Thu,  4 Jun 2020 22:23:30 +0000 (UTC)
-Received: from localhost (unknown [10.36.110.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38D3010013D7;
-        Thu,  4 Jun 2020 22:23:28 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 00:23:23 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [netfilter] e32a4dc651:
- BUG:using_smp_processor_id()in_preemptible
-Message-ID: <20200605002323.501b1cc6@redhat.com>
-In-Reply-To: <20200603084934.GF12456@shao2-debian>
-References: <20200603084934.GF12456@shao2-debian>
-Organization: Red Hat
+        Thu, 4 Jun 2020 18:24:06 -0400
+Received: by mail-il1-f194.google.com with SMTP id a13so7698061ilh.3;
+        Thu, 04 Jun 2020 15:24:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9twZbcOiLW0yLQJYmRVs4qavY+XNMKpL9WdtifUyAH0=;
+        b=TgdDvg0VrcfpXjBomNyWCWb1ONF6TzjqCI0Ws8m6eOmOIAk//kt/DQxOcopsv3UL/5
+         P18spWE5Rc0WrAeZHJvo8Y4UMwWTaSdpLLtzwe7KupCOE5rWJtw0JftZd5qKXMkLUdlJ
+         tZmZYW6Ig/0wl557FVzv4w4YTsBgsxKoM/M4L7lsrXfxR9kG5DW8/ogm9t+i6LWlKQgN
+         /O3dimuXx0DyhuYUshJ6ZtXTAQrLESxBdUYOTMr+U0HYslCbGdIrgo/SneKLiiOnGEFN
+         zH1lm3RB+xJgnRn6L0l82k24BK+/0IyWOC6a1v1vBWRQD8LBrezLAfBrdqUf4F2NKI51
+         3QFQ==
+X-Gm-Message-State: AOAM533n2rBTilxdEM4PtuZe+2CbsUEjuDkfaMNFa/LUMEg94Ncmz/ky
+        6OA5RDvlJuJ7lKWH4iHtrw==
+X-Google-Smtp-Source: ABdhPJw4Iafe1pMJfz84rEJOIVETUZQAgI9tRhEJzB4YXRVgrQvOWSYePNiqSlZkykkFuA1ew6Sl1w==
+X-Received: by 2002:a92:b001:: with SMTP id x1mr5480753ilh.18.1591309445557;
+        Thu, 04 Jun 2020 15:24:05 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id p5sm2004317ilg.88.2020.06.04.15.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 15:24:04 -0700 (PDT)
+Received: (nullmailer pid 4153174 invoked by uid 1000);
+        Thu, 04 Jun 2020 22:24:02 -0000
+Date:   Thu, 4 Jun 2020 16:24:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Xin Ji <xji@analogixsemi.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jonas Karlman <jonas@kwiboo.se>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        dri-devel@lists.freedesktop.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>
+Subject: Re: [PATCH v12 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter DT schema
+Message-ID: <20200604222402.GA4153046@bogus>
+References: <cover.1591253353.git.xji@analogixsemi.com>
+ <eb82c52574bf41b5edad488e14c27cabad39b922.1591253353.git.xji@analogixsemi.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb82c52574bf41b5edad488e14c27cabad39b922.1591253353.git.xji@analogixsemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, 3 Jun 2020 16:49:34 +0800
-kernel test robot <lkp@intel.com> wrote:
-
-> Greeting,
+On Thu, 04 Jun 2020 15:56:36 +0800, Xin Ji wrote:
+> anx7625: MIPI to DP transmitter DT schema
 > 
-> FYI, we noticed the following commit (built with gcc-7):
+> Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> ---
+>  .../bindings/display/bridge/analogix,anx7625.yaml  | 95 ++++++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
 > 
-> commit: e32a4dc6512ce3c1a1920531246e7037896e510a ("netfilter: nf_tables: make sets built-in")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> in testcase: kernel-selftests
-> with following parameters:
-> 
-> 	group: kselftests-netfilter
 
-I couldn't find this information in the report. Would it be possible to
-have here an indication of what kselftest specifically is failing?
-There are a number of tests in that group. I have an obvious suspicion
-here (nft_concat_range.sh), but it would be nice to know, in general.
 
-> [...]
->
-> [  165.316525] BUG: using smp_processor_id() in preemptible [00000000] code: nft/6247
-> [  165.319547] caller is nft_pipapo_insert+0x464/0x610 [nf_tables]
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-I'll take care of this, thanks Florian for forwarding.
-
--- 
-Stefano
+If a tag was not added on purpose, please state why and what changed.
 
