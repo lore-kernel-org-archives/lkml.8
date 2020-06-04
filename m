@@ -2,133 +2,68 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4750C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E317C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C89C1206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3A5206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgFDMTI (ORCPT
+        id S1728396AbgFDMT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:19:08 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:43626 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbgFDMTH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:19:07 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1D19A1C0BD2; Thu,  4 Jun 2020 14:19:06 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 14:19:05 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
-Subject: [GIT PULL] LEDs changes for v5.8-rc1
-Message-ID: <20200604121905.GA4931@duo.ucw.cz>
+        Thu, 4 Jun 2020 08:19:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5852 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727944AbgFDMT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 08:19:27 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4F1943A5487BC59EE09D;
+        Thu,  4 Jun 2020 20:19:22 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 4 Jun 2020
+ 20:19:12 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <jpr@f6fbb.org>, <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <linux-hams@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <wanghai38@huawei.com>
+Subject: [PATCH] yam: fix possible memory leak in yam_init_driver
+Date:   Thu, 4 Jun 2020 20:18:51 +0800
+Message-ID: <20200604121851.63880-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If register_netdev(dev) fails, free_netdev(dev) needs
+to be called, otherwise a memory leak will occur.
 
---nFreZHaLTZJo0R7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ drivers/net/hamradio/yam.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
+index 71cdef9..5ab53e9 100644
+--- a/drivers/net/hamradio/yam.c
++++ b/drivers/net/hamradio/yam.c
+@@ -1133,6 +1133,7 @@ static int __init yam_init_driver(void)
+ 		err = register_netdev(dev);
+ 		if (err) {
+ 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
++			free_netdev(dev);
+ 			goto error;
+ 		}
+ 		yam_devs[i] = dev;
+-- 
+1.8.3.1
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/=
-leds-5.8-rc1
-
-for you to fetch changes up to 59ea3c9faf3235b66bc31ca883d59ce58b8b2b27:
-
-  leds: add aw2013 driver (2020-05-25 12:56:39 +0200)
-
-----------------------------------------------------------------
-LEDs pull request for 5.8-rc1.
-
-New drivers: aw2013, sgm3140, ariel, and some fixes. Nothing much to
-see here, next release should be more interesting.
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      leds: trigger: remove redundant assignment to variable ret
-
-Denis Osterland-Heim (1):
-      leds: pwm: check result of led_pwm_set() in led_pwm_add()
-
-Linus Walleij (5):
-      leds: lm355x: Drop surplus include
-      leds: lp3952: Include the right header
-      leds: lt3593: Drop surplus include
-      leds: tca6507: Include the right header
-      leds: netxbig: Convert to use GPIO descriptors
-
-Lubomir Rintel (1):
-      leds: ariel: Add driver for status LEDs on Dell Wyse 3020
-
-Luca Weiss (2):
-      dt-bindings: leds: Add binding for sgm3140
-      leds: add sgm3140 driver
-
-Nikita Travkin (2):
-      dt-bindings: leds: Add binding for aw2013
-      leds: add aw2013 driver
-
-Tomi Valkeinen (1):
-      leds: tlc591xxt: hide error on EPROBE_DEFER
-
- .../devicetree/bindings/leds/leds-aw2013.yaml      |  91 +++++
- .../devicetree/bindings/leds/leds-sgm3140.yaml     |  62 +++
- drivers/leds/Kconfig                               |  29 ++
- drivers/leds/Makefile                              |   3 +
- drivers/leds/leds-ariel.c                          | 133 +++++++
- drivers/leds/leds-aw2013.c                         | 436 +++++++++++++++++=
-++++
- drivers/leds/leds-lm355x.c                         |   1 -
- drivers/leds/leds-lp3952.c                         |   2 +-
- drivers/leds/leds-lt3593.c                         |   1 -
- drivers/leds/leds-netxbig.c                        | 148 +++----
- drivers/leds/leds-pwm.c                            |  16 +-
- drivers/leds/leds-sgm3140.c                        | 320 +++++++++++++++
- drivers/leds/leds-tca6507.c                        |   2 +-
- drivers/leds/leds-tlc591xx.c                       |   5 +-
- drivers/leds/trigger/ledtrig-timer.c               |   4 +-
- 15 files changed, 1173 insertions(+), 80 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-aw2013.yaml
- create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
- create mode 100644 drivers/leds/leds-ariel.c
- create mode 100644 drivers/leds/leds-aw2013.c
- create mode 100644 drivers/leds/leds-sgm3140.c
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---nFreZHaLTZJo0R7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtjmuQAKCRAw5/Bqldv6
-8u48AJ47Nco4fZbvtuQJwKDHcNHcgKOSRwCgtQoaxP2tbH7XobuH4CGyLtEFCNY=
-=Asf1
------END PGP SIGNATURE-----
-
---nFreZHaLTZJo0R7j--
