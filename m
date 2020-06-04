@@ -2,136 +2,166 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94542077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aYS6ocEi"
+	by mail.kernel.org (Postfix) with ESMTP id 39B812077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgFDU5z (ORCPT
+        id S1729991AbgFDU6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:57:55 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:17575 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729839AbgFDU5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:57:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591304268; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=wI+CMekow0meYW6dUpwEc+eymozIziRtNlUOVzQUGoI=; b=aYS6ocEiaQ41mcZS+vEtkJHXncJNedBd0LtZ1XE8pWdV9df32v5UsMb7/Yhs8BcGMfly1ND3
- 1bUhH9X4VfrZQtbGv4/npQPjo9tOvoa/hmanfIDdwYFVLSQ1kOAOKpegndtxSRHqLTaiTJ3Q
- wf+z6H+iA9DD23Nrw4oIwuLuj/s=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5ed96037ea0dfa490e8089f1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 20:57:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A4584C433B2; Thu,  4 Jun 2020 20:57:25 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14351C433C6;
-        Thu,  4 Jun 2020 20:57:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14351C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Takashi Iwai <tiwai@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 5/6] drm/msm: Set the global virtual address range from the IOMMU domain
-Date:   Thu,  4 Jun 2020 14:57:09 -0600
-Message-Id: <20200604205710.3167-6-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200604205710.3167-1-jcrouse@codeaurora.org>
-References: <20200604205710.3167-1-jcrouse@codeaurora.org>
+        Thu, 4 Jun 2020 16:58:00 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:18801
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729848AbgFDU5r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 16:57:47 -0400
+X-IronPort-AV: E=Sophos;i="5.73,472,1583190000"; 
+   d="scan'208";a="350629662"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 22:57:18 +0200
+Date:   Thu, 4 Jun 2020 22:57:18 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     Joe Perches <joe@perches.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] [PATCH v2] coccinelle: api: add kzfree script
+In-Reply-To: <20200604204846.15897-1-efremov@linux.com>
+Message-ID: <alpine.DEB.2.21.2006042254240.2577@hadrien>
+References: <20200604140805.111613-1-efremov@linux.com> <20200604204846.15897-1-efremov@linux.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the aperture settings from the IOMMU domain to set up the virtual
-address range for the GPU. This allows us to transparently deal with
-IOMMU side features (like split pagetables).
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
 
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
- drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+On Thu, 4 Jun 2020, Denis Efremov wrote:
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 89673c7ed473..3e717c1ebb7f 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
- 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
- 	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
- 	struct msm_gem_address_space *aspace;
-+	u64 start, size;
- 
--	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
--		0xfffffff);
-+	/*
-+	 * Use the aperture start or SZ_16M, whichever is greater. This will
-+	 * ensure that we align with the allocated pagetable range while still
-+	 * allowing room in the lower 32 bits for GMEM and whatnot
-+	 */
-+	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
-+	size = iommu->geometry.aperture_end - start + 1;
-+
-+	aspace = msm_gem_address_space_create(mmu, "gpu",
-+		start & GENMASK(48, 0), size);
- 
- 	if (IS_ERR(aspace) && !IS_ERR(mmu))
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..bbe129867590 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
-+	/* The arm-smmu driver expects the addresses to be sign extended */
-+	if (iova & BIT(48))
-+		iova |= GENMASK(63, 49);
-+
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
- 	WARN_ON(!ret);
- 
-@@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
- {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 
-+	if (iova & BIT(48))
-+		iova |= GENMASK(63, 49);
-+
- 	iommu_unmap(iommu->domain, iova, len);
- 
- 	return 0;
--- 
-2.17.1
+> Check for memset()/memset_explicit() with 0 followed by
+> kfree()/vfree()/kvfree().
+>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+> Changes in v2:
+> - memset_explicit() added
+> - kvfree_sensitive() added
+> - forall added to r1
+> - ... between memset and kfree added
+>   Unfortunately, it doesn't work as I would expect it to in "patch"
+>   mode. I've added my comment about it in the rule. It can be safely
+>   removed from the patch if I misunderstood something.
+>
+> Another "strange" behaviour that I faced that r2 rule works only if I
+> write 2 expression lines:
+> expression *E;
+> expression size;
+> If I try to use a single line "expression *E, size;" then r2 matches nothing.
 
+The parser for metavariables is not so smart.  Everything to the left of
+the first metavariable name is the type.  Everything after is the list of
+metavariables of that type.  So if you put them together you require size
+to be a pointer.
+
+On the other hand, do you really require E to be a pointer?  If you do
+that, it will have to find the type of E.  If E refers to a structure
+field, then the type might not be available in the current function, and
+you may need command line argments like --all-includes or
+--recursive-includes.  Is avoiding transforming the case where E is not
+verified to be a pointer a concern?
+
+julia
+
+>
+>  scripts/coccinelle/api/kzfree.cocci | 65 +++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 scripts/coccinelle/api/kzfree.cocci
+>
+> diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/api/kzfree.cocci
+> new file mode 100644
+> index 000000000000..5c7e4bb13bb7
+> --- /dev/null
+> +++ b/scripts/coccinelle/api/kzfree.cocci
+> @@ -0,0 +1,65 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Use kzfree, kvfree_sensitive rather than memset or
+> +/// memset_explicit with 0 followed by kfree
+> +///
+> +// Confidence: High
+> +// Copyright: (C) 2020 Denis Efremov ISPRAS
+> +// Options: --no-includes --include-headers
+> +//
+> +// Keywords: kzfree, kvfree_sensitive
+> +//
+> +
+> +virtual context
+> +virtual patch
+> +virtual org
+> +virtual report
+> +
+> +
+> +// Ignore kzfree definition
+> +// Ignore kasan test
+> +@r depends on !patch && !(file in "lib/test_kasan.c") && !(file in "mm/slab_common.c") forall@
+> +expression *E;
+> +position p;
+> +@@
+> +
+> +* \(memset\|memset_explicit\)(E, 0, ...);
+> +  ... when != E
+> +      when strict
+> +* \(kfree\|vfree\|kvfree\)(E)@p;
+> +
+> +@r1 depends on patch && !(file in "lib/test_kasan.c") && !(file in "mm/slab_common.c")@
+> +expression *E;
+> +expression size;
+> +@@
+> +
+> +- \(memset\|memset_explicit\)(E, 0, size);
+> +/// Unfortunately, it doesn't work as in !patch mode.
+> +/// spatch (v1.0.8) should patch 4 functions in linux 5.7 with this rule
+> +/// and uncommented "when" lines. With only "... when != E" line 2 functions
+> +/// are patched, none with "when strict". 3 functions patch is produced by the
+> +/// rule with "when" lines commented out.
+> +//  ... when != E
+> +//      when strict
+> +(
+> +- kfree(E);
+> ++ kzfree(E);
+> +|
+> +- vfree(E);
+> ++ kvfree_sensitive(E, size);
+> +|
+> +- kvfree(E);
+> ++ kvfree_sensitive(E, size);
+> +)
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], "WARNING opportunity for kzfree/kvfree_sensitive")
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0], "WARNING opportunity for kzfree/kvfree_sensitive")
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
