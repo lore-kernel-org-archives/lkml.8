@@ -2,163 +2,115 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9522DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C17206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E108A206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKPFfTyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgFDNkv (ORCPT
+        id S1728661AbgFDNnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:40:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47690 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbgFDNkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:40:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 33A05AB76;
-        Thu,  4 Jun 2020 13:40:52 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 14:40:43 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thu, 4 Jun 2020 09:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgFDNnD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:43:03 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5991C08C5C0;
+        Thu,  4 Jun 2020 06:43:01 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h188so3621561lfd.7;
+        Thu, 04 Jun 2020 06:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pD3DL1EaqqhfcWp/JmI04Moao7zjsJCQcgkS8UaxqlM=;
+        b=MKPFfTyNBu5xL7UVO/owP88fZoQ+vKDXkLQNZsqxE0/VkuzbWZiZ+Ceyej+3Ql5fxD
+         txySRAOTxRKovhF50vbUYe/Xh/IsfP/7AZNMEc9o98vTKJe4LpFau4//de0QUq46kFPA
+         aHonJp59+xVtgS//Y0qZ5SLBzJVR+btTICuCihHpdPWhUjPuzgIdmR4cxUjANfqw3eo0
+         frdGIX+YmRKYML2LAiAH0JQtpAhbdixw8Cylog63L9jzrF23xMBiqhuPbAJFrnh/Qign
+         vbZ5jz69ZjJSlIJW9ee2HApvVygDUoF9K5HV7vPgYCHz9YctFyYpAOCpiuWiaSF8R+OB
+         +z0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pD3DL1EaqqhfcWp/JmI04Moao7zjsJCQcgkS8UaxqlM=;
+        b=L1xF47CGVQiOjtn/TOl/wqHvbZevTeLADCz/mv1PJBOTcaEMUCZy1bwZae1rksBMjq
+         HgqfG/NXTexerZvFOli+KsPz5Lm5BJEu7aRVUFcfWbSXD3Xzmzed/F6WhjfDnnCmtzZl
+         crJmPCp8Ckuc6i5pu5E2b4Ff961zXn48JQpuVsodoGdEam4DKK1r3WQKzDkD2BZ1VDab
+         97CK7vx+NgKG2lxOrQRFyZwt7ldLKitLH/GdVzSAaY8hLO5RhCdQLGPZZtW750teZwWg
+         bmPqNyScwlpxRouQQPVD8IcM0mrd3CYYnhptMTthXc8COvDJIvS4vUHg8ltNeAsxyEKp
+         4Xkg==
+X-Gm-Message-State: AOAM533hpnIxqo7ZJCn2JbIAqtMR4AV/3XgILwA7NmomXYWUsya51sYe
+        DfFDdRNtggYygPc0X78+lZk=
+X-Google-Smtp-Source: ABdhPJytsfVJ7LvUsWJ6dPyF1k3beQt090aEMwO18JA1CYO7E4vI2OP1jIn9j9oKioBeaEA7xAakLQ==
+X-Received: by 2002:ac2:5094:: with SMTP id f20mr2669227lfm.128.1591278179989;
+        Thu, 04 Jun 2020 06:42:59 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id s8sm58463ljh.101.2020.06.04.06.42.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 06:42:57 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 4 Jun 2020 15:42:55 +0200
+To:     Peter Enderborg <peter.enderborg@sony.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200604134042.GJ3070@suse.de>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
- <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200529100806.GA3070@suse.de>
- <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
- <20200603094036.GF3070@suse.de>
- <20200603124112.w5stb7v2z3kzcze3@e107158-lin.cambridge.arm.com>
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu: Stop shrinker loop
+Message-ID: <20200604134255.GA24897@pc636>
+References: <20200604102320.15914-1-peter.enderborg@sony.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200603124112.w5stb7v2z3kzcze3@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200604102320.15914-1-peter.enderborg@sony.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:41:13PM +0100, Qais Yousef wrote:
-> > > netperf-udp
-> > >                                 ./5.7.0-rc7            ./5.7.0-rc7            ./5.7.0-rc7
-> > >                               without-clamp             with-clamp      with-clamp-tskgrp
-> > > 
-> > > Hmean     send-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-> > > Hmean     send-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-> > > Hmean     send-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-> > > Hmean     send-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-> > > Hmean     send-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.96 *   1.24%*
-> > > Hmean     send-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-> > > Hmean     send-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-> > > Hmean     send-8192     14961.77 (   0.00%)    14418.92 *  -3.63%*    14908.36 *  -0.36%*
-> > > Hmean     send-16384    25799.50 (   0.00%)    25025.64 *  -3.00%*    25831.20 *   0.12%*
-> > > Hmean     recv-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
-> > > Hmean     recv-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
-> > > Hmean     recv-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
-> > > Hmean     recv-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
-> > > Hmean     recv-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.95 *   1.24%*
-> > > Hmean     recv-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
-> > > Hmean     recv-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
-> > > Hmean     recv-8192     14961.61 (   0.00%)    14418.88 *  -3.63%*    14908.30 *  -0.36%*
-> > > Hmean     recv-16384    25799.39 (   0.00%)    25025.49 *  -3.00%*    25831.00 *   0.12%*
-> > > 
-> > > netperf-tcp
-> > >  
-> > > Hmean     64              818.65 (   0.00%)      812.98 *  -0.69%*      826.17 *   0.92%*
-> > > Hmean     128            1569.55 (   0.00%)     1555.79 *  -0.88%*     1586.94 *   1.11%*
-> > > Hmean     256            2952.86 (   0.00%)     2915.07 *  -1.28%*     2968.15 *   0.52%*
-> > > Hmean     1024          10425.91 (   0.00%)    10296.68 *  -1.24%*    10418.38 *  -0.07%*
-> > > Hmean     2048          17454.51 (   0.00%)    17369.57 *  -0.49%*    17419.24 *  -0.20%*
-> > > Hmean     3312          22509.95 (   0.00%)    22229.69 *  -1.25%*    22373.32 *  -0.61%*
-> > > Hmean     4096          25033.23 (   0.00%)    24859.59 *  -0.69%*    24912.50 *  -0.48%*
-> > > Hmean     8192          32080.51 (   0.00%)    31744.51 *  -1.05%*    31800.45 *  -0.87%*
-> > > Hmean     16384         36531.86 (   0.00%)    37064.68 *   1.46%*    37397.71 *   2.37%*
-> > > 
-> > > The diffs are smaller than on openSUSE Leap 15.1 and some of the
-> > > uclamp taskgroup results are better?
-> > > 
-> > 
-> > I don't see the stddev and coeff but these look close to borderline.
-> > Sure, they are marked with a * so it passed a significant test but it's
-> > still a very marginal difference for netperf. It's possible that the
-> > systemd configurations differ in some way that is significant for uclamp
-> > but I don't know what that is.
+On Thu, Jun 04, 2020 at 12:23:20PM +0200, Peter Enderborg wrote:
+> The count and scan can be separated in time. It is a fair chance
+> that all work is already done when the scan starts. It
+> then might retry. This is can be avoided with returning SHRINK_STOP.
 > 
-> Hmm so what you're saying is that Dietmar didn't reproduce the same problem
-> you're observing? I was hoping to use that to dig more into it.
+> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+> ---
+>  kernel/rcu/tree.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index c716eadc7617..8b36c6b2887d 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3310,7 +3310,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+>  			break;
+>  	}
+>  
+> -	return freed;
+> +	return freed == 0 ? SHRINK_STOP : freed;
+>  }
+>  
+The loop will be stopped anyway sooner or later, but sooner is better :)
+To me that change makes sense.
 
-Not as such, I'm saying that for whatever reason the problem is not as
-visible with Dietmar's setup. It may be machine-specific or distribution
-specific. There are alternative suggestions for testing just the fast
-paths with a pipe test that may be clearer.
+Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-> > 
-> > > With this test setup we now can play with the uclamp code in
-> > > enqueue_task() and dequeue_task().
-> > > 
-> > 
-> > That is still true. An annotated perf profile should tell you if the
-> > uclamp code is being heavily used or if it's bailing early but it's also
-> > possible that uclamp overhead is not a big deal on your particular
-> > machine.
-> > 
-> > The possibility that either the distribution, the machine or both are
-> > critical for detecting a problem with uclamp may explain why any overhead
-> > was missed. Even if it is marginal, it still makes sense to minimise the
-> > amount of uclamp code that is executed if no limit is specified for tasks.
-> 
-> So one speculation I have that might be causing the problem is that the
-> accesses of struct uclamp_rq are causing bad cache behavior in your case. Your
-> mmtest description of the netperf says that it is sensitive to cacheline
-> bouncing.
-> 
-> Looking at struct rq, the uclamp_rq is spanning 2 cachelines
-> 
->  29954         /* --- cacheline 1 boundary (64 bytes) --- */
->  29955         struct uclamp_rq           uclamp[2];            /*    64    96 */
->  29956         /* --- cacheline 2 boundary (128 bytes) was 32 bytes ago --- */
->  29957         unsigned int               uclamp_flags;         /*   160     4 */
->  29958
->  29959         /* XXX 28 bytes hole, try to pack */
->  29960
-> 
-> Reducing sturct uclamp_bucket to use unsigned int instead of unsigned long
-> helps putting it all in a single cacheline
-> 
-
-I tried this and while it did not make much of a difference to the
-headline metric, the workload was less variable so if it's proven that
-cache line bouncing is reduced (I didn't measure it), it may have merit
-on its own even if it does not fully address the problem.
-
--- 
-Mel Gorman
-SUSE Labs
+--
+Vlad Rezki
