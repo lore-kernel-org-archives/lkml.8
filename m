@@ -2,121 +2,109 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D802AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D813C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B385C20738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C8B20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BRJKJNTE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j/CCKyyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgFDIiJ (ORCPT
+        id S1728002AbgFDIie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
+        Thu, 4 Jun 2020 04:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgFDIiI (ORCPT
+        with ESMTP id S1727046AbgFDIid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:38:08 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40495C05BD1E;
-        Thu,  4 Jun 2020 01:38:08 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49czgf4R3Sz9sSf;
-        Thu,  4 Jun 2020 18:38:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591259886;
-        bh=Fw81xUNRxSEfr/K2a41wO/SlsASJNJ6ZEGKglcUTBhU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BRJKJNTELzccZZlcQ6aC+MJCXwoHaorwVDckpFcIW+elWGhu5ytiSMqUSYA7u7m4/
-         1LjQOJr7oKKQgaMuL4yPS6aOrqIEneuvMe0Vizwjm4jrQj+RhBrcpIQ1mjs+lGargc
-         hjdOZACWqzp1XB8uoAFQi3E1onhKNn2Z6/cZ7sC0xGjnm5hNFuEOFw77nVnZNDwmgx
-         sAtwhadQZS/86XPNI3OtljWczqHFZXr/53kBThoq7ZOiaZQbneNccEh6a1knTTVJPd
-         MwxiB7YdROQninB0Mn7v+nTOBRmN5KXrW94buNHe2A4eGDXFkNAKanJN25cgSqbhYV
-         D/6udXo/aGZtg==
-Date:   Thu, 4 Jun 2020 18:38:05 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: linux-next: fix ups for clashes between akpm and powerpc trees
-Message-ID: <20200604183805.6f384b23@canb.auug.org.au>
-In-Reply-To: <20200604165246.436f02ba@canb.auug.org.au>
-References: <20200603202655.0ad0eacc@canb.auug.org.au>
-        <20200604165246.436f02ba@canb.auug.org.au>
+        Thu, 4 Jun 2020 04:38:33 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35FBAC05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:38:33 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id j202so1311447ybg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=552FTsyBPmP0dIys2XvU7DaT4X8pVqCWxWc8Zz4SjJ8=;
+        b=j/CCKyyi12hJt4X4YJ5jPUjnYgUqmF75Nt4hRNt6YKnV/taKrFZImPQ5T8ws5DSVXR
+         xCPRqMYM7HINlDNEpVvc28tTSzUW+2Y7YE1prSQ/hE56w0dtP3r9imiZXen55WykmhKd
+         8pCJBy/O90/8I5D6Ifw0fLvfwSZTfwSXdqOJEDr6p7BpXasbsv7g29Bg23XhD78DCXK2
+         CRKAdkluo80uS7NhDRhrRGZdF99zAYbaI1OflgYRIlshnUCI6qy4xMuIZn0zAQp9t1lw
+         FpjMMYIHGMwKolJfnmgzASHcdjPBNrk60LyHTUrQJ+ROAdGJF53opWizVK8QKz1iDbmF
+         JlzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=552FTsyBPmP0dIys2XvU7DaT4X8pVqCWxWc8Zz4SjJ8=;
+        b=tZ2esO3cUTjrlxF8pvRkw/d4IGXIplgb59KTqFFLqMADKYzUJqEcwqeocHxLG50e+M
+         1JbpxOOQr+z7vy2ra6LbSK1r0phuc2VAqJ+SwfYvuGZhNyzs9k02bTJpp+oaMQ3bb1uD
+         ytboiTCR2EvTqYd3wsxFOlKcsd8Bs4rax6SuFz/0BrR9DQOUWoPupiEd53Qmmpy9ZrKn
+         v075a/tLOa2WQMCIM2hHeGsh+rPcA8i0Ln2sNyPt4iTvxfMZH5ZPwTBS7+nO+m4maQaQ
+         gF9S2x75VmQ0R8Gd7XTPZRGzp7CgsvnxdgqC1kneS3ErpxLTUpgbtoyiMobAIF9TsM8C
+         vIvw==
+X-Gm-Message-State: AOAM532rYMp415OW58g6ojnLwZX+KmXFXFTwHh0Fqc0fGXiERoM1ckoj
+        c3mE5E36KDoxUbnVLS4RH9UZ0hZ6Q8SZ082Afn4JjQ==
+X-Google-Smtp-Source: ABdhPJzcrcXUi2Ku7FkWmVcLSZg8uMvygPWDYZKbc+j99+tLrqn4nTF+cuVE1ZzCTbDTRUp80rvyLFJMRMCOpZXDqZ4=
+X-Received: by 2002:a25:ef07:: with SMTP id g7mr6125577ybd.516.1591259912263;
+ Thu, 04 Jun 2020 01:38:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SvRqq+9lvuVyD6gXBTM7iQ2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CAOzgRdZQjuDfA1wa9AGYjRa-mNWbTNQNCOS60eHzDLeW9WCXpg@mail.gmail.com>
+ <CANN689Gy2aUgF7oE2UE3miHf7fah=9zM3KZ512Mj6kJTiRz3Xg@mail.gmail.com> <CAOzgRdZejnB+ruxhZhKBBw9rgnfNbiLSensa-2+20FTkSxrwwA@mail.gmail.com>
+In-Reply-To: <CAOzgRdZejnB+ruxhZhKBBw9rgnfNbiLSensa-2+20FTkSxrwwA@mail.gmail.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Thu, 4 Jun 2020 01:38:18 -0700
+Message-ID: <CANN689GvTF75Knsc82PGrwA44J+yx2ORP-i3fp36avMuxRPwdg@mail.gmail.com>
+Subject: Re: [PATCH v6 10/12] mmap locking API: rename mmap_sem to mmap_lock
+To:     youling 257 <youling257@gmail.com>
+Cc:     "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Hugh Dickins <hughd@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ying Han <yinghan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SvRqq+9lvuVyD6gXBTM7iQ2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Thu, 4 Jun 2020 16:52:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+On Thu, Jun 4, 2020 at 1:16 AM youling 257 <youling257@gmail.com> wrote:
+> 2020-06-04 13:57 GMT+08:00, Michel Lespinasse <walken@google.com>:
+> > However I would like more information about your report. Did you apply
+> > the series yourself ? If so, what base tree did you apply it onto ? If
+> > not, what tree did you use that already included the series ?
 >
-> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/=
-include/asm/book3s/64/pgtable.h
-> index 25c3cb8272c0..a6799723cd98 100644
-> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-> @@ -1008,6 +1008,12 @@ extern struct page *p4d_page(p4d_t p4d);
->  #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
->  #define p4d_page_vaddr(p4d)	__va(p4d_val(p4d) & ~P4D_MASKED_BITS)
-> =20
-> +static inline unsigned long pgd_index(unsigned long address)
-> +{
-> +	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
-> +}
-> +#define pgd_index pgd_index
-> +
->  #define pte_ERROR(e) \
->  	pr_err("%s:%d: bad pte %08lx.\n", __FILE__, __LINE__, pte_val(e))
->  #define pmd_ERROR(e) \
+> I build linux next-20200603 tree have the kernel/sys.c error.
 
-I have added that hunk to linux-next for tomorrow as a fix for
-mm-consolidate-pgd_index-and-pgd_offset_k-definitions.
+Thanks for the info.
 
-Its not strickly necessary, but Michael expressed a preference for the
-inline function.  I was wondering if pgd_index "Must be a compile-time
-constant" on one (or a few) architectures, then why not leave the
-default as an inline function and special case it as a macro where
-needed ...
+The proper fix is to replace down_write(&mm->mmap_sem) with
+mmap_write_lock(mm) and up_write(&mm->mmap_sem) with
+mmap_write_unlock(mm)
 
---=20
-Cheers,
-Stephen Rothwell
+If you just needed a quick fix to get the tree to build, what you did
+(replacing mmap_sem with mmap_lock) is also fine.
 
---Sig_/SvRqq+9lvuVyD6gXBTM7iQ2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks again !
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Ysu0ACgkQAVBC80lX
-0GwIpAf9HNqmGtGniydmF0H4hLlZjKycJ6U7wVQBWTZh40QmaBNhJo4Cq2mG4U0u
-SGEKP3LMv8GVAo6lyLyoIv53uAYcmrWv3L7iIAyd+1EPz44VURGXudmTXdLTH8mw
-s4jNwXbVxEOADoRs5r+cF/8+bofKdqC3ehJcd24NU9VEbadfcHOdGMfAVSyk6+Ox
-10pI2Wd1u4SxS/PS6j/XJU+6EZMyCz5TYFAsAnZzL/09NxqShgcz7f/Wp7vN3KUQ
-g72Ar0TulShJoWwbn3GOuqznN5nkkmMQSWd/1RyIs///jaDTKw4W28Wq8GkBEjdU
-S3RU07Z4DFQCS9UIQVm49RYneteAbw==
-=/0oI
------END PGP SIGNATURE-----
-
---Sig_/SvRqq+9lvuVyD6gXBTM7iQ2--
+-- 
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
