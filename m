@@ -2,100 +2,115 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17129C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F701C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2FB6207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591276234;
-	bh=KhaotgH0l//otNB03AB1rir98Xd5bkTWiUjmhQOMhDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ncx+YygFXYn4WrGNRI0hcy8z9rc1/7MxYT7ujREsVO7qAerP6KOqwI7lPjrDoHhSh
-	 JvzvuKkjiy3R5dBeaQoGv0rrZmXtw4nEJe/kEBpbp/FswwV+HpcStB9VqVTzx8j//N
-	 7i1T3R20XKdGbwTCqx4YE0da+StscyZ+5WPI6v30=
+	by mail.kernel.org (Postfix) with ESMTP id 6406F20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNTx6mqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgFDNKe (ORCPT
+        id S1728442AbgFDNK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbgFDNKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:10:33 -0400
-Received: from localhost (lfbn-ncy-1-324-171.w83-196.abo.wanadoo.fr [83.196.159.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FD3D206C3;
-        Thu,  4 Jun 2020 13:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591276233;
-        bh=KhaotgH0l//otNB03AB1rir98Xd5bkTWiUjmhQOMhDI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yEqGvYPW0O+EKKbZKW/d8lT7v1yqRUrXjq3TUgL2yQzJiHyRK2O+haCEROS2rOul+
-         mhWcLqwSXGU2roa3QPGkCwirNqKuePmcz3vd4D3Oq3+0bv6hCpIbGzH11vLv5CrHvw
-         /wSpvi/1EK177OgJlHaemMBV/STgGQAB3MezK9uA=
-Date:   Thu, 4 Jun 2020 15:10:30 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
-Message-ID: <20200604131029.GA27571@lenoir>
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-9-frederic@kernel.org>
- <20200526212017.GE76276@google.com>
- <20200526224908.GC16672@google.com>
+        Thu, 4 Jun 2020 09:10:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728038AbgFDNKz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:10:55 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76CFC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:10:55 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id n123so2892823ybf.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bsgm/TKaQa1WLgF7Jlo3Jkj2UeTFocZUCUKf1011cuc=;
+        b=dNTx6mqqy7cKYr6LeBPm8T8QMP1bWemgs9tn5LA8PwwT5b9uYGoEOO7nrOaxI8HSgF
+         sEkATWLylk3rMeS/XsK4JQOIle/TBs+afxA6rQs0zIYiJ0x62J6r+GwZ2LCTYxp0BCKb
+         9rt5tPJGyKGDibCWDRwcopwAeXl7sqD6BwjYGQY47CJ0L6/WdO4AHMy9r1ZUDb133Xjn
+         nui8+40mbwrG5+Ol0llqxLbYmTQHQtjzRbkxRoIm0I+24yleuQpyUDGZ6vqGtTLdPtGL
+         4t1QXO+QZbPsYYArVgVv0FvLy1RiB6Sph6aE7NfPVSzXPeciKWwSSTs8wAsr4xPySlWW
+         ikTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bsgm/TKaQa1WLgF7Jlo3Jkj2UeTFocZUCUKf1011cuc=;
+        b=e7Nn//LPnsccPw8YJ7ToWSPGa6Ax0t8llAXr3kiC7bVU2ddEFbkdbkv7Xj9jfqLoFi
+         Sk7tV1KHKCLDLwpPR0FjjiMNaLKml1u+qIbESUdQS6EX7gRxBbv2Fif5NcZchLL+Hoso
+         T7Jka6KQKriOYxhXVMo2mJ4K090I26nVRuiVHXUZ/eAiHvjHF51jat6couFf0L/8HAmO
+         gQRB8g28+KbvNXCqg2CWxs+bNkCfJJ463m1w1P+G9F9TER+5urzfq7CNByh9VhBSqwqy
+         PC6Y/bZEkWrLKYm5yF4bJCli5WjKDq9ugNcCRjn9mXamlQ4I/fCxuaFyNckQryDzzpce
+         uJrQ==
+X-Gm-Message-State: AOAM5309HYBhzC4BqOHXraE9JY1arYhvbYgjMNNH8GdMgLgJ+OUm3mJ2
+        If1oiIf/VfHtdIImKh4xQxNbf+S2d1IFBlRU1jtcUg==
+X-Google-Smtp-Source: ABdhPJznZ4kgf3E7pVsIR+yXbd62nObH+ZoygHL56PaPVrmzBCCzB1mkH7ELrGSGj1vCTfsXKYF+txj1dTIRXd0BCe0=
+X-Received: by 2002:a25:4cc4:: with SMTP id z187mr8163120yba.274.1591276254605;
+ Thu, 04 Jun 2020 06:10:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526224908.GC16672@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200602080425.93712-1-kerneljasonxing@gmail.com> <20200604090014.23266-1-kerneljasonxing@gmail.com>
+In-Reply-To: <20200604090014.23266-1-kerneljasonxing@gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 4 Jun 2020 06:10:43 -0700
+Message-ID: <CANn89iKt=3iDZM+vUbCvO_aGuedXFhzdC6OtQMeVTMDxyp9bAg@mail.gmail.com>
+Subject: Re: [PATCH v2 4.19] tcp: fix TCP socks unreleased in BBR mode
+To:     Jason Xing <kerneljasonxing@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neal Cardwell <ncardwell@google.com>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, liweishi@kuaishou.com,
+        Shujin Li <lishujin@kuaishou.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 06:49:08PM -0400, Joel Fernandes wrote:
-> On Tue, May 26, 2020 at 05:20:17PM -0400, Joel Fernandes wrote:
->  
-> > > The switch happens on the target with IRQs disabled and rdp->nocb_lock
-> > > held to avoid races between local callbacks handling and kthread
-> > > offloaded callbacks handling.
-> > > nocb_cb kthread is first parked to avoid any future race with
-> > > concurrent rcu_do_batch() executions. Then the cblist is set to offloaded
-> > > so that the nocb_gp kthread ignores this rdp.
-> > 
-> > nit: you mean cblist is set to non-offloaded mode right?
-> > 
-> > Also, could you clarify better the rcu_barrier bits in the changelog. I know
-> > there's some issue if the cblist has both offloaded and non-offloaded
-> > callbacks, but it would be good to clarify this here better IMHO.
-> 
-> And for archival purposes: rcu_barrier needs excluding here because it is
-> possible that for a brief period of time, the callback kthread has been
-> parked to do the mode-switch, and it could be executing a bunch of callbacks
-> when it was asked to park.
-> 
-> Meanwhile, more interrupts happen and more callbacks are queued which are now
-> executing in softirq. This ruins the ordering of callbacks that rcu_barrier
-> needs.
+On Thu, Jun 4, 2020 at 2:01 AM <kerneljasonxing@gmail.com> wrote:
+>
+> From: Jason Xing <kerneljasonxing@gmail.com>
+>
+> When using BBR mode, too many tcp socks cannot be released because of
+> duplicate use of the sock_hold() in the manner of tcp_internal_pacing()
+> when RTO happens. Therefore, this situation maddly increases the slab
+> memory and then constantly triggers the OOM until crash.
+>
+> Besides, in addition to BBR mode, if some mode applies pacing function,
+> it could trigger what we've discussed above,
+>
+> Reproduce procedure:
+> 0) cat /proc/slabinfo | grep TCP
+> 1) switch net.ipv4.tcp_congestion_control to bbr
+> 2) using wrk tool something like that to send packages
+> 3) using tc to increase the delay and loss to simulate the RTO case.
+> 4) cat /proc/slabinfo | grep TCP
+> 5) kill the wrk command and observe the number of objects and slabs in
+> TCP.
+> 6) at last, you could notice that the number would not decrease.
+>
+> v2: extend the timer which could cover all those related potential risks
+> (suggested by Eric Dumazet and Neal Cardwell)
+>
+> Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
+> Signed-off-by: liweishi <liweishi@kuaishou.com>
+> Signed-off-by: Shujin Li <lishujin@kuaishou.com>
 
-I think in that case the callbacks would still be executed in order. We wait
-for the kthread to park before switching to softirq callback execution.
+That is not how things work really.
 
-Initially it was to avoid callback ordering issues but I don't recall
-exactly which. Maybe it wasn't actually needed. But anyway I'll keep it
-for the next version where, for a brief period of time, nocb kthread will
-be able to compete with callback execution in softirq.
+I will submit this properly so that stable teams do not have to guess
+how to backport this to various kernels.
 
-I'll clarify that in the changelog.
+Changelog is misleading, this has nothing to do with BBR, we need to be precise.
 
-Thanks.
+Thank you.
