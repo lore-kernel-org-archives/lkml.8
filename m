@@ -2,150 +2,165 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6132DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757A1C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4184D206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FA9206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SqOksEvR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iwsRqxQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgFDURb (ORCPT
+        id S1729748AbgFDUSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50956 "EHLO
+        Thu, 4 Jun 2020 16:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729689AbgFDURb (ORCPT
+        with ESMTP id S1728450AbgFDUSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:17:31 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D88DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:17:31 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id n2so2641783pld.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:17:31 -0700 (PDT)
+        Thu, 4 Jun 2020 16:18:34 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7005DC08C5C5
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:18:34 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b5so3775064pfp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:18:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=H1eh8obpCVvS2HNCrovSqQnp/TRwxmNDTy89WEbh5+g=;
-        b=SqOksEvREgLepLVQGAzPlfCPWhWU72ZgIQdIiHFeGpJSEp/iKfbdPSbazf9TiUzt5Z
-         K/pDmo0kkiNA6a90CKohwCSDHTQrGnYHMjRm606324czREVrBKd4XoPoCBv0D6VpTDE6
-         2csOEiMwD14URodWHNHix++//jtig92l5p5po54rQ6ZJBOu+qY02PbcqILGdCWyHa9aZ
-         yG1nEz/NUC/hxeWTO0njMi5xqpEd90T+tcCg3MA2G//ZQHMJMhZVFLtlR7Djn4Nk46SB
-         i+TfqLe5YFFWUO83ph/BsY0aRtQ4TUBf+y5sz0xNyrG20OXqK798gwBzadXJh4orsXsv
-         VHFQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KSgduwKhAGu1Me5hdrsNlT/LSTVts5IMrrdQbnnmgtM=;
+        b=iwsRqxQEY+LpPM+s+DR5Kt1prnKy4GHGxqj/QUqqkkqSMBCDJe1CHdT/yKZJkiBDXL
+         Y6szw+en5NZ6khTYpwS0FGviJsYX/r26zXRpTi2oURHUxJskaDdTNYF20YKqgU+50wUG
+         aJZ2WjX85SJKBXLpicthf/oXnlRh2W1BmzGAE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H1eh8obpCVvS2HNCrovSqQnp/TRwxmNDTy89WEbh5+g=;
-        b=ewPchpebF8cwZRfFDhS/rtfOlbl/4H/YpS42Oz/mVZMjEFofcuwUk/lbUWROniH9Qn
-         CmJh+VsLb3dPQ8VwQ86iz73Z0A9gbkBlAPb0ULEYL/vNK6CFcCKC3haRqi62fGKRuhWb
-         JHuymn/HiHmKGl3tlvPyFwbfeACVTX0xPsuPVKHzuLkh5IFikb7oYeJ3rV2SxyqlpC5c
-         sqS6mXka2f3aLMqJIdUtlX5QW8xVzpbIx0IfNOA0gQQ3gflnl+gy63vJwwF5JQelcCqw
-         E7/18QIaOF2JfQCOHXil/mN/gwWBHyuRn2iwDt0riZ/tjmxtAI8bP8gcxPGxL3t6bI+q
-         anPw==
-X-Gm-Message-State: AOAM531IjuWZT4HxQtNOJzypM79VG/NBZLfivrtL2dn9N6w+r1c5G99a
-        9lJau0MBz1WWkE019Snh4QtFBV9lZDrZFQ==
-X-Google-Smtp-Source: ABdhPJzbunpclwUqC1RO0emeXvryKd+sGoxw5dp06T0g0ioRPbuzl/0CXQTIAgShoiy6zsrfbWV1QA==
-X-Received: by 2002:a17:90a:2843:: with SMTP id p3mr7407272pjf.187.1591301850054;
-        Thu, 04 Jun 2020 13:17:30 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id z128sm4827699pfb.201.2020.06.04.13.17.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 13:17:29 -0700 (PDT)
-Subject: Re: [PATCH v3 0/4] forbid fix {SQ,IO}POLL
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1591196426.git.asml.silence@gmail.com>
- <414b9a24-2e70-3637-0b98-10adf3636c37@kernel.dk>
- <f5370eb3-af80-5481-3589-675befa41009@kernel.dk>
- <d1d92d99-c6b1-fc6e-ea1d-6c2e5097d83f@gmail.com>
- <cc3197f9-e8b1-ac13-c121-291bb32646e3@kernel.dk>
- <947accf4-5ba1-cd39-2aeb-efb7065efb84@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8d817367-436b-073c-6a2c-e60830d7646e@kernel.dk>
-Date:   Thu, 4 Jun 2020 14:17:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KSgduwKhAGu1Me5hdrsNlT/LSTVts5IMrrdQbnnmgtM=;
+        b=W4OQN60DBWu5OEvEEMOAsvL722EMmxIdGYZXWAd/O4QMFNwpm21M/2iK/aPXaxjCqD
+         KwCSBqQz3b5B3riC0XNY95MqnQnidNu9QwTqpsHKWL1Pk0CKjIefij82OYR5BShL4qhD
+         /Yly2GwUknF3VOkUxq2ADFR8UMM7ZkOzCfpBoJPrXr1pe+G7CVfIx7OwolMxukfiDwqr
+         quRHbCNGhuilQNxgL0JjmiHugc+OUY6BKTzp6t/u/ORyy01og+3nkCRpzdcLEEXLLNRc
+         YWMnYaHzwaoeIYlbqp4+J6OgWhDOu+ei76QGXhEgjM7blFHIY5yueetDaxNLs0Bgx6yQ
+         tMtg==
+X-Gm-Message-State: AOAM533ah5Y3MIyEdJUSSCpzVKc9GHY3VfZVeyPSxlp6SrXTrumGgi/T
+        J7aYk2hzubNudy6fIeHKne0z/A==
+X-Google-Smtp-Source: ABdhPJy6jmo6NLjATFT9PEAZE69aJp2ake2/5E+UKA7LNV6vmFPBoWj+KBik/aUM7ISRTcCYuBBaWw==
+X-Received: by 2002:a63:c58:: with SMTP id 24mr6232804pgm.246.1591301913875;
+        Thu, 04 Jun 2020 13:18:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r5sm5581320pji.20.2020.06.04.13.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 13:18:33 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 13:18:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 03/10] b43: Remove uninitialized_var() usage
+Message-ID: <202006041316.A15D952@keescook>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-4-keescook@chromium.org>
+ <CAKwvOdnNuFySqAMk7s_cXqFM=dPX4JfvqNVLCuj90Gn4tzciAw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <947accf4-5ba1-cd39-2aeb-efb7065efb84@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnNuFySqAMk7s_cXqFM=dPX4JfvqNVLCuj90Gn4tzciAw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/20 2:12 PM, Pavel Begunkov wrote:
-> On 04/06/2020 22:52, Jens Axboe wrote:
->> On 6/4/20 1:22 PM, Pavel Begunkov wrote:
->>> On 04/06/2020 20:06, Jens Axboe wrote:
->>>> On 6/3/20 12:51 PM, Jens Axboe wrote:
->>>>> On 6/3/20 9:03 AM, Pavel Begunkov wrote:
->>>>>> The first one adds checks {SQPOLL,IOPOLL}. IOPOLL check can be
->>>>>> moved in the common path later, or rethinked entirely, e.g.
->>>>>> not io_iopoll_req_issued()'ed for unsupported opcodes.
->>>>>>
->>>>>> 3 others are just cleanups on top.
->>>>>>
->>>>>>
->>>>>> v2: add IOPOLL to the whole bunch of opcodes in [1/4].
->>>>>>     dirty and effective.
->>>>>> v3: sent wrong set in v2, re-sending right one 
->>>>>>
->>>>>> Pavel Begunkov (4):
->>>>>>   io_uring: fix {SQ,IO}POLL with unsupported opcodes
->>>>>>   io_uring: do build_open_how() only once
->>>>>>   io_uring: deduplicate io_openat{,2}_prep()
->>>>>>   io_uring: move send/recv IOPOLL check into prep
->>>>>>
->>>>>>  fs/io_uring.c | 94 ++++++++++++++++++++++++++-------------------------
->>>>>>  1 file changed, 48 insertions(+), 46 deletions(-)
->>>>>
->>>>> Thanks, applied.
->>>>
->>>> #1 goes too far, provide/remove buffers is fine with iopoll. I'll
->>>> going to edit the patch.
->>>
->>> Conceptually it should work, but from a quick look:
->>>
->>> - io_provide_buffers() drops a ref from req->refs, which should've
->>> been used by iopoll*. E.g. io_complete_rw_iopoll() doesn't do that.
->>>
->>> - it doesn't set REQ_F_IOPOLL_COMPLETED, thus iopoll* side will
->>> call req->file->iopoll().
->>
->> We don't poll for provide/remove buffers, or file update. The
->> completion is done inline. The REQ_F_IOPOLL_COMPLETED and friends
->> is only applicable on read/writes.
->>
+On Thu, Jun 04, 2020 at 01:08:44PM -0700, Nick Desaulniers wrote:
+> On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> > (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> > "unused variable"). If the compiler thinks it is uninitialized, either
+> > simply initialize the variable or make compiler changes. As a precursor
+> > to removing[2] this[3] macro[4], just initialize this variable to NULL,
+> > and make the (unreachable!) code do a conditional test.
+> >
+> > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/net/wireless/broadcom/b43/phy_n.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
+> > index d3c001fa8eb4..88cdcea10d61 100644
+> > --- a/drivers/net/wireless/broadcom/b43/phy_n.c
+> > +++ b/drivers/net/wireless/broadcom/b43/phy_n.c
+> > @@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
 > 
-> 1. Let io_provide_buffers() succeeds, putting a ref and returning 0
+> The TODOs and `#if 0` in this function are concerning.  It looks like
+> `rf_pwr_offset_table` is only used when `phy->rev` is >=7 && < 19.
 > 
-> 2. io_issue_sqe() on the way back do IORING_SETUP_IOPOLL check,
-> where it calls io_iopoll_req_issued(req)
+> Further, the loop has a case for `phy->rev >= 19` but we would have
+> returned earlier if that was the case.
 
-Only if req->file is valid, which it isn't for these non-file requests.
+Yeah, that's why I put the "(unreachable!)" note in the commit log. ;)
 
 > 
-> 3. io_iopoll_req_issued() unconditionally adds the req into ->poll_list
+> >         u32 rfpwr_offset;
+> >         u8 pga_gain, pad_gain;
+> >         int i;
+> > -       const s16 *uninitialized_var(rf_pwr_offset_table);
+> > +       const s16 *rf_pwr_offset_table = NULL;
+> >
+> >         table = b43_nphy_get_tx_gain_table(dev);
+> >         if (!table)
+> > @@ -4256,9 +4256,13 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
+> >                         pga_gain = (table[i] >> 24) & 0xf;
+> >                         pad_gain = (table[i] >> 19) & 0x1f;
+> >                         if (b43_current_band(dev->wl) == NL80211_BAND_2GHZ)
+> > -                               rfpwr_offset = rf_pwr_offset_table[pad_gain];
+> > +                               rfpwr_offset = rf_pwr_offset_table
+> > +                                               ? rf_pwr_offset_table[pad_gain]
+> > +                                               : 0;
+> >                         else
+> > -                               rfpwr_offset = rf_pwr_offset_table[pga_gain];
+> > +                               rfpwr_offset = rf_pwr_offset_table
+> > +                                               ? rf_pwr_offset_table[pga_gain]
+> > +                                               : 0;
 > 
-> 4. io_do_iopoll() checks the req, doesn't find it flagged with
-> REQ_F_IOPOLL_COMPLETED, and tries req->file->iopoll().
 > 
-> 
-> Do I miss something? Just did a quick and dirty test, which segfaulted.
-> Not certain about it though.
-> 
+> The code is trying to check `phy->rev >= 7 && phy->rev < 19` once
+> before the loop, then set `rf_pwr_offset_table`, so having another
+> conditional on `rf_pwr_offset_table` in the loop is unnecessary. I'm
+> ok with initializing it to `NULL`, but I'm not sure the conditional
+> check is necessary.  Do you get a compiler warning otherwise?
 
+I mean, sort of the best thing to do is just remove nearly everything
+here since it's actually unreachable. But it is commented as "when
+supported ..." etc, so I figured I'd leave it. As part of that I didn't
+want to leave any chance of a NULL deref, so I added the explicit tests
+just for robustness.
+
+*shrug*
+
+-Kees
 
 -- 
-Jens Axboe
-
+Kees Cook
