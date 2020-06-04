@@ -2,144 +2,127 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79433C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B040C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C302207D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OVOU8wgQ";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="tzmbXo/n"
+	by mail.kernel.org (Postfix) with ESMTP id E0F0A2075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgFDUA5 (ORCPT
+        id S1729632AbgFDUBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:00:57 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:60822 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726026AbgFDUA4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:00:56 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3094CC0085;
-        Thu,  4 Jun 2020 20:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1591300856; bh=4iyYGm9kU4tXwwTrh4TcBOJ+9qYc+ODucXbiTbKnD28=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=OVOU8wgQZrIM30U7yZovqW7RajBZdEAvw1dqdZoOl+B+5PRWfCx248BPMmcWVRcZP
-         EmxG7ar3uHLVurkLp6e0lkF6/Ue6OemDmbvD0Bd3Ce8FJ8s3juA6XYy4KjIVkwEwL9
-         ZeD598gGsrqqyyay2mxK1mzFN17oJA2+cLPARkfkgugAK8vgBRXPPAUaigYcCheWBf
-         ZRmfWSuCvF6+mOyKEb+Nw0VnT5CbtQrCxXcitpDWq6/XhhmKtStKMrNScbF9ASFb6c
-         Ir4JsN5G1N8CIjuFaq45233qIRrV89jix4K5UiEFxSdQIG1tKlhl7W52c58EUlt1C8
-         TKg/qC+poqGVQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id BF2A9A0069;
-        Thu,  4 Jun 2020 20:00:55 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 4 Jun 2020 13:00:55 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Thu, 4 Jun 2020 13:00:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fuVfcQZWTmZkJZe608/A5ui48VKIDoPaXp8BeQ6snO0tgdJ2YEjm8b06U9SDrAhsDZmNfLgKZvKXRGciGRxupFYZMNBfsG0/VpQMqf25YzRHOe3WL1cxjBznXz8eRUMX+21s5BxNgoydNGcydD/468RabgvOrnYbm5gkMhfiDEfoB/qWeKbVOzLC8eoNF2cO816RXQJF5Po5Vu9nAFMnSLORKOPniPoXuXKAJgtdOIwQvQkXan7eVWGz3BB54f+qopR1fjzvpzx4E6ua6MuVEF0ymgSXNY6pDxrP4dVxIOVlp5/v/AqUD1kPw4uWk03HK53MRMd6SVsZlksErNrAUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4iyYGm9kU4tXwwTrh4TcBOJ+9qYc+ODucXbiTbKnD28=;
- b=JluDGMEd/mNCSzKeR9M0Gsil5aG4z1CfWlcip9BhbmsJmrZ7rtDr4S+mkRI5NHU3Ldg5D69pds00DHntBBHpKzk+jg4+hr2eEvm4K/fhUwA4vBLCriQFDco8aGkqbX4WyTov7fAJwcegz8SOt/Ycbzn1UIB5ZXkkyD7kT0G7w+grtDcQ/7w8ZGLAcxeWzUkE1CrUF3hXbFo1vKxNpEDScI6TN3pIkR9mU/ZUDhibQybUEDqXKIkFyZ0rhCGWahdkaVCGmIbEmMro25LlHb5nFsSAcgrmMux5mJxHvzoppzbLqRONlztPgooiasDqyel0B84omhyCLLyk02INk0FYqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4iyYGm9kU4tXwwTrh4TcBOJ+9qYc+ODucXbiTbKnD28=;
- b=tzmbXo/nr+vffGHp3886HHRX/EccTSkIuqphrrBndAG3NmqqgobulKbefrK0m20pyvaRaiFpAUhkQFPOM+IEEiHwTi1+PS94jTXMAcLRLs5uBsNPoe2HatxgmzawaRD/z6ZCXDBb60WihYyiIx7tN5CNuDoQf+EifLAcTDnZ9dc=
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com (2603:10b6:a03:dc::26)
- by BYAPR12MB2647.namprd12.prod.outlook.com (2603:10b6:a03:6f::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 4 Jun
- 2020 20:00:54 +0000
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::a43a:7392:6fa:c6af]) by BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::a43a:7392:6fa:c6af%6]) with mapi id 15.20.3045.024; Thu, 4 Jun 2020
- 20:00:54 +0000
-X-SNPS-Relay: synopsys.com
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH v2 0/4] ARC: [plat-hsdk-4xd] initial port for HSDK-4xD
- board
-Thread-Topic: [PATCH v2 0/4] ARC: [plat-hsdk-4xd] initial port for HSDK-4xD
- board
-Thread-Index: AQHWOpc5Ca0pDE8WGEerFDRoKZEMvKjI4IWA
-Date:   Thu, 4 Jun 2020 20:00:54 +0000
-Message-ID: <feba6ef6-0782-ee5e-b51c-30cf79166486@synopsys.com>
-References: <20200604173927.23127-1-Eugeniy.Paltsev@synopsys.com>
-In-Reply-To: <20200604173927.23127-1-Eugeniy.Paltsev@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thu, 4 Jun 2020 16:01:04 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9085 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726026AbgFDUBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 16:01:02 -0400
+IronPort-SDR: cqH+NTyVsdU81zy7i4hxpuo6S9JwMGocsQKEA6gqxphnXIzlI1NOAMqbsdxUJElCducvGjjmag
+ 8q9HhjIcHTMw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 13:01:01 -0700
+IronPort-SDR: tluEnoI5BHVFrd5oKrlu6iCyv3ojLGqH/iZlc6XckXDP3nnxkLjc+CFGm8wUkhjO06eS3slOPF
+ A47zDYTxEY2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
+   d="scan'208";a="273220444"
+Received: from joviedo-mobl1.amr.corp.intel.com (HELO [10.255.7.226]) ([10.255.7.226])
+  by orsmga006.jf.intel.com with ESMTP; 04 Jun 2020 13:00:58 -0700
+Subject: Re: [PATCH] x86/mm: use max memory block size with unaligned memory
+ end
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+References: <20200604035443.3267046-1-daniel.m.jordan@oracle.com>
+ <5827baaf-0eb5-bcea-5d98-727485683512@redhat.com>
+ <20200604172213.f5lufktpqvqjkv4u@ca-dmjordan1.us.oracle.com>
+ <ebc31650-9e98-f286-6fc2-aafdd3cd9272@redhat.com>
+ <20200604181201.lqop72ihg5butlmz@ca-dmjordan1.us.oracle.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <72066bef-866a-c2a4-d536-4212c3344045@intel.com>
+Date:   Thu, 4 Jun 2020 13:00:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
-authentication-results: synopsys.com; dkim=none (message not signed)
- header.d=none;synopsys.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [2601:641:c100:83a0:fee2:8ed0:e900:96d1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 896d18fe-e2bf-40e2-7f24-08d808c1fd41
-x-ms-traffictypediagnostic: BYAPR12MB2647:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB2647421A17E2BEABD2C89D16B6890@BYAPR12MB2647.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 04244E0DC5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v9J8sBx5kdU3GoOXtzS90sTqvlkHzezj4+MAqzkDAAgkgeewSDgTVHVEPyHiuP2PF1E3u7TEfn7ueHarAazOMENY/QBrszqE26vZDwr7vjtujtSFFd8DMjkCX/Ja6iznfiKOD2y17z7yTMjiDM1NzAt4BJ4YpO/NnD666f8QA4m41ghnENvCFP5vLqqFMVVxIPYVnKh1u4uDYt/QPiNozrOBZps8BwOjx8lEBrCHBqlGtMie3B3/GTcqMhHDPkzmSvepwo/2VGAmynp/NL6N4yY2RG/aDAlmdEfpOxwD4RbjdGATErZHE5yEQIcUHLUtHbhqvoEpFFIagOlS3FOwDfBnjaAPuLAZUiaf6fS3uBQHnXoS+OQgxagP3dPYS7wu
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3479.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(396003)(366004)(39860400002)(376002)(53546011)(31696002)(2906002)(186003)(6512007)(36756003)(31686004)(54906003)(316002)(86362001)(110136005)(71200400001)(4744005)(66446008)(76116006)(66476007)(5660300002)(6506007)(66556008)(64756008)(8936002)(4326008)(107886003)(8676002)(6486002)(2616005)(66946007)(478600001)(43740500002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: tZ2DHuPjUwt1eSp3xEAavF4vsYrcMlYhI82HgVFo+yA90jc7kXxhhzSqVu5RALbghyMVyMO7xTW9h78stGiVYB5JI2cJlA2e9uUK/pE+pLdXJZoUv4hwK2s++1FSlyiZYjopZGi9/sPWqT216Z7QfcXfz6d3z/i0QeW0MF6v+3n2fMAT1qAbh3A81TD3CqgzDxXAXWn0E4YCs36HZkgqx65IS5N507hu0Kc0j1jI6hx4+snwbklMFQZVxMPYvkmG8J3M9rhiKJ89QEzTsHipzbjpUpSohp2YrILSKt7A6Z7/lctwH97T7cHFfUd55UjXaxpMQSTwUYVRjKPev6DrWxdbIJQlcEgoW8DrEAxfIJOAm2caIcCcDrdkVKlgyhLjSh3X6GZ2q94Cz6BdR8h1jr8zx1GnLFlXgX9O4lr+WsOwna1PbK2HHr2I7YhV8vkxgkWo0FGOgNW4icw408XjMpabGRXCzeP/m0TrAZ32FSidUfslF+15IYl64ZztU3COAnovfN/sxGIZAL5570U27R/gu/oDQ8HBbCYeayQ/HH3LK4aY9hvyIhP+dHkbBetY
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BBDC6C79001E5144A82BE410828D7132@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 896d18fe-e2bf-40e2-7f24-08d808c1fd41
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 20:00:54.2334
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EtkhDouhW4CEMhGUNwKzlfeVVEr4BSe9vajuatsQhwrZ2QXwsD/Rgxt/paANNPnr2L+TmwzZJVkyfgrc/0tEKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2647
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20200604181201.lqop72ihg5butlmz@ca-dmjordan1.us.oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi80LzIwIDEwOjM5IEFNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+IENoYW5nZXMgdjEt
-PnYyOg0KPiAgKiBGYWxsYmFjayB0byBJU0EgZGVmYXVsdCBtY3B1IGZsYWcgaWYgY3VzdG9tIG9u
-ZSBpc24ndCBzdXBwb3J0ZWQgYnkNCj4gICAgY29tcGlsZXIuDQo+ICAqIERyb3AgSFNESyBjdXN0
-b20gS2NvbmZpZyBvcHRpb25zIChjaG9vc2UgYmV0d2VlbiBIU0RLIGFuZCBIU0RLLTR4RCkgYXMN
-Cj4gICAgd2UgZG9uJ3QgbmVlZCBpdCAoYXQgbGVhc3QgZm9yIG5vdykuIEluc3RlYWQgd2Ugc2Vs
-ZWN0IEFSQ19MUEJfRElTQUJMRQ0KPiAgICBmb3IgYm90aCBib2FyZHMgYnV0IGl0J3MgdG90YWxs
-eSBPSyBhcyBIU0RLIGRvZXNuJ3QgaGF2ZSBMUEIgc28NCj4gICAgZGlzYWJsaW5nIHdpbGwgYmUg
-c2tpcHBlZCBieSBCQ1IgY2hlY2sgaW4gcnVudGltZS4NCj4gICogQWRkIG1pc3NpbmcgSFNESy00
-eEQgZGV2aWNlIHRyZWUgYmluZGluZ3MuIENvbnZlcnQgSFNESyBkZXZpY2UgdHJlZQ0KPiAgICBi
-aW5kaW5ncyB0byBqc29uLXNjaGVtYS4NCj4gDQo+IEV1Z2VuaXkgUGFsdHNldiAoNCk6DQo+ICAg
-QVJDOiBhbGxvdyB0byBvdmVycmlkZSBkZWZhdWx0IG1jcHUgY29tcGlsZXIgZmxhZw0KPiAgIEFS
-QzogQVJDdjI6IHN1cHBvcnQgbG9vcCBidWZmZXIgKExQQikgZGlzYWJsaW5nDQo+ICAgQVJDOiBb
-cGxhdC1oc2RrLTR4ZF0gaW5pdGlhbCBwb3J0IGZvciBIU0RLLTR4RCBib2FyZA0KPiAgIEFSQzog
-W3BsYXQtaHNkaypdIGRvY3VtZW50IEhTREstNHhEIGJvYXJkL1NvQyBiaW5kaW5ncw0KDQpMVEdN
-IG92ZXJhbGwuIERyb3BwaW5nIG9mIG5ldyBLY29uZmlnIGl0ZW1zIGlzIG5pY2UgdG9vLg0KDQot
-VmluZWV0DQo=
+On 6/4/20 11:12 AM, Daniel Jordan wrote:
+>> E.g., on powerpc that's 16MB so they have *a lot* of memory blocks.
+>> That's why that's not papering over the problem. Increasing the memory
+>> block size isn't always the answer.
+> Ok.  If you don't mind, what's the purpose of hotplugging at that granularity?
+> I'm simply curious.
+
+FWIW, the 128MB on x86 came from the original sparsemem/hotplug
+implementation.  It was the size of the smallest DIMM that my server
+system at the time would take.  ppc64's huge page size was and is 16MB
+and that's also the granularity with which hypervisors did hot-add way
+back then.  I'm not actually sure what they do now.
+
+My belief at the time was that the section size would grow over time as
+DIMMs and hotplug units grew.  I was young and naive. :)
+
+I actually can't think of anything that's *keeping* it at 128MB on x86
+though.  We don't, for instance, require a whole section to be
+pfn_valid().
