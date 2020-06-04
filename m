@@ -2,177 +2,109 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96D4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 103D12067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591237981;
-	bh=nkcDQQdUvb7qTq1n10CXRDABnrT77AQLwUdiWRqhWYE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DxEOW54Ty/LBQa0kUBOo2jG8t5aGyf0ZuXdnZCVj5ty3kfPr0mxnc+oMtjTG5cmfd
-	 xytfDThHanF0bRomPhEqYiZvyYTA+OgnWiSdrO2UVWuxIlFvBgfsmlnrKYWqw/qHhy
-	 TvwiF2rf14TA5PQP5XT0/LZKTwcFSg5DefP3FFgs=
+	by mail.kernel.org (Postfix) with ESMTP id 7DB7E206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:36:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dB7zMMYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgFDCdA (ORCPT
+        id S1726867AbgFDCgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726337AbgFDCc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:32:59 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 3 Jun 2020 22:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbgFDCf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 22:35:59 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56731C03E96D;
+        Wed,  3 Jun 2020 19:35:59 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07D7120657;
-        Thu,  4 Jun 2020 02:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591237979;
-        bh=nkcDQQdUvb7qTq1n10CXRDABnrT77AQLwUdiWRqhWYE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=VDAsQwAP33wgORMvfS0T+A9ovT5WL/cPjVJ2dfiljT19QNdJcCOpYO3tSZPsGnOKq
-         00BWW2zwYry1ftG5Zye5MhDZ8JG3au1ubrQi+reBdrw1ZvsLbv4rJNJKR98BPz1k1e
-         PcwPUhM4XAgeqRffBrlkM/H4EZkGXQD7wYVjW1Mg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DB1073522946; Wed,  3 Jun 2020 19:32:58 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 19:32:58 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Akira Yokosawa <akiyks@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Jade Alglave <jade.alglave@arm.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will@kernel.org>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cqdk6GlGz9sSc;
+        Thu,  4 Jun 2020 12:35:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591238156;
+        bh=sYrEd3q4vBrkVZAPsehx+zHZl1jC2S3RqY1YwQho1DA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dB7zMMYS4iOLRaE1HGBIOrn5kJIfF/ZS3cNLADABr3l9q5L0tDI2gE0No0LC/FyWu
+         6GaGWHZtJeBQmjCpWDA2gWhPzS9YAFM3aOHROKYO0NQvAxddMX4bmLXC2od+SDQDH+
+         Pv1jNP+CLTe/fAyczIbQohNw9xVPwus1/uNIPKogLcCC7BKMyEaJwUljpI5EMiW3RB
+         c/5ZSIw0AS2JZKj3KU1mIiL2Yu2S497jzd4IoZAZq3g/oFqgS1XLY7mAaFuem8upgp
+         6UeTyX5XU2uR8lw8W5eYuTds98Ac6Ah6/vExy65IwN5g4i5e7g9mejVJHC/luDkEFa
+         vyHxKDH64OjFw==
+Date:   Thu, 4 Jun 2020 12:35:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [RFC PATCH -rcu lkmm] tools/memory-model/README: Expand
- dependency of klitmus7
-Message-ID: <20200604023258.GV29598@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <4a05e568-aa30-423a-badc-f79f0af815a0@gmail.com>
- <20200601043433.GA21675@andrea>
+        David Miller <davem@davemloft.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: linux-next: manual merge of the tip tree with the sparc-next tree
+Message-ID: <20200604123553.503daf22@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601043433.GA21675@andrea>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/KF=zwyZJkiMoTsiLbQLierv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 06:34:33AM +0200, Andrea Parri wrote:
-> On Mon, Jun 01, 2020 at 12:37:20AM +0900, Akira Yokosawa wrote:
-> > From 87048d7212f6cb16b0a2b85fa6d2f34c28b078c0 Mon Sep 17 00:00:00 2001
-> > From: Akira Yokosawa <akiyks@gmail.com>
-> > Date: Sun, 31 May 2020 20:04:32 +0900
-> > Subject: [PATCH RFC] tools/memory-model/README: Expand dependency of klitmus7
-> > 
-> > klitmus7 is independent of the memory model but depends on the
-> > build-target kernel release.
-> > It occasionally lost compatibility due to kernel API changes [1, 2, 3].
-> > It was remedied in a backwards-compatible manner respectively [4, 5, 6].
-> > 
-> > Reflect this fact in README.
-> > 
-> > [1]: b899a850431e ("compiler.h: Remove ACCESS_ONCE()")
-> > [2]: 0bb95f80a38f ("Makefile: Globally enable VLA warning")
-> > [3]: d56c0d45f0e2 ("proc: decouple proc from VFS with "struct proc_ops"")
-> > [4]: https://github.com/herd/herdtools7/commit/e87d7f9287d1
-> >      ("klitmus: Use WRITE_ONCE and READ_ONCE in place of deprecated ACCESS_ONCE")
-> > [5]: https://github.com/herd/herdtools7/commit/a0cbb10d02be
-> >      ("klitmus: Avoid variable length array")
-> > [6]: https://github.com/herd/herdtools7/commit/46b9412d3a58
-> >      ("klitmus: Linux kernel v5.6.x compat")
-> > 
-> > NOTE: [5] was ahead of herdtools7 7.53, which did not make an
-> > official release.  Code generated by klitmus7 without [5] can still be
-> > built targeting Linux 4.20--5.5 if you don't care VLA warnings.
-> > 
-> > Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> 
-> Acked-by: Andrea Parri <parri.andrea@gmail.com>
+--Sig_/KF=zwyZJkiMoTsiLbQLierv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Queued, thank you both!
+Hi all,
 
-							Thanx, Paul
+Today's linux-next merge of the tip tree got conflicts in:
 
->   Andrea
-> 
-> 
-> > ---
-> > Hi all,
-> > 
-> > Recent struggle of Andrii with the use of klitmus7 on an up-to-date
-> > Linux system prompted me to add some explanation of klitmus7's dependency
-> > in README.
-> > 
-> > As herdtools7 7.56 is still under development, I called out just HEAD
-> > in the compatibility table.  Once 7.56 is released, the table can be
-> > updated.
-> > 
-> > I'm not sure if this is the right place to carry such info.
-> > Anyway, I'd be glad if this patch can trigger a meaningful update of
-> > README.
-> > 
-> >         Thanks, Akira
-> > --
-> >  tools/memory-model/README | 30 ++++++++++++++++++++++++++++--
-> >  1 file changed, 28 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/memory-model/README b/tools/memory-model/README
-> > index b9c562e92981..90af203c3cf1 100644
-> > --- a/tools/memory-model/README
-> > +++ b/tools/memory-model/README
-> > @@ -28,8 +28,34 @@ downloaded separately:
-> >  See "herdtools7/INSTALL.md" for installation instructions.
-> >  
-> >  Note that although these tools usually provide backwards compatibility,
-> > -this is not absolutely guaranteed.  Therefore, if a later version does
-> > -not work, please try using the exact version called out above.
-> > +this is not absolutely guaranteed.
-> > +
-> > +For example, a future version of herd7 might not work with the model
-> > +in this release.  A compatible model will likely be made available in
-> > +a later release of Linux kernel.
-> > +
-> > +If you absolutely need to run the model in this particular release,
-> > +please try using the exact version called out above.
-> > +
-> > +klitmus7 is independent of the model provided here.  It has its own
-> > +dependency on a target kernel release where converted code is built
-> > +and executed.  Any change in kernel APIs essential to klitmus7 will
-> > +necessitate an upgrade of klitmus7.
-> > +
-> > +If you find any compatibility issues in klitmus7, please inform the
-> > +memory model maintainers.
-> > +
-> > +klitmus7 Compatibility Table
-> > +----------------------------
-> > +
-> > +	============  ==========
-> > +	target Linux  herdtools7
-> > +	------------  ----------
-> > +	     -- 4.18  7.48 --
-> > +	4.15 -- 4.19  7.49 --
-> > +	4.20 -- 5.5   7.54 --
-> > +	5.6  --       HEAD
-> > +	============  ==========
-> >  
-> >  
-> >  ==================
-> > -- 
-> > 2.17.1
-> > 
+  arch/sparc/mm/srmmu.c
+
+Commits
+
+3408974d0533 sparc32: mm: Restructure sparc32 MMU page-table layout
+c95be5b549d6 sparc32: mm: Change pgtable_t type to pte_t * instead of struc=
+t page *
+f790d0205fd5 sparc32: mm: Fix argument checking in __srmmu_get_nocache()
+
+from the tip tree are also in the sparc-next tree as different commits
+(plus some others).
+
+I fixed it up (I just used the sparc-next tree version) and can carry the
+fix as necessary. This is now fixed as far as linux-next is concerned,
+but any non trivial conflicts should be mentioned to your upstream
+maintainer when your tree is submitted for merging.  You may also want
+to consider cooperating with the maintainer of the conflicting tree to
+minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/KF=zwyZJkiMoTsiLbQLierv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YXgkACgkQAVBC80lX
+0GwrIQgAgJUxQkVHp0zEAsUqzMrxCAzRwgZuuroqqIhopVdG5Eiz/zJ7I4YznhjX
+RpnnAmo2z99NkCNhzY9zo84oANM6i5vpJNs+wi9GX3T0q3XsiHUmvIbY8q949Kvp
+7tns3Kx+ivK6W9ACM3KdoFK1XGJfV8DRgcuzP+Wy7QuEmPL0OKvrj7exzC364m44
+FIWHmrQQRNIRfRCof2sYR7xrTxDSjWm3ISezTc51Tv3lWRu0kWVSPSipCAEpHGjQ
+mS9U0qe8LK611EtEfXoU8PSkd7HMVxM3cmCgDbro4FE7fGjQ4EDk2Cgfz2oF+LU/
+HKY3o942SkHJyqqQCrdTenyqadppYg==
+=I5kJ
+-----END PGP SIGNATURE-----
+
+--Sig_/KF=zwyZJkiMoTsiLbQLierv--
