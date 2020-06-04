@@ -2,175 +2,200 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4634AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C982C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 174E52067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17654206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eTUIYqIr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpyL4ZRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgFDUZl (ORCPT
+        id S1729073AbgFDU1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52222 "EHLO
+        Thu, 4 Jun 2020 16:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729723AbgFDUZ3 (ORCPT
+        with ESMTP id S1725883AbgFDU07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:25:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169C2C08C5C4
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:25:29 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s88so1721435pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:25:29 -0700 (PDT)
+        Thu, 4 Jun 2020 16:26:59 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA950C08C5C0;
+        Thu,  4 Jun 2020 13:26:57 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j10so7504396wrw.8;
+        Thu, 04 Jun 2020 13:26:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TblIMkzhKEVNZyPa1dQf8kFQ+MgYlpgsesY6pOK1xME=;
-        b=eTUIYqIrq5sxbgWQO/3JauOnTYpVr1lxYINDt5nKOAMkJOKF9ufyGFqb5XSmsRi3m+
-         Uksx9+kJJ0xBVvvMTZtWdGvFYckH9URWghdJ/VSzZBwwBmizmaE949JntUM6qTfFIrip
-         3zzyVfVtH7B2Lzj4WQ8kAWj65+Txwm/2hs5XFlhCKdRU1uedTRsD04P49ZgSRY5QBLTc
-         CQBCbVHZuVCB29pP2Co0mZAOf0TgkJUljtb0VB8CHI8VhuigYp30PE+r/D7MHanlVYxK
-         BKS8ooZdHaU0PWi8nTHb08bOMRG7dMr/qLVaTlH87DKKqIpufZxi7ZRUHWNmW4PpK4km
-         2vlA==
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NeiT4PSA5RuF4lXPzfjt4fbzeMLKUCOZ8v+zwCWEt7g=;
+        b=QpyL4ZROWDrVQ4tds8HwCcAAZNNH33SPFta6TmANYSrqGowRfTFzPva68PonNWXlu8
+         ZVIj7uhV4oMApfS7Yve8rQQuCTDnCLvD9YPi55kYEu8mUlD63Pyv65llRET6HPRzg7QC
+         9dfqu34YenOx2rdBQMwBwfy7566tKVhBIMvHy9AymlvyW/EsIACSOy7+3OKDttTt919x
+         Tnew9p3am+P4YxNCtM5czM+caHNdVhKCtFssyRK6ob8pBgdHKgNoR6nEwCv9XzEFb7Gr
+         r3wrq4KhT36h+g6Kuc80Vx49ezWY1VVPAwtCyRNXFHBP0fwhSw+QV6SfIxZmaIZF+uDE
+         A+fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TblIMkzhKEVNZyPa1dQf8kFQ+MgYlpgsesY6pOK1xME=;
-        b=Pg9pE2Wo5fUBPfSI/RaChIdCqhtA0njvUE2eUXEoPuiCmEWJnke+WDmZMucKOp8ken
-         5vWE3WOLqxKk7lfkPyDrYaDZqKTycL5xmYdSN54PzZkHbc4rmgjqGlUb/pQhSKD/SzsA
-         f21jjsXNgL2pJ8NLSnx1gexv7NWA/269G/QiC0YTFIdD05vvvGT7XWawbcVUKiqPokFp
-         gEHBt33rbfvhQxExl8BuAjL5h9nK3qtkEHXwtF+pr7rcn310otIs/WcRo+awaAm0FgeY
-         zEGuRgEksFG6Nw3Yq5MuzdGcvYfjf4WSKwGE+m3Eu8nRoebLhSMmx7O1kAR5Ljp4keXX
-         Rcrw==
-X-Gm-Message-State: AOAM530gKf4DRupPvXzzuanIVLOdBPCyVRcO7RbdLS5Fa2J4VLgUf91X
-        GHvE7+oZ3Qek6788b/XiwrbelmOU/7q/Etyn6rx3yw==
-X-Google-Smtp-Source: ABdhPJzjhN/4pCp12TIV+9JXZmAnmqzfEHd9/r8jgURCikDTNzP/FuiRKg13zAi0ZiROLKM3I1SNYAlTdBzPgSsKmW0=
-X-Received: by 2002:a17:902:341:: with SMTP id 59mr6129425pld.119.1591302328252;
- Thu, 04 Jun 2020 13:25:28 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NeiT4PSA5RuF4lXPzfjt4fbzeMLKUCOZ8v+zwCWEt7g=;
+        b=bv9g5gUd05eozY8YTU8XYYWUFIFEDQ5qDUU3oSoSKFn2XYgJ/06GcERwev7nTWZSN5
+         o2NIK7Ka18bL/VGPFnq+DqG2OQXHEjJAcYoLv5vseulzkcSP1l95IeC3dookTQgbrGJ5
+         ATwlbSQeFzfdOWsirDFA+/7f3LBGfoPoaLBbvxgYRV3mgQHxc0BVLfX3doEdn9U5Iid5
+         zRQ6Ue3o2NxtEfY6CCE1XM5KiTkCd5cZ9v4ekRSjfLZQIhOJUGUYlxJVhZOxkgdE2LPz
+         ud5NvqTmSOqZsuB03MHeNinGBVDCODi/y0PbXoR9J+uyKiuJ40Cwzj4UrkHlPf+DamCK
+         +YVg==
+X-Gm-Message-State: AOAM532/zqNTYtEMVHYX/brlMVlrC7PBMWmBilTH/QZzaUdXcQtzlo/1
+        CWDqaafKyGw2/pSgDE5nqRdx8jJO
+X-Google-Smtp-Source: ABdhPJwjVoEH0+Qml6rnQrnesO6f0qGzzP/vN5aKsvCRQC5sl58F2MzAmik4d1KCoDfVBHbXjiYXGw==
+X-Received: by 2002:a5d:4841:: with SMTP id n1mr6440598wrs.64.1591302416352;
+        Thu, 04 Jun 2020 13:26:56 -0700 (PDT)
+Received: from [192.168.43.208] ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id i3sm9418076wrm.83.2020.06.04.13.26.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 13:26:55 -0700 (PDT)
+Subject: Re: [PATCH v3 0/4] forbid fix {SQ,IO}POLL
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1591196426.git.asml.silence@gmail.com>
+ <414b9a24-2e70-3637-0b98-10adf3636c37@kernel.dk>
+ <f5370eb3-af80-5481-3589-675befa41009@kernel.dk>
+ <d1d92d99-c6b1-fc6e-ea1d-6c2e5097d83f@gmail.com>
+ <cc3197f9-e8b1-ac13-c121-291bb32646e3@kernel.dk>
+ <947accf4-5ba1-cd39-2aeb-efb7065efb84@gmail.com>
+ <8d817367-436b-073c-6a2c-e60830d7646e@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <7c262b84-9404-afc1-b585-244f8c0c0918@gmail.com>
+Date:   Thu, 4 Jun 2020 23:25:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200603233203.1695403-1-keescook@chromium.org>
- <20200603233203.1695403-4-keescook@chromium.org> <CAKwvOdnNuFySqAMk7s_cXqFM=dPX4JfvqNVLCuj90Gn4tzciAw@mail.gmail.com>
- <202006041316.A15D952@keescook>
-In-Reply-To: <202006041316.A15D952@keescook>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 4 Jun 2020 13:25:16 -0700
-Message-ID: <CAKwvOdk9e19MqJNhGYV5mJisLOcjK+ba2sYzLgf7cvNerqNuwA@mail.gmail.com>
-Subject: Re: [PATCH 03/10] b43: Remove uninitialized_var() usage
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <8d817367-436b-073c-6a2c-e60830d7646e@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 1:18 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Jun 04, 2020 at 01:08:44PM -0700, Nick Desaulniers wrote:
-> > On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > > (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> > > "unused variable"). If the compiler thinks it is uninitialized, either
-> > > simply initialize the variable or make compiler changes. As a precursor
-> > > to removing[2] this[3] macro[4], just initialize this variable to NULL,
-> > > and make the (unreachable!) code do a conditional test.
-> > >
-> > > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> > > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> > > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> > > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
-> > >
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  drivers/net/wireless/broadcom/b43/phy_n.c | 10 +++++++---
-> > >  1 file changed, 7 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > > index d3c001fa8eb4..88cdcea10d61 100644
-> > > --- a/drivers/net/wireless/broadcom/b43/phy_n.c
-> > > +++ b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > > @@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
-> >
-> > The TODOs and `#if 0` in this function are concerning.  It looks like
-> > `rf_pwr_offset_table` is only used when `phy->rev` is >=7 && < 19.
-> >
-> > Further, the loop has a case for `phy->rev >= 19` but we would have
-> > returned earlier if that was the case.
+On 04/06/2020 23:17, Jens Axboe wrote:
+> On 6/4/20 2:12 PM, Pavel Begunkov wrote:
+>> On 04/06/2020 22:52, Jens Axboe wrote:
+>>> On 6/4/20 1:22 PM, Pavel Begunkov wrote:
+>>>> On 04/06/2020 20:06, Jens Axboe wrote:
+>>>>> On 6/3/20 12:51 PM, Jens Axboe wrote:
+>>>>>> On 6/3/20 9:03 AM, Pavel Begunkov wrote:
+>>>>>>> The first one adds checks {SQPOLL,IOPOLL}. IOPOLL check can be
+>>>>>>> moved in the common path later, or rethinked entirely, e.g.
+>>>>>>> not io_iopoll_req_issued()'ed for unsupported opcodes.
+>>>>>>>
+>>>>>>> 3 others are just cleanups on top.
+>>>>>>>
+>>>>>>>
+>>>>>>> v2: add IOPOLL to the whole bunch of opcodes in [1/4].
+>>>>>>>     dirty and effective.
+>>>>>>> v3: sent wrong set in v2, re-sending right one 
+>>>>>>>
+>>>>>>> Pavel Begunkov (4):
+>>>>>>>   io_uring: fix {SQ,IO}POLL with unsupported opcodes
+>>>>>>>   io_uring: do build_open_how() only once
+>>>>>>>   io_uring: deduplicate io_openat{,2}_prep()
+>>>>>>>   io_uring: move send/recv IOPOLL check into prep
+>>>>>>>
+>>>>>>>  fs/io_uring.c | 94 ++++++++++++++++++++++++++-------------------------
+>>>>>>>  1 file changed, 48 insertions(+), 46 deletions(-)
+>>>>>>
+>>>>>> Thanks, applied.
+>>>>>
+>>>>> #1 goes too far, provide/remove buffers is fine with iopoll. I'll
+>>>>> going to edit the patch.
+>>>>
+>>>> Conceptually it should work, but from a quick look:
+>>>>
+>>>> - io_provide_buffers() drops a ref from req->refs, which should've
+>>>> been used by iopoll*. E.g. io_complete_rw_iopoll() doesn't do that.
+>>>>
+>>>> - it doesn't set REQ_F_IOPOLL_COMPLETED, thus iopoll* side will
+>>>> call req->file->iopoll().
+>>>
+>>> We don't poll for provide/remove buffers, or file update. The
+>>> completion is done inline. The REQ_F_IOPOLL_COMPLETED and friends
+>>> is only applicable on read/writes.
+>>>
+>>
+>> 1. Let io_provide_buffers() succeeds, putting a ref and returning 0
+>>
+>> 2. io_issue_sqe() on the way back do IORING_SETUP_IOPOLL check,
+>> where it calls io_iopoll_req_issued(req)
+> 
+> Only if req->file is valid, which it isn't for these non-file requests.
 
-oh, and there's an early return for `phy->rev < 3` I just noticed.
+Ok, it looks like I miss your commit doing ->file check there.
+Now sure how it slipped even though it's marked v5.7-rc7.
 
->
-> Yeah, that's why I put the "(unreachable!)" note in the commit log. ;)
 
-I don't think that note is correct.
+>>
+>> 3. io_iopoll_req_issued() unconditionally adds the req into ->poll_list
+>>
+>> 4. io_do_iopoll() checks the req, doesn't find it flagged with
+>> REQ_F_IOPOLL_COMPLETED, and tries req->file->iopoll().
+>>
+>>
+>> Do I miss something? Just did a quick and dirty test, which segfaulted.
+>> Not certain about it though.
+>>
+> 
+> 
 
->
-> >
-> > >         u32 rfpwr_offset;
-> > >         u8 pga_gain, pad_gain;
-> > >         int i;
-> > > -       const s16 *uninitialized_var(rf_pwr_offset_table);
-> > > +       const s16 *rf_pwr_offset_table = NULL;
-> > >
-> > >         table = b43_nphy_get_tx_gain_table(dev);
-> > >         if (!table)
-> > > @@ -4256,9 +4256,13 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
-> > >                         pga_gain = (table[i] >> 24) & 0xf;
-> > >                         pad_gain = (table[i] >> 19) & 0x1f;
-> > >                         if (b43_current_band(dev->wl) == NL80211_BAND_2GHZ)
-> > > -                               rfpwr_offset = rf_pwr_offset_table[pad_gain];
-> > > +                               rfpwr_offset = rf_pwr_offset_table
-> > > +                                               ? rf_pwr_offset_table[pad_gain]
-> > > +                                               : 0;
-> > >                         else
-> > > -                               rfpwr_offset = rf_pwr_offset_table[pga_gain];
-> > > +                               rfpwr_offset = rf_pwr_offset_table
-> > > +                                               ? rf_pwr_offset_table[pga_gain]
-> > > +                                               : 0;
-> >
-> >
-> > The code is trying to check `phy->rev >= 7 && phy->rev < 19` once
-> > before the loop, then set `rf_pwr_offset_table`, so having another
-> > conditional on `rf_pwr_offset_table` in the loop is unnecessary. I'm
-> > ok with initializing it to `NULL`, but I'm not sure the conditional
-> > check is necessary.  Do you get a compiler warning otherwise?
->
-> I mean, sort of the best thing to do is just remove nearly everything
-> here since it's actually unreachable. But it is commented as "when
-
-This code is reachable. Consider `phy->rev >= 7 && phy->rev < 19`.  If
-`rf_pwr_offset_table` was NULL, it would have returned early on L4246,
-so the checks added in this patch are unnecessary.  Forgive me if
-there's some other control flow I'm not considering.
-
-> supported ..." etc, so I figured I'd leave it. As part of that I didn't
-> want to leave any chance of a NULL deref, so I added the explicit tests
-> just for robustness.
->
-> *shrug*
 -- 
-Thanks,
-~Nick Desaulniers
+Pavel Begunkov
