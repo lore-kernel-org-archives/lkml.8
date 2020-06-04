@@ -2,157 +2,148 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDEFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E8020659
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofK7eD8B"
+	by mail.kernel.org (Postfix) with ESMTP id 00584206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgFDUL1 (ORCPT
+        id S1729125AbgFDUNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgFDUL0 (ORCPT
+        Thu, 4 Jun 2020 16:13:19 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:60070 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbgFDUNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:11:26 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB6E3C08C5C0;
-        Thu,  4 Jun 2020 13:11:25 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id n23so8927645ljh.7;
-        Thu, 04 Jun 2020 13:11:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XU0sQ4AkY1li005iXLFGPT/yJrACPsD+D0QUcwKxbto=;
-        b=ofK7eD8B1/9BSCaSgojRaCOmwx01Ttt6nsbP4g8v2aLHAkH8xvErsn+Td7xlEDLlUN
-         MBl3OUUJDhmzTCWBpdPLbeh4Y+oX5fZuZaJHgkU1SaZ9F2msGWYkEewBtG+fOTmUX4gE
-         RSuLeFyxSKShmRKWomc4bC7nYahl5KUJIMHV/5A2aGTxZsYKSmO3tLhJFrGZk80okEyV
-         CO0zEe+puJNnWbGo7uP2SLGbRR89p65GVVfEFaTrLEPksbLXcGgq23TBBLTsQ5D/jIVF
-         EoKyy+YfwXcASnsw02P0PSozsMqB4OB4Q6Jo5lIGJHkfIVAj06UggOCS74xPVi5JdkSx
-         X3Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XU0sQ4AkY1li005iXLFGPT/yJrACPsD+D0QUcwKxbto=;
-        b=VR/azh3wI5y5ixQbSQyq9bNDyyExx356vaJEgdaTqtdFPl/RVTuLIQrjE18uZ4Vboo
-         1Uof8jDohjRhwPsNg+UQp4I/IcKFTBvzYC3VJNUTbtOGDWviMpzh34MoXqy3oZreTLZK
-         v2PWiIbyMat85wuDbANmCnV8H382PJlefRHhtZ4xAePUN6y4uaoh9ineVXLpo9n3VV4z
-         279ksccnASJ/PuqHHEYbqJ3kAOS94PaTPolDe9ZBT2ZW3QWd+rslGgxkI+7LQ8qq9qP3
-         l2kKE6bwZSwklgbRjokaGRRgO16xE5ObaB6E2LbzHuqjwv+wh57eiUs2mzf+0jiC+ZJT
-         o73Q==
-X-Gm-Message-State: AOAM531b8IuiC+MPBaddxq3Ic7KvofDcPANE4IujLxd7Wm+wijQlxH+0
-        Z73taC3il29qDrJJ8ClAWarbrcoL
-X-Google-Smtp-Source: ABdhPJx0A2rPrPu2k48Hoi2XL4mtgbkathz1czvfCgSp5jecedoeGvSXplvI9Pkp7ZF0kezRsDI5Fw==
-X-Received: by 2002:a2e:2e08:: with SMTP id u8mr2814161lju.132.1591301483156;
-        Thu, 04 Jun 2020 13:11:23 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
-        by smtp.googlemail.com with ESMTPSA id c4sm113241lja.56.2020.06.04.13.11.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 13:11:19 -0700 (PDT)
-Subject: Re: [PATCH v8 2/6] ARM: tegra: Add device-tree for ASUS Google Nexus
- 7
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200514213654.12834-1-digetx@gmail.com>
- <20200514213654.12834-3-digetx@gmail.com>
- <20200515181847.GA13860@qmqm.qmqm.pl>
- <cf73df1a-92ed-f509-74e8-1c847945fb14@gmail.com>
-Message-ID: <16146336-e853-0130-3d07-d5352546453b@gmail.com>
-Date:   Thu, 4 Jun 2020 23:11:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 4 Jun 2020 16:13:18 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jgwEm-00039a-Kq; Thu, 04 Jun 2020 14:13:16 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jgwEl-0008Pb-PQ; Thu, 04 Jun 2020 14:13:16 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     <linux-kernel@vger.kernel.org>
+Date:   Thu, 04 Jun 2020 15:09:16 -0500
+Message-ID: <87k10mioer.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <cf73df1a-92ed-f509-74e8-1c847945fb14@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jgwEl-0008Pb-PQ;;;mid=<87k10mioer.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/ZkL+F89jjfIpI3mg8ccyT4X1fIe58w40=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [GIT PULL] exec cleanups for v5.8-rc1
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-16.05.2020 15:01, Dmitry Osipenko пишет:
-> 15.05.2020 21:18, Michał Mirosław пишет:
->> On Fri, May 15, 2020 at 12:36:50AM +0300, Dmitry Osipenko wrote:
->>> There are few hardware variants of NVIDIA Tegra30-based Nexus 7 device:
->>>
->>> 1. WiFi-only (named Grouper)
->>> 2. GSM (named Tilapia)
->>> 3. Using Maxim PMIC (E1565 board ID)
->>> 4. Using Ti PMIC (PM269 board ID)
->>
->> Hi,
->>
->> I've briefly looked at the PM269 devicetree (PMIC part) and it looks very
->> similar, if not the same, to what I deduced from the TF300T kernel.
-> 
-> Hello Michał,
-> 
-> Definitely there are board parts that are reused by different devices.
-> This is not surprising since most of the boards are designed by the same
-> company.
-> 
->> Those devices don't look to differ much from original Cardhu tablet
->> devkit, so maybe the trees can base off of that?
-> 
-> I don't think it's really possible in a case of Nexus 7 because in
-> overall the used hardware components differ a bit too much. It shouldn't
-> worth the effort, IMO.
-> 
->> I would also guess that because of this 'ram-code', memory timings would
->> be duplicated between devices. I can see small differences between
->> ram-code=1 timings of Grouper and TF300T, though they look like arbiter
->> tuning differences. I'll have to test if my TF300T works with Grouper's
->> settings. In case they work, could you split the memory timings to another
->> dtsi file?
-> 
-> Yes, perhaps this could be done. The memory timings on Grouper and
-> Tilapia are pretty much the same as well. As you noticed, there are some
-> tuning differences of TF300T in comparison to the Nexus 7, the same
-> applies to the Grouper and Tilapia variants.
-> 
->> BTW, shouldn't EMC timing set match MC? I see more frequencies listed in
->> MC than EMC nodes.
-> 
-> The MC timings are exactly the same on Grouper and Tilapia, but EMC
-> timings have a very minor differences, and thus, the common.dtsi misses
-> these differentiating EMC timings, they are defined in grouper.dtsi and
-> tilapia.dts.
-> 
-> I guess we indeed could try to select the lowest common denominator
-> timing and re-use it. I'll consider this change for v9, thank you very
-> much for the suggestion.
 
-Hello Michał,
+Please pull the proc-linus branch from the git tree:
 
-I tried to investigate whether we could unify the memory timings and
-it's hard to tell. The values are mostly off by one in most cases for
-one or two registers, in others cases a memory-chip feature is enabled
-or disabled for the same memory module. It certainly feels like we could
-safely ignore all those minor differences, but I don't have enough
-expertise in order to decide firmly. In my opinion it should be better
-to leave the memory timings as-is for the starter, we could always get
-back to the unification later on.
+   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-linus
+
+   HEAD: 3977e285ee89a94699255dbbf6eeea13889a1083 exec: Remove the recomputation of bprm->cred
+
+Last cycle for the Nth time I ran into bugs and quality of
+implementation issues related to exec that could not be easily be fixed
+because of the way exec is implemented.  So I have been digging into
+exec and cleanup up what I can.
+
+I don't think I have exec sorted out enough to fix the issues I started
+with but I have made some headway this cycle with 4 sets of changes.
+
+      exec: Promised cleanups after introducing exec_update_mutex
+      exec: Trivial cleanups for exec
+      exec: Control flow simplifications
+      exec: Remove the recomputation of bprm->cred
+
+The net result is code that is a bit easier to understand and work with
+and a decrease in the number of lines of code (if you don't count the
+added tests).
+
+There is a trivial conflict with the transformation of
+copy_strings_kernel into copy_string_kernel by Christoph Hellwig.  These
+changes touch adjacent lines.
+
+Arnd Bergmann (1):
+      binfmt_elf_fdpic: fix execfd build regression
+
+Eric W. Biederman (30):
+      binfmt: Move install_exec_creds after setup_new_exec to match binfmt_elf
+      exec: Make unlocking exec_update_mutex explict
+      exec: Rename the flag called_exec_mmap point_of_no_return
+      exec: Merge install_exec_creds into setup_new_exec
+      exec: In setup_new_exec cache current in the local variable me
+      exec: Move most of setup_new_exec into flush_old_exec
+      exec: Rename flush_old_exec begin_new_exec
+      exec: Promised cleanups after introducing exec_update_mutex
+      exec: Move the comment from above de_thread to above unshare_sighand
+      exec: Fix spelling of search_binary_handler in a comment
+      exec: Run sync_mm_rss before taking exec_update_mutex
+      exec: Move handling of the point of no return to the top level
+      exec: Set the point of no return sooner
+      exec: Trivial cleanups for exec
+      exec: Move would_dump into flush_old_exec
+      Merge f87d1c955916 ("exec: Move would_dump into flush_old_exec")
+      exec: Teach prepare_exec_creds how exec treats uids & gids
+      exec: Factor security_bprm_creds_for_exec out of security_bprm_set_creds
+      exec: Convert security_bprm_set_creds into security_bprm_repopulate_creds
+      exec: Allow load_misc_binary to call prepare_binprm unconditionally
+      exec: Move the call of prepare_binprm into search_binary_handler
+      exec/binfmt_script: Don't modify bprm->buf and then return -ENOEXEC
+      exec: Generic execfd support
+      exec: Remove recursion from search_binary_handler
+      exec: Control flow simplifications
+      exec: Always set cap_ambient in cap_bprm_set_creds
+      Merge commit a4ae32c71fe9 ("exec: Always set cap_ambient in cap_bprm_set_creds")
+      exec: Add a per bprm->file version of per_clear
+      exec: Compute file based creds only once
+      exec: Remove the recomputation of bprm->cred
+
+Kees Cook (1):
+      selftests/exec: Add binfmt_script regression test
+
+ Documentation/trace/ftrace.rst             |   2 +-
+ arch/alpha/kernel/binfmt_loader.c          |  11 +-
+ arch/x86/ia32/ia32_aout.c                  |   4 +-
+ fs/binfmt_aout.c                           |   3 +-
+ fs/binfmt_elf.c                            |   7 +-
+ fs/binfmt_elf_fdpic.c                      |   9 +-
+ fs/binfmt_em86.c                           |  13 +-
+ fs/binfmt_flat.c                           |   4 +-
+ fs/binfmt_misc.c                           |  69 +------
+ fs/binfmt_script.c                         |  82 ++++----
+ fs/exec.c                                  | 320 ++++++++++++++++-------------
+ include/linux/binfmts.h                    |  45 ++--
+ include/linux/lsm_hook_defs.h              |   3 +-
+ include/linux/lsm_hooks.h                  |  56 ++---
+ include/linux/security.h                   |  15 +-
+ kernel/cred.c                              |   3 +
+ kernel/events/core.c                       |   2 +-
+ security/apparmor/domain.c                 |   7 +-
+ security/apparmor/include/domain.h         |   2 +-
+ security/apparmor/lsm.c                    |   2 +-
+ security/commoncap.c                       |  22 +-
+ security/security.c                        |   9 +-
+ security/selinux/hooks.c                   |   8 +-
+ security/smack/smack_lsm.c                 |   9 +-
+ security/tomoyo/tomoyo.c                   |  12 +-
+ tools/testing/selftests/exec/Makefile      |   1 +
+ tools/testing/selftests/exec/binfmt_script | 171 +++++++++++++++
+ 27 files changed, 503 insertions(+), 388 deletions(-)
+
+
+Eric
