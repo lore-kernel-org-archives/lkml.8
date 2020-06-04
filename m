@@ -2,90 +2,118 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FFDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B38206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="f+Lz97I9"
+	by mail.kernel.org (Postfix) with ESMTP id 03E4A2075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgFDIz2 (ORCPT
+        id S1728237AbgFDIzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgFDIz2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:55:28 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05165C03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:55:28 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l27so5229070ejc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1cyPRerltnuf6OiO7zJfaJBlJDvo/vDR9533o+NbRzk=;
-        b=f+Lz97I9fYwRYsY1POv4BsWh7sUNv4BwjVfHmAFW+Z0LJmUxUd/I2VZj/A64TA7MPT
-         pehLmYFlyB2KmT0oVWyHVVPADXZ4TH++UGj5eo9+51dg818r2EbyPG4wWWhVHyp98pBk
-         Smrt++8CCAh/W90dkqBCeWHyBCw5gCvR/nIU0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1cyPRerltnuf6OiO7zJfaJBlJDvo/vDR9533o+NbRzk=;
-        b=IyyFsYHPFdYl9rj3Zis3mq0iZpXXu+agUX47enPLC3Hb8gfJh44j8W56ui8kkeMLxF
-         IjZyZM0+wYohzubb3rDCSLhPt8WhNcKst+1LQlDGrTxK0VAVUhMd3nWKjV4xYzFVRrAz
-         YSKnsbASA5Q0BIR9io4ViluSgYq7G8SFIVCBrndGPT52IsNZyCMJsGgNqdUEmz6S3dGP
-         rWNtGaR3tfdR5HwGFMxRGY1I/uDc8GNmNSdgr1tOErj+nHkAeba8iG5GmLzq+xwWw1KG
-         AhBTqFnr1luDsg7TiBDqjids24gpk4E8PJSWcogZ7UyhuclILy3scRu/HXNKMKDJMOD4
-         E/Nw==
-X-Gm-Message-State: AOAM532zRgtGtpG18dedfMs7KbNAlTwRtpAbNYGeWuJoBj1Tq+QDzKz+
-        9eOhu1TN01cWMP4yjcn3j0fvVE1WjrvbtyaphwB9Jg==
-X-Google-Smtp-Source: ABdhPJzQs5HWOaGr4oBKOUkG5SV+qx7C50ZekirwI6OrNE+rcVx1U6hY4cJ6QS1W+QqIhe4fn6OY1LGz4Eio1g316Pc=
-X-Received: by 2002:a17:906:1947:: with SMTP id b7mr2876662eje.320.1591260926736;
- Thu, 04 Jun 2020 01:55:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <874ks212uj.fsf@m5Zedd9JOGzJrf0>
-In-Reply-To: <874ks212uj.fsf@m5Zedd9JOGzJrf0>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 4 Jun 2020 10:55:15 +0200
-Message-ID: <CAJfpegux+mVxbBH7UbrGWHrQ-7Si211GwSED3h339nERgpeYJw@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: initialize error in ovl_copy_xattr
-To:     Yuxuan Shui <yshuiv7@gmail.com>
-Cc:     overlayfs <linux-unionfs@vger.kernel.org>,
+        Thu, 4 Jun 2020 04:55:54 -0400
+Received: from mga05.intel.com ([192.55.52.43]:40369 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbgFDIzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 04:55:53 -0400
+IronPort-SDR: HE8Q32ng2Ig1l92Z7wQ3KEfT1DPsJLdeBFrW+TqUAaiNPHtW1C2a4CQ4lWibAlK+QcW9zv4MMz
+ hgfSDkXE4vBQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 01:55:53 -0700
+IronPort-SDR: XWUioZwNvMW3pwhLRwrKei5TMxDsG+3ACuBOXQ4V8b69iCzpl6jZsYo5nUD6qEChoPr7xSAFmZ
+ cTsQ6HVSP8+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
+   d="scan'208";a="348039114"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga001.jf.intel.com with ESMTP; 04 Jun 2020 01:55:50 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     trix@redhat.com, bhu@redhat.com, mtosatti@redhat.com,
+        gregkh@linuxfoundation.org, Xu Yilun <yilun.xu@intel.com>
+Subject: [PATCH v6 0/7] Add interrupt support to FPGA DFL drivers
+Date:   Thu,  4 Jun 2020 16:52:10 +0800
+Message-Id: <1591260737-15211-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 5:20 AM Yuxuan Shui <yshuiv7@gmail.com> wrote:
->
->
-> In ovl_copy_xattr, if all the xattrs to be copied are overlayfs private
-> xattrs, the copy loop will terminate without assigning anything to the
-> error variable, thus returning an uninitialized value.
->
-> If ovl_copy_xattr is called from ovl_clear_empty, this uninitialized
-> error value is put into a pointer by ERR_PTR(), causing potential
-> invalid memory accesses down the line.
->
-> This commit initialize error with 0. This is the correct value because
-> when there's no xattr to copy, because all xattrs are private,
-> ovl_copy_xattr should succeed.
->
-> This bug is discovered with the help of INIT_STACK_ALL and clang.
->
-> Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
+This patchset add interrupt support to FPGA DFL drivers.
 
-Thanks, applied.
+With these patches, DFL driver will parse and assign interrupt resources
+for enumerated feature devices and their sub features.
 
-Miklos
+This patchset also introduces a set of APIs for user to monitor DFL
+interrupts. Three sub features (DFL FME error, DFL AFU error and user
+interrupt) drivers now support these APIs.
+
+Patch #1: DFL framework change. Accept interrupt info input from DFL bus
+          driver, and add interrupt parsing and assignment for feature
+          sub devices.
+Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
+Patch #3: DFL framework change. Add helper functions for feature sub
+          device drivers to handle interrupt and notify users.
+Patch #4: Add interrupt support for AFU error reporting sub feature.
+Patch #5: Add interrupt support for FME global error reporting sub
+          feature.
+Patch #6: Add interrupt support for a new sub feature, to handle user
+          interrupts implemented in AFU.
+Patch #7: Documentation for DFL interrupt handling.
+
+Main changes from v1: 
+ - Early validating irq table for each feature in parse_feature_irq()
+   in Patch #1. 
+ - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
+   instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for 
+   DFL_FPGA_FME/PORT_XXX_SET_IRQ param
+
+Main changes from v2:
+ - put parse_feature_irqs() inside create_feature_instance().
+ - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
+ - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
+
+Main changes from v3:
+ - rebased to 5.7-rc1.
+ - fail the dfl enumeration when irq parsing error happens.
+ - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
+   drivers.
+
+Main changes from v4:
+ - Minor fixes for Hao's comments.
+
+Main changes from v5:
+ - Remove unnecessary type casting in Patch #1 & #3.
+ - Minor fixes for Moritz's comments.
+
+Xu Yilun (7):
+  fpga: dfl: parse interrupt info for feature devices on enumeration
+  fpga: dfl: pci: add irq info for feature devices enumeration
+  fpga: dfl: introduce interrupt trigger setting API
+  fpga: dfl: afu: add interrupt support for port error reporting
+  fpga: dfl: fme: add interrupt support for global error reporting
+  fpga: dfl: afu: add AFU interrupt support
+  Documentation: fpga: dfl: add descriptions for interrupt related
+    interfaces.
+
+ Documentation/fpga/dfl.rst    |  19 +++
+ drivers/fpga/dfl-afu-error.c  |  17 +++
+ drivers/fpga/dfl-afu-main.c   |  32 +++++
+ drivers/fpga/dfl-fme-error.c  |  18 +++
+ drivers/fpga/dfl-fme-main.c   |   6 +
+ drivers/fpga/dfl-pci.c        |  81 +++++++++--
+ drivers/fpga/dfl.c            | 308 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/fpga/dfl.h            |  57 ++++++++
+ include/uapi/linux/fpga-dfl.h |  82 +++++++++++
+ 9 files changed, 611 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
+
