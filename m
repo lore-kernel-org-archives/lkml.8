@@ -2,162 +2,138 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF871C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 878D4207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591267587;
-	bh=qqMf+cgcW5aWTOd2XIoCAn1ZhsEUMirD9lIzCwykBdk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JMPFNsP/6YN3QOEhqcKnH1Wxd/OepHla7HkFOm/WfMiKGp5se3cZ5M7EXpIX6MQUn
-	 aGtQ0NHqJkjtEmlObJwi/P7cAqRg49osQKoWe86Vc0DhRb5CmYewKvEDGIbwtPQb6m
-	 NAZsRwIrdGjoVvEZfhEf7Id5IJaop3JysgnYPB1I=
+	by mail.kernel.org (Postfix) with ESMTP id 5188D207D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726288AbgFDKq0 (ORCPT
+        id S1726216AbgFDKwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:46:26 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:32879 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgFDKq0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:46:26 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i74so4679280oib.0;
-        Thu, 04 Jun 2020 03:46:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wapTXlNyzxQxPAMAYQm5d6AJvGc7ALvZ5d5MGvh545A=;
-        b=Jyl1oNuC+bkxtq1gHg/rwsDmgdli1tTgjWvzrPiTJ94sQzXuweLxRFkrJg+NcEHWTe
-         tL+y39bJtb6Y5QUZuug+1rZoRdaLqz7cvavZxUN/eLZHiavKMp+m3Xqb65K8c9sYQN6D
-         2aiWxd9QJjbPUWiQq+rRzAbIeWOdF2st7YFvLfL8z14Bnpsq+/hAHmrpvXyo8gTtBIpH
-         k2zDamF/blUZR1JDexzNSKAuvXKh3bzMR8FGRsTC2MQFpjaVjKiZm7sSM158hWXZDjTE
-         Buos6J36uiU3d6IXknTMti+yJjbWYF01EyEipzaRbRn5Lowb/ahiyipTRSBDao/bzouk
-         xrNA==
-X-Gm-Message-State: AOAM530+a2N5AbP5j/9Da95J1yYJgxkVGs7fFxVxJvGqD7e4ZoLnjosD
-        OnHEG1VgpUr/MuCzBF6FttacXGAKjj5rxg5iw+I=
-X-Google-Smtp-Source: ABdhPJwle7qDpHwAQGYs18DADpyiV5rAllbgOwetFP249ew3PEFnme9pErN/3fR2nq7VUIrGp3DlgUqNT6UxDMa5ALY=
-X-Received: by 2002:aca:eb56:: with SMTP id j83mr2762270oih.110.1591267584968;
- Thu, 04 Jun 2020 03:46:24 -0700 (PDT)
+        Thu, 4 Jun 2020 06:52:05 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51809 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgFDKwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 06:52:05 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49d2f92LdYz9tyTR;
+        Thu,  4 Jun 2020 12:52:01 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 0Dmm7-lgggFl; Thu,  4 Jun 2020 12:52:01 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49d2f91QWvz9tyTQ;
+        Thu,  4 Jun 2020 12:52:01 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AE2878B8B8;
+        Thu,  4 Jun 2020 12:52:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id n4jmuRMQx7XC; Thu,  4 Jun 2020 12:52:02 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [10.25.210.22])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 098DC8B8B2;
+        Thu,  4 Jun 2020 12:52:02 +0200 (CEST)
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: linux-next: build failure on powerpc 8xx with 16k pages
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <dc2b16e1-b719-5500-508d-ae97bf50c4a6@csgroup.eu>
+Date:   Thu, 4 Jun 2020 10:48:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20200603132148.1.I0ec31d716619532fc007eac081e827a204ba03de@changeid>
-In-Reply-To: <20200603132148.1.I0ec31d716619532fc007eac081e827a204ba03de@changeid>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 4 Jun 2020 12:46:13 +0200
-Message-ID: <CAJZ5v0i5VPk+HUb6P43Apb=MwanTkeWqjBMEemDo+fiBTM+eOg@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: Allow suspend even when preparation has failed
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Len Brown <len.brown@intel.com>,
-        Todd Brandt <todd.e.brandt@linux.intel.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 10:22 PM Abhishek Pandit-Subedi
-<abhishekpandit@chromium.org> wrote:
->
-> It is preferable to allow suspend even when Bluetooth has problems
-> preparing for sleep. When Bluetooth fails to finish preparing for
-> suspend, log the error and allow the suspend notifier to continue
-> instead.
->
-> To also make it clearer why suspend failed, change bt_dev_dbg to
-> bt_dev_err when handling the suspend timeout.
->
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Hi all,
 
-Thanks for the patch, it looks reasonable to me.
+Using mpc885_ads_defconfig with CONFIG_PPC_16K_PAGES instead of 
+CONFIG_PPC_4K_PAGES, getting the following build failure:
 
-It would be good to add a Fixes tag to it to indicate that it works
-around an issue introduced by an earlier commit.
+   CC      mm/gup.o
+In file included from ./include/linux/kernel.h:11:0,
+                  from mm/gup.c:2:
+In function 'gup_hugepte.constprop',
+     inlined from 'gup_huge_pd.isra.78' at mm/gup.c:2465:8:
+./include/linux/compiler.h:392:38: error: call to 
+'__compiletime_assert_257' declared with attribute error: Unsupported 
+access size for {READ,WRITE}_ONCE().
+   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+                                       ^
+./include/linux/compiler.h:373:4: note: in definition of macro 
+'__compiletime_assert'
+     prefix ## suffix();    \
+     ^
+./include/linux/compiler.h:392:2: note: in expansion of macro 
+'_compiletime_assert'
+   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+   ^
+./include/linux/compiler.h:405:2: note: in expansion of macro 
+'compiletime_assert'
+   compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long), \
+   ^
+./include/linux/compiler.h:291:2: note: in expansion of macro 
+'compiletime_assert_rwonce_type'
+   compiletime_assert_rwonce_type(x);    \
+   ^
+mm/gup.c:2428:8: note: in expansion of macro 'READ_ONCE'
+   pte = READ_ONCE(*ptep);
+         ^
+In function 'gup_get_pte',
+     inlined from 'gup_pte_range' at mm/gup.c:2228:9,
+     inlined from 'gup_pmd_range' at mm/gup.c:2613:15,
+     inlined from 'gup_pud_range' at mm/gup.c:2641:15,
+     inlined from 'gup_p4d_range' at mm/gup.c:2666:15,
+     inlined from 'gup_pgd_range' at mm/gup.c:2694:15,
+     inlined from 'internal_get_user_pages_fast' at mm/gup.c:2785:3:
+./include/linux/compiler.h:392:38: error: call to 
+'__compiletime_assert_254' declared with attribute error: Unsupported 
+access size for {READ,WRITE}_ONCE().
+   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+                                       ^
+./include/linux/compiler.h:373:4: note: in definition of macro 
+'__compiletime_assert'
+     prefix ## suffix();    \
+     ^
+./include/linux/compiler.h:392:2: note: in expansion of macro 
+'_compiletime_assert'
+   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+   ^
+./include/linux/compiler.h:405:2: note: in expansion of macro 
+'compiletime_assert'
+   compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long), \
+   ^
+./include/linux/compiler.h:291:2: note: in expansion of macro 
+'compiletime_assert_rwonce_type'
+   compiletime_assert_rwonce_type(x);    \
+   ^
+mm/gup.c:2199:9: note: in expansion of macro 'READ_ONCE'
+   return READ_ONCE(*ptep);
+          ^
+make[2]: *** [mm/gup.o] Error 1
 
-Len, Todd, would it be possible to test this one on the affected machines?
 
-> ---
-> To verify this is properly working, I added an additional change to
-> hci_suspend_wait_event to always return -16. This validates that suspend
-> continues even when an error has occurred during the suspend
-> preparation.
->
-> Example on Chromebook:
-> [   55.834524] PM: Syncing filesystems ... done.
-> [   55.841930] PM: Preparing system for sleep (s2idle)
-> [   55.940492] Bluetooth: hci_core.c:hci_suspend_notifier() hci0: Suspend notifier action (3) failed: -16
-> [   55.940497] Freezing user space processes ... (elapsed 0.001 seconds) done.
-> [   55.941692] OOM killer disabled.
-> [   55.941693] Freezing remaining freezable tasks ... (elapsed 0.000 seconds) done.
-> [   55.942632] PM: Suspending system (s2idle)
->
-> I ran this through a suspend_stress_test in the following scenarios:
-> * Peer classic device connected: 50+ suspends
-> * No devices connected: 100 suspends
-> * With the above test case returning -EBUSY: 50 suspends
->
-> I also ran this through our automated testing for suspend and wake on
-> BT from suspend continues to work.
->
->
->  net/bluetooth/hci_core.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
->
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index dbe2d79f233fba..54da48441423e0 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -3289,10 +3289,10 @@ static int hci_suspend_wait_event(struct hci_dev *hdev)
->                                      WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
->
->         if (ret == 0) {
-> -               bt_dev_dbg(hdev, "Timed out waiting for suspend");
-> +               bt_dev_err(hdev, "Timed out waiting for suspend events");
->                 for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
->                         if (test_bit(i, hdev->suspend_tasks))
-> -                               bt_dev_dbg(hdev, "Bit %d is set", i);
-> +                               bt_dev_err(hdev, "Suspend timeout bit: %d", i);
->                         clear_bit(i, hdev->suspend_tasks);
->                 }
->
-> @@ -3360,12 +3360,15 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
->                 ret = hci_change_suspend_state(hdev, BT_RUNNING);
->         }
->
-> -       /* If suspend failed, restore it to running */
-> -       if (ret && action == PM_SUSPEND_PREPARE)
-> -               hci_change_suspend_state(hdev, BT_RUNNING);
-> -
->  done:
-> -       return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
-> +       /* We always allow suspend even if suspend preparation failed and
-> +        * attempt to recover in resume.
-> +        */
-> +       if (ret)
-> +               bt_dev_err(hdev, "Suspend notifier action (%x) failed: %d",
-> +                          action, ret);
-> +
-> +       return NOTIFY_STOP;
->  }
->
->  /* Alloc HCI device */
-> --
-> 2.27.0.rc2.251.g90737beb825-goog
->
+Bisected to:
+
+2ab3a0a02905 (HEAD, refs/bisect/bad) READ_ONCE: Enforce atomicity for 
+{READ,WRITE}_ONCE() memory accesses
+
+Christophe
+
