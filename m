@@ -2,132 +2,97 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA26C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9561D206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5663420835
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgFDTbZ (ORCPT
+        id S1728944AbgFDTdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:31:25 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:56336
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbgFDTbZ (ORCPT
+        Thu, 4 Jun 2020 15:33:20 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:59628 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgFDTdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:31:25 -0400
-X-IronPort-AV: E=Sophos;i="5.73,472,1583190000"; 
-   d="scan'208";a="350624709"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 21:31:22 +0200
-Date:   Thu, 4 Jun 2020 21:31:21 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Matthias Maennich <maennich@google.com>
-cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
-        cocci@systeme.lip6.fr, stable@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH] scripts: add dummy report mode to add_namespace.cocci
-In-Reply-To: <20200604164145.173925-1-maennich@google.com>
-Message-ID: <alpine.DEB.2.21.2006042130080.2577@hadrien>
-References: <20200604164145.173925-1-maennich@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 4 Jun 2020 15:33:19 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id D09B120021;
+        Thu,  4 Jun 2020 21:33:14 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 21:33:13 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v2] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens
+ during PM sleep
+Message-ID: <20200604193313.GA94913@ravnborg.org>
+References: <20200604103438.23667-1-harigovi@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604103438.23667-1-harigovi@codeaurora.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=edQTgYMH c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8 a=M66uC3hkwJVUcRF4gK8A:9
+        a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22 a=pHzHmUro8NiASowvMSCR:22
+        a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Harigovindan
+On Thu, Jun 04, 2020 at 04:04:38PM +0530, Harigovindan P wrote:
+> ti-sn65dsi86 bridge is enumerated as a runtime device.
+> 
+> Adding sleep ops to force runtime_suspend when PM suspend is
+> requested on the device.
 
+Patch looks correct - but could you please explain why it is needed.
+What is the gain compared to not having this patch.
 
-On Thu, 4 Jun 2020, Matthias Maennich wrote:
+I ask for two reasons:
+1) I really do not know
+2) this info should be in the changelog
 
-> When running `make coccicheck` in report mode using the
-> add_namespace.cocci file, it will fail for files that contain
-> MODULE_LICENSE. Those match the replacement precondition, but spatch
-> errors out as virtual.ns is not set.
->
-> In order to fix that, add the virtual rule nsdeps and only do search and
-> replace if that rule has been explicitly requested.
->
-> In order to make spatch happy in report mode, we also need a dummy rule,
-> as otherwise it errors out with "No rules apply". Using a script:python
-> rule appears unrelated and odd, but this is the shortest I could come up
-> with.
->
-> Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
-> `make nsdeps`.
->
-> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-> Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Cc: jeyu@kernel.org
-> Cc: cocci@systeme.lip6.fr
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Matthias Maennich <maennich@google.com>
+Without a better changelog no ack from me - sorry.
 
-Acked-by: Julia Lawall <julia.lawall@inria.fr>
+	Sam
 
-Shuah reported the problem to me, so you could add
-
-Reported-by: Shuah Khan <skhan@linuxfoundation.org>
-
-
+> 
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
->  scripts/coccinelle/misc/add_namespace.cocci | 8 +++++++-
->  scripts/nsdeps                              | 2 +-
->  2 files changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
-> index 99e93a6c2e24..cbf1614163cb 100644
-> --- a/scripts/coccinelle/misc/add_namespace.cocci
-> +++ b/scripts/coccinelle/misc/add_namespace.cocci
-> @@ -6,6 +6,7 @@
->  /// add a missing namespace tag to a module source file.
->  ///
->
-> +virtual nsdeps
->  virtual report
->
->  @has_ns_import@
-> @@ -16,10 +17,15 @@ MODULE_IMPORT_NS(ns);
->
->  // Add missing imports, but only adjacent to a MODULE_LICENSE statement.
->  // That ensures we are adding it only to the main module source file.
-> -@do_import depends on !has_ns_import@
-> +@do_import depends on !has_ns_import && nsdeps@
->  declarer name MODULE_LICENSE;
->  expression license;
->  identifier virtual.ns;
->  @@
->  MODULE_LICENSE(license);
->  + MODULE_IMPORT_NS(ns);
-> +
-> +// Dummy rule for report mode that would otherwise be empty and make spatch
-> +// fail ("No rules apply.")
-> +@script:python depends on report@
-> +@@
-> diff --git a/scripts/nsdeps b/scripts/nsdeps
-> index 03a8e7cbe6c7..dab4c1a0e27d 100644
-> --- a/scripts/nsdeps
-> +++ b/scripts/nsdeps
-> @@ -29,7 +29,7 @@ fi
->
->  generate_deps_for_ns() {
->  	$SPATCH --very-quiet --in-place --sp-file \
-> -		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
-> +		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D nsdeps -D ns=$1 $2
->  }
->
->  generate_deps() {
-> --
-> 2.27.0.rc2.251.g90737beb825-goog
->
->
+> Changes in v2:
+> 	- Include bridge name in the commit message and 
+> 	remove dependent patchwork link from the commit
+> 	text as bridge is independent of OEM(Stephen Boyd)
+> 
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> index 6ad688b320ae..2eef755b2917 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> @@ -159,6 +159,8 @@ static int __maybe_unused ti_sn_bridge_suspend(struct device *dev)
+>  
+>  static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
+>  	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+>  };
+>  
+>  static int status_show(struct seq_file *s, void *data)
+> -- 
+> 2.27.0
