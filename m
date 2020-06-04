@@ -5,73 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555B8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89A732088E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3278120885
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZCDuFtoO"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WQ76x/1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgFDIOE (ORCPT
+        id S1728151AbgFDINx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:14:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51456 "EHLO
+        Thu, 4 Jun 2020 04:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgFDIMm (ORCPT
+        with ESMTP id S1727059AbgFDIMn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:12:42 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D358C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:12:39 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k26so4623233wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:12:39 -0700 (PDT)
+        Thu, 4 Jun 2020 04:12:43 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3FEC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:12:43 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id r9so4295567wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:12:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iX8yvgIySAam94sgW57RQXUmTB7Ou3XcFF4UUEubWkk=;
-        b=ZCDuFtoO+JO6z1AsWRdVcfb4gkFPZIWpzbyZoQgItzGv+2X9uOvWQIfJl2CXVLRyS7
-         jmrwsv7OJneJtVtuGdLOTI+9nAN12c7tfvxEoB5QUeVSsKzLICOoE2KZwOuoG0NrxtB0
-         Y5WBOXg98M8mm1tRfoWbjuaEkFXGTwncTzP4U=
+        bh=RU/4ty0eEugeyrPrVEiQiwkrKqeJ+uZPrr4qGpCy8Ns=;
+        b=WQ76x/1RuTy1JkP9aezKfVnljVf6mBF2k34u6CEzkCHMD5rjzO23Ol0qswF1Uqnn3r
+         NZfMgpfPaWZjBnzc3b4R0o6daICNWxE3wsC5YBUn7XLwXhFfZLN5ZIKJ1vC7UEvOJvnQ
+         jpY5agvtrUOJPNYvXTokA+XG56fPkvmyjcTDY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iX8yvgIySAam94sgW57RQXUmTB7Ou3XcFF4UUEubWkk=;
-        b=U/dYrounjxVRzlF1onWdNUy+ww4NF96f+U7f6X1j28P7gPMtm2hcv5hJyaEMY3m+Hj
-         QQPJy1Yawy4x3NYryBEdVj9VyuEbKdevslMqurMV+OxLErYAvDI92NIwUIoXyfZeg1Lm
-         yBvKuPizHLHPyeckXmqgY/S8hkYIAZ9Wy5qcf7dNfp3YTbVql6idLsLJ0+zhs2j39qLj
-         CL+mvEee1oc/u62NVvBbqgMzvjd7aAQqupMxcMYpL3IIJdMqQ8ZcVgEXQCHAtF33J5Ni
-         tpPCnm37g4hsUMJelP4jjluacuawyvH3HLkysf6/RauYMVNag0OahMGLBaxV3MmeOlHM
-         XyKA==
-X-Gm-Message-State: AOAM533yiWx4sssJlB1C+OQn2dg+n5/sqq5xZMr2miJqZQw42haLfpKB
-        Wi/RrsEjFgo7H6Vc8WXQ9ads1PH9Gsg=
-X-Google-Smtp-Source: ABdhPJxE++sNFKLfONHraOPjYXQYwoR5UNfEopf+/1eDf4bACkMBIaDiWDCJt9Y4c08FHgIuU/EGmg==
-X-Received: by 2002:a7b:c145:: with SMTP id z5mr3006166wmi.6.1591258357250;
-        Thu, 04 Jun 2020 01:12:37 -0700 (PDT)
+        bh=RU/4ty0eEugeyrPrVEiQiwkrKqeJ+uZPrr4qGpCy8Ns=;
+        b=YVQQxiDcoznnoZ4IwCGhPsPIAmfWxraMqr7SBQWrUVNZMHCO+4m1HXLoCnz4ZGdnsZ
+         bmaIkCY7WntaWHgmcEodUVHXv46T51tPvmYjmlb7hJyyn77iGyuUyM5fYW8NwUxZ14BP
+         Zv9vEEoKDCHIhzDWsZQEtF4p0iXNNM+lRKF6Qvm2O5rAWMTC/u51EYiYHGf76YWLoQQM
+         D8Ph1qkp+w+sQFx8JG/jXHUxev8mRLUmDu4XAWQHcbJoB0cXFVjeMP6Us3on20llBSJ6
+         zF9oFytfuTIj+8Dem28fWW2UaCrmjn4QlWiUmZ+X1OdKioRAgJ8Jy8Kuty0jxLdrrktP
+         hyNw==
+X-Gm-Message-State: AOAM533rIMOuOfB6RV0eh8H83Ls9+BrqcN0aTwoJauOSy+m/CXKxgGVJ
+        MhVwBUUmFTDznkjpb8jc47HfJmYuE98=
+X-Google-Smtp-Source: ABdhPJzyEEdLMFWp1SPIqCkQHe7o3lL3hDIhqzkna+QlwTAI0JRQsL2kauEYBN5PgJQKziIXdiNizg==
+X-Received: by 2002:a1c:4008:: with SMTP id n8mr3030923wma.118.1591258362288;
+        Thu, 04 Jun 2020 01:12:42 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id f11sm6873305wrj.2.2020.06.04.01.12.35
+        by smtp.gmail.com with ESMTPSA id f11sm6873305wrj.2.2020.06.04.01.12.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 01:12:36 -0700 (PDT)
+        Thu, 04 Jun 2020 01:12:41 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     DRI Development <dri-devel@lists.freedesktop.org>
 Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
         amd-gfx@lists.freedesktop.org,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
         linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
         Chris Wilson <chris@chris-wilson.co.uk>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 04/18] dma-fence: prime lockdep annotations
-Date:   Thu,  4 Jun 2020 10:12:10 +0200
-Message-Id: <20200604081224.863494-5-daniel.vetter@ffwll.ch>
+Subject: [PATCH 08/18] drm/amdgpu: add dma-fence annotations to atomic commit path
+Date:   Thu,  4 Jun 2020 10:12:14 +0200
+Message-Id: <20200604081224.863494-9-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
 References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
@@ -83,54 +81,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Two in one go:
-- it is allowed to call dma_fence_wait() while holding a
-  dma_resv_lock(). This is fundamental to how eviction works with ttm,
-  so required.
+I need a canary in a ttm-based atomic driver to make sure the
+dma_fence_begin/end_signalling annotations actually work.
 
-- it is allowed to call dma_fence_wait() from memory reclaim contexts,
-  specifically from shrinker callbacks (which i915 does), and from mmu
-  notifier callbacks (which amdgpu does, and which i915 sometimes also
-  does, and probably always should, but that's kinda a debate). Also
-  for stuff like HMM we really need to be able to do this, or things
-  get real dicey.
-
-Consequence is that any critical path necessary to get to a
-dma_fence_signal for a fence must never a) call dma_resv_lock nor b)
-allocate memory with GFP_KERNEL. Also by implication of
-dma_resv_lock(), no userspace faulting allowed. That's some supremely
-obnoxious limitations, which is why we need to sprinkle the right
-annotations to all relevant paths.
-
-The one big locking context we're leaving out here is mmu notifiers,
-added in
-
-commit 23b68395c7c78a764e8963fc15a7cfd318bf187f
-Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Mon Aug 26 22:14:21 2019 +0200
-
-    mm/mmu_notifiers: add a lockdep map for invalidate_range_start/end
-
-that one covers a lot of other callsites, and it's also allowed to
-wait on dma-fences from mmu notifiers. But there's no ready-made
-functions exposed to prime this, so I've left it out for now.
-
-v2: Also track against mmu notifier context.
-
-v3: kerneldoc to spec the cross-driver contract. Note that currently
-i915 throws in a hard-coded 10s timeout on foreign fences (not sure
-why that was done, but it's there), which is why that rule is worded
-with SHOULD instead of MUST.
-
-Also some of the mmu_notifier/shrinker rules might surprise SoC
-drivers, I haven't fully audited them all. Which is infeasible anyway,
-we'll need to run them with lockdep and dma-fence annotations and see
-what goes boom.
-
-v4: A spelling fix from Mika
-
-Cc: Mika Kuoppala <mika.kuoppala@intel.com>
-Cc: Thomas Hellstrom <thomas.hellstrom@intel.com>
 Cc: linux-media@vger.kernel.org
 Cc: linaro-mm-sig@lists.linaro.org
 Cc: linux-rdma@vger.kernel.org
@@ -141,115 +94,40 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc: Christian König <christian.koenig@amd.com>
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 ---
- Documentation/driver-api/dma-buf.rst |  6 ++++
- drivers/dma-buf/dma-fence.c          | 41 ++++++++++++++++++++++++++++
- drivers/dma-buf/dma-resv.c           |  4 +++
- include/linux/dma-fence.h            |  1 +
- 4 files changed, 52 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/driver-api/dma-buf.rst b/Documentation/driver-api/dma-buf.rst
-index 05d856131140..f8f6decde359 100644
---- a/Documentation/driver-api/dma-buf.rst
-+++ b/Documentation/driver-api/dma-buf.rst
-@@ -133,6 +133,12 @@ DMA Fences
- .. kernel-doc:: drivers/dma-buf/dma-fence.c
-    :doc: DMA fences overview
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index bdba0bfd6df1..adabfa929f42 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -57,6 +57,7 @@
  
-+DMA Fence Cross-Driver Contract
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ #include "ivsrcid/ivsrcid_vislands30.h"
+ 
++#include <linux/module.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/version.h>
+@@ -7320,6 +7321,9 @@ static void amdgpu_dm_atomic_commit_tail(struct drm_atomic_state *state)
+ 	struct drm_connector_state *old_con_state, *new_con_state;
+ 	struct dm_crtc_state *dm_old_crtc_state, *dm_new_crtc_state;
+ 	int crtc_disable_count = 0;
++	bool fence_cookie;
 +
-+.. kernel-doc:: drivers/dma-buf/dma-fence.c
-+   :doc: fence cross-driver contract
++	fence_cookie = dma_fence_begin_signalling();
+ 
+ 	drm_atomic_helper_update_legacy_modeset_state(dev, state);
+ 
+@@ -7600,6 +7604,8 @@ static void amdgpu_dm_atomic_commit_tail(struct drm_atomic_state *state)
+ 	/* Signal HW programming completion */
+ 	drm_atomic_helper_commit_hw_done(state);
+ 
++	dma_fence_end_signalling(fence_cookie);
 +
- DMA Fence Signalling Annotations
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 	if (wait_for_vblank)
+ 		drm_atomic_helper_wait_for_flip_done(dev, state);
  
-diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-index 0005bc002529..754e6fb84fb7 100644
---- a/drivers/dma-buf/dma-fence.c
-+++ b/drivers/dma-buf/dma-fence.c
-@@ -64,6 +64,47 @@ static atomic64_t dma_fence_context_counter = ATOMIC64_INIT(1);
-  *   &dma_buf.resv pointer.
-  */
- 
-+/**
-+ * DOC: fence cross-driver contract
-+ *
-+ * Since &dma_fence provide a cross driver contract, all drivers must follow the
-+ * same rules:
-+ *
-+ * * Fences must complete in a reasonable time. Fences which represent kernels
-+ *   and shaders submitted by userspace, which could run forever, must be backed
-+ *   up by timeout and gpu hang recovery code. Minimally that code must prevent
-+ *   further command submission and force complete all in-flight fences, e.g.
-+ *   when the driver or hardware do not support gpu reset, or if the gpu reset
-+ *   failed for some reason. Ideally the driver supports gpu recovery which only
-+ *   affects the offending userspace context, and no other userspace
-+ *   submissions.
-+ *
-+ * * Drivers may have different ideas of what completion within a reasonable
-+ *   time means. Some hang recovery code uses a fixed timeout, others a mix
-+ *   between observing forward progress and increasingly strict timeouts.
-+ *   Drivers should not try to second guess timeout handling of fences from
-+ *   other drivers.
-+ *
-+ * * To ensure there's no deadlocks of dma_fence_wait() against other locks
-+ *   drivers should annotate all code required to reach dma_fence_signal(),
-+ *   which completes the fences, with dma_fence_begin_signalling() and
-+ *   dma_fence_end_signalling().
-+ *
-+ * * Drivers are allowed to call dma_fence_wait() while holding dma_resv_lock().
-+ *   This means any code required for fence completion cannot acquire a
-+ *   &dma_resv lock. Note that this also pulls in the entire established
-+ *   locking hierarchy around dma_resv_lock() and dma_resv_unlock().
-+ *
-+ * * Drivers are allowed to call dma_fence_wait() from their &shrinker
-+ *   callbacks. This means any code required for fence completion cannot
-+ *   allocate memory with GFP_KERNEL.
-+ *
-+ * * Drivers are allowed to call dma_fence_wait() from their &mmu_notifier
-+ *   respectively &mmu_interval_notifier callbacks. This means any code required
-+ *   for fence completeion cannot allocate memory with GFP_NOFS or GFP_NOIO.
-+ *   Only GFP_ATOMIC is permissible, which might fail.
-+ */
-+
- static const char *dma_fence_stub_get_name(struct dma_fence *fence)
- {
-         return "stub";
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index 99c0a33c918d..c223f32425c4 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -35,6 +35,7 @@
- #include <linux/dma-resv.h>
- #include <linux/export.h>
- #include <linux/sched/mm.h>
-+#include <linux/mmu_notifier.h>
- 
- /**
-  * DOC: Reservation Object Overview
-@@ -115,6 +116,9 @@ static int __init dma_resv_lockdep(void)
- 	if (ret == -EDEADLK)
- 		dma_resv_lock_slow(&obj, &ctx);
- 	fs_reclaim_acquire(GFP_KERNEL);
-+	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
-+	__dma_fence_might_wait();
-+	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
- 	fs_reclaim_release(GFP_KERNEL);
- 	ww_mutex_unlock(&obj.lock);
- 	ww_acquire_fini(&ctx);
-diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-index 3f288f7db2ef..09e23adb351d 100644
---- a/include/linux/dma-fence.h
-+++ b/include/linux/dma-fence.h
-@@ -360,6 +360,7 @@ dma_fence_get_rcu_safe(struct dma_fence __rcu **fencep)
- #ifdef CONFIG_LOCKDEP
- bool dma_fence_begin_signalling(void);
- void dma_fence_end_signalling(bool cookie);
-+void __dma_fence_might_wait(void);
- #else
- static inline bool dma_fence_begin_signalling(void)
- {
 -- 
 2.26.2
 
