@@ -2,89 +2,116 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE12C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 809D2208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:42:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eONCZ4WA"
+	by mail.kernel.org (Postfix) with ESMTP id 6857E208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591267343;
+	bh=pz9jxsR7fg56nTvd7znls/4ExyVCIuWGVT4dgqTnomg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oHIzAT0Orm+xbQryXXAhgKIKUMOp1CEuxKAnOzwj20hhbF9XNAoz+4ME50w9/9ES6
+	 P3Rc5+TZwPuxaMK27bztTStMXzpgY06vmUV8voE8Ii0q5obEsFKT+wcq/BIkA22YrT
+	 k36VlY5fBuONQeLc3aw9whYgvUVLsxEVpnxcnNRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgFDKmA (ORCPT
+        id S1726221AbgFDKmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:42:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgFDKmA (ORCPT
+        Thu, 4 Jun 2020 06:42:21 -0400
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:39957 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgFDKmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:42:00 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E54C03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 03:41:59 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f112d001dd207221d904b00.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2d00:1dd2:722:1d90:4b00])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 248371EC0105;
-        Thu,  4 Jun 2020 12:41:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591267318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=7I6iPuEVb5CnEJjzJhvwDiCZmWRnS4fkHUoU0mPnILg=;
-        b=eONCZ4WAshkgaItjnFDP+g42Mom/CLZtNhqvu9om0TG8p9+01ATGjpRTPeZGNUVhLP/7pm
-        xN7WWwrOS+kAj4LaTI2+Bz/oQlVGjf88tZE0l2Auzx3Ktm0M34WICrKbyeJPBTLK4IWWAq
-        aZi8sFV5P4K4Gmexoh3QrRPqTEZP97U=
-From:   Borislav Petkov <bp@alien8.de>
-To:     X86 ML <x86@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/cpufeatures: Mark two free bits in word 3
-Date:   Thu,  4 Jun 2020 12:41:50 +0200
-Message-Id: <20200604104150.2056-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        Thu, 4 Jun 2020 06:42:20 -0400
+Received: by mail-oi1-f170.google.com with SMTP id t25so4641890oij.7;
+        Thu, 04 Jun 2020 03:42:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MtLNfsN/A/N2E3wGVViMKTHPXKwZLxoBNdSqzHaE8IA=;
+        b=TJgUvPw4HOhKa1RKyZx1yhqfeWlnJRqajjAbpdn8XEdkZ3L7yMKindhHxkfljFWGln
+         RDOjrSBcaKqdIKhBADlWaKzeKoR4P2ALaUrsc7+AzlwyRAQ5TlmL/MLNnjbcv/fkdQdZ
+         MZnlYmqUVrcesFft/AWRCnUKe+pVHTcXIpsLbP94vUNQ3yJH59gS9qhbtdaH73nOGoC3
+         E2jSWblAocsZsjqk+PGBGrS6qUhQRyB+aM+nV8fcq2ds3K2d14TsrdoT0gKidz9/p5Ab
+         K+3bl0JubX9WriK00QfqvqVIcsn0xk6qlmijCtmc+a/72QRpOJrkNlL18niPwHZUbvHO
+         J61g==
+X-Gm-Message-State: AOAM533I17OgN6WcOr0Ri9PWnsDl6ZGlC5fPimJCoS4NjyONFg5UlnRO
+        mEXfYu06dTZprE+GyftecJpdCb+YtbTFJbkHUhE=
+X-Google-Smtp-Source: ABdhPJy8rc2CM0Ibwow4BpUi881bLGZBqvgaLDrHV1YRcB5ipoLExPWRN9L10+GYyAKPX9xvchTgof73i4AGf3hzDdY=
+X-Received: by 2002:aca:ad88:: with SMTP id w130mr2754792oie.103.1591267339260;
+ Thu, 04 Jun 2020 03:42:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+ <20200603075200.hbyofgcyiwocl565@vireshk-i7> <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
+ <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com> <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
+In-Reply-To: <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 4 Jun 2020 12:42:06 +0200
+Message-ID: <CAJZ5v0jj5OS4oB7MYBqKeYejy_3Vz_2oy0hn-Xm=D7XAszM_vg@mail.gmail.com>
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <Sudeep.Holla@arm.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On Thu, Jun 4, 2020 at 6:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 04-06-20, 09:32, Xiongfeng Wang wrote:
+> > On 2020/6/3 21:39, Rafael J. Wysocki wrote:
+> > > The frequency value obtained by kicking the CPU out of idle
+> > > artificially is bogus, though.  You may as well return a random number
+> > > instead.
+> >
+> > Yes, it may return a randowm number as well.
+> >
+> > >
+> > > The frequency of a CPU in an idle state is in fact unknown in the case
+> > > at hand, so returning 0 looks like the cleanest option to me.
+> >
+> > I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
+> > return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
+> > zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
+> > idle, I will get a non-zero value. The user may feel odd about
+> > 'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
+> > may hope it can return the frequency when the CPU execute instructions, namely
+> > in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
+>
+> This is what I was worried about as well. The interface to sysfs needs
+> to be robust. Returning frequency on some readings and 0 on others
+> doesn't look right to me as well. This will break scripts (I am not
+> sure if some scripts are there to look for these values) with the
+> randomness of values returned by it.
 
-... so that they get reused when needed.
+The only thing the scripts need to do is to skip zeros (or anything
+less than the minimum hw frequency for that matter) coming from that
+attribute.
 
-No functional changes.
+> On reading values locally from the CPU, I thought about the case where
+> userspace can prevent a CPU going into idle just by reading its
+> frequency from sysfs (and so waste power), but the same can be done by
+> userspace to run arbitrary load on the CPUs.
+>
+> Can we do some sort of caching of the last frequency the CPU was
+> running at before going into idle ? Then we can just check if cpu is
+> idle and so return cached value.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/cpufeatures.h | 2 ++
- 1 file changed, 2 insertions(+)
+That is an option, but it looks like in this case the cpuinfo_cur_freq
+attribute should not be present at all, as per the documentation.
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index db189945e9b0..cb702e5248b9 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -96,6 +96,7 @@
- #define X86_FEATURE_SYSCALL32		( 3*32+14) /* "" syscall in IA32 userspace */
- #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
- #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
-+/* free					( 3*32+17) */
- #define X86_FEATURE_LFENCE_RDTSC	( 3*32+18) /* "" LFENCE synchronizes RDTSC */
- #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
- #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
-@@ -107,6 +108,7 @@
- #define X86_FEATURE_EXTD_APICID		( 3*32+26) /* Extended APICID (8 bits) */
- #define X86_FEATURE_AMD_DCM		( 3*32+27) /* AMD multi-node processor */
- #define X86_FEATURE_APERFMPERF		( 3*32+28) /* P-State hardware coordination feedback capability (APERF/MPERF MSRs) */
-+/* free					( 3*32+29) */
- #define X86_FEATURE_NONSTOP_TSC_S3	( 3*32+30) /* TSC doesn't stop in S3 state */
- #define X86_FEATURE_TSC_KNOWN_FREQ	( 3*32+31) /* TSC has known frequency */
- 
--- 
-2.21.0
-
+Cheers!
