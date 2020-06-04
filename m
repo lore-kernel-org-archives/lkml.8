@@ -2,115 +2,117 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D958C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5286BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F9C20738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA1B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hgm9HtO2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ib7Wc1Gn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbgFDQkC (ORCPT
+        id S1729919AbgFDQkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:40:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25719 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729657AbgFDQjt (ORCPT
+        Thu, 4 Jun 2020 12:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729657AbgFDQkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:39:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591288787;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=sQfD7DfM7A0Gmivi6tpLXZMhnc7A3tGFd2gq5rfU1s4=;
-        b=hgm9HtO2+4NYjpldlY0Xvy8njEXaf9xRZorjXj6JNpqZMLnoABsyBkkTEkeYzU+lAv94CP
-        3MnQ+y5tIvYB4EQogbTX90xpVZsZRgMU+kn5BbgwfGp4m6LnFNiG0AN0ULZKlP+BQBkE/1
-        pMYkiZxiytt3YIhuhr5EUe5sA/Zq4uw=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-4LIgXZ_uOcCTvr2_P8FZcg-1; Thu, 04 Jun 2020 12:39:44 -0400
-X-MC-Unique: 4LIgXZ_uOcCTvr2_P8FZcg-1
-Received: by mail-wr1-f71.google.com with SMTP id h6so2665558wrx.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:39:43 -0700 (PDT)
+        Thu, 4 Jun 2020 12:40:19 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D251C08C5C0;
+        Thu,  4 Jun 2020 09:40:19 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 5so1420863pjd.0;
+        Thu, 04 Jun 2020 09:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=A3i1Y/uWZjvOKPJmr6UpXk+ssrbNL04u8CPNIJtcrUM=;
+        b=Ib7Wc1GnX3qN2AImWV6NMbcrCTmw3Q2G02/8t7+ZAdbp5pnq9zar82fav50SR9V44Z
+         bHjAdfvge/2orXyJV5wgsojwuGWWeM8BgfXjl8HSXxmLvi+1qEokqYWq7UmS1fhwRdLr
+         elmkEava9W0hOtXbWzHrlRGI17+TdRAKuAL94+RbdHYU3oQBIM8UkNzUBmPd6WOV1QpC
+         OxLxBZeLEdsfu+h1pDPd9m26bbqadt8vw+l3N2zfGSLoVqLR0QfzZ/inWMB6FTkxcD33
+         WalkNDwcneAwdvMp+8b6LeV/4ICyRepKs/T5hOcVuQFGKLaH3ok60zkF8ci34OXkMZYT
+         1B/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sQfD7DfM7A0Gmivi6tpLXZMhnc7A3tGFd2gq5rfU1s4=;
-        b=So0GJqJslF2JPv3NSt2a6xFCJXmjEqud1xqUHn+J8xmXczaedU765FAMxXycxlEcBt
-         GGzRR5u/13U6JCUVFyRzwYB7JHd2JzS3CNsMYKC/7JXQQ/zLO9OFuSmkLxpMhz1Xk/0g
-         Zd6MIWAGZX8gq6rjMe6DcogB6Ybl2SEF0mD1FydBhXnIyjNa19TGmj0LVwvBA7+Vfeuw
-         lNBevTkq4TYBacyYWuK1lE3PusIT0TKJjYIqQ4mMZMky261o0gFTK/3vx7ney34Pz55a
-         o8RD/PMTmXp+r4qf0Mt4H2nhEaZ1snB76nessVG/S8AFcnC3TIWxGwllXZzT7YP5BWeG
-         a2dQ==
-X-Gm-Message-State: AOAM531XtnveZy4Ghsz8uPnFGtaG7O+52kbO+n3X24kEbxvJouFVrlAW
-        4DQA5Q52aIflybqnUu8qv8ueT5KqXNkCjsQnad0Vy8zQt6VB+Q+4wMOAGK0t2kHAXYqdfGys2ip
-        44Xm+qNG7Z+iaEP8/NAUyNGNw
-X-Received: by 2002:a05:6000:10c3:: with SMTP id b3mr5605452wrx.53.1591288782771;
-        Thu, 04 Jun 2020 09:39:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx/iZt4qBXPIMd9t0x1KbJliF+RE629lbzbGD/TDpfh53s+jzO/S3om9jhWda/I5co04K1QRg==
-X-Received: by 2002:a05:6000:10c3:: with SMTP id b3mr5605438wrx.53.1591288782588;
-        Thu, 04 Jun 2020 09:39:42 -0700 (PDT)
-Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id p9sm7881636wma.48.2020.06.04.09.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 09:39:42 -0700 (PDT)
-From:   Julien Thierry <jthierry@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, mhelsley@vmware.com,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 0/4] Remove dependency of check subcmd upon orc
-Date:   Thu,  4 Jun 2020 17:39:34 +0100
-Message-Id: <20200604163938.21660-1-jthierry@redhat.com>
-X-Mailer: git-send-email 2.21.1
+        bh=A3i1Y/uWZjvOKPJmr6UpXk+ssrbNL04u8CPNIJtcrUM=;
+        b=bGWV9GVGhYXXtpHeaGORX5GFm4vdiX4VQ/ynERJhX6t43q2J4ezNlZEIplpxqJSjhm
+         MeCynOvWNeJFHhlJP4u7/VlVtzRYqVDREXA/SmlYWv30Z4ZhbIu55FL/VjX4PoKxUhac
+         7svMPQD2yMYWrWiatv4Bd1FwZiMD6h7RWLq4zw8vHAYxdGa0y2MSzK/KWaxlXKuG616K
+         +Qb5impTU7Ag5pMVXeaCagzmyR7CAkd4RHqyano+4CRWu0peoi5Ub8+l+BGQ7QvDweBX
+         I2LhLYNa+xkixinB12fJHFnqYNenl8v2kNKMqLzpZW1HW6nO01qlzRiB7Nefqp28JdP9
+         GdGQ==
+X-Gm-Message-State: AOAM533yiivvByCAZnAUMswxsodNH4Tfngu+1spVOO+uXDy0GqwRZ3+1
+        4RnLBWY0IVS6CoMRi8rLios=
+X-Google-Smtp-Source: ABdhPJwHCqIPELRZMH+m8w5zHxSff7d/Jnxr6zWedksxAa4bE5qv/P/51TM6EZ2sLGPMS2V0vMUnJA==
+X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr7093309pjb.4.1591288818763;
+        Thu, 04 Jun 2020 09:40:18 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j8sm5807508pjw.11.2020.06.04.09.40.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 09:40:16 -0700 (PDT)
+Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
+ strings
+To:     Lukas Wunner <lukas@wunner.de>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-3-f.fainelli@gmail.com>
+ <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <15c3995e-87de-0f2b-3424-5dd698b181d3@gmail.com>
+Date:   Thu, 4 Jun 2020 09:40:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Matt Helsley's change[1] provided a base framework to opt-in/out
-objtool subcommands at compile time. This makes it easier for
-architectures to port objtool, one subcommand at a time.
 
-Orc generation relies on the check operation implementation. However,
-the way this is done causes the check implementation to depend on the
-implementation of orc generation functions to call if orc generation is
-requested. This means that in order to implement check subcmd, orc
-subcmd also need to be implemented.
+On 6/3/2020 9:20 PM, Lukas Wunner wrote:
+> On Wed, Jun 03, 2020 at 08:46:54PM -0700, Florian Fainelli wrote:
+>> The BCM2711 SoC features 5 SPI controllers which all share the same
+>> interrupt line, the SPI driver needs to support interrupt sharing,
+>> therefore use the chip specific compatible string to help with that.
+> 
+> You're saying above that the 5 controllers all share the interrupt
+> but below you're only changing the compatible string of 4 controllers.
+> 
+> So I assume spi0 still has its own interrupt and only the additional
+> 4 controllers present on the BCM2711/BCM7211 share their interrupt?
 
-These patches aim at removing that dependency, having orc subcmd
-being built on top of the check subcmd.
-
-[1] https://www.spinics.net/lists/kernel/msg3510844.html
-
-Cheers,
-
-Julien Thierry (4):
-  objtool: Move object file loading out of check
-  objtool: Move orc outside of check
-  objtool: orc: Skip setting orc_entry for non-text sections
-  objtool: orc_gen: Move orc_entry out of instruction structure
-
- tools/objtool/builtin-check.c |  7 ++-
- tools/objtool/builtin-orc.c   | 24 +++++++++-
- tools/objtool/check.c         | 45 ++++--------------
- tools/objtool/check.h         |  1 -
- tools/objtool/objtool.c       | 30 ++++++++++++
- tools/objtool/objtool.h       |  5 +-
- tools/objtool/orc_gen.c       | 86 ++++++++++++++++++++---------------
- tools/objtool/weak.c          |  4 +-
- 8 files changed, 122 insertions(+), 80 deletions(-)
-
---
-2.21.1
-
+Correct, there are 5 instances, but only the 4 that were added for 2711
+actually share the interrupt line, I will correct that in the next patch
+version.
+-- 
+Florian
