@@ -2,534 +2,553 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13533C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B4DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8DAD2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fa2ry8JP"
+	by mail.kernel.org (Postfix) with ESMTP id 48D362065C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgFDJGC (ORCPT
+        id S1728483AbgFDJGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:06:02 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54658 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728127AbgFDJF7 (ORCPT
+        Thu, 4 Jun 2020 05:06:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23870 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728127AbgFDJGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:05:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591261556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v6aK2hpgClJ6HivdtvQMmbhWQibPdYDHnwlJip8pmN0=;
-        b=Fa2ry8JP4aV3wICHqoy8jydtgfaMhXq+JjJgGgWUEDtIGWBlD1CUOXn37HrF5soR5+BteK
-        xMpEYzNRNEzdCT/UfEGaSm/CnZBgGqjP3e0LdBjWB7GZdBkb+B8Aurwr1tYHL6Ezsf+9ez
-        FN449pZOg6lIiu3xMSmokNIWiOJ3M68=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262--Zc-XcPmOlebgZSWPPSXJQ-1; Thu, 04 Jun 2020 05:05:53 -0400
-X-MC-Unique: -Zc-XcPmOlebgZSWPPSXJQ-1
-Received: by mail-wm1-f69.google.com with SMTP id v23so1763591wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:05:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=v6aK2hpgClJ6HivdtvQMmbhWQibPdYDHnwlJip8pmN0=;
-        b=bUHNwqZYaIgyGsVseCsGSDxo6+iP3yg/LgwX9wLgt+sv+cpszEkBp1lHCvXQqWKifh
-         yZjofkwDi6fSknCwZfvM5g/GSyAkyFVI6u7pVaMgzbQjv6SiWXR8b1S4C4QDTN4L/t6U
-         IGlvc4XQFv8EYouLpE37CiavpkluuPYJ2QpaiK5GxHuyiauNd3g9mxoD5MuI+bdkHF+5
-         +1YSgusyb0ixYX3H3ZUVRoLhKXPo+BcWCzQz+rnvMF4A3aWhkTBdFnvdwO5mP3awpyPL
-         bFCianCqI0C5fBkQMoQd7I7yOMhXg0qaEdSgzmxGxB8qnuYWYTSdo7jgHs6YCodFwQCo
-         Ekdw==
-X-Gm-Message-State: AOAM5300qpM++48k4P7YF5lH1/RGL/zvvQpAYuNVdNyIUAKAw0aELZlL
-        WazHOqTdl4oPz6ZBY+tTdW3uofph4QnSNgMpSC4BUDE/kYNZpT08w8dSSxyhCczq6HxSr9dzSO3
-        FtvsXedJOiyLLZ6zPZLwM1fxy
-X-Received: by 2002:adf:f5d0:: with SMTP id k16mr3622125wrp.288.1591261551653;
-        Thu, 04 Jun 2020 02:05:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyi+CU2C+brb/iCtICGkKIxnwDqSCBSke7/ca4OcXimxY2yNqEMNHuLL4VWSXsyXnSJovbNlw==
-X-Received: by 2002:adf:f5d0:: with SMTP id k16mr3622030wrp.288.1591261550603;
-        Thu, 04 Jun 2020 02:05:50 -0700 (PDT)
-Received: from redhat.com ([2a00:a040:185:f65:9a3b:8fff:fed3:ad8d])
-        by smtp.gmail.com with ESMTPSA id i74sm7061245wri.49.2020.06.04.02.05.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 02:05:49 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 05:05:42 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC 08/13] vhost/net: convert to new API: heads->bufs
-Message-ID: <20200604050332-mutt-send-email-mst@kernel.org>
-References: <20200602130543.578420-1-mst@redhat.com>
- <20200602130543.578420-9-mst@redhat.com>
- <8e5c4e5d-9729-2458-893d-a767b758e7ef@redhat.com>
+        Thu, 4 Jun 2020 05:06:35 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0548WYdd093116;
+        Thu, 4 Jun 2020 05:05:49 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ec65g583-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 05:05:49 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0548xVlu184092;
+        Thu, 4 Jun 2020 05:05:48 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ec65g57c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 05:05:48 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0548uLAR023363;
+        Thu, 4 Jun 2020 09:05:47 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf481p2x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 09:05:46 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05495i1I65536250
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jun 2020 09:05:44 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6501D5205A;
+        Thu,  4 Jun 2020 09:05:44 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.75.100])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 27BF752051;
+        Thu,  4 Jun 2020 09:05:39 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Thu, 04 Jun 2020 14:35:38 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-nvdimm\@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Santosh Sivaraj <santosh@fossix.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        "Weiny\, Ira" <ira.weiny@intel.com>
+Subject: RE: [RESEND PATCH v9 4/5] ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
+In-Reply-To: <BN6PR11MB413223B333153721405DFD91C6890@BN6PR11MB4132.namprd11.prod.outlook.com>
+References: <20200602101438.73929-1-vaibhav@linux.ibm.com> <20200602101438.73929-5-vaibhav@linux.ibm.com> <BN6PR11MB413223B333153721405DFD91C6890@BN6PR11MB4132.namprd11.prod.outlook.com>
+Date:   Thu, 04 Jun 2020 14:35:38 +0530
+Message-ID: <87h7vrgpzx.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8e5c4e5d-9729-2458-893d-a767b758e7ef@redhat.com>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-04_04:2020-06-02,2020-06-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015
+ suspectscore=2 adultscore=0 malwarescore=0 cotscore=-2147483648
+ spamscore=0 mlxlogscore=999 lowpriorityscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006040058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 04:11:54PM +0800, Jason Wang wrote:
-> 
-> On 2020/6/2 下午9:06, Michael S. Tsirkin wrote:
-> > Convert vhost net to use the new format-agnostic API.
-> > In particular, don't poke at vq internals such as the
-> > heads array.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> >   drivers/vhost/net.c | 153 +++++++++++++++++++++++---------------------
-> >   1 file changed, 81 insertions(+), 72 deletions(-)
-> > 
-> > diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> > index 749a9cf51a59..47af3d1ce3dd 100644
-> > --- a/drivers/vhost/net.c
-> > +++ b/drivers/vhost/net.c
-> > @@ -59,13 +59,13 @@ MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
-> >    * status internally; used for zerocopy tx only.
-> >    */
-> >   /* Lower device DMA failed */
-> > -#define VHOST_DMA_FAILED_LEN	((__force __virtio32)3)
-> > +#define VHOST_DMA_FAILED_LEN	(3)
-> >   /* Lower device DMA done */
-> > -#define VHOST_DMA_DONE_LEN	((__force __virtio32)2)
-> > +#define VHOST_DMA_DONE_LEN	(2)
-> >   /* Lower device DMA in progress */
-> > -#define VHOST_DMA_IN_PROGRESS	((__force __virtio32)1)
-> > +#define VHOST_DMA_IN_PROGRESS	(1)
-> >   /* Buffer unused */
-> > -#define VHOST_DMA_CLEAR_LEN	((__force __virtio32)0)
-> > +#define VHOST_DMA_CLEAR_LEN	(0)
-> 
-> 
-> Another patch for this?
+Hi Dan,
 
-It can't be a separate patch. Without switching to vhost_buf we are
-passing vring_used structs around, and that has __virtio32 length. If
-switching to vhost_buf, the length is u32.
-Just 4 lines, not a lot would be gained by splitting it out anyway.
+Thanks for review and insights on this. My responses below:
 
-> 
-> >   #define VHOST_DMA_IS_DONE(len) ((__force u32)(len) >= (__force u32)VHOST_DMA_DONE_LEN)
-> > @@ -112,9 +112,12 @@ struct vhost_net_virtqueue {
-> >   	/* last used idx for outstanding DMA zerocopy buffers */
-> >   	int upend_idx;
-> >   	/* For TX, first used idx for DMA done zerocopy buffers
-> > -	 * For RX, number of batched heads
-> > +	 * For RX, number of batched bufs
-> >   	 */
-> >   	int done_idx;
-> > +	/* Outstanding user bufs. UIO_MAXIOV in length. */
-> > +	/* TODO: we can make this smaller for sure. */
-> > +	struct vhost_buf *bufs;
-> >   	/* Number of XDP frames batched */
-> >   	int batched_xdp;
-> >   	/* an array of userspace buffers info */
-> > @@ -271,6 +274,8 @@ static void vhost_net_clear_ubuf_info(struct vhost_net *n)
-> >   	int i;
-> >   	for (i = 0; i < VHOST_NET_VQ_MAX; ++i) {
-> > +		kfree(n->vqs[i].bufs);
-> > +		n->vqs[i].bufs = NULL;
-> >   		kfree(n->vqs[i].ubuf_info);
-> >   		n->vqs[i].ubuf_info = NULL;
-> >   	}
-> > @@ -282,6 +287,12 @@ static int vhost_net_set_ubuf_info(struct vhost_net *n)
-> >   	int i;
-> >   	for (i = 0; i < VHOST_NET_VQ_MAX; ++i) {
-> > +		n->vqs[i].bufs = kmalloc_array(UIO_MAXIOV,
-> > +					       sizeof(*n->vqs[i].bufs),
-> > +					       GFP_KERNEL);
-> > +		if (!n->vqs[i].bufs)
-> > +			goto err;
-> > +
-> >   		zcopy = vhost_net_zcopy_mask & (0x1 << i);
-> >   		if (!zcopy)
-> >   			continue;
-> > @@ -364,18 +375,18 @@ static void vhost_zerocopy_signal_used(struct vhost_net *net,
-> >   	int j = 0;
-> >   	for (i = nvq->done_idx; i != nvq->upend_idx; i = (i + 1) % UIO_MAXIOV) {
-> > -		if (vq->heads[i].len == VHOST_DMA_FAILED_LEN)
-> > +		if (nvq->bufs[i].in_len == VHOST_DMA_FAILED_LEN)
-> >   			vhost_net_tx_err(net);
-> > -		if (VHOST_DMA_IS_DONE(vq->heads[i].len)) {
-> > -			vq->heads[i].len = VHOST_DMA_CLEAR_LEN;
-> > +		if (VHOST_DMA_IS_DONE(nvq->bufs[i].in_len)) {
-> > +			nvq->bufs[i].in_len = VHOST_DMA_CLEAR_LEN;
-> >   			++j;
-> >   		} else
-> >   			break;
-> >   	}
-> >   	while (j) {
-> >   		add = min(UIO_MAXIOV - nvq->done_idx, j);
-> > -		vhost_add_used_and_signal_n(vq->dev, vq,
-> > -					    &vq->heads[nvq->done_idx], add);
-> > +		vhost_put_used_n_bufs(vq, &nvq->bufs[nvq->done_idx], add);
-> > +		vhost_signal(vq->dev, vq);
-> >   		nvq->done_idx = (nvq->done_idx + add) % UIO_MAXIOV;
-> >   		j -= add;
-> >   	}
-> > @@ -390,7 +401,7 @@ static void vhost_zerocopy_callback(struct ubuf_info *ubuf, bool success)
-> >   	rcu_read_lock_bh();
-> >   	/* set len to mark this desc buffers done DMA */
-> > -	nvq->vq.heads[ubuf->desc].in_len = success ?
-> > +	nvq->bufs[ubuf->desc].in_len = success ?
-> >   		VHOST_DMA_DONE_LEN : VHOST_DMA_FAILED_LEN;
-> >   	cnt = vhost_net_ubuf_put(ubufs);
-> > @@ -452,7 +463,8 @@ static void vhost_net_signal_used(struct vhost_net_virtqueue *nvq)
-> >   	if (!nvq->done_idx)
-> >   		return;
-> > -	vhost_add_used_and_signal_n(dev, vq, vq->heads, nvq->done_idx);
-> > +	vhost_put_used_n_bufs(vq, nvq->bufs, nvq->done_idx);
-> > +	vhost_signal(dev, vq);
-> >   	nvq->done_idx = 0;
-> >   }
-> > @@ -558,6 +570,7 @@ static void vhost_net_busy_poll(struct vhost_net *net,
-> >   static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
-> >   				    struct vhost_net_virtqueue *tnvq,
-> > +				    struct vhost_buf *buf,
-> >   				    unsigned int *out_num, unsigned int *in_num,
-> >   				    struct msghdr *msghdr, bool *busyloop_intr)
-> >   {
-> > @@ -565,10 +578,10 @@ static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
-> >   	struct vhost_virtqueue *rvq = &rnvq->vq;
-> >   	struct vhost_virtqueue *tvq = &tnvq->vq;
-> > -	int r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-> > -				  out_num, in_num, NULL, NULL);
-> > +	int r = vhost_get_avail_buf(tvq, buf, tvq->iov, ARRAY_SIZE(tvq->iov),
-> > +				    out_num, in_num, NULL, NULL);
-> > -	if (r == tvq->num && tvq->busyloop_timeout) {
-> > +	if (!r && tvq->busyloop_timeout) {
-> >   		/* Flush batched packets first */
-> >   		if (!vhost_sock_zcopy(vhost_vq_get_backend(tvq)))
-> >   			vhost_tx_batch(net, tnvq,
-> > @@ -577,8 +590,8 @@ static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
-> >   		vhost_net_busy_poll(net, rvq, tvq, busyloop_intr, false);
-> > -		r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
-> > -				      out_num, in_num, NULL, NULL);
-> > +		r = vhost_get_avail_buf(tvq, buf, tvq->iov, ARRAY_SIZE(tvq->iov),
-> > +					out_num, in_num, NULL, NULL);
-> >   	}
-> >   	return r;
-> > @@ -607,6 +620,7 @@ static size_t init_iov_iter(struct vhost_virtqueue *vq, struct iov_iter *iter,
-> >   static int get_tx_bufs(struct vhost_net *net,
-> >   		       struct vhost_net_virtqueue *nvq,
-> > +		       struct vhost_buf *buf,
-> >   		       struct msghdr *msg,
-> >   		       unsigned int *out, unsigned int *in,
-> >   		       size_t *len, bool *busyloop_intr)
-> > @@ -614,9 +628,9 @@ static int get_tx_bufs(struct vhost_net *net,
-> >   	struct vhost_virtqueue *vq = &nvq->vq;
-> >   	int ret;
-> > -	ret = vhost_net_tx_get_vq_desc(net, nvq, out, in, msg, busyloop_intr);
-> > +	ret = vhost_net_tx_get_vq_desc(net, nvq, buf, out, in, msg, busyloop_intr);
-> > -	if (ret < 0 || ret == vq->num)
-> > +	if (ret <= 0)
-> >   		return ret;
-> >   	if (*in) {
-> > @@ -761,7 +775,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >   	struct vhost_net_virtqueue *nvq = &net->vqs[VHOST_NET_VQ_TX];
-> >   	struct vhost_virtqueue *vq = &nvq->vq;
-> >   	unsigned out, in;
-> > -	int head;
-> > +	int ret;
-> >   	struct msghdr msg = {
-> >   		.msg_name = NULL,
-> >   		.msg_namelen = 0,
-> > @@ -773,6 +787,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >   	int err;
-> >   	int sent_pkts = 0;
-> >   	bool sock_can_batch = (sock->sk->sk_sndbuf == INT_MAX);
-> > +	struct vhost_buf buf;
-> >   	do {
-> >   		bool busyloop_intr = false;
-> > @@ -780,13 +795,13 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >   		if (nvq->done_idx == VHOST_NET_BATCH)
-> >   			vhost_tx_batch(net, nvq, sock, &msg);
-> > -		head = get_tx_bufs(net, nvq, &msg, &out, &in, &len,
-> > -				   &busyloop_intr);
-> > +		ret = get_tx_bufs(net, nvq, &buf, &msg, &out, &in, &len,
-> > +				  &busyloop_intr);
-> >   		/* On error, stop handling until the next kick. */
-> > -		if (unlikely(head < 0))
-> > +		if (unlikely(ret < 0))
-> >   			break;
-> >   		/* Nothing new?  Wait for eventfd to tell us they refilled. */
-> > -		if (head == vq->num) {
-> > +		if (!ret) {
-> >   			if (unlikely(busyloop_intr)) {
-> >   				vhost_poll_queue(&vq->poll);
-> >   			} else if (unlikely(vhost_enable_notify(&net->dev,
-> > @@ -808,7 +823,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >   				goto done;
-> >   			} else if (unlikely(err != -ENOSPC)) {
-> >   				vhost_tx_batch(net, nvq, sock, &msg);
-> > -				vhost_discard_vq_desc(vq, 1);
-> > +				vhost_discard_avail_bufs(vq, &buf, 1);
-> >   				vhost_net_enable_vq(net, vq);
-> >   				break;
-> >   			}
-> > @@ -829,7 +844,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >   		/* TODO: Check specific error and bomb out unless ENOBUFS? */
-> >   		err = sock->ops->sendmsg(sock, &msg, len);
-> >   		if (unlikely(err < 0)) {
-> > -			vhost_discard_vq_desc(vq, 1);
-> > +			vhost_discard_avail_bufs(vq, &buf, 1);
-> 
-> 
-> Do we need to decrease first_desc in vhost_discard_avail_bufs()?
-> 
-> 
-> >   			vhost_net_enable_vq(net, vq);
-> >   			break;
-> >   		}
-> > @@ -837,8 +852,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >   			pr_debug("Truncated TX packet: len %d != %zd\n",
-> >   				 err, len);
-> >   done:
-> > -		vq->heads[nvq->done_idx].id = cpu_to_vhost32(vq, head);
-> > -		vq->heads[nvq->done_idx].len = 0;
-> > +		nvq->bufs[nvq->done_idx] = buf;
-> >   		++nvq->done_idx;
-> >   	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
-> > @@ -850,7 +864,7 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
-> >   	struct vhost_net_virtqueue *nvq = &net->vqs[VHOST_NET_VQ_TX];
-> >   	struct vhost_virtqueue *vq = &nvq->vq;
-> >   	unsigned out, in;
-> > -	int head;
-> > +	int ret;
-> >   	struct msghdr msg = {
-> >   		.msg_name = NULL,
-> >   		.msg_namelen = 0,
-> > @@ -864,6 +878,7 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
-> >   	struct vhost_net_ubuf_ref *uninitialized_var(ubufs);
-> >   	bool zcopy_used;
-> >   	int sent_pkts = 0;
-> > +	struct vhost_buf buf;
-> >   	do {
-> >   		bool busyloop_intr;
-> > @@ -872,13 +887,13 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
-> >   		vhost_zerocopy_signal_used(net, vq);
-> >   		busyloop_intr = false;
-> > -		head = get_tx_bufs(net, nvq, &msg, &out, &in, &len,
-> > -				   &busyloop_intr);
-> > +		ret = get_tx_bufs(net, nvq, &buf, &msg, &out, &in, &len,
-> > +				  &busyloop_intr);
-> >   		/* On error, stop handling until the next kick. */
-> > -		if (unlikely(head < 0))
-> > +		if (unlikely(ret < 0))
-> >   			break;
-> >   		/* Nothing new?  Wait for eventfd to tell us they refilled. */
-> > -		if (head == vq->num) {
-> > +		if (!ret) {
-> >   			if (unlikely(busyloop_intr)) {
-> >   				vhost_poll_queue(&vq->poll);
-> >   			} else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
-> > @@ -897,8 +912,8 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
-> >   			struct ubuf_info *ubuf;
-> >   			ubuf = nvq->ubuf_info + nvq->upend_idx;
-> > -			vq->heads[nvq->upend_idx].id = cpu_to_vhost32(vq, head);
-> > -			vq->heads[nvq->upend_idx].len = VHOST_DMA_IN_PROGRESS;
-> > +			nvq->bufs[nvq->upend_idx] = buf;
-> > +			nvq->bufs[nvq->upend_idx].in_len = VHOST_DMA_IN_PROGRESS;
-> >   			ubuf->callback = vhost_zerocopy_callback;
-> >   			ubuf->ctx = nvq->ubufs;
-> >   			ubuf->desc = nvq->upend_idx;
-> > @@ -930,17 +945,19 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
-> >   				nvq->upend_idx = ((unsigned)nvq->upend_idx - 1)
-> >   					% UIO_MAXIOV;
-> >   			}
-> > -			vhost_discard_vq_desc(vq, 1);
-> > +			vhost_discard_avail_bufs(vq, &buf, 1);
-> >   			vhost_net_enable_vq(net, vq);
-> >   			break;
-> >   		}
-> >   		if (err != len)
-> >   			pr_debug("Truncated TX packet: "
-> >   				 " len %d != %zd\n", err, len);
-> > -		if (!zcopy_used)
-> > -			vhost_add_used_and_signal(&net->dev, vq, head, 0);
-> > -		else
-> > +		if (!zcopy_used) {
-> > +			vhost_put_used_buf(vq, &buf);
-> > +			vhost_signal(&net->dev, vq);
-> 
-> 
-> Do we need something like vhost_put_used_and_signal()?
-> 
-> Thanks
-> 
-> 
-> > +		} else {
-> >   			vhost_zerocopy_signal_used(net, vq);
-> > +		}
-> >   		vhost_net_tx_packet(net);
-> >   	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
-> >   }
-> > @@ -1004,7 +1021,7 @@ static int vhost_net_rx_peek_head_len(struct vhost_net *net, struct sock *sk,
-> >   	int len = peek_head_len(rnvq, sk);
-> >   	if (!len && rvq->busyloop_timeout) {
-> > -		/* Flush batched heads first */
-> > +		/* Flush batched bufs first */
-> >   		vhost_net_signal_used(rnvq);
-> >   		/* Both tx vq and rx socket were polled here */
-> >   		vhost_net_busy_poll(net, rvq, tvq, busyloop_intr, true);
-> > @@ -1022,11 +1039,11 @@ static int vhost_net_rx_peek_head_len(struct vhost_net *net, struct sock *sk,
-> >    * @iovcount	- returned count of io vectors we fill
-> >    * @log		- vhost log
-> >    * @log_num	- log offset
-> > - * @quota       - headcount quota, 1 for big buffer
-> > - *	returns number of buffer heads allocated, negative on error
-> > + * @quota       - bufcount quota, 1 for big buffer
-> > + *	returns number of buffers allocated, negative on error
-> >    */
-> >   static int get_rx_bufs(struct vhost_virtqueue *vq,
-> > -		       struct vring_used_elem *heads,
-> > +		       struct vhost_buf *bufs,
-> >   		       int datalen,
-> >   		       unsigned *iovcount,
-> >   		       struct vhost_log *log,
-> > @@ -1035,30 +1052,24 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
-> >   {
-> >   	unsigned int out, in;
-> >   	int seg = 0;
-> > -	int headcount = 0;
-> > -	unsigned d;
-> > +	int bufcount = 0;
-> >   	int r, nlogs = 0;
-> >   	/* len is always initialized before use since we are always called with
-> >   	 * datalen > 0.
-> >   	 */
-> >   	u32 uninitialized_var(len);
-> > -	while (datalen > 0 && headcount < quota) {
-> > +	while (datalen > 0 && bufcount < quota) {
-> >   		if (unlikely(seg >= UIO_MAXIOV)) {
-> >   			r = -ENOBUFS;
-> >   			goto err;
-> >   		}
-> > -		r = vhost_get_vq_desc(vq, vq->iov + seg,
-> > -				      ARRAY_SIZE(vq->iov) - seg, &out,
-> > -				      &in, log, log_num);
-> > -		if (unlikely(r < 0))
-> > +		r = vhost_get_avail_buf(vq, bufs + bufcount, vq->iov + seg,
-> > +					ARRAY_SIZE(vq->iov) - seg, &out,
-> > +					&in, log, log_num);
-> > +		if (unlikely(r <= 0))
-> >   			goto err;
-> > -		d = r;
-> > -		if (d == vq->num) {
-> > -			r = 0;
-> > -			goto err;
-> > -		}
-> >   		if (unlikely(out || in <= 0)) {
-> >   			vq_err(vq, "unexpected descriptor format for RX: "
-> >   				"out %d, in %d\n", out, in);
-> > @@ -1069,14 +1080,12 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
-> >   			nlogs += *log_num;
-> >   			log += *log_num;
-> >   		}
-> > -		heads[headcount].id = cpu_to_vhost32(vq, d);
-> >   		len = iov_length(vq->iov + seg, in);
-> > -		heads[headcount].len = cpu_to_vhost32(vq, len);
-> >   		datalen -= len;
-> > -		++headcount;
-> > +		++bufcount;
-> >   		seg += in;
-> >   	}
-> > -	heads[headcount - 1].len = cpu_to_vhost32(vq, len + datalen);
-> > +	bufs[bufcount - 1].in_len = len + datalen;
-> >   	*iovcount = seg;
-> >   	if (unlikely(log))
-> >   		*log_num = nlogs;
-> > @@ -1086,9 +1095,9 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
-> >   		r = UIO_MAXIOV + 1;
-> >   		goto err;
-> >   	}
-> > -	return headcount;
-> > +	return bufcount;
-> >   err:
-> > -	vhost_discard_vq_desc(vq, headcount);
-> > +	vhost_discard_avail_bufs(vq, bufs, bufcount);
-> >   	return r;
-> >   }
-> > @@ -1113,7 +1122,7 @@ static void handle_rx(struct vhost_net *net)
-> >   	};
-> >   	size_t total_len = 0;
-> >   	int err, mergeable;
-> > -	s16 headcount;
-> > +	int bufcount;
-> >   	size_t vhost_hlen, sock_hlen;
-> >   	size_t vhost_len, sock_len;
-> >   	bool busyloop_intr = false;
-> > @@ -1147,14 +1156,14 @@ static void handle_rx(struct vhost_net *net)
-> >   			break;
-> >   		sock_len += sock_hlen;
-> >   		vhost_len = sock_len + vhost_hlen;
-> > -		headcount = get_rx_bufs(vq, vq->heads + nvq->done_idx,
-> > -					vhost_len, &in, vq_log, &log,
-> > -					likely(mergeable) ? UIO_MAXIOV : 1);
-> > +		bufcount = get_rx_bufs(vq, nvq->bufs + nvq->done_idx,
-> > +				       vhost_len, &in, vq_log, &log,
-> > +				       likely(mergeable) ? UIO_MAXIOV : 1);
-> >   		/* On error, stop handling until the next kick. */
-> > -		if (unlikely(headcount < 0))
-> > +		if (unlikely(bufcount < 0))
-> >   			goto out;
-> >   		/* OK, now we need to know about added descriptors. */
-> > -		if (!headcount) {
-> > +		if (!bufcount) {
-> >   			if (unlikely(busyloop_intr)) {
-> >   				vhost_poll_queue(&vq->poll);
-> >   			} else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
-> > @@ -1171,7 +1180,7 @@ static void handle_rx(struct vhost_net *net)
-> >   		if (nvq->rx_ring)
-> >   			msg.msg_control = vhost_net_buf_consume(&nvq->rxq);
-> >   		/* On overrun, truncate and discard */
-> > -		if (unlikely(headcount > UIO_MAXIOV)) {
-> > +		if (unlikely(bufcount > UIO_MAXIOV)) {
-> >   			iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
-> >   			err = sock->ops->recvmsg(sock, &msg,
-> >   						 1, MSG_DONTWAIT | MSG_TRUNC);
-> > @@ -1195,7 +1204,7 @@ static void handle_rx(struct vhost_net *net)
-> >   		if (unlikely(err != sock_len)) {
-> >   			pr_debug("Discarded rx packet: "
-> >   				 " len %d, expected %zd\n", err, sock_len);
-> > -			vhost_discard_vq_desc(vq, headcount);
-> > +			vhost_discard_avail_bufs(vq, nvq->bufs + nvq->done_idx, bufcount);
-> >   			continue;
-> >   		}
-> >   		/* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_NET_HDR */
-> > @@ -1214,15 +1223,15 @@ static void handle_rx(struct vhost_net *net)
-> >   		}
-> >   		/* TODO: Should check and handle checksum. */
-> > -		num_buffers = cpu_to_vhost16(vq, headcount);
-> > +		num_buffers = cpu_to_vhost16(vq, bufcount);
-> >   		if (likely(mergeable) &&
-> >   		    copy_to_iter(&num_buffers, sizeof num_buffers,
-> >   				 &fixup) != sizeof num_buffers) {
-> >   			vq_err(vq, "Failed num_buffers write");
-> > -			vhost_discard_vq_desc(vq, headcount);
-> > +			vhost_discard_avail_bufs(vq, nvq->bufs + nvq->done_idx, bufcount);
-> >   			goto out;
-> >   		}
-> > -		nvq->done_idx += headcount;
-> > +		nvq->done_idx += bufcount;
-> >   		if (nvq->done_idx > VHOST_NET_BATCH)
-> >   			vhost_net_signal_used(nvq);
-> >   		if (unlikely(vq_log))
+"Williams, Dan J" <dan.j.williams@intel.com> writes:
 
+> [ forgive formatting I'm temporarily stuck using Outlook this week... ]
+>
+>> From: Vaibhav Jain <vaibhav@linux.ibm.com>
+> [..]
+>> 
+>> Introduce support for PAPR NVDIMM Specific Methods (PDSM) in papr_scm
+>> module and add the command family NVDIMM_FAMILY_PAPR to the white
+>> list of NVDIMM command sets. Also advertise support for ND_CMD_CALL for
+>> the nvdimm command mask and implement necessary scaffolding in the
+>> module to handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+>> 
+>> The layout of the PDSM request as we expect from libnvdimm/libndctl is
+>> described in newly introduced uapi header 'papr_pdsm.h' which defines a
+>> new 'struct nd_pdsm_cmd_pkg' header. This header is used to communicate
+>> the PDSM request via member 'nd_cmd_pkg.nd_command' and size of
+>> payload that need to be sent/received for servicing the PDSM.
+>> 
+>> A new function is_cmd_valid() is implemented that reads the args to
+>> papr_scm_ndctl() and performs sanity tests on them. A new function
+>> papr_scm_service_pdsm() is introduced and is called from
+>> papr_scm_ndctl() in case of a PDSM request is received via ND_CMD_CALL
+>> command from libnvdimm.
+>> 
+>> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Ira Weiny <ira.weiny@intel.com>
+>> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+>> ---
+>> Changelog:
+>> 
+>> Resend:
+>> * Added ack from Aneesh.
+>> 
+>> v8..v9:
+>> * Reduced the usage of term SCM replacing it with appropriate
+>>   replacement [ Dan Williams, Aneesh ]
+>> * Renamed 'papr_scm_pdsm.h' to 'papr_pdsm.h'
+>> * s/PAPR_SCM_PDSM_*/PAPR_PDSM_*/g
+>> * s/NVDIMM_FAMILY_PAPR_SCM/NVDIMM_FAMILY_PAPR/g
+>> * Minor updates to 'papr_psdm.h' to replace usage of term 'SCM'.
+>> * Minor update to patch description.
+>> 
+>> v7..v8:
+>> * Removed the 'payload_offset' field from 'struct
+>>   nd_pdsm_cmd_pkg'. Instead command payload is always assumed to start
+>>   at 'nd_pdsm_cmd_pkg.payload'. [ Aneesh ]
+>> * To enable introducing new fields to 'struct nd_pdsm_cmd_pkg',
+>>   'reserved' field of 10-bytes is introduced. [ Aneesh ]
+>> * Fixed a typo in "Backward Compatibility" section of papr_scm_pdsm.h
+>>   [ Ira ]
+>> 
+>> Resend:
+>> * None
+>> 
+>> v6..v7 :
+>> * Removed the re-definitions of __packed macro from papr_scm_pdsm.h
+>>   [Mpe].
+>> * Removed the usage of __KERNEL__ macros in papr_scm_pdsm.h [Mpe].
+>> * Removed macros that were unused in papr_scm.c from papr_scm_pdsm.h
+>>   [Mpe].
+>> * Made functions defined in papr_scm_pdsm.h as static inline. [Mpe]
+>> 
+>> v5..v6 :
+>> * Changed the usage of the term DSM to PDSM to distinguish it from the
+>>   ACPI term [ Dan Williams ]
+>> * Renamed papr_scm_dsm.h to papr_scm_pdsm.h and updated various
+>> struct
+>>   to reflect the new terminology.
+>> * Updated the patch description and title to reflect the new terminology.
+>> * Squashed patch to introduce new command family in 'ndctl.h' with
+>>   this patch [ Dan Williams ]
+>> * Updated the papr_scm_pdsm method starting index from 0x10000 to 0x0
+>>   [ Dan Williams ]
+>> * Removed redundant license text from the papr_scm_psdm.h file.
+>>   [ Dan Williams ]
+>> * s/envelop/envelope/ at various places [ Dan Williams ]
+>> * Added '__packed' attribute to command package header to gaurd
+>>   against different compiler adding paddings between the fields.
+>>   [ Dan Williams]
+>> * Converted various pr_debug to dev_debug [ Dan Williams ]
+>> 
+>> v4..v5 :
+>> * None
+>> 
+>> v3..v4 :
+>> * None
+>> 
+>> v2..v3 :
+>> * Updated the patch prefix to 'ndctl/uapi' [Aneesh]
+>> 
+>> v1..v2 :
+>> * None
+>> ---
+>>  arch/powerpc/include/uapi/asm/papr_pdsm.h | 136
+>> ++++++++++++++++++++++  arch/powerpc/platforms/pseries/papr_scm.c |
+>> 101 +++++++++++++++-
+>>  include/uapi/linux/ndctl.h                |   1 +
+>>  3 files changed, 232 insertions(+), 6 deletions(-)  create mode 100644
+>> arch/powerpc/include/uapi/asm/papr_pdsm.h
+>> 
+>> diff --git a/arch/powerpc/include/uapi/asm/papr_pdsm.h
+>> b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+>> new file mode 100644
+>> index 000000000000..6407fefcc007
+>> --- /dev/null
+>> +++ b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+>> @@ -0,0 +1,136 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+>> +/*
+>> + * PAPR nvDimm Specific Methods (PDSM) and structs for libndctl
+>> + *
+>> + * (C) Copyright IBM 2020
+>> + *
+>> + * Author: Vaibhav Jain <vaibhav at linux.ibm.com>  */
+>> +
+>> +#ifndef _UAPI_ASM_POWERPC_PAPR_PDSM_H_
+>> +#define _UAPI_ASM_POWERPC_PAPR_PDSM_H_
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +/*
+>> + * PDSM Envelope:
+>> + *
+>> + * The ioctl ND_CMD_CALL transfers data between user-space and kernel
+>> +via
+>> + * envelope which consists of a header and user-defined payload sections.
+>> + * The header is described by 'struct nd_pdsm_cmd_pkg' which expects a
+>> + * payload following it and accessible via 'nd_pdsm_cmd_pkg.payload' field.
+>> + * There is reserved field that can used to introduce new fields to the
+>> + * structure in future. It also tries to ensure that
+>> 'nd_pdsm_cmd_pkg.payload'
+>> + * lies at a 8-byte boundary.
+>> + *
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  |   64-Bytes  |       16-Bytes      |       Max 176-Bytes       |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  |               nd_pdsm_cmd_pkg     |                           |
+>> + *  |-------------+                     |                           |
+>> + *  |  nd_cmd_pkg |                     |                           |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  | nd_family   |                     |                           |
+>> + *  | nd_size_out | cmd_status          |                           |
+>> + *  | nd_size_in  | payload_version     |     payload               |
+>> + *  | nd_command  | reserved            |                           |
+>> + *  | nd_fw_size  |                     |                           |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *
+>> + * PDSM Header:
+>> + *
+>> + * The header is defined as 'struct nd_pdsm_cmd_pkg' which embeds a
+>> + * 'struct nd_cmd_pkg' instance. The PDSM command is assigned to
+>> member
+>> + * 'nd_cmd_pkg.nd_command'. Apart from size information of the
+>> envelope
+>> +which is
+>> + * contained in 'struct nd_cmd_pkg', the header also has members
+>> +following
+>> + * members:
+>> + *
+>> + * 'cmd_status'		: (Out) Errors if any encountered while
+>> servicing PDSM.
+>> + * 'payload_version'	: (In/Out) Version number associated with the
+>> payload.
+>> + * 'reserved'		: Not used and reserved for future.
+>> + *
+>> + * PDSM Payload:
+>> + *
+>> + * The layout of the PDSM Payload is defined by various structs shared
+>> +between
+>> + * papr_scm and libndctl so that contents of payload can be
+>> +interpreted. During
+>> + * servicing of a PDSM the papr_scm module will read input args from
+>> +the payload
+>> + * field by casting its contents to an appropriate struct pointer based
+>> +on the
+>> + * PDSM command. Similarly the output of servicing the PDSM command
+>> +will be
+>> + * copied to the payload field using the same struct.
+>> + *
+>> + * 'libnvdimm' enforces a hard limit of 256 bytes on the envelope size,
+>> +which
+>> + * leaves around 176 bytes for the envelope payload (ignoring any
+>> +padding that
+>> + * the compiler may silently introduce).
+>> + *
+>> + * Payload Version:
+>> + *
+>> + * A 'payload_version' field is present in PDSM header that indicates a
+>> +specific
+>> + * version of the structure present in PDSM Payload for a given PDSM
+>> command.
+>> + * This provides backward compatibility in case the PDSM Payload
+>> +structure
+>> + * evolves and different structures are supported by 'papr_scm' and
+>> 'libndctl'.
+>> + *
+>> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send
+>> +the version
+>> + * of the payload struct it supports via 'payload_version' field. The
+>> 'papr_scm'
+>> + * module when servicing the PDSM envelope checks the 'payload_version'
+>> +and then
+>> + * uses 'payload struct version' == MIN('payload_version field',
+>> + * 'max payload-struct-version supported by papr_scm') to service the
+>> PDSM.
+>> + * After servicing the PDSM, 'papr_scm' put the negotiated version of
+>> +payload
+>> + * struct in returned 'payload_version' field.
+>> + *
+>> + * Libndctl on receiving the envelope back from papr_scm again checks
+>> +the
+>> + * 'payload_version' field and based on it use the appropriate version
+>> +dsm
+>> + * struct to parse the results.
+>> + *
+>> + * Backward Compatibility:
+>> + *
+>> + * Above scheme of exchanging different versioned PDSM struct between
+>> +libndctl
+>> + * and papr_scm should provide backward compatibility until following
+>> +two
+>> + * assumptions/conditions when defining new PDSM structs hold:
+>> + *
+>> + * Let T(X) = { set of attributes in PDSM struct 'T' versioned X }
+>> + *
+>> + * 1. T(X) is a proper subset of T(Y) if Y > X.
+>> + *    i.e Each new version of PDSM struct should retain existing struct
+>> + *    attributes from previous version
+>> + *
+>> + * 2. If an entity (libndctl or papr_scm) supports a PDSM struct T(X) then
+>> + *    it should also support T(1), T(2)...T(X - 1).
+>> + *    i.e When adding support for new version of a PDSM struct, libndctl
+>> + *    and papr_scm should retain support of the existing PDSM struct
+>> + *    version they support.
+>> + */
+>> +
+>> +/* PDSM-header + payload expected with ND_CMD_CALL ioctl from
+>> libnvdimm
+>> +*/ struct nd_pdsm_cmd_pkg {
+>> +	struct nd_cmd_pkg hdr;	/* Package header containing sub-
+>> cmd */
+>> +	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
+>> +	__u16 reserved[5];	/* Ignored and to be used in future */
+>> +	__u16 payload_version;	/* In/Out: version of the payload */
+>> +	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
+>> +} __packed;
+>> +
+>> +/*
+>> + * Methods to be embedded in ND_CMD_CALL request. These are sent to
+>> the
+>> +kernel
+>> + * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct  */
+>> +enum papr_pdsm {
+>> +	PAPR_PDSM_MIN = 0x0,
+>> +	PAPR_PDSM_MAX,
+>> +};
+>> +
+>> +/* Convert a libnvdimm nd_cmd_pkg to pdsm specific pkg */ static inline
+>> +struct nd_pdsm_cmd_pkg *nd_to_pdsm_cmd_pkg(struct nd_cmd_pkg
+>> *cmd) {
+>> +	return (struct nd_pdsm_cmd_pkg *) cmd; }
+>> +
+>> +/* Return the payload pointer for a given pcmd */ static inline void
+>> +*pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd) {
+>> +	if (pcmd->hdr.nd_size_in == 0 && pcmd->hdr.nd_size_out == 0)
+>> +		return NULL;
+>> +	else
+>> +		return (void *)(pcmd->payload);
+>> +}
+>> +
+>> +#endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
+>> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c
+>> b/arch/powerpc/platforms/pseries/papr_scm.c
+>> index 149431594839..5e2237e7ec08 100644
+>> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+>> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+>> @@ -15,13 +15,15 @@
+>>  #include <linux/seq_buf.h>
+>> 
+>>  #include <asm/plpar_wrappers.h>
+>> +#include <asm/papr_pdsm.h>
+>> 
+>>  #define BIND_ANY_ADDR (~0ul)
+>> 
+>>  #define PAPR_SCM_DIMM_CMD_MASK \
+>>  	((1ul << ND_CMD_GET_CONFIG_SIZE) | \
+>>  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+>> -	 (1ul << ND_CMD_SET_CONFIG_DATA))
+>> +	 (1ul << ND_CMD_SET_CONFIG_DATA) | \
+>> +	 (1ul << ND_CMD_CALL))
+>> 
+>>  /* DIMM health bitmap bitmap indicators */
+>>  /* SCM device is unable to persist memory contents */ @@ -350,16 +352,97
+>> @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
+>>  	return 0;
+>>  }
+>> 
+>> +/*
+>> + * Validate the inputs args to dimm-control function and return '0' if valid.
+>> + * This also does initial sanity validation to ND_CMD_CALL sub-command
+>> packages.
+>> + */
+>> +static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void
+>> *buf,
+>> +		       unsigned int buf_len)
+>> +{
+>> +	unsigned long cmd_mask = PAPR_SCM_DIMM_CMD_MASK;
+>> +	struct nd_pdsm_cmd_pkg *pkg = nd_to_pdsm_cmd_pkg(buf);
+>> +	struct papr_scm_priv *p;
+>> +
+>> +	/* Only dimm-specific calls are supported atm */
+>> +	if (!nvdimm)
+>> +		return -EINVAL;
+>> +
+>> +	/* get the provider date from struct nvdimm */
+>> +	p = nvdimm_provider_data(nvdimm);
+>> +
+>> +	if (!test_bit(cmd, &cmd_mask)) {
+>> +		dev_dbg(&p->pdev->dev, "Unsupported cmd=%u\n", cmd);
+>> +		return -EINVAL;
+>> +	} else if (cmd == ND_CMD_CALL) {
+>> +
+>> +		/* Verify the envelope package */
+>> +		if (!buf || buf_len < sizeof(struct nd_pdsm_cmd_pkg)) {
+>> +			dev_dbg(&p->pdev->dev, "Invalid pkg size=%u\n",
+>> +				buf_len);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		/* Verify that the PDSM family is valid */
+>> +		if (pkg->hdr.nd_family != NVDIMM_FAMILY_PAPR) {
+>> +			dev_dbg(&p->pdev->dev, "Invalid pkg
+>> family=0x%llx\n",
+>> +				pkg->hdr.nd_family);
+>> +			return -EINVAL;
+>> +
+>> +		}
+>> +
+>> +		/* We except a payload with all PDSM commands */
+>> +		if (pdsm_cmd_to_payload(pkg) == NULL) {
+>> +			dev_dbg(&p->pdev->dev,
+>> +				"Empty payload for sub-command=0x%llx\n",
+>> +				pkg->hdr.nd_command);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	/* Command looks valid */
+>
+<snip>
+> So this is where I would expect the kernel to validate the command vs
+> a known list of supported commands / payloads. One of the goals of
+> requiring public documentation of any commands that libnvdimm might
+> support for the ioctl path is to give the kernel the ability to gate
+> future enabling on consideration of a common kernel front-end
+> interface. I believe this would also address questions about the
+> versioning scheme because userspace would be actively prevented from
+> sending command payloads that were not first explicitly enabled in the
+> kernel. This interface as it stands in this patch set seems to be a
+> very thin / "anything goes" passthrough with no consideration for that
+> policy.
+>
+> As an example of the utility of this policy, consider the recent
+> support for nvdimm security commands that allow a passphrase to be set
+> and issue commands like "unlock" and "secure erase". The kernel
+> actively prevents those commands from being sent from userspace. See
+> acpi_nfit_clear_to_send() and nd_cmd_clear_to_send(). The reasoning is
+> that it enforces the kernel's nvdimm security model that uses
+> encrypted/trusted keys to protect key material (clear text keys
+> only-ever exist in kernel-space). Yes, that restriction is painful for
+> people that don't want the kernel's security model and just want the
+> simplicity of passing clear-text keys around, but it's necessary for
+> the kernel to have any chance to provide a common abstraction across
+> vendors. The pain of negotiating every single command with what the
+> kernel will support is useful for the long term health of the
+> kernel. It forces ongoing conversations across vendors to consolidate
+> interfaces and reuse kernel best practices like encrypted/trusted
+> keys. Code acceptance is the only real gate the kernel has to enforce
+> cooperation across vendors.
+>
+> The expectation is that the kernel does not allow any command to pass
+> that is not explicitly listed in a bitmap of known commands. I would
+> expect that if you changed the payload of an existing command that
+> would likely require a new entry in this bitmap. The goal is to give
+> the kernel a chance to constrain the passthrough interface to afford a
+> chance to have a discussion of what might done in a common
+> implementation. Another example is the label-area read-write
+> commands. The kernel needs explicit control to ensure that it owns the
+> label area and that userspace is not able to corrupt it (write it
+> behind the kernel's back).
+>
+> Now that said, I have battle scars with some OEMs that just want a
+> generic passthrough interface so they never need to work with the
+> kernel community again and can just write their custom validation
+> tooling and be done. I've mostly been successful in that fight outside
+> of the gaping hole of ND_CMD_VENDOR. That's the path that ipmctl has
+> used to issue commands that have not made it into the public
+> specification on docs.pmem.io. My warning shot for that is the
+> "disable_vendor_specific" module option that administrators can set to
+> only allow commands that the kernel explicitly knows the effects of to
+> be issued. The result is only tooling / enabling that submits to this
+> auditing regime is guaranteed to work everywhere.
+
+Agree with points made above. With this patchset we arent really trying
+to push an ioctl passthrough to exchange arbitary data with
+papr-scm module. Nor do we want to bypass the kernel community for any
+future enhancements on this interface. We made some design choices based on
+our understanding of certain restriction we saw in
+ndctl/libndctl. Specifically wanted to avoid issuing two CMD_CALL ioctl
+roundtrips.
+
+That being said I had an extended discussion with Aneesh rethinking the
+'version' field and we both agreed *to remove this field* from the
+proposed 'struct nd_pdsm_cmd_pkg'. This should resolve the contentions
+around this Patch-4 in this patchset. Since the 'version' field isnt
+extensively used right now the impact on the patchset would be small.
+
+>
+> So, that long explanation out of the way, what does that mean for this
+> patch set? I'd like to understand if you still see a need for a
+> versioning scheme if the implementation is required to explicitly list
+> all the commands it supports? I.e. that the kernel need not worry
+> about userspace sending future unknown payloads because unknown
+> payloads are blocked. Also if your interface has anything similar to a
+> "vendor specific" passthrough I would like to require that go through
+> the ND_CMD_VENDOR ioctl, so that the kernel still has a common check
+> point to prevent vendor specific "I don't want to talk to the kernel
+> community" shenanigans, but even better if ND_CMD_VENDOR is something
+> the kernel can eventually jettison because nobody is using it.
+
+As I mentioned above this isn't a 'vendor specific passthrough'
+machenism. The 'version' field was proposed to avoid two CMD_CALL ioctl
+roundtrip to fetch and report extended nvdimm health data like
+'life-remaining' which isnt always available for papr-scm.
+
+However we just realized instead of relying on 'version' field we can
+advertise support for these extended attributes via nvdimm-flags from
+sysfs. Looking at the nvdimm-flags libndctl can use an appropriate
+pdsm command and struct to fetch the dimm health information from
+papr_scm via CMD_CALL.
+
+But thats something we plan to do in future and not with the current
+patchset which only reports fixed set of nvdimm health attributes.
+
+>
+> I feel like this is a conversation that will take a few days to
+> resolve, which does not leave time to push this for v5.8. That said, I
+> do think the health flags patches at the beginning of this series are
+> low risk and uncontentious. How about I merge those for v5.8 and
+> circle back to get this ioctl path queued early in v5.8-rc? Apologies
+> for the late feedback on this relative to v5.8.
+>
+Thanks for this consideration. Agree to the proposal. However changes to
+patchset with removal of 'version' field is fairly small hence can
+quickly push an updated patch series cumulating rest of the review
+comments from Ira.
+
+Does that sounds reasonable ?
+
+Thanks,
+~ Vaibhav
