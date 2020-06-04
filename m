@@ -2,109 +2,102 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3200BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3866C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A45720872
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A101720772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:45:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pgR/6JaO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPUH5x7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgFDMoO (ORCPT
+        id S1727966AbgFDMps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:44:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37026 "EHLO
+        Thu, 4 Jun 2020 08:45:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgFDMoN (ORCPT
+        with ESMTP id S1725926AbgFDMpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:44:13 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BC0C08C5C0;
-        Thu,  4 Jun 2020 05:44:13 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id dp10so2795805qvb.10;
-        Thu, 04 Jun 2020 05:44:13 -0700 (PDT)
+        Thu, 4 Jun 2020 08:45:47 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43946C08C5C0;
+        Thu,  4 Jun 2020 05:45:46 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id b8so4959298oic.1;
+        Thu, 04 Jun 2020 05:45:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SjLnQZ46lUbHvc3PkUxiHDXKl5I0zjvuEJ2uPwsxzI8=;
-        b=pgR/6JaOszrzbplONJz2cHfFaCUGS0thtHFez6ULWs8Iosj/kMc4w+SGq+CzSVwxgj
-         n/8hUyIny/XflYy1ZN0HjwftKbam5yhism9DK3FilsGSqlpAEmlZ5+SeOEtKVKY1ofEx
-         9FNLoWnJq/8biZCB/1FE4C1rHzhKMp++V0/l4fIKaCaod7ZMHVYjDS2EsHCv2p95PVmz
-         1xS16UWAD6YAcR7WGtMJFjfjtRM4fYx1OXKQOeuymN66xeLMHGdBI+guTLYFvBXlF1rH
-         bYpYriPRDvRWVyMA5FQpk8XHGZrfEGXQ1lc4aKBtUjJCUiOVtdmA6fPu0poJHP7gJaqk
-         X7Bw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0FyB/2FD/Wz2mQVyCXr4z+abWPutppIDhAG7xkBlOto=;
+        b=aPUH5x7vYLnuwZPM+GLvDsTg0raj6TtTBQwqXmnV6iE2TVlqx0i7PfPuwCnwNbxgbE
+         p3N/ZYPseFZsnYRXSDb+s7RBbYobAZt/8TgjVzNkCIWpRa3rhOmJq0VVMW1zfNWy/HZF
+         Puk2Ded4vmnJrYNtUtk8eRuFw5hyxLzOEpCDhVcXAtNpRSyiyNgF7VjJMXTxxJGyFHgY
+         bmBmZRcmGs/pV1+7riS4hQ3a/gxwLnJksnB5HWRVesLWCEP/gIW/5qYhLIByFmMDFR8R
+         pm43x1jD/BxHoIBF7kaWVtwzutOWi7f8ZDghPBJWDqH3qu7/htVNBzsZyM0CCR45aK5u
+         k7jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SjLnQZ46lUbHvc3PkUxiHDXKl5I0zjvuEJ2uPwsxzI8=;
-        b=Y5FmMBBj+BzF4aclC3zUjOuy1TrzhWEqjFqMlzFt1nmMRkv8N6ohcJ+PGkHhNgICUT
-         KrLuZglZ5CKU7rpxscD+05uyDFeR+IXVK2ZX58NR9CPwWBW0wRmBcaJZV8ZBom/lpA9u
-         Kz5jm3pAmP+NngWD7/qBRlqP0XhaxQlB4o5X6g40BtAE005JZhOocft1cZU4GofsHVyL
-         15FvNtcw9y0AGe/1Ep9CftYxgNSMnZ9nVpk2yyzoWSnE06CpWDDtkbJkkakh8YaMuT6i
-         lobENuu5BUj1XC3b/zUtmVHuv2G29oQN8+tKAdMGvmhDqKNWLNdMqA5DErjSCWhOMAuh
-         SrWg==
-X-Gm-Message-State: AOAM533MYN+t9T5X9CQPo30nwEz7wnxQghXRTTqepqZkzwu/2V6WUo71
-        /C+/Xz2H+hjObPY2+GM3RW6JzTXe
-X-Google-Smtp-Source: ABdhPJwk9NDtjNNxuy+/sFNOoOaj07rkvuAtcSdE6Ozd3bA8dTGYOjcG4WiRbf2pwSalhdjb1NJmYg==
-X-Received: by 2002:ad4:5512:: with SMTP id az18mr4537708qvb.51.1591274652710;
-        Thu, 04 Jun 2020 05:44:12 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:1172:51aa:9d42:fe87? ([2601:282:803:7700:1172:51aa:9d42:fe87])
-        by smtp.googlemail.com with ESMTPSA id o3sm4806783qkj.97.2020.06.04.05.44.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 05:44:11 -0700 (PDT)
-Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus' tree
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-References: <20200511130015.37103884@canb.auug.org.au>
- <20200602092040.5ef52300@canb.auug.org.au>
- <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
- <20200604112606.25ffde35@canb.auug.org.au>
- <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
- <20200604064149.GT19286@gauss3.secunet.de>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <9b338449-e342-96ab-0ba1-a73058fac037@gmail.com>
-Date:   Thu, 4 Jun 2020 06:44:10 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0FyB/2FD/Wz2mQVyCXr4z+abWPutppIDhAG7xkBlOto=;
+        b=FlF76FH7Gk8fezj5SgpszJNoY3TyL5Iy0pIIQOL/j4GEFhlKXZHXFlN1kAzgBIhD2I
+         d6oKaJ2/OfUiBsZfW7nRVOAHSmT6WtPjxvEnLEup6RBEdhDHz7z2Bclx4xgHXogTiOSW
+         narv3yyvV5EFdBea0uMn8Pyz+LnO8wikJVLgF9arEYOgRozDo1rmlqYOXUrTzJ6jJt2w
+         8ODidT+rdVFLsp4ReexAHFh6exNwoHwj+GN/Lybr7BjA61Fn0rNyRtFFqNbg2n25r/Yn
+         Frd4QOSfDTyUlwEzoJNRB4VvKiwbyO4lUFUGK5BzwGHqQ4ue9mq4cQxrwoLuXOTnGAky
+         MhkQ==
+X-Gm-Message-State: AOAM533g3IUQUKsP+Ko0jUcREEvd+TSDz2OA6VrpupOfBujY/eMbnPeO
+        XbV+fQwPeBJ8HX9vJFs9GIfNFAImM72czH6r3gVbbVOW
+X-Google-Smtp-Source: ABdhPJwfSS/2FE0F6fA/+WceOtzebYj4zrpQypLEK8cWqk6QR1F5yYab4Yu5K3BvyQiHWxguSs6LIUlLlrihhv3bPAE=
+X-Received: by 2002:aca:3d09:: with SMTP id k9mr2786702oia.160.1591274745732;
+ Thu, 04 Jun 2020 05:45:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200604064149.GT19286@gauss3.secunet.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
+ <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
+ <290017a8-d943-570f-1f90-acecf1c075a1@schaufler-ca.com> <alpine.LRH.2.21.2006040809280.6050@namei.org>
+ <761f5d15-3422-1834-7be5-8f3276d10172@schaufler-ca.com>
+In-Reply-To: <761f5d15-3422-1834-7be5-8f3276d10172@schaufler-ca.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 4 Jun 2020 08:45:34 -0400
+Message-ID: <CAEjxPJ49ownvc=3OnvkaMD-oYm-aUta98kKs4LDTJTnm65RD=Q@mail.gmail.com>
+Subject: Re: [GIT PULL] SELinux patches for v5.8
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     James Morris <jmorris@namei.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Moore <paul@paul-moore.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/20 12:41 AM, Steffen Klassert wrote:
-> On Wed, Jun 03, 2020 at 08:55:01PM -0600, David Ahern wrote:
->> On 6/3/20 7:26 PM, Stephen Rothwell wrote:
->>>
->>> And now the net-next tree has been merged into Linus' tree without this fix :-(
->>>
->>
->> I took a look earlier and I think it is fine. Some code was moved around
->> in ipsec-next and I think the merge is good. I'll run the test cases
->> later this week and double check. Thanks for the reminder
-> 
-> The setting of XFRM_TRANSFORMED moved to xfrm_output() and depends
-> on CONFIG_NETFILTER. So I think the fix is needed. After the merge
-> of the net tree today, I have both conflicting patches patches in
-> the ipsec tree. I'd apply the fix from Stephen unless you say
-> it is not needed.
-> 
+On Wed, Jun 3, 2020 at 6:39 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+> On 6/3/2020 3:12 PM, James Morris wrote:
+> > On Wed, 3 Jun 2020, Casey Schaufler wrote:
+> >
+> >> The use of security modules was expected to be rare.
+> > This is not correct. Capabilities were ported to LSM and stacked from the
+> > beginning, and several major distros worked on LSM so they could ship
+> > their own security modules.
+>
+> Capabilities has always been a special case.
+> Until Android adopted SELinux the actual use of LSMs was rare.
 
-Indeed. I must have been looking at -net. Both -net and -net-next have
-it conditional, so yes a fixup patch is needed.
+I don't think that is correct.  Fedora/RHEL were enabling SELinux by
+default since around 2004/2005 and for a while Fedora was tracking
+SELinux status as part of their "smolt" hardware profiling project and
+SELinux enablement was trending above 80% IIRC before they
+de-commissioned smolt. SuSE/SLES and Ubuntu were enabling AppArmor by
+default for quite some time too prior to SE Android.  It is certainly
+true that Android's adoption of SELinux massively increased the size
+of the SELinux install base (and was the first to make SELinux usage
+mandatory, not just default-enabled) but I don't think it is accurate
+to say that LSM usage was rare prior to that.
