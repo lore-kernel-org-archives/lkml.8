@@ -2,512 +2,162 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC81C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A557C206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A830A206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MglHwX8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgFDStq (ORCPT
+        id S1728881AbgFDSuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:49:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51556 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726893AbgFDStq (ORCPT
+        Thu, 4 Jun 2020 14:50:24 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:51204 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728834AbgFDSuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:49:46 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054Ia90J026522;
-        Thu, 4 Jun 2020 14:49:14 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31etw2q70a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 14:49:13 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 054IaAYK026549;
-        Thu, 4 Jun 2020 14:49:13 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31etw2q6y2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 14:49:13 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054ILi86022879;
-        Thu, 4 Jun 2020 18:49:11 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 31bf4849n1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 18:49:10 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054In8nZ65011852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jun 2020 18:49:08 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F12AA4064;
-        Thu,  4 Jun 2020 18:49:08 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A71F9A405F;
-        Thu,  4 Jun 2020 18:49:04 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.102.17.54])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Thu,  4 Jun 2020 18:49:04 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Fri, 05 Jun 2020 00:19:03 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Santosh Sivaraj <santosh@fossix.org>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RESEND PATCH v9 5/5] powerpc/papr_scm: Implement support for PAPR_PDSM_HEALTH
-In-Reply-To: <20200603231814.GK1505637@iweiny-DESK2.sc.intel.com>
-References: <20200602101438.73929-1-vaibhav@linux.ibm.com> <20200602101438.73929-6-vaibhav@linux.ibm.com> <20200602211901.GA1676657@iweiny-DESK2.sc.intel.com> <87pnaggee3.fsf@linux.ibm.com> <20200603231814.GK1505637@iweiny-DESK2.sc.intel.com>
-Date:   Fri, 05 Jun 2020 00:19:03 +0530
-Message-ID: <87bllyhdk0.fsf@linux.ibm.com>
+        Thu, 4 Jun 2020 14:50:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591296622; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=l6wlzfSYbJzkeSugvF6FSEks0oM2Zf6QKufmIi2dOJ8=;
+ b=MglHwX8mPoTVrR6AByjV49hXMHl1S9n0yBcrEIZ7Qd7FyO2w3HvH1KvK3y+iN8d8FGYJl5Hj
+ IRskhnqA11l9lWzHESp/OK2imh84FhPc9zXaZBHON5aKOqItxCsuZos/tMfeWQWP48Kl2QO6
+ QfauAy2+n8Ksl+PdyJsf19rYSQ0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ed9426076fccbb4c8f7e004 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 18:50:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3532FC43395; Thu,  4 Jun 2020 18:50:03 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E782C433CB;
+        Thu,  4 Jun 2020 18:50:02 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-04_12:2020-06-04,2020-06-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- mlxscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 impostorscore=0 spamscore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006040129
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 00:20:02 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ohad Ben Cohen <ohad@wizery.com>, rohitkr@codeaurora.org,
+        stable@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] remoteproc: qcom: q6v5: Update running state before
+ requesting stop
+In-Reply-To: <CAE=gft4v1iHAPJS13fLBXgjt8ZRhD7q894zF_7JvK9QbiTbwhA@mail.gmail.com>
+References: <20200602163257.26978-1-sibis@codeaurora.org>
+ <CAE=gft7sbh_S_GiRohtMmdMN9JzQhG0m3bUerwrmzhjmXucGKw@mail.gmail.com>
+ <6392c800b0be1cbabb8a241cf518ab4b@codeaurora.org>
+ <CAE=gft4v1iHAPJS13fLBXgjt8ZRhD7q894zF_7JvK9QbiTbwhA@mail.gmail.com>
+Message-ID: <ebc56ab0bd61f5b33be976a6643880db@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ira,
-
-Thanks again for looking into patch. My responses below:
-
-Ira Weiny <ira.weiny@intel.com> writes:
-
-> On Thu, Jun 04, 2020 at 12:34:04AM +0530, Vaibhav Jain wrote:
->> Hi Ira,
+On 2020-06-04 04:03, Evan Green wrote:
+> On Tue, Jun 2, 2020 at 10:29 PM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
 >> 
->> Thanks for reviewing this patch. My responses below:
+>> Evan,
+>> Thanks for taking time to review
+>> the series.
 >> 
->> Ira Weiny <ira.weiny@intel.com> writes:
->> 
->> > On Tue, Jun 02, 2020 at 03:44:38PM +0530, Vaibhav Jain wrote:
->> >> This patch implements support for PDSM request 'PAPR_PDSM_HEALTH'
->> >> that returns a newly introduced 'struct nd_papr_pdsm_health' instance
->> >> containing dimm health information back to user space in response to
->> >> ND_CMD_CALL. This functionality is implemented in newly introduced
->> >> papr_pdsm_health() that queries the nvdimm health information and
->> >> then copies this information to the package payload whose layout is
->> >> defined by 'struct nd_papr_pdsm_health'.
->> >> 
->> >> The patch also introduces a new member 'struct papr_scm_priv.health'
->> >> thats an instance of 'struct nd_papr_pdsm_health' to cache the health
->> >> information of a nvdimm. As a result functions drc_pmem_query_health()
->> >> and flags_show() are updated to populate and use this new struct
->> >> instead of a u64 integer that was earlier used.
->> >> 
->> >> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
->> >> Cc: Dan Williams <dan.j.williams@intel.com>
->> >> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> >> Cc: Ira Weiny <ira.weiny@intel.com>
->> >> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->> >> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+>> On 2020-06-02 23:14, Evan Green wrote:
+>> > On Tue, Jun 2, 2020 at 9:33 AM Sibi Sankar <sibis@codeaurora.org>
+>> > wrote:
+>> >>
+>> >> Sometimes the stop triggers a watchdog rather than a stop-ack. Update
+>> >> the running state to false on requesting stop to skip the watchdog
+>> >> instead.
+>> >>
+>> >> Error Logs:
+>> >> $ echo stop > /sys/class/remoteproc/remoteproc0/state
+>> >> ipa 1e40000.ipa: received modem stopping event
+>> >> remoteproc-modem: watchdog received: sys_m_smsm_mpss.c:291:APPS force
+>> >> stop
+>> >> qcom-q6v5-mss 4080000.remoteproc-modem: port failed halt
+>> >> ipa 1e40000.ipa: received modem offline event
+>> >> remoteproc0: stopped remote processor 4080000.remoteproc-modem
+>> >>
+>> >> Fixes: 3b415c8fb263 ("remoteproc: q6v5: Extract common resource
+>> >> handling")
+>> >> Cc: stable@vger.kernel.org
+>> >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 >> >> ---
->> >> Changelog:
->> >> 
->> >> Resend:
->> >> * Added ack from Aneesh.
->> >> 
->> >> v8..v9:
->> >> * s/PAPR_SCM_PDSM_HEALTH/PAPR_PDSM_HEALTH/g  [ Dan , Aneesh ]
->> >> * s/PAPR_SCM_PSDM_DIMM_*/PAPR_PDSM_DIMM_*/g
->> >> * Renamed papr_scm_get_health() to papr_psdm_health()
->> >> * Updated patch description to replace papr-scm dimm with nvdimm.
->> >> 
->> >> v7..v8:
->> >> * None
->> >> 
->> >> Resend:
->> >> * None
->> >> 
->> >> v6..v7:
->> >> * Updated flags_show() to use seq_buf_printf(). [Mpe]
->> >> * Updated papr_scm_get_health() to use newly introduced
->> >>   __drc_pmem_query_health() bypassing the cache [Mpe].
->> >> 
->> >> v5..v6:
->> >> * Added attribute '__packed' to 'struct nd_papr_pdsm_health_v1' to
->> >>   gaurd against possibility of different compilers adding different
->> >>   paddings to the struct [ Dan Williams ]
->> >> 
->> >> * Updated 'struct nd_papr_pdsm_health_v1' to use __u8 instead of
->> >>   'bool' and also updated drc_pmem_query_health() to take this into
->> >>   account. [ Dan Williams ]
->> >> 
->> >> v4..v5:
->> >> * None
->> >> 
->> >> v3..v4:
->> >> * Call the DSM_PAPR_SCM_HEALTH service function from
->> >>   papr_scm_service_dsm() instead of papr_scm_ndctl(). [Aneesh]
->> >> 
->> >> v2..v3:
->> >> * Updated struct nd_papr_scm_dimm_health_stat_v1 to use '__xx' types
->> >>   as its exported to the userspace [Aneesh]
->> >> * Changed the constants DSM_PAPR_SCM_DIMM_XX indicating dimm health
->> >>   from enum to #defines [Aneesh]
->> >> 
->> >> v1..v2:
->> >> * New patch in the series
->> >> ---
->> >>  arch/powerpc/include/uapi/asm/papr_pdsm.h |  39 +++++++
->> >>  arch/powerpc/platforms/pseries/papr_scm.c | 125 +++++++++++++++++++---
->> >>  2 files changed, 147 insertions(+), 17 deletions(-)
->> >> 
->> >> diff --git a/arch/powerpc/include/uapi/asm/papr_pdsm.h b/arch/powerpc/include/uapi/asm/papr_pdsm.h
->> >> index 6407fefcc007..411725a91591 100644
->> >> --- a/arch/powerpc/include/uapi/asm/papr_pdsm.h
->> >> +++ b/arch/powerpc/include/uapi/asm/papr_pdsm.h
->> >> @@ -115,6 +115,7 @@ struct nd_pdsm_cmd_pkg {
->> >>   */
->> >>  enum papr_pdsm {
->> >>  	PAPR_PDSM_MIN = 0x0,
->> >> +	PAPR_PDSM_HEALTH,
->> >>  	PAPR_PDSM_MAX,
->> >>  };
->> >>  
->> >> @@ -133,4 +134,42 @@ static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
->> >>  		return (void *)(pcmd->payload);
->> >>  }
->> >>  
->> >> +/* Various nvdimm health indicators */
->> >> +#define PAPR_PDSM_DIMM_HEALTHY       0
->> >> +#define PAPR_PDSM_DIMM_UNHEALTHY     1
->> >> +#define PAPR_PDSM_DIMM_CRITICAL      2
->> >> +#define PAPR_PDSM_DIMM_FATAL         3
->> >> +
->> >> +/*
->> >> + * Struct exchanged between kernel & ndctl in for PAPR_PDSM_HEALTH
->> >> + * Various flags indicate the health status of the dimm.
->> >> + *
->> >> + * dimm_unarmed		: Dimm not armed. So contents wont persist.
->> >> + * dimm_bad_shutdown	: Previous shutdown did not persist contents.
->> >> + * dimm_bad_restore	: Contents from previous shutdown werent restored.
->> >> + * dimm_scrubbed	: Contents of the dimm have been scrubbed.
->> >> + * dimm_locked		: Contents of the dimm cant be modified until CEC reboot
->> >> + * dimm_encrypted	: Contents of dimm are encrypted.
->> >> + * dimm_health		: Dimm health indicator. One of PAPR_PDSM_DIMM_XXXX
->> >> + */
->> >> +struct nd_papr_pdsm_health_v1 {
->> >> +	__u8 dimm_unarmed;
->> >> +	__u8 dimm_bad_shutdown;
->> >> +	__u8 dimm_bad_restore;
->> >> +	__u8 dimm_scrubbed;
->> >> +	__u8 dimm_locked;
->> >> +	__u8 dimm_encrypted;
->> >> +	__u16 dimm_health;
->> >> +} __packed;
->> >> +
->> >> +/*
->> >> + * Typedef the current struct for dimm_health so that any application
->> >> + * or kernel recompiled after introducing a new version automatically
->> >> + * supports the new version.
->> >> + */
->> >> +#define nd_papr_pdsm_health nd_papr_pdsm_health_v1
->> >> +
->> >> +/* Current version number for the dimm health struct */
 >> >
->> > This can't be the 'current' version.  You will need a list of versions you
->> > support.  Because if the user passes in an old version you need to be able to
->> > respond with that old version.  Also if you plan to support 'return X for a Y
->> > query' then the user will need both X and Y defined to interpret X.
->> Yes, and that change will be introduced with addition of version-2 of
->> nd_papr_pdsm_health. Earlier version of the patchset[1] had such a table
->> implemented. But to simplify the patchset, as we are only dealing with
->> version-1 of the structs right now, it was dropped.
+>> > Are you sure you want to tolerate this behavior from MSS? This is a
+>> > graceful shutdown, modem shouldn't have a problem completing the
+>> > proper handshake. If they do, isn't that a bug on the modem side?
 >> 
->> [1] :
->> https://lore.kernel.org/linuxppc-dev/20200220095805.197229-9-vaibhav@linux.ibm.com/
->
-> I'm not sure I follow that comment.
->
-> I feel like there is some confusion about what firmware can return vs the UAPI
-> structure.  You have already marshaled the data between the 2.  We can define
-> whatever we want for the UAPI structures throwing away data the kernel does not
-> understand from the firmware.
->
->> 
->> >
->> >> +#define ND_PAPR_PDSM_HEALTH_VERSION 1
->> >> +
->> >>  #endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
->> >> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
->> >> index 5e2237e7ec08..c0606c0c659c 100644
->> >> --- a/arch/powerpc/platforms/pseries/papr_scm.c
->> >> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
->> >> @@ -88,7 +88,7 @@ struct papr_scm_priv {
->> >>  	unsigned long lasthealth_jiffies;
->> >>  
->> >>  	/* Health information for the dimm */
->> >> -	u64 health_bitmap;
->> >> +	struct nd_papr_pdsm_health health;
->> >
->> > ok so we are throwing away all the #defs from patch 1?  Are they still valid?
->> >
->> > I'm confused that patch 3 added this and we are throwing it away
->> > here...
->> The #defines are still valid, only the usage moved to a __drc_pmem_query_health().
->> 
->> >
->> >>  };
->> >>  
->> >>  static int drc_pmem_bind(struct papr_scm_priv *p)
->> >> @@ -201,6 +201,7 @@ static int drc_pmem_query_n_bind(struct papr_scm_priv *p)
->> >>  static int __drc_pmem_query_health(struct papr_scm_priv *p)
->> >>  {
->> >>  	unsigned long ret[PLPAR_HCALL_BUFSIZE];
->> >> +	u64 health;
->> >>  	long rc;
->> >>  
->> >>  	/* issue the hcall */
->> >> @@ -208,18 +209,46 @@ static int __drc_pmem_query_health(struct papr_scm_priv *p)
->> >>  	if (rc != H_SUCCESS) {
->> >>  		dev_err(&p->pdev->dev,
->> >>  			 "Failed to query health information, Err:%ld\n", rc);
->> >> -		rc = -ENXIO;
->> >> -		goto out;
->> >> +		return -ENXIO;
->> >
->> > I missed this...  probably did not need the goto in the first patch?
->> Yes, will get rid of the goto from patch-1.
->
-> Cool.
->
->> 
->> >
->> >>  	}
->> >>  
->> >>  	p->lasthealth_jiffies = jiffies;
->> >> -	p->health_bitmap = ret[0] & ret[1];
->> >> +	health = ret[0] & ret[1];
->> >>  
->> >>  	dev_dbg(&p->pdev->dev,
->> >>  		"Queried dimm health info. Bitmap:0x%016lx Mask:0x%016lx\n",
->> >>  		ret[0], ret[1]);
->> >> -out:
->> >> -	return rc;
->> >> +
->> >> +	memset(&p->health, 0, sizeof(p->health));
->> >> +
->> >> +	/* Check for various masks in bitmap and set the buffer */
->> >> +	if (health & PAPR_PMEM_UNARMED_MASK)
->> >
->> > Oh ok...  odd.  (don't add code then just take it away in a series)
->> > You could have lead with the user structure and put this code in patch
->> > 3.
->> The struct nd_papr_pdsm_health in only introduced this patch in header
->> 'papr_pdsm.h' as means of exchanging nvdimm health information with
->> userspace. Introducing this struct without introducing the necessary
->> scafolding in 'papr_pdsm.h' would have been very counter-intutive.
->
-> I respectfully disagree.  You intended to use a copy of this structure in
-> kernel to store the data.  Just do that.
-Have addressed this in v10 that doesnt resort to removing the
-functionality that was introduced in an earlier patch.
+>> The graceful shutdown is achieved
+>> though sysmon (enabled using
+>> CONFIG_QCOM_SYSMON). When sysmon is
+>> enabled we get a shutdown-ack when we
+>> try to stop the modem, post which
+>> request stop is a basically a nop.
+>> Request stop is done to force stop
+>> the modem during failure cases (like
+>> rmtfs is not running and so on) and
+>> we do want to mask the wdog that we get
+>> during this scenario ( The locking
+>> already prevents the servicing of the
+>> wdog during shutdown, the check just
+>> prevents the scheduling of crash handler
+>> and err messages associated with it).
+>> Also this check was always present and
+>> was missed during common q6v5 resource
+>> helper migration, hence the unused
+>> running state in mss driver.
+> 
+> So you're saying that the intention of the ->running check already in
+> q6v5_wdog_interrupt() was to allow either the stop-ack or wdog
+> interrupt to complete the stop. This patch just fixes a regression
+> introduced during the refactor.
+> This patch seems ok to me then. It still sort of seems like a bug that
+> the modem responds arbitrarily in one of two ways, even to a "harsh"
+> shutdown request.
+> 
+> I wasn't aware of QCOM_SYSMON. Reading it now, It seems like kind of a
 
->
->> 
->> >
->> > Why does the user need u8 to represent a single bit?  Does this help protect
->> > against endian issues?
->> This was 'bool' earlier but since type 'bool' isnt suitable for ioctl abi
->> and I wanted to avoid bit fields here as not sure if their packing may
->> differ across compilers hence replaced with u8.
->> 
->
-> ok works for me...
->
->> >
->> >> +		p->health.dimm_unarmed = 1;
->> >> +
->> >> +	if (health & PAPR_PMEM_BAD_SHUTDOWN_MASK)
->> >> +		p->health.dimm_bad_shutdown = 1;
->> >> +
->> >> +	if (health & PAPR_PMEM_BAD_RESTORE_MASK)
->> >> +		p->health.dimm_bad_restore = 1;
->> >> +
->> >> +	if (health & PAPR_PMEM_ENCRYPTED)
->> >> +		p->health.dimm_encrypted = 1;
->> >> +
->> >> +	if (health & PAPR_PMEM_SCRUBBED_AND_LOCKED) {
->> >> +		p->health.dimm_locked = 1;
->> >> +		p->health.dimm_scrubbed = 1;
->> >> +	}
->> >> +
->> >> +	if (health & PAPR_PMEM_HEALTH_UNHEALTHY)
->> >> +		p->health.dimm_health = PAPR_PDSM_DIMM_UNHEALTHY;
->> >> +
->> >> +	if (health & PAPR_PMEM_HEALTH_CRITICAL)
->> >> +		p->health.dimm_health = PAPR_PDSM_DIMM_CRITICAL;
->> >> +
->> >> +	if (health & PAPR_PMEM_HEALTH_FATAL)
->> >> +		p->health.dimm_health = PAPR_PDSM_DIMM_FATAL;
->> >> +
->> >> +	return 0;
->> >>  }
->> >>  
->> >>  /* Min interval in seconds for assuming stable dimm health */
->> >> @@ -403,6 +432,58 @@ static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
->> >>  	return 0;
->> >>  }
->> >>  
->> >> +/* Fetch the DIMM health info and populate it in provided package. */
->> >> +static int papr_pdsm_health(struct papr_scm_priv *p,
->> >> +			       struct nd_pdsm_cmd_pkg *pkg)
->> >> +{
->> >> +	int rc;
->> >> +	size_t copysize = sizeof(p->health);
->> >> +
->> >> +	/* Ensure dimm health mutex is taken preventing concurrent access */
->> >> +	rc = mutex_lock_interruptible(&p->health_mutex);
->> >> +	if (rc)
->> >> +		goto out;
->> >> +
->> >> +	/* Always fetch upto date dimm health data ignoring cached values */
->> >> +	rc = __drc_pmem_query_health(p);
->> >> +	if (rc)
->> >> +		goto out_unlock;
->> >> +	/*
->> >> +	 * If the requested payload version is greater than one we know
->> >> +	 * about, return the payload version we know about and let
->> >> +	 * caller/userspace handle.
->> >> +	 */
->> >> +	if (pkg->payload_version > ND_PAPR_PDSM_HEALTH_VERSION)
->> >> +		pkg->payload_version = ND_PAPR_PDSM_HEALTH_VERSION;
->> >
->> > I know this seems easy now but I do think you will run into trouble later.
->> 
->> I did addressed this in an earlier iteration of this patchset[1] and
->> dropped it in favour of simplicity.
->> 
->> [1] :
->> https://lore.kernel.org/linuxppc-dev/20200220095805.197229-9-vaibhav@linux.ibm.com/
->  
-> I don't see how that addresses this?  See my other email.
->
-> Ira
->
->> 
->> > Ira
->> >
->> >> +
->> >> +	if (pkg->hdr.nd_size_out < copysize) {
->> >> +		dev_dbg(&p->pdev->dev, "Truncated payload (%u). Expected (%lu)",
->> >> +			pkg->hdr.nd_size_out, copysize);
->> >> +		rc = -ENOSPC;
->> >> +		goto out_unlock;
->> >> +	}
->> >> +
->> >> +	dev_dbg(&p->pdev->dev, "Copying payload size=%lu version=0x%x\n",
->> >> +		copysize, pkg->payload_version);
->> >> +
->> >> +	/* Copy the health struct to the payload */
->> >> +	memcpy(pdsm_cmd_to_payload(pkg), &p->health, copysize);
->> >> +	pkg->hdr.nd_fw_size = copysize;
->> >> +
->> >> +out_unlock:
->> >> +	mutex_unlock(&p->health_mutex);
->> >> +
->> >> +out:
->> >> +	/*
->> >> +	 * Put the error in out package and return success from function
->> >> +	 * so that errors if any are propogated back to userspace.
->> >> +	 */
->> >> +	pkg->cmd_status = rc;
->> >> +	dev_dbg(&p->pdev->dev, "completion code = %d\n", rc);
->> >> +
->> >> +	return 0;
->> >> +}
->> >> +
->> >>  static int papr_scm_service_pdsm(struct papr_scm_priv *p,
->> >>  				struct nd_pdsm_cmd_pkg *call_pkg)
->> >>  {
->> >> @@ -417,6 +498,9 @@ static int papr_scm_service_pdsm(struct papr_scm_priv *p,
->> >>  
->> >>  	/* Depending on the DSM command call appropriate service routine */
->> >>  	switch (call_pkg->hdr.nd_command) {
->> >> +	case PAPR_PDSM_HEALTH:
->> >> +		return papr_pdsm_health(p, call_pkg);
->> >> +
->> >>  	default:
->> >>  		dev_dbg(&p->pdev->dev, "Unsupported PDSM request 0x%llx\n",
->> >>  			call_pkg->hdr.nd_command);
->> >> @@ -485,34 +569,41 @@ static ssize_t flags_show(struct device *dev,
->> >>  	struct nvdimm *dimm = to_nvdimm(dev);
->> >>  	struct papr_scm_priv *p = nvdimm_provider_data(dimm);
->> >>  	struct seq_buf s;
->> >> -	u64 health;
->> >>  	int rc;
->> >>  
->> >>  	rc = drc_pmem_query_health(p);
->> >>  	if (rc)
->> >>  		return rc;
->> >>  
->> >> -	/* Copy health_bitmap locally, check masks & update out buffer */
->> >> -	health = READ_ONCE(p->health_bitmap);
->> >> -
->> >>  	seq_buf_init(&s, buf, PAGE_SIZE);
->> >> -	if (health & PAPR_PMEM_UNARMED_MASK)
->> >> +
->> >> +	/* Protect concurrent modifications to papr_scm_priv */
->> >> +	rc = mutex_lock_interruptible(&p->health_mutex);
->> >> +	if (rc)
->> >> +		return rc;
->> >> +
->> >> +	if (p->health.dimm_unarmed)
->> >>  		seq_buf_printf(&s, "not_armed ");
->> >>  
->> >> -	if (health & PAPR_PMEM_BAD_SHUTDOWN_MASK)
->> >> +	if (p->health.dimm_bad_shutdown)
->> >>  		seq_buf_printf(&s, "flush_fail ");
->> >>  
->> >> -	if (health & PAPR_PMEM_BAD_RESTORE_MASK)
->> >> +	if (p->health.dimm_bad_restore)
->> >>  		seq_buf_printf(&s, "restore_fail ");
->> >>  
->> >> -	if (health & PAPR_PMEM_ENCRYPTED)
->> >> +	if (p->health.dimm_encrypted)
->> >>  		seq_buf_printf(&s, "encrypted ");
->> >>  
->> >> -	if (health & PAPR_PMEM_SMART_EVENT_MASK)
->> >> +	if (p->health.dimm_health)
->> >>  		seq_buf_printf(&s, "smart_notify ");
->> >>  
->> >> -	if (health & PAPR_PMEM_SCRUBBED_AND_LOCKED)
->> >> -		seq_buf_printf(&s, "scrubbed locked ");
->> >> +	if (p->health.dimm_scrubbed)
->> >> +		seq_buf_printf(&s, "scrubbed ");
->> >> +
->> >> +	if (p->health.dimm_locked)
->> >> +		seq_buf_printf(&s, "locked ");
->> >> +
->> >> +	mutex_unlock(&p->health_mutex);
->> >>  
->> >>  	if (seq_buf_used(&s))
->> >>  		seq_buf_printf(&s, "\n");
->> >> -- 
->> >> 2.26.2
->> >> 
->> 
->> -- 
->> Cheers
->> ~ Vaibhav
+TL;DR
+Sysmon when enabled adds a lookup
+for qmi service 43 (Subsystem
+control service). When we shutdown
+the modem, we send a SSCTL_SHUTDOWN_REQ
+to the service and the modem responds
+with a shutdown-ack interrupt. If you
+have rmtfs running with -v turned on
+you can notice pending efs transactions
+being completed followed by a bye I guess.
+
+> lot... do I really need all this? Can I get by with just remoteproc
+> stops?
+> Anyway, for this patch:
+> 
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+
+Thanks for the review!
 
 -- 
-Cheers
-~ Vaibhav
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
