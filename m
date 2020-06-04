@@ -2,122 +2,80 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB729206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:39:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="QYPuNXUX"
+	by mail.kernel.org (Postfix) with ESMTP id 0F574207D5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgFDJjh (ORCPT
+        id S1728115AbgFDJjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
+        Thu, 4 Jun 2020 05:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgFDJjh (ORCPT
+        with ESMTP id S1728071AbgFDJjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:39:37 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139C9C03E97D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:39:37 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id x93so4119496ede.9
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J7btnW3tsRxnIcXWy64DJz6nFcHS2EOi2Wpoy2UuEWQ=;
-        b=QYPuNXUXgWjqVo65fdSoRHO9CgkgNI76FQMpdvgcNSunnwsKIobrL81g/G/D3F14GA
-         xtaIXdN6O9X9bBEBEn4ru62fmVgnFkVqcDxfiNG87C+lwW8+tLFRSV7Btz2DGPiAuLyO
-         D+z6aFktaf7jWvDMeM8FMthrfku1de5uPqUPQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J7btnW3tsRxnIcXWy64DJz6nFcHS2EOi2Wpoy2UuEWQ=;
-        b=ZnFENe+K9bX5tKUYiZSLJnCYz75k+Dm+0LEr0p18XqgAE8xRQ2J+rpTt0IzVX5xoUb
-         /hcL3K1fi4aj2yxEGJ4R+oucaxkOozeK3kV8CZMKOYyUQp4efjeaYpsXR+MQcuMaMeOq
-         6SydO4b55do2LdQPLzAvoIv35+ohQKXqTAQGUzZQRGOIpE1PTp6I7OOQ5CC4XIwFF4RK
-         7d/jnMh76+jyCuU1pu+2eN7/qTzqYNYCFdvdEg9mcUzhL6+FW2xD0wH33SfsweduROHF
-         w2259B9K3vtnlnkcRY/dF2jgOD+AUu+URM/B+AzAd6KXpVEjC+vas+K3YyZcDdrFMI80
-         eljg==
-X-Gm-Message-State: AOAM532/H0Un98weZuu6A1Kh/VjfpLkUHC8Gz0P0wsxWW6FWOf2uF5eF
-        Jl3BnMLD2/XTrnmbiqT+oD8fV9mb5iKhX7sqjrG9X+Z9pXw=
-X-Google-Smtp-Source: ABdhPJxKDysyrZZSn8pqHQJgaPL3tRQPi8ZTv3ZfjwOOzrRG9lOPs9ai1Upz60g4bD+J/4yiv2Uy2btGEws69dG3mnk=
-X-Received: by 2002:a50:ee8f:: with SMTP id f15mr3506384edr.168.1591263575775;
- Thu, 04 Jun 2020 02:39:35 -0700 (PDT)
+        Thu, 4 Jun 2020 05:39:40 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0C7C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:39:40 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 7562426F; Thu,  4 Jun 2020 11:39:38 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 11:39:36 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH] iommu: Check for deferred attach in
+ iommu_group_do_dma_attach()
+Message-ID: <20200604093936.GK14598@8bytes.org>
+References: <20200604091944.26402-1-joro@8bytes.org>
 MIME-Version: 1.0
-References: <20200603154559.140418-1-colin.king@canonical.com>
- <CAOQ4uxhLW=MSk=RhUi51EdOticfk1i_pku6qjCp2QpwnpyL5sw@mail.gmail.com>
- <1edc291d-6e63-89d8-d48c-443908ddc0e8@canonical.com> <CAJfpegsyGmJYHJr8rmRTxScYGyNQ1ZdPMxprW1zoQmGhXg1wuA@mail.gmail.com>
- <78e9b4ed-f530-1fd0-07a2-aca5245a6bd8@canonical.com>
-In-Reply-To: <78e9b4ed-f530-1fd0-07a2-aca5245a6bd8@canonical.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 4 Jun 2020 11:39:24 +0200
-Message-ID: <CAJfpegvnMrYdn0pqZLK7BaPmfwd_8Xf=vECd3GVDa6++bh9D7Q@mail.gmail.com>
-Subject: Re: [PATCH][next] ovl: fix null pointer dereference on null stack
- pointer on error return
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604091944.26402-1-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 11:27 AM Colin Ian King <colin.king@canonical.com> wrote:
->
-> On 04/06/2020 08:25, Miklos Szeredi wrote:
-> > On Wed, Jun 3, 2020 at 6:15 PM Colin Ian King <colin.king@canonical.com> wrote:
-> >>
-> >> On 03/06/2020 17:11, Amir Goldstein wrote:
-> >>> On Wed, Jun 3, 2020 at 6:46 PM Colin King <colin.king@canonical.com> wrote:
-> >>>>
-> >>>> From: Colin Ian King <colin.king@canonical.com>
-> >>>>
-> >>>> There are two error return paths where the call to path_put is
-> >>>> dereferencing the null pointer 'stack'.  Fix this by avoiding the
-> >>>> error exit path via label 'out_err' that will lead to the path_put
-> >>>> calls and instead just return the error code directly.
-> >>>>
-> >>>> Addresses-Coverity: ("Dereference after null check)"
-> >>>> Fixes: 4155c10a0309 ("ovl: clean up getting lower layers")
-> >>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >>>
-> >>>
-> >>> Which branch is that based on?
-> >>> Doesn't seem to apply to master nor next
-> >>
-> >> It was based on today's linux-next
-> >
-> > Yeah, it's actually
-> >
-> > Fixes: 73819e26c0f0 ("ovl: get rid of redundant members in struct ovl_fs")
-> >
-> > So I'll just fold your patch.  There's still a change in the loop
-> > count for later errors, but that's okay, since
-> > ovl_lower_dir()/ovl_mount_dir_noesc() use the path_put_init() variant.
-> > Actually ovl_lower_dir() can get rid of that path_put_init()
-> > completely, since now the only caller will take care of that...
-> >
-> > Thanks for reporting!
-> >
-> > Miklos
-> >
-> Is there a reason for folding the fix and hence losing the Signed-off-by
-> tag?
+On Thu, Jun 04, 2020 at 11:19:44AM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> The iommu_group_do_dma_attach() must not attach devices which have
+> deferred_attach set. Otherwise devices could cause IOMMU faults when
+> re-initialized in a kdump kernel.
+> 
+> Fixes: deac0b3bed26 ("iommu: Split off default domain allocation from group assignment")
+> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  drivers/iommu/iommu.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index b5ea203f6c68..5a6d509f72b6 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1680,8 +1680,12 @@ static void probe_alloc_default_domain(struct bus_type *bus,
+>  static int iommu_group_do_dma_attach(struct device *dev, void *data)
+>  {
+>  	struct iommu_domain *domain = data;
+> +	int ret = 0;
+>  
+> -	return __iommu_attach_device(domain, dev);
+> +	if (!iommu_is_attach_deferred(group->domain, dev))
+> +		ret = __iommu_attach_device(group->domain, dev);
 
-I generally prefer to fold small fixes for not yet merged patches.  In
-this case it's more of a personal preference, but in other cases it
-might have an effect on bisectability.
+And of course with the same bug as my original diff. Fixed that up
+before applying it. (group->domain -> domain).
 
-Thanks,
-Miklos
+
+	Joerg
