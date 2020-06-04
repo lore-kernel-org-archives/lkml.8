@@ -2,120 +2,102 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E690C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B69922067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CUAua5qV"
+	by mail.kernel.org (Postfix) with ESMTP id E8E69206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591305240;
+	bh=2TgX524QxU5g09+EVKx4PYrPaxdDEGbnQte8wTn3A9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WHjU8iqrmGq1EVAVa1pbXDEZsjm7eom3TdFbUKFpadM2dsOZs+YT7OKpNuFRZCaPN
+	 K3bjFLFtk+hGaDHMS73f4O7C5VuK/Jbo4iQzItbYrzrXm8giRkiOm2IWujrM5jKQzs
+	 pXM4/2CqlOEa8Fzp8YgWlwJZEMREydcDr/H8ETEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgFDVMk (ORCPT
+        id S1726639AbgFDVN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 17:12:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgFDVMg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:12:36 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36130C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 14:12:36 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id k13so4372581vsm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:12:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2/2vvNqjDrDfa9zj4WkpMzbskQTo3mnO0g8KBrFA7s8=;
-        b=CUAua5qV8xF2sA5jNCA2iEaVCwy8+VpWn+NmTfcE6rq0kqEpaokEJWOgU5rdPmU2g7
-         1Vv5n3TRANrrPNT8DQXFfzcsyspUq7QIQNzjXHwb51Ovp3FYXom9Bk6Tt9wDXsmFiYI3
-         sQsGqUR7iG/5s865l6vTA02WgDgK6RP0D8h7w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2/2vvNqjDrDfa9zj4WkpMzbskQTo3mnO0g8KBrFA7s8=;
-        b=bz7PTPsrYFUi57dAvva8OO/MpgR1ti8YbfrpHGfYIXq/158tw+LZHATOWZ7VAX0R/g
-         5GKg5TnqD9IRa5SfD1l3yNbPicVSKyY/MvXzRk+v2pROo9wAQVPVqdEi8FFTeFtgN1TP
-         J87XYs0C0jTnkFU2mgD1LmN0srck8nbTxhOOZZtcJbUvwFYlFaCdD6c1Uk7+Urz5ZT7I
-         ZzBDjAmFrcgQ37CytYgg4bvZWI72iL1UPXX6eitlVtG9cK8bCfp2n2Em3uAdnWeZQYm5
-         OOhMh6JVZa0yNAU5KFnY9l6kJ5HksxymrKMF7poS+bNTBnweFnB6/SlBDi7WSRBXdDw5
-         qvrQ==
-X-Gm-Message-State: AOAM531nFLXkpgEOip/mAa4DWwpkO1k30fGn8vSd9zScN/oCgN5jR5vS
-        tZYG60yNCAl8exK8HriGT1Uj1OcBiXg=
-X-Google-Smtp-Source: ABdhPJxnS2HnhpSELozguuVLsLD2b1i80fzGZRhU0bm7CWM9L1CybFT8bMWNORxDKADhXJXCTsCDVQ==
-X-Received: by 2002:a67:1dc5:: with SMTP id d188mr5131206vsd.103.1591305155043;
-        Thu, 04 Jun 2020 14:12:35 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id b21sm418256uap.15.2020.06.04.14.12.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 14:12:34 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id g44so2229219uae.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:12:34 -0700 (PDT)
-X-Received: by 2002:a9f:2804:: with SMTP id c4mr5242531uac.8.1591305153580;
- Thu, 04 Jun 2020 14:12:33 -0700 (PDT)
+        Thu, 4 Jun 2020 17:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726106AbgFDVN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 17:13:58 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B862067B;
+        Thu,  4 Jun 2020 21:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591305238;
+        bh=2TgX524QxU5g09+EVKx4PYrPaxdDEGbnQte8wTn3A9g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P0+MAxQDugaaDhNYggEouW+7JZaR1K/9qYg+H5ysAbLXSygx9WfUNMmDuZMy7whRf
+         BNTFXnwKLHHmis/PZCa5lQE9+DHifYWmPjd7j+ji9JsqBbUNzzSWyrxlf0by09sIIV
+         sZI0jHMx/cz2J2Kv1fiosjazgSo71R3qAQo18pl8=
+Date:   Thu, 4 Jun 2020 16:19:03 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] docs: deprecated.rst: Add note to the use of
+ struct_size() helper
+Message-ID: <20200604211903.GF10051@embeddedor>
+References: <20200604172138.GA21820@embeddedor>
+ <202006041047.9B3E8FB951@keescook>
+ <20200604182123.GD10051@embeddedor>
+ <202006041322.35912ABB@keescook>
 MIME-Version: 1.0
-References: <1591264879-25920-1-git-send-email-sumit.garg@linaro.org> <1591264879-25920-5-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1591264879-25920-5-git-send-email-sumit.garg@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 4 Jun 2020 14:12:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=URj6UiZgH_g3twcYgv=USGr7YUV5SkW3J-WYR1vs+MDw@mail.gmail.com>
-Message-ID: <CAD=FV=URj6UiZgH_g3twcYgv=USGr7YUV5SkW3J-WYR1vs+MDw@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] kdb: Switch to use safer dbg_io_ops over console APIs
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006041322.35912ABB@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jun 04, 2020 at 01:25:26PM -0700, Kees Cook wrote:
+> On Thu, Jun 04, 2020 at 01:21:23PM -0500, Gustavo A. R. Silva wrote:
+> > Yeah. My reasoning for is that it will take a while --at least one 
+> > development cycle more-- to completely get rid of all the 0/1-arrays.
+> 
+> Right -- but we need a place to point people when we tell them "please
+> don't use 0-byte and 1-byte arrays", and the deprecated.rst is the place
+> for that.
+> 
+> Having it in deprecated.rst once they're all gone only serves to explain
+> why various compiler flags are enabled, etc. But while they're being
+> removed, it serves as a single place to document the issue (as in, much
+> of the flex-array patch commit log "boilerplate" can actually be
+> repeated in deprecated.rst.
+> 
+> > But I think we can add this note while I continue working on the flexible-array
+> > conversions. Once that work is complete, I can go back and update the
+> > documentation. :)
+> > 
+> > What do you think?
+> 
+> I think we need to document it at the beginning of the work (and I
+> should have asked for this earlier). So let's just add a new section on
+> dynamic array usage, etc. It can include a note about struct_size() as
+> an example for why 1-byte arrays are so weird. :)
+> 
 
-On Thu, Jun 4, 2020 at 3:02 AM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> @@ -433,7 +432,8 @@ static int kgdboc_earlycon_get_char(void)
->  {
->         char c;
->
-> -       if (!earlycon->read(earlycon, &c, 1))
-> +       if (!kgdboc_earlycon_io_ops.cons->read(kgdboc_earlycon_io_ops.cons,
-> +                                              &c, 1))
->                 return NO_POLL_CHAR;
->
->         return c;
-> @@ -441,7 +441,8 @@ static int kgdboc_earlycon_get_char(void)
->
->  static void kgdboc_earlycon_put_char(u8 chr)
->  {
-> -       earlycon->write(earlycon, &chr, 1);
-> +       kgdboc_earlycon_io_ops.cons->write(kgdboc_earlycon_io_ops.cons, &chr,
-> +                                          1);
->  }
+Got ya. :)
 
-The get_char / put_char functions are pretty unwieldy now.  If it were
-me I would have done:
+One last thing... I was thinking on adding such section (dynamic array
+usage) to coding-style.rst, explaining how to use struct_size() and
+transform the different open-coded versions we currently have in the
+kernel, e.g. I have seen people use offsetof() --and sometimes open-coded
+versions of sizeof_field()-- and its open-coded version to do arithmetic
+in allocator arguments.
 
-struct console *con =  kgdboc_earlycon_io_ops.cons;
+Thanks
+--
+Gustavo
 
-...and then used it so the lines didn't wrap in such a terrible way.  ;-)
-
-I'm not sure if I'd spin just for that, though.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
--Doug
