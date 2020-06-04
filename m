@@ -2,137 +2,167 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1795A20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:30:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="cIwUViir";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S8YKghCe"
+	by mail.kernel.org (Postfix) with ESMTP id 7B40E20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFDBat (ORCPT
+        id S1726970AbgFDBcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:30:49 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:45699 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725983AbgFDBas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:30:48 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 11BAD5C0106;
-        Wed,  3 Jun 2020 21:30:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 03 Jun 2020 21:30:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=4vipdXWneTcdQDAu6JbWhyQeuEq
-        wMDjkliQKHSJwEH8=; b=cIwUViirQ9aI81E1h0bKidmTFtjoZ3LThdQfLivnDXP
-        2btgd5UtvVfYduXrqevolSErnEYP2HZnQbdnc61HbLzpZdUJc/RvgQpiMGH+bOlb
-        6Ivkzm0h2a4JS6qL+aRABncNgBWPKrHvbb+lkJblhT43dkmDPk1Ddf5MBjZdf+BH
-        ww74xt8wIMuMw8/aBBQUF0FM3jsARRUK96SqIA+AoX929SoDHZb910EXEchb/2nf
-        JaLfrJPWdHt9vuWjtQGARoNXfeE/4QaoMaUi5MxH0tGt7plBif2Yi7tUHTIZ52rC
-        EdsfjCMdnHkVk8KWGWBk4XwevOM1KbHD+PVZEbs+xDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=4vipdX
-        WneTcdQDAu6JbWhyQeuEqwMDjkliQKHSJwEH8=; b=S8YKghCehYdlM9NUVAcy4B
-        VSjw0fBXZl7sAnCD5BS8WoUavWx0V3IfVv39aT+ViY8jH3ezW1RJPupIUm5m6NSZ
-        4Obj2dJVtVZBSWrh89ONFFxa2U9F833qfyVEnAagdSAF2oryyD4YAMnPYRdF68F/
-        nCHzGOnlAx1uXOAgTsfoJPiLGxHC0kMTdBPQlUkoIc050N4blHTk6tlPutvHLlhA
-        dGAbC8V54HSB+ElKNShotd9H9NiI0g8ghKxf/PaKkRJ+LmXkm2PYenjhrAPwZM73
-        SYx3r+yNZEd0unJs0GEfXMpoorV+t+QJmIp9WwtIp4Uig3F2VGGPx821uhu1Z48A
-        ==
-X-ME-Sender: <xms:xk7YXjotCgMhjSg8JiQBr5kfok2z4dhwN3EOhuifuvkNSLoi2bpy3w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudegtddggeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
-    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucggtffrrg
-    htthgvrhhnpedukefhkeelueegveetheelffffjeegleeuudelfeefuedtleffueejfffh
-    ueffudenucfkphepieejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdr
-    uggv
-X-ME-Proxy: <xmx:xk7YXtp5ZbUUly9jsELG0yos269NcSSsK1HdpmB3g1LP1-g26LItDA>
-    <xmx:xk7YXgMWB8CbJkqyi3wxyO0gtFnStxLx-DmUlnyDcFOxFnAf5qiNpQ>
-    <xmx:xk7YXm59ckpYdEnpybu9o4jOV5b-3Q4f7_YWHalDsufJgdx6eV2ZXw>
-    <xmx:x07YXiGlKa4Q0ask8n5CAbddDBD-iVvpYiyku3egEYkhUiyFskOWTg>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 504183280065;
-        Wed,  3 Jun 2020 21:30:46 -0400 (EDT)
-Date:   Wed, 3 Jun 2020 18:30:45 -0700
-From:   Andres Freund <andres@anarazel.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-Message-ID: <20200604013045.7gu7xopreusbdea2@alap3.anarazel.de>
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <20200604005916.niy2mejjcsx4sv6t@alap3.anarazel.de>
- <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
+        Wed, 3 Jun 2020 21:32:53 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52400 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725983AbgFDBcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:32:53 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 96913A50AD9BE0EBAFA8;
+        Thu,  4 Jun 2020 09:32:51 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.101) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 4 Jun 2020
+ 09:32:42 +0800
+Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
+ is in idle state
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <Sudeep.Holla@arm.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
+ <20200603075200.hbyofgcyiwocl565@vireshk-i7>
+ <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com>
+Date:   Thu, 4 Jun 2020 09:32:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
+In-Reply-To: <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.101]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Rafael,
 
-On 2020-06-03 19:04:17 -0600, Jens Axboe wrote:
-> > The workload that triggers the bug within a few seconds is postgres
-> > doing a parallel sequential scan of a large table (and aggregating the
-> > data, but that shouldn't matter). In the triggering case that boils down
-> > to 9 processes sequentially reading a number of 1GB files (we chunk
-> > tables internally into smaller files). Each process will read a 512kB
-> > chunk of the file on its own, and then claim the next 512kB from a
-> > shared memory location. Most of the IO will be READV requests, reading
-> > 16 * 8kB into postgres' buffer pool (which may or may not be neighboring
-> > 8kB pages).
+Thanks for your reply !
+
+On 2020/6/3 21:39, Rafael J. Wysocki wrote:
+> On Wed, Jun 3, 2020 at 9:52 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>
+>> On 02-06-20, 11:34, Xiongfeng Wang wrote:
+>>> Hi Viresh,
+>>>
+>>> Sorry to disturb you about another problem as follows.
+>>>
+>>> CPPC use the increment of Desired Performance counter and Reference Performance
+>>> counter to get the CPU frequency and show it in sysfs through
+>>> 'cpuinfo_cur_freq'. But ACPI CPPC doesn't specifically define the behavior of
+>>> these two counters when the CPU is in idle state, such as stop incrementing when
+>>> the CPU is in idle state.
+>>>
+>>> ARMv8.4 Extension inctroduced support for the Activity Monitors Unit (AMU). The
+>>> processor frequency cycles and constant frequency cycles in AMU can be used as
+>>> Delivered Performance counter and Reference Performance counter. These two
+>>> counter in AMU does not increase when the PE is in WFI or WFE. So the increment
+>>> is zero when the PE is in WFI/WFE. This cause no issue because
+>>> 'cppc_get_rate_from_fbctrs()' in cppc_cpufreq driver will check the increment
+>>> and return the desired performance if the increment is zero.
+>>>
+>>> But when the CPU goes into power down idle state, accessing these two counters
+>>> in AMU by memory-mapped address will return zero. Such as CPU1 went into power
+>>> down idle state and CPU0 try to get the frequency of CPU1. In this situation,
+>>> will display a very big value for 'cpuinfo_cur_freq' in sysfs. Do you have some
+>>> advice about this problem ?
+>>>
+>>> I was thinking about an idea as follows. We can run 'cppc_cpufreq_get_rate()' on
+>>> the CPU to be measured, so that we can make sure the CPU is in C0 state when we
+>>> access the two counters. Also we can return the actual frequency rather than
+>>> desired performance when the CPU is in WFI/WFE. But this modification will
+>>> change the existing logical and I am not sure if this will cause some bad effect.
+>>>
+>>>
+>>> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+>>> index 257d726..ded3bcc 100644
+>>> --- a/drivers/cpufreq/cppc_cpufreq.c
+>>> +++ b/drivers/cpufreq/cppc_cpufreq.c
+>>> @@ -396,9 +396,10 @@ static int cppc_get_rate_from_fbctrs(struct cppc_cpudata *cpu,
+>>>         return cppc_cpufreq_perf_to_khz(cpu, delivered_perf);
+>>>  }
+>>>
+>>> -static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>>> +static int cppc_cpufreq_get_rate_cpu(void *info)
+>>>  {
+>>>         struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
+>>> + unsigned int cpunum = *(unsigned int *)info;
+>>>         struct cppc_cpudata *cpu = all_cpu_data[cpunum];
+>>>         int ret;
+>>>
+>>> @@ -418,6 +419,22 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>>>         return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
+>>>  }
+>>>
+>>> +static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>>> +{
+>>> + unsigned int ret;
+>>> +
+>>> + ret = smp_call_on_cpu(cpunum, cppc_cpufreq_get_rate_cpu, &cpunum, true);
+>>> +
+>>> + /*
+>>> +  * convert negative error code to zero, otherwise we will display
+>>> +  * an odd value for 'cpuinfo_cur_freq' in sysfs
+>>> +  */
+>>> + if (ret < 0)
+>>> +         ret = 0;
+>>> +
+>>> + return ret;
+>>> +}
+>>> +
+>>>  static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
+>>>  {
+>>>         struct cppc_cpudata *cpudata;
+>>
+>> I don't see any other sane solution, even if this brings the CPU back
+>> to normal state and waste power. We should be able to reliably provide
+>> value to userspace.
+>>
+>> Rafael / Sudeep: What you do say ?
 > 
-> I'll try and reproduce this, any chance you have a test case that can
-> be run so I don't have to write one from scratch? The more detailed
-> instructions the better.
+> The frequency value obtained by kicking the CPU out of idle
+> artificially is bogus, though.  You may as well return a random number
+> instead.
 
-It shouldn't be too hard to write you a detailed script for reproducing
-the issue. But it'd not be an all that minimal reproducer, unless it
-also triggers on smaller scale (it's a 130GB database that triggers the
-problem reliably, and small tables don't seem to do so reliably).
+Yes, it may return a randowm number as well.
 
-I'll try to write that up after I set up kvm / repro there.
+> 
+> The frequency of a CPU in an idle state is in fact unknown in the case
+> at hand, so returning 0 looks like the cleanest option to me.
 
-One thing I forgot in the earlier email: I ran the benchmark using 'perf
-stat -a -e ...'. I'm fairly, but not absolutely, certain that it also
-triggered without that. I don't think it's related, but I thought I
-better mention it.
+I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
+return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
+zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
+idle, I will get a non-zero value. The user may feel odd about
+'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
+may hope it can return the frequency when the CPU execute instructions, namely
+in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
 
+Thanks,
+Xiongfeng
 
-> I have a known issue with request starvation, wonder if that could be it.
-> I'm going to rebase the branch on top of the aops->readahead() changes
-> shortly, and fix that issue. Hopefully that's what's plaguing your run
-> here, but if not, I'll hunt that one down.
+> 
+> Thanks!
+> 
+> .
+> 
 
-FWIW, I had iostat -xm /dev/nvme1n1 1 running during this. Shortly
-before the crash I see:
-
-Device            r/s     rMB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wMB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dMB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-nvme1n1       6221.00    956.09  3428.00  35.53    0.24   157.38    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    1.48  99.00
-
-Device            r/s     rMB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wMB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dMB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-nvme1n1       6456.00    978.83  3439.00  34.75    0.21   155.25    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    1.38  98.70
-
-It's maybe also worth noting that in this workload the results are
-*worse* than when using 5.7-rc7 io_uring. So perhaps request starvation
-isn't the worst guess...
-
-Greetings,
-
-Andres Freund
