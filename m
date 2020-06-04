@@ -6,154 +6,114 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A871C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECED620772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5284C20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591288542;
-	bh=yh0pW6AQ26Q8fHNyEsW/NqFcwh9UdeeuT0YVHMhwgkA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Iw6PNqa6NuyO60gn6a4FnMDZmtMiXdSRvgIT5B5cf6QOmeJ5fISmR9vz7u2LU5PVG
-	 M7LysHeMoVX8vZbibeuU+9WItLVKvT3jD3ksCpcwvr52Vz79yMPZgH7P4wd0XyxKGj
-	 jTrlIaU+jhPkTTctdRWzKUEyCefFRVQMqDuPdNo0=
+	s=default; t=1591288617;
+	bh=Ob2NvE97oNdAouC/Qd1yeVKTZ9zDRPlYMVGlTwcn5xk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=GBG/J2AGSngTS5UYTt+VRMC5qyaGZy7rb/mqYVOybyfz/C1uxxMe4jwnjTpMn229H
+	 jd6XGghN7QlLfCTZOWjaq2PI3YyBv7BcjXe1Z/9fnJLJkXmW4jBkT8htLnSIUoI5dR
+	 u17PGQ1aZSvSNPFAk4z2iLnEmMoM3LUX5msacc3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbgFDQfl (ORCPT
+        id S1729836AbgFDQg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49812 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 12:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729115AbgFDQfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:35:40 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1729582AbgFDQg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:36:56 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81E772063A;
-        Thu,  4 Jun 2020 16:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA0112072E;
+        Thu,  4 Jun 2020 16:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591288540;
-        bh=yh0pW6AQ26Q8fHNyEsW/NqFcwh9UdeeuT0YVHMhwgkA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oz64bk3++bmjKdBSuwstw05YML612cdirg9gx/8mR6XeIO74cg1yCESj90ohJnnSv
-         cDjuZ3NgvkxFiF6nuUmo0AN81ew532R2PhQsVHA85/U4gwsC8tsoSN0c9Q6Q6TEmnE
-         pYa3JVNL1KSaYea21V1Ssgc3vDVvVHvl91cck04A=
-Date:   Thu, 4 Jun 2020 17:35:33 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        kernel-team@android.com, Jun Nakajima <jun.nakajima@intel.com>
-Subject: Re: [RFC 00/16] KVM protected memory extension
-Message-ID: <20200604163532.GE3650@willie-the-truck>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200604161523.39962919@why>
- <20200604154835.GE30223@linux.intel.com>
+        s=default; t=1591288615;
+        bh=Ob2NvE97oNdAouC/Qd1yeVKTZ9zDRPlYMVGlTwcn5xk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=tJqEQdgBn+WS1LA9fQSW2gKbcql3z+nl1jeyInY0xhtJPU46R4XMimIZQY6aEk/i3
+         6+Agu2RiH8XwO1IHcassX1oYTd+Jhwh3Bnh/pLouhDXwh4x0vXIvU9hslxU6QnLCsh
+         S/Y+UGh1lOi8CON3Ow+q2irI7pxDYRg17PdZmSAk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8CB7635228BC; Thu,  4 Jun 2020 09:36:55 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 09:36:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
+ entrypoints
+Message-ID: <20200604163655.GC29598@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-2-frederic@kernel.org>
+ <20200520122949.GB16672@google.com>
+ <20200522175739.GM2869@paulmck-ThinkPad-P72>
+ <20200604114121.GA26398@lenoir>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200604154835.GE30223@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200604114121.GA26398@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sean,
-
-On Thu, Jun 04, 2020 at 08:48:35AM -0700, Sean Christopherson wrote:
-> On Thu, Jun 04, 2020 at 04:15:23PM +0100, Marc Zyngier wrote:
-> > On Fri, 22 May 2020 15:51:58 +0300
-> > "Kirill A. Shutemov" <kirill@shutemov.name> wrote:
+On Thu, Jun 04, 2020 at 01:41:22PM +0200, Frederic Weisbecker wrote:
+> On Fri, May 22, 2020 at 10:57:39AM -0700, Paul E. McKenney wrote:
+> > On Wed, May 20, 2020 at 08:29:49AM -0400, Joel Fernandes wrote:
+> > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > > 
-> > > == Background / Problem ==
-> > > 
-> > > There are a number of hardware features (MKTME, SEV) which protect guest
-> > > memory from some unauthorized host access. The patchset proposes a purely
-> > > software feature that mitigates some of the same host-side read-only
-> > > attacks.
-> > > 
-> > > 
-> > > == What does this set mitigate? ==
-> > > 
-> > >  - Host kernel ”accidental” access to guest data (think speculation)
-> > > 
-> > >  - Host kernel induced access to guest data (write(fd, &guest_data_ptr, len))
-> > > 
-> > >  - Host userspace access to guest data (compromised qemu)
-> > > 
-> > > == What does this set NOT mitigate? ==
-> > > 
-> > >  - Full host kernel compromise.  Kernel will just map the pages again.
-> > > 
-> > >  - Hardware attacks
+> > Thank you for looking this over, Joel!
 > > 
-> > Just as a heads up, we (the Android kernel team) are currently
-> > involved in something pretty similar for KVM/arm64 in order to bring
-> > some level of confidentiality to guests.
-> > 
-> > The main idea is to de-privilege the host kernel by wrapping it in its
-> > own nested set of page tables which allows us to remove memory
-> > allocated to guests on a per-page basis. The core hypervisor runs more
-> > or less independently at its own privilege level. It still is KVM
-> > though, as we don't intend to reinvent the wheel.
-> > 
-> > Will has written a much more lingo-heavy description here:
-> > https://lore.kernel.org/kvmarm/20200327165935.GA8048@willie-the-truck/
+> > Is it feasible to make rcu_nocb_lock*() and rcu_nocb_unlock*() "do the
+> > right thing", even when things are changing?  If it is feasible, that
+> > would prevent any number of "interesting" copy-pasta and "just now became
+> > common code" bugs down the road.
 > 
-> Pardon my arm64 ignorance...
+> This won't be pretty:
+> 
+>     locked = rcu_nocb_lock();
+>     rcu_nocb_unlock(locked);
 
-No, not at all!
+I was thinking in terms of a bit in the rcu_data structure into
+which rcu_nocb_lock() and friends stored the status, and from which
+rcu_nocb_unlock() and friends retrieved that same status.  Sort of like
+how preemptible RCU uses the ->rcu_read_lock_nesting field in task_struct.
 
-> IIUC, in this mode, the host kernel runs at EL1?  And to switch to a guest
-> it has to bounce through EL2, which is KVM, or at least a chunk of KVM?
-> I assume the EL1->EL2->EL1 switch is done by trapping an exception of some
-> form?
+As noted, this does require reworking the hotplug code to avoid the
+current holding of two such locks concurrently, which I am happy to do
+if that helps.
 
-Yes, and this is actually the way that KVM works on some Arm CPUs today,
-as the original virtualisation extensions in the Armv8 architecture do
-not make it possible to run the kernel directly at EL2 (for example, there
-is only one page-table base register). This was later addressed in the
-architecture by the "Virtualisation Host Extensions (VHE)", and so KVM
-supports both options.
+Or am I missing a subtle (or not-so-subtle) twist here?
 
-With non-VHE today, there is a small amount of "world switch" code at
-EL2 which is installed by the host kernel and provides a way to transition
-between the host and the guest. If the host needs to do something at EL2
-(e.g. privileged TLB invalidation), then it makes a hypercall (HVC instruction)
-via the kvm_call_hyp() macro (and this ends up just being a function call
-for VHE).
+> And anyway we still want to unconditionally lock on many places,
+> regardless of the offloaded state. I don't know how we could have
+> a magic helper do the unconditional lock on some places and the
+> conditional on others.
 
-> If all of the above are "yes", does KVM already have the necessary logic to
-> perform the EL1->EL2->EL1 switches, or is that being added as part of the
-> de-privileging effort?
+I was assuming (perhaps incorrectly) that an intermediate phase between
+not-offloaded and offloaded would take care of all of those cases.
 
-The logic is there as part of the non-VHE support code, but it's not great
-from a security angle. For example, the guest stage-2 page-tables are still
-allocated by the host, the host has complete access to guest and hypervisor
-memory (including hypervisor text) and things like kvm_call_hyp() are a bit
-of an open door. We're working on making the EL2 code more self contained,
-so that after the host has initialised KVM, it can shut the door and the
-hypervisor can install a stage-2 translation over the host, which limits its
-access to hypervisor and guest memory. There will clearly be IOMMU work as
-well to prevent DMA attacks.
+> Also the point of turning the lock helpers into primitives is to make
+> it clearer as to where we really need unconditional locking and where
+> we allow it to be conditional. A gift to reviewers :-)
 
-Will
+Unless and until someone does a copy-pasta, thus unconditionally
+doing the wrong thing.  ;-)
+
+If we cannot avoid different spellings of ->cblist in different places,
+such is life, but I do want to make sure that we have fully considered
+the alternatives.
+
+						Thanx, Paul
