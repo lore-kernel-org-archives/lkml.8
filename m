@@ -2,66 +2,136 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E21C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C87A2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1C72067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:02:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iHL0pYjT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgFDWAq (ORCPT
+        id S1726965AbgFDWC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgFDWAq (ORCPT
+        Thu, 4 Jun 2020 18:02:26 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:17108 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726062AbgFDWCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:00:46 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14AB2C08C5C0;
-        Thu,  4 Jun 2020 15:00:46 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id AFBDE11D53F8B;
-        Thu,  4 Jun 2020 15:00:42 -0700 (PDT)
-Date:   Thu, 04 Jun 2020 15:00:40 -0700 (PDT)
-Message-Id: <20200604.150040.2131369235290939835.davem@davemloft.net>
-To:     joyce.ooi@intel.com
-Cc:     thor.thayer@linux.intel.com, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dalon.westergreen@linux.intel.com, ley.foon.tan@intel.com,
-        chin.liang.see@intel.com, dinh.nguyen@intel.com
-Subject: Re: [PATCH v3 00/10] net: eth: altera: tse: Add PTP and mSGDMA
- prefetcher
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200604073256.25702-1-joyce.ooi@intel.com>
-References: <20200604073256.25702-1-joyce.ooi@intel.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 04 Jun 2020 15:00:43 -0700 (PDT)
+        Thu, 4 Jun 2020 18:02:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591308145; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=U+qcEcDFlcO/1JNEMt/uEx7bgKnkpDhfMTVm6faeMKk=; b=iHL0pYjT6hzj8xTfNdXT31iye0+swVQ2g4VDEpsAhZnvsxrNlNqXSHKK1TWXP1UIrNQkZVZq
+ QqxsCdVoFNUlbewQRTl/kxsbFARD6UI3T/VyMGZxTEw+/n43PIib3bA23AzwsEymeZldPRDd
+ QDY+IubGy+bTvbVGTw3i5EFAi2w=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5ed96f6f2738686126a1b79a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 22:02:23
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A9536C433CA; Thu,  4 Jun 2020 22:02:22 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E654C433C6;
+        Thu,  4 Jun 2020 22:02:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E654C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 4 Jun 2020 16:02:16 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [PATCH v7 6/6] arm6: dts: qcom: sm845: Set the
+ compatible string for the GPU SMMU
+Message-ID: <20200604220216.GA12322@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+References: <20200604205710.3167-1-jcrouse@codeaurora.org>
+ <20200604205710.3167-7-jcrouse@codeaurora.org>
+ <CAF6AEGt4N5+0h0fkrO7m6KD3VMXkdoFyhN5Nz72DcMjoHX6XWA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGt4N5+0h0fkrO7m6KD3VMXkdoFyhN5Nz72DcMjoHX6XWA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ooi, Joyce" <joyce.ooi@intel.com>
-Date: Thu,  4 Jun 2020 15:32:46 +0800
-
-> From: Joyce Ooi <joyce.ooi@intel.com>
+On Thu, Jun 04, 2020 at 02:27:21PM -0700, Rob Clark wrote:
+> On Thu, Jun 4, 2020 at 1:57 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> >
+> > Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+> > split pagetables.
+> >
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> >
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index 8eb5a31346d2..8b15cd74e9ba 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -3556,7 +3556,7 @@
+> >                 };
+> >
+> >                 adreno_smmu: iommu@5040000 {
+> > -                       compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
+> > +                       compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
 > 
-> This patch series cleans up the Altera TSE driver and adds support
-> for the newer msgdma prefetcher as well as ptp support when using
-> the msgdma prefetcher.
+> Should this be something like:
 > 
-> v2: Rename altera_ptp to intel_fpga_tod, modify msgdma and sgdma tx_buffer
->     functions to be of type netdev_tx_t, and minor suggested edits
-> v3: Modify tx_buffer to stop queue before returning NETDEV_TX_BUSY
+>    compatible = "qcom,adreno-smmu", "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
+> 
+> so that new dtb still works with old kernel?
 
-net-next is closed at this time
+As far as I know qcom,sdm845-smmu-v2 never was actually used unless we were
+doing the parsing trick somewhere.
+
+Jordan
+
+> >                         reg = <0 0x5040000 0 0x10000>;
+> >                         #iommu-cells = <1>;
+> >                         #global-interrupts = <2>;
+> > --
+> > 2.17.1
+> >
+> > _______________________________________________
+> > Freedreno mailing list
+> > Freedreno@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
