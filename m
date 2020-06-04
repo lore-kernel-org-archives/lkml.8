@@ -2,135 +2,104 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01618C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8934C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4868206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21C5206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591290990;
-	bh=08nZgXvPl19HDIg7XZbBxcvU4tdcjivgkaK6s6iQ7Zk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MisOE+D6tyirrwmrbLB1vJ4xDjaiCIkk3DoqlQx8FoVM5t7FX4vTo3wYUU8nTRJP+
-	 trNbtm0L+EYenijntrHNCwQ4Rm7ibclh0keCJddhs81OYF5xnJoOTikYYN3xASG1EQ
-	 YSRaqZyr/FwFPM6v2ZsETsl9ozEzgOvHdTZBl4I0=
+	s=default; t=1591290998;
+	bh=xlvCcankQA9MFCIiXiqb4rudhOnmx6uF/9ckqom/KqQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=HpYs+CfeoYp1wmBWkAp8BPKHodXsSFx89kY3rm+grv4d7ggcckt4CcmWcJjgOrNjt
+	 3jBnIfZnXZ70eQrIZ75GxdoOxkI9Xd2LLM/Xd7HJhT4XBe/AgLAgidZWoVQOFWMDlk
+	 CYNnGyHGGmPH6Q9txWA2B7AjYEncDDO12u4JUz7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgFDRQa (ORCPT
+        id S1730081AbgFDRQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730051AbgFDRQ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:16:29 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F14AAC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:16:28 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z18so8228439lji.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H8kZFr8TiFC27H3w+X6ZCuLeuTOqZ7+EkG9BgkcWmiE=;
-        b=C7WSNRoJag77E7M3JA5+YgLnjPBrdf00/5milKzOk0Mh/stV1wcQhNQM4qki+qew6e
-         qTIrXsmck8Bd578raZvZGYMwEnRTiJv8DVaKRWk4F96h/ntvJqbdECJtT+SYCc2UAQYn
-         6031MrSwuK2KLCneeH6uAJNVSwh5GMCXyqoqw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H8kZFr8TiFC27H3w+X6ZCuLeuTOqZ7+EkG9BgkcWmiE=;
-        b=gulrlx2ZeYRoOX9YxkbyW+4u3zAgBkkodnJ7k6E2gOzur4kqq1heZk4KQCZ38/0JtY
-         USqWHhp9O910kpvsHr7WPQE4u5ueyKT036PUIZA8qRGaMBE1gBiWDxDPUdbLp2CzM9Vi
-         cjEsv9WpXF0o+F3aNS3tlML01h6g0EzrHIH1QYlmxPOuu1O7m69UlwsWJk4xjmULUB/c
-         YvhJXr8KjR74giVjFtqhNbCxvOIgxo2nChd6OYXKB6fHANzZlvo+/u3I3g4ThvuE85l8
-         L6tQUCjN+8zJJm3r9W+OtH+92J2IjMsO4wS4NdQEF6McbdwYz+QMVguhrzx44ojZMVPR
-         kZSg==
-X-Gm-Message-State: AOAM533iMh7dPF0aOWZZV0wdrDPmLRId5+nfyT1aL+j1cyJV1Oh4UARa
-        SHjUvOUHqovzHYT9UI7+SQF9Aag8NFg=
-X-Google-Smtp-Source: ABdhPJwp5tQ6+5Z63GZzHFM2S5m+ap4/Ghs8XiLha5Ecx8eHrDiwD2hdKSxGBmz4+Y9Cuy09KTNdAA==
-X-Received: by 2002:a2e:b612:: with SMTP id r18mr2521993ljn.195.1591290986304;
-        Thu, 04 Jun 2020 10:16:26 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id c8sm55581lfc.46.2020.06.04.10.16.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 10:16:25 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id a9so4726950ljn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:16:24 -0700 (PDT)
-X-Received: by 2002:a05:651c:2c6:: with SMTP id f6mr2563945ljo.371.1591290984015;
- Thu, 04 Jun 2020 10:16:24 -0700 (PDT)
+        Thu, 4 Jun 2020 13:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730070AbgFDRQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 13:16:33 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E189E207DF;
+        Thu,  4 Jun 2020 17:16:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591290993;
+        bh=xlvCcankQA9MFCIiXiqb4rudhOnmx6uF/9ckqom/KqQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NGYApT4Yvh6GHePH+aTn9EtTJhBPHGbYQe3pHgPVQ0TQ27Dkj3aTPwpzHXBdsvndy
+         ys9mND1jQECUMjj8/bX971PEruZf32VoX1rLl38h0Iyg8FQ6r2fZxaaDCZAEtbOcmk
+         igAFo5xfRi8ydpLZ9Wxr4O2s1EafEEn3Zk53mPlk=
+Date:   Thu, 4 Jun 2020 12:21:38 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] docs: deprecated.rst: Add note to the use of struct_size()
+ helper
+Message-ID: <20200604172138.GA21820@embeddedor>
 MIME-Version: 1.0
-References: <20200603232311.GA205619@roeck-us.net> <20200604083512.GN6857@suse.de>
-In-Reply-To: <20200604083512.GN6857@suse.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 4 Jun 2020 10:16:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj2_YdxPaRFqBUUDZvtZKKG5To2KJhciJmDbchW2NFLnw@mail.gmail.com>
-Message-ID: <CAHk-=wj2_YdxPaRFqBUUDZvtZKKG5To2KJhciJmDbchW2NFLnw@mail.gmail.com>
-Subject: Re: [PATCH] mm/vmalloc: track which page-table levels were modified
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 1:35 AM Joerg Roedel <jroedel@suse.de> wrote:
->
-> I posted the fix for this already:
->
->         https://lore.kernel.org/lkml/20200604074446.23944-1-joro@8bytes.org/
+Add a note to educate people about the proper use of struct_size() when
+the trailing array in the enclosing structure is a one-element array.
 
-Ugh.
+Zero-length and one-element arrays will soon be removed from the kernel,
+but in the meantime, it's worth letting people know how to correctly
+use struct_size() together with such constructs.
 
-I was going to apply this directly, but as I looked at the patch I
-just found it fairly illegible.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
 
-Is there some reason why the 5level-fixup.h versions use that
-very-hard-to-follow macro, rather than the inline functions that the
-main mm.h file uses?
+Kees,
+ 
+This is not substitute for the patch I'll write about flexible-arrays
+and the deprecation of zero-lenght and one-element arrays.
 
-I'm _assuming_ it's because it gets included in some place where not
-everything is defined yet, so making it a macro means that it works
-(later on) when everything has come together..
+Thanks
+--
+Gustavo
 
-But the solution to that would seem to make all the p.._alloc_track()
-macros just be in a different header file, and make them be all
-together. We already have that
+ Documentation/process/deprecated.rst | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-   #if !__ARCH_HAS_5LEVEL_HACK
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 652e2aa02a66c..0b7b37718bf96 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -85,6 +85,17 @@ Instead, use the helper::
+ 
+ 	header = kzalloc(struct_size(header, item, count), GFP_KERNEL);
+ 
++NOTE: You might want to use the following form in case the trailing array
++is a one-element array, as unlike zero-length arrays and flexible-array
++members, `one-element arrays occupy at least as much space as a single
++object of the type <https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
++hence they contribute to the size of the enclosing structure::
++
++	header = kzalloc(struct_size(header, item, count - 1), GFP_KERNEL);
++
++It's also worth noting that one-element arrays --together with zero-length
++arrays-- will soon be completely removed from the codebase and deprecated.
++
+ See array_size(), array3_size(), and struct_size(),
+ for more details as well as the related check_add_overflow() and
+ check_mul_overflow() family of functions.
+-- 
+2.27.0
 
-in linux/mm.h, so it's not like we really have isolated that issue
-into just 5level-fixup.h anyway, and creating a new
-<linux/pagetable-alloc.h> header that has all the variations in one
-place, and that is only included by the two (!) users of these things
-would seem to be a good idea regardless.
-
-Because <linux/mm.h> is included by pretty much everything. Why do we
-have those alloc_track functions defined in such a common header when
-they are _so_ special?
-
-Please? I'd obviously like this to be fixed on ppc asap, but I'd also
-like the fix to improve on the current somewhat confusing situation..
-
-For extra point, the p??_alloc_track() functions could even be
-generated from a macro pattern, because the pattern is pretty much set
-in stone.
-
-I think the only thing that really differs is the types and the
-PGTBL_xyz_MODIFIED mask, and which entry is tested for "none" (which
-is also the only thing that makes the 5level fixup case different -
-no?
-
-                       Linus
