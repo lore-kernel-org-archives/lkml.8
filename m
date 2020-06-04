@@ -2,195 +2,147 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B880DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88181C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8071320772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XOG7B0Uq"
+	by mail.kernel.org (Postfix) with ESMTP id 5D28D20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591232903;
+	bh=9F8xSey40KLIeBf4ebRlWdcOose6FvNWuocvkvhZ4Ac=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vlYVZdgRrLOc3KqAixOPlvdLOuAyoo2sM00wpUxYtXGH8qtqNFOgAeJvbtPuYROni
+	 5++STDJNKLkg1R2aC2tvwCI43EdA/n6D39Xklw60AGKul/DnInA9fG3cYQqde4jCqV
+	 WekWQOrKM6OIDf7pJseJEnUJZ+OBzEIsjQzEbPEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgFDBEW (ORCPT
+        id S1726835AbgFDBIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgFDBEV (ORCPT
+        Wed, 3 Jun 2020 21:08:21 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:54085 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgFDBIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:04:21 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C2DC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 18:04:20 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g12so1446195pll.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 18:04:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=o1u/ed182CTWV8ow6a1sNvTj56lmdVmqwb3Ugrhvu/U=;
-        b=XOG7B0UqKMUBqsmoZP8owSJl9EczK6OxwF3SJPJbA3aYLAPGTl0/f/XWkbRf+ZHI6z
-         gxdhlS0G7mu/aTcyOE+Q+VY6008fSTbJhPPxx1NyyjxNyC5UHJ+hh1GxbQzKOxMn/TVS
-         xpg5G65SVDRkyk8hkTf895suzz6jRplA4wMYc/XQ5B0t3HlFxK+mrEvjpvD8GL525ZFC
-         XgamVRkWG8Z0XGCSND93tk/EXitp9qsShjq09fjp1Mos5xuazTOmRUzmQeLMLA9UF42h
-         kdBOildx92qTrLay+BF9nH2aXnxLvzST5gkY9Y0dyOJqzeE/2AGqSCwQaPANmfTx4kqq
-         BkHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o1u/ed182CTWV8ow6a1sNvTj56lmdVmqwb3Ugrhvu/U=;
-        b=HOJmkhz57OV/aSgaTq2E3WlgJtpa+iDkP94exnup+/GyGeJvV6IoXdYWZDb/TBUkpo
-         b1pEED1lAo5LTaFRX3XUXT+nfysoU0yNk/khNHBX2ggA0Ctxf3ogNnMIbchdP6qheqYN
-         L5Szugu9BuRb+c/JGCfhHRySY2P8NtxigGvjl93/sLeWV03aNIKwY90geUlTN5Sb7ZtA
-         BPcuOg+oR37htVRYQM71vROVcavaNVLVzKGUYj0jtXhKHeG/xUj2JuMWYSYrWH153ptY
-         FIVK9/XsFcdZtIJzPau1iZLGPT8FSAazYko26jz5xxUXaQdoyKhyaxgN6uGGUAxk18om
-         SZig==
-X-Gm-Message-State: AOAM533xMoV6PXky0F5sWVzXNSVc5gVr01YGWpOphv5kOOeI742xmci6
-        xHFosuYGroShBaQ4XzTjkZmDOzsxHctJOw==
-X-Google-Smtp-Source: ABdhPJwbOM4D7odfCkk3PeUCFQAJ68BerkNFfcVMjPgVIAg8AgGN6Jz9Tv9I+1N2b/H1jvH+Fj92XQ==
-X-Received: by 2002:a17:90a:642:: with SMTP id q2mr3082422pje.71.1591232660150;
-        Wed, 03 Jun 2020 18:04:20 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id b6sm2889281pfp.24.2020.06.03.18.04.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 18:04:19 -0700 (PDT)
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-To:     Andres Freund <andres@anarazel.de>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <20200604005916.niy2mejjcsx4sv6t@alap3.anarazel.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
-Date:   Wed, 3 Jun 2020 19:04:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 3 Jun 2020 21:08:21 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 054186RS030408
+        for <linux-kernel@vger.kernel.org>; Thu, 4 Jun 2020 10:08:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 054186RS030408
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1591232887;
+        bh=bLUoWeC/HMd6TVBBN77lrqngZcxjikvtaTQJilz/QFc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WtseokXhFXXu8TyT8OuDqEUkqDYWnfpDAq+COVc2ZdBKQCgupNWzIiKQAhvtoOEMJ
+         D9t9gt/umx/QcxacEKWaZmApRhIQoaN8OKn0JOWUJSr/qzATp6xDYVgWmM0U+6uT55
+         i1vVqEFYyempxyWx0VzjqsC1EFZXn/wGyfGH6GJNoy5OyVWeov0gorZ+PbAJXjAeRp
+         WarDS6YsMJDLLY/fCBWqI4Krohq4dns/8wcUT0otW9h6zPePqJP5JDFhoyeT8ahbX4
+         tmOW/DuQlzK8ON5TjUsmSXcWl1Lr495tGkPo8e8nWm/IY0p0aSpRSbWACLPgQ/yrw9
+         gerLGWS8A2zBw==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id a10so1503620uan.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 18:08:07 -0700 (PDT)
+X-Gm-Message-State: AOAM532kXrTYiOcYSzFnzmJJFsDF1qc9DdztOohdH6enzLYc/DsylDol
+        2YnEcNjFQX85h5l3o/InOnkYQhiYjESryjbqndM=
+X-Google-Smtp-Source: ABdhPJwL52eDyBlsSWmyh7Ni+YlmWRChhtwNIoHZW7rX98LM96u/HYGIlFojpLHp9kglMPzrki+pmQXcqg5OY7a32WU=
+X-Received: by 2002:ab0:3ae:: with SMTP id 43mr2050774uau.25.1591232885980;
+ Wed, 03 Jun 2020 18:08:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200604005916.niy2mejjcsx4sv6t@alap3.anarazel.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <4627b565-0a5c-080e-726a-01b773c985e8@landley.net>
+ <20200603170357.GG1079@brightrain.aerifal.cx> <CAK8P3a2QYkZ9StDssxeZ3_zR5OH_P3v-D1iZp7=1E+2EaqoNcQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2QYkZ9StDssxeZ3_zR5OH_P3v-D1iZp7=1E+2EaqoNcQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 4 Jun 2020 10:07:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATDg=5U=GjwN9+gfW+kxJ3gN25wGrr7odiqsf7HBsb73w@mail.gmail.com>
+Message-ID: <CAK7LNATDg=5U=GjwN9+gfW+kxJ3gN25wGrr7odiqsf7HBsb73w@mail.gmail.com>
+Subject: Re: headers_install builds break on a lot of targets?
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Rich Felker <dalias@libc.org>, Rob Landley <rob@landley.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/20 6:59 PM, Andres Freund wrote:
-> Hi,
-> 
-> I was trying to benchmark the benefits of this for the io_uring using
-> postgres I am working on. The initial results where quite promising
-> (reducing cpu usage significantly, to lower than non-uring sync io). But
-> unfortunately trying another workload triggered both panics and before
-> that seemingly returned wrong data.
-> 
-> I first saw that problem with b360d424ce02, which was
-> linux-block/async-buffered.6 at the time. After hitting the issue, I
-> updated to the current linux-block/async-buffered.6, but the problem
-> persists.
-> 
-> The workload that triggers the bug within a few seconds is postgres
-> doing a parallel sequential scan of a large table (and aggregating the
-> data, but that shouldn't matter). In the triggering case that boils down
-> to 9 processes sequentially reading a number of 1GB files (we chunk
-> tables internally into smaller files). Each process will read a 512kB
-> chunk of the file on its own, and then claim the next 512kB from a
-> shared memory location. Most of the IO will be READV requests, reading
-> 16 * 8kB into postgres' buffer pool (which may or may not be neighboring
-> 8kB pages).
+On Thu, Jun 4, 2020 at 2:59 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Jun 3, 2020 at 7:04 PM Rich Felker <dalias@libc.org> wrote:
+> > On Wed, Jun 03, 2020 at 08:49:54AM -0500, Rob Landley wrote:
+> > >     make ARCH=3D$i distclean defconfig headers_install \
+> > >
+> > > On the bright side, the resulting fruitbasket.tar.xz is 1.5 megabytes=
+. The
+> > > downside is I have no idea how broken the resulting header files are =
+after this
+> > > error-fest:
+> > >
+> > > alpha
+> > > arc
+> > > gcc: error: unrecognized command line option =E2=80=98-mmedium-calls=
+=E2=80=99
+> > > gcc: error: unrecognized command line option =E2=80=98-mno-sdata=E2=
+=80=99; did you mean
+> > > =E2=80=98-fno-stats=E2=80=99?
+> > > gcc: error: unrecognized command line option =E2=80=98-mmedium-calls=
+=E2=80=99
+> > > gcc: error: unrecognized command line option =E2=80=98-mno-sdata=E2=
+=80=99; did you mean
+> > > =E2=80=98-fno-stats=E2=80=99?
+> > > [...]
+> >
+> > Uhg. Surely there should be some fix for whatever mistaken dep is
+> > behind this? Headers shouldn't actually depend on any config/compiler
+> > output, should they??
+>
+> The first one of the two comes from "make defconfig", which definitely ne=
+eds
+> a working $TARGET compiler, but isn't actually needed before
+> "make headers_install" as I just checked.
+>
+> > Or is that machinery somehow involved in
+> > generating the syscall lists and similar?
+>
+> The syscall list for ARC is still not generated (that's on my todo list),=
+ but
+> something does call it even for "make headers_install".
+>
+> What it does is to set Makefile variables such as
+>
+> CC_VERSION_TEXT =3D $(shell $(CC) --version 2>/dev/null | head -n 1)
+> and trying out all kinds of gcc options that may or may not be supported
+> such as  "$(call cc-option,-fno-tree-loop-im)".
+>
+> Setting CC=3D: avoids this, like
+>
+> make -s CC=3D: ARCH=3D$i headers_install  INSTALL_HDR_PATH=3D"$PWD/fruitb=
+asket/$i"
+>
+>       Arnd
 
-I'll try and reproduce this, any chance you have a test case that can
-be run so I don't have to write one from scratch? The more detailed
-instructions the better.
 
-> The io submissions in this case will all be done to the same io_uring,
-> targeting MAP_HUGETLB | MAP_SHARED | MAP_ANONYMOUS memory. The data is
-> on xfs.
-> 
-> The benchmark starts with dropping caches, which helpfully is visible in
-> dmesg... That takes a few seconds, so the actual buffered io_uring load
-> starts soon after.
-> 
-> [  125.526092] tee (7775): drop_caches: 3
-> [  146.264327] kill_fasync: bad magic number in fasync_struct!
-> 
-> After this, but before the oops, I see some userspace memory or
-> non-io-uring pipe reads being corrupted.
-> 
-> 
-> [  146.264327] kill_fasync: bad magic number in fasync_struct!
-> [  146.285175] kill_fasync: bad magic number in fasync_struct!
-> [  146.290793] kill_fasync: bad magic number in fasync_struct!
-> [  146.285175] kill_fasync: bad magic number in fasync_struct!
-> [  146.290793] kill_fasync: bad magic number in fasync_struct!
-> [  157.071979] BUG: kernel NULL pointer dereference, address: 0000000000000020
-> [  157.078945] #PF: supervisor read access in kernel mode
-> [  157.084082] #PF: error_code(0x0000) - not-present page
-> [  157.089225] PGD 0 P4D 0
-> [  157.091763] Oops: 0000 [#1] SMP NOPTI
-> [  157.095429] CPU: 3 PID: 7756 Comm: postgres Not tainted 5.7.0-rc7-andres-00133-gc8707bf69395 #41
-> [  157.104208] Hardware name: Supermicro SYS-7049A-T/X11DAi-N, BIOS 3.2 11/13/2019
-> [  157.111518] RIP: 0010:xfs_log_commit_cil+0x356/0x7f0
-> [  157.116478] Code: 00 00 48 89 7e 08 49 89 76 30 48 89 11 48 89 4a 08 8b 4c 24 2c 48 89 85 c0 00 00 00 48 89 85 c8 00 00 00 49 8b 46 20 45 31 c9 <8b> 70 20 85 f6 0f 84 d9 02 00 00 45 31 c0 85 c9 7e 4f 41 8b 46 2c
-> [  157.135226] RSP: 0018:ffffc90021fefb00 EFLAGS: 00010246
-> [  157.140452] RAX: 0000000000000000 RBX: ffff8897a9ea80b0 RCX: 0000000000000458
-> [  157.147582] RDX: ffff8897a9ea80c0 RSI: ffff88afc39a1200 RDI: ffff88afb1ae2c18
-> [  157.154715] RBP: ffff8897a9ea8000 R08: ffffc90021fefb30 R09: 0000000000000000
-> [  157.161848] R10: 0000000000000084 R11: 0000000000000012 R12: ffff8897721bd400
-> [  157.168983] R13: ffff88afb1ae2c00 R14: ffff88afb19860c0 R15: ffff8897a9ea80a0
-> [  157.176115] FS:  00007ffbbe9a1980(0000) GS:ffff8897e0cc0000(0000) knlGS:0000000000000000
-> [  157.184199] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  157.189946] CR2: 0000000000000020 CR3: 000000179c0ac005 CR4: 00000000007606e0
-> [  157.197081] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  157.204212] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  157.211343] PKRU: 55555554
-> [  157.214048] Call Trace:
-> [  157.216498]  __xfs_trans_commit+0xa1/0x340
-> [  157.220596]  xfs_create+0x4cc/0x5e0
-> [  157.224087]  xfs_generic_create+0x241/0x310
-> [  157.228274]  path_openat+0xdb7/0x1020
-> [  157.231940]  do_filp_open+0x91/0x100
-> [  157.235518]  ? __sys_recvfrom+0xe4/0x170
-> [  157.239444]  ? _cond_resched+0x19/0x30
-> [  157.243196]  do_sys_openat2+0x215/0x2d0
-> [  157.247037]  do_sys_open+0x44/0x80
-> [  157.250443]  do_syscall_64+0x48/0x130
-> [  157.254108]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [  157.259161] RIP: 0033:0x7ffbc0ded307
-> [  157.262738] Code: 25 00 00 41 00 3d 00 00 41 00 74 47 64 8b 04 25 18 00 00 00 85 c0 75 6b 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 95 00 00 00 48 8b 4c 24 28 64 48 33 0c 25
-> [  157.281485] RSP: 002b:00007fff520a4940 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-> [  157.289052] RAX: ffffffffffffffda RBX: 00005561dc02eca0 RCX: 00007ffbc0ded307
-> [  157.296185] RDX: 0000000000000241 RSI: 00005561dc013470 RDI: 00000000ffffff9c
-> [  157.303317] RBP: 00005561dc013470 R08: 0000000000000004 R09: 0000000000000001
-> [  157.310447] R10: 00000000000001b6 R11: 0000000000000246 R12: 0000000000000241
-> [  157.317575] R13: 00005561dc02eca0 R14: 0000000000000001 R15: 0000000000000000
-> [  157.324705] Modules linked in: isst_if_common squashfs nls_iso8859_1 nls_cp437 snd_hda_codec_realtek vfat snd_hda_codec_generic fat iwlmvm ledtrig_audio snd_hda_codec_hdmi x86_pkg_temp_thermal intel_powerclamp snd_hda_intel snd_intel_dspcfg iwlwifi efi_pstore btusb snd_hda_codec btrtl btbcm efivars snd_hwdep btintel snd_hda_core iTCO_wdt iTCO_vendor_support mei_me mei loop coretemp hid_logitech_hidpp hid_logitech_dj hid_lenovo amdgpu gpu_sched i40e ixgbe ast drm_vram_helper drm_ttm_helper ttm mdio xhci_pci xhci_hcd
-> [  157.370249] CR2: 0000000000000020
-> 
-> There's a lot more of these later, some interspersed (possibly related
-> to grabbing the output via serial->bmc->network->ipmitool). I've
-> attached the whole dmesg and .config.
-> 
-> What would be helpful for debugging? Should I try the v5 branch instead?
-> 
-> I'll try setting up a VM + passing through NVME to be able to test this
-> without fear... In one instance I did see some minor corruption on
-> another device & fs (ext4 on dm-crypt on nvme). It's all backed up,
-> but...
 
-I have a known issue with request starvation, wonder if that could be it.
-I'm going to rebase the branch on top of the aops->readahead() changes
-shortly, and fix that issue. Hopefully that's what's plaguing your run
-here, but if not, I'll hunt that one down.
+You can do headers_install without the .config file.
+'make defconfig' is unneeded.
 
-Thanks for testing!
+headers_install should be independent of $(CC) too.
 
--- 
-Jens Axboe
 
+linux-next has some progress about this.
+
+You can get clean headers_install without CROSS_COMPILE
+for parisc, h8300, hexagon.
+
+
+You still get warnings for ia64 and arc.
+Our goal is to not require $(CC) for non-dot-config target
+like 'make headers_install', 'make help', etc.
+
+
+--
+Best Regards
+Masahiro Yamada
