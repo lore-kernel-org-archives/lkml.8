@@ -2,131 +2,122 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AACDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C174206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9CE206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EHN6SZoT"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="iYnI6N0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgFDLJx (ORCPT
+        id S1726288AbgFDLK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgFDLJs (ORCPT
+        Thu, 4 Jun 2020 07:10:58 -0400
+Received: from mail.efficios.com ([167.114.26.124]:44980 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgFDLK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:09:48 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5666C03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 04:09:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YWhHltp0HfbKPBvZhE5nAcBu90lHTux6EoGengUlZUY=; b=EHN6SZoT1AGLXLg6ILzh9fyvWu
-        +CCU3esUOwX7At2JOffTBvgl/aMm1ZE/HMlXJEpyR2fLWUqc9xkh38DTb0rQGQqPLmxkFZG3MZu8Z
-        S91E+nWHd4zY2/n1Sg0ldzNokSPYHiuoLaO9A2PuammUh4fa+61gCj7CLv3Gm71PMixxyFRj924gm
-        cjiUZkg4prc+AYW2pw5di8BMYTp94v2eOfQplC/pJfTDf9Swvq8H5NEXbU/1CrIMkNo6Qmwxbm2Ic
-        2UgGBsgZOLTqfvB6K7o6MHwHsIINKTVByuzFjv17cDZuPlv37iHz4PDkplC7ueU4tLUKQR+Y5eZsH
-        NC3uPwhg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgnkP-00054A-Bw; Thu, 04 Jun 2020 11:09:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8A1430008D;
-        Thu,  4 Jun 2020 13:09:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 81C4A20DF6C6C; Thu,  4 Jun 2020 13:09:18 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 13:09:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     bp@alien8.de, tglx@linutronix.de, mingo@kernel.org,
-        clang-built-linux@googlegroups.com, paulmck@kernel.org,
-        dvyukov@google.com, glider@google.com, andreyknvl@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -tip] kcov: Make runtime functions noinstr-compatible
-Message-ID: <20200604110918.GA2750@hirez.programming.kicks-ass.net>
-References: <20200604095057.259452-1-elver@google.com>
+        Thu, 4 Jun 2020 07:10:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id EEBF32C5456;
+        Thu,  4 Jun 2020 07:10:56 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id lABorUU7fUUP; Thu,  4 Jun 2020 07:10:56 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 952022C5455;
+        Thu,  4 Jun 2020 07:10:56 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 952022C5455
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1591269056;
+        bh=1KUporPmaXnM01aB++UOwuHWfy+Lc+22xlsbm4M+iEY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=iYnI6N0dTWNo/PGXrBPIgA48+Bic32iPb5gH9BB+4odj9lFzDoNsDBYddXODI6OKT
+         aPiIwzA8ajSDPSDYt7pVjJU9+h2Np+I43FJ2Up2C4HxpwUA1L5143hU1eyraoJn2J5
+         DSGIig7yN4OQa8MtafuSzE652+DV2C1l8R/JHiCMkxo7xszbnjCrrJzS44Xunz/D3t
+         GBcE/CoS0bAhGvKU07FWiUKifyKIWg1DB70jQNtuVf9qqsBIuTRtLQsVtno64FHVl/
+         M1Ckp2a4yKev6d0W9FAKgZKo+0u7Vhr5KXtNPg2zsGTn4RNTgpAAOS58PoC2Gy9CmG
+         NUhO7ZI8IMLzQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id cI2TZ8maBAHa; Thu,  4 Jun 2020 07:10:56 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 822AC2C553F;
+        Thu,  4 Jun 2020 07:10:56 -0400 (EDT)
+Date:   Thu, 4 Jun 2020 07:10:56 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Joseph Myers <joseph@codesourcery.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Cc:     Florian Weimer <fweimer@redhat.com>, Rich Felker <dalias@libc.org>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>
+Message-ID: <188671972.53608.1591269056445.JavaMail.zimbra@efficios.com>
+In-Reply-To: <alpine.DEB.2.21.2006031718070.7179@digraph.polyomino.org.uk>
+References: <20200527185130.5604-1-mathieu.desnoyers@efficios.com> <20200527185130.5604-2-mathieu.desnoyers@efficios.com> <87d06gxsla.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.2006031718070.7179@digraph.polyomino.org.uk>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
+ and thread creation (v20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604095057.259452-1-elver@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v20)
+Thread-Index: zF49gywpspZcwIriHJ+0g73PGzbsCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 11:50:57AM +0200, Marco Elver wrote:
-> The KCOV runtime is very minimal, only updating a field in 'current',
-> and none of __sanitizer_cov-functions generates reports nor calls any
-> other external functions.
+----- On Jun 3, 2020, at 1:22 PM, Joseph Myers joseph@codesourcery.com wrote:
 
-Not quite true; it writes to t->kcov_area, and we need to make
-absolutely sure that doesn't take faults or triggers anything else
-untowards.
-
-> Therefore we can make the KCOV runtime noinstr-compatible by:
+> On Wed, 3 Jun 2020, Florian Weimer via Libc-alpha wrote:
 > 
->   1. always-inlining internal functions and marking
->      __sanitizer_cov-functions noinstr. The function write_comp_data() is
->      now guaranteed to be inlined into __sanitize_cov_trace_*cmp()
->      functions, which saves a call in the fast-path and reduces stack
->      pressure due to the first argument being a constant.
+>> I'm still waiting for feedback from other maintainers whether the level
+>> of documentation and testing is appropriate.
 > 
->   2. For Clang, correctly pass -fno-stack-protector via a separate
->      cc-option, as -fno-conserve-stack does not exist on Clang.
-> 
-> The major benefit compared to adding another attribute to 'noinstr' to
-> not collect coverage information, is that we retain coverage visibility
-> in noinstr functions. We also currently lack such an attribute in both
-> GCC and Clang.
-> 
+> Looking at the documentation in the manual, it doesn't look like it has
+> enough information for someone to use this functionality, or to know when
+> they might want to use it, and nor does it point to external documentation
+> of it.  It would seem appropriate at least to include a link to wherever
+> the external documentation is of what this functionality is good for, how
+> to create and use a "Restartable Sequence critical section", and how to
+> "perform rseq registration to the kernel".
 
-> -static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
-> +static __always_inline void write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
->  {
->  	struct task_struct *t;
->  	u64 *area;
-> @@ -231,59 +231,59 @@ static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
->  	}
->  }
+That external piece of documentation would be part of the Linux man-pages
+project, maintained by Michael Kerrisk. I have submitted a few revisions
+of the rseq(2) man page, but have been waiting for Michael to reply for more
+than a year now:
 
-This thing; that appears to be the meat of it, right?
+  https://lore.kernel.org/r/2021826204.69809.1588000508294.JavaMail.zimbra@efficios.com
 
-I can't find where t->kcov_area comes from.. is that always
-kcov_mmap()'s vmalloc_user() ?
+I'm thinking about hosting a rseq(2) man-page into my librseq project, would
+that make sense ?
 
-That whole kcov_remote stuff confuses me.
+librseq is currently a development branch in my own repository for now. It still
+needs to be tweaked to adapt to the various changes that went into the glibc rseq
+enablement patchset, and then I plan to move it to a more "formal" home:
 
-KCOV_ENABLE() has kcov_fault_in_area(), which supposedly takes the
-vmalloc faults for the current task, but who does it for the remote?
+  https://github.com/compudj/librseq
 
-Now, luckily Joerg went and ripped out the vmalloc faults, let me check
-where those patches are... w00t, they're upstream in this merge window.
+Thanks,
 
-So no #PF from writing to t->kcov_area then, under the assumption that
-the vmalloc_user() is the only allocation site.
-
-But then there's hardware watchpoints, if someone goes and sets a data
-watchpoint in the kcov_area we're screwed. Nothing actively prevents
-that from happening. Then again, the same is currently true for much of
-current :/
-
-Also, I think you need __always_inline on kaslr_offset()
+Mathieu
 
 
-And, unrelated to this patch in specific, I suppose I'm going to have to
-extend objtool to look for data that is used from noinstr, to make sure
-we exclude it from inspection and stuff, like that kaslr offset crud for
-example.
-
-Anyway, yes, it appears you're lucky (for having Joerg remove vmalloc
-faults) and this mostly should work as is.
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
