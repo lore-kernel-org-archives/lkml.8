@@ -2,368 +2,121 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E51C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9410FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC773207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D468207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:23:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HXy04FH4"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Z1SifWi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgFDNWA (ORCPT
+        id S1728573AbgFDNXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:22:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39084 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728473AbgFDNV7 (ORCPT
+        Thu, 4 Jun 2020 09:23:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbgFDNXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:21:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591276917;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=DHrMnCyPNfTHJnXV1DMm7XzmV+ayRU6NvyYnxtLnRIo=;
-        b=HXy04FH4SWKVknbGvJ5hCh5UR/OGbWMr4MOsSu2x92gqgmXayCiYlr/Da7hfT6B5iaeGRH
-        JbynrbBMxP9OdNwF4nF+Rb+ZZqZ02u+6kQwQDWVcHPlKqJxnF8O0BT3On+WLfWfdUOtSbi
-        JygRR3GCCJMR8VIPpiuyy/qKGY7SxoI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-82-5vhAVLh8OLmA_U0I1odt_Q-1; Thu, 04 Jun 2020 09:21:54 -0400
-X-MC-Unique: 5vhAVLh8OLmA_U0I1odt_Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8819BFDE;
-        Thu,  4 Jun 2020 13:21:48 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AE1678F08;
-        Thu,  4 Jun 2020 13:21:16 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
-        eparis@parisplace.org, tgraf@infradead.org,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak124 v3] audit: log nftables configuration change events
-Date:   Thu,  4 Jun 2020 09:20:49 -0400
-Message-Id: <f9da8b5dbf2396b621c77c17b5b1123be5aa484e.1591275439.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 4 Jun 2020 09:23:09 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C92C08C5C4
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:23:09 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id q14so5125723qtr.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Zd56CSP9N2M4FrfN9ySWd7Nzjr+sOLOVU8sX9ZsvxYk=;
+        b=Z1SifWi8Glj9s1ZlViEQIoOzrtW4kQqhJPAuBmH8BuAfTlSORzOP5/aBkVIpDCF065
+         4tet6nf/xexKbX9HERYTEiH7bvvMa7jEzJZJ+Y9NbTVNdXZMe5cuQGHU5U8XYpc6rEpA
+         0M5eGOL/GQzV1R+AsSeBTDbzXk+YExg+XOlZLmxAbhKhBOAjkHQZ06AbVHRZdzvZiU7w
+         cHe+L3V8vNXxybekuzSoIvOp1xxWvK8SbdjJVplyLz5vYnbOtUIAIDcZULCyq5qUdBWf
+         hegDa8ghfSlITKfZUXou8d2OJHz3pI/kZh5/E9mjrrfnPUc08cS9ulbxQPmbEBYY1pID
+         +u9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Zd56CSP9N2M4FrfN9ySWd7Nzjr+sOLOVU8sX9ZsvxYk=;
+        b=U8kGlmCJ486+hI8PBw8XYiwLVj5Yum/Y3EUWsANxVCdImNyJw6SeoZ0apZRiKcw6wO
+         O71n/cNOubhhAkqZQKi+6RIB5HVPS4w9T6j/LChAUoZ2JvZkFESaXwCeP+L2d6p29OtC
+         Td/CizQEUDaXE2fpX1htMdtLMfggbX5hOUuvbQl2asGYhrVhittGmeaQ4Wso6tIvtL7o
+         NI6w5pTcMKEU9OOD7UM4DcFlaLmhibrOshcnIES65YQoNGs9SYkFYJAs2nSYk6CJPpuU
+         Y/pGe7t1Wg18AAkNVZrewtCKMM2r8e0R5m8394HxRxA+qyVXTztsms7GLlC3h8wPoqp2
+         D9EA==
+X-Gm-Message-State: AOAM533kSddhC7Wy/i1NqxgxmnujPRdd/G9xMwvivoUnHSH+ykWO1tHU
+        CAu95YRKatiGHNq500JCkh88oQ==
+X-Google-Smtp-Source: ABdhPJxRZn/pXIUEkZhANETiTogTGf06kqn6Gs1x5NZFGFUPmFe5McyxpBqwN0tWHmbj+GOZ4kP/eQ==
+X-Received: by 2002:aed:3fa5:: with SMTP id s34mr4444014qth.343.1591276988114;
+        Thu, 04 Jun 2020 06:23:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 126sm4330150qkj.89.2020.06.04.06.23.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 06:23:07 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jgppq-001CIj-Sr; Thu, 04 Jun 2020 10:23:06 -0300
+Date:   Thu, 4 Jun 2020 10:23:06 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 09/10] treewide: Remove uninitialized_var() usage
+Message-ID: <20200604132306.GO6578@ziepe.ca>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-10-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603233203.1695403-10-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iptables, ip6tables, arptables and ebtables table registration,
-replacement and unregistration configuration events are logged for the
-native (legacy) iptables setsockopt api, but not for the
-nftables netlink api which is used by the nft-variant of iptables in
-addition to nftables itself.
+On Wed, Jun 03, 2020 at 04:32:02PM -0700, Kees Cook wrote:
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings
+> (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> either simply initialize the variable or make compiler changes.
+> 
+> I preparation for removing[2] the[3] macro[4], remove all remaining
+> needless uses with the following script:
+> 
+> git grep '\buninitialized_var\b' | cut -d: -f1 | sort -u | \
+> 	xargs perl -pi -e \
+> 		's/\buninitialized_var\(([^\)]+)\)/\1/g;
+> 		 s:\s*/\* (GCC be quiet|to make compiler happy) \*/$::g;'
+> 
+> drivers/video/fbdev/riva/riva_hw.c was manually tweaked to avoid
+> pathological white-space.
+> 
+> No outstanding warnings were found building allmodconfig with GCC 9.3.0
+> for x86_64, i386, arm64, arm, powerpc, powerpc64le, s390x, mips, sparc64,
+> alpha, and m68k.
 
-Add calls to log the configuration actions in the nftables netlink api.
+At least in the infiniband part I'm confident that old gcc versions
+will print warnings after this patch.
 
-This uses the same NETFILTER_CFG record format but overloads the table
-field.
+As the warnings are wrong, do we care? Should old gcc maybe just -Wno-
+the warning?
 
-  type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=?:0;?:0 family=unspecified entries=2 op=nft_register_gen pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-  ...
-  type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.878:162) : table=firewalld:1;?:0 family=inet entries=0 op=nft_register_table pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-  ...
-  type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=8 op=nft_register_chain pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-  ...
-  type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;filter_FORWARD:85 family=inet entries=101 op=nft_register_rule pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-  ...
-  type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=87 op=nft_register_setelem pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
-  ...
-  type=NETFILTER_CFG msg=audit(2020-05-28 17:46:41.911:163) : table=firewalld:1;__set0:87 family=inet entries=0 op=nft_register_set pid=396 subj=system_u:system_r:firewalld_t:s0 comm=firewalld
+Otherwise the IB bits look ok to me
 
-For further information please see issue
-https://github.com/linux-audit/audit-kernel/issues/124
+Acked-by: Jason Gunthorpe <jgg@mellanox.com>
 
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
-Changelog:
-v3:
-- inline message type rather than table
-
-v2:
-- differentiate between xtables and nftables
-- add set, setelem, obj, flowtable, gen
-- use nentries field as appropriate per type
-- overload the "tables" field with table handle and chain/set/flowtable
-
- include/linux/audit.h         |  18 ++++++++
- kernel/auditsc.c              |  24 ++++++++--
- net/netfilter/nf_tables_api.c | 103 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 142 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/audit.h b/include/linux/audit.h
-index 3fcd9ee49734..604ede630580 100644
---- a/include/linux/audit.h
-+++ b/include/linux/audit.h
-@@ -12,6 +12,7 @@
- #include <linux/sched.h>
- #include <linux/ptrace.h>
- #include <uapi/linux/audit.h>
-+#include <uapi/linux/netfilter/nf_tables.h>
- 
- #define AUDIT_INO_UNSET ((unsigned long)-1)
- #define AUDIT_DEV_UNSET ((dev_t)-1)
-@@ -98,6 +99,23 @@ enum audit_nfcfgop {
- 	AUDIT_XT_OP_REGISTER,
- 	AUDIT_XT_OP_REPLACE,
- 	AUDIT_XT_OP_UNREGISTER,
-+	AUDIT_NFT_OP_TABLE_REGISTER,
-+	AUDIT_NFT_OP_TABLE_UNREGISTER,
-+	AUDIT_NFT_OP_CHAIN_REGISTER,
-+	AUDIT_NFT_OP_CHAIN_UNREGISTER,
-+	AUDIT_NFT_OP_RULE_REGISTER,
-+	AUDIT_NFT_OP_RULE_UNREGISTER,
-+	AUDIT_NFT_OP_SET_REGISTER,
-+	AUDIT_NFT_OP_SET_UNREGISTER,
-+	AUDIT_NFT_OP_SETELEM_REGISTER,
-+	AUDIT_NFT_OP_SETELEM_UNREGISTER,
-+	AUDIT_NFT_OP_GEN_REGISTER,
-+	AUDIT_NFT_OP_OBJ_REGISTER,
-+	AUDIT_NFT_OP_OBJ_UNREGISTER,
-+	AUDIT_NFT_OP_OBJ_RESET,
-+	AUDIT_NFT_OP_FLOWTABLE_REGISTER,
-+	AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,
-+	AUDIT_NFT_OP_INVALID,
- };
- 
- extern int is_audit_feature_set(int which);
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index 468a23390457..3a9100e95fda 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -75,6 +75,7 @@
- #include <linux/uaccess.h>
- #include <linux/fsnotify_backend.h>
- #include <uapi/linux/limits.h>
-+#include <uapi/linux/netfilter/nf_tables.h>
- 
- #include "audit.h"
- 
-@@ -136,9 +137,26 @@ struct audit_nfcfgop_tab {
- };
- 
- static const struct audit_nfcfgop_tab audit_nfcfgs[] = {
--	{ AUDIT_XT_OP_REGISTER,		"register"	},
--	{ AUDIT_XT_OP_REPLACE,		"replace"	},
--	{ AUDIT_XT_OP_UNREGISTER,	"unregister"	},
-+	{ AUDIT_XT_OP_REGISTER,			"xt_register"		   },
-+	{ AUDIT_XT_OP_REPLACE,			"xt_replace"		   },
-+	{ AUDIT_XT_OP_UNREGISTER,		"xt_unregister"		   },
-+	{ AUDIT_NFT_OP_TABLE_REGISTER,		"nft_register_table"	   },
-+	{ AUDIT_NFT_OP_TABLE_UNREGISTER,	"nft_unregister_table"	   },
-+	{ AUDIT_NFT_OP_CHAIN_REGISTER,		"nft_register_chain"	   },
-+	{ AUDIT_NFT_OP_CHAIN_UNREGISTER,	"nft_unregister_chain"	   },
-+	{ AUDIT_NFT_OP_RULE_REGISTER,		"nft_register_rule"	   },
-+	{ AUDIT_NFT_OP_RULE_UNREGISTER,		"nft_unregister_rule"	   },
-+	{ AUDIT_NFT_OP_SET_REGISTER,		"nft_register_set"	   },
-+	{ AUDIT_NFT_OP_SET_UNREGISTER,		"nft_unregister_set"	   },
-+	{ AUDIT_NFT_OP_SETELEM_REGISTER,	"nft_register_setelem"	   },
-+	{ AUDIT_NFT_OP_SETELEM_UNREGISTER,	"nft_unregister_setelem"   },
-+	{ AUDIT_NFT_OP_GEN_REGISTER,		"nft_register_gen"	   },
-+	{ AUDIT_NFT_OP_OBJ_REGISTER,		"nft_register_obj"	   },
-+	{ AUDIT_NFT_OP_OBJ_UNREGISTER,		"nft_unregister_obj"	   },
-+	{ AUDIT_NFT_OP_OBJ_RESET,		"nft_reset_obj"		   },
-+	{ AUDIT_NFT_OP_FLOWTABLE_REGISTER,	"nft_register_flowtable"   },
-+	{ AUDIT_NFT_OP_FLOWTABLE_UNREGISTER,	"nft_unregister_flowtable" },
-+	{ AUDIT_NFT_OP_INVALID,			"nft_invalid"		   },
- };
- 
- static int audit_match_perm(struct audit_context *ctx, int mask)
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 3558e76e2733..b9e7440cc87d 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -12,6 +12,7 @@
- #include <linux/netlink.h>
- #include <linux/vmalloc.h>
- #include <linux/rhashtable.h>
-+#include <linux/audit.h>
- #include <linux/netfilter.h>
- #include <linux/netfilter/nfnetlink.h>
- #include <linux/netfilter/nf_tables.h>
-@@ -693,6 +694,16 @@ static void nf_tables_table_notify(const struct nft_ctx *ctx, int event)
- {
- 	struct sk_buff *skb;
- 	int err;
-+	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-+			      ctx->table->name, ctx->table->handle);
-+
-+	audit_log_nfcfg(buf,
-+			ctx->family,
-+			ctx->table->use,
-+			event == NFT_MSG_NEWTABLE ?
-+				AUDIT_NFT_OP_TABLE_REGISTER :
-+				AUDIT_NFT_OP_TABLE_UNREGISTER);
-+	kfree(buf);
- 
- 	if (!ctx->report &&
- 	    !nfnetlink_has_listeners(ctx->net, NFNLGRP_NFTABLES))
-@@ -1428,6 +1439,17 @@ static void nf_tables_chain_notify(const struct nft_ctx *ctx, int event)
- {
- 	struct sk_buff *skb;
- 	int err;
-+	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;%s:%llu",
-+			      ctx->table->name, ctx->table->handle,
-+			      ctx->chain->name, ctx->chain->handle);
-+
-+	audit_log_nfcfg(buf,
-+			ctx->family,
-+			ctx->chain->use,
-+			event == NFT_MSG_NEWCHAIN ?
-+				AUDIT_NFT_OP_CHAIN_REGISTER :
-+				AUDIT_NFT_OP_CHAIN_UNREGISTER);
-+	kfree(buf);
- 
- 	if (!ctx->report &&
- 	    !nfnetlink_has_listeners(ctx->net, NFNLGRP_NFTABLES))
-@@ -2691,6 +2713,17 @@ static void nf_tables_rule_notify(const struct nft_ctx *ctx,
- {
- 	struct sk_buff *skb;
- 	int err;
-+	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;%s:%llu",
-+			      ctx->table->name, ctx->table->handle,
-+			      ctx->chain->name, ctx->chain->handle);
-+
-+	audit_log_nfcfg(buf,
-+			ctx->family,
-+			rule->handle,
-+			event == NFT_MSG_NEWRULE ?
-+				AUDIT_NFT_OP_RULE_REGISTER :
-+				AUDIT_NFT_OP_RULE_UNREGISTER);
-+	kfree(buf);
- 
- 	if (!ctx->report &&
- 	    !nfnetlink_has_listeners(ctx->net, NFNLGRP_NFTABLES))
-@@ -3693,6 +3726,17 @@ static void nf_tables_set_notify(const struct nft_ctx *ctx,
- 	struct sk_buff *skb;
- 	u32 portid = ctx->portid;
- 	int err;
-+	char *buf = kasprintf(gfp_flags, "%s:%llu;%s:%llu",
-+			      ctx->table->name, ctx->table->handle,
-+			      set->name, set->handle);
-+
-+	audit_log_nfcfg(buf,
-+			ctx->family,
-+			set->field_count,
-+			event == NFT_MSG_NEWSET ?
-+				AUDIT_NFT_OP_SET_REGISTER :
-+				AUDIT_NFT_OP_SET_UNREGISTER);
-+	kfree(buf);
- 
- 	if (!ctx->report &&
- 	    !nfnetlink_has_listeners(ctx->net, NFNLGRP_NFTABLES))
-@@ -4809,6 +4853,17 @@ static void nf_tables_setelem_notify(const struct nft_ctx *ctx,
- 	u32 portid = ctx->portid;
- 	struct sk_buff *skb;
- 	int err;
-+	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;%s:%llu",
-+			      ctx->table->name, ctx->table->handle,
-+			      set->name, set->handle);
-+
-+	audit_log_nfcfg(buf,
-+			ctx->family,
-+			set->handle,
-+			event == NFT_MSG_NEWSETELEM ?
-+				AUDIT_NFT_OP_SETELEM_REGISTER :
-+				AUDIT_NFT_OP_SETELEM_UNREGISTER);
-+	kfree(buf);
- 
- 	if (!ctx->report && !nfnetlink_has_listeners(net, NFNLGRP_NFTABLES))
- 		return;
-@@ -5890,6 +5945,19 @@ static int nf_tables_dump_obj(struct sk_buff *skb, struct netlink_callback *cb)
- 			    obj->ops->type->type != filter->type)
- 				goto cont;
- 
-+			if (reset) {
-+				char *buf = kasprintf(GFP_KERNEL,
-+						      "%s:%llu;?:0",
-+						      table->name,
-+						      table->handle);
-+
-+				audit_log_nfcfg(buf,
-+						family,
-+						obj->handle,
-+						AUDIT_NFT_OP_OBJ_RESET);
-+				kfree(buf);
-+			}
-+
- 			if (nf_tables_fill_obj_info(skb, net, NETLINK_CB(cb->skb).portid,
- 						    cb->nlh->nlmsg_seq,
- 						    NFT_MSG_NEWOBJ,
-@@ -6000,6 +6068,17 @@ static int nf_tables_getobj(struct net *net, struct sock *nlsk,
- 	if (NFNL_MSG_TYPE(nlh->nlmsg_type) == NFT_MSG_GETOBJ_RESET)
- 		reset = true;
- 
-+	if (reset) {
-+		char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-+				      table->name, table->handle);
-+
-+		audit_log_nfcfg(buf,
-+				family,
-+				obj->handle,
-+				AUDIT_NFT_OP_OBJ_RESET);
-+		kfree(buf);
-+	}
-+
- 	err = nf_tables_fill_obj_info(skb2, net, NETLINK_CB(skb).portid,
- 				      nlh->nlmsg_seq, NFT_MSG_NEWOBJ, 0,
- 				      family, table, obj, reset);
-@@ -6075,6 +6154,16 @@ void nft_obj_notify(struct net *net, const struct nft_table *table,
- {
- 	struct sk_buff *skb;
- 	int err;
-+	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;?:0",
-+			      table->name, table->handle);
-+
-+	audit_log_nfcfg(buf,
-+			family,
-+			obj->handle,
-+			event == NFT_MSG_NEWOBJ ?
-+				AUDIT_NFT_OP_OBJ_REGISTER :
-+				AUDIT_NFT_OP_OBJ_UNREGISTER);
-+	kfree(buf);
- 
- 	if (!report &&
- 	    !nfnetlink_has_listeners(net, NFNLGRP_NFTABLES))
-@@ -6701,6 +6790,17 @@ static void nf_tables_flowtable_notify(struct nft_ctx *ctx,
- {
- 	struct sk_buff *skb;
- 	int err;
-+	char *buf = kasprintf(GFP_KERNEL, "%s:%llu;%s:%llu",
-+			      flowtable->table->name, flowtable->table->handle,
-+			      flowtable->name, flowtable->handle);
-+
-+	audit_log_nfcfg(buf,
-+			ctx->family,
-+			flowtable->hooknum,
-+			event == NFT_MSG_NEWFLOWTABLE ?
-+				AUDIT_NFT_OP_FLOWTABLE_REGISTER :
-+				AUDIT_NFT_OP_FLOWTABLE_UNREGISTER);
-+	kfree(buf);
- 
- 	if (ctx->report &&
- 	    !nfnetlink_has_listeners(ctx->net, NFNLGRP_NFTABLES))
-@@ -6822,6 +6922,9 @@ static void nf_tables_gen_notify(struct net *net, struct sk_buff *skb,
- 	struct sk_buff *skb2;
- 	int err;
- 
-+	audit_log_nfcfg("?:0;?:0", 0, net->nft.base_seq,
-+			AUDIT_NFT_OP_GEN_REGISTER);
-+
- 	if (nlmsg_report(nlh) &&
- 	    !nfnetlink_has_listeners(net, NFNLGRP_NFTABLES))
- 		return;
--- 
-1.8.3.1
-
+Jason
