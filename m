@@ -2,114 +2,115 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09086C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E9C205CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0F42075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="fGkqeUca"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IVRMdF5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgFDIch (ORCPT
+        id S1728002AbgFDIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgFDIcg (ORCPT
+        Thu, 4 Jun 2020 04:34:26 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44115 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726802AbgFDIe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:32:36 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4763C05BD1E;
-        Thu,  4 Jun 2020 01:32:35 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id mb16so5142102ejb.4;
-        Thu, 04 Jun 2020 01:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1AuRE0AuSz1Dcafc63dQERov0niyM7+8vmaBb8F6Fzc=;
-        b=fGkqeUca0o35s+UryeUeoBdAohiaNg3kfMd+bxQWJyNHWhpzLy1Cr1ZcAjKHF8+WnL
-         QA+DS5hlfW9VNepBJ+oGxqr+ac8FDcs1OIPBlQl52vV/mW34uykJiE5ZJT3mW7lhSYZL
-         N4vom68WUkZGhqUpfeFd2DUOEWyFbBMFDByyY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1AuRE0AuSz1Dcafc63dQERov0niyM7+8vmaBb8F6Fzc=;
-        b=mvbqjNy8mfgcqtalAaC1wRCH3MLbEgpIp84sGm3Je0T30bDRDgVPh12wvlYcS+NR0j
-         2PJhs2dMNupSX64R8vJ2z5CrsBP2EE3CbWNhTeuFOc1z8rKRA+EpGkD6RbB3yiEXRSm0
-         CXlKOAU6phLt7gtFuPuUCkfvUdmBhlfrRslDMnHjsQSFDAuzRL+5bwm4If+HCqLceoB0
-         sNSKz12unPFB+GTf6P/P/4PapGAZpl1BjcpcdzEtZP/DRzeZNUrX5BhA+aiS3OkXHUpO
-         spB4WhKbaxB4b5sarhIgZWE75pEj61Y+GfcrR4wsmccdgsVdGK+U+vgjv381WKb02oO7
-         8vDA==
-X-Gm-Message-State: AOAM530uTY4ylxG64MbcG0MPHMfb9B74kqtibWCO5+6csS7vT+0r4A0s
-        S0+mi1XjswQS6jYVSng1FKnxgPZW21mml+xY9ao=
-X-Google-Smtp-Source: ABdhPJy5ctc5383qKNluaPDwm98VmrQIOXT9qbgA+PmD3daSJjnvtPCKWdZ3etbzj/j/2E6sMLG804CjxluMDKg+46Q=
-X-Received: by 2002:a17:906:3603:: with SMTP id q3mr2981318ejb.477.1591259554440;
- Thu, 04 Jun 2020 01:32:34 -0700 (PDT)
+        Thu, 4 Jun 2020 04:34:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591259664;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MY7gosntZyRVCAkzfX2AHr3cS9sWbmmToluAIV7gnzA=;
+        b=IVRMdF5JTU1oj/U1CEmZXs7HaIQsU6RJBsy1u5T1xAj1+lECA8tVqiTnPqlICeqEiD0Kp7
+        NSdamYuVmeLPt+2zAOcXKoDeNXxMfxE+WFEtWTKHvJMlGyHmZgzCxjCwB92MEmP+SIfahu
+        s1nySAnSEqwXjNJ2G9TAN7Frq4wccx0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-JVyp_s-RPnCG6EDEN2Hufw-1; Thu, 04 Jun 2020 04:34:22 -0400
+X-MC-Unique: JVyp_s-RPnCG6EDEN2Hufw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F29A464;
+        Thu,  4 Jun 2020 08:34:21 +0000 (UTC)
+Received: from krava (unknown [10.40.192.62])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AA0C06111F;
+        Thu,  4 Jun 2020 08:34:17 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 10:34:16 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH 1/2] perf tools: check libasan and libubsan in
+ Makefile.config
+Message-ID: <20200604083416.GA1283757@krava>
+References: <1591071304-19338-1-git-send-email-yangtiezhu@loongson.cn>
+ <20200602141551.GC1169993@krava>
+ <35e55bec-1f8a-0e8f-798b-bab51ad30797@loongson.cn>
 MIME-Version: 1.0
-References: <20200527200820.47359-1-tali.perry1@gmail.com> <20200603202553.GB7684@kunai>
-In-Reply-To: <20200603202553.GB7684@kunai>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 4 Jun 2020 08:32:22 +0000
-Message-ID: <CACPK8Xe=66y+MkfogP4Gh6A9X7UDhOyAdUDwp=iqe7zitdxA8g@mail.gmail.com>
-Subject: Re: [PATCH v14 0/3] i2c: npcm7xx: add NPCM i2c controller driver
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Tali Perry <tali.perry1@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Brendan Higgins <brendanhiggins@google.com>, ofery@google.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kfting@nuvoton.com, Rob Herring <robh+dt@kernel.org>,
-        linux-i2c@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        andriy.shevchenko@linux.intel.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Benjamin Fair <benjaminfair@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35e55bec-1f8a-0e8f-798b-bab51ad30797@loongson.cn>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 20:26, Wolfram Sang <wsa@the-dreams.de> wrote:
->
-> On Wed, May 27, 2020 at 11:08:17PM +0300, Tali Perry wrote:
-> > This patch set adds i2c controller support
-> > for the Nuvoton NPCM Baseboard Management Controller (BMC).
-> >
-> > NPCM7xx includes 16 I2C controllers. This driver operates the controller.
-> > This module also includes a slave mode.
-> >
-> > ---
-> > v14 -> v13:
-> >       - Fix yaml example: add missing include.
-> >       - Replace all udelay to usleep_range, except one which is called from
-> >         irq.
-> >       - Fix compilation error (module_platfrom_init conflict).
-> >       - debugfs counters always updated. Counting till max value,
-> >         then stop counting.
-> >       - Rename bus-frequency to clock-frequency.
-> >       - Remove unused variables.
->
-> I don't have time for a deeper review, but from what I can tell this
-> driver is good to go and we can fix things incrementally from now on.
->
-> Applied to for-next (will go into 5.8), thanks!
+On Wed, Jun 03, 2020 at 10:01:27AM +0800, Tiezhu Yang wrote:
 
-Thanks Wolfram. I encourage this approach to working with patches, and
-especially for our vendors who are trying to do the correct thing in
-mainlining their code.
+SNIP
 
-Congrats Tali on getting the driver in the tree. This has a been a long journey!
+> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > > index 12a8204..b699d21 100644
+> > > --- a/tools/perf/Makefile.config
+> > > +++ b/tools/perf/Makefile.config
+> > > @@ -387,6 +387,12 @@ else
+> > >         NO_LIBBPF := 1
+> > >         NO_JVMTI := 1
+> > >       else
+> > > +      ifneq ($(shell ldconfig -p | grep libasan >/dev/null 2>&1; echo $$?), 0)
+> > > +        msg := $(error No libasan found, please install libasan);
+> > > +      endif
+> > > +      ifneq ($(shell ldconfig -p | grep libubsan >/dev/null 2>&1; echo $$?), 0)
+> > > +        msg := $(error No libubsan found, please install libubsan);
+> > > +      endif
+> > hum, would it be better to have check for this in tools/build/features?
+> 
+> Hi Jiri,
+> 
+> Thanks for your suggestion.
+> 
+> Do you mean that it is better to add this check at the end of file
+> tools/build/Makefile.feature?
 
-Cheers,
+we usualy detect installed libraries via tools/build/features framework,
+this looks like it could fit in there
 
-Joel
+jirka
+
+> 
+> > 
+> > jirka
+> > 
+> > >         ifneq ($(filter s% -static%,$(LDFLAGS),),)
+> > >           msg := $(error No static glibc found, please install glibc-static);
+> > >         else
+> > > -- 
+> > > 2.1.0
+> > > 
+> 
+
