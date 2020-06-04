@@ -6,229 +6,148 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75806C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E36C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F9E20679
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIe8qjjS"
+	by mail.kernel.org (Postfix) with ESMTP id A65C520679
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591244023;
+	bh=qqCjWIFc0oBvTEtu2FOjWM7Jsh9w5wGA/RGYzYlOxag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LODG5PUWnYpaHWUcn3LD8K9ghra5Hr1cpQdCNvV2bF5S7qPf3X2N+eEFdVNGMhrjx
+	 dbAYp31zoX9z+Yv9Luojc0uwkoV7wHKmcPrV+Ggk1RCLJF+JkY80XppzrFmDv9a+FX
+	 bxr3TLmhfVROeSXfwMWhIEMRehzv3d21Fj/vAAkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgFDELL (ORCPT
+        id S1726438AbgFDENm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:11:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29629 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726004AbgFDELL (ORCPT
+        Thu, 4 Jun 2020 00:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgFDENl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:11:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591243868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pJYQiOc0xX40urKPDpngXkAXxVxxYqFmS7EXvpDIHMs=;
-        b=jIe8qjjSQxsC7pQ1nMqImyZNlvkiIPQfn6hcCPM5Yid+FhrmOoATHCyyDThL72oDK/iIWC
-        fSiweE6ngOg1z5PFLAieqbVLXppwJtCDzgOxmWgzaowjMIKGy5tg+65o2FXe1VkMCoJioL
-        usulZfTSe4b05ehtaYqfnqpZriVlUM4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-98e8rTb1N728VQ1_xIJy2g-1; Thu, 04 Jun 2020 00:11:01 -0400
-X-MC-Unique: 98e8rTb1N728VQ1_xIJy2g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96CE7835B41;
-        Thu,  4 Jun 2020 04:10:59 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9617D78F19;
-        Thu,  4 Jun 2020 04:10:58 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 22:10:58 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
- VFIO_IRQ_TYPE_REMAP_BAR_REGION
-Message-ID: <20200603221058.1927a0fc@x1.home>
-In-Reply-To: <20200604024228.GD12300@joy-OptiPlex-7040>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
-        <20200518025245.14425-1-yan.y.zhao@intel.com>
-        <20200529154547.19a6685f@x1.home>
-        <20200601065726.GA5906@joy-OptiPlex-7040>
-        <20200601104307.259b0fe1@x1.home>
-        <20200602082858.GA8915@joy-OptiPlex-7040>
-        <20200602133435.1ab650c5@x1.home>
-        <20200603014058.GA12300@joy-OptiPlex-7040>
-        <20200603170452.7f172baf@x1.home>
-        <20200604024228.GD12300@joy-OptiPlex-7040>
-Organization: Red Hat
+        Thu, 4 Jun 2020 00:13:41 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28625C03E96D
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 21:13:41 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id n23so5509871ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x+NrqN+0xbQXOWLT6R62mZhI75888x+45r0FZYiQvi4=;
+        b=Gsr5lN9LD8WT3djx/WpsXxGUrPz8bH8FVB0oU047nVrriDXWLxousSD6QAE6djVWhp
+         87R3f/XeWUBxR1JOs/dxzvYX2IVp0MFK0CUObhFX39bp0Pnswj79PJRrIjHnMOS/gaWX
+         +0mM9d0u66/Dew3fTDnMCmjIwdXBg3bbVAXGs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x+NrqN+0xbQXOWLT6R62mZhI75888x+45r0FZYiQvi4=;
+        b=SUBOEZuLKB3bkIw+5xCRFcfFNRmb30tENI64fqFbLRrd+j/YeLBTyO57mw4yoSolmR
+         wzwznXt1MIxMtvYQAEhiUfktrirBOLCwLdkireSBNpGdx4PONErB9qAxdkYaPkaebJIw
+         9fm3ZNh0llEXdhuK9XbzJz10vZ6yHg+toABDH4Afibq2aOtzKa2/td0RZ4Vc+MAbK4JH
+         4Ml/Clk7fnG6/ySRqm8gojH6MC1Rzg1aSF/abyb2rlJCsYSXWeTCd5K7/B5El+BqMFNR
+         XGLC2Nnf3vb75fvJAfRtNnizB+hz+eJ2SWFu9Beis4cgl1/KZVduggAnF3v9O2K2Ek31
+         nZNw==
+X-Gm-Message-State: AOAM530FmBK0FnnLIR2Cd8Twf/Fpn4jRrL9G8Y0IBKqt0HENIFCfb3yV
+        Q1j4gYe6+QB9ArFuigqXKfKiK1fDufE=
+X-Google-Smtp-Source: ABdhPJyuCY0lMmhTUe8hXu0AyFBzAF+cgBW38fccrYJppdbQRRlvho6yiCv0OpXwkiEXn41J0TtCGg==
+X-Received: by 2002:a2e:9818:: with SMTP id a24mr1103253ljj.161.1591244018956;
+        Wed, 03 Jun 2020 21:13:38 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id t22sm1130019lji.90.2020.06.03.21.13.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 21:13:37 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id a25so5521922ljp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:13:37 -0700 (PDT)
+X-Received: by 2002:a2e:974e:: with SMTP id f14mr1100137ljj.102.1591244017171;
+ Wed, 03 Jun 2020 21:13:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200603100559.2718efba@coco.lan>
+In-Reply-To: <20200603100559.2718efba@coco.lan>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 3 Jun 2020 21:13:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg=CTtNrxPeFzkDw053dY3urchiyxevHnUXHhTGbK=9OQ@mail.gmail.com>
+Message-ID: <CAHk-=wg=CTtNrxPeFzkDw053dY3urchiyxevHnUXHhTGbK=9OQ@mail.gmail.com>
+Subject: Re: [GIT PULL for v5.8-rc1] media updates
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 22:42:28 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Wed, Jun 3, 2020 at 1:06 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> PS.: The diffstat is so big that I almost dropped it, as it is almost
+> useless for humans to read. I ended by not doing it just because perhaps
+> you could be using some sort of script to check diffstat.
 
-> On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:
-> > On Tue, 2 Jun 2020 21:40:58 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:  
-> > > > I'm not at all happy with this.  Why do we need to hide the migration
-> > > > sparse mmap from the user until migration time?  What if instead we
-> > > > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
-> > > > where the existing capability is the normal runtime sparse setup and
-> > > > the user is required to use this new one prior to enabled device_state
-> > > > with _SAVING.  The vendor driver could then simply track mmap vmas to
-> > > > the region and refuse to change device_state if there are outstanding
-> > > > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
-> > > > required, no new irqfds, an incremental change to the protocol,
-> > > > backwards compatible to the extent that a vendor driver requiring this
-> > > > will automatically fail migration.
-> > > >     
-> > > right. looks we need to use this approach to solve the problem.
-> > > thanks for your guide.
-> > > so I'll abandon the current remap irq way for dirty tracking during live
-> > > migration.
-> > > but anyway, it demos how to customize irq_types in vendor drivers.
-> > > then, what do you think about patches 1-5?  
-> > 
-> > In broad strokes, I don't think we've found the right solution yet.  I
-> > really question whether it's supportable to parcel out vfio-pci like
-> > this and I don't know how I'd support unraveling whether we have a bug
-> > in vfio-pci, the vendor driver, or how the vendor driver is making use
-> > of vfio-pci.
-> >
-> > Let me also ask, why does any of this need to be in the kernel?  We
-> > spend 5 patches slicing up vfio-pci so that we can register a vendor
-> > driver and have that vendor driver call into vfio-pci as it sees fit.
-> > We have two patches creating device specific interrupts and a BAR
-> > remapping scheme that we've decided we don't need.  That brings us to
-> > the actual i40e vendor driver, where the first patch is simply making
-> > the vendor driver work like vfio-pci already does, the second patch is
-> > handling the migration region, and the third patch is implementing the
-> > BAR remapping IRQ that we decided we don't need.  It's difficult to
-> > actually find the small bit of code that's required to support
-> > migration outside of just dealing with the protocol we've defined to
-> > expose this from the kernel.  So why are we trying to do this in the
-> > kernel?  We have quirk support in QEMU, we can easily flip
-> > MemoryRegions on and off, etc.  What access to the device outside of
-> > what vfio-pci provides to the user, and therefore QEMU, is necessary to
-> > implement this migration support for i40e VFs?  Is this just an
-> > exercise in making use of the migration interface?  Thanks,
-> >   
-> hi Alex
-> 
-> There was a description of intention of this series in RFC v1
-> (https://www.spinics.net/lists/kernel/msg3337337.html).
-> sorry, I didn't include it in starting from RFC v2.
-> 
-> "
-> The reason why we don't choose the way of writing mdev parent driver is
-> that
+No, but I do compare the basics, and you don't have to more than scan
+it to see that "ok, it only touches area xyz".
 
-I didn't mention an mdev approach, I'm asking what are we accomplishing
-by doing this in the kernel at all versus exposing the device as normal
-through vfio-pci and providing the migration support in QEMU.  Are you
-actually leveraging having some sort of access to the PF in supporting
-migration of the VF?  Is vfio-pci masking the device in a way that
-prevents migrating the state from QEMU?
+And it turns out that it is huge for you partly because you have the
+default (fairly low) git rename detection limits, in order to avoid
+using a lot of CPU or memory for rename detection.
 
-> (1) VFs are almost all the time directly passthroughed. Directly binding
-> to vfio-pci can make most of the code shared/reused. If we write a
-> vendor specific mdev parent driver, most of the code (like passthrough
-> style of rw/mmap) still needs to be copied from vfio-pci driver, which is
-> actually a duplicated and tedious work.
-> (2) For features like dynamically trap/untrap pci bars, if they are in
-> vfio-pci, they can be available to most people without repeated code
-> copying and re-testing.
-> (3) with a 1:1 mdev driver which passes through VFs most of the time, people
-> have to decide whether to bind VFs to vfio-pci or mdev parent driver before
-> it runs into a real migration need. However, if vfio-pci is bound
-> initially, they have no chance to do live migration when there's a need
-> later.
-> "
-> particularly, there're some devices (like NVMe) they purely reply on
-> vfio-pci to do device pass-through and they have no standalone parent driver
-> to do mdev way.
-> 
-> I think live migration is a general requirement for most devices and to
-> interact with the migration interface requires vendor drivers to do
-> device specific tasks like geting/seting device state, starting/stopping
-> devices, tracking dirty data, report migration capabilities... all those
-> works need be in kernel.
+So you get:
 
-I think Alex Graf proved they don't necessarily need to be done in
-kernel back in 2015: https://www.youtube.com/watch?v=4RFsSgzuFso
-He was able to achieve i40e VF live migration by only hacking QEMU.  In
-this series you're allowing a vendor driver to interpose itself between
-the user (QEMU) and vfio-pci such that we switch to the vendor code
-during migration.  Why can't that interpose layer be in QEMU rather
-than the kernel?  It seems that it only must be in the kernel if we
-need to provide migration state via backdoor, perhaps like going
-through the PF.  So what access to the i40e VF device is not provided to
-the user through vfio-pci that is necessary to implement migration of
-this device?  The tasks listed above are mostly standard device driver
-activities and clearly vfio-pci allows userspace device drivers.
+>  2181 files changed, 260633 insertions(+), 106012 deletions(-)
 
-> do you think it's better to create numerous vendor quirks in vfio-pci?
+while I get
 
-In QEMU, perhaps.  Alternatively, let's look at exactly what access is
-not provided through vfio-pci that's necessary for this and decide if
-we want to enable that access or if cracking vfio-pci wide open for
-vendor drivers to pick and choose when and how to use it is really the
-right answer.
+ 1698 files changed, 161922 insertions(+), 7301 deletions(-)
 
-> as to this series, though patch 9/10 currently only demos reporting a
-> migration region, it actually shows the capability iof vendor driver to
-> customize device regions. e.g. in patch 10/10, it customizes the BAR0 to
-> be read/write. and though we abandoned the REMAP BAR irq_type in patch
-> 10/10 for migration purpose, I have to say this irq_type has its usage
-> in other use cases, where synchronization is not a hard requirement and
-> all it needs is a notification channel from kernel to use. this series
-> just provides a possibility for vendors to customize device regions and
-> irqs.
+which is a noticeable difference. Still a big diffstat, but quite a
+bit smaller than yours.
 
-I don't disagree that a device specific interrupt might be useful, but
-I would object to implementing this one only as an artificial use case.
-We can wait for a legitimate use case to implement that.
+You also get a _lot_ more noise in the form of "create mode xyz" and
+"delete mode abc" notices, while for me a lot of them are just "rename
+abc => xyz". So there's a double whammy for you.
 
-> for interfaces exported in patch 3/10-5/10, they anyway need to be
-> exported for writing mdev parent drivers that pass through devices at
-> normal time to avoid duplication. and yes, your worry about
+The reason is that your diff only has renames for the 100% matches like this:
 
-Where are those parent drivers?  What are their actual requirements?
+>  rename Documentation/{media/v4l-drivers => admin-guide/media}/au0828-cardlist.rst (100%)
 
-> identification of bug sources is reasonable. but if a device is binding
-> to vfio-pci with a vendor module loaded, and there's a bug, they can do at
-> least two ways to identify if it's a bug in vfio-pci itself.
-> (1) prevent vendor modules from loading and see if the problem exists
-> with pure vfio-pci.
-> (2) do what's demoed in patch 8/10, i.e. do nothing but simply pass all
-> operations to vfio-pci.
+which git can detect purely by seeing "oh, same exact SHA1".
 
-The code split is still extremely ad-hoc, there's no API.  An mdev
-driver isn't even a sub-driver of vfio-pci like you're trying to
-accomplish here, there would need to be a much more defined API when
-the base device isn't even a vfio_pci_device.  I don't see how this
-series would directly enable an mdev use case.
+But you don't have any non-100% renames.
 
-> so, do you think this series has its merit and we can continue improving
-> it?
+In contrast, the diffstat I see also has the inexact renames like
 
-I think this series is trying to push an artificial use case that is
-perhaps better done in userspace.  What is the actual interaction with
-the VF device that can only be done in the host kernel for this
-example?  Thanks,
+ rename Documentation/{media/v4l-drivers =>
+admin-guide/media}/bttv-cardlist.rst (99%)
+ rename Documentation/{media/v4l-drivers => admin-guide/media}/bttv.rst (79%)
 
-Alex
+because I have done
 
+   git config diff.renamelimit 0
+
+to make the rename detection limit be infinite (alternatively, just
+edit your ~/.gitconfig file manually - it's often easier than
+remembering what the "git config" syntax is).
+
+You want to see
+
+  [diff]
+        renamelimit = 0
+
+in your ~/.gitconfig file (or, alternatively, if you want the setting
+to be per-repo, in your .git/config file in your repository).
+
+The default git limits for "should I spend CPU time and memory on
+detecting inexact renames" are fairly low, because people use git on
+fairly low-end machines.
+
+I bet your development machine isn't some kind of low-end toy, and
+rename detection is not _that_ expensive.
+
+              Linus
