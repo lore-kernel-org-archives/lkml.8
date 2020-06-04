@@ -2,228 +2,226 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67852207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA49F207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgFDNur (ORCPT
+        id S1728746AbgFDNuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:50:47 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:34694 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbgFDNur (ORCPT
+        Thu, 4 Jun 2020 09:50:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44327 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728337AbgFDNur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jun 2020 09:50:47 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 613EF1C0BD2; Thu,  4 Jun 2020 15:50:45 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 15:50:45 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     jacek.anaszewski@gmail.com, matthias.bgg@gmail.com, dmurphy@ti.com,
-        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: Re: [PATCH] leds: mt6360: Add LED driver for MT6360
-Message-ID: <20200604135045.GH7222@duo.ucw.cz>
-References: <1591252004-12681-1-git-send-email-gene.chen.richtek@gmail.com>
+Received: by mail-lj1-f195.google.com with SMTP id c17so7346666lji.11;
+        Thu, 04 Jun 2020 06:50:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HscaqQ3a9rlG7LMvxfetj9PZadqBQlxA9luDvY709kI=;
+        b=ai6pgs+Tew/uxPdpW0D6kM9fjKaFU57Yse/NujW+695tWtAZsHbMGGjsRLwvkvSFdM
+         tKaKvGQpWjWbihXm9SM7bzwIuUyydb6gftVGfGn+rqrf8iT84i2RTj6MP76Pkb3s7Wtv
+         u2i1GX3tx60c2Sye/K5XP1y5zvn163ycQ1SR1IDsoyjiGPkmpQ9nc5k8xIuY7cpNXkxe
+         Ny3vMLTeLJHhVYOFYSlJMhAkaXrk7pKOBF/AP1p5BtvMyovAinP3X23oSRcwCyermoIZ
+         OOdjYs1SLiwTCfRS0PA+Ha75IlelzNAKXJeEctRiFvw7bbdTtJSLgfapP+/Nti9yhtyg
+         q8Nw==
+X-Gm-Message-State: AOAM530Fkf4utpvodap55ttY2/yNOYsu0YKEeaGDv2lW83PULYVAn2oJ
+        4Axxi4wbLXQjpHiWggk/vqM=
+X-Google-Smtp-Source: ABdhPJwFgNnX9eJFc5s+1RCeoml4wry3jADSZr+Uk82Gr4M4947yFLD4wkmGdf/0gl0X9+wHhybHLA==
+X-Received: by 2002:a2e:8ec9:: with SMTP id e9mr2378478ljl.152.1591278644807;
+        Thu, 04 Jun 2020 06:50:44 -0700 (PDT)
+Received: from localhost.localdomain ([185.248.161.177])
+        by smtp.gmail.com with ESMTPSA id u16sm1202140lji.58.2020.06.04.06.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 06:50:43 -0700 (PDT)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Sven Schnelle <svens@stackframe.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Mathias Krause <minipli@googlemail.com>,
+        PaX Team <pageexec@freemail.hu>,
+        Brad Spengler <spender@grsecurity.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        kernel-hardening@lists.openwall.com, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, gcc@gcc.gnu.org
+Cc:     notify@kernel.org
+Subject: [PATCH 1/5] gcc-plugins/stackleak: Exclude alloca() from the instrumentation logic
+Date:   Thu,  4 Jun 2020 16:49:53 +0300
+Message-Id: <20200604134957.505389-2-alex.popov@linux.com>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200604134957.505389-1-alex.popov@linux.com>
+References: <20200604134957.505389-1-alex.popov@linux.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="gTtJ75FAzB1T2CN6"
-Content-Disposition: inline
-In-Reply-To: <1591252004-12681-1-git-send-email-gene.chen.richtek@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some time ago Variable Length Arrays (VLA) were removed from the kernel.
+The kernel is built with '-Wvla'. Let's exclude alloca() from the
+instrumentation logic and make it simpler. The build-time assertion
+against alloca() is added instead.
 
---gTtJ75FAzB1T2CN6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Unfortunately, for that assertion we can't simply check cfun->calls_alloca
+during RTL phase. It turned out that gcc before version 7 called
+allocate_dynamic_stack_space() from expand_stack_vars() for runtime
+alignment of constant-sized stack variables. That caused cfun->calls_alloca
+to be set for functions that don't use alloca().
 
-Hi!
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+---
+ scripts/gcc-plugins/stackleak_plugin.c | 51 +++++++++++---------------
+ 1 file changed, 21 insertions(+), 30 deletions(-)
 
-> +
-> +#define MT6360_LED_DESC(_id)  {						\
-> +	.cdev =3D {							\
-> +		.name =3D "mt6360_isink" #_id,				\
-> +		.max_brightness =3D MT6360_SINKCUR_MAX##_id,		\
-> +		.brightness_set_blocking =3D mt6360_led_brightness_set,	\
-> +		.brightness_get =3D mt6360_led_brightness_get,		\
-> +		.blink_set =3D mt6360_led_blink_set,			\
-> +	},								\
-> +	.index =3D MT6360_LED_ISINK##_id,					\
-> +	.currsel_reg =3D MT6360_CURRSEL_REG##_id,				\
-> +	.currsel_mask =3D MT6360_CURRSEL_MASK##_id,			\
-> +	.enable_mask =3D MT6360_LEDEN_MASK##_id,				\
-> +	.mode_reg =3D MT6360_LEDMODE_REG##_id,				\
-> +	.mode_mask =3D MT6360_LEDMODE_MASK##_id,				\
-> +	.pwmduty_reg =3D MT6360_PWMDUTY_REG##_id,				\
-> +	.pwmduty_mask =3D MT6360_PWMDUTY_MASK##_id,			\
-> +	.pwmfreq_reg =3D MT6360_PWMFREQ_REG##_id,				\
-> +	.pwmfreq_mask =3D MT6360_PWMFREQ_MASK##_id,			\
-> +	.breath_regbase =3D MT6360_BREATH_REGBASE##_id,			\
-> +}
-> +
-> +/* ISINK 1/2/3 for RGBLED, ISINK4 for MoonLight */
-> +static const struct mt6360_led_classdev def_led_classdev[MT6360_LED_MAX]=
- =3D {
-> +	MT6360_LED_DESC(1),
-> +	MT6360_LED_DESC(2),
-> +	MT6360_LED_DESC(3),
-> +	MT6360_LED_DESC(4),
-> +};
+diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+index cc75eeba0be1..1ecfe50d0bf5 100644
+--- a/scripts/gcc-plugins/stackleak_plugin.c
++++ b/scripts/gcc-plugins/stackleak_plugin.c
+@@ -9,10 +9,9 @@
+  * any of the gcc libraries
+  *
+  * This gcc plugin is needed for tracking the lowest border of the kernel stack.
+- * It instruments the kernel code inserting stackleak_track_stack() calls:
+- *  - after alloca();
+- *  - for the functions with a stack frame size greater than or equal
+- *     to the "track-min-size" plugin parameter.
++ * It instruments the kernel code inserting stackleak_track_stack() calls
++ * for the functions with a stack frame size greater than or equal to
++ * the "track-min-size" plugin parameter.
+  *
+  * This plugin is ported from grsecurity/PaX. For more information see:
+  *   https://grsecurity.net/
+@@ -46,7 +45,7 @@ static struct plugin_info stackleak_plugin_info = {
+ 		"disable\t\tdo not activate the plugin\n"
+ };
+ 
+-static void stackleak_add_track_stack(gimple_stmt_iterator *gsi, bool after)
++static void stackleak_add_track_stack(gimple_stmt_iterator *gsi)
+ {
+ 	gimple stmt;
+ 	gcall *stackleak_track_stack;
+@@ -56,12 +55,7 @@ static void stackleak_add_track_stack(gimple_stmt_iterator *gsi, bool after)
+ 	/* Insert call to void stackleak_track_stack(void) */
+ 	stmt = gimple_build_call(track_function_decl, 0);
+ 	stackleak_track_stack = as_a_gcall(stmt);
+-	if (after) {
+-		gsi_insert_after(gsi, stackleak_track_stack,
+-						GSI_CONTINUE_LINKING);
+-	} else {
+-		gsi_insert_before(gsi, stackleak_track_stack, GSI_SAME_STMT);
+-	}
++	gsi_insert_before(gsi, stackleak_track_stack, GSI_SAME_STMT);
+ 
+ 	/* Update the cgraph */
+ 	bb = gimple_bb(stackleak_track_stack);
+@@ -87,14 +81,13 @@ static bool is_alloca(gimple stmt)
+ 
+ /*
+  * Work with the GIMPLE representation of the code. Insert the
+- * stackleak_track_stack() call after alloca() and into the beginning
+- * of the function if it is not instrumented.
++ * stackleak_track_stack() call into the beginning of the function.
+  */
+ static unsigned int stackleak_instrument_execute(void)
+ {
+ 	basic_block bb, entry_bb;
+-	bool prologue_instrumented = false, is_leaf = true;
+-	gimple_stmt_iterator gsi;
++	bool is_leaf = true;
++	gimple_stmt_iterator gsi = { 0 };
+ 
+ 	/*
+ 	 * ENTRY_BLOCK_PTR is a basic block which represents possible entry
+@@ -111,27 +104,17 @@ static unsigned int stackleak_instrument_execute(void)
+ 	 */
+ 	FOR_EACH_BB_FN(bb, cfun) {
+ 		for (gsi = gsi_start_bb(bb); !gsi_end_p(gsi); gsi_next(&gsi)) {
+-			gimple stmt;
+-
+-			stmt = gsi_stmt(gsi);
++			gimple stmt = gsi_stmt(gsi);
+ 
+ 			/* Leaf function is a function which makes no calls */
+ 			if (is_gimple_call(stmt))
+ 				is_leaf = false;
+ 
+-			if (!is_alloca(stmt))
+-				continue;
+-
+-			/* Insert stackleak_track_stack() call after alloca() */
+-			stackleak_add_track_stack(&gsi, true);
+-			if (bb == entry_bb)
+-				prologue_instrumented = true;
++			/* Variable Length Arrays are forbidden in the kernel */
++			gcc_assert(!is_alloca(stmt));
+ 		}
+ 	}
+ 
+-	if (prologue_instrumented)
+-		return 0;
+-
+ 	/*
+ 	 * Special cases to skip the instrumentation.
+ 	 *
+@@ -168,7 +151,7 @@ static unsigned int stackleak_instrument_execute(void)
+ 		bb = single_succ(ENTRY_BLOCK_PTR_FOR_FN(cfun));
+ 	}
+ 	gsi = gsi_after_labels(bb);
+-	stackleak_add_track_stack(&gsi, false);
++	stackleak_add_track_stack(&gsi);
+ 
+ 	return 0;
+ }
+@@ -185,12 +168,20 @@ static bool large_stack_frame(void)
+ /*
+  * Work with the RTL representation of the code.
+  * Remove the unneeded stackleak_track_stack() calls from the functions
+- * which don't call alloca() and don't have a large enough stack frame size.
++ * that don't have a large enough stack frame size.
+  */
+ static unsigned int stackleak_cleanup_execute(void)
+ {
+ 	rtx_insn *insn, *next;
+ 
++	/*
++	 * gcc before version 7 called allocate_dynamic_stack_space() from
++	 * expand_stack_vars() for runtime alignment of constant-sized stack
++	 * variables. That caused cfun->calls_alloca to be set for functions
++	 * that don't use alloca().
++	 * For more info see gcc commit 7072df0aae0c59ae437e.
++	 * Let's leave such functions instrumented.
++	 */
+ 	if (cfun->calls_alloca)
+ 		return 0;
+ 
+-- 
+2.25.2
 
-While this is pretty interesting abuse of the macros, please get rid
-of it. I'm sure code will look better as a result.
-
-> +static int mt6360_fled_strobe_set(
-> +			       struct led_classdev_flash *fled_cdev, bool state)
-> +{
-> +	struct led_classdev *led_cdev =3D &fled_cdev->led_cdev;
-> +	struct mt6360_led_data *mld =3D dev_get_drvdata(led_cdev->dev->parent);
-> +	struct mt6360_fled_classdev *mtfled_cdev =3D (void *)fled_cdev;
-> +	int id =3D mtfled_cdev->index, ret;
-> +
-> +	if (!(state ^ test_bit(id, &mld->fl_strobe_flags)))
-> +		return 0;
-
-Yup, and you can abuse xor operator too. Don't do that. I believe you
-wanted to say:
-
-+	if (state =3D=3D test_bit(id, &mld->fl_strobe_flags))
-+		return 0;
-
-
-> +	if (mt6360_fled_check_flags_if_any(&mld->fl_torch_flags)) {
-> +		dev_err(led_cdev->dev,
-> +			"Disable all leds torch [%lu]\n", mld->fl_torch_flags);
-> +		return -EINVAL;
-> +	}
-> +	ret =3D regmap_update_bits(mld->regmap, mtfled_cdev->cs_enable_reg,
-> +				 mtfled_cdev->cs_enable_mask, state ? 0xff : 0);
-> +	if (ret < 0) {
-> +		dev_err(led_cdev->dev, "Fail to set cs enable [%d]\n", state);
-> +		goto out_strobe_set;
-> +	}
-
-Just return ret; no need for goto. (Please fix globally).
-
-> +static int mt6360_fled_brightness_set(struct led_classdev *led_cdev,
-> +				      enum led_brightness brightness)
-> +{
-> +	struct led_classdev_flash *lcf =3D lcdev_to_flcdev(led_cdev);
-> +	struct mt6360_led_data *mld =3D dev_get_drvdata(led_cdev->dev->parent);
-> +	struct mt6360_fled_classdev *mtfled_cdev =3D (void *)lcf;
-> +	int id =3D mtfled_cdev->index, shift, keep, ret;
-> +
-> +	if (mt6360_fled_check_flags_if_any(&mld->fl_strobe_flags)) {
-> +		dev_err(led_cdev->dev,
-> +		       "Disable all leds strobe [%lu]\n", mld->fl_strobe_flags);
-> +		return -EINVAL;
-> +	}
-> +	if (brightness =3D=3D LED_OFF) {
-> +		clear_bit(id, &mld->fl_torch_flags);
-> +		keep =3D mt6360_fled_check_flags_if_any(&mld->fl_torch_flags);
-> +		ret =3D regmap_update_bits(mld->regmap,
-> +					 mtfled_cdev->torch_enable_reg,
-> +					 mtfled_cdev->torch_enable_mask,
-> +					 keep ? 0xff : 0);
-> +		if (ret < 0) {
-> +			dev_err(led_cdev->dev, "Fail to set torch disable\n");
-> +			goto out_bright_set;
-> +		}
-> +		ret =3D regmap_update_bits(mld->regmap,
-> +					 mtfled_cdev->cs_enable_reg,
-> +					 mtfled_cdev->cs_enable_mask, 0);
-> +		if (ret < 0)
-> +			dev_err(led_cdev->dev, "Fail to set torch disable\n");
-> +		goto out_bright_set;
-> +	}
-
-Should turning off the led go to separate function?
-
-
-
-> +#define MT6360_FLED_DESC(_id)  {					\
-> +	.fl_cdev =3D {							\
-> +	 .led_cdev =3D {							\
-> +		.name =3D "mt6360_fled_ch" #_id,				\
-> +		.max_brightness =3D MT6360_TORBRIGHT_MAX##_id,		\
-> +		.brightness_set_blocking =3D  mt6360_fled_brightness_set,	\
-> +		.brightness_get =3D mt6360_fled_brightness_get,		\
-> +		.flags =3D LED_DEV_CAP_FLASH,				\
-> +	 },								\
-> +	 .brightness =3D {						\
-> +		.min =3D MT6360_STROBECUR_MIN,				\
-> +		.step =3D MT6360_STROBECUR_STEP,				\
-> +		.max =3D MT6360_STROBECUR_MAX,				\
-> +		.val =3D MT6360_STROBECUR_MIN,				\
-> +	 },								\
-> +	 .timeout =3D {							\
-> +		.min =3D MT6360_STRBTIMEOUT_MIN,				\
-> +		.step =3D MT6360_STRBTIMEOUT_STEP,			\
-> +		.max =3D MT6360_STRBTIMEOUT_MAX,				\
-> +		.val =3D MT6360_STRBTIMEOUT_MIN,				\
-> +	 },								\
-> +	 .ops =3D &mt6360_fled_ops,					\
-> +	},								\
-> +	.index =3D MT6360_FLED_CH##_id,					\
-> +	.cs_enable_reg =3D MT6360_CSENABLE_REG##_id,			\
-> +	.cs_enable_mask =3D MT6360_CSENABLE_MASK##_id,			\
-> +	.torch_bright_reg =3D MT6360_TORBRIGHT_REG##_id,			\
-> +	.torch_bright_mask =3D MT6360_TORBRIGHT_MASK##_id,		\
-> +	.torch_enable_reg =3D MT6360_TORENABLE_REG##_id,			\
-> +	.torch_enable_mask =3D MT6360_TORENABLE_MASK##_id,		\
-> +	.strobe_bright_reg =3D MT6360_STRBRIGHT_REG##_id,			\
-> +	.strobe_bright_mask =3D MT6360_STRBRIGHT_MASK##_id,		\
-> +	.strobe_enable_reg =3D MT6360_STRBENABLE_REG##_id,		\
-> +	.strobe_enable_mask =3D MT6360_STRBENABLE_MASK##_id,		\
-> +}
-> +
-> +static const struct mt6360_fled_classdev def_fled_classdev[MT6360_FLED_M=
-AX] =3D {
-> +	MT6360_FLED_DESC(1),
-> +	MT6360_FLED_DESC(2),
-> +};
-
-Yeah, well, no.
-
-> @@ -236,5 +241,4 @@ struct mt6360_pmu_data {
->  #define CHIP_VEN_MASK				(0xF0)
->  #define CHIP_VEN_MT6360				(0x50)
->  #define CHIP_REV_MASK				(0x0F)
-> -
->  #endif /* __MT6360_H__ */
-
-This one is unrelated and not really an improvement.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---gTtJ75FAzB1T2CN6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtj8NQAKCRAw5/Bqldv6
-8tGJAKCk/tQlh2dphyQmGz3W4P1KLZfCFgCfW2DcYsCMqf6HOjZrQg7Tw9n6pDg=
-=oa9M
------END PGP SIGNATURE-----
-
---gTtJ75FAzB1T2CN6--
