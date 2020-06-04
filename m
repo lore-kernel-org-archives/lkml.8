@@ -2,398 +2,109 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3200BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26B5207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A45720872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="dnkopTmg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pgR/6JaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgFDMnW (ORCPT
+        id S1728005AbgFDMoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:43:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
+        Thu, 4 Jun 2020 08:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgFDMnU (ORCPT
+        with ESMTP id S1726003AbgFDMoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:43:20 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CABC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:43:20 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id w1so5772070qkw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:43:20 -0700 (PDT)
+        Thu, 4 Jun 2020 08:44:13 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BC0C08C5C0;
+        Thu,  4 Jun 2020 05:44:13 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id dp10so2795805qvb.10;
+        Thu, 04 Jun 2020 05:44:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AAk4apw0tPkpx+v42w8OxrwItXcj6jJnR/oP+5jlPEo=;
-        b=dnkopTmgMhziXOlRGGOw+IrcSBzXoNLVw3dMgoS3pEDafR7B6C2v7vvcPfndTbmSLx
-         pzMBJCAxbOyIx87FxGVnY9LL6lAnyQa6l29LsVCQMgOMDoI+2qhk75G5DDZXZMorx7GJ
-         mRXtEihTsiojPM9rZpmZTHSMkPZWoAoZ/00Silx6MnuDXNAklzHI9fUprYvbWYwzSb12
-         3vjvAdKrQwI7c7E9P6rFNYWXE+cPROhNKRcHYnarBfAGBOQcyqm9gRU+LsYuLjxpeO9C
-         6LJEK8cTJjoVpiAL8G2nOLVgoeOFDTk0C2xEmDy1D764xnZxZS/0qw9xEGuhADYEe7Dt
-         roWg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SjLnQZ46lUbHvc3PkUxiHDXKl5I0zjvuEJ2uPwsxzI8=;
+        b=pgR/6JaOszrzbplONJz2cHfFaCUGS0thtHFez6ULWs8Iosj/kMc4w+SGq+CzSVwxgj
+         n/8hUyIny/XflYy1ZN0HjwftKbam5yhism9DK3FilsGSqlpAEmlZ5+SeOEtKVKY1ofEx
+         9FNLoWnJq/8biZCB/1FE4C1rHzhKMp++V0/l4fIKaCaod7ZMHVYjDS2EsHCv2p95PVmz
+         1xS16UWAD6YAcR7WGtMJFjfjtRM4fYx1OXKQOeuymN66xeLMHGdBI+guTLYFvBXlF1rH
+         bYpYriPRDvRWVyMA5FQpk8XHGZrfEGXQ1lc4aKBtUjJCUiOVtdmA6fPu0poJHP7gJaqk
+         X7Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AAk4apw0tPkpx+v42w8OxrwItXcj6jJnR/oP+5jlPEo=;
-        b=MO12FrN01IefjDCGMv9xWsCX0b5xHtX22XCuheqzZOkkDbTbKxm2nYpOmLkhmX45C4
-         kytlCb7/8ViLW7xL0n0iJzc+wUkc1uacyYxm8e5V4i+1FbLg6dGvfT2PjtWdVAwbT1Qa
-         JOKlXRbaoIjKHj8las1lLFyC87IFtxsWzStC1j8JERH9QFsusCvz470UBEq5RRNEzHZn
-         q+ZAgmF2GOJVWyUmV+IDoxTUBHkXaiwVhq3OMj0Jan9eAR+i7zOMTpNncZyeeQJ/rWfA
-         9ifowosit3HJhMLA8au5OPVKdnNPvWkc+lm7D9teAaj/ZbK8xIlTyZtUpEUGjFdv06Qw
-         l9FA==
-X-Gm-Message-State: AOAM532GhtKrZ7JLPUyBFH0yfoNCQ/Dk9b4KQt2AF9pIMIw3JIFT7N7t
-        dV0fb6pqnPLROFa/sV4HGqk8UsXxgO1RDn0LPsZm7/Bs
-X-Google-Smtp-Source: ABdhPJzP4ul/j9n//MCcyYjMQgizKb4I6M9itO5F/T4etTotiMHO/vX+d15z0UhKzyoQoBKrkbrtZfk47kbC0dF2YtE=
-X-Received: by 2002:a37:dd6:: with SMTP id 205mr4273510qkn.323.1591274599280;
- Thu, 04 Jun 2020 05:43:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SjLnQZ46lUbHvc3PkUxiHDXKl5I0zjvuEJ2uPwsxzI8=;
+        b=Y5FmMBBj+BzF4aclC3zUjOuy1TrzhWEqjFqMlzFt1nmMRkv8N6ohcJ+PGkHhNgICUT
+         KrLuZglZ5CKU7rpxscD+05uyDFeR+IXVK2ZX58NR9CPwWBW0wRmBcaJZV8ZBom/lpA9u
+         Kz5jm3pAmP+NngWD7/qBRlqP0XhaxQlB4o5X6g40BtAE005JZhOocft1cZU4GofsHVyL
+         15FvNtcw9y0AGe/1Ep9CftYxgNSMnZ9nVpk2yyzoWSnE06CpWDDtkbJkkakh8YaMuT6i
+         lobENuu5BUj1XC3b/zUtmVHuv2G29oQN8+tKAdMGvmhDqKNWLNdMqA5DErjSCWhOMAuh
+         SrWg==
+X-Gm-Message-State: AOAM533MYN+t9T5X9CQPo30nwEz7wnxQghXRTTqepqZkzwu/2V6WUo71
+        /C+/Xz2H+hjObPY2+GM3RW6JzTXe
+X-Google-Smtp-Source: ABdhPJwk9NDtjNNxuy+/sFNOoOaj07rkvuAtcSdE6Ozd3bA8dTGYOjcG4WiRbf2pwSalhdjb1NJmYg==
+X-Received: by 2002:ad4:5512:: with SMTP id az18mr4537708qvb.51.1591274652710;
+        Thu, 04 Jun 2020 05:44:12 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:1172:51aa:9d42:fe87? ([2601:282:803:7700:1172:51aa:9d42:fe87])
+        by smtp.googlemail.com with ESMTPSA id o3sm4806783qkj.97.2020.06.04.05.44.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 05:44:11 -0700 (PDT)
+Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus' tree
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+References: <20200511130015.37103884@canb.auug.org.au>
+ <20200602092040.5ef52300@canb.auug.org.au>
+ <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
+ <20200604112606.25ffde35@canb.auug.org.au>
+ <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
+ <20200604064149.GT19286@gauss3.secunet.de>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <9b338449-e342-96ab-0ba1-a73058fac037@gmail.com>
+Date:   Thu, 4 Jun 2020 06:44:10 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200516064507.19058-1-warthog618@gmail.com>
-In-Reply-To: <20200516064507.19058-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 4 Jun 2020 14:43:08 +0200
-Message-ID: <CAMpxmJUbC4qmUGM0Z-6hXsYPRSpEpNM7iXgc7XbMcf_epi0Lig@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200604064149.GT19286@gauss3.secunet.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sob., 16 maj 2020 o 08:45 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
-):
->
-> Add a new version of the uAPI to address existing 32/64bit alignment
-> issues, add support for debounce, and provide some future proofing by
-> adding padding reserved for future use.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
->
+On 6/4/20 12:41 AM, Steffen Klassert wrote:
+> On Wed, Jun 03, 2020 at 08:55:01PM -0600, David Ahern wrote:
+>> On 6/3/20 7:26 PM, Stephen Rothwell wrote:
+>>>
+>>> And now the net-next tree has been merged into Linus' tree without this fix :-(
+>>>
+>>
+>> I took a look earlier and I think it is fine. Some code was moved around
+>> in ipsec-next and I think the merge is good. I'll run the test cases
+>> later this week and double check. Thanks for the reminder
+> 
+> The setting of XFRM_TRANSFORMED moved to xfrm_output() and depends
+> on CONFIG_NETFILTER. So I think the fix is needed. After the merge
+> of the net tree today, I have both conflicting patches patches in
+> the ipsec tree. I'd apply the fix from Stephen unless you say
+> it is not needed.
+> 
 
-I'm a bit late to the party but here's my review.
-
->
->  include/uapi/linux/gpio.h | 204 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 197 insertions(+), 7 deletions(-)
->
-> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> index 0206383c0383..3db7e0bc1312 100644
-> --- a/include/uapi/linux/gpio.h
-> +++ b/include/uapi/linux/gpio.h
-> @@ -14,6 +14,9 @@
->  #include <linux/ioctl.h>
->  #include <linux/types.h>
->
-> +/* The maximum size of name and label arrays */
-> +#define GPIO_MAX_NAME_SIZE 32
-> +
->  /**
->   * struct gpiochip_info - Information about a certain GPIO chip
->   * @name: the Linux kernel name of this GPIO chip
-> @@ -27,6 +30,184 @@ struct gpiochip_info {
->         __u32 lines;
->  };
->
-> +/* Maximum number of requested lines */
-> +#define GPIOLINES_MAX 64
-> +
-> +enum gpioline_direction {
-> +       GPIOLINE_DIRECTION_INPUT        =3D 1,
-> +       GPIOLINE_DIRECTION_OUTPUT       =3D 2,
-> +};
-> +
-> +enum gpioline_drive {
-> +       GPIOLINE_DRIVE_PUSH_PULL        =3D 0,
-> +       GPIOLINE_DRIVE_OPEN_DRAIN       =3D 1,
-> +       GPIOLINE_DRIVE_OPEN_SOURCE      =3D 2,
-> +};
-> +
-> +enum gpioline_bias {
-> +       GPIOLINE_BIAS_DISABLE           =3D 0,
-> +       GPIOLINE_BIAS_PULL_UP           =3D 1,
-> +       GPIOLINE_BIAS_PULL_DOWN         =3D 2,
-> +};
-> +
-> +enum gpioline_edge {
-> +       GPIOLINE_EDGE_NONE              =3D 0,
-> +       GPIOLINE_EDGE_RISING            =3D 1,
-> +       GPIOLINE_EDGE_FALLING           =3D 2,
-> +       GPIOLINE_EDGE_BOTH              =3D 3,
-> +};
-
-I would skip the names of the enum types if we're not reusing them anywhere=
-.
-
-> +
-> +/* Line flags - V2 */
-> +#define GPIOLINE_FLAG_V2_KERNEL                (1UL << 0) /* Line used b=
-y the kernel */
-
-In v1 this flag is also set if the line is used by user-space. Maybe a
-simple GPIOLINE_FLAG_V2_USED would be better?
-
-> +#define GPIOLINE_FLAG_V2_ACTIVE_LOW    (1UL << 1)
-> +#define GPIOLINE_FLAG_V2_DIRECTION     (1UL << 2)
-> +#define GPIOLINE_FLAG_V2_DRIVE         (1UL << 3)
-> +#define GPIOLINE_FLAG_V2_BIAS          (1UL << 4)
-> +#define GPIOLINE_FLAG_V2_EDGE_DETECTION        (1UL << 5)
-> +#define GPIOLINE_FLAG_V2_DEBOUNCE      (1UL << 6)
-> +
-> +/**
-> + * struct gpioline_config - Configuration for GPIO lines
-> + * @default_values: if the direction is GPIOLINE_DIRECTION_OUTPUT, this
-> + * specifies the default output value, should be 0 (low) or 1 (high),
-> + * anything else than 0 or 1 will be interpreted as 1 (high)
-> + * @flags: flags for the GPIO lines, such as GPIOLINE_FLAG_V2_ACTIVE_LOW=
-,
-> + * GPIOLINE_FLAG_V2_DIRECTION etc, OR:ed together
-> + * @direction: if GPIOLINE_FLAG_V2_DIRECTION is set in flags, the desire=
-d
-> + * direction for the requested lines, with a value from enum
-> + * gpioline_direction
-> + * @drive: if GPIOLINE_FLAG_V2_DRIVE is set in flags, the desired drive =
-for
-> + * the requested lines, with a value from enum gpioline_drive
-> + * @bias: if GPIOLINE_FLAG_V2_BIAS is set in flags, the desired bias for
-> + * the requested lines, with a value from enum gpioline_bias
-> + * @edge_detection: if GPIOLINE_FLAG_V2_EDGE_DETECTION is set in flags, =
-the
-> + * desired edge_detection for the requested lines, with a value from enu=
-m
-> + * gpioline_edge
-> + * @debounce: if GPIOLINE_FLAG_V2_DEBOUNCE is set in flags, the desired
-> + * debounce period for the requested lines, in microseconds
-> + * @padding: reserved for future use and should be zero filled
-> + */
-> +struct gpioline_config {
-> +       __u8 default_values[GPIOLINES_MAX];
-
-As I said elsewhere - bitfield is fine here for me: for instance a single u=
-64.
-
-> +       __u32 flags;
-> +       __u8 direction;
-> +       __u8 drive;
-> +       __u8 bias;
-> +       __u8 edge_detection;
-> +       __u32 debounce;
-
-Maybe debounce_time for clarity?
-
-> +       __u32 padding[7]; /* for future use */
-> +};
-> +
-> +/**
-> + * struct gpioline_request - Information about a request for GPIO lines
-> + * @offsets: an array of desired lines, specified by offset index for th=
-e
-> + * associated GPIO device
-> + * @consumer: a desired consumer label for the selected GPIO lines such
-> + * as "my-bitbanged-relay"
-> + * @config: Requested configuration for the requested lines. Note that
-> + * even if multiple lines are requested, the same configuration must be
-> + * applicable to all of them. If you want lines with individual
-> + * configuration, request them one by one. It is possible to select a
-> + * batch of input or output lines, but they must all have the same
-> + * configuration, i.e. all inputs or all outputs, all active low etc
-> + * @lines: number of lines requested in this request, i.e. the number of
-> + * valid fields in the GPIOLINES_MAX sized arrays, set to 1 to request a
-> + * single line
-> + * @padding: reserved for future use and should be zero filled
-> + * @fd: if successful this field will contain a valid anonymous file han=
-dle
-> + * after a GPIO_GET_LINE_IOCTL operation, zero or negative value means
-> + * error
-> + */
-> +struct gpioline_request {
-> +       __u32 offsets[GPIOLINES_MAX];
-> +       char consumer[GPIO_MAX_NAME_SIZE];
-> +       struct gpioline_config config;
-> +       __u32 lines;
-
-Maybe num_lines would be clearer?
-
-> +       __u32 padding[4]; /* for future use */
-> +       __s32 fd;
-> +};
-> +
-> +/**
-> + * struct gpioline_values - Values of GPIO lines
-> + * @values: when getting the state of lines this contains the current
-> + * state of a line, when setting the state of lines these should contain
-> + * the desired target state
-> + */
-> +struct gpioline_values {
-> +       __u8 values[GPIOLINES_MAX];
-
-Same here for bitfield. And maybe reuse this structure in
-gpioline_config for default values?
-
-> +};
-> +
-> +/**
-> + * struct gpioline_info_v2 - Information about a certain GPIO line
-> + * @name: the name of this GPIO line, such as the output pin of the line=
- on
-> + * the chip, a rail or a pin header name on a board, as specified by the
-> + * gpio chip, may be empty
-> + * @consumer: a functional name for the consumer of this GPIO line as se=
-t
-> + * by whatever is using it, will be empty if there is no current user bu=
-t
-> + * may also be empty if the consumer doesn't set this up
-> + * @offset: the local offset on this GPIO device, fill this in when
-> + * requesting the line information from the kernel
-> + * @flags: various flags for this line
-> + * @direction: if GPIOLINE_FLAG_V2_DIRECTION is set in flags, the direct=
-ion
-> + * of the line, with a value from enum gpioline_direction
-> + * @drive: if GPIOLINE_FLAG_V2_DRIVE is set in flags, the drive for the
-> + * line, with a value from enum gpioline_drive
-> + * @bias: if GPIOLINE_FLAG_V2_BIAS is set in flags, the bias for the lin=
-e,
-> + * with a value from enum gpioline_bias
-> + * @edge_detection: if GPIOLINE_FLAG_V2_EDGE_DETECTION is set in flags, =
-the
-> + * edge_detection for the line, with a value from enum gpioline_edge
-> + * @debounce: if GPIOLINE_FLAG_V2_DEBOUNCE is set in flags, the debounce
-> + * period for the line, in microseconds
-> + * @padding: reserved for future use
-> + */
-> +struct gpioline_info_v2 {
-> +       char name[GPIO_MAX_NAME_SIZE];
-> +       char consumer[GPIO_MAX_NAME_SIZE];
-> +       __u32 offset;
-> +       __u32 flags;
-> +       __u8 direction;
-> +       __u8 drive;
-> +       __u8 bias;
-> +       __u8 edge_detection;
-> +       __u32 debounce;
-> +       __u32 padding[12]; /* for future use */
-> +};
-> +
-> +/**
-> + * struct gpioline_info_changed_v2 - Information about a change in statu=
-s
-> + * of a GPIO line
-> + * @info: updated line information
-> + * @timestamp: estimate of time of status change occurrence, in nanoseco=
-nds
-> + * and GPIOLINE_CHANGED_CONFIG
-> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELE=
-ASED
-> + * @padding: reserved for future use
-> + */
-> +struct gpioline_info_changed_v2 {
-> +       struct gpioline_info_v2 info;
-> +       __u64 timestamp;
-> +       __u32 event_type;
-> +       __u32 padding[5]; /* for future use */
-> +};
-> +
-> +enum gpioline_event_id {
-> +       GPIOLINE_EVENT_RISING_EDGE      =3D 1,
-> +       GPIOLINE_EVENT_FALLING_EDGE     =3D 2,
-> +};
-> +
-> +/**
-> + * struct gpioline_event - The actual event being pushed to userspace
-> + * @timestamp: best estimate of time of event occurrence, in nanoseconds
-> + * @id: event identifier with value from enum gpioline_event_id
-> + * @offset: the offset of the line that triggered the event
-> + * @padding: reserved for future use
-> + */
-> +struct gpioline_event {
-> +       __u64 timestamp;
-
-I'd specify in the comment the type of clock used for the timestamp.
-
-> +       __u32 id;
-> +       __u32 offset;
-> +       __u32 padding[2]; /* for future use */
-> +};
-> +
->  /* Informational flags */
->  #define GPIOLINE_FLAG_KERNEL           (1UL << 0) /* Line used by the ke=
-rnel */
->  #define GPIOLINE_FLAG_IS_OUT           (1UL << 1)
-> @@ -144,8 +325,6 @@ struct gpiohandle_config {
->         __u32 padding[4]; /* padding for future use */
->  };
->
-> -#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_=
-config)
-> -
->  /**
->   * struct gpiohandle_data - Information of values on a GPIO handle
->   * @values: when getting the state of lines this contains the current
-> @@ -156,9 +335,6 @@ struct gpiohandle_data {
->         __u8 values[GPIOHANDLES_MAX];
->  };
->
-> -#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpioha=
-ndle_data)
-> -#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpioha=
-ndle_data)
-> -
->  /* Eventrequest flags */
->  #define GPIOEVENT_REQUEST_RISING_EDGE  (1UL << 0)
->  #define GPIOEVENT_REQUEST_FALLING_EDGE (1UL << 1)
-> @@ -202,11 +378,25 @@ struct gpioevent_data {
->         __u32 id;
->  };
->
-> +/* V1 and V2 */
->  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
-> +#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0C, __u32)
-> +
-> +/* V1 */
->  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
-> -#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_=
-info)
-> -#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
->  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_re=
-quest)
->  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_requ=
-est)
-> +#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpioha=
-ndle_data)
-> +#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpioha=
-ndle_data)
-> +#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0A, struct gpiohandle_=
-config)
-> +#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0B, struct gpioline_=
-info)
-> +
-> +/* V2 */
-> +#define GPIO_GET_LINEINFO_V2_IOCTL _IOWR(0xB4, 0x0D, struct gpioline_inf=
-o_v2)
-> +#define GPIO_GET_LINEINFO_WATCH_V2_IOCTL _IOWR(0xB4, 0x0E, struct gpioli=
-ne_info_v2)
-> +#define GPIO_GET_LINE_IOCTL _IOWR(0xB4, 0x0F, struct gpioline_request)
-> +#define GPIOLINE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x10, struct gpioline_conf=
-ig)
-> +#define GPIOLINE_GET_VALUES_IOCTL _IOWR(0xB4, 0x11, struct gpioline_valu=
-es)
-> +#define GPIOLINE_SET_VALUES_IOCTL _IOWR(0xB4, 0x12, struct gpioline_valu=
-es)
->
->  #endif /* _UAPI_GPIO_H_ */
-> --
-> 2.26.2
->
-
-Bartosz
+Indeed. I must have been looking at -net. Both -net and -net-next have
+it conditional, so yes a fixup patch is needed.
