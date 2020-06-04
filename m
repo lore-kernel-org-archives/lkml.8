@@ -2,91 +2,125 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC42C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE80C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED12207D3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2550E2077D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SFLfC3R2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oMACUeDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgFDU5q (ORCPT
+        id S1729916AbgFDU5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:57:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:40895 "EHLO
+        Thu, 4 Jun 2020 16:57:53 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49842 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725952AbgFDU5h (ORCPT
+        by vger.kernel.org with ESMTP id S1729915AbgFDU5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:57:37 -0400
+        Thu, 4 Jun 2020 16:57:49 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591304257; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=/f/Ml8Uw4CsFYme7s4sIwRAl922zMOEAfEPEEjjh3ik=; b=SFLfC3R2iNrtp2BWLMj6c6NfufRmdiBNldP/+zbH6sGQ1yg0Cvkv+ufqbrHOTqdmlvOeMkRW
- kZIKiF25Zkkzv4WJxG9Tm5I2vud+ChUseF8UZuBJZfmRSfNqqB5cmL+1NZEacxnzhqQYKB1c
- 74+ryZee5FqFO9j1bYHDdRokZjk=
+ s=smtp; t=1591304268; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=tGegCLreeE39fZph91CzCOdnJ3ipf0nuM1nQAi/8hPE=; b=oMACUeDLsFbdyO8ysIC8t4JQ9NoARg70dS3IzfZclb4siDdCGiutUcR+H9hxgJlHY/WtblYs
+ za/ack7q6rp61NeprvKANvi3I+EuO+1fjaZKs2jL2DvZauAM2Oz6XrwahBH+ZaNbo2jNU5+B
+ i6G9h55Xk786qJA0VuK1CUdFrzU=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5ed9603744a25e0052288e23 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 20:57:27
+ smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
+ 5ed9602f27386861268584d5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 20:57:19
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 93819C43387; Thu,  4 Jun 2020 20:57:26 +0000 (UTC)
+        id 98CEAC433B7; Thu,  4 Jun 2020 20:57:17 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68F36C43391;
-        Thu,  4 Jun 2020 20:57:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68F36C43391
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ECAA0C433CB;
+        Thu,  4 Jun 2020 20:57:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ECAA0C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     freedreno@lists.freedesktop.org, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 6/6] arm6: dts: qcom: sm845: Set the compatible string for the GPU SMMU
-Date:   Thu,  4 Jun 2020 14:57:10 -0600
-Message-Id: <20200604205710.3167-7-jcrouse@codeaurora.org>
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sean Paul <sean@poorly.run>, Takashi Iwai <tiwai@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/6] iommu/arm-smmu: Enable split pagetable support
+Date:   Thu,  4 Jun 2020 14:57:04 -0600
+Message-Id: <20200604205710.3167-1-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200604205710.3167-1-jcrouse@codeaurora.org>
-References: <20200604205710.3167-1-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
-split pagetables.
+Another iteration of the split-pagetable support for arm-smmu and the Adreno GPU
+SMMU. After email discussions [1] we opted to make a arm-smmu implementation for
+specifically for the Adreno GPU and use that to enable split pagetable support
+and later other implementation specific bits that we need.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+On the hardware side this is very close to the same code from before [2] only
+the TTBR1 quirk is turned on by the implementation and not a domain attribute.
+In drm/msm we use the returned size of the aperture as a clue to let us know
+which virtual address space we should use for global memory objects.
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+There are two open items that you should be aware of. First, in the
+implementation specific code we have to check the compatible string of the
+device so that we only enable TTBR1 for the GPU (SID 0) and not the GMU (SID 4).
+I went back and forth trying to decide if I wanted to use the compatbile string
+or the SID as the filter and settled on the compatible string but I could be
+talked out of it.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8eb5a31346d2..8b15cd74e9ba 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3556,7 +3556,7 @@
- 		};
- 
- 		adreno_smmu: iommu@5040000 {
--			compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
-+			compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
- 			reg = <0 0x5040000 0 0x10000>;
- 			#iommu-cells = <1>;
- 			#global-interrupts = <2>;
+The other open item is that in drm/msm the hardware only uses 49 bits of the
+address space but arm-smmu expects the address to be sign extended all the way
+to 64 bits. This isn't a problem normally unless you look at the hardware
+registers that contain a IOVA and then the upper bits will be zero. I opted to
+restrict the internal drm/msm IOVA range to only 49 bits and then sign extend
+right before calling iommu_map / iommu_unmap. This is a bit wonky but I thought
+that matching the hardware would be less confusing when debugging a hang.
+
+[1] https://lists.linuxfoundation.org/pipermail/iommu/2020-May/044537.html
+[2] https://patchwork.kernel.org/patch/11482591/
+
+
+Jordan Crouse (6):
+  iommu/arm-smmu: Pass io-pgtable config to implementation specific
+    function
+  iommu/arm-smmu: Add support for split pagetables
+  dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+  iommu/arm-smmu: Add implementation for the adreno GPU SMMU
+  drm/msm: Set the global virtual address range from the IOMMU domain
+  arm6: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |  4 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 13 ++++++-
+ drivers/gpu/drm/msm/msm_iommu.c               |  7 ++++
+ drivers/iommu/arm-smmu-impl.c                 |  6 ++-
+ drivers/iommu/arm-smmu-qcom.c                 | 38 ++++++++++++++++++-
+ drivers/iommu/arm-smmu.c                      | 32 +++++++++++-----
+ drivers/iommu/arm-smmu.h                      | 29 ++++++++++----
+ 8 files changed, 108 insertions(+), 23 deletions(-)
+
 -- 
 2.17.1
 
