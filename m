@@ -2,180 +2,111 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53192C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE8B207D3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591263712;
-	bh=1Q3d66uzBYSZVsxgnp/NnELnCNnx2g8D9fS4fWf1tZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JnJ1t3JZz1I+qvCGjMqW5bjgoQwsYUoaY77PXSaTsJEAKnGBnWQFsmMg2fFj1afOV
-	 Uz6KHQb2NBOpt4Zd/YrH0rHoNah529Fhx1SswKH0IcmB4zaPtWEntx5WaeXAdXR8wv
-	 DRTLga1ykM2MrrYtINsoeMn9sOOrebu3QqrSXmbE=
+	by mail.kernel.org (Postfix) with ESMTP id 3B577207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgFDJlv (ORCPT
+        id S1728066AbgFDJnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 05:43:17 -0400
+Received: from mx.socionext.com ([202.248.49.38]:32538 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgFDJlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:41:51 -0400
-Received: from kernel.org (unknown [87.71.78.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3FDC206C3;
-        Thu,  4 Jun 2020 09:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591263710;
-        bh=1Q3d66uzBYSZVsxgnp/NnELnCNnx2g8D9fS4fWf1tZU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C4SWVhgke8okNdSNThzzm+pvB0BBxC+L9XfiRpfWwdENE32NTRySuxE9r/7AGBN52
-         VQ5bSYln8QHw7vVdtvRzDfqt4APeQDd4kA7Xe8CNmHjvD48410i6h4eSQt1s7mqDXL
-         qqxMB94j2dQ/XCuBIdXsQpiPRrpdWdkx5G8lu2ug=
-Date:   Thu, 4 Jun 2020 12:41:33 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Message-ID: <20200604094133.GC202650@kernel.org>
-References: <20200518184843.3029640-1-ira.weiny@intel.com>
- <20200519165422.GA5838@roeck-us.net>
- <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
- <20200519194215.GA71941@roeck-us.net>
- <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
- <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
- <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
- <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
- <20200603211416.GA1740285@iweiny-DESK2.sc.intel.com>
- <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
+        id S1726299AbgFDJnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:43:17 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 04 Jun 2020 18:43:14 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4CA2318009F;
+        Thu,  4 Jun 2020 18:43:14 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 4 Jun 2020 18:43:14 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id E9F061A01BB;
+        Thu,  4 Jun 2020 18:43:12 +0900 (JST)
+Received: from [10.213.31.56] (unknown [10.213.31.56])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 3637F12041F;
+        Thu,  4 Jun 2020 18:43:12 +0900 (JST)
+Subject: Re: [PATCH v3 1/6] PCI: dwc: Add msi_host_isr() callback
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1591174481-13975-2-git-send-email-hayashi.kunihiko@socionext.com>
+ <95bb3ffbfab4923854e20266c6b0b098@kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <6926b2da-5d00-b582-7d25-a8a0d7014570@socionext.com>
+Date:   Thu, 4 Jun 2020 18:43:11 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
+In-Reply-To: <95bb3ffbfab4923854e20266c6b0b098@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 04:44:17PM -0700, Guenter Roeck wrote:
+Hi Marc,
+
+On 2020/06/03 20:15, Marc Zyngier wrote:
+> On 2020-06-03 09:54, Kunihiko Hayashi wrote:
+>> This adds msi_host_isr() callback function support to describe
+>> SoC-dependent service triggered by MSI.
+>>
+>> For example, when AER interrupt is triggered by MSI, the callback function
+>> reads SoC-dependent registers and detects that the interrupt is from AER,
+>> and invoke AER interrupts related to MSI.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++----
+>>  drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+>>  2 files changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index 0a4a5aa..9b628a2 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -112,13 +112,13 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+>>  static void dw_chained_msi_isr(struct irq_desc *desc)
+>>  {
+>>      struct irq_chip *chip = irq_desc_get_chip(desc);
+>> -    struct pcie_port *pp;
+>> +    struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>
+>> -    chained_irq_enter(chip, desc);
+>> +    if (pp->ops->msi_host_isr)
+>> +        pp->ops->msi_host_isr(pp);
 > 
-> sparc32 smp images in next-20200603 still crash for me with a spinlock
-> recursion. s390 images hang early in boot. Several others (alpha, arm64,
-> various ppc) don't even compile. I can run some more bisects over time,
-> but this is becoming a full-time job :-(.
+> Why is this call outside of the enter/exit guards?
+> Do you still need to execute the standard handler?
 
-I've been able to bisect s390 hang to commit b614345f52bc ("x86/entry:
-Clarify irq_{enter,exit}_rcu()").
+I assume that the msi_host_isr() contains chained interrupts in
+the second patch and no need to treat as the standard handler,
+so this should be called in the guards.
+I'll move this call to the top of dw_chained_msi_isr().
 
-After this commit, lockdep_hardirq_exit() is called twice on s390 (and
-others) - one time in irq_exit_rcu() and another one in irq_exit():
+Thank you,
 
-/**
- * irq_exit_rcu() - Exit an interrupt context without updating RCU
- *
- * Also processes softirqs if needed and possible.
- */
-void irq_exit_rcu(void)
-{
-	__irq_exit_rcu();
-	 /* must be last! */
-	lockdep_hardirq_exit();
-}
-
-/**
- * irq_exit - Exit an interrupt context, update RCU and lockdep
- *
- * Also processes softirqs if needed and possible.
- */
-void irq_exit(void)
-{
-	irq_exit_rcu();
-	rcu_irq_exit();
-	 /* must be last! */
-	lockdep_hardirq_exit();
-}
-
-Removing the call in irq_exit() make s390 boot again, and judgung by the
-x86 entry code, the comment /* must be last! */ is stale...
-
-@Peter, @Thomas, can you comment please?
-
-From e51d50ee6f4d1f446decf91c2c67230da14ff82c Mon Sep 17 00:00:00 2001
-From: Mike Rapoport <rppt@linux.ibm.com>
-Date: Thu, 4 Jun 2020 12:37:03 +0300
-Subject: [PATCH] softirq: don't call lockdep_hardirq_exit() twice
-
-After commit b614345f52bc ("x86/entry: Clarify irq_{enter,exit}_rcu()")
-lockdep_hardirq_exit() is called twice on every architecture that uses
-irq_exit(): one time in irq_exit_rcu() and another one in irq_exit().
-
-Remove the extra call in irq_exit().
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- kernel/softirq.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index a3eb6eba8c41..7523f4ce4c1d 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -427,7 +427,6 @@ static inline void __irq_exit_rcu(void)
- void irq_exit_rcu(void)
- {
- 	__irq_exit_rcu();
--	 /* must be last! */
- 	lockdep_hardirq_exit();
- }
- 
-@@ -440,8 +439,6 @@ void irq_exit(void)
- {
- 	irq_exit_rcu();
- 	rcu_irq_exit();
--	 /* must be last! */
--	lockdep_hardirq_exit();
- }
- 
- /*
--- 
-2.26.2
-
-
-
-> Guenter
-
--- 
-Sincerely yours,
-Mike.
+Best Regards
+Kunihiko Hayashi
