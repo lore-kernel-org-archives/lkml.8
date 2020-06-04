@@ -2,107 +2,75 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2202B205CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80282072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgFDGGA (ORCPT
+        id S1726791AbgFDGJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:06:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54212 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgFDGF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:05:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 77FA1AFC1;
-        Thu,  4 Jun 2020 06:06:01 +0000 (UTC)
-Subject: Re: [PATCH] scsi: Fix incorrect usage of shost_for_each_device
-To:     Ye Bin <yebin10@huawei.com>, martin.petersen@oracle.com,
-        jejb@linux.ibm.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200518074420.39275-1-yebin10@huawei.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <c772dacb-b16a-e404-4333-ab5abf6daaf9@suse.de>
-Date:   Thu, 4 Jun 2020 08:05:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 02:09:45 -0400
+Received: from mx22.baidu.com ([220.181.50.185]:37906 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725959AbgFDGJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 02:09:44 -0400
+Received: from BC-Mail-Ex16.internal.baidu.com (unknown [172.31.51.56])
+        by Forcepoint Email with ESMTPS id 07A3E72BA719D212B263;
+        Thu,  4 Jun 2020 14:09:31 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ BC-Mail-Ex16.internal.baidu.com (172.31.51.56) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1531.3; Thu, 4 Jun 2020 14:09:30 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Thu, 4 Jun 2020 14:09:25 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "wei.huang2@amd.com" <wei.huang2@amd.com>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSF1bdjVdIEtWTTogWDg2OiBzdXBwb3J0?=
+ =?utf-8?Q?_APERF/MPERF_registers?=
+Thread-Topic: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3Y1XSBLVk06IFg4Njogc3VwcG9ydCBBUEVSRi9N?=
+ =?utf-8?Q?PERF_registers?=
+Thread-Index: AQHWNjvN8r9nufprD0OWRxID181WWai/6tGAgAGIe0D//4JRgIAHCw/A
+Date:   Thu, 4 Jun 2020 06:09:25 +0000
+Message-ID: <aa1bd610bf8d4bb5a626cd5dd6af17d3@baidu.com>
+References: <1590813353-11775-1-git-send-email-lirongqing@baidu.com>
+ <3f931ecf-7f1c-c178-d18c-46beadd1d313@intel.com>
+ <e7ccee7dc30e4d1e8dcb8a002d6a6ed2@baidu.com>
+ <9c870a06-ee46-5c9d-11c0-602aeb18c83d@intel.com>
+In-Reply-To: <9c870a06-ee46-5c9d-11c0-602aeb18c83d@intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.198.10]
+x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex16_2020-06-04 14:09:30:838
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200518074420.39275-1-yebin10@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 9:44 AM, Ye Bin wrote:
-> shost_for_each_device(sdev, shost) \
-> 	for ((sdev) = __scsi_iterate_devices((shost), NULL); \
-> 	     (sdev); \
-> 	     (sdev) = __scsi_iterate_devices((shost), (sdev)))
-> 
-> When terminating shost_for_each_device() iteration with break or return,
-> scsi_device_put() should be used to prevent stale scsi device references from
-> being left behind.
-> 
-> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> ---
->   drivers/scsi/scsi_error.c | 2 ++
->   drivers/scsi/scsi_lib.c   | 4 +++-
->   2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-> index 978be1602f71..927b1e641842 100644
-> --- a/drivers/scsi/scsi_error.c
-> +++ b/drivers/scsi/scsi_error.c
-> @@ -1412,6 +1412,7 @@ static int scsi_eh_stu(struct Scsi_Host *shost,
->   				sdev_printk(KERN_INFO, sdev,
->   					    "%s: skip START_UNIT, past eh deadline\n",
->   					    current->comm));
-> +			scsi_device_put(sdev);
->   			break;
->   		}
->   		stu_scmd = NULL;
-> @@ -1478,6 +1479,7 @@ static int scsi_eh_bus_device_reset(struct Scsi_Host *shost,
->   				sdev_printk(KERN_INFO, sdev,
->   					    "%s: skip BDR, past eh deadline\n",
->   					     current->comm));
-> +			scsi_device_put(sdev);
->   			break;
->   		}
->   		bdr_scmd = NULL;
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index be1a4a9a5fca..173bc7fc2836 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -2859,8 +2859,10 @@ scsi_host_unblock(struct Scsi_Host *shost, int new_state)
->   
->   	shost_for_each_device(sdev, shost) {
->   		ret = scsi_internal_device_unblock(sdev, new_state);
-> -		if (ret)
-> +		if (ret) {
-> +			scsi_device_put(sdev);
->   			break;
-> +		}
->   	}
->   	return ret;
->   }
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+PiBJTU8sIElmIHdlIHJlYWxseSB3YW50IHRvIGVuc3VyZSB0aGUgY29ycmVjdG5lc3Mgb2YgdXNl
+cnNwYWNlIHByb3ZpZGVkIENQVUlEDQo+IHNldHRpbmdzLCB3ZSBuZWVkIHRvIHJldHVybiBFUlJP
+UiB0byB1c2Vyc3BhY2UgaW5zdGVhZCBvZiBmaXhpbmcgaXQgc2lsaWVudGx5Lg0KPiANCg0KT2sg
+LCBJIHdpbGwgbWFrZSBpdCByZXR1cm4gYSBlcnJvcg0KDQpUaGFua3MNCg0KLUxpDQoNCg0KPiAt
+IFhpYW95YW8NCg==
