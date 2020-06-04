@@ -2,113 +2,159 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4635CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC8EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E21D2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591269210;
-	bh=Nbi1Vwcd5pL6Yj4orLCRo0b8veuEtH1O87IQWqOBnuw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SpkIGFfy0Z86TI5uHC2YX7QlI2h6oTN1Q7m7Hxc3Hko8v1PuwtAFhxYAzOvCCoZFm
-	 xI8vE9ovxTvBA2OdmGblZoifHsyD5lTeAiiqPzcUR1R38N1r2H+LgvKubZxLjjG9z8
-	 cGNJi8b8QYGPNOTNi458Tqr78zu1+2IJtGiEfuj8=
+	by mail.kernel.org (Postfix) with ESMTP id 23BDA206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mkgwdtgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgFDLN3 (ORCPT
+        id S1726332AbgFDLN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56366 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 07:13:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:58609 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgFDLN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:13:28 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726061AbgFDLN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 07:13:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591269237; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=FGQ3twZFTwvr0xbvXHPXtxfqUMKDj7xP+zfVZfXNXqM=;
+ b=mkgwdtgSqKV7FAIB1w9cI+Lwy4W2xLnku5yJOYdBDVXAhFIZwjkjsoU8aeRz62QNtz42VjsU
+ xmqtEVLeS/Y2bma9Hj69j6i26acWmiLrufA6H7ZiO/nXVR9Nz5hAaloby+MctEy3A+AlTcDF
+ FcDAnF88EkJjLF3LK2f6Ffvp89s=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
+ 5ed8d76e9077f356cba8c2e8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 11:13:50
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E1C17C433C6; Thu,  4 Jun 2020 11:13:49 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3429A206A2;
-        Thu,  4 Jun 2020 11:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591269207;
-        bh=Nbi1Vwcd5pL6Yj4orLCRo0b8veuEtH1O87IQWqOBnuw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QgWPc37BTO8K8KgGK1UajZ4b1MCZp4/zWB7ShZWgSgr3nnMQE0L8sIsE/S0nbnzO9
-         lrtYt89a2iu+JABD68eS4UqgsyTh/wUvkBWpj0b++mqrOOKdpoabFEnSaaEV4A8b0+
-         t0TNMpIQtA+hTVfAFtQJ+iUK8E4prnVk+GlFKm1o=
-Date:   Thu, 4 Jun 2020 12:13:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
- strings
-Message-ID: <20200604111325.GC6644@sirena.org.uk>
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-3-f.fainelli@gmail.com>
- <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
+        (Authenticated sender: ppvk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35603C433CA;
+        Thu,  4 Jun 2020 11:13:49 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
-Content-Disposition: inline
-In-Reply-To: <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
-X-Cookie: VMS version 2.0 ==>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 04 Jun 2020 16:43:49 +0530
+From:   ppvk@codeaurora.org
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
+        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V1 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
+ support
+In-Reply-To: <29826613b412e4f4db4289e292a1fe57@codeaurora.org>
+References: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
+ <1591175376-2374-2-git-send-email-ppvk@codeaurora.org>
+ <29826613b412e4f4db4289e292a1fe57@codeaurora.org>
+Message-ID: <8865e3b00fce4f28264b60cd498fcf02@codeaurora.org>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sibi,
 
---H8ygTp4AXg6deix2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for the review!!
 
-On Thu, Jun 04, 2020 at 06:20:38AM +0200, Lukas Wunner wrote:
-> On Wed, Jun 03, 2020 at 08:46:54PM -0700, Florian Fainelli wrote:
-> > The BCM2711 SoC features 5 SPI controllers which all share the same
-> > interrupt line, the SPI driver needs to support interrupt sharing,
-> > therefore use the chip specific compatible string to help with that.
+On 2020-06-03 17:22, Sibi Sankar wrote:
+> Hey Pradeep,
+> Thanks for the patch.
+> 
+> On 2020-06-03 14:39, Pradeep P V K wrote:
+>> Interconnect bandwidth scaling support is now added as a
+>> part of OPP [1]. So, make sure interconnect driver is ready
+>> before handling interconnect scaling.
+>> 
+>> This change is based on
+>> [1] [Patch v8] Introduce OPP bandwidth bindings
+>> (https://lkml.org/lkml/2020/5/12/493)
+>> 
+>> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
+>> for dev_pm_opp_of_add_table()
+>> (https://lkml.org/lkml/2020/5/5/491)
+>> 
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> ---
+>>  drivers/mmc/host/sdhci-msm.c | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>> 
+>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>> b/drivers/mmc/host/sdhci-msm.c
+>> index b277dd7..bf95484 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -14,6 +14,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/iopoll.h>
+>>  #include <linux/regulator/consumer.h>
+>> +#include <linux/interconnect.h>
+>> 
+>>  #include "sdhci-pltfm.h"
+>>  #include "cqhci.h"
+>> @@ -1999,6 +2000,7 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  	struct sdhci_pltfm_host *pltfm_host;
+>>  	struct sdhci_msm_host *msm_host;
+>>  	struct clk *clk;
+>> +	struct icc_path *sdhc_path;
+>>  	int ret;
+>>  	u16 host_version, core_minor;
+>>  	u32 core_version, config;
+>> @@ -2070,6 +2072,20 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  	}
+>>  	msm_host->bulk_clks[0].clk = clk;
+>> 
+>> +	/* Make sure that ICC driver is ready for interconnect bandwdith
+>> +	 * scaling before registering the device for OPP.
+>> +	 */
+>> +	sdhc_path = of_icc_get(&pdev->dev, NULL);
+>> +	ret = PTR_ERR_OR_ZERO(sdhc_path);
+>> +	if (ret) {
+>> +		if (ret == -EPROBE_DEFER)
+>> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
+>> +		else
+>> +			dev_err(&pdev->dev, "failed to get icc path:%d\n", ret);
+>> +		goto bus_clk_disable;
+>> +	}
+>> +	icc_put(sdhc_path);
+> 
+> ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
+> 
+> since there are multiple paths
+> described in the bindings you
+> should use ^^ instead and you
+> can drop temporary path as well.
+> 
+Ok. of_icc_get() used above is only to test if ICC driver is ready or 
+not. I'm not
+really using the multiple paths here. Anyhow i will use 
+dev_pm_opp_of_find_icc_paths()
+to get rid of some extra lines of code.
 
-> You're saying above that the 5 controllers all share the interrupt
-> but below you're only changing the compatible string of 4 controllers.
-
-> So I assume spi0 still has its own interrupt and only the additional
-> 4 controllers present on the BCM2711/BCM7211 share their interrupt?
-
-Regardless of what's going on with the interrupts the compatible string
-should reflect the IP version so unless for some reason someone taped
-out two different versions of the IP it seems odd that the compatible
-strings would vary within a given SoC.
-
---H8ygTp4AXg6deix2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y11QACgkQJNaLcl1U
-h9BJoQf9E2n8uWIZEAGBfspqHbovoYPVluN+kh7+8y5BKxaA1Wz41xV3hGzU3Wzl
-gEH2zebNk9eIG8IUALFCgrMLhlRBwBVV5D4LB5dVMvuwNWDeJOUs3cgBVuI8cd83
-+avoXuMxBVRfhlC6JnUGrqHFPwpdBrcmfOK51jkDqZfoLdlm/ICsnWQBJPsfYTE1
-iunoxY5P1vldrejYbghjoIn5OgtfDDV52cH68De5WX9srhWs8pwI+ZyXNmwuHt7d
-FStC87OY8PDFPkpoF3wpmfF2BQPpzbn/b//Hyco7fg+NUJ+hMFNynSn+tcp5fgYB
-R1ryNcVXhixXytOvVz7v7fBb8AtCxw==
-=gHMp
------END PGP SIGNATURE-----
-
---H8ygTp4AXg6deix2--
+>> +
+>>  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
+>>  	if (IS_ERR(msm_host->opp_table)) {
+>>  		ret = PTR_ERR(msm_host->opp_table);
