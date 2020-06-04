@@ -2,61 +2,63 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADCD220756
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190B2206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pwMJgwX+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFOe7x6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgFDDrB (ORCPT
+        id S1727794AbgFDDrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38650 "EHLO
+        Wed, 3 Jun 2020 23:47:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgFDDrA (ORCPT
+        with ESMTP id S1727078AbgFDDrE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:47:00 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB29C03E96D;
-        Wed,  3 Jun 2020 20:46:59 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p30so2901551pgl.11;
-        Wed, 03 Jun 2020 20:46:59 -0700 (PDT)
+        Wed, 3 Jun 2020 23:47:04 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278A8C03E96D;
+        Wed,  3 Jun 2020 20:47:03 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id j1so2580891pfe.4;
+        Wed, 03 Jun 2020 20:47:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vIelIHMHC9bmcO62i5sJQbllpydzbql+AW2fKGKLm8w=;
-        b=pwMJgwX+JwNqqrwv3Yn6+talwqvr3l+j3eiRhOeemebCxVbfw3/Jh3bCdkVn3S9hdn
-         1P6mxCJuELmrmk11evGM07gHh65TJ4x2tmyyl76BWNjex+NwhQZa46uuLmUve1zFK90C
-         EIPkQ6it+24y7HsxiI1wqw4f0MZB2eiKu8OtIU842VX/WEddK15W73xUT6hbuKHLRNPe
-         pY/QAehksOROpPCGnKfZbSGSCrWO00/A66SjOS9mxab8610GtpHm+36wAzhCWPb8d+EN
-         QqHHQ32YTZJMpRczVy5FctkD4D8lrooQpnVrrv/+ZbeHV3dVyzlj7p0VI7TiF4mqUg5/
-         ouZQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ljd1gL0a9YiLaECGRPUeWMWqu+jwE37ussa58cXejzA=;
+        b=KFOe7x6IauMLNFE6HuIGA9laJSc4wQ8x9ZS2Kto1ySLnTDNb85y66ci+0Meqq7qqy/
+         5K+adi8U+uMY5S2TtJ8ek0N60iZ5UHt8DrBbU9vN/NlexZkaZSrcsT2mK/VbDiNas0Wj
+         55H9G3/nXOALk9OhppEKn1xUs0OMCg+QZ4kbpUTHnewmfqXsjToNh8rMRwoDdTGGKHZX
+         sj00WxYzUPlGyf7sDohmvVnRDurXAq2pZso/3HiHo7fVNhSX6hEw2N9J5PdlIw378rqu
+         Dt2kAGGlAyb4laYnEodsJ2kr1a9A3bstMmu64hRqIOrRA4bo80PMEwXOLNqBgXzBdAi6
+         EjJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vIelIHMHC9bmcO62i5sJQbllpydzbql+AW2fKGKLm8w=;
-        b=aWQIBWLUJ8dCj+rKLLtlvxKeGnjjsUO3Hbg9I3m7xR/ngI+I1Cp0vrW1AQBLkDkIcL
-         lPi1ABa+YIR1J6uUNoEEdZr2EzswzvqqxMbQ1mSEr6/Hap6zIByrW1CAJXd2neP7ZC0C
-         Fh6DGTVlKw4RYG/bUzUxjVRMIMOiXgm/FEbfZaVtZuZmbRT2bi6whd+rR+EDB7orxcUf
-         Lnm5PryH+KbQUd+9U7musKUZyCamICIUZUKWUmtWXOpWRWEZy8UaF1+Ct5GUaiybMYv3
-         t1ZPWFpD6E/4wBeiiFOatDVkrE7FRL6cY79kuaUxAsUp3TerfQoOr+Wt1In8ZpypFKI9
-         8PIA==
-X-Gm-Message-State: AOAM533xzm/k+x9XZ/Wer69RHPpYjsJYxpt2VILW+lwp2p2fUYargmdx
-        U7uvG3MQYqtBIM1IOyMpLULrnOcv
-X-Google-Smtp-Source: ABdhPJzAsFSdg/Xoho3piRcJExQi4MMZ1DyC2gHEk1MrkiQq2B109Fcf+SCBNd5L6CmKmGKTiwn5QQ==
-X-Received: by 2002:a05:6a00:807:: with SMTP id m7mr2357570pfk.246.1591242418671;
-        Wed, 03 Jun 2020 20:46:58 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ljd1gL0a9YiLaECGRPUeWMWqu+jwE37ussa58cXejzA=;
+        b=fahz0hmDVyz0gJfrdpIXHf5farpnThBpHqeqRrPNwjDH5Y9RFWz8PCVfvNB0aTTb/u
+         38aahd3gQ5Bk8kcYqx9kbzHZvOOOskZGW/o+v+CHZrLvlf2cwYq6EfQqEOUdMrHVJws1
+         np8hbK11dW+ridHL2n0a1Qn6Ul4ErihSdphzwuIzAmwyoTpuXi3yXwmQ8Nhn+MtzVoN+
+         kWbC4AsFsNooLJLGVmFLH7bxRkuDx2vCHkBI0789J3ZlOSD3yd5qD9Z4m4/QVnoj2n1g
+         EzdUwWR7hrmkiRKtoNtLml3wKEVM7kkZSidH5x5YF0i/AKs+pb9eBwFwlsENncI6WhS9
+         K0AA==
+X-Gm-Message-State: AOAM531xdqo8iGloNj48FBcT6vapus3a/Oxit8F8lL+bS3xstMRjVEAo
+        GUEDsrKl+mnnH1R5a3JShHPndlcl
+X-Google-Smtp-Source: ABdhPJwNVk3QpeeMpbblNbwAltfHbm6Ih+XSP+R2DYxvoDZBP0fN/cf2VcALRGiRxP0aHkdT0nmoYA==
+X-Received: by 2002:a62:e703:: with SMTP id s3mr2151197pfh.43.1591242422257;
+        Wed, 03 Jun 2020 20:47:02 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id p19sm3083367pff.116.2020.06.03.20.46.56
+        by smtp.gmail.com with ESMTPSA id p19sm3083367pff.116.2020.06.03.20.47.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 20:46:57 -0700 (PDT)
+        Wed, 03 Jun 2020 20:47:01 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -75,35 +77,66 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         Martin Sperl <kernel@martin.sperl.org>, lukas@wunner.de
-Subject: [PATCH 0/3] spi: bcm2835: Enable shared interrupt support
-Date:   Wed,  3 Jun 2020 20:46:52 -0700
-Message-Id: <20200604034655.15930-1-f.fainelli@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible strings
+Date:   Wed,  3 Jun 2020 20:46:54 -0700
+Message-Id: <20200604034655.15930-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200604034655.15930-1-f.fainelli@gmail.com>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark, Lukas,
+The BCM2711 SoC features 5 SPI controllers which all share the same
+interrupt line, the SPI driver needs to support interrupt sharing,
+therefore use the chip specific compatible string to help with that.
 
-This patch series is implementing the approach that was discussed in
-response to this previous submission:
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/boot/dts/bcm2711.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-https://lore.kernel.org/linux-arm-kernel/20200528185805.28991-1-nsaenzjulienne@suse.de/
-
-It aims to have dedicated interrupt handlers for 2835 versus 2711/7211
-so as to minimize the overhead for 2835.
-
-Florian Fainelli (3):
-  dt-bindings: spi: Document bcm2711 and bcm7211 SPI compatible
-  ARM: dts: bcm2711: Update SPI nodes compatible strings
-  spi: bcm2835: Enable shared interrupt support
-
- .../bindings/spi/brcm,bcm2835-spi.txt         |  3 +-
- arch/arm/boot/dts/bcm2711.dtsi                |  8 ++--
- drivers/spi/spi-bcm2835.c                     | 48 +++++++++++++++----
- 3 files changed, 44 insertions(+), 15 deletions(-)
-
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index a91cf68e3c4c..9a9ea67fbc2d 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -152,7 +152,7 @@
+ 		};
+ 
+ 		spi3: spi@7e204600 {
+-			compatible = "brcm,bcm2835-spi";
++			compatible = "brcm,bcm2711-spi", "brcm,bcm2835-spi";
+ 			reg = <0x7e204600 0x0200>;
+ 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clocks BCM2835_CLOCK_VPU>;
+@@ -162,7 +162,7 @@
+ 		};
+ 
+ 		spi4: spi@7e204800 {
+-			compatible = "brcm,bcm2835-spi";
++			compatible = "brcm,bcm2711-spi", "brcm,bcm2835-spi";
+ 			reg = <0x7e204800 0x0200>;
+ 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clocks BCM2835_CLOCK_VPU>;
+@@ -172,7 +172,7 @@
+ 		};
+ 
+ 		spi5: spi@7e204a00 {
+-			compatible = "brcm,bcm2835-spi";
++			compatible = "brcm,bcm2711-spi", "brcm,bcm2835-spi";
+ 			reg = <0x7e204a00 0x0200>;
+ 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clocks BCM2835_CLOCK_VPU>;
+@@ -182,7 +182,7 @@
+ 		};
+ 
+ 		spi6: spi@7e204c00 {
+-			compatible = "brcm,bcm2835-spi";
++			compatible = "brcm,bcm2711-spi", "brcm,bcm2835-spi";
+ 			reg = <0x7e204c00 0x0200>;
+ 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clocks BCM2835_CLOCK_VPU>;
 -- 
 2.17.1
 
