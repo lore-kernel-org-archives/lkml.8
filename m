@@ -2,121 +2,225 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA370C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FA7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3872206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C0A206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MOfa19Ht"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QE+bsATF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgFDV06 (ORCPT
+        id S1727813AbgFDV22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 17:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
+        Thu, 4 Jun 2020 17:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgFDV06 (ORCPT
+        with ESMTP id S1726480AbgFDV21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:26:58 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25763C08C5C0;
-        Thu,  4 Jun 2020 14:26:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id e2so7648784eje.13;
-        Thu, 04 Jun 2020 14:26:58 -0700 (PDT)
+        Thu, 4 Jun 2020 17:28:27 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FFEC08C5C0;
+        Thu,  4 Jun 2020 14:28:27 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m1so4132275pgk.1;
+        Thu, 04 Jun 2020 14:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WE1oe2yB5oVKYeXtakXr0zKpVIUuuVPE1o8EvQmvAgo=;
-        b=MOfa19HtKuS1dBbVo7y/trtcUwipqOZV+Kcw2wnnzCFXuRDwAZJWnmNidsfNqKrhkx
-         u38R3tD071DTiHuqoTAvaOwm34eIju84ayw93sVyeF+bHFsTuUr7CpnQynd6uWNH655O
-         8avch9SwhLtb3xl5M7p4Jc/npv2R+TqFxSaRxpBaMWW/vpHU8TwpaHnYJMl5XfrXoUih
-         Bi+0tNXvYRlLXGuoGkNGhr1b9khG9vGFYjwWS3q0n1+7GwZYgLG6tE0j6l38Jp7pC7UX
-         dw2mUn9Ba8Bj8cb3xS5HzNcjwkBin1TWA1GblANMc/W1lA7ijjzE10YTqyGs0DJOxoZM
-         Ko5g==
+        h=from:to:cc:subject:date:message-id;
+        bh=iU5iJUMELFSmlK8SfH+sUjldtPgarSfrCWNEy+Lwh4g=;
+        b=QE+bsATF+II22srCA4SunF483vWK3hPQloPGHtKJMsAqxkrApCeA2q8IjOX5YK0e+5
+         ZXlp/g3KsxcDttj5VwjRGOkBRkSoj6YJ9tJrPQmm+y9dyDkxD7ttGagUEmU3+VMFhNGf
+         LxNHi3ZQe+gI8lyUPJlVLuU+W+X2N40RrRWQOit7emXK3AqqURP8kqdcFzZgfQGckmsQ
+         7o/gTtnw/zxdiRHRCi2u5Wt2xFxLHncLUE0fhjAkT/toViE/gGlDH8XXhekp0+BpsbdO
+         MTiuIbNDLDlC/l+yvIh0PYPi1OP70l7N7bqlXB7vr+W5XC+Zc8A17OpZo7AwivgH3M2h
+         ytNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WE1oe2yB5oVKYeXtakXr0zKpVIUuuVPE1o8EvQmvAgo=;
-        b=Hc9D5RUqN1lXGTxmeCrZSJWoc01GJ5LU6D7HDrwD4lzScwpqMhJPi6QvCohYqyX0d1
-         Ss4JLOmUT7btSFgUcIwg5339XTP2qEDIchR9QuyYTGdToGQugZPK2tJp8opy6xKj7Nbp
-         gcM4PJytCEob14FHTLzsnkLIXi3Aj31Dz43KT/zY8neM3GuzSEVPmhgVmRmeTn/pBxOp
-         G9nocxC3ussohNQzgwTfYSELYKdzS4udCkfbru/yDEPrLOXsbo0tT2IxRH7xTrO0ykwk
-         ozbBjDVOWw6Kea4LwBBGb+sXW7vk3qg8b7bg6SlsHVGjbEbz+8onhglHCN9/f985s5bm
-         mL7Q==
-X-Gm-Message-State: AOAM532wLWm3BKLqoSC0Z400fD/CktROg1jokN6gC9WqfAKpoZetRuo4
-        IhXEepj2rKrDiL92nf2vIrvxhVyC3TjhtHl348M=
-X-Google-Smtp-Source: ABdhPJy16zksl6Je748Tu/2bB0Pl9iDll7SpFPWhZUcw7BNspDhhcW4cw9AdU0+h0JLBpdnXeoM3Pm/krMB8v+T7THo=
-X-Received: by 2002:a17:906:3bd8:: with SMTP id v24mr5183395ejf.231.1591306016754;
- Thu, 04 Jun 2020 14:26:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604205710.3167-1-jcrouse@codeaurora.org> <20200604205710.3167-7-jcrouse@codeaurora.org>
-In-Reply-To: <20200604205710.3167-7-jcrouse@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 4 Jun 2020 14:27:21 -0700
-Message-ID: <CAF6AEGt4N5+0h0fkrO7m6KD3VMXkdoFyhN5Nz72DcMjoHX6XWA@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH v7 6/6] arm6: dts: qcom: sm845: Set the
- compatible string for the GPU SMMU
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iU5iJUMELFSmlK8SfH+sUjldtPgarSfrCWNEy+Lwh4g=;
+        b=FpxRkyIOshoaJqmEp4SMnNeDKi/7mJrU5j0tguAzpPXn0aI9101q56IkDZIgtySJbW
+         yvNWjxWoA63t+sLaDQbr+cJuFPdOhjTBv2v4hMplaSTNAfs2hh4fRYM0VwVzpGzPvgzQ
+         /fkBttXVJCPWEwRXlMc7W6o/YQ9/1qmLLsH0SrLzNd/W4LNDsQ00LeRHJsNrPYfqit2U
+         qUEPy6uF4iJULAVyVYxH5dUNc96TzP0XQtdmOCr0TOJXcLbctOG5GkrwiyjxDsFgryWI
+         k1XNEb9f25Sxgwn0NTYv8QxCE5MyhaG2InQKr5Lqp7Z34agC7ZpuX/2jVrBWSSgNSsba
+         UvpQ==
+X-Gm-Message-State: AOAM533wY9HkHnkrYZVnK/iw36LhVk9yKchjGzXePFSiHxWDlAsLtlKz
+        zLK9jBWqTojfZoqKlsJNVp3MtvZd
+X-Google-Smtp-Source: ABdhPJxBusojGAIYyVfGCb3/XjJGxG2X3jcM+yG/UzlvGT5gG9FuSfqFsFQdcDZ+EowRT+0Iv8WYpg==
+X-Received: by 2002:a62:e916:: with SMTP id j22mr6017327pfh.85.1591306106783;
+        Thu, 04 Jun 2020 14:28:26 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id v129sm5317416pfv.18.2020.06.04.14.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 14:28:25 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        Martin Sperl <kernel@martin.sperl.org>, lukas@wunner.de
+Subject: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+Date:   Thu,  4 Jun 2020 14:28:19 -0700
+Message-Id: <20200604212819.715-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 1:57 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
-> split pagetables.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
->
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 8eb5a31346d2..8b15cd74e9ba 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -3556,7 +3556,7 @@
->                 };
->
->                 adreno_smmu: iommu@5040000 {
-> -                       compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
-> +                       compatible = "qcom,adreno-smmu", "qcom,smmu-v2";
+The 4 SPI controller instances added in BCM2711 and BCM7211 SoCs (SPI3,
+SPI4, SPI5 and SPI6) share the same interrupt line with SPI0.
 
-Should this be something like:
+For the BCM2835 case which is deemed performance critical, we would like
+to continue using an interrupt handler which does not have the extra
+comparison on BCM2835_SPI_CS_INTR.
 
-   compatible = "qcom,adreno-smmu", "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
+To support that requirement the common interrupt handling code between
+the shared and non-shared interrupt paths is split into a
+bcm2835_spi_interrupt_common() and both bcm2835_spi_interrupt() as well
+as bcm2835_spi_shared_interrupt() make use of it.
 
-so that new dtb still works with old kernel?
+During probe, we determine if there is at least another instance of this
+SPI controller, and if there is, then we install a shared interrupt
+handler.
 
-BR,
--R
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v2:
 
->                         reg = <0 0x5040000 0 0x10000>;
->                         #iommu-cells = <1>;
->                         #global-interrupts = <2>;
-> --
-> 2.17.1
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+- identify other available SPI nodes to determine if we need to set-up
+  interrupt sharing. This needs to happen for the very first instance
+  since we cannot know for the first instance whether interrupt sharing
+  is needed or not.
+
+ drivers/spi/spi-bcm2835.c | 61 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 50 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index 237bd306c268..0288b5b3de1e 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -361,11 +361,10 @@ static void bcm2835_spi_reset_hw(struct spi_controller *ctlr)
+ 	bcm2835_wr(bs, BCM2835_SPI_DLEN, 0);
+ }
+ 
+-static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
++static inline irqreturn_t bcm2835_spi_interrupt_common(struct spi_controller *ctlr,
++						       u32 cs)
+ {
+-	struct spi_controller *ctlr = dev_id;
+ 	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+-	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
+ 
+ 	/*
+ 	 * An interrupt is signaled either if DONE is set (TX FIFO empty)
+@@ -394,6 +393,27 @@ static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
++static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
++{
++	struct spi_controller *ctlr = dev_id;
++	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
++	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
++
++	return bcm2835_spi_interrupt_common(ctlr, cs);
++}
++
++static irqreturn_t bcm2835_spi_shared_interrupt(int irq, void *dev_id)
++{
++	struct spi_controller *ctlr = dev_id;
++	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
++	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
++
++	if (!(cs & BCM2835_SPI_CS_INTR))
++		return IRQ_NONE;
++
++	return bcm2835_spi_interrupt_common(ctlr, cs);
++}
++
+ static int bcm2835_spi_transfer_one_irq(struct spi_controller *ctlr,
+ 					struct spi_device *spi,
+ 					struct spi_transfer *tfr,
+@@ -1287,12 +1307,37 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++static const struct of_device_id bcm2835_spi_match[] = {
++	{ .compatible = "brcm,bcm2835-spi", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
++
+ static int bcm2835_spi_probe(struct platform_device *pdev)
+ {
++	irq_handler_t bcm2835_spi_isr_func = bcm2835_spi_interrupt;
+ 	struct spi_controller *ctlr;
++	unsigned long flags = 0;
++	struct device_node *dn;
+ 	struct bcm2835_spi *bs;
+ 	int err;
+ 
++	/* On BCM2711 there can be multiple SPI controllers enabled sharing the
++	 * same interrupt line, but we also want to minimize the overhead if
++	 * there is no need to support interrupt sharing. If we find at least
++	 * another available instane (not counting the one we are probed from),
++	 * then we assume that interrupt sharing is necessary.
++	 */
++	for_each_compatible_node(dn, NULL, bcm2835_spi_match[0].compatible) {
++		err = of_device_is_available(dn) && dn != pdev->dev.of_node;
++		of_node_put(dn);
++		if (err) {
++			flags = IRQF_SHARED;
++			bcm2835_spi_isr_func = bcm2835_spi_shared_interrupt;
++			break;
++		}
++	}
++
+ 	ctlr = spi_alloc_master(&pdev->dev, ALIGN(sizeof(*bs),
+ 						  dma_get_cache_alignment()));
+ 	if (!ctlr)
+@@ -1344,8 +1389,8 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ 	bcm2835_wr(bs, BCM2835_SPI_CS,
+ 		   BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX);
+ 
+-	err = devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_interrupt, 0,
+-			       dev_name(&pdev->dev), ctlr);
++	err = devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_isr_func,
++			       flags, dev_name(&pdev->dev), ctlr);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
+ 		goto out_dma_release;
+@@ -1400,12 +1445,6 @@ static void bcm2835_spi_shutdown(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "failed to shutdown\n");
+ }
+ 
+-static const struct of_device_id bcm2835_spi_match[] = {
+-	{ .compatible = "brcm,bcm2835-spi", },
+-	{}
+-};
+-MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
+-
+ static struct platform_driver bcm2835_spi_driver = {
+ 	.driver		= {
+ 		.name		= DRV_NAME,
+-- 
+2.17.1
+
