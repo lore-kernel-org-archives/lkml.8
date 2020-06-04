@@ -7,230 +7,158 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD66C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3C5020657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6382520657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:29:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qn2BQw97"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gF+uWURR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgFDCXA (ORCPT
+        id S1726469AbgFDC3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
+        Wed, 3 Jun 2020 22:29:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgFDCXA (ORCPT
+        with ESMTP id S1726047AbgFDC3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:23:00 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD0EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 19:22:59 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id nm22so411994pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 19:22:59 -0700 (PDT)
+        Wed, 3 Jun 2020 22:29:32 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DD7C03E96D
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 19:29:31 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id n22so990141vkm.7
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 19:29:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Yipjb/nJ+PoPYGY3bQlr0vEC5GDtsZwp9TVgxD0rnGk=;
-        b=Qn2BQw97F7bIZrtjDlecVedaFxpvLQXfHqx5ZIkhrdMftq1Uzxuvb3gxbs04al8f6z
-         dUNJTwOCuq0f5AzUIWaq/boxSUbsE7CQq5poZsErcM9jbnlKvwg3ugwzZmw6UY051thR
-         aeypVbCcCPa33vgHBqM+4kc/3K8/7P1pLFmH0=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GiZwMzoPS09yzBU7S2hJ7r+gRIFX95ple22IuWgCNw4=;
+        b=gF+uWURRh8uwv2hzNLJPZDege+6/RxAKTa99l8IPtuMOxNN3gLY9hIZiknH3Fkeaar
+         cvBMdieSIb+hccNBsqfqKdjKbGDy19j8gffbEb5p9RQpriNR8VSJwJB2NL9Ukxk0KgxX
+         RUd+vKOB/CvPR0X5Es5srwyCY/HvUcznw45jU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Yipjb/nJ+PoPYGY3bQlr0vEC5GDtsZwp9TVgxD0rnGk=;
-        b=eNnU0vicC6qql6vTPBop6JDUMdHhq0v2N2kooHLxXcKafZlRiyAHZyejuX8ZBEMI4K
-         fRj7eI8sHOITyYeRre6X8H8gBE0W12FjT8nuOPvuFh19ZYgtChPqSVSQjmiVcD92lAOS
-         Hl90fqWwNfYUL6ky5rvb8y9d222bSo/uRDqtqcOVGPer1/NKs+Ucr+p91Dhk5H+Qo/BT
-         c1SNp22gUGUEC5zUO75/Gle5+MTL1X8AnDCx3MwoDWCXP/7aNGMC91iqoXLUBL14cNLr
-         EA8Xxm5Iq1LEtgKZbh9RUiBvV/dQbnEEhwZjb/ztgc6wdG4yuFoPEdTtvTG1HkEdSguJ
-         Q/Xw==
-X-Gm-Message-State: AOAM533vfl6qXUMqBksTaK+mfgeI/ypTD0Im8q4RI1+V9LJNPpaTgn+3
-        4TzsqsNRFEMe+GiB6CWTozk3Mg==
-X-Google-Smtp-Source: ABdhPJyecMU8uoaQFlZIapME+iRHy6MQjiZHyGdWTsN1FsR15QCal3RaNi3fnZYfnzICd0tiI8+uGQ==
-X-Received: by 2002:a17:90a:4d4e:: with SMTP id l14mr3326764pjh.10.1591237379271;
-        Wed, 03 Jun 2020 19:22:59 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y6sm3106283pfp.144.2020.06.03.19.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 19:22:58 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 19:22:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        containers@lists.linux-foundation.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Daniel Wagner <daniel.wagner@bmw-carit.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Fastabend <john.r.fastabend@intel.com>,
-        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <202006031845.F587F85A@keescook>
-References: <20200603011044.7972-1-sargun@sargun.me>
- <20200603011044.7972-2-sargun@sargun.me>
- <20200604012452.vh33nufblowuxfed@wittgenstein>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GiZwMzoPS09yzBU7S2hJ7r+gRIFX95ple22IuWgCNw4=;
+        b=cykkJ5/FnR0oaD6Fa+MeFSq5Ts73nE+uSZRpO12Hxi8XnWhs4Hy+FOi9JhPpaDEsMx
+         fSlABLsRu+MMoxICaqxXTNNZRWxQIFXK7dq70nT+3GA8wtUg+jfSc2fSxFLGmvT3CLia
+         Lp7Fv6iCxKtE8i5yuFlvuR2PppbypYHzs2BTmrJCBi29JvXiziA8Td+5AQt+5Tn3mCH+
+         ums4UK+DgKy8BrZLKlWpB4jFSttH39Yz5Z2DzhQMBAA2fqUCARYzdgUSskibIsTj+lNa
+         Eb3gB62I3Maj92lKGPo1T5g2t90jHFBTqts2aokqEo+gXjfv+1jYiMdYFSk8esnKfOPZ
+         J/GA==
+X-Gm-Message-State: AOAM532tojH/faeeBsrGxq9Loe8y6qGS7Z0lYwhsH7pbM0NwGPSkVBEu
+        VrRL2HiUKvFcpPiAqIvoY80LY5di3/Fl1rAzr28JMg==
+X-Google-Smtp-Source: ABdhPJyOkMxi3kmXQuLdkLG0TI4YGq6+Fj1A2qCxPvej1w2D2dixQYceehb742uQ5rO3puyZGIjvnIKc79wo0ALTZ+8=
+X-Received: by 2002:a1f:8d0a:: with SMTP id p10mr1986031vkd.33.1591237770303;
+ Wed, 03 Jun 2020 19:29:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604012452.vh33nufblowuxfed@wittgenstein>
+References: <1590051985-29149-1-git-send-email-weiyi.lu@mediatek.com> <1590051985-29149-7-git-send-email-weiyi.lu@mediatek.com>
+In-Reply-To: <1590051985-29149-7-git-send-email-weiyi.lu@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 4 Jun 2020 10:29:19 +0800
+Message-ID: <CANMq1KBRe81Sa4A6sCM2egOVRWCJbUNPsXHpfzkT33XGVZXBhg@mail.gmail.com>
+Subject: Re: [PATCH v15 06/11] soc: mediatek: Add subsys clock control for bus protection
+To:     Weiyi Lu <weiyi.lu@mediatek.com>
+Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 03:24:52AM +0200, Christian Brauner wrote:
-> On Tue, Jun 02, 2020 at 06:10:41PM -0700, Sargun Dhillon wrote:
-> > Previously there were two chunks of code where the logic to receive file
-> > descriptors was duplicated in net. The compat version of copying
-> > file descriptors via SCM_RIGHTS did not have logic to update cgroups.
-> > Logic to change the cgroup data was added in:
-> > commit 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-> > commit d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-> > 
-> > This was not copied to the compat path. This commit fixes that, and thus
-> > should be cherry-picked into stable.
-> > 
-> > This introduces a helper (file_receive) which encapsulates the logic for
-> > handling calling security hooks as well as manipulating cgroup information.
-> > This helper can then be used other places in the kernel where file
-> > descriptors are copied between processes
-> > 
-> > I tested cgroup classid setting on both the compat (x32) path, and the
-> > native path to ensure that when moving the file descriptor the classid
-> > is set.
-> > 
-> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> > Suggested-by: Kees Cook <keescook@chromium.org>
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> > Cc: Daniel Wagner <daniel.wagner@bmw-carit.de>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Cc: Jann Horn <jannh@google.com>,
-> > Cc: John Fastabend <john.r.fastabend@intel.com>
-> > Cc: Tejun Heo <tj@kernel.org>
-> > Cc: Tycho Andersen <tycho@tycho.ws>
-> > Cc: stable@vger.kernel.org
-> > Cc: cgroups@vger.kernel.org
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  fs/file.c            | 35 +++++++++++++++++++++++++++++++++++
-> >  include/linux/file.h |  1 +
-> >  net/compat.c         | 10 +++++-----
-> >  net/core/scm.c       | 14 ++++----------
-> >  4 files changed, 45 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/fs/file.c b/fs/file.c
-> > index abb8b7081d7a..5afd76fca8c2 100644
-> > --- a/fs/file.c
-> > +++ b/fs/file.c
-> > @@ -18,6 +18,9 @@
-> >  #include <linux/bitops.h>
-> >  #include <linux/spinlock.h>
-> >  #include <linux/rcupdate.h>
-> > +#include <net/sock.h>
-> > +#include <net/netprio_cgroup.h>
-> > +#include <net/cls_cgroup.h>
-> >  
-> >  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
-> >  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
-> > @@ -931,6 +934,38 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
-> >  	return err;
-> >  }
-> >  
-> > +/*
-> > + * File Receive - Receive a file from another process
-> > + *
-> > + * This function is designed to receive files from other tasks. It encapsulates
-> > + * logic around security and cgroups. The file descriptor provided must be a
-> > + * freshly allocated (unused) file descriptor.
-> > + *
-> > + * This helper does not consume a reference to the file, so the caller must put
-> > + * their reference.
-> > + *
-> > + * Returns 0 upon success.
-> > + */
-> > +int file_receive(int fd, struct file *file)
-> 
-> This is all just a remote version of fd_install(), yet it deviates from
-> fd_install()'s semantics and naming. That's not great imho. What about
-> naming this something like:
-> 
-> fd_install_received()
-> 
-> and move the get_file() out of there so it has the same semantics as
-> fd_install(). It seems rather dangerous to have a function like
-> fd_install() that consumes a reference once it returned and another
-> version of this that is basically the same thing but doesn't consume a
-> reference because it takes its own. Seems an invitation for confusion.
-> Does that make sense?
+On Thu, May 21, 2020 at 5:06 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
+>
+> For the bus protection operations, some subsys clocks need to be enabled
+> before releasing the protection, and vice versa.
+> But those subsys clocks could only be controlled once its corresponding
+> power domain is turned on first.
+> In this patch, we add the subsys clock control into its relevant steps.
+>
+> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-scpsys.c | 62 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 60 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> index 59a525a..ef2c668 100644
+> --- a/drivers/soc/mediatek/mtk-scpsys.c
+> +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> [snip]
+>         val |= PWR_ISO_BIT;
+> @@ -498,6 +511,39 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
+>         return ret;
+>  }
+>
+> +static int init_subsys_clks(struct platform_device *pdev,
+> +               const char *prefix, struct clk **clk)
+> +{
+> +       struct device_node *node = pdev->dev.of_node;
+> +       u32 prefix_len, sub_clk_cnt = 0;
+> +       struct property *prop;
+> +       const char *clk_name;
+> +
+> +       prefix_len = strlen(prefix);
+> +
+> +       of_property_for_each_string(node, "clock-names", prop, clk_name) {
+> +               if (!strncmp(clk_name, prefix, prefix_len) &&
+> +                               (clk_name[prefix_len] == '-')) {
+> +                       if (sub_clk_cnt >= MAX_SUBSYS_CLKS) {
+> +                               dev_err(&pdev->dev,
+> +                                       "subsys clk out of range %d\n",
+> +                                       sub_clk_cnt);
+> +                               return -EINVAL;
+> +                       }
+> +
+> +                       clk[sub_clk_cnt] = devm_clk_get(&pdev->dev,
+> +                                               clk_name);
+> +
+> +                       if (IS_ERR(clk[sub_clk_cnt]))
+> +                               return PTR_ERR(clk[sub_clk_cnt]);
+> +
+> +                       sub_clk_cnt++;
+> +               }
+> +       }
+> +
+> +       return sub_clk_cnt;
+> +}
+> +
+>  static int init_basic_clks(struct platform_device *pdev, struct clk **clk,
+>                         const char * const *name)
+>  {
+> @@ -596,6 +642,18 @@ static struct scp *init_scp(struct platform_device *pdev,
+>                 if (ret)
+>                         return ERR_PTR(ret);
+>
+> +               if (data->subsys_clk_prefix) {
+> +                       ret = init_subsys_clks(pdev,
+> +                                       data->subsys_clk_prefix,
+> +                                       scpd->subsys_clk);
+> +                       if (ret < 0) {
+> +                               dev_err(&pdev->dev,
+> +                                       "%s: subsys clk unavailable\n",
+> +                                       data->name);
 
-We have some competing opinions on this, I guess. What I really don't
-like is the copy/pasting of the get_unused_fd_flags() and
-put_unused_fd() needed by (nearly) all the callers. If it's a helper, it
-should help. Specifically, I'd like to see this:
+init_subsys_clks should already have printed an error (directly or
+indirectly), so this is not needed.
 
-int file_receive(int fd, unsigned long flags, struct file *file,
-		 int __user *fdptr)
-{
-	struct socket *sock;
-	int err;
-
-	err = security_file_receive(file);
-	if (err)
-		return err;
-
-	if (fd < 0) {
-		/* Install new fd. */
-		int new_fd;
-
-		err = get_unused_fd_flags(flags);
-		if (err < 0)
-			return err;
-		new_fd = err;
-
-		/* Copy fd to any waiting user memory. */
-		if (fdptr) {
-			err = put_user(new_fd, fdptr);
-			if (err < 0) {
-				put_unused_fd(new_fd);
-				return err;
-			}
-		}
-		fd_install(new_fd, get_file(file));
-		fd = new_fd;
-	} else {
-		/* Replace existing fd. */
-		err = replace_fd(fd, file, flags);
-		if (err)
-			return err;
-	}
-
-	/* Bump the cgroup usage counts. */
-	sock = sock_from_file(fd, &err);
-	if (sock) {
-		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-		sock_update_classid(&sock->sk->sk_cgrp_data);
-	}
-
-	return fd;
-}
-
-If everyone else *really* prefers keeping the get_unused_fd_flags() /
-put_unused_fd() stuff outside the helper, then I guess I'll give up,
-but I think it is MUCH cleaner this way -- all 4 users trim down lots
-of code duplication.
-
--- 
-Kees Cook
+> +                               return ERR_PTR(ret);
+> +                       }
+> +               }
+> +
+>                 genpd->name = data->name;
+>                 genpd->power_off = scpsys_power_off;
+>                 genpd->power_on = scpsys_power_on;
+> --
+> 1.8.1.1.dirty
