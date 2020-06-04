@@ -2,146 +2,109 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3318C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F1D20878
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="gAJavElU"
+	by mail.kernel.org (Postfix) with ESMTP id E7E6A2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgFDJRD (ORCPT
+        id S1728127AbgFDJRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgFDJRC (ORCPT
+        Thu, 4 Jun 2020 05:17:41 -0400
+Received: from smtprelay0175.hostedemail.com ([216.40.44.175]:59320 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726248AbgFDJRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:17:02 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C55EC03E96E
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:17:02 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id m21so4059882eds.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zhAP4FrRDZrjypcHYBWPYi+wkv0jiWxIjMhRADC+Z5I=;
-        b=gAJavElU635AJKokbORkRDl2kDekyNy4u8CmFMidi8khzlpUxFcGRfzaeZ3Jgj9mOB
-         1+tKhkMzDGoDn2AGpuzJ0NsaB1c3+XFNNzAZKaQYHmNxgVeT+XUEk+2k16vEB2GOO7M3
-         yHp6Vl00koFbXurW03WpWE/JSwfPOtiGtfhvI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zhAP4FrRDZrjypcHYBWPYi+wkv0jiWxIjMhRADC+Z5I=;
-        b=M/wEeBiDrDM9gmdQd9O/gijCqPZqpOnv1LJ0x/9iKRAWlGDQbgv/UelfpHSJXHlEsj
-         fKi8Pb+9aeluC2uoqmoI6POqB4o8PU8/qa3mV/lY6YR7Ty2lXOd5wUqO23kc9TAiFsJQ
-         wRhEpxeBP0Vf2ji9dFeoG3JTK3vpUYm0UlgsBEZryn7+XWlx+io677EG9S8ALpyUXRUh
-         ludFO9Pgajp0gbud1sRomUsZCgYDmgPwXuAuF01Jny/TQf4Ce+hHswNjLz5G0bjKS8d8
-         5q6SY/nXCvOMeRHC190xaS578SO/CajiHwD9OOf9dCIq/chZK71WULgwLHPGv+r84Sji
-         8Frg==
-X-Gm-Message-State: AOAM5316UG0wV9GyjPH6GVcwnhYs2cVyOiZrkW/7y8asJpaNAgvR+Rfe
-        KVEqp9MoAnUO9GzLSxFJ8iA8kyh01SrKHm6JxUBIvw==
-X-Google-Smtp-Source: ABdhPJx61AOxmZRmL/Oy5iwZykzcL1rHsU7jxY58d6SBzKQDu9pppgd1wvMKOMT3TGbZI7nXAdbF8OSqjlU8BfXzx44=
-X-Received: by 2002:aa7:d785:: with SMTP id s5mr3554653edq.17.1591262220848;
- Thu, 04 Jun 2020 02:17:00 -0700 (PDT)
+        Thu, 4 Jun 2020 05:17:40 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 7FBE8837F27E;
+        Thu,  4 Jun 2020 09:17:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: lock32_040a1d426d96
+X-Filterd-Recvd-Size: 3759
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  4 Jun 2020 09:17:36 +0000 (UTC)
+Message-ID: <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>
+Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
+ which is unused and broken
+From:   Joe Perches <joe@perches.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Date:   Thu, 04 Jun 2020 02:17:35 -0700
+In-Reply-To: <20200604083120.GF22511@kadam>
+References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
+         <87h7vvb1s3.fsf@belgarion.home>
+         <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
+         <20200601183102.GS30374@kadam>
+         <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
+         <20200604083120.GF22511@kadam>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-References: <4ebd0429-f715-d523-4c09-43fa2c3bc338@oracle.com>
- <202005281652.QNakLkW3%lkp@intel.com> <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
-In-Reply-To: <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 4 Jun 2020 11:16:49 +0200
-Message-ID: <CAJfpegtz=tzndsF=_1tYHewGwEgvqEOA_4zj8HCAqyFdKe6mag@mail.gmail.com>
-Subject: Re: [PATCH v2] ovl: provide real_file() and overlayfs get_unmapped_area()
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Colin Walters <walters@verbum.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        overlayfs <linux-unionfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 11:01 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 5/28/20 1:37 AM, kbuild test robot wrote:
-> > Hi Mike,
-> >
-> > I love your patch! Yet something to improve:
-> >
-> > [auto build test ERROR on miklos-vfs/overlayfs-next]
-> > [also build test ERROR on linus/master v5.7-rc7]
-> > [cannot apply to linux/master next-20200526]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/Mike-Kravetz/ovl-provide-real_file-and-overlayfs-get_unmapped_area/20200528-080533
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git overlayfs-next
-> > config: h8300-randconfig-r036-20200528 (attached as .config)
-> > compiler: h8300-linux-gcc (GCC) 9.3.0
-> > reproduce (this is a W=1 build):
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=h8300
-> >
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> > All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
-> >
-> > fs/overlayfs/file.c: In function 'ovl_get_unmapped_area':
-> >>> fs/overlayfs/file.c:768:14: error: 'struct mm_struct' has no member named 'get_unmapped_area'
-> > 768 |   current->mm->get_unmapped_area)(realfile,
-> > |              ^~
-> >>> fs/overlayfs/file.c:770:1: warning: control reaches end of non-void function [-Wreturn-type]
-> > 770 | }
-> > | ^
-> >
-> > vim +768 fs/overlayfs/file.c
-> >
-> >    760
-> >    761        static unsigned long ovl_get_unmapped_area(struct file *file,
-> >    762                                        unsigned long uaddr, unsigned long len,
-> >    763                                        unsigned long pgoff, unsigned long flags)
-> >    764        {
-> >    765                struct file *realfile = real_file(file);
-> >    766
-> >    767                return (realfile->f_op->get_unmapped_area ?:
-> >  > 768                        current->mm->get_unmapped_area)(realfile,
-> >    769                                                        uaddr, len, pgoff, flags);
-> >  > 770        }
-> >    771
-> >
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> >
->
-> Well yuck!  get_unmapped_area is not part of mm_struct if !CONFIG_MMU.
->
-> Miklos, would adding '#ifdef CONFIG_MMU' around the overlayfs code be too
-> ugly for you?  Another option is to use real_file() in the mmap code as
-> done in [1].
+On Thu, 2020-06-04 at 11:31 +0300, Dan Carpenter wrote:
+> On Thu, Jun 04, 2020 at 12:08:49AM +0200, Linus Walleij wrote:
+[]
+> > Fixes means it fixes something that was wrong in that commit.
+> > That's all. Whether syntactic or semantic or regression or
+> > serious or not does not matter. It is also not compulsory to
+> > add it is just helpful.
+> 
+> Fixes tag should be compulsory for actual bug fixes.  We had a the
+> Bad Binder exploit last year because commit f5cb779ba163
+> ("ANDROID: binder: remove waitqueue when thread exits.") had no Fixes
+> tag and wasn't backported to Android kernels.
 
-I think the proper fix is to add an inline helper
-(call_get_unmapped_area()?) in linux/mm.h, and make that work properly
-for the NOMMU case as well.
+Fixes tags IMO should be exclusively for actual bug fixes
+and should be mandatory.
 
-Thanks,
-Miklos
+Perhaps:
+---
+ Documentation/process/submitting-patches.rst | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index 1699b7f8e63a..285a84ae79de 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -636,12 +636,14 @@ idea was not posted in a public forum. That said, if we diligently credit our
+ idea reporters, they will, hopefully, be inspired to help us again in the
+ future.
+ 
+-A Fixes: tag indicates that the patch fixes an issue in a previous commit. It
+-is used to make it easy to determine where a bug originated, which can help
+-review a bug fix. This tag also assists the stable kernel team in determining
+-which stable kernel versions should receive your fix. This is the preferred
+-method for indicating a bug fixed by the patch. See :ref:`describe_changes`
+-for more details.
++A Fixes: tag indicates that the patch fixes a "bug". i.e.: a logic defect or
++regression in a previous commit.  A Fixes: tag should not be used to indicate
++that a previous commit had some trivial defect in spelling in the commit log or
++some whitespace defect.  The Fixes: tag is used to make it easy to determine
++where a bug originated, which can help review a bug fix. The Fixes: tag also
++assists the stable kernel team in determining which stable kernel versions
++should receive your fix. This is the preferred method for indicating a bug is
++fixed by the patch.  See :ref:`describe_changes` for more details.
+ 
+ .. _the_canonical_patch_format:
+ 
+
