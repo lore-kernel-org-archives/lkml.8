@@ -2,107 +2,99 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7772063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B17206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgFDMzW (ORCPT
+        id S1728090AbgFDM4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:55:22 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5786 "EHLO huawei.com"
+        Thu, 4 Jun 2020 08:56:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33338 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726003AbgFDMzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:55:22 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AC2FA10A86605A74B66A;
-        Thu,  4 Jun 2020 20:55:18 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 4 Jun 2020
- 20:55:11 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <linux@armlinux.org.uk>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>, <Anson.Huang@nxp.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH] ARM: imx6: add missing put_device() call in imx6q_suspend_init()
-Date:   Thu, 4 Jun 2020 20:54:49 +0800
-Message-ID: <20200604125449.3917164-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        id S1726003AbgFDM4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 08:56:02 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C3FF38982D2650F15B66;
+        Thu,  4 Jun 2020 20:55:57 +0800 (CST)
+Received: from [127.0.0.1] (10.166.212.204) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 4 Jun 2020
+ 20:55:47 +0800
+Subject: Re: [PATCH] module: make module symbols visible after init
+To:     <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>
+CC:     <chenwandun@huawei.com>, <xiexiuqi@huawei.com>,
+        <bobo.shaobowang@huawei.com>, <huawei.libin@huawei.com>,
+        <jeyu@kernel.org>, <jikos@kernel.org>
+References: <20200603141200.17745-1-cj.chengjian@huawei.com>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <14e1413f-92a2-f228-e149-82d4fdbc0c0d@huawei.com>
+Date:   Thu, 4 Jun 2020 20:55:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
+In-Reply-To: <20200603141200.17745-1-cj.chengjian@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.166.212.204]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-if of_find_device_by_node() succeed, imx6q_suspend_init() doesn't have a
-corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+Hi, Petr, Jessica and Miroslav
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- arch/arm/mach-imx/pm-imx6.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Thank you for your reply
 
-diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-index dd34dff13762..40c74b4c4d73 100644
---- a/arch/arm/mach-imx/pm-imx6.c
-+++ b/arch/arm/mach-imx/pm-imx6.c
-@@ -493,14 +493,14 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_base = gen_pool_alloc(ocram_pool, MX6Q_SUSPEND_OCRAM_SIZE);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -523,7 +523,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	ret = imx6_pm_get_base(&pm_info->mmdc_base, socdata->mmdc_compat);
- 	if (ret) {
- 		pr_warn("%s: failed to get mmdc base %d!\n", __func__, ret);
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	ret = imx6_pm_get_base(&pm_info->src_base, socdata->src_compat);
-@@ -570,7 +570,7 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 		&imx6_suspend,
- 		MX6Q_SUSPEND_OCRAM_SIZE - sizeof(*pm_info));
- 
--	goto put_node;
-+	goto put_device;
- 
- pl310_cache_map_failed:
- 	iounmap(pm_info->gpc_base.vbase);
-@@ -580,6 +580,8 @@ static int __init imx6q_suspend_init(const struct imx6_pm_socdata *socdata)
- 	iounmap(pm_info->src_base.vbase);
- src_map_failed:
- 	iounmap(pm_info->mmdc_base.vbase);
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
- 
--- 
-2.25.4
+On 2020/6/4 16:57, Petr Mladek wrote:
+> On Wed 2020-06-03 14:12:00, Cheng Jian wrote:
+>
+> It is really handful that module symbols can be found already when
+> the module is MODULE_STATE_COMING state. It is used by livepatching,
+> ftrace, and maybe some other subsystems.
+
+Yes, you are right, I missed this before.
+
+There are many scenes that lookup the symbols of module when the module is
+
+MODULE_STATE_COMING state.
+
+in livepatch:
+
+     klp_module_coming
+
+-=> klp_write_object_relocations
+
+-=> klp_resolve_symbols
+
+-=> module_kallsyms_on_each_symbol
+
+My patch is incorrect.
+
+> The problem is that nobody is allowed to use (call) module symbols
+> before mod->init() is called and the module is moved to
+> MODULE_STATE_LIVE.
+>
+> By other words. Any code that calls module symbols before the module
+> is fully initialized is buggy. The caller should get fixed,
+> not the kallsyms side.
+>
+> Have you seen such a problem in the real life, please?
+>
+> Best Regards,
+> Petr
+>
+> .
+
+
+     Thank you very much.
+
+         -- Cheng Jian.
+
 
