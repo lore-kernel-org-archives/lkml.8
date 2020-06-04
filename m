@@ -2,174 +2,110 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E05C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF1B5206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB4620734
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sop3cyur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgFDF64 (ORCPT
+        id S1726864AbgFDF7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 01:58:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5674 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbgFDF6z (ORCPT
+        Thu, 4 Jun 2020 01:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgFDF7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 01:58:55 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0545WT7Y143073;
-        Thu, 4 Jun 2020 01:58:15 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31efd5b3g0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 01:58:15 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0545oBWO000717;
-        Thu, 4 Jun 2020 05:58:12 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 31bf4a8j8a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 05:58:12 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0545wBgB44761534
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jun 2020 05:58:11 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDAB4AE063;
-        Thu,  4 Jun 2020 05:58:11 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D488AAE060;
-        Thu,  4 Jun 2020 05:58:02 +0000 (GMT)
-Received: from [9.85.152.111] (unknown [9.85.152.111])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jun 2020 05:58:02 +0000 (GMT)
-Message-ID: <1591250278.9016.2.camel@abdul>
-Subject: Re: [mainline][Oops][bisected 2ba3e6 ] 5.7.0 boot fails with kernel
- panic on powerpc
-From:   Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     sachinp <sachinp@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        manvanth <manvanth@linux.vnet.ibm.com>,
-        linux-next <linux-next@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "aneesh.kumar" <aneesh.kumar@linux.vnet.ibm.com>,
-        akpm@linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hch <hch@lst.de>
-Date:   Thu, 04 Jun 2020 11:27:58 +0530
-In-Reply-To: <20200603133257.GL6857@suse.de>
-References: <1591181457.9020.13.camel@abdul> <20200603133257.GL6857@suse.de>
+        Thu, 4 Jun 2020 01:59:02 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D29CC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 22:59:02 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j10so4669316wrw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 22:59:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FO6ddmmMOTqzEQzFeNiwRnQByIoMnIpEHIfJrVL2Z1w=;
+        b=sop3cyur+ogstPxGG6m32GjjmzF8BI0wyDhCKwhQZkI5/EYFy29EbLmYMk5bEBmqKj
+         2LYGFwWISKuoytG/jiCbncSEp4lqvh7dm8XleRdFmNyxs7vEIG7J2VR3NfuANV9v+fGc
+         lqswC78Dt8neX4JDRNgF/XDzlq2jVfK5WQDmQyeQOGNbXpXS/mk1pxJ7HHmFJjr1UgH3
+         8UsCfpl3youRSWz7IVzLNfEdvfzy6p5FYu2KVK3ozXML/h7KGjgKSijKEZHBEpepPot5
+         oQsIYE+8AhnI3ocEoC1cwUwS79lx0hGoSlShqZQobkJvi3PSulY1tbIRzzJln8Wc35Nu
+         Bw3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FO6ddmmMOTqzEQzFeNiwRnQByIoMnIpEHIfJrVL2Z1w=;
+        b=JoTKCJOevz5JGX14D34xT2Dkfg50nzQcbQH7utd1TqizyeQ6oUyfCshnT7MRSY8074
+         OBTT2KDCVutS4PMaum9I7Uu40FAfFK25zVXDa7x/VS5LAydTcL5G2Q0kJUIfwTiF9FBu
+         tDH0k5ne86wn/Nxkct424W0fZ314I/eqFWEYUlqtFLiS11wviPed4ZPvHNywe45p7SjL
+         piCH1q0HeXUgRc4pVn0JN0Si31vi+mBM7GTpa1nE0egwOtJ+ul6MAmC0fyulYG8u/I4l
+         uHQChhrX1CPcO82k/EgpBHZ2TK+3FmUnu5vyGybWJeQXh5/Z4mkmbuSqYwmq+I+iscy7
+         +mYw==
+X-Gm-Message-State: AOAM531yKCceFaX2QaQ2h8td4fjlxsM/yjbnsBtUWVHQTING8lpO2Zu+
+        ng57YE2DbxIrYPayOi8Hv3tX9WSclzugJhc+rqk=
+X-Google-Smtp-Source: ABdhPJyDoKq6+ihPF6HjLDzKQXQIKUaeKz80DVGCBc7oqL4oTwXJI5n5A/shzDK+XctpcYZHdi3iwjpfbCsyaTsNgCg=
+X-Received: by 2002:adf:fec8:: with SMTP id q8mr2836519wrs.2.1591250340742;
+ Wed, 03 Jun 2020 22:59:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAOGVgQGhWSdLA5my72P-Rz6b4UFJ2-1xZcdmDm5m=by7vRWDAA@mail.gmail.com>
+ <CAOGVgQEOwRZoPkXwGO1+voD4Z5sPhLs_Q7piTUy15LmwPsZh4A@mail.gmail.com>
+In-Reply-To: <CAOGVgQEOwRZoPkXwGO1+voD4Z5sPhLs_Q7piTUy15LmwPsZh4A@mail.gmail.com>
+From:   Idan Yadgar <idanyadgar@gmail.com>
+Date:   Thu, 4 Jun 2020 08:58:08 +0300
+Message-ID: <CAOGVgQF2Pmcpei1RqMk+Kbk6VFXksdKmYcKG-1bxanRWia82zA@mail.gmail.com>
+Subject: Re: Capabilities are list when creating a user namespace
+To:     dhowells@redhat.com
+Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, armijn@tjaldur.nl,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-04_01:2020-06-02,2020-06-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- mlxlogscore=913 phishscore=0 cotscore=-2147483648 malwarescore=0
- adultscore=0 spamscore=0 clxscore=1015 impostorscore=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006040033
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-03 at 15:32 +0200, Joerg Roedel wrote:
-> On Wed, Jun 03, 2020 at 04:20:57PM +0530, Abdul Haleem wrote:
-> > @Joerg, Could you please have a look?
-> 
-> Can you please try the attached patch?
+Hello, sorry for duplicating the previous email, forgot to send it to
+the mailing lists as well.
+Did you miss my email?
 
-Thanks Joerg, The given patch fixes the boot problem.
+Idan Yadgar.
 
-Please add Reported-by in fix commit.
-
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-
-> 
-> diff --git a/include/asm-generic/5level-fixup.h b/include/asm-generic/5level-fixup.h
-> index 58046ddc08d0..afbab31fbd7e 100644
-> --- a/include/asm-generic/5level-fixup.h
-> +++ b/include/asm-generic/5level-fixup.h
-> @@ -17,6 +17,11 @@
->  	((unlikely(pgd_none(*(p4d))) && __pud_alloc(mm, p4d, address)) ? \
->  		NULL : pud_offset(p4d, address))
-> 
-> +#define pud_alloc_track(mm, p4d, address, mask)					\
-> +	((unlikely(pgd_none(*(p4d))) &&						\
-> +	  (__pud_alloc(mm, p4d, address) || ({*(mask)|=PGTBL_P4D_MODIFIED;0;})))?	\
-> +	  NULL : pud_offset(p4d, address))
-> +
->  #define p4d_alloc(mm, pgd, address)		(pgd)
->  #define p4d_alloc_track(mm, pgd, address, mask)	(pgd)
->  #define p4d_offset(pgd, start)			(pgd)
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 7e07f4f490cb..d46bf03b804f 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2088,35 +2088,35 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
->  		NULL : pud_offset(p4d, address);
->  }
-> 
-> -static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
-> +static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
->  				     unsigned long address,
->  				     pgtbl_mod_mask *mod_mask)
-> -
->  {
-> -	if (unlikely(pgd_none(*pgd))) {
-> -		if (__p4d_alloc(mm, pgd, address))
-> +	if (unlikely(p4d_none(*p4d))) {
-> +		if (__pud_alloc(mm, p4d, address))
->  			return NULL;
-> -		*mod_mask |= PGTBL_PGD_MODIFIED;
-> +		*mod_mask |= PGTBL_P4D_MODIFIED;
->  	}
-> 
-> -	return p4d_offset(pgd, address);
-> +	return pud_offset(p4d, address);
->  }
-> 
-> -#endif /* !__ARCH_HAS_5LEVEL_HACK */
-> -
-> -static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
-> +static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
->  				     unsigned long address,
->  				     pgtbl_mod_mask *mod_mask)
-> +
->  {
-> -	if (unlikely(p4d_none(*p4d))) {
-> -		if (__pud_alloc(mm, p4d, address))
-> +	if (unlikely(pgd_none(*pgd))) {
-> +		if (__p4d_alloc(mm, pgd, address))
->  			return NULL;
-> -		*mod_mask |= PGTBL_P4D_MODIFIED;
-> +		*mod_mask |= PGTBL_PGD_MODIFIED;
->  	}
-> 
-> -	return pud_offset(p4d, address);
-> +	return p4d_offset(pgd, address);
->  }
-> 
-> +#endif /* !__ARCH_HAS_5LEVEL_HACK */
-> +
->  static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
->  {
->  	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
-
-
--- 
-Regard's
-
-Abdul Haleem
-IBM Linux Technology Centre
-
-
-
+On Fri, May 29, 2020 at 5:48 PM Idan Yadgar <idanyadgar@gmail.com> wrote:
+>
+> Hello, did you miss my mail?
+>
+> =D7=91=D7=AA=D7=90=D7=A8=D7=99=D7=9A =D7=99=D7=95=D7=9D =D7=90=D7=B3, 24 =
+=D7=91=D7=9E=D7=90=D7=99 2020, 15:32, =D7=9E=D7=90=D7=AA Idan Yadgar =E2=80=
+=8F<idanyadgar@gmail.com>:
+>>
+>> Hello,
+>>
+>> A process which changes its user namespace (unshare or setns), or a
+>> process that is created by clone with the CLONE_NEWUSER flag has all
+>> capabilities inside the new namespace, and loses all its capabilities
+>> in the parent/previous user namespace.
+>> This poses an issue because some operations require a capability in a
+>> user namespace other then the current one for the process. The man
+>> states multiple times that a system call requires a capability in the
+>> initial user namespace (for example, open_by_handle_at requires
+>> CAP_DAC_READ_SEARCH in the initial user namespace), but this cannot
+>> happen unless the process is owned by root, thus preventing
+>> open_by_handle_at to be run inside a user namespace.
+>>
+>> Solving this problem can be done by allowing (via prctl or any other
+>> mechanism) a task to save its
+>> capabilities for a given user namespace, even when it isn't a member
+>> in that namespace.
+>>
+>> We would like to hear some thoughts about this issue and our proposed so=
+lution.
