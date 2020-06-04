@@ -2,85 +2,146 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D16EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E99C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECC2206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFC82075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AGX2JM1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgFDLVP (ORCPT
+        id S1727777AbgFDLWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:21:15 -0400
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:49817 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgFDLVP (ORCPT
+        Thu, 4 Jun 2020 07:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgFDLWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:21:15 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8C42E100E2006;
-        Thu,  4 Jun 2020 13:21:12 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 1A72A3B12FD; Thu,  4 Jun 2020 13:21:12 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 13:21:12 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
- strings
-Message-ID: <20200604112112.b3k4wrftckndscu6@wunner.de>
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-3-f.fainelli@gmail.com>
- <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
- <20200604111325.GC6644@sirena.org.uk>
+        Thu, 4 Jun 2020 07:22:17 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABE6C03E96D;
+        Thu,  4 Jun 2020 04:22:16 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49d3K31hYNz9sSc;
+        Thu,  4 Jun 2020 21:22:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591269735;
+        bh=+pASmEeVNDr1NSOgiu0O7kLS0WjldedJkdE2mr3Rdf8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AGX2JM1zVMQdKUwFBrJF9JKiCiZzau5WdqjvsHfbbEzVFojVh1q3CzthduKL1CUB+
+         LI/xh2fiQ6UZSj716Sa2+mSb3GVAsScTNKOtj7JlqJiqlHbg9QHv9LZrRBKWUjD7N4
+         qFZ2zNWLBJZCb6Ml3+3iMqYR6NHP3LZ9WDflfmRf50JYaTCGqpbSJAKcMlY2JzqsZk
+         8cudxGP7leeP28ZsrhRGv1UE0XFIvS11SKqa1iUutK90ZYkXolYCBzvo7hzkhqCq+a
+         Ks1EtycOMm4RetTAleCUF5khsU6N9vcrbQwPLBAVUZ2JHr0hu7fcvInjDXw+xIBRha
+         F35iL2ivafgfQ==
+Date:   Thu, 4 Jun 2020 21:22:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: linux-next: fix ups for clashes between akpm and powerpc trees
+Message-ID: <20200604212214.636fb3b3@canb.auug.org.au>
+In-Reply-To: <20200604174925.3610fdd1@canb.auug.org.au>
+References: <20200603202655.0ad0eacc@canb.auug.org.au>
+        <20200604165246.436f02ba@canb.auug.org.au>
+        <20200604174925.3610fdd1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604111325.GC6644@sirena.org.uk>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: multipart/signed; boundary="Sig_/nPbcj_1v_8JcRgPlYkGeC.W";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:13:25PM +0100, Mark Brown wrote:
-> On Thu, Jun 04, 2020 at 06:20:38AM +0200, Lukas Wunner wrote:
-> > On Wed, Jun 03, 2020 at 08:46:54PM -0700, Florian Fainelli wrote:
-> > > The BCM2711 SoC features 5 SPI controllers which all share the same
-> > > interrupt line, the SPI driver needs to support interrupt sharing,
-> > > therefore use the chip specific compatible string to help with that.
-> 
-> > You're saying above that the 5 controllers all share the interrupt
-> > but below you're only changing the compatible string of 4 controllers.
-> 
-> > So I assume spi0 still has its own interrupt and only the additional
-> > 4 controllers present on the BCM2711/BCM7211 share their interrupt?
-> 
-> Regardless of what's going on with the interrupts the compatible string
-> should reflect the IP version so unless for some reason someone taped
-> out two different versions of the IP it seems odd that the compatible
-> strings would vary within a given SoC.
+--Sig_/nPbcj_1v_8JcRgPlYkGeC.W
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hm.  I guess it may be possible to search the DT for other devices
-sharing the same interrupt line and thereby determine whether
-IRQF_SHARED is necessary.  The helper to perform this search could
-live in drivers/of/irq.c as I imagine it might be useful in general.
+Hi all,
+
+On Thu, 4 Jun 2020 17:49:25 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> diff --cc arch/powerpc/include/asm/nohash/32/pgtable.h
+> index 639f3b3713ec,eb8538c85077..1927e1b653f2
+> --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
+> +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+> @@@ -342,15 -334,6 +337,10 @@@ static inline int pte_young(pte_t pte
+>   	pfn_to_page((__pa(pmd_val(pmd)) >> PAGE_SHIFT))
+>   #endif
+>  =20
+> - /* Find an entry in the third-level page table.. */
+> - #define pte_index(address)		\
+> - 	(((address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+>  +#define pte_offset_kernel(dir, addr)	\
+>  +	(pmd_bad(*(dir)) ? NULL : (pte_t *)pmd_page_vaddr(*(dir)) + \
+>  +				  pte_index(addr))
+> - #define pte_offset_map(dir, addr)	pte_offset_kernel((dir), (addr))
+> - static inline void pte_unmap(pte_t *pte) { }
+>  +
+>   /*
+>    * Encode and decode a swap entry.
+>    * Note that the bits we use in a PTE for representing a swap entry
+
+I have added this hunk (sort of - see below) to linux-next for tomorrow
+as a fix for mm-consolidate-pte_index-and-pte_offset_-definitions.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 4 Jun 2020 21:16:19 +1000
+Subject: [PATCH] mm-consolidate-pte_index-and-pte_offset_-definitions-fix
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/powerpc/include/asm/nohash/32/pgtable.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/in=
+clude/asm/nohash/32/pgtable.h
+index c188a6f64bcd..d94bcd117c5b 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+@@ -341,6 +341,10 @@ static inline int pte_young(pte_t pte)
+ 	pfn_to_page((__pa(pmd_val(pmd)) >> PAGE_SHIFT))
+ #endif
+=20
++#define pte_offset_kernel(dir, addr)	\
++	(pmd_bad(*(dir)) ? NULL : (pte_t *)pmd_page_vaddr(*(dir)) + \
++				  pte_index(addr))
++
+ /*
+  * Encode and decode a swap entry.
+  * Note that the bits we use in a PTE for representing a swap entry
+--=20
+2.27.0.rc2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nPbcj_1v_8JcRgPlYkGeC.W
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Y2WYACgkQAVBC80lX
+0GyXZQf/eNdHFYlKfa+3iDMos8hf6GGuCaB7e2Oe8JwIsG9r8qFIQlrSexdp8ZzM
+X+iq7IGQ4vXiEixuGLtKQCud/HMTLFurB/ts0ft4u22GGVfKpJWIF4RSnsechPpS
+R+BRmanSOQ74zPbnPk4WtE+iSJCk5zyFji4jAAE/jxlEL0pZbStKV1uZf0FX4rfE
+b42J8uczlq/ApG83J4vnb2q/EenVIwuTuNr9gn9MTDsxu295i9VP8hhnqLIkkiXq
+d+ynjmPkh18GyA1hcD2wmefY/6yz2XwrkO1tWiVjVUqAXo/ShOPSoFPeALCmABU8
+4mJAEjZtH09YZ2U3/4x5OEj9eiWKzw==
+=KOF1
+-----END PGP SIGNATURE-----
+
+--Sig_/nPbcj_1v_8JcRgPlYkGeC.W--
