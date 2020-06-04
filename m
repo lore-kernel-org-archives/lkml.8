@@ -2,128 +2,140 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62EAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC22C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2E37207F7
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29D4207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TupHTdyg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eoTD3080"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgFDO7p (ORCPT
+        id S1729284AbgFDPBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729204AbgFDO7n (ORCPT
+        Thu, 4 Jun 2020 11:01:21 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40483 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729098AbgFDPBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:59:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11898C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:59:43 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b16so3345662pfi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xZR3lWkoYpLFg4eE+Etif6ukCUL5ApBdi/GoHnvWaEk=;
-        b=TupHTdygAigywhS3pB8tAlBUKta4lXvoAYH4dzNzhrASd2l3DGn01fOXPA/fx+ddwx
-         e63Z0EnMX9EmBApvSxhudimZg0Kyu1Ran7gh+CyYHPG3fZ0CjgSq6NhbXpLphCrF+Ouq
-         t2GxHonz+RRUwsB+KYTkj8rNjo2/BKZIMEe8c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xZR3lWkoYpLFg4eE+Etif6ukCUL5ApBdi/GoHnvWaEk=;
-        b=ci7qHv4408QcwvsiMLDf7fw3i7vXd7rtfugO2FMvWlgyqaHSy1jnzJ/D4ylUiQGzOI
-         gL7sEbaK4F4lUA7e2QyZAfO/Dv4MCwvWxfwHBL9rAlXyFzvuT0dhiScy0XARyPEthSnk
-         RhIajBracetGulsxmrGLorzN9AesA5zqxwLhCC+xziKEgrnNJipEWZaNJnX1Ko1dSkF0
-         +8jelvfoJPqUizjIeV7ONq6yd9tUl8p4zh2bvZQ3VgNJgkRBO1d1KGIjQBVppOc5aL5T
-         lBcJh+3E8PIuyjHb9PA6Ss06SLnzfQH4BLsn4w0fMg/5Rk9k+lyQ4LIM037vk43RcAJr
-         zV4Q==
-X-Gm-Message-State: AOAM531IIPHFWHjcwZtC7u+36Wy8RKq7xy0iqQfIqt0ntJFGFHr/llLj
-        NLJLBaT/iVAyVa/Y8FyJYCwTBg==
-X-Google-Smtp-Source: ABdhPJwvM5Okdp4t/lqPdqt9FJOxz3H8PoeKTiCxL62lJBkvY0bVXGWNEvmo0e7yAT0Y8leJzLPW1g==
-X-Received: by 2002:a63:d544:: with SMTP id v4mr4979382pgi.60.1591282782325;
-        Thu, 04 Jun 2020 07:59:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w65sm4752697pfb.160.2020.06.04.07.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 07:59:41 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 07:59:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mm@kvack.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 09/10] treewide: Remove uninitialized_var() usage
-Message-ID: <202006040757.0DFC3F28E@keescook>
-References: <20200603233203.1695403-1-keescook@chromium.org>
- <20200603233203.1695403-10-keescook@chromium.org>
- <20200604132306.GO6578@ziepe.ca>
+        Thu, 4 Jun 2020 11:01:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591282879;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DUJSsxamSXNS7464W+wDMFH7KOGftVp/cJbzl7mlIr8=;
+        b=eoTD3080T91wFoY4mFuInMEHp3NZ0XZx/lHJ5b15iuNw7mMYKziLOO6j5pRseL1hjx1N+w
+        mhGvA9Giqu9e3+/BuaUNtppKbF4dAICA214wzTeOR9NJixLKi0MM274AufspRBaHyQroV9
+        NekqwOctOwiBOXG5jVnYMRAU5eDQegk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-fQD-0OoMPTecJ1u66hTwCg-1; Thu, 04 Jun 2020 11:01:17 -0400
+X-MC-Unique: fQD-0OoMPTecJ1u66hTwCg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48045464;
+        Thu,  4 Jun 2020 15:01:15 +0000 (UTC)
+Received: from gondolin (ovpn-112-76.ams2.redhat.com [10.36.112.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D0A061987;
+        Thu,  4 Jun 2020 15:01:09 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 17:01:06 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, kevin.tian@intel.com, shaopeng.he@intel.com,
+        yi.l.liu@intel.com, xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 02/10] vfio/pci: macros to generate module_init
+ and module_exit for vendor modules
+Message-ID: <20200604170106.561db9ad.cohuck@redhat.com>
+In-Reply-To: <20200518024510.14115-1-yan.y.zhao@intel.com>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+        <20200518024510.14115-1-yan.y.zhao@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604132306.GO6578@ziepe.ca>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 10:23:06AM -0300, Jason Gunthorpe wrote:
-> On Wed, Jun 03, 2020 at 04:32:02PM -0700, Kees Cook wrote:
-> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > (or can in the future), and suppresses unrelated compiler warnings
-> > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
-> > either simply initialize the variable or make compiler changes.
-> > 
-> > I preparation for removing[2] the[3] macro[4], remove all remaining
-> > needless uses with the following script:
-> > 
-> > git grep '\buninitialized_var\b' | cut -d: -f1 | sort -u | \
-> > 	xargs perl -pi -e \
-> > 		's/\buninitialized_var\(([^\)]+)\)/\1/g;
-> > 		 s:\s*/\* (GCC be quiet|to make compiler happy) \*/$::g;'
-> > 
-> > drivers/video/fbdev/riva/riva_hw.c was manually tweaked to avoid
-> > pathological white-space.
-> > 
-> > No outstanding warnings were found building allmodconfig with GCC 9.3.0
-> > for x86_64, i386, arm64, arm, powerpc, powerpc64le, s390x, mips, sparc64,
-> > alpha, and m68k.
+On Sun, 17 May 2020 22:45:10 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
+
+> vendor modules call macro module_vfio_pci_register_vendor_handler to
+> generate module_init and module_exit.
+> It is necessary to ensure that vendor modules always call
+> vfio_pci_register_vendor_driver() on driver loading and
+> vfio_pci_unregister_vendor_driver on driver unloading,
+> because
+> (1) at compiling time, there's only a dependency of vendor modules on
+> vfio_pci.
+> (2) at runtime,
+> - vendor modules add refs of vfio_pci on a successful calling of
+>   vfio_pci_register_vendor_driver() and deref of vfio_pci on a
+>   successful calling of vfio_pci_unregister_vendor_driver().
+> - vfio_pci only adds refs of vendor module on a successful probe of vendor
+>   driver.
+>   vfio_pci derefs vendor module when unbinding from a device.
 > 
-> At least in the infiniband part I'm confident that old gcc versions
-> will print warnings after this patch.
+> So, after vfio_pci is unbound from a device, the vendor module to that
+> device is free to get unloaded. However, if that vendor module does not
+> call vfio_pci_unregister_vendor_driver() in its module_exit, vfio_pci may
+> hold a stale pointer to vendor module.
 > 
-> As the warnings are wrong, do we care? Should old gcc maybe just -Wno-
-> the warning?
-
-I *think* a lot of those are from -Wmaybe-uninitialized, but Linus just
-turned that off unconditionally in v5.7:
-78a5255ffb6a ("Stop the ad-hoc games with -Wno-maybe-initialized")
-
-I'll try to double-check with some older gcc versions. My compiler
-collection is mostly single-axis: lots of arches, not lots of versions. ;)
-
-> Otherwise the IB bits look ok to me
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  include/linux/vfio.h | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> Acked-by: Jason Gunthorpe <jgg@mellanox.com>
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index 3e53deb012b6..f3746608c2d9 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -223,4 +223,31 @@ struct vfio_pci_vendor_driver_ops {
+>  };
+>  int __vfio_pci_register_vendor_driver(struct vfio_pci_vendor_driver_ops *ops);
+>  void vfio_pci_unregister_vendor_driver(struct vfio_device_ops *device_ops);
+> +
+> +#define vfio_pci_register_vendor_driver(__name, __probe, __remove,	\
+> +					__device_ops)			\
+> +static struct vfio_pci_vendor_driver_ops  __ops ## _node = {		\
+> +	.owner		= THIS_MODULE,					\
+> +	.name		= __name,					\
+> +	.probe		= __probe,					\
+> +	.remove		= __remove,					\
+> +	.device_ops	= __device_ops,					\
+> +};									\
+> +__vfio_pci_register_vendor_driver(&__ops ## _node)
+> +
+> +#define module_vfio_pci_register_vendor_handler(name, probe, remove,	\
+> +						device_ops)		\
+> +static int __init device_ops ## _module_init(void)			\
+> +{									\
+> +	vfio_pci_register_vendor_driver(name, probe, remove,		\
+> +					device_ops);			\
 
-Thanks!
+What if this function fails (e.g. with -ENOMEM)?
 
--- 
-Kees Cook
+> +	return 0;							\
+> +};									\
+> +static void __exit device_ops ## _module_exit(void)			\
+> +{									\
+> +	vfio_pci_unregister_vendor_driver(device_ops);			\
+> +};									\
+> +module_init(device_ops ## _module_init);				\
+> +module_exit(device_ops ## _module_exit)
+> +
+>  #endif /* VFIO_H */
+
