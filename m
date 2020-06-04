@@ -2,132 +2,198 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC55C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D79EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF65207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E044A207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BlBWPqpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgFDGov (ORCPT
+        id S1727078AbgFDGqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:44:51 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30581 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgFDGoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:44:46 -0400
-IronPort-SDR: V6OsyqcfcyOBgZQlHSsptKANTSuPSl6zBXklPJyl2I4yhhXIS53l9C+c2oH+ZlsHow0c8Sny6k
- 1rEBEMBBocsg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 23:44:45 -0700
-IronPort-SDR: Hi+ARyh48YSb32/Pt8vOy4p7zx/cFnMDyZyMrnGYxWixi6a4PkX1oDrgQ4wPYlujYL2xH3fTes
- IcRlwA5YSB6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
-   d="scan'208";a="445398016"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jun 2020 23:44:44 -0700
-Date:   Wed, 3 Jun 2020 23:44:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Message-ID: <20200604064444.GD1740285@iweiny-DESK2.sc.intel.com>
-References: <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
- <20200519194215.GA71941@roeck-us.net>
- <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
- <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
- <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
- <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
- <20200603211416.GA1740285@iweiny-DESK2.sc.intel.com>
- <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
- <20200604062226.GA1740345@iweiny-DESK2.sc.intel.com>
- <20200604063745.GB202650@kernel.org>
+        Thu, 4 Jun 2020 02:46:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48690 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgFDGqC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 02:46:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0546c2CR182582;
+        Thu, 4 Jun 2020 06:45:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=vUCYjp1f2wNESYetrOp1ZqmW5F/o/FmwplfPJxUOq/I=;
+ b=BlBWPqpf/PAKOO+PwXnUCnQDAX4S9pnxguIs9OMO5U28MBvSl5RODQ1HT8XkhT7qbhNF
+ +98WlrIe5+MKY2fQPvv2khmj8j7rCy8+eh+Q3XYBJN4dZ2Xpk8H20rKEJCndsF6I2yt3
+ dNxJ7FJ/AjH4yuQ9SvK8tZYHNNtGB2K1I579wIY/IYN35odV1W1hx5oy2/N1M/gQpQrM
+ p/twRrXqlnAmC4M3rows4W88LNsdPvB+3vKKtbyxludRb+L3vyd8Cyv186PcYO/bl/2C
+ Fh5DmC3gY8ndVv/CiS89B6mTqPEHaUt0n0044T+ypPxvsKa23gVvqOyD8Shl+DWpQt0K Uw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31bewr4x61-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 04 Jun 2020 06:45:51 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0546c4iJ186253;
+        Thu, 4 Jun 2020 06:43:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31dju4gnba-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Jun 2020 06:43:51 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0546hn2R004470;
+        Thu, 4 Jun 2020 06:43:49 GMT
+Received: from [10.159.230.80] (/10.159.230.80)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Jun 2020 23:43:49 -0700
+Subject: Re: [PATCH 1/1] nvme-fcloop: verify wwnn and wwpn format
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     linux-nvme@lists.infradead.org, james.smart@broadcom.com
+Cc:     sagi@grimberg.me, linux-kernel@vger.kernel.org,
+        chaitanya.kulkarni@wdc.com, hch@lst.de
+References: <20200526042118.17836-1-dongli.zhang@oracle.com>
+Message-ID: <38a2cfb9-df2a-c5cb-6797-2b96ef049c7c@oracle.com>
+Date:   Wed, 3 Jun 2020 23:43:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604063745.GB202650@kernel.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200526042118.17836-1-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006040043
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=2 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006040043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:37:45AM +0300, Mike Rapoport wrote:
-> On Wed, Jun 03, 2020 at 11:22:26PM -0700, Ira Weiny wrote:
-> > On Wed, Jun 03, 2020 at 04:44:17PM -0700, Guenter Roeck wrote:
-> > 
-> > With linux-next on sparc I too see the spinlock issue; something like:
-> > 
-> > ...
-> > Starting syslogd: BUG: spinlock recursion on CPU#0, S01syslogd/139
-> >  lock: 0xf53ef350, .magic: dead4ead, .owner: S01syslogd/139, .owner_cpu: 0
-> > CPU: 0 PID: 139 Comm: S01syslogd Not tainted 5.7.0-next-20200603 #1
-> > [f0067d00 : 
-> > do_raw_spin_lock+0xa8/0xd8 ] 
-> > [f00d598c : 
-> > copy_page_range+0x328/0x804 ] 
-> > [f0025c34 : 
-> > dup_mm+0x334/0x434 ] 
-> > [f0027198 : 
-> > copy_process+0x1248/0x12d4 ] 
-> > [f00273b8 : 
-> > _do_fork+0x54/0x30c ] 
-> > [f00276e4 : 
-> > do_fork+0x5c/0x6c ] 
-> > [f000de44 : 
-> > sparc_do_fork+0x18/0x38 ] 
-> > [f000b7f4 : 
-> > do_syscall+0x34/0x40 ] 
-> > [5010cd4c : 
-> > 0x5010cd4c ] 
-> > 
-> > 
-> > I'm going to bisect between there and HEAD.
+May I get feedback for this?
+
+For the first time I use fcloop, I set:
+
+# echo "wwnn=0x3,wwpn=0x1" > /sys/class/fcloop/ctl/add_target_port
+
+However, I would not be able to move forward if I use "0x3" or "0x1" for nvme-fc
+target or host further. Instead, the address and port should be
+0x0000000000000003 and 0x0000000000000001.
+
+This patch would sync the requirements of input format for nvme-fc and
+nvme-fcloop, unless this would break existing test suite (e.g., blktest).
+
+Thank you very much!
+
+Dongli Zhang
+
+On 5/25/20 9:21 PM, Dongli Zhang wrote:
+> The nvme host and target verify the wwnn and wwpn format via
+> nvme_fc_parse_traddr(). For instance, it is required that the length of
+> wwnn to be either 21 ("nn-0x") or 19 (nn-).
 > 
-> The sparc issue should be fixed by 
+> Add this verification to nvme-fcloop so that the input should always be in
+> hex and the length of input should always be 18.
 > 
-> https://lore.kernel.org/lkml/20200526173302.377-1-will@kernel.org
-
-Saw your other email.  And yes they are!
-
-Thanks!
-Ira
-
+> Otherwise, the user may use e.g. 0x2 to create fcloop local port, while
+> 0x0000000000000002 is required for nvme host and target. This makes the
+> requirement of format confusing.
+> 
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+>  drivers/nvme/target/fcloop.c | 29 +++++++++++++++++++++++------
+>  1 file changed, 23 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
+> index f69ce66e2d44..14124e6d4bf2 100644
+> --- a/drivers/nvme/target/fcloop.c
+> +++ b/drivers/nvme/target/fcloop.c
+> @@ -43,6 +43,17 @@ static const match_table_t opt_tokens = {
+>  	{ NVMF_OPT_ERR,		NULL		}
+>  };
 >  
-> > Ira
+> +static int fcloop_verify_addr(substring_t *s)
+> +{
+> +	size_t blen = s->to - s->from + 1;
+> +
+> +	if (strnlen(s->from, blen) != NVME_FC_TRADDR_HEXNAMELEN + 2 ||
+> +	    strncmp(s->from, "0x", 2))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>  static int
+>  fcloop_parse_options(struct fcloop_ctrl_options *opts,
+>  		const char *buf)
+> @@ -64,14 +75,16 @@ fcloop_parse_options(struct fcloop_ctrl_options *opts,
+>  		opts->mask |= token;
+>  		switch (token) {
+>  		case NVMF_OPT_WWNN:
+> -			if (match_u64(args, &token64)) {
+> +			if (fcloop_verify_addr(args) ||
+> +			    match_u64(args, &token64)) {
+>  				ret = -EINVAL;
+>  				goto out_free_options;
+>  			}
+>  			opts->wwnn = token64;
+>  			break;
+>  		case NVMF_OPT_WWPN:
+> -			if (match_u64(args, &token64)) {
+> +			if (fcloop_verify_addr(args) ||
+> +			    match_u64(args, &token64)) {
+>  				ret = -EINVAL;
+>  				goto out_free_options;
+>  			}
+> @@ -92,14 +105,16 @@ fcloop_parse_options(struct fcloop_ctrl_options *opts,
+>  			opts->fcaddr = token;
+>  			break;
+>  		case NVMF_OPT_LPWWNN:
+> -			if (match_u64(args, &token64)) {
+> +			if (fcloop_verify_addr(args) ||
+> +			    match_u64(args, &token64)) {
+>  				ret = -EINVAL;
+>  				goto out_free_options;
+>  			}
+>  			opts->lpwwnn = token64;
+>  			break;
+>  		case NVMF_OPT_LPWWPN:
+> -			if (match_u64(args, &token64)) {
+> +			if (fcloop_verify_addr(args) ||
+> +			    match_u64(args, &token64)) {
+>  				ret = -EINVAL;
+>  				goto out_free_options;
+>  			}
+> @@ -141,14 +156,16 @@ fcloop_parse_nm_options(struct device *dev, u64 *nname, u64 *pname,
+>  		token = match_token(p, opt_tokens, args);
+>  		switch (token) {
+>  		case NVMF_OPT_WWNN:
+> -			if (match_u64(args, &token64)) {
+> +			if (fcloop_verify_addr(args) ||
+> +			    match_u64(args, &token64)) {
+>  				ret = -EINVAL;
+>  				goto out_free_options;
+>  			}
+>  			*nname = token64;
+>  			break;
+>  		case NVMF_OPT_WWPN:
+> -			if (match_u64(args, &token64)) {
+> +			if (fcloop_verify_addr(args) ||
+> +			    match_u64(args, &token64)) {
+>  				ret = -EINVAL;
+>  				goto out_free_options;
+>  			}
 > 
-> -- 
-> Sincerely yours,
-> Mike.
