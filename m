@@ -2,84 +2,232 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60377C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7F8207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:13:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MMExCahL"
+	by mail.kernel.org (Postfix) with ESMTP id B57AB207DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591280065;
+	bh=SCLkXgVzXNdzdCHPei9pY0G0PDi8p/GQBiMYtchY+SI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=qcizKSDZsqss4hNUL7/goWespl2QOIANC3kV00xvFf9KsSNdHcJ+ZawgFSCxcMHIo
+	 Tqt6coYu+KMe81/x1HU0xuhpqc2AW0MkcVWZ4CGTGubkc4/++bXG0XN0m1GiPUFvOJ
+	 U8jHLAPY5TUAM1cgDESGcRIk08ji3AU9Lmr7FqXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgFDONo (ORCPT
+        id S1728851AbgFDOOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:13:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgFDONn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:13:43 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D9EC08C5C0;
-        Thu,  4 Jun 2020 07:13:43 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f112d0035262982e5edc845.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2d00:3526:2982:e5ed:c845])
+        Thu, 4 Jun 2020 10:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728604AbgFDOOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:14:24 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 90D271EC00EE;
-        Thu,  4 Jun 2020 16:13:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591280019;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=PiS/G1re/6DoKop+Jf7bGyd3ouNTY6QNqAFqqHmxdOU=;
-        b=MMExCahLnZvU570uryyCYn73tp+qAN1XLG9yMmOBdI3ywjh1fxtJHVKZSmLjB7eJxmXSSb
-        orxwuH1LOIYZjPTKsjxkKgNshPFNFkbcc0LTBUjmkeVkqdG0jPYqwxvIh0AhHL+tS1JsVv
-        wI1Q9hcNm9nN9znG9UzP47xbobbgR9Y=
-Date:   Thu, 4 Jun 2020 16:13:33 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 31/75] x86/head/64: Install boot GDT
-Message-ID: <20200604141333.GA2246@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-32-joro@8bytes.org>
- <20200518082313.GA25034@zn.tnic>
- <20200604114821.GA30945@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5019B207D8;
+        Thu,  4 Jun 2020 14:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591280063;
+        bh=SCLkXgVzXNdzdCHPei9pY0G0PDi8p/GQBiMYtchY+SI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=doB9Gd21f40QxuWhGjumdgTAUERB37eRuSOY476S6mPPnqX7k/vDinTJm73sztGbL
+         gkLYszJji7F24A2ozyeCtVljiqkqtKg/IQcYEMFoBrAxPuVORkxltJdqZrBvx5iRup
+         ib4GNQQhpEWzu97qWn86QU1tNbMPIFYfEBiyomHQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2D9CB35228BC; Thu,  4 Jun 2020 07:14:23 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 07:14:23 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH 2/9] rcu: Fixup noinstr warnings
+Message-ID: <20200604141423.GY29598@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200603114014.152292216@infradead.org>
+ <20200603114051.896465666@infradead.org>
+ <20200603164600.GQ29598@paulmck-ThinkPad-P72>
+ <20200603171320.GE2570@hirez.programming.kicks-ass.net>
+ <20200604033409.GX29598@paulmck-ThinkPad-P72>
+ <CANpmjNPmXLR1MsLonhn_gdDuOquzQ0Ovw7PAWejOJ-aV2F=iHg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604114821.GA30945@8bytes.org>
+In-Reply-To: <CANpmjNPmXLR1MsLonhn_gdDuOquzQ0Ovw7PAWejOJ-aV2F=iHg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 01:48:21PM +0200, Joerg Roedel wrote:
-> Yeah, seems to work. Updated patch attached.
+On Thu, Jun 04, 2020 at 08:02:31AM +0200, Marco Elver wrote:
+> On Thu, 4 Jun 2020 at 05:34, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Wed, Jun 03, 2020 at 07:13:20PM +0200, Peter Zijlstra wrote:
+> > > On Wed, Jun 03, 2020 at 09:46:00AM -0700, Paul E. McKenney wrote:
+> > >
+> > > > > --- a/kernel/rcu/tree.c
+> > > > > +++ b/kernel/rcu/tree.c
+> > > > > @@ -250,7 +250,7 @@ static noinstr void rcu_dynticks_eqs_ent
+> > > > >    * next idle sojourn.
+> > > > >    */
+> > > > >   rcu_dynticks_task_trace_enter();  // Before ->dynticks update!
+> > > > > - seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+> > > > > + seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+> > > >
+> > > > To preserve KCSAN's ability to see this, there would be something like
+> > > > instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks)) prior
+> > > > to the instrumentation_end() invoked before rcu_dynticks_eqs_enter()
+> > > > in each of rcu_eqs_enter() and rcu_nmi_exit(), correct?
+> > >
+> > > Yes.
+> > >
+> > > > >   // RCU is no longer watching.  Better be in extended quiescent state!
+> > > > >   WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+> > > > >                (seq & RCU_DYNTICK_CTRL_CTR));
+> > > > > @@ -274,13 +274,13 @@ static noinstr void rcu_dynticks_eqs_exi
+> > > > >    * and we also must force ordering with the next RCU read-side
+> > > > >    * critical section.
+> > > > >    */
+> > > > > - seq = atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+> > > > > + seq = arch_atomic_add_return(RCU_DYNTICK_CTRL_CTR, &rdp->dynticks);
+> > > >
+> > > > And same here, but after the instrumentation_begin() following
+> > > > rcu_dynticks_eqs_exit() in both rcu_eqs_exit() and rcu_nmi_enter(),
+> > > > correct?
+> > >
+> > > Yep.
+> > >
+> > > > >   // RCU is now watching.  Better not be in an extended quiescent state!
+> > > > >   rcu_dynticks_task_trace_exit();  // After ->dynticks update!
+> > > > >   WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+> > > > >                !(seq & RCU_DYNTICK_CTRL_CTR));
+> > > > >   if (seq & RCU_DYNTICK_CTRL_MASK) {
+> > > > > -         atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
+> > > > > +         arch_atomic_andnot(RCU_DYNTICK_CTRL_MASK, &rdp->dynticks);
+> > > >
+> > > > This one is gone in -rcu.
+> > >
+> > > Good, because that would make things 'complicated' with the external
+> > > instrumentation call. And is actually the reason I didn't even attempt
+> > > it this time around.
+> > >
+> > > > >           smp_mb__after_atomic(); /* _exit after clearing mask. */
+> > > > >   }
+> > > > >  }
+> > > > > @@ -313,7 +313,7 @@ static __always_inline bool rcu_dynticks
+> > > > >  {
+> > > > >   struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > > > >
+> > > > > - return !(atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
+> > > > > + return !(arch_atomic_read(&rdp->dynticks) & RCU_DYNTICK_CTRL_CTR);
+> > >
+> > > The above is actually instrumented by KCSAN, due to arch_atomic_read()
+> > > being a READ_ONCE() and it now understanding volatile.
+> > >
+> > > > Also instrument_atomic_write(&rdp->dynticks, sizeof(rdp->dynticks)) as
+> >
+> > Right, this should instead be instrument_read(...).
+> >
+> > Though if KCSAN is unconditionally instrumenting volatile, how does
+> > this help?  Or does KCSAN's instrumentation of volatile somehow avoid
+> > causing trouble?
+> 
+> When used normally outside noinstr functions, because this is an
+> __always_inline function, it will be instrumented. Within noinstr
+> (which imply __no_kcsan) functions it should not be instrumented.
 
-Looks nice, thanks!
+Got it, thank you!
 
--- 
-Regards/Gruss,
-    Boris.
+This is going to require some serious commenting.  ;-)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+							Thanx, Paul
+
+> Thanks,
+> -- Marco
+> 
+> 
+> > > > follows:
+> > > >
+> > > > o   rcu_nmi_exit(): After each following instrumentation_begin().
+> > >
+> > > Yes
+> > >
+> > > > o   In theory in rcu_irq_exit_preempt(), but as this generates code
+> > > >     only in lockdep builds, it might not be worth worrying about.
+> > > >
+> > > > o   Ditto for rcu_irq_exit_check_preempt().
+> > > >
+> > > > o   Ditto for __rcu_irq_enter_check_tick().
+> > >
+> > > Not these, afaict they're all the above arch_atomic_read(), which is
+> > > instrumented due to volatile in these cases.
+> > >
+> > > > o   rcu_nmi_enter(): After each following instrumentation_begin().
+> > >
+> > > Yes
+> > >
+> > > > o   __rcu_is_watching() is itself noinstr:
+> > > >
+> > > >     o       idtentry_enter_cond_rcu(): After each following
+> > > >             instrumentation_begin().
+> > > >
+> > > > o   rcu_is_watching(): Either before or after the call to
+> > > >     rcu_dynticks_curr_cpu_in_eqs().
+> > >
+> > > Something like that yes.
+> > >
+> > > > >  }
+> > > > >
+> > > > >  /*
+> > > > > @@ -692,6 +692,7 @@ noinstr void rcu_nmi_exit(void)
+> > > > >  {
+> > > > >   struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+> > > > >
+> > > > > + instrumentation_begin();
+> > > > >   /*
+> > > > >    * Check for ->dynticks_nmi_nesting underflow and bad ->dynticks.
+> > > > >    * (We are exiting an NMI handler, so RCU better be paying attention
+> > > > > @@ -705,7 +706,6 @@ noinstr void rcu_nmi_exit(void)
+> > > > >    * leave it in non-RCU-idle state.
+> > > > >    */
+> > > > >   if (rdp->dynticks_nmi_nesting != 1) {
+> > > > > -         instrumentation_begin();
+> > > > >           trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
+> > > > >                             atomic_read(&rdp->dynticks));
+> > > > >           WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+> > > > > @@ -714,7 +714,6 @@ noinstr void rcu_nmi_exit(void)
+> > > > >           return;
+> > > > >   }
+> > > > >
+> > > > > - instrumentation_begin();
+> > > > >   /* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
+> > > > >   trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
+> > > > >   WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+> > > >
+> > > > This one looks to be having no effect on instrumentation of atomics, but
+> > > > rather coalescing a pair of instrumentation_begin() into one.
+> > > >
+> > > > Do I understand correctly?
+> > >
+> > > Almost, it puts the WARN_ON_ONCE()s under instrumentation_begin() too,
+> > > and that makes a differnce, iirc it was the
+> > > rcu_dynticks_curr_cpu_in_eqs() call that stood out. But that could've
+> > > been before I switched it to arch_atomic_read(). In any case, I find
+> > > this form a lot clearer.
+> >
+> > Got it, thank you.
+> >
+> >                                                 Thanx, Paul
