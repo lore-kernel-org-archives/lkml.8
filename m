@@ -2,146 +2,128 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A024DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EEEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797572067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591307030;
-	bh=NrT7kxPJZH9oq0NI7hXVoXdbIA1zZsJXsd3+en/OdUk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=valAux3ik2H6IaZM6zvt/ztC0f8Buf4ww4DV6xg3MKVQhXdbPciVLx/qa0V76TQxe
-	 4zb92EEfwcC7sfhvUYl9ihXXH+7fGt7gO2IhfzM0CVRXrr6L3bV7qjBH+fES74Eejl
-	 XoSazEmm6VWm0pFyZdOwEeZ1DbeT56j43sk//PcU=
+	by mail.kernel.org (Postfix) with ESMTP id C14BF2067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:49:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IWBW759K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgFDVnt (ORCPT
+        id S1728269AbgFDVtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 17:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbgFDVnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:43:49 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB442067B;
-        Thu,  4 Jun 2020 21:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591307028;
-        bh=NrT7kxPJZH9oq0NI7hXVoXdbIA1zZsJXsd3+en/OdUk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=r8aUrwNbHRix1KcN/0gp2RjDKP6AUB88k/5FTg4dFXc6HUQjUPB0cTVS6vvLoLDhV
-         FVvDfS1pPkJwnLSAbcQq4yJKIXEP4oMXG3E5dDz7cylvZMkcj6G0wTD0LDPHf3hp6d
-         Ay4t4J92gQ7iRig2XwcJxKCWT/ln2zvfWfTec4Mg=
-Date:   Thu, 4 Jun 2020 14:43:47 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Charan Teja Reddy <charante@codeaurora.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        vinmenon@codeaurora.org
-Subject: Re: [PATCH] mm, page_alloc: skip ->waternark_boost for atomic
- order-0 allocations
-Message-Id: <20200604144347.7804bc81bbd6dd3027a1cb10@linux-foundation.org>
-In-Reply-To: <1589882284-21010-1-git-send-email-charante@codeaurora.org>
-References: <1589882284-21010-1-git-send-email-charante@codeaurora.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 4 Jun 2020 17:49:41 -0400
+Received: from mail-eopbgr1320122.outbound.protection.outlook.com ([40.107.132.122]:8249
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbgFDVtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 17:49:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R//VyhcFFRd1ELifyD8Q7rDzfEAOl7JAjUaC07rJHzuh46tjAAdRLWouE/BKUKaT9uiatwcNcNrOwX9+LJA4x8x337sGr9gmY2VOKxNnPqfsRuINHVOw4QZwGrj4YbUlKeeeCAZLQppBkL0XqlTaUeO1C4DQGvK/+w5egcqa9mEk/l32rGZZy9DGrIDuvfBOAJX4emDyAkvXAXRbjFRLgHJdKYYL0RmYjE5y3mjoLdj9CJC9Gs3b5ihkxPc8Mg4T9q+WDL53L7x3jhO2yL27Lt44dapp9SgM6jOgOqIO/JkJWvZvKRbt/M29DBCZgLozzFt8nN7uAkZvsynO02tiQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQu0y/eedBIMGwq+dIwMvSZGC83/S6X/U2Ns1PJiOug=;
+ b=mf1QVu5mW/RTFlbrgV9/8C7Hgdo6EHQtZFESuOMr6nv11EjZ/UY0QDOfQZvQZwgUHpd7p+7ZfXvnVSpQqCS6/KA6X5pDKHMbAJvoekU0FvW5rOyEAygDnTYvk/lXwLlStXxcbaYlYbmYZi2X4yLxcYHMN28tRf86EMxYFp3eVuz1g6I510qr3PT0tW8pmwJU6LS5hGi3cLEJG4hthlBcvWv2ZU/gYyWWgstq2dwDmXbf63kyZwFepcEhInpkJfxHibQ72CoIILrkdJA4EtFykAqkasAs4pS1rFutk/3lFEwLcZNzfQLdu64I3vndjKA09E/KfJ8jPea08lksPwyhGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQu0y/eedBIMGwq+dIwMvSZGC83/S6X/U2Ns1PJiOug=;
+ b=IWBW759Kne5IuFoz45jGbB38E0JtREWHuunXkwd9GIwJQVPcQuOrKitr2yVkWjo6M95T+EPaMeMTh2oxXSgAQMCZX9QjsKMSX7fWqU8CZfS+DxyCZAwBA6a8BqgmVaWaX6FaYK1+GDs5DO+1lXrvHgqfXRoGLMsqH9akgnytLbM=
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::19)
+ by HK0P153MB0339.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.3; Thu, 4 Jun
+ 2020 21:49:31 +0000
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983]) by HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983%7]) with mapi id 15.20.3088.011; Thu, 4 Jun 2020
+ 21:49:31 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "efremov@linux.com" <efremov@linux.com>,
+        Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] scsi: storvsc: Use kzfree() in storvsc_suspend()
+Thread-Topic: [PATCH] scsi: storvsc: Use kzfree() in storvsc_suspend()
+Thread-Index: AQHWOrkjuNlCF70aE0iSK1Gft60RkajI/fMQ
+Date:   Thu, 4 Jun 2020 21:49:31 +0000
+Message-ID: <HK0P153MB03228498F6E0AD292909CC7BBF890@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+References: <20200604130406.108940-1-efremov@linux.com>
+ <CAA42JLat6Ern5_mztmoBX9-ONtmz=gZE3YUphY+njTa+A=efVw@mail.gmail.com>
+ <696a6af8-744d-01b5-4a37-5320887e9108@linux.com>
+In-Reply-To: <696a6af8-744d-01b5-4a37-5320887e9108@linux.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-04T21:49:28Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3cfe004-f624-4e11-8802-ac1e1393a663;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: linux.com; dkim=none (message not signed)
+ header.d=none;linux.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2601:600:a280:7f70:e404:4689:ed94:8298]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2a9dca31-7efc-4860-f1f3-08d808d129eb
+x-ms-traffictypediagnostic: HK0P153MB0339:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB0339DB6E82E5604B79A2FE37BF890@HK0P153MB0339.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 04244E0DC5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oSHoNXY14aOxrjiag9B6zy1DERFKbQNKu4cuDoJ2EMwiD0UX8epfD3yJEjxCrDgObXnsO4tIPT3G+K3hfLd4a51TIn6IQsZOMwRn9c/Dy2VZI2ubFhN81lxuT7LbHbhwDDF4U6LrBQEqQG6Gs/AtBIgNIzF0T+esNei9XQgNrSKmUNbFuxh3EVoZDrIATRT80SJdulJ69Xab7A9bcdv8rSZm12ElMnv3FMuugkF8B/+5zDeHrjaPnPjufT6i2zQe1scP/7R6NvTWQefc/bIK28piBZO/aJUXc6FRiOUBvAG3wqf8x7tRDup4cEZlYvMZwj2oUThJ3k9E/mFHCMEFOw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0322.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(39860400002)(346002)(136003)(396003)(8936002)(5660300002)(4744005)(186003)(8676002)(7696005)(83380400001)(66946007)(76116006)(478600001)(2906002)(71200400001)(10290500003)(82950400001)(82960400001)(6636002)(4326008)(33656002)(54906003)(52536014)(6506007)(316002)(66476007)(86362001)(9686003)(55016002)(110136005)(8990500004)(66556008)(64756008)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: lieWSi4q/ix3XjrjPRz15st05UXQrIZyarsQFJyBkKeP76kkMWd2oDFpZwmyY5rrZMTtNGxTeEX0c8loqHWgfntTGhruhfeCdTF5m3dkgRelZmdqN/Gf+R+qnTiRshnSVWWOFMqglMJsEFV+1TV9gyH4mLIX4TVOZr2r2sYxnZ91ePyL8nUbUvrKIWTe6WJ3BVlqv28GJHsmhgcm0DRp9HvfDS/Dic49iBRpqM+BhDaflNCTk0NBJXnOZUKXlvqNrh5LcGTb68YzTZMa6qykNTUE3TeFfVcqvvuuMirY3avAo0iu+FR52waCzgd05GvF9qfODKtJnYsaSQI5VCJhT3nhZqmJg+SGB99gxmX/m4kbGBr/jzFuzVYEusFn8WfUF+mLlgpHd/FLTipS/SL2GCni4s3cm5rNutdnuTxmXAgGd08Y6MU8zOD2PsWTpIo04tPoEXldh7sfvr0a/OJRG4SodxcRHqofMKn9jHVvCUia/y1djEJXzXuA/MQ19+Ja6gnVa0zaSWtipdNq9Cp8dZo4TRxa4nRk6hkY9dAq9boC3Mh+wCaBBG5sTtHhf5Qn
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a9dca31-7efc-4860-f1f3-08d808d129eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 21:49:31.3273
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wqTJXO+N3UhSlSuKqB3obR3PVCEFnxiuK4DXcDX7+0Y8NCgB4KuFI4zWe0IIhSQd1QyUbBUFaP/+KshlJP5PHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0339
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 15:28:04 +0530 Charan Teja Reddy <charante@codeaurora.org> wrote:
-
-> When boosting is enabled, it is observed that rate of atomic order-0
-> allocation failures are high due to the fact that free levels in the
-> system are checked with ->watermark_boost offset. This is not a problem
-> for sleepable allocations but for atomic allocations which looks like
-> regression.
-> 
-> This problem is seen frequently on system setup of Android kernel
-> running on Snapdragon hardware with 4GB RAM size. When no extfrag event
-> occurred in the system, ->watermark_boost factor is zero, thus the
-> watermark configurations in the system are:
->    _watermark = (
->           [WMARK_MIN] = 1272, --> ~5MB
->           [WMARK_LOW] = 9067, --> ~36MB
->           [WMARK_HIGH] = 9385), --> ~38MB
->    watermark_boost = 0
-> 
-> After launching some memory hungry applications in Android which can
-> cause extfrag events in the system to an extent that ->watermark_boost
-> can be set to max i.e. default boost factor makes it to 150% of high
-> watermark.
->    _watermark = (
->           [WMARK_MIN] = 1272, --> ~5MB
->           [WMARK_LOW] = 9067, --> ~36MB
->           [WMARK_HIGH] = 9385), --> ~38MB
->    watermark_boost = 14077, -->~57MB
-> 
-> With default system configuration, for an atomic order-0 allocation to
-> succeed, having free memory of ~2MB will suffice. But boosting makes
-> the min_wmark to ~61MB thus for an atomic order-0 allocation to be
-> successful system should have minimum of ~23MB of free memory(from
-> calculations of zone_watermark_ok(), min = 3/4(min/2)). But failures are
-> observed despite system is having ~20MB of free memory. In the testing,
-> this is reproducible as early as first 300secs since boot and with
-> furtherlowram configurations(<2GB) it is observed as early as first
-> 150secs since boot.
-> 
-> These failures can be avoided by excluding the ->watermark_boost in
-> watermark caluculations for atomic order-0 allocations.
-
-Do we have any additional reviewer input on this one?
-
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -3709,6 +3709,18 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
->  		}
->  
->  		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
-> +		/*
-> +		 * Allow GFP_ATOMIC order-0 allocations to exclude the
-> +		 * zone->watermark_boost in its watermark calculations.
-> +		 * We rely on the ALLOC_ flags set for GFP_ATOMIC
-> +		 * requests in gfp_to_alloc_flags() for this. Reason not to
-> +		 * use the GFP_ATOMIC directly is that we want to fall back
-> +		 * to slow path thus wake up kswapd.
-> +		 */
-> +		if (unlikely(!order && !(alloc_flags & ALLOC_WMARK_MASK) &&
-> +		     (alloc_flags & (ALLOC_HARDER | ALLOC_HIGH)))) {
-> +			mark = zone->_watermark[WMARK_MIN];
-> +		}
->  		if (!zone_watermark_fast(zone, order, mark,
->  				       ac->highest_zoneidx, alloc_flags)) {
->  			int ret;
-
-It would seem smart to do
-
---- a/mm/page_alloc.c~mm-page_alloc-skip-waternark_boost-for-atomic-order-0-allocations-fix
-+++ a/mm/page_alloc.c
-@@ -3745,7 +3745,6 @@ retry:
- 			}
- 		}
- 
--		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
- 		/*
- 		 * Allow GFP_ATOMIC order-0 allocations to exclude the
- 		 * zone->watermark_boost in their watermark calculations.
-@@ -3757,6 +3756,8 @@ retry:
- 		if (unlikely(!order && !(alloc_flags & ALLOC_WMARK_MASK) &&
- 		     (alloc_flags & (ALLOC_HARDER | ALLOC_HIGH)))) {
- 			mark = zone->_watermark[WMARK_MIN];
-+		} else {
-+			mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK);
- 		}
- 		if (!zone_watermark_fast(zone, order, mark,
- 				       ac->highest_zoneidx, alloc_flags)) {
-
-but that makes page_alloc.o 16 bytes larger, so I guess don't bother.
+PiBGcm9tOiBEZW5pcyBFZnJlbW92IDxlZnJlbW92QGxpbnV4LmNvbT4NCj4gU2VudDogVGh1cnNk
+YXksIEp1bmUgNCwgMjAyMCAyOjQzIFBNDQo+ID4NCj4gPiBIaSBEZW5pcywNCj4gPiBXaGVuIEkg
+YWRkZWQgdGhlIGZ1bmN0aW9uIHN0b3J2c2Nfc3VzcGVuZCgpIHNldmVyYWwgbW9udGhzIGFnbywg
+c29tZWhvdw0KPiA+IEkgZm9yZ290IHRvIHJlbW92ZSB0aGUgdW5uZWNlc3NhcnkgbWVtc2V0KCku
+IFNvcnJ5IQ0KPiA+DQo+ID4gVGhlIGJ1ZmZlciBpcyByZWNyZWF0ZWQgaW4gc3RvcnZzY19yZXN1
+bWUoKSAtPiBzdG9ydnNjX2Nvbm5lY3RfdG9fdnNwKCkgLT4NCj4gPiBzdG9ydnNjX2NoYW5uZWxf
+aW5pdCgpIC0+IHN0b3JfZGV2aWNlLT5zdG9yX2NobnMgPSBrY2FsbG9jKC4uLiksIHNvIEkgYmVs
+aWV2ZQ0KPiA+IHRoZSBtZW1zZXQoKSBjYW4gYmUgc2FmZWx5IHJlbW92ZWQuDQo+IA0KPiBJJ20g
+bm90IHN1cmUgdGhhdCBJIHVuZGVyc3RhbmQgeW91ciBkZXNjcmlwdGlvbi4gQXMgZm9yIG1lLCBt
+ZW1zZXQgd2l0aCAwDQo+IGJlZm9yZQ0KPiBtZW1vcnkgZnJlZWluZyBpcyByZXF1aXJlZCBvbmx5
+IGZvciBzZW5zaXRpdmUgaW5mb3JtYXRpb24gYW5kIGl0J3MgY29tcGxldGVseQ0KPiB1bnJlbGF0
+ZWQgdG8gbWVtb3J5IHplcm9pbmcgZHVyaW5nIGFsbG9jYXRpb24gd2l0aCBremFsbG9jL2tjYWxs
+b2MuDQo+IElmIGl0J3Mgbm90IGEgc2Vuc2l0aXZlIGluZm9ybWF0aW9uIHRoZW4gbWVtc2V0IGNv
+dWxkIGJlIHNhZmVseSByZW1vdmVkLg0KDQpUaGVyZSBpcyBubyBzZW5zaXRpdmUgaW5mbyBpbiB0
+aGUgYnVmZmVyIGhlcmUuDQoNCj4gPiBDYW4geW91IHBsZWFzZSBtYWtlIGEgdjIgcGF0Y2ggZm9y
+IGl0IGFuZCBDYyBteSBjb3Jwb3JhdGUgZW1haWwgImRlY3VpIiAoaW4NCj4gVG8pPw0KPiANCj4g
+WWVzLCBvZiBjb3Vyc2UuIENvdWxkIEkgYWRkICJTdWdnZXN0ZWQtYnkiPw0KPiANCj4gVGhhbmtz
+LA0KPiBEZW5pcw0KDQpTdXJlLiANCg0KVGhhbmtzLA0KLS0gRGV4dWFuDQoNCg==
