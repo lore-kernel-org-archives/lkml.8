@@ -2,263 +2,261 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06495C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D86D920738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D520220738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtJOvinh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgFDNsk (ORCPT
+        id S1728785AbgFDNsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:48:40 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:50224 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728680AbgFDNsY (ORCPT
+        Thu, 4 Jun 2020 09:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728740AbgFDNsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:48:24 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 054DluOu011526;
-        Thu, 4 Jun 2020 16:47:56 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 7490E639BF; Thu,  4 Jun 2020 16:47:56 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org,
-        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: [PATCH v10 3/8] tpm: tpm_tis: Add retry in case of protocol failure or data integrity (on I2C only) failure.
-Date:   Thu,  4 Jun 2020 16:47:08 +0300
-Message-Id: <20200604134713.157951-4-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200604134713.157951-1-amirmizi6@gmail.com>
-References: <20200604134713.157951-1-amirmizi6@gmail.com>
+        Thu, 4 Jun 2020 09:48:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56FBC08C5C0;
+        Thu,  4 Jun 2020 06:48:30 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x6so6136924wrm.13;
+        Thu, 04 Jun 2020 06:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tQC9ksibbWNElIUuh3WWMUOJLyZyxUN8UQNPyjTHGLM=;
+        b=AtJOvinh5j31bUl4bdt/a3YilODP/E/cqKihKdjiid8EfEb2STxLVYS54wY5i81TP6
+         NdZ4fUW/M66NksmEuRk+1xDX4HW++4QxQNuaaPAW3QYMgw0sI4N+uz3vGyZjm/GKT1um
+         85gHP5vbsx16TCJ369EHxaBykkOBA2t1pBNS4Jv2hkqXl0wE+78dZiP8geIpm+6B27zE
+         Vwp+iHXye9Oi1WSRxSt+bxFDXJpt4ZJWYZooCT+8IAHQei+xGlbHjeAd3xoCMGZEqE4W
+         FyE6rRPI0dneCl6OeGg1h9Btp652Ny6GzuQloTh61hWh1Z72knRXisJuTw9wsUzRltYX
+         Oxiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tQC9ksibbWNElIUuh3WWMUOJLyZyxUN8UQNPyjTHGLM=;
+        b=Z0456qocunvaMqn5YrE/Ym9hZlmvgOpcc4Uvd21o95aUDKdd/nIMS0Kil15Q4U2XDB
+         5nwgG0lShWwghK5mC1ey4khH0J691v00l1UpTFLZ1zaPYyz/E9OtLWQueQSDSJ6X4ET1
+         Rl3+pC6ZA0Wez6U+cmUSyOAGLlEu6Wj/P9XIhtTifbKULFZfJxJdnwFhg79C2NS5NzEJ
+         pNea7qckwe7P9AFscMmuhRPp1IFwOdnfi0UKucJJ6yYVVZ/Jy3xS23RD2y0h+AeTepc9
+         ORRYKCpZgv0wD3//jqYh8fjj1brRt39wG86n8ReVQSQ7UyNNhxgHoup6rIBqKuToUcGp
+         +W0A==
+X-Gm-Message-State: AOAM531SpYD3UedFtN0J6fUJAWBiS2y75C7Zjnd/marLndWSy7E1/TcU
+        iCWSfeg+o0cuVjbkkaxcmtH904+Rhw4=
+X-Google-Smtp-Source: ABdhPJzy7eDNasJ9GdqOSXY6o+hfjUCaB9s3BVQsbTCgUqhXmBa1G4sMZJhQvG1QEckdIz7bPtZYmg==
+X-Received: by 2002:adf:a157:: with SMTP id r23mr4805670wrr.92.1591278509103;
+        Thu, 04 Jun 2020 06:48:29 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id f9sm7795043wre.65.2020.06.04.06.48.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 06:48:28 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, jonas.gorski@gmail.com,
+        rpurdie@rpsys.net, pavel@ucw.cz
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v4] leds-bcm6328: support second hw blinking interval
+Date:   Thu,  4 Jun 2020 15:48:26 +0200
+Message-Id: <20200604134826.1808153-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200512100136.956872-1-noltari@gmail.com>
+References: <20200512100136.956872-1-noltari@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+Add support for both configurable HW blinking intervals.
 
-The FIFO protocol described in the TCG PC Client Device Driver Design
-Principles for TPM 2.0 advises retrying sending a command or receiving
-a response using the FIFO protocol in case of any error in the protocol.
-
-Add a retry mechanism on any protocol error. In addition, in case of a data
-integrity issue in the I2C bus protocol, check after sending a command
-completion or receiving a response from the TPM.
-
-Co-developed-by: Christophe Ricard <christophe-h.ricard@st.com>
-Signed-off-by: Christophe Ricard <christophe-h.ricard@st.com>
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- drivers/char/tpm/tpm_tis_core.c | 106 ++++++++++++++++++++++++----------------
- drivers/char/tpm/tpm_tis_core.h |   3 ++
- 2 files changed, 67 insertions(+), 42 deletions(-)
+ v4: improve code documentation and use blink instead of intervals, which
+     should make the code much more clear to understand
+ v3: add code documentation
+ v2: remove LED from the other blinking interval
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index 6ea70ea..202714d 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -308,7 +308,7 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- {
- 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
- 	int size = 0;
--	int status;
-+	int status, i;
- 	u32 expected;
+ drivers/leds/leds-bcm6328.c | 97 ++++++++++++++++++++++++++++---------
+ 1 file changed, 75 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/leds/leds-bcm6328.c b/drivers/leds/leds-bcm6328.c
+index 42e1b7598c3a..bad7efb75112 100644
+--- a/drivers/leds/leds-bcm6328.c
++++ b/drivers/leds/leds-bcm6328.c
+@@ -24,12 +24,17 @@
  
- 	if (count < TPM_HEADER_SIZE) {
-@@ -316,39 +316,53 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- 		goto out;
- 	}
+ #define BCM6328_LED_MAX_COUNT		24
+ #define BCM6328_LED_DEF_DELAY		500
+-#define BCM6328_LED_INTERVAL_MS		20
  
--	size = recv_data(chip, buf, TPM_HEADER_SIZE);
--	/* read first 10 bytes, including tag, paramsize, and result */
--	if (size < TPM_HEADER_SIZE) {
--		dev_err(&chip->dev, "Unable to read header\n");
--		goto out;
--	}
-+	for (i = 0; i < TPM_RETRY; i++) {
-+		size = recv_data(chip, buf, TPM_HEADER_SIZE);
-+		/* read first 10 bytes, including tag, paramsize, and result */
-+		if (size < TPM_HEADER_SIZE) {
-+			dev_err(&chip->dev, "Unable to read header\n");
-+			goto retry;
-+		}
- 
--	expected = be32_to_cpu(*(__be32 *) (buf + 2));
--	if (expected > count || expected < TPM_HEADER_SIZE) {
--		size = -EIO;
--		goto out;
--	}
-+		expected = be32_to_cpu(*(__be32 *) (buf + 2));
-+		if (expected > count || expected < TPM_HEADER_SIZE) {
-+			size = -EIO;
-+			goto retry;
-+		}
- 
--	size += recv_data(chip, &buf[TPM_HEADER_SIZE],
--			  expected - TPM_HEADER_SIZE);
--	if (size < expected) {
--		dev_err(&chip->dev, "Unable to read remainder of result\n");
--		size = -ETIME;
--		goto out;
--	}
-+		size += recv_data(chip, &buf[TPM_HEADER_SIZE],
-+				  expected - TPM_HEADER_SIZE);
-+		if (size < expected) {
-+			dev_err(&chip->dev, "Unable to read remainder of result\n");
-+			size = -ETIME;
-+			goto retry;
-+		}
- 
--	if (wait_for_tpm_stat(chip, TPM_STS_VALID, TPM_STS_VALID,
--			      chip->timeout_c, &priv->int_queue, false) < 0) {
--		size = -ETIME;
--		goto out;
--	}
--	status = tpm_tis_status(chip);
--	if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
--		dev_err(&chip->dev, "Error left over data\n");
--		size = -EIO;
--		goto out;
--	}
-+		if (wait_for_tpm_stat(chip, TPM_STS_VALID, TPM_STS_VALID,
-+				      chip->timeout_c, &priv->int_queue,
-+				      false) < 0) {
-+			size = -ETIME;
-+			goto retry;
-+		}
+-#define BCM6328_LED_INTV_MASK		0x3f
+-#define BCM6328_LED_FAST_INTV_SHIFT	6
+-#define BCM6328_LED_FAST_INTV_MASK	(BCM6328_LED_INTV_MASK << \
+-					 BCM6328_LED_FAST_INTV_SHIFT)
++#define BCM6328_LED_BLINK_DELAYS	2
++#define BCM6328_LED_BLINK_MS		20
 +
-+		status = tpm_tis_status(chip);
-+		if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
-+			dev_err(&chip->dev, "Error left over data\n");
-+			size = -EIO;
-+			goto retry;
-+		}
++#define BCM6328_LED_BLINK_MASK		0x3f
++#define BCM6328_LED_BLINK1_SHIFT	0
++#define BCM6328_LED_BLINK1_MASK		(BCM6328_LED_BLINK_MASK << \
++					 BCM6328_LED_BLINK1_SHIFT)
++#define BCM6328_LED_BLINK2_SHIFT	6
++#define BCM6328_LED_BLINK2_MASK		(BCM6328_LED_BLINK_MASK << \
++					 BCM6328_LED_BLINK2_SHIFT)
+ #define BCM6328_SERIAL_LED_EN		BIT(12)
+ #define BCM6328_SERIAL_LED_MUX		BIT(13)
+ #define BCM6328_SERIAL_LED_CLK_NPOL	BIT(14)
+@@ -45,8 +50,8 @@
  
-+		if (priv->phy_ops->verify_data_integrity)
-+			if (!priv->phy_ops->verify_data_integrity(priv, buf,
-+								  size))
-+				size = -EIO;
-+retry:
-+		if (size <= 0)
-+			tpm_tis_write8(priv, TPM_STS(priv->locality),
-+				       TPM_STS_RESPONSE_RETRY);
-+		else
-+			goto out;
-+	}
- out:
- 	tpm_tis_ready(chip);
- 	return size;
-@@ -372,7 +386,7 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
- 				      TPM_STS_COMMAND_READY, chip->timeout_b,
- 				      &priv->int_queue, false) < 0) {
- 			rc = -ETIME;
--			goto out_err;
-+			return rc;
- 		}
- 	}
+ #define BCM6328_LED_MODE_MASK		3
+ #define BCM6328_LED_MODE_ON		0
+-#define BCM6328_LED_MODE_FAST		1
+-#define BCM6328_LED_MODE_BLINK		2
++#define BCM6328_LED_MODE_BLINK1		1
++#define BCM6328_LED_MODE_BLINK2		2
+ #define BCM6328_LED_MODE_OFF		3
+ #define BCM6328_LED_SHIFT(X)		((X) << 1)
  
-@@ -381,13 +395,13 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
- 		if (burstcnt < 0) {
- 			dev_err(&chip->dev, "Unable to read burstcount\n");
- 			rc = burstcnt;
--			goto out_err;
-+			return rc;
- 		}
- 		burstcnt = min_t(int, burstcnt, len - count);
- 		rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
- 					 burstcnt, buf + count);
- 		if (rc < 0)
--			goto out_err;
-+			return rc;
+@@ -127,12 +132,18 @@ static void bcm6328_led_set(struct led_classdev *led_cdev,
+ 	unsigned long flags;
  
- 		count += burstcnt;
- 	}
-@@ -395,14 +409,10 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
- 			      TPM_STS_VALID, chip->timeout_a, &priv->int_queue,
- 			      false) < 0) {
- 		rc = -ETIME;
--		goto out_err;
-+		return rc;
- 	}
- 
- 	return 0;
--
--out_err:
--	tpm_tis_ready(chip);
--	return rc;
+ 	spin_lock_irqsave(led->lock, flags);
+-	*(led->blink_leds) &= ~BIT(led->pin);
++
++	/* Remove LED from cached HW blinking intervals */
++	led->blink_leds[0] &= ~BIT(led->pin);
++	led->blink_leds[1] &= ~BIT(led->pin);
++
++	/* Set LED on/off */
+ 	if ((led->active_low && value == LED_OFF) ||
+ 	    (!led->active_low && value != LED_OFF))
+ 		bcm6328_led_mode(led, BCM6328_LED_MODE_ON);
+ 	else
+ 		bcm6328_led_mode(led, BCM6328_LED_MODE_OFF);
++
+ 	spin_unlock_irqrestore(led->lock, flags);
  }
  
- static void disable_interrupts(struct tpm_chip *chip)
-@@ -431,13 +441,25 @@ static void disable_interrupts(struct tpm_chip *chip)
- static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+@@ -140,8 +151,8 @@ static unsigned long bcm6328_blink_delay(unsigned long delay)
  {
- 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
--	int rc;
-+	int rc, i;
- 	u32 ordinal;
- 	unsigned long dur;
+ 	unsigned long bcm6328_delay;
  
--	rc = tpm_tis_send_data(chip, buf, len);
--	if (rc < 0)
--		return rc;
-+	for (i = 0; i < TPM_RETRY; i++) {
-+		rc = tpm_tis_send_data(chip, buf, len);
-+		if (rc < 0)
-+			continue;
-+		if (priv->phy_ops->verify_data_integrity) {
-+			if (!priv->phy_ops->verify_data_integrity(priv, buf,
-+								  len)){
-+				rc = -EIO;
-+				continue;
-+			}
-+		}
-+		break;
-+	}
-+	if (i == TPM_RETRY)
-+		goto out_err;
+-	bcm6328_delay = delay + BCM6328_LED_INTERVAL_MS / 2;
+-	bcm6328_delay = bcm6328_delay / BCM6328_LED_INTERVAL_MS;
++	bcm6328_delay = delay + BCM6328_LED_BLINK_MS / 2;
++	bcm6328_delay = bcm6328_delay / BCM6328_LED_BLINK_MS;
+ 	if (bcm6328_delay == 0)
+ 		bcm6328_delay = 1;
  
- 	/* go and do it */
- 	rc = tpm_tis_write8(priv, TPM_STS(priv->locality), TPM_STS_GO);
-diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-index d06c65b..cd97c01 100644
---- a/drivers/char/tpm/tpm_tis_core.h
-+++ b/drivers/char/tpm/tpm_tis_core.h
-@@ -34,6 +34,7 @@ enum tis_status {
- 	TPM_STS_GO = 0x20,
- 	TPM_STS_DATA_AVAIL = 0x10,
- 	TPM_STS_DATA_EXPECT = 0x08,
-+	TPM_STS_RESPONSE_RETRY = 0x02,
- };
+@@ -168,28 +179,68 @@ static int bcm6328_blink_set(struct led_classdev *led_cdev,
+ 		return -EINVAL;
+ 	}
  
- enum tis_int_flags {
-@@ -106,6 +107,8 @@ struct tpm_tis_phy_ops {
- 	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
- 	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
- 	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
-+	bool (*verify_data_integrity)(struct tpm_tis_data *data, const u8 *buf,
-+				      size_t len);
- };
+-	if (delay > BCM6328_LED_INTV_MASK) {
++	if (delay > BCM6328_LED_BLINK_MASK) {
+ 		dev_dbg(led_cdev->dev,
+ 			"fallback to soft blinking (delay > %ums)\n",
+-			BCM6328_LED_INTV_MASK * BCM6328_LED_INTERVAL_MS);
++			BCM6328_LED_BLINK_MASK * BCM6328_LED_BLINK_MS);
+ 		return -EINVAL;
+ 	}
  
- static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
+ 	spin_lock_irqsave(led->lock, flags);
+-	if (*(led->blink_leds) == 0 ||
+-	    *(led->blink_leds) == BIT(led->pin) ||
+-	    *(led->blink_delay) == delay) {
++	/*
++	 * Check if any of the two configurable HW blinking intervals is
++	 * available:
++	 *   1. No LEDs assigned to the HW blinking interval.
++	 *   2. Only this LED is assigned to the HW blinking interval.
++	 *   3. LEDs with the same delay assigned.
++	 */
++	if (led->blink_leds[0] == 0 ||
++	    led->blink_leds[0] == BIT(led->pin) ||
++	    led->blink_delay[0] == delay) {
+ 		unsigned long val;
+ 
+-		*(led->blink_leds) |= BIT(led->pin);
+-		*(led->blink_delay) = delay;
++		/* Add LED to the first HW blinking interval cache */
++		led->blink_leds[0] |= BIT(led->pin);
++
++		/* Remove LED from the second HW blinking interval cache */
++		led->blink_leds[1] &= ~BIT(led->pin);
+ 
++		/* Cache first HW blinking interval delay */
++		led->blink_delay[0] = delay;
++
++		/* Update the delay for the first HW blinking interval */
+ 		val = bcm6328_led_read(led->mem + BCM6328_REG_INIT);
+-		val &= ~BCM6328_LED_FAST_INTV_MASK;
+-		val |= (delay << BCM6328_LED_FAST_INTV_SHIFT);
++		val &= ~BCM6328_LED_BLINK1_MASK;
++		val |= (delay << BCM6328_LED_BLINK1_SHIFT);
+ 		bcm6328_led_write(led->mem + BCM6328_REG_INIT, val);
+ 
+-		bcm6328_led_mode(led, BCM6328_LED_MODE_BLINK);
++		/* Set the LED to first HW blinking interval */
++		bcm6328_led_mode(led, BCM6328_LED_MODE_BLINK1);
++
++		rc = 0;
++	} else if (led->blink_leds[1] == 0 ||
++		   led->blink_leds[1] == BIT(led->pin) ||
++		   led->blink_delay[1] == delay) {
++		unsigned long val;
++
++		/* Remove LED from the first HW blinking interval */
++		led->blink_leds[0] &= ~BIT(led->pin);
++
++		/* Add LED to the second HW blinking interval */
++		led->blink_leds[1] |= BIT(led->pin);
++
++		/* Cache second HW blinking interval delay */
++		led->blink_delay[1] = delay;
++
++		/* Update the delay for the second HW blinking interval */
++		val = bcm6328_led_read(led->mem + BCM6328_REG_INIT);
++		val &= ~BCM6328_LED_BLINK2_MASK;
++		val |= (delay << BCM6328_LED_BLINK2_SHIFT);
++		bcm6328_led_write(led->mem + BCM6328_REG_INIT, val);
++
++		/* Set the LED to second HW blinking interval */
++		bcm6328_led_mode(led, BCM6328_LED_MODE_BLINK2);
++
+ 		rc = 0;
+ 	} else {
+ 		dev_dbg(led_cdev->dev,
+@@ -358,11 +409,13 @@ static int bcm6328_leds_probe(struct platform_device *pdev)
+ 	if (!lock)
+ 		return -ENOMEM;
+ 
+-	blink_leds = devm_kzalloc(dev, sizeof(*blink_leds), GFP_KERNEL);
++	blink_leds = devm_kcalloc(dev, BCM6328_LED_BLINK_DELAYS,
++				  sizeof(*blink_leds), GFP_KERNEL);
+ 	if (!blink_leds)
+ 		return -ENOMEM;
+ 
+-	blink_delay = devm_kzalloc(dev, sizeof(*blink_delay), GFP_KERNEL);
++	blink_delay = devm_kcalloc(dev, BCM6328_LED_BLINK_DELAYS,
++				   sizeof(*blink_delay), GFP_KERNEL);
+ 	if (!blink_delay)
+ 		return -ENOMEM;
+ 
 -- 
-2.7.4
+2.26.2
 
