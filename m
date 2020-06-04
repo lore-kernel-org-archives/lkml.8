@@ -2,111 +2,125 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA19C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB6D2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652B72067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvglNati"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ctMItyku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgFDUbK (ORCPT
+        id S1729784AbgFDUeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53154 "EHLO
+        Thu, 4 Jun 2020 16:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbgFDUbK (ORCPT
+        with ESMTP id S1728800AbgFDUeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:31:10 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA48C08C5C0;
-        Thu,  4 Jun 2020 13:31:10 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id y18so7888645iow.3;
-        Thu, 04 Jun 2020 13:31:10 -0700 (PDT)
+        Thu, 4 Jun 2020 16:34:21 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB7DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:34:20 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id c1so4310444vsc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:34:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1y9+v8Zse1/fm+EdYKqvmDNnlC2PLMsLjmR6tfks32E=;
-        b=JvglNatiArVj99EcpKmtASWLGtM+OjNzl4S+TMj/HAfWFzIWWUxPM6HWzBdWK16jPN
-         FetsAWyxhZ5wxWRZ+VwdN7zpZBJ64QJE87y/qbKe9cMvM4OrWpZBbBJuoMhhUmTrNvwE
-         eWWndF2SIaHnYIy4R5Gn4mQZOWC7RCGow4hhMUZKZ7qBafGrtNC8D/P6iL7AcQnxh3WV
-         r3DdRqdLPkihEYKSsPwFn6W3HDgAjLWmt/Ci4HQJ65O0tKnZOY0x2HiDribQ/n4Wq/Oe
-         4WL/1RczuV8hAKqdl3Bwre8BV9omXsQL8FtuNzyy6H3TjpdZlEiBpVLMHROblT8qE4Uv
-         WDqQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QccmPOAwdRsqU+gseuKb7TceQ37JHCZ0c4E7yU4KiQA=;
+        b=ctMItykuizT2FjCtlj3c7yeA8hejo1Eu0YvNGbgfHWNvUAZmSu1iqvjTuxpl6Rm/XM
+         /bOQT4clHDMwkaa7CQpWJ+/aULE1pYzv7SNXe1g+1d4Jvdus2Zf/u2kDn//UPtypAuEw
+         ce+XSToUwc8hZkd4Z5GjQqIAIMzFGI0iD70BY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1y9+v8Zse1/fm+EdYKqvmDNnlC2PLMsLjmR6tfks32E=;
-        b=jdwWJIJWwKEU8Y+fYxcFZcbE2L7PLAwaACe7PT72WD0hE6lvdiNIapOn1tiIOpcuYA
-         EJFNcSfkUsWFgLT8sldakszLl3uIvCIaQXw0mflJbobGxZwbDm9RA6DWiZaHwERsYbC0
-         GQzaZP9FoZ6aPDdYPSd/P9Db+Uv2/u7NAm+BCZA6FBveEAQ2Y/nI4An6Hj8XXAUMkc/i
-         uFXlk43a5FkZ0PoUFqS1RY6yt4WTt365X0cB0iLTGP+laa5Uk41ht2FaYjsy347Zv9KU
-         NuAV8JvUJkOHaTcqdWcBPgOXyTGNgJrTw31orr15E6r1wlLO8iGIYn+5jA4a9cCFnx08
-         3OuA==
-X-Gm-Message-State: AOAM533grJbOjj4DV1Puoh5hgeEOotlCpBIPm8CMNRtJ/Qvihntj6EVM
-        e54764U74h2oGkGwiPbUvu8=
-X-Google-Smtp-Source: ABdhPJz7WsTouSbk2KulrP4/FiAhwzQwzcmUqS4m+OkWqaj9p3tCPnSF/XMJCyNphhzd3Zv7HZIvHA==
-X-Received: by 2002:a02:b88e:: with SMTP id p14mr5745455jam.36.1591302669452;
-        Thu, 04 Jun 2020 13:31:09 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id d11sm314373iod.11.2020.06.04.13.31.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:31:08 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu,
-        mccamant@cs.umn.edu
-Subject: [PATCH] dmaengine: sh: usb-dmac: handle pm_runtime_get_sync failure
-Date:   Thu,  4 Jun 2020 15:30:57 -0500
-Message-Id: <20200604203059.964-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QccmPOAwdRsqU+gseuKb7TceQ37JHCZ0c4E7yU4KiQA=;
+        b=ZlTt8w/uc/F4hgfV2N7HroOdWxba0VgbGS6iKaZ2bZu+YaoBcihRxrjaaZ6OBY0YdR
+         Vb8LNbm+aSC62SzCnhaVHpVcPzUiUlvT/jHpGnsLt/aAkua2QfyvZDKPQyCU1xYFXTVs
+         ah0G5HQnl9fW/kcBfxfIFY/295BHHU2NrUfcLAtloWR7mnuekVt2WIjlmGAnzo4wgC+e
+         ibbhQtkxN1Og/7Qvq717YwhM1TPF9yxofNaIKiakxYyS1YuE/+6mUVpVnGl/lNNuuSUv
+         9u9RWe7ca8+6pooUFCPpznHGew2A/RMuNkHfJwH+A+MD1kMccdh1+rnpxdc4GaNoqdM7
+         yHeQ==
+X-Gm-Message-State: AOAM5324FyF3Ut7PWZ8NbSSyQagIiqnICGPOtp/AUH5cUjhIoDhi7cqx
+        4lEmSt5btb3OLNaJtFbDjvXAB1E/ncw=
+X-Google-Smtp-Source: ABdhPJzBZ0W+Vb3bd6RvKhc94OMKFh7YiFpuJmzz3ughImkG2VD97GXYBdO6VUUmvq7ryEotQu58oQ==
+X-Received: by 2002:a67:d381:: with SMTP id b1mr4724561vsj.148.1591302859591;
+        Thu, 04 Jun 2020 13:34:19 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id l14sm850014vkl.47.2020.06.04.13.34.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 13:34:18 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id r11so4337248vsj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:34:17 -0700 (PDT)
+X-Received: by 2002:a67:8881:: with SMTP id k123mr5087675vsd.198.1591302857244;
+ Thu, 04 Jun 2020 13:34:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 4 Jun 2020 13:34:05 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V7ce7EGqJh6aga4yH3NqdgXMHBe=EOONtcd2LFDX75_A@mail.gmail.com>
+Message-ID: <CAD=FV=V7ce7EGqJh6aga4yH3NqdgXMHBe=EOONtcd2LFDX75_A@mail.gmail.com>
+Subject: Re: [PATCH v6] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+Hi,
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/dma/sh/usb-dmac.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, Jun 4, 2020 at 6:20 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> -#ifdef CONFIG_PM
+> -static int msm_runtime_suspend(struct device *dev)
+> +#ifdef CONFIG_PM_SLEEP
+> +static int msm_pm_suspend(struct device *dev)
+>  {
+> -       struct drm_device *ddev = dev_get_drvdata(dev);
+> -       struct msm_drm_private *priv = ddev->dev_private;
+> -       struct msm_mdss *mdss = priv->mdss;
+>
 
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index b218a013c260..43511434c90c 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -797,7 +797,7 @@ static int usb_dmac_probe(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
--		goto error_pm;
-+		goto error_pm_get;
- 	}
- 
- 	ret = usb_dmac_init(dmac);
-@@ -853,6 +853,7 @@ static int usb_dmac_probe(struct platform_device *pdev)
- 
- error:
- 	of_dma_controller_free(pdev->dev.of_node);
-+error_pm_get:
- 	pm_runtime_put(&pdev->dev);
- error_pm:
- 	pm_runtime_disable(&pdev->dev);
--- 
-2.17.1
+nit: remove blank line at the start of this function
 
+>  static const struct dev_pm_ops msm_pm_ops = {
+>         SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
+>         SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
+> +       .prepare = msm_pm_prepare,
+> +       .complete = msm_pm_complete,
+
+Presumably you will get a compile failure if someone compiles without
+CONFIG_PM_SLEEP since msm_pm_prepare() and msm_pm_complete() won't be
+defined but you refer to them unconditionally.  Probably the best
+solution is to just add "__maybe_unused" to your prepare/complete
+function and then always define them.
+
+
+I can't say I've thought through every corner case but at least this
+change no longer raises alarm bells in my mind when I look at it.  ;-)
+ If it works for you and nobody else has objections then it seems good
+enough and we can always make more improvements later.  Feel free to
+add my Reviewed-by tag when my nit is fixed and you make sure it
+compiles even if CONFIG_PM_SLEEP isn't defined.
+
+-Doug
