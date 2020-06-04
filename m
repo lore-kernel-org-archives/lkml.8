@@ -2,109 +2,105 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A86C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1693C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B22620772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:26:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q9RiV1dI"
+	by mail.kernel.org (Postfix) with ESMTP id CF19E20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgFDN0j (ORCPT
+        id S1728555AbgFDN2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728224AbgFDN0i (ORCPT
+        Thu, 4 Jun 2020 09:28:08 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:59734 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728484AbgFDN2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:26:38 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D947C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qdNli0NEHd43fwml9PHoxGbEchkTHhQ67oW6OcyjWWg=; b=Q9RiV1dIL5RZNEJrMOBFr4t6Uo
-        zQItk4JSKEFB/aQqsDcK8xTCN8m2s0SzrQ4OUAuc1l79u5cEYOhiCCuotAihVSRUtMaCszZSahE+f
-        AutRgArbGxQta6BsGc7eJ/Fb+B79A1xO5XR9wtDa/MwnJLsLt2k4/13X+0in/TsxSfx5fPu/1F9ME
-        21BbNGa1r0wqAozqh2NY2O7HD6u72Nv2Q+YtYpOOfPhr3+KnuStZU4jWq2L+WOh4hTqqaQQIw6+30
-        K/0Tz+ovcG2si5yrovDCs9uSqWxePvk+q4Vk7NMJqXkYMLN0F+ceN98T4qdLj4rKmswfwq/37Aw+h
-        PRbFHt0g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgpsL-0000mk-4C; Thu, 04 Jun 2020 13:25:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1E87E301DFD;
-        Thu,  4 Jun 2020 15:25:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DDF5B20C333CF; Thu,  4 Jun 2020 15:25:37 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 15:25:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch V9 00/39] x86/entry: Rework leftovers (was part V)
-Message-ID: <20200604132537.GA3976@hirez.programming.kicks-ass.net>
-References: <20200521200513.656533920@linutronix.de>
- <5e68aa83-feac-2aa7-10ee-aebebc60c83e@citrix.com>
- <20200522211706.GZ2483@worktop.programming.kicks-ass.net>
- <83474edd-195f-f10b-9fe9-8ee168344e29@citrix.com>
+        Thu, 4 Jun 2020 09:28:07 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-67-smgdUXOqPqOLrGJKNE45Cg-1; Thu, 04 Jun 2020 14:28:03 +0100
+X-MC-Unique: smgdUXOqPqOLrGJKNE45Cg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 4 Jun 2020 14:28:02 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 4 Jun 2020 14:28:02 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christian Brauner' <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>
+CC:     Sargun Dhillon <sargun@sargun.me>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        "containers@lists.linux-foundation.org" 
+        <containers@lists.linux-foundation.org>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        Tejun Heo <tj@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Thread-Topic: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Thread-Index: AQHWOm8IcrQ9iML/NEWzIJOikhNiKKjIcAVA
+Date:   Thu, 4 Jun 2020 13:28:02 +0000
+Message-ID: <f1b77cafef8c4d159b1daa9cd4a06794@AcuMS.aculab.com>
+References: <20200603011044.7972-1-sargun@sargun.me>
+ <20200603011044.7972-2-sargun@sargun.me>
+ <20200604012452.vh33nufblowuxfed@wittgenstein>
+ <202006031845.F587F85A@keescook>
+ <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+In-Reply-To: <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83474edd-195f-f10b-9fe9-8ee168344e29@citrix.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 08:18:44PM +0100, Andrew Cooper wrote:
+RnJvbTogQ2hyaXN0aWFuIEJyYXVuZXINCj4gU2VudDogMDQgSnVuZSAyMDIwIDEzOjUyDQouLg0K
+PiBGb3Igc2NtIHlvdSBjYW4gZmFpbCBzb21ld2hlcmUgaW4gdGhlIG1pZGRsZSBvZiBwdXR0aW5n
+IGFueSBudW1iZXIgb2YNCj4gZmlsZSBkZXNjcmlwdG9ycyBzbyB5b3UncmUgbGVmdCBpbiBhIHN0
+YXRlIHdpdGggb25seSBhIHN1YnNldCBvZg0KPiByZXF1ZXN0ZWQgZmlsZSBkZXNjcmlwdG9ycyBp
+bnN0YWxsZWQgc28gaXQncyBub3QgcmVhbGx5IHVzZWZ1bCB0aGVyZS4NCj4gQW5kIGlmIHlvdSBt
+YW5hZ2UgdG8gaW5zdGFsbCBhbiBmZCBidXQgdGhlbiBmYWlsIHRvIHB1dF91c2VyKCkgaXQNCj4g
+dXNlcnNwYWNlIGNhbiBzaW1wbHkgY2hlY2sgaXQncyBmZHMgdmlhIHByb2MgYW5kIGhhcyB0byBh
+bnl3YXkgb24gYW55DQo+IHNjbSBtZXNzYWdlIGVycm9yLiBJZiB5b3UgZmFpbCBhbiBzY20gbWVz
+c2FnZSB1c2Vyc3BhY2UgYmV0dGVyIGNoZWNrDQo+IHRoZWlyIGZkcy4NCg0KVGhlcmUgaXMgYSBz
+aW1pbGFyIGVycm9yIHBhdGggaW4gdGhlIHNjdHAgJ3BlZWxvZmYnIGNvZGUuDQpJZiB0aGUgcHV0
+X3VzZXIoKSBmYWlscyBpdCBjdXJyZW50bHkgY2xvc2VzIHRoZSBmZCBiZWZvcmUNCnJldHVybmlu
+ZyAtRUZBVUxULg0KDQpJJ20gbm90IGF0IGFsbCBzdXJlIHRoaXMgaXMgaGVscGZ1bC4NClRoZSBh
+cHBsaWNhdGlvbiBjYW4ndCB0ZWxsIHdoZXRoZXIgdGhlIFNJR1NFR1YgaGFwcGVuZWQgb24gdGhl
+DQpjb3B5aW4gb2YgdGhlIHBhcmFtZXRlcnMgb3IgdGhlIGNvcHlvdXQgb2YgdGhlIHJlc3VsdC4N
+Cg0KSVNUTSB0aGF0IGlmIHRoZSBhcHBsaWNhdGlvbiBwYXNzZXMgYW4gYWRkcmVzcyB0aGF0IGNh
+bm5vdA0KYmUgd3JpdHRlbiB0byBpdCBkZXNlcnZlcyB3aGF0IGl0IGdldHMgLSB0eXBpY2FsbHkg
+YW4gZmQgaXQNCmRvZXNuJ3Qga25vdyB0aGUgbnVtYmVyIG9mLg0KDQpXaGF0IGlzIGltcG9ydGFu
+dCBpcyB0aGF0IHRoZSBrZXJuZWwgZGF0YSBpcyBjb25zaXN0ZW50Lg0KU28gd2hlbiB0aGUgcHJv
+Y2VzcyBleGl0cyB0aGUgZmQgaXMgY2xvc2VkIGFuZCBhbGwgdGhlIHJlc291cmNlcw0KYXJlIHJl
+bGVhc2VkLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFt
+bGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3Ry
+YXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
-> Well that didn't last long...
-> 
-> The new ISE (rev 39, published today) introduces BUS LOCK DEBUG
-> EXCEPTION which is now a second inverted polarity sticky bit (bit 11) in
-> %dr6.
-> 
-> This one is liable to get more traction than RTM debugging, so something
-> probably does want fixing in the #DB handler.
-
-Well that's crap :-(
-
-It being enabled through IA32_DEBUGCTL instead of through DR7 means that
-the current code doesn't disable it and this then means we can have
-nested #DB again.
-
-Who sodding throught this was a good idea ?! What happened to #AC that
-SLD currently uses?
-
-What hardware will this be in and can we get this fixed?
