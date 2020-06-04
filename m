@@ -2,133 +2,102 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC57420659
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0E2206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qPGYj+Fa"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UJqmJXRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgFDT41 (ORCPT
+        id S1729217AbgFDT53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
+        Thu, 4 Jun 2020 15:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbgFDT4Y (ORCPT
+        with ESMTP id S1728991AbgFDT52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:56:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9B7C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:56:24 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e9so3973133pgo.9
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:56:24 -0700 (PDT)
+        Thu, 4 Jun 2020 15:57:28 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51542C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:57:28 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p21so3961181pgm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JchjGYZl0wqUOrU5YQvGeZV5DROtdtYOgYQQhEiIskY=;
-        b=qPGYj+Fa3kUn8rqUio1Dqo/wmmdxLTwJv3dkdlE3ClgOnCxbEa6OJED06WKQ9xZ/S5
-         drxLk5d97vcv5eQ6d4d6pUs5J9MwW0FbQj4r4wLXcZG5wYgEinukAsqpd6SbNEpGTiIL
-         ybbjkH30SzUTY9QY0bM3t5oBYgf/gdFtcqSjGZ4Vd93wXluzmD0tkk2N1s4+IczoK5T8
-         73LFTDcT2N2adp5wR2Mlu3UFct0QurWe1qbINXwuT+3G9C5se3K/oYDgtwvOmb8nMB81
-         9/qgL3YapcLXLfnBA8fVq9DtyGqYOQK0MGNYMtExoxZdmGcyOrFvw2budA/p7MR7MkMh
-         dTFw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=17b2aaxx9AWik+/H6nkchZPzWER/WcSta2U6qBhKjfI=;
+        b=UJqmJXRMu1MCMIknBTQnQbAcYFvoypy/3vBe+OATtsjD/2iSOyg5q2yQ/edgeCLPSd
+         bn8wZpbzUnj4rYWdkqMW5g9R2NMAPbfWz9eCOAazkyIzP83AmLPbYiaOpAM/Y8hfr9l0
+         zPslHOc7sqHKhoejCEYWz1TIpXbjQlC7UPrO8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JchjGYZl0wqUOrU5YQvGeZV5DROtdtYOgYQQhEiIskY=;
-        b=jXOQiJooNphNU7asfgL2WZVuxNEsbN3R9+HWrvTQt7y7xE7s7dTiIL9E3zUqYYacZq
-         JyYkJMBMdyrFH3v85S0u6q9e4XCNrxO7YWPD9B0uQCbqAEakMPk4Ln8Oq+8uHzozjY78
-         St1YPBQKPMbttow5mHc9r4pWybKbxJvxOdLsJC0OIA1JQShBFmetJ7ssK++iZIW0B1TT
-         cor2tCvSpWD/qzJNmoUE1QUpc3/xKxSsiin2xrEvkMglsGKVBc/daRL0/CKjEMPvuzqK
-         lbIYh4ZnjjeGRp5LAHrleq5Y0l2M+yY2zvsb4DCkUb4qqdmTIcxgT5WoM5A963Wl3YNk
-         NuJA==
-X-Gm-Message-State: AOAM530jCO499MOn04p9sqw43XLSStGm/czU863y1IvfZd00icnbYJDz
-        +4gp9UQe1GaH83IhI8V+jjQnUynvNrLal8NH1CB8q440qQE=
-X-Google-Smtp-Source: ABdhPJy7InXrusPAFFTJ9/oFSaSF0Eic2jn49VfP7aR0w5k1vGP4KYsGIQVm0HirYrhRu0SFvISfn3kdwUp620gXyHY=
-X-Received: by 2002:a63:f00d:: with SMTP id k13mr6167247pgh.263.1591300583418;
- Thu, 04 Jun 2020 12:56:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=17b2aaxx9AWik+/H6nkchZPzWER/WcSta2U6qBhKjfI=;
+        b=jH9/phfczWFOzxIYFtGoRU3qM99gyv7RkzXwGFkBpctqd1ResoM4mEpLTqgdkV4/hK
+         YOD+L7ZstqTh9zYNLe+sZ6NVRNHY5Xq59OpJE0fBvfkk2WYgFI1lov6XZvcnkMIuLHZC
+         TtI1Je0yOZMfRLVjTBW7X6pwvvGyaU1tzlas/BOo5SoOB0Ja931DIaMY+6YHH5hqBTi4
+         VbFi2hX0ycVUKjnex643UglLMrg+LsuE0NwaXtQXOBYOif/aiAJ1eYGdPSD1jySu02MB
+         /aTJAAYidjAJDDKdw18AZzg8qMsN455/0tUU7/rVQNb8tpWul95srqHx9bi6rJQSxGsz
+         wYNw==
+X-Gm-Message-State: AOAM531VEuMZgYSQd3u6ydF18Hf5pyKnyh8ZxToipN8CXJDzbge6atYh
+        9tNYtXsBqeSGUPdggyjynR+y+JNRlrjSnQ==
+X-Google-Smtp-Source: ABdhPJwN5n5f0TKfN423aURRb4ZD2T087OtrXyelKJTyJ/6QqMLlLTeoMVmKyvSJ1+0DhyBpwVEeEg==
+X-Received: by 2002:aa7:9d01:: with SMTP id k1mr6059050pfp.6.1591300647119;
+        Thu, 04 Jun 2020 12:57:27 -0700 (PDT)
+Received: from mathewk1.lan ([161.97.192.125])
+        by smtp.gmail.com with ESMTPSA id p19sm5324130pff.116.2020.06.04.12.57.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 12:57:26 -0700 (PDT)
+From:   Mathew King <mathewk@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mathew King <mathewk@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH] acpi: battery: Always read fresh battery state on update
+Date:   Thu,  4 Jun 2020 13:56:58 -0600
+Message-Id: <20200604195658.66201-1-mathewk@chromium.org>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-References: <20200603233203.1695403-1-keescook@chromium.org> <20200603233203.1695403-3-keescook@chromium.org>
-In-Reply-To: <20200603233203.1695403-3-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 4 Jun 2020 12:56:11 -0700
-Message-ID: <CAKwvOdmfOSGAZiuapXOaiU74AQVMDgimrnCiRDjzw4p4oh1vaw@mail.gmail.com>
-Subject: Re: [PATCH 02/10] drbd: Remove uninitialized_var() usage
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> "unused variable"). If the compiler thinks it is uninitialized, either
-> simply initialize the variable or make compiler changes. As a precursor
-> to removing[2] this[3] macro[4], just initialize this variable to NULL.
->
-> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+When the ACPI battery receives a notification event it should always
+read the battery state fresh from the ACPI device and not use the cached
+state. Currently the cached state stays valid and the new state may not
+be read when a notification occurs. This can lead to a udev event
+showing that the battery has changed but the sysfs state will still have
+the cached state values. This change invalidates the update time forcing
+the state to be updated before notifying the power_supply subsystem of
+the change.
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Fixes: a29728463b25 ("drbd: Backport the "events2" command")
+Signed-off-by: Mathew King <mathewk@chromium.org>
+---
+ drivers/acpi/battery.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
->  drivers/block/drbd/drbd_state.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/block/drbd/drbd_state.c b/drivers/block/drbd/drbd_state.c
-> index eeaa3b49b264..0067d328f0b5 100644
-> --- a/drivers/block/drbd/drbd_state.c
-> +++ b/drivers/block/drbd/drbd_state.c
-> @@ -1604,7 +1604,7 @@ static void broadcast_state_change(struct drbd_state_change *state_change)
->         unsigned int n_device, n_connection, n_peer_device, n_peer_devices;
->         void (*last_func)(struct sk_buff *, unsigned int, void *,
->                           enum drbd_notification_type) = NULL;
-> -       void *uninitialized_var(last_arg);
-> +       void *last_arg = NULL;
->
->  #define HAS_CHANGED(state) ((state)[OLD] != (state)[NEW])
->  #define FINAL_STATE_CHANGE(type) \
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200603233203.1695403-3-keescook%40chromium.org.
-
-
-
+diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+index 366c389175d8..ab7fa4879fbe 100644
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -981,6 +981,7 @@ static int acpi_battery_update(struct acpi_battery *battery, bool resume)
+ 		acpi_battery_init_alarm(battery);
+ 	}
+ 
++	battery->update_time = 0;
+ 	result = acpi_battery_get_state(battery);
+ 	if (result)
+ 		return result;
 -- 
-Thanks,
-~Nick Desaulniers
+2.27.0.rc2.251.g90737beb825-goog
+
