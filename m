@@ -2,162 +2,90 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202082077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B38206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dnFzQRrb"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="f+Lz97I9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgFDIzS (ORCPT
+        id S1728212AbgFDIz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58080 "EHLO
+        Thu, 4 Jun 2020 04:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgFDIzQ (ORCPT
+        with ESMTP id S1726664AbgFDIz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:55:16 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8EDC03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:55:16 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x22so3099637lfd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:55:16 -0700 (PDT)
+        Thu, 4 Jun 2020 04:55:28 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05165C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:55:28 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l27so5229070ejc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=szeredi.hu; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wX/HMY1MRP8U/gjc3VbRQHcLWsJVELT9dkOTjKxMtVY=;
-        b=dnFzQRrbfXxSpYDcYeOBjWm1ZuPcoD6NU73Rn0+PwaRw6755xtm/+yOZcIflRwncuV
-         BaBtWr8t+jEsn4YTdhr0KxQOeqIWcxIHaeZVS8Xoc7P/0xdaCxHN+/Bz1fYikyy8XfDd
-         u6RYfyzcDnN672UN0j/5mq74CzwrVmXAB53V3HyjsXVK1iQrhCSxMTVnxOS34ivIAJqa
-         aQhMnvdRdXsQhAtQ3oKd0B7WGtvpk2l8Xcwt1SInOh8uy+nPsL8DE/BWzPMCZBWJeZOH
-         ENERiodaMRIzGWPdxAKHxlgNVMBaz3yGRycaR05/cvaDVzIfJYMDO6p0zoHAWNr5PxwB
-         JnRg==
+        bh=1cyPRerltnuf6OiO7zJfaJBlJDvo/vDR9533o+NbRzk=;
+        b=f+Lz97I9fYwRYsY1POv4BsWh7sUNv4BwjVfHmAFW+Z0LJmUxUd/I2VZj/A64TA7MPT
+         pehLmYFlyB2KmT0oVWyHVVPADXZ4TH++UGj5eo9+51dg818r2EbyPG4wWWhVHyp98pBk
+         Smrt++8CCAh/W90dkqBCeWHyBCw5gCvR/nIU0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wX/HMY1MRP8U/gjc3VbRQHcLWsJVELT9dkOTjKxMtVY=;
-        b=BZXSTkyQIvi9quNhMjo3KID0RogAPHhWbdS8qc5ZTo63W6FUcNhiNnrCdNWJENvF/z
-         5ItKYYE+hInvxTy8dyHi87nktXKBZb4iwAUZSGvxIQ9JJbrkzczSBM6FB/z4mWTWrGkb
-         7CKxw/LdzVhxWV/YKT1RQ3sarlWRBXzOeWrnx/OThtcK50VNpaEnEbjEe0E2x9gMeJJS
-         /nVXZrT2KCNEwDobXhLLrX7+uW6JaPOVa68h5c0QDV9nHfFonQBN5JNMDBz1KDnSS+OU
-         LWAdxqJ2JqJstYNztXu0BKUYh5/sizwUntJDGt3UIYWbnhvuWwfInSADydaLIbtChssK
-         DL1Q==
-X-Gm-Message-State: AOAM530o4/hflcHOrbpuvWH46nra/xrYdIloSqvlDKJ+92KF1IPcXrTo
-        RggMpv9vUBoFHO31Vr8PbTsX9mmyWvUOsklWhQkgUTi+MbP5Xg==
-X-Google-Smtp-Source: ABdhPJz0o1EJ6dFFghkS8xup1wk1Y0lP19vT/WOEvgMVQo42NPE3njAeNbTwIyu0Yg9XGPmSgubrKg0JstC1Q1jZn5o=
-X-Received: by 2002:a19:5013:: with SMTP id e19mr1920798lfb.95.1591260914773;
- Thu, 04 Jun 2020 01:55:14 -0700 (PDT)
+        bh=1cyPRerltnuf6OiO7zJfaJBlJDvo/vDR9533o+NbRzk=;
+        b=IyyFsYHPFdYl9rj3Zis3mq0iZpXXu+agUX47enPLC3Hb8gfJh44j8W56ui8kkeMLxF
+         IjZyZM0+wYohzubb3rDCSLhPt8WhNcKst+1LQlDGrTxK0VAVUhMd3nWKjV4xYzFVRrAz
+         YSKnsbASA5Q0BIR9io4ViluSgYq7G8SFIVCBrndGPT52IsNZyCMJsGgNqdUEmz6S3dGP
+         rWNtGaR3tfdR5HwGFMxRGY1I/uDc8GNmNSdgr1tOErj+nHkAeba8iG5GmLzq+xwWw1KG
+         AhBTqFnr1luDsg7TiBDqjids24gpk4E8PJSWcogZ7UyhuclILy3scRu/HXNKMKDJMOD4
+         E/Nw==
+X-Gm-Message-State: AOAM532zRgtGtpG18dedfMs7KbNAlTwRtpAbNYGeWuJoBj1Tq+QDzKz+
+        9eOhu1TN01cWMP4yjcn3j0fvVE1WjrvbtyaphwB9Jg==
+X-Google-Smtp-Source: ABdhPJzQs5HWOaGr4oBKOUkG5SV+qx7C50ZekirwI6OrNE+rcVx1U6hY4cJ6QS1W+QqIhe4fn6OY1LGz4Eio1g316Pc=
+X-Received: by 2002:a17:906:1947:: with SMTP id b7mr2876662eje.320.1591260926736;
+ Thu, 04 Jun 2020 01:55:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591181457.9020.13.camel@abdul> <20200603133257.GL6857@suse.de>
-In-Reply-To: <20200603133257.GL6857@suse.de>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 4 Jun 2020 14:25:03 +0530
-Message-ID: <CA+G9fYu+NWDzg4ZiZQBqqViDhgMBTd=2vjYW-HG4i4phqNUDbQ@mail.gmail.com>
-Subject: Re: [mainline][Oops][bisected 2ba3e6 ] 5.7.0 boot fails with kernel
- panic on powerpc
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-next <linux-next@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        mpe <mpe@ellerman.id.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        sachinp <sachinp@linux.vnet.ibm.com>,
-        manvanth <manvanth@linux.vnet.ibm.com>,
-        "aneesh.kumar" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>, hch <hch@lst.de>,
-        lkft-triage@lists.linaro.org
+References: <874ks212uj.fsf@m5Zedd9JOGzJrf0>
+In-Reply-To: <874ks212uj.fsf@m5Zedd9JOGzJrf0>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 4 Jun 2020 10:55:15 +0200
+Message-ID: <CAJfpegux+mVxbBH7UbrGWHrQ-7Si211GwSED3h339nERgpeYJw@mail.gmail.com>
+Subject: Re: [PATCH] overlayfs: initialize error in ovl_copy_xattr
+To:     Yuxuan Shui <yshuiv7@gmail.com>
+Cc:     overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 19:03, Joerg Roedel <jroedel@suse.de> wrote:
+On Wed, May 27, 2020 at 5:20 AM Yuxuan Shui <yshuiv7@gmail.com> wrote:
 >
-> On Wed, Jun 03, 2020 at 04:20:57PM +0530, Abdul Haleem wrote:
-> > @Joerg, Could you please have a look?
 >
-> Can you please try the attached patch?
+> In ovl_copy_xattr, if all the xattrs to be copied are overlayfs private
+> xattrs, the copy loop will terminate without assigning anything to the
+> error variable, thus returning an uninitialized value.
+>
+> If ovl_copy_xattr is called from ovl_clear_empty, this uninitialized
+> error value is put into a pointer by ERR_PTR(), causing potential
+> invalid memory accesses down the line.
+>
+> This commit initialize error with 0. This is the correct value because
+> when there's no xattr to copy, because all xattrs are private,
+> ovl_copy_xattr should succeed.
+>
+> This bug is discovered with the help of INIT_STACK_ALL and clang.
+>
+> Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
 
-@Joerg, Linaro test farm noticed this kernel crash on nxp ls2088
-Machine model: Freescale Layerscape 2088A RDB Board
-while booting Linux mainline 5.7.0 version kernel.
+Thanks, applied.
 
-After applying your proposed patch fixed boot problem.
-
-Tested-by: Naresh Kamboju <nareshj.kamboju@linaro.org>
-
-Test ref:
-https://lavalab.nxp.com/scheduler/job/23787#L426
-
-Here is the kernel crash log before patch applied,
-
-[    0.000000] Linux version 5.7.0-03887-gf6aee505c71b
-(TuxBuild@ecb9ef34f06f) (gcc version 9.3.0 (Debian 9.3.0-8), GNU ld
-(GNU Binutils for Debian) 2.34) #1 SMP PREEMPT Wed Jun 3 18:21:26 UTC
-2020
-[    0.000000] Machine model: Freescale Layerscape 2088A RDB Board
-<>
-[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-[    0.000000] Unable to handle kernel paging request at virtual
-address fffeffff80000000
-[    0.000000] Mem abort info:
-[    0.000000]   ESR = 0x96000004
-[    0.000000]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.000000]   SET = 0, FnV = 0
-[    0.000000]   EA = 0, S1PTW = 0
-[    0.000000] Data abort info:
-[    0.000000]   ISV = 0, ISS = 0x00000004
-[    0.000000]   CM = 0, WnR = 0
-[    0.000000] [fffeffff80000000] address between user and kernel address ranges
-[    0.000000] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-5.7.0-03887-gf6aee505c71b #1
-[    0.000000] Hardware name: Freescale Layerscape 2088A RDB Board (DT)
-[    0.000000] pstate: 80000085 (Nzcv daIf -PAN -UAO BTYPE=--)
-[    0.000000] pc : map_kernel_range_noflush+0xc0/0x280
-[    0.000000] lr : __vmalloc_node_range+0x154/0x2a0
-[    0.000000] sp : ffffb3b1dcbc3e20
-[    0.000000] x29: ffffb3b1dcbc3e20 x28: fffeffff80000000
-[    0.000000] x27: ffff800010004000 x26: ffff800010000000
-[    0.000000] x25: 0000000000402dc2 x24: ffffb3b1dc53c000
-[    0.000000] x23: 0068000000000f13 x22: 0000000000000004
-[    0.000000] x21: ffffb3b1dc53cf48 x20: 0000000000000000
-[    0.000000] x19: ffffb3b1dc627800 x18: 00000000000000c0
-[    0.000000] x17: 0000000000000000 x16: 0000000000000007
-[    0.000000] x15: dead000000000100 x14: fffffe020b990600
-[    0.000000] x13: dead000000000122 x12: 0000000000000001
-[    0.000000] x11: 0000000000000000 x10: ffff0082fe3fdec0
-[    0.000000] x9 : ffff0082fe342d58 x8 : ffff4cd121ba5000
-[    0.000000] x7 : ffff808010000000 x6 : 0000000000000004
-[    0.000000] x5 : 000000000000fffd x4 : 0000000000004000
-[    0.000000] x3 : ffff800050000000 x2 : 0001000080000000
-[    0.000000] x1 : 0000000000000000 x0 : ffff800010003fff
-[    0.000000] Call trace:
-[    0.000000]  map_kernel_range_noflush+0xc0/0x280
-[    0.000000]  __vmalloc_node_range+0x154/0x2a0
-[    0.000000]  __vmalloc_node+0x5c/0x70
-[    0.000000]  init_IRQ+0xac/0xf8
-[    0.000000]  start_kernel+0x2d0/0x4dc
-[    0.000000] Code: f90047e0 d503201f d2a80003 8b030343 (f9400380)
-[    0.000000] random: get_random_bytes called from
-print_oops_end_marker+0x2c/0x58 with crng_init=0
-[    0.000000] ---[ end trace 0000000000000000 ]---
-[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
-
-ref:
-https://lavalab.nxp.com/scheduler/job/23596#L603
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+Miklos
