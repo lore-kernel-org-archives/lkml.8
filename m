@@ -2,174 +2,248 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81177206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91F4206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:52:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgFDMvx (ORCPT
+        id S1728054AbgFDMwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:51:53 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:34872 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFDMvx (ORCPT
+        Thu, 4 Jun 2020 08:52:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35727 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgFDMwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:51:53 -0400
-Received: by mail-oo1-f68.google.com with SMTP id e12so1216539oou.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:51:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZN38JmrN8vqGz8+PUtDOXoeKLTv7lNfegH7QoQuS+Cg=;
-        b=DUAKQqVw43qLIxB2578m07C5zwQwHR7OQGrWkOrdDZuAsXRgGTPWl4ireGic1IYrTZ
-         7XbW9VGs7bf93NW5ywrqHSkL6QDyxltJvTmYMNiJc7CY5RNRVDUJAhtwJTf68lzw7VME
-         01SDeQ6d1WNssu1OdpTPvzqKl9NPsM8UjFWDLRS4fKVxdZU6Dvss+XPlho7pv82N3cI2
-         mjUTwW48WZjBhkBfqP3LTCWS4a2ArDQIzWlQMPM6nX651LI2mz+V7gqv43wgORQMBIiV
-         8j7vdjYjaj4kR5UIJzLkGRv8/DhQW/eJkVStNKic7gHPpi/VJ4A4AV9Z8rBAucPrsY9l
-         UAvA==
-X-Gm-Message-State: AOAM530tMnutF3tuck0SxqHk+3bcbOyfzhzXON+SPx3mE6UMX8V1coeR
-        Ay1RuOzYYwsnYJqr5zaSzTifDfdbAkvG12uFAgQ=
-X-Google-Smtp-Source: ABdhPJwrNMqwRNBWMNB6iDUETVg0jP+4RAZlz7cdtMQXWLZ9o0j7yx6n8S0CWGGrr2qF7G5m8T1QtwuOtggTMUZXork=
-X-Received: by 2002:a4a:95d0:: with SMTP id p16mr3638116ooi.40.1591275112310;
- Thu, 04 Jun 2020 05:51:52 -0700 (PDT)
+        Thu, 4 Jun 2020 08:52:36 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jgpMC-0007l3-4H; Thu, 04 Jun 2020 12:52:28 +0000
+Date:   Thu, 4 Jun 2020 14:52:26 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        containers@lists.linux-foundation.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <20200604125226.eztfrpvvuji7cbb2@wittgenstein>
+References: <20200603011044.7972-1-sargun@sargun.me>
+ <20200603011044.7972-2-sargun@sargun.me>
+ <20200604012452.vh33nufblowuxfed@wittgenstein>
+ <202006031845.F587F85A@keescook>
 MIME-Version: 1.0
-References: <20200602223728.32722-1-richard.weiyang@gmail.com>
- <CAMuHMdUfnmm4bXVRvFOmG5DFYR+LtcZ1UviDszr9bByiN=DO+Q@mail.gmail.com> <20200604122805.d2ndjmkmti6wl3nz@master>
-In-Reply-To: <20200604122805.d2ndjmkmti6wl3nz@master>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 4 Jun 2020 14:51:40 +0200
-Message-ID: <CAMuHMdXnLUS8F4nWJBqDjoKhBmF2_ihfwe4jTGxuZ1e_WKRNPQ@mail.gmail.com>
-Subject: Re: [Patch v2] lib: test get_count_order/long in test_bitops.c
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202006031845.F587F85A@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei,
+On Wed, Jun 03, 2020 at 07:22:57PM -0700, Kees Cook wrote:
+> On Thu, Jun 04, 2020 at 03:24:52AM +0200, Christian Brauner wrote:
+> > On Tue, Jun 02, 2020 at 06:10:41PM -0700, Sargun Dhillon wrote:
+> > > Previously there were two chunks of code where the logic to receive file
+> > > descriptors was duplicated in net. The compat version of copying
+> > > file descriptors via SCM_RIGHTS did not have logic to update cgroups.
+> > > Logic to change the cgroup data was added in:
+> > > commit 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+> > > commit d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+> > > 
+> > > This was not copied to the compat path. This commit fixes that, and thus
+> > > should be cherry-picked into stable.
+> > > 
+> > > This introduces a helper (file_receive) which encapsulates the logic for
+> > > handling calling security hooks as well as manipulating cgroup information.
+> > > This helper can then be used other places in the kernel where file
+> > > descriptors are copied between processes
+> > > 
+> > > I tested cgroup classid setting on both the compat (x32) path, and the
+> > > native path to ensure that when moving the file descriptor the classid
+> > > is set.
+> > > 
+> > > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > > Suggested-by: Kees Cook <keescook@chromium.org>
+> > > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > > Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> > > Cc: Daniel Wagner <daniel.wagner@bmw-carit.de>
+> > > Cc: David S. Miller <davem@davemloft.net>
+> > > Cc: Jann Horn <jannh@google.com>,
+> > > Cc: John Fastabend <john.r.fastabend@intel.com>
+> > > Cc: Tejun Heo <tj@kernel.org>
+> > > Cc: Tycho Andersen <tycho@tycho.ws>
+> > > Cc: stable@vger.kernel.org
+> > > Cc: cgroups@vger.kernel.org
+> > > Cc: linux-fsdevel@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > ---
+> > >  fs/file.c            | 35 +++++++++++++++++++++++++++++++++++
+> > >  include/linux/file.h |  1 +
+> > >  net/compat.c         | 10 +++++-----
+> > >  net/core/scm.c       | 14 ++++----------
+> > >  4 files changed, 45 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/fs/file.c b/fs/file.c
+> > > index abb8b7081d7a..5afd76fca8c2 100644
+> > > --- a/fs/file.c
+> > > +++ b/fs/file.c
+> > > @@ -18,6 +18,9 @@
+> > >  #include <linux/bitops.h>
+> > >  #include <linux/spinlock.h>
+> > >  #include <linux/rcupdate.h>
+> > > +#include <net/sock.h>
+> > > +#include <net/netprio_cgroup.h>
+> > > +#include <net/cls_cgroup.h>
+> > >  
+> > >  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
+> > >  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
+> > > @@ -931,6 +934,38 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+> > >  	return err;
+> > >  }
+> > >  
+> > > +/*
+> > > + * File Receive - Receive a file from another process
+> > > + *
+> > > + * This function is designed to receive files from other tasks. It encapsulates
+> > > + * logic around security and cgroups. The file descriptor provided must be a
+> > > + * freshly allocated (unused) file descriptor.
+> > > + *
+> > > + * This helper does not consume a reference to the file, so the caller must put
+> > > + * their reference.
+> > > + *
+> > > + * Returns 0 upon success.
+> > > + */
+> > > +int file_receive(int fd, struct file *file)
+> > 
+> > This is all just a remote version of fd_install(), yet it deviates from
+> > fd_install()'s semantics and naming. That's not great imho. What about
+> > naming this something like:
+> > 
+> > fd_install_received()
+> > 
+> > and move the get_file() out of there so it has the same semantics as
+> > fd_install(). It seems rather dangerous to have a function like
+> > fd_install() that consumes a reference once it returned and another
+> > version of this that is basically the same thing but doesn't consume a
+> > reference because it takes its own. Seems an invitation for confusion.
+> > Does that make sense?
+> 
+> We have some competing opinions on this, I guess. What I really don't
+> like is the copy/pasting of the get_unused_fd_flags() and
+> put_unused_fd() needed by (nearly) all the callers. If it's a helper, it
+> should help. Specifically, I'd like to see this:
+> 
+> int file_receive(int fd, unsigned long flags, struct file *file,
+> 		 int __user *fdptr)
 
-On Thu, Jun 4, 2020 at 2:28 PM Wei Yang <richard.weiyang@gmail.com> wrote:
-> On Thu, Jun 04, 2020 at 01:50:13PM +0200, Geert Uytterhoeven wrote:
-> >On Wed, Jun 3, 2020 at 1:11 AM Wei Yang <richard.weiyang@gmail.com> wrote:
-> >> Add some test for get_count_order/long in test_bitops.c.
-> >>
-> >> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> >
-> >Thanks for your patch, which is now commit 7851d6639caeea40 ("lib:
-> >test get_count_order/long in test_bitops.c") in linux-next.
-> >
-> >> --- a/lib/test_bitops.c
-> >> +++ b/lib/test_bitops.c
-> >
-> >> @@ -24,6 +28,26 @@ enum bitops_fun {
-> >>
-> >>  static DECLARE_BITMAP(g_bitmap, BITOPS_LENGTH);
-> >>
-> >> +unsigned int order_comb[][2] = {
-> >> +       {0x00000003,  2},
-> >> +       {0x00000004,  2},
-> >> +       {0x00001fff, 13},
-> >> +       {0x00002000, 13},
-> >> +       {0x50000000, 31},
-> >> +       {0x80000000, 31},
-> >> +       {0x80003000, 32},
-> >> +};
-> >> +
-> >> +unsigned long order_comb_long[][2] = {
-> >> +       {0x0000000300000000, 34},
-> >> +       {0x0000000400000000, 34},
-> >> +       {0x00001fff00000000, 45},
-> >> +       {0x0000200000000000, 45},
-> >> +       {0x5000000000000000, 63},
-> >> +       {0x8000000000000000, 63},
-> >> +       {0x8000300000000000, 64},
-> >> +};
-> >
-> >noreply@ellerman.id.au reported for m68k-allmodconfig:
-> >
-> >lib/test_bitops.c:42:3: error: unsigned conversion from 'long long
-> >int' to 'long unsigned int' changes value from '12884901888' to '0'
-> >[-Werror=overflow]
-> >lib/test_bitops.c:43:3: error: unsigned conversion from 'long long
-> >int' to 'long unsigned int' changes value from '17179869184' to '0'
-> >[-Werror=overflow]
-> >lib/test_bitops.c:44:3: error: unsigned conversion from 'long long
-> >int' to 'long unsigned int' changes value from '35180077121536' to '0'
-> >[-Werror=overflow]
-> >lib/test_bitops.c:45:3: error: unsigned conversion from 'long long
-> >int' to 'long unsigned int' changes value from '35184372088832' to '0'
-> >[-Werror=overflow]
-> >lib/test_bitops.c:46:3: error: unsigned conversion from 'long long
-> >int' to 'long unsigned int' changes value from '5764607523034234880'
-> >to '0' [-Werror=overflow]
-> >lib/test_bitops.c:47:3: error: conversion from 'long long unsigned
-> >int' to 'long unsigned int' changes value from '9223372036854775808'
-> >to '0' [-Werror=overflow]
-> >lib/test_bitops.c:48:3: error: conversion from 'long long unsigned
-> >int' to 'long unsigned int' changes value from '9223424813412909056'
-> >to '0' [-Werror=overflow]
-> >
-> >Indeed, on 32-bit, none of these values fit in unsigned long.
-> >
->
-> Hmm... I didn't test on 32bit platform. Sorry for that.
->
-> >>  static int __init test_bitops_startup(void)
-> >>  {
-> >>         pr_warn("Loaded test module\n");
-> >> @@ -32,6 +56,18 @@ static int __init test_bitops_startup(void)
-> >>         set_bit(BITOPS_11, g_bitmap);
-> >>         set_bit(BITOPS_31, g_bitmap);
-> >>         set_bit(BITOPS_88, g_bitmap);
-> >> +
-> >> +       for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
-> >> +               if (order_comb[i][1] != get_count_order(order_comb[i][0]))
-> >> +                       pr_warn("get_count_order wrong for %x\n",
-> >> +                                      order_comb[i][0]); }
-> >> +
-> >> +       for (i = 0; i < ARRAY_SIZE(order_comb_long); i++) {
-> >> +               if (order_comb_long[i][1] !=
-> >> +                              get_count_order_long(order_comb_long[i][0]))
-> >> +                       pr_warn("get_count_order_long wrong for %lx\n",
-> >> +                                      order_comb_long[i][0]); }
-> >> +
-> >>         return 0;
-> >
-> >BTW, shouldn't get_count_order_long() be tested with the values in
-> >order_comb[], too?
-> >
->
-> You mean
->
->        {0x0000000000000003,  2},
->        {0x0000000000000004,  2},
->        {0x0000000000001fff, 13},
->        {0x0000000000002000, 13},
->        {0x0000000050000000, 31},
->        {0x0000000080000000, 31},
->        {0x0000000080003000, 32},
+I still fail to see what this whole put_user() handling buys us at all
+and why this function needs to be anymore complicated then simply:
 
-Yes, those values.  And those should work with get_count_order_long()
-on both 32-bit and 64-bit.
+fd_install_received(int fd, struct file *file)
+{
+	security_file_receive(file);
+ 
+ 	sock = sock_from_file(fd, &err);
+ 	if (sock) {
+ 		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+ 		sock_update_classid(&sock->sk->sk_cgrp_data);
+ 	}
 
-Gr{oetje,eeting}s,
+	fd_install();
+	return;
+}
 
-                        Geert
+exactly like fd_install() but for received files.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+For scm you can fail somewhere in the middle of putting any number of
+file descriptors so you're left in a state with only a subset of
+requested file descriptors installed so it's not really useful there.
+And if you manage to install an fd but then fail to put_user() it
+userspace can simply check it's fds via proc and has to anyway on any
+scm message error. If you fail an scm message userspace better check
+their fds.
+For seccomp maybe but even there I doubt it and I still maintain that
+userspace screwing this up is on them which is how we do this most of
+the time. And for pidfd_getfd() this whole put_user() thing doesn't
+matter at all.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+It's much easier and clearer if we simply have a fd_install() -
+fd_install_received() parallelism where we follow an established
+convention. _But_ if that blocks you from making this generic enough
+then at least the replace_fd() vs fd_install() logic seems it shouldn't
+be in there. 
+
+And the function name really needs to drive home the point that it
+installs an fd into the tasks fdtable no matter what version you go
+with. file_receive() is really not accurate enough for this at all.
+
+> {
+> 	struct socket *sock;
+> 	int err;
+> 
+> 	err = security_file_receive(file);
+> 	if (err)
+> 		return err;
+> 
+> 	if (fd < 0) {
+> 		/* Install new fd. */
+> 		int new_fd;
+> 
+> 		err = get_unused_fd_flags(flags);
+> 		if (err < 0)
+> 			return err;
+> 		new_fd = err;
+> 
+> 		/* Copy fd to any waiting user memory. */
+> 		if (fdptr) {
+> 			err = put_user(new_fd, fdptr);
+> 			if (err < 0) {
+> 				put_unused_fd(new_fd);
+> 				return err;
+> 			}
+> 		}
+> 		fd_install(new_fd, get_file(file));
+> 		fd = new_fd;
+> 	} else {
+> 		/* Replace existing fd. */
+> 		err = replace_fd(fd, file, flags);
+> 		if (err)
+> 			return err;
+> 	}
+> 
+> 	/* Bump the cgroup usage counts. */
+> 	sock = sock_from_file(fd, &err);
+> 	if (sock) {
+> 		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+> 		sock_update_classid(&sock->sk->sk_cgrp_data);
+> 	}
+> 
+> 	return fd;
+> }
+> 
+> If everyone else *really* prefers keeping the get_unused_fd_flags() /
+> put_unused_fd() stuff outside the helper, then I guess I'll give up,
+> but I think it is MUCH cleaner this way -- all 4 users trim down lots
+> of code duplication.
+> 
+> -- 
+> Kees Cook
