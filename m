@@ -2,168 +2,146 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F01C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B40A2075B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C9C2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VXb0tquW"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="q0b+yMcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgFDJgh (ORCPT
+        id S1727937AbgFDJhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbgFDJgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:36:37 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCFBC03E96E
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:36:37 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id e8so1110639ooi.11
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z9Gmt7c5N9Wuf1xRRCeQ6LGP+x2nsJ1lC3QXqc/8Dhc=;
-        b=VXb0tquWgjUAVrjUQvBFkjElO+us0sp63/gsGT4muxVdIPXG+oOFyRdt5aJn92ZJCE
-         JEx8kDimDYdhzsWhF2WmVH5MN3MfzCxv74ky6abUFQGxx1keKlESVewu1Qc/kd4r6C/w
-         DTSeetaURTCVMFTRo+qfVX0P6p2YnA4RabcrA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z9Gmt7c5N9Wuf1xRRCeQ6LGP+x2nsJ1lC3QXqc/8Dhc=;
-        b=ciAqzKj0vZ6HGq987re1gIyMugAMiNKwVl7NoqZEWhjq4aMZ9X+GbIGvzJIWx983oe
-         21ZecIuzodSMy7msqyUg4d44t/x4Xu61gxLxh8b7mDoA7fSk+P3oyll2CXs0GVK5PTvP
-         TVz3ntm7ojz5veGPjk8DiwPF9ww62Q4bh7r02YXqLLwJ7j6aO80cb/ieJV1HgB+Fo4pg
-         c3vagW5WQIuubW9LUYWGE58ovPJOJzhnQc/8pS41Dt8fbucoJQLn8DwIe158VTbaHNxo
-         unt32GGtmybValeEVRxaEGQkonPP4TMsMoJbH0ssjbnF8MaHzovUc4zeSyNFVk+npfDL
-         cZhg==
-X-Gm-Message-State: AOAM530SYym1diJEeDjnYuRACgsMeqTNoasT8D5KhHqFTJBS9T65Rdvc
-        +qt8KRMzL3hhGR8h0iaq4TQm+bZpm4FoXJSVW3D+LQ==
-X-Google-Smtp-Source: ABdhPJxAG9oiM1c1QpEnWLT/EWRbfMWy2gQklxD/IkomQ4LgpvxeJOMC+BW+nd+79+C1K6VQUmsFQCXuYgbPlpehCRs=
-X-Received: by 2002:a4a:311d:: with SMTP id k29mr3016059ooa.89.1591263396299;
- Thu, 04 Jun 2020 02:36:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-4-daniel.vetter@ffwll.ch> <edbfc1aa-9297-8202-cef8-1facafaa0dfe@shipmail.org>
- <CAKMK7uGLAPvvgHCCZhg0cea3Fz=Zqhf-GKS2OC3mZudYe3mKhw@mail.gmail.com> <159126281827.25109.3992161193069793005@build.alporthouse.com>
-In-Reply-To: <159126281827.25109.3992161193069793005@build.alporthouse.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 4 Jun 2020 11:36:24 +0200
-Message-ID: <CAKMK7uHOcH+rWhor7zzqqcjCUtxz_-5stLAOVD=4_ED+QjN8oQ@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 03/18] dma-fence: basic lockdep annotations
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas_os@shipmail.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Thu, 4 Jun 2020 05:37:21 -0400
+Received: from mout.web.de ([217.72.192.78]:40895 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbgFDJhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:37:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591263415;
+        bh=LJN3Kf4vQsasf3c2M0JNJOkqWVCOQTQQEFF500nJIbM=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=q0b+yMclK9v1qNZ9aVOp1gbpfRs6a3LbUH/nffGnDaWZCXRFIzJYDOnfgseyZiixP
+         35s3nqIetyAwQdqbrYBh3FJE5FQ8xtHPWjPseP7B9xZqlkN1jVDRL63znhCxGHOK5p
+         RX86hAw3Uzu6KFDPgMsg9ki6griWjxQRPteHCviM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mmymz-1jICyv3DZH-00jw0c; Thu, 04
+ Jun 2020 11:36:54 +0200
+Subject: Re: [PATCH] dmaengine: stm32-dmamux: Fix pm_runtime_get_sync()
+ failure cases
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Thomas Hellstrom <thomas.hellstrom@intel.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Mika Kuoppala <mika.kuoppala@intel.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        kernel-janitors@vger.kernel.org
+References: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
+ <CAEkB2ET_gfNUAuoZHxiGWZX7d3CQaJYJJqS2Fspif5mFq4-xfA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <f21a82e5-810e-b153-651a-9f347dfe0216@web.de>
+Date:   Thu, 4 Jun 2020 11:36:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <CAEkB2ET_gfNUAuoZHxiGWZX7d3CQaJYJJqS2Fspif5mFq4-xfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:N3PPV2/zDO+XFyf+JdBnUlRlfc+sl+YC3VoGzVNwgF6oOISqYp0
+ N/B7w2TFwK+uJeBNhNE7BkKl12aa7AM1nyeCOtZLDtPyUIr8XNfQm/PTWxyJpeaFqR+So1W
+ Q0J4BAgPlSlhhfYcYbvSLbW8OPrPAsbEYbHtYAgNH75ry2HZYqAZlsfqhdTpfia9193H9V+
+ zo741yPmncRrz1pf838Gw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9z9yiXxRKJI=:I4PDmBw3lL71NuE6T+52vB
+ Iz9oaE11/xW0K9GQt7GJUPUVMLMFw3U+LiRYsXwCtPuONMFFyqRZVK+P6yhzQikx+oBlJRWwJ
+ H2TDZiERzlTMQAA+O86CVSpKQvxxDi9cJZ+hMmT0psW3SYX4ZCnQXS1lQP0jYFfq0cztOpF7G
+ 2d4sFWX9vOGMS0KrZHlPsHejrqNGS0icLC0T8ZC+eXEv3Ynro5RNduwgxQ+D7Iejebmm7OQ+2
+ f3ihgRQTiPOuFJEZ5AQfyc6VcO5dZsBs2ZgTNFpu37nlIxUluphnAmT2+sEO0me7PoVvzkTGj
+ +LRkaiK3ezT7643nOde+LhooQv/av9RdSw0s5ktCsB2/SXMMqyFGuZCMU6yg2tnoy/Uv8LqLu
+ 8Idmf73FJ/eDCDifWWA31hu+2/E8IqRnIplDfoRvmvlUDUVySIYhw9jKd8vQUW7FJMsVu6Xtw
+ 7Za3ONLGcWK0o5j0piIUuSi9q9mGVfXXnRuhJ4zLHhCJYxJweBEi4wmVbUbJqhiBWwCto5t/b
+ J61kG1gPgSGf/t66clKrv7E6UVjH6IftFr2BMQ1VGeauZemB/Jq9YxTZDrEGJjGF25g1ZElvQ
+ pTL4yxSnkFpBZoX+EugOUGsiERCGOvxOuUZgXKk7MpeyjPHqARoo5qSOFDTZ2WxIftMTSbsgr
+ RErZlQYEK3fcboVDm9SDxMtWqIKv1qBhpdbu99ChSIMK39/Ylb6++pqw3M7NvEpZToRBHWQiU
+ SQ0rKKi6ffFlPhSTWsE/WT0+awQ0ChDCEOsnOlWMUNmiuE581MIwUlhb1oWwdSgr1yUu5bU0b
+ Ub1yJVtL0rcTNzlmWvQbPiEjo7w+USU1jLzhykShUvWBX0YU6cqBW17GiFmLHZ1e+QL8+TxHM
+ sGHUgy2JNR6RUDQpZw4HyXkVf9SjYFS9vZpoAim5neE2jzUgM+l3VDmDMqJGuOu8wPHJVTtP5
+ F4AzsC1095kDq7Njhb9TO9g2v75mc4VM8XFLxedOI46ryJDujTtEHLrq81R/RSdo28baYafzn
+ Jik/EM3sjzoSD6kPpWdiLwOH3Cz6/Ax8wIsE+cXsfQDjustFC8lBc3v4J/0zCfqcLmxXXV99R
+ gi5yb1OR5vlXz79TZC/b60zV51OAytbgK0vhZIQfnyaHbGwp1cSLTzNmOpBH6PjobTycmmIC3
+ VueyrS6Ia3EQk4A46Tx/gwJM9os6+24HN7OYmwpu/a7fS0Yz/GHEF9L63iqXa3xPykw+pvjxG
+ yBahHtqgG/BbwTCE3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 11:27 AM Chris Wilson <chris@chris-wilson.co.uk> wro=
-te:
->
-> Quoting Daniel Vetter (2020-06-04 10:21:46)
-> > On Thu, Jun 4, 2020 at 10:57 AM Thomas Hellstr=C3=B6m (Intel)
-> > <thomas_os@shipmail.org> wrote:
-> > >
-> > >
-> > > On 6/4/20 10:12 AM, Daniel Vetter wrote:
-> > > ...
-> > > > Thread A:
-> > > >
-> > > >       mutex_lock(A);
-> > > >       mutex_unlock(A);
-> > > >
-> > > >       dma_fence_signal();
-> > > >
-> > > > Thread B:
-> > > >
-> > > >       mutex_lock(A);
-> > > >       dma_fence_wait();
-> > > >       mutex_unlock(A);
-> > > >
-> > > > Thread B is blocked on A signalling the fence, but A never gets aro=
-und
-> > > > to that because it cannot acquire the lock A.
-> > > >
-> > > > Note that dma_fence_wait() is allowed to be nested within
-> > > > dma_fence_begin/end_signalling sections. To allow this to happen th=
-e
-> > > > read lock needs to be upgraded to a write lock, which means that an=
-y
-> > > > other lock is acquired between the dma_fence_begin_signalling() cal=
-l and
-> > > > the call to dma_fence_wait(), and still held, this will result in a=
-n
-> > > > immediate lockdep complaint. The only other option would be to not
-> > > > annotate such calls, defeating the point. Therefore these annotatio=
-ns
-> > > > cannot be sprinkled over the code entirely mindless to avoid false
-> > > > positives.
-> > >
-> > > Just realized, isn't that example actually a true positive, or at lea=
-st
-> > > a great candidate for a true positive, since if another thread reente=
-rs
-> > > that signaling path, it will block on that mutex, and the fence would
-> > > never be signaled unless there is another signaling path?
-> >
-> > Not sure I understand fully, but I think the answer is "it's complicate=
-d".
->
-> See cd8084f91c02 ("locking/lockdep: Apply crossrelease to completions")
->
-> dma_fence usage here is nothing but another name for a completion.
+> Please stop proposing rewording on my patches!
 
-Quoting from my previous cover letter:
+I find it interesting that you got into the mood to choose
+another patch subject variant.
+https://lore.kernel.org/patchwork/patch/1252131/
+https://lore.kernel.org/dmaengine/20200603193648.19190-1-navid.emamdoost@gmail.com/
 
-"I've dragged my feet for years on this, hoping that cross-release lockdep
-would do this for us, but well that never really happened unfortunately.
-So here we are."
 
-I discussed this with Peter, cross-release not getting in is pretty
-final it seems. The trouble is false positives without explicit
-begin/end annotations reviewed by humans - ime from just these few
-examples you just can't guess this stuff by computeres, you need real
-brains thinking about all the edge cases, and where exactly the
-critical section starts and ends. Without that you're just going to
-drown in a sea of false positives and yuck.
+> I will consider updating my patches only if a maintainer asks for it.
 
-So yeah I had hopes for cross-release too, unfortunately that was
-entirely in vain and a distraction.
+Now I am curious if you would like take my patch review request into account
+to avoid a typo there.
+How will the quality evolve for such commit messages?
 
-Now I guess it would be nice if there's a per-class
-completion_begin/end annotation for the more generic problem. But then
-also most people don't have a cross-driver completion api contract
-like dma_fence is, with some of the most ridiculous over the top
-constraints of what's possible and what's not possible on each side of
-the cross-release. We do have a bit an outsized benefit (in pain
-reduction) vs cost ratio here.
--Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Regards,
+Markus
