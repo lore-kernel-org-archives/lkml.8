@@ -2,146 +2,195 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 527C52072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BF020738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ub4mWTHg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TnjMgpis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbgFDQmN (ORCPT
+        id S1729884AbgFDQn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729115AbgFDQmN (ORCPT
+        Thu, 4 Jun 2020 12:43:28 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33811 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729859AbgFDQn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:42:13 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B57EC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 09:42:13 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id f187so8655866ybc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=pofY5UnHBtE2yEYmKDPS6cR9bq/E80+ZeaPnrnMNK98=;
-        b=ub4mWTHgAmvJMZjGWw+3krHG/dMMay/tEALCX2G/rPbqjl75Y1uFKqie5t1rgrrhON
-         mSo60E/ut95d77LLkZkje/FzRws70wUBRcAvqqI6aATgZOEQANEMIjEbyhsrSIwC/se1
-         +gGkOGCIm1IyRrH4kWj4cbjTNvz6C+D4ft584XFWfpJ7iRrH7vNHTY3oULr4Z6pRVU6G
-         BavBT5hfTMSMPCNrPtuEOHmz9ygqHX4Urzmv6tacLepDNsToQeLuvQr0aZV2GY+d7uvc
-         FqYz0BricpkB/+MN9552QQhFDDWbsbpx/QxKWrc7keuS8FBrMpqkSeSwwHcn2IhJ2wAB
-         UILw==
+        Thu, 4 Jun 2020 12:43:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591289005;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=b43y7oBLYY4aNesbrL9YUempKco+Tvij6pj28X/0Ggg=;
+        b=TnjMgpisVQA4FaxjiX5s/YiGin5n4Sr2PI5IZza38bT8r4pErS2n//M+UPpaGjaTx+3aa8
+        kmB2ch7HzJ70N99/C88ngZvF0CWOnPM2/ufqHuyW4zI1yWp5HHgg4ls/Ax2TWJhrA1u/9i
+        DU5valMLduA706Tj9HenZz9DztlftvE=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-F7AGwcOaMnq7V_MSmYm1uw-1; Thu, 04 Jun 2020 12:43:24 -0400
+X-MC-Unique: F7AGwcOaMnq7V_MSmYm1uw-1
+Received: by mail-ed1-f71.google.com with SMTP id y4so2888435edo.16
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:43:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=pofY5UnHBtE2yEYmKDPS6cR9bq/E80+ZeaPnrnMNK98=;
-        b=jNkDN7oAxMaBI8Gq4xoNAM0w9kZVbjTjtyLX0K0oQSRPodaLpDKf32Wy6PRjCbV5QW
-         zZqsu5KHkqAdSQn/h2a+wTQ2wGVGHnOoL6GprBQzavyQwim0zm4MNTVZSzxqDI7wyg0b
-         xQHXva95fe2futZggOBim/Jjy53/i1VCW2Vm6oZs2aTSTMjmx0xNVW4eSsaMHcTEpHN8
-         7N2ZF862v8XTgmR+OU3OQLOloALlfWe4ckJVfNIckU2A61bUh3b3m0fOosDuLvxRZbfA
-         sviZhfK7AL0OR53axMB/u4Uz/vuhKM9ikyhXnosJ85B5ozroutt82IyBOSRFcS+4mXsu
-         ATwg==
-X-Gm-Message-State: AOAM532gGESV17o3QKlIMxrLEewKOGwNL5sytSkVLo9PAftyG+caEEGJ
-        BxCCRhClUFSCgCg3SX+GYrt2Ak38cXVcD77cGz5HHturxaPoXV+rZ7Lw1G5h35qmrCawVuZOfAm
-        jR0nVI/tBejd00GL/czCV8sY+rwlL1cw9lavtlfMklPVUWGXRmt9fyXANooph9CZTHD06+2g6Q+
-        w=
-X-Google-Smtp-Source: ABdhPJzuB/YAm+byvdwGw2WfFvD+78kMp/xSR/rtbn2s7vqMXsI0/43mdS+H2sOvX7lbvdCDP2L90nRRZYLC1A==
-X-Received: by 2002:a25:5804:: with SMTP id m4mr9094629ybb.488.1591288932392;
- Thu, 04 Jun 2020 09:42:12 -0700 (PDT)
-Date:   Thu,  4 Jun 2020 18:41:45 +0200
-Message-Id: <20200604164145.173925-1-maennich@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.rc2.251.g90737beb825-goog
-Subject: [PATCH] scripts: add dummy report mode to add_namespace.cocci
-From:   Matthias Maennich <maennich@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, maennich@google.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        YueHaibing <yuehaibing@huawei.com>, jeyu@kernel.org,
-        cocci@systeme.lip6.fr, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=b43y7oBLYY4aNesbrL9YUempKco+Tvij6pj28X/0Ggg=;
+        b=NtVTy4o59rrVM0n2sUsgpDQLrXxW2Oq7u15FB9IwYhs+l0q9tta9LGgWkgVAqQF7SY
+         CFqD4n8PNqimxbbqIYNznTPShLoAr9x+Lz/uuSNrd84H1eGx4xKtfuL1sRZmwsvailHV
+         GI9CUAN3m512Tdj4nxUbyjWOXZzKqBJhOPSHpvFjB/3wNrneWwuDj5C3hNFPi9GHA10j
+         tsnTmuvzaTuOpCRclfUjI3V7+4iYVANpLNV4jMmx7g19MXnChO+h6cqXmz86g4ytyD68
+         ghzEajWZF/CxMQxp7Ea9s5okS8hXA+03d8yFnH1i7HnW+eeTOGCLUTZ4pIp8qMcRC+rT
+         1Rcw==
+X-Gm-Message-State: AOAM531+wmQ4v0fsSVxdzraPvTnVPshJXUXnAlj6UxlsGjDgLNd6UlDq
+        7QxO11D4nUIyW0VqDNs/6A6BxJs3IN4sDXDoExwlAn0xrJuW6LkXABY+O8QRDl9qJFwIUTBEPFf
+        rx8zhIadKM3TmlDQGfzgeW9zg
+X-Received: by 2002:a17:906:2f8d:: with SMTP id w13mr4892305eji.102.1591289002658;
+        Thu, 04 Jun 2020 09:43:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyPnkn9qZ3C4tEYb3JPcW9SIz73nKr8uZwFQF/sN4ea+5RpiF1LAJWzu/jMThhlIZyslufZDw==
+X-Received: by 2002:a17:906:2f8d:: with SMTP id w13mr4892290eji.102.1591289002373;
+        Thu, 04 Jun 2020 09:43:22 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id v24sm2550044ejf.20.2020.06.04.09.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 09:43:21 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: Inject #GP when nested_vmx_get_vmptr() fails to read guest memory
+In-Reply-To: <20200604160253.GF30223@linux.intel.com>
+References: <20200604143158.484651-1-vkuznets@redhat.com> <da7acd6f-204d-70e2-52aa-915a4d9163ef@redhat.com> <20200604145357.GA30223@linux.intel.com> <87k10meth6.fsf@vitty.brq.redhat.com> <20200604160253.GF30223@linux.intel.com>
+Date:   Thu, 04 Jun 2020 18:43:19 +0200
+Message-ID: <87h7vqeq8o.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running `make coccicheck` in report mode using the
-add_namespace.cocci file, it will fail for files that contain
-MODULE_LICENSE. Those match the replacement precondition, but spatch
-errors out as virtual.ns is not set.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-In order to fix that, add the virtual rule nsdeps and only do search and
-replace if that rule has been explicitly requested.
+> On Thu, Jun 04, 2020 at 05:33:25PM +0200, Vitaly Kuznetsov wrote:
+>> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+>> 
+>> > On Thu, Jun 04, 2020 at 04:40:52PM +0200, Paolo Bonzini wrote:
+>> >> On 04/06/20 16:31, Vitaly Kuznetsov wrote:
+>> >
+>> > ...
+>> >
+>> >> > KVM could've handled the request correctly by going to userspace and
+>> >> > performing I/O but there doesn't seem to be a good need for such requests
+>> >> > in the first place. Sane guests should not call VMXON/VMPTRLD/VMCLEAR with
+>> >> > anything but normal memory. Just inject #GP to find insane ones.
+>> >> > 
+>> 
+>> ...
+>> 
+>> >> 
+>> >> looks good but we need to do the same in handle_vmread, handle_vmwrite,
+>> >> handle_invept and handle_invvpid.  Which probably means adding something
+>> >> like nested_inject_emulation_fault to commonize the inner "if".
+>> >
+>> > Can we just kill the guest already instead of throwing more hacks at this
+>> > and hoping something sticks?  We already have one in
+>> > kvm_write_guest_virt_system...
+>> >
+>> >   commit 541ab2aeb28251bf7135c7961f3a6080eebcc705
+>> >   Author: Fuqian Huang <huangfq.daxian@gmail.com>
+>> >   Date:   Thu Sep 12 12:18:17 2019 +0800
+>> >
+>> >     KVM: x86: work around leak of uninitialized stack contents
+>> >
+>> 
+>> Oh I see...
+>> 
+>> [...]
+>> 
+>> Let's get back to 'vm_bugged' idea then? 
+>> 
+>> https://lore.kernel.org/kvm/87muadnn1t.fsf@vitty.brq.redhat.com/
+>
+> Hmm, I don't think we need to go that far.  The 'vm_bugged' idea was more
+> to handle cases where KVM itself (or hardware) screwed something up and
+> detects an issue deep in a call stack with no recourse for reporting the
+> error up the stack.
+>
+> That isn't the case here.  Unless I'm mistaken, the end result is simliar
+> to this patch, except that KVM would exit to userspace with
+> KVM_INTERNAL_ERROR_EMULATION instead of injecting a #GP.  E.g.
 
-In order to make spatch happy in report mode, we also need a dummy rule,
-as otherwise it errors out with "No rules apply". Using a script:python
-rule appears unrelated and odd, but this is the shortest I could come up
-with.
+I just wanted to resurrect that 'vm_bugged' idea but was waiting for a
+good opportunity :-)
 
-Adjust scripts/nsdeps accordingly to set the nsdeps rule when run trough
-`make nsdeps`.
+The advantage of KVM_EXIT_INTERNAL_ERROR is that we're not trying to
+invent some behavior which is not in SDM and making it a bit more likely
+that we get a bug report from an angry user.
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Fixes: c7c4e29fb5a4 ("scripts: add_namespace: Fix coccicheck failed")
-Cc: YueHaibing <yuehaibing@huawei.com>
-Cc: jeyu@kernel.org
-Cc: cocci@systeme.lip6.fr
-Cc: stable@vger.kernel.org
-Signed-off-by: Matthias Maennich <maennich@google.com>
----
- scripts/coccinelle/misc/add_namespace.cocci | 8 +++++++-
- scripts/nsdeps                              | 2 +-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 9c74a732b08d..e13d2c0014e2 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -4624,6 +4624,20 @@ void nested_vmx_pmu_entry_exit_ctls_update(struct kvm_vcpu *vcpu)
+>         }
+>  }
+>
+> +static int nested_vmx_handle_memory_failure(struct kvm_vcpu *vcpu, int ret,
+> +                                           struct x86_exception *e)
+> +{
+> +       if (r == X86EMUL_PROPAGATE_FAULT) {
+> +               kvm_inject_emulated_page_fault(vcpu, &e);
+> +               return 1;
+> +       }
+> +
+> +       vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> +       vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> +       vcpu->run->internal.ndata = 0;
+> +       return 0;
+> +}
+> +
+>  static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+>  {
+>         gva_t gva;
+> @@ -4634,11 +4648,9 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+>                                 sizeof(*vmpointer), &gva))
+>                 return 1;
+>
+> -       if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
+> -               kvm_inject_emulated_page_fault(vcpu, &e);
+> -               return 1;
+> -       }
+> -
+> +       r kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
+> +       if (r)
+> +               return nested_vmx_handle_memory_failure(r, &e);
+>         return 0;
+>  }
+>
 
-diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
-index 99e93a6c2e24..cbf1614163cb 100644
---- a/scripts/coccinelle/misc/add_namespace.cocci
-+++ b/scripts/coccinelle/misc/add_namespace.cocci
-@@ -6,6 +6,7 @@
- /// add a missing namespace tag to a module source file.
- ///
- 
-+virtual nsdeps
- virtual report
- 
- @has_ns_import@
-@@ -16,10 +17,15 @@ MODULE_IMPORT_NS(ns);
- 
- // Add missing imports, but only adjacent to a MODULE_LICENSE statement.
- // That ensures we are adding it only to the main module source file.
--@do_import depends on !has_ns_import@
-+@do_import depends on !has_ns_import && nsdeps@
- declarer name MODULE_LICENSE;
- expression license;
- identifier virtual.ns;
- @@
- MODULE_LICENSE(license);
- + MODULE_IMPORT_NS(ns);
-+
-+// Dummy rule for report mode that would otherwise be empty and make spatch
-+// fail ("No rules apply.")
-+@script:python depends on report@
-+@@
-diff --git a/scripts/nsdeps b/scripts/nsdeps
-index 03a8e7cbe6c7..dab4c1a0e27d 100644
---- a/scripts/nsdeps
-+++ b/scripts/nsdeps
-@@ -29,7 +29,7 @@ fi
- 
- generate_deps_for_ns() {
- 	$SPATCH --very-quiet --in-place --sp-file \
--		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
-+		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D nsdeps -D ns=$1 $2
- }
- 
- generate_deps() {
+... and the same for handle_vmread, handle_vmwrite, handle_invept and
+handle_invvpid as suggested by Paolo. I'll be sending this as v2 with
+your Suggested-by: shortly.
+
+>
+>
+> Side topic, I have some preliminary patches for the 'vm_bugged' idea.  I'll
+> try to whip them into something that can be posted upstream in the next few
+> weeks.
+>
+
+Sounds great!
+
 -- 
-2.27.0.rc2.251.g90737beb825-goog
+Vitaly
 
