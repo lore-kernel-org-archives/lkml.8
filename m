@@ -2,120 +2,122 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9838C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57111C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C47CB206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F3B206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNyM+gbp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oe7vA6DP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgFDSjP (ORCPT
+        id S1728262AbgFDSjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35676 "EHLO
+        Thu, 4 Jun 2020 14:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726456AbgFDSjM (ORCPT
+        with ESMTP id S1726456AbgFDSjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:39:12 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39CD5C08C5C0;
-        Thu,  4 Jun 2020 11:39:12 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id c1so4115958vsc.11;
-        Thu, 04 Jun 2020 11:39:12 -0700 (PDT)
+        Thu, 4 Jun 2020 14:39:35 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DC0C08C5C0;
+        Thu,  4 Jun 2020 11:39:34 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s1so8632381ljo.0;
+        Thu, 04 Jun 2020 11:39:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5q6R61skmaUmxxBq8d7U2mAvRURoQSI07JE0eiuucbQ=;
-        b=QNyM+gbpSige5VstWz/Omh6CLX8lhz7YNAX3V28I+BhGnTApz4VGceVp1Xe2D6xvOI
-         2ndwVZyrV0jxu9GlI8T3qYsumNXCFTPTlSYvHQO7hiUt3t4w+5XEbDC9TrFvh1d0U7D+
-         vHlCFw0iHsKbuqofDI4FVzuwvSidSEcvqwB4HAg5u1fB01RcTbMRfMBHCYbcC6pRLdIr
-         qCNYinXCUQE/mckvOCrEIGEG1WNlixCtdMwFUSSwzPowETekhb7ISp6KD5Gio7wNRwZd
-         UdN/IsTGINM83DnnjHAgU0H1evU0j+tkIj3PlJ/kyMyTrSKogc0MYrWGc2E02mtk2d/6
-         VGpg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0Q/ce7fKWUL0s8qvvjbmoZjoyGz/9VTtrwk7OIonRS0=;
+        b=Oe7vA6DPMtrxABtP+GfxI19vl/Np0zAoJ3rQVrPyw3dmLRNsP2ttlHE1R2QMJR6tGj
+         gSecfgdkWzxznF6+OQO8LO3/ISzfkTLJoqUnXEXvGsMFoaQgvUZia22V9EkwE+Hhi3tQ
+         JO1TRBRtB7c7yQrmwSBw2pfw+mz1Dnz8iGnEdDR5cLj2uTWaS9pWEdQfTFr1Z3L9vbDA
+         MtXnCKWjyBwc+JtFSRDyMqHngGQxIaHv1qpjz+9EwwcVDLqwC/bq2vMJ8Ic1XWLaqa8o
+         UoZNl78xswtdxfSayg/502LLf76dk9vg/YDFdVgQcOELB19l3dGFSj50fNpj7w1V+sIu
+         ADqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5q6R61skmaUmxxBq8d7U2mAvRURoQSI07JE0eiuucbQ=;
-        b=HQN9dlyhwmmSLfSi3V62DZkpMop9M4Ke9St5XSc9WJWw/HMVPgLB7S0opU8NvSWyq8
-         eZ68sGDrL+3nQlqnIt3q/uqUDGxcUCxZL5wEuiHqrFxQ30G9kjXqj/7E6474gM37l790
-         9Y+cGdeN4DF6PdtRCOOG6VnuLXv3IWHdVMjucOBvnQoQ8qYy62syXKXWXstrlCo0ea3E
-         z4CotvJzFsjWJkMMu3UiHuBuGOuPvJ33plJYoZgc2C5bgF699TkY/rMtZJZPHZfnaF6x
-         9TUU0thRhs1R4aFuHLBbnGZScnAwmVfRL/87cN5lBM5WG/GRP3pG5pC3CV785UsQBe1S
-         o73w==
-X-Gm-Message-State: AOAM531oMhtjyvqhgH4pz4kn8XQFkTWm6OlhzFzisqnnTHpcPx1LM8YZ
-        6QZlxrogK/M9XDjdxxlKDIjOkFYDcHhHlnnVFIw=
-X-Google-Smtp-Source: ABdhPJzJ/ojMJg2wlACU8XWNC4Gqfm/IMG3F7SitSKAxuXoe0yvbCNhzUBOi7JJmfWff5fp2tTL/8OXMUm9Gzn59Pbk=
-X-Received: by 2002:a05:6102:3ce:: with SMTP id n14mr4674472vsq.113.1591295951292;
- Thu, 04 Jun 2020 11:39:11 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0Q/ce7fKWUL0s8qvvjbmoZjoyGz/9VTtrwk7OIonRS0=;
+        b=hMONEWFgYcRJNsIWd9VWN6V+WrE2ZkB3t+U6sX+0LkdMS3BzTCvO2E0qBIeD1o41W2
+         QJQzSBmj/GzP1RUxYLRdZAlTHutV1nAI8sNg4dpoeKRIVHtMcioJmEWGb2wAOTY4jWus
+         Jfa4R68UYKF0RTIWL4L/xCWq4Fh2mPDt83G6znZkiTMwKckC4q6WzwlAolTF2FjCqfP7
+         0iz9ihC9Q4/insu7QmwWZJiTowbjCw1NXhcq4MRhoZtCL/PcW8J2zx3tYbNBnrAjqh79
+         A6VqLQIMtU8m2kdEMhgSCb586AgY4aflrukZEbadg1S+oePkGP8pzHsJ4EEvQ8YcCReJ
+         s9rw==
+X-Gm-Message-State: AOAM530hp31aIQO2kKf2gv72LqxEi9IliM5Zs22Qc+IIqRZCPtPcoNkw
+        Z8k/scuzOByiHf8UaX9CHW4=
+X-Google-Smtp-Source: ABdhPJwoA3DeXT6fj2z00w4xH93nWSIkOISXuObAIqJFwXHmR+1sygKwnnL4iCmN7If2mWM9jrGSLQ==
+X-Received: by 2002:a2e:9a81:: with SMTP id p1mr2617188lji.119.1591295972392;
+        Thu, 04 Jun 2020 11:39:32 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id q15sm96025lfc.44.2020.06.04.11.39.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 11:39:30 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Thu, 4 Jun 2020 20:39:27 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu: Stop shrinker loop
+Message-ID: <20200604183927.GA26933@pc636>
+References: <20200604102320.15914-1-peter.enderborg@sony.com>
+ <20200604134255.GA24897@pc636>
+ <20200604163100.GB29598@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200518173450.097837707@linuxfoundation.org> <20200518173452.813559136@linuxfoundation.org>
-In-Reply-To: <20200518173452.813559136@linuxfoundation.org>
-From:   =?UTF-8?Q?David_Bala=C5=BEic?= <xerces9@gmail.com>
-Date:   Thu, 4 Jun 2020 20:39:00 +0200
-Message-ID: <CAPJ9Yc8YOeqeO4mo80iVMf3ay+CkdMvYzJY1BqXMNPcKzL6_zg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 12/80] pppoe: only process PADT targeted at local interfaces
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604163100.GB29598@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+> On Thu, Jun 04, 2020 at 03:42:55PM +0200, Uladzislau Rezki wrote:
+> > On Thu, Jun 04, 2020 at 12:23:20PM +0200, Peter Enderborg wrote:
+> > > The count and scan can be separated in time. It is a fair chance
+> > > that all work is already done when the scan starts. It
+> > > then might retry. This is can be avoided with returning SHRINK_STOP.
+> > > 
+> > > Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+> > > ---
+> > >  kernel/rcu/tree.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index c716eadc7617..8b36c6b2887d 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3310,7 +3310,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+> > >  			break;
+> > >  	}
+> > >  
+> > > -	return freed;
+> > > +	return freed == 0 ? SHRINK_STOP : freed;
+> > >  }
+> > >  
+> > The loop will be stopped anyway sooner or later, but sooner is better :)
+> > To me that change makes sense.
+> > 
+> > Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> 
+> Queued, thank you both!
+> 
+Thank you, Paul!
 
-Is there a good reason this did not land in 4.14 branch?
-
-Openwrt is using that and so it missed this patch.
-
-Any chance it goes in in next round?
-
-Regards,
-David
-
-On Mon, 18 May 2020 at 19:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> From: Guillaume Nault <gnault@redhat.com>
->
-> [ Upstream commit b8c158395119be62294da73646a3953c29ac974b ]
->
-> We don't want to disconnect a session because of a stray PADT arriving
-> while the interface is in promiscuous mode.
-> Furthermore, multicast and broadcast packets make no sense here, so
-> only PACKET_HOST is accepted.
->
-> Reported-by: David Bala=C5=BEic <xerces9@gmail.com>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Guillaume Nault <gnault@redhat.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/net/ppp/pppoe.c |    3 +++
->  1 file changed, 3 insertions(+)
->
-> --- a/drivers/net/ppp/pppoe.c
-> +++ b/drivers/net/ppp/pppoe.c
-> @@ -497,6 +497,9 @@ static int pppoe_disc_rcv(struct sk_buff
->         if (!skb)
->                 goto out;
->
-> +       if (skb->pkt_type !=3D PACKET_HOST)
-> +               goto abort;
-> +
->         if (!pskb_may_pull(skb, sizeof(struct pppoe_hdr)))
->                 goto abort;
->
->
->
+--
+Vlad Rezki
