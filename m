@@ -2,130 +2,131 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A106EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3064C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A85C206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4E420772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pp9oePz0"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ix4aY2En"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgFDRJK (ORCPT
+        id S1730038AbgFDRJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:09:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729994AbgFDRJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:09:10 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F78CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:09:10 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 64so3537107pfg.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vTStGj95ld9u7qkUYgU+8qXianN1IvrWD90jNTWUG9A=;
-        b=Pp9oePz0iDeW5lK/UVyrG268kmsnptbgxA6fex7JANQGQupPY4LTPKk8NlJSjKAEXg
-         MBJxHq+MIzP8rMGcq4X0bD3g3XJT/wzB0Vdv0PA3h9Tqc9+sJi1JwWAtYO+IdoTzROrQ
-         Zd4zBPqauS3iobpGI1XpZUmAAfWqDbG2vd8/k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vTStGj95ld9u7qkUYgU+8qXianN1IvrWD90jNTWUG9A=;
-        b=KdWFZLn8PqBEbVD/sVXbvPdAiMsFstTHphjX5m72hI88Izrwq2oOwrtOGgyvX0aEn9
-         IGsXR3JBcjj/pJyYVxNhOris4Uz1ozYZ5shGMGD1Tll67qw4+KA/QdEloXLZe3cOWs4d
-         qh71KDSeUh0m16QFh2z+FNZVG6uoUpG/rM8LOJdiHIuefj0nIW5kB1x84VmG/hyXP+yz
-         kjm1afP91KP8tzhIpPlxGXSPaDtK6v6dw/aVjAtrI3eGJo5PmEj9BTZxW2i7fBbWxkUL
-         CDdYq9zYtXiiMKPFnNbjtfQsYDuEjgCmyUcxA5kvL8jbECDS50/w58H7KQmkaTZdZjqH
-         8Qlg==
-X-Gm-Message-State: AOAM530U9LRzvSCsD4c6CxGr0QgacosklboJ3mJ7h+kSawt/zeFO7J5q
-        DDG9Vs1KBY+6LW6VFmVBeu3Gxw==
-X-Google-Smtp-Source: ABdhPJx2MzNkKVrT8WwTQAmXK4to6UBM/aaS1nLNNdsJTBm3DlU6iQH70iEPakIl6HD11i64VyfOrg==
-X-Received: by 2002:a62:8cc7:: with SMTP id m190mr1386879pfd.174.1591290549416;
-        Thu, 04 Jun 2020 10:09:09 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id q201sm4970443pfq.40.2020.06.04.10.09.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 10:09:08 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 10:09:06 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc-owner@vger.kernel.org,
-        rnayak@codeaurora.org, sibis@codeaurora.org, matthias@chromium.org
-Subject: Re: [PATCH V2 1/2] mmc: sdhci-msm: Add interconnect bandwidth
- scaling support
-Message-ID: <20200604170906.GP4525@google.com>
-References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
- <1591269283-24084-2-git-send-email-ppvk@codeaurora.org>
+        Thu, 4 Jun 2020 13:09:50 -0400
+Received: from mout.web.de ([212.227.17.11]:39795 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729994AbgFDRJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 13:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591290568;
+        bh=TAu6AnQdJCXobcFRn5FXllOYi3fYYBifAG7ZFmLonoU=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=Ix4aY2En/e1BkJ8nRFAlGEGJ+uvjYgFHvL8XV4N53/v6aRP9C8OT/Wk7rf0clD0mp
+         0c96AvUQrlG9085hTCogJB89ITNyr0eoXPo8q5KKtwhb1KlWpThL0NB389efZxxJRr
+         0Gc+Czw7LfGHoZOKouSh4mlya/JzHp3zVy1Jcxuc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MOArg-1jdc7Q2apw-005YSS; Thu, 04
+ Jun 2020 19:09:28 +0200
+Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Jessica Yu <jeyu@kernel.org>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [PATCH] Coccinelle: Add dummy report mode to add_namespace.cocci
+To:     =?UTF-8?Q?Matthias_M=c3=a4nnich?= <maennich@google.com>,
+        Coccinelle <cocci@systeme.lip6.fr>, stable@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <a7359014-7932-c001-d995-920e6eab39e6@web.de>
+Date:   Thu, 4 Jun 2020 19:09:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1591269283-24084-2-git-send-email-ppvk@codeaurora.org>
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MH5+fAfiFqX2Nhk2jXFWYEWvscnGJRl7ZP6YWBUMDkmLs30pZME
+ wBGC/4kpKmEndPWIIPc+aipPQwUu5hFI6urTrGZ56F0xWRdQ5K9oGV6DcWkLSv+XTzMcYph
+ 0PS9q+rN9A2jPWHrkg6AYa2CzxNddJoyzS5dbEc+2EAq0FCwkIih5pnuzG1LwrIXJIa7Qln
+ baRjXcZAfLDyI9KJPpq8g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZN2de3a9t8E=:R+DmM2Y5/+ig7AGYu5Lk+L
+ sdxjtweB2S9BnQ1APxi6SRV+a26LK1U4nUFfFNczqNfeOSl+l1aZixWsoKw3o2nemcq1iKRzy
+ g4H0eOniHwato0vBJ4Z5DdO9YjrwvO0lm2ahre0RCfXGQtjPZ9AizyfYTI/9rn/mmGExIh0LW
+ h4eBzkB6xQ+/cyvkfVIgyXk5aNdLWbUvWGWrgRjZSMACrOgDFuxZYvca74I7T75Ahz60FJiMz
+ ZC3C8JtDVutF4byZ3oIuWM7DrdiWDIWF6r1B6QiCNH7rbLiiGr+Mfi4lNUaTxeken4BiQIdyC
+ Kwzgo6Q/Xn8hLY1km+GRbrcjlnAirZe6okUqXoavqAr7Tqc1+2q5Jkpeuug8UuTpVxtuymen8
+ NBEuQF35oKfJXFU6WoO7Q2ezdVgdAhxjCsDcQIgPIfDiOPENSJ9u5YyaPsLu8WEV/ErkyjqSJ
+ 9h997pRCX+dvWbpXYtyITg6wXTro2YLIyBNF52RXYlsf1J+Cm09x5SkAmDEmB8K8ZajL2hp7C
+ b0Isf4B+1buhyQUvrWECIVog2HJ8f/M7aJKHcsBDrRf4xO6J7kUfZbzblaB5QsKZDVzYpMryp
+ rFQhr2YWfIGLDE508Pp6iIpwgTAjwFih7B49qd0nXVf+yUET52ssWzF4x/3K3AIVdKPkUF/X2
+ GTSQA7N9IKh8RD8kF3Oos5ApCWta1qGpa2E1P+9Gt7CsldAEDkSKtDL6gjOWWOKv1j4Nt5Gpu
+ lh7y9uajPlxsoj/5gythrcrgZMQ8kYMXwo84TZUtiHvW71mzGwWx5AjPkpeSEHZ5HZ89AOc0P
+ SRprGrOKICdW5K0WbhzArRl9BmGBB/M4diqbhVT/qKCrOQTa1GQ5LkPUYuDreJ2Y4+pl33+Bw
+ rPolaMyeh9enzc80Wllfraa99g/kdNgTRFCA/qhfLYRqjh2AEsXVq/S59u4mQQznH6CzUjJMx
+ tJpLf0hjUBsflI/WYS7Bi2zsnj51XYNuM5jFCIXhbAnFpLCX+meZ+WmYKrah1AOoGCJcMCJ/2
+ UYy6lA1Cmi8F5DmQy9gc6+erFS5tDDKbTmSb+O0qJl+uFZ9Rc86cfE8AHZ/3wfIUxHC8ayxm9
+ PW7sAMesyBBhkhLsnyczkO2Dx+UaadVWkK3nFlbMdXrr+og2cYDP2NGKdPw4A/LKGZE+PSXKc
+ fJd2ZUg/x2og2HO9QAy1xyqNP2pEnxQN5q0+ejx2csQKGtRW/VqE5iLGD2nR5AFbakioiSVeu
+ 965a6KsyyIKVmxAyT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 04:44:42PM +0530, Pradeep P V K wrote:
-> Interconnect bandwidth scaling support is now added as a
-> part of OPP [1]. So, make sure interconnect driver is ready
-> before handling interconnect scaling.
-> 
-> This change is based on
-> [1] [Patch v8] Introduce OPP bandwidth bindings
-> (https://lkml.org/lkml/2020/5/12/493)
-> 
-> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
-> for dev_pm_opp_of_add_table()
-> (https://lkml.org/lkml/2020/5/5/491)
-> 
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> ---
->  drivers/mmc/host/sdhci-msm.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index b277dd7..a13ff1b 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -14,6 +14,7 @@
->  #include <linux/slab.h>
->  #include <linux/iopoll.h>
->  #include <linux/regulator/consumer.h>
-> +#include <linux/interconnect.h>
->  
->  #include "sdhci-pltfm.h"
->  #include "cqhci.h"
-> @@ -2070,6 +2071,18 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->  	}
->  	msm_host->bulk_clks[0].clk = clk;
->  
-> +	/* Make sure that ICC driver is ready for interconnect bandwdith
-> +	 * scaling before registering the device for OPP.
-> +	 */
-> +	ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
-> +	if (ret) {
-> +		if (ret == -EPROBE_DEFER)
-> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
+> =E2=80=A6 when run trough
 
-I already commented on this on v1:
+I hope that a typo will be avoided for the final change description.
 
-  This log seems to add little more than noise, or are there particular reasons
-  why it is useful in this driver? Most drivers just return silently in case of
-  deferred probing.
-
-If you think the log is really needed please explain why.
+Regards,
+Markus
