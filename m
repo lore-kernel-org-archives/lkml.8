@@ -2,132 +2,154 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AF6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8911BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57F4B206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BCF206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgFDLmQ (ORCPT
+        id S1728076AbgFDLnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:42:16 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:48604
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725601AbgFDLmP (ORCPT
+        Thu, 4 Jun 2020 07:43:53 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:52864 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727916AbgFDLnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:42:15 -0400
-X-IronPort-AV: E=Sophos;i="5.73,472,1583190000"; 
-   d="scan'208";a="350573905"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 13:42:12 +0200
-Date:   Thu, 4 Jun 2020 13:42:12 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
- which is unused and broken
-In-Reply-To: <10e54ee84bd44171ef329bed9e7e6a946bae61ba.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.2006041328570.2577@hadrien>
-References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>           <87h7vvb1s3.fsf@belgarion.home>           <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>           <20200601183102.GS30374@kadam>           <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
-  <20200604083120.GF22511@kadam>   <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>   <alpine.DEB.2.21.2006041147360.2577@hadrien>  <32232229031e02edcc268b1074c9bac44012ee35.camel@perches.com>  <alpine.DEB.2.21.2006041228520.2577@hadrien>
- <10e54ee84bd44171ef329bed9e7e6a946bae61ba.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 4 Jun 2020 07:43:53 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jgoHn-0006x4-S6; Thu, 04 Jun 2020 05:43:51 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jgoHm-0005J8-T3; Thu, 04 Jun 2020 05:43:51 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     <linux-kernel@vger.kernel.org>, io-uring@vger.kernel.org
+Date:   Thu, 04 Jun 2020 06:39:52 -0500
+Message-ID: <87a71jjbzr.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-XM-SPF: eid=1jgoHm-0005J8-T3;;;mid=<87a71jjbzr.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19bzVDa02BMFQbK6IVGpEyjtJ8JcakdHO8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: io_wq_work task_pid is nonsense
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+I was looking at something else and I happened to come across the
+task_pid field in struct io_wq_work.  The field is initialized with
+task_pid_vnr.  Then it is used for cancelling pending work.
 
-On Thu, 4 Jun 2020, Joe Perches wrote:
+The only appropriate and safe use of task_pid_vnr is for sending
+a pid value to userspace and that is not what is going on here.
 
-> On Thu, 2020-06-04 at 12:33 +0200, Julia Lawall wrote:
-> >
-> > On Thu, 4 Jun 2020, Joe Perches wrote:
-> >
-> > > On Thu, 2020-06-04 at 11:52 +0200, Julia Lawall wrote:
-> > > > Should Fixes also be used when the change will make it hard to port other
-> > > > fixes over it?
-> > >
-> > > If it's a logic defect or regression that's being fixed,
-> > > shouldn't the logic defect or regression be fixed as
-> > > reasonably soon as possible?
-> >
-> > Sure, but I recall seeing some patches that mentioned that the problem had
-> > existed since the beginning of git.  Of course, it should be rare.
->
-> git history goes back 15 years already.
-> There are scant few bugs that old.
->
-> There is a tree with even older history that Rob Landley
-> still has here: https://landley.net/kdocs/fullhist/
->
-> It does make git blame research a bit easier for those
-> rare and extremely old defects.
->
-> > > The nature of the fix should ideally be optimal for
-> > > backporting, but I believe that should not stop any
-> > > consideration for the standalone fix itself.
-> >
-> > I'm not sure to follow this.
->
-> I think it comes down to defects in current need to be
-> fixed.  Describing
-> the base commit that is being fixed
-> is useful for backporting.
->
-> I believe it's not reasonable to ask the author of a
-> fix to research how it could or should be backported.
->
-> > Sometimes non-bug fixes that block
-> > backporting a bug fix have to be backported as well.  So the fixes would
-> > again highlight the range of versions affected by the issue.
->
-> Sure, but the non-bug fixes that may also need backporting
-> to enable easy backports of the actual fix should not be
-> described in the Fixes: <commit> as those are  generally
-> easily researched from a command like:
->
-> $ git log <commit>.. <files in fix>
->
-> by whoever needs to backport.
+This use is particularly bad as it looks like I can start a pid
+namespace create an io work queue and create threads that happen to have
+the userspace pid in question and then terminate them, or close their
+io_work_queue file descriptors, and wind up closing someone else's work.
 
-OK, I recall a discussion with Dan where he suggested that some things
-that were not actually bug fixes could also merit a Fixes tag.  But it's
-probably better if he weighs in directly.
+There is also pid wrap around, and the craziness of de_thread to contend
+with as well.
 
-It would be unfortunate if someone doesn't submit a fix because they can't
-figure out how to make the Fixes tag properly, though.
+Perhaps since all the task_pid field is used for is cancelling work for
+an individual task you could do something like the patch below.  I am
+assuming no reference counting is necessary as the field can not live
+past the life of a task.
 
-For example, when there is a lot of concurrency involved, some of the bugs
-reported by syzkaller can be hard to fully understand.  In the case of a
-NULL pointer dereference can a patch only be submitted if it is known
-where the NULL comes from, and at what time the reason for producing the
-NULL was introduced into the kernel?  Adding a NULL test without fully
-understanding how the NULL can arise could reasonably be seen as papering
-over a real problem.  But sometimes it could be better to paper over the
-problem than incur the problem in a critical situation.
+Of cource the fact that you don't perform this work for file descriptors
+that are closed just before a task exits makes me wonder.
 
-But I agree that these are corner cases.  Hopefully if such a NULL test
-was submitted with an explanation on why the submitter was not able to
-find the source of the problem and why the problem is important, then the
-maintainer could provide some guidance that would resolve the situation.
+Can you please fix this code up to do something sensible?
+Maybe like below?
 
-julia
+Eric
+
+diff --git a/fs/io-wq.h b/fs/io-wq.h
+index 5ba12de7572f..bef29fff7403 100644
+--- a/fs/io-wq.h
++++ b/fs/io-wq.h
+@@ -91,7 +91,7 @@ struct io_wq_work {
+ 	const struct cred *creds;
+ 	struct fs_struct *fs;
+ 	unsigned flags;
+-	pid_t task_pid;
++	struct task_struct *task;
+ };
+ 
+ #define INIT_IO_WORK(work, _func)				\
+@@ -129,7 +129,7 @@ static inline bool io_wq_is_hashed(struct io_wq_work *work)
+ 
+ void io_wq_cancel_all(struct io_wq *wq);
+ enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork);
+-enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid);
++enum io_wq_cancel io_wq_cancel_task(struct io_wq *wq, struct task_struct *task);
+ 
+ typedef bool (work_cancel_fn)(struct io_wq_work *, void *);
+ 
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index 4023c9846860..2139a049d548 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -1004,18 +1004,16 @@ enum io_wq_cancel io_wq_cancel_work(struct io_wq *wq, struct io_wq_work *cwork)
+ 	return io_wq_cancel_cb(wq, io_wq_io_cb_cancel_data, (void *)cwork);
+ }
+ 
+-static bool io_wq_pid_match(struct io_wq_work *work, void *data)
++static bool io_wq_task_match(struct io_wq_work *work, void *data)
+ {
+-	pid_t pid = (pid_t) (unsigned long) data;
++	struct task_struct *task = data;
+ 
+-	return work->task_pid == pid;
++	return work->task == task;
+ }
+ 
+-enum io_wq_cancel io_wq_cancel_pid(struct io_wq *wq, pid_t pid)
++enum io_wq_cancel io_wq_cancel_task(struct io_wq *wq, struct task_struct *task)
+ {
+-	void *data = (void *) (unsigned long) pid;
+-
+-	return io_wq_cancel_cb(wq, io_wq_pid_match, data);
++	return io_wq_cancel_cb(wq, io_wq_task_match, task);
+ }
+ 
+ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index c687f57fb651..b9d557a21a26 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1031,8 +1031,8 @@ static inline void io_req_work_grab_env(struct io_kiocb *req,
+ 		}
+ 		spin_unlock(&current->fs->lock);
+ 	}
+-	if (!req->work.task_pid)
+-		req->work.task_pid = task_pid_vnr(current);
++	if (!req->work.task)
++		req->work.task = current;
+ }
+ 
+ static inline void io_req_work_drop_env(struct io_kiocb *req)
+@@ -7421,7 +7421,7 @@ static int io_uring_flush(struct file *file, void *data)
+ 	 * If the task is going away, cancel work it may have pending
+ 	 */
+ 	if (fatal_signal_pending(current) || (current->flags & PF_EXITING))
+-		io_wq_cancel_pid(ctx->io_wq, task_pid_vnr(current));
++		io_wq_cancel_task(ctx->io_wq, current);
+ 
+ 	return 0;
+ }
