@@ -2,91 +2,86 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C82C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63CA020738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5617B207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591287305;
+	bh=T+Ujqj3So5mnSunqooQUIoEERMGQTbg+ImhD7uF3Tg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T0mGl1cYbGkSlUYD8b3SvzVEL35ec0UGLxmnfjiu05ZPVCSLrEDFE1AaJfgJC7JSX
+	 IDtYZY96KTyhxeIcwEF9GEmjPDIGRWNQ1FFWwUsQxnnVK/Uog/0/kRVfor+W4O2XI1
+	 2mWvmTRRtsi6umgOirXQMxXqerqExJWtVT79dtl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgFDQOl (ORCPT
+        id S1729781AbgFDQPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:14:41 -0400
-Received: from smtp4-g21.free.fr ([212.27.42.4]:30694 "EHLO smtp4-g21.free.fr"
+        Thu, 4 Jun 2020 12:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728972AbgFDQOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:14:41 -0400
-Received: from [192.168.1.91] (unknown [77.207.133.132])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp4-g21.free.fr (Postfix) with ESMTPSA id D6B3219F5E1;
-        Thu,  4 Jun 2020 18:13:26 +0200 (CEST)
-Subject: Re: [PATCH v5 0/2] Small devm helper for devm implementations
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <e8221bff-3e2a-7607-c5c8-abcf9cebb1b5@free.fr>
-Message-ID: <217b892d-678f-8c32-b9ab-a3dd238c197a@free.fr>
-Date:   Thu, 4 Jun 2020 18:13:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1728972AbgFDQPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:15:04 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6BB620738;
+        Thu,  4 Jun 2020 16:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591287303;
+        bh=T+Ujqj3So5mnSunqooQUIoEERMGQTbg+ImhD7uF3Tg4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dzPBNqcBRsQT1H2CPJvGzMO8Lpdy0HNS5Xil/NnTj1VW5Ep5Wf7N7ZIjDLMPMdoW/
+         06zNrNT1jHwjKuIjvLQ4YHumz1O6zQVGpFUv3Dv3iap/FErmLci+2pCad8KO9TnovT
+         S5HlaAv1f4u5LKVBXppt8Cv9qOHwt2JtYvxq1frA=
+Date:   Thu, 4 Jun 2020 09:15:02 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] crypto: CRYPTO_CTR no longer need CRYPTO_SEQIV
+Message-ID: <20200604161502.GA147774@gmail.com>
+References: <1587735647-17718-1-git-send-email-clabbe@baylibre.com>
+ <1587735647-17718-3-git-send-email-clabbe@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <e8221bff-3e2a-7607-c5c8-abcf9cebb1b5@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1587735647-17718-3-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like this series has fallen through the cracks :(
-Greg, you would be taking the drivers/base/devres.c changes?
-As mentioned in patch 2, "This patch needs testing on a platform with many clocks."
-(I've only tested using a trivial kernel module)
+On Fri, Apr 24, 2020 at 01:40:46PM +0000, Corentin Labbe wrote:
+> As comment of the v2, Herbert said: "The SEQIV select from CTR is historical
+> and no longer necessary."
+> 
+> So let's get rid of it.
+> 
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+>  crypto/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index 6d27fc6a7bf5..a5936e967fe2 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -370,7 +370,6 @@ config CRYPTO_CFB
+>  config CRYPTO_CTR
+>  	tristate "CTR support"
+>  	select CRYPTO_SKCIPHER
+> -	select CRYPTO_SEQIV
+>  	select CRYPTO_MANAGER
+>  	help
+>  	  CTR: Counter mode
 
-On 10/03/2020 11:11, Marc Gonzalez wrote:
+Shouldn't this patch also have added 'select CRYPTO_SEQIV' to INET_ESP and
+INET6_ESP?  Or is the intent to make people explicitly select CRYPTO_SEQIV?
 
-> Differences from v4 to v5
-> x Fix the grammar in devm_add comments [Geert]
-> x Undo an unrelated change in devm_clk_put [Geert]
-> 
-> Differences from v3 to v4
-> x Add a bunch of kerneldoc above devm_add() [Greg KH]
-> x Split patch in two [Greg KH]
-> 
-> Differences from v2 to v3
-> x Make devm_add() return an error-code rather than the raw data pointer
->   (in case devres_alloc ever returns an ERR_PTR) as suggested by Geert
-> x Provide a variadic version devm_vadd() to work with structs as suggested
->   by Geert
-> x Don't use nested ifs in clk_devm* implementations (hopefully simpler
->   code logic to follow) as suggested by Geert
-> 
-> Marc Gonzalez (2):
->   devres: Provide new helper for devm functions
->   clk: Use devm_add in managed functions
-> 
->  drivers/base/devres.c    | 28 ++++++++++++
->  drivers/clk/clk-devres.c | 97 +++++++++++++++-------------------------
->  include/linux/device.h   |  3 ++
->  3 files changed, 67 insertions(+), 61 deletions(-)
+- Eric
