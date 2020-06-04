@@ -2,117 +2,94 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D66C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24003C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 549C3206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14E5207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rsTC7PTQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YmPFjye2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgFDUjD (ORCPT
+        id S1729998AbgFDUjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbgFDUjD (ORCPT
+        Thu, 4 Jun 2020 16:39:21 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37097 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728721AbgFDUjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:39:03 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A4EC08C5C0;
-        Thu,  4 Jun 2020 13:39:03 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id v11so7449430ilh.1;
-        Thu, 04 Jun 2020 13:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Xy6WhYHrZaTBlBCQYphldIVHuAQk5+ZidfmsU27NTQc=;
-        b=rsTC7PTQdxeCF9bdVVUKmgWUrBXkrL8mSJIFlZiAgKOs2S+4GGfRL22H2uVLsAWxeH
-         YiKgG8Lsw/cFCfCAI2hbNM80EIg0ZfMt5gmILrNIEndmnL9uAo1oW1A0321onLpwL88D
-         AQCckdtG7XEKrttga2RCL6zDWEw3IGLJqvir/MQb1dbe70HmfZSnIwvIcUL7kFqySuFy
-         Q6bd+MolP8YfxNkWRxcnSUQPP4lOM6b5b/al3f6SZynvR+sM3CNATmcBpOnMMg3PiGaO
-         lENLvHMCTS5VApDzXjsvFeaxkxL31XqiNcA/5O2a6W+6QHl+eqfC9S+56qLIUunh0X/D
-         a+4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Xy6WhYHrZaTBlBCQYphldIVHuAQk5+ZidfmsU27NTQc=;
-        b=rBOWEuGbi7P+XPB6xvUPy/L6ne6DM4BpVG+EL5RuMyJLB0xudM4JyaWRut0hgZ46ac
-         V5DK3QbLbBS5q8OTLAEMsRHT+U9gfJqhV9TJNg38ZE/HOBWlxFHXV9REk6BwA2/2gvht
-         0LdxrFG5cun2XMzbFos66ux6DamAzMayGrcO0nhHUpWC71qNWW6PQaZTSnecTl0diaVR
-         SNEI9po+kbUX+q265VnnmgC43ZXW02iBuxXmDLjvMee5M/bsri1nH3VZxXg7Pjg+jpa4
-         u/EFgte6aKB081iF8n/y60aCLv5Gq28RTNNj3/WncwV1c8Y3iJOHQspSmpY9skENc8wD
-         yGNg==
-X-Gm-Message-State: AOAM532fZ6og6fOJaUUAsWATt9KIsw6S7IbF5iSC74DeDGeCDjCVrm9A
-        qk8ruuszFyRdkmrH8xGA3Lw=
-X-Google-Smtp-Source: ABdhPJx+wodiLLrkKDg3ha+a9NBtWbzHQmztrwc5GTaxABEAFKKibyP4WD7RjgCj+7p3tMqE7yZOUg==
-X-Received: by 2002:a92:9fd1:: with SMTP id z78mr5279766ilk.221.1591303142416;
-        Thu, 04 Jun 2020 13:39:02 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id y23sm321642ior.38.2020.06.04.13.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:39:01 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] dmaengine: sprd: handle the failure cases of pm_runtime_get_sync
-Date:   Thu,  4 Jun 2020 15:38:54 -0500
-Message-Id: <20200604203854.23106-1-navid.emamdoost@gmail.com>
+        Thu, 4 Jun 2020 16:39:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591303160; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=1lvc/rtJTGg1ms49oe99E5caOYOwoBK6dQq3fFKin0E=; b=YmPFjye2FWSpJiOd2ck6Ib7J9aq6Bqhw3EMTHTCKaYwxIELCCg0VxOkzQmiyDh/ls1WkXMf3
+ KTG4FdDpBxMk7vzU7i9GkxP3xB1fH4GwlP8ulKrw8w3xSzr9s5TBcy2yhcNQ0NGJM3paqi/N
+ JmhhPZ73LRGR7dVxRR8ytaSMDU8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5ed95bef76fccbb4c826e894 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 20:39:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D0A0AC433A1; Thu,  4 Jun 2020 20:39:10 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1002FC433C6;
+        Thu,  4 Jun 2020 20:39:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1002FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] iommu/arm-smmu: Mark qcom_smmu_client_of_match as possibly unused
+Date:   Thu,  4 Jun 2020 14:39:04 -0600
+Message-Id: <20200604203905.31964-1-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+When CONFIG_OF=n of_match_device() gets pre-processed out of existence
+leaving qcom-smmu_client_of_match unused. Mark it as possibly unused to
+keep the compiler from warning in that case.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Fixes: 0e764a01015d ("iommu/arm-smmu: Allow client devices to select direct mapping")
+Reported-by: kbuild test robot <lkp@intel.com>
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- drivers/dma/sprd-dma.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 0ef5ca81ba4d..0ba4fe1a1905 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1204,8 +1204,10 @@ static int sprd_dma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
+ drivers/iommu/arm-smmu-qcom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+index cf01d0215a39..be4318044f96 100644
+--- a/drivers/iommu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -12,7 +12,7 @@ struct qcom_smmu {
+ 	struct arm_smmu_device smmu;
+ };
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto err_rpm;
-+	}
- 
- 	ret = dma_async_device_register(&sdev->dma_dev);
- 	if (ret < 0) {
-@@ -1239,8 +1241,10 @@ static int sprd_dma_remove(struct platform_device *pdev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		return ret;
-+	}
- 
- 	/* explicitly free the irq */
- 	if (sdev->irq > 0)
+-static const struct of_device_id qcom_smmu_client_of_match[] = {
++static const struct of_device_id qcom_smmu_client_of_match[] __maybe_unused = {
+ 	{ .compatible = "qcom,adreno" },
+ 	{ .compatible = "qcom,mdp4" },
+ 	{ .compatible = "qcom,mdss" },
 -- 
 2.17.1
 
