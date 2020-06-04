@@ -2,166 +2,138 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B812077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A3420825
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="odXbhUUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgFDU6A (ORCPT
+        id S1729025AbgFDU6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:58:00 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:18801
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729848AbgFDU5r (ORCPT
+        Thu, 4 Jun 2020 16:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbgFDU6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:57:47 -0400
-X-IronPort-AV: E=Sophos;i="5.73,472,1583190000"; 
-   d="scan'208";a="350629662"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 22:57:18 +0200
-Date:   Thu, 4 Jun 2020 22:57:18 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     Joe Perches <joe@perches.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH v2] coccinelle: api: add kzfree script
-In-Reply-To: <20200604204846.15897-1-efremov@linux.com>
-Message-ID: <alpine.DEB.2.21.2006042254240.2577@hadrien>
-References: <20200604140805.111613-1-efremov@linux.com> <20200604204846.15897-1-efremov@linux.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 4 Jun 2020 16:58:15 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85BFDC08C5C0;
+        Thu,  4 Jun 2020 13:58:14 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id u13so1738791iol.10;
+        Thu, 04 Jun 2020 13:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=Qe+5VsgePcwf6ejrqCiKCctQ/WjhPUBGKBkCEYX6uA4=;
+        b=odXbhUUcIf+wDeJdjDiEFXtAYFDHAH8SAaNwcJFDM9qyOS5kIxKELihPixhgMuWsuM
+         P3ftGyZTm8N3iRqAE/zGh/6Tj/FwKzi+e312hNAri4dLyhuZsVZ6pvT0TGWVr82qZhqP
+         xpzITULxMsu9HCeR/Fu8fY00Ujga47C2NYw0ZWpAq8nhchSjrc9Gx1hdB9IUk3cXGfsx
+         VWi9Q6APAlhH+HlN+wzjZ2rOVsUqe/9ob+rhxSJYeRVHffy8QZ1CHAECUXaQz476rziC
+         s3Xe2jQo9509hzQq9oZweKonvblBmfe30dX1ICjs/m7aTkmW94D1z6eVMJOHyrzwGabS
+         qQKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=Qe+5VsgePcwf6ejrqCiKCctQ/WjhPUBGKBkCEYX6uA4=;
+        b=LYl0CcSfK7WcwihtWFMyzO2bPwtto7IoZEvRE3mycYnjzVX3HVfXCnup+S9W/UjYB6
+         7PjDgPpgAEyRrBMrwe7KcBHKMEjDMkzFUJM61c0r8YJy/9gxRFTBckd7NgKVuxhj50Vf
+         oyHq7vMUqMINCS5yt2T5ngXzRUCGRDavO9b96u6Mesx8LZTJgbd5DrIopSPlmPxPv5qT
+         Wd3IUH4iKCjcTO2mAjwxTV5rex1g3RwM5p5UzzeML72SJhsk+OsJDo3PaQy+rb8tME2O
+         pf2UFPWYUBsA//WgL+ZPz3bkxw93Pj2tD1ubCGWNWaXEQgO8rZFhWawbKgBMrRm4JcFb
+         bUHQ==
+X-Gm-Message-State: AOAM532I8HbVFfCfyagpH+XTZfBHNomnicK+PUJeA8xQkCtorpL2unaI
+        aeqVwQ6N5dNfBMm7pXfWKYrOXConN/mbnQRZT94=
+X-Google-Smtp-Source: ABdhPJyHp6QCOAL+6a1wVmeMAZXhyv99uIVM4TXT2D1wSQJb1hxXPIfOtwEqduYsONFSiqzgwB7hE4xuQIiOkGIx+qI=
+X-Received: by 2002:a02:ca18:: with SMTP id i24mr6012139jak.70.1591304293893;
+ Thu, 04 Jun 2020 13:58:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-6-keescook@chromium.org> <CAKwvOdm5zDide5RuppY_jG=r46=UMdVJBrkBqD5x=dOMTG9cZg@mail.gmail.com>
+ <202006041318.B0EA9059C7@keescook>
+In-Reply-To: <202006041318.B0EA9059C7@keescook>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 4 Jun 2020 22:58:02 +0200
+Message-ID: <CA+icZUX7HE6cVoyiKtvOe85F+npUzGy5wmScTNCKRVeCEy8Juw@mail.gmail.com>
+Subject: Re: [PATCH 05/10] ide: Remove uninitialized_var() usage
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Thu, 4 Jun 2020, Denis Efremov wrote:
-
-> Check for memset()/memset_explicit() with 0 followed by
-> kfree()/vfree()/kvfree().
+On Thu, Jun 4, 2020 at 10:20 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
-> Changes in v2:
-> - memset_explicit() added
-> - kvfree_sensitive() added
-> - forall added to r1
-> - ... between memset and kfree added
->   Unfortunately, it doesn't work as I would expect it to in "patch"
->   mode. I've added my comment about it in the rule. It can be safely
->   removed from the patch if I misunderstood something.
+> On Thu, Jun 04, 2020 at 12:29:17PM -0700, Nick Desaulniers wrote:
+> > On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> > > (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> > > "unused variable"). If the compiler thinks it is uninitialized, either
+> > > simply initialize the variable or make compiler changes. As a precursor
+> > > to removing[2] this[3] macro[4], just remove this variable since it was
+> > > actually unused:
+> > >
+> > > drivers/ide/ide-taskfile.c:232:34: warning: unused variable 'flags' [-Wunused-variable]
+> > >         unsigned long uninitialized_var(flags);
+> > >                                         ^
+> > >
+> > > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> > > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> > > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> > > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+> > >
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> >
+> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 >
-> Another "strange" behaviour that I faced that r2 rule works only if I
-> write 2 expression lines:
-> expression *E;
-> expression size;
-> If I try to use a single line "expression *E, size;" then r2 matches nothing.
+> Thanks for the reviews!
+>
+> > Fixes ce1e518190ea ("ide: don't disable interrupts during kmap_atomic()")
+>
+> I originally avoided adding Fixes tags because I didn't want these
+> changes backported into a -stable without -Wmaybe-uninitialized
+> disabled, but in these cases (variable removal), that actually does make
+> sense. Thanks!
+>
 
-The parser for metavariables is not so smart.  Everything to the left of
-the first metavariable name is the type.  Everything after is the list of
-metavariables of that type.  So if you put them together you require size
-to be a pointer.
+Fixes tag does not automatically mean it is "for-stable".
 
-On the other hand, do you really require E to be a pointer?  If you do
-that, it will have to find the type of E.  If E refers to a structure
-field, then the type might not be available in the current function, and
-you may need command line argments like --all-includes or
---recursive-includes.  Is avoiding transforming the case where E is not
-verified to be a pointer a concern?
+[1] says:
 
-julia
+> Patches that fix a severe bug in a released kernel should be directed
+> toward the stable maintainers by putting a line like this::
+>
+>   Cc: stable@vger.kernel.org
 
->
->  scripts/coccinelle/api/kzfree.cocci | 65 +++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 scripts/coccinelle/api/kzfree.cocci
->
-> diff --git a/scripts/coccinelle/api/kzfree.cocci b/scripts/coccinelle/api/kzfree.cocci
-> new file mode 100644
-> index 000000000000..5c7e4bb13bb7
-> --- /dev/null
-> +++ b/scripts/coccinelle/api/kzfree.cocci
-> @@ -0,0 +1,65 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// Use kzfree, kvfree_sensitive rather than memset or
-> +/// memset_explicit with 0 followed by kfree
-> +///
-> +// Confidence: High
-> +// Copyright: (C) 2020 Denis Efremov ISPRAS
-> +// Options: --no-includes --include-headers
-> +//
-> +// Keywords: kzfree, kvfree_sensitive
-> +//
-> +
-> +virtual context
-> +virtual patch
-> +virtual org
-> +virtual report
-> +
-> +
-> +// Ignore kzfree definition
-> +// Ignore kasan test
-> +@r depends on !patch && !(file in "lib/test_kasan.c") && !(file in "mm/slab_common.c") forall@
-> +expression *E;
-> +position p;
-> +@@
-> +
-> +* \(memset\|memset_explicit\)(E, 0, ...);
-> +  ... when != E
-> +      when strict
-> +* \(kfree\|vfree\|kvfree\)(E)@p;
-> +
-> +@r1 depends on patch && !(file in "lib/test_kasan.c") && !(file in "mm/slab_common.c")@
-> +expression *E;
-> +expression size;
-> +@@
-> +
-> +- \(memset\|memset_explicit\)(E, 0, size);
-> +/// Unfortunately, it doesn't work as in !patch mode.
-> +/// spatch (v1.0.8) should patch 4 functions in linux 5.7 with this rule
-> +/// and uncommented "when" lines. With only "... when != E" line 2 functions
-> +/// are patched, none with "when strict". 3 functions patch is produced by the
-> +/// rule with "when" lines commented out.
-> +//  ... when != E
-> +//      when strict
-> +(
-> +- kfree(E);
-> ++ kzfree(E);
-> +|
-> +- vfree(E);
-> ++ kvfree_sensitive(E, size);
-> +|
-> +- kvfree(E);
-> ++ kvfree_sensitive(E, size);
-> +)
-> +
-> +@script:python depends on report@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.report.print_report(p[0], "WARNING opportunity for kzfree/kvfree_sensitive")
-> +
-> +@script:python depends on org@
-> +p << r.p;
-> +@@
-> +
-> +coccilib.org.print_todo(p[0], "WARNING opportunity for kzfree/kvfree_sensitive")
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
+- Sedat -
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n299
