@@ -2,105 +2,147 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFACC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D407A206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE40C20756
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oOxhcsvV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="An50kzaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgFDDcU (ORCPT
+        id S1726912AbgFDDdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36388 "EHLO
+        Wed, 3 Jun 2020 23:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgFDDcT (ORCPT
+        with ESMTP id S1725946AbgFDDdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:32:19 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1CCC08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 20:32:17 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b7so1713642pju.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 20:32:17 -0700 (PDT)
+        Wed, 3 Jun 2020 23:33:21 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9EDFC03E96D;
+        Wed,  3 Jun 2020 20:33:19 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id 25so2927725oiy.13;
+        Wed, 03 Jun 2020 20:33:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cIQNiSwo2zh6B6Kdp7Ix9xordB73NniypCevPw5WnEI=;
-        b=oOxhcsvVz/mOwc4x4AFo8LBYfoYOzgK0UI1I0WFHclj8ueojMzkJupjaA2XX+eB1Kv
-         EuBF0inVDuWFb78orLxaQGeTqez4tMfKQyfG4scRXxYyKkGbTHdX9kUgaVjoJNKGA5mh
-         z8tnF6HXe5v3lRjORS4sQGF6iXLYYfapnIIGiOsyhOfrIe5n7mponbiBE3ETzPpx/jj5
-         lX/X3Xq9WB+IU+YCyHRH2uroe17NNyyg4uYIBBagaF7wwC7B4qS8FGqerABwOrrwia89
-         FCpiGaPdeKl8L8tfFeG26MKKbYPu37HmA0JEvf8/3Le2Ey4vdAbejHitdWwxxd2rPUoE
-         Ypxg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8Faii11PvSo51bdsAemmq3+A0d7oNRL4/GLZ67cBSMg=;
+        b=An50kzaFvA39pC4h/8bP4oIWOqTSG046GlYB5+emgXeZszQTtbXKqSjDjHWmw8n8um
+         VXpLlrq83m2ZAS8J26v56FTDUjfbdw4fWaYAjEK9Ox20DjsyL1kabqtQvJ0qaNA6AN6x
+         WQHzqT/rIk17+lobg6a1Qz4niujZV9KifIFoGU6CnMcUxFKQqfbbxVvC4XVpIL5SSTtt
+         6xGwnGkCkYTcRnL3OaIoBi5ReA1N/8hWVCv9k4QJ2ieUjD5HXDXWHDv6XZ9+0M+W+p2j
+         GHjogeet/zLPYDJFnvbD/NGsLeEzoRiqyu6IiidyEX/Bv9x5fa84lURyrkrcSmOp3voL
+         uKqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=cIQNiSwo2zh6B6Kdp7Ix9xordB73NniypCevPw5WnEI=;
-        b=pbPdgzHLQ4A/9Gv8Y9HjDI0Zekyyf50lK+bBqpNnaH5XFnFkykHeR4KPjsbt3Kp9wt
-         8/fDL7EH0+Xx7OOgWaNyRZShAngw+VYniE1hIqTk4oJgl9O68WeOSZC1y0DN3hoPhEtK
-         4LFatu5aBepWzs/dSVUIHGTkgr45xu7eW32KLG2cIes9nti44xik9HPpfqou9COmkllV
-         jvmpS07Q0BgFtXUbWJQ1wyzbjW53APmYJ8qAsiFHlmqJWQD1JEGI5E71vVi5kieWxmO3
-         cAdZ3D51PPoDWzFmY00iUqxTno+H9E73H3YSvrsbgdns08XK304HWLw/bJ0QFupCeiLJ
-         QTuA==
-X-Gm-Message-State: AOAM533YdRTla5jawjEt2iwRXBIdbJQGfse4Ji9RaIRBOHps1DJOhoRc
-        LdoSiJhoYnZRAcbejvXg0uH8LA==
-X-Google-Smtp-Source: ABdhPJxDUpLaGd8Ah2EOUk/6YEhH5sLPNm4vSSGbi/SDOch1uipUoFtOMqN+TKKRkLDkVMSI2IM3LQ==
-X-Received: by 2002:a17:90b:3105:: with SMTP id gc5mr3497133pjb.36.1591241537050;
-        Wed, 03 Jun 2020 20:32:17 -0700 (PDT)
-Received: from localhost.localdomain ([45.135.186.21])
-        by smtp.gmail.com with ESMTPSA id r24sm2689658pgm.25.2020.06.03.20.32.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jun 2020 20:32:16 -0700 (PDT)
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-To:     =?UTF-8?q?=C2=A0Herbert=20Xu=C2=A0?= <herbert@gondor.apana.org.au>,
-        =?UTF-8?q?=C2=A0Greg=20Kroah-Hartman=C2=A0?= 
-        <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?=C2=A0Jonathan=20Cameron=C2=A0?= 
-        <Jonathan.Cameron@huawei.com>,
-        =?UTF-8?q?=C2=A0wangzhou1=C2=A0?= <wangzhou1@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kbuild-all@lists.01.org, Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
-Date:   Thu,  4 Jun 2020 11:32:04 +0800
-Message-Id: <1591241524-6452-1-git-send-email-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <202006032110.BEbKqovX%lkp@intel.com>
-References: <202006032110.BEbKqovX%lkp@intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8Faii11PvSo51bdsAemmq3+A0d7oNRL4/GLZ67cBSMg=;
+        b=cn5EHlwGGW1f0zzJWjK8IWiC7Lmx1BXuDjrrN0yry05CPX4ek3L8XW0g6ab1ocQBEx
+         0zjQyciDKeOlbMZPq/+zIW7fuW7Sq33+ysMevEPLRuaN6BUxzgCTBjkAjTdCNSSzuWb+
+         nkyGJBgAG7gZ6oCEUF38dqhSlYINOADbPtFqlCdfuBdf7bbFX6nJJcV2MFvYFYGTCsXC
+         qxYJ3ow6VrLBeYuXk7erXVqJD2W8TjhPF+niUS/qPy7d8TYP6djnPBB42v9kDeW2efdZ
+         +gAfZwEjYjERAfA/EiKWjMVXKOqTIGHpXwJ0V/VWHNKAQXfEsTpipuN8zULdnwIqmxPC
+         BT5w==
+X-Gm-Message-State: AOAM531Rbdbx0Ogow2ZEFqMSf/nWIypRlEeTYf54IlA/P8H+rHX8ZbbW
+        jvTkTs6lxpcmTiAfCXTjhOs=
+X-Google-Smtp-Source: ABdhPJwnzfVVb4uCTFG1lxg30QZrwlILRC7pC1WmnFYGEgON5rzpjMpDI7aYXPTUb98IobrtcgZC+g==
+X-Received: by 2002:aca:b707:: with SMTP id h7mr1938490oif.174.1591241599191;
+        Wed, 03 Jun 2020 20:33:19 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id n60sm327816otn.75.2020.06.03.20.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 20:33:17 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 20:33:15 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 09/10] treewide: Remove uninitialized_var() usage
+Message-ID: <20200604033315.GA1131596@ubuntu-n2-xlarge-x86>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-10-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603233203.1695403-10-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use strlcpy to fix the warning
-warning: 'strncpy' specified bound 64 equals destination size
-         [-Wstringop-truncation]
+On Wed, Jun 03, 2020 at 04:32:02PM -0700, Kees Cook wrote:
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings
+> (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> either simply initialize the variable or make compiler changes.
+> 
+> I preparation for removing[2] the[3] macro[4], remove all remaining
+> needless uses with the following script:
+> 
+> git grep '\buninitialized_var\b' | cut -d: -f1 | sort -u | \
+> 	xargs perl -pi -e \
+> 		's/\buninitialized_var\(([^\)]+)\)/\1/g;
+> 		 s:\s*/\* (GCC be quiet|to make compiler happy) \*/$::g;'
+> 
+> drivers/video/fbdev/riva/riva_hw.c was manually tweaked to avoid
+> pathological white-space.
+> 
+> No outstanding warnings were found building allmodconfig with GCC 9.3.0
+> for x86_64, i386, arm64, arm, powerpc, powerpc64le, s390x, mips, sparc64,
+> alpha, and m68k.
+> 
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/crypto/hisilicon/qm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+<snip>
 
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index f795fb5..224f3e2 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -1574,7 +1574,7 @@ static int qm_alloc_uacce(struct hisi_qm *qm)
- 		.ops = &uacce_qm_ops,
- 	};
- 
--	strncpy(interface.name, pdev->driver->name, sizeof(interface.name));
-+	strlcpy(interface.name, pdev->driver->name, sizeof(interface.name));
- 
- 	uacce = uacce_alloc(&pdev->dev, &interface);
- 	if (IS_ERR(uacce))
--- 
-2.7.4
+> diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+> index a0f6813f4560..a71fa7204882 100644
+> --- a/arch/powerpc/kvm/book3s_pr.c
+> +++ b/arch/powerpc/kvm/book3s_pr.c
+> @@ -1829,7 +1829,7 @@ static int kvmppc_vcpu_run_pr(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
+>  {
+>  	int ret;
+>  #ifdef CONFIG_ALTIVEC
+> -	unsigned long uninitialized_var(vrsave);
+> +	unsigned long vrsave;
+>  #endif
 
+This variable is actually unused:
+
+../arch/powerpc/kvm/book3s_pr.c:1832:16: warning: unused variable 'vrsave' [-Wunused-variable]
+        unsigned long vrsave;
+                      ^
+1 warning generated.
+
+It has been unused since commit 99dae3bad28d ("KVM: PPC: Load/save
+FP/VMX/VSX state directly to/from vcpu struct").
+
+$ git grep vrsave 99dae3bad28d8fdd32b7bfdd5e2ec7bb2d4d019d arch/powerpc/kvm/book3s_pr.c
+99dae3bad28d8fdd32b7bfdd5e2ec7bb2d4d019d:arch/powerpc/kvm/book3s_pr.c:  unsigned long uninitialized_var(vrsave);
+
+I would nuke the whole '#ifdef' block.
+
+Cheers,
+Nathan
