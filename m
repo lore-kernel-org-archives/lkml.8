@@ -2,214 +2,92 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A44DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 607B02077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE65206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:43:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="xChTMe0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgFDJnr (ORCPT
+        id S1728280AbgFDJn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:43:47 -0400
-Received: from mx.socionext.com ([202.248.49.38]:32552 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728082AbgFDJnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:43:47 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 04 Jun 2020 18:43:44 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 506BE60057;
-        Thu,  4 Jun 2020 18:43:44 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 4 Jun 2020 18:43:44 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 00BBB1A01BB;
-        Thu,  4 Jun 2020 18:43:44 +0900 (JST)
-Received: from [10.213.31.56] (unknown [10.213.31.56])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 3708112041F;
-        Thu,  4 Jun 2020 18:43:43 +0900 (JST)
-Subject: Re: [PATCH v3 2/6] PCI: uniphier: Add misc interrupt handler to
- invoke PME and AER
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1591174481-13975-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1591174481-13975-3-git-send-email-hayashi.kunihiko@socionext.com>
- <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <2e07d3d3-515b-57e1-0a36-8892bc38bb7b@socionext.com>
-Date:   Thu, 4 Jun 2020 18:43:42 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 4 Jun 2020 05:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728066AbgFDJn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:43:58 -0400
+Received: from forwardcorp1p.mail.yandex.net (forwardcorp1p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b6:217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F050C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:43:58 -0700 (PDT)
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 8BD552E1515;
+        Thu,  4 Jun 2020 12:43:53 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 8Ys540NFgH-hqx8xeXM;
+        Thu, 04 Jun 2020 12:43:53 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1591263833; bh=b3DXVvqT1EzaVn2igQ1Ig47zD0kPzfJszibVFHtFWY8=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=xChTMe0DYr9bpfYQnnCLir/iieno7gmgT86rM/Vx5f+krqOL9OelVU3b/dKKX3Xgo
+         vmoOJSA6pGVOpObpJE5v/aOkQi9dwTuBd1AAOpJTNV45QEEnulRh9Yxi6agbtXuHrB
+         AQj/HGnGA1fLLJI1RNqy4WcKtB/z5TyKVYA+za5A=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:717::1:10])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id rb3AdYrtMr-hqWGl6mq;
+        Thu, 04 Jun 2020 12:43:52 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH util-linux] dmesg: adjust timestamps according to
+ suspended time
+To:     Karel Zak <kzak@redhat.com>
+Cc:     util-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <159103929487.199093.15757669576783156290.stgit@buzz>
+ <20200604093043.55a4zzo2hewhcwru@ws.net.home>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <c1ec31ea-494b-5d3e-3c0c-c3d8bb1a6c9c@yandex-team.ru>
+Date:   Thu, 4 Jun 2020 12:43:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <78af3b11de9c513f9be2a1f42f273f27@kernel.org>
+In-Reply-To: <20200604093043.55a4zzo2hewhcwru@ws.net.home>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/06/03 20:22, Marc Zyngier wrote:
-> On 2020-06-03 09:54, Kunihiko Hayashi wrote:
->> The misc interrupts consisting of PME, AER, and Link event, is handled
->> by INTx handler, however, these interrupts should be also handled by
->> MSI handler.
+On 04/06/2020 12.30, Karel Zak wrote:
+> On Mon, Jun 01, 2020 at 10:21:34PM +0300, Konstantin Khlebnikov wrote:
+>> Timestamps in kernel log comes from monotonic clocksource which does not
+>> tick when system suspended. Suspended time easily sums into hours and days
+>> rendering human readable timestamps in dmesg useless.
 >>
->> This adds the function uniphier_pcie_misc_isr() that handles misc
->> intterupts, which is called from both INTx and MSI handlers.
+>> Adjusting timestamps accouring to current delta between boottime and
+>> monotonic clocksources produces accurate timestamps for messages printed
+>> since last resume. Which are supposed to be most interesting.
 > 
-> interrupts
-
-Okay, I'll fix it.
-
->> This function detects PME and AER interrupts with the status register,
->> and invoke PME and AER drivers related to INTx or MSI.
->>
->> And this sets the mask for misc interrupts from INTx if MSI is enabled
->> and sets the mask for misc interrupts from MSI if MSI is disabled.
->>
->> Cc: Marc Zyngier <maz@kernel.org>
->> Cc: Jingoo Han <jingoohan1@gmail.com>
->> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>  drivers/pci/controller/dwc/pcie-uniphier.c | 53 +++++++++++++++++++++++-------
->>  1 file changed, 42 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c
->> b/drivers/pci/controller/dwc/pcie-uniphier.c
->> index a5401a0..a8dda39 100644
->> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
->> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
->> @@ -44,7 +44,9 @@
->>  #define PCL_SYS_AUX_PWR_DET        BIT(8)
->>
->>  #define PCL_RCV_INT            0x8108
->> +#define PCL_RCV_INT_ALL_INT_MASK    GENMASK(28, 25)
->>  #define PCL_RCV_INT_ALL_ENABLE        GENMASK(20, 17)
->> +#define PCL_RCV_INT_ALL_MSI_MASK    GENMASK(12, 9)
->>  #define PCL_CFG_BW_MGT_STATUS        BIT(4)
->>  #define PCL_CFG_LINK_AUTO_BW_STATUS    BIT(3)
->>  #define PCL_CFG_AER_RC_ERR_MSI_STATUS    BIT(2)
->> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
->>
->>  static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
->>  {
->> -    writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
->> +    u32 val;
->> +
->> +    val = PCL_RCV_INT_ALL_ENABLE;
->> +    if (pci_msi_enabled())
->> +        val |= PCL_RCV_INT_ALL_INT_MASK;
->> +    else
->> +        val |= PCL_RCV_INT_ALL_MSI_MASK;
->> +
->> +    writel(val, priv->base + PCL_RCV_INT);
->>      writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
->>  }
->>
->> @@ -231,28 +241,48 @@ static const struct irq_domain_ops
->> uniphier_intx_domain_ops = {
->>      .map = uniphier_pcie_intx_map,
->>  };
->>
->> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->> +static void uniphier_pcie_misc_isr(struct pcie_port *pp)
->>  {
->> -    struct pcie_port *pp = irq_desc_get_handler_data(desc);
->>      struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>      struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->> -    struct irq_chip *chip = irq_desc_get_chip(desc);
->> -    unsigned long reg;
->> -    u32 val, bit, virq;
->> +    u32 val, virq;
->>
->> -    /* INT for debug */
->>      val = readl(priv->base + PCL_RCV_INT);
->>
->>      if (val & PCL_CFG_BW_MGT_STATUS)
->>          dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
->> +
->>      if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
->>          dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
->> -    if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
->> -        dev_dbg(pci->dev, "Root Error\n");
->> -    if (val & PCL_CFG_PME_MSI_STATUS)
->> -        dev_dbg(pci->dev, "PME Interrupt\n");
->> +
->> +    if (pci_msi_enabled()) {
+> It's definitely better than the current broken timestamps, but the real
+> and final solution is to have exact information about system suspends.
 > 
-> This checks whether the kernel supports MSIs. Not that they are
-> enabled in your controller. Is that really what you want to do?
+> It would be enough to maintain in kernel memory a simple log with
+>     <bootime> <monotonic> <state_change>
+> and export this info by /proc/suspendlog, after that we can all
+> re-count /dev/kmsg timestamps to something useful.
 
-The below two status bits are valid when the interrupt for MSI is asserted.
-That is, pci_msi_enabled() is wrong.
+Boottime or real time could be simply printed into kernel log at
+suspend and resume. So demsg could detect current offset while reading.
 
-I'll modify the function to check the two bits only if this function is
-called from MSI handler.
+But for older kernel dmesg still needs guessing like this.
 
 > 
->> +        if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
->> +            dev_dbg(pci->dev, "Root Error Status\n");
->> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->> +            generic_handle_irq(virq);
->> +        }
->> +
->> +        if (val & PCL_CFG_PME_MSI_STATUS) {
->> +            dev_dbg(pci->dev, "PME Interrupt\n");
->> +            virq = irq_linear_revmap(pp->irq_domain, 0);
->> +            generic_handle_irq(virq);
->> +        }
+>    Karel
 > 
-> These two cases do the exact same thing, calling the same interrupt.
-> What is the point of dealing with them independently?
-
-Both PME and AER are asserted from MSI-0, and each handler checks its own
-status bit in the PCIe register (aer_irq() in pcie/aer.c and pcie_pme_irq()
-in pcie/pme.c).
-So I think this handler calls generic_handle_irq() for the same MSI-0.
-
 > 
->> +    }
->>
->>      writel(val, priv->base + PCL_RCV_INT);
->> +}
->> +
->> +static void uniphier_pcie_irq_handler(struct irq_desc *desc)
->> +{
->> +    struct pcie_port *pp = irq_desc_get_handler_data(desc);
->> +    struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> +    struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
->> +    struct irq_chip *chip = irq_desc_get_chip(desc);
->> +    unsigned long reg;
->> +    u32 val, bit, virq;
->> +
->> +    /* misc interrupt */
->> +    uniphier_pcie_misc_isr(pp);
-> 
-> This is a chained handler called outside of a chained_irq_enter/exit
-> block. It isn't acceptable.
-
-I got it.
-This call should be called in the block.
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
