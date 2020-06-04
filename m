@@ -2,152 +2,105 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E36C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F03FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A65C520679
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591244023;
-	bh=qqCjWIFc0oBvTEtu2FOjWM7Jsh9w5wGA/RGYzYlOxag=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LODG5PUWnYpaHWUcn3LD8K9ghra5Hr1cpQdCNvV2bF5S7qPf3X2N+eEFdVNGMhrjx
-	 dbAYp31zoX9z+Yv9Luojc0uwkoV7wHKmcPrV+Ggk1RCLJF+JkY80XppzrFmDv9a+FX
-	 bxr3TLmhfVROeSXfwMWhIEMRehzv3d21Fj/vAAkQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1ECBB206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgFDENm (ORCPT
+        id S1726480AbgFDEP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgFDENl (ORCPT
+        Thu, 4 Jun 2020 00:15:26 -0400
+Received: from mail1.windriver.com ([147.11.146.13]:62675 "EHLO
+        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbgFDEP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:13:41 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28625C03E96D
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 21:13:41 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n23so5509871ljh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x+NrqN+0xbQXOWLT6R62mZhI75888x+45r0FZYiQvi4=;
-        b=Gsr5lN9LD8WT3djx/WpsXxGUrPz8bH8FVB0oU047nVrriDXWLxousSD6QAE6djVWhp
-         87R3f/XeWUBxR1JOs/dxzvYX2IVp0MFK0CUObhFX39bp0Pnswj79PJRrIjHnMOS/gaWX
-         +0mM9d0u66/Dew3fTDnMCmjIwdXBg3bbVAXGs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x+NrqN+0xbQXOWLT6R62mZhI75888x+45r0FZYiQvi4=;
-        b=SUBOEZuLKB3bkIw+5xCRFcfFNRmb30tENI64fqFbLRrd+j/YeLBTyO57mw4yoSolmR
-         wzwznXt1MIxMtvYQAEhiUfktrirBOLCwLdkireSBNpGdx4PONErB9qAxdkYaPkaebJIw
-         9fm3ZNh0llEXdhuK9XbzJz10vZ6yHg+toABDH4Afibq2aOtzKa2/td0RZ4Vc+MAbK4JH
-         4Ml/Clk7fnG6/ySRqm8gojH6MC1Rzg1aSF/abyb2rlJCsYSXWeTCd5K7/B5El+BqMFNR
-         XGLC2Nnf3vb75fvJAfRtNnizB+hz+eJ2SWFu9Beis4cgl1/KZVduggAnF3v9O2K2Ek31
-         nZNw==
-X-Gm-Message-State: AOAM530FmBK0FnnLIR2Cd8Twf/Fpn4jRrL9G8Y0IBKqt0HENIFCfb3yV
-        Q1j4gYe6+QB9ArFuigqXKfKiK1fDufE=
-X-Google-Smtp-Source: ABdhPJyuCY0lMmhTUe8hXu0AyFBzAF+cgBW38fccrYJppdbQRRlvho6yiCv0OpXwkiEXn41J0TtCGg==
-X-Received: by 2002:a2e:9818:: with SMTP id a24mr1103253ljj.161.1591244018956;
-        Wed, 03 Jun 2020 21:13:38 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id t22sm1130019lji.90.2020.06.03.21.13.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 21:13:37 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id a25so5521922ljp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:13:37 -0700 (PDT)
-X-Received: by 2002:a2e:974e:: with SMTP id f14mr1100137ljj.102.1591244017171;
- Wed, 03 Jun 2020 21:13:37 -0700 (PDT)
+        Thu, 4 Jun 2020 00:15:26 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 0544F8Uj017628
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Wed, 3 Jun 2020 21:15:08 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 3 Jun 2020 21:14:50 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <linux-usb@vger.kernel.org>, <kt0755@gmail.com>,
+        <stern@rowland.harvard.edu>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] usb: usbtest: fix missing kfree(dev->buf) in usbtest_disconnect
+Date:   Thu, 4 Jun 2020 12:23:41 +0800
+Message-ID: <20200604042341.25305-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200603100559.2718efba@coco.lan>
-In-Reply-To: <20200603100559.2718efba@coco.lan>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 3 Jun 2020 21:13:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg=CTtNrxPeFzkDw053dY3urchiyxevHnUXHhTGbK=9OQ@mail.gmail.com>
-Message-ID: <CAHk-=wg=CTtNrxPeFzkDw053dY3urchiyxevHnUXHhTGbK=9OQ@mail.gmail.com>
-Subject: Re: [GIT PULL for v5.8-rc1] media updates
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 1:06 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> PS.: The diffstat is so big that I almost dropped it, as it is almost
-> useless for humans to read. I ended by not doing it just because perhaps
-> you could be using some sort of script to check diffstat.
+From: Zqiang <qiang.zhang@windriver.com>
 
-No, but I do compare the basics, and you don't have to more than scan
-it to see that "ok, it only touches area xyz".
+BUG: memory leak
+unreferenced object 0xffff888055046e00 (size 256):
+  comm "kworker/2:9", pid 2570, jiffies 4294942129 (age 1095.500s)
+  hex dump (first 32 bytes):
+    00 70 04 55 80 88 ff ff 18 bb 5a 81 ff ff ff ff  .p.U......Z.....
+    f5 96 78 81 ff ff ff ff 37 de 8e 81 ff ff ff ff  ..x.....7.......
+  backtrace:
+    [<00000000d121dccf>] kmemleak_alloc_recursive
+include/linux/kmemleak.h:43 [inline]
+    [<00000000d121dccf>] slab_post_alloc_hook mm/slab.h:586 [inline]
+    [<00000000d121dccf>] slab_alloc_node mm/slub.c:2786 [inline]
+    [<00000000d121dccf>] slab_alloc mm/slub.c:2794 [inline]
+    [<00000000d121dccf>] kmem_cache_alloc_trace+0x15e/0x2d0 mm/slub.c:2811
+    [<000000005c3c3381>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000005c3c3381>] usbtest_probe+0x286/0x19d0
+drivers/usb/misc/usbtest.c:2790
+    [<000000001cec6910>] usb_probe_interface+0x2bd/0x870
+drivers/usb/core/driver.c:361
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
+    [<000000003ef66004>] __device_attach_driver+0x1b6/0x240
+drivers/base/dd.c:831
+    [<00000000eee53e97>] bus_for_each_drv+0x14e/0x1e0 drivers/base/bus.c:431
+    [<00000000bb0648d0>] __device_attach+0x1f9/0x350 drivers/base/dd.c:897
+    [<00000000838b324a>] device_initial_probe+0x1a/0x20 drivers/base/dd.c:944
+    [<0000000030d501c1>] bus_probe_device+0x1e1/0x280 drivers/base/bus.c:491
+    [<000000005bd7adef>] device_add+0x131d/0x1c40 drivers/base/core.c:2504
+    [<00000000a0937814>] usb_set_configuration+0xe84/0x1ab0
+drivers/usb/core/message.c:2030
+    [<00000000e3934741>] generic_probe+0x6a/0xe0 drivers/usb/core/generic.c:210
+    [<0000000098ade0f1>] usb_probe_device+0x90/0xd0
+drivers/usb/core/driver.c:266
+    [<000000007806c118>] really_probe+0x48d/0x8f0 drivers/base/dd.c:551
+    [<00000000a3308c3e>] driver_probe_device+0xfc/0x2a0 drivers/base/dd.c:724
 
-And it turns out that it is huge for you partly because you have the
-default (fairly low) git rename detection limits, in order to avoid
-using a lot of CPU or memory for rename detection.
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+---
+ v1->v2:
+ Remove Fixes field.
 
-So you get:
+ drivers/usb/misc/usbtest.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->  2181 files changed, 260633 insertions(+), 106012 deletions(-)
+diff --git a/drivers/usb/misc/usbtest.c b/drivers/usb/misc/usbtest.c
+index 98ada1a3425c..bae88893ee8e 100644
+--- a/drivers/usb/misc/usbtest.c
++++ b/drivers/usb/misc/usbtest.c
+@@ -2873,6 +2873,7 @@ static void usbtest_disconnect(struct usb_interface *intf)
+ 
+ 	usb_set_intfdata(intf, NULL);
+ 	dev_dbg(&intf->dev, "disconnect\n");
++	kfree(dev->buf);
+ 	kfree(dev);
+ }
+ 
+-- 
+2.24.1
 
-while I get
-
- 1698 files changed, 161922 insertions(+), 7301 deletions(-)
-
-which is a noticeable difference. Still a big diffstat, but quite a
-bit smaller than yours.
-
-You also get a _lot_ more noise in the form of "create mode xyz" and
-"delete mode abc" notices, while for me a lot of them are just "rename
-abc => xyz". So there's a double whammy for you.
-
-The reason is that your diff only has renames for the 100% matches like this:
-
->  rename Documentation/{media/v4l-drivers => admin-guide/media}/au0828-cardlist.rst (100%)
-
-which git can detect purely by seeing "oh, same exact SHA1".
-
-But you don't have any non-100% renames.
-
-In contrast, the diffstat I see also has the inexact renames like
-
- rename Documentation/{media/v4l-drivers =>
-admin-guide/media}/bttv-cardlist.rst (99%)
- rename Documentation/{media/v4l-drivers => admin-guide/media}/bttv.rst (79%)
-
-because I have done
-
-   git config diff.renamelimit 0
-
-to make the rename detection limit be infinite (alternatively, just
-edit your ~/.gitconfig file manually - it's often easier than
-remembering what the "git config" syntax is).
-
-You want to see
-
-  [diff]
-        renamelimit = 0
-
-in your ~/.gitconfig file (or, alternatively, if you want the setting
-to be per-repo, in your .git/config file in your repository).
-
-The default git limits for "should I spend CPU time and memory on
-detecting inexact renames" are fairly low, because people use git on
-fairly low-end machines.
-
-I bet your development machine isn't some kind of low-end toy, and
-rename detection is not _that_ expensive.
-
-              Linus
