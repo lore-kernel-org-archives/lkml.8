@@ -2,175 +2,437 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A2CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6F320772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83AC206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WJzQNxEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgFDCw3 (ORCPT
+        id S1726874AbgFDCwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:52:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:52047 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgFDCw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:52:28 -0400
-IronPort-SDR: 7zUYjuBa8aLNe1PP+qthuiwDhhfRYSsbIr0vXbiMfNMAko+4mW9XHRGgNonPB11S8xMAEtaUDx
- ZR+W4l3GGXMw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 19:52:27 -0700
-IronPort-SDR: xa2mAS/6hWVV/l5ceT7e+WGoacQK86k6UhI3lpRhV3MEtvRd3TzdavvXqTCJU7S9ZpHOF+Au1t
- jamXNZQA6YIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,470,1583222400"; 
-   d="scan'208";a="471274028"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Jun 2020 19:52:25 -0700
-Date:   Wed, 3 Jun 2020 22:42:28 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
-        xin.zeng@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
- VFIO_IRQ_TYPE_REMAP_BAR_REGION
-Message-ID: <20200604024228.GD12300@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
- <20200518025245.14425-1-yan.y.zhao@intel.com>
- <20200529154547.19a6685f@x1.home>
- <20200601065726.GA5906@joy-OptiPlex-7040>
- <20200601104307.259b0fe1@x1.home>
- <20200602082858.GA8915@joy-OptiPlex-7040>
- <20200602133435.1ab650c5@x1.home>
- <20200603014058.GA12300@joy-OptiPlex-7040>
- <20200603170452.7f172baf@x1.home>
+        Wed, 3 Jun 2020 22:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbgFDCwe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 22:52:34 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23243C03E96D
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 19:52:33 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id h7so3650257otr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 19:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hNhBTEux2YCwj9xj/sQYAYywb4N076++sidiufmRnK4=;
+        b=WJzQNxEFGqsVkYUWZrloqKfNYJBigesd8zbO/lFV2NOGz/UHVmNJCu34+QoZdJ23pS
+         hpZWXfGxYWmyN96yARaqo8PcEcni3CUnDurYcBIXSJ7pP9P+Vxmmud04IxiHT7g85JYm
+         kgp5WlGLzROjE2uJZxRwa8xXIHgUqxovoqmjDuWcpmnQfqhVOukY+Ff7XxieE5WeA2wg
+         +0p4GYYaWiC/FcujvQ+smELv/1oaU1AOfvntshx59UOnm/0hV39MXPTFDOEJvorhxgup
+         UhxLolyJfdzXp2FZPnFqHJbpYagDl8U+8d5V6fpvz5dmVyiyloPtGHuAXyf7ncFSfDnP
+         jv4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hNhBTEux2YCwj9xj/sQYAYywb4N076++sidiufmRnK4=;
+        b=sntRQWoaTSwmUhkXrYhjPaiFU5YWE9KB78ynafn0lvZZFjaYphSIsd6rVMdCQyXiIa
+         ldovUgBDLAGg3gdqV/SeCmpNzqNZ6/FqthvcH/JYLPxsBrHE+rron4ovlZFkeR5fRyuc
+         bZp+PAaHPGR7jUvujAGAmSDBMY1IvIIFqbhE0S/FuK4xerHFT2M0AMNgfHGb2e7Bh7Ra
+         1RfhjRfjrCc+xv6zUBlPhqd19xC6E2c3u+pL0yotLye31qBBK7PmVDkco570PzcX6Q9x
+         4nPchHssyp+qLP71RCOv2Fn7qTk3MT0mY1/SnIRbfA1UHRGhGUVr9PeCxSeMYgQfmnbE
+         kSpQ==
+X-Gm-Message-State: AOAM531sumVtvz9zPA3LKWkQSsOXWmzdwLJC1SY5KB/Fk7nfkXQ6i2mD
+        SwvzN0YyphScHmqlP/9fSvmFHx6a0accFcvRHJrCBA==
+X-Google-Smtp-Source: ABdhPJzrfsbN88IGHwKE3Asp5wKetzs6DRElpJD/KDgxI/TWfDj/hKHS/3Nmxco/Ssff3+JXh1XIDv4b+49FyLYAwNU=
+X-Received: by 2002:a05:6830:1e59:: with SMTP id e25mr1900651otj.127.1591239150272;
+ Wed, 03 Jun 2020 19:52:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603170452.7f172baf@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200603080010.13366-1-alex@ghiti.fr> <20200603080010.13366-2-alex@ghiti.fr>
+In-Reply-To: <20200603080010.13366-2-alex@ghiti.fr>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Thu, 4 Jun 2020 10:52:19 +0800
+Message-ID: <CANXhq0qjWKCqbY4BmCa1wZKYY_Dax8fGj1s4Q_ZipaFPo9dz8g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] riscv: Move kernel mapping to vmalloc zone
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:
-> On Tue, 2 Jun 2020 21:40:58 -0400
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
-> 
-> > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:
-> > > I'm not at all happy with this.  Why do we need to hide the migration
-> > > sparse mmap from the user until migration time?  What if instead we
-> > > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
-> > > where the existing capability is the normal runtime sparse setup and
-> > > the user is required to use this new one prior to enabled device_state
-> > > with _SAVING.  The vendor driver could then simply track mmap vmas to
-> > > the region and refuse to change device_state if there are outstanding
-> > > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
-> > > required, no new irqfds, an incremental change to the protocol,
-> > > backwards compatible to the extent that a vendor driver requiring this
-> > > will automatically fail migration.
-> > >   
-> > right. looks we need to use this approach to solve the problem.
-> > thanks for your guide.
-> > so I'll abandon the current remap irq way for dirty tracking during live
-> > migration.
-> > but anyway, it demos how to customize irq_types in vendor drivers.
-> > then, what do you think about patches 1-5?
-> 
-> In broad strokes, I don't think we've found the right solution yet.  I
-> really question whether it's supportable to parcel out vfio-pci like
-> this and I don't know how I'd support unraveling whether we have a bug
-> in vfio-pci, the vendor driver, or how the vendor driver is making use
-> of vfio-pci.
+On Wed, Jun 3, 2020 at 4:01 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
 >
-> Let me also ask, why does any of this need to be in the kernel?  We
-> spend 5 patches slicing up vfio-pci so that we can register a vendor
-> driver and have that vendor driver call into vfio-pci as it sees fit.
-> We have two patches creating device specific interrupts and a BAR
-> remapping scheme that we've decided we don't need.  That brings us to
-> the actual i40e vendor driver, where the first patch is simply making
-> the vendor driver work like vfio-pci already does, the second patch is
-> handling the migration region, and the third patch is implementing the
-> BAR remapping IRQ that we decided we don't need.  It's difficult to
-> actually find the small bit of code that's required to support
-> migration outside of just dealing with the protocol we've defined to
-> expose this from the kernel.  So why are we trying to do this in the
-> kernel?  We have quirk support in QEMU, we can easily flip
-> MemoryRegions on and off, etc.  What access to the device outside of
-> what vfio-pci provides to the user, and therefore QEMU, is necessary to
-> implement this migration support for i40e VFs?  Is this just an
-> exercise in making use of the migration interface?  Thanks,
-> 
-hi Alex
+> This is a preparatory patch for relocatable kernel.
+>
+> The kernel used to be linked at PAGE_OFFSET address and used to be loaded
+> physically at the beginning of the main memory. Therefore, we could use
+> the linear mapping for the kernel mapping.
+>
+> But the relocated kernel base address will be different from PAGE_OFFSET
+> and since in the linear mapping, two different virtual addresses cannot
+> point to the same physical address, the kernel mapping needs to lie outside
+> the linear mapping.
+>
+> In addition, because modules and BPF must be close to the kernel (inside
+> +-2GB window), the kernel is placed at the end of the vmalloc zone minus
+> 2GB, which leaves room for modules and BPF. The kernel could not be
+> placed at the beginning of the vmalloc zone since other vmalloc
+> allocations from the kernel could get all the +-2GB window around the
+> kernel which would prevent new modules and BPF programs to be loaded.
+>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>  arch/riscv/boot/loader.lds.S     |  3 +-
+>  arch/riscv/include/asm/page.h    | 10 +++++-
+>  arch/riscv/include/asm/pgtable.h | 38 ++++++++++++++-------
+>  arch/riscv/kernel/head.S         |  3 +-
+>  arch/riscv/kernel/module.c       |  4 +--
+>  arch/riscv/kernel/vmlinux.lds.S  |  3 +-
+>  arch/riscv/mm/init.c             | 58 +++++++++++++++++++++++++-------
+>  arch/riscv/mm/physaddr.c         |  2 +-
+>  8 files changed, 88 insertions(+), 33 deletions(-)
+>
+> diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
+> index 47a5003c2e28..62d94696a19c 100644
+> --- a/arch/riscv/boot/loader.lds.S
+> +++ b/arch/riscv/boot/loader.lds.S
+> @@ -1,13 +1,14 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>
+>  #include <asm/page.h>
+> +#include <asm/pgtable.h>
+>
+>  OUTPUT_ARCH(riscv)
+>  ENTRY(_start)
+>
+>  SECTIONS
+>  {
+> -       . = PAGE_OFFSET;
+> +       . = KERNEL_LINK_ADDR;
+>
+>         .payload : {
+>                 *(.payload)
+> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+> index 2d50f76efe48..48bb09b6a9b7 100644
+> --- a/arch/riscv/include/asm/page.h
+> +++ b/arch/riscv/include/asm/page.h
+> @@ -90,18 +90,26 @@ typedef struct page *pgtable_t;
+>
+>  #ifdef CONFIG_MMU
+>  extern unsigned long va_pa_offset;
+> +extern unsigned long va_kernel_pa_offset;
+>  extern unsigned long pfn_base;
+>  #define ARCH_PFN_OFFSET                (pfn_base)
+>  #else
+>  #define va_pa_offset           0
+> +#define va_kernel_pa_offset    0
+>  #define ARCH_PFN_OFFSET                (PAGE_OFFSET >> PAGE_SHIFT)
+>  #endif /* CONFIG_MMU */
+>
+>  extern unsigned long max_low_pfn;
+>  extern unsigned long min_low_pfn;
+> +extern unsigned long kernel_virt_addr;
+>
+>  #define __pa_to_va_nodebug(x)  ((void *)((unsigned long) (x) + va_pa_offset))
+> -#define __va_to_pa_nodebug(x)  ((unsigned long)(x) - va_pa_offset)
+> +#define linear_mapping_va_to_pa(x)     ((unsigned long)(x) - va_pa_offset)
+> +#define kernel_mapping_va_to_pa(x)     \
+> +       ((unsigned long)(x) - va_kernel_pa_offset)
+> +#define __va_to_pa_nodebug(x)          \
+> +       (((x) >= PAGE_OFFSET) ?         \
+> +               linear_mapping_va_to_pa(x) : kernel_mapping_va_to_pa(x))
+>
+>  #ifdef CONFIG_DEBUG_VIRTUAL
+>  extern phys_addr_t __virt_to_phys(unsigned long x);
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index 35b60035b6b0..94ef3b49dfb6 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -11,23 +11,29 @@
+>
+>  #include <asm/pgtable-bits.h>
+>
+> -#ifndef __ASSEMBLY__
+> -
+> -/* Page Upper Directory not used in RISC-V */
+> -#include <asm-generic/pgtable-nopud.h>
+> -#include <asm/page.h>
+> -#include <asm/tlbflush.h>
+> -#include <linux/mm_types.h>
+> -
+> -#ifdef CONFIG_MMU
+> +#ifndef CONFIG_MMU
+> +#define KERNEL_VIRT_ADDR       PAGE_OFFSET
+> +#define KERNEL_LINK_ADDR       PAGE_OFFSET
+> +#else
+> +/*
+> + * Leave 2GB for modules and BPF that must lie within a 2GB range around
+> + * the kernel.
+> + */
+> +#define KERNEL_VIRT_ADDR       (VMALLOC_END - SZ_2G + 1)
+> +#define KERNEL_LINK_ADDR       KERNEL_VIRT_ADDR
+>
+>  #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
+>  #define VMALLOC_END      (PAGE_OFFSET - 1)
+>  #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
+>
+>  #define BPF_JIT_REGION_SIZE    (SZ_128M)
+> -#define BPF_JIT_REGION_START   (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
+> -#define BPF_JIT_REGION_END     (VMALLOC_END)
+> +#define BPF_JIT_REGION_START   PFN_ALIGN((unsigned long)&_end)
+> +#define BPF_JIT_REGION_END     (BPF_JIT_REGION_START + BPF_JIT_REGION_SIZE)
+> +
+> +#ifdef CONFIG_64BIT
+> +#define VMALLOC_MODULE_START   BPF_JIT_REGION_END
+> +#define VMALLOC_MODULE_END     (((unsigned long)&_start & PAGE_MASK) + SZ_2G)
+> +#endif
+>
+>  /*
+>   * Roughly size the vmemmap space to be large enough to fit enough
+> @@ -57,9 +63,16 @@
+>  #define FIXADDR_SIZE     PGDIR_SIZE
+>  #endif
+>  #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
+> -
+>  #endif
+>
+> +#ifndef __ASSEMBLY__
+> +
+> +/* Page Upper Directory not used in RISC-V */
+> +#include <asm-generic/pgtable-nopud.h>
+> +#include <asm/page.h>
+> +#include <asm/tlbflush.h>
+> +#include <linux/mm_types.h>
+> +
+>  #ifdef CONFIG_64BIT
+>  #include <asm/pgtable-64.h>
+>  #else
+> @@ -483,6 +496,7 @@ static inline void __kernel_map_pages(struct page *page, int numpages, int enabl
+>
+>  #define kern_addr_valid(addr)   (1) /* FIXME */
+>
+> +extern char _start[];
+>  extern void *dtb_early_va;
+>  void setup_bootmem(void);
+>  void paging_init(void);
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 98a406474e7d..8f5bb7731327 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -49,7 +49,8 @@ ENTRY(_start)
+>  #ifdef CONFIG_MMU
+>  relocate:
+>         /* Relocate return address */
+> -       li a1, PAGE_OFFSET
+> +       la a1, kernel_virt_addr
+> +       REG_L a1, 0(a1)
+>         la a2, _start
+>         sub a1, a1, a2
+>         add ra, ra, a1
+> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+> index 8bbe5dbe1341..1a8fbe05accf 100644
+> --- a/arch/riscv/kernel/module.c
+> +++ b/arch/riscv/kernel/module.c
+> @@ -392,12 +392,10 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+>  }
+>
+>  #if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
+> -#define VMALLOC_MODULE_START \
+> -        max(PFN_ALIGN((unsigned long)&_end - SZ_2G), VMALLOC_START)
+>  void *module_alloc(unsigned long size)
+>  {
+>         return __vmalloc_node_range(size, 1, VMALLOC_MODULE_START,
+> -                                   VMALLOC_END, GFP_KERNEL,
+> +                                   VMALLOC_MODULE_END, GFP_KERNEL,
+>                                     PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
+>                                     __builtin_return_address(0));
+>  }
+> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> index 0339b6bbe11a..a9abde62909f 100644
+> --- a/arch/riscv/kernel/vmlinux.lds.S
+> +++ b/arch/riscv/kernel/vmlinux.lds.S
+> @@ -4,7 +4,8 @@
+>   * Copyright (C) 2017 SiFive
+>   */
+>
+> -#define LOAD_OFFSET PAGE_OFFSET
+> +#include <asm/pgtable.h>
+> +#define LOAD_OFFSET KERNEL_LINK_ADDR
+>  #include <asm/vmlinux.lds.h>
+>  #include <asm/page.h>
+>  #include <asm/cache.h>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 736de6c8739f..37be2eb45e58 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -22,6 +22,9 @@
+>
+>  #include "../kernel/head.h"
+>
+> +unsigned long kernel_virt_addr = KERNEL_VIRT_ADDR;
+> +EXPORT_SYMBOL(kernel_virt_addr);
+> +
+>  unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+>                                                         __page_aligned_bss;
+>  EXPORT_SYMBOL(empty_zero_page);
+> @@ -178,8 +181,12 @@ void __init setup_bootmem(void)
+>  }
+>
+>  #ifdef CONFIG_MMU
+> +/* Offset between linear mapping virtual address and kernel load address */
+>  unsigned long va_pa_offset;
+>  EXPORT_SYMBOL(va_pa_offset);
+> +/* Offset between kernel mapping virtual address and kernel load address */
+> +unsigned long va_kernel_pa_offset;
+> +EXPORT_SYMBOL(va_kernel_pa_offset);
+>  unsigned long pfn_base;
+>  EXPORT_SYMBOL(pfn_base);
+>
+> @@ -271,7 +278,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
+>         if (mmu_enabled)
+>                 return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+>
+> -       pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+> +       pmd_num = (va - kernel_virt_addr) >> PGDIR_SHIFT;
+>         BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+>         return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+>  }
+> @@ -372,14 +379,30 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
+>  #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
+>  #endif
+>
+> +static uintptr_t load_pa, load_sz;
+> +
+> +void create_kernel_page_table(pgd_t *pgdir, uintptr_t map_size)
 
-There was a description of intention of this series in RFC v1
-(https://www.spinics.net/lists/kernel/msg3337337.html).
-sorry, I didn't include it in starting from RFC v2.
+It could be static if this function is only used in this file, as
+kbuild test reported.
+Apart from this, it looks good to me.
+Reviewed-by: Zong Li <zong.li@sifive.com>
 
-"
-The reason why we don't choose the way of writing mdev parent driver is
-that
-(1) VFs are almost all the time directly passthroughed. Directly binding
-to vfio-pci can make most of the code shared/reused. If we write a
-vendor specific mdev parent driver, most of the code (like passthrough
-style of rw/mmap) still needs to be copied from vfio-pci driver, which is
-actually a duplicated and tedious work.
-(2) For features like dynamically trap/untrap pci bars, if they are in
-vfio-pci, they can be available to most people without repeated code
-copying and re-testing.
-(3) with a 1:1 mdev driver which passes through VFs most of the time, people
-have to decide whether to bind VFs to vfio-pci or mdev parent driver before
-it runs into a real migration need. However, if vfio-pci is bound
-initially, they have no chance to do live migration when there's a need
-later.
-"
-particularly, there're some devices (like NVMe) they purely reply on
-vfio-pci to do device pass-through and they have no standalone parent driver
-to do mdev way.
-
-I think live migration is a general requirement for most devices and to
-interact with the migration interface requires vendor drivers to do
-device specific tasks like geting/seting device state, starting/stopping
-devices, tracking dirty data, report migration capabilities... all those
-works need be in kernel.
-do you think it's better to create numerous vendor quirks in vfio-pci?
-
-as to this series, though patch 9/10 currently only demos reporting a
-migration region, it actually shows the capability iof vendor driver to
-customize device regions. e.g. in patch 10/10, it customizes the BAR0 to
-be read/write. and though we abandoned the REMAP BAR irq_type in patch
-10/10 for migration purpose, I have to say this irq_type has its usage
-in other use cases, where synchronization is not a hard requirement and
-all it needs is a notification channel from kernel to use. this series
-just provides a possibility for vendors to customize device regions and
-irqs.
-
-for interfaces exported in patch 3/10-5/10, they anyway need to be
-exported for writing mdev parent drivers that pass through devices at
-normal time to avoid duplication. and yes, your worry about
-identification of bug sources is reasonable. but if a device is binding
-to vfio-pci with a vendor module loaded, and there's a bug, they can do at
-least two ways to identify if it's a bug in vfio-pci itself.
-(1) prevent vendor modules from loading and see if the problem exists
-with pure vfio-pci.
-(2) do what's demoed in patch 8/10, i.e. do nothing but simply pass all
-operations to vfio-pci.
-
-so, do you think this series has its merit and we can continue improving
-it?
-
-Thanks
-Yan
- 
-
-
-
+> +{
+> +       uintptr_t va, end_va;
+> +
+> +       end_va = kernel_virt_addr + load_sz;
+> +       for (va = kernel_virt_addr; va < end_va; va += map_size)
+> +               create_pgd_mapping(pgdir, va,
+> +                                  load_pa + (va - kernel_virt_addr),
+> +                                  map_size, PAGE_KERNEL_EXEC);
+> +}
+> +
+>  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>  {
+>         uintptr_t va, end_va;
+> -       uintptr_t load_pa = (uintptr_t)(&_start);
+> -       uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
+>         uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
+>
+> +       load_pa = (uintptr_t)(&_start);
+> +       load_sz = (uintptr_t)(&_end) - load_pa;
+> +
+>         va_pa_offset = PAGE_OFFSET - load_pa;
+> +       va_kernel_pa_offset = kernel_virt_addr - load_pa;
+> +
+>         pfn_base = PFN_DOWN(load_pa);
+>
+>         /*
+> @@ -402,26 +425,22 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>         create_pmd_mapping(fixmap_pmd, FIXADDR_START,
+>                            (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
+>         /* Setup trampoline PGD and PMD */
+> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+> +       create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+>                            (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
+> -       create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
+> +       create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
+>                            load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
+>  #else
+>         /* Setup trampoline PGD */
+> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+> +       create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+>                            load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
+>  #endif
+>
+>         /*
+> -        * Setup early PGD covering entire kernel which will allows
+> +        * Setup early PGD covering entire kernel which will allow
+>          * us to reach paging_init(). We map all memory banks later
+>          * in setup_vm_final() below.
+>          */
+> -       end_va = PAGE_OFFSET + load_sz;
+> -       for (va = PAGE_OFFSET; va < end_va; va += map_size)
+> -               create_pgd_mapping(early_pg_dir, va,
+> -                                  load_pa + (va - PAGE_OFFSET),
+> -                                  map_size, PAGE_KERNEL_EXEC);
+> +       create_kernel_page_table(early_pg_dir, map_size);
+>
+>         /* Create fixed mapping for early FDT parsing */
+>         end_va = __fix_to_virt(FIX_FDT) + FIX_FDT_SIZE;
+> @@ -441,6 +460,7 @@ static void __init setup_vm_final(void)
+>         uintptr_t va, map_size;
+>         phys_addr_t pa, start, end;
+>         struct memblock_region *reg;
+> +       static struct vm_struct vm_kernel = { 0 };
+>
+>         /* Set mmu_enabled flag */
+>         mmu_enabled = true;
+> @@ -467,10 +487,22 @@ static void __init setup_vm_final(void)
+>                 for (pa = start; pa < end; pa += map_size) {
+>                         va = (uintptr_t)__va(pa);
+>                         create_pgd_mapping(swapper_pg_dir, va, pa,
+> -                                          map_size, PAGE_KERNEL_EXEC);
+> +                                          map_size, PAGE_KERNEL);
+>                 }
+>         }
+>
+> +       /* Map the kernel */
+> +       create_kernel_page_table(swapper_pg_dir, PMD_SIZE);
+> +
+> +       /* Reserve the vmalloc area occupied by the kernel */
+> +       vm_kernel.addr = (void *)kernel_virt_addr;
+> +       vm_kernel.phys_addr = load_pa;
+> +       vm_kernel.size = (load_sz + PMD_SIZE - 1) & ~(PMD_SIZE - 1);
+> +       vm_kernel.flags = VM_MAP | VM_NO_GUARD;
+> +       vm_kernel.caller = __builtin_return_address(0);
+> +
+> +       vm_area_add_early(&vm_kernel);
+> +
+>         /* Clear fixmap PTE and PMD mappings */
+>         clear_fixmap(FIX_PTE);
+>         clear_fixmap(FIX_PMD);
+> diff --git a/arch/riscv/mm/physaddr.c b/arch/riscv/mm/physaddr.c
+> index e8e4dcd39fed..35703d5ef5fd 100644
+> --- a/arch/riscv/mm/physaddr.c
+> +++ b/arch/riscv/mm/physaddr.c
+> @@ -23,7 +23,7 @@ EXPORT_SYMBOL(__virt_to_phys);
+>
+>  phys_addr_t __phys_addr_symbol(unsigned long x)
+>  {
+> -       unsigned long kernel_start = (unsigned long)PAGE_OFFSET;
+> +       unsigned long kernel_start = (unsigned long)kernel_virt_addr;
+>         unsigned long kernel_end = (unsigned long)_end;
+>
+>         /*
+> --
+> 2.20.1
+>
