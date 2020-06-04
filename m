@@ -2,74 +2,60 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E62C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9007C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A768207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A899A207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgFDW5e (ORCPT
+        id S1728207AbgFDW7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:57:34 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:59797 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726221AbgFDW5e (ORCPT
+        Thu, 4 Jun 2020 18:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgFDW7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:57:34 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id B5C4ED79AF1;
-        Fri,  5 Jun 2020 08:57:30 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jgyne-0001Aj-8R; Fri, 05 Jun 2020 08:57:26 +1000
-Date:   Fri, 5 Jun 2020 08:57:26 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
-Message-ID: <20200604225726.GU2040@dread.disaster.area>
-References: <20200604202340.29170-1-willy@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604202340.29170-1-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
-        a=2E5S9D3U1MkxagNI6HEA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 4 Jun 2020 18:59:01 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8857C08C5C0;
+        Thu,  4 Jun 2020 15:59:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1FF4011F5F8D1;
+        Thu,  4 Jun 2020 15:59:00 -0700 (PDT)
+Date:   Thu, 04 Jun 2020 15:58:59 -0700 (PDT)
+Message-Id: <20200604.155859.185403656964744319.davem@davemloft.net>
+To:     wanghai38@huawei.com
+Cc:     jpr@f6fbb.org, kuba@kernel.org, linux-hams@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] yam: fix possible memory leak in yam_init_driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200604121851.63880-1-wanghai38@huawei.com>
+References: <20200604121851.63880-1-wanghai38@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 04 Jun 2020 15:59:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 01:23:40PM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Test generic/019 often results in:
-> 
-> WARNING: at fs/iomap/buffered-io.c:1069 iomap_page_mkwrite_actor+0x57/0x70
-> 
-> Since this can happen due to a storage error, we should not WARN for it.
-> Just return -EIO, which will be converted to a SIGBUS for the hapless
-> task attempting to write to the page that we can't read.
+From: Wang Hai <wanghai38@huawei.com>
+Date: Thu, 4 Jun 2020 20:18:51 +0800
 
-Why didn't the "read" part of the fault which had the EIO error fail
-the page fault? i.e. why are we waiting until deep inside the write
-fault path to error out on a failed page read?
+> If register_netdev(dev) fails, free_netdev(dev) needs
+> to be called, otherwise a memory leak will occur.
+> 
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wang Hai <wanghai38@huawei.com>
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Applied, thanks.
