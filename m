@@ -2,119 +2,74 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF53C20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:53:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g+JVXvVE"
+	by mail.kernel.org (Postfix) with ESMTP id 2E6C720772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgFDBxw (ORCPT
+        id S1726316AbgFDB7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728007AbgFDBxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:53:23 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5478AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 18:53:23 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so3969501qtg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 18:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ol8M2KCtVTfhjIudQ80yoAA541E23GCrsvIpBzMufk8=;
-        b=g+JVXvVEhHBGXKk2wAZGtNuoP1FYpvjvUuC5MOwY3es9FBBcxhVq6st1ofsoIOh7+e
-         2eFVCjT62+hMAWz2US1Slf0/Wzf6zyrhKXZ7XXrIwxVYhhLty0DDItF+ZpBm5FB4Eqon
-         7uv+DEl4e5steUBdILty/uqHIbznxb8XXwua4wBLyTUX1Ln0ENC4YgiE7rXkPKrqw/U+
-         oYXNL+FC6xTjKapLxYXEgp9prko8EXbVw4RR7+kADWkJgyS/CfIvgcU4mIYg+ez2B4jR
-         ouIkuZGdHNwOWxpM8m4GtThiXkCxZTYLikuEoLjVRopgs8ZAqm6hkSFQj1UNuSzaG9r4
-         hCkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ol8M2KCtVTfhjIudQ80yoAA541E23GCrsvIpBzMufk8=;
-        b=SSO5XvwaZ5+RXZjBkuZzEG5gbsmVgbxCojzFZiKlsklCkWZ+vy7gHRAEHwTeawj6BL
-         hCAvQHBIKXJ/9k2uvwrAON2EhNt/Ee1wkRcUn6CMJputG+Kn01CNJEvsnjkPe5VHhT0v
-         Z/YhWoe9EmJ7Xro6W6Z7Pn/7woUYDZbkaR//IGsO7hSNCssunG3W5LUHIiJGm5rmvVQg
-         nYfakLWcQsKGOopi2N5lN+y5gGJbRzQqPXe4AiBIEofdE6lTlIggtsFTcQdIA4E6iFxD
-         tOYgOKiJhk4KP8N/BHBcYBI9OSl0WviOHSHX0yqYiNTjv7NjR0BPxeN2GuBrbfkIwAKq
-         QJFg==
-X-Gm-Message-State: AOAM53353PLOOt6Eh4gusaE//DRiRGeUVoY4+zvVvT1R8Tc5ylYRPtDr
-        UbGyJA1GtNDH3cV4QZdwjf26qg==
-X-Google-Smtp-Source: ABdhPJwV+BvFStA1v5/UAqO4fihvZU5fJ58FDImcRujQQp1tu0wGpU2ow31ZMbF7tSXu0JwSuJkq6A==
-X-Received: by 2002:ac8:2bc1:: with SMTP id n1mr2332050qtn.382.1591235602521;
-        Wed, 03 Jun 2020 18:53:22 -0700 (PDT)
-Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id t74sm2986439qka.21.2020.06.03.18.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 18:53:21 -0700 (PDT)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, robh@kernel.org
-Cc:     amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/6] soc: qcom: rpmhpd: Introduce function to retrieve power domain performance state count
-Date:   Wed,  3 Jun 2020 21:53:13 -0400
-Message-Id: <20200604015317.31389-3-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200604015317.31389-1-thara.gopinath@linaro.org>
-References: <20200604015317.31389-1-thara.gopinath@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 3 Jun 2020 21:59:53 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:45278 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725973AbgFDB7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:59:52 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F1E431A0191;
+        Thu,  4 Jun 2020 03:59:50 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B6F1C1A016E;
+        Thu,  4 Jun 2020 03:59:45 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 04E88402B0;
+        Thu,  4 Jun 2020 09:59:38 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux@rempel-privat.de, wolfram@the-dreams.de,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 0/3] Convert i.MX/MXS I2C/LPI2C binding doc to json-schema
+Date:   Thu,  4 Jun 2020 09:49:15 +0800
+Message-Id: <1591235358-15516-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Populate .get_performance_state_count in genpd ops to retrieve the count of
-performance states supported by a rpmh power domain.
+Coverts i.MX/MXS I2C/LPI2C binding doc to json-schema, some examples are too old,
+update them based on latest DT file, also add more compatible based on supported SoCs.
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/soc/qcom/rpmhpd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Compated to V1, this patch series adds "additionalProperties: false" for each
+binding doc.
 
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index e72426221a69..a9c597143525 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -362,6 +362,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
- 	return dev_pm_opp_get_level(opp);
- }
- 
-+static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
-+{
-+	struct rpmhpd *pd = domain_to_rpmhpd(domain);
-+
-+	return pd->level_count;
-+}
-+
- static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
- {
- 	int i;
-@@ -450,6 +457,7 @@ static int rpmhpd_probe(struct platform_device *pdev)
- 		rpmhpds[i]->pd.power_on = rpmhpd_power_on;
- 		rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
- 		rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
-+		rpmhpds[i]->pd.get_performance_state_count = rpmhpd_performance_states_count;
- 		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
- 
- 		data->domains[i] = &rpmhpds[i]->pd;
+Anson Huang (3):
+  dt-bindings: i2c: Convert imx lpi2c to json-schema
+  dt-bindings: i2c: Convert mxs i2c to json-schema
+  dt-bindings: i2c: Convert imx i2c to json-schema
+
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt      |  20 ----
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.yaml     |  47 ++++++++
+ Documentation/devicetree/bindings/i2c/i2c-imx.txt  |  49 ---------
+ Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 119 +++++++++++++++++++++
+ Documentation/devicetree/bindings/i2c/i2c-mxs.txt  |  25 -----
+ Documentation/devicetree/bindings/i2c/i2c-mxs.yaml |  55 ++++++++++
+ 6 files changed, 221 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-imx.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
+
 -- 
-2.20.1
+2.7.4
 
