@@ -2,125 +2,143 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA452C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 656522067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6902067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PmkevgLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgFDU1Y (ORCPT
+        id S1729915AbgFDU1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:27:24 -0400
-Received: from v6.sk ([167.172.42.174]:46350 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgFDU1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:27:24 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 0E4BC610D0;
-        Thu,  4 Jun 2020 20:26:52 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 22:26:48 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [RESEND 2 PATCH] media: marvell-ccic: Add support for runtime PM
-Message-ID: <20200604202648.GA565781@furthur.local>
-References: <20200601192124.172650-1-lkundrak@v3.sk>
+        Thu, 4 Jun 2020 16:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbgFDU1d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 16:27:33 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B9CC08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:27:32 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id s18so7884011ioe.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cIgVS8ggkjhxB0JoJojRceUX9GryrMeDRowoa0T2ICw=;
+        b=PmkevgLVw0MJkySoUuAV4KjwhxjrSugxZVs3t7ZgLbW+hH6bGVCkDpHNCQOp3dzFRn
+         59sEJdR8Ilwa/jfy9rErHPpp4lr5TDsowJRUdgab+6o7x7X4YDxyTROH1vSRKXXJmRt5
+         ai86SvPojqS2mw90PUpX1D/anPL9xfbtHr254pasWlf4hLzV/NEJRe200wNIuWFEImhd
+         0CaTPDx74hKuyopOCTc7cxjpxxTXgc4EYjSbzJglWsHVEhvpSEtlCzf+luwwDgMkcB3+
+         pemWmzfJeatJQ2XMNd2bjltqSNtD1xqWNThs1yzSikgadfUaVOSXWT/p/94BuM+DSjjT
+         s6Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cIgVS8ggkjhxB0JoJojRceUX9GryrMeDRowoa0T2ICw=;
+        b=KonKYO5cJEciLYfIPAxrvaYbYM+NhptzZDgmvVbDQXdf16XIbe4/YfT5JBQXOmJJDX
+         J1/7G7E9iQHaWzjULcPbZEf25p0nKx4+sqIAOf7PZ1qbPvYBuwDOQfil1pdOXgLlMSgY
+         QBZXx91BQJWnp0qB2oDMU4Bjr00B+xo2J1nrL4OZNA3W/qGsqsAj8E8VHDQGcLRQkjwo
+         oROQs5RRZ7ki/f/xC9rgJ3EO38yjVbQiQelMkHQcVkAaeARKaNM2Ry9b82dasyeTSgaM
+         yJVYGZjGOalRaRYOSodWKtMbH/FOdA2aozaJp/VQbplAQe1L9q6/cDKo2m+4FExIAE+6
+         BuOQ==
+X-Gm-Message-State: AOAM531uyv3HZrOfBSQ5aoK5LYSEss792eJpJISmq8FRUi83O8L6msQR
+        NHg2ujjS249ornxTPEvHKwiTMmJ2xV8dpyjNKPWGFw==
+X-Google-Smtp-Source: ABdhPJzpThlPYBYmjbj75PgXV76QN3HOlHcq6JbnftNLq7+6HWjg+EJisZsywxEQ5wQs0Dn47n7F1bJh1xikj8I2bZ4=
+X-Received: by 2002:a05:6602:224a:: with SMTP id o10mr5387683ioo.90.1591302452004;
+ Thu, 04 Jun 2020 13:27:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601192124.172650-1-lkundrak@v3.sk>
+References: <20200601175139.22097-1-mathieu.poirier@linaro.org> <0780724c-4fc0-9f98-023e-aa1245b01888@st.com>
+In-Reply-To: <0780724c-4fc0-9f98-023e-aa1245b01888@st.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Thu, 4 Jun 2020 14:27:21 -0600
+Message-ID: <CANLsYkwsBSaVJCi7xDXC6E+E_UzwKmZqDtzZUWTDusuQKjKiQA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/9] remoteproc: Add support for attaching with rproc
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "ohad@wizery.com" <ohad@wizery.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        "s-anna@ti.com" <s-anna@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc += Sakari. I'm wondering if you'd mind looking at this mmp ccic patch
-too.
+On Thu, 4 Jun 2020 at 08:24, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>
+> Hi Mathieu,
+>
+> On 6/1/20 7:51 PM, Mathieu Poirier wrote:
+> > This fourth iteration implements a solution that is fairly different from
+> > what was proposed in V3 and earlier versions.  Three aspects have been
+> > revisited:
+> >
+> > 1) Only the scenario where the remoteproc core is attaching to the remote
+> >    processor is implemented.  Other scenarios where actions need to be
+> >    taken when the remote processor is stopped or crashes will be
+> >    considered in subsequent versions.
+> >
+> > 2) The introduction of a new RPROC_DETACHED state to be set by platform
+> >    drivers when needing to attach to an already running remote processor.
+> >
+> > 3) New functions are introduced to replicate the functionality provided by
+> >    rproc_fw_boot() and rproc_start(), minus operations related to firmware
+> >    management.
+> >
+> > Enhancement to the documentation has been left out intentionally until it
+> > is agreed to move forward with this implementation.
+>
+> Look good to me, i have only a minor concerns about the code duplication
+> introduced by the point 3)
+>
 
-Thank you
-Lubo
+This is an idea Bjorn and I have decided to try in the hope of making
+the state machine, and the feature as a whole, easier to understand.
+It might be one of those rare cases where more code is better.
 
-On Mon, Jun 01, 2020 at 09:21:24PM +0200, Lubomir Rintel wrote:
-> On MMP3, the camera block lives on na separate power island. We want to
-> turn it off if the CCIC is not in use to conserve power.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  drivers/media/platform/marvell-ccic/mcam-core.c  |  3 +++
->  drivers/media/platform/marvell-ccic/mmp-driver.c | 12 ++++++++----
->  2 files changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-> index 09775b6624c6b..c2cd1d461bd06 100644
-> --- a/drivers/media/platform/marvell-ccic/mcam-core.c
-> +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-> @@ -24,6 +24,7 @@
->  #include <linux/clk.h>
->  #include <linux/clk-provider.h>
->  #include <linux/videodev2.h>
-> +#include <linux/pm_runtime.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-ioctl.h>
->  #include <media/v4l2-ctrls.h>
-> @@ -901,6 +902,7 @@ static void mcam_clk_enable(struct mcam_camera *mcam)
->  {
->  	unsigned int i;
->  
-> +	pm_runtime_get_sync(mcam->dev);
->  	for (i = 0; i < NR_MCAM_CLK; i++) {
->  		if (!IS_ERR(mcam->clk[i]))
->  			clk_prepare_enable(mcam->clk[i]);
-> @@ -915,6 +917,7 @@ static void mcam_clk_disable(struct mcam_camera *mcam)
->  		if (!IS_ERR(mcam->clk[i]))
->  			clk_disable_unprepare(mcam->clk[i]);
->  	}
-> +	pm_runtime_put(mcam->dev);
->  }
->  
->  /* ---------------------------------------------------------------------- */
-> diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
-> index 92b92255dac66..eec482d16805b 100644
-> --- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-> +++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-> @@ -24,6 +24,7 @@
->  #include <linux/list.h>
->  #include <linux/pm.h>
->  #include <linux/clk.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include "mcam-core.h"
->  
-> @@ -313,10 +314,12 @@ static int mmpcam_probe(struct platform_device *pdev)
->  	cam->irq = res->start;
->  	ret = devm_request_irq(&pdev->dev, cam->irq, mmpcam_irq, IRQF_SHARED,
->  					"mmp-camera", mcam);
-> -	if (ret == 0) {
-> -		mmpcam_add_device(cam);
-> -		return 0;
-> -	}
-> +	if (ret)
-> +		goto out;
-> +
-> +	mmpcam_add_device(cam);
-> +	pm_runtime_enable(&pdev->dev);
-> +	return 0;
->  
->  out:
->  	fwnode_handle_put(mcam->asd.match.fwnode);
-> @@ -332,6 +335,7 @@ static int mmpcam_remove(struct mmp_camera *cam)
->  
->  	mmpcam_remove_device(cam);
->  	mccic_shutdown(mcam);
-> +	pm_runtime_force_suspend(mcam->dev);
->  	return 0;
->  }
->  
-> -- 
-> 2.26.2
-> 
+> If you are agree with that, I plan to do a new review on the stm32 series
+> when you will start the documentation :-)
+
+A wise decision...
+
+Thanks for taking the time to look at this,
+Mathieu
+
+>
+> Regards,
+> Arnaud
+>
+> >
+> > Applies cleanly on rproc-next(7dcef3988eed) and will be rebased on v5.8-rc1
+> > when it comes out in two weeks.
+> >
+> > Thanks,
+> > Mathieu
+> >
+> > Mathieu Poirier (9):
+> >   remoteproc: Add new RPROC_DETACHED state
+> >   remoteproc: Add new attach() remoteproc operation
+> >   remoteproc: Introducing function rproc_attach()
+> >   remoteproc: Introducing function rproc_actuate()
+> >   remoteproc: Introducing function rproc_validate()
+> >   remoteproc: Refactor function rproc_boot()
+> >   remoteproc: Refactor function rproc_trigger_auto_boot()
+> >   remoteproc: Refactor function rproc_free_vring()
+> >   remoteproc: Properly handle firmware name when attaching
+> >
+> >  drivers/remoteproc/remoteproc_core.c     | 226 +++++++++++++++++++++--
+> >  drivers/remoteproc/remoteproc_internal.h |   8 +
+> >  drivers/remoteproc/remoteproc_sysfs.c    |  17 +-
+> >  include/linux/remoteproc.h               |   9 +-
+> >  4 files changed, 243 insertions(+), 17 deletions(-)
+> >
