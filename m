@@ -2,118 +2,115 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ED7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D697A206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D782207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O25wYAeO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+Q49A8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbgFDR7Z (ORCPT
+        id S1730418AbgFDSAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57798 "EHLO
+        Thu, 4 Jun 2020 14:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbgFDR7Y (ORCPT
+        with ESMTP id S1730291AbgFDSAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:59:24 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E120C08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:59:24 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a127so3583209pfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:59:24 -0700 (PDT)
+        Thu, 4 Jun 2020 14:00:10 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D479DC08C5C0;
+        Thu,  4 Jun 2020 11:00:09 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so8481854ljn.4;
+        Thu, 04 Jun 2020 11:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qJ1KmR7n31K99rmmaGKTiex9LAFKCkmBxAmhTYhJxo=;
-        b=O25wYAeOqYLKutlDyi60xIlbTuDdCOT5e2XYNOsNGhC4B+NaMg3VxpH/LIFlYcKegJ
-         T2d7Nsibm7xBSN7jaERDrF77NKlRLBhUJZhYCNyaOF8giEp3RryXOHyVxA+KlQtlUkqU
-         MR3J/581kbOBBRQlO36Kq+wpxgAQjeV+sg00s=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K5hXBosjT34N5pe55Zo3AXrhYRYyL0wmamJerePymfg=;
+        b=f+Q49A8u/sllE4uZIds5hGyaYD7tV1apOkk8or3iXPkoHjuO+YfBSyFwGx2yDzqpJq
+         XNNCW9ca4PReoItNsgn6QIy9wIEkFUsVm9AzYPQoY+ZXzNMfTVuIuFf90o1cQhDcBfWb
+         L2imJNgj3grrLu058wPejRniR5nQakEPnPlyFZhSOH3z15LmIEZXB8lAaNVA9HTrq+B/
+         iIw7RTnTNMo/rif2AwylBWLdDvKe4liqeVymF/TGycUrmw4k0MC0FujfF/ZTstWC8xm+
+         KFQkYAm7tzKoT/IGh30N9G51Nt9XwR5+MLOYavrBc77+v9cwXyE5Rmb6d3p4zanX51G1
+         HLAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=2qJ1KmR7n31K99rmmaGKTiex9LAFKCkmBxAmhTYhJxo=;
-        b=hCv2Sp0Ku9jLIfBEd/I76eKz3WEpW/SqcO1vCBTaERRVOpMS9364+KgtTBuDs/+60J
-         GK2uW+uUXgkj1drh0x++DpoZRIMkbugYAI6Be8eXvi8PCQ+qJQ9HqfiZEA2fLNCwUzy6
-         Do2l7z8ASjKaLRvNe2edgCGIG32Mh/4f2GDgWJh0Q0yRKTYacz4iyNRGb9layhOI6Tja
-         VuYkVyEZtqV+eneWscUkPMlzq+G4ue9xA9lXXR7D7MrHKy1wk0Wq8hIc/PZkB6U4uo4G
-         opd4DbajVaDAnlNIka/tx/llSnRHStaQlDPndvKRDRAI/d6804Ekqu7oH0NruJNakS8j
-         zKNQ==
-X-Gm-Message-State: AOAM5309rlpYweGdZzgfkOZOXT2420RsNVU4kgQEc49xpMMHtunxJevu
-        o06fpAYPFoujxu8MekGmc4+VRw==
-X-Google-Smtp-Source: ABdhPJy8aqjpj6isz3vL3kGOUE53Wgd2Jl+2f1JtJGfWBzh0MNQ1ovSw5R16ThJEKXvXpFgxlTMkiA==
-X-Received: by 2002:a63:454c:: with SMTP id u12mr5625732pgk.153.1591293563926;
-        Thu, 04 Jun 2020 10:59:23 -0700 (PDT)
-Received: from evgreen-glaptop.cheshire.ch ([2601:646:c780:1404:1c5a:73fa:6d5a:5a3c])
-        by smtp.gmail.com with ESMTPSA id q13sm2568927pfk.8.2020.06.04.10.59.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 04 Jun 2020 10:59:23 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     kuabhs@google.com.org, sujitka@chromium.org,
-        Evan Green <evgreen@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Govind Singh <govinds@qti.qualcomm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michal Kazior <michal.kazior@tieto.com>,
-        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] ath10k: Acquire tx_lock in tx error paths
-Date:   Thu,  4 Jun 2020 10:59:11 -0700
-Message-Id: <20200604105901.1.I5b8b0c7ee0d3e51a73248975a9da61401b8f3900@changeid>
-X-Mailer: git-send-email 2.24.1
+        bh=K5hXBosjT34N5pe55Zo3AXrhYRYyL0wmamJerePymfg=;
+        b=LHrVkp8cjo9zbBCdOU/+l7kEVMbl4AWXnTd9zQmuRcOiw5MmMPrdqS5afF3niqqjuf
+         w2A72E2tpsagaXg8nkO8aY6bbGSTffEndaiJmRwFuZ+Q22ND9wh6vClo6Kgiwhv9F34f
+         4Pgmt+W2f6qC4wzrzXMr1rV4CtDBclwzi8DhMd1/OBwiRbqxxrQmJTR8RL9c0hOlLdrq
+         8gugiCkoaSo8FhfoB7zrAGcr31QM0VX9n6ZneVcLz0ZU75OC4JMrDmexDC7uaoSmB83Z
+         F9qndfYEkr+aUFpaWbb17L6IzEMcCWf5Ubp0Li/I58yY3mcT/riJZurU/u29yst8jFut
+         SQKQ==
+X-Gm-Message-State: AOAM533GR4bhDkFj5b8mvn7GhElfq6UUorWH030woNSIfKDaSauTReG3
+        /HqR7fra/cZ3M5wO8tEoQuw=
+X-Google-Smtp-Source: ABdhPJxWOe8bCnc/Ps106uS9rKC3UVwmEAlt4lo1901TQelBb1AJxkeq4n5R/lp6ng69HGddbRaQ+g==
+X-Received: by 2002:a2e:b0ce:: with SMTP id g14mr2716505ljl.49.1591293608363;
+        Thu, 04 Jun 2020 11:00:08 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
+        by smtp.googlemail.com with ESMTPSA id f10sm77210lfm.34.2020.06.04.11.00.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 11:00:07 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: tegra: Use noirq suspend/resume callbacks
+To:     Vidya Sagar <vidyas@nvidia.com>, linus.walleij@linaro.org,
+        treding@nvidia.com, jonathanh@nvidia.com, skomatineni@nvidia.com
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20200604174935.26560-1-vidyas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <70a740d5-05b2-b8a6-fea6-da192f9411f3@gmail.com>
+Date:   Thu, 4 Jun 2020 21:00:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200604174935.26560-1-vidyas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ath10k_htt_tx_free_msdu_id() has a lockdep assertion that htt->tx_lock
-is held. Acquire the lock in a couple of error paths when calling that
-function to ensure this condition is met.
+04.06.2020 20:49, Vidya Sagar пишет:
+> Use noirq suspend/resume callbacks as other drivers which implement
+> noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
+> configure the signals used by their respective devices in the noirq phase.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> index 21661f6490d6..195cfe557511 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -731,8 +731,8 @@ static int tegra_pinctrl_resume(struct device *dev)
+>  }
+>  
+>  const struct dev_pm_ops tegra_pinctrl_pm = {
+> -	.suspend = &tegra_pinctrl_suspend,
+> -	.resume = &tegra_pinctrl_resume
+> +	.suspend_noirq = &tegra_pinctrl_suspend,
+> +	.resume_noirq = &tegra_pinctrl_resume
+>  };
+>  
+>  static bool tegra_pinctrl_gpio_node_has_range(struct tegra_pmx *pmx)
+> 
 
-Fixes: 6421969f248fd ("ath10k: refactor tx pending management")
-Fixes: e62ee5c381c59 ("ath10k: Add support for htt_data_tx_desc_64
-descriptor")
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+That's a good catch! Perhaps I2C on later Tegra SoCs also should suffer
+similarly to the PCIe.
 
- drivers/net/wireless/ath/ath10k/htt_tx.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/htt_tx.c b/drivers/net/wireless/ath/ath10k/htt_tx.c
-index e9d12ea708b62..e8c00af2cce1d 100644
---- a/drivers/net/wireless/ath/ath10k/htt_tx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_tx.c
-@@ -1545,7 +1545,9 @@ static int ath10k_htt_tx_32(struct ath10k_htt *htt,
- err_unmap_msdu:
- 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
- err_free_msdu_id:
-+	spin_lock_bh(&htt->tx_lock);
- 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
-+	spin_unlock_bh(&htt->tx_lock);
- err:
- 	return res;
- }
-@@ -1752,7 +1754,9 @@ static int ath10k_htt_tx_64(struct ath10k_htt *htt,
- err_unmap_msdu:
- 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
- err_free_msdu_id:
-+	spin_lock_bh(&htt->tx_lock);
- 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
-+	spin_unlock_bh(&htt->tx_lock);
- err:
- 	return res;
- }
--- 
-2.24.1
-
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
