@@ -2,113 +2,113 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD57C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9148AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 584B3206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8B220870
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WmLl8KBQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eqp6HF10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728938AbgFDSuq (ORCPT
+        id S1728981AbgFDSwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:50:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59222 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728834AbgFDSuq (ORCPT
+        Thu, 4 Jun 2020 14:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728939AbgFDSwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:50:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591296644;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W6snlKjU8aRgZULuYnJpe7wNQI9bh2ev/bXaAzVSEvQ=;
-        b=WmLl8KBQrOUEGCtp9YoGxmRFPdxgBNUh+NdrV+asBoOHDzqPKZqPR3GVYCyZoBJ11FbsJW
-        WI1eq9K3RFxYiMoxl0uITD4p6j2d6B3LM24Hhi8G/BE/hO06XSM0HWUzqFqd0c4V5H1B6Z
-        UgoqP4RLZ5z4hCdhuLhlMBFdIRHLmjI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-487-ZsUb3tMLPOW1wcDE74g3ZQ-1; Thu, 04 Jun 2020 14:50:42 -0400
-X-MC-Unique: ZsUb3tMLPOW1wcDE74g3ZQ-1
-Received: by mail-wr1-f71.google.com with SMTP id e1so2790097wrm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 11:50:42 -0700 (PDT)
+        Thu, 4 Jun 2020 14:52:03 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0962C08C5C0;
+        Thu,  4 Jun 2020 11:52:03 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id a21so6007957oic.8;
+        Thu, 04 Jun 2020 11:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7wZxQ2ZYTUXj6H4A/fAYu04YU+AVtihyuBKgDVRw7Dg=;
+        b=Eqp6HF106HdaJQCMM+MYN1Iag55bBz6XgbmJ4Rm+khvXbF3EW/YGZnt5wSvXmnOXV+
+         PTG0zUud87zStyGqsE6yQ4+OYSUEwySxI/JnIzd/UJSsLBfcrV8Ozp8HdrRXMuOL7hm6
+         cKAPs5iOW6Ou+IALHz+4AjrXFUjZLxqF5a77thdclvBo5CEipnfaHAA7/iHa8hXVdSRB
+         HVCgTkhFbk5Sy4N16Lt8aPmsOu53xRuTM++U+gtRPPMAkMn95kECiKFKPweWrA+gYcCC
+         rD/QdTrM0c6/m1Pg7Nw9vxqQ9C4HqHTpGTDslhPq19VHW1Rn/QcmeGA+WUVoVuIbyLOc
+         Xx2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=W6snlKjU8aRgZULuYnJpe7wNQI9bh2ev/bXaAzVSEvQ=;
-        b=na/3f+vAfZA5ptgnRk3NUNzFxGEtukjfqizzGf/4lQbavwhFdcbSaQP05EdLxcGxQx
-         hVMCtIBLjewGxvee5rJRTxQWVR+3MSRzpeew+DLbWllGiIyiVizhZgavNJvrADLRMcKu
-         vM0XoTMHSHQAN8ZTvb3ZuPKAvfQpKee5vTy/WvEhwh7If6Vh6b1dyzt+xuDMEaUIh1G4
-         5P1cdKDo10Fut1gpP47hwXqS9j0AedtUMe5Wzt4n7WbLSpwziBfLj7bAhBsc33Iw7N7G
-         RYc9KmnrIS5C4fam5ugnxl2T1D83FV4P7zxuh+2owzZsWmrr2Izk86YksgZyzh+SmDCM
-         eMGw==
-X-Gm-Message-State: AOAM530EipDAu5KDDgvdgidCn887mkBR83f0KhieDRCvoDhziWjOflle
-        l4Sl/M+s9RK509uiEhFjQ9ScMZ3TyBo2rOsFDKN89TUGEI+CJO4yWxDlq0Ln4u/qwSzNdoLS1u2
-        fn5RtDBziMFDOjcN4ZZi1a4nX
-X-Received: by 2002:a1c:b656:: with SMTP id g83mr5563947wmf.151.1591296641702;
-        Thu, 04 Jun 2020 11:50:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyFWuENQHpNppZbCtXmj/W7gbwDx2OeFjgcac3birrs4llztufXXrEhiTnzIxGTS74oUPNMZw==
-X-Received: by 2002:a1c:b656:: with SMTP id g83mr5563911wmf.151.1591296641446;
-        Thu, 04 Jun 2020 11:50:41 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id d24sm8081830wmb.45.2020.06.04.11.50.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 11:50:40 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 14:50:37 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
-Message-ID: <20200604145002-mutt-send-email-mst@kernel.org>
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-6-jasowang@redhat.com>
- <20200602010809-mutt-send-email-mst@kernel.org>
- <e722bb62-2a72-779a-f542-1096e8f609b8@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7wZxQ2ZYTUXj6H4A/fAYu04YU+AVtihyuBKgDVRw7Dg=;
+        b=DaWyPJTckb7qy1hZHUy/VBS5X2nfUd5jzLsZ3RigWGNsXnVBbdc74iGr8PqwaMwnhy
+         Wn6WPdUlm+e9y8Jr52hkGa2lyNvE4nUkVya18dRlBjbeVGavyqTuzvC+7UPsdYca0c1a
+         Q5xhoda6Fh+YocHawJHAMlR9gm99Qe/XuYwdvkp7bdCC0MS5Ybrtzbi7cC1CajKkTQJp
+         5x2lXjL+aMZEuwEp/Idmj24AGKrCV/Mt3lZmQ0P8LQegrMTt6O/s45azJ1Iv3fCtH/oW
+         E+puIyFbXm4gFaIIyMTmF60m2VN9Nr2z62tTwjzDXmFXNru7TQbcphEBBVFHKYATfFAu
+         HpQg==
+X-Gm-Message-State: AOAM531S2jLRZ+hPJrpjf058UMiqTdP6AVJGGAujwZVqsVoBf2jnJ4VB
+        RYaMQKONjGt3VSdOllFel27y78y4NiUzNPWE0EHMT9sY
+X-Google-Smtp-Source: ABdhPJxn3lSKV7CojeVjAyCPOlId/gXxk16z216+OIfdv+TZra7z0yINDq7DlAdQ8TogaDU/9ZC5XOvBb3vs4jP5I5M=
+X-Received: by 2002:aca:a948:: with SMTP id s69mr4146936oie.140.1591296723348;
+ Thu, 04 Jun 2020 11:52:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e722bb62-2a72-779a-f542-1096e8f609b8@redhat.com>
+References: <20200326200634.222009-1-dancol@google.com> <20200401213903.182112-1-dancol@google.com>
+ <alpine.LRH.2.21.2006041354381.1812@namei.org>
+In-Reply-To: <alpine.LRH.2.21.2006041354381.1812@namei.org>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 4 Jun 2020 14:51:52 -0400
+Message-ID: <CAEjxPJ4GvTXQY_BzLugnrXrPnehqwnmqxn21mjVDhpk4kYV3Aw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] SELinux support for anonymous inodes and UFFD
+To:     James Morris <jmorris@namei.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Tim Murray <timmurray@google.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Paul Moore <paul@paul-moore.com>,
+        Nick Kralevich <nnk@google.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 03:12:27PM +0800, Jason Wang wrote:
-> 
-> On 2020/6/2 下午1:09, Michael S. Tsirkin wrote:
-> > On Fri, May 29, 2020 at 04:03:02PM +0800, Jason Wang wrote:
-> > > Note that since virtio specification does not support get/restore
-> > > virtqueue state. So we can not use this driver for VM. This can be
-> > > addressed by extending the virtio specification.
-> > Looks like exactly the kind of hardware limitation VDPA is supposed to
-> > paper over within guest. So I suggest we use this as
-> > a litmus test, and find ways for VDPA to handle this without
-> > spec changes.
-> 
-> 
-> Yes, and just to confirm, do you think it's beneficial to extend virtio
-> specification to support state get/set?
-> 
-> Thanks
+On Wed, Jun 3, 2020 at 11:59 PM James Morris <jmorris@namei.org> wrote:
+>
+> On Wed, 1 Apr 2020, Daniel Colascione wrote:
+>
+> > Daniel Colascione (3):
+> >   Add a new LSM-supporting anonymous inode interface
+> >   Teach SELinux about anonymous inodes
+> >   Wire UFFD up to SELinux
+> >
+> >  fs/anon_inodes.c                    | 191 ++++++++++++++++++++++------
+> >  fs/userfaultfd.c                    |  30 ++++-
+> >  include/linux/anon_inodes.h         |  13 ++
+> >  include/linux/lsm_hooks.h           |  11 ++
+> >  include/linux/security.h            |   3 +
+> >  security/security.c                 |   9 ++
+> >  security/selinux/hooks.c            |  53 ++++++++
+> >  security/selinux/include/classmap.h |   2 +
+> >  8 files changed, 267 insertions(+), 45 deletions(-)
+>
+> Applied to
+> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git secure_uffd_v5.9
+> and next-testing.
+>
+> This will provide test coverage in linux-next, as we aim to get this
+> upstream for v5.9.
+>
+> I had to make some minor fixups, please review.
 
-Let's leave that for another day. For now vdpa should be flexible enough
-to work on spec compliant VMs.
-
-> 
-> > 
-
+LGTM and my userfaultfd test case worked.
