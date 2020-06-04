@@ -2,94 +2,107 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB930207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591284009;
-	bh=w2uxMGuh2+1k7LPoRuxUyCewdA+D0PptbvSog58dJiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bMpGgprSH6P24M4feZGEsFV6x0a1N3+3TmQ/t2DC4E79EXzAaLjymKLkWyOm0JnDH
-	 rne4uWD5SS3LQRzSO1flyy+JyjrNOepz0NnhEAccObk06Y+od8H0C93Z2eQEDNHP96
-	 UtG9Jr5eU6fgjyW47Byn51m0lGimILV4HMoxCAWM=
+	by mail.kernel.org (Postfix) with ESMTP id 0BD42206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gpos+plQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgFDPUI (ORCPT
+        id S1729403AbgFDPUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbgFDPUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:20:07 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D40D8206E6;
-        Thu,  4 Jun 2020 15:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591284007;
-        bh=w2uxMGuh2+1k7LPoRuxUyCewdA+D0PptbvSog58dJiE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W+f0x/FEf8ckxVQEj4c9o8Sbp2+VQ4FAQSK+8OHNGhIInSIYdLal8pWCCNaPj+G6V
-         4HfPBpL4h6mXmSMBnKRvcLZHWbD2kv+SvkhdQIXzZwlnHNpXCMrpJCg9WvsZda25/U
-         mnPnjW+sbeRpfeHXwCs/6+Pl17xFrsbh45/X29Js=
-Date:   Thu, 4 Jun 2020 16:20:02 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/arm-smmu: Mark qcom_smmu_client_of_match as
- possibly unused
-Message-ID: <20200604152002.GC3650@willie-the-truck>
-References: <20200603211507.27756-1-jcrouse@codeaurora.org>
+        Thu, 4 Jun 2020 11:20:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729352AbgFDPUW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 11:20:22 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE72AC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:20:22 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y11so2286465plt.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=L5y9b1v4A4lBO5NWvkoBLQUmHew2ukXmcq/ClJT1w1w=;
+        b=gpos+plQKfEIX7tzDBt/sI1M4cJ64HGjlcagV8I9ZM5vteH+aKUEUFO+edPS0/ec+W
+         n5texbDTEFIsJZXY49B4p050y09qfwf2Tr4C+tZV/0UnDjeFumyzyatU66CMmkp++5ED
+         4cdCY2TLNCYSpQvvfik1nroAPCGadhKstu8xo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=L5y9b1v4A4lBO5NWvkoBLQUmHew2ukXmcq/ClJT1w1w=;
+        b=nBQFHsJi+zMG+jysJS6e9RZGE4uJyQisHRDfhmCNI1QngEcU8zO0hsES4853tGHMVv
+         HqB4BZwlz4fcDJqJmlu8gD4GmCXwjyWFXBcjezZpXr8hQ4GfCAahzCowKunwiWFJkhF4
+         d54CclMigVZkfD1FdQuM6EXq2tc0sf2MY+B8wiWhH5krV+CMblPmrl4nz5YogCtrtN4y
+         fUXf6f/J1PQ9x6fqdEVAo/ZS01l3lCRqM/5CJWoAk/4XOtH3eOrsjTPZHuwAgYMr3RbX
+         xzLiUiHpoD18dwDYS8JwvwRmRoaEBFjdcLiUjPGzqerK1jmtbXr1yxofP+GjdfCAY/FD
+         VmDQ==
+X-Gm-Message-State: AOAM5307zG/BYj36MyYOBxuzaqGvicuBpXMYYcgc1L3ZYNq834D8xEHr
+        eP52BOd8xURMN/OetH2odVEQMKzkC1SRsarCtsTTXqRqj1G3QKcAMZ5v+wODhLGG2s6jYN0tbXx
+        1E48iupMHhZvMLFH51BG8BReRpsNkvTOERoWkNQ02vrzdfR3IIIOJY/gTDzbvbqXiu53Dt3PWpJ
+        t0htc=
+X-Google-Smtp-Source: ABdhPJw9p8K0tPRXYb3Jjq/wmj3jBKcwtKglo8mpz4juTMEILBuyPkPUJXY3hMAlX2cld8lf4d2muw==
+X-Received: by 2002:a17:90a:4ecb:: with SMTP id v11mr6588792pjl.75.1591284021628;
+        Thu, 04 Jun 2020 08:20:21 -0700 (PDT)
+Received: from [10.230.185.151] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u7sm5095551pfu.162.2020.06.04.08.20.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 08:20:20 -0700 (PDT)
+Subject: Re: [PATCH 1/1] nvme-fcloop: verify wwnn and wwpn format
+To:     Dongli Zhang <dongli.zhang@oracle.com>,
+        linux-nvme@lists.infradead.org
+Cc:     hch@lst.de, sagi@grimberg.me, chaitanya.kulkarni@wdc.com,
+        linux-kernel@vger.kernel.org
+References: <20200526042118.17836-1-dongli.zhang@oracle.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <60df6752-3512-f7a9-b0df-1096b93b8eda@broadcom.com>
+Date:   Thu, 4 Jun 2020 08:20:18 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603211507.27756-1-jcrouse@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200526042118.17836-1-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 03:15:07PM -0600, Jordan Crouse wrote:
-> When CONFIG_OF=n of_match_device() gets pre-processed out of existence
-> leaving qcom-smmu_client_of_match unused. Mark it as possibly unused to
-> keep the compiler from warning in that case.
-> 
-> Fixes: 0e764a01015d ("iommu/arm-smmu: Allow client devices to select direct mapping")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+On 5/25/2020 9:21 PM, Dongli Zhang wrote:
+> The nvme host and target verify the wwnn and wwpn format via
+> nvme_fc_parse_traddr(). For instance, it is required that the length of
+> wwnn to be either 21 ("nn-0x") or 19 (nn-).
+>
+> Add this verification to nvme-fcloop so that the input should always be in
+> hex and the length of input should always be 18.
+>
+> Otherwise, the user may use e.g. 0x2 to create fcloop local port, while
+> 0x0000000000000002 is required for nvme host and target. This makes the
+> requirement of format confusing.
+>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 > ---
-> 
->  drivers/iommu/arm-smmu-qcom.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> index cf01d0215a39..063b4388b0ff 100644
-> --- a/drivers/iommu/arm-smmu-qcom.c
-> +++ b/drivers/iommu/arm-smmu-qcom.c
-> @@ -12,7 +12,7 @@ struct qcom_smmu {
->  	struct arm_smmu_device smmu;
->  };
->  
-> -static const struct of_device_id qcom_smmu_client_of_match[] = {
-> +static const struct __maybe_unused of_device_id qcom_smmu_client_of_match[] = {
+>   drivers/nvme/target/fcloop.c | 29 +++++++++++++++++++++++------
+>   1 file changed, 23 insertions(+), 6 deletions(-)
+>
+>
 
-Yikes, I've never seen that between the 'struct' and the struct name before!
-I'd be inclined to stick it at the end, right before the '='.
+Reviewed-by: James Smart <james.smart@broadcom.com>
 
-With that:
+Looks good. Sorry for the delay.
 
-Acked-by: Will Deacon <will@kernel.org>
+-- james
 
-Will
+
