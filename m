@@ -2,125 +2,122 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7785DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54EA6206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5F3206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ci3Ljv/v"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DtYdwjkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgFDLIr (ORCPT
+        id S1726644AbgFDLJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
+        Thu, 4 Jun 2020 07:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFDLIr (ORCPT
+        with ESMTP id S1725997AbgFDLJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:08:47 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391CDC03E96D;
-        Thu,  4 Jun 2020 04:08:47 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49d31R2lbyz9sSn;
-        Thu,  4 Jun 2020 21:08:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591268923;
-        bh=K79lzCubQbJZW5qR1JuzI86y9iQNVkA+csPsrM3RczE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ci3Ljv/vAVYlVHoTIky+EPiWBoZ/qP/g7N6KWHXOVSJJTjcC367wU1iWmHfBhSt3Y
-         uSmR+cwhT60XEuJd1Oso1sSxwygbnWOHScELhmohpX34l26G6URw0az8cikf9rv/vS
-         hfRmBO3M6+D5cTfGIkxcdMG3GG4u6VJ882GiNf9Q4mEOJ4KI6s1Enk2OrTzmghMxDG
-         FyiROSiQRdJxJXIhccK6btWQBE1aNHSVMjVifHXDpg42+bkmr2OLu+tDpHxzhoICMz
-         Q++MeLQ5hsdCHlUwNsL8eUOpPNHvp1Af26iZauzfRSHp6RqKlewl7w25DMmT1ZaCdE
-         J24kqt/6xD4fg==
-Date:   Thu, 4 Jun 2020 21:08:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: linux-next: fix ups for clashes between akpm and powerpc trees
-Message-ID: <20200604210842.6e128144@canb.auug.org.au>
-In-Reply-To: <20200604174925.3610fdd1@canb.auug.org.au>
-References: <20200603202655.0ad0eacc@canb.auug.org.au>
-        <20200604165246.436f02ba@canb.auug.org.au>
-        <20200604174925.3610fdd1@canb.auug.org.au>
+        Thu, 4 Jun 2020 07:09:48 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD83C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 04:09:47 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l27so5649488ejc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 04:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=8Nq0dyaB6V8gFTM/YIgSsevuRr16ab+DDL+OOpCw0+M=;
+        b=DtYdwjkfZDm/pkt5YmTNSHJ9A4B6WzK/4f/uiufgOby6UBjgBvDnu6Ws+LL2sjfFN8
+         +k2ALeYbQ/wjL2qq0DZzmSjDUVdXHzS8IZTAJmvLNW41tNvLt7rpKOJsMmewM63GET6T
+         sJAzUQG0NBEPxWrkewksInmBZe/To4YReryGM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=8Nq0dyaB6V8gFTM/YIgSsevuRr16ab+DDL+OOpCw0+M=;
+        b=gRJ1PsVBau2x+OUjUqWigOfwos5xLdmjuA1SpGtNozDnAcSgrYFNrACyg6Y7AldYeu
+         9qMa1U9ZTaOwC0Su/3Ok2GUBmgiLihWf3td1e08wqyb5r8KVorMIv8WjY1iNkKHhIu+6
+         wx8ez1JuzGnNW7JXlnwisArgPl2O7RyhWM87k+KztaEUYTt8RZ1Ka5IiRFcO1F4nRrY2
+         HcZ9e4QL+hXE9lDPc2KOVOQXyCMPwdTcWWRp8EsnrSwXBcOYFCEouZ0ebXy54chT2dOw
+         y8hditcYt6cDBssEBMaPlOfyyfsSAdKCZIKgVJRamYC1S7InfQRaxPrh8nTeXK4if83q
+         nDdA==
+X-Gm-Message-State: AOAM531JN8n8hNxMFSVPxA4izTMZKlT90gdilcdF0cP8M9xEBi6O0MAb
+        Si82GDABK2liEyDkogesDjZGRqoNDMqn4PkFnuOzKw==
+X-Google-Smtp-Source: ABdhPJxWOzqXodtiDr7HB6vWbsh1MH6JiswGUHe7BXvqDqw/2/sI3UN28tMnHUBfoAkzlU8seWlC3OgsrQlzhpsJod8=
+X-Received: by 2002:a17:907:40bf:: with SMTP id nu23mr3339170ejb.74.1591268986462;
+ Thu, 04 Jun 2020 04:09:46 -0700 (PDT)
+From:   Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
+ <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com> 08525d33fafb0a10c427838621fb571f@mail.gmail.com
+In-Reply-To: 08525d33fafb0a10c427838621fb571f@mail.gmail.com
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dXXN7Tr4ujmem3SXFI1Rdp1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJb9Wzm0098wwdcUnfhuPbO5i84ZwGnJavmp64zHeCAAWdaIA==
+Date:   Thu, 4 Jun 2020 16:39:43 +0530
+Message-ID: <4779a72c878774e4e3525aae8932feda@mail.gmail.com>
+Subject: RE: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by JBOD
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Xiaoming Gao <newtongao@tencent.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>
+Cc:     xiakaixu1987@gmail.com, jejb@linux.ibm.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dXXN7Tr4ujmem3SXFI1Rdp1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Thu, 4 Jun 2020 17:49:25 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+>Subject: RE: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung
+caused by JBOD
 >
-> diff --cc arch/powerpc/include/asm/nohash/32/pgtable.h
-> index 639f3b3713ec,eb8538c85077..1927e1b653f2
-> --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-> +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-> @@@ -204,13 -205,6 +205,9 @@@ static inline void pmd_clear(pmd_t *pmd
->   	*pmdp =3D __pmd(0);
->   }
->  =20
-> -=20
-> - /* to find an entry in a kernel page-table-directory */
-> - #define pgd_offset_k(address) pgd_offset(&init_mm, address)
-> -=20
->  +/* to find an entry in a page-table-directory */
->  +#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
->  +#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
->  =20
->   /*
->    * PTE updates. This function is called whenever an existing
-> @@@ -240,7 -234,7 +237,7 @@@ static inline pte_basic_t pte_update(st
->   	pte_basic_t old =3D pte_val(*p);
->   	pte_basic_t new =3D (old & ~(pte_basic_t)clr) | set;
->   	int num, i;
-> --	pmd_t *pmd =3D pmd_offset(pud_offset(pgd_offset(mm, addr), addr), addr=
-);
-> ++	pmd_t *pmd =3D pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, addr), =
-addr), addr), addr);
->  =20
->   	if (!huge)
->   		num =3D PAGE_SIZE / SZ_4K;
+>>Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung
+>>caused by JBOD
+>>
+>>
+>>> when kernel crash, and kexec into kdump kernel, megaraid_sas will
+>>> hung and print follow error logs
+>>>
+>>> 24.1485901 sd 0:0:G:0: [sda 1 tag809 BRCfl Debug mfi stat 0x2(1, data
+>>> len requested/conpleted 0X100 0/0x0)]
+>>> 24.1867171 sd 0:0:G :9: [sda I tag861 BRCfl Debug mfft stat 0x2d,
+>>> data len reques ted/conp1e Led 0X100 0/0x0]
+>>> 24.2054191 sd 0:O:6:O: [sda 1 tag861 FAILED Result: hustbyte=DIDGK
+>>> drioerbyte-DRIUCR SENSE]
+>>> 24.2549711 bik_update_ request ! 1/0 error , dev sda, sector
+>>> 937782912 op 0x0:(READ) flags 0x0 phys_seg 1 prio class
+>>> 21.2752791 buffer_io_error 2 callbacks suppressed
+>>> 21.2752731 Duffer IO error an dev sda, logical block 117212064, async
+>>> page read
+>>>
+>>> this bug is caused by commit '59db5a931bbe73f ("scsi: megaraid_sas:
+>>> Handle sequence JBOD map failure at driver level ")' and can be fixed
+>>> by not set JOB when reset_devices on
+>>
+>>Broadcom: Please review.
+>>
+>>Thanks!
+>>
+>>--
+>>Martin K. Petersen	Oracle Linux Engineering
+>
+>We are working on it and will update you at the earliest.
+>
+>Thanks,
+>Chandrakanth Patil
 
-I have added those hunks (more or less) to linux-next for tomorrow as a
-fix for mm-consolidate-pgd_index-and-pgd_offset_k-definitions.
---=20
-Cheers,
-Stephen Rothwell
+Hi Martin, Xiaoming Gao, Kai Liu,
 
---Sig_/dXXN7Tr4ujmem3SXFI1Rdp1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+It is a known firmware issue and has been fixed. Please update to the
+latest firmware available in the Broadcom support website.
+Please let me know if you need any further information.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Y1joACgkQAVBC80lX
-0Gx3pgf+Mn7BRXOxObGN3++NOIeZTrVUPPh44KZI+DUFc8z3Ep+BwSjtw0cwpy2A
-MnGKmG8EoYj4mQQPYqb6yR9VTs0rbTc1WOcd0zWbCNx6TcSHFPuY4N9A//b6CL6o
-4jR0d2u+SBLAo0CvxQXy2wzieiDxcPIk+0cLzjMpOzawQ9PIyZda7ZU8mjrprKRy
-P8tpd7zVTlp0xX3lCxN48hKa7iZ+v/Y9J3ZPowM1L52qRWCWiLw1Y5E2/WuHUI8c
-mBTJIlbicbjpoAX/BnUMcfe10nlFqQX40e1wLDvaM7uUyuaWFc4BmNiYHht5dEls
-1JWABzQ+sOgZlogNRgLyb1yf51/vSg==
-=5ege
------END PGP SIGNATURE-----
-
---Sig_/dXXN7Tr4ujmem3SXFI1Rdp1--
+Thanks,
+Chandrakanth Patil
