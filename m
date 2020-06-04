@@ -2,333 +2,117 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6465C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51FD52067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF3C2067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:52:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FgBnJm9u"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Pht6nRqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgFDVvo (ORCPT
+        id S1728391AbgFDVwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 17:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgFDVvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:51:44 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D92CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 14:51:43 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s1so9253543ljo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=qMCzLUzDcVuGIj9gFT0hcdo9qNIj7PjrfTm3Vlb6UMY=;
-        b=FgBnJm9uS+BGwUupUVQzyE8qlTL0a/HqrdSBwEI46Z1VufXwwxodzBDAZLUHZfoLI8
-         O2ENVs6a1nVihwFWr5dPiMHpdm6xcU06vfwmpP996MdphitezjdmkWX11/0PQPUJj3s+
-         etAbjipCP1A/ETV4c6YNuaU1+Yjps+fKoBHidLWNbghNJQ62WNFcAUicTfiuehXFf5Xc
-         eCMzSq7rUoRBmHuguSNBKiZUiI+S2axIs8F+fJMjj5gkmdtZMJZooCG3CpRHXnhYrX/2
-         qBoqPUlkvC40hAafuAuTyIzFpHzYrmiSKKrK0kiuYY0E+WJ2/q8eBZpV0ERJ0YqwTryM
-         GwqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=qMCzLUzDcVuGIj9gFT0hcdo9qNIj7PjrfTm3Vlb6UMY=;
-        b=lSub5/6O5RnbtRDwsYdE0VxHY0gJF6zJV7ggGiTJF+SiQDDY3AyibKphzGaUYaGIEs
-         iGQpt/HRk6Im1D/SeKP0b45AfcFpST3tzU0H5z5MUiOO1Y6Eg+AP5P9YIN3Diyp1u4+a
-         ZU3NzShKJUPIfDpAm08vsSz6Tss63cbpCgGqWM7GSvokdZInbV1zASBLqHotpo10IL/u
-         INwEJllNCrKvjLJA7Xr/EbbL/I4bYfOksqkIOkdOSNYOYHNlKKVevJYDdcN6DQTZToNF
-         IOswKTlqz/SPRKXYZcbU9lFdaYvW6XzZ9fvk8tK2iRIrane1K6bi/UcxGUUL6vQEa/px
-         kQLg==
-X-Gm-Message-State: AOAM532QVU5wmRNC3qWxpx8U2shbmlJ51VCK9oGDpRwsjtXbvtJ92swI
-        TWpaq91K72hONy+CccSu38DmhRdJCAbtzzCdbtewYA==
-X-Google-Smtp-Source: ABdhPJy2lA5ZDywhiXOahlFaA/MacgOrpdkhDbUDI0QB514qyTWr6g+1PORt30ybzUiKfj8dKNaHG0K2LH/tTErUQq8=
-X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr2919870ljo.338.1591307501431;
- Thu, 04 Jun 2020 14:51:41 -0700 (PDT)
+        Thu, 4 Jun 2020 17:52:02 -0400
+Received: from mail-eopbgr1310111.outbound.protection.outlook.com ([40.107.131.111]:28416
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbgFDVwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 17:52:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HapSrbPbg5borr7AY8ru7e2ZZor1TN/kzuM5kRSpfIKvVpydTcmswpaPoJZ/XfcyEALVZ3HofXGtNSH1KLsUBoHw+jhbDiERw9R8oK+g91F+HMWqNKxFwUP4aKdP0VNePTdhTQCVgomymvv3kHAKEd1Hi5CqUKn+MM+E52MQmDtxNSMYM82E9eyEydH9LlrpTW/pbvFVd+djXxXxk3kBDAhRs7NUsjykSgdfpUi1PScyqGIGSykmYZ+ECZoc4M9YpW2qhLrzhYvhVt9GxLf8SAz3j88fSiWQ5ft0x6sdcftyLeHTF5TPkfZ33FbVMGqQVtDh5QZP00nP/leAfDcK1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RgbFpQSong9zMyNKrndw9f10bGkEuDGfhpKFkPfN2LU=;
+ b=cCvbuN43hRhzUWsmFL9Rjz5vgIAzWotZSkKS+FpXXQ0g1n3cC4keypjmKzbOUvEl86CR5Lnfr3fQAvr3YgsNsw6++U7HMlIR8yD/jTcL80x2FslseKF4B9Exr1S0WzWteJn1mfC5jFD5AfvoG4/DU151lFM942Dx9Sw0fdAjvpFSaLkrMoWsO5qxvzbumfN5V6FF3A7vK+pjGxj9v2FKUtremFnx+vtS3tfEx9ohuhxTRLxZqbRU+SnFfKvOYE+6Bbou8kQ96YzW6M+dsMsZzuTCJUIxmC92UPOvN+WPaBbu+08RF3beCsPTLJVddNh1vJEXXPGZrJzeJ8Vhp1MZIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RgbFpQSong9zMyNKrndw9f10bGkEuDGfhpKFkPfN2LU=;
+ b=Pht6nRqIFhTXEqv9lFgmMyM8FuHiK79bFYA9F8LENCHiseBGVa66Se49lv0ISl6V8VBloIBs1yg311kS+eAOVosjLeamiLZCjKEtJcZvpg2Utuq/TcloBKD+fw/as/WKWsWRqQ8RzR8N2S97ylW86VO9uEmnycVc8S5YCW/1I8s=
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b5::19)
+ by HK0P153MB0339.APCP153.PROD.OUTLOOK.COM (2603:1096:203:b6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.3; Thu, 4 Jun
+ 2020 21:51:35 +0000
+Received: from HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983]) by HK0P153MB0322.APCP153.PROD.OUTLOOK.COM
+ ([fe80::e567:3a32:6574:8983%7]) with mapi id 15.20.3088.011; Thu, 4 Jun 2020
+ 21:51:35 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "'efremov@linux.com'" <efremov@linux.com>,
+        'Dexuan-Linux Cui' <dexuan.linux@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>,
+        'Linux SCSI List' <linux-scsi@vger.kernel.org>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] scsi: storvsc: Use kzfree() in storvsc_suspend()
+Thread-Topic: [PATCH] scsi: storvsc: Use kzfree() in storvsc_suspend()
+Thread-Index: AQHWOrkjuNlCF70aE0iSK1Gft60RkajI/fMQgAAA/HA=
+Date:   Thu, 4 Jun 2020 21:51:34 +0000
+Message-ID: <HK0P153MB03226BD1374D6FF3B1D545A7BF890@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+References: <20200604130406.108940-1-efremov@linux.com>
+ <CAA42JLat6Ern5_mztmoBX9-ONtmz=gZE3YUphY+njTa+A=efVw@mail.gmail.com>
+ <696a6af8-744d-01b5-4a37-5320887e9108@linux.com>
+ <HK0P153MB03228498F6E0AD292909CC7BBF890@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <HK0P153MB03228498F6E0AD292909CC7BBF890@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-04T21:49:28Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3cfe004-f624-4e11-8802-ac1e1393a663;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: linux.com; dkim=none (message not signed)
+ header.d=none;linux.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [2601:600:a280:7f70:e404:4689:ed94:8298]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5e580886-5b1f-4db6-2302-08d808d17367
+x-ms-traffictypediagnostic: HK0P153MB0339:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HK0P153MB0339FDB519E16E8387E478EEBF890@HK0P153MB0339.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 04244E0DC5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lyk6fOqWnVsCS1ZQQg2/yE7PuQpXkWhvVR5/by5YZKsK2ceH5d+QotRjvngATeg0xZC83AGrLp79BrgBZ8pvgbqrzv32z1W+r5d71n9FASQ4f651z9qCQV7YUJc8gIHs4eVhyMQfnmRZb4mnUp8Q9vE7N5oFnYjABiTsSZE2B1R8Phz6fJUpCEwobV1zT6TemdVVS0ZnYuLx8adkGOOkJjh5Y4I171uWCshOcG3vBlpgr5PxVEluKGfKJOBJ3tOVoYEjBiAcjM/Ktq38zHwDAV4mTKgWshH7RAuHKkfeCXBJ7NmXE1zGTLgrcRCfGZkmmwru//4dlcW9nvNzuMeit5LgSJ/2E5N1RyvsSzM3S7e1IdIZpjZKCm91Wc/WgYHI
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0322.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(52536014)(4326008)(33656002)(54906003)(316002)(6506007)(2940100002)(8990500004)(66556008)(64756008)(66446008)(66476007)(86362001)(9686003)(55016002)(110136005)(8676002)(7696005)(5660300002)(4744005)(186003)(8936002)(10290500003)(82950400001)(82960400001)(6636002)(76116006)(66946007)(71200400001)(2906002)(478600001)(491001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: lWsgaIr/36cgFhkggmtD4e5p38WHvAsOHwLvrxD6G+MNroS33uJD2tUSIvcNeOAXOMtHcFYoynbWdjj2g+kcI0HN4P/I91JET3ZiCCNECqptxIF4msQliNZ/b8g5Uw/iFgOtbNxq491cNo0MELSTg1iF9XaH+GGX8/7uI7yy2A9O5PfnLw6POGu2buJky6AASXyr0keOyjfxoeZfD3jh7d+Mf4lIFb3C9P8MXidBthbUgddgtWJoAeVZiNR4DWhgJ0ghq+ijOVOZqCTJWXS6b9KtnyIKoZX+vNlbdK/W+IYNqtx+ReKA2/vAQd2mMvV+WtnB3a7v4Zo2Whd4vg1BpA94uxhzhrhoCW0D7HU0V4cCv2bGMvlTxofdcxuwWfhSWdwrJupfAf35DH/GzTXgBq6EdUs+WarrAGGEMQDy539V2JO7PFkvd9K7k9tyzpjylTjc9KhNnxGEbyXK6cahScMCqCNmI6QusVUObLxdgJ1Y3OYxY3crIKoJfAuUzLeQKKd6ViWmCWBfn7Eu1z9cEUgpP2Unj2SdSOp2oq6tCQkEt3D2xYsRY2R8BKG1hIBD
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Jun 2020 23:51:30 +0200
-Message-ID: <CACRpkdY=R5_g+Vrjtj9tZ=5gxh5qPWqm-yqtFB5GbKC75Yskxg@mail.gmail.com>
-Subject: [GIT PULL] Bulk GPIO changes for v5.8
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e580886-5b1f-4db6-2302-08d808d17367
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 21:51:34.6443
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1vz5WuyhxATNGteB2tROrh4azo9a/ShAT4kJcyqNHiCjObp+gTeyALMpLB553D91SdhoqzDAWPAI+pqiGO5NOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0339
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-here is the bulk of GPIO changes for the v5.8 kernel cycle.
-
-Nothing too exciting, details in the signed tag.
-
-Some new functionality was added on top of massive
-fixes so that is why I merged in v5.7-rc7 to make it
-apply without creating a mess.
-
-Please pull it in!
-
-Med v=C3=A4nlig h=C3=A4lsning,
-Linus Walleij
-
-The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145=
-:
-
-  Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.8-1
-
-for you to fetch changes up to 74910e15ab25f95f162bc4d4a634d029186543ce:
-
-  gpio: pca953x: Drop unneeded ACPI_PTR() (2020-06-03 14:04:28 +0200)
-
-----------------------------------------------------------------
-This is the bulk of GPIO changes for the v5.8 kernel cycle.
-
-Core changes:
-
-- A new GPIO aggregator driver has been merged: this can
-  join a few select GPIO lines into a new aggregated GPIO
-  chip. This can be used for security: a process can be
-  granted access to only these lines, for example for
-  industrial control. Another way to use this is to
-  reexpose certain select lines to a virtual machine or
-  container.
-
-- Warn if the gpio-line-names is too long in he DT parser
-  core.
-
-- GPIO lines can now be looked up by line name in addition
-  to being looked up by offset.
-
-New drivers:
-
-- A new generic regmap GPIO driver has been merged. Too
-  many regmap drivers are starting to look like each other
-  so we need to create some common ground and try to move
-  drivers over to using that.
-
-- The F7188X driver now supports F81865.
-
-Driver improvements:
-
-- Large improvements to the PCA953x expander, get multiple lines
-  and several cleanups.
-
-- Large improvements to the DesignWare DWAPB driver, and Sergey
-  Semin has volunteered to maintain it.
-
-- PL061 can now be built as a module, this is part of a bigger
-  effort to make the ARM platforms more modular.
-
-----------------------------------------------------------------
-Adam Ford (1):
-      gpiolib: of: improve gpiolib-of support of pull up/down on expanders
-
-Andy Shevchenko (35):
-      gpio: Extend TODO to cover code duplication avoidance
-      gpio: pch: Use BIT() and GENMASK() where it's appropriate
-      gpio: pch: Get rid of unneeded variable in IRQ handler
-      gpio: pch: Refactor pch_irq_type() to avoid unnecessary locking
-      gpio: pch: Use in pch_irq_type() macros provided by IRQ core
-      gpio: merrifield: Switch over to MSI interrupts
-      gpio: merrifield: Better show how GPIO and IRQ bases are derived
-from hardware
-      gpio: dwapb: Append MODULE_ALIAS for platform driver
-      gpio: dwapb: Refactor IRQ handler to use bit operations
-      gpio: dwapb: Use chained IRQ prologue and epilogue
-      gpio: dwapb: set default handler to be handle_bad_irq()
-      gpio: dwapb: Deduplicate IRQ resource management
-      gpio: dwapb: Convert to use irqd_to_hwirq()
-      gpio: dwapb: Use device_get_match_data() to simplify code
-      gpio: dwapb: Convert to use IRQ core provided macros
-      gpio: dwapb: Switch to more usual pattern of RMW in
-dwapb_gpio_set_debounce()
-      gpio: dwapb: Drop bogus BUG_ON()s
-      gpio: dwapb: Drop of_match_ptr() & ACPI_PTR() calls
-      gpio: dwapb: Split out dwapb_get_irq() helper
-      gpio: dwapb: Get rid of unnecessary conjunction over 32-bit value
-      gpio: dwapb: Amend indentation in some cases
-      gpio: pca953x: Rewrite ->get_multiple() function
-      gpio: mb86s7x: Use devm_clk_get_optional() to get the input clock
-      gpio: mb86s7x: Remove superfluous test for ACPI companion
-      gpio: xgene-sb: Drop redundant OF_GPIO dependency
-      gpio: xgene-sb: Allow driver to be built with COMPILE_TEST
-      gpio: xgene-sb: Drop extra check to call
-acpi_gpiochip_request_interrupts()
-      gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip
-de-registration
-      gpio: dwapb: avoid error message for optional IRQ
-      gpio: dwapb: Don't use IRQ 0 as valid Linux interrupt
-      gpio: dwapb: Remove unneeded has_irq member in struct dwapb_port_prop=
-erty
-      MAINTAINERS: Fix file name for DesignWare GPIO DT schema
-      gpio: pca935x: Allow IRQ support for driver built as a module
-      gpiolib: Separate GPIO_GET_LINEINFO_WATCH_IOCTL conditional
-      gpio: pca953x: Drop unneeded ACPI_PTR()
-
-Bartosz Golaszewski (1):
-      gpio: pca953x: disable regmap locking
-
-Brian Masney (1):
-      gpio: xgene-sb: set valid IRQ type in to_irq()
-
-Dejin Zheng (2):
-      gpio: ftgpio010: Fix small typo
-      gpio: mm-lantiq: Fix small typo
-
-Dinghao Liu (1):
-      gpio: rcar: Fix runtime PM imbalance on error
-
-Douglas Anderson (2):
-      gpio: Document proper return value for gpio drivers
-      gpio: Make "offset" and "unsigned int", not just "unsigned"
-
-Geert Uytterhoeven (10):
-      gpiolib: Improve kernel messages
-      gpiolib: Rename "chip" variables to "gc" in core header file
-      gpiolib: Document that GPIO line names are not globally unique
-      i2c: i801: Use GPIO_LOOKUP() helper macro
-      mfd: sm501: Use GPIO_LOOKUP_IDX() helper macro
-      gpiolib: Add support for GPIO lookup by line name
-      gpio: Add GPIO Aggregator
-      docs: gpio: Add GPIO Aggregator documentation
-      MAINTAINERS: Add GPIO Aggregator section
-      dt-bindings: gpio: Add renesas,em-gio bindings
-
-Hans de Goede (1):
-      gpiolib: acpi: Add missing __init(const) markers to initcall-s
-
-Kent Gibson (1):
-      tools: gpio: add bias flags to lsgpio
-
-Linus Walleij (5):
-      Merge tag 'gpio-updates-for-v5.8-part1' of
-git://git.kernel.org/.../brgl/linux into devel
-      Merge tag 'intel-gpio-v5.8-1' of
-git://git.kernel.org/.../andy/linux-gpio-intel into devel
-      Merge branch 'ib-gpio-aggregator' into devel
-      Merge tag 'gpio-updates-for-v5.8-part2' of
-git://git.kernel.org/.../brgl/linux into devel
-      Merge tag 'v5.7-rc7' into devel
-
-Maulik Shah (1):
-      gpio: gpiolib: Allow GPIO IRQs to lazy disable
-
-Mian Yousaf Kaukab (1):
-      gpio: tegra186: export MODULE_DEVICE_TABLE
-
-Michael Walle (3):
-      gpiolib: Introduce gpiochip_irqchip_add_domain()
-      gpio: add a reusable generic gpio_chip using regmap
-      MAINTAINERS: Add gpio regmap section
-
-Paul Thomas (1):
-      gpio: gpio-pca953x, Add get_multiple function
-
-Petteri Jokinen (1):
-      gpio-f7188x: Add GPIO support for F81865
-
-Rob Herring (1):
-      gpio: pl061: Support building as module
-
-Rodrigo Alencar (1):
-      gpio: max730x: bring gpiochip_add_data after port config
-
-Serge Semin (6):
-      dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
-      dt-bindings: gpio: Add DW GPIO debounce clock property
-      dt-bindings: gpio: Add Sergey Semin to DW APB GPIO driver maintainers
-      gpio: dwapb: Use optional-clocks interface for APB ref-clock
-      gpio: dwapb: Add debounce reference clock support
-      MAINTAINERS: Add Segey Semin to maintainers of DW APB GPIO driver
-
-Stephen Boyd (1):
-      gpiolib: devprop: Warn if gpio-line-names is too long
-
-Tiezhu Yang (1):
-      gpio: pxa: Add COMPILE_TEST support
-
-Uwe Kleine-K=C3=B6nig (2):
-      gpio: pca953x: fix handling of automatic address incrementing
-      gpio: pca953x: drop unused parameters of pca953x_recalc_addr()
-
-Wei Yongjun (1):
-      gpio: mlxbf2: fix return value check in mlxbf2_gpio_get_lock_res()
-
-YueHaibing (1):
-      gpio: mlxbf2: remove unused including <linux/version.h>
-
-sachin agarwal (1):
-      gpio: ich: fix a typo
-
- Documentation/admin-guide/gpio/gpio-aggregator.rst | 111 ++++
- Documentation/admin-guide/gpio/index.rst           |   1 +
- .../devicetree/bindings/gpio/renesas,em-gio.yaml   |  70 +++
- .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml | 134 +++++
- .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |  65 ---
- Documentation/driver-api/gpio/board.rst            |  15 +-
- MAINTAINERS                                        |  16 +-
- drivers/gpio/Kconfig                               |  24 +-
- drivers/gpio/Makefile                              |   2 +
- drivers/gpio/TODO                                  |   4 +
- drivers/gpio/gpio-aggregator.c                     | 568 +++++++++++++++++=
-++++
- drivers/gpio/gpio-dwapb.c                          | 248 ++++-----
- drivers/gpio/gpio-f7188x.c                         |  33 +-
- drivers/gpio/gpio-ftgpio010.c                      |   2 +-
- drivers/gpio/gpio-ich.c                            |   2 +-
- drivers/gpio/gpio-max730x.c                        |  12 +-
- drivers/gpio/gpio-mb86s7x.c                        |  28 +-
- drivers/gpio/gpio-merrifield.c                     |  10 +-
- drivers/gpio/gpio-mlxbf2.c                         |   5 +-
- drivers/gpio/gpio-mm-lantiq.c                      |   2 +-
- drivers/gpio/gpio-pca953x.c                        |  96 ++--
- drivers/gpio/gpio-pch.c                            |  73 +--
- drivers/gpio/gpio-pl061.c                          |   9 +-
- drivers/gpio/gpio-rcar.c                           |   4 +-
- drivers/gpio/gpio-regmap.c                         | 349 +++++++++++++
- drivers/gpio/gpio-tegra186.c                       |   1 +
- drivers/gpio/gpio-xgene-sb.c                       |  14 +-
- drivers/gpio/gpiolib-acpi.c                        |   6 +-
- drivers/gpio/gpiolib-devprop.c                     |   5 +-
- drivers/gpio/gpiolib-of.c                          |  10 +
- drivers/gpio/gpiolib.c                             | 165 ++++--
- drivers/gpio/gpiolib.h                             |  27 +-
- drivers/i2c/busses/i2c-i801.c                      |   6 +-
- drivers/mfd/intel_quark_i2c_gpio.c                 |   1 -
- drivers/mfd/sm501.c                                |  24 +-
- include/linux/gpio/driver.h                        |  48 +-
- include/linux/gpio/machine.h                       |  17 +-
- include/linux/gpio/regmap.h                        |  86 ++++
- include/linux/platform_data/gpio-dwapb.h           |   1 -
- tools/gpio/lsgpio.c                                |  12 +
- 40 files changed, 1859 insertions(+), 447 deletions(-)
- create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
- create mode 100644 Documentation/devicetree/bindings/gpio/renesas,em-gio.y=
-aml
- create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio=
-.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.=
-txt
- create mode 100644 drivers/gpio/gpio-aggregator.c
- create mode 100644 drivers/gpio/gpio-regmap.c
- create mode 100644 include/linux/gpio/regmap.h
+PiBGcm9tOiBEZXh1YW4gQ3VpDQo+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDQsIDIwMjAgMjo1MCBQ
+TQ0KPiANCj4gPiA+IENhbiB5b3UgcGxlYXNlIG1ha2UgYSB2MiBwYXRjaCBmb3IgaXQgYW5kIENj
+IG15IGNvcnBvcmF0ZSBlbWFpbCAiZGVjdWkiIChpbg0KPiA+IFRvKT8NCj4gPg0KPiA+IFllcywg
+b2YgY291cnNlLiBDb3VsZCBJIGFkZCAiU3VnZ2VzdGVkLWJ5Ij8NCj4gPg0KPiA+IFRoYW5rcywN
+Cj4gPiBEZW5pcw0KPiANCj4gU3VyZS4NCg0KUGxlYXNlIGFsc28gYWRkZWQgYSB0YWc6DQogDQpG
+aXhlczogNTZmYjEwNTg1OTM0ICgic2NzaTogc3RvcnZzYzogQWRkIHRoZSBzdXBwb3J0IG9mIGhp
+YmVybmF0aW9uIikNCg0KVGhhbmtzLA0KRGV4dWFuDQo=
