@@ -2,97 +2,151 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A532C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE1C207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D5B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mTXFKyn4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vr/I6zf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgFDQEx (ORCPT
+        id S1729685AbgFDQFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:04:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40038 "EHLO
+        Thu, 4 Jun 2020 12:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgFDQEw (ORCPT
+        with ESMTP id S1726026AbgFDQFu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:04:52 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48572C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 09:04:52 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id c8so6924366iob.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:04:52 -0700 (PDT)
+        Thu, 4 Jun 2020 12:05:50 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF0BC08C5C0;
+        Thu,  4 Jun 2020 09:05:50 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i12so1311929pju.3;
+        Thu, 04 Jun 2020 09:05:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lJFlc3Gy04cdlG64ny6cPW6U6TQmqhNoO4dpS7PXknE=;
-        b=mTXFKyn4oqGoG+g3Bk47F5MLJHUMSNBsAauKM5ecuDkU7B+iueqgNX19QrxBZF1xdc
-         1jAb1wzPtsjLj562LpXyuIrK2dSd+9lXJo+VStIYcvWHRLdlgexGwuJ5v3ZM4IaIM1sw
-         JQ16pGfjlhO7byFHQMW95D3FGYwZ6lAr8OUnezIW84s+GABmE7koMXsCZN1fcjIaNKM4
-         lmbBUOqZkvbjwkWV9tTkBNJJrMF4jkeuZrSN1hj5/OvT9yPzqbd8EpSIlEpUEPQ107Fd
-         Dy5L/xdGR7NtXRX7Gk0LgoptBmgYiEJBnNiV+dN0iSfuXLfO5fCMpPwi9J0GVods6QMg
-         1xLg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HAWfVJ/MMzDDKipytKTsDnZ0G7qcc8KGtxLvXJOdNtk=;
+        b=Vr/I6zf9wpjvEwDaJRBX1+2aezi8wRyFreAa10APW8X1OHOEJVUF5Q7ARa3lfsQxV5
+         PonhEHPXMbOZ92Hv3xwguR8YsivIs6B6pm4J5X1yPTPMefCXweIlZEILCdduTmW+yxyw
+         OhnEBT4jsdV70Qrr/oA/Ze0IpOOH9DdR2SA5hFnhkya/j7r/2psfkWCwVhcqQIt/xwQy
+         shgoaSohosf7QXYHzM2Sp3IzNFwxzNG2HrlEmLya+hN+YPiSKSe2J76DTQQC9iYlPsjv
+         N7o0wJbseIrr7hrSLutCvvD3KwHNTA/MPX1Ln8fg20ENbh/0qci1FwGRVgYfXf/irWnd
+         uUeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lJFlc3Gy04cdlG64ny6cPW6U6TQmqhNoO4dpS7PXknE=;
-        b=sc2RvF/wwghIBDG2eoEOQR8q97E7q1nsbr3lLAYd2ioFr9jN0HnpdIAKSb+UVFkq1N
-         bbBHwyojFcLN7qV7nYx+v71hZYyCU362GOWHIKQbdvs6ruA3SqL8n3F5/Ja6qTWfDPCY
-         wGLPh/0l4X99p6BLACRBxf84N3PO+4VMkg9bO24CHHmdF8iquHhNzsYTskdxOoaCDrt6
-         mG/+FO33RXL+bpJ5CPAwJq2jHuDeFY7UT8v9frpsdW+1MHMCqKM29UCQLVqIOf+ruLBM
-         e+WLckbwDE2E05ChWvJpRiy+flagT822Cq6CS4mAuJJPRpWMJPMQm5M/ulokxiL9OXJx
-         BW6A==
-X-Gm-Message-State: AOAM531yJ+TXm0FXZaAh7eEem/p5dqFCNsZ0EULGHPDojiwmh7J3XTAL
-        XzAkvWhcNcODtAAua5cB1of65q51ybG4C+xofjo=
-X-Google-Smtp-Source: ABdhPJzsd93CWEsJZg8aBgXCPYiR1gAdYYsTgHX8mCO8aV9bTUGmnU9TgkL53rRGtlJz1GDKtDXa5xpLQtoDNnolXmk=
-X-Received: by 2002:a6b:b489:: with SMTP id d131mr4695033iof.73.1591286691576;
- Thu, 04 Jun 2020 09:04:51 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HAWfVJ/MMzDDKipytKTsDnZ0G7qcc8KGtxLvXJOdNtk=;
+        b=KXLP2vJl/fBSDRxvPujOop52zkcrCnQu4buv448yjXQJZ6alvaj4MoGWYBFWpljZSy
+         +I2uT1214BZ0h6Xm+yr7tg3rOZbnbkIZ0Rhl0FkffL9SXNY9Tyb0nu1DGrABJl2N7FV8
+         4RNNkZpsnrk5cFJ9GgOSQOQ2Ln5f2s3oj9Vg/a5VRXW137E1O0quLAjc1kqsRykoAf2L
+         gmQpTZAy60aeWS55kvQ98njQ9A+xWPYeHfh3W62yqaB9VRB36KdjIq6lyz0+/4ErUI8A
+         1DGsWwjG0pBl0+/ESv4AEA/Qkw0GELaxyloIBDJaVZz5BGCeUcYD3pXmhBjXsAutiF6m
+         2tGg==
+X-Gm-Message-State: AOAM532NjU0I5ExazNOQXGtNEvVtDAMdJancwdvnNbSYn/s9Icdxb3Hg
+        sxUzi7BlZCloEvakxtAFiDc=
+X-Google-Smtp-Source: ABdhPJzDmXwGbLzqmN4JtHAm4tslIFeo872mF9VRUt+Ly23GpPsGhckeyoYK7qV6BFeOQmVssm8UQQ==
+X-Received: by 2002:a17:90a:5806:: with SMTP id h6mr7122674pji.66.1591286749669;
+        Thu, 04 Jun 2020 09:05:49 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id n8sm5559105pjq.49.2020.06.04.09.05.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 09:05:48 -0700 (PDT)
+Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
+To:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>, lukas@wunner.de
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-4-f.fainelli@gmail.com>
+ <20200604123220.GD6644@sirena.org.uk>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <21772111-fa1f-7a50-aa92-e44b09cff4eb@gmail.com>
+Date:   Thu, 4 Jun 2020 09:05:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
- <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com>
- <CAOkhzLV+suVNAoyiaHKOkbwP-KKgTLEa7S8kp8+GSTLm_-wWFw@mail.gmail.com> <CAKb7UvgWMsLSHCayzdY7UYMVTjN3OHbH2WhKd-BP46K=r4Ra8A@mail.gmail.com>
-In-Reply-To: <CAKb7UvgWMsLSHCayzdY7UYMVTjN3OHbH2WhKd-BP46K=r4Ra8A@mail.gmail.com>
-From:   Zeno Davatz <zdavatz@gmail.com>
-Date:   Thu, 4 Jun 2020 18:04:40 +0200
-Message-ID: <CAOkhzLXZVNdpgwV=iiO0TEvLp3Hx28Zk8iYzwy5BvJ1pWi4QxQ@mail.gmail.com>
-Subject: Re: [Nouveau] NVIDIA GP107 (137000a1) - acr: failed to load firmware
-To:     Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     nouveau <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200604123220.GD6644@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you, Ilia
 
-On Thu, Jun 4, 2020 at 5:25 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
 
-> There's a lot more firmware files than that ... everything in the
-> gp107 directory. Also this would only be necessary if nouveau is built
-> into the kernel. The files just have to be available whenever nouveau
-> is loaded -- if it's built in, that means the firmware has to be baked
-> into the kernel too. If it's loaded from initrd, that means the
-> firmware has to be in initrd. If it's loaded after boot, then the
-> firmware has to be available after boot.
+On 6/4/2020 5:32 AM, Mark Brown wrote:
+> On Wed, Jun 03, 2020 at 08:46:55PM -0700, Florian Fainelli wrote:
+>> The SPI controller found in the BCM2711 and BCM7211 SoCs is instantiated
+>> 5 times, with all instances sharing the same interrupt line. We
+>> specifically match the two compatible strings here to determine whether
+>> it is necessary to request the interrupt with the IRQF_SHARED flag and
+>> to use an appropriate interrupt handler capable of returning IRQ_NONE.
+> 
+>> For the BCM2835 case which is deemed performance critical, there is no
+>> overhead since a dedicated handler that does not assume sharing is used.
+> 
+> This feels hacky - it's essentially using the compatible string to set a
+> boolean flag which isn't really about the IP but rather the platform
+> integration.  It might cause problems if we do end up having to quirk
+> this version of the IP for some other reason.
 
-For the time being I got it working by removing all nouveau selections
-in "make menuconfig" and by emerging "x11-drivers/nvidia-drivers"
-Version 440.82.
+I am not sure why it would be a problem, when you describe a piece of
+hardware with Device Tree, even with the IP block being strictly the
+same, its very integration into a new SoC (with details like shared
+interrupt lines) do warrant a different compatible string. Maybe this is
+more of a philosophical question.
 
-Back on the latest Linux Kernel. Feels great ;).
+> I'm also looking at the
+> code and wondering if the overhead of checking to see if the interrupt
+> is flagged is really that severe, it's just a check to see if a bit is
+> set in a register which we already read so should be a couple of
+> instructions (which disassembly seems to confirm).  It *is* overhead so
+> there's some value in it, I'm just surprised that it's such a hot path
+> especially with a reasonably deep FIFO like this device has.
 
-Linux zenogentoo 5.7.0 #84 SMP Thu Jun 4 17:47:15 CEST 2020 x86_64
-Intel(R) Core(TM) i7 CPU 960 @ 3.20GHz GenuineIntel GNU/Linux
+If it was up to me, we would just add the check on BCM2835_SPI_CS_INTR
+not being set and return IRQ_NONE and be done with it. I appreciate that
+Lukas has spent some tremendous amount of time working on this
+controller driver and he has a sensitivity for performance.
 
-Best
-Zeno
+> 
+> I guess ideally genirq would provide a way to figure out if an interrupt
+> is actually shared in the present system, and better yet we'd have a way
+> for drivers to say they aren't using the interrupt ATM, but that might
+> be more effort than it's really worth.  If this is needed and there's no
+> better way of figuring out if the interrupt is really shared then I'd
+> suggest a boolean flag rather than a compatible string, it's still a
+> hack but it's less likely to store up trouble for the future.
+
+Instead of counting the number of SPI devices we culd request the
+interrupt first with flags = IRQF_PROBE_SHARED, if this works, good we
+have a single SPI master enabled, if it returns -EBUSY, try again with
+flags = IRQF_SHARED and set-up the bcm2835_spi_sh_interrupt interrupt
+handler to manage the sharing.
+
+This would not require DT changes, which is probably better anyway.
+-- 
+Florian
