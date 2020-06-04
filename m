@@ -2,174 +2,234 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4805C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761E320738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA3820738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tpy3UUKA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sho0kogY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgFDIpK (ORCPT
+        id S1728161AbgFDIpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:45:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42739 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbgFDIpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:45:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49czqf2Rqnz9sSy;
-        Thu,  4 Jun 2020 18:45:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591260302;
-        bh=LlZr+htNbQIbe6wiwJmoZRCGLt4C6qq99v+LUf8ZcOE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Tpy3UUKALFMtiVfrkXdXfPgJTP2ZljUa60ZO8xsiZ1xwvKXdwN47Rt6kUI2aKhcR4
-         jBkZHTNGvOksRNH5HTxJrB+/8SexE/2+0TNF2zPttOfE3pM9HXfrifGhPAnUcP+JuS
-         fbEXIF7Aa/+B8IpeEe5hGzx2eXcJPIS85IYuwb93I68xyVMUd5wjbw0NHrJ6UxPafn
-         wuB8IyGTOl2HbAzEW/dMGezb8qgoVlUMWZ1FoYdCT/kSvxbygnKO+BJ/Gc9EKDb5l3
-         57jWCKshEsv96WS0w4eSCemK3xyjjUS7QS8hKDfsir65XjgO/+LHcOawk1/Gb0Oirw
-         Ar4Jas8S7t0nQ==
-Date:   Thu, 4 Jun 2020 18:45:01 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: linux-next: fix ups for clashes between akpm and powerpc trees
-Message-ID: <20200604184501.1ea5ba36@canb.auug.org.au>
-In-Reply-To: <20200604165246.436f02ba@canb.auug.org.au>
-References: <20200603202655.0ad0eacc@canb.auug.org.au>
-        <20200604165246.436f02ba@canb.auug.org.au>
+        Thu, 4 Jun 2020 04:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgFDIpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 04:45:12 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E73C05BD1E;
+        Thu,  4 Jun 2020 01:45:12 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q24so900942pjd.1;
+        Thu, 04 Jun 2020 01:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=guLDCrKfgZXr2CUB7wtfdzsZqMjoNL6/MaH81QBWwkU=;
+        b=Sho0kogY3aiD9T4AnJflI+T8IHF5DPdOpbzHhHXLgO3HP/9HGBWYAqUQiYu6zFGtNk
+         bFeM36p5aLuPB/pjLke2zCOF1ZGPeIlFf9crhbekHE7hf8GgKuxAEqCmyXKaPosMSQyx
+         bAZaakC4s7L/OUwH3csRo8rU0dJlyQ46pD9qemiVtBiZCk2wYbofk6NbKMk7qOjMBoFZ
+         ZbsXBnk19VPW6pjVQlJBKYjQepwKlv8IMOEzqLotBE3LHT+lSW1oyMmcg+2+Ltc/0yvK
+         ZaZ6ScG3oQgN3hRsYwpfaRAEWJKMGZUHn1rdPVrV3daX2JPxqonm0Fgd1KfjvEnh3LYj
+         FvLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=guLDCrKfgZXr2CUB7wtfdzsZqMjoNL6/MaH81QBWwkU=;
+        b=pOf5SN1SbFvleAz13c6Czy9cVQ/l9IT73w1XfYcLjm8sljZepyNJqi4HKkqWeCD/32
+         X4OkVDkbTeJGQKCjRng9UK8WYtgcsOjghzBV2acMs53MvzF0s+J5b+hnTRaLsBlzFYCe
+         80mwa+eNP3zl+xxWxPoqFq/gfjq+VBoTYSRaB6HT+wmAqQDVnXz7wnsZ7/j+ZI3kc/ES
+         ziEICSiWGikTHDDyIkOErE31jZxQFCUTJ+6/zKDfO2qo6xrlMZk6eioOh36OZ4KEuiKD
+         R+og2l19Sj0IA1XSjsSEvbLqW1RV9bHPJPEVbMa+t9bPnvmLX3UixiE9ofWRAjjPx6O+
+         SqUQ==
+X-Gm-Message-State: AOAM531iqQRhrDDUQ1mNLOFmph9RIhHlWihdH/X78l2yTCJf6JkuuHJZ
+        h1m/E9Ub7W+dCH+6q9VNNBk=
+X-Google-Smtp-Source: ABdhPJwryDsPGUtTnfVSppltS744ryZSBfAtNDM8IYW8ZtEDDlistFhcVjOUGI71bkg8DciUg4+/gg==
+X-Received: by 2002:a17:90a:2222:: with SMTP id c31mr4618065pje.200.1591260311547;
+        Thu, 04 Jun 2020 01:45:11 -0700 (PDT)
+Received: from dc803.flets-west.jp ([2404:7a87:83e0:f800:39b2:3392:bee8:f3be])
+        by smtp.gmail.com with ESMTPSA id y6sm4770565pjw.15.2020.06.04.01.45.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 01:45:10 -0700 (PDT)
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+To:     kohada.t2@gmail.com
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] exfat: add error check when updating dir-entries
+Date:   Thu,  4 Jun 2020 17:44:42 +0900
+Message-Id: <20200604084445.19205-1-kohada.t2@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eHsh.cfwjZ2F39DrKQkZg7I";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eHsh.cfwjZ2F39DrKQkZg7I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add error check when synchronously updating dir-entries.
+Furthermore, add exfat_update_bhs(). It wait for write completion once
+instead of sector by sector.
 
-Hi all,
+Suggested-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+---
+ fs/exfat/dir.c      | 15 +++++++++------
+ fs/exfat/exfat_fs.h |  3 ++-
+ fs/exfat/file.c     |  5 ++++-
+ fs/exfat/inode.c    |  8 +++++---
+ fs/exfat/misc.c     | 19 +++++++++++++++++++
+ 5 files changed, 39 insertions(+), 11 deletions(-)
 
-On Thu, 4 Jun 2020 16:52:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> diff --git a/arch/powerpc/mm/kasan/8xx.c b/arch/powerpc/mm/kasan/8xx.c
-> index db4ef44af22f..569d98a41881 100644
-> --- a/arch/powerpc/mm/kasan/8xx.c
-> +++ b/arch/powerpc/mm/kasan/8xx.c
-> @@ -10,7 +10,7 @@
->  static int __init
->  kasan_init_shadow_8M(unsigned long k_start, unsigned long k_end, void *b=
-lock)
->  {
-> -	pmd_t *pmd =3D pmd_ptr_k(k_start);
-> +	pmd_t *pmd =3D pmd_off_k(k_start);
->  	unsigned long k_cur, k_next;
-> =20
->  	for (k_cur =3D k_start; k_cur !=3D k_end; k_cur =3D k_next, pmd +=3D 2,=
- block +=3D SZ_8M) {
-> @@ -59,7 +59,7 @@ int __init kasan_init_region(void *start, size_t size)
->  		return ret;
-> =20
->  	for (; k_cur < k_end; k_cur +=3D PAGE_SIZE) {
-> -		pmd_t *pmd =3D pmd_ptr_k(k_cur);
-> +		pmd_t *pmd =3D pmd_off_k(k_cur);
->  		void *va =3D block + k_cur - k_start;
->  		pte_t pte =3D pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
-> =20
-> diff --git a/arch/powerpc/mm/kasan/book3s_32.c b/arch/powerpc/mm/kasan/bo=
-ok3s_32.c
-> index 4bc491a4a1fd..a32b4640b9de 100644
-> --- a/arch/powerpc/mm/kasan/book3s_32.c
-> +++ b/arch/powerpc/mm/kasan/book3s_32.c
-> @@ -46,7 +46,7 @@ int __init kasan_init_region(void *start, size_t size)
->  	kasan_update_early_region(k_start, k_cur, __pte(0));
-> =20
->  	for (; k_cur < k_end; k_cur +=3D PAGE_SIZE) {
-> -		pmd_t *pmd =3D pmd_ptr_k(k_cur);
-> +		pmd_t *pmd =3D pmd_off_k(k_cur);
->  		void *va =3D block + k_cur - k_start;
->  		pte_t pte =3D pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
-> =20
-> diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-> index 286441bbbe49..92e8929cbe3e 100644
-> --- a/arch/powerpc/mm/nohash/8xx.c
-> +++ b/arch/powerpc/mm/nohash/8xx.c
-> @@ -74,7 +74,7 @@ static pte_t __init *early_hugepd_alloc_kernel(hugepd_t=
- *pmdp, unsigned long va)
->  static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr=
-_t pa,
->  					     pgprot_t prot, int psize, bool new)
->  {
-> -	pmd_t *pmdp =3D pmd_ptr_k(va);
-> +	pmd_t *pmdp =3D pmd_off_k(va);
->  	pte_t *ptep;
-> =20
->  	if (WARN_ON(psize !=3D MMU_PAGE_512K && psize !=3D MMU_PAGE_8M))
-> diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-> index 45a0556089e8..1136257c3a99 100644
-> --- a/arch/powerpc/mm/pgtable.c
-> +++ b/arch/powerpc/mm/pgtable.c
-> @@ -264,7 +264,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct =
-*vma,
->  #if defined(CONFIG_PPC_8xx)
->  void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *pt=
-ep, pte_t pte)
->  {
-> -	pmd_t *pmd =3D pmd_ptr(mm, addr);
-> +	pmd_t *pmd =3D pmd_off(mm, addr);
->  	pte_basic_t val;
->  	pte_basic_t *entry =3D &ptep->pte;
->  	int num =3D is_hugepd(*((hugepd_t *)pmd)) ? 1 : SZ_512K / SZ_4K;
-> diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-> index e2d054c9575e..6eb4eab79385 100644
-> --- a/arch/powerpc/mm/pgtable_32.c
-> +++ b/arch/powerpc/mm/pgtable_32.c
-> @@ -40,7 +40,7 @@ notrace void __init early_ioremap_init(void)
->  {
->  	unsigned long addr =3D ALIGN_DOWN(FIXADDR_START, PGDIR_SIZE);
->  	pte_t *ptep =3D (pte_t *)early_fixmap_pagetable;
-> -	pmd_t *pmdp =3D pmd_ptr_k(addr);
-> +	pmd_t *pmdp =3D pmd_off_k(addr);
-> =20
->  	for (; (s32)(FIXADDR_TOP - addr) > 0;
->  	     addr +=3D PGDIR_SIZE, ptep +=3D PTRS_PER_PTE, pmdp++)
+diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+index de43534aa299..3eb8386fb5f2 100644
+--- a/fs/exfat/dir.c
++++ b/fs/exfat/dir.c
+@@ -602,16 +602,19 @@ void exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)
+ 	es->modified = true;
+ }
+ 
+-void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
++int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync)
+ {
+-	int i;
++	int i, err = 0;
+ 
+-	for (i = 0; i < es->num_bh; i++) {
+-		if (es->modified)
+-			exfat_update_bh(es->sb, es->bh[i], sync);
+-		brelse(es->bh[i]);
++	if (es->modified) {
++		set_bit(EXFAT_SB_DIRTY, &EXFAT_SB(es->sb)->s_state);
++		err = exfat_update_bhs(es->bh, es->num_bh, sync);
+ 	}
++
++	for (i = 0; i < es->num_bh; i++)
++		err ? bforget(es->bh[i]):brelse(es->bh[i]);
+ 	kfree(es);
++	return err;
+ }
+ 
+ static int exfat_walk_fat_chain(struct super_block *sb,
+diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h
+index 595f3117f492..f4fa0e833486 100644
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -462,7 +462,7 @@ struct exfat_dentry *exfat_get_dentry_cached(struct exfat_entry_set_cache *es,
+ 		int num);
+ struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
+ 		struct exfat_chain *p_dir, int entry, unsigned int type);
+-void exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
++int exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
+ int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain *p_dir);
+ 
+ /* inode.c */
+@@ -515,6 +515,7 @@ void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
+ u16 exfat_calc_chksum16(void *data, int len, u16 chksum, int type);
+ u32 exfat_calc_chksum32(void *data, int len, u32 chksum, int type);
+ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync);
++int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync);
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags);
+ void exfat_chain_dup(struct exfat_chain *dup, struct exfat_chain *ec);
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index fce03f318787..37c8f04c1f8a 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -153,6 +153,7 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 		struct timespec64 ts;
+ 		struct exfat_dentry *ep, *ep2;
+ 		struct exfat_entry_set_cache *es;
++		int err;
+ 
+ 		es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
+ 				ES_ALL_ENTRIES);
+@@ -187,7 +188,9 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+ 		}
+ 
+ 		exfat_update_dir_chksum_with_entry_set(es);
+-		exfat_free_dentry_set(es, inode_needs_sync(inode));
++		err = exfat_free_dentry_set(es, inode_needs_sync(inode));
++		if (err)
++			return err;
+ 	}
+ 
+ 	/* cut off from the FAT chain */
+diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+index ef7cf7a6d187..c0bfd1a586aa 100644
+--- a/fs/exfat/inode.c
++++ b/fs/exfat/inode.c
+@@ -77,8 +77,7 @@ static int __exfat_write_inode(struct inode *inode, int sync)
+ 	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
+ 
+ 	exfat_update_dir_chksum_with_entry_set(es);
+-	exfat_free_dentry_set(es, sync);
+-	return 0;
++	return exfat_free_dentry_set(es, sync);
+ }
+ 
+ int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
+@@ -222,6 +221,7 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+ 		if (ei->dir.dir != DIR_DELETED && modified) {
+ 			struct exfat_dentry *ep;
+ 			struct exfat_entry_set_cache *es;
++			int err;
+ 
+ 			es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry,
+ 				ES_ALL_ENTRIES);
+@@ -240,7 +240,9 @@ static int exfat_map_cluster(struct inode *inode, unsigned int clu_offset,
+ 				ep->dentry.stream.valid_size;
+ 
+ 			exfat_update_dir_chksum_with_entry_set(es);
+-			exfat_free_dentry_set(es, inode_needs_sync(inode));
++			err = exfat_free_dentry_set(es, inode_needs_sync(inode));
++			if (err)
++				return err;
+ 
+ 		} /* end of if != DIR_DELETED */
+ 
+diff --git a/fs/exfat/misc.c b/fs/exfat/misc.c
+index 17d41f3d3709..dc34968e99d3 100644
+--- a/fs/exfat/misc.c
++++ b/fs/exfat/misc.c
+@@ -173,6 +173,25 @@ void exfat_update_bh(struct super_block *sb, struct buffer_head *bh, int sync)
+ 		sync_dirty_buffer(bh);
+ }
+ 
++int exfat_update_bhs(struct buffer_head **bhs, int nr_bhs, int sync)
++{
++	int i, err = 0;
++
++	for (i = 0; i < nr_bhs; i++) {
++		set_buffer_uptodate(bhs[i]);
++		mark_buffer_dirty(bhs[i]);
++		if (sync)
++			write_dirty_buffer(bhs[i], 0);
++	}
++
++	for (i = 0; i < nr_bhs && sync; i++) {
++		wait_on_buffer(bhs[i]);
++		if (!buffer_uptodate(bhs[i]))
++			err = -EIO;
++	}
++	return err;
++}
++
+ void exfat_chain_set(struct exfat_chain *ec, unsigned int dir,
+ 		unsigned int size, unsigned char flags)
+ {
+-- 
+2.25.1
 
-I have added the above hunks as to linux-next for tomorrow as a fix for
-mm-pgtable-add-shortcuts-for-accessing-kernel-pmd-and-pte.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/eHsh.cfwjZ2F39DrKQkZg7I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YtI0ACgkQAVBC80lX
-0GzQQwgAlMZMllEsSqKLjKU606gkIgqzsKHBa0X8F0ls9Qph/WMXE95rxW5oFDfH
-Te0J+/vySQTXkzfuYG/K9DI3be0R8QvXtAl+3AoK2ofI3312PDvkzl7N7mia0hlh
-NHu37L3Y5MuM45lWQbWesScyfrhS3thgiUsiZ1DyRvWctokVBNCn2XBIlAlu6kbb
-1FGLMEPs3n1lZGRMWdSUxYrMgPzl1P2H+FRRl6QH/q+tCYu02Ebj7YVL+kYz15zd
-OZ13aC3IcK7u7GOS6PFeIzysZK5LdZEGiwnuS8vyXkcuVpq+8tFTb9AvK6r1p9Dg
-K2Jh2auK0jWAmoSUCofDTsMOzPvyBw==
-=0FIL
------END PGP SIGNATURE-----
-
---Sig_/eHsh.cfwjZ2F39DrKQkZg7I--
