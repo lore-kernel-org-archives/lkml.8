@@ -2,150 +2,97 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B289C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E134C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F157720772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4221720772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:04:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pBLxwY3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgFDQCz (ORCPT
+        id S1729115AbgFDQEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:02:55 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45312 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729544AbgFDQCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:02:54 -0400
-IronPort-SDR: l6jLOIbXa0SmQ3W6wmt1jD0DTiJ5RhXB3Ofa+Qk6TZpIJCIte+ojNTdeDe/umUZ52X8Ph3fQyy
- xBuWriJUuXFw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 09:02:53 -0700
-IronPort-SDR: XfMIW/slEzHy8FEIrNuiLel4FFfrQXWrAk8p53myPCBWxxfKJlWe+z6o6XyUVmNCtSwYxqx9Xt
- QXKInEXDxYXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
-   d="scan'208";a="258926535"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Jun 2020 09:02:53 -0700
-Date:   Thu, 4 Jun 2020 09:02:53 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: nVMX: Inject #GP when nested_vmx_get_vmptr() fails
- to read guest memory
-Message-ID: <20200604160253.GF30223@linux.intel.com>
-References: <20200604143158.484651-1-vkuznets@redhat.com>
- <da7acd6f-204d-70e2-52aa-915a4d9163ef@redhat.com>
- <20200604145357.GA30223@linux.intel.com>
- <87k10meth6.fsf@vitty.brq.redhat.com>
+        Thu, 4 Jun 2020 12:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgFDQEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:04:23 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011DAC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 09:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tL9q+t8Vqftp23TReUP0WPRi7rrcPb/Bl/OGGiR0B+c=; b=pBLxwY3FdJi/B95CQxC5sy60fF
+        nj6BOVbpfeRct+qR4bDej3dOtdi9Ws+RR9Sa8c6/VVQO40xC0Y3tsskNeMKN8ZKqByeF4f1Y9sSgp
+        4hChjgSK0xZHMhpDNVd+HApV6CfehskCuQll6h2RAGhbjyCq3/lZVkpu3epzfHi6SgW74k2x2gO91
+        Sc4rX/4DJa3xmxCp/I+qcopphb09naROy4xVyksZbXP0kT6qBieoaIM5qUd7xALtBBil0+4QUTCWj
+        7uJPPPZBTW0+KoEYr9DzaAlFShUay1I9LCUkwpWXeDhyqzm4NjwiPFYUjK95+qVBsmiK2EPUfGF4K
+        +absGcZw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgsLW-0004Zj-Fw; Thu, 04 Jun 2020 16:03:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 239A430008D;
+        Thu,  4 Jun 2020 18:03:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0DB1D20D6E7D6; Thu,  4 Jun 2020 18:03:57 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 18:03:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Marco Elver <elver@google.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip] kcov: Make runtime functions noinstr-compatible
+Message-ID: <20200604160357.GF3976@hirez.programming.kicks-ass.net>
+References: <20200604095057.259452-1-elver@google.com>
+ <20200604110918.GA2750@hirez.programming.kicks-ass.net>
+ <CAAeHK+wRDk7LnpKShdUmXo54ij9T0sN9eG4BZXqbVovvbz5LTQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k10meth6.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAAeHK+wRDk7LnpKShdUmXo54ij9T0sN9eG4BZXqbVovvbz5LTQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 05:33:25PM +0200, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > On Thu, Jun 04, 2020 at 04:40:52PM +0200, Paolo Bonzini wrote:
-> >> On 04/06/20 16:31, Vitaly Kuznetsov wrote:
+On Thu, Jun 04, 2020 at 04:02:54PM +0200, Andrey Konovalov wrote:
+> On Thu, Jun 4, 2020 at 1:09 PM Peter Zijlstra <peterz@infradead.org> wrote:
+
+> > That whole kcov_remote stuff confuses me.
 > >
-> > ...
-> >
-> >> > KVM could've handled the request correctly by going to userspace and
-> >> > performing I/O but there doesn't seem to be a good need for such requests
-> >> > in the first place. Sane guests should not call VMXON/VMPTRLD/VMCLEAR with
-> >> > anything but normal memory. Just inject #GP to find insane ones.
-> >> > 
+> > KCOV_ENABLE() has kcov_fault_in_area(), which supposedly takes the
+> > vmalloc faults for the current task, but who does it for the remote?
 > 
-> ...
+> Hm, no one. This might be an issue, thanks for noticing!
 > 
-> >> 
-> >> looks good but we need to do the same in handle_vmread, handle_vmwrite,
-> >> handle_invept and handle_invvpid.  Which probably means adding something
-> >> like nested_inject_emulation_fault to commonize the inner "if".
-> >
-> > Can we just kill the guest already instead of throwing more hacks at this
-> > and hoping something sticks?  We already have one in
-> > kvm_write_guest_virt_system...
-> >
-> >   commit 541ab2aeb28251bf7135c7961f3a6080eebcc705
-> >   Author: Fuqian Huang <huangfq.daxian@gmail.com>
-> >   Date:   Thu Sep 12 12:18:17 2019 +0800
-> >
-> >     KVM: x86: work around leak of uninitialized stack contents
-> >
+> > Now, luckily Joerg went and ripped out the vmalloc faults, let me check
+> > where those patches are... w00t, they're upstream in this merge window.
 > 
-> Oh I see...
+> Could you point me to those patches?
 > 
-> [...]
-> 
-> Let's get back to 'vm_bugged' idea then? 
-> 
-> https://lore.kernel.org/kvm/87muadnn1t.fsf@vitty.brq.redhat.com/
+> Even though it might work fine now, we might get issues if we backport
+> remote kcov to older kernels.
 
-Hmm, I don't think we need to go that far.  The 'vm_bugged' idea was more
-to handle cases where KVM itself (or hardware) screwed something up and
-detects an issue deep in a call stack with no recourse for reporting the
-error up the stack.
+Thinking more about this; you can't actually pre-fault for kernel
+threads, as kernel threads will run with the mm of whatever regular
+thread ran before them, and who knows if they have that vmalloc region
+faulted in.
 
-That isn't the case here.  Unless I'm mistaken, the end result is simliar
-to this patch, except that KVM would exit to userspace with
-KVM_INTERNAL_ERROR_EMULATION instead of injecting a #GP.  E.g.
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 9c74a732b08d..e13d2c0014e2 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4624,6 +4624,20 @@ void nested_vmx_pmu_entry_exit_ctls_update(struct kvm_vcpu *vcpu)
-        }
- }
-
-+static int nested_vmx_handle_memory_failure(struct kvm_vcpu *vcpu, int ret,
-+                                           struct x86_exception *e)
-+{
-+       if (r == X86EMUL_PROPAGATE_FAULT) {
-+               kvm_inject_emulated_page_fault(vcpu, &e);
-+               return 1;
-+       }
-+
-+       vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+       vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
-+       vcpu->run->internal.ndata = 0;
-+       return 0;
-+}
-+
- static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
- {
-        gva_t gva;
-@@ -4634,11 +4648,9 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
-                                sizeof(*vmpointer), &gva))
-                return 1;
-
--       if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
--               kvm_inject_emulated_page_fault(vcpu, &e);
--               return 1;
--       }
--
-+       r kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
-+       if (r)
-+               return nested_vmx_handle_memory_failure(r, &e);
-        return 0;
- }
-
-
-
-Side topic, I have some preliminary patches for the 'vm_bugged' idea.  I'll
-try to whip them into something that can be posted upstream in the next few
-weeks.
+So Joerg's patches are pretty much the only way to guarantee remotes
+will not his the vmalloc fault.
