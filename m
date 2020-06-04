@@ -2,108 +2,226 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F070C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED803C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4FAB2075B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B9F2075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ETG3c85b"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bKEL5N+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgFDTgg (ORCPT
+        id S1728982AbgFDTjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:36:36 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:37402 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbgFDTgg (ORCPT
+        Thu, 4 Jun 2020 15:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbgFDTi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:36:36 -0400
-Received: from jorhand-sb2.corp.microsoft.com (unknown [76.104.235.235])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4919820B7185;
-        Thu,  4 Jun 2020 12:36:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4919820B7185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1591299395;
-        bh=Wj3IFzpGg4vQIux2KK5gfmytqMUrK5JDeB2oZyK7nZ0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ETG3c85b67XW691yPa3rhCXvFbCy28ekwVUI/3jsxQXpMF+RNf2bQlWPcPS7PflRy
-         umsrgGkv6fO7SIpnQxXH+MFZLOmsh2WU6cIlJoq8XbRi7CsRcWGk6DsKBWGAlHI9rP
-         xNU1On31vVlDKuYro63toACMcMZKqnP9a1S2mXWI=
-From:   jorhand@linux.microsoft.com
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        Jordan Hand <jorhand@linux.microsoft.com>
-Subject: [PATCH] software node: recursively unregister child swnodes
-Date:   Thu,  4 Jun 2020 12:36:23 -0700
-Message-Id: <20200604193623.16946-1-jorhand@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 4 Jun 2020 15:38:59 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A97C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:38:57 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 9so8796751ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EC5OcEtQhTge4l+YJjdaj9zLNH3vvY9AIXosw8Q5X1Q=;
+        b=bKEL5N+lXZlTR8RT4w88Q2zpLpHg4+ir80lB97eDS31qZVtEzZhYnc0xAn6Bawtk/d
+         8dKD7DwCjCqAlDXugJa+r1mDKQXwqgUboJRohkcQgT07Gr1LN5U60kgovgcMAuVmpjeL
+         ZCkhsOFen1HbtibyX1iiZjKu0ZPjoZHNtlrKmf4Ki5t2EkvWE9pj27R4+TdESSFnrk2e
+         MFHWadn1hlnkguPn9rMHg1ehFiWPQEZvamlOZ/N5JlRqfizXKyEIM50L7iF/enlp9lm/
+         BrBWhoTKFEK/aoCBb23kBoTsPYA1QUR4+WpAyefdZHzDQP5CyWZDUMWCGUiV48s5dZp/
+         mABw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EC5OcEtQhTge4l+YJjdaj9zLNH3vvY9AIXosw8Q5X1Q=;
+        b=ehkt4Khsr/6naLrDNbEQYHHqwSAJGcuOX+d51/MnhD3FcX23qM/fq8MO2+2jYHD/95
+         q3EK/w1Z3+K47FPKGBqUpP73Hn06sO4aMV7TcfMYfRp2R3vprRIIkrwnefZaeqXUyS6p
+         gd0V9zYuolEuZE2JK/3bEYuHDiES84AzeLtVC3naJJKMtGOUFb158lu030DFIuJlJGC7
+         azfjMLQM7R+pBqQWBjudzBU0VNtZixY2YV8da4oQYvipVEq+51lbxkZi8Whlw/TlL17e
+         9FH8j87kpf/y7C3yfhKV3RIyUTyNNS6d7gGuVD2z40NhRQf3tbh+ACbhsf1SWx6Deay7
+         ZfyQ==
+X-Gm-Message-State: AOAM531WAqsjfkFUontnGBma2CIgw2N7Uwh4SAYEgV623PgDORSdSE1R
+        Ds8QhN7U0bzIpX/idH40LI+lz2HS/YfJ/f61OvklLg==
+X-Google-Smtp-Source: ABdhPJzH4hCPoN9DQ3CStQ4Mw0y8xn738oIzhgaGEGbe9EAsDN89kcJ68Wzk0ppYx7/p4J7/dHa9+9+M1am9gyKUrO8=
+X-Received: by 2002:a2e:b0e9:: with SMTP id h9mr2744476ljl.307.1591299535843;
+ Thu, 04 Jun 2020 12:38:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520> <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com> <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+In-Reply-To: <20200603121613.GA1488883@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 4 Jun 2020 12:38:18 -0700
+Message-ID: <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Hand <jorhand@linux.microsoft.com>
+Hello,
 
-If a child swnode is unregistered after it's parent, it can lead to
-undefined behavior.
+I spent some more thoughts into this...
 
-When a swnode is unregistered, recursively free it's children to avoid
-this condition.
+On Wed, Jun 3, 2020 at 5:16 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Jun 03, 2020 at 04:51:18AM -0700, Rajat Jain wrote:
+> > Hello,
+> >
+> > >
+> > > > Thanks for the pointer! I'm still looking at the details yet, but a
+> > > > quick look (usb_dev_authorized()) seems to suggest that this API is
+> > > > "device based". The multiple levels of "authorized" seem to take shape
+> > > > from either how it is wired or from userspace choice. Once authorized,
+> > > > USB device or interface is authorized to be used by *anyone* (can be
+> > > > attached to any drivers). Do I understand it right that it does not
+> > > > differentiate between drivers?
+> > >
+> > > Yes, and that is what you should do, don't fixate on drivers.  Users
+> > > know how to control and manage devices.  Us kernel developers are
+> > > responsible for writing solid drivers and getting them merged into the
+> > > kernel tree and maintaining them over time.  Drivers in the kernel
+> > > should always be trusted, ...
+> >
+> > 1) Yes, I agree that this would be ideal, and this should be our
+> > mission. I should clarify that I may have used the wrong term
+> > "Trusted/Certified drivers". I didn't really mean that the drivers may
+> > be malicious by intent. What I really meant is that a driver may have
+> > an attack surface, which is a vulnerability that may be exploited.
+>
+> Any code has such a thing, proving otherwise is a tough problem :)
+>
+> > Realistically speaking, finding vulnerabilities in drivers, creating
+> > attacks to exploit them, and fixing them is a never ending cat and
+> > mouse game. At Least "identifying the vulnerabilities" part is better
+> > performed by security folks rather than driver writers.
+>
+> Are you sure about that?  It's hard to prove a negative :)
+>
+> > Earlier in the
+> > thread I had mentioned certain studies/projects that identified and
+> > exploited such vulnerabilities in the drivers. I should have used the
+> > term "Vetted Drivers" maybe to convey the intent better - drivers that
+> > have been vetted by a security focussed team (admin). What I'm
+> > advocating here is an administrator's right to control the drivers
+> > that he wants to allow for external ports on his systems.
+>
+> That's an odd thing, but sure, if you want to write up such a policy for
+> your systems, great.  But that policy does not belong in the kernel, it
+> belongs in userspace.
+>
+> > 2) In addition to the problem of driver negligences / vulnerabilities
+> > to be exploited, we ran into another problem with the "whitelist
+> > devices only" approach. We did start with the "device based" approach
+> > only initially - but quickly realized that anything we use to
+> > whitelist an external device can only be based on the info provided by
+> > *that device* itself. So until we have devices that exchange
+> > certificates with kernel [1], it is easy for a malicious device to
+> > spoof a whitelisted device (by presenting the same VID:DID or any
+> > other data that is used by us to whitelist it).
+> >
+> > [1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
+> >
+> > I hope that helps somewhat clarify how / why we reached here?
+>
+> Kind of, I still think all you need to do is worry about controling the
+> devices and if a driver should bind to it or not.  Again, much like USB
+> has been doing for a very long time now.  The idea of "spoofing" ids
+> also is not new, and has been around for a very long time as well, and
+> again, the controls that the USB core gives you allows you to make any
+> type of policy decision you want to, in userspace.
 
-Signed-off-by: Jordan Hand <jorhand@linux.microsoft.com>
----
- drivers/base/swnode.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Er, *currently* it doesn't allow the userspace to make the particular
+policy I want to, right? Specifically, today an administrator can not
+control which USB *drivers* he wants to allow on an *external* USB
+port. He can only control which USB devices he wants to authorize, but
+once authorized, they are free to bind to any of the USB drivers. So
+if I want to allow the administrator to implement a policy that allows
+him to control the drivers for external ports, we'll need to enhance
+the current code (whether we want to do it specific to a bus, or more
+generically in the driver core). Are we on the same page?
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index e5eb27375416..e63093b1542b 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -619,6 +619,8 @@ static void software_node_release(struct kobject *kobj)
- 		property_entries_free(swnode->node->properties);
- 		kfree(swnode->node);
- 	}
-+
-+	list_del(&kobj->entry);
- 	ida_destroy(&swnode->child_ids);
- 	kfree(swnode);
- }
-@@ -712,11 +714,6 @@ EXPORT_SYMBOL_GPL(software_node_register_nodes);
-  * @nodes: Zero terminated array of software nodes to be unregistered
-  *
-  * Unregister multiple software nodes at once.
-- *
-- * NOTE: Be careful using this call if the nodes had parent pointers set up in
-- * them before registering.  If so, it is wiser to remove the nodes
-- * individually, in the correct order (child before parent) instead of relying
-- * on the sequential order of the list of nodes in the array.
-  */
- void software_node_unregister_nodes(const struct software_node *nodes)
- {
-@@ -839,10 +836,16 @@ EXPORT_SYMBOL_GPL(fwnode_create_software_node);
- void fwnode_remove_software_node(struct fwnode_handle *fwnode)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
-+	struct swnode *child = NULL;
- 
- 	if (!swnode)
- 		return;
- 
-+	while (!list_empty(&swnode->children)) {
-+		child = list_first_entry_or_null(&swnode->children, struct swnode, entry);
-+		fwnode_remove_software_node(&child->fwnode);
-+	}
-+
- 	kobject_put(&swnode->kobj);
- }
- EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
--- 
-2.17.1
+To implement the policy that I want to in the driver core, what is
+missing today in driver core is a distinction between "internal" and
+"external" devices. Some buses have this knowledge locally today (PCI
+has "untrusted" flag which can be used, USB uses hcd->wireless and
+hub->port->connect_type) but it is not shared with the core.
 
+So just to make sure if I'm thinking in the right direction, this is
+what I'm thinking:
+
+1) The device core needs a notion of internal vs external devices (a
+flag) - a knowledge that needs to be filled in by the bus as it
+discovers the device.
+
+2) The driver core needs to allow an admin to provide a whitelist of
+drivers for external devices. (Via Command line or a driver flag.
+Default = everything is whitelisted).
+
+3) While matching a driver to a device, the driver core needs to
+impose the whitelist if the device is external, and if the
+administrator has provided a whitelist.
+
+Any bus that wants to use this can use it if it wants to, for external devices.
+
+Thoughts?
+
+Thanks & Best Regards,
+
+Rajat
+
+>
+> So please, in summary:
+>         - don't think this is some new type of thing, it's an old issue
+>           transferred to yet-another-hardware-bus.  Not to say this is
+>           not important, just please look at the work that others have
+>           done in the past to help mitigate and solve this (reading the
+>           Wireless USB spec should help you out here too, as they
+>           detailed all of this.)
+>         - do copy what USB did, by moving that logic into the driver
+>           core so that all busses who want to take advantage of this
+>           type of functionality, easily can do so.
+>
+> thanks,
+>
+> greg k-h
