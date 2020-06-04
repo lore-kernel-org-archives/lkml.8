@@ -2,88 +2,124 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E4F2087D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591314629;
-	bh=u+5YnwWFFK5nlG26TpFp3tw/TxQAXscErfxMw11kdHY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RD+naCOLrk/10zSYnEkHm6FXC1SmdRXRfwXZt6INcCeA3MFSEMLaPAv7FI0VpmfbB
-	 tUwrg/khMY2oew81HWD7+lbD82eLQibskMcRIkWHUiVGVPt0M22MiQAQqKX3nFTk3o
-	 xC1wH7T9u+MTz34VUtxIscyomJ2MZ8ui49gX/ekg=
+	by mail.kernel.org (Postfix) with ESMTP id 9759820885
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:50:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oZKNYYSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgFDXu0 (ORCPT
+        id S1726166AbgFDXuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 19:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726021AbgFDXuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 19:50:25 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E69E20872;
-        Thu,  4 Jun 2020 23:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591314625;
-        bh=u+5YnwWFFK5nlG26TpFp3tw/TxQAXscErfxMw11kdHY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12DhJ4j7SA82q006esRWoPp6vOrOhNNpd5/SGsziuuG2nsrgWgRBs8X1fCOmSkiu/
-         7hDhu5CTTZDufKWiPU3Qabbm39ZYXLl43tsAqzpsKzd7LoHvD7VRvPzHMjJ8ocV2nC
-         N6ttocMm+STaxGGsMhocOjVAwE7tSwTk9UiCCVxE=
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 2/2] f2fs: attach IO flags to the missing cases
-Date:   Thu,  4 Jun 2020 16:50:23 -0700
-Message-Id: <20200604235023.1954-2-jaegeuk@kernel.org>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-In-Reply-To: <20200604235023.1954-1-jaegeuk@kernel.org>
-References: <20200604235023.1954-1-jaegeuk@kernel.org>
+        Thu, 4 Jun 2020 19:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgFDXuv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 19:50:51 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ABFC08C5C0;
+        Thu,  4 Jun 2020 16:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zd4mes2BosmuFtfxX993NYsNl3JofXApEXaS2L2Ahxo=; b=oZKNYYSdr+hQlwG33pEv98hFFt
+        xKb+ex6ntArPYooazlnjnglvCWH60//QaGdgMpdLZqxxQzSV5+wtnBxJTA4qidME6oTOXT087jtkT
+        ZRogGDJAhYiUY40e+NMTbxpLiU8lKVM2m/arjiaYuKUWo+PqodhzOn8Ws87yUhUb2xt2TauhtV2ty
+        p6cw9t+luO4t1VXTMyew+jpImhI6hDJWVLbqlJ5NobIkV7SYl1BGH0dTLU51i9vWK47MlZJw3Qn7g
+        pHZj2mstwkP3dplf9FnNJ7RZ1cFRJOAGsnth2NCphWWWDYquZH4w8kc3+nJmXY6ZiA00C28O3WPCN
+        FU24Ks1w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgzdK-0000wH-IF; Thu, 04 Jun 2020 23:50:50 +0000
+Date:   Thu, 4 Jun 2020 16:50:50 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
+Message-ID: <20200604235050.GX19604@bombadil.infradead.org>
+References: <20200604202340.29170-1-willy@infradead.org>
+ <20200604225726.GU2040@dread.disaster.area>
+ <20200604230519.GW19604@bombadil.infradead.org>
+ <20200604233053.GW2040@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604233053.GW2040@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds more IOs to attach flags.
+On Fri, Jun 05, 2020 at 09:30:53AM +1000, Dave Chinner wrote:
+> On Thu, Jun 04, 2020 at 04:05:19PM -0700, Matthew Wilcox wrote:
+> > On Fri, Jun 05, 2020 at 08:57:26AM +1000, Dave Chinner wrote:
+> > > On Thu, Jun 04, 2020 at 01:23:40PM -0700, Matthew Wilcox wrote:
+> > > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > > 
+> > > > Test generic/019 often results in:
+> > > > 
+> > > > WARNING: at fs/iomap/buffered-io.c:1069 iomap_page_mkwrite_actor+0x57/0x70
+> > > > 
+> > > > Since this can happen due to a storage error, we should not WARN for it.
+> > > > Just return -EIO, which will be converted to a SIGBUS for the hapless
+> > > > task attempting to write to the page that we can't read.
+> > > 
+> > > Why didn't the "read" part of the fault which had the EIO error fail
+> > > the page fault? i.e. why are we waiting until deep inside the write
+> > > fault path to error out on a failed page read?
+> > 
+> > I have a hypothesis that I don't know how to verify.
+> > 
+> > First the task does a load from the page and we put a read-only PTE in
+> > the page tables.  Then it writes to the page using write().  The page
+> > gets written back, but hits an error in iomap_writepage_map()
+> > which calls ClearPageUptodate().  Then the task with it mapped attempts
+> > to store to it.
+> 
+> Sure, but that's not really what I was asking: why isn't this
+> !uptodate state caught before the page fault code calls
+> ->page_mkwrite? The page fault code has a reference to the page,
+> after all, and in a couple of paths it even has the page locked.
 
-Fixes: d58f2f658159 ("f2fs: add node_io_flag for bio flags likewise data_io_flag")
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/data.c | 2 ++
- 1 file changed, 2 insertions(+)
+If there's already a PTE present, then the page fault code doesn't
+check the uptodate bit.  Here's the path I'm looking at:
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 2f5293eb5e52a..9d40db50cd65a 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -702,6 +702,7 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
- 	if (fio->io_wbc && !is_read_io(fio->op))
- 		wbc_account_cgroup_owner(fio->io_wbc, page, PAGE_SIZE);
- 
-+	__attach_io_flag(fio);
- 	bio_set_op_attrs(bio, fio->op, fio->op_flags);
- 
- 	inc_page_count(fio->sbi, is_read_io(fio->op) ?
-@@ -888,6 +889,7 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
- alloc_new:
- 	if (!bio) {
- 		bio = __bio_alloc(fio, BIO_MAX_PAGES);
-+		__attach_io_flag(fio);
- 		bio_set_op_attrs(bio, fio->op, fio->op_flags);
- 
- 		add_bio_entry(fio->sbi, bio, page, fio->temp);
--- 
-2.27.0.278.ge193c7cf3a9-goog
+do_wp_page()
+ -> vm_normal_page()
+ -> wp_page_shared()
+     -> do_page_mkwrite()
 
+I don't see anything in there that checked Uptodate.
+
+> What I'm trying to understand is why this needs to be fixed inside
+> ->page_mkwrite, because AFAICT if we have to fix this in the iomap
+> code, we have the same "we got handed a bad page by the page fault"
+> problem in every single ->page_mkwrite implementation....
+
+I think the iomap code is the only filesystem which clears PageUptodate
+on errors.  I know we've argued about whether that's appropriate or not
+in the past.
+
+> > I haven't dug through what generic/019 does, so I don't know how plausible
+> > this is.
+> 
+> # Run fsstress and fio(dio/aio and mmap) and simulate disk failure
+> # check filesystem consistency at the end.
+> 
+> I don't think it is mixing buffered writes and mmap writes on the
+> same file via fio. Maybe fsstress is triggering that, but the
+> fsstress workload is single threaded so, again, I'm not sure it will
+> do this.
+
+Maybe that's not how we end up with a read-only PTE in the process's
+page tables.  Perhaps it starts out with a store, then on an fsync()
+we mark it read-only, then try to do another store.
