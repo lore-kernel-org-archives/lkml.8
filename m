@@ -2,267 +2,138 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4772AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE1EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A8C207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591311586;
-	bh=RRMdIhmNHJoaM/ItSrwfciqNl9YxCsCTIRQSNt9XuHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YS16f+VBuEz5pCPn4/FcnstRAwI1HSxMlxcCQrfl5SAFwhwA/b9InT99DgnGYXhOK
-	 IRHIFMpWI1aCN7xUUxwwfM2k/jZ5E9Egw+VCcFhXo7PApcKT5yWSs3edzE87guEicF
-	 deig7z1JhV/aGzJh7VfVQaxle7Cx0YBhtmaymO+E=
+	by mail.kernel.org (Postfix) with ESMTP id 292D8207DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:03:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="FsgtDi4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgFDW7p (ORCPT
+        id S1728109AbgFDXD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:59:45 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34602 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgFDW7l (ORCPT
+        Thu, 4 Jun 2020 19:03:57 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:37853 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgFDXD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:59:41 -0400
-Received: by mail-io1-f68.google.com with SMTP id m81so8271157ioa.1;
-        Thu, 04 Jun 2020 15:59:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8uhmMDfRFKU/nBl31EsFuSRXyVismi/8+HPrlybWyQk=;
-        b=nxg0KN+nnJaCr/jrPAtkbxDrMBe5SbyMZMMzwaUktvReGm2BXBq+jFHnKuv1Pg6GM2
-         tOXIPxcm30EJNi5HqvskXQ4hrX2DWtdzt6eW4RJV7A6SKsQfdjp4nErHHq6LkMMP4RMg
-         y21X8EC7cl7Mn1EPuvp3yp46IH2KArR/9AAXGcu1XvEm67vigDJX4ubyrPiZiGHgee7E
-         o1iXo8wklMSPK71RF6Bg1sTOINZgBPS4gHrybs8v+JTt/GqhQPswsKA2JidT7WOJ7/dq
-         hut2wS6S4dOFS4TmNqyIveeKSliiP9pv9Kypv3zrHav4M7CxUKC0jUdeznfkSld3eIxn
-         n4lA==
-X-Gm-Message-State: AOAM530o/5lERZd1ygF4dREMC+4bp96+65bw/O+YxHe5d3CFOoQEiqlR
-        ewiXrf1iuDKnZwmQv5YndQ==
-X-Google-Smtp-Source: ABdhPJy3FRCmhs5wpZu5M6xi9I5On7T/sWS+PTp9rSvKw2YGDhhjzyd/3BPor/LTC/K+iEwpm5QpLw==
-X-Received: by 2002:a05:6602:114:: with SMTP id s20mr6033098iot.11.1591311580245;
-        Thu, 04 Jun 2020 15:59:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id z4sm479124iot.24.2020.06.04.15.59.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 15:59:39 -0700 (PDT)
-Received: (nullmailer pid 6101 invoked by uid 1000);
-        Thu, 04 Jun 2020 22:59:38 -0000
-Date:   Thu, 4 Jun 2020 16:59:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v26 04/15] dt: bindings: lp50xx: Introduce the lp50xx
- family of RGB drivers
-Message-ID: <20200604225938.GA4175214@bogus>
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200604120504.32425-5-dmurphy@ti.com>
+        Thu, 4 Jun 2020 19:03:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591311836; x=1622847836;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=XlvjY2cbK79XKJQbABj6I52DuwNCmkoPmmNUgRZuzx4=;
+  b=FsgtDi4Pv7uJuxVHUmYuYmjeDKtjri0bEhdXdULKxXlXZik0elc8l+1H
+   Okxa5LoVs10W2+uh5dWu2Zf9V5m9t2BE0I58KYm4xTOcr/TBdkUTsGe8X
+   xlus2sPLU/yRrLu7yrqqc7QwunL6zfIgt1D1iFB1k5N0GuJGFiMgyqMB0
+   I=;
+IronPort-SDR: BU/B31Mc2p1teKXE8T0M/Qekrk1iOuiIqPmHAVira61H+IDlK+H6BZmL2NxaskgX4guwfy+OUc
+ I5F/nNdpGkaw==
+X-IronPort-AV: E=Sophos;i="5.73,472,1583193600"; 
+   d="scan'208";a="34541182"
+Subject: Re: [PATCH 03/12] x86/xen: Introduce new function to map
+ HYPERVISOR_shared_info on Resume
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 04 Jun 2020 23:03:43 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id 7E52614194D;
+        Thu,  4 Jun 2020 23:03:35 +0000 (UTC)
+Received: from EX13D05UWC001.ant.amazon.com (10.43.162.82) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Jun 2020 23:03:07 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D05UWC001.ant.amazon.com (10.43.162.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Jun 2020 23:03:07 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 4 Jun 2020 23:03:07 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 705A940712; Thu,  4 Jun 2020 23:03:07 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 23:03:07 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <jgross@suse.com>,
+        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
+        <kamatam@amazon.com>, <sstabellini@kernel.org>,
+        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>
+Message-ID: <20200604230307.GB25251@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <cover.1589926004.git.anchalag@amazon.com>
+ <529f544a64bb93b920bf86b1d3f86d93b0a4219b.1589926004.git.anchalag@amazon.com>
+ <72989b50-0c13-7a2b-19e2-de4a3646c83f@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200604120504.32425-5-dmurphy@ti.com>
+In-Reply-To: <72989b50-0c13-7a2b-19e2-de4a3646c83f@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:04:53AM -0500, Dan Murphy wrote:
-> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
-> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
-> can control RGB LEDs individually or as part of a control bank group.
-> These devices have the ability to adjust the mixing control for the RGB
-> LEDs to obtain different colors independent of the overall brightness of
-> the LED grouping.
+On Sat, May 30, 2020 at 07:02:01PM -0400, Boris Ostrovsky wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 > 
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/lp5012.pdf
-> http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> http://www.ti.com/lit/ds/symlink/lp5036.pdf
 > 
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/leds/leds-lp50xx.yaml | 136 ++++++++++++++++++
->  1 file changed, 136 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-> new file mode 100644
-> index 000000000000..02fcdc13262f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for LP50XX RGB LED from Texas Instruments.
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
-> +  a LED group or control them individually.
-> +
-> +  The difference in these RGB LED drivers is the number of supported RGB
-> +  modules.
-> +
-> +  For more product information please see the link below:
-> +  http://www.ti.com/lit/ds/symlink/lp5012.pdf
-> +  http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> +  http://www.ti.com/lit/ds/symlink/lp5036.pdf
-> +
-> +properties:
-> +  #allOf:
-> +    #- $ref: "common.yaml#"
-> +    #- $ref: "leds-class-multicolor.yaml#"
+> On 5/19/20 7:25 PM, Anchal Agarwal wrote:
+> > Introduce a small function which re-uses shared page's PA allocated
+> > during guest initialization time in reserve_shared_info() and not
+> > allocate new page during resume flow.
+> > It also  does the mapping of shared_info_page by calling
+> > xen_hvm_init_shared_info() to use the function.
+> >
+> > Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+> > ---
+> >  arch/x86/xen/enlighten_hvm.c | 7 +++++++
+> >  arch/x86/xen/xen-ops.h       | 1 +
+> >  2 files changed, 8 insertions(+)
+> >
+> > diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+> > index e138f7de52d2..75b1ec7a0fcd 100644
+> > --- a/arch/x86/xen/enlighten_hvm.c
+> > +++ b/arch/x86/xen/enlighten_hvm.c
+> > @@ -27,6 +27,13 @@
+> >
+> >  static unsigned long shared_info_pfn;
+> >
+> > +void xen_hvm_map_shared_info(void)
+> > +{
+> > +     xen_hvm_init_shared_info();
+> > +     if (shared_info_pfn)
+> > +             HYPERVISOR_shared_info = __va(PFN_PHYS(shared_info_pfn));
+> > +}
+> > +
+> 
+> 
+> AFAICT it is only called once so I don't see a need for new routine.
+> 
+> 
+HYPERVISOR_shared_info can only be mapped in this scope without refactoring
+much of the code.
+> And is it possible for shared_info_pfn to be NULL in resume path (which
+> is where this is called)?
+> 
+> 
+I don't think it should be, still a sanity check but I don't think its needed there
+because hibernation will fail in any case if thats the case. 
+However, HYPERVISOR_shared_info does needs to be re-mapped on resume as its been
+marked to dummy address on suspend. Its also safe in case va changes.
+Does the answer your question?
+> -boris
 
-These describe properties in the 'multi-led' nodes, so the $ref goes 
-there. And you only need the 2nd one because it already references the 
-1st one (or it should once you fix patch 1).
-
-> +
-> +  compatible:
-> +    enum:
-> +      - ti,lp5009
-> +      - ti,lp5012
-> +      - ti,lp5018
-> +      - ti,lp5024
-> +      - ti,lp5030
-> +      - ti,lp5036
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description:
-> +      I2C slave address
-> +      lp5009/12 - 0x14, 0x15, 0x16, 0x17
-> +      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
-> +      lp5030/36 - 0x30, 0x31, 0x32, 0x33
-> +
-> +  enable-gpios:
-> +    maxItems: 1
-> +    description: GPIO pin to enable/disable the device.
-> +
-> +  vled-supply:
-> +    description: LED supply.
-> +
-> +  child-node:
-
-I guess you didn't understand what I said on this. What you need is:
-
-patternProperties:
-  '^multi-led@[0-9]$':
-    type: object
-    $ref: leds-class-multicolor.yaml#
-    properties:
-      ...
-
-    patternProperties:
-      '^led@[0-9]$':
-        type: object
-        $ref: common.yaml#
-
-Adjust '[0-9]' based on how many possible child addresses there can be. 
-It's hex if more than 10.
-
-> +    properties:
-> +      ti,led-bank:
-> +        description:
-> +          This property denotes the LED module numbers that will be controlled as
-> +          a single RGB cluster.  Each LED module number will be controlled by a
-> +          single LED class instance.
-> +          There can only be one instance of the ti,led-bank
-> +          property for each device node.  This is a required node if the LED
-> +          modules are to be banked.
-> +        $ref: /schemas/types.yaml#definitions/uint32-array
-> +
-> +required:
-> +  - compatible
-> +  - reg
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/gpio/gpio.h>
-> +   #include <dt-bindings/leds/common.h>
-> +
-> +   i2c {
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       led-controller@14 {
-> +           compatible = "ti,lp5009";
-> +           reg = <0x14>;
-> +           #address-cells = <1>;
-> +           #size-cells = <0>;
-> +           enable-gpios = <&gpio1 16>;
-> +
-> +           multi-led@1 {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               reg = <1>;
-> +               color = <LED_COLOR_ID_MULTI>;
-> +               function = LED_FUNCTION_CHARGING;
-> +
-> +               led@0 {
-> +                   reg = <0>;
-> +                   color = <LED_COLOR_ID_RED>;
-> +               };
-> +
-> +               led@1 {
-> +                   reg = <1>;
-> +                   color = <LED_COLOR_ID_GREEN>;
-> +               };
-> +
-> +               led@2 {
-> +                   reg = <2>;
-> +                   color = <LED_COLOR_ID_BLUE>;
-> +               };
-> +          };
-> +
-> +          multi-led@2 {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            reg = <2>;
-> +            color = <LED_COLOR_ID_MULTI>;
-> +            function = LED_FUNCTION_STANDBY;
-> +            ti,led-bank = <2 3 5>;
-
-I still don't understand why 'reg = <2 3 5>;' with the 1st entry being 
-the control bank. Is '2' in reg not the same thing as '2' here?
-
-> +
-> +            led@6 {
-> +              reg = <0x6>;
-> +              color = <LED_COLOR_ID_RED>;
-> +              led-sources = <6 9 15>;
-> +            };
-> +
-> +            led@7 {
-> +              reg = <0x7>;
-> +              color = <LED_COLOR_ID_GREEN>;
-> +              led-sources = <7 10 16>;
-> +            };
-> +
-> +            led@8 {
-> +              reg = <0x8>;
-> +              color = <LED_COLOR_ID_BLUE>;
-> +              led-sources = <8 11 17>;
-> +            };
-> +         };
-> +       };
-> +    };
-> -- 
-> 2.26.2
+-Anchal
+> 
 > 
