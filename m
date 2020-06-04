@@ -2,161 +2,111 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2383EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39542C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F183120659
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1701120659
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M0mkpsLd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBB2oy+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgFDUI6 (ORCPT
+        id S1729201AbgFDULM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
+        Thu, 4 Jun 2020 16:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728587AbgFDUI5 (ORCPT
+        with ESMTP id S1726262AbgFDULL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:08:57 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59098C08C5C4
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:08:57 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n23so3980350pgb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:08:57 -0700 (PDT)
+        Thu, 4 Jun 2020 16:11:11 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A69A8C08C5C0;
+        Thu,  4 Jun 2020 13:11:11 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id u13so1597458iol.10;
+        Thu, 04 Jun 2020 13:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AFF1riO+rvi+JtGxWF5qzVLPXHH0Nzh8aZcDxBuji4s=;
-        b=M0mkpsLd7B3310QKl3SLGg22ik2mXjNx5FY1vzJopMffJnCw8jRcmo9fV9LTIHikFp
-         RUv7WnBJ6K5VaUslDx62awUaItJ+YKUKSU3/LS3bQT0QPBOUmH8h7pgLYyxlBLfTzZPU
-         CwkTICvo+M0GUh+egz/pFlCv8tR424B81CNZ9aQO8/k4dMiV20ohQx7N7YX7tjfxxqqp
-         JKfbJIsE+MYGNYLFN8gpzmr0Avp6j5x4qED0RF7A5OiE4WLh5w8/DvLwZz8GAkmSlO6c
-         QbXytbk3xKeeMX1S4Xa0zICtEJbZ60RM6KlvqWwsKz3NAMy2eeUR9b8nqFf/OpAnG9F0
-         SQHw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Pi/zBjFq7tRVG33YykVUtKHdjWOyuCQKzTlU7tlBF7U=;
+        b=lBB2oy+l9vqKat9u2vnCdAL9M0TQDIpPrMh2tdRpHEtN5UkRxct6thh3HTVUB5oWNo
+         81Bl4/TFBla4jrWCUtz0xisKmElWSnNBbpKe/dZQdRTdv9wT2/FZoJhYqBf365Bm8MR4
+         Umev2czrKdMGVMVe+FyMaEIurlOhjPO1DCWF76EZZapzggrjoFWwHONdFU8fmbYl0HY6
+         9uG5jey4zXI9w3BlUcdN4zK5jg/8VGXcqB2eir2FIpxqFQZv46ADedjjemkbiOJNenCS
+         laNrSq6I6WsNST/2eBdxW7duNc9lLLStJ0W0MwXO33KysyHnQRCVPoVw6nrCDqGr99Ac
+         t9+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AFF1riO+rvi+JtGxWF5qzVLPXHH0Nzh8aZcDxBuji4s=;
-        b=CeCY4+g+ve/rr4ikveDX1KH+dqmnRNg/Z+o7JElR3ZDZf5ALG7/QGzmyz5KpDIB2nq
-         Xn9t+zRVT4bBE4r2m/+TDYD3NFjMPfTTvnmSZn/YHMeJFg8i93SwJseAZDGnmrWWtekv
-         SHkSGL9o7FP5x6JVhcZJulaoJBeKA0/BPzqL/ErPhmxCAF8IVLiuMwbga3ID9VT7l2wL
-         lrqgfxoNEO//08Kk9dFqNmUF520MPwhe0bI0nlYZYblhQl3qHUs1kCwcB7/g0+vvugh+
-         lpcNLhBnxYCG7MNRGHX+xiqKC5CsBqu3Xzk30mFj1u3aHY1v4LJttodgj9XmAoMMfqN8
-         D5Rg==
-X-Gm-Message-State: AOAM530RjI4zOAxrQ9422S5ZxFQ4mTmSUAohq8PuxMZlqKcIt5QrntRE
-        eo9SueE7lp/EgagRWeaokh3iVD1kLAuW6JWch1G8aw==
-X-Google-Smtp-Source: ABdhPJxLMcvCCgSkDUjAgCX71OWizViN7uenmXgd4TZP4zed6Dsn/5qWQdcJBcIITrWPyVLL/7sbTfhjLEhVY3eJVkA=
-X-Received: by 2002:a63:5644:: with SMTP id g4mr5811569pgm.381.1591301336363;
- Thu, 04 Jun 2020 13:08:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200603233203.1695403-1-keescook@chromium.org> <20200603233203.1695403-4-keescook@chromium.org>
-In-Reply-To: <20200603233203.1695403-4-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 4 Jun 2020 13:08:44 -0700
-Message-ID: <CAKwvOdnNuFySqAMk7s_cXqFM=dPX4JfvqNVLCuj90Gn4tzciAw@mail.gmail.com>
-Subject: Re: [PATCH 03/10] b43: Remove uninitialized_var() usage
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Pi/zBjFq7tRVG33YykVUtKHdjWOyuCQKzTlU7tlBF7U=;
+        b=ECgXhC+zluTpJolnKhUwinEYsqiszFofsTf2jFXkYzE1jjVha6Uxa7P2MGqKZzAeyn
+         ZY7xguURv2HqX5p/I/XGvTpQG0bRjycy84VuCCzNAIl2aVJUUoMBb8c93vepkbH8oH0m
+         Hs/YZuQVzoqa7Tsafz0p0sDsMyvL27MXDLfM44HKbHqogW4OjWbIOUgxoIBw8/y7yS2D
+         QiSLKiI4+i0UidgATiBclEZXVDgmJAElxOjM2DjLyW9IhmToiqqoJLjtkTPH8VLnYRfo
+         nPDGtqm6KefHlzWQOBnRbxck9fyMjRC02HAuTxC0SLiyc5mQqBGiZmRfRfyl+KbdX7SF
+         G2Yg==
+X-Gm-Message-State: AOAM533wtUwWRzOHxRIpeHrK+VaylbxxAItPN01mY5bxWR2pTS38qE0w
+        /ofAlx1Ob7+/AtWNvvqBT8Q=
+X-Google-Smtp-Source: ABdhPJyMVZut24SMKLBXsgjpmcZScbs8OJAuqugOBN1c33TeRW2hoM6Y6/wbK3+sEOAYlEPS1ykATQ==
+X-Received: by 2002:a5d:860b:: with SMTP id f11mr5441744iol.104.1591301469814;
+        Thu, 04 Jun 2020 13:11:09 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id w18sm1936296ili.19.2020.06.04.13.11.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 13:11:09 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu,
+        mccamant@cs.umn.edu, Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] dmaengine: tegra210-adma: handle pm_runtime_get_sync failure cases
+Date:   Thu,  4 Jun 2020 15:10:58 -0500
+Message-Id: <20200604201058.86457-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> "unused variable"). If the compiler thinks it is uninitialized, either
-> simply initialize the variable or make compiler changes. As a precursor
-> to removing[2] this[3] macro[4], just initialize this variable to NULL,
-> and make the (unreachable!) code do a conditional test.
->
-> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/net/wireless/broadcom/b43/phy_n.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
-> index d3c001fa8eb4..88cdcea10d61 100644
-> --- a/drivers/net/wireless/broadcom/b43/phy_n.c
-> +++ b/drivers/net/wireless/broadcom/b43/phy_n.c
-> @@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-The TODOs and `#if 0` in this function are concerning.  It looks like
-`rf_pwr_offset_table` is only used when `phy->rev` is >=7 && < 19.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/dma/tegra210-adma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Further, the loop has a case for `phy->rev >= 19` but we would have
-returned earlier if that was the case.
-
->         u32 rfpwr_offset;
->         u8 pga_gain, pad_gain;
->         int i;
-> -       const s16 *uninitialized_var(rf_pwr_offset_table);
-> +       const s16 *rf_pwr_offset_table = NULL;
->
->         table = b43_nphy_get_tx_gain_table(dev);
->         if (!table)
-> @@ -4256,9 +4256,13 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
->                         pga_gain = (table[i] >> 24) & 0xf;
->                         pad_gain = (table[i] >> 19) & 0x1f;
->                         if (b43_current_band(dev->wl) == NL80211_BAND_2GHZ)
-> -                               rfpwr_offset = rf_pwr_offset_table[pad_gain];
-> +                               rfpwr_offset = rf_pwr_offset_table
-> +                                               ? rf_pwr_offset_table[pad_gain]
-> +                                               : 0;
->                         else
-> -                               rfpwr_offset = rf_pwr_offset_table[pga_gain];
-> +                               rfpwr_offset = rf_pwr_offset_table
-> +                                               ? rf_pwr_offset_table[pga_gain]
-> +                                               : 0;
-
-
-The code is trying to check `phy->rev >= 7 && phy->rev < 19` once
-before the loop, then set `rf_pwr_offset_table`, so having another
-conditional on `rf_pwr_offset_table` in the loop is unnecessary. I'm
-ok with initializing it to `NULL`, but I'm not sure the conditional
-check is necessary.  Do you get a compiler warning otherwise?
-
->                 } else {
->                         pga_gain = (table[i] >> 24) & 0xF;
->                         if (b43_current_band(dev->wl) == NL80211_BAND_2GHZ)
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200603233203.1695403-4-keescook%40chromium.org.
-
-
-
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index c4ce5dfb149b..899eaaf9fc48 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -659,6 +659,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+ 	ret = pm_runtime_get_sync(tdc2dev(tdc));
+ 	if (ret < 0) {
+ 		free_irq(tdc->irq, tdc);
++		pm_runtime_put(tdc2dev(tdc));
+ 		return ret;
+ 	}
+ 
+@@ -870,7 +871,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0)
+-		goto rpm_disable;
++		goto rpm_put;
+ 
+ 	ret = tegra_adma_init(tdma);
+ 	if (ret)
 -- 
-Thanks,
-~Nick Desaulniers
+2.17.1
+
