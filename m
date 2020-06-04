@@ -2,107 +2,188 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1724EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E242C204EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059B2204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d0UayAtA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nk5QM+Tx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgFDRpn (ORCPT
+        id S1730207AbgFDRpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:45:43 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31715 "EHLO
+        Thu, 4 Jun 2020 13:45:52 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43510 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730144AbgFDRpm (ORCPT
+        by vger.kernel.org with ESMTP id S1730144AbgFDRpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:45:42 -0400
+        Thu, 4 Jun 2020 13:45:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591292741;
+        s=mimecast20190719; t=1591292749;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qDo8p9BXXIxSVFgSR/pGZb84AN0JbtfR3XCYvCIeiuU=;
-        b=d0UayAtAkIpYAVTM02tedcydLs23PaKRexgLTm1y8q2WoDGm3G4X0y0LjjwO3qtqsujTyz
-        F9kBzNwGRpSfancsTCnsi4djbUp8N2tx5M0Y+qISIDWsoCTkMjA/VPke1rJ+92ibVhwFGT
-        hzz0nlI9EYmkYXkYk3wFXwuY7ioM1P4=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=oj+xAGxWNflxShPgkMUsRlyTI7/e09ggt6o5sfkK4cI=;
+        b=Nk5QM+Tx2pmlNPBXjDqWUmJ8HxwBD7yieI//Qi+hCwkaNRNizDnDYniktxPZ4wnukOfX8i
+        iRtTBuuZ/bK0WIEpIFw9OrizyKeVvwVoCu6oZmcEtMTJ3fvRNdvnGuLit8isyOYNNEEQ9q
+        ppUfeUyKh3MT1Ig4e8IXtuRT68BBnMw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-6Fol4DoTOHqdfoN9prVAzw-1; Thu, 04 Jun 2020 13:45:37 -0400
-X-MC-Unique: 6Fol4DoTOHqdfoN9prVAzw-1
+ us-mta-101-czBYCIaSNAie9hQheAqAIQ-1; Thu, 04 Jun 2020 13:45:45 -0400
+X-MC-Unique: czBYCIaSNAie9hQheAqAIQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3056D107ACF5;
-        Thu,  4 Jun 2020 17:45:35 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-114-122.rdu2.redhat.com [10.10.114.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BEF5B7B5ED;
-        Thu,  4 Jun 2020 17:45:34 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 4E25C223B92; Thu,  4 Jun 2020 13:45:34 -0400 (EDT)
-Date:   Thu, 4 Jun 2020 13:45:34 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A9FF100CCC6;
+        Thu,  4 Jun 2020 17:45:43 +0000 (UTC)
+Received: from [10.36.112.96] (ovpn-112-96.ams2.redhat.com [10.36.112.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ED10A7B5EB;
+        Thu,  4 Jun 2020 17:45:40 +0000 (UTC)
+Subject: Re: [PATCH] x86/mm: use max memory block size with unaligned memory
+ end
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] KVM: x86: Interrupt-based mechanism for
- async_pf 'page present' notifications
-Message-ID: <20200604174534.GB99235@redhat.com>
-References: <20200525144125.143875-1-vkuznets@redhat.com>
- <3be1df67-2e39-c7b7-b666-66cd4fe61406@redhat.com>
+        Steven Sistare <steven.sistare@oracle.com>
+References: <20200604035443.3267046-1-daniel.m.jordan@oracle.com>
+ <5827baaf-0eb5-bcea-5d98-727485683512@redhat.com>
+ <20200604172213.f5lufktpqvqjkv4u@ca-dmjordan1.us.oracle.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <ebc31650-9e98-f286-6fc2-aafdd3cd9272@redhat.com>
+Date:   Thu, 4 Jun 2020 19:45:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3be1df67-2e39-c7b7-b666-66cd4fe61406@redhat.com>
+In-Reply-To: <20200604172213.f5lufktpqvqjkv4u@ca-dmjordan1.us.oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 01:04:55PM +0200, Paolo Bonzini wrote:
-> On 25/05/20 16:41, Vitaly Kuznetsov wrote:
-> > Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
-> > it seems that re-using #PF exception for a PV mechanism wasn't a great
-> > idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
-> > not present' events and normal APIC interrupts for 'page ready' events.
-> > This series does the later.
-> > 
-> > Changes since v1:
-> > - struct kvm_vcpu_pv_apf_data's fields renamed to 'flags' and 'token',
-> >   comments added [Vivek Goyal]
-> > - 'type1/2' names for APF events dropped from everywhere [Vivek Goyal]
-> > - kvm_arch_can_inject_async_page_present() renamed to 
-> >   kvm_arch_can_dequeue_async_page_present [Vivek Goyal]
-> > - 'KVM: x86: deprecate KVM_ASYNC_PF_SEND_ALWAYS' patch added.
-> > 
-> > v1: https://lore.kernel.org/kvm/20200511164752.2158645-1-vkuznets@redhat.com/
-> > QEMU patches for testing: https://github.com/vittyvk/qemu.git (async_pf2_v2 branch)
+On 04.06.20 19:22, Daniel Jordan wrote:
+> On Thu, Jun 04, 2020 at 09:22:03AM +0200, David Hildenbrand wrote:
+>> On 04.06.20 05:54, Daniel Jordan wrote:
+>>> Some of our servers spend 14 out of the 21 seconds of kernel boot
+>>> initializing memory block sysfs directories and then creating symlinks
+>>> between them and the corresponding nodes.  The slowness happens because
+>>> the machines get stuck with the smallest supported memory block size on
+>>> x86 (128M), which results in 16,288 directories to cover the 2T of
+>>> installed RAM, and each of these paths does a linear search of the
+>>> memory blocks for every block id, with atomic ops at each step.
+>>
+>> With 4fb6eabf1037 ("drivers/base/memory.c: cache memory blocks in xarray
+>> to accelerate lookup") merged by Linus' today (strange, I thought this
+>> would be long upstream)
 > 
-> I'll do another round of review and queue patches 1-7; 8-9 will be
-> queued later and separately due to the conflicts with the interrupt
-> entry rework, but it's my job and you don't need to do anything else.
+> Ah, thanks for pointing this out!  It was only posted to LKML so I missed it.
+> 
+>> all linear searches should be gone and at least
+>> the performance observation in this patch no longer applies.
+> 
+> The performance numbers as stated, that's certainly true, but this patch on top
+> still improves kernel boot by 7%.  It's a savings of half a second -- I'll take
+> it.
+> 
+> IMHO the root cause of this is really the small block size.  Building a cache
+> on top to avoid iterating over tons of small blocks seems like papering over
+> the problem, especially when one of the two affected paths in boot is a
 
-Hi Paolo,
+The memory block size dictates your memory hot(un)plug granularity.
+E.g., on powerpc that's 16MB so they have *a lot* of memory blocks.
+That's why that's not papering over the problem. Increasing the memory
+block size isn't always the answer.
 
-I seee 1-7 got merged for 5.8. When you say patch 8-9 will be queue later,
-you mean later in 5.8 or it will held till 5.9 merge window opens.
+(there are other, still fairly academic approaches to power down memory
+banks where you also want small memory blocks instead)
 
-Thanks
-Vivek
+> cautious check that might be ready to be removed by now[0]:
+
+Yeah, we discussed that somewhere already. My change only highlighted
+the problem. And now that it's cheap, it can just stay unless there is a
+very good reason not to do it.
+
+> 
+>     static int init_memory_block(struct memory_block **memory,
+>     			     unsigned long block_id, unsigned long state)
+>     {
+>             ...
+>     	mem = find_memory_block_by_id(block_id);
+>     	if (mem) {
+>     		put_device(&mem->dev);
+>     		return -EEXIST;
+>     	}
+> 
+> Anyway, I guess I'll redo the changelog and post again.
+> 
+>> The memmap init should nowadays consume most time.
+> 
+> Yeah, but of course it's not as bad as it was now that it's fully parallelized.
+
+Right. I also observed that computing if a zone is contiguous can be
+expensive.
+
+
+-- 
+Thanks,
+
+David / dhildenb
 
