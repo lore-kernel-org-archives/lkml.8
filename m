@@ -2,281 +2,115 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD43C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B587120829
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0692420829
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TPms31tr"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PHtn+4sW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgFDPEC (ORCPT
+        id S1729336AbgFDPEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58832 "EHLO
+        Thu, 4 Jun 2020 11:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729303AbgFDPD7 (ORCPT
+        with ESMTP id S1729308AbgFDPEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:03:59 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081F7C08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:03:58 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id 9so7699721ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:03:57 -0700 (PDT)
+        Thu, 4 Jun 2020 11:04:00 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DABC08C5C3
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:03:59 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b27so6301315qka.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wlhcvUOakWuhijmYI6rLUV+QKnBtMlyB6Wx9LlrghBM=;
-        b=TPms31trvxW7w5W5M6NqQilVoiTyZS/u3VNpjpuGrpzu5Vnzp+Akgw1RD7kdvWRLTU
-         f0jgDWHXFYwCpCyOw92t4GxhIJ2Rh7S9sz3Uugelw2BkoYuzm2gEEKpGS455kXPHyzAu
-         ABG5NzsN/9An6Yrw9i/bQ6XXr0zcW3hHInLhooxw0Hcrwf0ReYoJ+YR32XFji568gjqg
-         yT7dolEGRX8nd/v2Qq9MoedA2dQtVBVueDelykF8gBgfegvoFerbr4JBe7ceArlNymCs
-         Kq3DFMyj2PdY+iLnr1XG0x+WlnMiUX3qLK0nE6m3553/SEBjAjdkPq6RMmr2s+pzS1Jo
-         p5lg==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bm9LXKRTRAn4ksM+zTELl5Ncxt58Msz6smAUvbLwlQg=;
+        b=PHtn+4sW9oeaaN0KqpSdfnAiSgGTHt2Z0UKpbIriHyOnPUd/JHuaYZWpEdpsIaFaRv
+         YvPtCcDdD0ZUErBQIlaSncoBZYl91ggI8sYHqzw9bR/TZvqy6AN1xRyhmdNp28tW459k
+         zc/ltDhaD7rxGMkMOSnh0JlRrzZf55P5fXoANCNcFe4PK35L1PIIi9SpADQrXNR7/ghu
+         MRG8AChv3Sipl7YoDkSMO58dnI5vaMxvWgOk5kcvZCaGXGfX1ivy5tr2caHeF+hJbc9g
+         4QqkF2HCIZX77Q4uhgsSWHmxgVDjsPrrSuqruV5LzG4O1WK1yxB7R9xOKCdHrDOgU+UW
+         UL+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wlhcvUOakWuhijmYI6rLUV+QKnBtMlyB6Wx9LlrghBM=;
-        b=WDE/9Wg5AA2XpBwtfKixoFHSUPuz4btsiYdg88MnLCAYpB7wvIhZ3z9OXoLiA+TSgN
-         vqtd66Bz/jtx4dm56ul/MkRjooF7PoYME8U9QFfs3SP73tBkEgvTL+Xak/iax4pXnoa1
-         M0AJNOEsOKVzkUMlrG5y+07d7vwifk9rYzCdwGU6CJ886E3kgTSL/ais0otP1u4hRd2m
-         JX2JlT2FSN1gAAhHgXHf7unWAjfsQHs1WZ/i89LBBKSJ5CVn0DjKzBaHjGjwfweist3n
-         bvxZfJAzmlG3mus9ZQdRnT1j2n0BT/1Du+CqGc2a6/CVXJDX2OLS9RBLApcYlZqCg2EB
-         w2nQ==
-X-Gm-Message-State: AOAM531lPPFQ35FymO8hYn3hthUZMxFvsvTfzJUVFMBwjD4ITO4i2wMY
-        zkfH1FFmlrQaThbMD7w43skoPYSGQ3M=
-X-Google-Smtp-Source: ABdhPJwUaJ7ESoL+nkMpVosCs7H1wewzc+sJXEMfDO23PeiCiHHf4288o+EiM3Ay39DIzg7b0GQ14w==
-X-Received: by 2002:a2e:9246:: with SMTP id v6mr2480893ljg.47.1591283035900;
-        Thu, 04 Jun 2020 08:03:55 -0700 (PDT)
-Received: from localhost.localdomain ([176.59.41.83])
-        by smtp.gmail.com with ESMTPSA id m15sm1514619lfk.65.2020.06.04.08.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 08:03:54 -0700 (PDT)
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
-        linux-integrity@vger.kernel.org, arnd@linaro.org,
-        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
-Subject: [PATCHv7 2/3] optee: enable support for multi-stage bus enumeration
-Date:   Thu,  4 Jun 2020 18:03:47 +0300
-Message-Id: <20200604150348.27996-3-maxim.uvarov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200604150348.27996-1-maxim.uvarov@linaro.org>
-References: <20200604150348.27996-1-maxim.uvarov@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bm9LXKRTRAn4ksM+zTELl5Ncxt58Msz6smAUvbLwlQg=;
+        b=n5syVOTzdwXaRB7ZE/w32zM+DVp4TulIV1tOQvbtZt5Vy4AGa16orZHT8gPhf2WqVq
+         jO8mWKloVzTEsqoBB/vxJOAGPf8YOO86zVFM8hT4piUfNh2LWpl2AfbjLoi+cSghdVSN
+         hOvY4VlFOvKgKqgd5vH5gT9qFFZ83DPvsyPTDzGcf0nDFsfiRAF5e9EHBow0L4wWpQco
+         2e1MQQcwN+I5mJTT3RuXFONKM0o6Ep0YqvwxrzPdbI/BMVpaGVF5zf6UrP38yOGWXDlj
+         c2z8zI7XcFjSnaJUxXLc3PQdV6GCzU419B3ZmT98tmJ5JIm/+rCOVMBanoTiKXItFICP
+         PNhg==
+X-Gm-Message-State: AOAM532rl0beKh4m/eYVwSK7bj6ZtkWrEd7LC8k0Yf/drUBAZ18JvmcQ
+        EopuIXr4XPH8la4vHTHkov9IEg==
+X-Google-Smtp-Source: ABdhPJxpiSlyIl8wDEUjWVCyb1O6lDkKyM6ZF/D0TVbA/KKrBsj4VNmpQA2CqhuZBuHgzP9j4gjV6g==
+X-Received: by 2002:a37:607:: with SMTP id 7mr4857940qkg.385.1591283038460;
+        Thu, 04 Jun 2020 08:03:58 -0700 (PDT)
+Received: from ovpn-112-233.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 205sm4560403qkh.94.2020.06.04.08.03.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jun 2020 08:03:57 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     peterz@infradead.org
+Cc:     mark.rutland@arm.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] fork: silence a false postive warning in __mmdrop
+Date:   Thu,  4 Jun 2020 11:03:44 -0400
+Message-Id: <20200604150344.1796-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some drivers (like ftpm) can operate only after tee-supplicant
-runs because of tee-supplicant provides things like storage
-services (rpmb, shm).  This patch splits probe of non tee-supplicant
-dependable drivers to the early stage, and after tee-supplicant run
-probe other drivers.
+The linux-next commit bf2c59fce407 ("sched/core: Fix illegal RCU from
+offline CPUs") delayed,
 
-Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@linaro.org>
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+idle->active_mm = &init_mm;
+
+into finish_cpu() instead of idle_task_exit() which results in a false
+positive warning that was originally designed in the commit 3eda69c92d47
+("kernel/fork.c: detect early free of a live mm").
+
+ WARNING: CPU: 127 PID: 72976 at kernel/fork.c:697
+ __mmdrop+0x230/0x2c0
+ do_exit+0x424/0xfa0
+ Call Trace:
+ do_exit+0x424/0xfa0
+ do_group_exit+0x64/0xd0
+ sys_exit_group+0x24/0x30
+ system_call_exception+0x108/0x1d0
+ system_call_common+0xf0/0x278
+
+Fixes: bf2c59fce407 ("sched/core: Fix illegal RCU from offline CPUs")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/tee/optee/core.c          | 27 ++++++++++++++++++++++++---
- drivers/tee/optee/device.c        | 29 +++++++++++------------------
- drivers/tee/optee/optee_private.h | 10 +++++++++-
- 3 files changed, 44 insertions(+), 22 deletions(-)
+ kernel/fork.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-index 99698b8a3a74..b373b1b08b6d 100644
---- a/drivers/tee/optee/core.c
-+++ b/drivers/tee/optee/core.c
-@@ -17,6 +17,7 @@
- #include <linux/tee_drv.h>
- #include <linux/types.h>
- #include <linux/uaccess.h>
-+#include <linux/workqueue.h>
- #include "optee_private.h"
- #include "optee_smc.h"
- #include "shm_pool.h"
-@@ -218,6 +219,11 @@ static void optee_get_version(struct tee_device *teedev,
- 	*vers = v;
- }
- 
-+static void optee_bus_scan(struct work_struct *work)
-+{
-+	WARN_ON(optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP));
-+}
-+
- static int optee_open(struct tee_context *ctx)
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 142b23645d82..5334efd2a680 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -694,7 +694,6 @@ void __mmdrop(struct mm_struct *mm)
  {
- 	struct optee_context_data *ctxdata;
-@@ -241,8 +247,18 @@ static int optee_open(struct tee_context *ctx)
- 			kfree(ctxdata);
- 			return -EBUSY;
- 		}
--	}
- 
-+		if (!optee->scan_bus_done) {
-+			INIT_WORK(&optee->scan_bus_work, optee_bus_scan);
-+			optee->scan_bus_wq = create_workqueue("optee_bus_scan");
-+			if (!optee->scan_bus_wq) {
-+				kfree(ctxdata);
-+				return -ECHILD;
-+			}
-+			queue_work(optee->scan_bus_wq, &optee->scan_bus_work);
-+			optee->scan_bus_done = true;
-+		}
-+	}
- 	mutex_init(&ctxdata->mutex);
- 	INIT_LIST_HEAD(&ctxdata->sess_list);
- 
-@@ -296,8 +312,13 @@ static void optee_release(struct tee_context *ctx)
- 
- 	ctx->data = NULL;
- 
--	if (teedev == optee->supp_teedev)
-+	if (teedev == optee->supp_teedev) {
-+		if (optee->scan_bus_wq) {
-+			destroy_workqueue(optee->scan_bus_wq);
-+			optee->scan_bus_wq = NULL;
-+		}
- 		optee_supp_release(&optee->supp);
-+	}
- }
- 
- static const struct tee_driver_ops optee_ops = {
-@@ -675,7 +696,7 @@ static int optee_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, optee);
- 
--	rc = optee_enumerate_devices();
-+	rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES);
- 	if (rc) {
- 		optee_remove(pdev);
- 		return rc;
-diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-index 14d335cf8d34..663c4c90a063 100644
---- a/drivers/tee/optee/device.c
-+++ b/drivers/tee/optee/device.c
-@@ -11,18 +11,6 @@
- #include <linux/uuid.h>
- #include "optee_private.h"
- 
--/*
-- * Get device UUIDs
-- *
-- * [out]     memref[0]        Array of device UUIDs
-- *
-- * Return codes:
-- * TEE_SUCCESS - Invoke command success
-- * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
-- * TEE_ERROR_SHORT_BUFFER - Output buffer size less than required
-- */
--#define PTA_CMD_GET_DEVICES		0x0
--
- static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
- {
- 	if (ver->impl_id == TEE_IMPL_ID_OPTEE)
-@@ -32,7 +20,8 @@ static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
- }
- 
- static int get_devices(struct tee_context *ctx, u32 session,
--		       struct tee_shm *device_shm, u32 *shm_size)
-+		       struct tee_shm *device_shm, u32 *shm_size,
-+		       u32 func)
- {
- 	int ret = 0;
- 	struct tee_ioctl_invoke_arg inv_arg;
-@@ -41,8 +30,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
- 	memset(&inv_arg, 0, sizeof(inv_arg));
- 	memset(&param, 0, sizeof(param));
- 
--	/* Invoke PTA_CMD_GET_DEVICES function */
--	inv_arg.func = PTA_CMD_GET_DEVICES;
-+	inv_arg.func = func;
- 	inv_arg.session = session;
- 	inv_arg.num_params = 4;
- 
-@@ -90,7 +78,7 @@ static int optee_register_device(const uuid_t *device_uuid)
- 	return rc;
- }
- 
--int optee_enumerate_devices(void)
-+static int __optee_enumerate_devices(u32 func)
- {
- 	const uuid_t pta_uuid =
- 		UUID_INIT(0x7011a688, 0xddde, 0x4053,
-@@ -121,7 +109,7 @@ int optee_enumerate_devices(void)
- 		goto out_ctx;
- 	}
- 
--	rc = get_devices(ctx, sess_arg.session, NULL, &shm_size);
-+	rc = get_devices(ctx, sess_arg.session, NULL, &shm_size, func);
- 	if (rc < 0 || !shm_size)
- 		goto out_sess;
- 
-@@ -133,7 +121,7 @@ int optee_enumerate_devices(void)
- 		goto out_sess;
- 	}
- 
--	rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size);
-+	rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size, func);
- 	if (rc < 0)
- 		goto out_shm;
- 
-@@ -161,3 +149,8 @@ int optee_enumerate_devices(void)
- 
- 	return rc;
- }
-+
-+int optee_enumerate_devices(u32 func)
-+{
-+	return  __optee_enumerate_devices(func);
-+}
-diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
-index d9c5037b4e03..8b71839a357e 100644
---- a/drivers/tee/optee/optee_private.h
-+++ b/drivers/tee/optee/optee_private.h
-@@ -78,6 +78,9 @@ struct optee_supp {
-  * @memremaped_shm	virtual address of memory in shared memory pool
-  * @sec_caps:		secure world capabilities defined by
-  *			OPTEE_SMC_SEC_CAP_* in optee_smc.h
-+ * @scan_bus_done	flag if device registation was already done.
-+ * @scan_bus_wq		workqueue to scan optee bus and register optee drivers
-+ * @scan_bus_work	workq to scan optee bus and register optee drivers
-  */
- struct optee {
- 	struct tee_device *supp_teedev;
-@@ -89,6 +92,9 @@ struct optee {
- 	struct tee_shm_pool *pool;
- 	void *memremaped_shm;
- 	u32 sec_caps;
-+	bool   scan_bus_done;
-+	struct workqueue_struct *scan_bus_wq;
-+	struct work_struct scan_bus_work;
- };
- 
- struct optee_session {
-@@ -173,7 +179,9 @@ void optee_free_pages_list(void *array, size_t num_entries);
- void optee_fill_pages_list(u64 *dst, struct page **pages, int num_pages,
- 			   size_t page_offset);
- 
--int optee_enumerate_devices(void);
-+#define PTA_CMD_GET_DEVICES		0x0
-+#define PTA_CMD_GET_DEVICES_SUPP	0x1
-+int optee_enumerate_devices(u32 func);
- 
- /*
-  * Small helpers
+ 	BUG_ON(mm == &init_mm);
+ 	WARN_ON_ONCE(mm == current->mm);
+-	WARN_ON_ONCE(mm == current->active_mm);
+ 	mm_free_pgd(mm);
+ 	destroy_context(mm);
+ 	mmu_notifier_subscriptions_destroy(mm);
 -- 
-2.17.1
+2.21.0 (Apple Git-122.2)
 
