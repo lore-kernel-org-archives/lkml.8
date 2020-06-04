@@ -2,69 +2,93 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6646C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D89D207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591239709;
-	bh=l4cGGOeQtX576EdkeXJ3SBIP9oSotpU6JYE4NkWSboo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KvulVP2NrqH/n9s9VO5GL7hgsXSstzFvSK8O5UzUtS8gPAyJ/Vv3T22B1GlltReAx
-	 19izQO/GMBreu68m5mneTbxzMF7+wJNquLQOckQcYJmtSB8Z6snGyN7zUH2xclMxvi
-	 B78oz73L7pdo0nku3Ktt+rq5Rzvk31iwO8pjJ1jw=
+	by mail.kernel.org (Postfix) with ESMTP id D1491206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:02:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="l4b8g311"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgFDDBr (ORCPT
+        id S1727016AbgFDDCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:01:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgFDDBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:01:47 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C9B8206C3;
-        Thu,  4 Jun 2020 03:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591239707;
-        bh=l4cGGOeQtX576EdkeXJ3SBIP9oSotpU6JYE4NkWSboo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fqZW2+BxmxhBH0SiAs7rfIX4Vs/xdbBeWAKHX1/JBtoZEDXq3NWr7VMLcLTmmLxeU
-         2uVrT+D9hbOUpcIkWoMW+z5jOhcMxO2IVZ2Jh14LBp+48JtfufiyxdXRiPGYwBUU8y
-         qAbs3TXuegSpgTVE7+mQ0YZ1MxWbZSEblVH7tB8s=
-Date:   Wed, 3 Jun 2020 20:01:45 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <chiqijun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>
-Subject: Re: [PATCH net-next 5/5] hinic: add support to get eeprom
- information
-Message-ID: <20200603200145.41cf76fd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200603062015.12640-6-luobin9@huawei.com>
-References: <20200603062015.12640-1-luobin9@huawei.com>
-        <20200603062015.12640-6-luobin9@huawei.com>
+        Wed, 3 Jun 2020 23:02:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16223 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725992AbgFDDCH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 23:02:07 -0400
+X-UUID: be76835fb3214aa3b7f98be91c9e5e1e-20200604
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UrOXbDNOnHiFKXtwaHVgzKiUKHi9PYwsXdkt9BWMTQ0=;
+        b=l4b8g311ij1osd5rrSxatQoejISeR2FIM9I2BLjH5Z/lF5w8CdMBFRPcBp84q2OS4CxL9M56MOPd2wPBOp9D/552vfvJTfOKfHr0KlZa+rg9vZY3kxhFE+KCSJJutYqimi5pgAKHP6lUDwhjwveUlVkudm8n9bE0Ve4NyvBLQJA=;
+X-UUID: be76835fb3214aa3b7f98be91c9e5e1e-20200604
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 493531536; Thu, 04 Jun 2020 11:02:05 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 4 Jun 2020 11:02:03 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 4 Jun 2020 11:02:03 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v4] usb: host: xhci-mtk: avoid runtime suspend when removing hcd
+Date:   Thu, 4 Jun 2020 11:01:53 +0800
+Message-ID: <1591239713-5081-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1591189767-21988-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1591189767-21988-1-git-send-email-macpaul.lin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: B6818B62397C1B7303376C105A3A0368FFDDA6D0DA11CA08A9A0942B6D3722342000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 14:20:15 +0800 Luo bin wrote:
-> add support to get eeprom information from the plug-in module
-> with ethtool -m cmd.
-> 
-> Signed-off-by: Luo bin <luobin9@huawei.com>
+V2hlbiBydW50aW1lIHN1c3BlbmQgd2FzIGVuYWJsZWQsIHJ1bnRpbWUgc3VzcGVuZCBtaWdodCBo
+YXBwZW4NCndoZW4geGhjaSBpcyByZW1vdmluZyBoY2QuIFRoaXMgbWlnaHQgY2F1c2Uga2VybmVs
+IHBhbmljIHdoZW4gaGNkDQpoYXMgYmVlbiBmcmVlZCBidXQgcnVudGltZSBwbSBzdXNwZW5kIHJl
+bGF0ZWQgaGFuZGxlIG5lZWQgdG8NCnJlZmVyZW5jZSBpdC4NCg0KU2lnbmVkLW9mZi1ieTogTWFj
+cGF1bCBMaW4gPG1hY3BhdWwubGluQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBDaHVuZmVu
+ZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQpDYzogc3RhYmxlQHZnZXIua2VybmVs
+Lm9yZw0KLS0tDQpDaGFuZ2VzIGZvciB2MzoNCiAgLSBSZXBsYWNlIGJldHRlciBzZXF1ZW5jZSBm
+b3IgZGlzYWJsaW5nIHRoZSBwbV9ydW50aW1lIHN1c3BlbmQuDQpDaGFuZ2VzIGZvciB2NDoNCiAg
+LSBUaGFua3MgZm9yIFNlcmdlaSdzIHJldmlldywgdHlwbyBpbiBjb21taXQgZGVzY3JpcHRpb24g
+aGFzIGJlZW4gY29ycmVjdGVkLg0KDQogZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay5jIHwgICAg
+NSArKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMgYi9kcml2ZXJzL3Vz
+Yi9ob3N0L3hoY2ktbXRrLmMNCmluZGV4IGJmYmRiM2MuLjY0MWQyNGUgMTAwNjQ0DQotLS0gYS9k
+cml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCisrKyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1t
+dGsuYw0KQEAgLTU4Nyw2ICs1ODcsOSBAQCBzdGF0aWMgaW50IHhoY2lfbXRrX3JlbW92ZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpDQogCXN0cnVjdCB4aGNpX2hjZAkqeGhjaSA9IGhjZF90
+b194aGNpKGhjZCk7DQogCXN0cnVjdCB1c2JfaGNkICAqc2hhcmVkX2hjZCA9IHhoY2ktPnNoYXJl
+ZF9oY2Q7DQogDQorCXBtX3J1bnRpbWVfcHV0X25vaWRsZSgmZGV2LT5kZXYpOw0KKwlwbV9ydW50
+aW1lX2Rpc2FibGUoJmRldi0+ZGV2KTsNCisNCiAJdXNiX3JlbW92ZV9oY2Qoc2hhcmVkX2hjZCk7
+DQogCXhoY2ktPnNoYXJlZF9oY2QgPSBOVUxMOw0KIAlkZXZpY2VfaW5pdF93YWtldXAoJmRldi0+
+ZGV2LCBmYWxzZSk7DQpAQCAtNTk3LDggKzYwMCw2IEBAIHN0YXRpYyBpbnQgeGhjaV9tdGtfcmVt
+b3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikNCiAJeGhjaV9tdGtfc2NoX2V4aXQobXRr
+KTsNCiAJeGhjaV9tdGtfY2xrc19kaXNhYmxlKG10ayk7DQogCXhoY2lfbXRrX2xkb3NfZGlzYWJs
+ZShtdGspOw0KLQlwbV9ydW50aW1lX3B1dF9zeW5jKCZkZXYtPmRldik7DQotCXBtX3J1bnRpbWVf
+ZGlzYWJsZSgmZGV2LT5kZXYpOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQotLSANCjEuNy45LjUNCg==
 
-drivers/net/ethernet/huawei/hinic/hinic_port.c:1386:5: warning: variable port_id set but not used [-Wunused-but-set-variable]
- 1386 |  u8 port_id;
-      |     ^~~~~~~
