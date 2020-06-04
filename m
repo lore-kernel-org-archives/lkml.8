@@ -2,111 +2,166 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA364C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB6B320679
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E10B20679
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="r5Xt1VZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgFDBZL (ORCPT
+        id S1727878AbgFDB0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:25:11 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbgFDBZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:25:10 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 961F65E1B4899E66A712;
-        Thu,  4 Jun 2020 09:25:07 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.10) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Thu, 4 Jun 2020
- 09:24:58 +0800
-Subject: Re: Question: livepatch failed for new fork() task stack unreliable
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
-        <cj.chengjian@huawei.com>, <mingo@redhat.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>,
-        <mbenes@suse.cz>, <devel@etsukata.com>, <viro@zeniv.linux.org.uk>,
-        <esyr@redhat.com>
-References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
- <20200529174433.wpkknhypx2bmjika@treble>
- <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
- <20200601180538.o5agg5trbdssqken@treble>
- <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
- <20200602131450.oydrydelpdaval4h@treble>
- <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
- <20200603153358.2ezz2pgxxxld7mj7@treble>
-From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Message-ID: <2225bc83-95f2-bf3d-7651-fdd10a3ddd00@huawei.com>
-Date:   Thu, 4 Jun 2020 09:24:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 3 Jun 2020 21:26:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43677 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbgFDB0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:26:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cp5C0ZNKz9sRN;
+        Thu,  4 Jun 2020 11:26:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591233969;
+        bh=VIP1nuNK7nGcpajAs4ak9+w77pPUCQpV3oytFQaYUJk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=r5Xt1VZck13b0Ygibc5YlFXvwXceSAQFtxC7nGmq2vvz3fHoX7RBB2WzqyZVjUeA+
+         RqBROVechh9Z/hggwrbumrD6GPQViGOdhQWxM5m0wqnJBzDIxL+e0MqbLRuriT2HmF
+         H7WyeviowbM88uWjCCenG68wows4laBY4IQ4lpJISk1Q8q2OqlDDluc82BdlmFFK07
+         oeiUlSctf/p0njWAewfyn/PuCS1MDMpyQmtwbRb4M66VNlCbRDlTS73sRyZBUlFS+e
+         lCgEBjw5gHEjAUIdYfUypS8vK9E+S5gCMh2nlFpA62shq8rHu42gllPo5UwsSsZPim
+         n9/SQrRc6vjEg==
+Date:   Thu, 4 Jun 2020 11:26:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus'
+ tree
+Message-ID: <20200604112606.25ffde35@canb.auug.org.au>
+In-Reply-To: <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
+References: <20200511130015.37103884@canb.auug.org.au>
+        <20200602092040.5ef52300@canb.auug.org.au>
+        <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200603153358.2ezz2pgxxxld7mj7@treble>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.10]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/D7tpbDpAi+qF/qgFD4IZ1/8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/D7tpbDpAi+qF/qgFD4IZ1/8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-在 2020/6/3 23:33, Josh Poimboeuf 写道:
-> On Wed, Jun 03, 2020 at 10:06:07PM +0800, Wangshaobo (bobo) wrote:
-> To be honest, I don't remember what I meant by sibling calls.  They
-> don't even leave anything on the stack.
+Hi David,
+
+On Mon, 1 Jun 2020 20:30:34 -0600 David Ahern <dsahern@gmail.com> wrote:
 >
-> For noreturns, the code might be laid out like this:
->
-> func1:
-> 	...
-> 	call noreturn_foo
-> func2:
->
-> func2 is immediately after the call to noreturn_foo.  So the return
-> address on the stack will actually be 'func2'.  We want to retrieve the
-> ORC data for the call instruction (inside func1), instead of the
-> instruction at the beginning of func2.
->
-> I should probably update that comment.
+> On 6/1/20 5:20 PM, Stephen Rothwell wrote:
+> > Hi Dave,
+> >=20
+> > On Mon, 11 May 2020 13:00:15 +1000 Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote: =20
+> >>
+> >> Today's linux-next merge of the ipsec-next tree got conflicts in:
+> >>
+> >>   net/ipv4/xfrm4_output.c
+> >>   net/ipv6/xfrm6_output.c
+> >>
+> >> between commit:
+> >>
+> >>   0c922a4850eb ("xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output=
+_finish")
+> >>
+> >> from Linus' tree and commit:
+> >>
+> >>   2ab6096db2f1 ("xfrm: remove output_finish indirection from xfrm_stat=
+e_afinfo")
+> >>
+> >> from the ipsec-next tree.
+> >>
+> >> I fixed it up (I used the latter versions of these files and then added
+> >> the following patch) and can carry the fix as necessary. This is now f=
+ixed
+> >> as far as linux-next is concerned, but any non trivial conflicts should
+> >> be mentioned to your upstream maintainer when your tree is submitted f=
+or
+> >> merging.  You may also want to consider cooperating with the maintainer
+> >> of the conflicting tree to minimise any particularly complex conflicts.
+> >>
+> >> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> >> Date: Mon, 11 May 2020 12:57:24 +1000
+> >> Subject: [PATCH] xfrm: merge fixup for "remove output_finish indirecti=
+on from xfrm_state_afinfo"
+> >>
+> >> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> >> ---
+> >>  net/xfrm/xfrm_output.c | 4 ----
+> >>  1 file changed, 4 deletions(-)
+> >>
+> >> diff --git a/net/xfrm/xfrm_output.c b/net/xfrm/xfrm_output.c
+> >> index 886a9b284b3a..0f4b3a5e02ba 100644
+> >> --- a/net/xfrm/xfrm_output.c
+> >> +++ b/net/xfrm/xfrm_output.c
+> >> @@ -574,16 +574,12 @@ int xfrm_output(struct sock *sk, struct sk_buff =
+*skb)
+> >>  	switch (x->outer_mode.family) {
+> >>  	case AF_INET:
+> >>  		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+> >> -#ifdef CONFIG_NETFILTER
+> >>  		IPCB(skb)->flags |=3D IPSKB_XFRM_TRANSFORMED;
+> >> -#endif
+> >>  		break;
+> >>  	case AF_INET6:
+> >>  		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+> >> =20
+> >> -#ifdef CONFIG_NETFILTER
+> >>  		IP6CB(skb)->flags |=3D IP6SKB_XFRM_TRANSFORMED;
+> >> -#endif
+> >>  		break;
+> >>  	}
+> >>   =20
+> >=20
+> > It looks like this merge resolution fix up was missed when the
+> > ipsec-next tree was merged into the net-next tree.
+> >  =20
+>=20
+> Thanks for catching that, Stephen. Important fix in 0c922a4850eb.
+>=20
 
-So, I want to ask is there any side effects if i modify like this ? this 
-modification is based on
+And now the net-next tree has been merged into Linus' tree without this fix=
+ :-(
 
-your fix. It looks like ok with proper test.
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index e9cc182aa97e..ecce5051e8fd 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -620,6 +620,7 @@ void __unwind_start(struct unwind_state *state, 
-struct task_struct *task,
-                 state->sp = task->thread.sp;
-                 state->bp = READ_ONCE_NOCHECK(frame->bp);
-                 state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+              state->signal = ((void *)state->ip == ret_from_fork);
-         }
+--Sig_/D7tpbDpAi+qF/qgFD4IZ1/8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2d240f..d7396431261a 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
-          state->sp = sp;
-          state->regs = NULL;
-          state->prev_regs = NULL;
--        state->signal = ((void *)state->ip == ret_from_fork);
-+        state->signal = false;
-          break;
+-----BEGIN PGP SIGNATURE-----
 
-thanks,
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YTa4ACgkQAVBC80lX
+0Gy0Jwf+LLZf5xta8sHu9u4cDZVpwUKA57dz+7JnE+Qux/fwvmDdVjRRk9/HsEzB
+5A0F6frHh9SkvmHdt55iYSmEoS6g7oWZzSVHnVZROBBOxR3B7wZ/E5mvUDh033oy
+dHlUNi/x5FoaMmGHSpjnjzqJMOKR2dwiijsMEafDHqSm6G0X825xEq+6Q/CYjeLE
+//4D1E1N8qZqGQcNUYuGjXeV62Kd8y6VdSWYJoAilM/u5CK3w6m5aL95Rw1CFdrS
+sAM4BE8W78X/wEftsQ9XjyOKxmh9mPnTAsTSmITydy6V6Qz7/+v2oPEBLw8Cik9F
+Lth7ALtNgc4Ubn8rkYUHWOCelb8EAg==
+=gNoZ
+-----END PGP SIGNATURE-----
 
-Wang ShaoBo
-
-
+--Sig_/D7tpbDpAi+qF/qgFD4IZ1/8--
