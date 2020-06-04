@@ -2,78 +2,70 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D350C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66E22207D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BAC206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFDJj5 (ORCPT
+        id S1728123AbgFDJkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgFDJj5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:39:57 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D847C03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:39:57 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:c96f:783c:a430:4a5a])
-        by baptiste.telenet-ops.be with bizsmtp
-        id mxfu2200V0MBGRv01xfuKF; Thu, 04 Jun 2020 11:39:54 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jgmLq-0001Rt-9S; Thu, 04 Jun 2020 11:39:54 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jgmLq-0000Vn-6s; Thu, 04 Jun 2020 11:39:54 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] medium: cec: Make MEDIA_CEC_SUPPORT default to n if !MEDIA_SUPPORT
-Date:   Thu,  4 Jun 2020 11:39:53 +0200
-Message-Id: <20200604093953.1353-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 4 Jun 2020 05:40:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24887 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbgFDJkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:40:24 -0400
+IronPort-SDR: /5EE5W+z3hS7Dgnjc+ioCgflv8Bjnay++CkN0LbnGBMWhu176RAN7hXR2t+bZ7lvWYMHd5ChaR
+ +MD+cc6SaOvw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 02:40:18 -0700
+IronPort-SDR: VFL+KJou8gMWo0laEdHS6nT07WwXP+woyVDnNCMkMTDHMMS+wR+4LrWfXPGySZyApbi5daP2wC
+ HzhdhtBJiG6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
+   d="scan'208";a="273052623"
+Received: from alachman-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.44.241])
+  by orsmga006.jf.intel.com with ESMTP; 04 Jun 2020 02:40:14 -0700
+Date:   Thu, 4 Jun 2020 12:40:12 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Andrey Pronin <apronin@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-integrity@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm_tis_spi: Don't send anything during flow control
+Message-ID: <20200604094012.GA8989@linux.intel.com>
+References: <20200528151912.1.Id689a39ce8d1ec6f29f4287277ad977ff4f57d7d@changeid>
+ <20200601014646.GA794847@linux.intel.com>
+ <CAD=FV=VaET7ZXE0f6ciKmE=p1R1DMF9jCue9_XAD4870byKGog@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=VaET7ZXE0f6ciKmE=p1R1DMF9jCue9_XAD4870byKGog@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently, MEDIA_CEC_SUPPORT became indepedent of MEDIA_SUPPORT.
-However, if MEDIA_SUPPORT is not enabled, MEDIA_SUPPORT_FILTER is not
-defined, and MEDIA_CEC_SUPPORT is thus enabled by default, which is not
-desirable.
+On Mon, Jun 01, 2020 at 03:54:03PM -0700, Doug Anderson wrote:
+> Does that answer your question, or were you worried about us needing
+> to init iobuf[0] to 0 in some other case?
+> 
+> -Doug
 
-Fix this by adding a dependency on MEDIA_CEC_SUPPORT to the default
-configuration.
+No, but it should be treated as a bug fix for CR50 implementation i.e.
+for 797c0113c9a481d4554988d70b5b52fae657262f, or is there some reason
+why it shouldn't?
 
-Fixes: 46d2a3b964ddbe63 ("media: place CEC menu before MEDIA_SUPPORT")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- drivers/media/cec/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/cec/Kconfig b/drivers/media/cec/Kconfig
-index eea74b7cfa8c5dec..7e830444bdbbb1d1 100644
---- a/drivers/media/cec/Kconfig
-+++ b/drivers/media/cec/Kconfig
-@@ -24,7 +24,7 @@ config CEC_PIN_ERROR_INJ
- menuconfig MEDIA_CEC_SUPPORT
- 	bool
- 	prompt "HDMI CEC drivers"
--	default y if !MEDIA_SUPPORT_FILTER
-+	default y if MEDIA_SUPPORT && !MEDIA_SUPPORT_FILTER
- 	help
- 	  Enable support for HDMI CEC (Consumer Electronics Control),
- 	  which is an optional HDMI feature.
--- 
-2.17.1
-
+/Jarkko
