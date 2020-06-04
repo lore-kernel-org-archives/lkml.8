@@ -2,189 +2,145 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8850C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FED62077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66AF2075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WnzST6NS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZS4bR5yl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgFDH1G (ORCPT
+        id S1727981AbgFDH1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:27:06 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:39602 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727916AbgFDH1F (ORCPT
+        Thu, 4 Jun 2020 03:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbgFDH1L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:27:05 -0400
+        Thu, 4 Jun 2020 03:27:11 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A71C05BD1E;
+        Thu,  4 Jun 2020 00:27:10 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id q8so5209892iow.7;
+        Thu, 04 Jun 2020 00:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591255624; x=1622791624;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=+aJnrbUqvIFf7ohzedUN3gFIX2zz4KmsEL9w8+oGKN4=;
-  b=WnzST6NSZtPmoQZ4DcOQPA7mnUK2a7XFRjYsi/mRneofh6PyBWGbhxOt
-   d+36W7kEEZmx4ed7s/ex0uKD2THxzb+212VahwvGxIinthhJZdnF7JpVB
-   v1aCxPlBi1esF1TKDzFOlEKXzgmMDrePuwnVMwD+2Osc2D9u6kAOct+Cz
-   U=;
-IronPort-SDR: J426QVX8oEfi7sc+ZPTlCCdn2WttshPkHh3eyOgQx47XJSmAizil8O2vjaFySFbrmJzpkfYb28
- Pt2T5fDVQU2Q==
-X-IronPort-AV: E=Sophos;i="5.73,471,1583193600"; 
-   d="scan'208";a="34436999"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 04 Jun 2020 07:26:47 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 9A103A25A5;
-        Thu,  4 Jun 2020 07:26:44 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 4 Jun 2020 07:26:44 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 4 Jun 2020 07:26:26 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [RFC v2 7/9] mm/damon: Implement callbacks for physical memory monitoring
-Date:   Thu, 4 Jun 2020 09:26:11 +0200
-Message-ID: <20200604072611.11049-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <bd640661-143f-882f-ed92-3d2791b173aa@redhat.com> (raw)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=mGOxjTCdefrrnR0hBKEqLE+5+y5wUx6BcOT52JEiO/w=;
+        b=ZS4bR5ylkA3qMyDfT9teREVYO+h3tibjnXyMJoJVX+G5mJ13iGtF5nRneHn2y4BXKk
+         lbuA38DH8PUg7+NnR/cRrvaPdec+9VbV7j8bpXSIvpgF1JXXQjjbiwoR4VphfuiGExJt
+         hLAd/KpHYlSGyG+SYPS4B4UqdSRoUABVvzmUhM84xdRr3+M7Ejw5zRXRHI9S7C4ge69w
+         pHHApPVvaksuEjuQWJYGIZ58KDToZLKr1OfN8O/H8RmdIn0p+KhbEW4AU6+9mOsYqoG0
+         i4HZ9VdbrqFEIkfk7P5p1r/q/z2DKw42yvXNm3xth1WgLu9BQ1Leo+hkaKoCcnQ7shWy
+         D+2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=mGOxjTCdefrrnR0hBKEqLE+5+y5wUx6BcOT52JEiO/w=;
+        b=WBkGpG1JIPkpiRgZ/zPYX4aOJd0rsTgI+A8sH52mYb8Y6itTIY2Dbq3LbG0CVvyK8d
+         7yeRCbcN+rivF4csTFIXvbi+gr7hWPpzyfZwL2PxM04ycVCFXbtpxNPt4h2V2bzuXUE8
+         PcaY//RmkERKRY/6jh26rxI7sZw6to9isozf/71MdKKcD1M1LlulxXv46yL35S9B8QwG
+         +ltyiwm2ubKPo+Bssw0jrCZRhzlbUTp2MPPgk5kL+KUU6gls5pUnyzui9mVhHqB5mkZ/
+         Egk+dmWoRKME3fyNxQ4jD5e7XhDP2GPHYiAzaBxED/iW4KvGHMjKOKc5jHL/14+49F0F
+         VQ/w==
+X-Gm-Message-State: AOAM532k0J3AmCTtfrEaXOWyQ3SiwDSc5kEctZRh8wd4btl+fWuEuPla
+        szJlYdGSIuS73EwThbuD14hmIlwjsOMYhoPwmgFg1/y3
+X-Google-Smtp-Source: ABdhPJwrHY2BsggDHErpO1Iuf0ec8cSLwXn1wO03W9qrRj259eIfuSS5XQEsDKLZy/A8Pd7aPUbrd6qaIHCM8QmxBFo=
+X-Received: by 2002:a5d:91cc:: with SMTP id k12mr2896278ior.135.1591255630008;
+ Thu, 04 Jun 2020 00:27:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.53]
-X-ClientProxiedBy: EX13D10UWA002.ant.amazon.com (10.43.160.228) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <20200603233203.1695403-1-keescook@chromium.org> <20200604033347.GA3962068@ubuntu-n2-xlarge-x86>
+In-Reply-To: <20200604033347.GA3962068@ubuntu-n2-xlarge-x86>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 4 Jun 2020 09:26:58 +0200
+Message-ID: <CA+icZUU4Re5g3rRJ=WF3_KiCEc3CUmbH_PibTunuK_E1QskEjQ@mail.gmail.com>
+Subject: Re: [PATCH 00/10] Remove uninitialized_var() macro
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 18:09:21 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Thu, Jun 4, 2020 at 5:33 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Wed, Jun 03, 2020 at 04:31:53PM -0700, Kees Cook wrote:
+> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> > (or can in the future), and suppresses unrelated compiler warnings
+> > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> > either simply initialize the variable or make compiler changes.
+> >
+> > As recommended[2] by[3] Linus[4], remove the macro.
+> >
+> > Most of the 300 uses don't cause any warnings on gcc 9.3.0, so they're in
+> > a single treewide commit in this series. A few others needed to actually
+> > get cleaned up, and I broke those out into individual patches.
+> >
+> > -Kees
+> >
+> > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+> >
+> > Kees Cook (10):
+> >   x86/mm/numa: Remove uninitialized_var() usage
+> >   drbd: Remove uninitialized_var() usage
+> >   b43: Remove uninitialized_var() usage
+> >   rtlwifi: rtl8192cu: Remove uninitialized_var() usage
+> >   ide: Remove uninitialized_var() usage
+> >   clk: st: Remove uninitialized_var() usage
+> >   spi: davinci: Remove uninitialized_var() usage
+> >   checkpatch: Remove awareness of uninitialized_var() macro
+> >   treewide: Remove uninitialized_var() usage
+> >   compiler: Remove uninitialized_var() macro
+>
+> I applied all of these on top of cb8e59cc8720 and ran a variety of
+> builds with clang for arm32, arm64, mips, powerpc, s390, and x86_64 [1]
+> and only saw one warning pop up (which was about a variable being
+> unused, commented on patch 9 about it). No warnings about uninitialized
+> variables came up; clang's -Wuninitialized was not impacted by
+> 78a5255ffb6a ("Stop the ad-hoc games with -Wno-maybe-initialized") so it
+> should have caught anything egregious.
+>
+> [1]: https://github.com/nathanchance/llvm-kernel-testing
+>
+> For the series, consider it:
+>
+> Tested-by: Nathan Chancellor <natechancellor@gmail.com> [build]
+>
 
-> On 03.06.20 16:11, SeongJae Park wrote:
-> > From: SeongJae Park <sjpark@amazon.de>
-> > 
-> > This commit implements the four callbacks (->init_target_regions,
-> > ->update_target_regions, ->prepare_access_check, and ->check_accesses)
-> > for the basic access monitoring of the physical memory address space.
-> > By setting the callback pointers to point those, users can easily
-> > monitor the accesses to the physical memory.
-> > 
-> > Internally, it uses the PTE Accessed bit, as similar to that of the
-> > virtual memory support.  Also, it supports only page frames that
-> > supported by idle page tracking.  Acutally, most of the code is stollen
-> > from idle page tracking.  Users who want to use other access check
-> > primitives and monitor the frames that not supported with this
-> > implementation could implement their own callbacks on their own.
-> > 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  include/linux/damon.h |   5 ++
-> >  mm/damon.c            | 184 ++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 189 insertions(+)
-> > 
-> > diff --git a/include/linux/damon.h b/include/linux/damon.h
-> > index 1a788bfd1b4e..f96503a532ea 100644
-> > --- a/include/linux/damon.h
-> > +++ b/include/linux/damon.h
-> > @@ -216,6 +216,11 @@ void kdamond_update_vm_regions(struct damon_ctx *ctx);
-> >  void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
-> >  unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
-> >  
-> > +void kdamond_init_phys_regions(struct damon_ctx *ctx);
-> > +void kdamond_update_phys_regions(struct damon_ctx *ctx);
-> > +void kdamond_prepare_phys_access_checks(struct damon_ctx *ctx);
-> > +unsigned int kdamond_check_phys_accesses(struct damon_ctx *ctx);
-> > +
-> >  int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
-> >  int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-> >  		unsigned long aggr_int, unsigned long regions_update_int,
-> > diff --git a/mm/damon.c b/mm/damon.c
-> > index f5cbc97a3bbc..6a5c6d540580 100644
-> > --- a/mm/damon.c
-> > +++ b/mm/damon.c
-> > @@ -19,7 +19,9 @@
-> >  #include <linux/mm.h>
-> >  #include <linux/module.h>
-> >  #include <linux/page_idle.h>
-> > +#include <linux/pagemap.h>
-> >  #include <linux/random.h>
-> > +#include <linux/rmap.h>
-> >  #include <linux/sched/mm.h>
-> >  #include <linux/sched/task.h>
-> >  #include <linux/slab.h>
-> > @@ -480,6 +482,11 @@ void kdamond_init_vm_regions(struct damon_ctx *ctx)
-> >  	}
-> >  }
-> >  
-> > +/* Do nothing.  Users should set the initial regions by themselves */
-> > +void kdamond_init_phys_regions(struct damon_ctx *ctx)
-> > +{
-> > +}
-> > +
-> >  static void damon_mkold(struct mm_struct *mm, unsigned long addr)
-> >  {
-> >  	pte_t *pte = NULL;
-> > @@ -611,6 +618,178 @@ unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
-> >  	return max_nr_accesses;
-> >  }
-> >  
-> > +/* access check functions for physical address based regions */
-> > +
-> > +/* This code is stollen from page_idle.c */
-> > +static struct page *damon_phys_get_page(unsigned long pfn)
-> > +{
-> > +	struct page *page;
-> > +	pg_data_t *pgdat;
-> > +
-> > +	if (!pfn_valid(pfn))
-> > +		return NULL;
-> > +
-> 
-> Who provides these pfns? Can these be random pfns, supplied unchecked by
-> user space? Or are they at least mapped into some user space process?
+Hi Kees,
 
-Your guess is right, users can give random physical address and that will be
-translated into pfn.
+I tried with updated version (checkpatch) of your tree and see no
+(new) warnings in my build-log.
 
-> 
-> IOW, do we need a pfn_to_online_page() to make sure the memmap even was
-> initialized?
+Feel free to add my...
 
-Thank you for pointing out this!  I will use it in the next spin.  Also, this
-code is stollen from page_idle_get_page().  Seems like it should also be
-modified to use it.  I will send the patch for it, either.
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
+Thanks.
 
-Thanks,
-SeongJae Park
-
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+Regards,
+- Sedat -
