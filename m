@@ -2,271 +2,271 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C039C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD7320772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AN3Ft1Bx"
+	by mail.kernel.org (Postfix) with ESMTP id CA1A52065C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgFDPkK (ORCPT
+        id S1729582AbgFDPk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:40:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21314 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729542AbgFDPkJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:40:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591285207;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=j7Xq9+WeNhyCr/KzEPWJaZZBLidwABLT+Mzl9B23jMM=;
-        b=AN3Ft1BxmCuqVd1eaj7HJlIvgOmtrpCS502CZaapQjNPX1K2DI0X3ImtY9qj768/M1Cozl
-        CFhQLwrKob9zGpxxWolbOgoGAy1XYJxkqFjpYWg76dwLP6OLoa7p4F7Jdf82a85ZAkWBzR
-        YiWqCiPjxQW7PiWwqMBG6+Fj3YT91s0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-jNs3Ihj3PECCD929tz65nA-1; Thu, 04 Jun 2020 11:40:05 -0400
-X-MC-Unique: jNs3Ihj3PECCD929tz65nA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 211751902EA0;
-        Thu,  4 Jun 2020 15:39:59 +0000 (UTC)
-Received: from [10.36.112.96] (ovpn-112-96.ams2.redhat.com [10.36.112.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 850AF60BF4;
-        Thu,  4 Jun 2020 15:39:50 +0000 (UTC)
-Subject: Re: [RFC v2 7/9] mm/damon: Implement callbacks for physical memory
- monitoring
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
-        Jonathan.Cameron@Huawei.com, aarcange@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
-        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
-        corbet@lwn.net, dwmw@amazon.com, foersleo@amazon.de,
-        irogers@google.com, jolsa@redhat.com, kirill@shutemov.name,
-        mark.rutland@arm.com, mgorman@suse.de, minchan@kernel.org,
-        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
-        rdunlap@infradead.org, riel@surriel.com, rientjes@google.com,
-        rostedt@goodmis.org, sblbir@amazon.com, shakeelb@google.com,
-        shuah@kernel.org, sj38.park@gmail.com, snu@amazon.de,
-        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
-        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200604152336.4826-1-sjpark@amazon.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <3be79702-2ac5-5c5b-b913-3c93aadf0aec@redhat.com>
-Date:   Thu, 4 Jun 2020 17:39:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 11:40:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:16825 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729402AbgFDPk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 11:40:56 -0400
+IronPort-SDR: P177AHBIa/jPgwW/n5H1oB6hYtZMaBvRtO17KTDKe9Q1EugzfoEmmjdb9jIuanI+dlFyXSLYUg
+ Lw7TadCo4oMg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 08:40:25 -0700
+IronPort-SDR: KX0U+/L9mj+R+zn+bO9mOmwaZ25v2nQ4H1+Mu00BL43sGBsmbM9O4Xx0i91LMx16zOokqwKb1q
+ d31cd69rhMCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
+   d="scan'208";a="304746987"
+Received: from lkp-server02.sh.intel.com (HELO 6de3076d9aaa) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Jun 2020 08:40:24 -0700
+Received: from kbuild by 6de3076d9aaa with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jgryh-00001Q-IM; Thu, 04 Jun 2020 15:40:23 +0000
+Date:   Thu, 04 Jun 2020 23:39:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/entry] BUILD SUCCESS
+ b8797e281f77cdac3988e9a97b1c76eabbabaefa
+Message-ID: <5ed915c8.sV/jYWaIzMLhjNGN%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200604152336.4826-1-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.20 17:23, SeongJae Park wrote:
-> On Thu, 4 Jun 2020 16:58:13 +0200 David Hildenbrand <david@redhat.com> wrote:
-> 
->> On 04.06.20 09:26, SeongJae Park wrote:
->>> On Wed, 3 Jun 2020 18:09:21 +0200 David Hildenbrand <david@redhat.com> wrote:
->>>
->>>> On 03.06.20 16:11, SeongJae Park wrote:
->>>>> From: SeongJae Park <sjpark@amazon.de>
->>>>>
->>>>> This commit implements the four callbacks (->init_target_regions,
->>>>> ->update_target_regions, ->prepare_access_check, and ->check_accesses)
->>>>> for the basic access monitoring of the physical memory address space.
->>>>> By setting the callback pointers to point those, users can easily
->>>>> monitor the accesses to the physical memory.
->>>>>
->>>>> Internally, it uses the PTE Accessed bit, as similar to that of the
->>>>> virtual memory support.  Also, it supports only page frames that
->>>>> supported by idle page tracking.  Acutally, most of the code is stollen
->>>>> from idle page tracking.  Users who want to use other access check
->>>>> primitives and monitor the frames that not supported with this
->>>>> implementation could implement their own callbacks on their own.
->>>>>
->>>>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
->>>>> ---
->>>>>  include/linux/damon.h |   5 ++
->>>>>  mm/damon.c            | 184 ++++++++++++++++++++++++++++++++++++++++++
->>>>>  2 files changed, 189 insertions(+)
->>>>>
->>>>> diff --git a/include/linux/damon.h b/include/linux/damon.h
->>>>> index 1a788bfd1b4e..f96503a532ea 100644
->>>>> --- a/include/linux/damon.h
->>>>> +++ b/include/linux/damon.h
->>>>> @@ -216,6 +216,11 @@ void kdamond_update_vm_regions(struct damon_ctx *ctx);
->>>>>  void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
->>>>>  unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
->>>>>  
->>>>> +void kdamond_init_phys_regions(struct damon_ctx *ctx);
->>>>> +void kdamond_update_phys_regions(struct damon_ctx *ctx);
->>>>> +void kdamond_prepare_phys_access_checks(struct damon_ctx *ctx);
->>>>> +unsigned int kdamond_check_phys_accesses(struct damon_ctx *ctx);
->>>>> +
->>>>>  int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
->>>>>  int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
->>>>>  		unsigned long aggr_int, unsigned long regions_update_int,
->>>>> diff --git a/mm/damon.c b/mm/damon.c
->>>>> index f5cbc97a3bbc..6a5c6d540580 100644
->>>>> --- a/mm/damon.c
->>>>> +++ b/mm/damon.c
->>>>> @@ -19,7 +19,9 @@
->>>>>  #include <linux/mm.h>
->>>>>  #include <linux/module.h>
->>>>>  #include <linux/page_idle.h>
->>>>> +#include <linux/pagemap.h>
->>>>>  #include <linux/random.h>
->>>>> +#include <linux/rmap.h>
->>>>>  #include <linux/sched/mm.h>
->>>>>  #include <linux/sched/task.h>
->>>>>  #include <linux/slab.h>
->>>>> @@ -480,6 +482,11 @@ void kdamond_init_vm_regions(struct damon_ctx *ctx)
->>>>>  	}
->>>>>  }
->>>>>  
->>>>> +/* Do nothing.  Users should set the initial regions by themselves */
->>>>> +void kdamond_init_phys_regions(struct damon_ctx *ctx)
->>>>> +{
->>>>> +}
->>>>> +
->>>>>  static void damon_mkold(struct mm_struct *mm, unsigned long addr)
->>>>>  {
->>>>>  	pte_t *pte = NULL;
->>>>> @@ -611,6 +618,178 @@ unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
->>>>>  	return max_nr_accesses;
->>>>>  }
->>>>>  
->>>>> +/* access check functions for physical address based regions */
->>>>> +
->>>>> +/* This code is stollen from page_idle.c */
->>>>> +static struct page *damon_phys_get_page(unsigned long pfn)
->>>>> +{
->>>>> +	struct page *page;
->>>>> +	pg_data_t *pgdat;
->>>>> +
->>>>> +	if (!pfn_valid(pfn))
->>>>> +		return NULL;
->>>>> +
->>>>
->>>> Who provides these pfns? Can these be random pfns, supplied unchecked by
->>>> user space? Or are they at least mapped into some user space process?
->>>
->>> Your guess is right, users can give random physical address and that will be
->>> translated into pfn.
->>>
->>
->> Note the difference to idle tracking: "Idle page tracking only considers
->> user memory pages", this is very different to your use case. Note that
->> this is why there is no pfn_to_online_page() check in page idle code.
-> 
-> My use case is same to that of idle page.  I also ignore non-user pages.
-> Actually, this function is for filtering of the non-user pages, which is simply
-> stollen from the page_idle.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
+branch HEAD: b8797e281f77cdac3988e9a97b1c76eabbabaefa  Merge branch 'linus' into x86/entry, to resolve conflicts
 
-Okay, that is valuable information, I missed that. The comment in
-page_idle.c is actually pretty valuable.
+i386-tinyconfig vmlinux size:
 
-In both cases, user space can provide random physical address but you
-will only care about user pages. Understood.
++-------+------------------------------------+------------------------------------------------------------------------+
+| DELTA |               SYMBOL               |                                 COMMIT                                 |
++-------+------------------------------------+------------------------------------------------------------------------+
+| +3696 | TOTAL                              | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+| +3221 | TEXT                               | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +395 | DATA                               | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -76 | RODATA                             | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+| +3904 | sha1_transform()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+| +1238 | generic_file_buffered_read()       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +859 | zhaoxin_pmu_init()                 | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +827 | free_area_init_node()              | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +643 | init.text                          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +581 | internal_get_user_pages_fast()     | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +463 | do_tee()                           | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +405 | __ia32_sys_setns()                 | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +405 | zhaoxin_pmu_handle_irq()           | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +336 | zxd_hw_cache_event_ids()           | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +336 | zxe_hw_cache_event_ids()           | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +333 | cp_statx()                         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +324 | page_cache_readahead_unbounded()   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +313 | memblock_add_range.isra()          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +296 | zhaoxin_pmu_enable_event()         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +288 | map_kernel_range_noflush()         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +259 | arch_sync_kernel_mappings()        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +256 | lru_pvecs                          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +210 | try_enable_new_console()           | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +204 | unmap_kernel_range_noflush()       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +160 | zxd_event_constraints              | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +157 | free_area_init()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +140 | zhaoxin_pmu_disable_event()        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +136 | arch/x86/events/zhaoxin/built-in.* | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +132 | bdi_alloc()                        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +128 | time64_str()                       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +124 | cpu_vuln_whitelist()               | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +121 | memmap_init                        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +121 | __dump_page()                      | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +116 | copy_xstate_to_kernel()            | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +104 | altinstructions                    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +104 | fillonedir()                       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  +102 | shrink_page_list()                 | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +99 | page_cache_pipe_buf_try_steal()    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +96 | copy_part()                        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +95 | lru_note_cost()                    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +91 | check_free_page()                  | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +90 | delay_halt()                       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +87 | do_statx()                         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +85 | sanitize_restored_user_xstate()    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +84 | arch/x86/built-in.*                | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +80 | zx_pmon_event_map                  | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +80 | zxc_event_constraints              | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +76 | arch/x86/events/built-in.*         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +76 | __vmalloc_node()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +75 | vfs_statx()                        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +71 | do_splice_from()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +70 | zhaoxin_arch_events_quirk()        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +69 | fpu__init_system_xstate()          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +68 | put_nsset()                        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +66 | zhaoxin_get_event_constraints()    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   +64 | lru_rotate                         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -64 | lru_add_pvec                       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -64 | lru_deactivate_file_pvecs          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -64 | lru_deactivate_pvecs               | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -64 | lru_lazyfree_pvecs                 | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -64 | lru_rotate_pvecs                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -65 | bdi_register_owner()               | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -65 | validate_xstate_header()           | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -67 | __vmalloc_node()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -79 | memblock_set_node()                | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -80 | forbidden_sb_flag                  | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -84 | init.data                          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -84 | memblock_dump()                    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -84 | vmalloc_user_node_flags()          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -85 | sanitize_restored_xstate()         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -87 | __do_sys_statx()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -89 | get_cpu_cap()                      | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -91 | free_pages_check()                 | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -92 | find_min_pfn_for_node()            | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|   -98 | fpu__clear()                       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -102 | page_cache_pipe_buf_steal()        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -103 | free_bootmem_with_active_regions() | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -119 | vmalloc_sync()                     | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -121 | vmalloc_sync_one()                 | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -122 | delay_mwaitx()                     | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -128 | register_console()                 | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -132 | bdi_alloc_node()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -140 | vmalloc_fault()                    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -157 | vunmap_page_range()                | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -176 | free_area_init_nodes()             | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -196 | __do_page_cache_readahead()        | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -241 | vmap_page_range_noflush()          | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -313 | cp_statx()                         | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -337 | memblock_add_range()               | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -466 | __ia32_sys_tee()                   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -512 | memblock_memory_init_regions()     | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -512 | memblock_reserved_init_regions()   | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -581 | gup_pgd_range()                    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+|  -826 | free_area_init_node()              | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+| -1238 | generic_file_buffered_read()       | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
+| -3904 | sha_transform()                    | b8797e281f77 Merge branch 'linus' into x86/entry, to resolve conflicts |
++-------+------------------------------------+------------------------------------------------------------------------+
 
-That turns things less dangerous. :)
+elapsed time: 485m
 
->>>> IOW, do we need a pfn_to_online_page() to make sure the memmap even was
->>>> initialized?
->>>
->>> Thank you for pointing out this!  I will use it in the next spin.  Also, this
->>> code is stollen from page_idle_get_page().  Seems like it should also be
->>> modified to use it.  I will send the patch for it, either.
->>
->> pfn_to_online_page() will only succeed for system RAM pages, not
->> dax/pmem (ZONE_DEVICE). dax/pmem needs special care.
->>
->> I can spot that you are taking references to random struct pages. This
->> looks dangerous to me and might mess in complicated ways with page
->> migration/isolation/onlining/offlining etc. I am not sure if we want that.
-> 
-> AFAIU, page_idle users can also pass random pfns by randomly accessing the
-> bitmap file.  Am I missing something?
+configs tested: 101
+configs skipped: 2
 
-I am definitely no expert on page idle tracking. If that is the case,
-then we'll also need pfn_to_online_page() handling (and might have to
-care about ZONE_DEVICE, not hard but needs some extra LOCs).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I am still not sure if grabbing references on theoretically isolated
-pageblocks is okay, but that's just complicated stuff and as you state,
-is already performed. At least I can read "With such an indicator of
-user pages we can skip isolated pages". So isolated pages during page
-migration are properly handled.
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                       aspeed_g4_defconfig
+arc                          axs101_defconfig
+arc                        vdk_hs38_defconfig
+parisc                           allyesconfig
+arc                        nsimosci_defconfig
+arm                         hackkit_defconfig
+sh                         apsh4a3a_defconfig
+arm                            mmp2_defconfig
+arm                        neponset_defconfig
+arm                         orion5x_defconfig
+sh                          r7780mp_defconfig
+riscv                            allyesconfig
+mips                        bcm47xx_defconfig
+arm                           tegra_defconfig
+mips                           ci20_defconfig
+arm                         ebsa110_defconfig
+arm                          moxart_defconfig
+arm                     eseries_pxa_defconfig
+arm                           stm32_defconfig
+arm                     am200epdkit_defconfig
+powerpc                    gamecube_defconfig
+nios2                            alldefconfig
+arm                              zx_defconfig
+microblaze                    nommu_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-
-Instead of stealing, factor out, document, and reuse? That makes it
-clearer that you are not inventing the wheel, and if we have to fix
-something, we only have to fix at a single point.
-
--- 
-Thanks,
-
-David / dhildenb
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
