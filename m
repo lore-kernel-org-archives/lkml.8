@@ -2,179 +2,88 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A6C20738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AA4207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgFDQNJ (ORCPT
+        id S1729767AbgFDQNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:13:09 -0400
-Received: from relay.sw.ru ([185.231.240.75]:35432 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729745AbgFDQNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:13:05 -0400
-Received: from [172.16.25.93] (helo=amikhalitsyn-pc0.sw.ru)
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <alexander.mikhalitsyn@virtuozzo.com>)
-        id 1jgsUC-0003Zt-U1; Thu, 04 Jun 2020 19:12:56 +0300
-From:   Alexander Mikhalitsyn <alexander.mikhalitsyn@virtuozzo.com>
-To:     miklos@szeredi.hu
-Cc:     avagin@openvz.org, ptikhomirov@virtuozzo.com,
-        khorenko@virtuozzo.com, vvs@virtuozzo.com, ktkhai@virtuozzo.com,
-        Alexander Mikhalitsyn <alexander.mikhalitsyn@virtuozzo.com>,
-        linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] overlayfs: add mnt_id paths options
-Date:   Thu,  4 Jun 2020 19:11:33 +0300
-Message-Id: <20200604161133.20949-3-alexander.mikhalitsyn@virtuozzo.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200604161133.20949-1-alexander.mikhalitsyn@virtuozzo.com>
-References: <20200604161133.20949-1-alexander.mikhalitsyn@virtuozzo.com>
+        Thu, 4 Jun 2020 12:13:48 -0400
+Received: from mail-vs1-f47.google.com ([209.85.217.47]:44338 "EHLO
+        mail-vs1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729718AbgFDQNr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:13:47 -0400
+Received: by mail-vs1-f47.google.com with SMTP id c1so3834696vsc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:13:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OP87Zw/IFo1icTUKy9gN1j2abZ8iJJoEohAgcxBcIRU=;
+        b=nFHIGbjXORx2R4ehJxXz13LfNufSyup86CQ7JODWtc1eWLFD9QVT8+jAT8YiVBWTtA
+         22/IF9pjTZItj425n/zPANeD3iz5RIDe7XtwsnHHkqQWhpHeMYw+HyirX7pQt+7ljv57
+         f0AX/8Yb5DZSTIwqLBJP3mKkPT6k3tDQ1y+t35uFBm1JTeftba6+CAvezi7wJCaGXs1j
+         WhXQJcH1PBayD6ILO2Xo8X1Hy/eWN/KiR6ZfM4q0bmPPhGpR1NLIxHryXcpdhVHCH8rJ
+         vUjrJNPxqHqPN3KpJXOv+0CpbIx3vUG+aQ+fBVDxFdmDnM2bNFT4BFj6aQQScDXu2DKF
+         QTuw==
+X-Gm-Message-State: AOAM533ZjTu3qNc6Qwj/Z9fF4lPf6DaRpwp6CAgVt9ZRDtwAi+6A5L+4
+        l0VoyrHpXrNkBIpke959zDl+MaDsG4ia1nNmQYg=
+X-Google-Smtp-Source: ABdhPJyZmGGDLNY7IQLFjPubFoChqilyzfCrDlHMylGl4TFQjwe3hKLPiVqvAiFOFQvqjwK4eN42b6KxRFZUg2EOyi8=
+X-Received: by 2002:a67:df8f:: with SMTP id x15mr4021008vsk.18.1591287226527;
+ Thu, 04 Jun 2020 09:13:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
+ <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com>
+ <CAOkhzLV+suVNAoyiaHKOkbwP-KKgTLEa7S8kp8+GSTLm_-wWFw@mail.gmail.com>
+ <CAKb7UvgWMsLSHCayzdY7UYMVTjN3OHbH2WhKd-BP46K=r4Ra8A@mail.gmail.com> <CAOkhzLXZVNdpgwV=iiO0TEvLp3Hx28Zk8iYzwy5BvJ1pWi4QxQ@mail.gmail.com>
+In-Reply-To: <CAOkhzLXZVNdpgwV=iiO0TEvLp3Hx28Zk8iYzwy5BvJ1pWi4QxQ@mail.gmail.com>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Thu, 4 Jun 2020 12:13:35 -0400
+Message-ID: <CAKb7UviB22HxSJ6j4ts=fU=J24Hh69NCBw4uHC5vsi902Pp6bA@mail.gmail.com>
+Subject: Re: [Nouveau] NVIDIA GP107 (137000a1) - acr: failed to load firmware
+To:     Zeno Davatz <zdavatz@gmail.com>
+Cc:     nouveau <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds config OVERLAY_FS_PATH_OPTIONS_MNT_ID
-compile-time option, and "mnt_id_path_opts" runtime module option.
-If enabled, user may see mnt_ids for lowerdir, upperdir paths
-in mountinfo in separate lowerdir_mnt_id/upperdir_mnt_id options.
+On Thu, Jun 4, 2020 at 12:04 PM Zeno Davatz <zdavatz@gmail.com> wrote:
+>
+> Thank you, Ilia
+>
+> On Thu, Jun 4, 2020 at 5:25 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
+>
+> > There's a lot more firmware files than that ... everything in the
+> > gp107 directory. Also this would only be necessary if nouveau is built
+> > into the kernel. The files just have to be available whenever nouveau
+> > is loaded -- if it's built in, that means the firmware has to be baked
+> > into the kernel too. If it's loaded from initrd, that means the
+> > firmware has to be in initrd. If it's loaded after boot, then the
+> > firmware has to be available after boot.
+>
+> For the time being I got it working by removing all nouveau selections
+> in "make menuconfig" and by emerging "x11-drivers/nvidia-drivers"
+> Version 440.82.
+>
+> Back on the latest Linux Kernel. Feels great ;).
+>
+> Linux zenogentoo 5.7.0 #84 SMP Thu Jun 4 17:47:15 CEST 2020 x86_64
+> Intel(R) Core(TM) i7 CPU 960 @ 3.20GHz GenuineIntel GNU/Linux
 
-This patch is very helpful to checkpoint/restore functionality
-of overlayfs mounts in case when we have overmounts on
-lowerdir, workdir, upperdir paths.
+Not sure why you bother asking questions when you're just going to
+dump nouveau anyways. This is the second time I've answered your
+questions on this very topic, I think it'll be the last too.
 
-Signed-off-by: Alexander Mikhalitsyn <alexander.mikhalitsyn@virtuozzo.com>
----
- fs/overlayfs/Kconfig     | 26 ++++++++++++++++++++++++++
- fs/overlayfs/overlayfs.h |  2 ++
- fs/overlayfs/super.c     | 15 +++++++++++++++
- fs/overlayfs/util.c      | 21 +++++++++++++++++++++
- 4 files changed, 64 insertions(+)
+Cheers,
 
-diff --git a/fs/overlayfs/Kconfig b/fs/overlayfs/Kconfig
-index c24988527ef3..2797869c8d16 100644
---- a/fs/overlayfs/Kconfig
-+++ b/fs/overlayfs/Kconfig
-@@ -154,4 +154,30 @@ config OVERLAY_FS_DYNAMIC_RESOLVE_PATH_OPTIONS
- 
- 	  For more information, see Documentation/filesystems/overlayfs.txt
- 
-+	  If unsure, say N.
-+
-+config OVERLAY_FS_PATH_OPTIONS_MNT_ID
-+	bool "Overlayfs: show mnt_id for all mount paths options"
-+	default y
-+	depends on OVERLAY_FS
-+	help
-+	  This option helps checkpoint/restore of overlayfs mounts.
-+	  If N selected, old behavior is saved.
-+
-+	  If this config option is enabled then in overlay filesystems mount
-+	  options you will be able to see additional parameters lowerdir_mnt_id/
-+	  upperdir_mnt_id with corresponding mnt_ids.
-+
-+	  It's also possible to change this behavior on overlayfs module loading or
-+	  through sysfs (mnt_id_path_opts parameter).
-+
-+	  Disable this to get a backward compatible with previous kernels configuration,
-+	  but in this case checkpoint/restore functionality for overlayfs mounts
-+	  may not fully work.
-+
-+	  If backward compatibility is not an issue, then it is safe and
-+	  recommended to say Y here.
-+
-+	  For more information, see Documentation/filesystems/overlayfs.txt
-+
- 	  If unsure, say N.
-\ No newline at end of file
-diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-index 8722ed556e11..980fe06d15b5 100644
---- a/fs/overlayfs/overlayfs.h
-+++ b/fs/overlayfs/overlayfs.h
-@@ -305,6 +305,8 @@ ssize_t ovl_getxattr(struct dentry *dentry, char *name, char **value,
- void print_path_option(struct seq_file *m, const char *name, struct path *path);
- void print_paths_option(struct seq_file *m, const char *name,
- 			struct path *paths, unsigned int num);
-+void print_mnt_id_option(struct seq_file *m, const char *name, struct path *path);
-+void print_mnt_ids_option(struct seq_file *m, const char *name,
- 			struct path *paths, unsigned int num);
- 
- static inline bool ovl_is_impuredir(struct dentry *dentry)
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index a449b6bb4b20..ee2ed125341c 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -57,6 +57,10 @@ static bool ovl_dyn_path_opts = IS_ENABLED(CONFIG_OVERLAY_FS_DYNAMIC_RESOLVE_PAT
- module_param_named(dyn_path_opts, ovl_dyn_path_opts, bool, 0644);
- MODULE_PARM_DESC(dyn_path_opts, "dyn_path_opts feature enabled");
- 
-+static bool ovl_mnt_id_path_opts = IS_ENABLED(OVERLAY_FS_PATH_OPTIONS_MNT_ID);
-+module_param_named(mnt_id_path_opts, ovl_mnt_id_path_opts, bool, 0644);
-+MODULE_PARM_DESC(mnt_id_path_opts, "mnt_id_path_opts feature enabled");
-+
- static void ovl_entry_stack_free(struct ovl_entry *oe)
- {
- 	unsigned int i;
-@@ -362,6 +366,17 @@ static int ovl_show_options(struct seq_file *m, struct dentry *dentry)
- 			seq_show_option(m, "workdir", ofs->config.workdir);
- 		}
- 	}
-+
-+	if (ovl_mnt_id_path_opts) {
-+		print_mnt_ids_option(m, "lowerdir_mnt_id", ofs->lowerpaths, ofs->numlayer);
-+		/*
-+		 * We don't need to show mnt_id for workdir because it
-+		 * on the same mount as upperdir.
-+		 */
-+		if (ofs->config.upperdir)
-+			print_mnt_id_option(m, "upperdir_mnt_id", &ofs->upperpath);
-+	}
-+
- 	if (ofs->config.default_permissions)
- 		seq_puts(m, ",default_permissions");
- 	if (strcmp(ofs->config.redirect_mode, ovl_redirect_mode_def()) != 0)
-diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-index 36bb98c14d35..85106b2ed00a 100644
---- a/fs/overlayfs/util.c
-+++ b/fs/overlayfs/util.c
-@@ -14,6 +14,7 @@
- #include <linux/namei.h>
- #include <linux/ratelimit.h>
- #include <linux/seq_file.h>
-+#include "../mount.h"
- #include "overlayfs.h"
- 
- int ovl_want_write(struct dentry *dentry)
-@@ -941,3 +942,23 @@ void print_paths_option(struct seq_file *m, const char *name,
- 		seq_path(m, &paths[i], ", \t\n\\");
- 	}
- }
-+
-+void print_mnt_id_option(struct seq_file *m, const char *name, struct path *path)
-+{
-+	seq_show_option(m, name, "");
-+	seq_printf(m, "%i", real_mount(path->mnt)->mnt_id);
-+}
-+
-+void print_mnt_ids_option(struct seq_file *m, const char *name,
-+			struct path *paths, unsigned int num)
-+{
-+	int i;
-+
-+	seq_show_option(m, name, "");
-+
-+	for (i = 0; i < num; i++) {
-+		if (i)
-+			seq_putc(m, ':');
-+		seq_printf(m, "%i", real_mount(paths[i].mnt)->mnt_id);
-+	}
-+}
--- 
-2.17.1
-
+  -ilia
