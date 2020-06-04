@@ -2,172 +2,212 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80366C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F9AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 612402072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D0C207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:24:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WWJ64XPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgFDPXy (ORCPT
+        id S1729528AbgFDPYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:23:54 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38231 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729170AbgFDPXy (ORCPT
+        Thu, 4 Jun 2020 11:24:43 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:11303 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729389AbgFDPYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:23:54 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 202so3856261lfe.5;
-        Thu, 04 Jun 2020 08:23:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4jbs7hokiJMRnyD3dWlpSHP6YUdgz5azaLbV7T35ajw=;
-        b=aM4eX6dgjYHJeDm9YlAen9BV29VGtjkBcfrB5Tm9aMbYrX5cJZ16Ba/EM9lXRcrlJc
-         rPKl71scbyYotCvdpUrmwbsILWm5GBIkkgRSOgbERI/QgWzbG+wVbxNfsroeGSgIL/Q5
-         Zq0L8aUSb7X/CpZr5TvsOhFi1BqLQdi5krdRVEZDwFehBSNg/HZBq5LKzGvJIQDPRTvA
-         zD9fLif9AOkbuFET7AZLVTW0PtLcL8jJUEtXsz6HlGtgfdnlPCqIt34og4/npe4K2Ar9
-         Kle9ET5g0RquY5L1jIx040yZ7lyGdCD4B7yeDZ2hipKReR3HyzdckKtFKTv46v5Fq+a9
-         ezjA==
-X-Gm-Message-State: AOAM531cJOWttkBVWa1vRD/Yh21jYj7CqI4/HK26oMkK98kKLeLN4Ijp
-        kb1ZAfLtNfCaQK3JesK+kHM=
-X-Google-Smtp-Source: ABdhPJyyRWkvftby51bCr4uEId8LuDmBXNOcjUTER2pKCZGzzGOoRiY4chOMeSH5S9jgSw2WlFFy6g==
-X-Received: by 2002:a05:6512:6ca:: with SMTP id u10mr2912954lff.184.1591284230606;
-        Thu, 04 Jun 2020 08:23:50 -0700 (PDT)
-Received: from [192.168.42.191] ([213.87.144.158])
-        by smtp.gmail.com with ESMTPSA id r7sm694396ljc.62.2020.06.04.08.23.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 08:23:49 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH 1/5] gcc-plugins/stackleak: Exclude alloca() from the
- instrumentation logic
-To:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-        Elena Reshetova <elena.reshetova@intel.com>
-Cc:     Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-kbuild@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>, gcc@gcc.gnu.org,
-        notify@kernel.org
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-2-alex.popov@linux.com>
- <CAG48ez05JOvqzYGr3PvyQGwFURspFWvNvf-b8Y613PX0biug8w@mail.gmail.com>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <70319f78-2c7c-8141-d751-07f28203db7c@linux.com>
-Date:   Thu, 4 Jun 2020 18:23:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 4 Jun 2020 11:24:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591284282; x=1622820282;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=85ZI8AvQy4iaEYwlmUIBJHVkn6uRn1cMnoNcm2qnEJs=;
+  b=WWJ64XPsP8oOTVB/csL7d65S3iub5Ko1sFL8RiLsYsWllbNJNjSg9ubv
+   VDCs2/8vMGu31z8DN/eaYKLBoLx5w+5cNIsZ7UWjbQzMevlVNmIWzWJB8
+   D4QaY70YiHAjYfbdJStHmJ/f3rp2Cm//y6sfh7x6TVwZ21JyamAGHlugA
+   8=;
+IronPort-SDR: +qPmIamr4P3EzJWJc5geCeaqAOpGROdK3K6WRwkx/VvmToKzVx8Y5/WKNsLj3Ap74wjy36mDCM
+ Hz0rXPTCbgcQ==
+X-IronPort-AV: E=Sophos;i="5.73,472,1583193600"; 
+   d="scan'208";a="35810828"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 04 Jun 2020 15:24:20 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id A4A19241C4A;
+        Thu,  4 Jun 2020 15:24:08 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Jun 2020 15:24:08 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.140) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Jun 2020 15:23:51 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     David Hildenbrand <david@redhat.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [RFC v2 7/9] mm/damon: Implement callbacks for physical memory monitoring
+Date:   Thu, 4 Jun 2020 17:23:36 +0200
+Message-ID: <20200604152336.4826-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <4b5814d8-9626-e71c-9e5d-a4a61fcd12e8@redhat.com> (raw)
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez05JOvqzYGr3PvyQGwFURspFWvNvf-b8Y613PX0biug8w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.140]
+X-ClientProxiedBy: EX13D34UWA004.ant.amazon.com (10.43.160.177) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.2020 17:01, Jann Horn wrote:
-> On Thu, Jun 4, 2020 at 3:51 PM Alexander Popov <alex.popov@linux.com> wrote:
->> Some time ago Variable Length Arrays (VLA) were removed from the kernel.
->> The kernel is built with '-Wvla'. Let's exclude alloca() from the
->> instrumentation logic and make it simpler. The build-time assertion
->> against alloca() is added instead.
-> [...]
->> +                       /* Variable Length Arrays are forbidden in the kernel */
->> +                       gcc_assert(!is_alloca(stmt));
+On Thu, 4 Jun 2020 16:58:13 +0200 David Hildenbrand <david@redhat.com> wrote:
+
+> On 04.06.20 09:26, SeongJae Park wrote:
+> > On Wed, 3 Jun 2020 18:09:21 +0200 David Hildenbrand <david@redhat.com> wrote:
+> > 
+> >> On 03.06.20 16:11, SeongJae Park wrote:
+> >>> From: SeongJae Park <sjpark@amazon.de>
+> >>>
+> >>> This commit implements the four callbacks (->init_target_regions,
+> >>> ->update_target_regions, ->prepare_access_check, and ->check_accesses)
+> >>> for the basic access monitoring of the physical memory address space.
+> >>> By setting the callback pointers to point those, users can easily
+> >>> monitor the accesses to the physical memory.
+> >>>
+> >>> Internally, it uses the PTE Accessed bit, as similar to that of the
+> >>> virtual memory support.  Also, it supports only page frames that
+> >>> supported by idle page tracking.  Acutally, most of the code is stollen
+> >>> from idle page tracking.  Users who want to use other access check
+> >>> primitives and monitor the frames that not supported with this
+> >>> implementation could implement their own callbacks on their own.
+> >>>
+> >>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> >>> ---
+> >>>  include/linux/damon.h |   5 ++
+> >>>  mm/damon.c            | 184 ++++++++++++++++++++++++++++++++++++++++++
+> >>>  2 files changed, 189 insertions(+)
+> >>>
+> >>> diff --git a/include/linux/damon.h b/include/linux/damon.h
+> >>> index 1a788bfd1b4e..f96503a532ea 100644
+> >>> --- a/include/linux/damon.h
+> >>> +++ b/include/linux/damon.h
+> >>> @@ -216,6 +216,11 @@ void kdamond_update_vm_regions(struct damon_ctx *ctx);
+> >>>  void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
+> >>>  unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
+> >>>  
+> >>> +void kdamond_init_phys_regions(struct damon_ctx *ctx);
+> >>> +void kdamond_update_phys_regions(struct damon_ctx *ctx);
+> >>> +void kdamond_prepare_phys_access_checks(struct damon_ctx *ctx);
+> >>> +unsigned int kdamond_check_phys_accesses(struct damon_ctx *ctx);
+> >>> +
+> >>>  int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
+> >>>  int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
+> >>>  		unsigned long aggr_int, unsigned long regions_update_int,
+> >>> diff --git a/mm/damon.c b/mm/damon.c
+> >>> index f5cbc97a3bbc..6a5c6d540580 100644
+> >>> --- a/mm/damon.c
+> >>> +++ b/mm/damon.c
+> >>> @@ -19,7 +19,9 @@
+> >>>  #include <linux/mm.h>
+> >>>  #include <linux/module.h>
+> >>>  #include <linux/page_idle.h>
+> >>> +#include <linux/pagemap.h>
+> >>>  #include <linux/random.h>
+> >>> +#include <linux/rmap.h>
+> >>>  #include <linux/sched/mm.h>
+> >>>  #include <linux/sched/task.h>
+> >>>  #include <linux/slab.h>
+> >>> @@ -480,6 +482,11 @@ void kdamond_init_vm_regions(struct damon_ctx *ctx)
+> >>>  	}
+> >>>  }
+> >>>  
+> >>> +/* Do nothing.  Users should set the initial regions by themselves */
+> >>> +void kdamond_init_phys_regions(struct damon_ctx *ctx)
+> >>> +{
+> >>> +}
+> >>> +
+> >>>  static void damon_mkold(struct mm_struct *mm, unsigned long addr)
+> >>>  {
+> >>>  	pte_t *pte = NULL;
+> >>> @@ -611,6 +618,178 @@ unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
+> >>>  	return max_nr_accesses;
+> >>>  }
+> >>>  
+> >>> +/* access check functions for physical address based regions */
+> >>> +
+> >>> +/* This code is stollen from page_idle.c */
+> >>> +static struct page *damon_phys_get_page(unsigned long pfn)
+> >>> +{
+> >>> +	struct page *page;
+> >>> +	pg_data_t *pgdat;
+> >>> +
+> >>> +	if (!pfn_valid(pfn))
+> >>> +		return NULL;
+> >>> +
+> >>
+> >> Who provides these pfns? Can these be random pfns, supplied unchecked by
+> >> user space? Or are they at least mapped into some user space process?
+> > 
+> > Your guess is right, users can give random physical address and that will be
+> > translated into pfn.
+> > 
 > 
-> There is a patch series from Elena and Kees on the kernel-hardening
-> list that deliberately uses __builtin_alloca() in the syscall entry
-> path to randomize the stack pointer per-syscall - see
-> <https://lore.kernel.org/kernel-hardening/20200406231606.37619-4-keescook@chromium.org/>.
+> Note the difference to idle tracking: "Idle page tracking only considers
+> user memory pages", this is very different to your use case. Note that
+> this is why there is no pfn_to_online_page() check in page idle code.
 
-Thanks, Jann.
+My use case is same to that of idle page.  I also ignore non-user pages.
+Actually, this function is for filtering of the non-user pages, which is simply
+stollen from the page_idle.
 
-At first glance, leaving alloca() handling in stackleak instrumentation logic
-would allow to integrate stackleak and this version of random_kstack_offset.
+> 
+> >>
+> >> IOW, do we need a pfn_to_online_page() to make sure the memmap even was
+> >> initialized?
+> > 
+> > Thank you for pointing out this!  I will use it in the next spin.  Also, this
+> > code is stollen from page_idle_get_page().  Seems like it should also be
+> > modified to use it.  I will send the patch for it, either.
+> 
+> pfn_to_online_page() will only succeed for system RAM pages, not
+> dax/pmem (ZONE_DEVICE). dax/pmem needs special care.
+> 
+> I can spot that you are taking references to random struct pages. This
+> looks dangerous to me and might mess in complicated ways with page
+> migration/isolation/onlining/offlining etc. I am not sure if we want that.
 
-Kees, Elena, did you try random_kstack_offset with upstream stackleak?
+AFAIU, page_idle users can also pass random pfns by randomly accessing the
+bitmap file.  Am I missing something?
 
-It looks to me that without stackleak erasing random_kstack_offset can be
-weaker. I mean, if next syscall has a bigger stack randomization gap, the data
-on thread stack from the previous syscall is not overwritten and can be used. Am
-I right?
 
-Another aspect: CONFIG_STACKLEAK_METRICS can be used for guessing kernel stack
-offset, which is bad. It should be disabled if random_kstack_offset is on.
+Thanks,
+SeongJae Park
 
-Best regards,
-Alexander
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
