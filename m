@@ -2,107 +2,87 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C98C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3100C207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C502086A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgFDM63 (ORCPT
+        id S1728038AbgFDNER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:58:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:44228 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgFDM63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:58:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66B6930E;
-        Thu,  4 Jun 2020 05:58:28 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3C643F305;
-        Thu,  4 Jun 2020 05:58:25 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 13:58:22 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-Message-ID: <20200604125822.GB12397@bogus>
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
- <20200603075200.hbyofgcyiwocl565@vireshk-i7>
- <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
- <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com>
- <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
- <CAJZ5v0jj5OS4oB7MYBqKeYejy_3Vz_2oy0hn-Xm=D7XAszM_vg@mail.gmail.com>
+        Thu, 4 Jun 2020 09:04:17 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45752 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgFDNEQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:04:16 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d7so3529461lfi.12;
+        Thu, 04 Jun 2020 06:04:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=urAgIqbBzqYwYgj9xnwgXf8/6DMJC8c4LD5osGdOhLY=;
+        b=jvDyhezTeyAmzAK5lCkTlrCy7erWTXtpWKTbpo/Cy9ZKxGjRsWEanXZkG3fH9o6Vhi
+         sIL2nGJfjQVhiYWVDLnISzWSNNbUVJ1sg/a3xFyHxRfOVlTxWZFPKuHCJAObleiWDSbs
+         fy1pYykh2NmSx5BI7VMmgDToz+x5HgusEKE9gxyjiX0jWGDAJM3yew4zLIG0TYSdySo0
+         iw/JpemDtQo/8S1euYgaOVYnRkPSX3KH47qhrI+qtcXsuBZvZcG6fuTdd166uq1DhVpm
+         JgtA9zWr11JgXGGzSocBww8Thml+VkuMG9vp9LSkHswZzmQU6yfrDyRgMWjUfFjIMnNA
+         lP+g==
+X-Gm-Message-State: AOAM530428NUfkW+Yh/MG7S2mlMcjLz+cAim2fV5I3xV/AFciHLE27nk
+        jhVrabIrQyjP51614z3WfdI=
+X-Google-Smtp-Source: ABdhPJzS9kADwtRgaXZHbRJYWBULIzX77aZRmv+Bae/lnf6GOmmkrg7UmLzqiqJoxJPKCK8UP1vo9w==
+X-Received: by 2002:a19:4854:: with SMTP id v81mr2467234lfa.189.1591275854710;
+        Thu, 04 Jun 2020 06:04:14 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id h13sm1181611ljc.129.2020.06.04.06.04.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 06:04:14 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: storvsc: Use kzfree() in storvsc_suspend()
+Date:   Thu,  4 Jun 2020 16:04:06 +0300
+Message-Id: <20200604130406.108940-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jj5OS4oB7MYBqKeYejy_3Vz_2oy0hn-Xm=D7XAszM_vg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:42:06PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Jun 4, 2020 at 6:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 04-06-20, 09:32, Xiongfeng Wang wrote:
-> > > On 2020/6/3 21:39, Rafael J. Wysocki wrote:
-> > > > The frequency value obtained by kicking the CPU out of idle
-> > > > artificially is bogus, though.  You may as well return a random number
-> > > > instead.
-> > >
-> > > Yes, it may return a randowm number as well.
-> > >
-> > > >
-> > > > The frequency of a CPU in an idle state is in fact unknown in the case
-> > > > at hand, so returning 0 looks like the cleanest option to me.
-> > >
-> > > I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
-> > > return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
-> > > zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
-> > > idle, I will get a non-zero value. The user may feel odd about
-> > > 'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
-> > > may hope it can return the frequency when the CPU execute instructions, namely
-> > > in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
-> >
-> > This is what I was worried about as well. The interface to sysfs needs
-> > to be robust. Returning frequency on some readings and 0 on others
-> > doesn't look right to me as well. This will break scripts (I am not
-> > sure if some scripts are there to look for these values) with the
-> > randomness of values returned by it.
-> 
-> The only thing the scripts need to do is to skip zeros (or anything
-> less than the minimum hw frequency for that matter) coming from that
-> attribute.
-> 
-> > On reading values locally from the CPU, I thought about the case where
-> > userspace can prevent a CPU going into idle just by reading its
-> > frequency from sysfs (and so waste power), but the same can be done by
-> > userspace to run arbitrary load on the CPUs.
-> >
-> > Can we do some sort of caching of the last frequency the CPU was
-> > running at before going into idle ? Then we can just check if cpu is
-> > idle and so return cached value.
-> 
-> That is an option, but it looks like in this case the cpuinfo_cur_freq
-> attribute should not be present at all, as per the documentation.
-> 
+Use kzfree() instead of memset() with 0 followed by kfree().
 
-+1 for dropping the attribute.
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/scsi/storvsc_drv.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 072ed8728657..e5a19cd8a450 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -2035,10 +2035,7 @@ static int storvsc_suspend(struct hv_device *hv_dev)
+ 
+ 	vmbus_close(hv_dev->channel);
+ 
+-	memset(stor_device->stor_chns, 0,
+-	       num_possible_cpus() * sizeof(void *));
+-
+-	kfree(stor_device->stor_chns);
++	kzfree(stor_device->stor_chns);
+ 	stor_device->stor_chns = NULL;
+ 
+ 	cpumask_clear(&stor_device->alloced_cpus);
 -- 
-Regards,
-Sudeep
+2.26.2
+
