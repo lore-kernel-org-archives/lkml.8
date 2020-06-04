@@ -2,227 +2,150 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E87C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5376F206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC352074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:14:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591254873;
+	bh=pQiZ65/cUBUWSQ69Pq08Vdl1ay+BjdbFbkajb1aT1Ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lDb/4SsN3jciIOnwX6D/eJzSdW4tCO4OwY1Nli4RHfmSPm+kAs/IdIpy01tsl2bbx
+	 +V1E9YrluPvCoysHkwTkoRu+cwKRazqKIZfBvLjtVvIjFTNPzgxUONBMcyz/1boDyS
+	 DR33k3mHBONoFqAsRtyoHAue+DN0COa/z3aPQCj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgFDHNJ (ORCPT
+        id S1727786AbgFDHOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:13:09 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:65395 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgFDHNJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:13:09 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Jun 2020 03:13:08 EDT
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: 9zAhf83GSgEwVQAlNLIU0pGVdGDAshbC0Sjobq4FVFCviv2UJIg1ceYEsq+Yy0UQBCh1NFfEVy
- iMLTX3yV7vbF6Waw25yG9y+zEinLLz1zR9Lro1huou6GtYPZBtzM7yyyrAbkeV8wwEgZAesGPR
- 9t4kRazxWGZKk+HF81fNvmBeezr3rFw/eWaf2A0imOXifNpt7cl+sNxzIbSZAhzYx7lP3DUvFq
- UuLfxFcBZb2rPfRlU+omrackTfSfGDW1cThP56PbO0AyoTGYXRLwTK9XnJksPbOfMd9H9U2L+p
- U9U=
-X-SBRS: 2.7
-X-MesageID: 19486747
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.73,471,1583211600"; 
-   d="scan'208";a="19486747"
-Date:   Thu, 4 Jun 2020 09:05:48 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     "Agarwal, Anchal" <anchalag@amazon.com>
-CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and
- hibernation]
-Message-ID: <20200604070548.GH1195@Air-de-Roger>
-References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
+        Thu, 4 Jun 2020 03:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725959AbgFDHOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 03:14:32 -0400
+Received: from willie-the-truck (unknown [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9169206DC;
+        Thu,  4 Jun 2020 07:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591254871;
+        bh=pQiZ65/cUBUWSQ69Pq08Vdl1ay+BjdbFbkajb1aT1Ec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IUcXCOKg4TAj9iHXF8yeI1elrDXEEOp/4uPhjL9xePaNoUijZ0Xw57hLkjCd6K0Ji
+         MF/F1DTXZPJa4cak++xV07+8vXwvrMiMNiR89fi8bUUIn2Yr8MPrUKieaS2ja6M+Wj
+         XtO6FKhx9/TE3nEhuVik1in0DW+6fQq0DVqKhuu8=
+Date:   Thu, 4 Jun 2020 08:14:11 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     John Donnelly <john.p.donnelly@oracle.com>,
+        chenzhou <chenzhou10@huawei.com>,
+        Simon Horman <horms@verge.net.au>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        guohanjun@huawei.com,
+        kexec mailing list <kexec@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        James Morse <james.morse@arm.com>, nsaenzjulienne@suse.de,
+        Prabhakar Kushwaha <prabhakar.pkin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Prabhakar Kushwaha <pkushwaha@marvell.com>,
+        RuiRui Yang <dyoung@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
+ kdump
+Message-ID: <20200604071410.GA30155@willie-the-truck>
+References: <CAJ2QiJ+1Hj2OQzpR5CfvLGMfTTbXAST94hsbfm0VcDmJKV3WTw@mail.gmail.com>
+ <303695cc-d3ea-9f51-1489-07d27d4253d4@oracle.com>
+ <CACi5LpOZzdfEKUYAfYxtgeUbk9K6YFVUKLaGS8XoS0kForjH9A@mail.gmail.com>
+ <F64A309C-B9C0-45F2-A50D-D677005C33A6@oracle.com>
+ <CAJ2QiJJE-jeRL1HPUZCwi1LtV9CBMmYrsOaS6vX1R1sJ6Z1t8g@mail.gmail.com>
+ <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
+ <CAJ2QiJJhUCnobrMHui5=6zLzgy3KsoPxrqiH_oYT8Jhb5MkmbA@mail.gmail.com>
+ <8463464e-5461-f328-621c-bacc6a3b88dd@huawei.com>
+ <8E0D45DC-12BF-437D-A342-03E974D9C6D4@oracle.com>
+ <CACi5LpN-+NRnaDoWWWidbzma8BNzmofA5FQBV=cPF1Mc84FpFg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACi5LpN-+NRnaDoWWWidbzma8BNzmofA5FQBV=cPF1Mc84FpFg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
->  CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+On Thu, Jun 04, 2020 at 01:17:06AM +0530, Bhupesh Sharma wrote:
+> On Wed, Jun 3, 2020 at 9:03 PM John Donnelly <john.p.donnelly@oracle.com> wrote:
+> > > On Jun 3, 2020, at 8:20 AM, chenzhou <chenzhou10@huawei.com> wrote:
+> > > On 2020/6/3 19:47, Prabhakar Kushwaha wrote:
+> > >>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > >>>> index 7f9e5a6dc48c..bd67b90d35bd 100644
+> > >>>> --- a/kernel/crash_core.c
+> > >>>> +++ b/kernel/crash_core.c
+> > >>>> @@ -354,7 +354,7 @@ int __init reserve_crashkernel_low(void)
+> > >>>>                       return 0;
+> > >>>>       }
+> > >>>>
+> > >>>> -       low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> > >>>> +       low_base = memblock_find_in_range(0,0xc0000000, low_size, CRASH_ALIGN);
+> > >>>>       if (!low_base) {
+> > >>>>               pr_err("Cannot reserve %ldMB crashkernel low memory,
+> > >>>> please try smaller size.\n",
+> > >>>>                      (unsigned long)(low_size >> 20));
+> > >>>>
+> > >>>>
+> > >>>    I suspect  0xc0000000  would need to be a CONFIG item  and not hard-coded.
+> > >>>
+> > >> if you consider this as valid change,  can you please incorporate as
+> > >> part of your patch-set.
+> > >
+> > > After commit 1a8e1cef7 ("arm64: use both ZONE_DMA and
+> > > ZONE_DMA32")，the 0-4G memory is splited to DMA [mem
+> > > 0x0000000000000000-0x000000003fffffff] and DMA32 [mem
+> > > 0x0000000040000000-0x00000000ffffffff] on arm64.
+> > >
+> > > From the above discussion, on your platform, the low crashkernel fall
+> > > in DMA32 region, but your environment needs to access DMA region, so
+> > > there is the call trace.
+> > >
+> > > I have a question, why do you choose 0xc0000000 here?
+> > >
+> > > Besides, this is common code, we also need to consider about x86.
+> > >
+> >
+> >  + nsaenzjulienne@suse.de
+> >
+> >   Exactly .  This is why it needs to be a CONFIG option for  Raspberry
+> >   ..,  or device tree option.
+> >
+> >
+> >   We could revert 1a8e1cef7 since it broke  Arm kdump too.
 > 
+> Well, unfortunately the patch for commit 1a8e1cef7603 ("arm64: use
+> both ZONE_DMA and ZONE_DMA32") was not Cc'ed to the kexec mailing
+> list, thus we couldn't get many eyes on it for a thorough review from
+> kexec/kdump p-o-v.
 > 
-> 
->     On Tue, May 19, 2020 at 11:27:50PM +0000, Anchal Agarwal wrote:
->     > From: Munehisa Kamata <kamatam@amazon.com>
->     > 
->     > S4 power transition states are much different than xen
->     > suspend/resume. Former is visible to the guest and frontend drivers should
->     > be aware of the state transitions and should be able to take appropriate
->     > actions when needed. In transition to S4 we need to make sure that at least
->     > all the in-flight blkif requests get completed, since they probably contain
->     > bits of the guest's memory image and that's not going to get saved any
->     > other way. Hence, re-issuing of in-flight requests as in case of xen resume
->     > will not work here. This is in contrast to xen-suspend where we need to
->     > freeze with as little processing as possible to avoid dirtying RAM late in
->     > the migration cycle and we know that in-flight data can wait.
->     > 
->     > Add freeze, thaw and restore callbacks for PM suspend and hibernation
->     > support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
->     > events, need to implement these xenbus_driver callbacks. The freeze handler
->     > stops block-layer queue and disconnect the frontend from the backend while
->     > freeing ring_info and associated resources. Before disconnecting from the
->     > backend, we need to prevent any new IO from being queued and wait for existing
->     > IO to complete. Freeze/unfreeze of the queues will guarantee that there are no
->     > requests in use on the shared ring. However, for sanity we should check
->     > state of the ring before disconnecting to make sure that there are no
->     > outstanding requests to be processed on the ring. The restore handler
->     > re-allocates ring_info, unquiesces and unfreezes the queue and re-connect to
->     > the backend, so that rest of the kernel can continue to use the block device
->     > transparently.
->     > 
->     > Note:For older backends,if a backend doesn't have commit'12ea729645ace'
->     > xen/blkback: unmap all persistent grants when frontend gets disconnected,
->     > the frontend may see massive amount of grant table warning when freeing
->     > resources.
->     > [   36.852659] deferring g.e. 0xf9 (pfn 0xffffffffffffffff)
->     > [   36.855089] xen:grant_table: WARNING:e.g. 0x112 still in use!
->     > 
->     > In this case, persistent grants would need to be disabled.
->     > 
->     > [Anchal Changelog: Removed timeout/request during blkfront freeze.
->     > Reworked the whole patch to work with blk-mq and incorporate upstream's
->     > comments]
-> 
->     Please tag versions using vX and it would be helpful if you could list
->     the specific changes that you performed between versions. There where
->     3 RFC versions IIRC, and there's no log of the changes between them.
-> 
-> I will elaborate on "upstream's comments" in my changelog in my next round of patches.
+> Also we historically never had distinction in common arch code on the
+> basis of the intended end use-case: embedded, server or automotive, so
+> I am not sure introducing a Raspberry specific CONFIG option would be
+> a good idea.
 
-Sorry for being picky, but can you please make sure your email client
-properly quotes previous emails on reply. Note the lack of '>' added
-to the quoted parts of your reply.
+Right, we need a fix that works for everybody, since we try hard for a
+single Image that works for all platforms.
 
->     > +                     }
->     > +
->     >                       break;
->     > +             }
->     > +
->     > +             /*
->     > +              * We may somehow receive backend's Closed again while thawing
->     > +              * or restoring and it causes thawing or restoring to fail.
->     > +              * Ignore such unexpected state regardless of the backend state.
->     > +              */
->     > +             if (info->connected == BLKIF_STATE_FROZEN) {
-> 
->     I think you can join this with the previous dev->state == XenbusStateClosed?
-> 
->     Also, won't the device be in the Closed state already if it's in state
->     frozen?
-> Yes but I think this mostly due to a hypothetical case if during thawing backend switches to Closed state.
-> I am not entirely sure if that could happen. Could use some expertise here.
+What I don't really understand is why, with Chen's patches applied, we can't
+just keep the crashkernel out of the DMA zones altogether when no base is
+specified. I guess I'll just look out for your patch!
 
-I think the frontend seeing the backend in the closed state during
-restore would be a bug that should prevent the frontend from
-resuming.
-
->     > +     /* Kick the backend to disconnect */
->     > +     xenbus_switch_state(dev, XenbusStateClosing);
->     > +
->     > +     /*
->     > +      * We don't want to move forward before the frontend is diconnected
->     > +      * from the backend cleanly.
->     > +      */
->     > +     timeout = wait_for_completion_timeout(&info->wait_backend_disconnected,
->     > +                                           timeout);
->     > +     if (!timeout) {
->     > +             err = -EBUSY;
-> 
->     Note err is only used here, and I think could just be dropped.
-> 
-> This err is what's being returned from the function. Am I missing anything?
-
-Just 'return -EBUSY;' directly, and remove the top level variable. You
-can also use -EBUSY directly in the xenbus_dev_error call. Anyway, not
-that important.
-
->     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
->     > +                              "the device may become inconsistent state");
-> 
->     Leaving the device in this state is quite bad, as it's in a closed
->     state and with the queues frozen. You should make an attempt to
->     restore things to a working state.
-> 
-> You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to 
-> leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
-> Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why 
-> I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
-
-You can manually force this state, and then check that it will behave
-correctly. I would expect that on a failure to disconnect from the
-backend you should switch the frontend to the 'Init' state in order to
-try to reconnect to the backend when possible.
-
->     > +     }
->     > +
->     > +     return err;
->     > +}
->     > +
->     > +static int blkfront_restore(struct xenbus_device *dev)
->     > +{
->     > +     struct blkfront_info *info = dev_get_drvdata(&dev->dev);
->     > +     int err = 0;
->     > +
->     > +     err = talk_to_blkback(dev, info);
->     > +     blk_mq_unquiesce_queue(info->rq);
->     > +     blk_mq_unfreeze_queue(info->rq);
->     > +     if (!err)
->     > +         blk_mq_update_nr_hw_queues(&info->tag_set, info->nr_rings);
-> 
->     Bad indentation. Also shouldn't you first update the queues and then
->     unfreeze them?
-> Please correct me if I am wrong, blk_mq_update_nr_hw_queues freezes the queue
-> So I don't think the order could be reversed.
-
-Regardless of what blk_mq_update_nr_hw_queues does, I don't think it's
-correct to unfreeze the queues without having updated them. Also the
-freezing/unfreezing uses a refcount, so I think it's perfectly fine to
-call blk_mq_update_nr_hw_queues first and then unfreeze the queues.
-
-Also note that talk_to_blkback returning an error should likely
-prevent any unfreezing, as the queues won't be updated to match the
-parameters of the backend.
-
-Thanks, Roger.
+Will
