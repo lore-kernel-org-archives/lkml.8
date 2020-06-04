@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA07BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8648420772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C2320772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgFDCGH (ORCPT
+        id S1726921AbgFDCGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:06:07 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:53810 "EHLO inva021.nxp.com"
+        Wed, 3 Jun 2020 22:06:11 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53866 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgFDCGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:06:05 -0400
+        id S1726480AbgFDCGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 22:06:08 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 438FA200135;
-        Thu,  4 Jun 2020 04:06:03 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A612520011E;
+        Thu,  4 Jun 2020 04:06:05 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B0B220011E;
-        Thu,  4 Jun 2020 04:05:58 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 97C5020013B;
+        Thu,  4 Jun 2020 04:06:00 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 02379402A5;
-        Thu,  4 Jun 2020 10:05:51 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4EFFF402B0;
+        Thu,  4 Jun 2020 10:05:54 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     broonie@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -35,9 +36,9 @@ To:     broonie@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 1/3] dt-bindings: spi: Convert mxs spi to json-schema
-Date:   Thu,  4 Jun 2020 09:55:29 +0800
-Message-Id: <1591235731-15673-2-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 3/3] dt-bindings: spi: Convert imx lpspi to json-schema
+Date:   Thu,  4 Jun 2020 09:55:31 +0800
+Message-Id: <1591235731-15673-4-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591235731-15673-1-git-send-email-Anson.Huang@nxp.com>
 References: <1591235731-15673-1-git-send-email-Anson.Huang@nxp.com>
@@ -47,67 +48,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the MXS SPI binding to DT schema format using json-schema
+Convert the i.MX LPSPI binding to DT schema format using json-schema
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 Changes since V1:
 	- add "unevaluatedProperties: false".
 ---
- Documentation/devicetree/bindings/spi/mxs-spi.txt  | 26 ----------
- Documentation/devicetree/bindings/spi/mxs-spi.yaml | 57 ++++++++++++++++++++++
- 2 files changed, 57 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/mxs-spi.yaml
+ .../devicetree/bindings/spi/spi-fsl-lpspi.txt      | 29 ----------
+ .../devicetree/bindings/spi/spi-fsl-lpspi.yaml     | 62 ++++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
 
-diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.txt b/Documentation/devicetree/bindings/spi/mxs-spi.txt
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
 deleted file mode 100644
-index 3499b73..0000000
---- a/Documentation/devicetree/bindings/spi/mxs-spi.txt
+index e71b81a..0000000
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
 +++ /dev/null
-@@ -1,26 +0,0 @@
--* Freescale MX233/MX28 SSP/SPI
+@@ -1,29 +0,0 @@
+-* Freescale Low Power SPI (LPSPI) for i.MX
 -
 -Required properties:
--- compatible: Should be "fsl,<soc>-spi", where soc is "imx23" or "imx28"
--- reg: Offset and length of the register set for the device
--- interrupts: Should contain SSP ERROR interrupt
--- dmas: DMA specifier, consisting of a phandle to DMA controller node
--  and SSP DMA channel ID.
--  Refer to dma.txt and fsl-mxs-dma.txt for details.
--- dma-names: Must be "rx-tx".
+-- compatible :
+-  - "fsl,imx7ulp-spi" for LPSPI compatible with the one integrated on i.MX7ULP soc
+-  - "fsl,imx8qxp-spi" for LPSPI compatible with the one integrated on i.MX8QXP soc
+-- reg : address and length of the lpspi master registers
+-- interrupt-parent : core interrupt controller
+-- interrupts : lpspi interrupt
+-- clocks : lpspi clock specifier. Its number and order need to correspond to the
+-	   value in clock-names.
+-- clock-names : Corresponding to per clock and ipg clock in "clocks"
+-		respectively. In i.MX7ULP, it only has per clk, so use CLK_DUMMY
+-		to fill the "ipg" blank.
+-- spi-slave : spi slave mode support. In slave mode, add this attribute without
+-	      value. In master mode, remove it.
 -
--Optional properties:
--- clock-frequency : Input clock frequency to the SPI block in Hz.
--		    Default is 160000000 Hz.
+-Examples:
 -
--Example:
--
--ssp0: ssp@80010000 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--	compatible = "fsl,imx28-spi";
--	reg = <0x80010000 0x2000>;
--	interrupts = <96>;
--	dmas = <&dma_apbh 0>;
--	dma-names = "rx-tx";
+-lpspi2: lpspi@40290000 {
+-	compatible = "fsl,imx7ulp-spi";
+-	reg = <0x40290000 0x10000>;
+-	interrupt-parent = <&intc>;
+-	interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks IMX7ULP_CLK_LPSPI2>,
+-		 <&clks IMX7ULP_CLK_DUMMY>;
+-	clock-names = "per", "ipg";
+-	spi-slave;
 -};
-diff --git a/Documentation/devicetree/bindings/spi/mxs-spi.yaml b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
 new file mode 100644
-index 0000000..68c5d6d
+index 0000000..8ceb529
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/mxs-spi.yaml
-@@ -0,0 +1,57 @@
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
+@@ -0,0 +1,62 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/spi/mxs-spi.yaml#
++$id: http://devicetree.org/schemas/spi/spi-fsl-lpspi.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale MX233/MX28 SSP/SPI
++title: Freescale Low Power SPI (LPSPI) for i.MX
 +
 +maintainers:
-+  - Marek Vasut <marex@denx.de>
++  - Anson Huang <Anson.Huang@nxp.com>
 +
 +allOf:
 +  - $ref: "/schemas/spi/spi-controller.yaml#"
@@ -115,8 +119,8 @@ index 0000000..68c5d6d
 +properties:
 +  compatible:
 +    enum:
-+      - fsl,imx23-spi
-+      - fsl,imx28-spi
++      - fsl,imx7ulp-spi
++      - fsl,imx8qxp-spi
 +
 +  reg:
 +    maxItems: 1
@@ -124,36 +128,41 @@ index 0000000..68c5d6d
 +  interrupts:
 +    maxItems: 1
 +
-+  dmas:
-+    maxItems: 1
++  clocks:
++    items:
++      - description: SoC SPI per clock
++      - description: SoC SPI ipg clock
++    maxItems: 2
 +
-+  dma-names:
-+    const: rx-tx
-+
-+  clock-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: input clock frequency to the SPI block in Hz.
-+    default: 160000000
++  clock-names:
++    items:
++      - const: per
++      - const: ipg
++    maxItems: 2
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+  - dmas
-+  - dma-names
++  - clocks
++  - clock-names
 +
 +unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    spi@80010000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "fsl,imx28-spi";
-+        reg = <0x80010000 0x2000>;
-+        interrupts = <96>;
-+        dmas = <&dma_apbh 0>;
-+        dma-names = "rx-tx";
++    #include <dt-bindings/clock/imx7ulp-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    spi@40290000 {
++        compatible = "fsl,imx7ulp-spi";
++        reg = <0x40290000 0x10000>;
++        interrupt-parent = <&intc>;
++        interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX7ULP_CLK_LPSPI2>,
++                 <&clks IMX7ULP_CLK_DUMMY>;
++        clock-names = "per", "ipg";
++        spi-slave;
 +    };
 -- 
 2.7.4
