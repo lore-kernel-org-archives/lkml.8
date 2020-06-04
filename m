@@ -2,189 +2,97 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3189C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B218620823
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:34:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TjCwc4Gl"
+	by mail.kernel.org (Postfix) with ESMTP id 9E8EE206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgFDOe7 (ORCPT
+        id S1729062AbgFDOgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:34:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729037AbgFDOe5 (ORCPT
+        Thu, 4 Jun 2020 10:36:38 -0400
+Received: from mail-vs1-f43.google.com ([209.85.217.43]:33265 "EHLO
+        mail-vs1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729000AbgFDOgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:34:57 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CE3C08C5C5
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:34:57 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ga6so1207837pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ove4i1/jldMZ8oj/uY7NqV8r09suzUfhCHwuSYH9N6k=;
-        b=TjCwc4Glzpv6zTuI4ORcCO3GKt0+Ccro7aRK1+e6UcK9/8RNeB8TRca2cDcrCZcFnw
-         dOZz9z/5MHyMXIaUdvhXgJxFJWPi992hZGVtspEgPL5VJyozAoxBel+yRY8wrOsFSawW
-         q/r0W2zg8NzemNia+bwbRZAfOWsgUJYKa74vc=
+        Thu, 4 Jun 2020 10:36:38 -0400
+Received: by mail-vs1-f43.google.com with SMTP id o2so3657798vsr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:36:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ove4i1/jldMZ8oj/uY7NqV8r09suzUfhCHwuSYH9N6k=;
-        b=saQci245N3DDv1P9N2YyR8Wx6i3jFpWrq13CHgsuRo/HffMhqitLaX7b2K5ygu4EZE
-         gqZrjZZGFEpvDSvtk40d/ndBk8wLlH4goJ5UP6QXtroG4C+6yu4s4zKq35lLZIK51RMf
-         +iDkGgC6yUUkro6E+9Jq09hxsLj6HVwSMoVh6xtBrRdFLD8Zj/pRNQnSYVnW8TCtfGmO
-         7anAbNJubfPssNkYlObgIZ/t8RDhaJnGOiNxnejlVIV89hgtnm8h9p1kQpd016DkOqs9
-         E/Q3dMwvGw9/6TwgdFpOGxccYCnRkDCpGWRsHCh0HGeWysScxqrGZs1ejzqwFIvaRc+5
-         mqnA==
-X-Gm-Message-State: AOAM5317CnkhxxdO+OnOEvUM8t58BAa5iS+vNlaP1n096q1oM/Hm7bf/
-        u7+8o62GCClO6baYLZh703ywaA==
-X-Google-Smtp-Source: ABdhPJwYFZeK5TkHVANf3TB7Mzvs6z8AC7rMNyAbLjxTjQqaX9yKSG5fQNVZZytsALVosdoYYC3FFg==
-X-Received: by 2002:a17:90a:950e:: with SMTP id t14mr5847304pjo.99.1591281296926;
-        Thu, 04 Jun 2020 07:34:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q8sm6069346pjj.51.2020.06.04.07.34.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 07:34:55 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 07:34:54 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mm@kvack.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 01/10] x86/mm/numa: Remove uninitialized_var() usage
-Message-ID: <202006040728.8797FAA4@keescook>
-References: <20200603233203.1695403-2-keescook@chromium.org>
- <874krr8dps.fsf@nanos.tec.linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i4Hx3BwEHJH2So5kTa/MIItyAdGgUGAgTi4KywxGBGc=;
+        b=lmS/v9KZzUzGSydNoX7cVuS4c2A/cOSTcHG4SWfP6m05kBH6MPoz6hXWw+gJnNmnM4
+         7PnUfG2scOoMK8bCBtm6PBAn6FaX1FxgKCHKE5CdhbfNM0Q7t3Tb+7jng9lX7A6q7/ZR
+         t6Ya8giCvwzObRXd/a3WmMtXGfbN/unIh1WbLzpTFDzVHsy8urTj2OhOZBMZh9RUPwgj
+         Fp6B2MjrxvapHeOpgDrWmdewkKkMk+IdyV6/jxJ1xcaOz77SVM9zdkZJ1/rlWJPPR1Rq
+         fO93NOVLEljSlYKVC1rJ/Dcmz63u5lJjJPDjNibBI03IHBzy2FjI2XxldR1ORet78HME
+         eSCw==
+X-Gm-Message-State: AOAM530f/T5ZsYlOY00qdHQkQxB9KBV3whKEOLtrjwHx2yfJaFriyIQB
+        x0tf46LchGvSQ8qr9wBBaEDd8WYA2Y/SrwedgOV1XBDs
+X-Google-Smtp-Source: ABdhPJwhCxXt1KLLCABr033pxl0Bt2L46aMad4CJ0ByJy9dVIIbK4v2b84tVyvNLADHeUE9fta3uCAKWrbD9/4nn5GM=
+X-Received: by 2002:a67:3083:: with SMTP id w125mr3719385vsw.207.1591281397221;
+ Thu, 04 Jun 2020 07:36:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874krr8dps.fsf@nanos.tec.linutronix.de>
+References: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
+In-Reply-To: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Thu, 4 Jun 2020 10:36:26 -0400
+Message-ID: <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com>
+Subject: Re: [Nouveau] NVIDIA GP107 (137000a1) - acr: failed to load firmware
+To:     Zeno Davatz <zdavatz@gmail.com>
+Cc:     nouveau <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:58:07AM +0200, Thomas Gleixner wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> > -#ifdef NODE_NOT_IN_PAGE_FLAGS
-> > -	pfn_align = node_map_pfn_alignment();
-> > -	if (pfn_align && pfn_align < PAGES_PER_SECTION) {
-> > -		printk(KERN_WARNING "Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
-> > -		       PFN_PHYS(pfn_align) >> 20,
-> > -		       PFN_PHYS(PAGES_PER_SECTION) >> 20);
-> > -		return -EINVAL;
-> > +	if (IS_ENABLED(NODE_NOT_IN_PAGE_FLAGS)) {
-> 
-> Hrm, clever ...
-> 
-> > +		unsigned long pfn_align = node_map_pfn_alignment();
-> > +
-> > +		if (pfn_align && pfn_align < PAGES_PER_SECTION) {
-> > +			pr_warn("Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
-> > +				PFN_PHYS(pfn_align) >> 20,
-> > +				PFN_PHYS(PAGES_PER_SECTION) >> 20);
-> > +			return -EINVAL;
-> > +		}
-> >  	}
-> > -#endif
-> >  	if (!numa_meminfo_cover_memory(mi))
-> >  		return -EINVAL;
-> >  
-> > diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
-> > index 71283739ffd2..1a4cdec2bd29 100644
-> > --- a/include/linux/page-flags-layout.h
-> > +++ b/include/linux/page-flags-layout.h
-> > @@ -100,7 +100,7 @@
-> >   * there.  This includes the case where there is no node, so it is implicit.
-> >   */
-> >  #if !(NODES_WIDTH > 0 || NODES_SHIFT == 0)
-> > -#define NODE_NOT_IN_PAGE_FLAGS
-> > +#define NODE_NOT_IN_PAGE_FLAGS 1
-> 
-> but if we ever lose the 1 then the above will silently compile the code
-> within the IS_ENABLED() section out.
+Starting with kernel 5.6, loading nouveau without firmware (for GPUs
+where it is required, such as yours) got broken.
 
-That's true, yes. I considered two other ways to do this:
+You are loading nouveau without firmware, so it fails.
 
-1) smallest patch, but more #ifdef:
+The firmware needs to be available to the kernel at the time of nouveau loading.
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 59ba008504dc..fbf5231a3d35 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -541,7 +541,9 @@ static void __init numa_clear_kernel_node_hotplug(void)
- 
- static int __init numa_register_memblks(struct numa_meminfo *mi)
- {
--	unsigned long uninitialized_var(pfn_align);
-+#ifdef NODE_NOT_IN_PAGE_FLAGS
-+	unsigned long pfn_align;
-+#endif
- 	int i, nid;
- 
- 	/* Account for nodes with cpus and no memory */
+Cheers,
 
-2) medium size, weird style:
+  -ilia
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 59ba008504dc..0df7ba9b21b2 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -541,7 +541,6 @@ static void __init numa_clear_kernel_node_hotplug(void)
- 
- static int __init numa_register_memblks(struct numa_meminfo *mi)
- {
--	unsigned long uninitialized_var(pfn_align);
- 	int i, nid;
- 
- 	/* Account for nodes with cpus and no memory */
-@@ -570,12 +569,15 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
- 	 * whether its granularity is fine enough.
- 	 */
- #ifdef NODE_NOT_IN_PAGE_FLAGS
--	pfn_align = node_map_pfn_alignment();
--	if (pfn_align && pfn_align < PAGES_PER_SECTION) {
--		printk(KERN_WARNING "Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
--		       PFN_PHYS(pfn_align) >> 20,
--		       PFN_PHYS(PAGES_PER_SECTION) >> 20);
--		return -EINVAL;
-+	{
-+		unsigned long pfn_align = node_map_pfn_alignment();
-+
-+		if (pfn_align && pfn_align < PAGES_PER_SECTION) {
-+			pr_warn("Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
-+			       PFN_PHYS(pfn_align) >> 20,
-+			       PFN_PHYS(PAGES_PER_SECTION) >> 20);
-+			return -EINVAL;
-+		}
- 	}
- #endif
- 	if (!numa_meminfo_cover_memory(mi))
-
-and 3 is what I sent: biggest, but removes #ifdef
-
-Any preference?
-
-Thanks!
-
--- 
-Kees Cook
+On Thu, Jun 4, 2020 at 10:24 AM Zeno Davatz <zdavatz@gmail.com> wrote:
+>
+> Hi
+>
+> With Kernel 5.7 I am still getting this, while booting:
+>
+> ~> uname -a
+> Linux zenogentoo 5.7.0 #80 SMP Thu Jun 4 16:10:03 CEST 2020 x86_64
+> Intel(R) Core(TM) i7 CPU 960 @ 3.20GHz GenuineIntel GNU/Linux
+> ~> dmesg |grep nouveau
+> [    0.762872] nouveau 0000:05:00.0: NVIDIA GP107 (137000a1)
+> [    0.875311] nouveau 0000:05:00.0: bios: version 86.07.42.00.4a
+> [    0.875681] nouveau 0000:05:00.0: acr: failed to load firmware
+> [    0.875780] nouveau 0000:05:00.0: acr: failed to load firmware
+> [    0.875881] nouveau 0000:05:00.0: acr ctor failed, -2
+> [    0.875980] nouveau: probe of 0000:05:00.0 failed with error -2
+>
+> Old thread is here: https://lkml.org/lkml/2020/4/3/775
+>
+> My Linxu-Firmware is: linux-firmware-20200421
+>
+> This used to work fine with Kernel 5.5.
+>
+> Please CC me for replies.
+>
+> best
+> Zeno
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
