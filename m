@@ -2,288 +2,160 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5D7C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA80C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A676A20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D7A2088E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aRJSMZ49"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BpQDzp3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgFDHaS (ORCPT
+        id S1728270AbgFDHaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:30:18 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41348 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbgFDHaO (ORCPT
+        Thu, 4 Jun 2020 03:30:20 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:7383 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728139AbgFDH3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:30:14 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E216029B;
-        Thu,  4 Jun 2020 09:30:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591255810;
-        bh=OeVLMiEC4J9VxlZT612hjSJQ4NpMPCcv03PP57PjMfI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aRJSMZ49P0ne+GgnWEY3QHWJgBfU1y1yTUIO2SjJykuAP4myXsxuT6xnJWkbNZh93
-         ziFph/TUVTEPz4TzPcxE408geh6tky+oIMjtFr631nzHMl02TO9HxADyvLeEW+cEK0
-         SqPz6kQSsGheat7L7K2U45pV3L7+3+NbRsnpe94o=
-Date:   Thu, 4 Jun 2020 10:29:52 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for
- LT9611
-Message-ID: <20200604072952.GA5828@pendragon.ideasonboard.com>
-References: <20200513100533.42996-1-vkoul@kernel.org>
- <20200513100533.42996-3-vkoul@kernel.org>
- <20200528014837.GD4670@pendragon.ideasonboard.com>
- <20200604071859.GD3521@vkoul-mobl>
+        Thu, 4 Jun 2020 03:29:42 -0400
+X-UUID: d72a4d305ba246bfadc4388ffef4f760-20200604
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=++AszAM+yvHiRrZuadM5z42ebHxNTFGklmlvhyXuUcg=;
+        b=BpQDzp3DKHtzCoGCWFiwCjBT4de9BRGMGSYd8+j0LrqMVkO2Ul6jlMWwcp1EZjufo+gIGPv4e/bpzP/eV0wH8juVUKWqVNfmNqMOGWax3lkjwdJSNK87VgY1GvYEUwP1UItNr6slXhu1GBevRkGNBI5HfrfGWrHzXP7RFf35xnk=;
+X-UUID: d72a4d305ba246bfadc4388ffef4f760-20200604
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <xia.jiang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1955025006; Thu, 04 Jun 2020 15:29:36 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 4 Jun 2020 15:29:33 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 4 Jun 2020 15:29:31 +0800
+From:   Xia Jiang <xia.jiang@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
+        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
+        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
+        Xia Jiang <xia.jiang@mediatek.com>
+Subject: [PATCH v9 16/18] media: platform: Rename jpeg dec file name
+Date:   Thu, 4 Jun 2020 15:27:06 +0800
+Message-ID: <20200604072708.9468-17-xia.jiang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200604072708.9468-1-xia.jiang@mediatek.com>
+References: <20200604072708.9468-1-xia.jiang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200604071859.GD3521@vkoul-mobl>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+UmVuYW1lIHRoZSBmaWxlcyB3aGljaCBhcmUgZm9yIGRlY29kZSBmZWF0dXJlLiBUaGlzIGlzIHBy
+ZXBhcmluZw0KcGF0aCBzaW5jZSB0aGUganBlZyBlbmMgcGF0Y2ggd2lsbCBiZSBhZGRlZCBsYXRl
+ci4NCg0KUmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+DQpTaWdu
+ZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhpYS5qaWFuZ0BtZWRpYXRlay5jb20+DQotLS0NCnY5OiBu
+byBjaGFuZ2VzDQotLS0NCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL01ha2VmaWxl
+ICAgICAgICAgICAgICAgICAgICAgIHwgMiArLQ0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRr
+LWpwZWcvbXRrX2pwZWdfY29yZS5jICAgICAgICAgICAgICAgfCA0ICsrLS0NCiAuLi4vcGxhdGZv
+cm0vbXRrLWpwZWcve210a19qcGVnX2h3LmMgPT4gbXRrX2pwZWdfZGVjX2h3LmN9ICAgIHwgMiAr
+LQ0KIC4uLi9wbGF0Zm9ybS9tdGstanBlZy97bXRrX2pwZWdfaHcuaCA9PiBtdGtfanBlZ19kZWNf
+aHcuaH0gICAgfCAyICstDQogLi4uL210ay1qcGVnL3ttdGtfanBlZ19wYXJzZS5jID0+IG10a19q
+cGVnX2RlY19wYXJzZS5jfSAgICAgICB8IDIgKy0NCiAuLi4vbXRrLWpwZWcve210a19qcGVnX3Bh
+cnNlLmggPT4gbXRrX2pwZWdfZGVjX3BhcnNlLmh9ICAgICAgIHwgMiArLQ0KIC4uLi9wbGF0Zm9y
+bS9tdGstanBlZy97bXRrX2pwZWdfcmVnLmggPT4gbXRrX2pwZWdfZGVjX3JlZy5ofSAgfCAwDQog
+NyBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQogcmVuYW1l
+IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcve210a19qcGVnX2h3LmMgPT4gbXRrX2pw
+ZWdfZGVjX2h3LmN9ICg5OSUpDQogcmVuYW1lIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpw
+ZWcve210a19qcGVnX2h3LmggPT4gbXRrX2pwZWdfZGVjX2h3Lmh9ICg5OCUpDQogcmVuYW1lIGRy
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcve210a19qcGVnX3BhcnNlLmMgPT4gbXRrX2pw
+ZWdfZGVjX3BhcnNlLmN9ICg5OCUpDQogcmVuYW1lIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRr
+LWpwZWcve210a19qcGVnX3BhcnNlLmggPT4gbXRrX2pwZWdfZGVjX3BhcnNlLmh9ICg5MiUpDQog
+cmVuYW1lIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcve210a19qcGVnX3JlZy5oID0+
+IG10a19qcGVnX2RlY19yZWcuaH0gKDEwMCUpDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlh
+L3BsYXRmb3JtL210ay1qcGVnL01ha2VmaWxlIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGst
+anBlZy9NYWtlZmlsZQ0KaW5kZXggOTJhNGZjMDQ2YmZlLi40ODUxNmRjZjk2ZTYgMTAwNjQ0DQot
+LS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL01ha2VmaWxlDQorKysgYi9kcml2
+ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL01ha2VmaWxlDQpAQCAtMSwzICsxLDMgQEANCiAj
+IFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkNCi1tdGtfanBlZy1vYmpzIDo9
+IG10a19qcGVnX2NvcmUubyBtdGtfanBlZ19ody5vIG10a19qcGVnX3BhcnNlLm8NCittdGtfanBl
+Zy1vYmpzIDo9IG10a19qcGVnX2NvcmUubyBtdGtfanBlZ19kZWNfaHcubyBtdGtfanBlZ19kZWNf
+cGFyc2Uubw0KIG9iai0kKENPTkZJR19WSURFT19NRURJQVRFS19KUEVHKSArPSBtdGtfanBlZy5v
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19j
+b3JlLmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0K
+aW5kZXggNmM4MjEzNGQ2YjNkLi5lMGU1MjJhNTAyZTEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21l
+ZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KKysrIGIvZHJpdmVycy9tZWRp
+YS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMNCkBAIC0yMyw5ICsyMyw5IEBADQog
+I2luY2x1ZGUgPG1lZGlhL3ZpZGVvYnVmMi1kbWEtY29udGlnLmg+DQogI2luY2x1ZGUgPHNvYy9t
+ZWRpYXRlay9zbWkuaD4NCiANCi0jaW5jbHVkZSAibXRrX2pwZWdfaHcuaCINCisjaW5jbHVkZSAi
+bXRrX2pwZWdfZGVjX2h3LmgiDQogI2luY2x1ZGUgIm10a19qcGVnX2NvcmUuaCINCi0jaW5jbHVk
+ZSAibXRrX2pwZWdfcGFyc2UuaCINCisjaW5jbHVkZSAibXRrX2pwZWdfZGVjX3BhcnNlLmgiDQog
+DQogc3RhdGljIHN0cnVjdCBtdGtfanBlZ19mbXQgbXRrX2pwZWdfZm9ybWF0c1tdID0gew0KIAl7
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19o
+dy5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19kZWNfaHcuYw0K
+c2ltaWxhcml0eSBpbmRleCA5OSUNCnJlbmFtZSBmcm9tIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+bXRrLWpwZWcvbXRrX2pwZWdfaHcuYw0KcmVuYW1lIHRvIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+bXRrLWpwZWcvbXRrX2pwZWdfZGVjX2h3LmMNCmluZGV4IDY4YWJjZmQ3NDk0ZC4uYWZiYmZkNWQw
+MmJjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBl
+Z19ody5jDQorKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2Rl
+Y19ody5jDQpAQCAtOSw3ICs5LDcgQEANCiAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQogI2lu
+Y2x1ZGUgPG1lZGlhL3ZpZGVvYnVmMi1jb3JlLmg+DQogDQotI2luY2x1ZGUgIm10a19qcGVnX2h3
+LmgiDQorI2luY2x1ZGUgIm10a19qcGVnX2RlY19ody5oIg0KIA0KICNkZWZpbmUgTVRLX0pQRUdf
+RFVOVU1fTUFTSyh2YWwpCSgoKHZhbCkgLSAxKSAmIDB4MykNCiANCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2h3LmggYi9kcml2ZXJzL21lZGlh
+L3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2RlY19ody5oDQpzaW1pbGFyaXR5IGluZGV4IDk4
+JQ0KcmVuYW1lIGZyb20gZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19o
+dy5oDQpyZW5hbWUgdG8gZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19k
+ZWNfaHcuaA0KaW5kZXggN2IwNjg3ZjhmNGI2Li4xY2MzN2RiZmM4ZTcgMTAwNjQ0DQotLS0gYS9k
+cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2h3LmgNCisrKyBiL2RyaXZl
+cnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfZGVjX2h3LmgNCkBAIC0xMSw3ICsx
+MSw3IEBADQogI2luY2x1ZGUgPG1lZGlhL3ZpZGVvYnVmMi1jb3JlLmg+DQogDQogI2luY2x1ZGUg
+Im10a19qcGVnX2NvcmUuaCINCi0jaW5jbHVkZSAibXRrX2pwZWdfcmVnLmgiDQorI2luY2x1ZGUg
+Im10a19qcGVnX2RlY19yZWcuaCINCiANCiBlbnVtIHsNCiAJTVRLX0pQRUdfREVDX1JFU1VMVF9F
+T0ZfRE9ORQkJPSAwLA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpw
+ZWcvbXRrX2pwZWdfcGFyc2UuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRr
+X2pwZWdfZGVjX3BhcnNlLmMNCnNpbWlsYXJpdHkgaW5kZXggOTglDQpyZW5hbWUgZnJvbSBkcml2
+ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX3BhcnNlLmMNCnJlbmFtZSB0byBk
+cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2RlY19wYXJzZS5jDQppbmRl
+eCBmODYyZDM4ZjNhZjcuLmI5NWM0NTc5MWMyOSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEv
+cGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfcGFyc2UuYw0KKysrIGIvZHJpdmVycy9tZWRpYS9w
+bGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19kZWNfcGFyc2UuYw0KQEAgLTgsNyArOCw3IEBADQog
+I2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KICNpbmNsdWRlIDxsaW51eC92aWRlb2RldjIuaD4N
+CiANCi0jaW5jbHVkZSAibXRrX2pwZWdfcGFyc2UuaCINCisjaW5jbHVkZSAibXRrX2pwZWdfZGVj
+X3BhcnNlLmgiDQogDQogI2RlZmluZSBURU0JMHgwMQ0KICNkZWZpbmUgU09GMAkweGMwDQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19wYXJzZS5o
+IGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19kZWNfcGFyc2UuaA0K
+c2ltaWxhcml0eSBpbmRleCA5MiUNCnJlbmFtZSBmcm9tIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
+bXRrLWpwZWcvbXRrX2pwZWdfcGFyc2UuaA0KcmVuYW1lIHRvIGRyaXZlcnMvbWVkaWEvcGxhdGZv
+cm0vbXRrLWpwZWcvbXRrX2pwZWdfZGVjX3BhcnNlLmgNCmluZGV4IDBhNDhlZWFiYWZmMi4uMjkx
+OGYxNTgxMWY4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9t
+dGtfanBlZ19wYXJzZS5oDQorKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210
+a19qcGVnX2RlY19wYXJzZS5oDQpAQCAtOCw3ICs4LDcgQEANCiAjaWZuZGVmIF9NVEtfSlBFR19Q
+QVJTRV9IDQogI2RlZmluZSBfTVRLX0pQRUdfUEFSU0VfSA0KIA0KLSNpbmNsdWRlICJtdGtfanBl
+Z19ody5oIg0KKyNpbmNsdWRlICJtdGtfanBlZ19kZWNfaHcuaCINCiANCiBib29sIG10a19qcGVn
+X3BhcnNlKHN0cnVjdCBtdGtfanBlZ19kZWNfcGFyYW0gKnBhcmFtLCB1OCAqc3JjX2FkZHJfdmEs
+DQogCQkgICAgdTMyIHNyY19zaXplKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRm
+b3JtL210ay1qcGVnL210a19qcGVnX3JlZy5oIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGst
+anBlZy9tdGtfanBlZ19kZWNfcmVnLmgNCnNpbWlsYXJpdHkgaW5kZXggMTAwJQ0KcmVuYW1lIGZy
+b20gZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19yZWcuaA0KcmVuYW1l
+IHRvIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfZGVjX3JlZy5oDQot
+LSANCjIuMTguMA0K
 
-On Thu, Jun 04, 2020 at 12:48:59PM +0530, Vinod Koul wrote:
-> Hi Laurent,
-> 
-> Sorry for late reply, I was out last week.
-
-No worries.
-
-> On 28-05-20, 04:48, Laurent Pinchart wrote:
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +    description: interrupt line for the chip
-> > 
-> > I think you could drop the descriptions for the reg and interrupt
-> > properties, they don't add much.
-> 
-> Sure, will do
-> 
-> > > +  reset-gpios:
-> > > +    maxItems: 1
-> > > +    description: GPIO connected to active high RESET pin.
-> > > +
-> > > +  vdd-supply:
-> > > +    description: Regulator for 1.8V MIPI phy power.
-> > > +
-> > > +  vcc-supply:
-> > > +    description: Regulator for 3.3V IO power.
-> > > +
-> > > +  ports:
-> > > +    type: object
-> > > +
-> > > +    properties:
-> > > +      "#address-cells":
-> > > +        const: 1
-> > > +
-> > > +      "#size-cells":
-> > > +        const: 0
-> > > +
-> > > +      port@0:
-> > > +        type: object
-> > > +        additionalProperties: false
-> > > +
-> > > +        description: |
-> > > +          HDMI port for HDMI output
-> > 
-> > The usual practice is to have the input ports first, followed by the
-> > output ports. Is there a reason not to follow that rule ?
-> 
-> I was not aware of this rule, is it documented somewhere?
-> Nevertheless will update..
-
-I don't think it's documented, no. It's just a common practice.
-
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            const: 0
-> > > +
-> > > +        patternProperties:
-> > > +          endpoint:
-> > 
-> > If you want to use patternProperties, this should be
-> > 
-> >           "^endpoint@[0-9]+$":
-> > 
-> > (including the quotes). Same below.
-> 
-> Ok
-> 
-> > > +            type: object
-> > > +            additionalProperties: false
-> > > +
-> > > +            properties:
-> > > +              remote-endpoint: true
-> > 
-> > How about
-> > 
-> >               remote-endpoint:
-> >                 $ref: /schemas/types.yaml#/definitions/phandle
-> > 
-> > and the same below ?
-> 
-> Ok
-> 
-> > You also need a reg property if multiple endpoints are present.
-> 
-> Will update
->
-> > > +
-> > > +        required:
-> > > +          - reg
-> > > +
-> > > +      port@1:
-> > > +        type: object
-> > > +        additionalProperties: false
-> > > +
-> > > +        description: |
-> > > +          MIPI port-1 for MIPI input
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            const: 1
-> > > +
-> > > +        patternProperties:
-> > > +          endpoint:
-> > > +            type: object
-> > > +            additionalProperties: false
-> > > +
-> > > +            properties:
-> > > +              remote-endpoint: true
-> > > +
-> > > +        required:
-> > > +          - reg
-> > > +
-> > > +      port@2:
-> > > +        type: object
-> > > +        additionalProperties: false
-> > > +
-> > > +        description: |
-> > > +          MIPI port-2 for MIPI input
-> > 
-> > A description of how the two MIPI inputs differ would be useful. In
-> > particular, are both mandatory, or is it valid to connect only one of
-> > the two ? If using a single input is supported, can it be either, or
-> > does it have to be the first one ? When using both inputs, what should
-> > be connected to them ?
-> 
-> Sure I will add details. port-1 is mandatory and port-2 optional. port-2
-> is used in combination with port-1 to drive displays for higher
-> resolution like 4k
-> 
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            const: 2
-> > > +
-> > > +        patternProperties:
-> > > +          endpoint:
-> > > +            type: object
-> > > +            additionalProperties: false
-> > > +
-> > > +            properties:
-> > > +              remote-endpoint: true
-> > > +
-> > > +        required:
-> > > +          - reg
-> > > +
-> > > +    required:
-> > > +      - "#address-cells"
-> > > +      - "#size-cells"
-> > > +      - port@0
-> > > +      - port@1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - vdd-supply
-> > > +  - vcc-supply
-> > > +  - ports
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/gpio/gpio.h>
-> > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > +
-> > > +    i2c10 {
-> > > +      #address-cells = <1>;
-> > > +      #size-cells = <0>;
-> > > +
-> > > +      lt9611_codec: hdmi-bridge@3b {
-> > 
-> > Please drop unused labels.
-> 
-> ok
-> 
-> > > +        compatible = "lontium,lt9611";
-> > > +        reg = <0x3b>;
-> > > +
-> > > +        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
-> > > +        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
-> > > +
-> > > +        vdd-supply = <&lt9611_1v8>;
-> > > +        vcc-supply = <&lt9611_3v3>;
-> > > +
-> > > +        ports {
-> > > +          #address-cells = <1>;
-> > > +          #size-cells = <0>;
-> > > +
-> > > +          port@0 {
-> > > +            reg = <0>;
-> > > +            lt9611_out: endpoint {
-> > > +              remote-endpoint = <&hdmi_con>;
-> > > +            };
-> > > +          };
-> > > +
-> > > +          port@1 {
-> > > +            reg = <1>;
-> > > +            lt9611_a: endpoint {
-> > > +              remote-endpoint = <&dsi0_out>;
-> > > +            };
-> > > +          };
-> > > +
-> > > +          port@2 {
-> > > +            reg = <2>;
-> > > +            lt9611_b: endpoint {
-> > > +              remote-endpoint = <&dsi1_out>;
-> > > +            };
-> > > +          };
-> > > +        };
-> > > +      };
-> > > +    };
-> > 
-> > It's customary to end YAML schema files with ... on a separate line.
-> 
-> Will update
-> 
-> Thanks for the review
-
--- 
-Regards,
-
-Laurent Pinchart
