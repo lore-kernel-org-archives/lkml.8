@@ -2,141 +2,121 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2060C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E6D2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MO+8OXTG"
+	by mail.kernel.org (Postfix) with ESMTP id 7CA1F206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgFDPfb (ORCPT
+        id S1729463AbgFDPir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729402AbgFDPfb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:35:31 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60665C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:35:31 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id u5so3618191pgn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wax4PTMKC91KYPdKcHl2puiFv+eU6eLijgiQ1wOXRG4=;
-        b=MO+8OXTGBmz97fF3PSAUhzNy/sUteX25T2uHr/xf1tHYvpVUxG1XScpC05FjrpAK4s
-         zpKeD88G8PrmeBKrg918QFJTO/D2/5OWiEiOdU2xUPdPNigNXVLxMaY0cxTABLqPzHmB
-         A6xODYnbuSBQfyTq668XHZWQDIS1meYvH6f47xEt6iTKFIj3nT03WfcqwrHXB8Ia8oYk
-         JwpqYWJffVZ8EiOIlAuBZEljfybk2eJXZVa8oElFQ7sMgIMnbEYGOM20gXzna0n5JXyB
-         R9zpfR9B+p/GfOruu+bdkIQleOHG1lTkQaLGIXgJXmNZrdXMMxt3Wh/hDcTwiqoDgj7e
-         M/XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wax4PTMKC91KYPdKcHl2puiFv+eU6eLijgiQ1wOXRG4=;
-        b=iKNl6Qr8nWr9wpJ/hCpWGT/Mn3VPTw+sBIfGiCNdXuRtqiD2TJUJPlzs2PhmC1Dd5u
-         Tu6z2feQAIJt2CwSjGw5vX5Uk2NJBxmKxK2VQVaMDGGxY0234LGx5+JZIuQ909BjMpgn
-         zlnwYlVT/6zsMHssRYitu3LYcx+LPEYYpddLjgtaoihuwjnEfnwPXCUBqzFZVPCXHfSU
-         bVtld5gVoMDkPzGgUfBdJWqx54pLDHB0oW72SYQoLbj70zdhUJaBxv6rKrmiYcAPcCHa
-         890TwH4TayzpaKisJ6USQHteMd0lzMdU+UcdJl9aYRvHHeIyA4B3deb3nrMTND4mwZsH
-         E+Ag==
-X-Gm-Message-State: AOAM532E/qq8LtM4h062VfwaFcSGIPB1UXn6HfXkwKrrjlJwGEu14IjU
-        EbMtMq+rlALcm7khYWVLPuM=
-X-Google-Smtp-Source: ABdhPJw2DdFyJawgCi1P2eY4+hgKaq55kDmEbpBocB7gjS8MfwwT/nXsKXMA9165aRyW/aow1QtOJQ==
-X-Received: by 2002:aa7:8506:: with SMTP id v6mr4883505pfn.303.1591284930918;
-        Thu, 04 Jun 2020 08:35:30 -0700 (PDT)
-Received: from localhost ([162.211.223.96])
-        by smtp.gmail.com with ESMTPSA id np5sm6659239pjb.43.2020.06.04.08.35.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Jun 2020 08:35:30 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 23:35:18 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: drivers/reset/reset-intel-gw.c:18: warning: "REG_OFFSET"
- redefined
-Message-ID: <20200604153518.GA23034@nuc8i5>
-References: <202006041903.Mwlo5QJ5%lkp@intel.com>
+        Thu, 4 Jun 2020 11:38:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:46030 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729035AbgFDPir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 11:38:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7230D1FB;
+        Thu,  4 Jun 2020 08:38:46 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AED9A3F305;
+        Thu,  4 Jun 2020 08:38:45 -0700 (PDT)
+References: <20200603173150.GB1551@shell.armlinux.org.uk> <jhjh7vshvwl.mognet@arm.com> <20200603184500.GC1551@shell.armlinux.org.uk> <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com> <20200603195853.GD1551@shell.armlinux.org.uk> <jhjftbbj3qi.mognet@arm.com> <a34fcb9a-ba4b-0c9e-328f-1244c2720ed2@linaro.org> <jhjeeqvi3m1.mognet@arm.com> <20200604092901.GE1551@shell.armlinux.org.uk> <jhjbllzhzg9.mognet@arm.com> <CALD-y_zQms4YQup2MgAfNhWSu=ewkhossHma2TKqfTcOFaG=uA@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: v5.7: new core kernel option missing help text
+In-reply-to: <CALD-y_zQms4YQup2MgAfNhWSu=ewkhossHma2TKqfTcOFaG=uA@mail.gmail.com>
+Date:   Thu, 04 Jun 2020 16:38:40 +0100
+Message-ID: <jhja71ij0xr.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006041903.Mwlo5QJ5%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:37:06PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   6929f71e46bdddbf1c4d67c2728648176c67c555
-> commit: e44ab4e14d6f4c448ae555132090c1a116b19e5c regmap: Simplify implementation of the regmap_read_poll_timeout() macro
-> date:   6 weeks ago
-> config: arm-randconfig-r035-20200604 (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout e44ab4e14d6f4c448ae555132090c1a116b19e5c
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arm 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+
+On 04/06/20 14:05, Thara Gopinath wrote:
+> On Thu, 4 Jun 2020 at 06:56, Valentin Schneider <valentin.schneider@arm.com>
+>>
+>> Right, s/defconfig/arch kconfig/ or somesuch.
+>>
 >
-Hi
+>  CPU_FREQ_THERMAL also has to be enabled for this to be effective.
+> Since arm64 defconfig enables  CPU_FREQ_THERMAL  (by enabling CPU_THERMAL),
+> it should be ok to enable it in arm64/Kconfig. (same with arm/Kconfig)
+>
+> Another option is to select the  SCHED_THERMAL_PRESSURE when
+> CPU_FREQ_THERMAL
+> is enabled in drivers/thermal/Kconfig.
+>
 
-Thanks very much for report this issue to me, and very very sorry for
-that. I submit a commit to fix it. it is in here:
-https://lkml.org/lkml/2020/6/4/606
+So interestingly while arch_set_thermal_pressure() (which just writes to a
+pcpu variable) is defined in sched/core.c, arch_scale_thermal_pressure()
+(which just returns aforementionned pcpu variable) is defined in
+arch_topology...
 
-BR,
-Dejin
+I'm thinking at this point we might as well turn the
+arch_scale_thermal_pressure() stub into what arch_topology does. This would
+effectively let any architecture use thermal pressure, providing they use
+cpufreq cooling.
 
-> All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> 
-> >> drivers/reset/reset-intel-gw.c:18: warning: "REG_OFFSET" redefined
-> 18 | #define REG_OFFSET GENMASK(31, 16)
-> |
-> In file included from arch/arm/mach-ixp4xx/include/mach/hardware.h:30,
-> from arch/arm/mach-ixp4xx/include/mach/io.h:15,
-> from arch/arm/include/asm/io.h:198,
-> from include/linux/io.h:13,
-> from include/linux/iopoll.h:14,
-> from include/linux/regmap.h:20,
-> from drivers/reset/reset-intel-gw.c:12:
-> arch/arm/mach-ixp4xx/include/mach/platform.h:25: note: this is the location of the previous definition
-> 25 | #define REG_OFFSET 3
-> |
-> 
-> vim +/REG_OFFSET +18 drivers/reset/reset-intel-gw.c
-> 
-> c9aef213e38cde Dilip Kota 2020-01-03  17  
-> c9aef213e38cde Dilip Kota 2020-01-03 @18  #define REG_OFFSET	GENMASK(31, 16)
-> c9aef213e38cde Dilip Kota 2020-01-03  19  #define BIT_OFFSET	GENMASK(15, 8)
-> c9aef213e38cde Dilip Kota 2020-01-03  20  #define STAT_BIT_OFFSET	GENMASK(7, 0)
-> c9aef213e38cde Dilip Kota 2020-01-03  21  
-> 
-> :::::: The code at line 18 was first introduced by commit
-> :::::: c9aef213e38cde27d4689a5cbe25a7c1b1db9fad reset: intel: Add system reset controller driver
-> 
-> :::::: TO: Dilip Kota <eswara.kota@linux.intel.com>
-> :::::: CC: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+If we want to keep changes contained to Kconfigs, for now I think the
+safest would be:
+
+---
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 16fbf74030fe..1e92080dc275 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -46,6 +46,7 @@ config ARM
+        select EDAC_ATOMIC_SCRUB
+        select GENERIC_ALLOCATOR
+        select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
++	select SCHED_THERMAL_PRESSURE if GENERIC_ARCH_TOPOLOGY
+        select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
+        select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+        select GENERIC_CPU_AUTOPROBE
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 552d36cacc05..cc1944fbae51 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -98,6 +98,7 @@ config ARM64
+        select FRAME_POINTER
+        select GENERIC_ALLOCATOR
+        select GENERIC_ARCH_TOPOLOGY
++	select SCHED_THERMAL_PRESSURE
+        select GENERIC_CLOCKEVENTS
+        select GENERIC_CLOCKEVENTS_BROADCAST
+        select GENERIC_CPU_AUTOPROBE
+diff --git a/init/Kconfig b/init/Kconfig
+index 74a5ac65644f..ba846f6e805b 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -439,8 +439,11 @@ config HAVE_SCHED_AVG_IRQ
+        depends on SMP
+
+ config SCHED_THERMAL_PRESSURE
+-	bool "Enable periodic averaging of thermal pressure"
++	def_bool n
+        depends on SMP
++	depends on CPU_FREQ_THERMAL
++	help
++	  <helpful thing here>
+
+ config BSD_PROCESS_ACCT
+        bool "BSD Process Accounting"
+---
 
 
+
+> Warm Regards
+> Thara
