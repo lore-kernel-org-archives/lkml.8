@@ -2,181 +2,107 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF5FC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39176C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCDAF20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A04206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591303642;
-	bh=KFodmG5dxLwi01xoHP3XvvFF9k/ifovAv20CD/RAbqo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QwkfCce8V/bfjTPGTfrPOd/sGNtTygM7HWnmiLju5bKPJngSP5dcyc55DsB8j/yT5
-	 JQDT6te0c0hauZ6Jt6Xn/7L/fefhM22+5RsyeyhfsKdT60r/bAux6DCjz6uwoLO1ke
-	 hMMO+uRCDSylPznwZ5CKSrqUV1Ka0NM2jhdyqXz8=
+	s=default; t=1591303652;
+	bh=Log6SWQTxsYpVF33fzIXGDOjHxh7iIO6XU823Wot5zs=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=qi/95rRa19v8mP8MK+pnQuB/DErsu48etOuoSc7TrgNvMkO0I8pKHR7WMOVwZJhHy
+	 In1mdpnoI+gbtRf7v37JuUPnhspuQV7V6fU+ls+YBvbTfSfUWo/mT4UvrfxARV990I
+	 7RpPVkyYKDKNTMzvFGfCDE1t44z8EK+AEyzlljdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbgFDUrW (ORCPT
+        id S1730159AbgFDUrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41170 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 16:47:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbgFDUrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:47:15 -0400
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729923AbgFDUrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 16:47:09 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91390207F9;
-        Thu,  4 Jun 2020 20:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C96F8207ED;
+        Thu,  4 Jun 2020 20:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591303633;
-        bh=KFodmG5dxLwi01xoHP3XvvFF9k/ifovAv20CD/RAbqo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=k7PE0miyDMbeR8z6yic0GzwJHBc4BnWOuy+uL5PUFHy26zjLx2c7DrAUiWE/dVFDH
-         7HEjNWZWuIzljvHpDgOzFd1//3dVtoLjgsJiP49dP3iJaDk1Ue8EzPwNL0p3YWhvgb
-         /IYet3YsBRn9V4Ll3IT9POl3Aw+S19y36dNyj1yg=
-Received: by mail-oo1-f54.google.com with SMTP id h7so1512372ooc.9;
-        Thu, 04 Jun 2020 13:47:13 -0700 (PDT)
-X-Gm-Message-State: AOAM533liRkyXqGM0J69dbeBl7mUs6bAkO4SaRXaIZnhx/x8s+qHGJUz
-        JiLTBwRY0vz7fyiFKK7H4QOQ/OgfVmq3F0eJTQ==
-X-Google-Smtp-Source: ABdhPJwwaaT3W3YLSJDqZR+blejzcilkUVb+CLjXx9zxnhQgu0H5S8pzGVf0fGb0K342AwgdZ/YgUMdqmCyiyHTPhzI=
-X-Received: by 2002:a4a:2c88:: with SMTP id o130mr5106020ooo.81.1591303632915;
- Thu, 04 Jun 2020 13:47:12 -0700 (PDT)
+        s=default; t=1591303628;
+        bh=Log6SWQTxsYpVF33fzIXGDOjHxh7iIO6XU823Wot5zs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y4B81oxEoJDir5oj3zQwUjcub8lh6hDhZFb3WlJdDXCtAaGHHJpHojnxvOS6kWeNV
+         rtGqbqkOZ/g9/wWExaQysPvRCb5Aocw7QRQF4RVI/mj+0pooX+X12Gl9OgatNCg0a1
+         XpY+ZH/zF+MVByZFNLUToI/xxzpWPiRLmYBNOWwQ=
+Received: from mchehab by mail.kernel.org with local (Exim 4.93)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jgwlW-0004Al-Sd; Thu, 04 Jun 2020 22:47:06 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] media: atomisp: change clock source default for ISP2401
+Date:   Thu,  4 Jun 2020 22:47:04 +0200
+Message-Id: <37f290eeb7f0c26b93fe34223d45d1bbce3e8e0c.1591303518.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1591303518.git.mchehab+huawei@kernel.org>
+References: <cover.1591303518.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200519224151.2074597-1-lkundrak@v3.sk> <20200519224151.2074597-13-lkundrak@v3.sk>
-In-Reply-To: <20200519224151.2074597-13-lkundrak@v3.sk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 4 Jun 2020 14:47:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJxP8-0amAEW7-zB_QRvXSmmTfgMDj7UOuDX-6z9me0Hw@mail.gmail.com>
-Message-ID: <CAL_JsqJxP8-0amAEW7-zB_QRvXSmmTfgMDj7UOuDX-6z9me0Hw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/13] dt-bindings: clock: Add Marvell MMP Audio Clock
- Controller binding
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 4:42 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> This describes the bindings for a controller that generates master and bit
-> clocks for the I2S interface.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
->
-> ---
-> Changes since v1:
-> - Fix commit message wording
-> - Define MMP2_CLK_AUDIO_NR_CLKS
-> - Make clock ids start at 0, not 1
-> - Fix dt-bindings/clock/marvell,mmp2-audio.h file name
-> - Rename node from "clocks" to "clock-controller"
->
->  .../clock/marvell,mmp2-audio-clock.yaml       | 74 +++++++++++++++++++
->  .../dt-bindings/clock/marvell,mmp2-audio.h    | 10 +++
->  2 files changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
->  create mode 100644 include/dt-bindings/clock/marvell,mmp2-audio.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-> new file mode 100644
-> index 000000000000..ab6e82d1d3a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/marvell,mmp2-audio-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell MMP2 Audio Clock Controller
-> +
-> +maintainers:
-> +  - Lubomir Rintel <lkundrak@v3.sk>
-> +
-> +description: |
-> +  The audio clock controller generates and supplies the clocks to the audio
-> +  codec.
-> +
-> +  Each clock is assigned an identifier and client nodes use this identifier
-> +  to specify the clock which they consume.
-> +
-> +  All these identifiers could be found in
-> +  <dt-bindings/clock/marvell,mmp2-audio.h>.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - marvell,mmp2-audio-clock
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Audio subsystem clock
-> +      - description: The crystal oscillator clock
-> +      - description: First I2S clock
-> +      - description: Second I2S clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: audio
-> +      - const: vctcxo
-> +      - const: i2s0
-> +      - const: i2s1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/marvell,mmp2-audio.h>
-> +    #include <dt-bindings/power/marvell,mmp2.h>
-> +
-> +    clock-controller@d42a0c30 {
-> +      compatible = "marvell,mmp2-audio-clock";
-> +      reg = <0xd42a0c30 0x10>;
-> +      clock-names = "audio", "vctcxo", "i2s0", "i2s1";
-> +      clocks = <&soc_clocks MMP2_CLK_AUDIO>,
-> +               <&soc_clocks MMP2_CLK_VCTCXO>,
-> +               <&soc_clocks MMP2_CLK_I2S0>,
-> +               <&soc_clocks MMP2_CLK_I2S1>;
+There's a notice there stating that the PLL is not reliable
+for CHT. Yet, it tries to read it via the BIOS. Well,
+this will fail (at least with the devices I checked the
+DSDT tables). So, change the logic in a way that it will
+change the default, depending on the ISP version.
 
-This now breaks linux-next. I think the above defines are missing
-their include.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../media/atomisp/pci/atomisp_gmin_platform.c  | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-My testing wasn't happy either because it couldn't find
-marvell,mmp2.h. I guess that's somewhere in linux-next and now we're
-on to the secondary issue. Once that's fixed, then the schema checks
-will actually run (hint: make sure they pass).
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+index cb02806274d1..a14326111b26 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+@@ -493,9 +493,23 @@ static struct gmin_subdev *gmin_subdev_add(struct v4l2_subdev *subdev)
+ 
+ 	gmin_subdevs[i].subdev = subdev;
+ 	gmin_subdevs[i].clock_num = gmin_get_var_int(dev, false, "CamClk", 0);
+-	/*WA:CHT requires XTAL clock as PLL is not stable.*/
++	/*
++	 * FIXME:
++	 * 	WA:CHT requires XTAL clock as PLL is not stable.
++	 *
++	 * However, such data doesn't seem to be present at the _DSM
++	 * table under the GUID dc2f6c4f-045b-4f1d-97b9-882a6860a4be.
++	 * So, let's change the default according with the ISP version,
++	 * but allowing it to be overridden by BIOS or by DMI match tables.
++	 */
++	if (IS_ISP2401)
++		gmin_subdevs[i].clock_src = VLV2_CLK_XTAL_25_0MHz;
++	else
++		gmin_subdevs[i].clock_src = VLV2_CLK_PLL_19P2MHZ;
++
+ 	gmin_subdevs[i].clock_src = gmin_get_var_int(dev, false, "ClkSrc",
+-				    VLV2_CLK_PLL_19P2MHZ);
++						     gmin_subdevs[i].clock_src);
++
+ 	gmin_subdevs[i].csi_port = gmin_get_var_int(dev, false, "CsiPort", 0);
+ 	gmin_subdevs[i].csi_lanes = gmin_get_var_int(dev, false, "CsiLanes", 1);
+ 
+-- 
+2.26.2
 
-Please get this fixed or revert before it is sent to Linus. Maybe we
-can have an rc1 without the schema broken.
-
-Rob
