@@ -2,135 +2,114 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49213C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09086C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22283205CB
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E9C205CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UO/LN4Bz"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="fGkqeUca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgFDIbu (ORCPT
+        id S1727999AbgFDIch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:31:50 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34318 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgFDIbt (ORCPT
+        Thu, 4 Jun 2020 04:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgFDIcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:31:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0548S7eE162710;
-        Thu, 4 Jun 2020 08:31:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=+U9pBSfXjXliRGgKHYuTmpAMur9djQ6OelvtEfxEzig=;
- b=UO/LN4Bzs6xjnoWtETZZ9tUKZi4IMXwj8kxT3lDrze66+DSq4UYaQiVpuocgZ06E6dPw
- zTdJ6CqCbO/4qG+IQcpHUA9vL5TruB9frU7HjIxssuyCJDZuFlcEEqZX1PB8Oy5VRzD3
- 3HLknCF6aeDGKs8Pyb+uO2rudpgM85OgLzpEac/Vn/kuwNWYNcpUGqKKpIiturlJQkSn
- loymQNZZIz/wVm+kZBlNzDnJlKDBB1OiqGKWgNuJlBS8tZtpSWOlJohD4LYzTd+wZOsV
- msAF445HU/jAKAVI9QqBklUp4yzhv7ynQSdBSjiGWzVf2B+3F6qba7kEj3ciKfUKcCZj QQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 31evvn06hp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 04 Jun 2020 08:31:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0548TMjT116781;
-        Thu, 4 Jun 2020 08:31:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 31c1e1dqyu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jun 2020 08:31:37 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0548VVjI025648;
-        Thu, 4 Jun 2020 08:31:31 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Jun 2020 01:31:30 -0700
-Date:   Thu, 4 Jun 2020 11:31:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
- which is unused and broken
-Message-ID: <20200604083120.GF22511@kadam>
-References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
- <87h7vvb1s3.fsf@belgarion.home>
- <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
- <20200601183102.GS30374@kadam>
- <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
+        Thu, 4 Jun 2020 04:32:36 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4763C05BD1E;
+        Thu,  4 Jun 2020 01:32:35 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id mb16so5142102ejb.4;
+        Thu, 04 Jun 2020 01:32:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1AuRE0AuSz1Dcafc63dQERov0niyM7+8vmaBb8F6Fzc=;
+        b=fGkqeUca0o35s+UryeUeoBdAohiaNg3kfMd+bxQWJyNHWhpzLy1Cr1ZcAjKHF8+WnL
+         QA+DS5hlfW9VNepBJ+oGxqr+ac8FDcs1OIPBlQl52vV/mW34uykJiE5ZJT3mW7lhSYZL
+         N4vom68WUkZGhqUpfeFd2DUOEWyFbBMFDByyY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1AuRE0AuSz1Dcafc63dQERov0niyM7+8vmaBb8F6Fzc=;
+        b=mvbqjNy8mfgcqtalAaC1wRCH3MLbEgpIp84sGm3Je0T30bDRDgVPh12wvlYcS+NR0j
+         2PJhs2dMNupSX64R8vJ2z5CrsBP2EE3CbWNhTeuFOc1z8rKRA+EpGkD6RbB3yiEXRSm0
+         CXlKOAU6phLt7gtFuPuUCkfvUdmBhlfrRslDMnHjsQSFDAuzRL+5bwm4If+HCqLceoB0
+         sNSKz12unPFB+GTf6P/P/4PapGAZpl1BjcpcdzEtZP/DRzeZNUrX5BhA+aiS3OkXHUpO
+         spB4WhKbaxB4b5sarhIgZWE75pEj61Y+GfcrR4wsmccdgsVdGK+U+vgjv381WKb02oO7
+         8vDA==
+X-Gm-Message-State: AOAM530uTY4ylxG64MbcG0MPHMfb9B74kqtibWCO5+6csS7vT+0r4A0s
+        S0+mi1XjswQS6jYVSng1FKnxgPZW21mml+xY9ao=
+X-Google-Smtp-Source: ABdhPJy5ctc5383qKNluaPDwm98VmrQIOXT9qbgA+PmD3daSJjnvtPCKWdZ3etbzj/j/2E6sMLG804CjxluMDKg+46Q=
+X-Received: by 2002:a17:906:3603:: with SMTP id q3mr2981318ejb.477.1591259554440;
+ Thu, 04 Jun 2020 01:32:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006040058
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 clxscore=1015 malwarescore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 impostorscore=0 adultscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006040058
+References: <20200527200820.47359-1-tali.perry1@gmail.com> <20200603202553.GB7684@kunai>
+In-Reply-To: <20200603202553.GB7684@kunai>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 4 Jun 2020 08:32:22 +0000
+Message-ID: <CACPK8Xe=66y+MkfogP4Gh6A9X7UDhOyAdUDwp=iqe7zitdxA8g@mail.gmail.com>
+Subject: Re: [PATCH v14 0/3] i2c: npcm7xx: add NPCM i2c controller driver
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Tali Perry <tali.perry1@gmail.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Brendan Higgins <brendanhiggins@google.com>, ofery@google.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kfting@nuvoton.com, Rob Herring <robh+dt@kernel.org>,
+        linux-i2c@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        andriy.shevchenko@linux.intel.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Benjamin Fair <benjaminfair@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:08:49AM +0200, Linus Walleij wrote:
-> On Mon, Jun 1, 2020 at 8:31 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > On Mon, Jun 01, 2020 at 01:31:23PM +0200, Christophe JAILLET wrote:
-> > > Le 01/06/2020 à 10:58, Robert Jarzmik a écrit :
-> > > > Christophe JAILLET <christophe.jaillet@wanadoo.fr> writes:
-> > > >
-> > > > > Commit 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
-> > > > > has turned a 'pinctrl_register()' into 'devm_pinctrl_register()' in
-> > > > > 'pxa2xx_pinctrl_init()'.
-> > > > > However, the corresponding 'pinctrl_unregister()' call in
-> > > > > 'pxa2xx_pinctrl_exit()' has not been removed.
-> > > > >
-> > > > > This is not an issue, because 'pxa2xx_pinctrl_exit()' is unused.
-> > > > > Remove it now to avoid some wondering in the future and save a few LoC.
-> > > > >
-> > > > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > > > Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> > > >
-> > > > Would be even a better patch with a :
-> > > > Fixes: 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
-> > >
-> > > I was wondering it was was needed in this case.
-> > > The patch does not really fix anything, as the function is unused. Or it
-> > > fixes things on a theoretical point of view.
+On Wed, 3 Jun 2020 at 20:26, Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> On Wed, May 27, 2020 at 11:08:17PM +0300, Tali Perry wrote:
+> > This patch set adds i2c controller support
+> > for the Nuvoton NPCM Baseboard Management Controller (BMC).
 > >
-> > There is no concensus...  We should call a vote on this at Kernel
-> > Summit.  :P
-> 
-> Fixes means it fixes something that was wrong in that commit.
-> That's all. Whether syntactic or semantic or regression or
-> serious or not does not matter. It is also not compulsory to
-> add it is just helpful.
+> > NPCM7xx includes 16 I2C controllers. This driver operates the controller.
+> > This module also includes a slave mode.
+> >
+> > ---
+> > v14 -> v13:
+> >       - Fix yaml example: add missing include.
+> >       - Replace all udelay to usleep_range, except one which is called from
+> >         irq.
+> >       - Fix compilation error (module_platfrom_init conflict).
+> >       - debugfs counters always updated. Counting till max value,
+> >         then stop counting.
+> >       - Rename bus-frequency to clock-frequency.
+> >       - Remove unused variables.
+>
+> I don't have time for a deeper review, but from what I can tell this
+> driver is good to go and we can fix things incrementally from now on.
+>
+> Applied to for-next (will go into 5.8), thanks!
 
-Fixes tag should be compulsory for actual bug fixes.  We had a the
-Bad Binder exploit last year because commit f5cb779ba163
-("ANDROID: binder: remove waitqueue when thread exits.") had no Fixes
-tag and wasn't backported to Android kernels.
+Thanks Wolfram. I encourage this approach to working with patches, and
+especially for our vendors who are trying to do the correct thing in
+mainlining their code.
 
-regards,
-dan carpenter
+Congrats Tali on getting the driver in the tree. This has a been a long journey!
 
+Cheers,
+
+Joel
