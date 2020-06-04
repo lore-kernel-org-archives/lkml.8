@@ -2,98 +2,122 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C859AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B67204EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591292876;
-	bh=hy+3xDuqCbqk3TJpDx0DpX17hTJm6msjJx8MXUi7K8w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nBef1i0c0AvpCjCRsdeB2Tnl9tbcdlg5hwxmzXGKTvVxzzsAWMlaiAOQXs4F8vsTu
-	 Pct51t/Q/Pl7KdJzjujfS1mMjA5+gJufeuCWiJd8i5X4LA9peWiidLXVgwFOVczGC4
-	 aSOHh1RBLHajZx5LnsjOfoOaJfhJrHJjAXvc2+BE=
+	by mail.kernel.org (Postfix) with ESMTP id A9591204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:48:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sI7b/qDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgFDRrz (ORCPT
+        id S1730265AbgFDRsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55930 "EHLO
+        Thu, 4 Jun 2020 13:48:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730053AbgFDRrz (ORCPT
+        with ESMTP id S1730124AbgFDRsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:47:55 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3963C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:47:54 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x27so4125370lfg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:47:54 -0700 (PDT)
+        Thu, 4 Jun 2020 13:48:22 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0AAC08C5C0;
+        Thu,  4 Jun 2020 10:48:22 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id i1so5725874ils.11;
+        Thu, 04 Jun 2020 10:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nDxVRnmNfiahvBHfdilSj3UT2s2FPsvV9ID8lODpa4Q=;
-        b=Lm1X79tNTv4QznYSL5D5S1XUiLEyklVkM9WYq6HnIY9gA4EBagpmRWlJMibEBhBwJc
-         cg9VK/adAQCw3M/k2FbSrM6KvuN5rqOp/aKFPLjCsVz5jYVnG4l3MP6TT3p+I38XBSds
-         +ge0tTEliQZr93Kny7soGj2k92/6ZzT/mNJR4=
+        bh=/V5YN3JVU+H2ybPVxXGB5Yo/z8JMsprmG2VuUwYuRz4=;
+        b=sI7b/qDlRiArW/5SdFyLqdgMpyDYULV1NOXwELfaYauvEpbt74X36o+SGdZ0XY0oMw
+         EpaXz8RJCt/CpvBzR+OYBkwFOk1WpNZbKQVuTFWUrR3te4T2zmLHJzEFg8hwVsYrB7/N
+         I09OKDJDFNk7f8Tu3D3Zq2YoPScRztc+8zcHKHI/gpfX2mT91iVcUyVT6zLvOGMbNlZn
+         GmUEqrEKUXiNRM5zGBvaonxxjpFF+Wx02FqC+20RilKlSP441jDoLViM/EB9RAxNfmSs
+         4xuC5aMG8pzk1XT0M8/inYWjUyzpCbRIeFMt5CGH2+g+AJ5nS5k8Zcpv4uhrH/Wr155e
+         Frkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nDxVRnmNfiahvBHfdilSj3UT2s2FPsvV9ID8lODpa4Q=;
-        b=XPsXUEh31iNcbzGvT1oOmXpw+3puagz2o0TBoXK3C3ZQunkRsaZQOIOWRyMXk9h7f9
-         oWkXbK5YcAaxHTsqYamYl4fwiKGFw4plyuQz20SFTO5P3OLVTBln9sKlb5dtOjab/8ik
-         +m/k24EbUxcVMmHUfOUUTp/pbyMh1KEVEayCpKqOMS6Y7Wx1UR2ErKWE7QAXEX2ctNXK
-         mLFXifWb/Ib6Ufxs80XPj6IZ/nlZLCYLn9u5HHLT5QCq+GrPOeChAyMfprvieUkKQdoZ
-         Hr50vnJT0jZAmmW/sS4LAtNDl+pw6x2pwz5Ny+R58F3+K2kyMRs/2bqXB6ozyIoDthlS
-         MIJQ==
-X-Gm-Message-State: AOAM530oH2357FJNEFJseQqiGetROf9cRiGho+1rnosh+G8DIOhhWgtF
-        W93IBLM1HMsN7ILlHPy2QMm4Nc40uvE=
-X-Google-Smtp-Source: ABdhPJwUcBg20sv1BMiNK+xjujABK9kl1EU8KfxgWAaSxWLFvheK2xBVwol+F8h5YbSWRdavkaRJMQ==
-X-Received: by 2002:ac2:4886:: with SMTP id x6mr3171628lfc.198.1591292873111;
-        Thu, 04 Jun 2020 10:47:53 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id t19sm69600lft.47.2020.06.04.10.47.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 10:47:52 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id z18so8354216lji.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:47:51 -0700 (PDT)
-X-Received: by 2002:a2e:b5d7:: with SMTP id g23mr2537789ljn.70.1591292870888;
- Thu, 04 Jun 2020 10:47:50 -0700 (PDT)
+        bh=/V5YN3JVU+H2ybPVxXGB5Yo/z8JMsprmG2VuUwYuRz4=;
+        b=tv/WhXF0qEfLdJt0CHJslXD5g+/CDZ4hkRdJNKbOORx+g42bYv3JV+bzViDIWDAcUc
+         AtiTskk/X8dDcGUKibIOya8s0DojmrA3TbhxNg/TezhWsUx6yf8IS1TL7yh3MQRFiTog
+         L0Th0t0mArZ5FitU77irqphhBg2a1haIplexcLBZG1Q3tf9aD4YYLQcUz5ydwUxmH1m0
+         E65usdlsKJOcl/QGQiFF+mzX8OreQpBn+TLlSIsOtQOCiZnbFOYtHG0X1GWO9lS45IR9
+         4RzIgrd1XtUa2LxVGsCFR24pQ7sdNyK5Y8UC7Z/jkE4jEQtofSPhj3lGxbCRrItCAIeb
+         az1w==
+X-Gm-Message-State: AOAM5316GtgdV1awEP+o67E64P2Oqy5+nCV2KYpam6NDNvD1vZnzeKOQ
+        OqUu+NEHRfE25sibP8l2a1JZabnriU/R9D9AeQU=
+X-Google-Smtp-Source: ABdhPJzFeNeeQM7soCpQdZ+IhQ7n6azUC9Mg45G4VT9kcauWSICOdgF4RaKvqGNHiRKEevdJDQLNgIrhu3an3lem1s0=
+X-Received: by 2002:a92:4852:: with SMTP id v79mr1192467ila.172.1591292901477;
+ Thu, 04 Jun 2020 10:48:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200603090429.GN3714@dell>
-In-Reply-To: <20200603090429.GN3714@dell>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 4 Jun 2020 10:47:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgUg1v5hJ0D-tGnY4-YM2za+jtGQ2r2DG0Bq6OOxnMtHw@mail.gmail.com>
-Message-ID: <CAHk-=wgUg1v5hJ0D-tGnY4-YM2za+jtGQ2r2DG0Bq6OOxnMtHw@mail.gmail.com>
-Subject: Re: [GIT PULL] Backlight for v5.8
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200603184104.4475-1-navid.emamdoost@gmail.com> <900909fe-fa15-fbca-80f7-79aeee721ed9@nvidia.com>
+In-Reply-To: <900909fe-fa15-fbca-80f7-79aeee721ed9@nvidia.com>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Thu, 4 Jun 2020 12:48:10 -0500
+Message-ID: <CAEkB2ET8+Bo+0xw0TS80tzg0zq0ygPd=GEDsPEnd96k8shMAAg@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: tegra210-adma: fix pm_runtime_get_sync failure
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 2:04 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Thu, Jun 4, 2020 at 12:45 PM Jon Hunter <jonathanh@nvidia.com> wrote:
 >
->    - Convert to GPIO descriptors; l4f00242t03
+>
+> On 03/06/2020 19:41, Navid Emamdoost wrote:
+> > Calling pm_runtime_get_sync increments the counter even in case of
+> > failure, causing incorrect ref count. Call pm_runtime_put if
+> > pm_runtime_get_sync fails.
+> >
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > ---
+> >  drivers/dma/tegra210-adma.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> > index c4ce5dfb149b..e8c749cd3fe8 100644
+> > --- a/drivers/dma/tegra210-adma.c
+> > +++ b/drivers/dma/tegra210-adma.c
+> > @@ -659,6 +659,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+> >       ret = pm_runtime_get_sync(tdc2dev(tdc));
+> >       if (ret < 0) {
+> >               free_irq(tdc->irq, tdc);
+> > +             pm_runtime_put(tdc2dev(tdc));
+> >               return ret;
+> >       }
+>
+>
+> Please do not send two patches with the same $subject that are fixing
+> two different areas of the driver. In fact, please squash these two
+> patches into a single fix and resend because they are fixing the same issue.
 
-I'm impressed by that completely nonsensical device naming scheme.
+Sure, I will prepare a version 2 with your suggestions.
 
-I had to look it up because I thought that line might have been line noise.
+>
+> Jon
+>
+> --
+> nvpublic
 
-I know some manufacturers and tech people have "issues" with naming,
-but I thought it was mainly just DRAM chip manufacturers that used the
-output from /dev/urandom to generate names.
 
-Ass a few special characters, and it would make for an excellent password.
 
-           Linus
+-- 
+Navid.
