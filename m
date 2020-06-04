@@ -2,171 +2,163 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F186CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9522DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF746207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591277991;
-	bh=a8wHNkwWkFqf5+XQaD/hLiY3eO+xKNajms4eYM3X5Kg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pmEI02SlB/CjA9qHBT95nrmZ+rgZkN3gg+qY7XJVJ7EvL7dmQczJMzbqZppF1eHO8
-	 IpVSwH2qwJ9oFo9zsMX8/02UCEbdYncZTlKF5OGHHJr14iV3HcTYFdcgd4CFR2nwRw
-	 xAF04ZSy77zhnp3BWSaoBbxjpZRzCFjuYxuknHE8=
+	by mail.kernel.org (Postfix) with ESMTP id 78C17206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgFDNjr (ORCPT
+        id S1728663AbgFDNkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38206 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 09:40:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47690 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgFDNjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:39:47 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2D0B206E6;
-        Thu,  4 Jun 2020 13:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591277986;
-        bh=a8wHNkwWkFqf5+XQaD/hLiY3eO+xKNajms4eYM3X5Kg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zwdC6HrVD8bGrwrQZZr5uLGot92oYLSbeHZrBiWEVTv3OpEUSA94yK6rIRMaK31xh
-         YDTq6srJeMsUYylPDg27kY820ipoxkJ9+mcY8OSvZIi5E322iSR+zv9unnBeE3MMs3
-         GcFuchpIvNQXNVI7neT42ZSFZWTcZh5dvMK74Xwg=
-Date:   Thu, 4 Jun 2020 14:39:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: Re: [PATCH] regulator: mt6360: Add support for MT6360 regulator
-Message-ID: <20200604133943.GE6644@sirena.org.uk>
-References: <1591254387-10304-1-git-send-email-gene.chen.richtek@gmail.com>
+        id S1728323AbgFDNkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:40:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 33A05AB76;
+        Thu,  4 Jun 2020 13:40:52 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 14:40:43 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200604134042.GJ3070@suse.de>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200529100806.GA3070@suse.de>
+ <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
+ <20200603094036.GF3070@suse.de>
+ <20200603124112.w5stb7v2z3kzcze3@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WK3l2KTTmXPVedZ6"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <1591254387-10304-1-git-send-email-gene.chen.richtek@gmail.com>
-X-Cookie: VMS version 2.0 ==>
+In-Reply-To: <20200603124112.w5stb7v2z3kzcze3@e107158-lin.cambridge.arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 03, 2020 at 01:41:13PM +0100, Qais Yousef wrote:
+> > > netperf-udp
+> > >                                 ./5.7.0-rc7            ./5.7.0-rc7            ./5.7.0-rc7
+> > >                               without-clamp             with-clamp      with-clamp-tskgrp
+> > > 
+> > > Hmean     send-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
+> > > Hmean     send-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
+> > > Hmean     send-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
+> > > Hmean     send-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
+> > > Hmean     send-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.96 *   1.24%*
+> > > Hmean     send-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
+> > > Hmean     send-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
+> > > Hmean     send-8192     14961.77 (   0.00%)    14418.92 *  -3.63%*    14908.36 *  -0.36%*
+> > > Hmean     send-16384    25799.50 (   0.00%)    25025.64 *  -3.00%*    25831.20 *   0.12%*
+> > > Hmean     recv-64         153.62 (   0.00%)      151.80 *  -1.19%*      155.60 *   1.28%*
+> > > Hmean     recv-128        306.77 (   0.00%)      306.27 *  -0.16%*      309.39 *   0.85%*
+> > > Hmean     recv-256        608.54 (   0.00%)      604.28 *  -0.70%*      613.42 *   0.80%*
+> > > Hmean     recv-1024      2395.80 (   0.00%)     2365.67 *  -1.26%*     2409.50 *   0.57%*
+> > > Hmean     recv-2048      4608.70 (   0.00%)     4544.02 *  -1.40%*     4665.95 *   1.24%*
+> > > Hmean     recv-3312      7223.97 (   0.00%)     7158.88 *  -0.90%*     7331.23 *   1.48%*
+> > > Hmean     recv-4096      8729.53 (   0.00%)     8598.78 *  -1.50%*     8860.47 *   1.50%*
+> > > Hmean     recv-8192     14961.61 (   0.00%)    14418.88 *  -3.63%*    14908.30 *  -0.36%*
+> > > Hmean     recv-16384    25799.39 (   0.00%)    25025.49 *  -3.00%*    25831.00 *   0.12%*
+> > > 
+> > > netperf-tcp
+> > >  
+> > > Hmean     64              818.65 (   0.00%)      812.98 *  -0.69%*      826.17 *   0.92%*
+> > > Hmean     128            1569.55 (   0.00%)     1555.79 *  -0.88%*     1586.94 *   1.11%*
+> > > Hmean     256            2952.86 (   0.00%)     2915.07 *  -1.28%*     2968.15 *   0.52%*
+> > > Hmean     1024          10425.91 (   0.00%)    10296.68 *  -1.24%*    10418.38 *  -0.07%*
+> > > Hmean     2048          17454.51 (   0.00%)    17369.57 *  -0.49%*    17419.24 *  -0.20%*
+> > > Hmean     3312          22509.95 (   0.00%)    22229.69 *  -1.25%*    22373.32 *  -0.61%*
+> > > Hmean     4096          25033.23 (   0.00%)    24859.59 *  -0.69%*    24912.50 *  -0.48%*
+> > > Hmean     8192          32080.51 (   0.00%)    31744.51 *  -1.05%*    31800.45 *  -0.87%*
+> > > Hmean     16384         36531.86 (   0.00%)    37064.68 *   1.46%*    37397.71 *   2.37%*
+> > > 
+> > > The diffs are smaller than on openSUSE Leap 15.1 and some of the
+> > > uclamp taskgroup results are better?
+> > > 
+> > 
+> > I don't see the stddev and coeff but these look close to borderline.
+> > Sure, they are marked with a * so it passed a significant test but it's
+> > still a very marginal difference for netperf. It's possible that the
+> > systemd configurations differ in some way that is significant for uclamp
+> > but I don't know what that is.
+> 
+> Hmm so what you're saying is that Dietmar didn't reproduce the same problem
+> you're observing? I was hoping to use that to dig more into it.
+> 
 
---WK3l2KTTmXPVedZ6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not as such, I'm saying that for whatever reason the problem is not as
+visible with Dietmar's setup. It may be machine-specific or distribution
+specific. There are alternative suggestions for testing just the fast
+paths with a pipe test that may be clearer.
 
-On Thu, Jun 04, 2020 at 03:06:27PM +0800, Gene Chen wrote:
+> > 
+> > > With this test setup we now can play with the uclamp code in
+> > > enqueue_task() and dequeue_task().
+> > > 
+> > 
+> > That is still true. An annotated perf profile should tell you if the
+> > uclamp code is being heavily used or if it's bailing early but it's also
+> > possible that uclamp overhead is not a big deal on your particular
+> > machine.
+> > 
+> > The possibility that either the distribution, the machine or both are
+> > critical for detecting a problem with uclamp may explain why any overhead
+> > was missed. Even if it is marginal, it still makes sense to minimise the
+> > amount of uclamp code that is executed if no limit is specified for tasks.
+> 
+> So one speculation I have that might be causing the problem is that the
+> accesses of struct uclamp_rq are causing bad cache behavior in your case. Your
+> mmtest description of the netperf says that it is sensitive to cacheline
+> bouncing.
+> 
+> Looking at struct rq, the uclamp_rq is spanning 2 cachelines
+> 
+>  29954         /* --- cacheline 1 boundary (64 bytes) --- */
+>  29955         struct uclamp_rq           uclamp[2];            /*    64    96 */
+>  29956         /* --- cacheline 2 boundary (128 bytes) was 32 bytes ago --- */
+>  29957         unsigned int               uclamp_flags;         /*   160     4 */
+>  29958
+>  29959         /* XXX 28 bytes hole, try to pack */
+>  29960
+> 
+> Reducing sturct uclamp_bucket to use unsigned int instead of unsigned long
+> helps putting it all in a single cacheline
+> 
 
-This looks nice and simple, a few fairly small comments below but high
-level it's basically fine.
+I tried this and while it did not make much of a difference to the
+headline metric, the workload was less variable so if it's proven that
+cache line bouncing is reduced (I didn't measure it), it may have merit
+on its own even if it does not fully address the problem.
 
-> --- /dev/null
-> +++ b/drivers/regulator/mt6360-regulator.c
-> @@ -0,0 +1,571 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2020 MediaTek Inc.
-
-Please make the entire comment a C++ one so things look more
-intentional.
-
-> +	for (i = 0; i < devdata->num_irq_descs; i++) {
-> +		irq_desc = devdata->irq_descs + i;
-> +		if (unlikely(!irq_desc->name))
-> +			continue;
-
-Do we really need an unlikely here?  This shouldn't be a hot path.
-
-> +static int mt6360_regulator_set_mode(
-> +				  struct regulator_dev *rdev, unsigned int mode)
-> +{
-
-> +	switch (1 << (ffs(mode) - 1)) {
-> +	case REGULATOR_MODE_NORMAL:
-
-I don't understand why this isn't just a straight switch on mode?
-
-> +static unsigned int mt6360_regulator_get_mode(struct regulator_dev *rdev)
-> +{
-> +	const struct mt6360_regulator_desc *desc =
-> +			       (const struct mt6360_regulator_desc *)rdev->desc;
-> +	int shift = ffs(desc->mode_get_mask) - 1, ret;
-> +	unsigned int val = 0;
-> +
-> +	default:
-> +		ret = 0;
-> +	}
-
-If we can't parse a valid value from the hardware then that's an error.
-
-> +static int mt6360_regulator_reg_write(void *context,
-> +				      unsigned int reg, unsigned int val)
-> +{
-> +	struct mt6360_regulator_data *mrd = context;
-> +	u8 chunk[4] = {0};
-> +
-> +	/* chunk 0 ->i2c addr, 1 -> reg_addr, 2 -> reg_val 3-> crc8 */
-> +	chunk[0] = (mrd->i2c->addr & 0x7f) << 1;
-> +	chunk[1] = reg & 0x3f;
-> +	chunk[2] = (u8)val;
-> +	chunk[3] = crc8(mrd->crc8_table, chunk, 3, 0);
-> +	/* also dummy one byte */
-> +	return i2c_smbus_write_i2c_block_data(mrd->i2c, chunk[1], 3, chunk + 2);
-> +}
-
-Oh, wow - that's a fun I/O interface!
-
-> +static const struct of_device_id __maybe_unused mt6360_regulator_of_id[] = {
-> +	{
-> +		.compatible = "mediatek,mt6360_pmic",
-> +		.data = (void *)&mt6360_pmic_devdata,
-> +	},
-> +	{
-> +		.compatible = "mediatek,mt6360_ldo",
-> +		.data = (void *)&mt6360_ldo_devdata,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, mt6360_regulator_of_id);
-
-I don't see any DT bindings documentation for this, documentation is
-required for all new bindings.
-
-> +	mrd->regmap = devm_regmap_init(&(mrd->i2c->dev),
-> +				       NULL, mrd, devdata->regmap_config);
-> +	if (IS_ERR(mrd->regmap)) {
-> +		dev_err(&pdev->dev, "Failed to register regmap\n");
-> +		return PTR_ERR(mrd->regmap);
-> +	}
-
-This looks like a MFD so it's surprising to see us defining a regmap at
-this level.  Why are we doing this?
-
---WK3l2KTTmXPVedZ6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y+Z8ACgkQJNaLcl1U
-h9DRUgf/Q07BCU3NVKHL/ESM60sLn9muFqxQNcAmFlGBR5bDLKsDToWTKNlTLQuv
-W2REKAvgWpj9dLzCIWOnMEJob8jsw3SSx5fzUNDq+WJLlzhf4MPQkG+/B5kOs7A8
-aCE35WQGvrfMs8zbQmA9VJxUVOHqnyoaUK86E73iUPAWShBSxH2AaVsi1WUqN53g
-LPnVfJ2MvnJLE3z6nmcMof9PXxdA48vrM2Wes0XL3rVUQkuxz9xPKThmtGUUqDoe
-Rx7F5rOP4r8Rq1lT1ac/U1X3AvqMyTK+9jniD9efE6zlLzlquzOjHyMxul1Z6Ok1
-MusCOVNvor+RxHuCDiY2mnZXflShXQ==
-=4cA0
------END PGP SIGNATURE-----
-
---WK3l2KTTmXPVedZ6--
+-- 
+Mel Gorman
+SUSE Labs
