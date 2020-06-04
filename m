@@ -2,170 +2,130 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50149C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D02C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F1B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HbM12CpU"
+	by mail.kernel.org (Postfix) with ESMTP id 6757A206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgFDOk7 (ORCPT
+        id S1729105AbgFDOmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:40:59 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37829 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728682AbgFDOk6 (ORCPT
+        Thu, 4 Jun 2020 10:42:22 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:40386 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729025AbgFDOmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:40:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591281656;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T1KzIQ4ZIm1Bb01N7lRD8u70UzbaIWnRS/sElZztpMM=;
-        b=HbM12CpUDYB+eaizVmTEDR8FDZOMS0ndFU5VPK32cfeoNcvqpSbbtFq6HkTNs+QA2b9yv9
-        XHcVYEulBcy0iTomHM8ZzAK1HxZ8tJG+MvYaeM9bDXFidGyIMECbqD2CCfkJyE4hojNXSL
-        ccAeaqPLh3I7MXYZ48SSFpFNYwz6lY0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-ftwfZGpvNniY_jRkebqKBA-1; Thu, 04 Jun 2020 10:40:55 -0400
-X-MC-Unique: ftwfZGpvNniY_jRkebqKBA-1
-Received: by mail-wr1-f69.google.com with SMTP id s17so2501496wrt.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:40:55 -0700 (PDT)
+        Thu, 4 Jun 2020 10:42:19 -0400
+Received: by mail-il1-f198.google.com with SMTP id s4so4115087ilc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:42:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=T1KzIQ4ZIm1Bb01N7lRD8u70UzbaIWnRS/sElZztpMM=;
-        b=MNFXTg09kbu4hyCSYrANr1V92eMgKETghuSQOFUY2EIclwPjHBT+Yi+zjGu60Bi9sE
-         6NU0HOVIBpUPqBrnzG4O+tDVnpLlZswhTQe9Et7Bh6VvkG7XDW5BQ7XfX5EQnKuH4WYT
-         dsrhfxl8HN1Wo+Z38rcI+ZPTparsKooXIiMgH8mOTfcM2k8WtWfbStgQ8n382e0pRQE9
-         WkbcFGNuFqaQpAi2B5LW/INPYAegyhsqUlbhxH/vXAsqy0HVI78Am+e8aNjty7dODfkM
-         sJubGzFJia3sJz5RV/k+FRa/t/QsAva+HJIM1mwVSXfI/oavoedU2Ng7o1yK+ISALljk
-         l+vA==
-X-Gm-Message-State: AOAM530Zc6duP7GBF5XU6snI564AqXQV0Qgu5bW6TGnH39wRisHTQWoG
-        HmwJ/ojLUNcEIDrUDL05FUSkQLFfSgRFfHofuP9CisjmkBePjjByxhQmf5l6R+RscfcOFOrWPkP
-        o+VbE3mECemE6YOrze0s4JPBq
-X-Received: by 2002:a5d:4f09:: with SMTP id c9mr4622976wru.3.1591281654238;
-        Thu, 04 Jun 2020 07:40:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz0T3+36Rp24qdkIttu0E+JI6/N5toSssvU3HegZCFxjFGCHGF+T9y5wmhzxGSCEXHDXbg8JA==
-X-Received: by 2002:a5d:4f09:: with SMTP id c9mr4622958wru.3.1591281653985;
-        Thu, 04 Jun 2020 07:40:53 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:a0c0:5d2e:1d35:17bb? ([2001:b07:6468:f312:a0c0:5d2e:1d35:17bb])
-        by smtp.gmail.com with ESMTPSA id 23sm7275756wmg.10.2020.06.04.07.40.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 07:40:53 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: Inject #GP when nested_vmx_get_vmptr() fails
- to read guest memory
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-References: <20200604143158.484651-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <da7acd6f-204d-70e2-52aa-915a4d9163ef@redhat.com>
-Date:   Thu, 4 Jun 2020 16:40:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ty3XY6GL9r1bw8IROJoQjoG/PwaIJU5wQYUR1R0AF9E=;
+        b=evjuT3UjUEOQVSP6F6kebBCDpQQyB/7SosBhBrMV6jt/NvPMMRDLxuMB+veONfliwG
+         Qu/LWvRsiJY3lNOof/jlTa8nu93jK2W+GhI8ZbW7dLOgHQ3qQkYFD/x5XzoS6mj6vbSV
+         CWSS7kMV+N+xoyaK9vvHjZbouBQQ4oOuRagXMaWQQytl1bpC1+y5veDfhXN9oWW2LwjA
+         Blq8Ue3b+xxVdexUAdxDz1AVgjNdjP4AaV4bIU2Ey51EJZzBczQiCmST0K5voKbave9N
+         tg4vbdcAiAGBprBO+kuGgdw6aNH0dc2ASwcWaWarC6UING54BBXlXURTKsdUS8SBBSCK
+         ejag==
+X-Gm-Message-State: AOAM5315suSm/UDBxo/QriBu/H+XGfsPk95fjUDLxphfmOxVRIoFCf5T
+        qgeOYXvB2A2g+P+pCVc8ZM3eTYGnTGrGobwqKIRpzSzxhzS9
+X-Google-Smtp-Source: ABdhPJzVkH0XgWUDVL0NQdNqdP6kI3aHVAOGVvYm/VtUnXmD5vmefM3RowqsYWjLFMeFWhHkqMhfRabPFQGMnkJdG4V8HtcDsfcB
 MIME-Version: 1.0
-In-Reply-To: <20200604143158.484651-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:5b99:: with SMTP id c25mr4404840ilg.42.1591281738622;
+ Thu, 04 Jun 2020 07:42:18 -0700 (PDT)
+Date:   Thu, 04 Jun 2020 07:42:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c4abec05a7432666@google.com>
+Subject: BUG: using smp_processor_id() in preemptible code in debug_smp_processor_id
+From:   syzbot <syzbot+9e0b179ae55eaf7a307a@syzkaller.appspotmail.com>
+To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/20 16:31, Vitaly Kuznetsov wrote:
-> Syzbot reports the following issue:
-> 
-> WARNING: CPU: 0 PID: 6819 at arch/x86/kvm/x86.c:618 kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
-> ...
-> Call Trace:
-> ...
-> RIP: 0010:kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
-> ...
->  nested_vmx_get_vmptr+0x1f9/0x2a0 arch/x86/kvm/vmx/nested.c:4638
->  handle_vmon arch/x86/kvm/vmx/nested.c:4767 [inline]
->  handle_vmon+0x168/0x3a0 arch/x86/kvm/vmx/nested.c:4728
->  vmx_handle_exit+0x29c/0x1260 arch/x86/kvm/vmx/vmx.c:6067
-> 
-> 'exception' we're trying to inject with kvm_inject_emulated_page_fault() comes from
->   nested_vmx_get_vmptr()
->    kvm_read_guest_virt()
->      kvm_read_guest_virt_helper()
->        vcpu->arch.walk_mmu->gva_to_gpa()
-> 
-> but it is only set when GVA to GPA conversion fails. In case it doesn't but
-> we still fail kvm_vcpu_read_guest_page(), X86EMUL_IO_NEEDED is returned and
-> nested_vmx_get_vmptr() calls kvm_inject_emulated_page_fault() with zeroed
-> 'exception'. This happen when e.g. VMXON/VMPTRLD/VMCLEAR argument is MMIO.
-> 
-> KVM could've handled the request correctly by going to userspace and
-> performing I/O but there doesn't seem to be a good need for such requests
-> in the first place. Sane guests should not call VMXON/VMPTRLD/VMCLEAR with
-> anything but normal memory. Just inject #GP to find insane ones.
-> 
-> Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 9c74a732b08d..05d57c3cb1ce 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -4628,14 +4628,29 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
->  {
->  	gva_t gva;
->  	struct x86_exception e;
-> +	int r;
->  
->  	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
->  				vmcs_read32(VMX_INSTRUCTION_INFO), false,
->  				sizeof(*vmpointer), &gva))
->  		return 1;
->  
-> -	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
-> -		kvm_inject_emulated_page_fault(vcpu, &e);
-> +	r = kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
-> +	if (r != X86EMUL_CONTINUE) {
-> +		if (r == X86EMUL_PROPAGATE_FAULT) {
-> +			kvm_inject_emulated_page_fault(vcpu, &e);
-> +		} else {
-> +			/*
-> +			 * X86EMUL_IO_NEEDED is returned when kvm_vcpu_read_guest_page()
-> +			 * fails to read guest's memory (e.g. when 'gva' points to MMIO
-> +			 * space). While KVM could've handled the request correctly by
-> +			 * exiting to userspace and performing I/O, there doesn't seem
-> +			 * to be a real use-case behind such requests, just inject #GP
-> +			 * for now.
-> +			 */
-> +			kvm_inject_gp(vcpu, 0);
-> +		}
-> +
->  		return 1;
->  	}
->  
-> 
+Hello,
 
-Hi Vitaly,
+syzbot found the following crash on:
 
-looks good but we need to do the same in handle_vmread, handle_vmwrite,
-handle_invept and handle_invvpid.  Which probably means adding something
-like nested_inject_emulation_fault to commonize the inner "if".
+HEAD commit:    065fcfd4 selftests: net: ip_defrag: ignore EPERM
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15c3e516100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d89141553e61b775
+dashboard link: https://syzkaller.appspot.com/bug?extid=9e0b179ae55eaf7a307a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131b5cf2100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176dfcf2100000
 
-Thanks,
+The bug was bisected to:
 
-Paolo
+commit e42671084361302141a09284fde9bbc14fdd16bf
+Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date:   Thu May 7 12:53:06 2020 +0000
 
+    net: qrtr: Do not depend on ARCH_QCOM
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1295eb91100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1195eb91100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1695eb91100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+9e0b179ae55eaf7a307a@syzkaller.appspotmail.com
+Fixes: e42671084361 ("net: qrtr: Do not depend on ARCH_QCOM")
+
+RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000004
+RBP: 00000000006cb018 R08: 0000000000000001 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401e90
+R13: 0000000000401f20 R14: 0000000000000000 R15: 0000000000000000
+BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor013/7182
+caller is radix_tree_node_alloc.constprop.0+0x200/0x330 lib/radix-tree.c:264
+CPU: 0 PID: 7182 Comm: syz-executor013 Not tainted 5.7.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+ debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+ radix_tree_node_alloc.constprop.0+0x200/0x330 lib/radix-tree.c:264
+ radix_tree_extend+0x234/0x4a0 lib/radix-tree.c:426
+ idr_get_free+0x60c/0x8e0 lib/radix-tree.c:1494
+ idr_alloc_u32+0x170/0x2d0 lib/idr.c:46
+ idr_alloc+0xc2/0x130 lib/idr.c:87
+ qrtr_port_assign net/qrtr/qrtr.c:703 [inline]
+ __qrtr_bind.isra.0+0x12e/0x5c0 net/qrtr/qrtr.c:756
+ qrtr_autobind net/qrtr/qrtr.c:787 [inline]
+ qrtr_autobind+0xaf/0xf0 net/qrtr/qrtr.c:775
+ qrtr_sendmsg+0x1d6/0x770 net/qrtr/qrtr.c:895
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x4405a9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe905331b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004a1bd8 RCX: 00000000004405a9
+RDX: 0000000000000000 RSI: 00000000
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
