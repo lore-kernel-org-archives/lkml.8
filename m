@@ -2,132 +2,146 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90832C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48AFB2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B8D2067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gn2JTTev"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HUTmsVkt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgFDIWr (ORCPT
+        id S1727055AbgFDIYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53062 "EHLO
+        Thu, 4 Jun 2020 04:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgFDIWr (ORCPT
+        with ESMTP id S1726802AbgFDIYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:22:47 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC95EC05BD1E;
-        Thu,  4 Jun 2020 01:22:46 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so6188330ljn.4;
-        Thu, 04 Jun 2020 01:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version;
-        bh=/pZRUQwbTJyxIjfL2SLZaaCRlVPUN1E89Tgo7boEHrY=;
-        b=gn2JTTevK/73GbATNCXpC8WiDu0GR/R4p9RCNBJJHKqT4hXpfs8Se96Z++XqTbDTvv
-         1I68UMOFgVBIHBDuA0wxomVL9CML8c90CiQoarDdiXXIIehcqsxzrHALuyutxN3vfRGO
-         Ooh772/2qY2Qs9y2pVA+K4YHHc6Phcc0JNyeZ+evo3H9JAJhROOmhuFZx/ZTZj+DSDYh
-         rVeaz8/1k0Jrp1/9DHAIkBPMbCAb+UjCH7NXFqgUhfkGj59Gonq9pBF3EqKP3NI/LX7M
-         UkLLuYQQQQnfdhXpeMOnLvdG8CeF+v42IUf3tuHUcTYbFu1k0RBBtbmR7qnyERxaUd+c
-         8Cng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version;
-        bh=/pZRUQwbTJyxIjfL2SLZaaCRlVPUN1E89Tgo7boEHrY=;
-        b=AjjQIuvbhXsI3329Jbk79OzEVMdusJt/o2Wm9mjQsMqyh0PvkOWSTosQPAXHp8BJpt
-         J+3yiBfdWrwnv9IyxZaSv+cM70n5ycOVGoWdh8fgzhvCVY0QGjqCzPRuSLouM4PAAAvK
-         IqznGrT2c032o92PtIsTrbfnS1bBi5jfKKoyp+YECWONru98GYRrIYWAQ37wAtNPqyxe
-         moiSYsIE/s3woCleUdCDfszkHcD9RJZgR6xvxZGz+WJAo1Ds8BJfYKNhDWdQFZTZVfQv
-         RLrkGMP9sBK3OTjc8JD0FFEyARCiKyU4fXI9EiO5X4xBgSHrCwGhH/Qx/6W2mIXi/BCK
-         7dZQ==
-X-Gm-Message-State: AOAM531mZn5BqgjKuGmuEcaeE9CwnvpizNbP8JtlsNoQjKT70gXluIFJ
-        gyhNJI7Lr2eW8TPkVK3rRu0=
-X-Google-Smtp-Source: ABdhPJwpcV8sR/8e6TUhVrMndC2q04n2y9gia509NnYsFtk4TjSvo4KVguFBEyVdx9FhLnf8nSSCyA==
-X-Received: by 2002:a2e:8246:: with SMTP id j6mr1524263ljh.54.1591258965089;
-        Thu, 04 Jun 2020 01:22:45 -0700 (PDT)
-Received: from eldfell.localdomain ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id k29sm1038116ljc.136.2020.06.04.01.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 01:22:44 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 11:22:34 +0300
-From:   Pekka Paalanen <ppaalanen@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Andrew Morton <akpm@osdl.org>, linux-fbdev@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-geode@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, Adrian Bunk <bunk@stusta.de>,
-        Andres Salomon <dilinger@queued.net>,
-        David Vrabel <dvrabel@arcom.com>
-Subject: Re: [PATCH] fbdev: geocode: Add the missed pci_disable_device() for
- gx1fb_map_video_memory()
-Message-ID: <20200604112234.7d840c15@eldfell.localdomain>
-In-Reply-To: <20200603092547.1424428-1-hslester96@gmail.com>
-References: <20200603092547.1424428-1-hslester96@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 4 Jun 2020 04:24:40 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A2C0C05BD1E;
+        Thu,  4 Jun 2020 01:24:40 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49czN505RNz9sSf;
+        Thu,  4 Jun 2020 18:24:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591259077;
+        bh=9zDAoR8ptxp4KD7+uEd43pqApDpbDt86eJ9jKZIT9UM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HUTmsVktEn0OwAE/VmnDinss5EY5AFNMs0gjrKMmSk7GpiEl5w69Kgy78l08REa9Z
+         JYYU39t0b63rTsq2pM/sjsj/4plP/42uKSFRtUuIOFVgxsG+hhoiKeCA3lILwdRW8x
+         Xsorl/74X5wBmGvEDcpA1CYEQl3WlAIk2pV3Sn8OUsj1+tdsZmgBUpTnPzkxOs4I7y
+         9Dl5g0NwcgoiwXE4exTqHscVvFFkaEVpJGG8HPu8b+qK2LDHevr3TfJXyv8nzv6H6y
+         0jlar1F52q9ksQ/WGFqu7sMhcRHhKNKcGYAS00YB8F/OgWawpQJy2+CE7BE7t3yrjv
+         UkKiNRkcJOwJg==
+Date:   Thu, 4 Jun 2020 18:24:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: linux-next: build failure after merge of the akpm tree
+Message-ID: <20200604182436.5c8fe72b@canb.auug.org.au>
+In-Reply-To: <20200604164442.5101cf27@canb.auug.org.au>
+References: <20200604164442.5101cf27@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/7zGwgSlxxHt_4_lufD_uPZr"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; boundary="Sig_/9GBF595DCEP7TWu_0KDlzbm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7zGwgSlxxHt_4_lufD_uPZr
+--Sig_/9GBF595DCEP7TWu_0KDlzbm
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed,  3 Jun 2020 17:25:47 +0800
-Chuhong Yuan <hslester96@gmail.com> wrote:
+Hi all,
 
-> Although gx1fb_probe() has handled the failure of gx1fb_map_video_memory()
-> partly, it does not call pci_disable_device() as gx1fb_map_video_memory()
-> calls pci_enable_device().
-> Add the missed function call to fix the bug.
+On Thu, 4 Jun 2020 16:44:42 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> Hi all,
 >=20
-> Fixes: 53eed4ec8bcd ("[PATCH] fbdev: geode updates]")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> After merging the akpm tree, today's linux-next build (powerpc
+> allyesconfig) failed like this:
+>=20
+> arch/powerpc/mm/ptdump/ptdump.c: In function 'walk_pagetables':
+> arch/powerpc/mm/ptdump/ptdump.c:337:25: error: implicit declaration of fu=
+nction 'pgd_is_leaf'; did you mean 'p4d_is_leaf'? [-Werror=3Dimplicit-funct=
+ion-declaration]
+>   337 |   if (pgd_none(*pgd) || pgd_is_leaf(*pgd))
+>       |                         ^~~~~~~~~~~
+>       |                         p4d_is_leaf
+>=20
+> Caused by commit
+>=20
+>    "powerpc: add support for folded p4d page tables"
+>=20
+> I applied the following fix up patch.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Thu, 4 Jun 2020 16:33:01 +1000
+> Subject: [PATCH] fixup for powerpc ptdump.c
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 > ---
->  drivers/video/fbdev/geode/gx1fb_core.c | 37 ++++++++++++++++++--------
->  1 file changed, 26 insertions(+), 11 deletions(-)
+>  arch/powerpc/mm/ptdump/ptdump.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptd=
+ump.c
+> index 9b1c89b05622..de6e05ef871c 100644
+> --- a/arch/powerpc/mm/ptdump/ptdump.c
+> +++ b/arch/powerpc/mm/ptdump/ptdump.c
+> @@ -334,12 +334,12 @@ static void walk_pagetables(struct pg_state *st)
+>  	for (i =3D pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr +=3D PGD=
+IR_SIZE) {
+>  		p4d_t *p4d =3D p4d_offset(pgd, 0);
+> =20
+> -		if (pgd_none(*pgd) || pgd_is_leaf(*pgd))
+> +		if (p4d_none(*p4d) || p4d_is_leaf(*p4d))
+>  			note_page(st, addr, 1, p4d_val(*p4d), PGDIR_SIZE);
+>  		else if (is_hugepd(__hugepd(p4d_val(*p4d))))
+> -			walk_hugepd(st, (hugepd_t *)pgd, addr, PGDIR_SHIFT, 1);
+> +			walk_hugepd(st, (hugepd_t *)p4d, addr, PGDIR_SHIFT, 1);
+>  		else
+> -			/* pgd exists */
+> +			/* p4d exists */
+>  			walk_pud(st, p4d, addr);
+>  	}
+>  }
+>
 
-Hi,
+I have put that in linux-next (for tomorrow) as a fix up for
+powerpc-add-support-for-folded-p4d-page-tables.
 
-there is a typo in the patch subject, the driver seems to be called
-geode, not geocode.
+--=20
+Cheers,
+Stephen Rothwell
 
-
-Thanks,
-pq
-
---Sig_/7zGwgSlxxHt_4_lufD_uPZr
+--Sig_/9GBF595DCEP7TWu_0KDlzbm
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl7Yr0sACgkQI1/ltBGq
-qqfEDw/+KLMc9/wo+jXiWAnLH7DQ87u0JEDybMYKFKx6EpC9KBlSApWcagjDaiw7
-Swy6OTzovGayh7moGisYDCTSsXsG0KyA3AmGbOhTDSjIyWYb+HPPAI9X10yMmwvo
-ql4+Jl5NF5ClfmQl3FAQKcrsdcUiTMJCu9rUBtaZG4RhTS/IV8Ou78BymOtzHSU3
-0W/IeutQWwjH3txsdthOe4O2mkJy3DCok0jxn76VsivoifPKxRbia8O7NH+UbFP6
-7p164/E4mVaTIHzFfqvvPqfZrh4w5k6meQHRy+9TC5AE46vADO/L7wcrghqrj0dK
-wXc6i16+04wreh1cQLK/37V3SGYLhILjvK+K/ERvr1utyGUoPu3pmf67qugwxSoj
-RfxWJj3yMnba/H7rCVXUKak5DtMixvtLlgwWg9JM0k453H8Ma4+pPPnEs5LrVVuw
-ANeolbROqLp7EDQ4nFSgLY3Jac2QH3uiUg/KyB+MMbA8HyTqHEyfPXoFQWFeEGdW
-c+ZPkw+f7QOYDOxGMmMKiZb6Vut5lNbfpSOIsleOeMbeifx2xtDK8IKV5gSfeFlI
-kueD9zp8FjwMZ4wDRYXpW+l8y3EQj1Dt0GDuw6f9K5Xo2a7s89jMY+2K+qJX9y5m
-oa24nht3w0fptulkyk4NPiuZVMXe6s8fZ/Fwf5M5W/Dd6Ii/dEE=
-=W7Eg
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Yr8QACgkQAVBC80lX
+0GwX6Qf8DuCMnioAOVgkvBD6oYTA+iAICkgnQ4MKxBsj07ufgAnufIgpO12beI9B
+x2QRbAOuEP0vjKdxsIlNFgdVqtZtYGkVqm5UxKKvXaYIfU+zCwJcRrJ4cFEiOLnA
+6cGRtmYVLhkgjK1zSy9DVW1YOcxisvLUnQsJQU2axbF0on6oL0zGocFdZuex6nLe
+kNc6ZD30U9w7sXZvB8SSAZxPgsdvR4oMQK95yvLnIapKbxoWFqt8piBtU/eDnrEz
+xJBjs/hwxcQc1CsCrO5aslRYm5Ip9n+w3d52IGV0fZ3Jsk/7X4051KUYUn7+IAS7
+iEt2gNhqJjks4NfwoXNNipH18LBVaQ==
+=s26x
 -----END PGP SIGNATURE-----
 
---Sig_/7zGwgSlxxHt_4_lufD_uPZr--
+--Sig_/9GBF595DCEP7TWu_0KDlzbm--
