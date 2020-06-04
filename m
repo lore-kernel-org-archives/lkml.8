@@ -2,82 +2,165 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6472EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3A820772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0465206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:56:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="JXYnJsBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgFDM4X (ORCPT
+        id S1728224AbgFDM4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:56:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41833 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgFDM4W (ORCPT
+        Thu, 4 Jun 2020 08:56:38 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:39931 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726003AbgFDM4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:56:22 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 9so7118013ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:56:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I+T4a/K2DGHf7cf/NXgqqInb1lYvZPk1WZQNcpjFcNs=;
-        b=ZqoJQLlLkxAAMbM3/doprCXi+Dn/5yRafiHz8Pg0rbGJjTBJnSNYG+PLZMIHN1YJUZ
-         dvuvK5BgsyG09FR98w4asDEADpalxvebixZVr47avbVBFvhtyx3TOLZbvQkrPsU0QTEw
-         o/sLJgAJm+blLL9BKwS2UJGK7eYhLRu5NEyuoAUMobhWwrlK/LGYSP2Ov88rXdCVWP5Y
-         WQ7jnSczPSF8R7FCz8lVotN3golnNsJX1zwZBVdkE+vxLohWy49GGKFncTX/1P0X9JdH
-         /agR/RTRdHH/1nQ24zLeiSQZH/jWkiNX5NAn4C6Qs+2wFkOxnUxrtbOpxnCOGKxMOylS
-         chZA==
-X-Gm-Message-State: AOAM5307uR6G4ep34NdBuss4MsLHmsAgCb2UJ4X+hO9vy6Khbdbku2LX
-        yTcL40qicmWSlE09VfYpfEY=
-X-Google-Smtp-Source: ABdhPJw6Q1myIejdtGw90gfYiJl034AWpTCndAx+I/QkvRC+yqb3ztgKzVOIXycKxOxU3zt3iiSX+w==
-X-Received: by 2002:a2e:811:: with SMTP id 17mr2055650lji.287.1591275381730;
-        Thu, 04 Jun 2020 05:56:21 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id l8sm1176676ljc.59.2020.06.04.05.56.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 05:56:21 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Evgeniy Polyakov <zbr@ioremap.net>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] w1: Use kzfree() in w1_master_release()
-Date:   Thu,  4 Jun 2020 15:56:17 +0300
-Message-Id: <20200604125617.100046-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 4 Jun 2020 08:56:37 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id gpQ7j2fwhnv5ngpQAju8kv; Thu, 04 Jun 2020 14:56:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1591275395; bh=GsXkE50T8O25yTIHoQaRVvowv2CeDBSFCyEe0VxuHU8=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=JXYnJsBUkpWl1YoOy2DtjiJSHC0mjJZa9TKkwt2F5mzHyuqS6pujrCr3YTRMKa3Ik
+         QUb2aWcVVMf8zMEz6YYNa6ktgWXYkuR/hWJFnRL8cXmkzE/6Xcxa/t+y6jwj1BBpAC
+         xjobzBAvnl/CmOy4QCLeE6TC+Eox9LNw1z5mJiPkkGv71QHsH5VGKAwEOUMD3BKKT8
+         gEpFDzit9PNFrLOtBZcT4cq14h+8pzEcuC1Y/43o7OQnn14p3jsc198xPVMIseRDOw
+         CkohQLnQHEibijkmcaGP2dDvV3ZITpgXTS+qxLjjC2dovLpyOJQC9wGXDf8bOB+eFG
+         32RCRQbzuHdUw==
+Subject: Re: [PATCH] v4l2-ctrl: add control for thumnails
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Tomasz Figa <tfiga@chromium.org>
+References: <20200526085446.30956-1-stanimir.varbanov@linaro.org>
+ <65ac9697-a43f-7025-e6fe-69c4a44c6d9a@xs4all.nl>
+ <ce28a840-a763-6700-16dd-d708e570d55c@linaro.org>
+ <d02c6cd0-a502-dc52-519e-54b6328d5373@linaro.org>
+ <544b19dd-4883-bae0-b488-46c856eb207d@xs4all.nl>
+ <6f71931a-9060-a399-835c-a1cf1f05dc79@linaro.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <1bc10e88-8cbe-3da9-daeb-d015f42d7acc@xs4all.nl>
+Date:   Thu, 4 Jun 2020 14:56:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <6f71931a-9060-a399-835c-a1cf1f05dc79@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAPj4iDjEkjil0CAzJQ0LO6ID7xKeLwdy5pi67iOCfa0MSwEHrW/RftrQ7mLUR6JHdeGk9Pd3wPbSJbN9phw4wgeN5kP7Dtw+ng4q1KObpTo9MqecqPH
+ weJKY04Tr4lC0JjE4tSxbVfNeWRzl8zyoRkowTdItkbpdPsK7DzM4OLH9oOs+vjUKYy0calpH3ZRFdfDl2tb66MUe1IuLSWxNlShFNZe/PNlxkhXtDhj9TXH
+ JtXczQh5AlenBmgzMPjKgwfJL7VzMp0zqoNIOmU4lFIL/XyAGQB7JXXMtPjkMVeaSNFpI7LSFU0Psza7JD2AhVLOpyKzLO1YTlIbzHidfcWLbqBMRT9D4o6B
+ rat7Lvg++pDnhaQ3Dth+5qT70qWKyiFbrslLfFMZvKdjDdjz4x7geavqdIegb5hJYou2hnqVexuf+/kTarp7bQHJxZ/2Pg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kzfree() instead of memset() with 0 followed by kfree().
-The pointer is allocated in w1_alloc_dev().
+On 04/06/2020 14:34, Stanimir Varbanov wrote:
+> Hi Hans,
+> 
+> On 6/4/20 12:08 PM, Hans Verkuil wrote:
+>> On 04/06/2020 11:02, Stanimir Varbanov wrote:
+>>> Hi Hans,
+>>>
+>>> On 5/27/20 12:53 AM, Stanimir Varbanov wrote:
+>>>> Hi Hans,
+>>>>
+>>>> On 5/26/20 3:04 PM, Hans Verkuil wrote:
+>>>>> On 26/05/2020 10:54, Stanimir Varbanov wrote:
+>>>>>> Add v4l2 control for decoder thumbnail.
+>>>>>>
+>>>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>>>> ---
+>>>>>>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 7 +++++++
+>>>>>>  drivers/media/v4l2-core/v4l2-ctrls.c                      | 2 ++
+>>>>>>  include/uapi/linux/v4l2-controls.h                        | 2 ++
+>>>>>>  3 files changed, 11 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>>>>> index d0d506a444b1..e838e410651b 100644
+>>>>>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>>>>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>>>>> @@ -3726,6 +3726,13 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
+>>>>>>      disables generating SPS and PPS at every IDR. Setting it to one enables
+>>>>>>      generating SPS and PPS at every IDR.
+>>>>>>  
+>>>>>> +``V4L2_CID_MPEG_VIDEO_DECODER_THUMBNAIL (button)``
+>>>>>> +    Instructs the decoder to produce immediate output. The decoder should
+>>>>>> +    consume first input buffer for progressive stream (or first two buffers
+>>>>>> +    for interlace). Decoder should not allocate more output buffers that it
+>>>>>> +    is required to consume one input frame. Usually the decoder input
+>>>>>> +    buffers will contain only I/IDR frames but it is not mandatory.
+>>>>>
+>>>>> This is very vague. It doesn't explain why the control is called 'THUMBNAIL',
+>>>>> but more importantly it doesn't explain how this relates to normal decoding.
+>>>>
+>>>> If in the normal decode the capture queue buffers are 5, in the
+>>>> thumbnail mode the number of buffers will be only 1 (if the bitstream is
+>>>> progressive) and this will guarantee low memory usage. The other
+>>>> difference is that the decoder will produce decoded frames (without
+>>>> errors) only for I/IDR (sync frames).
+>>
+>> Isn't this really a "DECODE_SYNC_FRAMES_ONLY" control? That's what it does,
+>> right? Skip any B/P frames and only decode sync frames.
+> 
+> Yes, it is.
+> To me V4L2_CID_MPEG_VIDEO_DECODE_SYNC_FRAMES sounds better. If you are
+> fine I can send a new patch.
+> 
+> The definition of "sync frames" is a bit difficult for codec-agnostic
+> controls. Is it sound better "INTRA", DECODE_INTRA_FRAMES (ONLY)?
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/w1/w1.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+INTRA is better. DECODE_INTRA_FRAMES_ONLY is a good name, I think.
 
-diff --git a/drivers/w1/w1.c b/drivers/w1/w1.c
-index e58c7592008d..24baacf8314c 100644
---- a/drivers/w1/w1.c
-+++ b/drivers/w1/w1.c
-@@ -71,8 +71,7 @@ static void w1_master_release(struct device *dev)
- 	struct w1_master *md = dev_to_w1_master(dev);
- 
- 	dev_dbg(dev, "%s: Releasing %s.\n", __func__, md->name);
--	memset(md, 0, sizeof(struct w1_master) + sizeof(struct w1_bus_master));
--	kfree(md);
-+	kzfree(md);
- }
- 
- static void w1_slave_release(struct device *dev)
--- 
-2.26.2
+Thumbnail creation can be given as an example in the description of the
+control, but that's just a use-case.
+
+Regards,
+
+	Hans
+
+> 
+>>
+>> That this is useful for creating thumbnails is just a specific use-case.
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>>>
+>>>>>
+>>>>> I.e. if you are decoding and 'press' this control, what happens then?
+>>>>
+>>>> Might be the button type wasn't great idea. In fact the control should
+>>>> be set before streamon so that the driver returns min_capture_bufs 1.
+>>>>
+>>>>>
+>>>>> What exactly is the use-case?
+>>>>
+>>>> It could be used to generate thumbnails of all video clips in a folder
+>>>> or when you open a Gallery application on your phone.
+>>>>
+>>>
+>>> What is your opinion on that control? I could consider to make it Venus
+>>> custom control but from the use-case it looks other drivers also can
+>>> benefit of it.
+>>>
+>>> I tried to make more generic one [1] but it looks it will be too difficult.
+>>>
+>>
+> 
 
