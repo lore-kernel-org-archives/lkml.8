@@ -2,111 +2,191 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B5AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB7620829
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0946920829
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:39:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="BkAIZS5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgFDDgL (ORCPT
+        id S1726563AbgFDDjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:36:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43478 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727884AbgFDDgI (ORCPT
+        Wed, 3 Jun 2020 23:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgFDDjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:36:08 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0543XC34097842;
-        Wed, 3 Jun 2020 23:35:41 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31eq5vatg7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 23:35:40 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0543XCJr097881;
-        Wed, 3 Jun 2020 23:35:40 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31eq5vatfa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Jun 2020 23:35:40 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0543QNOr014509;
-        Thu, 4 Jun 2020 03:35:38 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf4816md-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 03:35:37 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0543ZZM863766598
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jun 2020 03:35:35 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42E9111C04C;
-        Thu,  4 Jun 2020 03:35:35 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E54511C050;
-        Thu,  4 Jun 2020 03:35:31 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.58.254])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Jun 2020 03:35:31 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au, mikey@neuling.org
-Cc:     ravi.bangoria@linux.ibm.com, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com, christophe.leroy@c-s.fr,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] powerpc/watchpoint: Remove 512 byte boundary
-Date:   Thu,  4 Jun 2020 09:04:43 +0530
-Message-Id: <20200604033443.70591-9-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200604033443.70591-1-ravi.bangoria@linux.ibm.com>
-References: <20200604033443.70591-1-ravi.bangoria@linux.ibm.com>
+        Wed, 3 Jun 2020 23:39:10 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F292C03E96D
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 20:39:10 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id d1so4690069ila.8
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 20:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JL8KAHI97qtguZ9Tb2fscmILbngbHV5HZl94fH1QWiU=;
+        b=BkAIZS5UfiiyWUPoA8i0jqjgQC/WADaVCEyErmWLwK8t3GHDHFMmZ0cWMKoqVrqQqf
+         GO+t+UGX7bnWxdI5DqxuR9Q92NU7fHo24UZMJGMnMMJRKYKo4x/F7pwAsbhyN7Gn60ju
+         n7q3PRtkSlmouoqf/iL9VnER2wtgOLpNaqOco=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JL8KAHI97qtguZ9Tb2fscmILbngbHV5HZl94fH1QWiU=;
+        b=fKbVE1PXzIQVSkDDlSTAnfO+7l2Sr6hVIRYjnjsr9TN0kyjNlU8xv9nIE/jsSe4IXs
+         uxll9HY5VzGrv1J1qjqcbKoa4Gx3Lx51Bcbknk0c8ScSm80j1ikvl27b5mZz0aYrkkkn
+         Es6Hn1rMGpewSjX01ajR8D4TT/a4UeGqorrxOkkLvseu+hUs7Zm9xzPQ0SufR9lq39My
+         Q51xChNcROS/I52mER1mIExd0wqpka9PGiC+DMuMxaG1FapcJYcH8Qfohce+E9CsE7oX
+         1mpb9JVB98nxPtIma8sedlL9kKZWc5bQTJJNIcrWZUrVLcjtEtPJCoJAkS4Qk18sKeN4
+         5+tQ==
+X-Gm-Message-State: AOAM531XWTCF/mWHoycUIUqEz30TeoOQgrD0paLvUI8vSOy5rU5MwnNL
+        lcSvj/zNTgc0mANQLciVR0amJA==
+X-Google-Smtp-Source: ABdhPJzpJ/gMzj+cF7tx0wsNnght7qYo/ErxsBP4IEom49PMUnSj0R69oQgNuqTUaWsGxM0Rfd7pDA==
+X-Received: by 2002:a92:c812:: with SMTP id v18mr2474993iln.178.1591241949645;
+        Wed, 03 Jun 2020 20:39:09 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id v20sm828328ilc.1.2020.06.03.20.39.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jun 2020 20:39:09 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 03:39:07 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        containers@lists.linux-foundation.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <20200604033907.GA16025@ircssh-2.c.rugged-nimbus-611.internal>
+References: <20200603011044.7972-1-sargun@sargun.me>
+ <20200603011044.7972-2-sargun@sargun.me>
+ <20200604012452.vh33nufblowuxfed@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-03_13:2020-06-02,2020-06-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- adultscore=0 priorityscore=1501 clxscore=1015 impostorscore=0
- malwarescore=0 cotscore=-2147483648 suspectscore=0 lowpriorityscore=0
- spamscore=0 phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006040020
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604012452.vh33nufblowuxfed@wittgenstein>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Power10 has removed 512 bytes boundary from match criteria. i.e. The watch
-range can cross 512 bytes boundary.
+On Thu, Jun 04, 2020 at 03:24:52AM +0200, Christian Brauner wrote:
+> On Tue, Jun 02, 2020 at 06:10:41PM -0700, Sargun Dhillon wrote:
+> > Previously there were two chunks of code where the logic to receive file
+> > descriptors was duplicated in net. The compat version of copying
+> > file descriptors via SCM_RIGHTS did not have logic to update cgroups.
+> > Logic to change the cgroup data was added in:
+> > commit 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+> > commit d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+> > 
+> > This was not copied to the compat path. This commit fixes that, and thus
+> > should be cherry-picked into stable.
+> > 
+> > This introduces a helper (file_receive) which encapsulates the logic for
+> > handling calling security hooks as well as manipulating cgroup information.
+> > This helper can then be used other places in the kernel where file
+> > descriptors are copied between processes
+> > 
+> > I tested cgroup classid setting on both the compat (x32) path, and the
+> > native path to ensure that when moving the file descriptor the classid
+> > is set.
+> > 
+> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > Suggested-by: Kees Cook <keescook@chromium.org>
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> > Cc: Daniel Wagner <daniel.wagner@bmw-carit.de>
+> > Cc: David S. Miller <davem@davemloft.net>
+> > Cc: Jann Horn <jannh@google.com>,
+> > Cc: John Fastabend <john.r.fastabend@intel.com>
+> > Cc: Tejun Heo <tj@kernel.org>
+> > Cc: Tycho Andersen <tycho@tycho.ws>
+> > Cc: stable@vger.kernel.org
+> > Cc: cgroups@vger.kernel.org
+> > Cc: linux-fsdevel@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  fs/file.c            | 35 +++++++++++++++++++++++++++++++++++
+> >  include/linux/file.h |  1 +
+> >  net/compat.c         | 10 +++++-----
+> >  net/core/scm.c       | 14 ++++----------
+> >  4 files changed, 45 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/fs/file.c b/fs/file.c
+> > index abb8b7081d7a..5afd76fca8c2 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -18,6 +18,9 @@
+> >  #include <linux/bitops.h>
+> >  #include <linux/spinlock.h>
+> >  #include <linux/rcupdate.h>
+> > +#include <net/sock.h>
+> > +#include <net/netprio_cgroup.h>
+> > +#include <net/cls_cgroup.h>
+> >  
+> >  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
+> >  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
+> > @@ -931,6 +934,38 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+> >  	return err;
+> >  }
+> >  
+> > +/*
+> > + * File Receive - Receive a file from another process
+> > + *
+> > + * This function is designed to receive files from other tasks. It encapsulates
+> > + * logic around security and cgroups. The file descriptor provided must be a
+> > + * freshly allocated (unused) file descriptor.
+> > + *
+> > + * This helper does not consume a reference to the file, so the caller must put
+> > + * their reference.
+> > + *
+> > + * Returns 0 upon success.
+> > + */
+> > +int file_receive(int fd, struct file *file)
+> 
+> This is all just a remote version of fd_install(), yet it deviates from
+> fd_install()'s semantics and naming. That's not great imho. What about
+> naming this something like:
+> 
+> fd_install_received()
+> 
+> and move the get_file() out of there so it has the same semantics as
+> fd_install(). It seems rather dangerous to have a function like
+> fd_install() that consumes a reference once it returned and another
+> version of this that is basically the same thing but doesn't consume a
+> reference because it takes its own. Seems an invitation for confusion.
+> Does that make sense?
+> 
+You're right. The reason for the difference in my mind is that fd_install
+always succeeds, whereas file_receive can fail. It's easier to do something
+like:
+fd_install(fd, get_file(f))
+vs.
+if (file_receive(fd, get_file(f))
+	fput(f);
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/kernel/hw_breakpoint.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Alternatively, if the reference was always consumed, it is somewhat
+easier.
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 031e6defc08e..9a2899f25aae 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -418,8 +418,9 @@ static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
- 
- 	if (dawr_enabled()) {
- 		max_len = DAWR_MAX_LEN;
--		/* DAWR region can't cross 512 bytes boundary */
--		if (ALIGN_DOWN(start_addr, SZ_512) != ALIGN_DOWN(end_addr - 1, SZ_512))
-+		/* DAWR region can't cross 512 bytes boundary on p10 predecessors */
-+		if (!cpu_has_feature(CPU_FTR_ARCH_31) &&
-+		    (ALIGN_DOWN(start_addr, SZ_512) != ALIGN_DOWN(end_addr - 1, SZ_512)))
- 			return -EINVAL;
- 	} else if (IS_ENABLED(CONFIG_PPC_8xx)) {
- 		/* 8xx can setup a range without limitation */
--- 
-2.26.2
-
+I'm fine either way, but just explaining my reasoning for the difference
+in behaviour.
