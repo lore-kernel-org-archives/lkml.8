@@ -2,81 +2,165 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5B2B206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE0C206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgFDNJJ (ORCPT
+        id S1728385AbgFDNJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:09:09 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:42722 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgFDNJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:09:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id v16so3564750ios.9
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:09:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=u+o2RcyaHSofblAhvnfVshy/ql7Met8tthhkmRydCTY=;
-        b=rK+KaOYvwV5puhXTVam8FUnSLMk0YaQa9/7RqhHLpA6vVJ0/iO5Q6valRQXE5E2vR0
-         j3rL+FZ7pZ0bRtJOQj3MZBbeO+pYuqy7Py9V8+43cn7J5DWB4gmcAhe2h20EpE5zr7QR
-         FBVb+vdktCwuoxs/5b4soqDvQj0NDbD4d0tlsLZpXUOdDuVtEV0JiKFf7ZoijU8WdtEU
-         5uu5Jf3SWqNYTmI6Lm+BpAYywYZsIaoyTFz8COP+ekl8oDxbj+0Iq0ZzoyhBAsH1rVD5
-         B7ML84np32dO805S2EAGjD8qYiniHjPNwbIcDgnKDOstAe/tJrki47nYAURyaJ7wO8dD
-         uXqw==
-X-Gm-Message-State: AOAM530piz0sor/t+7NQRDhwGO+VrDEI4DHFhBaQYgFEGIX2Vgy138S/
-        cskxfCKMBPrQP40eASBW50mZCRIfimjMDn+oeXGveD+kCbaB
-X-Google-Smtp-Source: ABdhPJzv0fpa1LEbfmP9G7nInep6IYlF2rdPEZ+bA0p++ozOTMgXiZEO3IRN+O2prm6dT0jXr2eer3ZzH36mkQc4A3bweWh9DzjZ
+        Thu, 4 Jun 2020 09:09:18 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22230 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728353AbgFDNJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:09:17 -0400
+IronPort-SDR: UhrolX2Qk/sZxdbQaatv/8mkBUlRyuGSxqNE/BbcU/CJ54ZWyr1JE3lwFeCPjOEXz6pn/uyYR/
+ YhtfziD8WHcQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 06:09:17 -0700
+IronPort-SDR: nJNGNHqQWHM+pu2diaSZcxzHHP8DbnDQVzXJZQiFz38xtTy6PakTnobpmx1cilHM+HSRAWxrj1
+ J6d+44NFPhQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
+   d="scan'208";a="304905559"
+Received: from lkp-server02.sh.intel.com (HELO 6de3076d9aaa) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 04 Jun 2020 06:09:15 -0700
+Received: from kbuild by 6de3076d9aaa with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jgpcQ-00000S-Po; Thu, 04 Jun 2020 13:09:14 +0000
+Date:   Thu, 04 Jun 2020 21:08:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:rcu/test] BUILD SUCCESS
+ 825986b77e4306c8d88168d071ddc0051fbc4433
+Message-ID: <5ed8f243.Y8pD17lDb9c6Wte2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-Received: by 2002:a92:9acc:: with SMTP id c73mr3904247ill.74.1591276146848;
- Thu, 04 Jun 2020 06:09:06 -0700 (PDT)
-Date:   Thu, 04 Jun 2020 06:09:06 -0700
-In-Reply-To: <000000000000c8a76e05a73e3be3@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000078fab705a741d901@google.com>
-Subject: Re: WARNING in kvm_inject_emulated_page_fault
-From:   syzbot <syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        junaids@google.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/test
+branch HEAD: 825986b77e4306c8d88168d071ddc0051fbc4433  torture:  Remove qemu dependency on EFI firmware
 
-commit ee1fa209f5e5ca5c1e76c7aa1c2aab292f371f4a
-Author: Junaid Shahid <junaids@google.com>
-Date:   Fri Mar 20 21:28:03 2020 +0000
+elapsed time: 635m
 
-    KVM: x86: Sync SPTEs when injecting page/EPT fault into L1
+configs tested: 98
+configs skipped: 1
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=138f49de100000
-start commit:   cb8e59cc Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=104f49de100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=178f49de100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a16ddbc78955e3a9
-dashboard link: https://syzkaller.appspot.com/bug?extid=2a7156e11dc199bdbd8a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=134ca2de100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178272f2100000
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
-Fixes: ee1fa209f5e5 ("KVM: x86: Sync SPTEs when injecting page/EPT fault into L1")
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                         hackkit_defconfig
+sh                         apsh4a3a_defconfig
+arm                            mmp2_defconfig
+arm                        neponset_defconfig
+arm                         orion5x_defconfig
+arm                       aspeed_g4_defconfig
+sh                          r7780mp_defconfig
+riscv                            allyesconfig
+mips                        bcm47xx_defconfig
+arm                           tegra_defconfig
+mips                           ci20_defconfig
+arm                         ebsa110_defconfig
+arm                          moxart_defconfig
+arm                     eseries_pxa_defconfig
+arm                           stm32_defconfig
+arm                     am200epdkit_defconfig
+powerpc                    gamecube_defconfig
+nios2                            alldefconfig
+arm                              zx_defconfig
+microblaze                    nommu_defconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
