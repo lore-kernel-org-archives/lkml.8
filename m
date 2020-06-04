@@ -2,170 +2,124 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43903C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 210C52072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1429B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MCijP08i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qFwmskb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgFDGKm (ORCPT
+        id S1727023AbgFDGKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:10:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24224 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726809AbgFDGKl (ORCPT
+        Thu, 4 Jun 2020 02:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbgFDGKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:10:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591251039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=spuln8OM2+pVMSm6QcNLxZDaud+7HSx0EW1bt/tNWEk=;
-        b=MCijP08ima0bYx5d+bBh2AR3YSjBepOxdOX9B5wCWUscALsBlQ1T38vJhbCYWA4IKjdil0
-        TMrehH75DzWUnoCVyIFfvLogLodL6znq8+FCX5OgGmTYQK/XGIC6KFqgwZf8WE/X7BV6ly
-        Ol7kYt2HfoGPWYfAIXO9tFoZbncm4qY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-346-U7aO9fZrPSCuhDk-WhhKeA-1; Thu, 04 Jun 2020 02:10:38 -0400
-X-MC-Unique: U7aO9fZrPSCuhDk-WhhKeA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3AA0B108BD0D;
-        Thu,  4 Jun 2020 06:10:37 +0000 (UTC)
-Received: from [10.72.13.104] (ovpn-13-104.pek2.redhat.com [10.72.13.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C5D234DA21;
-        Thu,  4 Jun 2020 06:10:28 +0000 (UTC)
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <20200603011810-mutt-send-email-mst@kernel.org>
- <20200603165205.GU23230@ZenIV.linux.org.uk>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ec086f7b-be01-5ffd-6fc3-f865d26b0daf@redhat.com>
-Date:   Thu, 4 Jun 2020 14:10:27 +0800
+        Thu, 4 Jun 2020 02:10:51 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 927D1C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 23:10:51 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bg4so1779877plb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 23:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Sw/822Lzx4gGPvnJW8ZhfnQxJ/CLse2iXnOnbBACWxs=;
+        b=qFwmskb7rZ/DVhuRWSdVuv4TylJZJF1ESC/hegc9sCDe7xqo+CNcCH3w6h3JZRcLZ0
+         ZaRkLrM4SzA6w7mDJBtYOUB9/JPdIcH/l443Zbw8Dyuzm7/vjI3Tw7ZO1qZb91VaOB4P
+         e6BxIXf4Xqdn7sl9xJPrqPfPeO0i9qZYGEN9zoEj58k8WXLB1S/rxp+gwTuvrNnh1rfJ
+         sILXhHzv9jB0kyCAd+/rvQsZWj0CMi+cdXh1W25JQEn6cmeq37sYNJql1E/7FQrMCMNo
+         3rgC3HhEJPNsRpoCqGu+0WvJJlNhuPbN9zx0Ov/0LRZlaLUW2pmnawv0TmK6OBuiATy4
+         pxSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Sw/822Lzx4gGPvnJW8ZhfnQxJ/CLse2iXnOnbBACWxs=;
+        b=KRla/cX6u+fQ25BiUUL9rPaaqf9Dbrj6ia3mNDCptN4modjjGGss/DM1nFw6gqwqIO
+         qsu9SziVywULFkhaCk0uHlDTmXi4E1iqvF1Bex8TPM7kyXetbKlFZ1fmPGfUWu3bM3mY
+         ES0J/aqJ88fe84GVm+sG5brJkxQBMO33KxV4SGTOT0Wv2KEQsxXelHfIL80sHFci/uU9
+         um+yF2+XAabpYAq70jXAPxd2MIcZQ7YEJW5L+2Fx2DyEOmk5pGYc57vkofNy1RIsMapC
+         g0OJCop8BpK3Pr8FcbwWu2LL7DCdUV2mkOU2y/4MEHVPzTXXY1soJS4hJ0Mp6CKmUGmF
+         fgWQ==
+X-Gm-Message-State: AOAM533yniZw5J44SSvfMTt7rYgfNhmNFhe0BbfEbA6G17qbICg6Nvmx
+        UP/osxpvqRMk10qbqI+lu7wVrg==
+X-Google-Smtp-Source: ABdhPJwa34gJbrecNcEPGbDakofpI2pLoPnPba+wpgdfTvMMSVdHY38aLuZ2GCjwbwL60zBe/z5cYQ==
+X-Received: by 2002:a65:6694:: with SMTP id b20mr2910101pgw.303.1591251051118;
+        Wed, 03 Jun 2020 23:10:51 -0700 (PDT)
+Received: from [10.15.5.98] ([45.135.186.21])
+        by smtp.gmail.com with ESMTPSA id b1sm4604480pjc.33.2020.06.03.23.10.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 23:10:50 -0700 (PDT)
+Subject: Re: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        wangzhou1 <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        kbuild-all@lists.01.org
+References: <202006032110.BEbKqovX%lkp@intel.com>
+ <1591241524-6452-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200604033918.GA2286@gondor.apana.org.au>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <b6ad8af2-1cb7-faac-0446-5e09e97f3616@linaro.org>
+Date:   Thu, 4 Jun 2020 14:10:37 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200603165205.GU23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200604033918.GA2286@gondor.apana.org.au>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/6/4 上午12:52, Al Viro wrote:
-> On Wed, Jun 03, 2020 at 01:29:00AM -0400, Michael S. Tsirkin wrote:
->> On Wed, Jun 03, 2020 at 02:48:15AM +0100, Al Viro wrote:
->>> On Tue, Jun 02, 2020 at 04:45:05AM -0400, Michael S. Tsirkin wrote:
->>>> So vhost needs to poke at userspace *a lot* in a quick succession.  It
->>>> is thus benefitial to enable userspace access, do our thing, then
->>>> disable. Except access_ok has already been pre-validated with all the
->>>> relevant nospec checks, so we don't need that.  Add an API to allow
->>>> userspace access after access_ok and barrier_nospec are done.
->>> BTW, what are you going to do about vq->iotlb != NULL case?  Because
->>> you sure as hell do *NOT* want e.g. translate_desc() under STAC.
->>> Disable it around the calls of translate_desc()?
->>>
->>> How widely do you hope to stretch the user_access areas, anyway?
->> So ATM I'm looking at adding support for the packed ring format.
->> That does something like:
+
+On 2020/6/4 上午11:39, Herbert Xu wrote:
+> On Thu, Jun 04, 2020 at 11:32:04AM +0800, Zhangfei Gao wrote:
+>> Use strlcpy to fix the warning
+>> warning: 'strncpy' specified bound 64 equals destination size
+>>           [-Wstringop-truncation]
 >>
->> get_user(flags, desc->flags)
->> smp_rmb()
->> if (flags & VALID)
->> copy_from_user(&adesc, desc, sizeof adesc);
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> ---
+>>   drivers/crypto/hisilicon/qm.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> this would be a good candidate I think.
-> Perhaps, once we get stac/clac out of raw_copy_from_user() (coming cycle,
-> probably).  BTW, how large is the structure and how is it aligned?
-
-
-Each descriptor is 16 bytes, and 16 bytes aligned.
-
-
->
->>> BTW, speaking of possible annotations: looks like there's a large
->>> subset of call graph that can be reached only from vhost_worker()
->>> or from several ioctls, with all uaccess limited to that subgraph
->>> (thankfully).  Having that explicitly marked might be a good idea...
->> Sure. What's a good way to do that though? Any examples to follow?
->> Or do you mean code comments?
-> Not sure...  FWIW, the part of call graph from "known to be only
-> used by vhost_worker" (->handle_kick/vhost_work_init callback/
-> vhost_poll_init callback) and "part of ->ioctl()" to actual uaccess
-> primitives is fairly large - the longest chain is
-> handle_tx_net ->
->    handle_tx ->
->      handle_tx_zerocopy ->
->        get_tx_bufs ->
-> 	vhost_net_tx_get_vq_desc ->
-> 	  vhost_tx_batch ->
-> 	    vhost_net_signal_used ->
-> 	      vhost_add_used_and_signal_n ->
-> 		vhost_signal ->
-> 		  vhost_notify ->
-> 		    vhost_get_avail_flags ->
-> 		      vhost_get_avail ->
-> 			vhost_get_user ->
-> 			  __get_user()
-> i.e. 14 levels deep and the graph doesn't factorize well...
->
-> Something along the lines of "all callers of thus annotated function
-> must be annotated the same way themselves, any implicit conversion
-> of pointers to such functions to anything other than boolean yields
-> a warning, explicit cast is allowed only with __force", perhaps?
-> Then slap such annotations on vhost_{get,put,copy_to,copy_from}_user(),
-> on ->handle_kick(), a force-cast in the only caller of ->handle_kick()
-> and force-casts in the 3 callers in ->ioctl().
->
-> And propagate the annotations until the warnings stop, basically...
->
-> Shouldn't be terribly hard to teach sparse that kind of stuff and it
-> might be useful elsewhere.  It would act as a qualifier on function
-> pointers, with syntax ultimately expanding to __attribute__((something)).
-> I'll need to refresh my memories of the parser, but IIRC that shouldn't
-> require serious modifications.  Most of the work would be in
-> evaluate_call(), just before calling evaluate_symbol_call()...
-> I'll look into that; not right now, though.
->
-> BTW, __vhost_get_user() might be better off expanded in both callers -
-> that would get their structure similar to vhost_copy_{to,from}_user(),
-> especially if you expand __vhost_get_user_slow() as well.
->
-> Not sure I understand what's going with ->meta_iotlb[] - what are the
-> lifetime rules for struct vhost_iotlb_map
-
-
-It used to cache the translation for virtqueue address which. Vhost will 
-try to get those addresses from IOTLB and store them in meta_iotlb, and 
-it will be invalidated when userspace update or invalidate a new mapping.
-
-
-> and what prevents the pointers
-> from going stale?
->
->
-
-The vq->mutex is used to synchronize between the invalidation and vhost 
-workers.
+>> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+>> index f795fb5..224f3e2 100644
+>> --- a/drivers/crypto/hisilicon/qm.c
+>> +++ b/drivers/crypto/hisilicon/qm.c
+>> @@ -1574,7 +1574,7 @@ static int qm_alloc_uacce(struct hisi_qm *qm)
+>>   		.ops = &uacce_qm_ops,
+>>   	};
+>>   
+>> -	strncpy(interface.name, pdev->driver->name, sizeof(interface.name));
+>> +	strlcpy(interface.name, pdev->driver->name, sizeof(interface.name));
+> Should this even allow truncation? Perhaps it'd be better to fail
+> in case of an overrun?
+I think we do not need consider overrun, since it at most copy size-1 
+bytes to dest.
+ From the manual: strlcpy()
+        This  function  is  similar  to  strncpy(), but it copies at 
+most size-1 bytes to dest, always adds a terminating null
+        byte,
+And simple tested with smaller SIZE of interface.name,  only SIZE-1 is 
+copied, so it is safe.
+-#define UACCE_MAX_NAME_SIZE    64
++#define UACCE_MAX_NAME_SIZE    4
 
 Thanks
-
-
