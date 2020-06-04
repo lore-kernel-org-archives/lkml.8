@@ -2,97 +2,221 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A266C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5663420835
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA82206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgFDTdU (ORCPT
+        id S1729027AbgFDTeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:33:20 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:59628 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgFDTdT (ORCPT
+        Thu, 4 Jun 2020 15:34:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28524 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726666AbgFDTeD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:33:19 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id D09B120021;
-        Thu,  4 Jun 2020 21:33:14 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 21:33:13 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v2] drm/bridge: ti-sn65dsi86: ensure bridge suspend happens
- during PM sleep
-Message-ID: <20200604193313.GA94913@ravnborg.org>
-References: <20200604103438.23667-1-harigovi@codeaurora.org>
+        Thu, 4 Jun 2020 15:34:03 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054J5H01032168;
+        Thu, 4 Jun 2020 15:34:00 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31f6hcgyra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 15:33:59 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054JWX5W030638;
+        Thu, 4 Jun 2020 19:33:58 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf482mjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 19:33:58 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054JXtgd53215486
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jun 2020 19:33:56 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D07CFAE058;
+        Thu,  4 Jun 2020 19:33:55 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 885FDAE056;
+        Thu,  4 Jun 2020 19:33:54 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.82.189])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Jun 2020 19:33:54 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     hbathini@linux.ibm.com, mahesh@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
+Subject: [PATCH v4] powerpc/fadump: fix race between pstore write and fadump crash trigger
+Date:   Fri,  5 Jun 2020 01:03:51 +0530
+Message-Id: <20200604193351.65317-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604103438.23667-1-harigovi@codeaurora.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=edQTgYMH c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=LpQP-O61AAAA:8 a=M66uC3hkwJVUcRF4gK8A:9
-        a=CjuIK1q_8ugA:10 a=pioyyrs4ZptJ924tMmac:22 a=pHzHmUro8NiASowvMSCR:22
-        a=nt3jZW36AmriUCFCBwmW:22
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-04_12:2020-06-04,2020-06-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ cotscore=-2147483648 mlxscore=0 lowpriorityscore=0 phishscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1011 malwarescore=0 spamscore=0 bulkscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006040129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Harigovindan
-On Thu, Jun 04, 2020 at 04:04:38PM +0530, Harigovindan P wrote:
-> ti-sn65dsi86 bridge is enumerated as a runtime device.
-> 
-> Adding sleep ops to force runtime_suspend when PM suspend is
-> requested on the device.
+When we enter into fadump crash path via system reset we fail to update
+the pstore.
 
-Patch looks correct - but could you please explain why it is needed.
-What is the gain compared to not having this patch.
+On the system reset path we first update the pstore then we go for fadump
+crash. But the problem here is when all the CPUs try to get the pstore
+lock to initiate the pstore write, only one CPUs will acquire the lock
+and proceed with the pstore write. Since it in NMI context CPUs that fail
+to get lock do not wait for their turn to write to the pstore and simply
+proceed with the next operation which is fadump crash. One of the CPU who
+proceeded with fadump crash path triggers the crash and does not wait for
+the CPU who gets the pstore lock to complete the pstore update.
 
-I ask for two reasons:
-1) I really do not know
-2) this info should be in the changelog
+Timeline diagram to depicts the sequence of events that leads to an
+unsuccessful pstore update when we hit fadump crash path via system reset.
 
-Without a better changelog no ack from me - sorry.
+                 1    2     3    ...      n   CPU Threads
+                 |    |     |             |
+                 |    |     |             |
+ Reached to   -->|--->|---->| ----------->|
+ system reset    |    |     |             |
+ path            |    |     |             |
+                 |    |     |             |
+ Try to       -->|--->|---->|------------>|
+ acquire the     |    |     |             |
+ pstore lock     |    |     |             |
+                 |    |     |             |
+                 |    |     |             |
+ Got the      -->| +->|     |             |<-+
+ pstore lock     | |  |     |             |  |-->  Didn't get the
+                 | --------------------------+     lock and moving
+                 |    |     |             |        ahead on fadump
+                 |    |     |             |        crash path
+                 |    |     |             |
+  Begins the  -->|    |     |             |
+  process to     |    |     |             |<-- Got the chance to
+  update the     |    |     |             |    trigger the crash
+  pstore         | -> |     |    ... <-   |
+                 | |  |     |         |   |
+                 | |  |     |         |   |<-- Triggers the
+                 | |  |     |         |   |    crash
+                 | |  |     |         |   |      ^
+                 | |  |     |         |   |      |
+  Writing to  -->| |  |     |         |   |      |
+  pstore         | |  |     |         |   |      |
+                   |                  |          |
+       ^           |__________________|          |
+       |               CPU Relax                 |
+       |                                         |
+       +-----------------------------------------+
+                          |
+                          v
+            Race: crash triggered before pstore
+                  update completes
 
-	Sam
+To avoid this race condition a barrier is added on crash_fadump path, it
+prevents the CPU to trigger the crash until all the online CPUs completes
+their task.
 
-> 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
-> Changes in v2:
-> 	- Include bridge name in the commit message and 
-> 	remove dependent patchwork link from the commit
-> 	text as bridge is independent of OEM(Stephen Boyd)
-> 
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 6ad688b320ae..2eef755b2917 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -159,6 +159,8 @@ static int __maybe_unused ti_sn_bridge_suspend(struct device *dev)
->  
->  static const struct dev_pm_ops ti_sn_bridge_pm_ops = {
->  	SET_RUNTIME_PM_OPS(ti_sn_bridge_suspend, ti_sn_bridge_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
->  
->  static int status_show(struct seq_file *s, void *data)
-> -- 
-> 2.27.0
+A barrier is added to make sure all the secondary CPUs hit the
+crash_fadump function before we initiates the crash. A timeout is kept to
+ensure the primary CPU (one who initiates the crash) do not wait for
+secondary CPUs indefinitely.
+
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ arch/powerpc/kernel/fadump.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+ ---
+Chanagelog:
+
+v1 -> v3:
+   - https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-April/208267.html
+
+v3 -> v4:
+
+   - Now the primary CPU (one who triggers dump) waits for all secondary
+     CPUs to enter and then initiates the crash.
+
+ ---
+
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 59e60a9a9f5c..4953f3246220 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -32,6 +32,14 @@
+ #include <asm/fadump-internal.h>
+ #include <asm/setup.h>
+ 
++/*
++ * The CPU who acquired the lock to trigger the fadump crash should
++ * wait for other CPUs to enter.
++ *
++ * The timeout is in milliseconds.
++ */
++#define CRASH_TIMEOUT		500
++
+ static struct fw_dump fw_dump;
+ 
+ static void __init fadump_reserve_crash_area(u64 base);
+@@ -46,6 +54,8 @@ struct fadump_mrange_info reserved_mrange_info = { "reserved", NULL, 0, 0, 0 };
+ #ifdef CONFIG_CMA
+ static struct cma *fadump_cma;
+ 
++static atomic_t cpus_in_crash;
++
+ /*
+  * fadump_cma_init() - Initialize CMA area from a fadump reserved memory
+  *
+@@ -596,8 +606,10 @@ early_param("fadump_reserve_mem", early_fadump_reserve_mem);
+ 
+ void crash_fadump(struct pt_regs *regs, const char *str)
+ {
++	unsigned int msecs;
+ 	struct fadump_crash_info_header *fdh = NULL;
+ 	int old_cpu, this_cpu;
++	unsigned int ncpus = num_online_cpus() - 1; /* Do not include first CPU */
+ 
+ 	if (!should_fadump_crash())
+ 		return;
+@@ -613,6 +625,8 @@ void crash_fadump(struct pt_regs *regs, const char *str)
+ 	old_cpu = cmpxchg(&crashing_cpu, -1, this_cpu);
+ 
+ 	if (old_cpu != -1) {
++		atomic_inc(&cpus_in_crash);
++
+ 		/*
+ 		 * We can't loop here indefinitely. Wait as long as fadump
+ 		 * is in force. If we race with fadump un-registration this
+@@ -636,6 +650,16 @@ void crash_fadump(struct pt_regs *regs, const char *str)
+ 
+ 	fdh->online_mask = *cpu_online_mask;
+ 
++	/*
++	 * If we came in via system reset, wait a while for the secondary
++	 * CPUs to enter.
++	 */
++	if (TRAP(&(fdh->regs)) == 0x100) {
++		msecs = CRASH_TIMEOUT;
++		while ((atomic_read(&cpus_in_crash) < ncpus) && (--msecs > 0))
++			mdelay(1);
++	}
++
+ 	fw_dump.ops->fadump_trigger(fdh, str);
+ }
+ 
+-- 
+2.25.4
+
