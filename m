@@ -2,128 +2,184 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C42C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB24AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2D82065C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48F920659
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f1H/yZCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgFDJFY (ORCPT
+        id S1728451AbgFDJFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:05:24 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17895 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726664AbgFDJFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:05:22 -0400
-IronPort-SDR: BkG9audbXH0Q7wDp9MGIArZWnhRhMsVX2J7xviMCdUpeJjwl4b1QJC9QhQUZ+wo+AqOj+YGXxi
- 56+JQfpUaCfw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 02:05:20 -0700
-IronPort-SDR: lGWk+CCUCdOR70V4sjK0oQFGaloxTVzUi5nUADrIKYP+gEPX0IEIgsg1wyHyEChiyyFFEZLdIQ
- EVBzvpSpMRCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
-   d="scan'208";a="294264505"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Jun 2020 02:05:17 -0700
-Date:   Thu, 4 Jun 2020 17:01:50 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mfd@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, bhu@redhat.com, mtosatti@redhat.com,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6 0/7] Add interrupt support to FPGA DFL drivers
-Message-ID: <20200604090150.GA15317@yilunxu-OptiPlex-7050>
-References: <1591260388-15128-1-git-send-email-yilun.xu@intel.com>
+        Thu, 4 Jun 2020 05:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgFDJFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:05:40 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E05C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:05:39 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id u17so2580722ybi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2anrII6963AR/Wz74rXx28vPNao9EA9gxM6bR73yPeI=;
+        b=f1H/yZCDQdANRjrTLUGN/RkXjoJIzHFS696pGR0pXRViXoZLAKh/UARuvbh1X48Px3
+         JDn5L8mFulCRzmlgrYou9g9uuqW6R55VzVfbojHMDy4l9EGI0h6ixdXC4UWNS9iVMyqE
+         +eGtlEnlrUBl4D6vfz2nvp7MGO3JAWA5Y5esSE2hRUsZjnJ0ACkFYl77Pq90F6jZuf2v
+         us1jJeoPwL9TBVt9oo0GPoFus0A0dkbk77Cqg6X6v8UCk48uLpMjIGdUe5dmTdVMHPbz
+         xSZx/poAtg4RW8kP3IbNEIMW+tUPFq1GeeVizmyh8ku4O/MqrX+Xcy5vpHNIuNsatf5Y
+         hhBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2anrII6963AR/Wz74rXx28vPNao9EA9gxM6bR73yPeI=;
+        b=YVSNGP1tZ1cQtlf659cGLYVzhvm1xWfWhMVK/w1Hq+Cp8IJ8yGqQMe/GO+QiDwRuh1
+         i52QTIXldJMwGp8RT8yhEcrik4cgIl5VBYVKveqsk1SS+3MxLUp5Vu0Cil0dABLxJG0b
+         97WYtt1t0yNqoyfAuA2g6i957t+N4hoz6yTsNbh6nbNRPlVjz8984T65//R3CD1CZyl/
+         bNtZXg6IRN8CgxlaQ2KCgXF+O9v2aaVg9BqizotgYsD7e1m9LG9aJGrH3cn6Q/Sh7Ftc
+         zIf8SjWkEhyaKNqH6h1Jr1KrbQpCQ+/iRQoFjkkkW01qqXdSC53xzWRzB4EZOM78ewZv
+         jr3g==
+X-Gm-Message-State: AOAM532CLFJFT/bjRYQqp6nclHW0xJOMAqNE6UkISXkNRjJe1cK6gCpC
+        EMKHddBFPFx6HYgjTvrsaN+3az9yH8P+z5/fzan2Zw==
+X-Google-Smtp-Source: ABdhPJwUB8zlPDVGkckdwEUKCDS5uUAO24MKWJlh2vcz2/rOaAjyIUp+4d29i9exJq+fCNdYlP9yughLP5I8FopI27I=
+X-Received: by 2002:a25:4f08:: with SMTP id d8mr6779430ybb.125.1591261538833;
+ Thu, 04 Jun 2020 02:05:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1591260388-15128-1-git-send-email-yilun.xu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1591253979-29067-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1591253979-29067-1-git-send-email-sumit.garg@linaro.org>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Thu, 4 Jun 2020 12:05:27 +0300
+Message-ID: <CAD8XO3bw5zofRynNWUW61nb8Y=2sVMqXE0zWKFQYCHr5CQTNYg@mail.gmail.com>
+Subject: Re: [PATCH v2] Documentation: tee: Document TEE kernel interface
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Jens Wiklander <jens.wiklander@linaro.org>, corbet@lwn.net,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        op-tee@lists.trustedfirmware.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I misspelled Moritz's mail address. I'll resent the patchset. Please
-ignore this set.
+Looks good for me.
 
-Sorry for inconvenience.
+Reviewed-by: Maxim Uvarov <maxim.uvarov@linaro.org>
 
-On Thu, Jun 04, 2020 at 04:46:21PM +0800, Xu Yilun wrote:
-> This patchset add interrupt support to FPGA DFL drivers.
-> 
-> With these patches, DFL driver will parse and assign interrupt resources
-> for enumerated feature devices and their sub features.
-> 
-> This patchset also introduces a set of APIs for user to monitor DFL
-> interrupts. Three sub features (DFL FME error, DFL AFU error and user
-> interrupt) drivers now support these APIs.
-> 
-> Patch #1: DFL framework change. Accept interrupt info input from DFL bus
->           driver, and add interrupt parsing and assignment for feature
->           sub devices.
-> Patch #2: DFL pci driver change, add interrupt info on DFL enumeration.
-> Patch #3: DFL framework change. Add helper functions for feature sub
->           device drivers to handle interrupt and notify users.
-> Patch #4: Add interrupt support for AFU error reporting sub feature.
-> Patch #5: Add interrupt support for FME global error reporting sub
->           feature.
-> Patch #6: Add interrupt support for a new sub feature, to handle user
->           interrupts implemented in AFU.
-> Patch #7: Documentation for DFL interrupt handling.
-> 
-> Main changes from v1: 
->  - Early validating irq table for each feature in parse_feature_irq()
->    in Patch #1. 
->  - Changes IOCTL interfaces. use DFL_FPGA_FME/PORT_XXX_GET_IRQ_NUM
->    instead of DFL_FPGA_FME/PORT_XXX_GET_INFO, delete flag field for 
->    DFL_FPGA_FME/PORT_XXX_SET_IRQ param
-> 
-> Main changes from v2:
->  - put parse_feature_irqs() inside create_feature_instance().
->  - refines code for dfl_fpga_set_irq_triggers, delete local variable j.
->  - put_user() instead of copy_to_user() for DFL_FPGA_XXX_GET_IRQ_NUM IOCTL
-> 
-> Main changes from v3:
->  - rebased to 5.7-rc1.
->  - fail the dfl enumeration when irq parsing error happens.
->  - Add 2 helper functions in dfl.c to handle generic irq ioctls in feature
->    drivers.
-> 
-> Main changes from v4:
->  - Minor fixes for Hao's comments.
-> 
-> Main changes from v5:
->  - Remove unnecessary type casting in Patch #1 & #3.
->  - Minor fixes for Moritz's comments.
-> 
-> Xu Yilun (7):
->   fpga: dfl: parse interrupt info for feature devices on enumeration
->   fpga: dfl: pci: add irq info for feature devices enumeration
->   fpga: dfl: introduce interrupt trigger setting API
->   fpga: dfl: afu: add interrupt support for port error reporting
->   fpga: dfl: fme: add interrupt support for global error reporting
->   fpga: dfl: afu: add AFU interrupt support
->   Documentation: fpga: dfl: add descriptions for interrupt related
->     interfaces.
-> 
->  Documentation/fpga/dfl.rst    |  19 +++
->  drivers/fpga/dfl-afu-error.c  |  17 +++
->  drivers/fpga/dfl-afu-main.c   |  32 +++++
->  drivers/fpga/dfl-fme-error.c  |  18 +++
->  drivers/fpga/dfl-fme-main.c   |   6 +
->  drivers/fpga/dfl-pci.c        |  81 +++++++++--
->  drivers/fpga/dfl.c            | 308 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/fpga/dfl.h            |  57 ++++++++
->  include/uapi/linux/fpga-dfl.h |  82 +++++++++++
->  9 files changed, 611 insertions(+), 9 deletions(-)
-> 
-> -- 
+On Thu, 4 Jun 2020 at 10:00, Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Update documentation with TEE bus infrastructure which provides an
+> interface for kernel client drivers to communicate with corresponding
+> Trusted Application.
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>
+> Changes in v2:
+> - Add TEE client driver example snippet.
+>
+>  Documentation/tee.txt | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>
+> diff --git a/Documentation/tee.txt b/Documentation/tee.txt
+> index c8fad81..350dd40 100644
+> --- a/Documentation/tee.txt
+> +++ b/Documentation/tee.txt
+> @@ -53,6 +53,66 @@ clients, forward them to the TEE and send back the results. In the case of
+>  supplicants the communication goes in the other direction, the TEE sends
+>  requests to the supplicant which then sends back the result.
+>
+> +The TEE kernel interface
+> +========================
+> +
+> +Kernel provides a TEE bus infrastructure where a Trusted Application is
+> +represented as a device identified via Universally Unique Identifier (UUID) and
+> +client drivers register a table of supported device UUIDs.
+> +
+> +TEE bus infrastructure registers following APIs:
+> +-  match(): iterates over the client driver UUID table to find a corresponding
+> +   match for device UUID. If a match is found, then this particular device is
+> +   probed via corresponding probe API registered by the client driver. This
+> +   process happens whenever a device or a client driver is registered with TEE
+> +   bus.
+> +-  uevent(): notifies user-space (udev) whenever a new device is registered on
+> +   TEE bus for auto-loading of modularized client drivers.
+> +
+> +TEE bus device enumeration is specific to underlying TEE implementation, so it
+> +is left open for TEE drivers to provide corresponding implementation.
+> +
+> +Then TEE client driver can talk to a matched Trusted Application using APIs
+> +listed in include/linux/tee_drv.h.
+> +
+> +TEE client driver example
+> +-------------------------
+> +
+> +Suppose a TEE client driver needs to communicate with a Trusted Application
+> +having UUID: ``ac6a4085-0e82-4c33-bf98-8eb8e118b6c2``, so driver registration
+> +snippet would look like::
+> +
+> +       static const struct tee_client_device_id client_id_table[] = {
+> +               {UUID_INIT(0xac6a4085, 0x0e82, 0x4c33,
+> +                          0xbf, 0x98, 0x8e, 0xb8, 0xe1, 0x18, 0xb6, 0xc2)},
+> +               {}
+> +       };
+> +
+> +       MODULE_DEVICE_TABLE(tee, client_id_table);
+> +
+> +       static struct tee_client_driver client_driver = {
+> +               .id_table       = client_id_table,
+> +               .driver         = {
+> +                       .name           = DRIVER_NAME,
+> +                       .bus            = &tee_bus_type,
+> +                       .probe          = client_probe,
+> +                       .remove         = client_remove,
+> +               },
+> +       };
+> +
+> +       static int __init client_init(void)
+> +       {
+> +               return driver_register(&client_driver.driver);
+> +       }
+> +
+> +       static void __exit client_exit(void)
+> +       {
+> +               driver_unregister(&client_driver.driver);
+> +       }
+> +
+> +       module_init(client_init);
+> +       module_exit(client_exit);
+> +
+>  OP-TEE driver
+>  =============
+>
+> @@ -112,6 +172,14 @@ kernel are handled by the kernel driver. Other RPC messages will be forwarded to
+>  tee-supplicant without further involvement of the driver, except switching
+>  shared memory buffer representation.
+>
+> +OP-TEE device enumeration
+> +-------------------------
+> +
+> +OP-TEE provides a pseudo Trusted Application: drivers/tee/optee/device.c in
+> +order to support device enumeration. In other words, OP-TEE driver invokes this
+> +application to retrieve a list of Trusted Applications which can be registered
+> +as devices on the TEE bus.
+> +
+>  AMD-TEE driver
+>  ==============
+>
+> --
 > 2.7.4
+>
