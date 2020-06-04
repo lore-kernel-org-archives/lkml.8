@@ -2,130 +2,95 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4D9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24384C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9C62074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591252679;
-	bh=O1a535rP16XFYofg4bMZWQkFl2JLEEYgVYDf/xPj9AA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KU9hpYP9dh0dfB7Jpz3N/GXvMKHk6rEBmHfXNAJVsJJ2PIegh+D6/UzbfDJ4U/oJv
-	 VTy60qGZ5PcK6cOhWB1WAOHDf77JjaP0q+ESTAeYrICulTjRtfIhxvNAcJASeK6SkA
-	 h5aBXtQLZ9oYbMmoQKtZOPTBHXtas149KWB78fEU=
+	by mail.kernel.org (Postfix) with ESMTP id 78DD62075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="N/XziD7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgFDGh6 (ORCPT
+        id S1727091AbgFDGiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbgFDGh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:37:57 -0400
-Received: from kernel.org (unknown [87.71.78.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE6B9206C3;
-        Thu,  4 Jun 2020 06:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591252677;
-        bh=O1a535rP16XFYofg4bMZWQkFl2JLEEYgVYDf/xPj9AA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JfERwxMXEu2kI9XoIT9dWNXO1rREUwNy4knLypfsDDn3RoK04PQ+VcJ9cU4AiLvZ9
-         zgKMGrd4au2WatdA8yMk1LlH6XWepwggHO+6JEHEW8/tg+Uifk/2Ah/6wTBJLxUsMO
-         hIlar1DcvGQ6J2i69MlWxGfbGkXBQIZ5oY21iu3Y=
-Date:   Thu, 4 Jun 2020 09:37:45 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Message-ID: <20200604063745.GB202650@kernel.org>
-References: <20200519165422.GA5838@roeck-us.net>
- <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
- <20200519194215.GA71941@roeck-us.net>
- <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
- <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
- <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
- <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
- <20200603211416.GA1740285@iweiny-DESK2.sc.intel.com>
- <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
- <20200604062226.GA1740345@iweiny-DESK2.sc.intel.com>
+        Thu, 4 Jun 2020 02:38:05 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.162]:11134 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgFDGiF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 02:38:05 -0400
+X-Greylist: delayed 346 seconds by postgrey-1.27 at vger.kernel.org; Thu, 04 Jun 2020 02:38:04 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1591252683;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=iYDIjqqc8Q9Y3o3HehlKUVb4sDPktGxVlK5z+tGCBwc=;
+        b=N/XziD7ZyPlvy5sBZTvQALHZuUuJSZVp5+tcnGoenhRH2JN2cdqyXJw8da3GF102Ja
+        dR6UCFNOrOIXXUQl7OSnXgRMWXvtbFRM8L4Fr0+BMeHgBxbaC64tLjq3AbA7hRhTFeYz
+        CJf9douk8qU9EAE3uvpal+OfSHFw6jpcU7t3YfDS9NbJ5pRzO38lRWuM805GVpYde0IG
+        RshcbQHQ7Em9VMikkDC2ytxNwWpe5KrlslhvIcClvtjDAiSaTOtFN49Xaofi2Vqv+xN0
+        ZcBMM4oyqJ3Rb47nHByS9h4Y0rt2FL9TyZ5mQ29KusLh1nEmETfYXLyDpfHA/n4dhYaW
+        WJCQ==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMGUch6lU2B"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.50.177]
+        by smtp.strato.de (RZmta 46.9.1 DYNA|AUTH)
+        with ESMTPSA id V08b19w546W04DJ
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 4 Jun 2020 08:32:00 +0200 (CEST)
+Subject: Re: [PATCH] can: Replace zero-length array with flexible-array
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200507185118.GA14022@embeddedor>
+ <0420f571-2d6a-c830-2029-8da60e3c2094@hartkopp.net>
+ <73903bc6-afb7-f30e-28ef-065d41c6ace6@embeddedor.com>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <74c08a71-afb5-aba4-2c30-c342b4a7e61f@hartkopp.net>
+Date:   Thu, 4 Jun 2020 08:31:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604062226.GA1740345@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <73903bc6-afb7-f30e-28ef-065d41c6ace6@embeddedor.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 11:22:26PM -0700, Ira Weiny wrote:
-> On Wed, Jun 03, 2020 at 04:44:17PM -0700, Guenter Roeck wrote:
-> 
-> With linux-next on sparc I too see the spinlock issue; something like:
-> 
-> ...
-> Starting syslogd: BUG: spinlock recursion on CPU#0, S01syslogd/139
->  lock: 0xf53ef350, .magic: dead4ead, .owner: S01syslogd/139, .owner_cpu: 0
-> CPU: 0 PID: 139 Comm: S01syslogd Not tainted 5.7.0-next-20200603 #1
-> [f0067d00 : 
-> do_raw_spin_lock+0xa8/0xd8 ] 
-> [f00d598c : 
-> copy_page_range+0x328/0x804 ] 
-> [f0025c34 : 
-> dup_mm+0x334/0x434 ] 
-> [f0027198 : 
-> copy_process+0x1248/0x12d4 ] 
-> [f00273b8 : 
-> _do_fork+0x54/0x30c ] 
-> [f00276e4 : 
-> do_fork+0x5c/0x6c ] 
-> [f000de44 : 
-> sparc_do_fork+0x18/0x38 ] 
-> [f000b7f4 : 
-> do_syscall+0x34/0x40 ] 
-> [5010cd4c : 
-> 0x5010cd4c ] 
-> 
-> 
-> I'm going to bisect between there and HEAD.
+Hi Gustavo,
 
-The sparc issue should be fixed by 
+On 04.06.20 02:58, Gustavo A. R. Silva wrote:
 
-https://lore.kernel.org/lkml/20200526173302.377-1-will@kernel.org
- 
-> Ira
+> Sorry for the late reply. I totally lost track of this thread. :/
 
--- 
-Sincerely yours,
-Mike.
+NP. At least your workflow seems to work :o)
+
+> pahole shows exactly the same output either if cf is a zero-length array or
+> a flexible-array member:
+> 
+> $ pahole -C 'can_skb_priv' drivers/net/can/dev.o
+> 
+> struct can_skb_priv {
+> 	int                        ifindex;              /*     0     4 */
+> 	int                        skbcnt;               /*     4     4 */
+> 	struct can_frame           cf[] __attribute__((__aligned__(8))); /*     8     0 */
+> 
+> 	/* size: 8, cachelines: 1, members: 3 */
+> 	/* forced alignments: 1 */
+> 	/* last cacheline: 8 bytes */
+> } __attribute__((__aligned__(8)));
+> 
+> So, it seems everything should fine. :)
+
+Great! Thanks for the info - and how I could have checked it on my own, too.
+
+Best,
+Oliver
