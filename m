@@ -2,199 +2,172 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20184C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A85C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB47A2077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C733C206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="1hy7H4aw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8MKx8Wk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgFDMJQ (ORCPT
+        id S1728328AbgFDMJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
+        Thu, 4 Jun 2020 08:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728024AbgFDMJQ (ORCPT
+        with ESMTP id S1728024AbgFDMJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:09:16 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A71FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:09:15 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x6so5777015wrm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:09:15 -0700 (PDT)
+        Thu, 4 Jun 2020 08:09:33 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE76C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:09:32 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id w90so4922439qtd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:09:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLOpxtZ/2WYBgqxYGSCuWHrLASkKLBzIuDEydJEL7OQ=;
-        b=1hy7H4awXmXbu3C9rteE5RlVnIe/awJ82GAcp00UQC+yLE20+qTsPA+3g1bgSFIYWh
-         hiX3TH7uC7VutKh3YAl2NTkqE3kDJBlqcNum6m9dMpTFZfono2JA8Lr+itzZ2Idj9ozJ
-         IxJmbLDjjnQC6qJApuWuaO+MQwkeQSPGFxpa0kEBy/4WM6/d6LPeLa+JBGjMLkoUojUC
-         EyasmnhFnJyKB7nUBnCSXFCFMatpM5xK0c59gNSi/F1WdmFLX4YQA0CpmLii/ZOVl5Zc
-         ceVJeVCudX5rmRnjMySUM5HTC7ncJ9XRQ5sDcWXzUMQNaGhh3smCPEZjsQNZlFU0cRuc
-         DAXQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+jNY0OxQKLd1WvX6JnPs3onyVCUthdyvu9aUn5huzkI=;
+        b=L8MKx8WkT410qkYvFSaTqRUr4fVYNHkSx0TMJzFvPuA2qozcz5nNF31doad1qmcZKG
+         P+/u60vsnCSow0+vcJywo5Va0rIDFMJI7XeaoXkowyTEd1A4yhgXqJZFl5lMpn1Vr9MN
+         gsB2kNOJ1Dbye6GCsOfSyAieGfa9zN8RmLiaawnsVZugTqUP3yMbERpToeMHPoNX+wQO
+         J+1uylPX/SIoay8Hu+MJW1JpozVVWfPbXAcE+VjSHVQpSbbt4WR8nzbWsdZeFFl+Wfp7
+         EmjmiF7TSLVX7Qm4hr7oiO1r7VTVCt0CkzDw4eb0qlSjivO5ACgwGxQ7h7e+ZS3g6fax
+         c2QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLOpxtZ/2WYBgqxYGSCuWHrLASkKLBzIuDEydJEL7OQ=;
-        b=T2GYFPmXenYsFscfnzIgvGyPq6yTwlXSGgvfYuKqMJBk7rhxcA449Z3/QG6ThhFgA1
-         qSBYz7d0WRSehfrg3d95eKYKJMjai5MVoNptwFoPaX++B6VxPr9vd0/0MG95vPLmlKmc
-         jMHG3jwnAIITzIbgKF+3zunydaq7cZNYNTaTCxKy4LcucEdJVspEGqQDGwHkxt+uDPyD
-         UkurtAGfr8Pcm9+m+kUHmTLOgRQsoxMU7teIOMgYO2Nq69mXe20MF1f/BJ54mXhvO88r
-         hzYqXkqF010GNcT+6QSQIAAHP2xUfT7dgwYdijvw79N6bBjxWIy5tZWzW+zlz7yeq8Xq
-         hrIQ==
-X-Gm-Message-State: AOAM533t6YLEeejRncTbFg07jFWJfKHOUCTz5TTPQHQ4tkt7do3FPYWu
-        CLxHqYc/2p16hAaijCbRo3Q8ow==
-X-Google-Smtp-Source: ABdhPJze958wqzKWPLBGHJhB470MblvxDP4tTNXuOJ5ziAVLe3vlHl6olnns0TOcrFMXkjuar1YWUQ==
-X-Received: by 2002:a5d:4a89:: with SMTP id o9mr4016933wrq.267.1591272554144;
-        Thu, 04 Jun 2020 05:09:14 -0700 (PDT)
-Received: from localhost.localdomain (dh207-97-4.xnet.hr. [88.207.97.4])
-        by smtp.googlemail.com with ESMTPSA id s2sm6740549wmh.11.2020.06.04.05.09.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 05:09:13 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, absahu@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH] clk: qcom: ipq4019: fix apss cpu overclocking
-Date:   Thu,  4 Jun 2020 14:09:05 +0200
-Message-Id: <20200604120905.1344074-1-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+jNY0OxQKLd1WvX6JnPs3onyVCUthdyvu9aUn5huzkI=;
+        b=iTvW0BaTm5dIbgDwx5ZFLLLXlU4lsFlUBVa4XdQXUNjK9aox2zGeEmuWuGCZfXXIb5
+         4XANLMp5qU39x718SvE52LFsxSx6WYu8IQijsOzL4jiBdy9FgvnZFvU4X0PzLfUzvnEw
+         3AmKtarqPeC3ScBWG5dCUeE9VaRwk/FAIkfSLHATzJSimVPUXmCXVD0kbUJuhehjq00y
+         ZR62IbpSns1djijGL9gsiDTfkQopBxqfRita+0MhNLNCdsh9r2UvZub3ub9wkN7kukAV
+         ssMlnuGShxs61dbYRFblh7ry9XQh2ePURyAt4hXMuxgKg6db5HvgbgAR4m+Gd6aDZSlQ
+         DnvA==
+X-Gm-Message-State: AOAM531k+OWcikvlNWXDJjr7v3ebp1Cga05aL31/ZIXETNkSJuzRiltW
+        GDu9y+qmhGo1Psp2RPN0bGQeR3usayVt3KylfDi7zA==
+X-Google-Smtp-Source: ABdhPJyC/ODun0saZltRdN6aUWpqSrTbDPEU82krsoQnxXg3qXfZSSCrXgNUXCpEpixt5SDFFEFb5jC0FeGyhciChxA=
+X-Received: by 2002:ac8:32dc:: with SMTP id a28mr4156710qtb.158.1591272571334;
+ Thu, 04 Jun 2020 05:09:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1585233617.git.andreyknvl@google.com> <6644839d3567df61ade3c4b246a46cacbe4f9e11.1585233617.git.andreyknvl@google.com>
+In-Reply-To: <6644839d3567df61ade3c4b246a46cacbe4f9e11.1585233617.git.andreyknvl@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 4 Jun 2020 14:09:20 +0200
+Message-ID: <CACT4Y+aH-ScaO4wwciZQbOB-tLXYun3vFwGNf8MOpCQ+JMbptg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] kcov: move t->kcov assignments into kcov_start/stop
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+On Thu, Mar 26, 2020 at 3:44 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> Every time kcov_start/stop() is called, t->kcov is also assigned, so
+> move the assignment into the functions.
+>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-There's an interaction issue between the clk changes:"
-clk: qcom: ipq4019: Add the apss cpu pll divider clock node
-clk: qcom: ipq4019: remove fixed clocks and add pll clocks
-" and the cpufreq-dt.
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-cpufreq-dt is now spamming the kernel-log with the following:
-
-[ 1099.190658] cpu cpu0: dev_pm_opp_set_rate: failed to find current OPP
-for freq 761142857 (-34)
-
-This only happens on certain devices like the Compex WPJ428
-and AVM FritzBox!4040. However, other devices like the Asus
-RT-AC58U and Meraki MR33 work just fine.
-
-The issue stem from the fact that all higher CPU-Clocks
-are achieved by switching the clock-parent to the P_DDRPLLAPSS
-(ddrpllapss). Which is set by Qualcomm's proprietary bootcode
-as part of the DDR calibration.
-
-For example, the FB4040 uses 256 MiB Nanya NT5CC128M16IP clocked
-at round 533 MHz (ddrpllsdcc = 190285714 Hz).
-
-whereas the 128 MiB Nanya NT5CC64M16GP-DI in the ASUS RT-AC58U is
-clocked at a slightly higher 537 MHz ( ddrpllsdcc = 192000000 Hz).
-
-This patch attempts to fix the issue by modifying
-clk_cpu_div_round_rate(), clk_cpu_div_set_rate(), clk_cpu_div_recalc_rate()
-to use a new qcom_find_freq_close() function, which returns the closest
-matching frequency, instead of the next higher. This way, the SoC in
-the FB4040 (with its max clock speed of 710.4 MHz) will no longer
-try to overclock to 761 MHz.
-
-Fixes: d83dcacea18 ("clk: qcom: ipq4019: Add the apss cpu pll divider clock node")
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: John Crispin <john@phrozen.org>
-Tested-by: Robert Marko <robert.marko@sartura.hr>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
----
- drivers/clk/qcom/gcc-ipq4019.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/qcom/gcc-ipq4019.c b/drivers/clk/qcom/gcc-ipq4019.c
-index ef5137fd50f3..eeed50573752 100644
---- a/drivers/clk/qcom/gcc-ipq4019.c
-+++ b/drivers/clk/qcom/gcc-ipq4019.c
-@@ -1243,6 +1243,29 @@ static const struct clk_fepll_vco gcc_fepll_vco = {
- 	.reg = 0x2f020,
- };
- 
-+
-+const struct freq_tbl *qcom_find_freq_close(const struct freq_tbl *f,
-+					     unsigned long rate)
-+{
-+	const struct freq_tbl *last = NULL;
-+
-+	for ( ; f->freq; f++) {
-+		if (rate == f->freq)
-+			return f;
-+
-+		if (f->freq > rate) {
-+			if (!last ||
-+			   (f->freq - rate) < (rate - last->freq))
-+				return f;
-+			else
-+				return last;
-+		}
-+		last = f;
-+	}
-+
-+	return last;
-+}
-+
- /*
-  * Round rate function for APSS CPU PLL Clock divider.
-  * It looks up the frequency table and returns the next higher frequency
-@@ -1255,7 +1278,7 @@ static long clk_cpu_div_round_rate(struct clk_hw *hw, unsigned long rate,
- 	struct clk_hw *p_hw;
- 	const struct freq_tbl *f;
- 
--	f = qcom_find_freq(pll->freq_tbl, rate);
-+	f = qcom_find_freq_close(pll->freq_tbl, rate);
- 	if (!f)
- 		return -EINVAL;
- 
-@@ -1278,7 +1301,7 @@ static int clk_cpu_div_set_rate(struct clk_hw *hw, unsigned long rate,
- 	u32 mask;
- 	int ret;
- 
--	f = qcom_find_freq(pll->freq_tbl, rate);
-+	f = qcom_find_freq_close(pll->freq_tbl, rate);
- 	if (!f)
- 		return -EINVAL;
- 
-@@ -1305,6 +1328,7 @@ static unsigned long
- clk_cpu_div_recalc_rate(struct clk_hw *hw,
- 			unsigned long parent_rate)
- {
-+	const struct freq_tbl *f;
- 	struct clk_fepll *pll = to_clk_fepll(hw);
- 	u32 cdiv, pre_div;
- 	u64 rate;
-@@ -1325,7 +1349,11 @@ clk_cpu_div_recalc_rate(struct clk_hw *hw,
- 	rate = clk_fepll_vco_calc_rate(pll, parent_rate) * 2;
- 	do_div(rate, pre_div);
- 
--	return rate;
-+	f = qcom_find_freq_close(pll->freq_tbl, rate);
-+	if (!f)
-+		return rate;
-+
-+	return f->freq;
- };
- 
- static const struct clk_ops clk_regmap_cpu_div_ops = {
--- 
-2.26.2
-
+> ---
+>  kernel/kcov.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+>
+> diff --git a/kernel/kcov.c b/kernel/kcov.c
+> index cc5900ac2467..888d0a236b04 100644
+> --- a/kernel/kcov.c
+> +++ b/kernel/kcov.c
+> @@ -309,10 +309,12 @@ void notrace __sanitizer_cov_trace_switch(u64 val, u64 *cases)
+>  EXPORT_SYMBOL(__sanitizer_cov_trace_switch);
+>  #endif /* ifdef CONFIG_KCOV_ENABLE_COMPARISONS */
+>
+> -static void kcov_start(struct task_struct *t, unsigned int size,
+> -                       void *area, enum kcov_mode mode, int sequence)
+> +static void kcov_start(struct task_struct *t, struct kcov *kcov,
+> +                       unsigned int size, void *area, enum kcov_mode mode,
+> +                       int sequence)
+>  {
+>         kcov_debug("t = %px, size = %u, area = %px\n", t, size, area);
+> +       t->kcov = kcov;
+>         /* Cache in task struct for performance. */
+>         t->kcov_size = size;
+>         t->kcov_area = area;
+> @@ -326,6 +328,7 @@ static void kcov_stop(struct task_struct *t)
+>  {
+>         WRITE_ONCE(t->kcov_mode, KCOV_MODE_DISABLED);
+>         barrier();
+> +       t->kcov = NULL;
+>         t->kcov_size = 0;
+>         t->kcov_area = NULL;
+>  }
+> @@ -333,7 +336,6 @@ static void kcov_stop(struct task_struct *t)
+>  static void kcov_task_reset(struct task_struct *t)
+>  {
+>         kcov_stop(t);
+> -       t->kcov = NULL;
+>         t->kcov_sequence = 0;
+>         t->kcov_handle = 0;
+>  }
+> @@ -584,9 +586,8 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+>                         return mode;
+>                 kcov_fault_in_area(kcov);
+>                 kcov->mode = mode;
+> -               kcov_start(t, kcov->size, kcov->area, kcov->mode,
+> +               kcov_start(t, kcov, kcov->size, kcov->area, kcov->mode,
+>                                 kcov->sequence);
+> -               t->kcov = kcov;
+>                 kcov->t = t;
+>                 /* Put either in kcov_task_exit() or in KCOV_DISABLE. */
+>                 kcov_get(kcov);
+> @@ -778,7 +779,6 @@ void kcov_remote_start(u64 handle)
+>         kcov = remote->kcov;
+>         /* Put in kcov_remote_stop(). */
+>         kcov_get(kcov);
+> -       t->kcov = kcov;
+>         /*
+>          * Read kcov fields before unlock to prevent races with
+>          * KCOV_DISABLE / kcov_remote_reset().
+> @@ -792,7 +792,6 @@ void kcov_remote_start(u64 handle)
+>         if (!area) {
+>                 area = vmalloc(size * sizeof(unsigned long));
+>                 if (!area) {
+> -                       t->kcov = NULL;
+>                         kcov_put(kcov);
+>                         return;
+>                 }
+> @@ -800,7 +799,7 @@ void kcov_remote_start(u64 handle)
+>         /* Reset coverage size. */
+>         *(u64 *)area = 0;
+>
+> -       kcov_start(t, size, area, mode, sequence);
+> +       kcov_start(t, kcov, size, area, mode, sequence);
+>
+>  }
+>  EXPORT_SYMBOL(kcov_remote_start);
+> @@ -873,7 +872,6 @@ void kcov_remote_stop(void)
+>                 return;
+>
+>         kcov_stop(t);
+> -       t->kcov = NULL;
+>
+>         spin_lock(&kcov->lock);
+>         /*
+> --
+> 2.26.0.rc2.310.g2932bb562d-goog
+>
