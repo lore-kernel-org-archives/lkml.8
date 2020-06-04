@@ -2,164 +2,81 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E4520772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:07:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="norj+OxS"
+	by mail.kernel.org (Postfix) with ESMTP id D5B2B206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgFDNHr (ORCPT
+        id S1728337AbgFDNJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgFDNHq (ORCPT
+        Thu, 4 Jun 2020 09:09:09 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:42722 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbgFDNJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:07:46 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DBAC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:07:46 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id z1so5122739qtn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=spr/NPPAffPb40s6qAmeni6NJsTnXmWG1bgJUhXLpiA=;
-        b=norj+OxSaUTJR+9g7Idf9dJWECEfCxDtdbIKfefQPmAxyGVw44ghGHtq7QCfhtF2tm
-         9UNCq51UrwREXWhc49MuquhNb9DXGSEZ99NBilcw6sZpXpwnmYtKDXV0d/BcnWAi0nBq
-         N7L2m3cxHRg1ZPEA5LPJgBo6Xc2ffE+1PUBSpzhOutKIY6pSSWsi1Gwo7MbVFIzkfwHW
-         o0slbeVE9Co4pYsw/k0kUK5f1FWTAy3tGm/KNo/kWG91T9wSkjwDyY5MeeBGgOkIefA/
-         9SyR5d0Pl6yih6tSkllfzzujaIozZcx45HgrAxBlIkbrGC1Futr/W3RGxuHgIbD1Tj/C
-         MNOQ==
+        Thu, 4 Jun 2020 09:09:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id v16so3564750ios.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:09:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=spr/NPPAffPb40s6qAmeni6NJsTnXmWG1bgJUhXLpiA=;
-        b=UjP4E+DhYF3nZL2MoE/cOIUK+nJ+FmmjytKEMTiwWUcd5AkBuTSgOrMmF0zJuXHiKs
-         f4C+ZjM92AHonjc0mpTrZ8ML/1xsrDwCP8/dyZnwwQ8oyAggqhOTBj0KxSscBx3yiEdg
-         vbIADQXL7CMMiTPLHjESJ4hRefwBuswR2UpLKhqRNqhk2z/7kwxb/KAdwp1dqINFN4Td
-         LLAe7jpuX2ZrbTgdHijJXZIVDXALiFfQnNsnTeita/iAcWHRgjnOxn1AQyTM2gZ5lN60
-         DrvVdSmCqN6w/BVGCSqSHWKS2kZNOAqNOC93ljEIkxRkR2Jg4fhP7X7iP9xG/ammZVUW
-         NthQ==
-X-Gm-Message-State: AOAM532md3S0W+Lz3iDOVE4qAlN9XAmcF4vaHBxcoQjxda0xp9lky9YF
-        NZE/vz3/kk3Xp0d6MaN29sx9EGoBOOjmywkMtspl/g==
-X-Google-Smtp-Source: ABdhPJzzvRzkjlxDhSeDQfQb84Cx99UMX4PqcBGOgNyhBZlIlFtkEM0SI8ZjH5kLg6imGNDp3dJA30f75fgCcuKlj0M=
-X-Received: by 2002:ac8:36c2:: with SMTP id b2mr4314281qtc.257.1591276064973;
- Thu, 04 Jun 2020 06:07:44 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=u+o2RcyaHSofblAhvnfVshy/ql7Met8tthhkmRydCTY=;
+        b=rK+KaOYvwV5puhXTVam8FUnSLMk0YaQa9/7RqhHLpA6vVJ0/iO5Q6valRQXE5E2vR0
+         j3rL+FZ7pZ0bRtJOQj3MZBbeO+pYuqy7Py9V8+43cn7J5DWB4gmcAhe2h20EpE5zr7QR
+         FBVb+vdktCwuoxs/5b4soqDvQj0NDbD4d0tlsLZpXUOdDuVtEV0JiKFf7ZoijU8WdtEU
+         5uu5Jf3SWqNYTmI6Lm+BpAYywYZsIaoyTFz8COP+ekl8oDxbj+0Iq0ZzoyhBAsH1rVD5
+         B7ML84np32dO805S2EAGjD8qYiniHjPNwbIcDgnKDOstAe/tJrki47nYAURyaJ7wO8dD
+         uXqw==
+X-Gm-Message-State: AOAM530piz0sor/t+7NQRDhwGO+VrDEI4DHFhBaQYgFEGIX2Vgy138S/
+        cskxfCKMBPrQP40eASBW50mZCRIfimjMDn+oeXGveD+kCbaB
+X-Google-Smtp-Source: ABdhPJzv0fpa1LEbfmP9G7nInep6IYlF2rdPEZ+bA0p++ozOTMgXiZEO3IRN+O2prm6dT0jXr2eer3ZzH36mkQc4A3bweWh9DzjZ
 MIME-Version: 1.0
-References: <cover.1585233617.git.andreyknvl@google.com> <f70377945d1d8e6e4916cbce871a12303d6186b4.1585233617.git.andreyknvl@google.com>
-In-Reply-To: <f70377945d1d8e6e4916cbce871a12303d6186b4.1585233617.git.andreyknvl@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 4 Jun 2020 15:07:33 +0200
-Message-ID: <CACT4Y+axz_FHFBg7nfDt8C4p5uuUR21_22A_kwKMYTh2mW9FZw@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] kcov: use t->kcov_mode as enabled indicator
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
+X-Received: by 2002:a92:9acc:: with SMTP id c73mr3904247ill.74.1591276146848;
+ Thu, 04 Jun 2020 06:09:06 -0700 (PDT)
+Date:   Thu, 04 Jun 2020 06:09:06 -0700
+In-Reply-To: <000000000000c8a76e05a73e3be3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000078fab705a741d901@google.com>
+Subject: Re: WARNING in kvm_inject_emulated_page_fault
+From:   syzbot <syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        junaids@google.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:44 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> Currently kcov_remote_start() and kcov_remote_stop() check t->kcov to
-> find out whether the coverage is already being collected by the
-> current task. Use t->kcov_mode for that instead. This doesn't change
-> the overall behavior in any way, but serves as a preparation for the
-> following softirq coverage collection support patch.
->
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+syzbot has bisected this bug to:
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+commit ee1fa209f5e5ca5c1e76c7aa1c2aab292f371f4a
+Author: Junaid Shahid <junaids@google.com>
+Date:   Fri Mar 20 21:28:03 2020 +0000
 
-> ---
->  kernel/kcov.c | 32 +++++++++++++++++++++++---------
->  1 file changed, 23 insertions(+), 9 deletions(-)
->
-> diff --git a/kernel/kcov.c b/kernel/kcov.c
-> index b985b7a72870..e43f06b5b2e4 100644
-> --- a/kernel/kcov.c
-> +++ b/kernel/kcov.c
-> @@ -746,26 +746,33 @@ static const struct file_operations kcov_fops = {
->   * In turns kcov_remote_stop() clears those pointers from task_struct to stop
->   * collecting coverage and copies all collected coverage into the kcov area.
->   */
-> +
-> +static inline bool kcov_mode_enabled(unsigned int mode)
-> +{
-> +       return (mode & ~KCOV_IN_CTXSW) != KCOV_MODE_DISABLED;
-> +}
-> +
->  void kcov_remote_start(u64 handle)
->  {
-> +       struct task_struct *t = current;
->         struct kcov_remote *remote;
->         struct kcov *kcov;
-> +       unsigned int mode;
->         void *area;
-> -       struct task_struct *t;
->         unsigned int size;
-> -       enum kcov_mode mode;
->         int sequence;
->
->         if (WARN_ON(!kcov_check_handle(handle, true, true, true)))
->                 return;
->         if (WARN_ON(!in_task()))
->                 return;
-> -       t = current;
-> +
->         /*
->          * Check that kcov_remote_start is not called twice
->          * nor called by user tasks (with enabled kcov).
->          */
-> -       if (WARN_ON(t->kcov))
-> +       mode = READ_ONCE(t->kcov_mode);
-> +       if (WARN_ON(kcov_mode_enabled(mode)))
->                 return;
->
->         kcov_debug("handle = %llx\n", handle);
-> @@ -863,13 +870,20 @@ static void kcov_move_area(enum kcov_mode mode, void *dst_area,
->  void kcov_remote_stop(void)
->  {
->         struct task_struct *t = current;
-> -       struct kcov *kcov = t->kcov;
-> -       void *area = t->kcov_area;
-> -       unsigned int size = t->kcov_size;
-> -       int sequence = t->kcov_sequence;
-> +       struct kcov *kcov;
-> +       unsigned int mode;
-> +       void *area;
-> +       unsigned int size;
-> +       int sequence;
->
-> -       if (!kcov)
-> +       mode = READ_ONCE(t->kcov_mode);
-> +       barrier();
-> +       if (!kcov_mode_enabled(mode))
->                 return;
-> +       kcov = t->kcov;
-> +       area = t->kcov_area;
-> +       size = t->kcov_size;
-> +       sequence = t->kcov_sequence;
->
->         kcov_stop(t);
->
-> --
-> 2.26.0.rc2.310.g2932bb562d-goog
->
+    KVM: x86: Sync SPTEs when injecting page/EPT fault into L1
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=138f49de100000
+start commit:   cb8e59cc Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=104f49de100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=178f49de100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a16ddbc78955e3a9
+dashboard link: https://syzkaller.appspot.com/bug?extid=2a7156e11dc199bdbd8a
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=134ca2de100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178272f2100000
+
+Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
+Fixes: ee1fa209f5e5 ("KVM: x86: Sync SPTEs when injecting page/EPT fault into L1")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
