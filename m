@@ -2,63 +2,61 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA908C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCF5206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7118E206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WBY6nwxW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lFoXN+fC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgFDLOa (ORCPT
+        id S1726906AbgFDLOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:14:30 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52578 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgFDLOV (ORCPT
+        Thu, 4 Jun 2020 07:14:23 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43710 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgFDLOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 4 Jun 2020 07:14:21 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054BECNV039108;
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054BECJh117018;
         Thu, 4 Jun 2020 06:14:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1591269252;
-        bh=ZNakNO/yn9w134SOd5ynDhx+3+mu8fsJN9YSibNbl20=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=WBY6nwxWd1R/Sb4pBxpHOdIWs7z5yxn90jQzCqEpS0kQFeWY6/M0RhnCyUZTGT+WD
-         WLC53ky6jFASRfs8QF/quEAfqpLfsswzebHQvLq/YxG+yZbyQWzmerAL+yMqaQJ5qi
-         2la9hKE3gRmehyEl4gpaouvaeB4/l4zA8AxNNCjA=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054BECB1055717
+        bh=XwPye/lXt4xwD158SWEeAIdpmucSTrF0pqrdUf2BvTI=;
+        h=From:To:CC:Subject:Date;
+        b=lFoXN+fC3TDWkKHblozftAgdjC26t/rBwnF4lm3XvypSEQWJJBSWIl8licVgCjITV
+         Ajev7e85B3vighDES54zGkGRyQ9S0F9+i+B1qc8C9s26apkZv/cFt3ovmGk/Hra8wq
+         r8XVJ7niPCI/HlAndmJaP2b9qpm7pzFc48a2SY3Y=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054BECLu117133
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Thu, 4 Jun 2020 06:14:12 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
  2020 06:14:12 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
  Frontend Transport; Thu, 4 Jun 2020 06:14:12 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054BECV8112932;
-        Thu, 4 Jun 2020 06:14:12 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054BEBrg061694;
+        Thu, 4 Jun 2020 06:14:11 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>, <robh@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v6 2/4] net: phy: Add a helper to return the index for of the internal delay
-Date:   Thu, 4 Jun 2020 06:14:08 -0500
-Message-ID: <20200604111410.17918-3-dmurphy@ti.com>
+Subject: [PATCH net-next v6 0/4] RGMII Internal delay common property
+Date:   Thu, 4 Jun 2020 06:14:06 -0500
+Message-ID: <20200604111410.17918-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200604111410.17918-1-dmurphy@ti.com>
-References: <20200604111410.17918-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,120 +66,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper function that will return the index in the array for the
-passed in internal delay value.  The helper requires the array, size and
-delay value.
+Hello
 
-The helper will then return the index for the exact match or return the
-index for the index to the closest smaller value.
+The RGMII internal delay is a common setting found in most RGMII capable PHY
+devices.  It was found that many vendor specific device tree properties exist
+to do the same function. This creates a common property to be used for PHY's
+that have tunable internal delays for the Rx and Tx paths.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/phy_device.c | 68 ++++++++++++++++++++++++++++++++++++
- include/linux/phy.h          |  4 +++
- 2 files changed, 72 insertions(+)
+Dan Murphy (4):
+  dt-bindings: net: Add tx and rx internal delays
+  net: phy: Add a helper to return the index for of the internal delay
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 04946de74fa0..611d4e68e3c6 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -31,6 +31,7 @@
- #include <linux/mdio.h>
- #include <linux/io.h>
- #include <linux/uaccess.h>
-+#include <linux/property.h>
- 
- MODULE_DESCRIPTION("PHY library");
- MODULE_AUTHOR("Andy Fleming");
-@@ -2657,6 +2658,73 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
- }
- EXPORT_SYMBOL(phy_get_pause);
- 
-+/**
-+ * phy_get_delay_index - returns the index of the internal delay
-+ * @phydev: phy_device struct
-+ * @dev: pointer to the devices device struct
-+ * @delay_values: array of delays the PHY supports
-+ * @size: the size of the delay array
-+ * @is_rx: boolean to indicate to get the rx internal delay
-+ *
-+ * Returns the index within the array of internal delay passed in.
-+ * Or if size == 0 then the delay read from the firmware is returned.
-+ * The array must be in ascending order.
-+ * Return errno if the delay is invalid or cannot be found.
-+ */
-+s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
-+			   const int *delay_values, int size, bool is_rx)
-+{
-+	int ret;
-+	int i;
-+	s32 delay;
-+
-+	if (is_rx)
-+		ret = device_property_read_u32(dev, "rx-internal-delay-ps",
-+					       &delay);
-+	else
-+		ret = device_property_read_u32(dev, "tx-internal-delay-ps",
-+					       &delay);
-+	if (ret) {
-+		phydev_err(phydev, "internal delay not defined\n");
-+		return -EINVAL;
-+	}
-+
-+	if (delay < 0)
-+		return -EINVAL;
-+
-+	if (size <= 0)
-+		return delay;
-+
-+	if (delay < delay_values[0] || delay > delay_values[size - 1]) {
-+		phydev_err(phydev, "Delay %d is out of range\n", delay);
-+		return -EINVAL;
-+	}
-+
-+	if (delay == delay_values[0])
-+		return 0;
-+
-+	for (i = 1; i < size; i++) {
-+		if (delay == delay_values[i])
-+			return i;
-+
-+		/* Find an approximate index by looking up the table */
-+		if (delay > delay_values[i - 1] &&
-+		    delay < delay_values[i]) {
-+			if (delay - delay_values[i - 1] <
-+			    delay_values[i] - delay)
-+				return i - 1;
-+			else
-+				return i;
-+		}
-+	}
-+
-+	phydev_err(phydev, "error finding internal delay index for %d\n",
-+		   delay);
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL(phy_get_internal_delay);
-+
- static bool phy_drv_supports_irq(struct phy_driver *phydrv)
- {
- 	return phydrv->config_intr && phydrv->ack_interrupt;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..917bfd422e06 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1430,6 +1430,10 @@ void phy_set_asym_pause(struct phy_device *phydev, bool rx, bool tx);
- bool phy_validate_pause(struct phy_device *phydev,
- 			struct ethtool_pauseparam *pp);
- void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause);
-+
-+s32 phy_get_internal_delay(struct phy_device *phydev, struct device *dev,
-+			   const int *delay_values, int size, bool is_rx);
-+
- void phy_resolve_pause(unsigned long *local_adv, unsigned long *partner_adv,
- 		       bool *tx_pause, bool *rx_pause);
- 
+ .../devicetree/bindings/net/ethernet-phy.yaml | 13 ++++
+ .../devicetree/bindings/net/ti,dp83869.yaml   | 16 ++++-
+ drivers/net/phy/dp83869.c                     | 53 ++++++++++++++-
+ drivers/net/phy/phy_device.c                  | 68 +++++++++++++++++++
+ include/linux/phy.h                           |  4 ++
+ 5 files changed, 150 insertions(+), 4 deletions(-)
+
 -- 
 2.26.2
 
