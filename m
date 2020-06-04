@@ -2,116 +2,125 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52005C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D40C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 260E5207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE40C20872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KzvI74TL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdMDHXDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgFDPcc (ORCPT
+        id S1729556AbgFDPd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35026 "EHLO
+        Thu, 4 Jun 2020 11:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgFDPcb (ORCPT
+        with ESMTP id S1729035AbgFDPd3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:32:31 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DA2C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:32:30 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id l10so1130490vsr.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:32:30 -0700 (PDT)
+        Thu, 4 Jun 2020 11:33:29 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EADA9C08C5C0;
+        Thu,  4 Jun 2020 08:33:28 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id j189so5416401oih.10;
+        Thu, 04 Jun 2020 08:33:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/YeM3iC830bcMzTR/1X2xHutiYoQDPBbG3PALEGjM+8=;
-        b=KzvI74TLs01/oLy/0cPpC6nyVQBWh7hc3RQfaNxL10RgHvCd832kALaB4GKujiDV3/
-         wpbTUQa54otkNkIZIBYOoiBhqO097n5dEeKWLE6N9iBzGO5CI4nQJAQKhpDTovNFnQr1
-         SkQFzt/JiYGju9JqXH7m84Ghor0YnnzVTE2nS8N/cGqYM0EAecbz3xdQSDXj/v5e1ppO
-         gcmzX7g3ZsKtcodoagZ+lhIR5/hX8p4BW9Qc7QS9jyGEy9Ej1OKDe65+4jUxiqElw6Ge
-         bSGYzTf96Vitl69+ScdmDwrpElUmavWznW6NoyaNVSBUdX0hJWYgJ6VHBARXDlo2dInM
-         xREg==
+        bh=AtgVM+6A77er24Q+A6g9v9mzs9lX03TOCiFz1KIlUSM=;
+        b=SdMDHXDU1rgTx+wjts5cAAVZzI8PH4x+evoQ+9wNhbQ4pAy6QDUIgVwnnxHp41EgDG
+         0yQHKyhqYJmyWolFnxaRv5tIkX5dQkUw7EFUpqbi+LbFLQWHuBYITsRBuRxcLFrlJ8UN
+         B5s9GdVoBin7ri8qbp0wPPFA2XvGksgADmlAtBP/RokTMKdpjdhBvDetQOjVr+5aG4JO
+         yTvLVGE/BFb6MCFCQmtJteGzfTZeSwTHd8p1SSzIy42satSw4L3LsqOK1L//iZ1H5IQu
+         iNdFRKGB+ls0tze4wmVWb9swU/RHoIYBa5j1qKMkUkIt/iVDMk+/8z611S0YiTBoDCrm
+         Rglw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/YeM3iC830bcMzTR/1X2xHutiYoQDPBbG3PALEGjM+8=;
-        b=E5HQmxwGYfNCx6+erfJnDoneP/4y2cE4JnUkMnfMx/jnlgAu3ELMCYih/0v9A03O0d
-         mP3mNGGpkuMH0dd6bhKll5zCChcvdQ/wwtbuacj+xsXaMClEPdf72MRHVTWB3CQumtpz
-         K4ffqf1djS3hMdnmNNIPYqNlSQyws4zOgbawHvGU2Q1X8M95MzhPNJJ1m1G7+CbUvaHu
-         BXKqZE7XpWmWdoEO2XKOkPPEYADyVHhTVBU0DE2suEOs/EVqv2nY2Yx27MgRwxjcVKiz
-         MMOSc0CM8te2aMzR4EopFwxMvG155Aenq4FSqaqhav20zxQDvE1mh93btEak9aX8WW5B
-         5Otg==
-X-Gm-Message-State: AOAM533mjcR2Jon9hQB5eGnw55KD7A4kp0lDRer94Ci6hjUe5aUZBnhy
-        Uyjla7RhOM2yDBgZcyPbsGbpMXpCBL99LPlk9U9D4A==
-X-Google-Smtp-Source: ABdhPJx2fa1vWpZaxY5fdy+Mx4yS8qnGtleOmW6eUw0Nisc0u92OLMiJ7DIL+sJ8WMh9jhPlRPn1yPZuw/MLdR8uwzQ=
-X-Received: by 2002:a05:6102:3195:: with SMTP id c21mr3530209vsh.31.1591284749590;
- Thu, 04 Jun 2020 08:32:29 -0700 (PDT)
+        bh=AtgVM+6A77er24Q+A6g9v9mzs9lX03TOCiFz1KIlUSM=;
+        b=sGuMr8NeqlI/8ApG914kmSic3oAOr7b9m0JXQPVPho6Ti5XMSJdqvQsRClIkEtHZpu
+         qBNAC2oQHu7IbhJKifOWI8bJreFivJWZGdF6204J4aq2cIBLoUZrBmeh+UyhBWsH7AB1
+         4CmZZHszBhcm/aVKNCPadeipxF0BONla+uE102ktZ1TXKv7XerCO2W4F7hVz9Tx3xcf6
+         KeKfSCzxEyqGkCl6vdhslCwuHeoLQWNFOByFPrDczQeWUogpBPxYq3LriAkqlZU4CXnA
+         R3xdCxUWV7dch1rMen+tzazy81FdsCPaPKSLq2DwhtMOyx6HKoOmnDrdiWmcMihLJHF4
+         Lalw==
+X-Gm-Message-State: AOAM532o2QAE7sZGA8ByaZ+GUhPqzBLgi8qsCeGxlw2UaNhrVuoHt/aG
+        7tLNfIhfDT7K0qWRnhGSXrwOP56qMpP0xj8QBRQj6/+j
+X-Google-Smtp-Source: ABdhPJxKZVxO2GZgY9pBarFgPeriOj/aGCeUld1RpPNMX4yzJ610oxzVEzXFz4IMUgKf8RxXpijCTZ8hE0LQZALe2CI=
+X-Received: by 2002:aca:ec97:: with SMTP id k145mr3279320oih.92.1591284808395;
+ Thu, 04 Jun 2020 08:33:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200527224659.206129-1-eranian@google.com> <20200527224659.206129-2-eranian@google.com>
- <20200601123850.GA213137@latitude> <CABPqkBSKF_4BpXxT=LDb786cW5euuOk7oUbnem5=P6BpMtk0ZA@mail.gmail.com>
- <20200604131141.GA678989@latitude>
-In-Reply-To: <20200604131141.GA678989@latitude>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Thu, 4 Jun 2020 08:32:18 -0700
-Message-ID: <CABPqkBRbh4XAQ2_5Zx0kx_vANrZjb=N8M6ZeR0px269Nbs1w_w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] perf/x86/rapl: move RAPL support to common x86 code
-To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, mingo@elte.hu,
-        Ian Rogers <irogers@google.com>,
-        "Phillips, Kim" <kim.phillips@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>
+References: <CAHC9VhTX8gkUui6AiTJMJgcohXa=TOqdO==rEDk=Mquz9sCNKA@mail.gmail.com>
+ <CAHk-=wiAVfqtJbZ=Ti1oxSvunUvsQ_CsOL5oFJL3mwhqKTeoNw@mail.gmail.com>
+ <290017a8-d943-570f-1f90-acecf1c075a1@schaufler-ca.com> <alpine.LRH.2.21.2006040809280.6050@namei.org>
+ <761f5d15-3422-1834-7be5-8f3276d10172@schaufler-ca.com> <CAEjxPJ49ownvc=3OnvkaMD-oYm-aUta98kKs4LDTJTnm65RD=Q@mail.gmail.com>
+ <86bd50bd-b5b2-e4a1-d62f-e5eaa0764585@schaufler-ca.com>
+In-Reply-To: <86bd50bd-b5b2-e4a1-d62f-e5eaa0764585@schaufler-ca.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Thu, 4 Jun 2020 11:33:17 -0400
+Message-ID: <CAEjxPJ7=yLKU7JrRdTAj1z=0rEMvLKbUqAL=-M=tgA38sjwdfw@mail.gmail.com>
+Subject: Re: [GIT PULL] SELinux patches for v5.8
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     James Morris <jmorris@namei.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Moore <paul@paul-moore.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 6:11 AM Johannes Hirte
-<johannes.hirte@datenkhaos.de> wrote:
+On Thu, Jun 4, 2020 at 11:28 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
 >
-> On 2020 Jun 01, Stephane Eranian wrote:
-> > On Mon, Jun 1, 2020 at 5:39 AM Johannes Hirte
-> > <johannes.hirte@datenkhaos.de> wrote:
-> > >
-> > > On 2020 Mai 27, Stephane Eranian wrote:
-> > >
-> > > ...
-> > > > diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-> > > > index 6f1d1fde8b2de..12c42eba77ec3 100644
-> > > > --- a/arch/x86/events/Makefile
-> > > > +++ b/arch/x86/events/Makefile
-> > > > @@ -1,5 +1,6 @@
-> > > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > >  obj-y                                        += core.o probe.o
-> > > > +obj-$(PERF_EVENTS_INTEL_RAPL)                += rapl.o
-> > > >  obj-y                                        += amd/
-> > > >  obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
-> > > >  obj-$(CONFIG_CPU_SUP_INTEL)          += intel/
-> > >
-> > > With this change, rapl won't be build. Must be:
-> > >
-> > > obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)                += rapl.o
-> > >
-> > Correct. I posted a patch last week to fix that.
-> > Thanks.
+> On 6/4/2020 5:45 AM, Stephen Smalley wrote:
+> > On Wed, Jun 3, 2020 at 6:39 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >> On 6/3/2020 3:12 PM, James Morris wrote:
+> >>> On Wed, 3 Jun 2020, Casey Schaufler wrote:
+> >>>
+> >>>> The use of security modules was expected to be rare.
+> >>> This is not correct. Capabilities were ported to LSM and stacked from the
+> >>> beginning, and several major distros worked on LSM so they could ship
+> >>> their own security modules.
+> >> Capabilities has always been a special case.
+> >> Until Android adopted SELinux the actual use of LSMs was rare.
+> > I don't think that is correct.  Fedora/RHEL were enabling SELinux by
+> > default since around 2004/2005 and for a while Fedora was tracking
+> > SELinux status as part of their "smolt" hardware profiling project and
+> > SELinux enablement was trending above 80% IIRC before they
+> > de-commissioned smolt. SuSE/SLES and Ubuntu were enabling AppArmor by
+> > default for quite some time too prior to SE Android.
 >
-> Yes, it just wasn't in tip when I've tested. Sorry for the noise.
+> POSIX ACLs have been enabled just as long. Their use is still
+> incredibly rare.
 >
-It is now. All is good.
-Thanks.
+> >   It is certainly
+> > true that Android's adoption of SELinux massively increased the size
+> > of the SELinux install base (and was the first to make SELinux usage
+> > mandatory, not just default-enabled) but I don't think it is accurate
+> > to say that LSM usage was rare prior to that.
+>
+> That will depend on whether you consider presence to be usage.
+> That gets into the whole "transparent security" argument.
 
->
-> --
-> Regards,
->   Johannes Hirte
->
+The distros were shipping policies for their respective LSMs that
+confined some subset of the processes, and userspace was leveraging
+those LSMs (both to get/set labels and to get policy decisions for
+userspace enforcers) well before Android adopted SELinux.  I think
+that counts as usage.  If by usage you mean end users were writing
+their own policies, that certainly is a more specialized class of
+users but that's even less so in Android, where end users aren't
+allowed to modify the policy at all.
+
+> Sorry I brought this up. I don't mean to disrespect the achievement
+> of SELinux. My experience of the Orange Book and early Common
+> Criteria era, including the Unix to Linux transition, seems to
+> have differed somewhat from that others.
