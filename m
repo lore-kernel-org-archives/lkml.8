@@ -2,126 +2,98 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D33C206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFXZR15/"
+	by mail.kernel.org (Postfix) with ESMTP id AC0DC20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgFDNsQ (ORCPT
+        id S1728733AbgFDNs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:48:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728447AbgFDNsP (ORCPT
+        Thu, 4 Jun 2020 09:48:28 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:50221 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728447AbgFDNsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:48:15 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674F2C08C5C0;
-        Thu,  4 Jun 2020 06:48:14 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id e125so3650206lfd.1;
-        Thu, 04 Jun 2020 06:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iMMF10Nxs4oc2EJJanF54FJNWM4D4Wwm1OdBu2wm4Z4=;
-        b=sFXZR15/LjqG5bpCkxOk37qC9tElVU94FDwkLLfN9UCkQU3wR4HPwpJalmClK0WYId
-         TK6qeC9VmQi1kN/fYn2uo77S6U3dVSlwcJhXWqOrCD8+8PeohG7Xn6gEW02z9J9azgjI
-         LjIhE9h/6nc/czWT+jayLqT96lT+joKTedEpgQuS0967kKFH6QY5aV5KRxzexUCmlutV
-         //C8VFzwL9ddcQVIX3sYK4MI86YxL9Sgu4FZXcZZOv4FFhhtxjlr2srMXtRo63T7hImF
-         WtwQr/H1MPKmgaEzFCK3eUmei3ieS5j+8orUdaYCy6Ex+4mlhdW9tGzjg4AXi0M8CA6d
-         +GUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iMMF10Nxs4oc2EJJanF54FJNWM4D4Wwm1OdBu2wm4Z4=;
-        b=YTT/oiJ6TG5j1stJX+o4rMZogz0rgHW1Uyz8onUU0AwddOi8C2RLnYMrcmlkwlikRp
-         oXuBqFz7+dYl3eFUsGv9bQ3HOdPKSPhqZNkViiLphBcvFWXpVNTvRBU63QXdFNc/H1Yd
-         X6in6E8hrSJOwTzADAse//Af/jOxt/RnYpXezZkKSPmrEvQDL93EbvdlzfQ20TubCa/0
-         5JgzLr0fwQ3jQa0B4Jrox9bQaCsPKmvsBqyKCseThsRLftSGP9xTMEDM+RAgQVRGXoXS
-         64Ox/00BdozijCYyU95ba0Gb+hdj6u2HXxx6sm8EEtpc3VU4J7VFGI25faZysLCa2Kvv
-         Ie3Q==
-X-Gm-Message-State: AOAM532s/gHVlxeceNj4SXIF9C6kt3qa3zNvIhjwqPPjxwl9ZP+0YuTZ
-        FA7mT3oSxFbXm2QGMHarQjYyaLBlpnhVJUPG2go=
-X-Google-Smtp-Source: ABdhPJwIR6Q2Naj2V+WJIUcSDZdWNqsRdct/J8jlK8ybr+qXkoX6RREh9lcQJkoOOoeN0FxBfO3Sew2nuLo6o95L/B0=
-X-Received: by 2002:a19:2358:: with SMTP id j85mr2654922lfj.182.1591278492760;
- Thu, 04 Jun 2020 06:48:12 -0700 (PDT)
+        Thu, 4 Jun 2020 09:48:22 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 054DlvgR011532;
+        Thu, 4 Jun 2020 16:47:57 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id A7465639BF; Thu,  4 Jun 2020 16:47:57 +0300 (IDT)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org,
+        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Amir Mizinski <amirmizi6@gmail.com>,
+        Benoit Houyere <benoit.houyere@st.com>
+Subject: [PATCH v10 5/8] tpm: Handle an exception for TPM Firmware Update mode.
+Date:   Thu,  4 Jun 2020 16:47:10 +0300
+Message-Id: <20200604134713.157951-6-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200604134713.157951-1-amirmizi6@gmail.com>
+References: <20200604134713.157951-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
- <20200604090014.23266-1-kerneljasonxing@gmail.com> <CANn89iKt=3iDZM+vUbCvO_aGuedXFhzdC6OtQMeVTMDxyp9bAg@mail.gmail.com>
-In-Reply-To: <CANn89iKt=3iDZM+vUbCvO_aGuedXFhzdC6OtQMeVTMDxyp9bAg@mail.gmail.com>
-From:   Jason Xing <kerneljasonxing@gmail.com>
-Date:   Thu, 4 Jun 2020 21:47:36 +0800
-Message-ID: <CAL+tcoCU157eGmMMabT5icdFJTMEWymNUNxHBbxY1OTir0=0FQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4.19] tcp: fix TCP socks unreleased in BBR mode
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neal Cardwell <ncardwell@google.com>,
-        David Miller <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        liweishi <liweishi@kuaishou.com>,
-        Shujin Li <lishujin@kuaishou.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 9:10 PM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Thu, Jun 4, 2020 at 2:01 AM <kerneljasonxing@gmail.com> wrote:
-> >
-> > From: Jason Xing <kerneljasonxing@gmail.com>
-> >
-> > When using BBR mode, too many tcp socks cannot be released because of
-> > duplicate use of the sock_hold() in the manner of tcp_internal_pacing()
-> > when RTO happens. Therefore, this situation maddly increases the slab
-> > memory and then constantly triggers the OOM until crash.
-> >
-> > Besides, in addition to BBR mode, if some mode applies pacing function,
-> > it could trigger what we've discussed above,
-> >
-> > Reproduce procedure:
-> > 0) cat /proc/slabinfo | grep TCP
-> > 1) switch net.ipv4.tcp_congestion_control to bbr
-> > 2) using wrk tool something like that to send packages
-> > 3) using tc to increase the delay and loss to simulate the RTO case.
-> > 4) cat /proc/slabinfo | grep TCP
-> > 5) kill the wrk command and observe the number of objects and slabs in
-> > TCP.
-> > 6) at last, you could notice that the number would not decrease.
-> >
-> > v2: extend the timer which could cover all those related potential risks
-> > (suggested by Eric Dumazet and Neal Cardwell)
-> >
-> > Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
-> > Signed-off-by: liweishi <liweishi@kuaishou.com>
-> > Signed-off-by: Shujin Li <lishujin@kuaishou.com>
->
-> That is not how things work really.
->
-> I will submit this properly so that stable teams do not have to guess
-> how to backport this to various kernels.
->
-> Changelog is misleading, this has nothing to do with BBR, we need to be precise.
->
+From: Amir Mizinski <amirmizi6@gmail.com>
 
-Thanks for your help. I can finally apply this patch into my kernel.
+An extra precaution for TPM Firmware Update Mode.
+For example if TPM power was cut while in Firmware update, platform
+should ignore "selftest" failure and skip TPM initialization sequence.
 
-Looking forward to your patchset :)
+Suggested-by: Benoit Houyere <benoit.houyere@st.com>
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+---
+ drivers/char/tpm/tpm2-cmd.c | 4 ++++
+ include/linux/tpm.h         | 1 +
+ 2 files changed, 5 insertions(+)
 
-Jason
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index 7603295..6e42946 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -727,6 +727,10 @@ int tpm2_auto_startup(struct tpm_chip *chip)
+ 		goto out;
+ 
+ 	rc = tpm2_do_selftest(chip);
++
++	if (rc == TPM2_RC_UPGRADE || rc == TPM2_RC_COMMAND_CODE)
++		return 0;
++
+ 	if (rc && rc != TPM2_RC_INITIALIZE)
+ 		goto out;
+ 
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 03e9b18..5a2e031 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -199,6 +199,7 @@ enum tpm2_return_codes {
+ 	TPM2_RC_INITIALIZE	= 0x0100, /* RC_VER1 */
+ 	TPM2_RC_FAILURE		= 0x0101,
+ 	TPM2_RC_DISABLED	= 0x0120,
++	TPM2_RC_UPGRADE         = 0x012D,
+ 	TPM2_RC_COMMAND_CODE    = 0x0143,
+ 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
+ 	TPM2_RC_REFERENCE_H0	= 0x0910,
+-- 
+2.7.4
 
-> Thank you.
