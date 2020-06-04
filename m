@@ -2,115 +2,107 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C738C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47D15207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:30:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bsum9bBG"
+	by mail.kernel.org (Postfix) with ESMTP id 3596C206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgFDXav (ORCPT
+        id S1726154AbgFDXa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 19:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgFDXav (ORCPT
+        Thu, 4 Jun 2020 19:30:58 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:48317 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725920AbgFDXa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 19:30:51 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B202C08C5C0;
-        Thu,  4 Jun 2020 16:30:50 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v24so2832640plo.6;
-        Thu, 04 Jun 2020 16:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=FW/OSHxQdI7/2m/YvmIaaghDq0GfzNoQim9YGqjpp98=;
-        b=Bsum9bBGQ813p4UUMyqGsugEnLA2aXO2iIy6rghlmvZT3An4doO86c5BDoKe1Uttox
-         Vte6W01nbTg/h5Nwo6MgcagBtu1NMhx/dOGDhXNdimkRrKwA3kQQcLFZvv/DmZ/vyIih
-         DMfqxDy2SETdmXJnYkdfXdmOvkAQg/5Ud7Ye15Uvgy1gou6dkgkFOkDbNdxtvxPlSk0x
-         j5ae+rBaiF27idd56iqEcgev0A+Ul9ykJu7PamUxJVHjJBZs5SVHG8k78pEDcisGnLHS
-         v1SqCyXla1qFO9yGQvArtuRW/N/PjPBv6x1yWItZP98huoQECaIgHX89amV54UTj4Jt8
-         twMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FW/OSHxQdI7/2m/YvmIaaghDq0GfzNoQim9YGqjpp98=;
-        b=U6FSLiGFVAOgtvMo99/MJdAu6BXIv5yjOrkHp76/fNa4zxpAToK0UIBNAyiKVhUV6q
-         s2ScJDw7JBZPc2D1fH0jENXl0sYXIUFOsT6CnCmINFy9LrPQJWM/fvEsbhLJBdqARYVJ
-         g5ZqxV7DwT96PuI5Ti/JpACVXRYEDhrNdnUz3X/Buu+XDN9+xbP0hb3tV/aX8kOFFAsK
-         mHuCvvLd16Qh5QTxtLM++Lqew2pU0MCBYRdO2OQWVOCaeS4WpJFORiAKrOlahLLiJ6pw
-         k3Lyi3fzLyKUJXArpPuDspfLhfs+oM5m8pwLNKv1YCEGOWhIhJrmkHEYl9PJfv/9YKqa
-         +upA==
-X-Gm-Message-State: AOAM531oAIW5FrajLoyVAgvT2ln8t0w41n/bumBCp/nPsap6IcqXW1I7
-        jwT8ixqAMa2/6tAX0CmFN2Q=
-X-Google-Smtp-Source: ABdhPJxCDYqfuUpsDs9juooBXwU2cchNCjv1+vWP1A9yFPhp2jPQbk9dmqvnwMkeR4Uo5myoO+xoQg==
-X-Received: by 2002:a17:90a:2647:: with SMTP id l65mr8818004pje.20.1591313449618;
-        Thu, 04 Jun 2020 16:30:49 -0700 (PDT)
-Received: from sol (220-235-66-207.dyn.iinet.net.au. [220.235.66.207])
-        by smtp.gmail.com with ESMTPSA id l3sm4775015pgm.59.2020.06.04.16.30.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 04 Jun 2020 16:30:48 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 07:30:43 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpiolib: split character device into gpiolib-cdev
-Message-ID: <20200604233043.GA8913@sol>
-References: <20200602141048.1995-1-warthog618@gmail.com>
- <CAMpxmJUjYn5SHg3BpCeKbYc_OpCjd8d943yfYL_TF15wyTenfA@mail.gmail.com>
- <20200604141804.GA5050@sol>
- <CAMpxmJXyVO4unLQOzC0xf47CTmK6VurTk+Q=9RDWhcP0pu73pQ@mail.gmail.com>
+        Thu, 4 Jun 2020 19:30:57 -0400
+Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id A45A6108319;
+        Fri,  5 Jun 2020 09:30:54 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jgzK1-0001Pa-Ln; Fri, 05 Jun 2020 09:30:53 +1000
+Date:   Fri, 5 Jun 2020 09:30:53 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
+Message-ID: <20200604233053.GW2040@dread.disaster.area>
+References: <20200604202340.29170-1-willy@infradead.org>
+ <20200604225726.GU2040@dread.disaster.area>
+ <20200604230519.GW19604@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJXyVO4unLQOzC0xf47CTmK6VurTk+Q=9RDWhcP0pu73pQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200604230519.GW19604@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
+        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
+        a=jINDFZZm4DkczEFURbYA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 06:22:43PM +0200, Bartosz Golaszewski wrote:
-> czw., 4 cze 2020 o 16:18 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> > >
-> > > Is this comment relevant for the character device?
-> > >
-> >
-> > True - that comment should stay in gpiolib, and gpiolib-cdev should get
-> > one of it's own.
-> >
-> > Any suggestions on how to maintain line history?
-> > I know you can trick git by moving the original file into two new ones,
-> > then moving one of those back to the old name, but not sure if that is
-> > what you would want to see in a patch.
-> >
+On Thu, Jun 04, 2020 at 04:05:19PM -0700, Matthew Wilcox wrote:
+> On Fri, Jun 05, 2020 at 08:57:26AM +1000, Dave Chinner wrote:
+> > On Thu, Jun 04, 2020 at 01:23:40PM -0700, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > 
+> > > Test generic/019 often results in:
+> > > 
+> > > WARNING: at fs/iomap/buffered-io.c:1069 iomap_page_mkwrite_actor+0x57/0x70
+> > > 
+> > > Since this can happen due to a storage error, we should not WARN for it.
+> > > Just return -EIO, which will be converted to a SIGBUS for the hapless
+> > > task attempting to write to the page that we can't read.
+> > 
+> > Why didn't the "read" part of the fault which had the EIO error fail
+> > the page fault? i.e. why are we waiting until deep inside the write
+> > fault path to error out on a failed page read?
 > 
-> People don't seem to care much about this in the kernel. Files get
-> moved and git blame results get lost all the time. Don't stress about
-> it.
+> I have a hypothesis that I don't know how to verify.
 > 
+> First the task does a load from the page and we put a read-only PTE in
+> the page tables.  Then it writes to the page using write().  The page
+> gets written back, but hits an error in iomap_writepage_map()
+> which calls ClearPageUptodate().  Then the task with it mapped attempts
+> to store to it.
 
-Oh, ok.  I guess that explains why I couldn't find any examples of how
-to do it in a patch - I had thought I wasn't looking hard enough.
+Sure, but that's not really what I was asking: why isn't this
+!uptodate state caught before the page fault code calls
+->page_mkwrite? The page fault code has a reference to the page,
+after all, and in a couple of paths it even has the page locked.
 
-There are still a couple of commits in gpio/fixes that will conflict -
-are those getting merged into gpio/devel any time soon?
-Or is there another branch I should rebase onto?
+What I'm trying to understand is why this needs to be fixed inside
+->page_mkwrite, because AFAICT if we have to fix this in the iomap
+code, we have the same "we got handed a bad page by the page fault"
+problem in every single ->page_mkwrite implementation....
+
+> I haven't dug through what generic/019 does, so I don't know how plausible
+> this is.
+
+# Run fsstress and fio(dio/aio and mmap) and simulate disk failure
+# check filesystem consistency at the end.
+
+I don't think it is mixing buffered writes and mmap writes on the
+same file via fio. Maybe fsstress is triggering that, but the
+fsstress workload is single threaded so, again, I'm not sure it will
+do this.
 
 Cheers,
-Kent.
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
