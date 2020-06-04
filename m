@@ -4,65 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79544C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C25C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526BC204EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90628204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="ehCLDs/3"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Om00MRPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgFDUk2 (ORCPT
+        id S1730072AbgFDUkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54566 "EHLO
+        Thu, 4 Jun 2020 16:40:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729828AbgFDUkV (ORCPT
+        with ESMTP id S1730048AbgFDUk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:40:21 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE57FC08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:40:19 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id m2so1735155pjv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:40:19 -0700 (PDT)
+        Thu, 4 Jun 2020 16:40:26 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B856C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:40:25 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t7so4063854pgt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
         h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=tOm0eZIfTixCIuiiTONw0d8MpMY0xEkqqW2K4o8xHYE=;
-        b=ehCLDs/32BzqqIn6f6SwjjPXO9KP3vf55FjWqEqklC4xvw5E7bMZa28s8uQSfCBeNz
-         L6dc1ieExL+7vlLqmQ0/lyOp2M4ICnoKOWoQvXEaknRAN8tmhLq/WVMAQeeXBMcjP9D6
-         3RuWyPaMG4tHZr8xq62MEA3JBDrJ1g6UIEkUgeLhrAUOSG253UV6VUVCsz31sJI5stXg
-         utocO4or8BMGQh9E85ibZom/QdW9WYGw2UJ20S0rR5ua2KHAJG3IFHDoxVmtjCcO4p+k
-         c2wX8Uz9hvNyy5I0BNAByB6m5FIsQVJ+Mjb0dZIJn3gtPpuM7UX4nvapcwYn3Ftp45K9
-         3+NA==
+        bh=xx1SMceBerbJ4D9bRiE7FtxAAA2jXtiHh9vjFS/GUGo=;
+        b=Om00MRPnxHudI86qW6Iuw7en1e4tOjieEUvzDKvCJ6A4wtwo1q9bHu+SKpd17jbVHg
+         s6b16xASEjJDBwRXkiDBeVMUAIEYfTycGII1FWri4gs9Asw2e1SM/lwwLyrDNzifqpef
+         G+Df9AN2+/XtCA1WyfBtD9WRGwKj1bEsapAaCQjDc7QDthWz6yufc8gSlHF1I7+GlFhY
+         eTnag4NLzgahcscyUqOavCXNQVqvO5Ht1vIczZBrSxb1jod3rQMBFdd1jGOs3rVChTqx
+         bmyp47HhTQH80xJaS5IIGoLQSnph+dZFze9hr5HNHcmtr0W2mIwVn2Vjjo1vON2LFoyS
+         THPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=tOm0eZIfTixCIuiiTONw0d8MpMY0xEkqqW2K4o8xHYE=;
-        b=N9hsq77pQZR8LQwXAjKqMSUh3elB3hg4Dsxdei8lqm8M5n+LSHiu9iEtZJlKLhdhvc
-         SQPPCw8yVFywzL8/xAc8QGQhEl+t7wNgdVW7EZM7qVRK+pfgQroeBffYbjwGhjRrLdtf
-         P1hhvsE42/0HxNXwZ6ZdJgCsCf2JoNnI2FN6/mYMC2N3GSH0080PwL5K1n7HVldUQWgv
-         JtIxqB62rm1M9yravyv60HDOgcmxFpHHOxjC4zlK35W6H2nplWHD4+VFP4tYJE9bYkgS
-         cabFqCDFbJuEMCAuWTwPlswss79kc6eaELQHuszwdQQwxMLnw+qMKAbEj15l6xgMnouK
-         vz2A==
-X-Gm-Message-State: AOAM531yfHPfHgrqYtYxz3CYhAPe1ToGntsdyBjzH3w1a9natlbh2eUg
-        kuuZJB6TJHx4y9Zdeokq5snUOw==
-X-Google-Smtp-Source: ABdhPJxsUSVVLwoV7LD89QZpLzQIKaoFTH88mEntDFRWMQpU65Q7OY9mgUqGNYJzYOPQBFPLR4GHyQ==
-X-Received: by 2002:a17:902:6b09:: with SMTP id o9mr6626139plk.45.1591303219131;
-        Thu, 04 Jun 2020 13:40:19 -0700 (PDT)
+        bh=xx1SMceBerbJ4D9bRiE7FtxAAA2jXtiHh9vjFS/GUGo=;
+        b=YGTgT2sZESehJPKsDFh4v/SDTMiKb/CGnrZvhOpGMHIv9TzGUVh9UoyBS6cOMym/TS
+         E8gl5pFe8Z+RNEBg4ghDmcj3KHMCa5ZgtFMKxZgBTpEOVlpXaf1P6yaXkYpjz0dxihZq
+         TSWznNBjD/wt7/VChhxmFrHbQJiZZ8010g27mg81gekzjX4uli1ZolDDXgc6uo3VVNMg
+         oPjVRJu5yKGiJl+7Sf9bjhOAyuXTRUmbB8iZzj+bW7xVg6ipmuUX/p17sbm4VcxCLaM2
+         BNVEBsI0YMp4RnvBWNZ1uyz6eV+IaKnsffvO4AwzqvnjtVriCNVFn3qbSpCC1RlsuO5x
+         +j5w==
+X-Gm-Message-State: AOAM531MCuz4Z/HXG7qNxG8pmVm0/P5kTl8DACKbMoPl/w//dhj+W5Zc
+        DB0QleG4Hj9qYzMyQcGmzO4rDg==
+X-Google-Smtp-Source: ABdhPJwvAhsBDFc+fpSlPYAPYmaksv9k7s7TOAHwIxYlG02LqHwsGEBSVZ0kNPiEyGgJTpNEaju9WQ==
+X-Received: by 2002:a62:3382:: with SMTP id z124mr6044820pfz.263.1591303224391;
+        Thu, 04 Jun 2020 13:40:24 -0700 (PDT)
 Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id e78sm5378955pfh.50.2020.06.04.13.40.18
+        by smtp.gmail.com with ESMTPSA id v186sm4246627pfv.54.2020.06.04.13.40.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:40:18 -0700 (PDT)
-Date:   Thu, 04 Jun 2020 13:40:18 -0700 (PDT)
-X-Google-Original-Date: Thu, 04 Jun 2020 13:27:53 PDT (-0700)
-Subject:     Re: [PATCH 2/5] RISC-V: Remove CLINT related code
-In-Reply-To: <20200521134544.816918-3-anup.patel@wdc.com>
+        Thu, 04 Jun 2020 13:40:23 -0700 (PDT)
+Date:   Thu, 04 Jun 2020 13:40:23 -0700 (PDT)
+X-Google-Original-Date: Thu, 04 Jun 2020 13:38:28 PDT (-0700)
+Subject:     Re: [PATCH 5/5] dt-bindings: timer: Add CLINT bindings
+In-Reply-To: <20200521134544.816918-6-anup.patel@wdc.com>
 CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
         robh+dt@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de,
         Damien Le Moal <Damien.LeMoal@wdc.com>,
@@ -73,7 +72,7 @@ CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
         Anup Patel <Anup.Patel@wdc.com>
 From:   Palmer Dabbelt <palmer@dabbelt.com>
 To:     Anup Patel <Anup.Patel@wdc.com>
-Message-ID: <mhng-f2e4aecb-a19b-4d20-9a48-9640bd9d264d@palmerdabbelt-glaptop1>
+Message-ID: <mhng-12494396-db4d-4b92-a8fb-1bb59bdf7fb8@palmerdabbelt-glaptop1>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -82,175 +81,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 06:45:41 PDT (-0700), Anup Patel wrote:
-> We will be having separate CLINT timer driver which will also
-> provide CLINT based IPI operations so let's remove CLINT related
-> code from arch/riscv directory.
-
-This will leave the system unbootable, which breaks bisecting.
-
+On Thu, 21 May 2020 06:45:44 PDT (-0700), Anup Patel wrote:
+> We add DT bindings documentation for CLINT device.
 >
 > Signed-off-by: Anup Patel <anup.patel@wdc.com>
 > ---
->  arch/riscv/include/asm/clint.h | 39 ------------------------------
->  arch/riscv/kernel/Makefile     |  2 +-
->  arch/riscv/kernel/clint.c      | 44 ----------------------------------
->  arch/riscv/kernel/setup.c      |  2 --
->  arch/riscv/kernel/smp.c        |  1 -
->  arch/riscv/kernel/smpboot.c    |  1 -
->  6 files changed, 1 insertion(+), 88 deletions(-)
->  delete mode 100644 arch/riscv/include/asm/clint.h
->  delete mode 100644 arch/riscv/kernel/clint.c
+>  .../bindings/timer/sifive,clint.txt           | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.txt
 >
-> diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
-> deleted file mode 100644
-> index a279b17a6aad..000000000000
-> --- a/arch/riscv/include/asm/clint.h
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef _ASM_RISCV_CLINT_H
-> -#define _ASM_RISCV_CLINT_H 1
-> -
-> -#include <linux/io.h>
-> -#include <linux/smp.h>
-> -
-> -#ifdef CONFIG_RISCV_M_MODE
-> -extern u32 __iomem *clint_ipi_base;
-> -
-> -void clint_init_boot_cpu(void);
-> -
-> -static inline void clint_send_ipi_single(unsigned long hartid)
-> -{
-> -	writel(1, clint_ipi_base + hartid);
-> -}
-> -
-> -static inline void clint_send_ipi_mask(const struct cpumask *mask)
-> -{
-> -	int cpu;
-> -
-> -	for_each_cpu(cpu, mask)
-> -		clint_send_ipi_single(cpuid_to_hartid_map(cpu));
-> -}
-> -
-> -static inline void clint_clear_ipi(unsigned long hartid)
-> -{
-> -	writel(0, clint_ipi_base + hartid);
-> -}
-> -#else /* CONFIG_RISCV_M_MODE */
-> -#define clint_init_boot_cpu()	do { } while (0)
-> -
-> -/* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_M_MODE): */
-> -void clint_send_ipi_single(unsigned long hartid);
-> -void clint_send_ipi_mask(const struct cpumask *hartid_mask);
-> -void clint_clear_ipi(unsigned long hartid);
-> -#endif /* CONFIG_RISCV_M_MODE */
-> -
-> -#endif /* _ASM_RISCV_CLINT_H */
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index d8bbd3207100..529cda705cfe 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -31,7 +31,7 @@ obj-y	+= cacheinfo.o
->  obj-y	+= patch.o
->  obj-$(CONFIG_MMU) += vdso.o vdso/
->
-> -obj-$(CONFIG_RISCV_M_MODE)	+= clint.o traps_misaligned.o
-> +obj-$(CONFIG_RISCV_M_MODE)	+= traps_misaligned.o
->  obj-$(CONFIG_FPU)		+= fpu.o
->  obj-$(CONFIG_SMP)		+= smpboot.o
->  obj-$(CONFIG_SMP)		+= smp.o
-> diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
-> deleted file mode 100644
-> index 3647980d14c3..000000000000
-> --- a/arch/riscv/kernel/clint.c
-> +++ /dev/null
-> @@ -1,44 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * Copyright (c) 2019 Christoph Hellwig.
-> - */
-> -
-> -#include <linux/io.h>
-> -#include <linux/of_address.h>
-> -#include <linux/types.h>
-> -#include <asm/clint.h>
-> -#include <asm/csr.h>
-> -#include <asm/timex.h>
-> -#include <asm/smp.h>
-> -
-> -/*
-> - * This is the layout used by the SiFive clint, which is also shared by the qemu
-> - * virt platform, and the Kendryte KD210 at least.
-> - */
-> -#define CLINT_IPI_OFF		0
-> -#define CLINT_TIME_CMP_OFF	0x4000
-> -#define CLINT_TIME_VAL_OFF	0xbff8
-> -
-> -u32 __iomem *clint_ipi_base;
-> -
-> -void clint_init_boot_cpu(void)
-> -{
-> -	struct device_node *np;
-> -	void __iomem *base;
-> -
-> -	np = of_find_compatible_node(NULL, NULL, "riscv,clint0");
-> -	if (!np) {
-> -		panic("clint not found");
-> -		return;
-> -	}
-> -
-> -	base = of_iomap(np, 0);
-> -	if (!base)
-> -		panic("could not map CLINT");
-> -
-> -	clint_ipi_base = base + CLINT_IPI_OFF;
-> -	riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
-> -	riscv_time_val = base + CLINT_TIME_VAL_OFF;
-> -
-> -	clint_clear_ipi(boot_cpu_hartid);
-> -}
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index 145128a7e560..b07a583bf53b 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -18,7 +18,6 @@
->  #include <linux/swiotlb.h>
->  #include <linux/smp.h>
->
-> -#include <asm/clint.h>
->  #include <asm/cpu_ops.h>
->  #include <asm/setup.h>
->  #include <asm/sections.h>
-> @@ -76,7 +75,6 @@ void __init setup_arch(char **cmdline_p)
->  	setup_bootmem();
->  	paging_init();
->  	unflatten_device_tree();
-> -	clint_init_boot_cpu();
->
->  #ifdef CONFIG_SWIOTLB
->  	swiotlb_init(1);
-> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-> index 8375cc5970f6..8a23f1eb5400 100644
-> --- a/arch/riscv/kernel/smp.c
-> +++ b/arch/riscv/kernel/smp.c
-> @@ -17,7 +17,6 @@
->  #include <linux/seq_file.h>
->  #include <linux/delay.h>
->
-> -#include <asm/clint.h>
->  #include <asm/sbi.h>
->  #include <asm/tlbflush.h>
->  #include <asm/cacheflush.h>
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index 5fe849791bf0..a6cfa9842d4b 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -24,7 +24,6 @@
->  #include <linux/of.h>
->  #include <linux/sched/task_stack.h>
->  #include <linux/sched/mm.h>
-> -#include <asm/clint.h>
->  #include <asm/cpu_ops.h>
->  #include <asm/irq.h>
->  #include <asm/mmu_context.h>
+> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.txt b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> new file mode 100644
+> index 000000000000..cae2dad1223a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.txt
+> @@ -0,0 +1,33 @@
+> +SiFive Core Local Interruptor (CLINT)
+> +-------------------------------------
+> +
+> +SiFive (and other RISC-V) SOCs include an implementation of the SiFive Core
+> +Local Interruptor (CLINT) for M-mode timer and inter-processor interrupts.
+> +
+> +It directly connects to the timer and inter-processor interrupt lines of
+> +various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local interrupt
+> +controller is the parent interrupt controller for CLINT device.
+> +
+> +The clock frequency of CLINT is specified via "timebase-frequency" DT
+> +property of "/cpus" DT node. The "timebase-frequency" DT property is
+> +described in: Documentation/devicetree/bindings/riscv/cpus.yaml
+> +
+> +Required properties:
+> +- compatible : "sifive,clint-1.0.0" and a string identifying the actual
+> +  detailed implementation in case that specific bugs need to be worked around.
+> +- reg : Should contain 1 register range (address and length).
+> +- interrupts-extended : Specifies which HARTs (or CPUs) are connected to
+> +  the CLINT.  Each node pointed to should be a riscv,cpu-intc node, which
+> +  has a riscv node as parent.
+> +
+> +Example:
+> +
+> +	clint@2000000 {
+> +		compatible = "sifive,clint-1.0.0", "sifive,fu540-c000-clint";
+> +		interrupts-extended = <
+> +			&cpu1-intc 3 &cpu1-intc 7
+> +			&cpu2-intc 3 &cpu2-intc 7
+> +			&cpu3-intc 3 &cpu3-intc 7
+> +			&cpu4-intc 3 &cpu4-intc 7>;
+> +		reg = <0x2000000 0x4000000>;
+> +	};
+
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
