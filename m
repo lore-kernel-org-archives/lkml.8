@@ -2,86 +2,175 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CADAC207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6527207DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrnH4OEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgFDODk (ORCPT
+        id S1728919AbgFDOES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:03:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36468 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgFDODk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:03:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id CE82BAC6C;
-        Thu,  4 Jun 2020 14:03:42 +0000 (UTC)
-Subject: Re: [PATCH 1/1] nvme-fcloop: verify wwnn and wwpn format
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "james.smart@broadcom.com" <james.smart@broadcom.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@lst.de" <hch@lst.de>, "sagi@grimberg.me" <sagi@grimberg.me>
-References: <20200526042118.17836-1-dongli.zhang@oracle.com>
- <38a2cfb9-df2a-c5cb-6797-2b96ef049c7c@oracle.com>
- <BYAPR04MB49650D649A53B89DBFE1461286890@BYAPR04MB4965.namprd04.prod.outlook.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <6c646a1e-ab40-63a1-01cb-6cc2548a3853@suse.de>
-Date:   Thu, 4 Jun 2020 16:03:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 10:04:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbgFDOER (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:04:17 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701C6C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:04:17 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id d7so6449561ioq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:04:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZIRXhR4auj5+SLQ7LtgQ61NpxJugv/PsvX/WpFw/ob0=;
+        b=ZrnH4OEFeXvjY7mP/ObdOSwchqQN16o0HIcF6buLn9exAq9bBI/5MsABF7cQbgEJho
+         OR/BDqs5KPZUFVf3ojhsB8cr5bdM3rAar4fGTU30I8iAdq8h7lUSUC9wpY0wFmp3X+hD
+         BUZnifFx3qH4R9ikjcSytq8HT2gd8DfEFplDfjy1mYzicOgupjRK5IDpJOg4u26AEFEK
+         xNf8ESO6GTNAf1SWahl8RzqZbiQbEBzeqt/LO4Rl9EGpkJSbJdFSOf1hefgk29CndNug
+         yJIIza3Or1Cv+XcdvtkXnTsFZaDgOkh5lvumqRZYmg98QekkA9MLxid2OLViWu/RarC7
+         6jgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZIRXhR4auj5+SLQ7LtgQ61NpxJugv/PsvX/WpFw/ob0=;
+        b=PO3tPqXxVwoY9HL4u2OvPWL4ccQ2/hW6DHb2zvCzza5X3YtlEfiqyWZKBhf0vQCvx9
+         l8+yEsppLjHPkdMB5h+nvwgb14/ljbzusYEVoF2jHKDAm9jbBeoctevpscWwxkLXpatN
+         gkiE3MfJYy4Onre/1fJb2U6WNmkJsS2jWDAdR5k86SrW2P5sKXj3cqHO1hOyg0giSTDL
+         f9l4uJtxUME8h0sXlEnup/rc94pZWV17NQhoxYeuMiJ7T83eeKhCIcc4kZEPuOb8iu1A
+         7BgWKDXX2pu9311Ja861gUD74ch8xPcnZoHlWaw79YWXmjOPvdnTerbtq5YBR54u3KP0
+         nukQ==
+X-Gm-Message-State: AOAM531EyTtXIu0B/WswHC/GtqUYBADQ0GEjsTqDN5sQtu2U+hALQw+f
+        Ipy/XcWT57rFZVjN8xgUQWwr0dVkAw==
+X-Google-Smtp-Source: ABdhPJyt3qoNNHm0835lJa4PmkA3HzrusAsIbCxG4T51dV5yN/AOvyO78ibonLWygZDR/00rGYkEDQ==
+X-Received: by 2002:a6b:d104:: with SMTP id l4mr4236706iob.65.1591279456378;
+        Thu, 04 Jun 2020 07:04:16 -0700 (PDT)
+Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
+        by smtp.gmail.com with ESMTPSA id l3sm2342439iow.55.2020.06.04.07.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 07:04:15 -0700 (PDT)
+From:   Brian Gerst <brgerst@gmail.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH] x86/stackprotector: Pre-initialize canary for secondary CPUs
+Date:   Thu,  4 Jun 2020 10:03:59 -0400
+Message-Id: <20200604140359.560797-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <BYAPR04MB49650D649A53B89DBFE1461286890@BYAPR04MB4965.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/20 8:54 AM, Chaitanya Kulkarni wrote:
-> On 6/3/20 11:46 PM, Dongli Zhang wrote:
->> May I get feedback for this?
->>
->> For the first time I use fcloop, I set:
->>
->> # echo "wwnn=0x3,wwpn=0x1" > /sys/class/fcloop/ctl/add_target_port
->>
->> However, I would not be able to move forward if I use "0x3" or "0x1" for nvme-fc
->> target or host further. Instead, the address and port should be
->> 0x0000000000000003 and 0x0000000000000001.
->>
->> This patch would sync the requirements of input format for nvme-fc and
->> nvme-fcloop, unless this would break existing test suite (e.g., blktest).
-> If I remember correctly I don't think we have fc-loop testcases (correct
-> me if I'm wrong).
-> 
-Well, I sent some testcases a while back (cf 'fcloop and ANA fixes').
-Should I resend them?
+The idle tasks created for each secondary CPU already have a random stack
+canary generated by fork().  Copy the canary to the percpu variable before
+starting the secondary CPU which removes the need to call
+boot_init_stack_canary().
 
-> Not an fc expert, but having uniform format for the input make sense to
-> me (unless there is an explicit reason). I'll let James have a final say.
-> 
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
+ arch/x86/include/asm/stackprotector.h | 12 ++++++++++++
+ arch/x86/kernel/smpboot.c             | 12 +-----------
+ arch/x86/xen/smp_pv.c                 |  2 --
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-I would stick to use the full 64bit number for both wwpn and wwnn; one 
-gets into too many arguments otherwise (big-endian? little-endian?).
-And one could argue that '0x0000000000000001' is invalid anyway as per 
-FC-FS3 a '0' in word 0 byte 0 means 'Name not present' :-)
+diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
+index 9804a7957f4e..7fb482f0f25b 100644
+--- a/arch/x86/include/asm/stackprotector.h
++++ b/arch/x86/include/asm/stackprotector.h
+@@ -90,6 +90,15 @@ static __always_inline void boot_init_stack_canary(void)
+ #endif
+ }
+ 
++static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
++{
++#ifdef CONFIG_X86_64
++	per_cpu(fixed_percpu_data.stack_canary, cpu) = idle->stack_canary;
++#else
++	per_cpu(stack_canary.canary, cpu) = idle->stack_canary;
++#endif
++}
++
+ static inline void setup_stack_canary_segment(int cpu)
+ {
+ #ifdef CONFIG_X86_32
+@@ -119,6 +128,9 @@ static inline void load_stack_canary_segment(void)
+ static inline void setup_stack_canary_segment(int cpu)
+ { }
+ 
++static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
++{ }
++
+ static inline void load_stack_canary_segment(void)
+ {
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 2467f3dd35d3..dad7f9ca6478 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -259,21 +259,10 @@ static void notrace start_secondary(void *unused)
+ 	/* enable local interrupts */
+ 	local_irq_enable();
+ 
+-	/* to prevent fake stack check failure in clock setup */
+-	boot_init_stack_canary();
+-
+ 	x86_cpuinit.setup_percpu_clockev();
+ 
+ 	wmb();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-
+-	/*
+-	 * Prevent tail call to cpu_startup_entry() because the stack protector
+-	 * guard has been changed a couple of function calls up, in
+-	 * boot_init_stack_canary() and must not be checked before tail calling
+-	 * another function.
+-	 */
+-	prevent_tail_call_optimization();
+ }
+ 
+ /**
+@@ -1011,6 +1000,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	alternatives_enable_smp();
+ 
+ 	per_cpu(current_task, cpu) = idle;
++	cpu_init_stack_canary(cpu, idle);
+ 
+ 	/* Initialize the interrupt stack(s) */
+ 	ret = irq_init_percpu_irqstack(cpu);
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index ae4d0f283df3..e9f5d6ec30a6 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -92,9 +92,7 @@ static void cpu_bringup(void)
+ asmlinkage __visible void cpu_bringup_and_idle(void)
+ {
+ 	cpu_bringup();
+-	boot_init_stack_canary();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
+-	prevent_tail_call_optimization();
+ }
+ 
+ void xen_smp_intr_free_pv(unsigned int cpu)
 
-Cheers,
-
-Hannes
+base-commit: cc7a4a02564c6cc8dc981fb0a37313830ee8c2d4
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+2.25.4
+
