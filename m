@@ -2,150 +2,98 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6188C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACD2206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J5RJ6b1s"
+	by mail.kernel.org (Postfix) with ESMTP id 82FE020663
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgFDLQg (ORCPT
+        id S1727109AbgFDLQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:16:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgFDLQf (ORCPT
+        Thu, 4 Jun 2020 07:16:41 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:58876 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726444AbgFDLQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:16:35 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D88FC03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 04:16:34 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id n9so2080382plk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 04:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=DEKbfIfXEu9wF9Z0rkW5J6S6e0LP/FIn5jqzqOD5wDs=;
-        b=J5RJ6b1svg73OcukZzTb62hfadQTam8cpOe6CX7zl/Yqm9toweh+CzSVUszQVZxgHc
-         MrzJlzQHPZiB/HszI+VdlKy0lFN8QKlDyAJ3lMMe45FqOCuMua5MMXQT/dYiM298BrDS
-         PwTgQO5xtayqQSu3nBzYBqxLzKEoVkKZOC5iQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=DEKbfIfXEu9wF9Z0rkW5J6S6e0LP/FIn5jqzqOD5wDs=;
-        b=IHGDD+7MHpb1MTZNnoZLuQqRYuxdL5/3jGcJB8ALjW7elAzadptFe2SSQkxwwdk1Sd
-         RJlrC3CHcL0y++k1che1I+HJ+zXieTS6D3IfTZuuWNaJzPp9qRSkP7VhdhHbQJxiby66
-         APPq9R4tDBnQRGG5YwWzl4oeM3YnUuiYpmJIPinqb3p9QejpzMfbBzSfzNOiMR8Xp84V
-         lzRVDUQlLzAd27xn6qj/rhRVCyqaRXfwlVWz/Ldnd7ezd06nDg8GYqKZVbDEBO2t4Yj8
-         tMILLKnb+k21B4dRRwVFitT6llWvUzisS2wYI75mRljHVGRmMLR15OoixVbKi1bo33dA
-         7EcA==
-X-Gm-Message-State: AOAM532lmsU2Vf/DVb53zK7SRRQxKiL4P6wzIypqoyEaGCxn2nJcPxPC
-        q/ATlFrZAQrqDx6F3sWkSmwPAQ==
-X-Google-Smtp-Source: ABdhPJxCCivBhK/hg9K6wT5AEXVQ71u0Uha04pdnmjNrV/7G1HqPOOjkbI98CsYtuP81QhefKr6diQ==
-X-Received: by 2002:a17:902:aa48:: with SMTP id c8mr4478787plr.128.1591269393407;
-        Thu, 04 Jun 2020 04:16:33 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a19sm4510338pfd.165.2020.06.04.04.16.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 04:16:32 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <159120577830.69627.13288547914742515702@swboyd.mtv.corp.google.com> <d9ccf188-4f00-d3ac-ba0f-73f06c087553@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram (Temp) <sanm@codeaurora.org>
-Date:   Thu, 04 Jun 2020 04:16:31 -0700
-Message-ID: <159126939154.69627.13027312816468830595@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Thu, 4 Jun 2020 07:16:38 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Jun 2020 16:45:16 +0530
+Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Jun 2020 16:44:48 +0530
+Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
+        id 9317B191B; Thu,  4 Jun 2020 16:44:47 +0530 (IST)
+From:   Pradeep P V K <ppvk@codeaurora.org>
+To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, mka@chromium.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
+        sibis@codeaurora.org, matthias@chromium.org,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: [PATCH V2 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+Date:   Thu,  4 Jun 2020 16:44:43 +0530
+Message-Id: <1591269283-24084-3-git-send-email-ppvk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
+References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (Temp) (2020-06-04 02:43:09)
->=20
-> On 6/3/2020 11:06 PM, Stephen Boyd wrote:
-> > Quoting Sandeep Maheswaram (2020-03-31 22:15:43)
-> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom=
-.c
-> >> index 1dfd024..d33ae86 100644
-> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> >> @@ -285,6 +307,101 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qc=
-om)
-> >>          return 0;
-> >>   }
-> >>  =20
-> >> +
-> >> +/**
-> >> + * dwc3_qcom_interconnect_init() - Get interconnect path handles
-> >> + * @qcom:                      Pointer to the concerned usb core.
-> >> + *
-> >> + */
-> >> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
-> >> +{
-> >> +       struct device *dev =3D qcom->dev;
-> >> +       int ret;
-> >> +
-> >> +       if (!device_is_bound(&qcom->dwc3->dev))
-> >> +               return -EPROBE_DEFER;
-> > How is this supposed to work? I see that this was added in an earlier
-> > revision of this patch series but there isn't any mention of why
-> > device_is_bound() is used here. It would be great if there was a comment
-> > detailing why this is necessary. It sounds like maximum_speed is
-> > important?
-> >
-> > Furthermore, dwc3_qcom_interconnect_init() is called by
-> > dwc3_qcom_probe() which is the function that registers the device for
-> > qcom->dwc3->dev. If that device doesn't probe between the time it is
-> > registered by dwc3_qcom_probe() and this function is called then we'll
-> > fail dwc3_qcom_probe() with -EPROBE_DEFER. And that will remove the
-> > qcom->dwc3->dev device from the platform bus because we call
-> > of_platform_depopulate() on the error path of dwc3_qcom_probe().
-> >
-> > So isn't this whole thing racy and can potentially lead us to a driver
-> > probe loop where the wrapper (dwc3_qcom) and the core (dwc3) are probing
-> > and we're trying to time it just right so that driver for dwc3 binds
-> > before we setup interconnects? I don't know if dwc3 can communicate to
-> > the wrapper but that would be more of a direct way to do this. Or maybe
-> > the wrapper should try to read the DT property for maximum speed and
-> > fallback to a worst case high bandwidth value if it can't figure it out
-> > itself without help from dwc3 core.
-> >
-> This was added in V4 to address comments from Matthias in V3
->=20
-> https://patchwork.kernel.org/patch/11148587/
->=20
+Add interconnect bandwidth scaling supported strings for qcom-sdhci
+controller.
 
-Yes, that why I said:
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-"I see that this was added in an earlier
- revision of this patch series but there isn't any mention of why
- device_is_bound() is used here. It would be great if there was a comment
- detailing why this is necessary. It sounds like maximum_speed is
- important?"
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index b8e1d2b..3b602fd 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -54,6 +54,21 @@ Required properties:
+ - qcom,dll-config: Chipset and Platform specific value. Use this field to
+ 	specify the DLL_CONFIG register value as per Hardware Programming Guide.
+ 
++Optional Properties:
++* Following bus parameters are required for interconnect bandwidth scaling:
++- interconnects: Pairs of phandles and interconnect provider specifier
++		 to denote the edge source and destination ports of
++		 the interconnect path.
++
++- interconnect-names: For sdhc, we have two main paths.
++		1. Data path : sdhc to ddr
++		2. Config path : cpu to sdhc
++		For Data interconnect path the name supposed to be
++		is "sdhc-ddr" and for config interconnect path it is
++		"cpu-sdhc".
++		Please refer to Documentation/devicetree/bindings/
++		interconnect/ for more details.
++
+ Example:
+ 
+ 	sdhc_1: sdhci@f9824900 {
+@@ -71,6 +86,9 @@ Example:
+ 
+ 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+ 		clock-names = "core", "iface";
++		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
++				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
++		interconnect-names = "sdhc-ddr","cpu-sdhc";
+ 
+ 		qcom,dll-config = <0x000f642c>;
+ 		qcom,ddr-config = <0x80040868>;
+-- 
+1.9.1
 
-Can you please respond to the rest of my email?
