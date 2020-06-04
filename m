@@ -2,154 +2,130 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D32EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4D9C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB3D2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B5Qr6T4g"
+	by mail.kernel.org (Postfix) with ESMTP id 2C9C62074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591252679;
+	bh=O1a535rP16XFYofg4bMZWQkFl2JLEEYgVYDf/xPj9AA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KU9hpYP9dh0dfB7Jpz3N/GXvMKHk6rEBmHfXNAJVsJJ2PIegh+D6/UzbfDJ4U/oJv
+	 VTy60qGZ5PcK6cOhWB1WAOHDf77JjaP0q+ESTAeYrICulTjRtfIhxvNAcJASeK6SkA
+	 h5aBXtQLZ9oYbMmoQKtZOPTBHXtas149KWB78fEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgFDGhe (ORCPT
+        id S1727054AbgFDGh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgFDGhe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:37:34 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A74C03E96D
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 23:37:32 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 202so2871954lfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 23:37:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JF6vGkjPu6tGR+2OADg3G9dJrQZgwlRE6N7uk3/c73c=;
-        b=B5Qr6T4g0IW9cB0HK8Emm/n5F4+eHb905Avti/2XM4JXgOgVPSgu1U1WiPl7vTAXwC
-         q1Gf8Z46hfUasR+d6cd+IW9NS1tQdCYb72hZbTTgc4ulmnwsmi18hAbgywg9V7kekbZN
-         mU5S9dBPyUXh4VYxZ/kb6EuJPrSIPPgQdunTiBDPloVidjO5yeawd8Tbukfw3wS9A/qU
-         LEhwd6P4l+GP2bVcUKTf08aImwA463VKFZxBMdyzwYDrtM/qKDosdo+VgwrFqDQH9gSS
-         LH26sE1WgLPI6HaFekPj3iV5oFHdcNWA3EWh/jSsd18GWkG2Mk1ElCDMsd3dZ6hlj2Mt
-         FCDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JF6vGkjPu6tGR+2OADg3G9dJrQZgwlRE6N7uk3/c73c=;
-        b=Nm4QwD3dYEw1pa7/yiCDLpKF0jL48o9XFje4fiDu5rDCwPOhvAhHpfD+PSuVSu3oSZ
-         W2uz43hyQIJOUF4JbQVcbdK6obXVlfEIRxK66kOGEbC/FuySFzheQ7ruxFbF/JEDGOi9
-         omn49NY3zbQNXPA2IdF9G8SDF9LkdxLB6+sjuvj7j9izrERZ+3cqE6dq03NcR9Um/I4o
-         XBgQ5NP2lSenXc5ObL+3YVxmBso/3piYMLIqGbYHVg4ePd6lTrAX4QFSA28f+7XdWs77
-         IFpl3T7DcuIRNdUz+tbF7DOPPN1bjS9amfPaG2aynhUeRwYTLBBEgqzeyNsin39agvFS
-         4TJA==
-X-Gm-Message-State: AOAM532RCUZ0H6aQMRYWfuoJGDPwIT7FCj3jkxGkdWfnIp4tUzd9OWSQ
-        jCjAq0DgOGFF1xRcIaF7WCGfUExDCWI2utS7cdLwKQ==
-X-Google-Smtp-Source: ABdhPJxzZug4yZBvmMHxNDR9NF9ca/j7Fd+HWqEAhKcwM7QbkBoQEDIBv7kiKQ+Iv2oaj3sESCLuAX8wA4juEgJP9hA=
-X-Received: by 2002:a19:434e:: with SMTP id m14mr1687549lfj.40.1591252651152;
- Wed, 03 Jun 2020 23:37:31 -0700 (PDT)
+        Thu, 4 Jun 2020 02:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726364AbgFDGh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 02:37:57 -0400
+Received: from kernel.org (unknown [87.71.78.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE6B9206C3;
+        Thu,  4 Jun 2020 06:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591252677;
+        bh=O1a535rP16XFYofg4bMZWQkFl2JLEEYgVYDf/xPj9AA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JfERwxMXEu2kI9XoIT9dWNXO1rREUwNy4knLypfsDDn3RoK04PQ+VcJ9cU4AiLvZ9
+         zgKMGrd4au2WatdA8yMk1LlH6XWepwggHO+6JEHEW8/tg+Uifk/2Ah/6wTBJLxUsMO
+         hIlar1DcvGQ6J2i69MlWxGfbGkXBQIZ5oY21iu3Y=
+Date:   Thu, 4 Jun 2020 09:37:45 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
+ pagefault/preempt twice
+Message-ID: <20200604063745.GB202650@kernel.org>
+References: <20200519165422.GA5838@roeck-us.net>
+ <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
+ <20200519194215.GA71941@roeck-us.net>
+ <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
+ <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
+ <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
+ <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
+ <20200603211416.GA1740285@iweiny-DESK2.sc.intel.com>
+ <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
+ <20200604062226.GA1740345@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <1591183888-11101-1-git-send-email-sumit.garg@linaro.org> <CAD8XO3Z-JvCYxqbbeGRmjc-KskpykrcfWEGKH9eO6mvG7zHc6Q@mail.gmail.com>
-In-Reply-To: <CAD8XO3Z-JvCYxqbbeGRmjc-KskpykrcfWEGKH9eO6mvG7zHc6Q@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 4 Jun 2020 12:07:19 +0530
-Message-ID: <CAFA6WYNm+5NGODemHKxQXSNk4m+0P60kr=btTwp9q-6d_6-QPw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: tee: Document TEE kernel interface
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        op-tee@lists.trustedfirmware.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604062226.GA1740345@iweiny-DESK2.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 at 20:05, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
->
-> Hello Sumit,
->
-> if this doc is for driver developers it might be useful to add some
-> code examples how to register drivers on tee bus.
+On Wed, Jun 03, 2020 at 11:22:26PM -0700, Ira Weiny wrote:
+> On Wed, Jun 03, 2020 at 04:44:17PM -0700, Guenter Roeck wrote:
+> 
+> With linux-next on sparc I too see the spinlock issue; something like:
+> 
+> ...
+> Starting syslogd: BUG: spinlock recursion on CPU#0, S01syslogd/139
+>  lock: 0xf53ef350, .magic: dead4ead, .owner: S01syslogd/139, .owner_cpu: 0
+> CPU: 0 PID: 139 Comm: S01syslogd Not tainted 5.7.0-next-20200603 #1
+> [f0067d00 : 
+> do_raw_spin_lock+0xa8/0xd8 ] 
+> [f00d598c : 
+> copy_page_range+0x328/0x804 ] 
+> [f0025c34 : 
+> dup_mm+0x334/0x434 ] 
+> [f0027198 : 
+> copy_process+0x1248/0x12d4 ] 
+> [f00273b8 : 
+> _do_fork+0x54/0x30c ] 
+> [f00276e4 : 
+> do_fork+0x5c/0x6c ] 
+> [f000de44 : 
+> sparc_do_fork+0x18/0x38 ] 
+> [f000b7f4 : 
+> do_syscall+0x34/0x40 ] 
+> [5010cd4c : 
+> 0x5010cd4c ] 
+> 
+> 
+> I'm going to bisect between there and HEAD.
 
-Sure, will add an example TEE client driver snippet for reference.
+The sparc issue should be fixed by 
 
--Sumit
+https://lore.kernel.org/lkml/20200526173302.377-1-will@kernel.org
+ 
+> Ira
 
->
-> Best regards,
-> Maxim.
->
-> On Wed, 3 Jun 2020 at 14:31, Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Update documentation with TEE bus infrastructure which provides an
-> > interface for kernel client drivers to communicate with corresponding
-> > Trusted Application.
-> >
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  Documentation/tee.txt | 30 ++++++++++++++++++++++++++++++
-> >  1 file changed, 30 insertions(+)
-> >
-> > diff --git a/Documentation/tee.txt b/Documentation/tee.txt
-> > index c8fad81..428d3b5 100644
-> > --- a/Documentation/tee.txt
-> > +++ b/Documentation/tee.txt
-> > @@ -53,6 +53,28 @@ clients, forward them to the TEE and send back the results. In the case of
-> >  supplicants the communication goes in the other direction, the TEE sends
-> >  requests to the supplicant which then sends back the result.
-> >
-> > +The TEE kernel interface
-> > +========================
-> > +
-> > +Kernel provides a TEE bus infrastructure where a Trusted Application is
-> > +represented as a device identified via Universally Unique Identifier (UUID) and
-> > +client drivers register a table of supported device UUIDs.
-> > +
-> > +TEE bus infrastructure registers following APIs:
-> > +-  match(): iterates over the client driver UUID table to find a corresponding
-> > +   match for device UUID. If a match is found, then this particular device is
-> > +   probed via corresponding probe API registered by the client driver. This
-> > +   process happens whenever a device or a client driver is registered with TEE
-> > +   bus.
-> > +-  uevent(): notifies user-space (udev) whenever a new device is registered on
-> > +   TEE bus for auto-loading of modularized client drivers.
-> > +
-> > +TEE bus device enumeration is specific to underlying TEE implementation, so it
-> > +is left open for TEE drivers to provide corresponding implementation.
-> > +
-> > +Then TEE client driver can talk to a matched Trusted Application using APIs
-> > +listed in include/linux/tee_drv.h.
-> > +
-> >  OP-TEE driver
-> >  =============
-> >
-> > @@ -112,6 +134,14 @@ kernel are handled by the kernel driver. Other RPC messages will be forwarded to
-> >  tee-supplicant without further involvement of the driver, except switching
-> >  shared memory buffer representation.
-> >
-> > +OP-TEE device enumeration
-> > +-------------------------
-> > +
-> > +OP-TEE provides a pseudo Trusted Application: drivers/tee/optee/device.c in
-> > +order to support device enumeration. In other words, OP-TEE driver invokes this
-> > +application to retrieve a list of Trusted Applications which can be registered
-> > +as devices on the TEE bus.
-> > +
-> >  AMD-TEE driver
-> >  ==============
-> >
-> > --
-> > 2.7.4
-> >
+-- 
+Sincerely yours,
+Mike.
