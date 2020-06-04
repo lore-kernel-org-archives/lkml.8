@@ -2,75 +2,245 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D66206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5E220738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgFDNSC (ORCPT
+        id S1728442AbgFDNUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:18:02 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51568 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbgFDNSB (ORCPT
+        Thu, 4 Jun 2020 09:20:48 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55827 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728055AbgFDNUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:18:01 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 95FF41C0BD2; Thu,  4 Jun 2020 15:17:59 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 15:17:44 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] dt-bindings: leds: fix macro names for pca955x
-Message-ID: <20200604131744.GB7222@duo.ucw.cz>
-References: <20200603091516.31907-1-f.suligoi@asem.it>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UHN/qo2QbUvPLonB"
-Content-Disposition: inline
-In-Reply-To: <20200603091516.31907-1-f.suligoi@asem.it>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 4 Jun 2020 09:20:47 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Jun 2020 18:50:05 +0530
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Jun 2020 18:49:41 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id 55AFD49A8; Thu,  4 Jun 2020 18:49:40 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, jsanka@codeaurora.org,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Subject: [PATCH v6] drm/msm/dpu: ensure device suspend happens during PM sleep
+Date:   Thu,  4 Jun 2020 18:49:35 +0530
+Message-Id: <1591276775-13949-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"The PM core always increments the runtime usage counter
+before calling the ->suspend() callback and decrements it
+after calling the ->resume() callback"
 
---UHN/qo2QbUvPLonB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+DPU and DSI are managed as runtime devices. When
+suspend is triggered, PM core adds a refcount on all the
+devices and calls device suspend, since usage count is
+already incremented, runtime suspend was not getting called
+and it kept the clocks on which resulted in target not
+entering into XO shutdown.
 
-On Wed 2020-06-03 11:15:16, Flavio Suligoi wrote:
-> The documentation reports the wrong macro names
-> related to the pca9532 instead of the pca955x
->=20
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> Acked-by: Rob Herring <robh@kernel.org>
+Add changes to force suspend on runtime devices during pm sleep.
 
-Thanks, applied.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Changes in v1:
+ - Remove unnecessary checks in the function
+    _dpu_kms_disable_dpu (Rob Clark).
 
---UHN/qo2QbUvPLonB
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v2:
+ - Avoid using suspend_late to reset the usagecount
+   as suspend_late might not be called during suspend
+   call failures (Doug).
 
------BEGIN PGP SIGNATURE-----
+Changes in v3:
+ - Use force suspend instead of managing device usage_count
+   via runtime put and get API's to trigger callbacks (Doug).
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtj0eAAKCRAw5/Bqldv6
-8vkJAJ9sKSBTC355Gt6RY0F4iPk8CNjcKQCfTkmUqMlgMHh8db7PoMQPEEr97Os=
-=RVZc
------END PGP SIGNATURE-----
+Changes in v4:
+ - Check the return values of pm_runtime_force_suspend and
+   pm_runtime_force_resume API's and pass appropriately (Doug).
 
---UHN/qo2QbUvPLonB--
+Changes in v5:
+ - With v4 patch, test cycle has uncovered issues in device resume.
+
+   On bubs: cmd tx failures were seen as SW is sending panel off
+   commands when the dsi resources are turned off.
+
+   Upon suspend, DRM driver will issue a NULL composition to the
+   dpu, followed by turning off all the HW blocks.
+
+   v5 changes will serialize the NULL commit and resource unwinding
+   by handling them under PM prepare and PM complete phases there by
+   ensuring that clks are on when panel off commands are being
+   processed.
+
+Changes in v6:
+- Use drm_mode_config_helper_suspend/resume() instead of legacy API
+  drm_atomic_helper_suspend/resume() (Doug).
+
+  Trigger runtime callbacks from the suspend/resume call to turn
+  off the resources.
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  2 +
+ drivers/gpu/drm/msm/dsi/dsi.c           |  2 +
+ drivers/gpu/drm/msm/msm_drv.c           | 67 ++++++++++++++++-----------------
+ 3 files changed, 37 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index ce19f1d..b886d9d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+ 
+ static const struct dev_pm_ops dpu_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static const struct of_device_id dpu_dt_match[] = {
+diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
+index 55ea4bc2..62704885 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi.c
++++ b/drivers/gpu/drm/msm/dsi/dsi.c
+@@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
+ 
+ static const struct dev_pm_ops dsi_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static struct platform_driver dsi_driver = {
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 7d985f8..da42ff7 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1035,75 +1035,74 @@ static int msm_ioctl_submitqueue_close(struct drm_device *dev, void *data,
+ 	.patchlevel         = MSM_VERSION_PATCHLEVEL,
+ };
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static int msm_pm_suspend(struct device *dev)
++#ifdef CONFIG_PM
++static int msm_runtime_suspend(struct device *dev)
+ {
+ 	struct drm_device *ddev = dev_get_drvdata(dev);
+ 	struct msm_drm_private *priv = ddev->dev_private;
++	struct msm_mdss *mdss = priv->mdss;
+ 
+-	if (WARN_ON(priv->pm_state))
+-		drm_atomic_state_put(priv->pm_state);
++	DBG("");
+ 
+-	priv->pm_state = drm_atomic_helper_suspend(ddev);
+-	if (IS_ERR(priv->pm_state)) {
+-		int ret = PTR_ERR(priv->pm_state);
+-		DRM_ERROR("Failed to suspend dpu, %d\n", ret);
+-		return ret;
+-	}
++	if (mdss && mdss->funcs)
++		return mdss->funcs->disable(mdss);
+ 
+ 	return 0;
+ }
+ 
+-static int msm_pm_resume(struct device *dev)
++static int msm_runtime_resume(struct device *dev)
+ {
+ 	struct drm_device *ddev = dev_get_drvdata(dev);
+ 	struct msm_drm_private *priv = ddev->dev_private;
+-	int ret;
++	struct msm_mdss *mdss = priv->mdss;
+ 
+-	if (WARN_ON(!priv->pm_state))
+-		return -ENOENT;
++	DBG("");
+ 
+-	ret = drm_atomic_helper_resume(ddev, priv->pm_state);
+-	if (!ret)
+-		priv->pm_state = NULL;
++	if (mdss && mdss->funcs)
++		return mdss->funcs->enable(mdss);
+ 
+-	return ret;
++	return 0;
+ }
+ #endif
+ 
+-#ifdef CONFIG_PM
+-static int msm_runtime_suspend(struct device *dev)
++#ifdef CONFIG_PM_SLEEP
++static int msm_pm_suspend(struct device *dev)
+ {
+-	struct drm_device *ddev = dev_get_drvdata(dev);
+-	struct msm_drm_private *priv = ddev->dev_private;
+-	struct msm_mdss *mdss = priv->mdss;
+ 
+-	DBG("");
++	if (pm_runtime_suspended(dev))
++		return 0;
+ 
+-	if (mdss && mdss->funcs)
+-		return mdss->funcs->disable(mdss);
++	return msm_runtime_suspend(dev);
++}
+ 
+-	return 0;
++static int msm_pm_resume(struct device *dev)
++{
++	if (pm_runtime_suspended(dev))
++		return 0;
++
++	return msm_runtime_resume(dev);
+ }
+ 
+-static int msm_runtime_resume(struct device *dev)
++static int msm_pm_prepare(struct device *dev)
+ {
+ 	struct drm_device *ddev = dev_get_drvdata(dev);
+-	struct msm_drm_private *priv = ddev->dev_private;
+-	struct msm_mdss *mdss = priv->mdss;
+ 
+-	DBG("");
++	return drm_mode_config_helper_suspend(ddev);
++}
+ 
+-	if (mdss && mdss->funcs)
+-		return mdss->funcs->enable(mdss);
++static void msm_pm_complete(struct device *dev)
++{
++	struct drm_device *ddev = dev_get_drvdata(dev);
+ 
+-	return 0;
++	drm_mode_config_helper_resume(ddev);
+ }
+ #endif
+ 
+ static const struct dev_pm_ops msm_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
+ 	SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
++	.prepare = msm_pm_prepare,
++	.complete = msm_pm_complete,
+ };
+ 
+ /*
+-- 
+1.9.1
+
