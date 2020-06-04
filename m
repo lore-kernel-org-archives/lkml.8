@@ -2,153 +2,175 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ECAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1F0206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF344206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSfqxACh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgFDOXP (ORCPT
+        id S1728977AbgFDOXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:23:15 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:39679 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgFDOXO (ORCPT
+        Thu, 4 Jun 2020 10:23:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728881AbgFDOXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:23:14 -0400
-Received: by mail-il1-f197.google.com with SMTP id o12so4076428ilf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:23:13 -0700 (PDT)
+        Thu, 4 Jun 2020 10:23:51 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98240C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:23:51 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id h7so4907687otr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0yy5MHljbkaYpaeAQHYcaCMNZgb1qOOCz2cvx6JmiYQ=;
+        b=HSfqxAChf0V1f77Ft3hLr3vs5os805dKFbsK7rD1pDPMUQ0Hpew3ZFGeV9PurLAR8j
+         TW4tdEXYbOb6rUxHNaPilcaDJb9iRw91ogsiZTa6bQ28RmdNGYq9X+Js7feaRn2eJn6/
+         5L+9nNoyuLYPE2FD9hDGbwmcS+1YS3WqMCv4fhktKikiT6BE8YgcpUB0SXyRDEBVqMXV
+         +s+5l8y2eVM3/iAZCQ2r6MFv8iXkhNVkCJKw5EVmRwuqMev8g9eAuZzjoj4YfOsEbPkY
+         HethYLZNONsBGpCZvmDurGpyo5swb5veoaKRFljbSId1jfTeY1YAn6c6MlLwFk0laMWy
+         DVMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ChhcWL3hTFWCpFWNbyNbxXqvn5rlljlRuJpYLklKBw0=;
-        b=LgfNwMZNfJsLoGxyEyvt1xwEwHXzjER85FFG4bmduVqCVVG75RYs+9MFr+GvzJC+x4
-         fqP8AqINKcaNTOPnc7HtutMt3Gx9gw59+pX+Pu3Hp1VStoj1JQ1sFNO2kLmb4T8TL02C
-         MRbewTcXxd7L1ZgMFunR60/icTqO1Q696dcvsfLuVikQEBpgvEWajLcuChLOgCFXZWDQ
-         1a972GjIXIq7sj0fv4V04SFfY6KGPp4ejLY+gNlmyB/F+5kJJM6ldgSMo58/xVGghjWy
-         lC08wMc838uExgyPi9jQK0wwleBx3vLoMQWqVjzNeeaAqFJ9n+DCT38ou0MFek0/Ov2d
-         bjUw==
-X-Gm-Message-State: AOAM5325M3q+eQluJPqvi+bzhVT7a/cOWBerQ/ZpXTm2rr2j+gnUFeCl
-        XSbjSkIlhhrUOilUlmX4lWHznkQWHkQo/pfWbBVMlBV7cX65
-X-Google-Smtp-Source: ABdhPJzKv56bUdfAsAiMeZJczlzOSCzOIr6s3IHnhpRAJVSmYLG7E+6UvtqjfxLBo4IZNA4/elWFCKEXkaegRZ/BtXgmwXe5cD1t
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0yy5MHljbkaYpaeAQHYcaCMNZgb1qOOCz2cvx6JmiYQ=;
+        b=aNUWH/1sxAPFxD56csal9FG/6pNgM3HrjKLzZqB/O+V+3h7zgH51BvicWtU+CHBGZZ
+         5pQvmv+Nvn8wOu27Kjy74qvPdL9xpXeG9Mki2V9EPeHAsxcBWQdcp6qq6NHOsRkleRux
+         hcDKLjHvImhs1kBPIun0q3Gsrq7l228QVaGN/lBoMCCVw2pfbzE+yskDn9KUsM6DZtzw
+         d8VjOkIrQ+dBEVyLb+VTinsKx/bOkLYjG4rP3LNwZbtHGADugLYsBWPNHb/YyCH1ER0H
+         mlDhC8ACQIiR28bIltlgBIDSpd0M0pdYWWxEw9NG7PeyvDv4erkKbvXBolk0sYqt98F+
+         sfEA==
+X-Gm-Message-State: AOAM530Rgg3nyDhiSXsO1TxrNqhLwXi+DmfHblyRr2GOOI/dpRD8t92Z
+        FPY1C3WF8USJJIQf8aOkLiUEbO5gMj8nicnUxi5XOQ==
+X-Google-Smtp-Source: ABdhPJxJZ4BbuQgjAR20KqnLGvUsqohMq0tFoznzianKvhbfTDKBnCLQ4GtkXTg8uj2Lc1wNadWuIeYAYYqrxPb24Mc=
+X-Received: by 2002:a9d:6958:: with SMTP id p24mr4127585oto.17.1591280630632;
+ Thu, 04 Jun 2020 07:23:50 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:a158:: with SMTP id v85mr3321556ili.21.1591280593441;
- Thu, 04 Jun 2020 07:23:13 -0700 (PDT)
-Date:   Thu, 04 Jun 2020 07:23:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000829d9805a742e264@google.com>
-Subject: general protection fault in ima_free_template_entry
-From:   syzbot <syzbot+223310b454ba6b75974e@syzkaller.appspotmail.com>
-To:     dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, roberto.sassu@huawei.com,
-        serge@hallyn.com, syzkaller-bugs@googlegroups.com,
-        zohar@linux.ibm.com
+References: <20200604095057.259452-1-elver@google.com> <20200604110918.GA2750@hirez.programming.kicks-ass.net>
+ <CAAeHK+wRDk7LnpKShdUmXo54ij9T0sN9eG4BZXqbVovvbz5LTQ@mail.gmail.com>
+In-Reply-To: <CAAeHK+wRDk7LnpKShdUmXo54ij9T0sN9eG4BZXqbVovvbz5LTQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 4 Jun 2020 16:23:38 +0200
+Message-ID: <CANpmjNML7hBNpYGL81M1-=rrYn5PAJPTxFc_Jn0DVhUgwJV8Hg@mail.gmail.com>
+Subject: Re: [PATCH -tip] kcov: Make runtime functions noinstr-compatible
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, 4 Jun 2020 at 16:03, Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Thu, Jun 4, 2020 at 1:09 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Jun 04, 2020 at 11:50:57AM +0200, Marco Elver wrote:
+> > > The KCOV runtime is very minimal, only updating a field in 'current',
+> > > and none of __sanitizer_cov-functions generates reports nor calls any
+> > > other external functions.
+> >
+> > Not quite true; it writes to t->kcov_area, and we need to make
+> > absolutely sure that doesn't take faults or triggers anything else
+> > untowards.
+> >
+> > > Therefore we can make the KCOV runtime noinstr-compatible by:
+> > >
+> > >   1. always-inlining internal functions and marking
+> > >      __sanitizer_cov-functions noinstr. The function write_comp_data() is
+> > >      now guaranteed to be inlined into __sanitize_cov_trace_*cmp()
+> > >      functions, which saves a call in the fast-path and reduces stack
+> > >      pressure due to the first argument being a constant.
+>
+> Maybe we could do CFLAGS_REMOVE_kcov.o = $(CC_FLAGS_FTRACE) the same
+> way we do it for KASAN? And drop notrace/noinstr from kcov. Would it
+> resolve the issue? I'm not sure which solution is better though.
 
-syzbot found the following crash on:
+Sadly no. 'noinstr' implies 'notrace', but also places the function in
+the .noinstr.text section for the purpose of objtool checking. But: we
+should only mark a function 'noinstr' if it (and its callees)
+satisfies the requirements that Peter outlined (are the requirements
+documented somewhere?). In particular, we need to worry about vmalloc
+faults.
 
-HEAD commit:    e7b08814 Add linux-next specific files for 20200529
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12d7b391100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1e62421a5de6da96
-dashboard link: https://syzkaller.appspot.com/bug?extid=223310b454ba6b75974e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108575d2100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13291661100000
+[...]
+> > > -static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
+> > > +static __always_inline void write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
+> > >  {
+> > >       struct task_struct *t;
+> > >       u64 *area;
+> > > @@ -231,59 +231,59 @@ static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
+> > >       }
+> > >  }
+> >
+> > This thing; that appears to be the meat of it, right?
+> >
+> > I can't find where t->kcov_area comes from.. is that always
+> > kcov_mmap()'s vmalloc_user() ?
+> >
+> > That whole kcov_remote stuff confuses me.
+> >
+> > KCOV_ENABLE() has kcov_fault_in_area(), which supposedly takes the
+> > vmalloc faults for the current task, but who does it for the remote?
+>
+> Hm, no one. This might be an issue, thanks for noticing!
+>
+> > Now, luckily Joerg went and ripped out the vmalloc faults, let me check
+> > where those patches are... w00t, they're upstream in this merge window.
+>
+> Could you point me to those patches?
+>
+> Even though it might work fine now, we might get issues if we backport
+> remote kcov to older kernels.
+>
+> >
+> > So no #PF from writing to t->kcov_area then, under the assumption that
+> > the vmalloc_user() is the only allocation site.
+> >
+> > But then there's hardware watchpoints, if someone goes and sets a data
+> > watchpoint in the kcov_area we're screwed. Nothing actively prevents
+> > that from happening. Then again, the same is currently true for much of
+> > current :/
+> >
+> > Also, I think you need __always_inline on kaslr_offset()
+> >
+> >
+> > And, unrelated to this patch in specific, I suppose I'm going to have to
+> > extend objtool to look for data that is used from noinstr, to make sure
+> > we exclude it from inspection and stuff, like that kaslr offset crud for
+> > example.
+> >
+> > Anyway, yes, it appears you're lucky (for having Joerg remove vmalloc
+> > faults) and this mostly should work as is.
 
-The bug was bisected to:
+Now I am a bit worried that, even though we're lucky today, with what
+Andrey said about e.g. kcov_remote faults, it'll be hard to ensure we
+won't break in future. The exact set of conditions that mean we're
+lucky today may change and we have no way of checking this.
 
-commit aa724fe18a8a8285d0071c3bfc932efb090d142d
-Author: Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Wed Mar 25 10:47:09 2020 +0000
+I'll try to roll a v2 based on the "if (_RET_IP_ in noinstr section)
+return;" and whitelist in objtool approach. Unless you see something
+very wrong with that. And I do hope we'll get compiler attributes
+eventually.
 
-    ima: Switch to dynamically allocated buffer for template digests
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1616e896100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1516e896100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1116e896100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+223310b454ba6b75974e@syzkaller.appspotmail.com
-Fixes: aa724fe18a8a ("ima: Switch to dynamically allocated buffer for template digests")
-
-RBP: 000000000000dcd4 R08: 0000000000000002 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402160
-R13: 00000000004021f0 R14: 0000000000000000 R15: 0000000000000000
-general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-CPU: 0 PID: 6811 Comm: syz-executor925 Not tainted 5.7.0-rc7-next-20200529-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:ima_free_template_entry+0x4a/0x170 security/integrity/ima/ima_api.c:27
-Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 25 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 5d 10 48 8d 7b 20 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e d1 00 00 00 8b 5b 20 31 ff 89
-RSP: 0018:ffffc900018e7598 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff9200031cece
-RDX: 0000000000000004 RSI: ffffffff836d8716 RDI: 0000000000000020
-RBP: ffff88809a078d80 R08: 0000000000000000 R09: ffffed1015cc719c
-R10: ffff8880ae638cdb R11: ffffed1015cc719b R12: ffffc900018e7670
-R13: ffffffff8a06d650 R14: ffff88809a078d90 R15: 00000000fffffff4
-FS:  0000000000bc7880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 00000000a6570000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- ima_alloc_init_template+0x3de/0x570 security/integrity/ima/ima_api.c:80
- ima_add_violation+0x109/0x1e0 security/integrity/ima/ima_api.c:148
- ima_rdwr_violation_check security/integrity/ima/ima_main.c:140 [inline]
- process_measurement+0x1144/0x1750 security/integrity/ima/ima_main.c:237
- ima_file_check+0xb9/0x100 security/integrity/ima/ima_main.c:491
- do_open fs/namei.c:3236 [inline]
- path_openat+0x17a4/0x27d0 fs/namei.c:3351
- do_filp_open+0x192/0x260 fs/namei.c:3378
- do_sys_openat2+0x585/0x7a0 fs/open.c:1173
- do_sys_open+0xc3/0x140 fs/open.c:1189
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x441219
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffca22cc218 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441219
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000180
-RBP: 000000000000dcd4 R08: 0000000000000002 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402160
-R13: 00000000004021f0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace d5e7ae4ed8ee55df ]---
-RIP: 0010:ima_free_template_entry+0x4a/0x170 security/integrity/ima/ima_api.c:27
-Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 25 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 5d 10 48 8d 7b 20 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e d1 00 00 00 8b 5b 20 31 ff 89
-RSP: 0018:ffffc900018e7598 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff9200031cece
-RDX: 0000000000000004 RSI: ffffffff836d8716 RDI: 0000000000000020
-RBP: ffff88809a078d80 R08: 0000000000000000 R09: ffffed1015cc719c
-R10: ffff8880ae638cdb R11: ffffed1015cc719b R12: ffffc900018e7670
-R13: ffffffff8a06d650 R14: ffff88809a078d90 R15: 00000000fffffff4
-FS:  0000000000bc7880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f1d9c03f078 CR3: 00000000a6570000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+-- Marco
