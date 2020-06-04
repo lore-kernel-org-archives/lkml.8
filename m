@@ -2,108 +2,78 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3960CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10337206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:21:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591244488;
-	bh=seZ4l17UAhJmDjcYLmBb3+WsxXCHmTGoBsmLJEsIK9s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tacCF8Mt5QRPjRZHf5KzgP6oyb1XOS+nr528bClbLHvHBqIjKqY95gv/mdILnghr4
-	 0t+EEiPBq5P5H+ft3xhfBYnBNoTAdvCnTvnA67KRDyhCrreMUIccB/1GlSxKzNDH+z
-	 JvSJ25ki9ixtzX7UGMZNSPHF4rbYVB0sBce34PFM=
+	by mail.kernel.org (Postfix) with ESMTP id D945A207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgFDEV0 (ORCPT
+        id S1726612AbgFDEXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
+        Thu, 4 Jun 2020 00:23:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgFDEV0 (ORCPT
+        with ESMTP id S1726146AbgFDEXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:21:26 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1F3C03E96D
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 21:21:25 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c11so5548735ljn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ibr/VZbLMyGb+zMg+GN++bmNBEQgeGmT6g5ZXwd388Q=;
-        b=Bn2WBvA5Ql6NayGRsHsky2PmoWV+IQEfrXN+hAq6GtSpeTQnBbkK5YEo6Hz8rIFW2K
-         8leA8oDfXoNMH7aqRARky+w4XxdyY/I/orySzXcl4QzN8H29WpFFD3TPfEXpAjIdyqIT
-         cR/9LY+nQvxxUamLToaC8aWuO4cMoZE6mkOqo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ibr/VZbLMyGb+zMg+GN++bmNBEQgeGmT6g5ZXwd388Q=;
-        b=kdFYdEvm5ZAB5RI6Q+jKJ13eECNAK3rxOGsC8IP3Ur/LcutaceSO1JJlEJ//B95Hfk
-         UXAKgNP0EVVzvQtY8UAbHjZ/JYd96JkVG6yHlr/3EvvdB46W7SYmGdsZ2a65LLXLxMgV
-         SaK00Cb1OowF/0cJcoTUKpQl2I7WTYkbcU8yryLZ9/Yn/5B+Xq3zOFI07MWvo1Lsmsbj
-         I1Sz9vryVfPWPGe2mmnKvic2Ny/VNXSbaEjdii1NsxXgfj37rM3hnpHSgfVhHwM9SpgG
-         WVgvaXE260qoMnAEcQER7VLoN9TAkLscw6GsNojnAzpXBqTijhPsa+uniRW+Gi0PEFiG
-         zEYQ==
-X-Gm-Message-State: AOAM531NAf308u6XnwWtYC7G3QDOILN9oxEWa90wF4z3nyx1nX5wgTLY
-        Xv/yQ4C+qJ12GXLcm3gTq1SPiF8yxFQ=
-X-Google-Smtp-Source: ABdhPJwz9IEDf4jq4yzTECCLHKXlU/x9MCDvJ3Zg9+f1sQvGJ3UNGGnjhRYdiJ0+qx5L8C6HQ61g1A==
-X-Received: by 2002:a05:651c:1022:: with SMTP id w2mr1237147ljm.262.1591244484066;
-        Wed, 03 Jun 2020 21:21:24 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id j12sm938136ljg.15.2020.06.03.21.21.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 21:21:23 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id n24so5491026lji.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:21:22 -0700 (PDT)
-X-Received: by 2002:a05:651c:2c6:: with SMTP id f6mr1085967ljo.371.1591244482555;
- Wed, 03 Jun 2020 21:21:22 -0700 (PDT)
+        Thu, 4 Jun 2020 00:23:25 -0400
+X-Greylist: delayed 347 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 03 Jun 2020 21:23:23 PDT
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A98C03E96D;
+        Wed,  3 Jun 2020 21:23:23 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 41F76100DA1BD;
+        Thu,  4 Jun 2020 06:23:22 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D74AA211B4E; Thu,  4 Jun 2020 06:23:21 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 06:23:21 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 1/3] dt-bindings: spi: Document bcm2711 and bcm7211 SPI
+ compatible
+Message-ID: <20200604042321.vugeex6qgpe3ajvc@wunner.de>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-2-f.fainelli@gmail.com>
 MIME-Version: 1.0
-References: <20200603100559.2718efba@coco.lan>
-In-Reply-To: <20200603100559.2718efba@coco.lan>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 3 Jun 2020 21:21:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg0=J7VXoEL0eCNmguyj-z7G-iByHcUV02nrmw10GCZ3A@mail.gmail.com>
-Message-ID: <CAHk-=wg0=J7VXoEL0eCNmguyj-z7G-iByHcUV02nrmw10GCZ3A@mail.gmail.com>
-Subject: Re: [GIT PULL for v5.8-rc1] media updates
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604034655.15930-2-f.fainelli@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 1:06 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
->   - The atomisp staging driver was resurrected. It is meant to work with
->     4 generations of cameras on Atom-based laptops, tablets and cell
->     phones. So, it seems worth investing time to cleanup this driver and
->     making it in good shape.
+On Wed, Jun 03, 2020 at 08:46:53PM -0700, Florian Fainelli wrote:
+> The BCM2711 and BCM7211 chips use the BCM2835 SPI controller, but there
+> are severl instances of those in the system and they all share the same
+      ^^^^^^
+Nit: "several"
 
-Hmm. It causes a warning for me:
+And apparently they do not *all* share the interrupt, but only
+4 controllers (out of 5, not counting the two bcm2835aux ones)
+do so.
 
-   drivers/staging/media/atomisp/pci/atomisp_v4l2.c:764:12: warning:
-=E2=80=98atomisp_mrfld_power=E2=80=99 defined but not used [-Wunused-functi=
-on]
+Thanks,
 
-which is a bit annoying.
-
-I can see the FIXME's there, but the warning still isn't acceptable.
-
-I'll add a fixup commit. I was going to do it in the merge itself, but
-decided that was a bit too subtle.
-
-               Linus
+Lukas
