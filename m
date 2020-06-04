@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75024C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E69C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B92E20738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CDD2072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OxzeBlAn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJSd+ZW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbgFDQjt (ORCPT
+        id S1729877AbgFDQjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:39:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33549 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729115AbgFDQjs (ORCPT
+        Thu, 4 Jun 2020 12:39:51 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42050 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729582AbgFDQjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:39:48 -0400
+        Thu, 4 Jun 2020 12:39:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1591288787;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VGXzotyGQ0uS8DSLgpA4BDR+heUxDbWEeeYOwit4OjY=;
-        b=OxzeBlAn+oHPVpE24eo4dERsld7f94gcoX1E3GanIuEvTOSCsvYv4BWcq9Ahw5ea3ZZ168
-        3v7eOj0TRDhA1LD/nrR/FGWSjtktIy86aiDWqpt70C3M9u5LTFjmDFqkzk1r7Io/QGpFg6
-        81zX227M3RiCoP/OX7RcIzbH5iZ4Cho=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-YF_G7h7gNTqEY-fGEPHRTQ-1; Thu, 04 Jun 2020 12:39:45 -0400
-X-MC-Unique: YF_G7h7gNTqEY-fGEPHRTQ-1
-Received: by mail-wr1-f70.google.com with SMTP id o1so2624665wrm.17
+        bh=iVvEBKYL9SiRyrwTcQNMfs37AyJatE6ZkmtZGf9Ce7M=;
+        b=QJSd+ZW6vhQbUjRgpcYf32QxVrRYQDZRY8CLDNqLegKyxY18f0uwi6OL2yqTspqIJn6IUf
+        G17r0MjDW1/h39gD2M/FbKsvsaJHxGVQiJCgWTqlh7rKaHQQzJ2oCcN65iik69hqTQ9Y2Z
+        Gduna1y+uNJ27jZau+K01PvfyYm3PNI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-_gCegx7jPyiR4pUofirpiw-1; Thu, 04 Jun 2020 12:39:45 -0400
+X-MC-Unique: _gCegx7jPyiR4pUofirpiw-1
+Received: by mail-wr1-f72.google.com with SMTP id n6so2651361wrv.6
         for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 09:39:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VGXzotyGQ0uS8DSLgpA4BDR+heUxDbWEeeYOwit4OjY=;
-        b=b5aQ+RNz2qeIfKhLebIn/ZXRy7JVf1IRMaPAwhdZrj7OWGmWOo9TGtPKckOA23RO5J
-         nvGYZndww+XkJbrpnjLcjwLgV6nqgZwVxvXlJYgk80pjhg9e9EvcL0qyQQPaoHCNcsjm
-         Fc5yzMi5+BVkKDn+GD5Yr/cB4hkqsuBIEXfUaev9oZd6bZDk5SH/BsbVWkWR+sfrTKy2
-         Rv9fPDYRI283tS1uTLAyhzUCGWGdhwmxCqJ6Bwbc8rj0/3MxfU99iCguZl19OJn3KK8u
-         oXR8sZYICJVEcTP4YHNgf+zQA0lPC+Rp0RkWXDTDt2PCtbG7xu/kNxxqBb2q/a40HvXc
-         Ci6w==
-X-Gm-Message-State: AOAM5329/rP71A76iVY9PdL3pDE23gbs8E/hX0/VebXpFsFsKDLwc/19
-        Ot+3X4ttt11NaZut1E0J7I8+nytfc1Jsr60BZfDSwLnSE51gZ+o11A0gwoCTe5ad6lWSNMdwXgy
-        6uuLW/+DXBlQeQli9ECoJa6hr
-X-Received: by 2002:a5d:6b86:: with SMTP id n6mr5144951wrx.167.1591288783739;
-        Thu, 04 Jun 2020 09:39:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxtyJ0tmjf8fdtQZFqLVCHFz6liK1ysUwYwSwcn7gEXkglGEsEbZwSoKH8WW7JgiEMONG75kQ==
-X-Received: by 2002:a5d:6b86:: with SMTP id n6mr5144940wrx.167.1591288783500;
-        Thu, 04 Jun 2020 09:39:43 -0700 (PDT)
+        bh=iVvEBKYL9SiRyrwTcQNMfs37AyJatE6ZkmtZGf9Ce7M=;
+        b=E8ABZQ85JSu7eiy4SJw1LqXYL80b6KxT1qJVpaNpYVWsiNMy/IJsu6emrF5AJuTcxa
+         RS/m6k9SLWJdGtKL0/v66Ikx0oaK0YKKt69UzEfywL7iI4m+K/gg+55YATP5vkfrinSU
+         uyQ/27/eewpfsoqd2DhvfeT7eFjEtJGLnGMiigIFlSoWv7rEY1w3kDdJFv+F/Ff53GCW
+         AgdbtLAsZbJHNQHHtDPIbho38h0SY4f0CyWAkHoHEPIX7UQIwsmppEt6sLAWsXZWUYoy
+         RfplbqoT0bsuh7qHRlwAJtGCqb++6aXOyAdQ7kNk7TKxH/PMjnUPExQTGVjZLMtHCwOf
+         BzJQ==
+X-Gm-Message-State: AOAM531JGq8129wJAYanlBusr43KVf3oB5NPW3Rh0QtRnkrQgyxoAHy4
+        shVvCftCSrpsToH+YWeb1NXcdVwEhrgczol2kSjSTnkl0kXQV7XP6nUu0nfER67QuCOExHhrWRZ
+        A9WzFixL2MJS8pAcnehudO89A
+X-Received: by 2002:a5d:4404:: with SMTP id z4mr5404018wrq.189.1591288784459;
+        Thu, 04 Jun 2020 09:39:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyA42SCXjHMtpFFKMGN0tQbnQVH4JgF3B76YKdjIkcIdWpMU7lnZZ2rujAEA2vN9B1wfxNLOg==
+X-Received: by 2002:a5d:4404:: with SMTP id z4mr5404009wrq.189.1591288784282;
+        Thu, 04 Jun 2020 09:39:44 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id p9sm7881636wma.48.2020.06.04.09.39.42
+        by smtp.gmail.com with ESMTPSA id p9sm7881636wma.48.2020.06.04.09.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 09:39:42 -0700 (PDT)
+        Thu, 04 Jun 2020 09:39:43 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, mhelsley@vmware.com,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 1/4] objtool: Move object file loading out of check
-Date:   Thu,  4 Jun 2020 17:39:35 +0100
-Message-Id: <20200604163938.21660-2-jthierry@redhat.com>
+Subject: [PATCH 2/4] objtool: Move orc outside of check
+Date:   Thu,  4 Jun 2020 17:39:36 +0100
+Message-Id: <20200604163938.21660-3-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200604163938.21660-1-jthierry@redhat.com>
 References: <20200604163938.21660-1-jthierry@redhat.com>
@@ -79,245 +79,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Structure objtool_file can be used by different subcommands. In fact
-it already is, by check and orc.
-
-Provide a function that allows to initialize objtool_file, that builtin
-can call, without relying on check to do the correct setup for them and
-explicitly hand the objtool_file to them.
+Now that the objtool_file can be obtained outside of the check function,
+orc generation builtin no longer requires check to explicitly call its
+orc related functions.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/builtin-check.c |  7 ++++++-
- tools/objtool/builtin-orc.c   |  8 +++++++-
- tools/objtool/check.c         | 37 +++++++++++------------------------
- tools/objtool/objtool.c       | 29 +++++++++++++++++++++++++++
- tools/objtool/objtool.h       |  4 +++-
- tools/objtool/weak.c          |  4 +---
- 6 files changed, 57 insertions(+), 32 deletions(-)
+ tools/objtool/builtin-check.c |  2 +-
+ tools/objtool/builtin-orc.c   | 18 +++++++++++++++++-
+ tools/objtool/check.c         | 16 +---------------
+ tools/objtool/objtool.h       |  2 +-
+ tools/objtool/weak.c          |  2 +-
+ 5 files changed, 21 insertions(+), 19 deletions(-)
 
 diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index 7a44174967b5..9f525d497308 100644
+index 9f525d497308..2bd520446ef8 100644
 --- a/tools/objtool/builtin-check.c
 +++ b/tools/objtool/builtin-check.c
-@@ -41,6 +41,7 @@ const struct option check_options[] = {
- int cmd_check(int argc, const char **argv)
- {
- 	const char *objname, *s;
-+	struct objtool_file *file;
+@@ -58,5 +58,5 @@ int cmd_check(int argc, const char **argv)
+ 	if (!file)
+ 		return 1;
  
- 	argc = parse_options(argc, argv, check_options, check_usage, 0);
- 
-@@ -53,5 +54,9 @@ int cmd_check(int argc, const char **argv)
- 	if (s && !s[9])
- 		vmlinux = true;
- 
--	return check(objname, false);
-+	file = objtool_setup_file(objname, false);
-+	if (!file)
-+		return 1;
-+
-+	return check(file, false);
+-	return check(file, false);
++	return check(file);
  }
 diff --git a/tools/objtool/builtin-orc.c b/tools/objtool/builtin-orc.c
-index b1dfe2007962..3b700f477a11 100644
+index 3b700f477a11..833ce587c3d4 100644
 --- a/tools/objtool/builtin-orc.c
 +++ b/tools/objtool/builtin-orc.c
-@@ -31,13 +31,19 @@ int cmd_orc(int argc, const char **argv)
- 		usage_with_options(orc_usage, check_options);
+@@ -32,6 +32,7 @@ int cmd_orc(int argc, const char **argv)
  
  	if (!strncmp(argv[0], "gen", 3)) {
-+		struct objtool_file *file;
-+
+ 		struct objtool_file *file;
++		int ret;
+ 
  		argc = parse_options(argc, argv, check_options, orc_usage, 0);
  		if (argc != 1)
- 			usage_with_options(orc_usage, check_options);
+@@ -43,7 +44,22 @@ int cmd_orc(int argc, const char **argv)
+ 		if (!file)
+ 			return 1;
  
- 		objname = argv[0];
- 
--		return check(objname, true);
-+		file = objtool_setup_file(objname, true);
-+		if (!file)
-+			return 1;
+-		return check(file, true);
++		ret = check(file);
++		if (ret)
++			return ret;
 +
-+		return check(file, true);
++		if (list_empty(&file->insn_list))
++			return 0;
++
++		ret = create_orc(file);
++		if (ret < 0)
++			return ret;
++
++		ret = create_orc_sections(file);
++		if (ret < 0)
++			return ret;
++
++		return elf_write(file->elf);
  	}
  
  	if (!strcmp(argv[0], "dump")) {
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 63d65a702900..1638428df454 100644
+index 1638428df454..3fbb60fe94df 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -26,7 +26,6 @@ struct alternative {
- 	bool skip_orig;
- };
- 
--const char *objname;
- struct cfi_init_state initial_func_cfi;
- 
- struct instruction *find_insn(struct objtool_file *file,
-@@ -2710,36 +2709,22 @@ static int validate_reachable_instructions(struct objtool_file *file)
+@@ -2709,7 +2709,7 @@ static int validate_reachable_instructions(struct objtool_file *file)
  	return 0;
  }
  
--static struct objtool_file file;
--
--int check(const char *_objname, bool orc)
-+int check(struct objtool_file *file, bool orc)
+-int check(struct objtool_file *file, bool orc)
++int check(struct objtool_file *file)
  {
  	int ret, warnings = 0;
  
--	objname = _objname;
--
--	file.elf = elf_open_read(objname, orc ? O_RDWR : O_RDONLY);
--	if (!file.elf)
--		return 1;
--
--	INIT_LIST_HEAD(&file.insn_list);
--	hash_init(file.insn_hash);
--	file.c_file = find_section_by_name(file.elf, ".comment");
--	file.ignore_unreachables = no_unreachable;
--	file.hints = false;
--
- 	arch_initial_func_cfi_state(&initial_func_cfi);
- 
--	ret = decode_sections(&file);
-+	ret = decode_sections(file);
- 	if (ret < 0)
- 		goto out;
- 	warnings += ret;
- 
--	if (list_empty(&file.insn_list))
-+	if (list_empty(&file->insn_list))
- 		goto out;
- 
- 	if (vmlinux && !validate_dup) {
--		ret = validate_vmlinux_functions(&file);
-+		ret = validate_vmlinux_functions(file);
- 		if (ret < 0)
- 			goto out;
- 
-@@ -2748,39 +2733,39 @@ int check(const char *_objname, bool orc)
- 	}
- 
- 	if (retpoline) {
--		ret = validate_retpoline(&file);
-+		ret = validate_retpoline(file);
- 		if (ret < 0)
- 			return ret;
+@@ -2756,20 +2756,6 @@ int check(struct objtool_file *file, bool orc)
  		warnings += ret;
  	}
  
--	ret = validate_functions(&file);
-+	ret = validate_functions(file);
- 	if (ret < 0)
- 		goto out;
- 	warnings += ret;
- 
--	ret = validate_unwind_hints(&file, NULL);
-+	ret = validate_unwind_hints(file, NULL);
- 	if (ret < 0)
- 		goto out;
- 	warnings += ret;
- 
- 	if (!warnings) {
--		ret = validate_reachable_instructions(&file);
-+		ret = validate_reachable_instructions(file);
- 		if (ret < 0)
- 			goto out;
- 		warnings += ret;
- 	}
- 
- 	if (orc) {
--		ret = create_orc(&file);
-+		ret = create_orc(file);
- 		if (ret < 0)
- 			goto out;
- 
--		ret = create_orc_sections(&file);
-+		ret = create_orc_sections(file);
- 		if (ret < 0)
- 			goto out;
- 
--		ret = elf_write(file.elf);
-+		ret = elf_write(file->elf);
- 		if (ret < 0)
- 			goto out;
- 	}
-diff --git a/tools/objtool/objtool.c b/tools/objtool/objtool.c
-index 58fdda510653..71c4122cf491 100644
---- a/tools/objtool/objtool.c
-+++ b/tools/objtool/objtool.c
-@@ -22,6 +22,8 @@
- #include <linux/kernel.h>
- 
- #include "builtin.h"
-+#include "objtool.h"
-+#include "warn.h"
- 
- struct cmd_struct {
- 	const char *name;
-@@ -39,6 +41,33 @@ static struct cmd_struct objtool_cmds[] = {
- 
- bool help;
- 
-+const char *objname;
-+static struct objtool_file file;
-+
-+struct objtool_file *objtool_setup_file(const char *_objname, bool writable)
-+{
-+	if (objname) {
-+		if (strcmp(objname, _objname)) {
-+			WARN("won't handle more than one file at a time");
-+			return NULL;
-+		}
-+		return &file;
-+	}
-+	objname = _objname;
-+
-+	file.elf = elf_open_read(objname, writable ? O_RDWR : O_RDONLY);
-+	if (!file.elf)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&file.insn_list);
-+	hash_init(file.insn_hash);
-+	file.c_file = find_section_by_name(file.elf, ".comment");
-+	file.ignore_unreachables = no_unreachable;
-+	file.hints = false;
-+
-+	return &file;
-+}
-+
- static void cmd_usage(void)
- {
- 	unsigned int i, longest = 0;
+-	if (orc) {
+-		ret = create_orc(file);
+-		if (ret < 0)
+-			goto out;
+-
+-		ret = create_orc_sections(file);
+-		if (ret < 0)
+-			goto out;
+-
+-		ret = elf_write(file->elf);
+-		if (ret < 0)
+-			goto out;
+-	}
+-
+ out:
+ 	if (ret < 0) {
+ 		/*
 diff --git a/tools/objtool/objtool.h b/tools/objtool/objtool.h
-index 528028a66816..e4f0ab5a4094 100644
+index e4f0ab5a4094..be526f3d294d 100644
 --- a/tools/objtool/objtool.h
 +++ b/tools/objtool/objtool.h
-@@ -19,7 +19,9 @@ struct objtool_file {
- 	bool ignore_unreachables, c_file, hints, rodata;
- };
+@@ -21,7 +21,7 @@ struct objtool_file {
  
--int check(const char *objname, bool orc);
-+struct objtool_file *objtool_setup_file(const char *_objname, bool writable);
-+
-+int check(struct objtool_file *file, bool orc);
+ struct objtool_file *objtool_setup_file(const char *_objname, bool writable);
+ 
+-int check(struct objtool_file *file, bool orc);
++int check(struct objtool_file *file);
  int orc_dump(const char *objname);
  int create_orc(struct objtool_file *file);
  int create_orc_sections(struct objtool_file *file);
 diff --git a/tools/objtool/weak.c b/tools/objtool/weak.c
-index 942ea5e8ac36..82698319f008 100644
+index 82698319f008..29180d599b08 100644
 --- a/tools/objtool/weak.c
 +++ b/tools/objtool/weak.c
-@@ -17,9 +17,7 @@
+@@ -17,7 +17,7 @@
  	return ENOSYS;							\
  })
  
--const char __weak *objname;
--
--int __weak check(const char *_objname, bool orc)
-+int __weak check(struct objtool_file *file, bool orc)
+-int __weak check(struct objtool_file *file, bool orc)
++int __weak check(struct objtool_file *file)
  {
  	UNSUPPORTED("check subcommand");
  }
