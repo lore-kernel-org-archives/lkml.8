@@ -2,175 +2,116 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E786C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6527207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:04:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrnH4OEF"
+	by mail.kernel.org (Postfix) with ESMTP id 7A9E3207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591279516;
+	bh=Epk5WMtzALPNz+dltu72WrLGhF9VGMjphVrnc6COsEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pVya/KYCzF/AJp7t331QXyrN3LIW7as8rYbWgpPGzNcBo382NAm8sJiyyd0JeBAxU
+	 0vVyvoUU8EcB6z8I9OwbgG7eUeNB4uBiJl5vZehO39fIc37jzDMZoJ/bC/Znvqlpv3
+	 k7m+ZrhCDcPwzCxOldoqhPhKM53na6kuR5VJsyWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgFDOES (ORCPT
+        id S1728942AbgFDOFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:04:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgFDOER (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:04:17 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701C6C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:04:17 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d7so6449561ioq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZIRXhR4auj5+SLQ7LtgQ61NpxJugv/PsvX/WpFw/ob0=;
-        b=ZrnH4OEFeXvjY7mP/ObdOSwchqQN16o0HIcF6buLn9exAq9bBI/5MsABF7cQbgEJho
-         OR/BDqs5KPZUFVf3ojhsB8cr5bdM3rAar4fGTU30I8iAdq8h7lUSUC9wpY0wFmp3X+hD
-         BUZnifFx3qH4R9ikjcSytq8HT2gd8DfEFplDfjy1mYzicOgupjRK5IDpJOg4u26AEFEK
-         xNf8ESO6GTNAf1SWahl8RzqZbiQbEBzeqt/LO4Rl9EGpkJSbJdFSOf1hefgk29CndNug
-         yJIIza3Or1Cv+XcdvtkXnTsFZaDgOkh5lvumqRZYmg98QekkA9MLxid2OLViWu/RarC7
-         6jgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZIRXhR4auj5+SLQ7LtgQ61NpxJugv/PsvX/WpFw/ob0=;
-        b=PO3tPqXxVwoY9HL4u2OvPWL4ccQ2/hW6DHb2zvCzza5X3YtlEfiqyWZKBhf0vQCvx9
-         l8+yEsppLjHPkdMB5h+nvwgb14/ljbzusYEVoF2jHKDAm9jbBeoctevpscWwxkLXpatN
-         gkiE3MfJYy4Onre/1fJb2U6WNmkJsS2jWDAdR5k86SrW2P5sKXj3cqHO1hOyg0giSTDL
-         f9l4uJtxUME8h0sXlEnup/rc94pZWV17NQhoxYeuMiJ7T83eeKhCIcc4kZEPuOb8iu1A
-         7BgWKDXX2pu9311Ja861gUD74ch8xPcnZoHlWaw79YWXmjOPvdnTerbtq5YBR54u3KP0
-         nukQ==
-X-Gm-Message-State: AOAM531EyTtXIu0B/WswHC/GtqUYBADQ0GEjsTqDN5sQtu2U+hALQw+f
-        Ipy/XcWT57rFZVjN8xgUQWwr0dVkAw==
-X-Google-Smtp-Source: ABdhPJyt3qoNNHm0835lJa4PmkA3HzrusAsIbCxG4T51dV5yN/AOvyO78ibonLWygZDR/00rGYkEDQ==
-X-Received: by 2002:a6b:d104:: with SMTP id l4mr4236706iob.65.1591279456378;
-        Thu, 04 Jun 2020 07:04:16 -0700 (PDT)
-Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
-        by smtp.gmail.com with ESMTPSA id l3sm2342439iow.55.2020.06.04.07.04.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 07:04:15 -0700 (PDT)
-From:   Brian Gerst <brgerst@gmail.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH] x86/stackprotector: Pre-initialize canary for secondary CPUs
-Date:   Thu,  4 Jun 2020 10:03:59 -0400
-Message-Id: <20200604140359.560797-1-brgerst@gmail.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 4 Jun 2020 10:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728496AbgFDOFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:05:14 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791F820738;
+        Thu,  4 Jun 2020 14:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591279514;
+        bh=Epk5WMtzALPNz+dltu72WrLGhF9VGMjphVrnc6COsEA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sf7Hy+B1x7rYiLFDGpZcfyrckIXZn5Y1kIlUFPDPjdiiOSqQtrTMcxXb0oGyI9iLn
+         8jCUl4YlcOzZKOCauoNq2XeYV6TUrG/h8/TnYezlbVFMIHtNSI9OXb0L7C8W5p2kFL
+         tL+4fGnqSSpZVdGYrCnig3VUHI1yScvIB2HDtq+4=
+Date:   Thu, 4 Jun 2020 15:05:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
+ strings
+Message-ID: <20200604140511.GF6644@sirena.org.uk>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-3-f.fainelli@gmail.com>
+ <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
+ <20200604111325.GC6644@sirena.org.uk>
+ <20200604112112.b3k4wrftckndscu6@wunner.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
+Content-Disposition: inline
+In-Reply-To: <20200604112112.b3k4wrftckndscu6@wunner.de>
+X-Cookie: VMS version 2.0 ==>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The idle tasks created for each secondary CPU already have a random stack
-canary generated by fork().  Copy the canary to the percpu variable before
-starting the secondary CPU which removes the need to call
-boot_init_stack_canary().
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
----
- arch/x86/include/asm/stackprotector.h | 12 ++++++++++++
- arch/x86/kernel/smpboot.c             | 12 +-----------
- arch/x86/xen/smp_pv.c                 |  2 --
- 3 files changed, 13 insertions(+), 13 deletions(-)
+--Zi0sgQQBxRFxMTsj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
-index 9804a7957f4e..7fb482f0f25b 100644
---- a/arch/x86/include/asm/stackprotector.h
-+++ b/arch/x86/include/asm/stackprotector.h
-@@ -90,6 +90,15 @@ static __always_inline void boot_init_stack_canary(void)
- #endif
- }
- 
-+static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
-+{
-+#ifdef CONFIG_X86_64
-+	per_cpu(fixed_percpu_data.stack_canary, cpu) = idle->stack_canary;
-+#else
-+	per_cpu(stack_canary.canary, cpu) = idle->stack_canary;
-+#endif
-+}
-+
- static inline void setup_stack_canary_segment(int cpu)
- {
- #ifdef CONFIG_X86_32
-@@ -119,6 +128,9 @@ static inline void load_stack_canary_segment(void)
- static inline void setup_stack_canary_segment(int cpu)
- { }
- 
-+static inline void cpu_init_stack_canary(int cpu, struct task_struct *idle)
-+{ }
-+
- static inline void load_stack_canary_segment(void)
- {
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 2467f3dd35d3..dad7f9ca6478 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -259,21 +259,10 @@ static void notrace start_secondary(void *unused)
- 	/* enable local interrupts */
- 	local_irq_enable();
- 
--	/* to prevent fake stack check failure in clock setup */
--	boot_init_stack_canary();
--
- 	x86_cpuinit.setup_percpu_clockev();
- 
- 	wmb();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
--
--	/*
--	 * Prevent tail call to cpu_startup_entry() because the stack protector
--	 * guard has been changed a couple of function calls up, in
--	 * boot_init_stack_canary() and must not be checked before tail calling
--	 * another function.
--	 */
--	prevent_tail_call_optimization();
- }
- 
- /**
-@@ -1011,6 +1000,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
- 	alternatives_enable_smp();
- 
- 	per_cpu(current_task, cpu) = idle;
-+	cpu_init_stack_canary(cpu, idle);
- 
- 	/* Initialize the interrupt stack(s) */
- 	ret = irq_init_percpu_irqstack(cpu);
-diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
-index ae4d0f283df3..e9f5d6ec30a6 100644
---- a/arch/x86/xen/smp_pv.c
-+++ b/arch/x86/xen/smp_pv.c
-@@ -92,9 +92,7 @@ static void cpu_bringup(void)
- asmlinkage __visible void cpu_bringup_and_idle(void)
- {
- 	cpu_bringup();
--	boot_init_stack_canary();
- 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
--	prevent_tail_call_optimization();
- }
- 
- void xen_smp_intr_free_pv(unsigned int cpu)
+On Thu, Jun 04, 2020 at 01:21:12PM +0200, Lukas Wunner wrote:
+> On Thu, Jun 04, 2020 at 12:13:25PM +0100, Mark Brown wrote:
 
-base-commit: cc7a4a02564c6cc8dc981fb0a37313830ee8c2d4
--- 
-2.25.4
+> > Regardless of what's going on with the interrupts the compatible string
+> > should reflect the IP version so unless for some reason someone taped
+> > out two different versions of the IP it seems odd that the compatible
+> > strings would vary within a given SoC.
 
+> Hm.  I guess it may be possible to search the DT for other devices
+> sharing the same interrupt line and thereby determine whether
+> IRQF_SHARED is necessary.  The helper to perform this search could
+> live in drivers/of/irq.c as I imagine it might be useful in general.
+
+That's another option, yeah - it'd be DT specific but it seems neater
+than a property and much more tractable than trying to dance around
+doing this in genirq (where we'd end up with callbacks when the second
+device registers or something else horrible).
+
+--Zi0sgQQBxRFxMTsj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y/5YACgkQJNaLcl1U
+h9DPAwf/UjD04C156SRCI5cTBUUAOg/X61gumN+fuyVQkAPs8CeP4cmV4HjtuXG2
+9LOnl4/Bdq17EjTvWg6+HAQvBa7i0pwE8ppy8gqcGiNqq+dn5+n9ZpcLvDea0tLX
+h2jq4LUfR3X3OgnTILP69XeLpk/ePNcpFTRij3YMnGqoa8VnlXiqP45YLEgVp0LK
+RHlYDfzgBy1NxyxckRk+emfSKseAHtWQjUz4P2zvyKUXl/tqW+Lwc/fGlfE3QfFu
+Eo1q4X4V2DuX83TzbvM8VXdJ/Lu0V05gyeYoEcQU+7j8MGno+JpLRX9C2J6uXwG+
+edz4Gd9KdV/56AJOMrKWO0i8BPznbQ==
+=DHOU
+-----END PGP SIGNATURE-----
+
+--Zi0sgQQBxRFxMTsj--
