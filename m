@@ -2,90 +2,82 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B226C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3DAD2074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zzqrnKvo"
+	by mail.kernel.org (Postfix) with ESMTP id F25DC2074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgFDKZb (ORCPT
+        id S1726112AbgFDKd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:25:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgFDKZb (ORCPT
+        Thu, 4 Jun 2020 06:33:56 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:59193 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgFDKd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:25:31 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFBCCC03E96E
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 03:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=oykwMbU7Wmvh1ZGkCXwhZjfvHzNP7lFFbQQT7fF0pCA=; b=zzqrnKvos/Jhw/yC2usTSVagG8
-        tMISst0ceWqCRicCc/W5/SDTTJKufGU2UPP9dPjpLjf+bS6SjYcxSXF0F3satI9G4G6ypQDVYjWPR
-        wDgJ0ur5wcr2AqcHrUylFbPXJ0PDfDnB6Ya/ikUb65BJcYatc3EfYDQNa88CoULmdFHOQhcfmJkA8
-        bITJbZqYb4JCespUqx/TyyIxI+76bo0iKk9OKDaae2nm1hz1oRF97fScsNGZctMkGtzBNWu7LPXIA
-        4bySgaBEO7zdDB64nO9tf/CnSnbc8Z/qWLlD3gfyX3suYdAnj1bqxbhpRHV0ego27SE3REFWZ2beG
-        NT72a2ig==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgn3e-0003tl-Jp; Thu, 04 Jun 2020 10:25:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 10E6D306E56;
-        Thu,  4 Jun 2020 12:25:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id EB8E620CC68B3; Thu,  4 Jun 2020 12:25:07 +0200 (CEST)
-Message-ID: <20200604102428.364746275@infradead.org>
-User-Agent: quilt/0.66
-Date:   Thu, 04 Jun 2020 12:22:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de
-Cc:     x86@kernel.org, elver@google.com, paulmck@kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, will@kernel.org, dvyukov@google.com,
-        glider@google.com, andreyknvl@google.com
-Subject: [PATCH 8/8] x86/entry, bug: Comment the instrumentation_begin() usage for WARN()
-References: <20200604102241.466509982@infradead.org>
+        Thu, 4 Jun 2020 06:33:56 -0400
+X-IronPort-AV: E=Sophos;i="5.73,472,1583190000"; 
+   d="scan'208";a="452952018"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 12:33:54 +0200
+Date:   Thu, 4 Jun 2020 12:33:53 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
+ which is unused and broken
+In-Reply-To: <32232229031e02edcc268b1074c9bac44012ee35.camel@perches.com>
+Message-ID: <alpine.DEB.2.21.2006041228520.2577@hadrien>
+References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>          <87h7vvb1s3.fsf@belgarion.home>          <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>          <20200601183102.GS30374@kadam>          <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
+  <20200604083120.GF22511@kadam>  <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>  <alpine.DEB.2.21.2006041147360.2577@hadrien> <32232229031e02edcc268b1074c9bac44012ee35.camel@perches.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explain the rationale for annotating WARN(), even though, strictly
-speaking printk() and friends are very much not safe in many of the
-places we put them.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/bug.h |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -76,6 +76,12 @@ do {								\
- 	unreachable();						\
- } while (0)
- 
-+/*
-+ * This instrumentation_begin() is strictly speaking incorrect; but it
-+ * suppresses the complaints from WARN()s in noinstr code. If such a WARN()
-+ * were to trigger, we'd rather wreck the machine in an attempt to get the
-+ * message out than not know about it.
-+ */
- #define __WARN_FLAGS(flags)					\
- do {								\
- 	instrumentation_begin();				\
 
 
+On Thu, 4 Jun 2020, Joe Perches wrote:
+
+> On Thu, 2020-06-04 at 11:52 +0200, Julia Lawall wrote:
+> > Should Fixes also be used when the change will make it hard to port other
+> > fixes over it?
+>
+> If it's a logic defect or regression that's being fixed,
+> shouldn't the logic defect or regression be fixed as
+> reasonably soon as possible?
+
+Sure, but I recall seeing some patches that mentioned that the problem had
+existed since the beginning of git.  Of course, it should be rare.
+
+>
+> The nature of the fix should ideally be optimal for
+> backporting, but I believe that should not stop any
+> consideration for the standalone fix itself.
+
+I'm not sure to follow this.  Sometimes non-bug fixes that block
+backporting a bug fix have to be backported as well.  So the fixes would
+again highlight the range of versions affected by the issue.
+
+julia
+
+> What do you think?
+>
+>
