@@ -2,173 +2,144 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21393C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79433C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED649206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C302207D5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IV6lJXWQ"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OVOU8wgQ";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="tzmbXo/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgFDT5z (ORCPT
+        id S1729571AbgFDUA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:57:55 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35623 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728991AbgFDT5y (ORCPT
+        Thu, 4 Jun 2020 16:00:57 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:60822 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726026AbgFDUA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:57:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591300673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=G1kd6xwQuWcQevYgiN5E77Wh4Al+ZX6bmwJ65V9TlV0=;
-        b=IV6lJXWQXaMsksDi3B5jxtKopyc6NEJdBXJXcr7XRs7UQIy61ou6Ddy4iogVoaIupu+rpQ
-        G3/2mX4IPAOBoXMaNaYMQH4iL9Hc2bv2D9o4lfirMRVsMSvbgD1KCv9tNJBsU7ahnpuSVk
-        9xrVD0z/UyXZr6MwK7DmeivjrcS0NFo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-raNl8zeOO4quuV5b7wLdXA-1; Thu, 04 Jun 2020 15:57:49 -0400
-X-MC-Unique: raNl8zeOO4quuV5b7wLdXA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 4 Jun 2020 16:00:56 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A13F464;
-        Thu,  4 Jun 2020 19:57:47 +0000 (UTC)
-Received: from localhost (ovpn-116-137.gru2.redhat.com [10.97.116.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FCA27CCD8;
-        Thu,  4 Jun 2020 19:57:45 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 16:57:44 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>, tiwai@suse.de,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] ima: Call ima_calc_boot_aggregate() in
- ima_eventdigest_init()
-Message-ID: <20200604195744.GS2970@glitch>
-References: <20200603150821.8607-1-roberto.sassu@huawei.com>
- <20200603150821.8607-2-roberto.sassu@huawei.com>
- <1591221815.5146.31.camel@linux.ibm.com>
- <20200604191207.GR2970@glitch>
- <1591299320.5146.53.camel@linux.ibm.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3094CC0085;
+        Thu,  4 Jun 2020 20:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1591300856; bh=4iyYGm9kU4tXwwTrh4TcBOJ+9qYc+ODucXbiTbKnD28=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=OVOU8wgQZrIM30U7yZovqW7RajBZdEAvw1dqdZoOl+B+5PRWfCx248BPMmcWVRcZP
+         EmxG7ar3uHLVurkLp6e0lkF6/Ue6OemDmbvD0Bd3Ce8FJ8s3juA6XYy4KjIVkwEwL9
+         ZeD598gGsrqqyyay2mxK1mzFN17oJA2+cLPARkfkgugAK8vgBRXPPAUaigYcCheWBf
+         ZRmfWSuCvF6+mOyKEb+Nw0VnT5CbtQrCxXcitpDWq6/XhhmKtStKMrNScbF9ASFb6c
+         Ir4JsN5G1N8CIjuFaq45233qIRrV89jix4K5UiEFxSdQIG1tKlhl7W52c58EUlt1C8
+         TKg/qC+poqGVQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id BF2A9A0069;
+        Thu,  4 Jun 2020 20:00:55 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 4 Jun 2020 13:00:55 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Thu, 4 Jun 2020 13:00:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fuVfcQZWTmZkJZe608/A5ui48VKIDoPaXp8BeQ6snO0tgdJ2YEjm8b06U9SDrAhsDZmNfLgKZvKXRGciGRxupFYZMNBfsG0/VpQMqf25YzRHOe3WL1cxjBznXz8eRUMX+21s5BxNgoydNGcydD/468RabgvOrnYbm5gkMhfiDEfoB/qWeKbVOzLC8eoNF2cO816RXQJF5Po5Vu9nAFMnSLORKOPniPoXuXKAJgtdOIwQvQkXan7eVWGz3BB54f+qopR1fjzvpzx4E6ua6MuVEF0ymgSXNY6pDxrP4dVxIOVlp5/v/AqUD1kPw4uWk03HK53MRMd6SVsZlksErNrAUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4iyYGm9kU4tXwwTrh4TcBOJ+9qYc+ODucXbiTbKnD28=;
+ b=JluDGMEd/mNCSzKeR9M0Gsil5aG4z1CfWlcip9BhbmsJmrZ7rtDr4S+mkRI5NHU3Ldg5D69pds00DHntBBHpKzk+jg4+hr2eEvm4K/fhUwA4vBLCriQFDco8aGkqbX4WyTov7fAJwcegz8SOt/Ycbzn1UIB5ZXkkyD7kT0G7w+grtDcQ/7w8ZGLAcxeWzUkE1CrUF3hXbFo1vKxNpEDScI6TN3pIkR9mU/ZUDhibQybUEDqXKIkFyZ0rhCGWahdkaVCGmIbEmMro25LlHb5nFsSAcgrmMux5mJxHvzoppzbLqRONlztPgooiasDqyel0B84omhyCLLyk02INk0FYqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4iyYGm9kU4tXwwTrh4TcBOJ+9qYc+ODucXbiTbKnD28=;
+ b=tzmbXo/nr+vffGHp3886HHRX/EccTSkIuqphrrBndAG3NmqqgobulKbefrK0m20pyvaRaiFpAUhkQFPOM+IEEiHwTi1+PS94jTXMAcLRLs5uBsNPoe2HatxgmzawaRD/z6ZCXDBb60WihYyiIx7tN5CNuDoQf+EifLAcTDnZ9dc=
+Received: from BYAPR12MB3479.namprd12.prod.outlook.com (2603:10b6:a03:dc::26)
+ by BYAPR12MB2647.namprd12.prod.outlook.com (2603:10b6:a03:6f::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 4 Jun
+ 2020 20:00:54 +0000
+Received: from BYAPR12MB3479.namprd12.prod.outlook.com
+ ([fe80::a43a:7392:6fa:c6af]) by BYAPR12MB3479.namprd12.prod.outlook.com
+ ([fe80::a43a:7392:6fa:c6af%6]) with mapi id 15.20.3045.024; Thu, 4 Jun 2020
+ 20:00:54 +0000
+X-SNPS-Relay: synopsys.com
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v2 0/4] ARC: [plat-hsdk-4xd] initial port for HSDK-4xD
+ board
+Thread-Topic: [PATCH v2 0/4] ARC: [plat-hsdk-4xd] initial port for HSDK-4xD
+ board
+Thread-Index: AQHWOpc5Ca0pDE8WGEerFDRoKZEMvKjI4IWA
+Date:   Thu, 4 Jun 2020 20:00:54 +0000
+Message-ID: <feba6ef6-0782-ee5e-b51c-30cf79166486@synopsys.com>
+References: <20200604173927.23127-1-Eugeniy.Paltsev@synopsys.com>
+In-Reply-To: <20200604173927.23127-1-Eugeniy.Paltsev@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+authentication-results: synopsys.com; dkim=none (message not signed)
+ header.d=none;synopsys.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [2601:641:c100:83a0:fee2:8ed0:e900:96d1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 896d18fe-e2bf-40e2-7f24-08d808c1fd41
+x-ms-traffictypediagnostic: BYAPR12MB2647:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB2647421A17E2BEABD2C89D16B6890@BYAPR12MB2647.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 04244E0DC5
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: v9J8sBx5kdU3GoOXtzS90sTqvlkHzezj4+MAqzkDAAgkgeewSDgTVHVEPyHiuP2PF1E3u7TEfn7ueHarAazOMENY/QBrszqE26vZDwr7vjtujtSFFd8DMjkCX/Ja6iznfiKOD2y17z7yTMjiDM1NzAt4BJ4YpO/NnD666f8QA4m41ghnENvCFP5vLqqFMVVxIPYVnKh1u4uDYt/QPiNozrOBZps8BwOjx8lEBrCHBqlGtMie3B3/GTcqMhHDPkzmSvepwo/2VGAmynp/NL6N4yY2RG/aDAlmdEfpOxwD4RbjdGATErZHE5yEQIcUHLUtHbhqvoEpFFIagOlS3FOwDfBnjaAPuLAZUiaf6fS3uBQHnXoS+OQgxagP3dPYS7wu
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3479.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(396003)(366004)(39860400002)(376002)(53546011)(31696002)(2906002)(186003)(6512007)(36756003)(31686004)(54906003)(316002)(86362001)(110136005)(71200400001)(4744005)(66446008)(76116006)(66476007)(5660300002)(6506007)(66556008)(64756008)(8936002)(4326008)(107886003)(8676002)(6486002)(2616005)(66946007)(478600001)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: tZ2DHuPjUwt1eSp3xEAavF4vsYrcMlYhI82HgVFo+yA90jc7kXxhhzSqVu5RALbghyMVyMO7xTW9h78stGiVYB5JI2cJlA2e9uUK/pE+pLdXJZoUv4hwK2s++1FSlyiZYjopZGi9/sPWqT216Z7QfcXfz6d3z/i0QeW0MF6v+3n2fMAT1qAbh3A81TD3CqgzDxXAXWn0E4YCs36HZkgqx65IS5N507hu0Kc0j1jI6hx4+snwbklMFQZVxMPYvkmG8J3M9rhiKJ89QEzTsHipzbjpUpSohp2YrILSKt7A6Z7/lctwH97T7cHFfUd55UjXaxpMQSTwUYVRjKPev6DrWxdbIJQlcEgoW8DrEAxfIJOAm2caIcCcDrdkVKlgyhLjSh3X6GZ2q94Cz6BdR8h1jr8zx1GnLFlXgX9O4lr+WsOwna1PbK2HHr2I7YhV8vkxgkWo0FGOgNW4icw408XjMpabGRXCzeP/m0TrAZ32FSidUfslF+15IYl64ZztU3COAnovfN/sxGIZAL5570U27R/gu/oDQ8HBbCYeayQ/HH3LK4aY9hvyIhP+dHkbBetY
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BBDC6C79001E5144A82BE410828D7132@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1591299320.5146.53.camel@linux.ibm.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="N+qDRRsDvMgizTft"
-Content-Disposition: inline
+X-MS-Exchange-CrossTenant-Network-Message-Id: 896d18fe-e2bf-40e2-7f24-08d808c1fd41
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 20:00:54.2334
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EtkhDouhW4CEMhGUNwKzlfeVVEr4BSe9vajuatsQhwrZ2QXwsD/Rgxt/paANNPnr2L+TmwzZJVkyfgrc/0tEKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2647
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---N+qDRRsDvMgizTft
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 04, 2020 at 03:35:20PM -0400, Mimi Zohar wrote:
-> On Thu, 2020-06-04 at 16:12 -0300, Bruno Meneguele wrote:
-> > On Wed, Jun 03, 2020 at 06:03:35PM -0400, Mimi Zohar wrote:
-> > > Hi Roberto,
-> > >=20
-> > > On Wed, 2020-06-03 at 17:08 +0200, Roberto Sassu wrote:
-> > > > If the template field 'd' is chosen and the digest to be added to t=
-he
-> > > > measurement entry was not calculated with SHA1 or MD5, it is
-> > > > recalculated with SHA1, by using the passed file descriptor. Howeve=
-r, this
-> > > > cannot be done for boot_aggregate, because there is no file descrip=
-tor.
-> > > >=20
-> > > > This patch adds a call to ima_calc_boot_aggregate() in
-> > > > ima_eventdigest_init(), so that the digest can be recalculated also=
- for the
-> > > > boot_aggregate entry.
-> > > >=20
-> > > > Cc: stable@vger.kernel.org # 3.13.x
-> > > > Fixes: 3ce1217d6cd5d ("ima: define template fields library and new =
-helpers")
-> > > > Reported-by: Takashi Iwai <tiwai@suse.de>
-> > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > >=20
-> > > Thanks, Roberto.
-> > >=20
-> > > I've pushed both patches out to the next-integrity branch and would
-> > > appreciate some additional testing.
-> > >=20
-> > > thanks,
-> > >=20
-> > > Mimi
-> > >=20
-> >=20
-> > Hi Mimi and Roberto,
-> >=20
-> > FWIW, I've tested this patch manually and things went fine, with no
-> > unexpected behavior or results.=20
->=20
-> Thanks, Bruno!
->=20
-> > However, wouldn't it be worth add a note in kmsg about the
-> > ima_calc_boot_aggregate() being called with an algo different from the
-> > system's default? Just to let the user know he won't find a sha256 when
-> > check the measurement. But that's something we can add later too.
->=20
-> There's no guarantees that the IMA default crypto algorithm will be
-> used for calculating the boot_aggregate. =A0The algorithm is dependent
-> on the TPM. =A0For example, the default IMA algorithm could be sha256,
-> but on a system with TPM 1.2, the boot_aggregate would have to be
-> sha1.
-
-Ah Indeed.. it makes sense.
-
->=20
-> This patch addresses a mismatch between the template format field ('d'
-> field) and the larger digest. =A0We could require the "ima_template_fmt"
-> specified on the boot command line define an appropriate format, but
-> Roberto decided to support the situation where both "d" and "d-ng" are
-> defined.
-
-Yes, personally I also prefer to "fail earlier" or to be more stricter
-on user definitions, but I also understand going the other way allowing
-both d & d-ng.
-
->=20
-> Mimi
->=20
-
-thanks Mimi.
-
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---N+qDRRsDvMgizTft
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7ZUjgACgkQYdRkFR+R
-okMoZgf/YKUFxFPcsI8P3M88CPBksamyJpDCfsFn0+pFPHLS2y6My9cUdESk33Pc
-SygUKgfNnw2sCPsawDBq3UE3IIQ33rI4XTGRuJR1PmJHz/s9qITC4aBugkC2ufDv
-a5sw/TCUHvUopciZGg4ryAIM+crwCqjiGUe7WHX6VunpaYjE724CNLP57Dg2GqGe
-r8OYClMIuRhyVtTfa3hjlFNiQdiymCXrguUBj1ss7YXxPpJAyB86Rdc1OHITFFl5
-SUPt1g5z8v3xIRoClUNiUyLKqI3hJ5U/OKndzsfzlmjhOPVbkfFe30EJHfW5vMT/
-PggXwoxgm0PKYxHxT+BBUFDAY6/9ag==
-=1GTw
------END PGP SIGNATURE-----
-
---N+qDRRsDvMgizTft--
-
+T24gNi80LzIwIDEwOjM5IEFNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+IENoYW5nZXMgdjEt
+PnYyOg0KPiAgKiBGYWxsYmFjayB0byBJU0EgZGVmYXVsdCBtY3B1IGZsYWcgaWYgY3VzdG9tIG9u
+ZSBpc24ndCBzdXBwb3J0ZWQgYnkNCj4gICAgY29tcGlsZXIuDQo+ICAqIERyb3AgSFNESyBjdXN0
+b20gS2NvbmZpZyBvcHRpb25zIChjaG9vc2UgYmV0d2VlbiBIU0RLIGFuZCBIU0RLLTR4RCkgYXMN
+Cj4gICAgd2UgZG9uJ3QgbmVlZCBpdCAoYXQgbGVhc3QgZm9yIG5vdykuIEluc3RlYWQgd2Ugc2Vs
+ZWN0IEFSQ19MUEJfRElTQUJMRQ0KPiAgICBmb3IgYm90aCBib2FyZHMgYnV0IGl0J3MgdG90YWxs
+eSBPSyBhcyBIU0RLIGRvZXNuJ3QgaGF2ZSBMUEIgc28NCj4gICAgZGlzYWJsaW5nIHdpbGwgYmUg
+c2tpcHBlZCBieSBCQ1IgY2hlY2sgaW4gcnVudGltZS4NCj4gICogQWRkIG1pc3NpbmcgSFNESy00
+eEQgZGV2aWNlIHRyZWUgYmluZGluZ3MuIENvbnZlcnQgSFNESyBkZXZpY2UgdHJlZQ0KPiAgICBi
+aW5kaW5ncyB0byBqc29uLXNjaGVtYS4NCj4gDQo+IEV1Z2VuaXkgUGFsdHNldiAoNCk6DQo+ICAg
+QVJDOiBhbGxvdyB0byBvdmVycmlkZSBkZWZhdWx0IG1jcHUgY29tcGlsZXIgZmxhZw0KPiAgIEFS
+QzogQVJDdjI6IHN1cHBvcnQgbG9vcCBidWZmZXIgKExQQikgZGlzYWJsaW5nDQo+ICAgQVJDOiBb
+cGxhdC1oc2RrLTR4ZF0gaW5pdGlhbCBwb3J0IGZvciBIU0RLLTR4RCBib2FyZA0KPiAgIEFSQzog
+W3BsYXQtaHNkaypdIGRvY3VtZW50IEhTREstNHhEIGJvYXJkL1NvQyBiaW5kaW5ncw0KDQpMVEdN
+IG92ZXJhbGwuIERyb3BwaW5nIG9mIG5ldyBLY29uZmlnIGl0ZW1zIGlzIG5pY2UgdG9vLg0KDQot
+VmluZWV0DQo=
