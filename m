@@ -2,66 +2,85 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A207FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E58C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D559207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D34207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbgFDO7c (ORCPT
+        id S1729200AbgFDO7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:59:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729082AbgFDO7c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:59:32 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61B6C08C5C0;
-        Thu,  4 Jun 2020 07:59:31 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jgrL2-0033fO-LT; Thu, 04 Jun 2020 14:59:24 +0000
-Date:   Thu, 4 Jun 2020 15:59:24 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Message-ID: <20200604145924.GF23230@ZenIV.linux.org.uk>
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <20200603011810-mutt-send-email-mst@kernel.org>
- <20200603165205.GU23230@ZenIV.linux.org.uk>
- <ec086f7b-be01-5ffd-6fc3-f865d26b0daf@redhat.com>
+        Thu, 4 Jun 2020 10:59:37 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10498 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729082AbgFDO7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:59:34 -0400
+IronPort-SDR: Rxic9d6J17TQzhVOv3tuCH4XFnNGOtIhMPZ21FvhRT7AqCFpMQyuwDXi/4fJRugc4b6jg9Rkvg
+ VlwEClcd6VRQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 07:59:33 -0700
+IronPort-SDR: f8xpR6ftA8jWoGpYXfb75vNCZkc5KvD3ZQyaQg8TnxPYhjeRCt/F0z1Qf9QReeDzqvAytAOHpH
+ 64ZoJYMs7T6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
+   d="scan'208";a="287397621"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga002.jf.intel.com with ESMTP; 04 Jun 2020 07:59:33 -0700
+Date:   Thu, 4 Jun 2020 07:59:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 25/75] x86/sev-es: Add support for handling IOIO
+ exceptions
+Message-ID: <20200604145932.GB30223@linux.intel.com>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-26-joro@8bytes.org>
+ <20200520062055.GA17090@linux.intel.com>
+ <20200603142325.GB23071@8bytes.org>
+ <20200603230716.GD25606@linux.intel.com>
+ <20200604101502.GA20739@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ec086f7b-be01-5ffd-6fc3-f865d26b0daf@redhat.com>
+In-Reply-To: <20200604101502.GA20739@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 02:10:27PM +0800, Jason Wang wrote:
-
-> > > get_user(flags, desc->flags)
-> > > smp_rmb()
-> > > if (flags & VALID)
-> > > copy_from_user(&adesc, desc, sizeof adesc);
-> > > 
-> > > this would be a good candidate I think.
-> > Perhaps, once we get stac/clac out of raw_copy_from_user() (coming cycle,
-> > probably).  BTW, how large is the structure and how is it aligned?
+On Thu, Jun 04, 2020 at 12:15:02PM +0200, Joerg Roedel wrote:
+> On Wed, Jun 03, 2020 at 04:07:16PM -0700, Sean Christopherson wrote:
+> > On Wed, Jun 03, 2020 at 04:23:25PM +0200, Joerg Roedel wrote:
+> > > User-space can also cause IOIO #VC exceptions, and user-space can be
+> > > 32-bit legacy code with segments, so es_base has to be taken into
+> > > account.
+> > 
+> > Is there actually a use case for this?  Exposing port IO to userspace
+> > doesn't exactly improve security.
 > 
-> 
-> Each descriptor is 16 bytes, and 16 bytes aligned.
+> Might be true, but Linux supports it and this patch-set is not the place
+> to challenge this feature.
 
-Won't it be cheaper to grap the entire thing unconditionally?  And what does
-that rmb order, while we are at it - won't all coherency work in terms of
-entire cachelines anyway?
-
-Confused...
+But SEV already broke it, no?
