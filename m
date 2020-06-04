@@ -2,122 +2,98 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C210C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8485C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB9C206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6279206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f/rmIX2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgFDRuq (ORCPT
+        id S1730274AbgFDRwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:50:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46818 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730055AbgFDRup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:50:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EC828B145;
-        Thu,  4 Jun 2020 17:50:46 +0000 (UTC)
-Message-ID: <47efdefe8873d8907ea20aa7f3ba025227ee3699.camel@suse.de>
-Subject: Re: [PATCH v3 03/25] firmware: rpi: Only create clocks device if we
- don't have a node for it
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Thu, 04 Jun 2020 19:50:42 +0200
-In-Reply-To: <f0b979221dedec7db9cab201388bf44c0d987a3d.1590594293.git-series.maxime@cerno.tech>
-References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
-         <f0b979221dedec7db9cab201388bf44c0d987a3d.1590594293.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-dbG+zekS2b9Psb4A2LAz"
-User-Agent: Evolution 3.36.2 
+        Thu, 4 Jun 2020 13:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730055AbgFDRwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 13:52:01 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4D1C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:52:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id fs4so1438285pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qaoQRHYuWirhQ83i+fNS4H0fknYzhKxkt6zmjLs44oE=;
+        b=f/rmIX2O3O5HUglhNmxahPTem94vBTlvk4JUufgpO8mRRmbfmsBjg7rXOFIOEO6rWQ
+         KxU9fxxevzlcHXjIa8mI4MgnlO0FL4xvf221+M50jTnJM1QQakRRJnecjre/hoYE/HPK
+         EVRwAAjjxuADf/alqt7VNYz/mQBCKwyUT3aUo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qaoQRHYuWirhQ83i+fNS4H0fknYzhKxkt6zmjLs44oE=;
+        b=MDKiwZWY7t/XSho1HMbXx+cgdPEY79uwOrkw6h2AKZavVOJZwjAVrDaeWNfTBHt9+y
+         0nKKVBHxwRdyGz+pPxp69YHsK2JXZ2hX/0n9j6c9psEpfG/qXWccM3ruVdZbor1CiQMR
+         F35nhJbJ9sZb/RyGxfhu6AgYVH/idWWK2RrxaxNeZmzBUlHbs4KYWNAUZFFmgDyrtAxa
+         tGmUi84O8UWnfmRupLtscCr6Qvsp3yIGg6YHfxW3ZF5kUiBRusOwwhidOBsqsaJpTUOv
+         gsyhc76EFB4Na/mfFJqmoLcvTUWuKOlP1I9M+fqt3BB+MPUx7WB/baiTqoAzE2oNmpAV
+         uG0Q==
+X-Gm-Message-State: AOAM533Q+B5BeCmDDSIMhhj4dXpabLyv8JgJ7AHtbLGdKQ7BfASxa0B6
+        8oX9+7If+y5IKE7c/cwkFaO20Q==
+X-Google-Smtp-Source: ABdhPJwjiDVuThcbOn0ps6jBSIPeXaBHyg0/HA9sRD14Mpe25WmBiFWt30f7PCSO0Ll+qqpnju384Q==
+X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr5762706plr.160.1591293120849;
+        Thu, 04 Jun 2020 10:52:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u21sm4986467pfn.123.2020.06.04.10.51.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 10:52:00 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 10:51:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+Message-ID: <202006041051.B542F1D@keescook>
+References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
+ <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
+ <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
+> On 2020-06-04 19:18, Vlastimil Babka wrote:
+> > On 6/4/20 7:14 PM, Vegard Nossum wrote:
+> > > 
+> > > Hi all,
+> > > 
+> > > I ran into a boot problem with latest linus/master
+> > > (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests like this:
+> > 
+> > Hi, what's the .config you use?
+> 
+> Pretty much x86_64 defconfig minus a few options (PCI, USB, ...)
 
---=-dbG+zekS2b9Psb4A2LAz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+What are you boot parameters? This must be another corner case...
+(I'll try reproducing with your .config)
 
-On Wed, 2020-05-27 at 17:44 +0200, Maxime Ripard wrote:
-> The firmware clocks driver was previously probed through a platform_devic=
-e
-> created by the firmware driver.
->=20
-> Since we will now have a node for that clocks driver, we need to create t=
-he
-> device only in the case where there's no node for it already.
->=20
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Regards,
-Nicolas
-
->  drivers/firmware/raspberrypi.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberryp=
-i.c
-> index ef8098856a47..b25901a77c09 100644
-> --- a/drivers/firmware/raspberrypi.c
-> +++ b/drivers/firmware/raspberrypi.c
-> @@ -208,6 +208,20 @@ rpi_register_hwmon_driver(struct device *dev, struct
-> rpi_firmware *fw)
-> =20
->  static void rpi_register_clk_driver(struct device *dev)
->  {
-> +	struct device_node *firmware;
-> +
-> +	/*
-> +	 * Earlier DTs don't have a node for the firmware clocks but
-> +	 * rely on us creating a platform device by hand. If we do
-> +	 * have a node for the firmware clocks, just bail out here.
-> +	 */
-> +	firmware =3D of_get_compatible_child(dev->of_node,
-> +					   "raspberrypi,firmware-clocks");
-> +	if (firmware) {
-> +		of_node_put(firmware);
-> +		return;
-> +	}
-> +
->  	rpi_clk =3D platform_device_register_data(dev, "raspberrypi-clk",
->  						-1, NULL, 0);
->  }
-
-
---=-dbG+zekS2b9Psb4A2LAz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7ZNHIACgkQlfZmHno8
-x/4/+Qf+KoDl73XDh5SQOyDp+euseA0GBAbtp3C2cPcPRD4caDDDoNq+9Qx6HvjI
-5dFfT4xdFV8Yyt9WXBFKJ3cWrJ8ubxes1FksaHAaAel7F8yiH4KS7iCm2A0DIW2P
-fQMlPSyuSYCd5JpvBBoKxRzaMqkzY8QclpbDwLWhTOu06h1vBQR+YiulI4RdPVxe
-r4payGStM+QYVGW+RmNv+XbtljaO5ELGf001cS5rCjuDsbfkQz+pdKvA2HbW6rIy
-gPxDIgznfjTur/h/T7grnHXePiXvrMhleHdHA2ISs6b6/Hb0uhimPjKqO4EIRGaz
-utM1xP1bhKzZgVW9YJyIjTIj/7E8xw==
-=5Iyd
------END PGP SIGNATURE-----
-
---=-dbG+zekS2b9Psb4A2LAz--
-
+-- 
+Kees Cook
