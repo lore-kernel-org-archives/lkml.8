@@ -2,131 +2,98 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC05C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC25207D3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09B8206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SIWTnYeZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qIrP0H3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgFDHin (ORCPT
+        id S1727990AbgFDHlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
+        Thu, 4 Jun 2020 03:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbgFDHim (ORCPT
+        with ESMTP id S1727105AbgFDHlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:38:42 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BEEC05BD1E;
-        Thu,  4 Jun 2020 00:38:42 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B661A29B;
-        Thu,  4 Jun 2020 09:38:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591256317;
-        bh=Ia+q/Q+BfL6tHkvCBFgK10jhset8KFeCNrnvPfoBk6o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SIWTnYeZ0/5gCWJqKEDGMMICDb2Q5FP8/+6+lMgm1XppsiWoorRuIQ36s2kiIpWid
-         1UOECcAivjKfGd3yuvYTH3SPR05Vy1k5CuMW3xHQIJxheqaPcTbpSgDblqDEKXHjcQ
-         cGV+uESgypZ58Vn7x77BJYNoHFFSCbr3860AfxBM=
-Date:   Thu, 4 Jun 2020 10:38:20 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 3/3] drm/bridge: Introduce LT9611 DSI to HDMI bridge
-Message-ID: <20200604073820.GB5828@pendragon.ideasonboard.com>
-References: <20200513100533.42996-1-vkoul@kernel.org>
- <20200513100533.42996-4-vkoul@kernel.org>
- <20200528015205.GE4670@pendragon.ideasonboard.com>
- <20200604072548.GE3521@vkoul-mobl>
+        Thu, 4 Jun 2020 03:41:05 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46833C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 00:41:05 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id t18so4945906wru.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 00:41:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7ANSCRHoGP+yLgZ4w++LPSO7krhwJHNme8PNHzorV40=;
+        b=qIrP0H3N/9Py644cE7DBX0T7bY9J9xZFEY1XClWzqAEbeSOdEPlpTCGO93VjQgNnoS
+         h/byYR4vrPUhXvZBEihjeyX3zapMx5ISLMlf0MrfIAtKCJHpjmqcHFdCxb8SD1878bZW
+         TTQUoc/l8QcyiLb8z82+0E7oHfAxP0Y7UKQ9dezoJ7bgC0ZKmZiiebDu1Huet1PC0BGe
+         +O5Csy4A6ofqiMQ3B9tVp1tk2tVizCkNgMvzIkid9OHLqjxV2mfHB3yhcGAdmeq06p79
+         MdFy+kXE2l9iBjpaVGO0OBQHYDa91E0Rrru7FZt30jRXUlD5NwGX4+Ly9sV9JlzWCcWu
+         gH2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7ANSCRHoGP+yLgZ4w++LPSO7krhwJHNme8PNHzorV40=;
+        b=gYodyJx/Z1DUB+kyVy2PzFb37ZFoBpQ1Q/XF4xWCyHjqwoixYrkcvsbRzm1FP0Lney
+         z8sOE8OehZFxay6GTsQeuH3uFrs0R191K5tjBpcP54EABkfVNoIB6shu83DT+1Y452JP
+         5ywzzqy+9aecZ0oCbKKZKESB/lnlWC/SSe2SP5cDnJ4OH/NvGLepY+3VeGlYf65OhPXi
+         Zi1dVCCx7iWWP1NK1GtJ+Jv/PwyCycDEXCHvJatrxDMumcOu6IQI0E5B2ZBRcfNc+AS4
+         hjXk8kKLPhKWgKXnYiUiIfp6yIWIb555E3jjrcCsSwiQtDSZ0I0ZBSACX6OyNKgYk5/j
+         WtXA==
+X-Gm-Message-State: AOAM531PAkMHPv9l1QhSZu2R/5iTDW5BXXK8bu06HRK0xGgbJwy+/was
+        cCCkEiuePB24XS1xW+LX7qi10g==
+X-Google-Smtp-Source: ABdhPJyhFqgZpjvkbRqAIjH5z/p0+HwMwTMFfsljLtGeh5V8gmW45GgN5zOXyFqaLpClsh++3uVHRQ==
+X-Received: by 2002:adf:82ab:: with SMTP id 40mr2927340wrc.85.1591256463800;
+        Thu, 04 Jun 2020 00:41:03 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id z12sm7257136wrg.9.2020.06.04.00.41.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 00:41:03 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 08:41:01 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] mailbox: mailbox-test: Fix a potential Oops on
+ allocation failure
+Message-ID: <20200604074101.GV3714@dell>
+References: <20200603103329.GB1845750@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200604072548.GE3521@vkoul-mobl>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200603103329.GB1845750@mwanda>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+On Wed, 03 Jun 2020, Dan Carpenter wrote:
 
-On Thu, Jun 04, 2020 at 12:55:48PM +0530, Vinod Koul wrote:
-> On 28-05-20, 04:52, Laurent Pinchart wrote:
+> The callers are expecting NULL on error so if we return an error pointer
+> it eventually results in an Oops.
 > 
-> > > +static int lt9611_bridge_attach(struct drm_bridge *bridge,
-> > > +				enum drm_bridge_attach_flags flags)
-> > > +{
-> > > +	struct lt9611 *lt9611 = bridge_to_lt9611(bridge);
-> > > +	int ret;
-> > > +
-> > > +	dev_dbg(lt9611->dev, "bridge attach\n");
-> > 
-> > 
-> > Connector creation in bridge drivers is deprecated. Please at least add
-> 
-> Okay what is the right way for connector creation? I can add support for
-> that.
+> Fixes: 8ea4484d0c2b ("mailbox: Add generic mechanism for testing Mailbox Controllers")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/mailbox/mailbox-test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Historically bridge drivers have created connectors. With support for
-bridge chaining, this approach was considered not to scale. For
-instance, I have a board where the SoC has an internal LVDS encoder, and
-the board itself has an LVDS-to-DPI decoder followed by a DPI-to-HDMI
-encoder. All three components are supported by bridge drivers, and only
-the last one should create a connector. Furthermore, different
-operations of the connector may be implemented by different bridges, for
-instance with one bridge connected to the DDC lines to read EDID, and
-another bridge connected to the HPD line to detect hotplug.
-
-To support these systems, we have deprecated connector creation in
-bridges, in favour of implementing new bridge callback functions for
-connector-related operations (see .get_modes(), .get_edid() and
-.detect() in struct drm_bridge_funcs). With this new model, each bridge
-implements the operations it supports, and the display controller driver
-binds the bridges together to create a connector that delegates the
-connector operations to the appropriate bridge. A helper function,
-drm_bridge_connector_init(), can be used to automate that.
-
-To transition to this model, we require all new bridge to at least
-optionally support disabling connector creation (as requested by the
-DRM_BRIDGE_ATTACH_NO_CONNECTOR), and implement the drm_bridge_funcs
-functions related to connector operations. Existing bridges are also
-converted to the new model. Once all bridges used by a display
-controller support the new model, the display controller is then
-converted to use DRM_BRIDGE_ATTACH_NO_CONNECTOR and
-drm_bridge_connector_init() (or implement the latter manually if the
-helper doesn't support all the display controller's needs). Once all
-display controllers using a bridge have been converted to the new model,
-support for creating a connector (the !DRM_BRIDGE_ATTACH_NO_CONNECTOR
-case) is removed from the bridge driver. Finally, once everybody will
-use the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag, we will simply drop it.
-
-> > support for the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag, to make connector
-> > creation optional. Ideally the !DRM_BRIDGE_ATTACH_NO_CONNECTOR case
-> 
-> will add that
-> 
-> > should not be implemented at all. This will require the display
-> > controller driver to use DRM_BRIDGE_ATTACH_NO_CONNECTOR. Which display
-> > controller(s) do you use this driver with ?
-> 
-> I am using with msm display driver, this was tested on dragon-board
-> db845c board.
+Reviewed-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
-Regards,
-
-Laurent Pinchart
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
