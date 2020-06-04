@@ -2,93 +2,171 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DA4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08698C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EA5207F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B4420738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ge1P9U3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgFDJU6 (ORCPT
+        id S1727059AbgFDJVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:20:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:42272 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgFDJU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:20:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91DBC55D;
-        Thu,  4 Jun 2020 02:20:57 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B4FA3F6CF;
-        Thu,  4 Jun 2020 02:20:55 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 10:20:52 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200604092052.GD8814@bogus>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus>
- <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
- <20200603180435.GB23722@bogus>
- <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
+        Thu, 4 Jun 2020 05:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgFDJVR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:21:17 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC716C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:21:16 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a9so2806483ljn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yyJR1MYehwBUt0YyExV80dxcZRy0+suSSvHSpdzdsAU=;
+        b=ge1P9U3b40ro4By+8hHm6GTS1SMbrieAZjWbp/5K+pDJajjes5lTSjJ0+SRUz9S12P
+         rkAqjRGvx7YXRNu45zhu7OIDDMdBCsWvg7iBRWAZbmash6YcMA1wfZrO50oXoinhLry3
+         8ourmKYOqO+UGXphdqushaKcDEi8j0I/JRah1H0JkiS0eK7QLNqPOOqMFpgdeB1pS0GF
+         QfJzZYUkBdAWqxC6ZiKTeUTvfhezJ+593WeVyQ46v9gSnQ0cE82Mjj11GUKPgK+UNnxc
+         /S9MM0EXpd+sEQhjOrAXcLL45Hk8kzDMrvgM58FdQvEhshHnfQd0Knh7UUbe8OYmWNan
+         MgQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yyJR1MYehwBUt0YyExV80dxcZRy0+suSSvHSpdzdsAU=;
+        b=AMD3LkRny72i09ubu+Sp3ZH2MY3IBFUTIxuh4pJzSykm2LYfXg/Aqzxq0rgjaHSoPT
+         /JugBR8gA2uEMvtocsf0qZ/JXwhqthss+6IXDy/XCz+lKkUcpdPnomFLkQdnx3hInWrh
+         rdnqqxO4A9p30plPTd+MLRHI7AYTH2caQcmpKFbPFfWFNULIraETtKhcfmqjYqOk6r/U
+         KVA0BMRycHL3Xm2MrjsLCV2v3+kUHwA+fAqGSWeFgEI9fwN1gCJV1v6tUMCY2H7m7oyJ
+         M+xp3qaUQVFnDVl7t48n8OwzStP3nKNZBSQ7ahxuOf2lXnNDi3A0/7b2sVilaBSU8shn
+         dLrw==
+X-Gm-Message-State: AOAM530PxySBrRJiao/xOPIv94l48YCPeH8AtjNyyns9TOxziek7j8Qh
+        YNJsGqoghnHNFEa2/Qf94iTILoluaRYfnmGu1chcXJfoD+Q=
+X-Google-Smtp-Source: ABdhPJyj/mcnooeJF5BciINSiXrorGxe0C3sLWapnPp74fQH2EvEPMjaYihJoGTqLF6YnVBy/ESZi9x4IAQnHCyXVkM=
+X-Received: by 2002:a2e:81c5:: with SMTP id s5mr1609658ljg.372.1591262475238;
+ Thu, 04 Jun 2020 02:21:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200601150645.13412-1-maxim.uvarov@linaro.org>
+ <20200601150645.13412-2-maxim.uvarov@linaro.org> <20200604083655.GA4026@linux.intel.com>
+In-Reply-To: <20200604083655.GA4026@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 4 Jun 2020 14:51:03 +0530
+Message-ID: <CAFA6WYMZx9goq4+yNH5UtrO-nO+R9ohE1dH6jTvKwvME+kKwoQ@mail.gmail.com>
+Subject: Re: [PATCHv6 1/3] optee: use uuid for sysfs driver entry
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Maxim Uvarov <maxim.uvarov@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 01:32:42PM -0500, Jassi Brar wrote:
-> On Wed, Jun 3, 2020 at 1:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Thu, 4 Jun 2020 at 14:07, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Mon, Jun 01, 2020 at 06:06:43PM +0300, Maxim Uvarov wrote:
+> > With the evolving use-cases for TEE bus, now it's required to support
+> > multi-stage enumeration process. But using a simple index doesn't
+> > suffice this requirement and instead leads to duplicate sysfs entries.
+> > So instead switch to use more informative device UUID for sysfs entry
+> > like:
+> > /sys/bus/tee/devices/optee-ta-<uuid>
 > >
-> > On Fri, May 29, 2020 at 09:37:58AM +0530, Viresh Kumar wrote:
-> > > On 28-05-20, 13:20, Rob Herring wrote:
-> > > > Whether Linux
-> > > > requires serializing mailbox accesses is a separate issue. On that side,
-> > > > it seems silly to not allow driving the h/w in the most efficient way
-> > > > possible.
-> > >
-> > > That's exactly what we are trying to say. The hardware allows us to
-> > > write all 32 bits in parallel, without any hardware issues, why
-> > > shouldn't we do that ? The delay (which Sudeep will find out, he is
-> > > facing issues with hardware access because of lockdown right now)
-> >
-> > OK, I was able to access the setup today. I couldn't reach a point
-> > where I can do measurements as the system just became unusable with
-> > one physical channel instead of 2 virtual channels as in my patches.
-> >
-> > My test was simple. Switch to schedutil and read sensors periodically
-> > via sysfs.
-> >
-> >  arm-scmi firmware:scmi: message for 1 is not expected!
-> >
-> This sounds like you are not serialising requests on a shared channel.
-> Can you please also share the patch?
+> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> > Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> Why do you mean by duplicate sysfs entries?
+>
 
-OK, I did try with a small patch initially and then realised we must hit
-issue with mainline as is. Tried and the behaviour is exact same. All
-I did is removed my patches and use bit[0] as the signal. It doesn't
-matter as writes to the register are now serialised. Oh, the above
-message comes when OS times out in advance while firmware continues to
-process the old request and respond.
+It's just about the device being added with the same name as of the
+device which is already present on the TEE bus. So this leads to
+duplicate sysfs entry error for device node which is created during
+device_register() execution flow.
 
-The trace I sent gives much better view of what's going on.
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+> >  MAINTAINERS                                       | 1 +
+> >  drivers/tee/optee/device.c                        | 6 +++---
+> >  3 files changed, 12 insertions(+), 3 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> > new file mode 100644
+> > index 000000000000..0ae04ae5374a
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> > @@ -0,0 +1,8 @@
+> > +What:                /sys/bus/tee/devices/optee-ta-<uuid>/
+> > +Date:           May 2020
+> > +KernelVersion   5.7
+> > +Contact:        tee-dev@lists.linaro.org
+> > +Description:
+> > +             OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+> > +             matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+> > +             are free to create needed API under optee-ta-<uuid> directory.
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ecc0749810b0..6717afef2de3 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+> >  M:   Jens Wiklander <jens.wiklander@linaro.org>
+> >  L:   tee-dev@lists.linaro.org
+> >  S:   Maintained
+> > +F:   Documentation/ABI/testing/sysfs-bus-optee-devices
+> >  F:   drivers/tee/optee/
+> >
+> >  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+> > diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> > index e3a148521ec1..ed3d1ddfa52b 100644
+> > --- a/drivers/tee/optee/device.c
+> > +++ b/drivers/tee/optee/device.c
+> > @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+> >       return 0;
+> >  }
+> >
+> > -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> > +static int optee_register_device(const uuid_t *device_uuid)
+> >  {
+> >       struct tee_client_device *optee_device = NULL;
+> >       int rc;
+> > @@ -75,7 +75,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >               return -ENOMEM;
+> >
+> >       optee_device->dev.bus = &tee_bus_type;
+> > -     dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+> > +     dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid);
+>
+> This code is and already was broken. If dev_set_name() returns -ENOMEM,
+> the name will be a null pointer.
 
---
-Regards,
-Sudeep
+Is this an expected error scenario? dev_set_name() is invoked at
+numerous places in the kernel without any error check.
+
+>
+> Also, I don't get how you can just swap the name without potentially
+> breaking the backwards compatiblity towards the user space.
+
+As of now, there isn't any compatibility concerns with user space as
+these TEE devices are meant to be used by kernel drivers only. TEE
+user-space interface is quite separate (see: Documentation/tee.txt).
+
+-Sumit
+
+>
+> /Jarkko
