@@ -2,106 +2,141 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED92C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC5D206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Tptn7ggY"
+	by mail.kernel.org (Postfix) with ESMTP id 07422206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgFDVaw (ORCPT
+        id S1727944AbgFDVcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 17:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgFDVav (ORCPT
+        Thu, 4 Jun 2020 17:32:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52050 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgFDVcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:30:51 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8951FC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 14:30:51 -0700 (PDT)
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 333D122708;
-        Thu,  4 Jun 2020 23:30:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591306249;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9Hu99ss9oTQ7LnLqOoe3fAITii0LfZbanya/jMFkUIY=;
-        b=Tptn7ggY73OR1BeJvQxcdMe2R0MU1SMjIhIrGd2OJ+4HHHKcUEXyNpOGrLL8D08Oy6sLZ2
-        54xuFIC3KBxF8EMsAiN6bqb8CstckFJaASyic5LfGdZiQd3cEskW+lBj3rvUulVqs7hm9l
-        lkNNAdyl0hwUJwmdZJMHS7kBd0peojU=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Gene Chen <gene.chen.richtek@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] mfd: mfd-core: Don't overwrite the dma_mask of the child device
-Date:   Thu,  4 Jun 2020 23:30:37 +0200
-Message-Id: <20200604213037.17254-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Thu, 4 Jun 2020 17:32:32 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jgxTJ-00081i-4f; Thu, 04 Jun 2020 21:32:21 +0000
+Date:   Thu, 4 Jun 2020 23:32:20 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexey Gladkov <legion@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>
+Subject: Re: [PATCH 0/2] proc: use subset option to hide some top-level
+ procfs entries
+Message-ID: <20200604213220.grcaldlxz54jyd3o@wittgenstein>
+References: <20200604200413.587896-1-gladkov.alexey@gmail.com>
+ <87ftbah8q2.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87ftbah8q2.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit cdfee5623290 ("driver core: initialize a default DMA mask for
-platform device") initialize the DMA of a platform device. But if the
-parent doesn't have a dma_mask set, for example if it's an I2C device,
-the dma_mask of the child platform device will be set to zero again.
-Which leads to many "DMA mask not set" warnings, if the MFD cell has the
-of_compatible property set.
+On Thu, Jun 04, 2020 at 03:33:25PM -0500, Eric W. Biederman wrote:
+> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+> 
+> > Greetings!
+> >
+> > Preface
+> > -------
+> > This patch set can be applied over:
+> >
+> > git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git d35bec8a5788
+> 
+> I am not going to seriously look at this for merging until after the
+> merge window closes. 
+> 
+> Have you thought about the possibility of relaxing the permission checks
+> to mount proc such that we don't need to verify there is an existing
+> mount of proc?  With just the subset pids I think this is feasible.  It
+> might not be worth it at this point, but it is definitely worth asking
+> the question.  As one of the benefits early propopents of the idea of a
+> subset of proc touted was that they would not be as restricted as they
+> are with today's proc.
+> 
+> I ask because this has a bearing on the other options you are playing
+> with.
+> 
+> Do we want to find a way to have the benefit of relaxed permission
+> checks while still including a few more files.
+> 
+> > Overview
+> > --------
+> > Directories and files can be created and deleted by dynamically loaded modules.
+> > Not all of these files are virtualized and safe inside the container.
+> >
+> > However, subset=pid is not enough because many containers wants to have
+> > /proc/meminfo, /proc/cpuinfo, etc. We need a way to limit the visibility of
+> > files per procfs mountpoint.
+> 
+> Is it desirable to have meminfo and cpuinfo as they are today or do
+> people want them to reflect the ``container'' context.   So that
+> applications like the JVM don't allocation too many cpus or don't try
+> and consume too much memory, or run on nodes that cgroups current make
+> unavailable.
+> 
+> Are there any users or planned users of this functionality yet?
+> 
+> I am concerned that you might be adding functionality that no one will
+> ever use that will just add code to the kernel that no one cares about,
+> that will then accumulate bugs.  Having had to work through a few of
+> those cases to make each mount of proc have it's own super block I am
+> not a great fan of adding another one.
+> 
+> If the runc, lxc and other container runtime folks can productively use
+> such and option to do useful things and they are sensible things to do I
+> don't have any fundamental objection.  But I do want to be certain this
+> is a feature that is going to be used.
 
-[    1.877937] sl28cpld-pwm sl28cpld-pwm: DMA mask not set
-[    1.883282] sl28cpld-pwm sl28cpld-pwm.0: DMA mask not set
-[    1.888795] sl28cpld-gpio sl28cpld-gpio: DMA mask not set
+I'm not sure Alexey is introducing virtualized meminfo and cpuinfo (but
+I haven't had time to look at this patchset).
+In any case, we are currently virtualizing:
+/proc/cpuinfo
+/proc/diskstats
+/proc/loadavg
+/proc/meminfo
+/proc/stat
+/proc/swaps
+/proc/uptime
+for each container with a tiny in-userspace filesystem LXCFS
+( https://github.com/lxc/lxcfs )
+and have been doing that for years.
+Having meminfo and cpuinfo virtualized in procfs was something we have
+been wanting for a long time and there have been patches by other people
+(from Siteground, I believe) to achieve this a few years back but were
+disregarded.
 
-Thus don't overwrite the dma_mask of the children. Instead set the
-dma_mask of the platform device.
+I think meminfo and cpuinfo would already be great. And if we're
+virtualizing cpuinfo we also need to virtualize the cpu bits exposed in
+/proc/stat. It would also be great to virtualize /proc/uptime. Right now
+we're achieving this essentially by substracting the time the init
+process of the pid namespace has started since system boot time, minus
+the time when the system started to get the actual reaper age (It's a
+bit more involved but that's the gist.).
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
----
-Former discussion was here:
-https://lore.kernel.org/lkml/20200423174543.17161-3-michael@walle.cc/
+This is all on the topic list for this year's virtual container's
+microconference at Plumber's and I would suggest we try to discuss the
+various requirements for something like this there. (I'm about to send
+the CFP out.)
 
-Because my MFD driver now uses of_platform_populate() it doesn't trigger
-this anymore. But it may be useful for others, e.g. if I'm not mistaken it
-should apply to the mt6360 sub devices.
-
-Thus I'm submitting this patch seperately.
-
- drivers/mfd/mfd-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index f5a73af60dd4..e735565969b3 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -138,7 +138,7 @@ static int mfd_add_device(struct device *parent, int id,
- 
- 	pdev->dev.parent = parent;
- 	pdev->dev.type = &mfd_dev_type;
--	pdev->dev.dma_mask = parent->dma_mask;
-+	pdev->platform_dma_mask = parent->dma_mask ? *parent->dma_mask : 0;
- 	pdev->dev.dma_parms = parent->dma_parms;
- 	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
- 
--- 
-2.20.1
-
+Christian
