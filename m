@@ -2,88 +2,94 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1714A20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B7D20663
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PhZG2KRu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XY/MGP0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgFDHbQ (ORCPT
+        id S1728038AbgFDHbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:31:16 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:36044 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727768AbgFDH3X (ORCPT
+        Thu, 4 Jun 2020 03:31:48 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35783 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727768AbgFDHbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:29:23 -0400
-X-UUID: 113561acb4354d378f5f95fac83ddf6d-20200604
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Gfwa+HEA1Fp8IFUeQUFuA37/N+o4Grdg0TxloGU3uxw=;
-        b=PhZG2KRuoIqangRBxEDXB9lubZQEx9oWCB88yMzlpQYUffatlijEClT79/1ditbGF2lJEOanmv3jZwWHvvDs85bq92QOQCUyQGP41N30KxnroC7n5FiVp0Vr0a0s0JKcKoZVRQMHT8f1DmjIvL3Rt3gpdvTSexzZoeeFfPxhLyI=;
-X-UUID: 113561acb4354d378f5f95fac83ddf6d-20200604
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 211813436; Thu, 04 Jun 2020 15:29:18 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 4 Jun 2020 15:29:15 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Jun 2020 15:29:13 +0800
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
-        Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH v9 02/18] media: platform: Improve queue set up flow for bug fixing
-Date:   Thu, 4 Jun 2020 15:26:52 +0800
-Message-ID: <20200604072708.9468-3-xia.jiang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200604072708.9468-1-xia.jiang@mediatek.com>
-References: <20200604072708.9468-1-xia.jiang@mediatek.com>
+        Thu, 4 Jun 2020 03:31:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591255907;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ScSOSv2NtMOfy/k7kNuH62249T1/AmnJUmlOdYJpg9M=;
+        b=XY/MGP0xDTzKnmsh8orfkQCDBpZyFPrEdWbY4FD5qpjbUiRG0JGPx4g2I9f99ktS8C516J
+        eLgCEhnkFnn6BHpKOJ0MoBpGXuJsMS2vMmfeszhrEeB90sjyq48JmzFTDjfmx8TSiwDSN5
+        8Dwc4D39d5EPgxy6x2fSjNnEdMHMoIs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-nCNyXAvDNe6LobAjFOmQpg-1; Thu, 04 Jun 2020 03:31:45 -0400
+X-MC-Unique: nCNyXAvDNe6LobAjFOmQpg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53FA119057A1;
+        Thu,  4 Jun 2020 07:31:44 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-113-227.phx2.redhat.com [10.3.113.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8DC9C2DE74;
+        Thu,  4 Jun 2020 07:31:43 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH] iommu: Don't attach deferred device in iommu_group_do_dma_attach
+Date:   Thu,  4 Jun 2020 00:31:42 -0700
+Message-Id: <20200604073142.74701-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGNoZWNraW5nIGNyZWF0ZWQgYnVmZmVyIHNpemUgZm9sbG93IGluIG10a19qcGVnX3F1ZXVl
-X3NldHVwKCkuDQoNClJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3Jn
-Pg0KU2lnbmVkLW9mZi1ieTogWGlhIEppYW5nIDx4aWEuamlhbmdAbWVkaWF0ZWsuY29tPg0KLS0t
-DQp2OTogbm8gY2hhbmdlcw0KLS0tDQogZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9t
-dGtfanBlZ19jb3JlLmMgfCA3ICsrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25z
-KCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19q
-cGVnX2NvcmUuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29y
-ZS5jDQppbmRleCA0YWQ0YTRiMzBhMGUuLjY3YTAyMmQwNGRmNyAxMDA2NDQNCi0tLSBhL2RyaXZl
-cnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQorKysgYi9kcml2ZXJz
-L21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KQEAgLTU3MSw2ICs1NzEs
-MTMgQEAgc3RhdGljIGludCBtdGtfanBlZ19xdWV1ZV9zZXR1cChzdHJ1Y3QgdmIyX3F1ZXVlICpx
-LA0KIAlpZiAoIXFfZGF0YSkNCiAJCXJldHVybiAtRUlOVkFMOw0KIA0KKwlpZiAoKm51bV9wbGFu
-ZXMpIHsNCisJCWZvciAoaSA9IDA7IGkgPCAqbnVtX3BsYW5lczsgaSsrKQ0KKwkJCWlmIChzaXpl
-c1tpXSA8IHFfZGF0YS0+c2l6ZWltYWdlW2ldKQ0KKwkJCQlyZXR1cm4gLUVJTlZBTDsNCisJCXJl
-dHVybiAwOw0KKwl9DQorDQogCSpudW1fcGxhbmVzID0gcV9kYXRhLT5mbXQtPmNvbHBsYW5lczsN
-CiAJZm9yIChpID0gMDsgaSA8IHFfZGF0YS0+Zm10LT5jb2xwbGFuZXM7IGkrKykgew0KIAkJc2l6
-ZXNbaV0gPSBxX2RhdGEtPnNpemVpbWFnZVtpXTsNCi0tIA0KMi4xOC4wDQo=
+Attaching a deferred device should be delayed until dma api is called.
+
+Cc: iommu@lists.linux-foundation.org
+Suggested-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+If you already have thrown a patch together, then ignore this. Also
+feel free to swap out the signed-off-by with your's since
+this is more your patch than mine. You can put a reviewed-by
+and tested-by instead for me.
+
+ drivers/iommu/iommu.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index b5ea203f6c68..d43120eb1dc5 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1680,8 +1680,12 @@ static void probe_alloc_default_domain(struct bus_type *bus,
+ static int iommu_group_do_dma_attach(struct device *dev, void *data)
+ {
+ 	struct iommu_domain *domain = data;
++	int ret = 0;
+ 
+-	return __iommu_attach_device(domain, dev);
++	if (!iommu_is_attach_deferred(domain, dev))
++		ret = __iommu_attach_device(domain, dev);
++
++	return ret;
+ }
+ 
+ static int __iommu_group_dma_attach(struct iommu_group *group)
+-- 
+2.24.0
 
