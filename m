@@ -2,105 +2,141 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA61C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514D9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401AF206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GjxtAOQp"
+	by mail.kernel.org (Postfix) with ESMTP id 3BBC22075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgFDTfV (ORCPT
+        id S1729344AbgFDTfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728895AbgFDTfT (ORCPT
+        Thu, 4 Jun 2020 15:35:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23274 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728420AbgFDTfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:35:19 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32727C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:35:19 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id e2so7345787eje.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=oyFcjly3iI3BI3+x8EJy7gBmUy6FOed1sXbAZssuOGo=;
-        b=GjxtAOQpLRjZNmSyUueh+o5GYU/a2WnPWJ6lUemF++gMlaOuL43n5nkyCy1JOOntFQ
-         N5IG9D54Qy0ztQrXQWRSzHY0sM73WSKhqiNtQ6KuMUwOi7+uVXbfp64AR+O9JXuEKwb6
-         LXL0lOS4/jEZkRYhN6FORL6w0jcd96qtmEh4k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=oyFcjly3iI3BI3+x8EJy7gBmUy6FOed1sXbAZssuOGo=;
-        b=shduVYBXKXPrngTLDJfS3q9B0pMwANGrD4xvFsTlLyNd8iWmKHoZAkKQ3zu/6xJrzq
-         lIo+LbAYaCwd/shm+AboM3FaH5PlZCNv/vn/pedocEdLenKRK4LDZdLT5bC/Rxr3FTIp
-         fCiG1hhR3u1si5BQjLKCHz5yxUVoikzUdqjNA6nS9dA+3KmaksO2JUI939e76fb0Y6o8
-         Mr1qJVwgjU1NLbKdJHcd48anfNWaa/XKQt8ObWmREiprji00R4olrC/kcokawTTDmMT/
-         fhMQ03w1rNAdhYq0ntIWtrYyTzfG4EvT3M6uahbGCE0nV9n2BTnEAwQNPkuqnc7YHFye
-         /PRQ==
-X-Gm-Message-State: AOAM532JYuJB/Gvccus2GWCNu/0GMYUtqpuIlO+pU7zwS+8bwVKJV+W+
-        DtDFrIwTCqGAaWMedSxPCUtI/6+ghCHnFwUd3C8WAw==
-X-Google-Smtp-Source: ABdhPJyPugwFVDV6AFxPuiXuVnUxIjbCmjXK1NRb4zaJGKhfuG6BzP+CkKC8JEeaZLgBDICeXdLhDSKGf2RflapIHsg=
-X-Received: by 2002:a17:906:8253:: with SMTP id f19mr5433964ejx.470.1591299317595;
- Thu, 04 Jun 2020 12:35:17 -0700 (PDT)
-From:   Chandrakanth Patil <chandrakanth.patil@broadcom.com>
-References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
- <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com> <4779a72c878774e4e3525aae8932feda@mail.gmail.com>
- <20200604155009.63mhbsoaoq6yra77@suse.com>
-In-Reply-To: <20200604155009.63mhbsoaoq6yra77@suse.com>
-MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQJb9Wzm0098wwdcUnfhuPbO5i84ZwGnJavmAYBmkM8CEG/qNaeTocBQ
-Date:   Fri, 5 Jun 2020 01:05:13 +0530
-Message-ID: <4285a7ff366d7f5cfb5cae582dadf878@mail.gmail.com>
-Subject: RE: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by JBOD
-To:     Kai Liu <kai.liu@suse.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Xiaoming Gao <newtongao@tencent.com>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>, xiakaixu1987@gmail.com,
-        jejb@linux.ibm.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Thu, 4 Jun 2020 15:35:54 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054JZcWQ180917;
+        Thu, 4 Jun 2020 15:35:46 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31c542sjs7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 15:35:46 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 054JZcEd181711;
+        Thu, 4 Jun 2020 15:35:38 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31c542sjj2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 15:35:38 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054JWcf1012568;
+        Thu, 4 Jun 2020 19:35:24 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31bf482mxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 19:35:24 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054JZMnY54395258
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jun 2020 19:35:22 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF48811C052;
+        Thu,  4 Jun 2020 19:35:21 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E915C11C04A;
+        Thu,  4 Jun 2020 19:35:20 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.133.34])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Jun 2020 19:35:20 +0000 (GMT)
+Message-ID: <1591299320.5146.53.camel@linux.ibm.com>
+Subject: Re: [PATCH 2/2] ima: Call ima_calc_boot_aggregate() in
+ ima_eventdigest_init()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Bruno Meneguele <bmeneg@redhat.com>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>, tiwai@suse.de,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Date:   Thu, 04 Jun 2020 15:35:20 -0400
+In-Reply-To: <20200604191207.GR2970@glitch>
+References: <20200603150821.8607-1-roberto.sassu@huawei.com>
+         <20200603150821.8607-2-roberto.sassu@huawei.com>
+         <1591221815.5146.31.camel@linux.ibm.com> <20200604191207.GR2970@glitch>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-04_12:2020-06-04,2020-06-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ mlxlogscore=999 cotscore=-2147483648 mlxscore=0 adultscore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006040132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused
->by JBOD
->
->On 2020/06/04 Thu 16:39, Chandrakanth Patil wrote:
->>
->>Hi Martin, Xiaoming Gao, Kai Liu,
->>
->>It is a known firmware issue and has been fixed. Please update to the
->>latest firmware available in the Broadcom support website.
->>Please let me know if you need any further information.
->
->Hi Chandrakanth,
->
->Could you let me know which megaraid based controllers are affected by this
->issue? All or
->some models or some generations?
->
->Best regards,
->Kai Liu
+On Thu, 2020-06-04 at 16:12 -0300, Bruno Meneguele wrote:
+> On Wed, Jun 03, 2020 at 06:03:35PM -0400, Mimi Zohar wrote:
+> > Hi Roberto,
+> > 
+> > On Wed, 2020-06-03 at 17:08 +0200, Roberto Sassu wrote:
+> > > If the template field 'd' is chosen and the digest to be added to the
+> > > measurement entry was not calculated with SHA1 or MD5, it is
+> > > recalculated with SHA1, by using the passed file descriptor. However, this
+> > > cannot be done for boot_aggregate, because there is no file descriptor.
+> > > 
+> > > This patch adds a call to ima_calc_boot_aggregate() in
+> > > ima_eventdigest_init(), so that the digest can be recalculated also for the
+> > > boot_aggregate entry.
+> > > 
+> > > Cc: stable@vger.kernel.org # 3.13.x
+> > > Fixes: 3ce1217d6cd5d ("ima: define template fields library and new helpers")
+> > > Reported-by: Takashi Iwai <tiwai@suse.de>
+> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > Thanks, Roberto.
+> > 
+> > I've pushed both patches out to the next-integrity branch and would
+> > appreciate some additional testing.
+> > 
+> > thanks,
+> > 
+> > Mimi
+> > 
+> 
+> Hi Mimi and Roberto,
+> 
+> FWIW, I've tested this patch manually and things went fine, with no
+> unexpected behavior or results. 
 
-Hi Kai Liu,
+Thanks, Bruno!
 
-Gen3 (Invader) and Gen3.5 (Ventura/Aero) generations of controllers are
-affected.
+> However, wouldn't it be worth add a note in kmsg about the
+> ima_calc_boot_aggregate() being called with an algo different from the
+> system's default? Just to let the user know he won't find a sha256 when
+> check the measurement. But that's something we can add later too.
 
-Thanks,
-Chandrakanth Patil
+There's no guarantees that the IMA default crypto algorithm will be
+used for calculating the boot_aggregate.  The algorithm is dependent
+on the TPM.  For example, the default IMA algorithm could be sha256,
+but on a system with TPM 1.2, the boot_aggregate would have to be
+sha1.
+
+This patch addresses a mismatch between the template format field ('d'
+field) and the larger digest.  We could require the "ima_template_fmt"
+specified on the boot command line define an appropriate format, but
+Roberto decided to support the situation where both "d" and "d-ng" are
+defined.
+
+Mimi
