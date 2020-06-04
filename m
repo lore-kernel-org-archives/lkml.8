@@ -2,181 +2,151 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07D7D206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332B6206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sVYb4xQh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p1RLJkFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgFDJBd (ORCPT
+        id S1728428AbgFDJCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59058 "EHLO
+        Thu, 4 Jun 2020 05:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbgFDJBb (ORCPT
+        with ESMTP id S1728089AbgFDJCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:01:31 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63214C03E96D;
-        Thu,  4 Jun 2020 02:01:31 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id s88so917787pjb.5;
-        Thu, 04 Jun 2020 02:01:31 -0700 (PDT)
+        Thu, 4 Jun 2020 05:02:46 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EF0C03E96E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:02:46 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id y13so5243362eju.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:02:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PFq0vXrRaSmgWvfmDIPgyoV5VxCvXpSfHJA3tFT8WZg=;
-        b=sVYb4xQhEF7N02+Uf9U0zOPXvoWAfJrAPHSODAEDPsUyPO7LjluXEJSg568Ur1R6fS
-         058N0SrkET5XvVxx77XyKw7l5pPcwkkkFscicMP2l3j93wf+NwZ2vk1SrZF9y8Fw8RDu
-         wepxC7TOXIZ2Lo8Z1I0I5jDF+NxMOiit6FAT108oH+hhUcpelTTXDWKH1avmGAhgxmcz
-         LzdzBDnvas3xLC/QAIvrtQl4eLB3l9RMVm7ouOtOrs8ELospfFFmX+MUuaptbj4IVn3d
-         HiPrxlDUjBtI1VBvLeGfbPaSG9cl2Fsws22EF6jz+yVKcasUModYlX7B8TFJzMTj45e0
-         rmIA==
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hHof+p3C9Md136JQ7k0tl8hMmspaaFCEsQhKQBHmNxA=;
+        b=p1RLJkFHX+/HAaWtEy3jwsTfPtsNiJliZpFxTrV1XyeKjW6c+81N5TFAVnh6b9eAUz
+         1jWiOzZBl9rVUsnqfcwlgM80fjmLjwZLhpOMjlH8Xwr+lIx4p8FvCKMk7EMGSiBE1ZTu
+         A/1zi/2qERY0KAaorMMvNhuDbklge4kwZ1/mrDweImSwz9dFh9KTjtNMJh7UlIicpjhm
+         G7viBE1GVTYYXxOz5KFnKImb03jUw45EXUrtQwO18cQ7C70e+BiXsjBXL065BXKh8mhs
+         7Qu51pm3knq8tG30mIZjKZtSMOMGlGYqIxd9WeAdOYJN2qShg9dZ0QETGacpX92pOqQG
+         g6kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PFq0vXrRaSmgWvfmDIPgyoV5VxCvXpSfHJA3tFT8WZg=;
-        b=frF4yL4R3+x0eY3+dIeN9u1EeMP8OS+SQ/D8cuxtI/iQT2ohemuhbDrMXYax2ZQNEN
-         8cqatafx0VHjzarEpuezKJpHQOhJRENA3+ZhTnOr5egloVa4IYaG6Wx0FqPGt4A3KdJB
-         9BC2rxHfW3jIag4UY87psbdD2Dt2pvSldCbs9hCpN+MR1jjGTEp7Cdz0gRBNa0IxLhkv
-         tSEOSKipXfAm6uFpiV/ShJS+Qd3AyObBB3zRR7W0M8Ylm0Dw0iyWpn/vm92vwkGtk0m+
-         Fyef319z2bMtZxWcSDhRQTYWyV43T6OHL7BjKtC9NPTOwpt1y+RgtosAB7MszyrN6q+/
-         B38Q==
-X-Gm-Message-State: AOAM532b4Mey/UN4ihvU+V3pRuX+6H8m6uZDBJRAT6cl0K58z7+dsnby
-        +ahf6nR1NIG+1IDxLgAyyTs=
-X-Google-Smtp-Source: ABdhPJxtCyXiehCK/eWYd3f9upvwKzw3NM8IBsK8vq7igCwcZfq0WI6FS0endAzwaYf28jVOpCay5A==
-X-Received: by 2002:a17:90a:8089:: with SMTP id c9mr5084842pjn.126.1591261290908;
-        Thu, 04 Jun 2020 02:01:30 -0700 (PDT)
-Received: from localhost.localdomain ([45.192.173.253])
-        by smtp.gmail.com with ESMTPSA id g21sm4595307pjl.3.2020.06.04.02.01.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jun 2020 02:01:29 -0700 (PDT)
-From:   kerneljasonxing@gmail.com
-To:     gregkh@linuxfoundation.org, edumazet@google.com,
-        ncardwell@google.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org
-Cc:     netdev@vger.kernel.org, kerneljasonxing@gmail.com,
-        linux-kernel@vger.kernel.org, liweishi@kuaishou.com,
-        lishujin@kuaishou.com
-Subject: [PATCH v2 4.19] tcp: fix TCP socks unreleased in BBR mode
-Date:   Thu,  4 Jun 2020 17:00:14 +0800
-Message-Id: <20200604090014.23266-1-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200602080425.93712-1-kerneljasonxing@gmail.com>
-References: <20200602080425.93712-1-kerneljasonxing@gmail.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hHof+p3C9Md136JQ7k0tl8hMmspaaFCEsQhKQBHmNxA=;
+        b=G507xFkhaHcvmljn6xglvRbaptXE5LaSKLoONx6ibchl91eg12xnaHgdA7XK/RLRY3
+         g6+KTF6RnoAN/p5Wkoc8eIbci0TCrxnFm3zf3gHXcBJM7EYQEDzYsMskFGuyljRLirgI
+         qUy4KfiELzyA4z89mXMQx5XJDLCo5Wenj6pjO6DQ8qqmg6TTFDpHLT/nlRS3c4O6IghG
+         fgb2tJtQ8xtQzxeWgLBlgESwjzg4CFz6prZB2xGuCHrzrFwnG9Tm1B6Swh/gNcY+PP7r
+         MEb1iPzw7yw4Pd7fKuLOhKBkeRwUM1LOvUK4ca1/lFDP7XOaaIDSB+pYMeGswH5omSx/
+         nyog==
+X-Gm-Message-State: AOAM533bAk3lvTk543xEx5ZWCSjtR/iMhsL8Tb1g3MiX8rPo+f8ymVf7
+        l8SmyASX5liWuszJM1/YxZCUw+tUq1Socw==
+X-Google-Smtp-Source: ABdhPJw5awrswXBB9T1X5H66YVQsV9+7Luv3jbVtzXFoUYhvXcs3GavJwgAMyZ94YIO/oW7JPztvmQ==
+X-Received: by 2002:a17:906:69d1:: with SMTP id g17mr2840858ejs.521.1591261365181;
+        Thu, 04 Jun 2020 02:02:45 -0700 (PDT)
+Received: from [192.168.1.4] (212-5-158-209.ip.btc-net.bg. [212.5.158.209])
+        by smtp.googlemail.com with ESMTPSA id gt26sm1592670ejb.107.2020.06.04.02.02.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 02:02:44 -0700 (PDT)
+Subject: Re: [PATCH] v4l2-ctrl: add control for thumnails
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Tomasz Figa <tfiga@chromium.org>
+References: <20200526085446.30956-1-stanimir.varbanov@linaro.org>
+ <65ac9697-a43f-7025-e6fe-69c4a44c6d9a@xs4all.nl>
+ <ce28a840-a763-6700-16dd-d708e570d55c@linaro.org>
+Message-ID: <d02c6cd0-a502-dc52-519e-54b6328d5373@linaro.org>
+Date:   Thu, 4 Jun 2020 12:02:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ce28a840-a763-6700-16dd-d708e570d55c@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Xing <kerneljasonxing@gmail.com>
+Hi Hans,
 
-When using BBR mode, too many tcp socks cannot be released because of
-duplicate use of the sock_hold() in the manner of tcp_internal_pacing()
-when RTO happens. Therefore, this situation maddly increases the slab
-memory and then constantly triggers the OOM until crash.
+On 5/27/20 12:53 AM, Stanimir Varbanov wrote:
+> Hi Hans,
+> 
+> On 5/26/20 3:04 PM, Hans Verkuil wrote:
+>> On 26/05/2020 10:54, Stanimir Varbanov wrote:
+>>> Add v4l2 control for decoder thumbnail.
+>>>
+>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>> ---
+>>>  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 7 +++++++
+>>>  drivers/media/v4l2-core/v4l2-ctrls.c                      | 2 ++
+>>>  include/uapi/linux/v4l2-controls.h                        | 2 ++
+>>>  3 files changed, 11 insertions(+)
+>>>
+>>> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>> index d0d506a444b1..e838e410651b 100644
+>>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>>> @@ -3726,6 +3726,13 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
+>>>      disables generating SPS and PPS at every IDR. Setting it to one enables
+>>>      generating SPS and PPS at every IDR.
+>>>  
+>>> +``V4L2_CID_MPEG_VIDEO_DECODER_THUMBNAIL (button)``
+>>> +    Instructs the decoder to produce immediate output. The decoder should
+>>> +    consume first input buffer for progressive stream (or first two buffers
+>>> +    for interlace). Decoder should not allocate more output buffers that it
+>>> +    is required to consume one input frame. Usually the decoder input
+>>> +    buffers will contain only I/IDR frames but it is not mandatory.
+>>
+>> This is very vague. It doesn't explain why the control is called 'THUMBNAIL',
+>> but more importantly it doesn't explain how this relates to normal decoding.
+> 
+> If in the normal decode the capture queue buffers are 5, in the
+> thumbnail mode the number of buffers will be only 1 (if the bitstream is
+> progressive) and this will guarantee low memory usage. The other
+> difference is that the decoder will produce decoded frames (without
+> errors) only for I/IDR (sync frames).
+> 
+>>
+>> I.e. if you are decoding and 'press' this control, what happens then?
+> 
+> Might be the button type wasn't great idea. In fact the control should
+> be set before streamon so that the driver returns min_capture_bufs 1.
+> 
+>>
+>> What exactly is the use-case?
+> 
+> It could be used to generate thumbnails of all video clips in a folder
+> or when you open a Gallery application on your phone.
+> 
 
-Besides, in addition to BBR mode, if some mode applies pacing function,
-it could trigger what we've discussed above,
+What is your opinion on that control? I could consider to make it Venus
+custom control but from the use-case it looks other drivers also can
+benefit of it.
 
-Reproduce procedure:
-0) cat /proc/slabinfo | grep TCP
-1) switch net.ipv4.tcp_congestion_control to bbr
-2) using wrk tool something like that to send packages
-3) using tc to increase the delay and loss to simulate the RTO case.
-4) cat /proc/slabinfo | grep TCP
-5) kill the wrk command and observe the number of objects and slabs in
-TCP.
-6) at last, you could notice that the number would not decrease.
+I tried to make more generic one [1] but it looks it will be too difficult.
 
-v2: extend the timer which could cover all those related potential risks
-(suggested by Eric Dumazet and Neal Cardwell)
-
-Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
-Signed-off-by: liweishi <liweishi@kuaishou.com>
-Signed-off-by: Shujin Li <lishujin@kuaishou.com>
----
- net/ipv4/tcp_output.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
-
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index cc4ba42..4626f4e 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -966,6 +966,8 @@ enum hrtimer_restart tcp_pace_kick(struct hrtimer *timer)
- 
- static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
- {
-+	struct tcp_sock *tp = tcp_sk(sk);
-+	ktime_t expire, now;
- 	u64 len_ns;
- 	u32 rate;
- 
-@@ -977,12 +979,28 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
- 
- 	len_ns = (u64)skb->len * NSEC_PER_SEC;
- 	do_div(len_ns, rate);
--	hrtimer_start(&tcp_sk(sk)->pacing_timer,
--		      ktime_add_ns(ktime_get(), len_ns),
-+	now = ktime_get();
-+	/* If hrtimer is already armed, then our caller has not
-+	 * used tcp_pacing_check().
-+	 */
-+	if (unlikely(hrtimer_is_queued(&tp->pacing_timer))) {
-+		expire = hrtimer_get_softexpires(&tp->pacing_timer);
-+		if (ktime_after(expire, now))
-+			now = expire;
-+		if (hrtimer_try_to_cancel(&tp->pacing_timer) == 1)
-+			__sock_put(sk);
-+	}
-+	hrtimer_start(&tp->pacing_timer, ktime_add_ns(now, len_ns),
- 		      HRTIMER_MODE_ABS_PINNED_SOFT);
- 	sock_hold(sk);
- }
- 
-+static bool tcp_pacing_check(const struct sock *sk)
-+{
-+	return tcp_needs_internal_pacing(sk) &&
-+	       hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
-+}
-+
- static void tcp_update_skb_after_send(struct tcp_sock *tp, struct sk_buff *skb)
- {
- 	skb->skb_mstamp = tp->tcp_mstamp;
-@@ -2117,6 +2135,9 @@ static int tcp_mtu_probe(struct sock *sk)
- 	if (!tcp_can_coalesce_send_queue_head(sk, probe_size))
- 		return -1;
- 
-+	if (tcp_pacing_check(sk))
-+		return -1;
-+
- 	/* We're allowed to probe.  Build it now. */
- 	nskb = sk_stream_alloc_skb(sk, probe_size, GFP_ATOMIC, false);
- 	if (!nskb)
-@@ -2190,12 +2211,6 @@ static int tcp_mtu_probe(struct sock *sk)
- 	return -1;
- }
- 
--static bool tcp_pacing_check(const struct sock *sk)
--{
--	return tcp_needs_internal_pacing(sk) &&
--	       hrtimer_is_queued(&tcp_sk(sk)->pacing_timer);
--}
--
- /* TCP Small Queues :
-  * Control number of packets in qdisc/devices to two packets / or ~1 ms.
-  * (These limits are doubled for retransmits)
 -- 
-1.8.3.1
+regards,
+Stan
 
+[1] https://www.spinics.net/lists/linux-media/msg167794.html
