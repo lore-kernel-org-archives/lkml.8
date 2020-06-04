@@ -2,131 +2,80 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF200C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5357320657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:41:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OaAdvv8o"
+	by mail.kernel.org (Postfix) with ESMTP id C25C62067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgFDClL (ORCPT
+        id S1726906AbgFDCnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:41:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54189 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726047AbgFDClI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:41:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591238466;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yd4542Fh+4FYtypVVwxlbTi97DfvciD+WPtx97gNYhs=;
-        b=OaAdvv8ovBLiSL6NgG2Hsi//d/uqKaDOdA4BFmCJdjyflX+eOGjVeXc7LmWNrIu+z0sT7p
-        fKErTkz9pvYNojLfzK8x8aNt9pvfWSscoiK23HTvKYxsMQzla6A5HQDT0AmeG2aCXjAr54
-        adlBLmBrshv6UuW12gz093WPIPtuBks=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-H713mFUsOtiEv0pmf7nX3g-1; Wed, 03 Jun 2020 22:41:02 -0400
-X-MC-Unique: H713mFUsOtiEv0pmf7nX3g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D3291883600;
-        Thu,  4 Jun 2020 02:41:00 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E5C62DE71;
-        Thu,  4 Jun 2020 02:40:53 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 21:40:51 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Cc:     huawei.libin@huawei.com, xiexiuqi@huawei.com,
-        cj.chengjian@huawei.com, mingo@redhat.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        mbenes@suse.cz, devel@etsukata.com, viro@zeniv.linux.org.uk,
-        esyr@redhat.com
-Subject: Re: Question: livepatch failed for new fork() task stack unreliable
-Message-ID: <20200604024051.6ovbr6tbrowwg6jr@treble>
-References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
- <20200529174433.wpkknhypx2bmjika@treble>
- <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
- <20200601180538.o5agg5trbdssqken@treble>
- <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
- <20200602131450.oydrydelpdaval4h@treble>
- <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
- <20200603153358.2ezz2pgxxxld7mj7@treble>
- <2225bc83-95f2-bf3d-7651-fdd10a3ddd00@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2225bc83-95f2-bf3d-7651-fdd10a3ddd00@huawei.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Wed, 3 Jun 2020 22:43:14 -0400
+Received: from mga04.intel.com ([192.55.52.120]:46889 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgFDCnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 22:43:14 -0400
+IronPort-SDR: hjdir4Z+gMysQacx1M3TC3DWxl5U9n+aAubNzoOCNDb6isU2OrIa+ZVsOu0PvVo/XtjwEW3LPk
+ Q+DosVcEIOgA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 19:43:13 -0700
+IronPort-SDR: DMUHMEnWDRklmY95LvDL49LiNPEhLY0j5aBlXnFuymzxcclPQ0W7K8iq9sRmao+y2ZCW0h8oBZ
+ Prw2wBpmEtlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,470,1583222400"; 
+   d="scan'208";a="304571640"
+Received: from lxy-dell.sh.intel.com ([10.239.159.21])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Jun 2020 19:43:11 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH] KVM: x86: Assign correct value to array.maxnent
+Date:   Thu,  4 Jun 2020 10:43:04 +0800
+Message-Id: <20200604024304.14643-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.18.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:24:55AM +0800, Wangshaobo (bobo) wrote:
-> 
-> 在 2020/6/3 23:33, Josh Poimboeuf 写道:
-> > On Wed, Jun 03, 2020 at 10:06:07PM +0800, Wangshaobo (bobo) wrote:
-> > To be honest, I don't remember what I meant by sibling calls.  They
-> > don't even leave anything on the stack.
-> > 
-> > For noreturns, the code might be laid out like this:
-> > 
-> > func1:
-> > 	...
-> > 	call noreturn_foo
-> > func2:
-> > 
-> > func2 is immediately after the call to noreturn_foo.  So the return
-> > address on the stack will actually be 'func2'.  We want to retrieve the
-> > ORC data for the call instruction (inside func1), instead of the
-> > instruction at the beginning of func2.
-> > 
-> > I should probably update that comment.
-> 
-> So, I want to ask is there any side effects if i modify like this ? this
-> modification is based on
-> 
-> your fix. It looks like ok with proper test.
-> 
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index e9cc182aa97e..ecce5051e8fd 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -620,6 +620,7 @@ void __unwind_start(struct unwind_state *state, struct
-> task_struct *task,
->                 state->sp = task->thread.sp;
->                 state->bp = READ_ONCE_NOCHECK(frame->bp);
->                 state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-> +              state->signal = ((void *)state->ip == ret_from_fork);
->         }
-> 
-> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-> index 7f969b2d240f..d7396431261a 100644
-> --- a/arch/x86/kernel/unwind_orc.c
-> +++ b/arch/x86/kernel/unwind_orc.c
-> @@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
->          state->sp = sp;
->          state->regs = NULL;
->          state->prev_regs = NULL;
-> -        state->signal = ((void *)state->ip == ret_from_fork);
-> +        state->signal = false;
->          break;
+Delay the assignment of array.maxnent to use correct value for the case
+cpuid->nent > KVM_MAX_CPUID_ENTRIES.
 
-Yes that's correct.
+Fixes: e53c95e8d41e ("KVM: x86: Encapsulate CPUID entries and metadata in struct")
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+---
+ arch/x86/kvm/cpuid.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 253b8e875ccd..befff01d100c 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -870,7 +870,6 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+ 
+ 	struct kvm_cpuid_array array = {
+ 		.nent = 0,
+-		.maxnent = cpuid->nent,
+ 	};
+ 	int r, i;
+ 
+@@ -887,6 +886,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+ 	if (!array.entries)
+ 		return -ENOMEM;
+ 
++	array.maxnent = cpuid->nent;
++
+ 	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
+ 		r = get_cpuid_func(&array, funcs[i], type);
+ 		if (r)
 -- 
-Josh
+2.18.2
 
