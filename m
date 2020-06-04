@@ -2,96 +2,136 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13130C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B11C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3BA420738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F34B20772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GxiViF8w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zPMPr/Yx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgFDNcP (ORCPT
+        id S1728632AbgFDNde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:32:15 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38150 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728450AbgFDNcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:32:14 -0400
-Received: from zn.tnic (p200300ec2f112d0098e027f4d433b155.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2d00:98e0:27f4:d433:b155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 55CEE1EC0390;
-        Thu,  4 Jun 2020 15:32:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591277533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=cKzOTjANxjf5KIgCFJRkHrKZbMh7bRF3C+zBu7WkOMw=;
-        b=GxiViF8wh1msY64c3kCXgN52drWIl0dwik4z9iLIF8wgfhrx3a5Cva1Bn9zsvu/dgC0dR/
-        F50ZifrnVSFAUxims3Ftpq9j+BvaV5FU0hkAZoeYeAMGVjY/hmAEWWuENMwZOMUC62eL8R
-        dwGFFUbxpy5hL0YQNVK/NbSkHHrdY+4=
-From:   Borislav Petkov <bp@alien8.de>
-To:     X86 ML <x86@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/asm: Unify __ASSEMBLY__ blocks
-Date:   Thu,  4 Jun 2020 15:32:04 +0200
-Message-Id: <20200604133204.7636-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        Thu, 4 Jun 2020 09:33:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728550AbgFDNdd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:33:33 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1522CC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:33:33 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id n2so2173819pld.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=RAV9/dNL++xiGiHR5A9Oc9TEhWA76VZjoAgyK161SVY=;
+        b=zPMPr/YxyP3965QTpRI2+WUxZFPPhZUrUCBk07JsMf7SI3dYonyONF/w0DXsy+H5hG
+         o/oJJjSdmpLtc+dJQvwp1leBctiT2Vq3wT+tqHFjb6xHMsfoWEaS9zvqmiv6i6Kypmcz
+         NuPrUukPkRrFI2m5XEndHGed2uTmcHb8pnRTofbn4DegJcnfjQFGe7zPoyuv2QGsXbWh
+         HH8bumkNPHc1m7ilS8Jcj/cIvN+irGawDlQl1LsOKy9ICdejCXO3r2FVOYnWv/nVXOPx
+         WfGKGP7iB52c9x+wjbCYhrs/rUdGBBvxGsKjhZBtuKFDffKB+jr+YPAY9FHogJdNolMo
+         B2Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=RAV9/dNL++xiGiHR5A9Oc9TEhWA76VZjoAgyK161SVY=;
+        b=MDu9boDoITd5B8Vkdbs24ay0c3jkZT9PcsKibLUId5YmYYoiNW+1hWuDErAghy6y1R
+         T7tKfFXjFIStHrUlbOUGTzwCcTDX0A3RQ1njY6opRLN6d4ea+4SohUrtum2PPLqq7IyX
+         d7qE81KRkt1miGaVcQvgs4f4FTBNk4gHmlz5pi9T0mqXze9gc6pTLiJE/zY6m/pDVTTJ
+         3SgazXKJNW+8zE+U4tY24g2Rn5kyrn4ktRc7sBvlalfcBwTCwgCFOAAjZTU8F/RDYXfi
+         G+fjjoF2b2JoopG+tf666+d+FjnjqmATTzE1KF81cYbGl89/pCaIJFRQdP7w0IS0nFYN
+         LDOg==
+X-Gm-Message-State: AOAM532QrVAe55HZjxua2ehKdDu3lT9DTemJE4T82ow6hCRV6RFLCSJt
+        uUlfvU8ua+3VWbBuQLISgqzx2w==
+X-Google-Smtp-Source: ABdhPJyHAP7hdkjk0QRqpIxnyq/8FeJd16IwaXCeqaVfm7NZUPFQxKr/IxN2WFjd4DugkV/BUTo0Ew==
+X-Received: by 2002:a17:902:7d85:: with SMTP id a5mr4997837plm.106.1591277612461;
+        Thu, 04 Jun 2020 06:33:32 -0700 (PDT)
+Received: from [10.158.2.42] ([45.135.186.31])
+        by smtp.gmail.com with ESMTPSA id y6sm5569040pjw.15.2020.06.04.06.33.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 06:33:31 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <20200601174104.GA734973@bjorn-Precision-5520>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <779f4044-cf6a-b0d3-916f-0274450c07d3@linaro.org>
+Date:   Thu, 4 Jun 2020 21:33:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200601174104.GA734973@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
 
-Merge the two ifndef __ASSEMBLY__ blocks.
 
-No functional changes.
+On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
+> On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
+>> On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
+>>> Is this slowdown significant?  We already iterate over every device
+>>> when applying PCI_FIXUP_FINAL quirks, so if we used the existing
+>>> PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
+>>> adding two more iterations to the loop in pci_do_fixups() that tries
+>>> to match quirks against the current device.  I doubt that would be a
+>>> measurable slowdown.
+>> I don't know how significant it is, but I remember people complaining
+>> about adding new PCI quirks because it takes too long for them to run
+>> them all. That was in the discussion about the quirk disabling ATS on
+>> AMD Stoney systems.
+>>
+>> So it probably depends on how many PCI devices are in the system whether
+>> it causes any measureable slowdown.
+> I found this [1] from Paul Menzel, which was a slowdown caused by
+> quirk_usb_early_handoff().  I think the real problem is individual
+> quirks that take a long time.
+>
+> The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
+> course, they're only run for matching devices anyway.  So I'd rather
+> keep them as PCI_FIXUP_FINAL than add a whole new phase.
+>
+Thanks Bjorn for taking time for this.
+If so, it would be much simpler.
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/asm.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
++++ b/drivers/iommu/iommu.c
+@@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct 
+fwnode_handle *iommu_fwnode,
+         fwspec->iommu_fwnode = iommu_fwnode;
+         fwspec->ops = ops;
+         dev_iommu_fwspec_set(dev, fwspec);
++
++       if (dev_is_pci(dev))
++               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
++
 
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 0f63585edf5f..5c15f95b1ba7 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -144,7 +144,7 @@
- 	_ASM_PTR (entry);					\
- 	.popsection
- 
--#else
-+#else /* ! __ASSEMBLY__ */
- # define _EXPAND_EXTABLE_HANDLE(x) #x
- # define _ASM_EXTABLE_HANDLE(from, to, handler)			\
- 	" .pushsection \"__ex_table\",\"a\"\n"			\
-@@ -164,9 +164,7 @@
- 	_ASM_EXTABLE_HANDLE(from, to, ex_handler_fault)
- 
- /* For C file, we already have NOKPROBE_SYMBOL macro */
--#endif
- 
--#ifndef __ASSEMBLY__
- /*
-  * This output constraint should be used for any inline asm which has a "call"
-  * instruction.  Otherwise the asm may be inserted before the frame pointer
-@@ -175,6 +173,6 @@
-  */
- register unsigned long current_stack_pointer asm(_ASM_SP);
- #define ASM_CALL_CONSTRAINT "+r" (current_stack_pointer)
--#endif
-+#endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_X86_ASM_H */
--- 
-2.21.0
+Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
+Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
+Will send this when 5.8-rc1 is open.
 
+Thanks
