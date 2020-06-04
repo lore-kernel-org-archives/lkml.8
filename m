@@ -2,85 +2,128 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E58C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D34207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E37207F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TupHTdyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729200AbgFDO7h (ORCPT
+        id S1729210AbgFDO7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:59:37 -0400
-Received: from mga17.intel.com ([192.55.52.151]:10498 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729082AbgFDO7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:59:34 -0400
-IronPort-SDR: Rxic9d6J17TQzhVOv3tuCH4XFnNGOtIhMPZ21FvhRT7AqCFpMQyuwDXi/4fJRugc4b6jg9Rkvg
- VlwEClcd6VRQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 07:59:33 -0700
-IronPort-SDR: f8xpR6ftA8jWoGpYXfb75vNCZkc5KvD3ZQyaQg8TnxPYhjeRCt/F0z1Qf9QReeDzqvAytAOHpH
- 64ZoJYMs7T6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
-   d="scan'208";a="287397621"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 04 Jun 2020 07:59:33 -0700
-Date:   Thu, 4 Jun 2020 07:59:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 25/75] x86/sev-es: Add support for handling IOIO
- exceptions
-Message-ID: <20200604145932.GB30223@linux.intel.com>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-26-joro@8bytes.org>
- <20200520062055.GA17090@linux.intel.com>
- <20200603142325.GB23071@8bytes.org>
- <20200603230716.GD25606@linux.intel.com>
- <20200604101502.GA20739@8bytes.org>
+        Thu, 4 Jun 2020 10:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729204AbgFDO7n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:59:43 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11898C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:59:43 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id b16so3345662pfi.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xZR3lWkoYpLFg4eE+Etif6ukCUL5ApBdi/GoHnvWaEk=;
+        b=TupHTdygAigywhS3pB8tAlBUKta4lXvoAYH4dzNzhrASd2l3DGn01fOXPA/fx+ddwx
+         e63Z0EnMX9EmBApvSxhudimZg0Kyu1Ran7gh+CyYHPG3fZ0CjgSq6NhbXpLphCrF+Ouq
+         t2GxHonz+RRUwsB+KYTkj8rNjo2/BKZIMEe8c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xZR3lWkoYpLFg4eE+Etif6ukCUL5ApBdi/GoHnvWaEk=;
+        b=ci7qHv4408QcwvsiMLDf7fw3i7vXd7rtfugO2FMvWlgyqaHSy1jnzJ/D4ylUiQGzOI
+         gL7sEbaK4F4lUA7e2QyZAfO/Dv4MCwvWxfwHBL9rAlXyFzvuT0dhiScy0XARyPEthSnk
+         RhIajBracetGulsxmrGLorzN9AesA5zqxwLhCC+xziKEgrnNJipEWZaNJnX1Ko1dSkF0
+         +8jelvfoJPqUizjIeV7ONq6yd9tUl8p4zh2bvZQ3VgNJgkRBO1d1KGIjQBVppOc5aL5T
+         lBcJh+3E8PIuyjHb9PA6Ss06SLnzfQH4BLsn4w0fMg/5Rk9k+lyQ4LIM037vk43RcAJr
+         zV4Q==
+X-Gm-Message-State: AOAM531IIPHFWHjcwZtC7u+36Wy8RKq7xy0iqQfIqt0ntJFGFHr/llLj
+        NLJLBaT/iVAyVa/Y8FyJYCwTBg==
+X-Google-Smtp-Source: ABdhPJwvM5Okdp4t/lqPdqt9FJOxz3H8PoeKTiCxL62lJBkvY0bVXGWNEvmo0e7yAT0Y8leJzLPW1g==
+X-Received: by 2002:a63:d544:: with SMTP id v4mr4979382pgi.60.1591282782325;
+        Thu, 04 Jun 2020 07:59:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w65sm4752697pfb.160.2020.06.04.07.59.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 07:59:41 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 07:59:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 09/10] treewide: Remove uninitialized_var() usage
+Message-ID: <202006040757.0DFC3F28E@keescook>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-10-keescook@chromium.org>
+ <20200604132306.GO6578@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604101502.GA20739@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200604132306.GO6578@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:15:02PM +0200, Joerg Roedel wrote:
-> On Wed, Jun 03, 2020 at 04:07:16PM -0700, Sean Christopherson wrote:
-> > On Wed, Jun 03, 2020 at 04:23:25PM +0200, Joerg Roedel wrote:
-> > > User-space can also cause IOIO #VC exceptions, and user-space can be
-> > > 32-bit legacy code with segments, so es_base has to be taken into
-> > > account.
+On Thu, Jun 04, 2020 at 10:23:06AM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 03, 2020 at 04:32:02PM -0700, Kees Cook wrote:
+> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> > (or can in the future), and suppresses unrelated compiler warnings
+> > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> > either simply initialize the variable or make compiler changes.
 > > 
-> > Is there actually a use case for this?  Exposing port IO to userspace
-> > doesn't exactly improve security.
+> > I preparation for removing[2] the[3] macro[4], remove all remaining
+> > needless uses with the following script:
+> > 
+> > git grep '\buninitialized_var\b' | cut -d: -f1 | sort -u | \
+> > 	xargs perl -pi -e \
+> > 		's/\buninitialized_var\(([^\)]+)\)/\1/g;
+> > 		 s:\s*/\* (GCC be quiet|to make compiler happy) \*/$::g;'
+> > 
+> > drivers/video/fbdev/riva/riva_hw.c was manually tweaked to avoid
+> > pathological white-space.
+> > 
+> > No outstanding warnings were found building allmodconfig with GCC 9.3.0
+> > for x86_64, i386, arm64, arm, powerpc, powerpc64le, s390x, mips, sparc64,
+> > alpha, and m68k.
 > 
-> Might be true, but Linux supports it and this patch-set is not the place
-> to challenge this feature.
+> At least in the infiniband part I'm confident that old gcc versions
+> will print warnings after this patch.
+> 
+> As the warnings are wrong, do we care? Should old gcc maybe just -Wno-
+> the warning?
 
-But SEV already broke it, no?
+I *think* a lot of those are from -Wmaybe-uninitialized, but Linus just
+turned that off unconditionally in v5.7:
+78a5255ffb6a ("Stop the ad-hoc games with -Wno-maybe-initialized")
+
+I'll try to double-check with some older gcc versions. My compiler
+collection is mostly single-axis: lots of arches, not lots of versions. ;)
+
+> Otherwise the IB bits look ok to me
+> 
+> Acked-by: Jason Gunthorpe <jgg@mellanox.com>
+
+Thanks!
+
+-- 
+Kees Cook
