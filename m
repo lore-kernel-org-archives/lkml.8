@@ -2,127 +2,179 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E18C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0294C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 407C52075B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DF92075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:04:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gvn0H32J"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rWrfGuxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgFDMAY (ORCPT
+        id S1728143AbgFDMEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58476 "EHLO
+        Thu, 4 Jun 2020 08:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbgFDMAX (ORCPT
+        with ESMTP id S1728044AbgFDMEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:00:23 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3BFC03E96D;
-        Thu,  4 Jun 2020 05:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=94RqwMfQvcXBuc+mBegSNwm7GH2pllORDWyK/Zxwbho=; b=gvn0H32JKoeDF67jj3pUDxvcls
-        SDl4QT8dK0M8xIiHyR4VAWaH79D1QG12Le23gvaRhRrpzPc9ZcsTlYXW3HLBITCeK9Tbj7zQx87oF
-        hCtj8euyGRASrC/GHomdfZEas0B1n6nu92LzQts3Iiu21AM5Z62kqHEcU28xruNf4KkRvQ+c58+NX
-        HQbis2OBEpqS73MDwkPxZ8aRri3pX+DJCGHDzL2Xr+VFtj7lIzpCJwTo/60uH45b5xH+kLTgwh5Y0
-        3bXIMhcNiB/IBtRiYxe3E61ZBFJNj2xugf3yxO4szIkHnG8/UqPR6VUDNPOakpINHvFfthnvSEby4
-        aFsbsT1Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgoXb-0001ap-Dm; Thu, 04 Jun 2020 12:00:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5EC4B30008D;
-        Thu,  4 Jun 2020 14:00:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id ED20720D8C5A7; Thu,  4 Jun 2020 14:00:07 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 14:00:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure on powerpc 8xx with 16k pages
-Message-ID: <20200604120007.GA4117@hirez.programming.kicks-ass.net>
-References: <dc2b16e1-b719-5500-508d-ae97bf50c4a6@csgroup.eu>
- <20200604111723.GA1267@willie-the-truck>
+        Thu, 4 Jun 2020 08:04:20 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359E2C03E96E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:04:20 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id v79so5628275qkb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:04:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rQACftCBYPdSwAslxUYeMjkisCybiZwNexgueRdL/90=;
+        b=rWrfGuxh1OBCcNfYCx/KQCoj8U7TjfmlIzH9M2tjrlAGVdBaMqdqcnRm40jNwO0XOJ
+         /3ihEVp12QxXNgJ+ksNYlzlI1IjZpoDFLpq6ZQ7t1ndpxYSyX42xDvltv2DeZoU2GW2s
+         1SDD4UsjDDgJBfch2nCATV2IIV8dbDGrnUk2seqzQ1PQpqL+yXGwwOfFp1a5c7IXr3Rm
+         OetqKiNJP6iAWXU1mBdDKuSL0qWez5pBrh6Y/yvus5yozK8WWXxly/D2ZHEIi8RcGjZk
+         zlsJCULqXmUZgrkD3oCr1krV8M3ZFd2k8UbEqRFTtgOMLW/O/XjfCK4I8NgS2EM0wuUc
+         uwkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rQACftCBYPdSwAslxUYeMjkisCybiZwNexgueRdL/90=;
+        b=XDL51FYY53QwlFwiAeFHT1v8qFy2Jpjyb9uncUe/vnPm48Meu3WFtPLrvMUBeoo6AR
+         +Dv7OjOEipWKSv2XKagIy1WParpS43F/z8SogJf+vhfTX/PYLWAgBDj6bB+4DSZ++FQh
+         dLJr2+g+VeZtUu/4GpWe6bt1CrC6BpervjJzp5zd/3zTSUVp3T73vojy+zZs0ff0/TgM
+         1x1uxjx8Iam4OGYEBg4FXX2qFJg/pkIayBW2DRFtke6H22cw1FohhXELBNYhBxfQsN8U
+         XKtSWhqHKDROWDftSO4Yvb/TslOB2guJJmPtgLXM1/3jVuPHsKTjNkTNrD+xVSVGDZYi
+         oe6g==
+X-Gm-Message-State: AOAM531K+9DzwiqwybEVaJOQ9asTNGTOxwrq6lsTgzMZxYOUdhVFPENv
+        riMKn0PJ5IrMEEIhZ+9x3Gc4QxyHKTloBTXfmVdr6dah
+X-Google-Smtp-Source: ABdhPJw+gVnIl9ro5623Beo5SlFkBvigm3cQQouSYHWdth7ulCxMWwR0Hs0o07gHCa/+js12enJXUc4bO/DmBRK/pxU=
+X-Received: by 2002:a37:5b47:: with SMTP id p68mr4378659qkb.120.1591272259324;
+ Thu, 04 Jun 2020 05:04:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604111723.GA1267@willie-the-truck>
+References: <20200602141048.1995-1-warthog618@gmail.com>
+In-Reply-To: <20200602141048.1995-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 4 Jun 2020 14:04:08 +0200
+Message-ID: <CAMpxmJUjYn5SHg3BpCeKbYc_OpCjd8d943yfYL_TF15wyTenfA@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: split character device into gpiolib-cdev
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:17:23PM +0100, Will Deacon wrote:
-> Hi, [+Peter]
-> 
-> On Thu, Jun 04, 2020 at 10:48:03AM +0000, Christophe Leroy wrote:
-> > Using mpc885_ads_defconfig with CONFIG_PPC_16K_PAGES instead of
-> > CONFIG_PPC_4K_PAGES, getting the following build failure:
-> > 
-> >   CC      mm/gup.o
-> > In file included from ./include/linux/kernel.h:11:0,
-> >                  from mm/gup.c:2:
-> > In function 'gup_hugepte.constprop',
-> >     inlined from 'gup_huge_pd.isra.78' at mm/gup.c:2465:8:
-> > ./include/linux/compiler.h:392:38: error: call to '__compiletime_assert_257'
-> > declared with attribute error: Unsupported access size for
-> > {READ,WRITE}_ONCE().
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >                                       ^
-> > ./include/linux/compiler.h:373:4: note: in definition of macro
-> > '__compiletime_assert'
-> >     prefix ## suffix();    \
-> >     ^
-> > ./include/linux/compiler.h:392:2: note: in expansion of macro
-> > '_compiletime_assert'
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >   ^
-> > ./include/linux/compiler.h:405:2: note: in expansion of macro
-> > 'compiletime_assert'
-> >   compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long), \
-> >   ^
-> > ./include/linux/compiler.h:291:2: note: in expansion of macro
-> > 'compiletime_assert_rwonce_type'
-> >   compiletime_assert_rwonce_type(x);    \
-> >   ^
-> > mm/gup.c:2428:8: note: in expansion of macro 'READ_ONCE'
-> >   pte = READ_ONCE(*ptep);
-> >         ^
-> > In function 'gup_get_pte',
-> >     inlined from 'gup_pte_range' at mm/gup.c:2228:9,
-> >     inlined from 'gup_pmd_range' at mm/gup.c:2613:15,
-> >     inlined from 'gup_pud_range' at mm/gup.c:2641:15,
-> >     inlined from 'gup_p4d_range' at mm/gup.c:2666:15,
-> >     inlined from 'gup_pgd_range' at mm/gup.c:2694:15,
-> >     inlined from 'internal_get_user_pages_fast' at mm/gup.c:2785:3:
-> 
-> At first glance, this looks like a real bug in the 16k page code -- you're
-> loading the pte non-atomically on the fast GUP path and so you're prone to
-> tearing, which probably isn't what you want. For a short-term hack, I'd
-> suggest having CONFIG_HAVE_FAST_GUP depend on !CONFIG_PPC_16K_PAGES, but if
-> you want to support this them you'll need to rework your pte_t so that it
-> can be loaded atomically.
+wt., 2 cze 2020 o 16:11 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
+>
+> Split the cdev specific functionality out of gpiolib.c and into
+> gpiolib-cdev.c. This improves the readability and maintainability of both
+> the cdev and core gpiolib code.
+>
+> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+>
+> ---
+> While this patch is complete and ready for review, I don't expect it to
+> be applied as is. There are a few cdev patches pending merge into
+> gpio/devel that are sure to conflict, and it makes more sense to
+> rebase this on top of them than vice versa. But I thought it would
+> be worthwhile to get it out for review so it can be ready to be rebased
+> when the time is right.
+>
+> Also, this is a naive split. That is, if applied as is, it will lose the
+> line history of the cdev code.  This is not what I intend, and I
+> understand can be avoided by encouraging git to remember the history
+> with a few moves, but I'm unsure how the maintainers would prefer that
+> to be done.
+>
+> Bart,
+>  As this was your idea, I've taken the liberty of adding the Suggested-by=
+.
+>  I hope that is ok.
+>
+> Changes in v2:
+>  - rebased to latest gpio/devel and added base-commit to placate the
+>   build bot.  The comments above still apply, as there are still a
+>   couple of commits in gpio/fixes that will conflict.
+>
+> Kent.
 
-Looking at commit 55c8fc3f49302, they're all the exact same value, so
-what they could do is grow another special gup_get_pte() variant that
-just loads the first value.
+Thanks for doing this Kent!
 
-Also, per that very same commit, there's a distinct lack of WRITE_ONCE()
-in the pte_update() / __set_pte_at() paths for much of Power.
+This looks mostly good, see a single comment below.
+
+Linus: do you think we can get this in for v5.8? Maybe apply this as
+the last patch before your PR?
+
+>
+>  drivers/gpio/Makefile       |    1 +
+>  drivers/gpio/gpiolib-cdev.c | 1148 +++++++++++++++++++++++++++++++++++
+>  drivers/gpio/gpiolib-cdev.h |   11 +
+>  drivers/gpio/gpiolib.c      | 1112 +--------------------------------
+>  4 files changed, 1164 insertions(+), 1108 deletions(-)
+>  create mode 100644 drivers/gpio/gpiolib-cdev.c
+>  create mode 100644 drivers/gpio/gpiolib-cdev.h
+>
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 65bf3940e33c..b5b58b624f37 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_GPIOLIB)           +=3D gpiolib.o
+>  obj-$(CONFIG_GPIOLIB)          +=3D gpiolib-devres.o
+>  obj-$(CONFIG_GPIOLIB)          +=3D gpiolib-legacy.o
+>  obj-$(CONFIG_GPIOLIB)          +=3D gpiolib-devprop.o
+> +obj-$(CONFIG_GPIOLIB)          +=3D gpiolib-cdev.o
+>  obj-$(CONFIG_OF_GPIO)          +=3D gpiolib-of.o
+>  obj-$(CONFIG_GPIO_SYSFS)       +=3D gpiolib-sysfs.o
+>  obj-$(CONFIG_GPIO_ACPI)                +=3D gpiolib-acpi.o
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> new file mode 100644
+> index 000000000000..971470bdc9c9
+> --- /dev/null
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -0,0 +1,1148 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/bitmap.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/cdev.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/compat.h>
+> +#include <linux/anon_inodes.h>
+> +#include <linux/file.h>
+> +#include <linux/kfifo.h>
+> +#include <linux/poll.h>
+> +#include <linux/timekeeping.h>
+> +#include <uapi/linux/gpio.h>
+> +
+> +
+> +#include "gpiolib.h"
+> +
+> +/* Implementation infrastructure for GPIO interfaces.
+> + *
+> + * The GPIO programming interface allows for inlining speed-critical
+> + * get/set operations for common cases, so that access to SOC-integrated
+> + * GPIOs can sometimes cost only an instruction or two per bit.
+> + */
+
+Is this comment relevant for the character device?
+
+Bartosz
