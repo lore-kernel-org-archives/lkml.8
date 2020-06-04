@@ -2,165 +2,99 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D15C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54FA9206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iwsRqxQE"
+	by mail.kernel.org (Postfix) with ESMTP id 97A33206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591301936;
+	bh=8AMUfx+U41h/W4ISZLyWgwankxiN0RxfqRn8dcLTozk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=U9xjeBsRovRFApvVyTZNFfRxeVUzNGuORWRxhYwdXHrM9C+735qShb/JjjZXc/ZTL
+	 tQjaKTk9Lg5a0dzS82IHyNb7Jpa8T2BUedCxenhOAJ6qj+hxY1aM8sV+ZbhOJ/NeZ2
+	 q/YD+bIE+eLddbK8zyzFSRv+O788IEima5usqr6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbgFDUSh (ORCPT
+        id S1729866AbgFDUSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728450AbgFDUSe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:18:34 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7005DC08C5C5
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:18:34 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b5so3775064pfp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KSgduwKhAGu1Me5hdrsNlT/LSTVts5IMrrdQbnnmgtM=;
-        b=iwsRqxQEY+LpPM+s+DR5Kt1prnKy4GHGxqj/QUqqkkqSMBCDJe1CHdT/yKZJkiBDXL
-         Y6szw+en5NZ6khTYpwS0FGviJsYX/r26zXRpTi2oURHUxJskaDdTNYF20YKqgU+50wUG
-         aJZ2WjX85SJKBXLpicthf/oXnlRh2W1BmzGAE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KSgduwKhAGu1Me5hdrsNlT/LSTVts5IMrrdQbnnmgtM=;
-        b=W4OQN60DBWu5OEvEEMOAsvL722EMmxIdGYZXWAd/O4QMFNwpm21M/2iK/aPXaxjCqD
-         KwCSBqQz3b5B3riC0XNY95MqnQnidNu9QwTqpsHKWL1Pk0CKjIefij82OYR5BShL4qhD
-         /Yly2GwUknF3VOkUxq2ADFR8UMM7ZkOzCfpBoJPrXr1pe+G7CVfIx7OwolMxukfiDwqr
-         quRHbCNGhuilQNxgL0JjmiHugc+OUY6BKTzp6t/u/ORyy01og+3nkCRpzdcLEEXLLNRc
-         YWMnYaHzwaoeIYlbqp4+J6OgWhDOu+ei76QGXhEgjM7blFHIY5yueetDaxNLs0Bgx6yQ
-         tMtg==
-X-Gm-Message-State: AOAM533ah5Y3MIyEdJUSSCpzVKc9GHY3VfZVeyPSxlp6SrXTrumGgi/T
-        J7aYk2hzubNudy6fIeHKne0z/A==
-X-Google-Smtp-Source: ABdhPJy6jmo6NLjATFT9PEAZE69aJp2ake2/5E+UKA7LNV6vmFPBoWj+KBik/aUM7ISRTcCYuBBaWw==
-X-Received: by 2002:a63:c58:: with SMTP id 24mr6232804pgm.246.1591301913875;
-        Thu, 04 Jun 2020 13:18:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r5sm5581320pji.20.2020.06.04.13.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:18:33 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 13:18:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH 03/10] b43: Remove uninitialized_var() usage
-Message-ID: <202006041316.A15D952@keescook>
-References: <20200603233203.1695403-1-keescook@chromium.org>
- <20200603233203.1695403-4-keescook@chromium.org>
- <CAKwvOdnNuFySqAMk7s_cXqFM=dPX4JfvqNVLCuj90Gn4tzciAw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdnNuFySqAMk7s_cXqFM=dPX4JfvqNVLCuj90Gn4tzciAw@mail.gmail.com>
+        Thu, 4 Jun 2020 16:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726456AbgFDUSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 16:18:54 -0400
+Received: from localhost.localdomain (unknown [194.230.155.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF5D6206E6;
+        Thu,  4 Jun 2020 20:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591301934;
+        bh=8AMUfx+U41h/W4ISZLyWgwankxiN0RxfqRn8dcLTozk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cG4hGRm4OKubJ9zcO4yHg94fi43rWCmcMt8d3MJmSafIsSh2OGN1qFw9nk/MLdprw
+         H6eZ30H84bXPOOlHoH1sDG1irCKDzTN0sOTcomSsPzs8jhao4DDoUxzs+Oh7L/XD8P
+         U7sNhA/X4xC11tIvj05ZxlWkA9jfz2Zax3QCFD6Y=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Tom Vaden <tom.vaden@hpe.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Daisuke HATAYAMA <d.hatayama@jp.fujitsu.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, Joerg Roedel <jroedel@suse.de>,
+        stable@vger.kernel.org
+Subject: [RFT PATCH] ia64: Fix build error with !COREDUMP
+Date:   Thu,  4 Jun 2020 22:18:42 +0200
+Message-Id: <20200604201842.29482-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 01:08:44PM -0700, Nick Desaulniers wrote:
-> On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > (or can in the future), and suppresses unrelated compiler warnings (e.g.
-> > "unused variable"). If the compiler thinks it is uninitialized, either
-> > simply initialize the variable or make compiler changes. As a precursor
-> > to removing[2] this[3] macro[4], just initialize this variable to NULL,
-> > and make the (unreachable!) code do a conditional test.
-> >
-> > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  drivers/net/wireless/broadcom/b43/phy_n.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > index d3c001fa8eb4..88cdcea10d61 100644
-> > --- a/drivers/net/wireless/broadcom/b43/phy_n.c
-> > +++ b/drivers/net/wireless/broadcom/b43/phy_n.c
-> > @@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
-> 
-> The TODOs and `#if 0` in this function are concerning.  It looks like
-> `rf_pwr_offset_table` is only used when `phy->rev` is >=7 && < 19.
-> 
-> Further, the loop has a case for `phy->rev >= 19` but we would have
-> returned earlier if that was the case.
+Fix linkage error when CONFIG_BINFMT_ELF is selected but CONFIG_COREDUMP
+is not:
 
-Yeah, that's why I put the "(unreachable!)" note in the commit log. ;)
+    ia64-linux-ld: arch/ia64/kernel/elfcore.o: in function `elf_core_write_extra_phdrs':
+    elfcore.c:(.text+0x172): undefined reference to `dump_emit'
+    ia64-linux-ld: arch/ia64/kernel/elfcore.o: in function `elf_core_write_extra_data':
+    elfcore.c:(.text+0x2b2): undefined reference to `dump_emit'
 
-> 
-> >         u32 rfpwr_offset;
-> >         u8 pga_gain, pad_gain;
-> >         int i;
-> > -       const s16 *uninitialized_var(rf_pwr_offset_table);
-> > +       const s16 *rf_pwr_offset_table = NULL;
-> >
-> >         table = b43_nphy_get_tx_gain_table(dev);
-> >         if (!table)
-> > @@ -4256,9 +4256,13 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
-> >                         pga_gain = (table[i] >> 24) & 0xf;
-> >                         pad_gain = (table[i] >> 19) & 0x1f;
-> >                         if (b43_current_band(dev->wl) == NL80211_BAND_2GHZ)
-> > -                               rfpwr_offset = rf_pwr_offset_table[pad_gain];
-> > +                               rfpwr_offset = rf_pwr_offset_table
-> > +                                               ? rf_pwr_offset_table[pad_gain]
-> > +                                               : 0;
-> >                         else
-> > -                               rfpwr_offset = rf_pwr_offset_table[pga_gain];
-> > +                               rfpwr_offset = rf_pwr_offset_table
-> > +                                               ? rf_pwr_offset_table[pga_gain]
-> > +                                               : 0;
-> 
-> 
-> The code is trying to check `phy->rev >= 7 && phy->rev < 19` once
-> before the loop, then set `rf_pwr_offset_table`, so having another
-> conditional on `rf_pwr_offset_table` in the loop is unnecessary. I'm
-> ok with initializing it to `NULL`, but I'm not sure the conditional
-> check is necessary.  Do you get a compiler warning otherwise?
+Cc: <stable@vger.kernel.org>
+Fixes: 1fcccbac89f5 ("elf coredump: replace ELF_CORE_EXTRA_* macros by functions")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-I mean, sort of the best thing to do is just remove nearly everything
-here since it's actually unreachable. But it is commented as "when
-supported ..." etc, so I figured I'd leave it. As part of that I didn't
-want to leave any chance of a NULL deref, so I added the explicit tests
-just for robustness.
+---
 
-*shrug*
+Please let kbuild test it for a while before applying. I built it only
+on few configurations.
 
--Kees
+This is similar fix to commit 42d91f612c87 ("um: Fix build error and
+kconfig for i386") although I put different fixes tag - the commit which
+introduced this part of code.
+---
+ arch/ia64/kernel/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/ia64/kernel/Makefile b/arch/ia64/kernel/Makefile
+index 1a8df6669eee..18d6008b151f 100644
+--- a/arch/ia64/kernel/Makefile
++++ b/arch/ia64/kernel/Makefile
+@@ -41,7 +41,7 @@ obj-y				+= esi_stub.o	# must be in kernel proper
+ endif
+ obj-$(CONFIG_INTEL_IOMMU)	+= pci-dma.o
+ 
+-obj-$(CONFIG_BINFMT_ELF)	+= elfcore.o
++obj-$(CONFIG_ELF_CORE)		+= elfcore.o
+ 
+ # fp_emulate() expects f2-f5,f16-f31 to contain the user-level state.
+ CFLAGS_traps.o  += -mfixed-range=f2-f5,f16-f31
 -- 
-Kees Cook
+2.17.1
+
