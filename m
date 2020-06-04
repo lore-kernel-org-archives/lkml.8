@@ -2,143 +2,130 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA452C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC6902067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D39206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PmkevgLV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wKDoW0ax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgFDU1e (ORCPT
+        id S1729946AbgFDU1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbgFDU1d (ORCPT
+        Thu, 4 Jun 2020 16:27:48 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49544 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgFDU1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:27:33 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B9CC08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:27:32 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s18so7884011ioe.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cIgVS8ggkjhxB0JoJojRceUX9GryrMeDRowoa0T2ICw=;
-        b=PmkevgLVw0MJkySoUuAV4KjwhxjrSugxZVs3t7ZgLbW+hH6bGVCkDpHNCQOp3dzFRn
-         59sEJdR8Ilwa/jfy9rErHPpp4lr5TDsowJRUdgab+6o7x7X4YDxyTROH1vSRKXXJmRt5
-         ai86SvPojqS2mw90PUpX1D/anPL9xfbtHr254pasWlf4hLzV/NEJRe200wNIuWFEImhd
-         0CaTPDx74hKuyopOCTc7cxjpxxTXgc4EYjSbzJglWsHVEhvpSEtlCzf+luwwDgMkcB3+
-         pemWmzfJeatJQ2XMNd2bjltqSNtD1xqWNThs1yzSikgadfUaVOSXWT/p/94BuM+DSjjT
-         s6Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cIgVS8ggkjhxB0JoJojRceUX9GryrMeDRowoa0T2ICw=;
-        b=KonKYO5cJEciLYfIPAxrvaYbYM+NhptzZDgmvVbDQXdf16XIbe4/YfT5JBQXOmJJDX
-         J1/7G7E9iQHaWzjULcPbZEf25p0nKx4+sqIAOf7PZ1qbPvYBuwDOQfil1pdOXgLlMSgY
-         QBZXx91BQJWnp0qB2oDMU4Bjr00B+xo2J1nrL4OZNA3W/qGsqsAj8E8VHDQGcLRQkjwo
-         oROQs5RRZ7ki/f/xC9rgJ3EO38yjVbQiQelMkHQcVkAaeARKaNM2Ry9b82dasyeTSgaM
-         yJVYGZjGOalRaRYOSodWKtMbH/FOdA2aozaJp/VQbplAQe1L9q6/cDKo2m+4FExIAE+6
-         BuOQ==
-X-Gm-Message-State: AOAM531uyv3HZrOfBSQ5aoK5LYSEss792eJpJISmq8FRUi83O8L6msQR
-        NHg2ujjS249ornxTPEvHKwiTMmJ2xV8dpyjNKPWGFw==
-X-Google-Smtp-Source: ABdhPJzpThlPYBYmjbj75PgXV76QN3HOlHcq6JbnftNLq7+6HWjg+EJisZsywxEQ5wQs0Dn47n7F1bJh1xikj8I2bZ4=
-X-Received: by 2002:a05:6602:224a:: with SMTP id o10mr5387683ioo.90.1591302452004;
- Thu, 04 Jun 2020 13:27:32 -0700 (PDT)
+        Thu, 4 Jun 2020 16:27:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054KRead089425;
+        Thu, 4 Jun 2020 15:27:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591302460;
+        bh=N+QJzUFxIrA5/MuRXT6M2TS2TtMFDYT1CkUkUKyL2nU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wKDoW0axSiLqJ/3p1Y1FMpNfJBXHSmXvlTIXVBMhohSyAZ0nwUFtYWXkSp921FGmW
+         X12njTBRLnsnK1ZZQnfcQR1rw08Gv8JUz8a+PFJ4eX4SQW3R6eqjNmjSbfA4lHVJxU
+         t8p36EM92491GlrWIaIWvGOicyeLBb7VDz2FkjSo=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054KReI6123953
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 15:27:40 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 15:27:40 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 15:27:40 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054KReJw121027;
+        Thu, 4 Jun 2020 15:27:40 -0500
+Subject: Re: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200604111410.17918-1-dmurphy@ti.com>
+ <20200604111410.17918-5-dmurphy@ti.com>
+ <20200604092545.40c85fce@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <63a53dad-4f0a-31ca-ad1a-361b633c28bf@ti.com>
+ <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <8a844e26-3a5a-ac61-1c4a-e60fbebf6341@ti.com>
+Date:   Thu, 4 Jun 2020 15:27:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200601175139.22097-1-mathieu.poirier@linaro.org> <0780724c-4fc0-9f98-023e-aa1245b01888@st.com>
-In-Reply-To: <0780724c-4fc0-9f98-023e-aa1245b01888@st.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 4 Jun 2020 14:27:21 -0600
-Message-ID: <CANLsYkwsBSaVJCi7xDXC6E+E_UzwKmZqDtzZUWTDusuQKjKiQA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] remoteproc: Add support for attaching with rproc
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "ohad@wizery.com" <ohad@wizery.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "s-anna@ti.com" <s-anna@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200604094829.0d7d5df7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 08:24, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
->
-> Hi Mathieu,
->
-> On 6/1/20 7:51 PM, Mathieu Poirier wrote:
-> > This fourth iteration implements a solution that is fairly different from
-> > what was proposed in V3 and earlier versions.  Three aspects have been
-> > revisited:
-> >
-> > 1) Only the scenario where the remoteproc core is attaching to the remote
-> >    processor is implemented.  Other scenarios where actions need to be
-> >    taken when the remote processor is stopped or crashes will be
-> >    considered in subsequent versions.
-> >
-> > 2) The introduction of a new RPROC_DETACHED state to be set by platform
-> >    drivers when needing to attach to an already running remote processor.
-> >
-> > 3) New functions are introduced to replicate the functionality provided by
-> >    rproc_fw_boot() and rproc_start(), minus operations related to firmware
-> >    management.
-> >
-> > Enhancement to the documentation has been left out intentionally until it
-> > is agreed to move forward with this implementation.
->
-> Look good to me, i have only a minor concerns about the code duplication
-> introduced by the point 3)
->
+Jakub
 
-This is an idea Bjorn and I have decided to try in the hope of making
-the state machine, and the feature as a whole, easier to understand.
-It might be one of those rare cases where more code is better.
-
-> If you are agree with that, I plan to do a new review on the stm32 series
-> when you will start the documentation :-)
-
-A wise decision...
-
-Thanks for taking the time to look at this,
-Mathieu
-
+On 6/4/20 11:48 AM, Jakub Kicinski wrote:
+> On Thu, 4 Jun 2020 11:38:14 -0500 Dan Murphy wrote:
+>> Jakub
+>>
+>> On 6/4/20 11:25 AM, Jakub Kicinski wrote:
+>>> On Thu, 4 Jun 2020 06:14:10 -0500 Dan Murphy wrote:
+>>>> Add RGMII internal delay configuration for Rx and Tx.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> Hi Dan, please make sure W=1 C=1 build is clean:
+>>>
+>>> drivers/net/phy/dp83869.c:103:18: warning: â€˜dp83869_internal_delayâ€™ defined but not used [-Wunused-const-variable=]
+>>>     103 | static const int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500,
+>>>         |                  ^~~~~~~~~~~~~~~~~~~~~~
+>> I built with W=1 and C=1 and did not see this warning.
+>>
+>> What defconfig are you using?
+> allmodconfig with gcc-10
 >
-> Regards,
-> Arnaud
+>> Can you check if CONFIG_OF_MDIO is set or not?  That would be the only
+>> way that warning would come up.
+> Hm. I don't have the config from this particular build but just running
+> allmodconfig makes it CONFIG_OF_MDIO=m
+
+OK that makes sense then.  That is an existing bug that shows up because 
+of this.
+
+#ifdef CONFIG_OF_MDIO
+
+So the addition of the array exposed an existing issue.
+
+That bug fix can go to net then.
+>>> Also net-next is closed right now, you can post RFCs but normal patches
+>>> should be deferred until after net-next reopens.
+>> I know net-next is closed.
+>>
+>> I pinged David M when it was open about what is meant by "new" patches
+>> in the net-dev FAQ.  So I figured I would send the patches to see what
+>> the response was.
+>>
+>> To me these are not new they are in process patches.  My understand is
+>> New is v1 patchesets.
+>>
+>> But now I have the answer.
+> Oh sorry, I may be wrong in this case, I haven't tracked this series.
 >
-> >
-> > Applies cleanly on rproc-next(7dcef3988eed) and will be rebased on v5.8-rc1
-> > when it comes out in two weeks.
-> >
-> > Thanks,
-> > Mathieu
-> >
-> > Mathieu Poirier (9):
-> >   remoteproc: Add new RPROC_DETACHED state
-> >   remoteproc: Add new attach() remoteproc operation
-> >   remoteproc: Introducing function rproc_attach()
-> >   remoteproc: Introducing function rproc_actuate()
-> >   remoteproc: Introducing function rproc_validate()
-> >   remoteproc: Refactor function rproc_boot()
-> >   remoteproc: Refactor function rproc_trigger_auto_boot()
-> >   remoteproc: Refactor function rproc_free_vring()
-> >   remoteproc: Properly handle firmware name when attaching
-> >
-> >  drivers/remoteproc/remoteproc_core.c     | 226 +++++++++++++++++++++--
-> >  drivers/remoteproc/remoteproc_internal.h |   8 +
-> >  drivers/remoteproc/remoteproc_sysfs.c    |  17 +-
-> >  include/linux/remoteproc.h               |   9 +-
-> >  4 files changed, 243 insertions(+), 17 deletions(-)
-> >
+It says v6 in $subject.
+
+But still you may be correct I don't know
+
+Dan
+
