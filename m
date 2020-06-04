@@ -4,42 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ED9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17922077D
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C3720738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgFDIoz (ORCPT
+        id S1728109AbgFDIpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:44:55 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58318 "EHLO
+        Thu, 4 Jun 2020 04:45:00 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:48268 "EHLO
         hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727026AbgFDIoz (ORCPT
+        by vger.kernel.org with ESMTP id S1727026AbgFDIo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:44:55 -0400
-Received: from [37.160.65.106] (port=1535 helo=[192.168.43.3])
+        Thu, 4 Jun 2020 04:44:58 -0400
+Received: from [37.160.65.106] (port=1546 helo=[192.168.43.3])
         by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.93)
         (envelope-from <luca@lucaceresoli.net>)
-        id 1jglUY-000GFK-U3; Thu, 04 Jun 2020 10:44:51 +0200
-Subject: Re: [RFC 3/4] regulator: lp87565: dt: add LP87524-Q1 variant
+        id 1jglUd-000GGv-Jr; Thu, 04 Jun 2020 10:44:55 +0200
+Subject: Re: [RFC 2/4] regulator: lp87565: dt: remove duplicated section
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Keerthy <j-keerthy@ti.com>, Axel Lin <axel.lin@ingics.com>
 References: <20200603200319.16184-1-luca@lucaceresoli.net>
- <20200603200319.16184-4-luca@lucaceresoli.net> <20200604060142.GQ3714@dell>
+ <20200603200319.16184-3-luca@lucaceresoli.net> <20200604064734.GS3714@dell>
 From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <5bfe9fb4-8792-ef21-bd02-7948d74a837d@lucaceresoli.net>
-Date:   Thu, 4 Jun 2020 10:44:50 +0200
+Message-ID: <ca06e449-c0cd-311d-a1ab-1c212352b8cf@lucaceresoli.net>
+Date:   Thu, 4 Jun 2020 10:44:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200604060142.GQ3714@dell>
+In-Reply-To: <20200604064734.GS3714@dell>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -60,47 +61,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Lee,
 
-On 04/06/20 08:01, Lee Jones wrote:
+thanks for the very prompt review!
+
+On 04/06/20 08:47, Lee Jones wrote:
 > On Wed, 03 Jun 2020, Luca Ceresoli wrote:
 > 
->> Add the LP87524-Q1 to the lp87565 bindings document along with an example.
-> 
-> Keep the way to describe model numbers consistent.
-> 
-> I suggest LP87565 here (even though the filename is in lower case).
-
-Ok.
-
+>> The "Required properties:" section is copied verbatim for each of the two
+>> supported chips. In preparation to add a new chip variant make it a common
+>> section and keep the two examples to differentiate between the two chips.
+>>
 >> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 >> ---
->>  .../devicetree/bindings/mfd/lp87565.txt       | 47 ++++++++++++++++++-
-> 
-> This is an MFD patch.
-> 
-> Please change the patch subject to reflect that.
-
-Done that here and in patch 2 as well, and also changed from "dt:" to a
-"dt-bindings:" prefix. This will be in v2:
-
-  dt-bindings: mfd: lp87565: add LP87524-Q1 variant
-
->>  1 file changed, 46 insertions(+), 1 deletion(-)
+>>  .../devicetree/bindings/mfd/lp87565.txt       | 21 ++++---------------
+>>  1 file changed, 4 insertions(+), 17 deletions(-)
 >>
 >> diff --git a/Documentation/devicetree/bindings/mfd/lp87565.txt b/Documentation/devicetree/bindings/mfd/lp87565.txt
->> index b75ae23a1ef3..839eac6b75c2 100644
+>> index 41671e0dc26b..b75ae23a1ef3 100644
 >> --- a/Documentation/devicetree/bindings/mfd/lp87565.txt
 >> +++ b/Documentation/devicetree/bindings/mfd/lp87565.txt
->> @@ -1,7 +1,8 @@
+>> @@ -1,7 +1,7 @@
 >>  TI LP87565 PMIC MFD driver
 >>  
 >>  Required properties:
->> -  - compatible:		one of "ti,lp87565", "ti,lp87565-q1", "ti,lp87561-q1"
->> +  - compatible:		one of "ti,lp87565", "ti,lp87565-q1", "ti,lp87561-q1",
->> +			"ti,lp87524-q1"
+>> -  - compatible:	"ti,lp87565", "ti,lp87565-q1"
+>> +  - compatible:		one of "ti,lp87565", "ti,lp87565-q1", "ti,lp87561-q1"
 > 
-> Maybe have 2 per line.  It would really help with my OCD!
+> What happened to your tabbing here?
 
-Ok.
+Looks weird, but I actually fixed it. The patch format is misleading, it
+you look at the file you'll see there's a missing tab there before the
+patch. Hm, guess I should have mentioned it in the commit message, will
+do in v2.
+
+> All the other entries start with a capital letter.  So should this.
+
+Right.
 
 -- 
 Luca
