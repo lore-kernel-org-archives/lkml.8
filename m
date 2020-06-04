@@ -2,90 +2,144 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E83C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6654DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC8A2063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37232207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KXWfe7dl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgFDPZ6 (ORCPT
+        id S1729414AbgFDP14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:25:58 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:41026 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbgFDPZ6 (ORCPT
+        Thu, 4 Jun 2020 11:27:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59571 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729170AbgFDP14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:25:58 -0400
-Received: by mail-vs1-f66.google.com with SMTP id a68so3751384vsd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:25:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wQu5VmRSYNeWuQ8i5tUUigorDKnoUd980cUZ+cjZTb4=;
-        b=S2l3kq1GJTOZsNXcTL+h46kQh1TepglSbipLEj3OV5FTNiepPOCfHOkQr7xO1zo6zU
-         kytdKjJrpxjiUXCE1NNQT9OzdBgTL18f2Dii2I0aSmARt7nF1Sm7s1/Kw3r9QJP8O9KR
-         9NIfkkvtn7XiNHlSjezos9z7LygRMFl64i7XiLcvpXfMjMHM156OMi9xMU9hfxb8jo4Z
-         t4rS09/8JVPtqm7gJjlcGySSQIJhKdIk31++/lygsie6ZVRxhc57VCmHScWIDUIDFGQd
-         ThrYUYw0fvHKAVc8Swhqgt1GgoeWI9nnUSdCw9lqqtLfHL8Ou3MLMdI/k58MPfr5tK1v
-         l2Ww==
-X-Gm-Message-State: AOAM532Dwgz5zzEYi6QH5M7U57CHSKAO4GQBCANpI6bbBbM2xEKQK4fC
-        vdHqlAJ7rQvSA/BppDJAOD1oNoa4w2xWY4B3hD4=
-X-Google-Smtp-Source: ABdhPJwqO+g81Sm7vWEc4Yket9tjpOnJckjtQCHgAFqLxf9gmX/lI345OEc23j2K4BGT9dlXl7YO1du334sGMfNmZ+A=
-X-Received: by 2002:a67:8846:: with SMTP id k67mr3801972vsd.210.1591284355742;
- Thu, 04 Jun 2020 08:25:55 -0700 (PDT)
+        Thu, 4 Jun 2020 11:27:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591284474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=VEuUjjQlFS0MFGxgzWVqz9t12MNDkBJC5FbPh6BNEJo=;
+        b=KXWfe7dla6Qqq7VTLpgpkqARslqVFa87o71KVJypq/aozfhgEJEBYC3oOf1ywXn325y86d
+        UTaNIxPXxLYqATlxX3BosCMQsY8IgPMwOqIgAAVVrYJyeYhhwOES0RyhRmkNj7ARnhpeFk
+        Od9q4pkLbsULatXMM9BeboWAp912Lu8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-Z7LamPxiPQON4KyxBudn7A-1; Thu, 04 Jun 2020 11:27:52 -0400
+X-MC-Unique: Z7LamPxiPQON4KyxBudn7A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F69C1B18BC5;
+        Thu,  4 Jun 2020 15:27:48 +0000 (UTC)
+Received: from [10.36.112.96] (ovpn-112-96.ams2.redhat.com [10.36.112.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 29C4960C80;
+        Thu,  4 Jun 2020 15:27:46 +0000 (UTC)
+Subject: Re: [PATCH] iommu/mediatek: Use totalram_pages to setup enable_4GB
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Miles Chen <miles.chen@mediatek.com>, wsd_upstream@mediatek.com,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        Chao Hao <chao.hao@mediatek.com>,
+        iommu@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org, Yong Wu <yong.wu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+References: <20200604080120.2628-1-miles.chen@mediatek.com>
+ <55820901-430b-14c4-9426-7a4991ca0eed@redhat.com>
+ <1591264174.12661.17.camel@mtkswgap22>
+ <f02c8c9d-ed75-6513-f8a9-a2fdbb11b750@redhat.com>
+ <20200604150643.GA29193@infradead.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <f62c9623-bf5c-6fdb-afa5-9ff04c8fde70@redhat.com>
+Date:   Thu, 4 Jun 2020 17:27:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
- <CAKb7Uvg0W_1qUjf3G4JrCb2oJgkwz4G5T6PwkyeL-rZEp4UnTw@mail.gmail.com> <CAOkhzLV+suVNAoyiaHKOkbwP-KKgTLEa7S8kp8+GSTLm_-wWFw@mail.gmail.com>
-In-Reply-To: <CAOkhzLV+suVNAoyiaHKOkbwP-KKgTLEa7S8kp8+GSTLm_-wWFw@mail.gmail.com>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Thu, 4 Jun 2020 11:25:44 -0400
-Message-ID: <CAKb7UvgWMsLSHCayzdY7UYMVTjN3OHbH2WhKd-BP46K=r4Ra8A@mail.gmail.com>
-Subject: Re: [Nouveau] NVIDIA GP107 (137000a1) - acr: failed to load firmware
-To:     Zeno Davatz <zdavatz@gmail.com>
-Cc:     nouveau <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200604150643.GA29193@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 11:16 AM Zeno Davatz <zdavatz@gmail.com> wrote:
->
-> On Thu, Jun 4, 2020 at 4:36 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
-> >
-> > Starting with kernel 5.6, loading nouveau without firmware (for GPUs
-> > where it is required, such as yours) got broken.
-> >
-> > You are loading nouveau without firmware, so it fails.
-> >
-> > The firmware needs to be available to the kernel at the time of nouveau loading.
->
-> Ok, I am now trying this:
->
-> /usr/src/linux> grep FIRMWARE /usr/src/linux/.config
-> CONFIG_FIRMWARE_MEMMAP=y
-> # CONFIG_GOOGLE_FIRMWARE is not set
-> CONFIG_PREVENT_FIRMWARE_BUILD=y
-> CONFIG_EXTRA_FIRMWARE="nvidia/gp107/gr/sw_nonctx.bin"
-> # CONFIG_CYPRESS_FIRMWARE is not set
-> # CONFIG_DRM_LOAD_EDID_FIRMWARE is not set
-> # CONFIG_FIRMWARE_EDID is not set
-> # CONFIG_TEST_FIRMWARE is not set
+On 04.06.20 17:06, Christoph Hellwig wrote:
+> On Thu, Jun 04, 2020 at 01:32:40PM +0200, David Hildenbrand wrote:
+>> Just a thought: If memory hotplug is applicable as well, you might
+>> either want to always assume data->enable_4GB, or handle memory hotplug
+>> events from the memory notifier, when new memory gets onlined (not sure
+>> how tricky that is).
+> 
+> We probably want a highest_pfn_possible() or similar API instead of
+> having drivers poking into random VM internals.
 
-There's a lot more firmware files than that ... everything in the
-gp107 directory. Also this would only be necessary if nouveau is built
-into the kernel. The files just have to be available whenever nouveau
-is loaded -- if it's built in, that means the firmware has to be baked
-into the kernel too. If it's loaded from initrd, that means the
-firmware has to be in initrd. If it's loaded after boot, then the
-firmware has to be available after boot.
+Well, memory notifiers are a reasonable api used accross the kernel to
+get notified when new memory is onlined to the buddy that could be used
+for allocations.
 
-Cheers,
+highest_pfn_possible() would have to default to something linked to
+MAX_PHYSMEM_BITS whenever memory hotplug is configured, I am not sure
+how helpful that is (IOW, you can just default to enable_4GB=true in
+that case instead in most cases).
 
-  -ilia
+-- 
+Thanks,
+
+David / dhildenb
+
