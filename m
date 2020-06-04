@@ -2,61 +2,106 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA012C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98CC820823
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BA7207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:03:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y+qvhynK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgFDPDl (ORCPT
+        id S1729293AbgFDPD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:03:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58766 "EHLO
+        Thu, 4 Jun 2020 11:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbgFDPDi (ORCPT
+        with ESMTP id S1728638AbgFDPDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:03:38 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B0EEC08C5C0;
-        Thu,  4 Jun 2020 08:03:38 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jgrP5-0033lc-U6; Thu, 04 Jun 2020 15:03:35 +0000
-Date:   Thu, 4 Jun 2020 16:03:35 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
-Message-ID: <20200604150335.GG23230@ZenIV.linux.org.uk>
-References: <20200602084257.134555-1-mst@redhat.com>
- <20200603014815.GR23230@ZenIV.linux.org.uk>
- <20200603011810-mutt-send-email-mst@kernel.org>
- <20200603165205.GU23230@ZenIV.linux.org.uk>
- <20200604054516-mutt-send-email-mst@kernel.org>
+        Thu, 4 Jun 2020 11:03:55 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AA9C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:03:54 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id r125so3770932lff.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8mvYq5u2MuHjycn6hYvFmkcMBPwMkF7OiyTcLEldoKI=;
+        b=Y+qvhynKYSHX8BiDFkP/S4vohEDVw08HK7v0lcnvCMfaGvYH1AK4t29iooALuPlEl/
+         dUXhszVNyTEBEyURpfaENunG4yCA/TI4K2iN0A0ZTaGB4aMvM91PDr6M7ZwHxD6bkePP
+         /xciGEAWGG2mZ2Z7gtaGbqD43ptaZ5jxaMUzg39rD2HaGMweoDIEIKd3i/GYXzcT9wZu
+         wRJJq9suE3fsNqs/5KiB3eqcJLZK7R6Oej4hnCo3dHJA9njIASKHuStAybkBVYGAcqko
+         riBweyZUQS7l7hUZiE9s90RmVzx9hh5iAIGanlL0uaHoV5FseARBu/U10lC5YmVGfZR+
+         7LwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8mvYq5u2MuHjycn6hYvFmkcMBPwMkF7OiyTcLEldoKI=;
+        b=WZ/pluurYLVU05YVPrjBrYzkn0ftgbZlulT+ZKbazbwupKRU6AiOOamI+IJqIMAN/l
+         NKpR1n76KJX4zqBs5sAXUmA5ErCRZIkwKEmgAjQB8JC9+KpxvLHGxFbRMxKdfzIvsvX6
+         rVxrMJpX5Iq0lPK2CXN4TRC7Gz+M7j3I7f8xZuVUheAZNHbTD87cHcz/5bUWzGRdlrKw
+         rfSCdz7Pq/RV8eRJcnYhm2Z2jQK/y5j05orjgwdgw+EHCWwWdUOn1Hs+NUcOMWeP6tmy
+         g36wyWrd6BlbNt/YKsourZH7pgO7fiP1pwQZCWJNyHg0QJ0oFk7nrtPEPFs2dOuoU8St
+         sYjg==
+X-Gm-Message-State: AOAM5338T3Aavet6/vpgHhGa6n8TBBQLGIBd3Zg96arkAlzVtnx3fSiN
+        RXrlyxYUHI3fOztYVW28/RV4XbLthQg=
+X-Google-Smtp-Source: ABdhPJyjUtNMiJfQCO+6pwW7PpNiXMf463lCpuTEqvxbiXuHw13DlR9CNHnNDe/wZgfZbFie2jnMBg==
+X-Received: by 2002:ac2:5094:: with SMTP id f20mr2852735lfm.128.1591283032156;
+        Thu, 04 Jun 2020 08:03:52 -0700 (PDT)
+Received: from localhost.localdomain ([176.59.41.83])
+        by smtp.gmail.com with ESMTPSA id m15sm1514619lfk.65.2020.06.04.08.03.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 08:03:50 -0700 (PDT)
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        linux-integrity@vger.kernel.org, arnd@linaro.org,
+        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCHv7 0/3] optee: register drivers on optee bus
+Date:   Thu,  4 Jun 2020 18:03:45 +0300
+Message-Id: <20200604150348.27996-1-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604054516-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 06:10:23AM -0400, Michael S. Tsirkin wrote:
+v7: - check return value of dev_set_name() (Jarkko Sakkinen)
+v6: - description, comments, patches reorder and destroy workqueue (Sumit Garg)
+v5: - removed pr_err and fix typos in description (Jarkko Sakkinen)
+    - added missed kfree in optee_open()
+v4: - sysfs entry is optee-ta-uuid (Jerome Forissier, Sumit Garg)
+    - added Documentation/ABI/testing/sysfs-bus-optee-devices (Greg Kroah-Hartman)
+v3: - support tee-suppicant restart (Jens Wiklander)
+    - description and comments (Jarkko Sakkinen)
+    - do not name optee drivers by index in sysfs (Sumit Garg)
+v2: - write TEE with capital letters.
+    - declare __optee_enumerate_device() as static.
 
-> 	stac()
-> 	for (i = 0; i < 64; ++i) {
-> 	 get_user(flags, desc[i].flags)
-unsafe_get_user(), please.
-> 	 smp_rmb()
-> 	 if (!(flags & VALID))
-> 		break;
-> 	 copy_from_user(&adesc[i], desc + i, sizeof adesc[i]);
-... and that would raw_copy_from_user() (or unsafe_copy_from_user(),
-for wrapper that would take a label to bugger off to)
-> 	}
-> 	clac()
+Maxim Uvarov (3):
+  optee: use uuid for sysfs driver entry
+  optee: enable support for multi-stage bus enumeration
+  tpm_ftpm_tee: register driver on TEE bus
+
+ .../ABI/testing/sysfs-bus-optee-devices       |  8 +++
+ MAINTAINERS                                   |  1 +
+ drivers/char/tpm/tpm_ftpm_tee.c               | 70 ++++++++++++++++---
+ drivers/tee/optee/core.c                      | 27 ++++++-
+ drivers/tee/optee/device.c                    | 38 +++++-----
+ drivers/tee/optee/optee_private.h             | 10 ++-
+ 6 files changed, 119 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+
+-- 
+2.17.1
+
