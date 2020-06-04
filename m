@@ -2,109 +2,98 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96D4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17447C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB7E206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44A5206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dB7zMMYS"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ZoGIw5n1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgFDCgA (ORCPT
+        id S1726860AbgFDClG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgFDCf7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:35:59 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56731C03E96D;
-        Wed,  3 Jun 2020 19:35:59 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cqdk6GlGz9sSc;
-        Thu,  4 Jun 2020 12:35:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591238156;
-        bh=sYrEd3q4vBrkVZAPsehx+zHZl1jC2S3RqY1YwQho1DA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dB7zMMYS4iOLRaE1HGBIOrn5kJIfF/ZS3cNLADABr3l9q5L0tDI2gE0No0LC/FyWu
-         6GaGWHZtJeBQmjCpWDA2gWhPzS9YAFM3aOHROKYO0NQvAxddMX4bmLXC2od+SDQDH+
-         Pv1jNP+CLTe/fAyczIbQohNw9xVPwus1/uNIPKogLcCC7BKMyEaJwUljpI5EMiW3RB
-         c/5ZSIw0AS2JZKj3KU1mIiL2Yu2S497jzd4IoZAZq3g/oFqgS1XLY7mAaFuem8upgp
-         6UeTyX5XU2uR8lw8W5eYuTds98Ac6Ah6/vExy65IwN5g4i5e7g9mejVJHC/luDkEFa
-         vyHxKDH64OjFw==
-Date:   Thu, 4 Jun 2020 12:35:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-Subject: linux-next: manual merge of the tip tree with the sparc-next tree
-Message-ID: <20200604123553.503daf22@canb.auug.org.au>
+        Wed, 3 Jun 2020 22:41:06 -0400
+Received: from mout.gmx.net ([212.227.17.20]:59599 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726047AbgFDClF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 22:41:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1591238420;
+        bh=rBeNnWCkETjnvDe3kdb6C2KAvfLQEEfKNU9wifTgN0k=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ZoGIw5n1NnxzuVY9OEPuIxnqoKo2Oq3xIwtsoprjWAwJDw38Q0zSBAg9aNtoYHwoC
+         M/9PsarM1tnVyr4QGfUWkjV3P/czxC0SI5jrWVUyI8UaKXyu5G9DQRWr7vY90QK0vJ
+         GZUgPGlcxsFo2fczRnyuzCBVGpzotFtUXZl05rLE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([88.152.145.75]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MWzjt-1jRUL72wZd-00XKM4; Thu, 04
+ Jun 2020 04:40:20 +0200
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] crypto: caam - fix typo
+Date:   Thu,  4 Jun 2020 04:40:13 +0200
+Message-Id: <20200604024013.5669-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KF=zwyZJkiMoTsiLbQLierv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Jv9qzEZHPwAEEDZp5lJdXCBS3tYyk3aBIbv2/Enk6Bx3K0gG1Co
+ QOEs6nj/Msh7f7SSIY0VYdyanyHWF8iQTGzFrTsl0pVD4nxwNuDesFgqTNcdGd8vrGxqJWr
+ f0YIj/EuWgC3mSRRsg7ogmjgaT7wc75WXu8AR4r/eMtY1qrJ17rqiXtSFkAZbU/vGJbHz4M
+ XOa01NXQ8HtkEIH4KXDiQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0Tw0YKok6IY=:pnp0uOOJgLNhUNhzFHp/bX
+ GBZqcUdrURimf8IGTnMcdlRSci3lPvUEfhdlYe4chHNhRnUROAnxMMS3NShgfYXBgHA7lPX2Y
+ n9Q9tk0s9KasV5q6uOTsNGBYXRUgtT7f4LLwTAzccZyaY6WgkqDOgPcMCLsQ8UOc9LDI9LImn
+ p61Yl/r1tbK5uLCPJm3JQxonLNh3NlyqmAn6y9MwBM1SV4wVzDAS7rd+HHWaulfuUEKC3KL1X
+ kI8Nx8AbH9t+/hOaFHd3Pb4QL6+yTbeVAcbApPhp4zAK52SEA7iMYLDC3bc+zNSS6/y2sMd/s
+ 35W2WIEMuJ9B1zSVpyMpaZXfecWZ3VE3keoKpYsYF3diwtBbREaKhvbECYIY4Hl769FhOjh/0
+ AjeEgFhHUU5yxRPsUVjJBhwxjl//kDR1Uy1wvuBxqspZQifbcFqpENlrKwAoZtWLsQ+ctrSvV
+ 9yLzlDP7H29LZd7RwFyGhJc/ZPmxM20k4H26jyZmcPHFp60w4/zFTlcUOFYWcYQbbknslgSfI
+ Yj02Qksvmm6tMf5ggfvU1S7O1e3BeP/pUSeUFTM5oRsUQjDUARID0A9QDfuL9ZGfwd/4l5KUc
+ 8m50sADD2OAMEGS+AC/Lqv2k1OtBsK8QCGNC7slPUGJfVFGL8BaGhqle+nC4U+B69pou14BZ8
+ PILVRFg/IxFsqVe4x2Fzy35h/ONKskYtXHuWLbpSHLguWJk+TaVIVPAM9MgogHZ+q6NoU3SOd
+ /zK3VwobtVe/pg3JkUq4iDwDky9RwfCVN06zMl/vmqRcwY9y5mw/bIDc5GKC3bTHfahKKeZUm
+ 6qHMt4ZMW4GJYM+9NMldL/FX/Rll1hUfb9q4JMHWW1f0a831m2HH0SnkX6KL/MI+Avs6l25td
+ YfbceVw+iCQMRajDRV4NmO1+kE0b3deCsK96U4Pk8ocRryg1oHJHiEpWD8ZrVwtt7jG7NVVfY
+ cUrwJ8aObM4xpIDEL+WAOmHtLiscj+KrBXmkCGGmwsaY2DJVcvWj8jX8h9uMqGE6T/5e2S10Z
+ 02wT6TFXv91NGFVHJjrv8fe0gd44HGtIg2meGRTcS5EwYys72Zgikd3L4QlViiBWST3Wo2bLW
+ QmaEaw94vDmop78a/VI9ez3cz1kx0asmz4hjcdsaOZ2DmMa5sTLuHQeXhhzTaXHF855Zg2bkV
+ sn5z2pH6wU00Pt4zUWoCUryf8XJrx55e+GUwkhhglO12IanO+OoqysD6D4SNa+97U1oBFO8xw
+ j0kC6Y4gyqlhW0kt/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KF=zwyZJkiMoTsiLbQLierv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+%s/suppying/supplying/
 
-Hi all,
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ drivers/crypto/caam/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Today's linux-next merge of the tip tree got conflicts in:
+diff --git a/drivers/crypto/caam/Kconfig b/drivers/crypto/caam/Kconfig
+index a62f228be6da..bc35aa0ec07a 100644
+=2D-- a/drivers/crypto/caam/Kconfig
++++ b/drivers/crypto/caam/Kconfig
+@@ -147,7 +147,7 @@ config CRYPTO_DEV_FSL_CAAM_RNG_API
+ 	select HW_RANDOM
+ 	help
+ 	  Selecting this will register the SEC4 hardware rng to
+-	  the hw_random API for suppying the kernel entropy pool.
++	  the hw_random API for supplying the kernel entropy pool.
 
-  arch/sparc/mm/srmmu.c
+ endif # CRYPTO_DEV_FSL_CAAM_JR
 
-Commits
+=2D-
+2.26.2
 
-3408974d0533 sparc32: mm: Restructure sparc32 MMU page-table layout
-c95be5b549d6 sparc32: mm: Change pgtable_t type to pte_t * instead of struc=
-t page *
-f790d0205fd5 sparc32: mm: Fix argument checking in __srmmu_get_nocache()
-
-from the tip tree are also in the sparc-next tree as different commits
-(plus some others).
-
-I fixed it up (I just used the sparc-next tree version) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/KF=zwyZJkiMoTsiLbQLierv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YXgkACgkQAVBC80lX
-0GwrIQgAgJUxQkVHp0zEAsUqzMrxCAzRwgZuuroqqIhopVdG5Eiz/zJ7I4YznhjX
-RpnnAmo2z99NkCNhzY9zo84oANM6i5vpJNs+wi9GX3T0q3XsiHUmvIbY8q949Kvp
-7tns3Kx+ivK6W9ACM3KdoFK1XGJfV8DRgcuzP+Wy7QuEmPL0OKvrj7exzC364m44
-FIWHmrQQRNIRfRCof2sYR7xrTxDSjWm3ISezTc51Tv3lWRu0kWVSPSipCAEpHGjQ
-mS9U0qe8LK611EtEfXoU8PSkd7HMVxM3cmCgDbro4FE7fGjQ4EDk2Cgfz2oF+LU/
-HKY3o942SkHJyqqQCrdTenyqadppYg==
-=I5kJ
------END PGP SIGNATURE-----
-
---Sig_/KF=zwyZJkiMoTsiLbQLierv--
