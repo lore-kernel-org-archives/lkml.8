@@ -2,138 +2,142 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF72FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 024B82075B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A151206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E03wrYq2"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XR8Gc15Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgFDJwe (ORCPT
+        id S1728410AbgFDJwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbgFDJwd (ORCPT
+        Thu, 4 Jun 2020 05:52:46 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:57201 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgFDJwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:52:33 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D44C03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:52:33 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id z145so1112506ooa.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:52:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dmgCAZztkKponFlSOj9eb5gBCC+mYH067uJY2h6tIxo=;
-        b=E03wrYq2qk/9Su1JbFTFYDDuOW7iHKPMLOx8+W7pS1jZqglh47WBhkKee9QC2VSjEM
-         tvIE+XYqvmo7ESzqR6LVCkHmsd7lNeDiAhYoceTkkuEcgiMKR/9EjPSBxfE1TEpFmiEh
-         bzoaOdFGTAK8+KqrMBwRAIGnAfvFPWkb7OjHd9duKelNwV3gJylT3glftJR/PklCsgWu
-         SACOQ0ZBL47eO0ziL5uk4GtCoozRHtEI5bApsN6wDR6QK3SR2znFluHgB4UIOVCbbOKV
-         vqHVa12JrWiQ/Nv5jd740PBsu3jMVVDZgShkBmSuN/vh30Na+kBpDrHHAI+8TVj3nxax
-         gdWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dmgCAZztkKponFlSOj9eb5gBCC+mYH067uJY2h6tIxo=;
-        b=oKv1WxfWAS9qCx8M2JInpWcV9MyOepPn07f5GFXi8chqvcOiLcQeNUB1YU5aLKdqE8
-         aNxprCJPU5uj2N2YzCshFi0Hqv4p1cl5PzRlJSG6MR9fqaXHb3NPpIMOrqPLOCuCtyro
-         hK2p0C2O0tPxSLmOjNI9kbE18vDjoLV3+bmu4ICkOOD0bZlS/3KPVf15ifZwqNHtJ6Hj
-         wpaC05+/8JC/qtG1Qe+gLoKXWnzZoaJ5s4c+bvBdkL2kjCeCyC+LmT12axBILmRxGMAu
-         ygoNKQrAZHt2w6vLCT6gK1RIycO4d8g5RmQpYJcsKz4BRrQnyWxr6Ul/3CRQxL5we37W
-         yEeA==
-X-Gm-Message-State: AOAM530tx3GSCHLrkhlNvv8zcknOch4h5yHfIRpvQQ9egfOKf1cOJdUq
-        tAvg0mCZxGe+n7Ab8ZJoP30h6cDdTkmjXMM9PJdnQg==
-X-Google-Smtp-Source: ABdhPJx8nxv/Fp5E/Hl1veAJDLXsZdjg22RW8vJHLljIuWAQjL8St9prG4WmEpx9rR9YO0eGNraD3hSeLtKzQnHTHb4=
-X-Received: by 2002:a4a:b54b:: with SMTP id s11mr3156030ooo.14.1591264352701;
- Thu, 04 Jun 2020 02:52:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200603114014.152292216@infradead.org> <20200603120037.GA2570@hirez.programming.kicks-ass.net>
- <20200603120818.GC2627@hirez.programming.kicks-ass.net> <CANpmjNOxLkqh=qpHQjUC_bZ0GCjkoJ4NxF3UuNGKhJSvcjavaA@mail.gmail.com>
- <20200603121815.GC2570@hirez.programming.kicks-ass.net> <CANpmjNPxMo0sNmkbMHmVYn=WJJwtmYR03ZtFDyPhmiMuR1ug=w@mail.gmail.com>
- <CANpmjNPzmynV2X+e76roUmt_3oq8KDDKyLLsgn__qtAb8i0aXQ@mail.gmail.com>
- <20200603160722.GD2570@hirez.programming.kicks-ass.net> <20200603181638.GD2627@hirez.programming.kicks-ass.net>
- <CANpmjNPJ_vTyTYyrXxP2ei0caLo10niDo8PapdJj2s4-w_R3TA@mail.gmail.com> <CANpmjNMyC+KHTbLFSxojV_CTK60t3ayJHxtyH4AckeMD2hGCtg@mail.gmail.com>
-In-Reply-To: <CANpmjNMyC+KHTbLFSxojV_CTK60t3ayJHxtyH4AckeMD2hGCtg@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 4 Jun 2020 11:52:18 +0200
-Message-ID: <CANpmjNM48j4D7F+cgUrrof38d3nLuQjbW6pz3nTwxcZ5Q+GJqQ@mail.gmail.com>
-Subject: Re: [PATCH 0/9] x86/entry fixes
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 4 Jun 2020 05:52:45 -0400
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200604095243epoutp0241971949f084ef5253325e2eb241e59a~VToICuXqQ1259012590epoutp02-
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 09:52:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200604095243epoutp0241971949f084ef5253325e2eb241e59a~VToICuXqQ1259012590epoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591264363;
+        bh=OaSZFf2qQGBcr7NfAGyghK+7rfdpjrzREc4+KoKyo9c=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=XR8Gc15QbSryNH8B7VuWpu5yQnCFUWakWFDvmadMLD2T3eE6cMBjk+XFZOjFrKLWP
+         DcsDb/MF7JEtU4wZUrhKbxQCFNFYg+Os9+j2smqIiQjVquIE2f80KH/rZV75HWwtrj
+         7MM3sFbZ2la+H3Pse814YSBuLjra/uhwARFjK4RQ=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20200604095243epcas2p2f25665a2a1dc82943d01d64ec0cc6646~VToHtpyas0969709697epcas2p23;
+        Thu,  4 Jun 2020 09:52:43 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 49d1Kk2ZMtzMqYkf; Thu,  4 Jun
+        2020 09:52:42 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B6.07.27441.A64C8DE5; Thu,  4 Jun 2020 18:52:42 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200604095241epcas2p3bef5ec0a913244bcfd8e7a84827bbf77~VToGeX5Qy3171131711epcas2p3B;
+        Thu,  4 Jun 2020 09:52:41 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200604095241epsmtrp253442ef020d6204a779f921155dbd375~VToGdwMg_1431714317epsmtrp2o;
+        Thu,  4 Jun 2020 09:52:41 +0000 (GMT)
+X-AuditID: b6c32a47-fafff70000006b31-20-5ed8c46a7f9f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4D.69.08303.964C8DE5; Thu,  4 Jun 2020 18:52:41 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.252.15.188]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200604095241epsmtip158f87366c228730fbf8e464f862b1ca1~VToGS3Ufg2316223162epsmtip1f;
+        Thu,  4 Jun 2020 09:52:41 +0000 (GMT)
+From:   Jeongtae Park <jtp.park@samsung.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jeongtae Park <jtp.park@samsung.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/vmalloc: fix a typo in comment
+Date:   Fri,  5 Jun 2020 03:52:39 +0900
+Message-Id: <20200604185239.20765-1-jtp.park@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmhW7WkRtxBm86BS3mrF/DZvFl0jt2
+        i5WrjzJZHFl7lcni8q45bBb31vxndWDz2PRpErvHiRm/WTx232xg8+jbsorR4/MmOY/X+w8x
+        BrBF5dhkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAJ2h
+        pFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwNCjQK07MLS7NS9dLzs+1MjQwMDIF
+        qkzIyXj35iFLwTT2ik1P/7A3ML5i7WLk5JAQMJHY8mAzM4gtJLCDUeLDK9suRi4g+xOjxN97
+        WxghnM+MEps3bGaC6Vj48ykbRGIXo8STOT9Y4aruPd8GVsUmoCUxfWYD2A4RAV2JVc93MYMU
+        MQusZJTY+e0vI0hCWMBI4uGdX2BFLAKqEjde7Qc7hFfAUmLR3gtsEOvkJVZvOADWLCGwiV1i
+        x7GV7F2MHECOi8SKk9oQNcISr45vYYewpSQ+v9vLBlHfzSixqHUFVPMERonv/99AvW0ssfPE
+        JBaQQcwCmhLrd+lDhBUldv6eC3YcswCfRMfhv1C7eCU62oQgSpQk5i2dxwxhS0hcmruFGaLE
+        Q+LRFXFIOMZKtLWcY53AKDsLYf4CRsZVjGKpBcW56anFRgXGyLG0iRGctrTcdzDOePtB7xAj
+        EwfjIUYJDmYlEV4r2WtxQrwpiZVVqUX58UWlOanFhxhNgeE1kVlKNDkfmDjzSuINTY2MjY0t
+        zIyMDU2MlcR5i60uxAkJpCeWpGanphakFsH0MXFwSjUwCfeuN33seGFFWA+bkrpenL7IoiB1
+        +Xf9v7wezjmauchRb+4OVvEXvHyWZb8XfxVO/sBkkT2tav+H56qOM6IlXuTz/JOtkbHaoLFk
+        4/eaqZVy4kYCtp7BUrLcy/9stW6I7tj2+cWlt0+Z//j0WB1+pbpI6/LNLyxPJTk1rk4VPGXR
+        Wzpn76ZPSbuPXTD2CBNpmiEqMUHBZEHBl7WfOF4+MjTMNxabpJqeu/n0S6fqOWp7o/yMG61L
+        /eZsz3id2FzwIMX6y84St+9uKasiRTacK9flX7lZ9MSCe8KHdkudsU98+PyvbUDcjoOTnins
+        EeB+umeKtf0LzeMrkwxnLf/wT+rF1msva1xv/F2S9/i9jBJLcUaioRZzUXEiAKgmWnnkAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPJMWRmVeSWpSXmKPExsWy7bCSnG7mkRtxBu37zCzmrF/DZvFl0jt2
+        i5WrjzJZHFl7lcni8q45bBb31vxndWDz2PRpErvHiRm/WTx232xg8+jbsorR4/MmOY/X+w8x
+        BrBFcdmkpOZklqUW6dslcGW8e/OQpWAae8Wmp3/YGxhfsXYxcnJICJhILPz5lK2LkYtDSGAH
+        o8T1HS+YIRISEss3vGCCsIUl7rccAWsQEvjIKLHtSAiIzSagJTF9ZgNYXERAV2LV813MIIOY
+        BdYySnTd/c0GkhAWMJJ4eOcXWBGLgKrEjVf7wRbwClhKLNp7gQ1igbzE6g0HmCcw8ixgZFjF
+        KJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7iREcRlpaOxj3rPqgd4iRiYPxEKMEB7OSCK+V
+        7LU4Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxfZy2MExJITyxJzU5NLUgtgskycXBKNTDFzt62
+        Y+Hvfdv2tvNUJS3nsrMTzLs0f1bB97KL85W28rjKru67e2fZJGk3wzcTvd9IcvJ8X7CEOz7x
+        WHLQxcRXc61ms2mdf1pvsvDaXQ2h751WHyat+Wmb8fPkV80Tp3gXLsmceMAvsP3bHM5lsqt9
+        FKQKP0+Xb8l4dIvVcquXlz3bOYtmpW61QL8lp2y2FVpphj4+sfGm2ELOa/W5z8/IdR7/6ZqS
+        sCMy5P5n0bfffrRLGfHMMl9te0TKom7GPlWHzZ3OjvPqv56ae27zEjvj7ysjuc9eeK/O+WNx
+        YzU/c3pwjbHfJLFwe63Fbc/aFlkq1Ym/2Jbz6cjjxrSH0ysiTsoK/axXuuGp5OibxPpKiaU4
+        I9FQi7moOBEAVmwMM5ICAAA=
+X-CMS-MailID: 20200604095241epcas2p3bef5ec0a913244bcfd8e7a84827bbf77
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200604095241epcas2p3bef5ec0a913244bcfd8e7a84827bbf77
+References: <CGME20200604095241epcas2p3bef5ec0a913244bcfd8e7a84827bbf77@epcas2p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 08:00, Marco Elver <elver@google.com> wrote:
->
-> On Wed, 3 Jun 2020 at 21:10, Marco Elver <elver@google.com> wrote:
-> >
-> > On Wed, 3 Jun 2020 at 20:16, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Wed, Jun 03, 2020 at 06:07:22PM +0200, Peter Zijlstra wrote:
-> > > > On Wed, Jun 03, 2020 at 04:47:54PM +0200, Marco Elver wrote:
-> > >
-> > > > > With that in mind, you could whitelist "__ubsan_handle"-prefixed
-> > > > > functions in objtool. Given the __always_inline+noinstr+__ubsan_handle
-> > > > > case is quite rare, it might be reasonable.
-> > > >
-> > > > Yes, I think so. Let me go have dinner and then I'll try and do a patch
-> > > > to that effect.
-> > >
-> > > Here's a slightly more radical patch, it unconditionally allows UBSAN.
-> > >
-> > > I've not actually boot tested this.. yet.
-> > >
-> > > ---
-> > > Subject: x86/entry, ubsan, objtool: Whitelist __ubsan_handle_*()
-> > > From: Peter Zijlstra <peterz@infradead.org>
-> > > Date: Wed Jun  3 20:09:06 CEST 2020
-> > >
-> > > The UBSAN instrumentation only inserts external CALLs when things go
-> > > 'BAD', much like WARN(). So treat them similar to WARN()s for noinstr,
-> > > that is: allow them, at the risk of taking the machine down, to get
-> > > their message out.
-> > >
-> > > Suggested-by: Marco Elver <elver@google.com>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >
-> > This is much cleaner, as it gets us UBSAN coverage back. Seems to work
-> > fine for me (only lightly tested), so
-> >
-> > Acked-by: Marco Elver <elver@google.com>
-> >
-> > Thanks!
->
-> I was thinking that if we remove __no_sanitize_undefined from noinstr,
-> we can lift the hard compiler restriction for UBSAN because
-> __no_sanitize_undefined isn't used anywhere. Turns out, that attribute
-> isn't broken on GCC <= 7, so I've sent v2 of my series:
-> https://lkml.kernel.org/r/20200604055811.247298-1-elver@google.com
+There is a typo in comment, fix it.
+"nother" -> "another"
 
-Now that hopefully KASAN/KCSAN/UBSAN are fine, I'm looking at adding a
-patch for KCOV:
-https://lkml.kernel.org/r/20200604095057.259452-1-elver@google.com
+Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Christoph Hellwig <hch@lst.de>
+---
+ mm/vmalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Will that work?
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 1e94497b7388..3091c2ca60df 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2317,7 +2317,7 @@ static inline void __vfree_deferred(const void *addr)
+ 	 * Use raw_cpu_ptr() because this can be called from preemptible
+ 	 * context. Preemption is absolutely fine here, because the llist_add()
+ 	 * implementation is lockless, so it works even if we are adding to
+-	 * nother cpu's list.  schedule_work() should be fine with this too.
++	 * another cpu's list. schedule_work() should be fine with this too.
+ 	 */
+ 	struct vfree_deferred *p = raw_cpu_ptr(&vfree_deferred);
+ 
+-- 
+2.17.1
 
-Thanks,
--- Marco
