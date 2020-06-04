@@ -2,181 +2,279 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED99C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0BCB2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AA7205CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X9w5kzck"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="K6ZtQpeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgFDIZY (ORCPT
+        id S1727882AbgFDIZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:25:24 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58674 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726802AbgFDIZY (ORCPT
+        Thu, 4 Jun 2020 04:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbgFDIZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:25:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591259122;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=muCealyjN50RS5Nucu0HXgvaCDsbKy5wb8tK7CmZyqw=;
-        b=X9w5kzcknT2dCH+8zcugEIEvf3IhehSD2jkNh/8vkuz9URQ7+NOcHke1htiSlkK17xBeCe
-        ugBTGuMknM1AxTHvZjtnZMI5PfZPGiXkjAejcGXQyI0ZA4oxCVXtWio5uBfWUZ4h2tz/P0
-        oF/VCTrSHFQ7frywU8XXoDbrgDmSdMQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-4Z7UOJ4hM-uOhpb3V8Q3RQ-1; Thu, 04 Jun 2020 04:25:20 -0400
-X-MC-Unique: 4Z7UOJ4hM-uOhpb3V8Q3RQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D5E9100A47D;
-        Thu,  4 Jun 2020 08:25:18 +0000 (UTC)
-Received: from [10.36.114.20] (ovpn-114-20.ams2.redhat.com [10.36.114.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F392261462;
-        Thu,  4 Jun 2020 08:25:15 +0000 (UTC)
-Subject: Re: [PATCH] iommu/mediatek: Use totalram_pages to setup enable_4GB
-To:     Miles Chen <miles.chen@mediatek.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, Yong Wu <yong.wu@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>
-References: <20200604080120.2628-1-miles.chen@mediatek.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <55820901-430b-14c4-9426-7a4991ca0eed@redhat.com>
-Date:   Thu, 4 Jun 2020 10:25:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 4 Jun 2020 04:25:46 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 762BAC03E96E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:25:45 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id e11so132441ilr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pYTZrpSKlWCZUeqd3ax0K9GSnrfHbHtF3YVJtTd8P+o=;
+        b=K6ZtQpeA/zQnn8J3gX+PNc1yI1bFeCE+1P458t4Ym1FDFiUe+2EPOQO6wVFD3IqJ13
+         rpydnvh5hcCjSNneskf4+dUoIHd66wJmJuwLLl2BUGqfmB2HRxhlIo6JiY2gO9bqjwSW
+         F804EhlS9vEMkkZ4I88yB61a8drL/w5ihSeME=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pYTZrpSKlWCZUeqd3ax0K9GSnrfHbHtF3YVJtTd8P+o=;
+        b=kwqNg685gUQ2wMC2xCECrYqip5bI+HyLAWkAs7ASfvsm8lIK9CjTT78czN7ud9umJZ
+         U18Oq2Q0UsEpymYncUGVEt/Z0N+adP2CjBtts1loMILxWUH0NdKRGwtIzJthh9JPgVEo
+         oUBUTJ1g4OQ7eAIdR4wFmVT6jlSOon0jsdiFQNxcxWnG2LpIG3On97zI/CiVrWXnJ1Vt
+         yg7icc4CPuQpt2mnSC8zs6BZluvj3BKDwzBt3UoZH9kj+XpQDj06IwuE0rEDJFpMuAXM
+         j5m0hR0sxn0yGxtaynmPo6zTpbS69JVlt+zNoTv+WzigBOxa/Gqf51QExWJjzPiZ1lGj
+         7fgg==
+X-Gm-Message-State: AOAM530FHXda/+SFuCY6p1UKFuSfw2imz1jYxrCfqv7sXvuuvXY7+Thw
+        Z7f0JLTlVZaxUMb9UhZJpYwTExNHwW7wBF62NaT+4Q==
+X-Google-Smtp-Source: ABdhPJy0GM4pMzZ+MACjE8TaKCx8RxW5rMNL2jOetcGVz6m34HluiBrK++u4C5BQy9VmWVJWYvkuJzEJgQ8DT/2NQio=
+X-Received: by 2002:a92:280b:: with SMTP id l11mr2866348ilf.179.1591259144636;
+ Thu, 04 Jun 2020 01:25:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200604080120.2628-1-miles.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200527182545.3859622-0-mholenko@antmicro.com>
+ <20200527182545.3859622-5-mholenko@antmicro.com> <CAPk366TMTGR7cchQa9YYWviQ04-Xko4D8mG+mywyThGVMQ+3dQ@mail.gmail.com>
+ <20200604075716.GA358281@kroah.com>
+In-Reply-To: <20200604075716.GA358281@kroah.com>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Thu, 4 Jun 2020 10:25:34 +0200
+Message-ID: <CAPk366Tjp156Rtz6YFoQGxp=-s=Q_b3sLj+khqooEBFN0Yo5Aw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/5] drivers/tty/serial: add LiteUART driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Gabriel L. Somlo" <gsomlo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.20 10:01, Miles Chen wrote:
-> To build this driver as a kernel module, we cannot use
-> the unexported symbol "max_pfn" to setup enable_4GB.
-> 
-> Use totalram_pages() instead to setup enable_4GB.
-> 
-> Suggested-by: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Yong Wu <yong.wu@mediatek.com>
-> Cc: Chao Hao <chao.hao@mediatek.com>
-> ---
->  drivers/iommu/mtk_iommu.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 5f4d6df59cf6..c2798a6e0e38 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -3,7 +3,6 @@
->   * Copyright (c) 2015-2016 MediaTek Inc.
->   * Author: Yong Wu <yong.wu@mediatek.com>
->   */
-> -#include <linux/memblock.h>
->  #include <linux/bug.h>
->  #include <linux/clk.h>
->  #include <linux/component.h>
-> @@ -626,8 +625,8 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	data->protect_base = ALIGN(virt_to_phys(protect), MTK_PROTECT_PA_ALIGN);
->  
-> -	/* Whether the current dram is over 4GB */
-> -	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
-> +	/* Whether the current dram is over 4GB, note: DRAM start at 1GB  */
-> +	data->enable_4GB = !!(totalram_pages() > ((SZ_2G + SZ_1G) >> PAGE_SHIFT));
+On Thu, Jun 4, 2020 at 9:57 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 04, 2020 at 09:16:25AM +0200, Mateusz Holenko wrote:
+> > On Wed, May 27, 2020 at 6:27 PM Mateusz Holenko <mholenko@antmicro.com>=
+ wrote:
+> > >
+> > > From: Filip Kokosinski <fkokosinski@antmicro.com>
+> > >
+> > > This commit adds driver for the FPGA-based LiteUART serial controller
+> > > from LiteX SoC builder.
+> > >
+> > > The current implementation supports LiteUART configured
+> > > for 32 bit data width and 8 bit CSR bus width.
+> > >
+> > > It does not support IRQ.
+> > >
+> > > Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
+> > > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> > > ---
+> > >
+> > > Notes:
+> > >     Changes in v6:
+> > >     - LiteUART ports now stored in xArray
+> > >     - removed PORT_LITEUART
+> > >     - fixed formatting
+> > >     - removed some unnecessary defines
+> > >
+> > >     No changes in v5.
+> > >
+> > >     Changes in v4:
+> > >     - fixed copyright header
+> > >     - removed a wrong dependency on UARTLITE from Kconfig
+> > >     - added a dependency on LITEX_SOC_CONTROLLER to LITEUART in Kconf=
+ig
+> > >
+> > >     Changes in v3:
+> > >     - aliases made optional
+> > >     - used litex_get_reg/litex_set_reg functions instead of macros
+> > >     - SERIAL_LITEUART_NR_PORTS renamed to SERIAL_LITEUART_MAX_PORTS
+> > >     - PORT_LITEUART changed from 122 to 123
+> > >     - added dependency on LITEX_SOC_CONTROLLER
+> > >     - patch number changed from 4 to 5
+> > >
+> > >     No changes in v2.
+> > >
+> > >  MAINTAINERS                   |   1 +
+> > >  drivers/tty/serial/Kconfig    |  31 +++
+> > >  drivers/tty/serial/Makefile   |   1 +
+> > >  drivers/tty/serial/liteuart.c | 404 ++++++++++++++++++++++++++++++++=
+++
+> > >  4 files changed, 437 insertions(+)
+> > >  create mode 100644 drivers/tty/serial/liteuart.c
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 51d2d6a61fb0..d855fe807833 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -9846,6 +9846,7 @@ M:        Mateusz Holenko <mholenko@antmicro.co=
+m>
+> > >  S:     Maintained
+> > >  F:     Documentation/devicetree/bindings/*/litex,*.yaml
+> > >  F:     drivers/soc/litex/litex_soc_ctrl.c
+> > > +F:     drivers/tty/serial/liteuart.c
+> > >  F:     include/linux/litex.h
+> > >
+> > >  LIVE PATCHING
+> > > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> > > index adf9e80e7dc9..17aaf0afb27a 100644
+> > > --- a/drivers/tty/serial/Kconfig
+> > > +++ b/drivers/tty/serial/Kconfig
+> > > @@ -1562,6 +1562,37 @@ config SERIAL_MILBEAUT_USIO_CONSOLE
+> > >           receives all kernel messages and warnings and which allows =
+logins in
+> > >           single user mode).
+> > >
+> > > +config SERIAL_LITEUART
+> > > +       tristate "LiteUART serial port support"
+> > > +       depends on HAS_IOMEM
+> > > +       depends on OF || COMPILE_TEST
+> > > +       depends on LITEX_SOC_CONTROLLER
+> > > +       select SERIAL_CORE
+> > > +       help
+> > > +         This driver is for the FPGA-based LiteUART serial controlle=
+r from LiteX
+> > > +         SoC builder.
+> > > +
+> > > +         Say 'Y' here if you wish to use the LiteUART serial control=
+ler.
+> > > +         Otherwise, say 'N'.
+> > > +
+> > > +config SERIAL_LITEUART_MAX_PORTS
+> > > +       int "Maximum number of LiteUART ports"
+> > > +       depends on SERIAL_LITEUART
+> > > +       default "1"
+> > > +       help
+> > > +         Set this to the maximum number of serial ports you want the=
+ driver
+> > > +         to support.
+> > > +
+> > > +config SERIAL_LITEUART_CONSOLE
+> > > +       bool "LiteUART serial port console support"
+> > > +       depends on SERIAL_LITEUART=3Dy
+> > > +       select SERIAL_CORE_CONSOLE
+> > > +       help
+> > > +         Say 'Y' here if you wish to use the FPGA-based LiteUART ser=
+ial controller
+> > > +         from LiteX SoC builder as the system console (the system co=
+nsole is the
+> > > +         device which receives all kernel messages and warnings and =
+which allows
+> > > +         logins in single user mode). Otherwise, say 'N'.
+> > > +
+> > >  endmenu
+> > >
+> > >  config SERIAL_MCTRL_GPIO
+> > > diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefil=
+e
+> > > index d056ee6cca33..9f8ba419ff3b 100644
+> > > --- a/drivers/tty/serial/Makefile
+> > > +++ b/drivers/tty/serial/Makefile
+> > > @@ -89,6 +89,7 @@ obj-$(CONFIG_SERIAL_OWL)      +=3D owl-uart.o
+> > >  obj-$(CONFIG_SERIAL_RDA)       +=3D rda-uart.o
+> > >  obj-$(CONFIG_SERIAL_MILBEAUT_USIO) +=3D milbeaut_usio.o
+> > >  obj-$(CONFIG_SERIAL_SIFIVE)    +=3D sifive.o
+> > > +obj-$(CONFIG_SERIAL_LITEUART) +=3D liteuart.o
+> > >
+> > >  # GPIOLIB helpers for modem control lines
+> > >  obj-$(CONFIG_SERIAL_MCTRL_GPIO)        +=3D serial_mctrl_gpio.o
+> > > diff --git a/drivers/tty/serial/liteuart.c b/drivers/tty/serial/liteu=
+art.c
+> > > new file mode 100644
+> > > index 000000000000..22b7612c13ca
+> > > --- /dev/null
+> > > +++ b/drivers/tty/serial/liteuart.c
+> > > @@ -0,0 +1,404 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * LiteUART serial controller (LiteX) Driver
+> > > + *
+> > > + * Copyright (C) 2019-2020 Antmicro <www.antmicro.com>
+> > > + */
+> > > +
+> > > +#include <linux/console.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/of_platform.h>
+> > > +#include <linux/serial.h>
+> > > +#include <linux/serial_core.h>
+> > > +#include <linux/timer.h>
+> > > +#include <linux/tty_flip.h>
+> > > +#include <linux/litex.h>
+> > > +#include <linux/xarray.h>
+> >
+> > kbuild test robot reported problems with this patch, namely: implicit
+> > declaration of function 'kzalloc'
+> > This is caused by the missing include directive. When I was testing it
+> > I must have missed the warning, but the compilation succeeded and the
+> > resulting binary worked fine on HW (LiteX/mor1kx platform).
+> > The fix is a simple one-liner, adding a new include:
+> >
+> > +#include <linux/slab.h>
+> >
+> > Since this is a very small fix and does not modify the actual code of
+> > the driver I want to wait for more feedback on all patches in the
+> > series before resubmitting, in order to limit traffic on the list.
+> > Or should I generate the next version and resend the whole patchset
+> > with this single fix, as otherwise it won't be reviewed at all?
+>
+> Please fix up and resend.  We can't do anything until after 5.8-rc1 is
+> out anyway...
+>
+> thanks,
+>
+> greg k-h
 
-A similar thing seems to be done by
-drivers/media/platform/mtk-vpu/mtk_vpu.c:
-	vpu->enable_4GB = !!(totalram_pages() > (SZ_2G >> PAGE_SHIFT));
+Sure, thanks for the prompt response!
 
-I do wonder if some weird memory hotplug setups might give you false
-negatives.
+Best,
+Mateusz Ho=C5=82enko
 
-E.g., start a VM with 1GB and hotplug 1GB - it will be hotplugged on
-x86-64 above 4GB, turning max_pfn into 5GB. totalram_pages() should
-return something < 2GB.
 
-Same can happen when you have a VM and use ballooning to fake-unplug
-memory, making totalram_pages() return something < 4GB, but leaving
-usable pfns >= 4GB.
-
-but
-... I don't know if I understood what "enable_4GB" needs/implies
-... I don't know if this is applicable to VMs at all (on real HW such
-    memory hotplug setups should not exist)
-... I don't know how this code would react to memory hotplug, so if the
-    condition changes after the driver loaded and enable_4GB would
-    suddenly apply. Again, most probably not relevant on real HW, only
-    for VMs.
-
--- 
-Thanks,
-
-David / dhildenb
-
+--=20
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
