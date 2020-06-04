@@ -2,136 +2,189 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3189C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE89207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B218620823
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EA8m89u9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TjCwc4Gl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgFDOc0 (ORCPT
+        id S1729058AbgFDOe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:32:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59194 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728919AbgFDOc0 (ORCPT
+        Thu, 4 Jun 2020 10:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729037AbgFDOe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:32:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591281144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=h9M1fLh8Ru9H4w+WFRAfiLMCmRmx0L8dSLxiYIXuu4E=;
-        b=EA8m89u9f8/g+TqsmQ3ZIOv2b/lDQrZViHjh3wwcFYyFitIOTM6RJ2vnHNK0syReTTUzTN
-        meke3oqv4RBmX0XZtTZRO1q/SUKqMPelHWdY+fAHRnPCO36cop1s2L2vQJp9sr9f2/hQhZ
-        2zAG7HYpcLkVPUsn0wHtyNSoxeqsV9Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-QJFS2nS7OyOa-MMajM20aw-1; Thu, 04 Jun 2020 10:32:20 -0400
-X-MC-Unique: QJFS2nS7OyOa-MMajM20aw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B75B1800D42;
-        Thu,  4 Jun 2020 14:32:02 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C6FB7CCC1;
-        Thu,  4 Jun 2020 14:32:00 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: nVMX: Inject #GP when nested_vmx_get_vmptr() fails to read guest memory
-Date:   Thu,  4 Jun 2020 16:31:58 +0200
-Message-Id: <20200604143158.484651-1-vkuznets@redhat.com>
+        Thu, 4 Jun 2020 10:34:57 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CE3C08C5C5
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:34:57 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ga6so1207837pjb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ove4i1/jldMZ8oj/uY7NqV8r09suzUfhCHwuSYH9N6k=;
+        b=TjCwc4Glzpv6zTuI4ORcCO3GKt0+Ccro7aRK1+e6UcK9/8RNeB8TRca2cDcrCZcFnw
+         dOZz9z/5MHyMXIaUdvhXgJxFJWPi992hZGVtspEgPL5VJyozAoxBel+yRY8wrOsFSawW
+         q/r0W2zg8NzemNia+bwbRZAfOWsgUJYKa74vc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ove4i1/jldMZ8oj/uY7NqV8r09suzUfhCHwuSYH9N6k=;
+        b=saQci245N3DDv1P9N2YyR8Wx6i3jFpWrq13CHgsuRo/HffMhqitLaX7b2K5ygu4EZE
+         gqZrjZZGFEpvDSvtk40d/ndBk8wLlH4goJ5UP6QXtroG4C+6yu4s4zKq35lLZIK51RMf
+         +iDkGgC6yUUkro6E+9Jq09hxsLj6HVwSMoVh6xtBrRdFLD8Zj/pRNQnSYVnW8TCtfGmO
+         7anAbNJubfPssNkYlObgIZ/t8RDhaJnGOiNxnejlVIV89hgtnm8h9p1kQpd016DkOqs9
+         E/Q3dMwvGw9/6TwgdFpOGxccYCnRkDCpGWRsHCh0HGeWysScxqrGZs1ejzqwFIvaRc+5
+         mqnA==
+X-Gm-Message-State: AOAM5317CnkhxxdO+OnOEvUM8t58BAa5iS+vNlaP1n096q1oM/Hm7bf/
+        u7+8o62GCClO6baYLZh703ywaA==
+X-Google-Smtp-Source: ABdhPJwYFZeK5TkHVANf3TB7Mzvs6z8AC7rMNyAbLjxTjQqaX9yKSG5fQNVZZytsALVosdoYYC3FFg==
+X-Received: by 2002:a17:90a:950e:: with SMTP id t14mr5847304pjo.99.1591281296926;
+        Thu, 04 Jun 2020 07:34:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q8sm6069346pjj.51.2020.06.04.07.34.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 07:34:55 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 07:34:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 01/10] x86/mm/numa: Remove uninitialized_var() usage
+Message-ID: <202006040728.8797FAA4@keescook>
+References: <20200603233203.1695403-2-keescook@chromium.org>
+ <874krr8dps.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874krr8dps.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzbot reports the following issue:
+On Thu, Jun 04, 2020 at 09:58:07AM +0200, Thomas Gleixner wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > -#ifdef NODE_NOT_IN_PAGE_FLAGS
+> > -	pfn_align = node_map_pfn_alignment();
+> > -	if (pfn_align && pfn_align < PAGES_PER_SECTION) {
+> > -		printk(KERN_WARNING "Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
+> > -		       PFN_PHYS(pfn_align) >> 20,
+> > -		       PFN_PHYS(PAGES_PER_SECTION) >> 20);
+> > -		return -EINVAL;
+> > +	if (IS_ENABLED(NODE_NOT_IN_PAGE_FLAGS)) {
+> 
+> Hrm, clever ...
+> 
+> > +		unsigned long pfn_align = node_map_pfn_alignment();
+> > +
+> > +		if (pfn_align && pfn_align < PAGES_PER_SECTION) {
+> > +			pr_warn("Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
+> > +				PFN_PHYS(pfn_align) >> 20,
+> > +				PFN_PHYS(PAGES_PER_SECTION) >> 20);
+> > +			return -EINVAL;
+> > +		}
+> >  	}
+> > -#endif
+> >  	if (!numa_meminfo_cover_memory(mi))
+> >  		return -EINVAL;
+> >  
+> > diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
+> > index 71283739ffd2..1a4cdec2bd29 100644
+> > --- a/include/linux/page-flags-layout.h
+> > +++ b/include/linux/page-flags-layout.h
+> > @@ -100,7 +100,7 @@
+> >   * there.  This includes the case where there is no node, so it is implicit.
+> >   */
+> >  #if !(NODES_WIDTH > 0 || NODES_SHIFT == 0)
+> > -#define NODE_NOT_IN_PAGE_FLAGS
+> > +#define NODE_NOT_IN_PAGE_FLAGS 1
+> 
+> but if we ever lose the 1 then the above will silently compile the code
+> within the IS_ENABLED() section out.
 
-WARNING: CPU: 0 PID: 6819 at arch/x86/kvm/x86.c:618 kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
-...
-Call Trace:
-...
-RIP: 0010:kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
-...
- nested_vmx_get_vmptr+0x1f9/0x2a0 arch/x86/kvm/vmx/nested.c:4638
- handle_vmon arch/x86/kvm/vmx/nested.c:4767 [inline]
- handle_vmon+0x168/0x3a0 arch/x86/kvm/vmx/nested.c:4728
- vmx_handle_exit+0x29c/0x1260 arch/x86/kvm/vmx/vmx.c:6067
+That's true, yes. I considered two other ways to do this:
 
-'exception' we're trying to inject with kvm_inject_emulated_page_fault() comes from
-  nested_vmx_get_vmptr()
-   kvm_read_guest_virt()
-     kvm_read_guest_virt_helper()
-       vcpu->arch.walk_mmu->gva_to_gpa()
+1) smallest patch, but more #ifdef:
 
-but it is only set when GVA to GPA conversion fails. In case it doesn't but
-we still fail kvm_vcpu_read_guest_page(), X86EMUL_IO_NEEDED is returned and
-nested_vmx_get_vmptr() calls kvm_inject_emulated_page_fault() with zeroed
-'exception'. This happen when e.g. VMXON/VMPTRLD/VMCLEAR argument is MMIO.
-
-KVM could've handled the request correctly by going to userspace and
-performing I/O but there doesn't seem to be a good need for such requests
-in the first place. Sane guests should not call VMXON/VMPTRLD/VMCLEAR with
-anything but normal memory. Just inject #GP to find insane ones.
-
-Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 9c74a732b08d..05d57c3cb1ce 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4628,14 +4628,29 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index 59ba008504dc..fbf5231a3d35 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -541,7 +541,9 @@ static void __init numa_clear_kernel_node_hotplug(void)
+ 
+ static int __init numa_register_memblks(struct numa_meminfo *mi)
  {
- 	gva_t gva;
- 	struct x86_exception e;
-+	int r;
+-	unsigned long uninitialized_var(pfn_align);
++#ifdef NODE_NOT_IN_PAGE_FLAGS
++	unsigned long pfn_align;
++#endif
+ 	int i, nid;
  
- 	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
- 				vmcs_read32(VMX_INSTRUCTION_INFO), false,
- 				sizeof(*vmpointer), &gva))
- 		return 1;
- 
--	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
--		kvm_inject_emulated_page_fault(vcpu, &e);
-+	r = kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
-+	if (r != X86EMUL_CONTINUE) {
-+		if (r == X86EMUL_PROPAGATE_FAULT) {
-+			kvm_inject_emulated_page_fault(vcpu, &e);
-+		} else {
-+			/*
-+			 * X86EMUL_IO_NEEDED is returned when kvm_vcpu_read_guest_page()
-+			 * fails to read guest's memory (e.g. when 'gva' points to MMIO
-+			 * space). While KVM could've handled the request correctly by
-+			 * exiting to userspace and performing I/O, there doesn't seem
-+			 * to be a real use-case behind such requests, just inject #GP
-+			 * for now.
-+			 */
-+			kvm_inject_gp(vcpu, 0);
-+		}
-+
- 		return 1;
- 	}
- 
--- 
-2.25.4
+ 	/* Account for nodes with cpus and no memory */
 
+2) medium size, weird style:
+
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index 59ba008504dc..0df7ba9b21b2 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -541,7 +541,6 @@ static void __init numa_clear_kernel_node_hotplug(void)
+ 
+ static int __init numa_register_memblks(struct numa_meminfo *mi)
+ {
+-	unsigned long uninitialized_var(pfn_align);
+ 	int i, nid;
+ 
+ 	/* Account for nodes with cpus and no memory */
+@@ -570,12 +569,15 @@ static int __init numa_register_memblks(struct numa_meminfo *mi)
+ 	 * whether its granularity is fine enough.
+ 	 */
+ #ifdef NODE_NOT_IN_PAGE_FLAGS
+-	pfn_align = node_map_pfn_alignment();
+-	if (pfn_align && pfn_align < PAGES_PER_SECTION) {
+-		printk(KERN_WARNING "Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
+-		       PFN_PHYS(pfn_align) >> 20,
+-		       PFN_PHYS(PAGES_PER_SECTION) >> 20);
+-		return -EINVAL;
++	{
++		unsigned long pfn_align = node_map_pfn_alignment();
++
++		if (pfn_align && pfn_align < PAGES_PER_SECTION) {
++			pr_warn("Node alignment %LuMB < min %LuMB, rejecting NUMA config\n",
++			       PFN_PHYS(pfn_align) >> 20,
++			       PFN_PHYS(PAGES_PER_SECTION) >> 20);
++			return -EINVAL;
++		}
+ 	}
+ #endif
+ 	if (!numa_meminfo_cover_memory(mi))
+
+and 3 is what I sent: biggest, but removes #ifdef
+
+Any preference?
+
+Thanks!
+
+-- 
+Kees Cook
