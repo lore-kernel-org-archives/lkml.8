@@ -2,103 +2,161 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C903C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2383EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46AE920659
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F183120659
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M0mkpsLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgFDUGc (ORCPT
+        id S1729125AbgFDUI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:06:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49790 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728054AbgFDUGa (ORCPT
+        Thu, 4 Jun 2020 16:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728587AbgFDUI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:06:30 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <seth.forshee@canonical.com>)
-        id 1jgw8B-0000Vx-QH
-        for linux-kernel@vger.kernel.org; Thu, 04 Jun 2020 20:06:27 +0000
-Received: by mail-io1-f70.google.com with SMTP id l19so1198517iol.5
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:06:27 -0700 (PDT)
+        Thu, 4 Jun 2020 16:08:57 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59098C08C5C4
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:08:57 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n23so3980350pgb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AFF1riO+rvi+JtGxWF5qzVLPXHH0Nzh8aZcDxBuji4s=;
+        b=M0mkpsLd7B3310QKl3SLGg22ik2mXjNx5FY1vzJopMffJnCw8jRcmo9fV9LTIHikFp
+         RUv7WnBJ6K5VaUslDx62awUaItJ+YKUKSU3/LS3bQT0QPBOUmH8h7pgLYyxlBLfTzZPU
+         CwkTICvo+M0GUh+egz/pFlCv8tR424B81CNZ9aQO8/k4dMiV20ohQx7N7YX7tjfxxqqp
+         JKfbJIsE+MYGNYLFN8gpzmr0Avp6j5x4qED0RF7A5OiE4WLh5w8/DvLwZz8GAkmSlO6c
+         QbXytbk3xKeeMX1S4Xa0zICtEJbZ60RM6KlvqWwsKz3NAMy2eeUR9b8nqFf/OpAnG9F0
+         SQHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t8BNrQ5EvO5CN1P54SLRxErq24g55GKkGlzRsUwueE8=;
-        b=NZUmGGYllPwJW/7yLbnSfcm5efBaD61Z3aj9vPB6vURoH/D49TSKpMqbb8vwY/lBhe
-         HVJbt4hzfxBPIc8rqGOAkGtPgByfUcfCUGwiTx3oPJkSOLIX+ZW7cNpADf0k4LajsD6D
-         Ql+E4TfLBk7sd3188O/AEI2Ias8pCsEhoH/Wx2NzzxsaD9vbcncGJgNDVl+Evfmw6G8g
-         XngUOw4geaIcUImGHSIOso1fq6jAwrhksxPdQM/ql4WoOxoE3dZ2AWw8afT+49Oe7X1P
-         /o1YbTX7O8ylFpkZRxBktkYOCm93kAwDdXHzQnjSYUvCWK1/i+fEPQqM4pTDhNoHq5Si
-         l4Bg==
-X-Gm-Message-State: AOAM530jjbnGbD3QR727ZyRbV7+WCnKsxZjX2gIi4Cz9JWBQBZKFG+5k
-        TqFEvgmo+NcbRpaD/TQMlhPq/5e9d8dYwKlmk6Nmcwvk3xduzKuGpagkuTJgLMMQa1Iu+Au9Z/Z
-        BN3yxKF6CJkoN2fLiJe2MkkKMSvtaTqjdxJUu1nRBOg==
-X-Received: by 2002:a6b:5915:: with SMTP id n21mr5546984iob.103.1591301186521;
-        Thu, 04 Jun 2020 13:06:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzbV+LEUf9tEApQ5CzjTpzWgDtZ35W682RhC2YNRXKY30uEF3BNkNH92/6pREx1x5YaL+IOGQ==
-X-Received: by 2002:a6b:5915:: with SMTP id n21mr5546945iob.103.1591301185990;
-        Thu, 04 Jun 2020 13:06:25 -0700 (PDT)
-Received: from localhost ([2605:a601:af9b:a120:2dfd:d485:5170:5d43])
-        by smtp.gmail.com with ESMTPSA id z13sm1890628ilh.82.2020.06.04.13.06.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:06:25 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 15:06:24 -0500
-From:   Seth Forshee <seth.forshee@canonical.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests/ftrace: Use printf instead of echo in
- kprobe syntax error tests
-Message-ID: <20200604200624.GD5650@ubuntu-x1>
-References: <20200304222009.34663-1-seth.forshee@canonical.com>
- <20200529203704.GA57013@ubuntu-x1>
- <de431b0e-6337-b95a-15c5-1c0c6abe697e@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AFF1riO+rvi+JtGxWF5qzVLPXHH0Nzh8aZcDxBuji4s=;
+        b=CeCY4+g+ve/rr4ikveDX1KH+dqmnRNg/Z+o7JElR3ZDZf5ALG7/QGzmyz5KpDIB2nq
+         Xn9t+zRVT4bBE4r2m/+TDYD3NFjMPfTTvnmSZn/YHMeJFg8i93SwJseAZDGnmrWWtekv
+         SHkSGL9o7FP5x6JVhcZJulaoJBeKA0/BPzqL/ErPhmxCAF8IVLiuMwbga3ID9VT7l2wL
+         lrqgfxoNEO//08Kk9dFqNmUF520MPwhe0bI0nlYZYblhQl3qHUs1kCwcB7/g0+vvugh+
+         lpcNLhBnxYCG7MNRGHX+xiqKC5CsBqu3Xzk30mFj1u3aHY1v4LJttodgj9XmAoMMfqN8
+         D5Rg==
+X-Gm-Message-State: AOAM530RjI4zOAxrQ9422S5ZxFQ4mTmSUAohq8PuxMZlqKcIt5QrntRE
+        eo9SueE7lp/EgagRWeaokh3iVD1kLAuW6JWch1G8aw==
+X-Google-Smtp-Source: ABdhPJxLMcvCCgSkDUjAgCX71OWizViN7uenmXgd4TZP4zed6Dsn/5qWQdcJBcIITrWPyVLL/7sbTfhjLEhVY3eJVkA=
+X-Received: by 2002:a63:5644:: with SMTP id g4mr5811569pgm.381.1591301336363;
+ Thu, 04 Jun 2020 13:08:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de431b0e-6337-b95a-15c5-1c0c6abe697e@linuxfoundation.org>
+References: <20200603233203.1695403-1-keescook@chromium.org> <20200603233203.1695403-4-keescook@chromium.org>
+In-Reply-To: <20200603233203.1695403-4-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 4 Jun 2020 13:08:44 -0700
+Message-ID: <CAKwvOdnNuFySqAMk7s_cXqFM=dPX4JfvqNVLCuj90Gn4tzciAw@mail.gmail.com>
+Subject: Re: [PATCH 03/10] b43: Remove uninitialized_var() usage
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 03:26:06PM -0600, Shuah Khan wrote:
-> On 5/29/20 2:37 PM, Seth Forshee wrote:
-> > On Wed, Mar 04, 2020 at 04:20:09PM -0600, Seth Forshee wrote:
-> > > Test cases which use echo to write strings containing backslashes
-> > > fail with some shells, as echo's treatment of backslashes in
-> > > strings varies between shell implementations. Use printf instead,
-> > > as it should behave consistently across different shells. This
-> > > requires adjustments to the strings to escape \ and % characters.
-> > > ftrace_errlog_check() must also re-escape these characters after
-> > > processing them to remove ^ characters.
-> > > 
-> > > Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-> > 
-> > Ping. Someone just asked me about this patch, and I noticed that it
-> > hasn't been applied or received any feedback.
-> > 
-> 
-> I pulled in this patch from Masami:
-> 
-> selftests/ftrace: Use printf for backslash included command
-> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=next&id=8e923a2168afd221ea26e3d9716f21e9578b5c4d
-> 
-> Looks like a duplicate.
-> 
-> Seth,
-> Is your patch still needed?
+On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just initialize this variable to NULL,
+> and make the (unreachable!) code do a conditional test.
+>
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/net/wireless/broadcom/b43/phy_n.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
+> index d3c001fa8eb4..88cdcea10d61 100644
+> --- a/drivers/net/wireless/broadcom/b43/phy_n.c
+> +++ b/drivers/net/wireless/broadcom/b43/phy_n.c
+> @@ -4222,7 +4222,7 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
 
-Nope, Masami's patch seems to fix the issues addressed by my patch.
-Thanks!
+The TODOs and `#if 0` in this function are concerning.  It looks like
+`rf_pwr_offset_table` is only used when `phy->rev` is >=7 && < 19.
+
+Further, the loop has a case for `phy->rev >= 19` but we would have
+returned earlier if that was the case.
+
+>         u32 rfpwr_offset;
+>         u8 pga_gain, pad_gain;
+>         int i;
+> -       const s16 *uninitialized_var(rf_pwr_offset_table);
+> +       const s16 *rf_pwr_offset_table = NULL;
+>
+>         table = b43_nphy_get_tx_gain_table(dev);
+>         if (!table)
+> @@ -4256,9 +4256,13 @@ static void b43_nphy_tx_gain_table_upload(struct b43_wldev *dev)
+>                         pga_gain = (table[i] >> 24) & 0xf;
+>                         pad_gain = (table[i] >> 19) & 0x1f;
+>                         if (b43_current_band(dev->wl) == NL80211_BAND_2GHZ)
+> -                               rfpwr_offset = rf_pwr_offset_table[pad_gain];
+> +                               rfpwr_offset = rf_pwr_offset_table
+> +                                               ? rf_pwr_offset_table[pad_gain]
+> +                                               : 0;
+>                         else
+> -                               rfpwr_offset = rf_pwr_offset_table[pga_gain];
+> +                               rfpwr_offset = rf_pwr_offset_table
+> +                                               ? rf_pwr_offset_table[pga_gain]
+> +                                               : 0;
+
+
+The code is trying to check `phy->rev >= 7 && phy->rev < 19` once
+before the loop, then set `rf_pwr_offset_table`, so having another
+conditional on `rf_pwr_offset_table` in the loop is unnecessary. I'm
+ok with initializing it to `NULL`, but I'm not sure the conditional
+check is necessary.  Do you get a compiler warning otherwise?
+
+>                 } else {
+>                         pga_gain = (table[i] >> 24) & 0xF;
+>                         if (b43_current_band(dev->wl) == NL80211_BAND_2GHZ)
+> --
+> 2.25.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200603233203.1695403-4-keescook%40chromium.org.
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
