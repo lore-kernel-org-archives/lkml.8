@@ -2,138 +2,133 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD53C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73BD0206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B599C2087D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="faSHCfVZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MJvTIu+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgFDMGj (ORCPT
+        id S1728572AbgFDMGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728494AbgFDMG3 (ORCPT
+        Thu, 4 Jun 2020 08:06:45 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49026 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728539AbgFDMGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:06:29 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7993BC03E96E
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:06:29 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id e20so2763808qvu.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J8XXw9bWqog1qXznkBFIaFfGNYcanEbfH23hTVGzPIQ=;
-        b=faSHCfVZTU002i9rOq3081b6hzhIIqH7n5dv5hGRJd8jMEK/WM+98oeWfE+xnoRjTI
-         xwyoBTmd5jkTkC2T2FtyxJh6cTLJurmhk5Kp48DH8KwAg3CCsjlyqPhtYX+t8vlCC9Kc
-         1l0/nu61+qDRbgfmSUXRvlSPGBNhPbZeMTPJBClNBBv85NJMoIeVwAOBeJN3uzZiNTdI
-         0tM1CsKAEz9faQe/svQg9wwSlgpONxqegigWVLrYtNSr8/GJnaRUx7mztf4LMqBfpPu5
-         TXw0mpqlRLDAHb0UL2838SF2FOH0YJ3/K2eGG8/NGgguFUx8fanSmhr6OSVaa41cZ/5z
-         VRdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J8XXw9bWqog1qXznkBFIaFfGNYcanEbfH23hTVGzPIQ=;
-        b=UJ4DBtSRpGj8tdr5ARnXPa38pVZmKqreX55JlQt2TTSNZeVqkbKKbu2Lf3raSSOHP2
-         RxbkfekrHYF75HJTICE/VS5xsxE3G6Lj7w3+qpTi8Wr2VR80mNgmOaCaIcjdNThX7Qtg
-         DUMkEzBQ4muphPcLpJC4yjYthtfJPJKTd/AKgKuXXFolZsNmb0lLm9pZkTmHPSJSAvpa
-         CStJoJDn8L+Glct1P9qCao/+SkgBJ5UjA7QZYdWaKzYoSB9q6htG/Q5RZzRl6VIGW0tL
-         GDE3GiY4Ul8S0F2aLpkDmAvtFkSwh+lLFG5eNDXdeHHCoUck91oQNuWC2+pA4wYdbvoJ
-         uG4A==
-X-Gm-Message-State: AOAM532B/Jn0OnMvy+XT0V00VSqwHIWLFHHaZm9rTTGYmiOoN5YztW4r
-        GoNLfTI0gCxSvsJoLMabn2MMMoZsOevq2N8kTy8YDg==
-X-Google-Smtp-Source: ABdhPJxZCPPf49APC5CxzIFLlJ2ZS0uykwlb6NLcKgK/nhI4HSwy5rWlG4Afb78EiExniD1IYqBpul8PsQDoOd/7vq0=
-X-Received: by 2002:a0c:c70f:: with SMTP id w15mr4544479qvi.34.1591272388478;
- Thu, 04 Jun 2020 05:06:28 -0700 (PDT)
+        Thu, 4 Jun 2020 08:06:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054C6ac5086980;
+        Thu, 4 Jun 2020 07:06:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591272396;
+        bh=PVCOo+XzcwzLU+bYymhrbah+9h2f7gl8DG1DYoe/ZbI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=MJvTIu+gnKYEn/jIkSsB0//F8OCfLeH+4ahnJPeNV81JaP+FRycxxx1drHN4nS6mc
+         riQ0VBQXQNs7b3ruD58wMAKkMWmZmcoUVLY8XfL3qtIz3YIfYzyWaUQzrp50Exwnk5
+         Kf1zY9Txegf4bkmZKCEwk1gCRa0f0YzmkaERZVvY=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054C6aao054761
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 07:06:36 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 07:06:35 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 07:06:35 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C6ZA4067477;
+        Thu, 4 Jun 2020 07:06:35 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v26 12/15] leds: lp5523: Update the lp5523 code to add multicolor brightness function
+Date:   Thu, 4 Jun 2020 07:05:01 -0500
+Message-ID: <20200604120504.32425-13-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200604120504.32425-1-dmurphy@ti.com>
+References: <20200604120504.32425-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <cover.1585233617.git.andreyknvl@google.com> <9d9134359725a965627b7e8f2652069f86f1d1fa.1585233617.git.andreyknvl@google.com>
-In-Reply-To: <9d9134359725a965627b7e8f2652069f86f1d1fa.1585233617.git.andreyknvl@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 4 Jun 2020 14:06:17 +0200
-Message-ID: <CACT4Y+YMd1f_trERXGgcQgXa35cq33kfQd-Fv8_5G6V+XLbqTw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] kcov: fix potential use-after-free in kcov_remote_start
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:44 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> If vmalloc() fails in kcov_remote_start() we'll access remote->kcov
-> without holding kcov_remote_lock, so remote might potentially be freed
-> at that point. Cache kcov pointer in a local variable.
->
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Add the multicolor brightness call back to support the multicolor
+framework.  This call back allows setting  brightness on grouped channels
+in a single function.
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/Kconfig       |  1 +
+ drivers/leds/leds-lp5523.c | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-> ---
->  kernel/kcov.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/kernel/kcov.c b/kernel/kcov.c
-> index f6bd119c9419..cc5900ac2467 100644
-> --- a/kernel/kcov.c
-> +++ b/kernel/kcov.c
-> @@ -748,6 +748,7 @@ static const struct file_operations kcov_fops = {
->  void kcov_remote_start(u64 handle)
->  {
->         struct kcov_remote *remote;
-> +       struct kcov *kcov;
->         void *area;
->         struct task_struct *t;
->         unsigned int size;
-> @@ -774,16 +775,17 @@ void kcov_remote_start(u64 handle)
->                 spin_unlock(&kcov_remote_lock);
->                 return;
->         }
-> +       kcov = remote->kcov;
->         /* Put in kcov_remote_stop(). */
-> -       kcov_get(remote->kcov);
-> -       t->kcov = remote->kcov;
-> +       kcov_get(kcov);
-> +       t->kcov = kcov;
->         /*
->          * Read kcov fields before unlock to prevent races with
->          * KCOV_DISABLE / kcov_remote_reset().
->          */
-> -       size = remote->kcov->remote_size;
-> -       mode = remote->kcov->mode;
-> -       sequence = remote->kcov->sequence;
-> +       size = kcov->remote_size;
-> +       mode = kcov->mode;
-> +       sequence = kcov->sequence;
->         area = kcov_remote_area_get(size);
->         spin_unlock(&kcov_remote_lock);
->
-> @@ -791,7 +793,7 @@ void kcov_remote_start(u64 handle)
->                 area = vmalloc(size * sizeof(unsigned long));
->                 if (!area) {
->                         t->kcov = NULL;
-> -                       kcov_put(remote->kcov);
-> +                       kcov_put(kcov);
->                         return;
->                 }
->         }
-> --
-> 2.26.0.rc2.310.g2932bb562d-goog
->
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index c127a931e250..8b28f73c810c 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -408,6 +408,7 @@ config LEDS_LP5521
+ config LEDS_LP5523
+ 	tristate "LED Support for TI/National LP5523/55231 LED driver chip"
+ 	depends on LEDS_CLASS && I2C
++	depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+ 	select LEDS_LP55XX_COMMON
+ 	help
+ 	  If you say yes here you get support for TI/National Semiconductor
+diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+index b076c16df9ab..9776dc72a764 100644
+--- a/drivers/leds/leds-lp5523.c
++++ b/drivers/leds/leds-lp5523.c
+@@ -791,6 +791,25 @@ static ssize_t store_master_fader_leds(struct device *dev,
+ 	return ret;
+ }
+ 
++static int lp5523_multicolor_brightness(struct lp55xx_led *led)
++{
++	struct lp55xx_chip *chip = led->chip;
++	int ret;
++	int i;
++
++	mutex_lock(&chip->lock);
++	for (i = 0; i < led->mc_cdev.num_colors; i++) {
++		ret = lp55xx_write(chip,
++				   LP5523_REG_LED_PWM_BASE +
++				   led->mc_cdev.subled_info[i].channel,
++				   led->mc_cdev.subled_info[i].brightness);
++		if (ret)
++			break;
++	}
++	mutex_unlock(&chip->lock);
++	return ret;
++}
++
+ static int lp5523_led_brightness(struct lp55xx_led *led)
+ {
+ 	struct lp55xx_chip *chip = led->chip;
+@@ -857,6 +876,7 @@ static struct lp55xx_device_config lp5523_cfg = {
+ 	.max_channel  = LP5523_MAX_LEDS,
+ 	.post_init_device   = lp5523_post_init_device,
+ 	.brightness_fn      = lp5523_led_brightness,
++	.multicolor_brightness_fn = lp5523_multicolor_brightness,
+ 	.set_led_current    = lp5523_set_led_current,
+ 	.firmware_cb        = lp5523_firmware_loaded,
+ 	.run_engine         = lp5523_run_engine,
+-- 
+2.26.2
+
