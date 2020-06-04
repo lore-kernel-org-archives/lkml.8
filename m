@@ -2,196 +2,168 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 572EB20663
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59BE20663
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y3gp9V2V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dFUigwMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgFDOvn (ORCPT
+        id S1729136AbgFDOxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:51:43 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55026 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729038AbgFDOvn (ORCPT
+        Thu, 4 Jun 2020 10:53:45 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41427 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729089AbgFDOxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:51:43 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054EmRN1006694;
-        Thu, 4 Jun 2020 14:51:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=yZ/+ZJnzGnmR7xhhJsmwnbo92NBRhvNckmqD86Sq/yw=;
- b=Y3gp9V2VSFZ5CQzf0bwJEoNtW2VsYWuDv10PHG4vOY9tJtXkCuZY0UNWqXph/Ymwlm+m
- VTK+37yFHeqNgd7lXN81KtlfGdj5Fnj5JT9SSD4VAx+quVwNrrplZAvnX1QTPNpyCYhc
- uEKm48/mrUCaq3oeFnxYZVz8JehshmL+Lta/nYK2AYVt9TqaH5t0m66cWXFdkTy0YX2k
- 4mJAkH0Xhqgdv4qBoIMWyIV9hxaj6y7J7x5cl/KL3P48WOnCRnXPLH0LHukU2X5+Ohqg
- vFXpSG/9HMgYO9PjeGzLCcJ00CrnGJSXf/UamHDxXpzqFNUg1f7TpgpHwdV9jQrbqNOq Sg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 31evvn1ygm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 04 Jun 2020 14:51:16 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054Em3vE111522;
-        Thu, 4 Jun 2020 14:51:15 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31c25vffjj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jun 2020 14:51:15 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 054Ep9Dr003969;
-        Thu, 4 Jun 2020 14:51:09 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Jun 2020 07:51:09 -0700
-Date:   Thu, 4 Jun 2020 07:51:07 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
-        "Qi, Fuli" <qi.fuli@fujitsu.com>,
-        "Gotou, Yasunori" <y-goto@fujitsu.com>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBSZQ==?= =?utf-8?Q?=3A?= [RFC PATCH 0/8]
- dax: Add a dax-rmap tree to support reflink
-Message-ID: <20200604145107.GA1334206@magnolia>
-References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
- <20200427122836.GD29705@bombadil.infradead.org>
- <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
- <20200428064318.GG2040@dread.disaster.area>
- <153e13e6-8685-fb0d-6bd3-bb553c06bf51@cn.fujitsu.com>
+        Thu, 4 Jun 2020 10:53:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591282421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bkjkczUAegkCYVD3I4mCfLncEzS/Hv9PCrfpe6zg2Qc=;
+        b=dFUigwMNlR4Ca5xnid82ixO/o7O3J2cYZNxC8QnNkNUHOC+A5a1C1LBL64IYapjBovDBSg
+        iAx2O982JbOFWRyMQqi8kA50+4yEYEnme/Ad31Kku7H2dceowVFqz9PMKPIspmfMc+HrzJ
+        emBdQW6PYHocnCcc7AkNXCiIueCwWPI=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-cSAcU14RO6SFvZZihQ6nQw-1; Thu, 04 Jun 2020 10:53:38 -0400
+X-MC-Unique: cSAcU14RO6SFvZZihQ6nQw-1
+Received: by mail-ej1-f72.google.com with SMTP id gr26so2228115ejb.22
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:53:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=bkjkczUAegkCYVD3I4mCfLncEzS/Hv9PCrfpe6zg2Qc=;
+        b=kEO2cIsYAnMywn0sj0F1plYwHdiDyfeFkqlckqmJLv04UfUjYKSzmbKKmOXPZxgwAz
+         r27VCEUw1ULAu1sAwQkKXLcJVZk2PHBKM+oIRC5u9TvNjHnrEXpihUR3Eww5+xg4Larm
+         hy1T5IME4FSEphFE54iSc2/N53MaQfYg3O7cIrYM8NnIvW+rhcDxPlGxa8KlAkOHRQom
+         HdbcR5ePRwZwArv7ve0BLQN8xnUFKj7hz9VwuLVUZ/pnmCdyepe9GNQuVtBPbTSmcmaF
+         EuZr8TkZiFbRhhH+Gd3YmRMxvhcUe/U02S7/c2D4bo3LQhM76JivoLnJLUBL1T4NbpHu
+         Z1vA==
+X-Gm-Message-State: AOAM5315j4XImNnj5pVUlGsRWjXXgDG6B0ULpVdDkl563njiM32sgV+j
+        zTw2XgAy+A4SbrZGFluAqlvDrZc7qjbvgzu2gsvIALwxWWiIwGLRzH3YuWXWIQ/kHLeRBauFJg8
+        1YOycENEBPD7kCss2Qrta1f0z
+X-Received: by 2002:a05:6402:1d96:: with SMTP id dk22mr4850221edb.258.1591282416850;
+        Thu, 04 Jun 2020 07:53:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwdUWD/soPlYgGL8mgklo+O0gr8pBKIXLBPJA28P88u/VAkfY5QZj9Zn762qCiARN2fkqYzVQ==
+X-Received: by 2002:a05:6402:1d96:: with SMTP id dk22mr4850191edb.258.1591282416533;
+        Thu, 04 Jun 2020 07:53:36 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id ce16sm2313704ejb.76.2020.06.04.07.53.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 07:53:36 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: Inject #GP when nested_vmx_get_vmptr() fails to read guest memory
+In-Reply-To: <da7acd6f-204d-70e2-52aa-915a4d9163ef@redhat.com>
+References: <20200604143158.484651-1-vkuznets@redhat.com> <da7acd6f-204d-70e2-52aa-915a4d9163ef@redhat.com>
+Date:   Thu, 04 Jun 2020 16:53:35 +0200
+Message-ID: <87mu5ievbk.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <153e13e6-8685-fb0d-6bd3-bb553c06bf51@cn.fujitsu.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1 spamscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006040102
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 suspectscore=1
- phishscore=0 clxscore=1011 malwarescore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 impostorscore=0 adultscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006040102
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 03:37:42PM +0800, Ruan Shiyang wrote:
-> 
-> 
-> On 2020/4/28 下午2:43, Dave Chinner wrote:
-> > On Tue, Apr 28, 2020 at 06:09:47AM +0000, Ruan, Shiyang wrote:
-> > > 
-> > > 在 2020/4/27 20:28:36, "Matthew Wilcox" <willy@infradead.org> 写道:
-> > > 
-> > > > On Mon, Apr 27, 2020 at 04:47:42PM +0800, Shiyang Ruan wrote:
-> > > > >   This patchset is a try to resolve the shared 'page cache' problem for
-> > > > >   fsdax.
-> > > > > 
-> > > > >   In order to track multiple mappings and indexes on one page, I
-> > > > >   introduced a dax-rmap rb-tree to manage the relationship.  A dax entry
-> > > > >   will be associated more than once if is shared.  At the second time we
-> > > > >   associate this entry, we create this rb-tree and store its root in
-> > > > >   page->private(not used in fsdax).  Insert (->mapping, ->index) when
-> > > > >   dax_associate_entry() and delete it when dax_disassociate_entry().
-> > > > 
-> > > > Do we really want to track all of this on a per-page basis?  I would
-> > > > have thought a per-extent basis was more useful.  Essentially, create
-> > > > a new address_space for each shared extent.  Per page just seems like
-> > > > a huge overhead.
-> > > > 
-> > > Per-extent tracking is a nice idea for me.  I haven't thought of it
-> > > yet...
-> > > 
-> > > But the extent info is maintained by filesystem.  I think we need a way
-> > > to obtain this info from FS when associating a page.  May be a bit
-> > > complicated.  Let me think about it...
-> > 
-> > That's why I want the -user of this association- to do a filesystem
-> > callout instead of keeping it's own naive tracking infrastructure.
-> > The filesystem can do an efficient, on-demand reverse mapping lookup
-> > from it's own extent tracking infrastructure, and there's zero
-> > runtime overhead when there are no errors present.
-> 
-> Hi Dave,
-> 
-> I ran into some difficulties when trying to implement the per-extent rmap
-> tracking.  So, I re-read your comments and found that I was misunderstanding
-> what you described here.
-> 
-> I think what you mean is: we don't need the in-memory dax-rmap tracking now.
-> Just ask the FS for the owner's information that associate with one page
-> when memory-failure.  So, the per-page (even per-extent) dax-rmap is
-> needless in this case.  Is this right?
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-Right.  XFS already has its own rmap tree.
+> On 04/06/20 16:31, Vitaly Kuznetsov wrote:
+>> Syzbot reports the following issue:
+>> 
+>> WARNING: CPU: 0 PID: 6819 at arch/x86/kvm/x86.c:618 kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
+>> ...
+>> Call Trace:
+>> ...
+>> RIP: 0010:kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
+>> ...
+>>  nested_vmx_get_vmptr+0x1f9/0x2a0 arch/x86/kvm/vmx/nested.c:4638
+>>  handle_vmon arch/x86/kvm/vmx/nested.c:4767 [inline]
+>>  handle_vmon+0x168/0x3a0 arch/x86/kvm/vmx/nested.c:4728
+>>  vmx_handle_exit+0x29c/0x1260 arch/x86/kvm/vmx/vmx.c:6067
+>> 
+>> 'exception' we're trying to inject with kvm_inject_emulated_page_fault() comes from
+>>   nested_vmx_get_vmptr()
+>>    kvm_read_guest_virt()
+>>      kvm_read_guest_virt_helper()
+>>        vcpu->arch.walk_mmu->gva_to_gpa()
+>> 
+>> but it is only set when GVA to GPA conversion fails. In case it doesn't but
+>> we still fail kvm_vcpu_read_guest_page(), X86EMUL_IO_NEEDED is returned and
+>> nested_vmx_get_vmptr() calls kvm_inject_emulated_page_fault() with zeroed
+>> 'exception'. This happen when e.g. VMXON/VMPTRLD/VMCLEAR argument is MMIO.
+>> 
+>> KVM could've handled the request correctly by going to userspace and
+>> performing I/O but there doesn't seem to be a good need for such requests
+>> in the first place. Sane guests should not call VMXON/VMPTRLD/VMCLEAR with
+>> anything but normal memory. Just inject #GP to find insane ones.
+>> 
+>> Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  arch/x86/kvm/vmx/nested.c | 19 +++++++++++++++++--
+>>  1 file changed, 17 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>> index 9c74a732b08d..05d57c3cb1ce 100644
+>> --- a/arch/x86/kvm/vmx/nested.c
+>> +++ b/arch/x86/kvm/vmx/nested.c
+>> @@ -4628,14 +4628,29 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+>>  {
+>>  	gva_t gva;
+>>  	struct x86_exception e;
+>> +	int r;
+>>  
+>>  	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
+>>  				vmcs_read32(VMX_INSTRUCTION_INFO), false,
+>>  				sizeof(*vmpointer), &gva))
+>>  		return 1;
+>>  
+>> -	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
+>> -		kvm_inject_emulated_page_fault(vcpu, &e);
+>> +	r = kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
+>> +	if (r != X86EMUL_CONTINUE) {
+>> +		if (r == X86EMUL_PROPAGATE_FAULT) {
+>> +			kvm_inject_emulated_page_fault(vcpu, &e);
+>> +		} else {
+>> +			/*
+>> +			 * X86EMUL_IO_NEEDED is returned when kvm_vcpu_read_guest_page()
+>> +			 * fails to read guest's memory (e.g. when 'gva' points to MMIO
+>> +			 * space). While KVM could've handled the request correctly by
+>> +			 * exiting to userspace and performing I/O, there doesn't seem
+>> +			 * to be a real use-case behind such requests, just inject #GP
+>> +			 * for now.
+>> +			 */
+>> +			kvm_inject_gp(vcpu, 0);
+>> +		}
+>> +
+>>  		return 1;
+>>  	}
+>>  
+>> 
+>
+> Hi Vitaly,
+>
+> looks good but we need to do the same in handle_vmread, handle_vmwrite,
+> handle_invept and handle_invvpid.  Which probably means adding something
+> like nested_inject_emulation_fault to commonize the inner "if".
+>
 
-> Based on this, we only need to store the extent information of a fsdax page
-> in its ->mapping (by searching from FS).  Then obtain the owners of this
-> page (also by searching from FS) when memory-failure or other rmap case
-> occurs.
+Oh true, I've only looked at nested_vmx_get_vmptr() users to fix the
+immediate issue. Will do v2.
 
-I don't even think you need that much.  All you need is the "physical"
-offset of that page within the pmem device (e.g. 'this is the 307th 4k
-page == offset 1257472 since the start of /dev/pmem0') and xfs can look
-up the owner of that range of physical storage and deal with it as
-needed.
+-- 
+Vitaly
 
-> So, a fsdax page is no longer associated with a specific file, but with a
-> FS(or the pmem device).  I think it's easier to understand and implement.
-
-Yes.  I also suspect this will be necessary to support reflink...
-
---D
-
-> 
-> --
-> Thanks,
-> Ruan Shiyang.
-> > 
-> > At the moment, this "dax association" is used to "report" a storage
-> > media error directly to userspace. I say "report" because what it
-> > does is kill userspace processes dead. The storage media error
-> > actually needs to be reported to the owner of the storage media,
-> > which in the case of FS-DAX is the filesytem.
-> > 
-> > That way the filesystem can then look up all the owners of that bad
-> > media range (i.e. the filesystem block it corresponds to) and take
-> > appropriate action. e.g.
-> > 
-> > - if it falls in filesytem metadata, shutdown the filesystem
-> > - if it falls in user data, call the "kill userspace dead" routines
-> >    for each mapping/index tuple the filesystem finds for the given
-> >    LBA address that the media error occurred.
-> > 
-> > Right now if the media error is in filesystem metadata, the
-> > filesystem isn't even told about it. The filesystem can't even shut
-> > down - the error is just dropped on the floor and it won't be until
-> > the filesystem next tries to reference that metadata that we notice
-> > there is an issue.
-> > 
-> > Cheers,
-> > 
-> > Dave.
-> > 
-> 
-> 
