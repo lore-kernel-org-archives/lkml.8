@@ -2,156 +2,85 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4867C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651D8206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:41:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ls8yGKOx"
+	by mail.kernel.org (Postfix) with ESMTP id 9B0B4206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 06:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgFDGlr (ORCPT
+        id S1727061AbgFDGlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 02:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgFDGlr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 02:41:47 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C97C05BD1E;
-        Wed,  3 Jun 2020 23:41:47 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ga6so729188pjb.1;
-        Wed, 03 Jun 2020 23:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XfO8TQWsKbgmttZdJsjsbuG8/l2FKfNiqjpmWnGFt2Y=;
-        b=ls8yGKOxOkkDTayRMXM+oAYVPWdSU+KsHEMMWQG7GchBHiYWmwOShVp55XnM/huqpx
-         YIsXxFj5wxi5PMQuTQd90JSBUsb8uHo6PTpSP3UVxm1tib6nHCbcZmgz107ryl9f9noy
-         8T1MDdcqS0IKWe+ZFKqQ99GdVxr2u/L874472ams2Y4LnQXud4x4ifDxHZ/lCWkaNKL8
-         GWvH1/fyUJxAtaeKVLpAm5lBSoremXuatNTEer1xX6Xd2yzlVIHaEYLJ95oCk/FqZp8x
-         C1914CD+qMmUaX1Yq3Nzx7/+2AOEuqRyFV6iw8T84BH0zG8wirCgNrfC37o/3uKHFVZ2
-         U7Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XfO8TQWsKbgmttZdJsjsbuG8/l2FKfNiqjpmWnGFt2Y=;
-        b=hErNa7az4MV2C7JMLj/9P2+6hsLPRVhwVytvRNM1Hgsm1jJUjwsLsDTtKVqV+H65Ce
-         13Wm+MX28onyYxB/LVnIz+/u+G/e3n4hzmuOHlOY2l4dgKFbiRPlDErgC6Ck0HfHXfWV
-         SB4pYJdgvUefIcq6ZOzG/qzA7vSJc1m6eqnyYC+duow/WCG9XdzLpdYYmSnk+LvLcKXd
-         d0K+MhXpu+Ih2cMh59HBn9aThRmWYQHYK1b7191vUOydoiO6BG2HXUhV8z+ARBJ9q1VD
-         LGCRKyMiiwfscsigVIuJ69j7ynNA9I1tHSVTWZTplHWeiaMnahZO8y6nSqU94z7EW/qz
-         9srg==
-X-Gm-Message-State: AOAM531sRLvlyMaGCgYDdYNFR/ZbF0itz3XZ0n1aH/B6VK+RhblRPKjo
-        k0orPg+Wh/EEz21CD1HzcBOepopLWqRr6qCr/rwukWUBjKM=
-X-Google-Smtp-Source: ABdhPJx/7dpfk4vPbg8kFRwS1O9JuGLzOAhpwDM90TbH+B132fWjwdrXCZmiGFuthJ3QNJt40m945hGb54FhxeP+0lo=
-X-Received: by 2002:a17:90a:220f:: with SMTP id c15mr4367943pje.129.1591252906576;
- Wed, 03 Jun 2020 23:41:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200603215314.GA916134@rikard> <20200603220226.916269-1-rikard.falkeborn@gmail.com>
-In-Reply-To: <20200603220226.916269-1-rikard.falkeborn@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 4 Jun 2020 09:41:29 +0300
-Message-ID: <CAHp75VcNVOF6jHZ7gtpqskg9rDgwt3MmtGZJJOXE-GwvXRPOhw@mail.gmail.com>
-Subject: Re: [PATCH] linux/bits.h: fix unsigned less than zero warnings
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, emil.l.velikov@gmail.com,
-        Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
+        Thu, 4 Jun 2020 02:41:53 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:45168 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbgFDGlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 02:41:52 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 89DE520533;
+        Thu,  4 Jun 2020 08:41:50 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3abts2OExfgK; Thu,  4 Jun 2020 08:41:50 +0200 (CEST)
+Received: from cas-essen-01.secunet.de (201.40.53.10.in-addr.arpa [10.53.40.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 2744E200AC;
+        Thu,  4 Jun 2020 08:41:50 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 4 Jun 2020 08:41:50 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Thu, 4 Jun 2020
+ 08:41:49 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+        id 8596231801D7; Thu,  4 Jun 2020 08:41:49 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 08:41:49 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     David Ahern <dsahern@gmail.com>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Florian Westphal <fw@strlen.de>
+Subject: Re: linux-next: manual merge of the ipsec-next tree with Linus' tree
+Message-ID: <20200604064149.GT19286@gauss3.secunet.de>
+References: <20200511130015.37103884@canb.auug.org.au>
+ <20200602092040.5ef52300@canb.auug.org.au>
+ <6092c5eb-6e50-97bc-90db-4f7a0ca29c6e@gmail.com>
+ <20200604112606.25ffde35@canb.auug.org.au>
+ <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <8d943a28-2e9f-9c61-9cff-899e907d6b86@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 1:03 AM Rikard Falkeborn
-<rikard.falkeborn@gmail.com> wrote:
->
-> When calling the GENMASK and GENMASK_ULL macros with zero lower bit and
-> an unsigned unknown high bit, some gcc versions warn due to the
-> comparisons of the high and low bit in GENMASK_INPUT_CHECK.
->
-> To silence the warnings, cast the inputs to int before doing the
-> comparisons. The only valid inputs to GENMASK() and GENMASK_ULL() are
-> are 0 to 31 or 63. Anything outside this is undefined due to the shifts
-> in GENMASK()/GENMASK_ULL(). Therefore, casting the inputs to int do not
-> change the values for valid known inputs. For unknown values, the check
-> does not change anything since it's a compile-time check only.
->
-> As an example of the warning, kindly reported by the kbuild test robot:
->
-> from drivers/mfd/atmel-smc.c:11:
-> drivers/mfd/atmel-smc.c: In function 'atmel_smc_cs_encode_ncycles':
-> include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
-> 26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> |                            ^
-> include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
-> 16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-> |                                                              ^
-> include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
-> 39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-> |   ^~~~~~~~~~~~~~~~~~~
-> >> drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro 'GENMASK'
-> 49 |  unsigned int lsbmask = GENMASK(msbpos - 1, 0);
-> |                         ^~~~~~~
->
+On Wed, Jun 03, 2020 at 08:55:01PM -0600, David Ahern wrote:
+> On 6/3/20 7:26 PM, Stephen Rothwell wrote:
+> > 
+> > And now the net-next tree has been merged into Linus' tree without this fix :-(
+> > 
+> 
+> I took a look earlier and I think it is fine. Some code was moved around
+> in ipsec-next and I think the merge is good. I'll run the test cases
+> later this week and double check. Thanks for the reminder
 
-Thank you for the patch!
-
-I think there is still a possibility to improve (as I mentioned there
-are test cases that are absent right now).
-What if we will have unsigned long value 0x100000001? Would it be 1
-after casting?
-
-Maybe cast to (long) or (long long) more appropriate?
-
-Please, add test cases.
-
-> Fixes: 295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Emil Velikov <emil.l.velikov@gmail.com>
-> Reported-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> ---
->  include/linux/bits.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/bits.h b/include/linux/bits.h
-> index 4671fbf28842..293d1ee71a48 100644
-> --- a/include/linux/bits.h
-> +++ b/include/linux/bits.h
-> @@ -21,9 +21,10 @@
->  #if !defined(__ASSEMBLY__) && \
->         (!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
->  #include <linux/build_bug.h>
-> +/* Avoid Wtype-limits warnings by casting the inputs to int */
->  #define GENMASK_INPUT_CHECK(h, l) \
->         (BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> -               __builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> +               __builtin_constant_p((int)(l) > (int)(h)), (int)(l) > (int)(h), 0)))
->  #else
->  /*
->   * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-> --
-> 2.27.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+The setting of XFRM_TRANSFORMED moved to xfrm_output() and depends
+on CONFIG_NETFILTER. So I think the fix is needed. After the merge
+of the net tree today, I have both conflicting patches patches in
+the ipsec tree. I'd apply the fix from Stephen unless you say
+it is not needed.
