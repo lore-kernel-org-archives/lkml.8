@@ -2,132 +2,92 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB366C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF6F207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B11206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RfoMZQjO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJkFARNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgFDOYK (ORCPT
+        id S1729014AbgFDOYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:24:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1655 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728881AbgFDOYJ (ORCPT
+        Thu, 4 Jun 2020 10:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728663AbgFDOYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:24:09 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054EMikq009578;
-        Thu, 4 Jun 2020 16:24:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=UkmPnCEcRQC0JdajD5qa7MyPL9pxMsvhxlH+GUvo0sI=;
- b=RfoMZQjO+7nbuCmeQSa9AcEnmj0FlV23lpGsOqXivY/l3qr7tkbSTK12JEbhxvlLooou
- XqjfFXRzdSwxcjS9rIlqiN7D/WYTa6UtjTVez6YpOZxoYit9jqz620rEw2+i3HeN+H7H
- 9PbbEnvtZ8j6EKZ8ch/zPh1nNCEERepsLaO36iNMnIbnvLlLdtMrPtFwfbEJcRY5D/IE
- Ist1jftqdzJnHy/ULC+8CyDxCd27iWRq8i097ywDIVjQiSdeLHiCO0WqLj/CnFXalRwN
- NY9YPxEqrIypwqDPjkTDbL+yoOJMydLPyZ4YG59Nqp03FiSIiUWnU2acoMvTqH745f4m nQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31ejxavamu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 16:24:04 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0C9F6100038;
-        Thu,  4 Jun 2020 16:24:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F051B2C50C8;
-        Thu,  4 Jun 2020 16:24:03 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.51) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Jun
- 2020 16:24:03 +0200
-Subject: Re: [PATCH v4 0/9] remoteproc: Add support for attaching with rproc
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "ohad@wizery.com" <ohad@wizery.com>
-CC:     "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        "s-anna@ti.com" <s-anna@ti.com>
-References: <20200601175139.22097-1-mathieu.poirier@linaro.org>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <0780724c-4fc0-9f98-023e-aa1245b01888@st.com>
-Date:   Thu, 4 Jun 2020 16:24:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 4 Jun 2020 10:24:43 -0400
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B754C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:24:43 -0700 (PDT)
+Received: by mail-il1-x131.google.com with SMTP id t8so6224892ilm.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=JS6HyeVvkiCeDemuhmHzEunRqmqArfkWc2lfz975jaM=;
+        b=GJkFARNUDltUhSI4g77UUJqkqXhQ4Sljzq2oabPOKKvdlLn4cSjYcrMZuZKO3+v7zE
+         WTcbBBgnGlQZM2ulOQ3wCDrzSBbmw3LJHI8H0Z1YRdz+NuVAmV44585FkTS09ufVMBY1
+         d7mSwWz5dgftw+kaQ8nMYAzNCFkWDrxuyh8vVYWBHB8XOOzyiY4vJe7RyHNYjSI2l59Q
+         Kn/PWbO2lW69j0Z5xlAuyNtERmkI1p7YEzbSJRYoDFGmjvSTMQwPFfLvuRpd4z8DeFUX
+         xfavYTMO9JGZTGIIotzJN1ZDGGWObzYhzudTQryVJSt2Bkf8PFoEoMX8icC1siFGWkFw
+         MG7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=JS6HyeVvkiCeDemuhmHzEunRqmqArfkWc2lfz975jaM=;
+        b=bi6WLTjzDxm6EB0aSk9JwL7TaLJqLLbATEMAEUK+3xLWdB3NrkCr/1FJlO1UinAgyN
+         xPyGDXgrCo0fpCozhc2Owq2jllAJl3+I0t/dPUPUeq/lemx8dRd7ymFeit+qwt+mOcfr
+         hWe0NNsDyr7UejfbEVusxoq2RP2H2IjN1OtNk1P+mr38AwLsI2zY+RChy2MaNaNQdY96
+         25niwoKzIt9yjcRhOC4eTtAcJd3C9XC5DdjJaFzmISEhXGtf/CfDlUVueomXVgNo0mQf
+         UTiM8gbKUzNENfGMT+GUGbItzHKFWbFtJeT43dhDd1V6mLMbE4M8m3P14mKpkSwocziq
+         XoRQ==
+X-Gm-Message-State: AOAM533jNkqL7osP8OB229cVXy4duZaf1ujGWFcpFyD1H8p+Pxb+cNpv
+        K9kfN0mccnda90AXSM37FhBDph5TFvdsG8RLu6gAnfSrCI0=
+X-Google-Smtp-Source: ABdhPJy2fM6Chl0A3+CRZB14CZUFCbwsNW4wh+kid99szc1vK1MLRFrJmJpID9X9N+BTR0IjCtDl1Xzila4UI6GHaOs=
+X-Received: by 2002:a92:af44:: with SMTP id n65mr3944790ili.61.1591280682508;
+ Thu, 04 Jun 2020 07:24:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200601175139.22097-1-mathieu.poirier@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-04_10:2020-06-02,2020-06-04 signatures=0
+From:   Zeno Davatz <zdavatz@gmail.com>
+Date:   Thu, 4 Jun 2020 16:24:31 +0200
+Message-ID: <CAOkhzLUrNYk6JKTbTQuFkfuGKxGvW9XVq6+p9igsBgX1-e9Cxg@mail.gmail.com>
+Subject: NVIDIA GP107 (137000a1) - acr: failed to load firmware
+To:     nouveau <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+Hi
 
-On 6/1/20 7:51 PM, Mathieu Poirier wrote:
-> This fourth iteration implements a solution that is fairly different from
-> what was proposed in V3 and earlier versions.  Three aspects have been 
-> revisited:
-> 
-> 1) Only the scenario where the remoteproc core is attaching to the remote
->    processor is implemented.  Other scenarios where actions need to be 
->    taken when the remote processor is stopped or crashes will be
->    considered in subsequent versions.
-> 
-> 2) The introduction of a new RPROC_DETACHED state to be set by platform
->    drivers when needing to attach to an already running remote processor.
-> 
-> 3) New functions are introduced to replicate the functionality provided by
->    rproc_fw_boot() and rproc_start(), minus operations related to firmware
->    management. 
-> 
-> Enhancement to the documentation has been left out intentionally until it
-> is agreed to move forward with this implementation.
+With Kernel 5.7 I am still getting this, while booting:
 
-Look good to me, i have only a minor concerns about the code duplication
-introduced by the point 3)
+~> uname -a
+Linux zenogentoo 5.7.0 #80 SMP Thu Jun 4 16:10:03 CEST 2020 x86_64
+Intel(R) Core(TM) i7 CPU 960 @ 3.20GHz GenuineIntel GNU/Linux
+~> dmesg |grep nouveau
+[    0.762872] nouveau 0000:05:00.0: NVIDIA GP107 (137000a1)
+[    0.875311] nouveau 0000:05:00.0: bios: version 86.07.42.00.4a
+[    0.875681] nouveau 0000:05:00.0: acr: failed to load firmware
+[    0.875780] nouveau 0000:05:00.0: acr: failed to load firmware
+[    0.875881] nouveau 0000:05:00.0: acr ctor failed, -2
+[    0.875980] nouveau: probe of 0000:05:00.0 failed with error -2
 
-If you are agree with that, I plan to do a new review on the stm32 series
-when you will start the documentation :-)
+Old thread is here: https://lkml.org/lkml/2020/4/3/775
 
-Regards,
-Arnaud
+My Linxu-Firmware is: linux-firmware-20200421
 
-> 
-> Applies cleanly on rproc-next(7dcef3988eed) and will be rebased on v5.8-rc1
-> when it comes out in two weeks.
-> 
-> Thanks,
-> Mathieu
-> 
-> Mathieu Poirier (9):
->   remoteproc: Add new RPROC_DETACHED state
->   remoteproc: Add new attach() remoteproc operation
->   remoteproc: Introducing function rproc_attach()
->   remoteproc: Introducing function rproc_actuate()
->   remoteproc: Introducing function rproc_validate()
->   remoteproc: Refactor function rproc_boot()
->   remoteproc: Refactor function rproc_trigger_auto_boot()
->   remoteproc: Refactor function rproc_free_vring()
->   remoteproc: Properly handle firmware name when attaching
-> 
->  drivers/remoteproc/remoteproc_core.c     | 226 +++++++++++++++++++++--
->  drivers/remoteproc/remoteproc_internal.h |   8 +
->  drivers/remoteproc/remoteproc_sysfs.c    |  17 +-
->  include/linux/remoteproc.h               |   9 +-
->  4 files changed, 243 insertions(+), 17 deletions(-)
-> 
+This used to work fine with Kernel 5.5.
+
+Please CC me for replies.
+
+best
+Zeno
