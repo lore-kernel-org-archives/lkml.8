@@ -2,116 +2,86 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E786C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9E3207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17ED7207D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591279516;
-	bh=Epk5WMtzALPNz+dltu72WrLGhF9VGMjphVrnc6COsEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pVya/KYCzF/AJp7t331QXyrN3LIW7as8rYbWgpPGzNcBo382NAm8sJiyyd0JeBAxU
-	 0vVyvoUU8EcB6z8I9OwbgG7eUeNB4uBiJl5vZehO39fIc37jzDMZoJ/bC/Znvqlpv3
-	 k7m+ZrhCDcPwzCxOldoqhPhKM53na6kuR5VJsyWU=
+	s=default; t=1591279520;
+	bh=yoZ+4NGxMSMul3HfyneR0IDhwul9qnZTStsDEn2Zgu4=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=kC0+uiL2YSc7z1v4AOzsCq1F370bh8lB7qeL6kEvZrQvA5gYTuwDFl+zLU7B8h+yo
+	 nCoMP2KbKr7VKeswghUbCScw56/sj+qcURcX7fOOXK8hxDwZSpDz27Xfi8iSipIQhd
+	 H8HwODuz0f4B82/waNTw/KFkDSJN0AHGBITXZHAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgFDOFP (ORCPT
+        id S1728956AbgFDOFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 10:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgFDOFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:05:14 -0400
+        id S1728496AbgFDOFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:05:16 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791F820738;
-        Thu,  4 Jun 2020 14:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2478D2063A;
+        Thu,  4 Jun 2020 14:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591279514;
-        bh=Epk5WMtzALPNz+dltu72WrLGhF9VGMjphVrnc6COsEA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sf7Hy+B1x7rYiLFDGpZcfyrckIXZn5Y1kIlUFPDPjdiiOSqQtrTMcxXb0oGyI9iLn
-         8jCUl4YlcOzZKOCauoNq2XeYV6TUrG/h8/TnYezlbVFMIHtNSI9OXb0L7C8W5p2kFL
-         tL+4fGnqSSpZVdGYrCnig3VUHI1yScvIB2HDtq+4=
-Date:   Thu, 4 Jun 2020 15:05:11 +0100
+        s=default; t=1591279516;
+        bh=yoZ+4NGxMSMul3HfyneR0IDhwul9qnZTStsDEn2Zgu4=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=oeFc3hPLn/eJQ8jT52aunzJxLu4etI3QaAS0voXxIyWb+xCQUXFs6CYPnG7kZSz4Z
+         W02MtBf5aUl1PlWgDlyRlA8VcIuklXBwBcu1xxB/A88NyMLvcvI+DXZTmdPNF/jxy6
+         d/80c9Z2fGRqsih7m2/4sskqDpGkrXcAosf72Ip4=
+Date:   Thu, 04 Jun 2020 15:05:14 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 2/3] ARM: dts: bcm2711: Update SPI nodes compatible
- strings
-Message-ID: <20200604140511.GF6644@sirena.org.uk>
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
- <20200604034655.15930-3-f.fainelli@gmail.com>
- <20200604042038.jzolu6k7q3d6bsvq@wunner.de>
- <20200604111325.GC6644@sirena.org.uk>
- <20200604112112.b3k4wrftckndscu6@wunner.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
-Content-Disposition: inline
-In-Reply-To: <20200604112112.b3k4wrftckndscu6@wunner.de>
-X-Cookie: VMS version 2.0 ==>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     lgirdwood@gmail.com, tiwai@suse.com, perex@perex.cz,
+        nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, timur@kernel.org,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, festevam@gmail.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <1591251930-4111-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1591251930-4111-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH] ASoC: fsl-asoc-card: Defer probe when fail to find codec device
+Message-Id: <159127951451.54171.5112369332405594522.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 4 Jun 2020 14:25:30 +0800, Shengjiu Wang wrote:
+> Defer probe when fail to find codec device, because the codec
+> device maybe probed later than machine driver.
 
---Zi0sgQQBxRFxMTsj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to
 
-On Thu, Jun 04, 2020 at 01:21:12PM +0200, Lukas Wunner wrote:
-> On Thu, Jun 04, 2020 at 12:13:25PM +0100, Mark Brown wrote:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-> > Regardless of what's going on with the interrupts the compatible string
-> > should reflect the IP version so unless for some reason someone taped
-> > out two different versions of the IP it seems odd that the compatible
-> > strings would vary within a given SoC.
+Thanks!
 
-> Hm.  I guess it may be possible to search the DT for other devices
-> sharing the same interrupt line and thereby determine whether
-> IRQF_SHARED is necessary.  The helper to perform this search could
-> live in drivers/of/irq.c as I imagine it might be useful in general.
+[1/1] ASoC: fsl-asoc-card: Defer probe when fail to find codec device
+      commit: e396dec46c5600d426b2ca8a01a877928b50d1d9
 
-That's another option, yeah - it'd be DT specific but it seems neater
-than a property and much more tractable than trying to dance around
-doing this in genirq (where we'd end up with callbacks when the second
-device registers or something else horrible).
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
---Zi0sgQQBxRFxMTsj
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Y/5YACgkQJNaLcl1U
-h9DPAwf/UjD04C156SRCI5cTBUUAOg/X61gumN+fuyVQkAPs8CeP4cmV4HjtuXG2
-9LOnl4/Bdq17EjTvWg6+HAQvBa7i0pwE8ppy8gqcGiNqq+dn5+n9ZpcLvDea0tLX
-h2jq4LUfR3X3OgnTILP69XeLpk/ePNcpFTRij3YMnGqoa8VnlXiqP45YLEgVp0LK
-RHlYDfzgBy1NxyxckRk+emfSKseAHtWQjUz4P2zvyKUXl/tqW+Lwc/fGlfE3QfFu
-Eo1q4X4V2DuX83TzbvM8VXdJ/Lu0V05gyeYoEcQU+7j8MGno+JpLRX9C2J6uXwG+
-edz4Gd9KdV/56AJOMrKWO0i8BPznbQ==
-=DHOU
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---Zi0sgQQBxRFxMTsj--
+Thanks,
+Mark
