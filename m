@@ -2,138 +2,101 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E325BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71F4206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qU5rKJo8"
+	by mail.kernel.org (Postfix) with ESMTP id A28B1206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgFDMGa (ORCPT
+        id S1728328AbgFDMHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:06:30 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49366 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbgFDMGY (ORCPT
+        Thu, 4 Jun 2020 08:07:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbgFDMHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:06:24 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054C6Kma130313;
-        Thu, 4 Jun 2020 07:06:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591272380;
-        bh=6kv4oPPzDnEU5/icPEIdws3eUefH8b8hua+2r+1UQCA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qU5rKJo8BRkYbQG5st/A7Ha2yrkAC9UFdt2oOvcz32irWjmjhpPKNis1n3XX02HQ4
-         Ug+vCpIcQBRxHIcvFNpCzNseXZul4+OWJPffxt3AhsqkRuszdkzug/u0+YM88rovGI
-         AGeNv/ZW4l55EjnM94r+UZZ/G7jmToIGrL4U0+hU=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054C6Kge036878
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Jun 2020 07:06:20 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
- 2020 07:06:20 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 4 Jun 2020 07:06:20 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C6Kj7017005;
-        Thu, 4 Jun 2020 07:06:20 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v26 09/15] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
-Date:   Thu, 4 Jun 2020 07:04:58 -0500
-Message-ID: <20200604120504.32425-10-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200604120504.32425-1-dmurphy@ti.com>
-References: <20200604120504.32425-1-dmurphy@ti.com>
+        Thu, 4 Jun 2020 08:07:52 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6806AC03E96D;
+        Thu,  4 Jun 2020 05:07:52 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id F3ED126F; Thu,  4 Jun 2020 14:07:50 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 14:07:49 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 42/75] x86/sev-es: Setup GHCB based boot #VC handler
+Message-ID: <20200604120749.GC30945@8bytes.org>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-43-joro@8bytes.org>
+ <20200520192230.GK1457@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520192230.GK1457@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accommodate the multicolor framework.  In addition to the
-accommodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
+On Wed, May 20, 2020 at 09:22:30PM +0200, Borislav Petkov wrote:
+> On Tue, Apr 28, 2020 at 05:16:52PM +0200, Joerg Roedel wrote:
+> > diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+> > index b2cbcd40b52e..e1ed963a57ec 100644
+> > --- a/arch/x86/include/asm/sev-es.h
+> > +++ b/arch/x86/include/asm/sev-es.h
+> > @@ -74,5 +74,6 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
+> >  }
+> >  
+> >  extern void vc_no_ghcb(void);
+> > +extern bool vc_boot_ghcb(struct pt_regs *regs);
+> 
+> Those function names need verbs:
+> 
+> 	handle_vc_no_ghcb
+> 	handle_vc_boot_ghcb
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+This are IDT entry points and the names above follow the convention for
+them, like e.g. 'page_fault', 'nmi' or 'general_protection'. Should I
+still add the verbs or just add a comment explaining what those symbols
+are?
 
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 33e3b0b3c53d..ff47cbf6ed3b 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -58,16 +58,21 @@ lp5521@33 {
- 				reg = <0x33>;
- 				label = "lp5521_pri";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 					linux,default-trigger = "heartbeat";
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
-@@ -77,15 +82,20 @@ lp5521@34 {
- 				reg = <0x34>;
- 				label = "lp5521_sec";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--- 
-2.26.2
+> There's already another sev_es_setup_ghcb() in compressed/. All those
+> functions with the same name are just confusion waiting to happen. Let's
+> prepend the ones in compressed/ with "early_" or so, so that their names
+> are at least different even if they're in two different files with the
+> same name.
+> 
+> This way you know at least which function is used in which boot stages.
 
+Okay, will see what can be changed. Some functions are part of the
+interface for sev-es-shared.c and need to have the same names, but
+sev_es_setup_ghcb() can be named differently.
+
+> > +static void __init vc_early_vc_forward_exception(struct es_em_ctxt *ctxt)
+> 
+> That second "vc" looks redundant.
+
+Heh, search and replace artifact :) Fixed now.
+
+
+	Joerg
