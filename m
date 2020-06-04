@@ -2,93 +2,99 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE80A206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D58520872
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgFDERJ (ORCPT
+        id S1726601AbgFDERj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:17:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:16104 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgFDERI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:17:08 -0400
-IronPort-SDR: UtNw6hvOlDZdYbt12xOlrfJfSWOBksFqXNVKHxUawtL/IyEtVn0biCoTJ0Y8i+PmWiGyteyjie
- MiQnqlMDMecg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 21:17:08 -0700
-IronPort-SDR: pT9a6wKXzrM+ieidBq3xAmrP+FCuj7BAtH3eZh6VKon148ga1t7N9JD1jIjMENjgD2ReP1SSvH
- euQ9AdxBkgNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
-   d="scan'208";a="416782285"
-Received: from lxy-dell.sh.intel.com ([10.239.159.21])
-  by orsmga004.jf.intel.com with ESMTP; 03 Jun 2020 21:17:06 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v2] KVM: x86: Assign correct value to array.maxnent
-Date:   Thu,  4 Jun 2020 12:16:36 +0800
-Message-Id: <20200604041636.1187-1-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.18.2
-Reply-To: <20200604024304.14643-1-xiaoyao.li@intel.com>
+        Thu, 4 Jun 2020 00:17:39 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:34843 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgFDERi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 00:17:38 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1A940100DA1B3;
+        Thu,  4 Jun 2020 06:17:33 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id AA79527E8AE; Thu,  4 Jun 2020 06:17:32 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 06:17:32 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200604041732.7ijkvad2yadtgjid@wunner.de>
+References: <20200604034655.15930-1-f.fainelli@gmail.com>
+ <20200604034655.15930-4-f.fainelli@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604034655.15930-4-f.fainelli@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delay the assignment of array.maxnent to use correct value for the case
-cpuid->nent > KVM_MAX_CPUID_ENTRIES.
+On Wed, Jun 03, 2020 at 08:46:55PM -0700, Florian Fainelli wrote:
+> +static const struct of_device_id bcm2835_spi_match[] = {
+> +	{ .compatible = "brcm,bcm2835-spi", .data = &bcm2835_spi_interrupt },
+> +	{ .compatible = "brcm,bcm2711-spi", .data = &bcm2835_spi_sh_interrupt },
+> +	{ .compatible = "brcm,bcm7211-spi", .data = &bcm2835_spi_sh_interrupt },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
 
-Fixes: e53c95e8d41e ("KVM: x86: Encapsulate CPUID entries and metadata in struct")
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
-v2:
-   - remove "const" of maxnent to fix build error.
----
- arch/x86/kvm/cpuid.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Maybe I'm missing something but I think you either have to reverse the
+order of the entries in this array or change patch [2/3] to drop
+"brcm,bcm2835-spi" from the compatible string:
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 253b8e875ccd..3d88ddf781d0 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -426,7 +426,7 @@ EXPORT_SYMBOL_GPL(kvm_set_cpu_caps);
- 
- struct kvm_cpuid_array {
- 	struct kvm_cpuid_entry2 *entries;
--	const int maxnent;
-+	int maxnent;
- 	int nent;
- };
- 
-@@ -870,7 +870,6 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
- 
- 	struct kvm_cpuid_array array = {
- 		.nent = 0,
--		.maxnent = cpuid->nent,
- 	};
- 	int r, i;
- 
-@@ -887,6 +886,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
- 	if (!array.entries)
- 		return -ENOMEM;
- 
-+	array.maxnent = cpuid->nent;
-+
- 	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
- 		r = get_cpuid_func(&array, funcs[i], type);
- 		if (r)
--- 
-2.18.2
+__of_match_node() iterates over the entries in the array above and
+calls __of_device_is_compatible() for each of them, which returns
+success if the entry matches any of the device's compatible string.
 
+Because "brcm,bcm2835-spi" is checked first and that string is
+present on the controllers with shared interrupt, they're all
+deemed not to use shared interrupts.
+
+If you opt so fix this by dropping "brcm,bcm2835-spi" from the
+device's compatible strings, then you have to move patch [2/3]
+behind patch [3/3].
+
+
+>  static int bcm2835_spi_probe(struct platform_device *pdev)
+>  {
+> +	irqreturn_t (*bcm2835_spi_isr_func)(int, void *);
+
+A more succinct alternative is:
+
+	irq_handler_t bcm2835_spi_isr_func;
+
+Otherwise this patch LGTM.
+
+Thanks,
+
+Lukas
