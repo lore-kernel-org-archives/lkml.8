@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72C3620772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA11E2087D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgFDBwI (ORCPT
+        id S1727977AbgFDBwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:52:08 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:35584 "EHLO inva021.nxp.com"
+        Wed, 3 Jun 2020 21:52:12 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:35608 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgFDBwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:52:01 -0400
+        id S1727113AbgFDBwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:52:02 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1C100200F09;
-        Thu,  4 Jun 2020 03:51:59 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D64420012A;
+        Thu,  4 Jun 2020 03:52:00 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 39045200130;
-        Thu,  4 Jun 2020 03:51:54 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 58A9C200EDD;
+        Thu,  4 Jun 2020 03:51:55 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id DD49D402AD;
-        Thu,  4 Jun 2020 09:51:47 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0FCDD402B0;
+        Thu,  4 Jun 2020 09:51:48 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     ulf.hansson@linaro.org, robh+dt@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -36,9 +36,9 @@ To:     ulf.hansson@linaro.org, robh+dt@kernel.org, shawnguo@kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 2/3] dt-bindings: mmc: Convert imx mmc to json-schema
-Date:   Thu,  4 Jun 2020 09:41:25 +0800
-Message-Id: <1591234886-15351-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 3/3] dt-bindings: mmc: Convert mxs mmc to json-schema
+Date:   Thu,  4 Jun 2020 09:41:26 +0800
+Message-Id: <1591234886-15351-4-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
 References: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
@@ -48,76 +48,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX MMC binding to DT schema format using json-schema
+Convert the MXS MMC binding to DT schema format using json-schema
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 Changes since V1:
 	- add "unevaluatedProperties: false".
 ---
- .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 23 ----------
- .../devicetree/bindings/mmc/fsl-imx-mmc.yaml       | 53 ++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml
+ Documentation/devicetree/bindings/mmc/mxs-mmc.txt  | 27 ----------
+ Documentation/devicetree/bindings/mmc/mxs-mmc.yaml | 58 ++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
 
-diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+diff --git a/Documentation/devicetree/bindings/mmc/mxs-mmc.txt b/Documentation/devicetree/bindings/mmc/mxs-mmc.txt
 deleted file mode 100644
-index 184ccff..0000000
---- a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+index 515addc..0000000
+--- a/Documentation/devicetree/bindings/mmc/mxs-mmc.txt
 +++ /dev/null
-@@ -1,23 +0,0 @@
--* Freescale Secure Digital Host Controller for i.MX2/3 series
+@@ -1,27 +0,0 @@
+-* Freescale MXS MMC controller
 -
--This file documents differences to the properties defined in mmc.txt.
+-The Freescale MXS Synchronous Serial Ports (SSP) can act as a MMC controller
+-to support MMC, SD, and SDIO types of memory cards.
+-
+-This file documents differences between the core properties in mmc.txt
+-and the properties used by the mxsmmc driver.
 -
 -Required properties:
--- compatible : Should be "fsl,<chip>-mmc", chip can be imx21 or imx31
+-- compatible: Should be "fsl,<chip>-mmc".  The supported chips include
+-  imx23 and imx28.
+-- interrupts: Should contain ERROR interrupt number
+-- dmas: DMA specifier, consisting of a phandle to DMA controller node
+-  and SSP DMA channel ID.
+-  Refer to dma.txt and fsl-mxs-dma.txt for details.
+-- dma-names: Must be "rx-tx".
 -
--Optional properties:
--- dmas: One DMA phandle with arguments as defined by the devicetree bindings
--	of the used DMA controller.
--- dma-names: Has to be "rx-tx".
+-Examples:
 -
--Example:
--
--sdhci1: sdhci@10014000 {
--	compatible = "fsl,imx27-mmc", "fsl,imx21-mmc";
--	reg = <0x10014000 0x1000>;
--	interrupts = <11>;
--	dmas = <&dma 7>;
+-ssp0: ssp@80010000 {
+-	compatible = "fsl,imx28-mmc";
+-	reg = <0x80010000 2000>;
+-	interrupts = <96>;
+-	dmas = <&dma_apbh 0>;
 -	dma-names = "rx-tx";
--	bus-width = <4>;
--	cd-gpios = <&gpio3 29>;
+-	bus-width = <8>;
 -};
-diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml
+diff --git a/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml b/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
 new file mode 100644
-index 0000000..ffa1627
+index 0000000..1cccc04
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml
-@@ -0,0 +1,53 @@
++++ b/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
+@@ -0,0 +1,58 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mmc/fsl-imx-mmc.yaml#
++$id: http://devicetree.org/schemas/mmc/mxs-mmc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale Secure Digital Host Controller for i.MX2/3 series
++title: Freescale MXS MMC controller
 +
 +maintainers:
-+  - Markus Pargmann <mpa@pengutronix.de>
++  - Shawn Guo <shawn.guo@linaro.org>
++
++description: |
++  The Freescale MXS Synchronous Serial Ports (SSP) can act as a MMC controller
++  to support MMC, SD, and SDIO types of memory cards.
++
++  This file documents differences between the core properties in mmc.txt
++  and the properties used by the mxsmmc driver.
 +
 +allOf:
 +  - $ref: "mmc-controller.yaml"
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - const: fsl,imx21-mmc
-+      - const: fsl,imx31-mmc
-+      - items:
-+          - const: fsl,imx27-mmc
-+          - const: fsl,imx21-mmc
++    enum:
++      - fsl,imx23-mmc
++      - fsl,imx28-mmc
 +
 +  reg:
 +    maxItems: 1
@@ -135,19 +143,20 @@ index 0000000..ffa1627
 +  - compatible
 +  - reg
 +  - interrupts
++  - dmas
++  - dma-names
 +
 +unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    mmc@10014000 {
-+        compatible = "fsl,imx27-mmc", "fsl,imx21-mmc";
-+        reg = <0x10014000 0x1000>;
-+        interrupts = <11>;
-+        dmas = <&dma 7>;
++    mmc@80010000 {
++        compatible = "fsl,imx28-mmc";
++        reg = <0x80010000 2000>;
++        interrupts = <96>;
++        dmas = <&dma_apbh 0>;
 +        dma-names = "rx-tx";
-+        bus-width = <4>;
-+        cd-gpios = <&gpio3 29>;
++        bus-width = <8>;
 +    };
 -- 
 2.7.4
