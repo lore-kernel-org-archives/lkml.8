@@ -2,97 +2,190 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D57C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB8A206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:21:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NNO9WfoC"
+	by mail.kernel.org (Postfix) with ESMTP id 1759A206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgFDKVe (ORCPT
+        id S1728198AbgFDKV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:21:34 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26541 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726236AbgFDKVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:21:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591266080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gSUt/M2frPtSsqZnHp0XYXCk18yFWUkSIdMBdFgZ1wg=;
-        b=NNO9WfoCFvLPZfQd46Q+iR0TpeJvuTQaARghA0NNondMMSvOPZHd+H2TkibrRu1lOyWC5T
-        LXScGpVmgqVKM7VMp1hZMt18Ys4Wpew7w0+dxyzht83phyN4o/MIl6ZGvER1HHFDEd/jec
-        OnVOPWB4v0oVqvEB/uyoZbZEQirEQqs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-YLGD09sgMU-beIe59zbfHg-1; Thu, 04 Jun 2020 06:21:16 -0400
-X-MC-Unique: YLGD09sgMU-beIe59zbfHg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07FAF800C78;
-        Thu,  4 Jun 2020 10:21:15 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.194.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 075E02DE71;
-        Thu,  4 Jun 2020 10:21:13 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 12:21:11 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     util-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH util-linux] dmesg: adjust timestamps according to
- suspended time
-Message-ID: <20200604102111.vst3goseqfxz5fa4@ws.net.home>
-References: <159103929487.199093.15757669576783156290.stgit@buzz>
- <20200604093043.55a4zzo2hewhcwru@ws.net.home>
- <c1ec31ea-494b-5d3e-3c0c-c3d8bb1a6c9c@yandex-team.ru>
+        Thu, 4 Jun 2020 06:21:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59650 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbgFDKVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 06:21:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 981CAB178;
+        Thu,  4 Jun 2020 10:21:56 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 12:21:52 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzkaller <syzkaller@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: twist: allow disabling reboot request
+Message-ID: <20200604102152.GE22497@linux-b0ei>
+References: <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
+ <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
+ <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
+ <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
+ <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
+ <19d377d3-8037-8090-0f99-447f72cc1d8c@i-love.sakura.ne.jp>
+ <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
+ <51eaa6cd-33ce-f9d8-942c-c797c0ec6733@i-love.sakura.ne.jp>
+ <20200603124405.GA22497@linux-b0ei>
+ <9203e56c-1d84-bfce-b2d8-b2395ef0168a@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c1ec31ea-494b-5d3e-3c0c-c3d8bb1a6c9c@yandex-team.ru>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <9203e56c-1d84-bfce-b2d8-b2395ef0168a@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:43:52PM +0300, Konstantin Khlebnikov wrote:
-> On 04/06/2020 12.30, Karel Zak wrote:
-> > On Mon, Jun 01, 2020 at 10:21:34PM +0300, Konstantin Khlebnikov wrote:
-> > > Timestamps in kernel log comes from monotonic clocksource which does not
-> > > tick when system suspended. Suspended time easily sums into hours and days
-> > > rendering human readable timestamps in dmesg useless.
-> > > 
-> > > Adjusting timestamps accouring to current delta between boottime and
-> > > monotonic clocksources produces accurate timestamps for messages printed
-> > > since last resume. Which are supposed to be most interesting.
+On Wed 2020-06-03 22:35:02, Tetsuo Handa wrote:
+> On 2020/06/03 21:44, Petr Mladek wrote:
+> > On Wed 2020-06-03 20:03:28, Tetsuo Handa wrote:
+> >> On 2020/05/29 22:26, Tetsuo Handa wrote:
+> >>>     By the way, I do worry that people forget to perform these steps when they do
+> >>>     their tests without asking syzbot...
+> >>
+> >> Here is a draft of boot-time switching. Since kconfig can handle string variable up to
+> >> 2048 characters, we could hold the content of the "your-config" file inside .config file
+> >> in order to avoid relying on external file in "syzkaller tree". But since only one kconfig
+> >> option is used, basically the way to temporarily include/exclude specific options (under
+> >> automated testing by syzbot) seems to remain directly patching apply_twist_flags(), for
+> >> https://github.com/google/syzkaller/blob/master/dashboard/config/util.sh will automatically
+> >> overwrite CONFIG_DEFAULT_TWIST_FLAGS settings. If each twist flag were using independent
+> >> kconfig option, the way to temporarily include/exclude specific options will become directly
+> >> patching Kconfig file.
+> >>
+> >> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> >> index 82d91547d122..78fdbb4f17b1 100644
+> >> --- a/include/linux/kernel.h
+> >> +++ b/include/linux/kernel.h
+> >> @@ -1038,4 +1038,12 @@ static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
+> >>  	 /* OTHER_WRITABLE?  Generally considered a bad idea. */		\
+> >>  	 BUILD_BUG_ON_ZERO((perms) & 2) +					\
+> >>  	 (perms))
+> >> +
+> >> +/* Flags for twisting kernel behavior. */
+> >> +struct twist_flags {
+> >> +	bool disable_kbd_k_spec_handler;
+> >> +	bool disable_reboot_request;
+> >> +};
+> >> +extern struct twist_flags twist_flags;
 > > 
-> > It's definitely better than the current broken timestamps, but the real
-> > and final solution is to have exact information about system suspends.
 > > 
-> > It would be enough to maintain in kernel memory a simple log with
-> >     <bootime> <monotonic> <state_change>
-> > and export this info by /proc/suspendlog, after that we can all
-> > re-count /dev/kmsg timestamps to something useful.
+> > Why all these options have to be in a single structure?
 > 
-> Boottime or real time could be simply printed into kernel log at
-> suspend and resume. So demsg could detect current offset while reading.
+> There will be many options (maybe some dozens).
+> Do we really want to expose so many options individually?
+> 
+> (If these options were build-time configuration, we won't need
+> this structure at all.)
+> 
+> > 
+> > 
+> >> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> >> index 498d344ea53a..41cfabc74ad7 100644
+> >> --- a/lib/Kconfig.debug
+> >> +++ b/lib/Kconfig.debug
+> >> @@ -2338,4 +2338,9 @@ config HYPERV_TESTING
+> >>  
+> >>  endmenu # "Kernel Testing and Coverage"
+> >>  
+> >> +menuconfig DEFAULT_TWIST_FLAGS
+> >> +	string "Default twist options (DANGEROUS)"
+> >> +	help
+> >> +	  Don't specify anything unless you know what you are doing.
+> >> +
+> >>  endmenu # Kernel hacking
+> > 
+> > Why such a crazy build configure option?
+> > 
+> > I think that the only way to get this upstream is to:
+> > 
+> >    + Add separate boot options that might theoretically be used also
+> >      by other people.
+> 
+> Like you said
+> 
+>   I am afraid that many of them could not be normal options. They change or
+>   break some behavior that is necessary by seriously used system.
+> 
+> these options are meant for helping fuzzers to find bugs while protecting
+> the kernel from legitimate-but-stupid requests from fuzzers. Other people
+> can include projects other than syzbot, but basically only useful for
+> debugging projects. (And making these options boot-time configuration
+> increases garbage/overhead for non-debugging usage.)
 
- Yes, but not sure if this is the most robust way (dmesg --clear will
- remove this info) and I guess the suspendlog can be useful
- independently on kmsg.
+There were suggestions that some switches might be useful in general.
+You should start with them.
 
-    Karel
+Anyway, it still sounds to me like another lockdown mode. I think that
+the relation with lockdown has already been discussed. But I do not
+remember if it was refused.
 
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
 
+> >    + Use boot parameters and not build configuration.
+> 
+> That sounds like a very tight restriction for syzbot. Relying on external
+> files breaks reproducibility; people can fail to specify intended options.
+> Saving intended options into the .config file is the most robust/reliable
+> approach.
+
+IMHO, it is not strict restriction. The motivation behind the boot
+ options is:
+
+   + Create widely useful behavior switches when possible instead of
+     crazy hacks all over the kernel code.
+
+   + The changes will modify the existing behavior. Build
+     configuration works only when the kernel will be used
+     for well defined purpose.
+
+     Boot option is better for (distribution) kernels that are used by
+     many different users. The person that builds the kernel does not
+     know what behavior would different users prefer.
+
+
+You might argue that syzbot is a well defined user. But this goes
+back to the first motivation to created general purpose options
+when possible.
+
+> >    + Avoid the meaningless word "twist" !!!
+> 
+> Then, what do you suggest? I think that we need some keyword for grouping.
+> https://lkml.kernel.org/r/41a49d42-7119-62b9-085b-aa99cadc4dd1@i-love.sakura.ne.jp
+
+Please, start will single option and you will see how they are
+acceptable for the affected subsystem. You could always group them
+later.
+
+Anyway, the word "twist" is meaning less. It inspires people to create
+hacks that have undefined effects.
+
+IMHO, lockdown would be better but it is already used. Anyway, I
+suggest start with independent options for the begining.
+
+Best Regards,
+Petr
+
+PS: This is most likely my last reply in this thread. I feel that I am
+just repeating all the already mentioned ideas just by other words.
