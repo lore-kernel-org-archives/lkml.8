@@ -2,212 +2,121 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12787C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D0C207D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20262063A
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:25:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WWJ64XPs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eJ3nrJSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgFDPYn (ORCPT
+        id S1729534AbgFDPZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:24:43 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:11303 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729389AbgFDPYn (ORCPT
+        Thu, 4 Jun 2020 11:25:31 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29454 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729359AbgFDPZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:24:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591284282; x=1622820282;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=85ZI8AvQy4iaEYwlmUIBJHVkn6uRn1cMnoNcm2qnEJs=;
-  b=WWJ64XPsP8oOTVB/csL7d65S3iub5Ko1sFL8RiLsYsWllbNJNjSg9ubv
-   VDCs2/8vMGu31z8DN/eaYKLBoLx5w+5cNIsZ7UWjbQzMevlVNmIWzWJB8
-   D4QaY70YiHAjYfbdJStHmJ/f3rp2Cm//y6sfh7x6TVwZ21JyamAGHlugA
-   8=;
-IronPort-SDR: +qPmIamr4P3EzJWJc5geCeaqAOpGROdK3K6WRwkx/VvmToKzVx8Y5/WKNsLj3Ap74wjy36mDCM
- Hz0rXPTCbgcQ==
-X-IronPort-AV: E=Sophos;i="5.73,472,1583193600"; 
-   d="scan'208";a="35810828"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 04 Jun 2020 15:24:20 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id A4A19241C4A;
-        Thu,  4 Jun 2020 15:24:08 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 4 Jun 2020 15:24:08 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.140) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 4 Jun 2020 15:23:51 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <foersleo@amazon.de>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
-        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
-        <ying.huang@intel.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [RFC v2 7/9] mm/damon: Implement callbacks for physical memory monitoring
-Date:   Thu, 4 Jun 2020 17:23:36 +0200
-Message-ID: <20200604152336.4826-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <4b5814d8-9626-e71c-9e5d-a4a61fcd12e8@redhat.com> (raw)
+        Thu, 4 Jun 2020 11:25:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591284330;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+QNtRZdQksHtLTAxFoyE3GgtLlyfez9R35g/z9pvVhk=;
+        b=eJ3nrJSxcZk3l0F4A/tQie7FfUQ+DPBoOj/tFpN3hMgZID26DoxYdu6JuGTybs5upM9oMS
+        39AbM8VmSP1HfZda5wR8dO8mHQxrZ+0+6I6NDPRaqi8BUOQp7O1lfCF7ndKl2BPsZr66F3
+        cGdsvFKv39D1NGp1pHFx7pSjISBF+Dk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-88-H6Yl6rxpPS2aoSTqNcEvog-1; Thu, 04 Jun 2020 11:25:25 -0400
+X-MC-Unique: H6Yl6rxpPS2aoSTqNcEvog-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9275C805489;
+        Thu,  4 Jun 2020 15:25:23 +0000 (UTC)
+Received: from gondolin (ovpn-112-76.ams2.redhat.com [10.36.112.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 882D67A8D2;
+        Thu,  4 Jun 2020 15:25:18 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 17:25:15 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, kevin.tian@intel.com, shaopeng.he@intel.com,
+        yi.l.liu@intel.com, xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 04/10] vfio/pci: let vfio_pci know number of
+ vendor regions and vendor irqs
+Message-ID: <20200604172515.614e9864.cohuck@redhat.com>
+In-Reply-To: <20200518024944.14263-1-yan.y.zhao@intel.com>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+        <20200518024944.14263-1-yan.y.zhao@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13D34UWA004.ant.amazon.com (10.43.160.177) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 16:58:13 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Sun, 17 May 2020 22:49:44 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-> On 04.06.20 09:26, SeongJae Park wrote:
-> > On Wed, 3 Jun 2020 18:09:21 +0200 David Hildenbrand <david@redhat.com> wrote:
-> > 
-> >> On 03.06.20 16:11, SeongJae Park wrote:
-> >>> From: SeongJae Park <sjpark@amazon.de>
-> >>>
-> >>> This commit implements the four callbacks (->init_target_regions,
-> >>> ->update_target_regions, ->prepare_access_check, and ->check_accesses)
-> >>> for the basic access monitoring of the physical memory address space.
-> >>> By setting the callback pointers to point those, users can easily
-> >>> monitor the accesses to the physical memory.
-> >>>
-> >>> Internally, it uses the PTE Accessed bit, as similar to that of the
-> >>> virtual memory support.  Also, it supports only page frames that
-> >>> supported by idle page tracking.  Acutally, most of the code is stollen
-> >>> from idle page tracking.  Users who want to use other access check
-> >>> primitives and monitor the frames that not supported with this
-> >>> implementation could implement their own callbacks on their own.
-> >>>
-> >>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> >>> ---
-> >>>  include/linux/damon.h |   5 ++
-> >>>  mm/damon.c            | 184 ++++++++++++++++++++++++++++++++++++++++++
-> >>>  2 files changed, 189 insertions(+)
-> >>>
-> >>> diff --git a/include/linux/damon.h b/include/linux/damon.h
-> >>> index 1a788bfd1b4e..f96503a532ea 100644
-> >>> --- a/include/linux/damon.h
-> >>> +++ b/include/linux/damon.h
-> >>> @@ -216,6 +216,11 @@ void kdamond_update_vm_regions(struct damon_ctx *ctx);
-> >>>  void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
-> >>>  unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
-> >>>  
-> >>> +void kdamond_init_phys_regions(struct damon_ctx *ctx);
-> >>> +void kdamond_update_phys_regions(struct damon_ctx *ctx);
-> >>> +void kdamond_prepare_phys_access_checks(struct damon_ctx *ctx);
-> >>> +unsigned int kdamond_check_phys_accesses(struct damon_ctx *ctx);
-> >>> +
-> >>>  int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
-> >>>  int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-> >>>  		unsigned long aggr_int, unsigned long regions_update_int,
-> >>> diff --git a/mm/damon.c b/mm/damon.c
-> >>> index f5cbc97a3bbc..6a5c6d540580 100644
-> >>> --- a/mm/damon.c
-> >>> +++ b/mm/damon.c
-> >>> @@ -19,7 +19,9 @@
-> >>>  #include <linux/mm.h>
-> >>>  #include <linux/module.h>
-> >>>  #include <linux/page_idle.h>
-> >>> +#include <linux/pagemap.h>
-> >>>  #include <linux/random.h>
-> >>> +#include <linux/rmap.h>
-> >>>  #include <linux/sched/mm.h>
-> >>>  #include <linux/sched/task.h>
-> >>>  #include <linux/slab.h>
-> >>> @@ -480,6 +482,11 @@ void kdamond_init_vm_regions(struct damon_ctx *ctx)
-> >>>  	}
-> >>>  }
-> >>>  
-> >>> +/* Do nothing.  Users should set the initial regions by themselves */
-> >>> +void kdamond_init_phys_regions(struct damon_ctx *ctx)
-> >>> +{
-> >>> +}
-> >>> +
-> >>>  static void damon_mkold(struct mm_struct *mm, unsigned long addr)
-> >>>  {
-> >>>  	pte_t *pte = NULL;
-> >>> @@ -611,6 +618,178 @@ unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
-> >>>  	return max_nr_accesses;
-> >>>  }
-> >>>  
-> >>> +/* access check functions for physical address based regions */
-> >>> +
-> >>> +/* This code is stollen from page_idle.c */
-> >>> +static struct page *damon_phys_get_page(unsigned long pfn)
-> >>> +{
-> >>> +	struct page *page;
-> >>> +	pg_data_t *pgdat;
-> >>> +
-> >>> +	if (!pfn_valid(pfn))
-> >>> +		return NULL;
-> >>> +
-> >>
-> >> Who provides these pfns? Can these be random pfns, supplied unchecked by
-> >> user space? Or are they at least mapped into some user space process?
-> > 
-> > Your guess is right, users can give random physical address and that will be
-> > translated into pfn.
-> > 
+> This allows a simpler VFIO_DEVICE_GET_INFO ioctl in vendor driver
 > 
-> Note the difference to idle tracking: "Idle page tracking only considers
-> user memory pages", this is very different to your use case. Note that
-> this is why there is no pfn_to_online_page() check in page idle code.
-
-My use case is same to that of idle page.  I also ignore non-user pages.
-Actually, this function is for filtering of the non-user pages, which is simply
-stollen from the page_idle.
-
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c         | 23 +++++++++++++++++++++--
+>  drivers/vfio/pci/vfio_pci_private.h |  2 ++
+>  include/linux/vfio.h                |  3 +++
+>  3 files changed, 26 insertions(+), 2 deletions(-)
 > 
-> >>
-> >> IOW, do we need a pfn_to_online_page() to make sure the memmap even was
-> >> initialized?
-> > 
-> > Thank you for pointing out this!  I will use it in the next spin.  Also, this
-> > code is stollen from page_idle_get_page().  Seems like it should also be
-> > modified to use it.  I will send the patch for it, either.
-> 
-> pfn_to_online_page() will only succeed for system RAM pages, not
-> dax/pmem (ZONE_DEVICE). dax/pmem needs special care.
-> 
-> I can spot that you are taking references to random struct pages. This
-> looks dangerous to me and might mess in complicated ways with page
-> migration/isolation/onlining/offlining etc. I am not sure if we want that.
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 290b7ab55ecf..30137c1c5308 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -105,6 +105,24 @@ void *vfio_pci_vendor_data(void *device_data)
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_pci_vendor_data);
+>  
+> +int vfio_pci_set_vendor_regions(void *device_data, int num_vendor_regions)
+> +{
+> +	struct vfio_pci_device *vdev = device_data;
+> +
+> +	vdev->num_vendor_regions = num_vendor_regions;
 
-AFAIU, page_idle users can also pass random pfns by randomly accessing the
-bitmap file.  Am I missing something?
+Do we need any kind of sanity check here, in case this is called with a
+bogus value?
 
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_pci_set_vendor_regions);
+> +
+> +
+> +int vfio_pci_set_vendor_irqs(void *device_data, int num_vendor_irqs)
+> +{
+> +	struct vfio_pci_device *vdev = device_data;
+> +
+> +	vdev->num_vendor_irqs = num_vendor_irqs;
 
-Thanks,
-SeongJae Park
+Here as well.
 
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vfio_pci_set_vendor_irqs);
+>  /*
+>   * Our VGA arbiter participation is limited since we don't know anything
+>   * about the device itself.  However, if the device is the only VGA device
+
+(...)
+
