@@ -2,135 +2,80 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9978EC433FE
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE34C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76232207D3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24240206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ifotk2PJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aHfI3s4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgFDIN0 (ORCPT
+        id S1728082AbgFDIN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
+        Thu, 4 Jun 2020 04:13:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbgFDIMu (ORCPT
+        with ESMTP id S1727854AbgFDINU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:12:50 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B4AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:12:50 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x6so4996923wrm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zHLq9yPZgKKERQ/k46N5wAtq1tEa3e90dS7EqKAAVV8=;
-        b=ifotk2PJMfPqXT/+gwn4eR7/3IWQV+W9DCcY7OyrRdaAZFQwKftRJdQXo0rpUM3/yB
-         gFJrkbneOCQ2QX77TBZL8U/VuKVxgzOxX4tlg9WC2CbjGOvgEb6AVwmiQ15EpDYBd7lG
-         Tzy0RTnpPG+HiMGAwz3SGe+WNdJdbJrdEf6D0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zHLq9yPZgKKERQ/k46N5wAtq1tEa3e90dS7EqKAAVV8=;
-        b=q3L4I5w4PL1hTDBmHBrgNStR1dBKqyNmzfqn4NCPZeR4QHx72zt+JbP2IBhOGufqdo
-         e3eWpsKpzxAaNh3nZRC+HewK9Znk4/2QB9/hSKtCkOKy9QzRUVpYLyCXQ409qs8D9cua
-         GuvU9CGrHE9CxWmHLCpPcxawiIgcyXzkU2X4qwoXAAEkQDxeLNP4YKXmglekSZrr/Pco
-         deM8LFlpb4tDapnwCdvTBzatFY3ZHQKjdrBPWwMZucWo9yVo9VXMX+UQuwITKVfl0nOs
-         FPet80K/LSZV3pkCpWnOA/npCqQZTwm44QQeyPBu2fCTY3T8bhVASBYUQxdIAeWIniJB
-         JQ9Q==
-X-Gm-Message-State: AOAM5337WWX07Q/2mJX061lvo+qt6wGdrDJ+48vxklFsmdoEKZm5HoC9
-        2HsEPR0P+gMNPeCBKnT4fKOzk7VXYeY=
-X-Google-Smtp-Source: ABdhPJwmXgxb0rRlbz9RyKT6KVGNFYaugD+jseyFJKYlXk9wNmaSF3eMQq44tjneQVcPWbVrYiOUJw==
-X-Received: by 2002:adf:fb0f:: with SMTP id c15mr3424740wrr.410.1591258368775;
-        Thu, 04 Jun 2020 01:12:48 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id f11sm6873305wrj.2.2020.06.04.01.12.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 01:12:48 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
+        Thu, 4 Jun 2020 04:13:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D95CC03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:13:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=IfinYWvBdTCCIaneu/iWkUgHWl2JfGtLuUEKRHK9Vk4=; b=aHfI3s4WLnLBft+Nady6ib4iGZ
+        uFoN52/Xxc0nrWP7AIy7CcGExAT0vWzl2Aso3MNHXQVdS/19Rz25eI3ZI3fXBlQGPDDCddU3ukVcq
+        9LVWCCuqXhjNrqMqXKlFK9E/AlaWsR+KnBoH2I1jbnEch509QKak3HJ8zbsLTcFHmAp0NxVtHL7zN
+        iVGEF94kTcB9Q5gCXCPDR9GD2ddHv4G1q0fDGEp4ngGxUsABt9YxMEohAtBqIOAZZ7Hc+Azq/2CvN
+        HsJfdsFPiyI8x4556NOrRUX+om8x4kaWsATcFNirIVgWwj5pDKKJcqfy1EM1t8wEWhc/AJAYykJRO
+        KqLOir0w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgkzz-0004pC-Sy; Thu, 04 Jun 2020 08:13:15 +0000
+Date:   Thu, 4 Jun 2020 01:13:15 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Airlie <airlied@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 13/18] drm/amdgpu/dc: Stop dma_resv_lock inversion in commit_tail
-Date:   Thu,  4 Jun 2020 10:12:19 +0200
-Message-Id: <20200604081224.863494-14-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [git pull] drm for 5.8-rc1
+Message-ID: <20200604081315.GA23276@infradead.org>
+References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
+ <20200603201337.GA225528@ziepe.ca>
+ <1d1ad025-e215-da23-5282-bbaf154fa979@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1d1ad025-e215-da23-5282-bbaf154fa979@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to grab dma_resv_lock while in commit_tail before we've done
-all the code that leads to the eventual signalling of the vblank event
-(which can be a dma_fence) is deadlock-y. Don't do that.
+On Thu, Jun 04, 2020 at 10:10:21AM +0200, Christian König wrote:
+> Dave and Daniel explicitly said they want to have this and it is ok as long
+> as I open code it in the driver and keep it AMD internal.
 
-Here the solution is easy because just grabbing locks to read
-something races anyway. We don't need to bother, READ_ONCE is
-equivalent. And avoids the locking issue.
+But it fundamentally is broken, and we've been through all the arguments
+why it is broken,  and it is not going to be any less broken because
+someone said they want this.
 
-Cc: linux-media@vger.kernel.org
-Cc: linaro-mm-sig@lists.linaro.org
-Cc: linux-rdma@vger.kernel.org
-Cc: amd-gfx@lists.freedesktop.org
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Christian KÃ¶nig <christian.koenig@amd.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index c575e7394d03..04c11443b9ca 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6910,7 +6910,11 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
- 		 * explicitly on fences instead
- 		 * and in general should be called for
- 		 * blocking commit to as per framework helpers
-+		 *
-+		 * Yes, this deadlocks, since you're calling dma_resv_lock in a
-+		 * path that leads to a dma_fence_signal(). Don't do that.
- 		 */
-+#if 0
- 		r = amdgpu_bo_reserve(abo, true);
- 		if (unlikely(r != 0))
- 			DRM_ERROR("failed to reserve buffer before flip\n");
-@@ -6920,6 +6924,12 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
- 		tmz_surface = amdgpu_bo_encrypted(abo);
- 
- 		amdgpu_bo_unreserve(abo);
-+#endif
-+		/*
-+		 * this races anyway, so READ_ONCE isn't any better or worse
-+		 * than the stuff above. Except the stuff above can deadlock.
-+		 */
-+		tiling_flags = READ_ONCE(abo->tiling_flags);
- 
- 		fill_dc_plane_info_and_addr(
- 			dm->adev, new_plane_state, tiling_flags,
--- 
-2.26.2
-
+I have to say I'm really pissed that you guys just sneaked it in.  I've
+been hoping that graphics is getting a litter better, but this attitud
+of we sneak hacks into the driver code that just happen to work on some
+platform you care about instead because you're too lazy to do the proper
+thing has top stop right now.  drm has been creating so much more
+maintainaince nightmares and buggy code than any other subsysem just
+because of that attitude.
