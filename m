@@ -2,159 +2,184 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB45C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23BDA206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCB6206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mkgwdtgS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pF2Po7Ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgFDLN6 (ORCPT
+        id S1727001AbgFDLO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:13:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:58609 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgFDLN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:13:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591269237; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=FGQ3twZFTwvr0xbvXHPXtxfqUMKDj7xP+zfVZfXNXqM=;
- b=mkgwdtgSqKV7FAIB1w9cI+Lwy4W2xLnku5yJOYdBDVXAhFIZwjkjsoU8aeRz62QNtz42VjsU
- xmqtEVLeS/Y2bma9Hj69j6i26acWmiLrufA6H7ZiO/nXVR9Nz5hAaloby+MctEy3A+AlTcDF
- FcDAnF88EkJjLF3LK2f6Ffvp89s=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5ed8d76e9077f356cba8c2e8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 11:13:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E1C17C433C6; Thu,  4 Jun 2020 11:13:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35603C433CA;
-        Thu,  4 Jun 2020 11:13:49 +0000 (UTC)
+        Thu, 4 Jun 2020 07:14:26 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52574 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgFDLOV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 07:14:21 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054BED4j039112;
+        Thu, 4 Jun 2020 06:14:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591269253;
+        bh=sgtW79HiUB/IYbIQdwVgNlZtG2gnFZnYkjyftZWduLU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=pF2Po7Ue7m3KRcnK6WY4WBk9Of34E8opz5xbBvF0x55QlQwzrnDWZ6upoBqfgdkfX
+         sNQ6iMPrNgK5sic7TgIsHmPJIuG4lKgLoz8zkBYsSHqSY4gphaf2Bnbxf7NK4uHUD9
+         /G8UJ9AuxYyWhLrDgUGcY8VbvyUdEtmKDH2FXXu4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054BEDvB126043;
+        Thu, 4 Jun 2020 06:14:13 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 06:14:12 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 06:14:12 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054BEC06112941;
+        Thu, 4 Jun 2020 06:14:12 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v6 4/4] net: dp83869: Add RGMII internal delay configuration
+Date:   Thu, 4 Jun 2020 06:14:10 -0500
+Message-ID: <20200604111410.17918-5-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200604111410.17918-1-dmurphy@ti.com>
+References: <20200604111410.17918-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 04 Jun 2020 16:43:49 +0530
-From:   ppvk@codeaurora.org
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc-owner@vger.kernel.org, rnayak@codeaurora.org,
-        matthias@chromium.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V1 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
- support
-In-Reply-To: <29826613b412e4f4db4289e292a1fe57@codeaurora.org>
-References: <1591175376-2374-1-git-send-email-ppvk@codeaurora.org>
- <1591175376-2374-2-git-send-email-ppvk@codeaurora.org>
- <29826613b412e4f4db4289e292a1fe57@codeaurora.org>
-Message-ID: <8865e3b00fce4f28264b60cd498fcf02@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
+Add RGMII internal delay configuration for Rx and Tx.
 
-Thanks for the review!!
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83869.c | 53 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 50 insertions(+), 3 deletions(-)
 
-On 2020-06-03 17:22, Sibi Sankar wrote:
-> Hey Pradeep,
-> Thanks for the patch.
-> 
-> On 2020-06-03 14:39, Pradeep P V K wrote:
->> Interconnect bandwidth scaling support is now added as a
->> part of OPP [1]. So, make sure interconnect driver is ready
->> before handling interconnect scaling.
->> 
->> This change is based on
->> [1] [Patch v8] Introduce OPP bandwidth bindings
->> (https://lkml.org/lkml/2020/5/12/493)
->> 
->> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
->> for dev_pm_opp_of_add_table()
->> (https://lkml.org/lkml/2020/5/5/491)
->> 
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->> ---
->>  drivers/mmc/host/sdhci-msm.c | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->> 
->> diff --git a/drivers/mmc/host/sdhci-msm.c 
->> b/drivers/mmc/host/sdhci-msm.c
->> index b277dd7..bf95484 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/iopoll.h>
->>  #include <linux/regulator/consumer.h>
->> +#include <linux/interconnect.h>
->> 
->>  #include "sdhci-pltfm.h"
->>  #include "cqhci.h"
->> @@ -1999,6 +2000,7 @@ static int sdhci_msm_probe(struct 
->> platform_device *pdev)
->>  	struct sdhci_pltfm_host *pltfm_host;
->>  	struct sdhci_msm_host *msm_host;
->>  	struct clk *clk;
->> +	struct icc_path *sdhc_path;
->>  	int ret;
->>  	u16 host_version, core_minor;
->>  	u32 core_version, config;
->> @@ -2070,6 +2072,20 @@ static int sdhci_msm_probe(struct 
->> platform_device *pdev)
->>  	}
->>  	msm_host->bulk_clks[0].clk = clk;
->> 
->> +	/* Make sure that ICC driver is ready for interconnect bandwdith
->> +	 * scaling before registering the device for OPP.
->> +	 */
->> +	sdhc_path = of_icc_get(&pdev->dev, NULL);
->> +	ret = PTR_ERR_OR_ZERO(sdhc_path);
->> +	if (ret) {
->> +		if (ret == -EPROBE_DEFER)
->> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
->> +		else
->> +			dev_err(&pdev->dev, "failed to get icc path:%d\n", ret);
->> +		goto bus_clk_disable;
->> +	}
->> +	icc_put(sdhc_path);
-> 
-> ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
-> 
-> since there are multiple paths
-> described in the bindings you
-> should use ^^ instead and you
-> can drop temporary path as well.
-> 
-Ok. of_icc_get() used above is only to test if ICC driver is ready or 
-not. I'm not
-really using the multiple paths here. Anyhow i will use 
-dev_pm_opp_of_find_icc_paths()
-to get rid of some extra lines of code.
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index cfb22a21a2e6..801341edbe31 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -64,6 +64,10 @@
+ #define DP83869_RGMII_TX_CLK_DELAY_EN		BIT(1)
+ #define DP83869_RGMII_RX_CLK_DELAY_EN		BIT(0)
+ 
++/* RGMIIDCTL */
++#define DP83869_RGMII_CLK_DELAY_SHIFT		4
++#define DP83869_CLK_DELAY_DEF			7
++
+ /* STRAP_STS1 bits */
+ #define DP83869_STRAP_OP_MODE_MASK		GENMASK(2, 0)
+ #define DP83869_STRAP_STS1_RESERVED		BIT(11)
+@@ -78,9 +82,6 @@
+ #define DP83869_PHYCR_FIFO_DEPTH_MASK	GENMASK(15, 12)
+ #define DP83869_PHYCR_RESERVED_MASK	BIT(11)
+ 
+-/* RGMIIDCTL bits */
+-#define DP83869_RGMII_TX_CLK_DELAY_SHIFT	4
+-
+ /* IO_MUX_CFG bits */
+ #define DP83869_IO_MUX_CFG_IO_IMPEDANCE_CTRL	0x1f
+ 
+@@ -99,6 +100,10 @@
+ #define DP83869_OP_MODE_MII			BIT(5)
+ #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
+ 
++static const int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500,
++					     1750, 2000, 2250, 2500, 2750, 3000,
++					     3250, 3500, 3750, 4000};
++
+ enum {
+ 	DP83869_PORT_MIRRORING_KEEP,
+ 	DP83869_PORT_MIRRORING_EN,
+@@ -108,6 +113,8 @@ enum {
+ struct dp83869_private {
+ 	int tx_fifo_depth;
+ 	int rx_fifo_depth;
++	s32 rx_id_delay;
++	s32 tx_id_delay;
+ 	int io_impedance;
+ 	int port_mirroring;
+ 	bool rxctrl_strap_quirk;
+@@ -182,6 +189,7 @@ static int dp83869_of_init(struct phy_device *phydev)
+ 	struct dp83869_private *dp83869 = phydev->priv;
+ 	struct device *dev = &phydev->mdio.dev;
+ 	struct device_node *of_node = dev->of_node;
++	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
+ 	int ret;
+ 
+ 	if (!of_node)
+@@ -232,6 +240,20 @@ static int dp83869_of_init(struct phy_device *phydev)
+ 				 &dp83869->tx_fifo_depth))
+ 		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
+ 
++	dp83869->rx_id_delay = phy_get_internal_delay(phydev, dev,
++						     &dp83869_internal_delay[0],
++						      delay_size, true);
++	if (dp83869->rx_id_delay < 0)
++		dp83869->rx_id_delay =
++				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
++
++	dp83869->tx_id_delay = phy_get_internal_delay(phydev, dev,
++						     &dp83869_internal_delay[0],
++						      delay_size, false);
++	if (dp83869->tx_id_delay < 0)
++		dp83869->tx_id_delay =
++				dp83869_internal_delay[DP83869_CLK_DELAY_DEF];
++
+ 	return ret;
+ }
+ #else
+@@ -394,6 +416,31 @@ static int dp83869_config_init(struct phy_device *phydev)
+ 				     dp83869->clk_output_sel <<
+ 				     DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT);
+ 
++	if (phy_interface_is_rgmii(phydev)) {
++		ret = phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIIDCTL,
++				    dp83869->rx_id_delay |
++			dp83869->tx_id_delay << DP83869_RGMII_CLK_DELAY_SHIFT);
++		if (ret)
++			return ret;
++
++		val = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL);
++		val &= ~(DP83869_RGMII_TX_CLK_DELAY_EN |
++			 DP83869_RGMII_RX_CLK_DELAY_EN);
++
++		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
++			val |= (DP83869_RGMII_TX_CLK_DELAY_EN |
++				DP83869_RGMII_RX_CLK_DELAY_EN);
++
++		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
++			val |= DP83869_RGMII_TX_CLK_DELAY_EN;
++
++		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
++			val |= DP83869_RGMII_RX_CLK_DELAY_EN;
++
++		ret = phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL,
++				    val);
++	}
++
+ 	return ret;
+ }
+ 
+-- 
+2.26.2
 
->> +
->>  	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
->>  	if (IS_ERR(msm_host->opp_table)) {
->>  		ret = PTR_ERR(msm_host->opp_table);
