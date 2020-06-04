@@ -1,111 +1,106 @@
-Return-Path: <SRS0=boYM=7Q=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 00:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5E820679
-	for <linux-kernel@archiver.kernel.org>; Wed,  3 Jun 2020 23:57:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="i4l7WCm1"
+	by mail.kernel.org (Postfix) with ESMTP id 2D45820679
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 00:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgFCX5j (ORCPT
+        id S1726154AbgFDAAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 19:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgFCX5i (ORCPT
+        Wed, 3 Jun 2020 20:00:37 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36418 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbgFDAAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 19:57:38 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7570C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 16:57:36 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id q19so4058554eja.7
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 16:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qxl9UqwBxJWfx8IWKXcwSwjGKz8RQbusLDYMB9ncMJU=;
-        b=i4l7WCm1Z5zGSujeMsVJUyO08b2q/Hb/0ZptV6brzAfQzAlV86jOsCR4m+FUtjzGl4
-         4Cqalj8Xr5UtMNdWribSTS4X5lqqF+KltPrGsBRHnaFzJH+5wIrS8Ow4cI6befD2Kpxv
-         Nz/kxP5A2ADSemhyLF1+kAKfU5BwnG+onbMGo=
+        Wed, 3 Jun 2020 20:00:36 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bg4so1404547plb.3;
+        Wed, 03 Jun 2020 17:00:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qxl9UqwBxJWfx8IWKXcwSwjGKz8RQbusLDYMB9ncMJU=;
-        b=QsrCVl0o+SnMofI7hA8JfqFeOfj3Je3aKNWF2oob9GpgFySeWYCacDWamw/Q6ygmhW
-         IfPNei7iXCSjXukHu2bZ9DYouweXIGIL/XEDiWyDRAVhjgiqR+lTD9bJEFHKU16z5mGt
-         LEmTStT0pd+1O8coDWI1fcqVnrKGLTdVKY/Mn82a0okS8kM7PUCKDn1q0nf5odRl8Mbi
-         L673rmhZ8p+kH8myg8jKeSu4ic/odklH8s02KLMsUI84fEDNLbZY8koOiuFnVUTSBGZ/
-         f/BZgPz9PEN4xj7PgC+wuMzS1aJb+VB72tcqjFnapVsSJj0nZ/PEdoD10mp1wklYr8Bc
-         Jbcw==
-X-Gm-Message-State: AOAM532pEsk4BijzUrjw/saBi3s4eodFO7H+Ubz6lS95SbbSruYFqUtU
-        aZ92zD1WMTPOtEwp7xBUP+xiQ+gAXhRKjlyQnv5/pA==
-X-Google-Smtp-Source: ABdhPJxq5weChnYWGZX8A/LxL13fIKbCFvAwo23a3Z/SlQObiHXmtI8ec7QPALTa21EqNlaI9ueFmeHjPnztX6wc/pg=
-X-Received: by 2002:a17:906:95d6:: with SMTP id n22mr144782ejy.138.1591228655260;
- Wed, 03 Jun 2020 16:57:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hqnXIJZaSToxwE4bsbIxKQdnZSaxn/cLMp66RTiJkEo=;
+        b=QtmfPKHb1de9eqnOjTAaek7DA3jPQBQJBw01QehIc+ht/jlY6ZNYMy5rGdJOZwxDNM
+         jUlyxFp7y0ApdBsyAzq7CgDZ0lMkxvI/1ERPZU4cHTbId0/xk8xu86JnbC9bQLXOL+WY
+         KmGJ+k0iG4iePZc/acsXZPusb9tccWAxFqeMBPC35HXSYwbLYceGX/Ix2J/7ff+tK3Uj
+         wa443ovMpRcXx9Go6IX8EkQ3tCQA3kgXq4SzD2EZeLhVGJd1QP6r2Df4fjDbgJnW+6em
+         mqy70Ue1wNLGL4pcTfUPpzogCnrclWPM3vG9uJQ82oFKZcbCq+28wc5pE1m8QXqUdeCG
+         JBEA==
+X-Gm-Message-State: AOAM533gLvx5HsLJC+Bj1l+QIS/nMP1lsoPqeP241cYBfVjCPO8zGD2I
+        2a/MIfgzzhGSjS8zAo4U+JBm51hI
+X-Google-Smtp-Source: ABdhPJxdv1OUJungAAnQJYQOYNOB9vqFI8KXBhLqIskIXOR/nZN6yrPTlTHOI+Lv1CJsgyn+BRHNiA==
+X-Received: by 2002:a17:90b:605:: with SMTP id gb5mr2422811pjb.167.1591228835561;
+        Wed, 03 Jun 2020 17:00:35 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id 98sm3970139pjo.12.2020.06.03.17.00.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 17:00:34 -0700 (PDT)
+Subject: Re: [PATCH 10/10] compiler: Remove uninitialized_var() macro
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-11-keescook@chromium.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <8882ca16-5192-a519-d5a8-02371fbb28cb@acm.org>
+Date:   Wed, 3 Jun 2020 17:00:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200603011044.7972-1-sargun@sargun.me> <202006031639.E053742@keescook>
-In-Reply-To: <202006031639.E053742@keescook>
-From:   Sargun Dhillon <sargun@sargun.me>
-Date:   Wed, 3 Jun 2020 16:56:59 -0700
-Message-ID: <CAMp4zn-8iSozHvgqXBPKz-ux7HH6T4Dj9p0fA3fs_e7ZwEPZRg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Add seccomp notifier ioctl that enables adding fds
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200603233203.1695403-11-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 4:42 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, Jun 02, 2020 at 06:10:40PM -0700, Sargun Dhillon wrote:
-> > Sargun Dhillon (4):
-> >   fs, net: Standardize on file_receive helper to move fds across
-> >     processes
-> >   pid: Use file_receive helper to copy FDs
->
-> The fixes (that should add open-coded cgroups stuff) should be separate
-> patches so they can be backported.
-Patch 1/4, and 2/4 are separated so they can be backported. Patch 1 should
-go into long term, and patch 2 should land in stable.
+On 2020-06-03 16:32, Kees Cook wrote:
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings
+> (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> either simply initialize the variable or make compiler changes.
 
-Do you see anything in 1/4, and 2/4 that shouldn't be there?
+Thank you for having done this work!
 
->
-> The helper doesn't take the __user pointer I thought we'd agreed it
-> should to avoid changing any SCM_RIGHTS behaviors?
->
-It doesn't change the SCM_RIGHTS behaviour because it continues
-to have the logic which allocates the file descriptor outside of the
-helper.
-1. Allocate FD (this happens in scm.c)
-2. Copy FD # to userspace (this happens in scm.c)
-3. Receive FD (this happens in the new helper)
-
-
-> >   seccomp: Introduce addfd ioctl to seccomp user notifier
-> >   selftests/seccomp: Test SECCOMP_IOCTL_NOTIF_ADDFD
->
-> Otherwise, yeah, this should be good.
->
-> --
-> Kees Cook
+Reviewed-by: Bart van Assche <bvanassche@acm.org>
