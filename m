@@ -2,148 +2,97 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF651C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1F320738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB8A206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZHnhhjKC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NNO9WfoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgFDKRn (ORCPT
+        id S1728009AbgFDKVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:17:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42190 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726812AbgFDKRm (ORCPT
+        Thu, 4 Jun 2020 06:21:34 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26541 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726236AbgFDKVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:17:42 -0400
+        Thu, 4 Jun 2020 06:21:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591265860;
+        s=mimecast20190719; t=1591266080;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2AztqKvzgy7aFiXghmWU8gdfGqSDj8pW4Rz5e+UFG6I=;
-        b=ZHnhhjKCJ4kMWcm3yu2QJJ1MsUEzKnZmqaJULruTnWMxTeVcDJNncsaHfcfjUrqVKeY4E9
-        tgR74dNADfu9dzQzRS+irIONTE12pjpNeCxIbUM/yuA927uF7xbK/EPTDdfiy/dguQwArF
-        cWZ6ZtZjEZB0R1eOPcEjqj+ROZ04yqA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-Gn0S7TIEMRGs_XITiCD9Ag-1; Thu, 04 Jun 2020 06:17:39 -0400
-X-MC-Unique: Gn0S7TIEMRGs_XITiCD9Ag-1
-Received: by mail-wm1-f71.google.com with SMTP id f62so1645003wme.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 03:17:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2AztqKvzgy7aFiXghmWU8gdfGqSDj8pW4Rz5e+UFG6I=;
-        b=Q43iB2VuA3BLq70R8zJaWGCEyh9D7Y49CSkF8zg1Qy3ETOJgMxdtr1PjswtCOn1hVp
-         YD6q8UerTcXGYZryfXmWzuiOsTvaYJaML8gwJy4lwub5oK5e+vaTgoOrc283pisaE0pn
-         72BaXM6hLPcMblIJfmHoJ6uBhaqgXEUGtx5RcqdFqYDspuaQ5p23h0og3mVJcjG4iZXT
-         DXPGQ9YR3ZP1Oz9ymJzc1TDY3jHPh+wTIhbLQWlZ37VRM3RcVUj1CE0pprtyAGEPu60H
-         ffD7romJ4oh15IpIgcWRDpuifQApe66Iibl+NDeacEoIDVM29r2UmKPQP6E+G3weAHaN
-         rLLA==
-X-Gm-Message-State: AOAM532laDSFar2bhTwYuD0eep4tFcnbrCwI8dU9rEd9vX9vnkqjAgga
-        YfncKlb3Jx4Wpi6M5WRxynufctXFq2n5pzPZj9qX9Mhksl1tEGm4Wr4io6ai85NiWWH6Y6ujXmj
-        cXVRKJ0GJ8NWOLMBBPUUAlEYX
-X-Received: by 2002:a1c:a3c1:: with SMTP id m184mr3568701wme.91.1591265857891;
-        Thu, 04 Jun 2020 03:17:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzJO213xAQF9M1ot7ZZba5ozFLdbD1Lq18fiEmWZFnyrw/++lJWGikXa82it32Q87Xgmp4QWw==
-X-Received: by 2002:a1c:a3c1:: with SMTP id m184mr3568671wme.91.1591265857625;
-        Thu, 04 Jun 2020 03:17:37 -0700 (PDT)
-Received: from redhat.com ([2a00:a040:185:f65:9a3b:8fff:fed3:ad8d])
-        by smtp.gmail.com with ESMTPSA id s8sm7754324wrg.50.2020.06.04.03.17.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 03:17:37 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 06:17:33 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC 07/13] vhost: format-independent API for used buffers
-Message-ID: <20200604060732-mutt-send-email-mst@kernel.org>
-References: <20200602130543.578420-1-mst@redhat.com>
- <20200602130543.578420-8-mst@redhat.com>
- <6d98f2cc-2084-cde0-c938-4ca01692adf9@redhat.com>
- <20200604050135-mutt-send-email-mst@kernel.org>
- <b39e6fb8-a59a-2b3f-a1eb-1ccea2fe1b86@redhat.com>
+        bh=gSUt/M2frPtSsqZnHp0XYXCk18yFWUkSIdMBdFgZ1wg=;
+        b=NNO9WfoCFvLPZfQd46Q+iR0TpeJvuTQaARghA0NNondMMSvOPZHd+H2TkibrRu1lOyWC5T
+        LXScGpVmgqVKM7VMp1hZMt18Ys4Wpew7w0+dxyzht83phyN4o/MIl6ZGvER1HHFDEd/jec
+        OnVOPWB4v0oVqvEB/uyoZbZEQirEQqs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-211-YLGD09sgMU-beIe59zbfHg-1; Thu, 04 Jun 2020 06:21:16 -0400
+X-MC-Unique: YLGD09sgMU-beIe59zbfHg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07FAF800C78;
+        Thu,  4 Jun 2020 10:21:15 +0000 (UTC)
+Received: from ws.net.home (unknown [10.40.194.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 075E02DE71;
+        Thu,  4 Jun 2020 10:21:13 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 12:21:11 +0200
+From:   Karel Zak <kzak@redhat.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     util-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH util-linux] dmesg: adjust timestamps according to
+ suspended time
+Message-ID: <20200604102111.vst3goseqfxz5fa4@ws.net.home>
+References: <159103929487.199093.15757669576783156290.stgit@buzz>
+ <20200604093043.55a4zzo2hewhcwru@ws.net.home>
+ <c1ec31ea-494b-5d3e-3c0c-c3d8bb1a6c9c@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b39e6fb8-a59a-2b3f-a1eb-1ccea2fe1b86@redhat.com>
+In-Reply-To: <c1ec31ea-494b-5d3e-3c0c-c3d8bb1a6c9c@yandex-team.ru>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 05:18:00PM +0800, Jason Wang wrote:
-> 
-> On 2020/6/4 下午5:03, Michael S. Tsirkin wrote:
-> > > >    static bool vhost_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
-> > > >    {
-> > > >    	__u16 old, new;
-> > > > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> > > > index a67bda9792ec..6c10e99ff334 100644
-> > > > --- a/drivers/vhost/vhost.h
-> > > > +++ b/drivers/vhost/vhost.h
-> > > > @@ -67,6 +67,13 @@ struct vhost_desc {
-> > > >    	u16 id;
-> > > >    };
-> > > > +struct vhost_buf {
-> > > > +	u32 out_len;
-> > > > +	u32 in_len;
-> > > > +	u16 descs;
-> > > > +	u16 id;
-> > > > +};
-> > > So it looks to me the struct vhost_buf can work for both split ring and
-> > > packed ring.
+On Thu, Jun 04, 2020 at 12:43:52PM +0300, Konstantin Khlebnikov wrote:
+> On 04/06/2020 12.30, Karel Zak wrote:
+> > On Mon, Jun 01, 2020 at 10:21:34PM +0300, Konstantin Khlebnikov wrote:
+> > > Timestamps in kernel log comes from monotonic clocksource which does not
+> > > tick when system suspended. Suspended time easily sums into hours and days
+> > > rendering human readable timestamps in dmesg useless.
 > > > 
-> > > If this is true, we'd better make struct vhost_desc work for both.
-> > > 
-> > > Thanks
-> > Both vhost_desc and vhost_buf can work for split and packed.
+> > > Adjusting timestamps accouring to current delta between boottime and
+> > > monotonic clocksources produces accurate timestamps for messages printed
+> > > since last resume. Which are supposed to be most interesting.
 > > 
-> > Do you mean we should add packed ring support based on this?
-> > For sure, this is one of the motivators for the patchset.
+> > It's definitely better than the current broken timestamps, but the real
+> > and final solution is to have exact information about system suspends.
 > > 
+> > It would be enough to maintain in kernel memory a simple log with
+> >     <bootime> <monotonic> <state_change>
+> > and export this info by /proc/suspendlog, after that we can all
+> > re-count /dev/kmsg timestamps to something useful.
 > 
-> Somehow. But the reason I ask is that I see "split" suffix is used in patch
-> 1 as:
-> 
-> peek_split_desc()
-> pop_split_desc()
-> push_split_desc()
-> 
-> But that suffix is not used for the new used ring API invented in this
-> patch.
-> 
-> Thanks
-> 
+> Boottime or real time could be simply printed into kernel log at
+> suspend and resume. So demsg could detect current offset while reading.
 
-And that is intentional: split is *not* part of API. The whole idea is
-that ring APIs are format agnostic using "buffer" terminology from spec.
-The split things are all static within vhost.c
+ Yes, but not sure if this is the most robust way (dmesg --clear will
+ remove this info) and I guess the suspendlog can be useful
+ independently on kmsg.
 
-OK so where I had to add a bunch of new format specific code, that was
-tagged as "split" to make it easier to spot that they only support a
-specific format.  At the same time, I did not rename existing code
-adding "split" in the name. I agree it's a useful additional step for
-packed ring format support, and it's fairly easy. I just didn't want
-to do it automatically.
-
-
+    Karel
 
 -- 
-MST
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
 
