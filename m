@@ -7,145 +7,126 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F639C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0942CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14B9207D5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53D3207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:36:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhwvEZTg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfRnxFaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgFDEfI (ORCPT
+        id S1728238AbgFDEgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46086 "EHLO
+        Thu, 4 Jun 2020 00:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgFDEfH (ORCPT
+        with ESMTP id S1728212AbgFDEgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:35:07 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F16EC05BD43
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 21:35:07 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id b5so4796330iln.5
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:35:07 -0700 (PDT)
+        Thu, 4 Jun 2020 00:36:16 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DAEC05BD43;
+        Wed,  3 Jun 2020 21:36:16 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so550418pjd.1;
+        Wed, 03 Jun 2020 21:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=g+64I7JZp1JXS80n8G4BLUDcZzIS9BkuQYkabG+zwps=;
-        b=AhwvEZTgFuvltvPU8KBCKvxVuGI0BR7fYtPWZvsfPhapBV6dbvgPl0k9VcIcG5U7WO
-         ITwqw0rXEPIg0WAJ/I1z7J8ih3dlvz9wWcm2Lmc2NX4mHjFwO0xN8iZ3bSWyH+f4XGj3
-         waL/8DTQJ9A5pSnXJLcJdVPBohzSQVkde58DeBk6HxMV2jM62Bez7XEsFenQXcrFXDBz
-         scQ7HaAGgXYD0DYQGq6Ly4m9ZOCiLjqtG85+39MmB/+5vSpQJ6+KA4cU00F/oiRue8TU
-         eYGzYLLXyTQdJrUE3I8qGms2BQADyObokXNkoU0zMsqo3mANxayQPQdQvdgCCaZNdREe
-         9uqQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2xpDF2Ski/AzNAcxs9cvvYgBD25WB8OjPMGHN4Zdggw=;
+        b=mfRnxFaCtnoj9sQ/h9BCPZV3JCpDSDCiCQBcWh8FQ7SmKFzIK4Nmb7Xwy30zT1hcRI
+         BdBz7HAlQ6hg7F3ouUKuXozyU8QzIcKx+jf3N4Lhk9qsPekg1iwWivOsL/BDiF/SvqSR
+         iz5fLMWbn8PNhvhdMN7YvJAa6nYtULixLfK3xrcY+tdCfVs/LifljsHp+oRdbCjl6czF
+         iSwg6GFZDSDk/nAM7XLfrMpeBhKElkWQCg7rvzMPJGoidiXgeFIKhO9q4yJARujxfON7
+         zAU7scxyWmDHe4lXIGyjRNyKSIOj2TKoPww7XlselBEdmEhH+8YHZEtLJ3rtcOaFUIfB
+         meRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=g+64I7JZp1JXS80n8G4BLUDcZzIS9BkuQYkabG+zwps=;
-        b=S7yiYrAcz6C87L88Y5WSvWGvGQses3mFQJ7qMmRAJB5TkrhNMvac+RkAQSpaiVx3K8
-         xpm8+Pj4jXKfBmQEGVaZ0QePLoGAaWJcRKn6UWzbiiG280Kv39QVWTiim8j5b8hV+8SD
-         MO6zKj/ttflLBSePo72YJei7JeT+hKyWUME8vEC6mvk4Ow3lFZ5NUve8yJnstOyh6753
-         z/L7V/tOJDkPtUOj/yZUIc7WcTAonDernMxO6TZcKLLiwd6ij4cCgTo4VvSBkuJ9vtln
-         phGQTXosGkwRYagbaeohYala2F285wfm4LH+LEKFa5Oe7RFlrc/BEvHuryAq3ehx0Uv3
-         5wiw==
-X-Gm-Message-State: AOAM533FnVX3OJjcoqvTbtNXCafItJpnlnOm2IZC9c1CVoGoZe3xAQ1D
-        b3GYAwBQ/xbXUPzrocbHJGi1nvsyVxnTJps5HbQ=
-X-Google-Smtp-Source: ABdhPJwqtGQ0Huvfnt9AjzvUGB7RCsJHSwB61wTKamI8d0uPbjkflX/+h8yjUR6HrSrd6SSwRsXU4LDXrXdyGFkKZi0=
-X-Received: by 2002:a92:5dd2:: with SMTP id e79mr2331818ilg.94.1591245306792;
- Wed, 03 Jun 2020 21:35:06 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2xpDF2Ski/AzNAcxs9cvvYgBD25WB8OjPMGHN4Zdggw=;
+        b=RDZCwaEyiIV8nA12d6sLMloGqy3bIVDwTYF2ems7P7wiWbQ9SWZf1WW2vs11sSTKKb
+         TJq84CkLoP8Tua4M9QuTNd7ndMcqlYq1H6Bj95JLA87CVLR11KaBtEToXn9xYJpfqTrA
+         8bmMFk0tsQC7sk/73ljLIshbh1T4fhQWP+wMWuIbAPYuK1rM6Nk/meMjiGojziTxv/Q9
+         aQjjkW9W0Wm/+PfA7W//huo1N4OQ2RESpuiTfJcsS6S3NDBYgU6UHHRp0STALImTxo5i
+         Fv2Qp5s+QhocPuO3LtYiLT4w8GI/YLesEBdKeZZVDtDEe1lLzFHiJsIiBzf3sAKHJh68
+         a1mA==
+X-Gm-Message-State: AOAM5337QcyfzAlVmkofVXUeyrgv3WPqumu0X4IdqkymG2i3XrtqKQc0
+        OXLNpbs/9b6EsFCFaCtZHbo=
+X-Google-Smtp-Source: ABdhPJwZd8LgTD+yRGTfGRpaoL0jPidjt/9faszZg2rhgwxRJxeSJcNg0LH9GPIeBfyhsbYYtGoNLw==
+X-Received: by 2002:a17:90a:9307:: with SMTP id p7mr3631526pjo.182.1591245376068;
+        Wed, 03 Jun 2020 21:36:16 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id a17sm540943pfi.203.2020.06.03.21.36.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 21:36:15 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Thu, 4 Jun 2020 13:36:13 +0900
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v6 03/14] videobuf2: handle V4L2 buffer cache flags
+Message-ID: <20200604043613.GA98819@jagdpanzerIV.localdomain>
+References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
+ <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
+ <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
+ <CAAFQd5Cu5ex=YcuVfmEC1uNA4DZBSAF04LYtrw3-q22ZMc7_DA@mail.gmail.com>
+ <cfb54bb3-a7dd-fafd-6b33-5500d6728a8f@xs4all.nl>
 MIME-Version: 1.0
-Received: by 2002:ac0:d54a:0:0:0:0:0 with HTTP; Wed, 3 Jun 2020 21:35:06 -0700 (PDT)
-From:   youling 257 <youling257@gmail.com>
-Date:   Thu, 4 Jun 2020 12:35:06 +0800
-Message-ID: <CAOzgRdZQjuDfA1wa9AGYjRa-mNWbTNQNCOS60eHzDLeW9WCXpg@mail.gmail.com>
-Subject: Re: [PATCH v6 10/12] mmap locking API: rename mmap_sem to mmap_lock
-To:     walken@google.com
-Cc:     Liam.Howlett@oracle.com, akpm@linux-foundation.org,
-        daniel.m.jordan@oracle.com, dave@stgolabs.net, hughd@google.com,
-        jgg@ziepe.ca, jglisse@redhat.com, jhubbard@nvidia.com,
-        ldufour@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, peterz@infradead.org, rientjes@google.com,
-        vbabka@suse.cz, willy@infradead.org, yinghan@google.com,
-        youling257 <youling257@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfb54bb3-a7dd-fafd-6b33-5500d6728a8f@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have build error about kernel/sys.c,
+On (20/06/02 14:24), Hans Verkuil wrote:
+[..]
+> For vim2m (but looks the same for vivid/vimc/vicodec):
+> 
+> Streaming ioctls:
+>         test read/write: OK (Not Supported)
+>         test blocking wait: OK
+>         Video Capture: Captured 8 buffers
+>         test MMAP (no poll): OK
+>         Video Capture: Captured 8 buffers
+>         test MMAP (select): OK
+>         Video Capture: Captured 8 buffers
+>         test MMAP (epoll): OK
+>         Video Capture: Captured 8 buffers
+>         test USERPTR (no poll): OK
+>         Video Capture: Captured 8 buffers
+>         test USERPTR (select): OK
+>                 fail: v4l2-test-buffers.cpp(1874): flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+>                 fail: v4l2-test-buffers.cpp(1937): setupDmaBuf(expbuf_node, node, q, exp_q)
+>         test DMABUF (no poll): FAIL
+>                 fail: v4l2-test-buffers.cpp(1874): flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+>                 fail: v4l2-test-buffers.cpp(1937): setupDmaBuf(expbuf_node, node, q, exp_q)
+>         test DMABUF (select): FAIL
 
+This helps. I'm probably "holding v4l2-compliance wrong", but I have
+never seen that assertion triggering. The fix should be easy enough
 
-kernel/sys.c: In function =E2=80=98prctl_set_vma=E2=80=99:
+---
 
-kernel/sys.c:2392:18: error:
-
-=E2=80=98struct mm_struct=E2=80=99 has no member named =E2=80=98mmap_sem=E2=
-=80=99; did you mean
-
-=E2=80=98mmap_base=E2=80=99?
-
-  2392 |  down_write(&mm->mmap_sem);
-
-       |                  ^~~~~~~~
-
-       |                  mmap_base
-
-kernel/sys.c:2402:16: error:
-
-=E2=80=98struct mm_struct=E2=80=99 has no member named =E2=80=98mmap_sem=E2=
-=80=99; did you mean
-
-=E2=80=98mmap_base=E2=80=99?
-
-  2402 |  up_write(&mm->mmap_sem);
-
-       |                ^~~~~~~~
-
-       |                mmap_base
-
-
-
-why not rename kernel/sys.c mmap_sem to mmap_lock?
-
-
-diff --git a/kernel/sys.c b/kernel/sys.c
-
-index 113955fe1c6b..043c04a745a9 100644
-
---- a/kernel/sys.c
-
-+++ b/kernel/sys.c
-
-@@ -2389,7 +2389,7 @@ static int prctl_set_vma(unsigned long opt,
-unsigned long start,
-
-      if (end =3D=3D start)
-
-          return 0;
-
--    down_write(&mm->mmap_sem);
-
-+    down_write(&mm->mmap_lock);
-
-      switch (opt) {
-
-      case PR_SET_VMA_ANON_NAME:
-
-@@ -2399,7 +2399,7 @@ static int prctl_set_vma(unsigned long opt,
-unsigned long start,
-
-          error =3D -EINVAL;
-
-      }
-
--    up_write(&mm->mmap_sem);
-
-+    up_write(&mm->mmap_lock);
-
-      return error;
-
-  }
+diff --git a/utils/v4l2-compliance/v4l2-test-buffers.cpp b/utils/v4l2-compliance/v4l2-test-buffers.cpp
+index 79b74e96..1ee12f96 100644
+--- a/utils/v4l2-compliance/v4l2-test-buffers.cpp
++++ b/utils/v4l2-compliance/v4l2-test-buffers.cpp
+@@ -1871,8 +1871,8 @@ static int setupDmaBuf(struct node *expbuf_node, struct node *node,
+ 				fail_on_test(!buf.g_bytesused(p));
+ 		}
+ 		flags = buf.g_flags();
+-		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE);
+-		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN);
++		fail_on_test(!(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE));
++		fail_on_test(!(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN));
+ 		fail_on_test(flags & V4L2_BUF_FLAG_DONE);
+ 		fail_on_test(buf.querybuf(node, i));
+ 		fail_on_test(buf.check(q, Queued, i));
