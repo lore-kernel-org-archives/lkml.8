@@ -2,181 +2,146 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3318C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7954E2065C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F1D20878
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpIhailS"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="gAJavElU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgFDJQf (ORCPT
+        id S1728049AbgFDJRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:16:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33152 "EHLO
+        Thu, 4 Jun 2020 05:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgFDJQe (ORCPT
+        with ESMTP id S1727925AbgFDJRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:16:34 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45607C03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:16:34 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id y13so2576063ybj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:16:34 -0700 (PDT)
+        Thu, 4 Jun 2020 05:17:02 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C55EC03E96E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:17:02 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id m21so4059882eds.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=szeredi.hu; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EZ/1OA1lIfkBZzGhY/7MgoW8R4VpB8ChGNgUuwxq9eI=;
-        b=lpIhailSAHTDLeRhiB9ZtjJ0QiY2pjYaNPivllIVOQxUjafhECX7wzRtPm4wt7ocGZ
-         yIbe1HyFhPgCisQUbqfx4i5UTJ5spb9z0ySzBeeyPv+gXmwFG3ZYC5kRwNQZxS+D+UZI
-         IMiV4/wQ2SnGXxUM6FCEj+n7rkLfLw9Z29pOzfpC+U+ceurlbYVa3XM5eQMD+mLTtp1U
-         YRXfrfrG+RfHNQvtuSIfDBxFFe1Ep8fBxsXs5+t9LnbPCo+SYJ6fRBE+r+MMyW12hmw6
-         KRVkpIYXpAX8/yW8Ywf2uKYpf2mAW8DZwzfMfFsI1F2qMHFeFIsnQG0cc0xzdfsQogyL
-         JyLQ==
+        bh=zhAP4FrRDZrjypcHYBWPYi+wkv0jiWxIjMhRADC+Z5I=;
+        b=gAJavElU635AJKokbORkRDl2kDekyNy4u8CmFMidi8khzlpUxFcGRfzaeZ3Jgj9mOB
+         1+tKhkMzDGoDn2AGpuzJ0NsaB1c3+XFNNzAZKaQYHmNxgVeT+XUEk+2k16vEB2GOO7M3
+         yHp6Vl00koFbXurW03WpWE/JSwfPOtiGtfhvI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EZ/1OA1lIfkBZzGhY/7MgoW8R4VpB8ChGNgUuwxq9eI=;
-        b=nU3lKUR9f034JEp8pp6Z6fPKC/rfnacVhI+lkpsjbWfDGlq7dORL9HFlAJchmFYiq7
-         M53NAs76Sw4mhBhpNhevxLjRii8nA1VH+CCD6DecOTM0axlP74g9VXeAOx4s3lfzd2Ma
-         vwjvXTNeqlRzp5qIQ7A5yHqPdlx9wb/zRpozvXoBvPszuq4qiZbocEAv40N4/dOLejrB
-         fim3Gjz2JXpn5JdjzkJhhGKIGftkF+nJtF+kw+SIIQU8/UH6dDSBkH6Zy7/+bjUOwOHn
-         09SgGNlv5hN+ZvVCK51m0kwcMsjxtT0jADOduyKnsJlONvLZrMSF9a1l90bhdm/twzeA
-         x3Lw==
-X-Gm-Message-State: AOAM530nwD3ikJkd74emqaowO9PDG8pK+qne7W+ZIbPRWIDUz7oskurf
-        Yg/kVl4ytQ9rgeFXYz0JPr3JCAZgZnfFHUM4cZC2pA==
-X-Google-Smtp-Source: ABdhPJznz7G/EiOx2AkWCjZzyX47+72QghNX17aKbkdplodgFQ31LTBq32m8EB6m6azYa8JVUqYhyHay+txWPeD0zw0=
-X-Received: by 2002:a5b:345:: with SMTP id q5mr6093715ybp.494.1591262192787;
- Thu, 04 Jun 2020 02:16:32 -0700 (PDT)
+        bh=zhAP4FrRDZrjypcHYBWPYi+wkv0jiWxIjMhRADC+Z5I=;
+        b=M/wEeBiDrDM9gmdQd9O/gijCqPZqpOnv1LJ0x/9iKRAWlGDQbgv/UelfpHSJXHlEsj
+         fKi8Pb+9aeluC2uoqmoI6POqB4o8PU8/qa3mV/lY6YR7Ty2lXOd5wUqO23kc9TAiFsJQ
+         wRhEpxeBP0Vf2ji9dFeoG3JTK3vpUYm0UlgsBEZryn7+XWlx+io677EG9S8ALpyUXRUh
+         ludFO9Pgajp0gbud1sRomUsZCgYDmgPwXuAuF01Jny/TQf4Ce+hHswNjLz5G0bjKS8d8
+         5q6SY/nXCvOMeRHC190xaS578SO/CajiHwD9OOf9dCIq/chZK71WULgwLHPGv+r84Sji
+         8Frg==
+X-Gm-Message-State: AOAM5316UG0wV9GyjPH6GVcwnhYs2cVyOiZrkW/7y8asJpaNAgvR+Rfe
+        KVEqp9MoAnUO9GzLSxFJ8iA8kyh01SrKHm6JxUBIvw==
+X-Google-Smtp-Source: ABdhPJx61AOxmZRmL/Oy5iwZykzcL1rHsU7jxY58d6SBzKQDu9pppgd1wvMKOMT3TGbZI7nXAdbF8OSqjlU8BfXzx44=
+X-Received: by 2002:aa7:d785:: with SMTP id s5mr3554653edq.17.1591262220848;
+ Thu, 04 Jun 2020 02:17:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200601150645.13412-1-maxim.uvarov@linaro.org>
- <20200601150645.13412-2-maxim.uvarov@linaro.org> <20200604083655.GA4026@linux.intel.com>
-In-Reply-To: <20200604083655.GA4026@linux.intel.com>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Thu, 4 Jun 2020 12:16:21 +0300
-Message-ID: <CAD8XO3b4K6ozHwKf2NDJ482JQY6CPXKKxRuZgo5snP16i_5E=Q@mail.gmail.com>
-Subject: Re: [PATCHv6 1/3] optee: use uuid for sysfs driver entry
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>
+References: <4ebd0429-f715-d523-4c09-43fa2c3bc338@oracle.com>
+ <202005281652.QNakLkW3%lkp@intel.com> <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
+In-Reply-To: <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 4 Jun 2020 11:16:49 +0200
+Message-ID: <CAJfpegtz=tzndsF=_1tYHewGwEgvqEOA_4zj8HCAqyFdKe6mag@mail.gmail.com>
+Subject: Re: [PATCH v2] ovl: provide real_file() and overlayfs get_unmapped_area()
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Colin Walters <walters@verbum.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        overlayfs <linux-unionfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 11:37, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+On Thu, May 28, 2020 at 11:01 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
 >
-> On Mon, Jun 01, 2020 at 06:06:43PM +0300, Maxim Uvarov wrote:
-> > With the evolving use-cases for TEE bus, now it's required to support
-> > multi-stage enumeration process. But using a simple index doesn't
-> > suffice this requirement and instead leads to duplicate sysfs entries.
-> > So instead switch to use more informative device UUID for sysfs entry
-> > like:
-> > /sys/bus/tee/devices/optee-ta-<uuid>
+> On 5/28/20 1:37 AM, kbuild test robot wrote:
+> > Hi Mike,
 > >
-> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> > Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
->
-> Why do you mean by duplicate sysfs entries?
->
-
-Without this change it will try to register something like that:
-first stage w/o tee-supplicant:
-/sys/bus/tee/devices/optee-clnt0
-/sys/bus/tee/devices/optee-clnt1
-/sys/bus/tee/devices/optee-clnt3
-Then with tee-supplicant also index started with 0. I.e.
-/sys/bus/tee/devices/optee-clnt0
-/sys/bus/tee/devices/optee-clnt1
-...
-
-So we need to increase global index or use some other unique names.
-
-
-
+> > I love your patch! Yet something to improve:
+> >
+> > [auto build test ERROR on miklos-vfs/overlayfs-next]
+> > [also build test ERROR on linus/master v5.7-rc7]
+> > [cannot apply to linux/master next-20200526]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> >
+> > url:    https://github.com/0day-ci/linux/commits/Mike-Kravetz/ovl-provide-real_file-and-overlayfs-get_unmapped_area/20200528-080533
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git overlayfs-next
+> > config: h8300-randconfig-r036-20200528 (attached as .config)
+> > compiler: h8300-linux-gcc (GCC) 9.3.0
+> > reproduce (this is a W=1 build):
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # save the attached .config to linux build tree
+> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=h8300
+> >
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> >
+> > All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
+> >
+> > fs/overlayfs/file.c: In function 'ovl_get_unmapped_area':
+> >>> fs/overlayfs/file.c:768:14: error: 'struct mm_struct' has no member named 'get_unmapped_area'
+> > 768 |   current->mm->get_unmapped_area)(realfile,
+> > |              ^~
+> >>> fs/overlayfs/file.c:770:1: warning: control reaches end of non-void function [-Wreturn-type]
+> > 770 | }
+> > | ^
+> >
+> > vim +768 fs/overlayfs/file.c
+> >
+> >    760
+> >    761        static unsigned long ovl_get_unmapped_area(struct file *file,
+> >    762                                        unsigned long uaddr, unsigned long len,
+> >    763                                        unsigned long pgoff, unsigned long flags)
+> >    764        {
+> >    765                struct file *realfile = real_file(file);
+> >    766
+> >    767                return (realfile->f_op->get_unmapped_area ?:
+> >  > 768                        current->mm->get_unmapped_area)(realfile,
+> >    769                                                        uaddr, len, pgoff, flags);
+> >  > 770        }
+> >    771
+> >
 > > ---
-> >  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
-> >  MAINTAINERS                                       | 1 +
-> >  drivers/tee/optee/device.c                        | 6 +++---
-> >  3 files changed, 12 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> > 0-DAY CI Kernel Test Service, Intel Corporation
+> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 > >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> > new file mode 100644
-> > index 000000000000..0ae04ae5374a
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> > @@ -0,0 +1,8 @@
-> > +What:                /sys/bus/tee/devices/optee-ta-<uuid>/
-> > +Date:           May 2020
-> > +KernelVersion   5.7
-> > +Contact:        tee-dev@lists.linaro.org
-> > +Description:
-> > +             OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
-> > +             matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
-> > +             are free to create needed API under optee-ta-<uuid> directory.
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index ecc0749810b0..6717afef2de3 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
-> >  M:   Jens Wiklander <jens.wiklander@linaro.org>
-> >  L:   tee-dev@lists.linaro.org
-> >  S:   Maintained
-> > +F:   Documentation/ABI/testing/sysfs-bus-optee-devices
-> >  F:   drivers/tee/optee/
-> >
-> >  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
-> > diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-> > index e3a148521ec1..ed3d1ddfa52b 100644
-> > --- a/drivers/tee/optee/device.c
-> > +++ b/drivers/tee/optee/device.c
-> > @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
-> >       return 0;
-> >  }
-> >
-> > -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> > +static int optee_register_device(const uuid_t *device_uuid)
-> >  {
-> >       struct tee_client_device *optee_device = NULL;
-> >       int rc;
-> > @@ -75,7 +75,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> >               return -ENOMEM;
-> >
-> >       optee_device->dev.bus = &tee_bus_type;
-> > -     dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
-> > +     dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid);
 >
-> This code is and already was broken. If dev_set_name() returns -ENOMEM,
-> the name will be a null pointer.
+> Well yuck!  get_unmapped_area is not part of mm_struct if !CONFIG_MMU.
 >
+> Miklos, would adding '#ifdef CONFIG_MMU' around the overlayfs code be too
+> ugly for you?  Another option is to use real_file() in the mmap code as
+> done in [1].
 
-Well in the current code base only 1% of drivers check the return code
-of dev_set_name(). But I don't  mind adding this check.
+I think the proper fix is to add an inline helper
+(call_get_unmapped_area()?) in linux/mm.h, and make that work properly
+for the NOMMU case as well.
 
-
-> Also, I don't get how you can just swap the name without potentially
-> breaking the backwards compatiblity towards the user space.
->
-> /Jarkko
-
-Backwards compatibility to what? API (stable, testing) are defined in
-Documentation. There was no doc for that. And user get notifications
-on uevent, so it's udev deal how to find proper sysfs entry.
-
-Regards,
-Maxim.
+Thanks,
+Miklos
