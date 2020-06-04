@@ -7,103 +7,115 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8520BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5798C2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591305156;
-	bh=UZlijKuPTO1hH3kVRxVei3fDs4KrTnkOB0gtMTwpIcs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SnzRXnru1ne7t6ZVPHwsHTzIPbUlUODbKXNUZV9UXB+IrnlXPNTV2ECSRYDYd64iw
-	 KmR+bpW6L3opM+M0UHu9DcS/WrMXMZFyZdP3FXz2zjiQs5JQbHAWpmld2ti3bzejxW
-	 Nul8aB0ZiaLK/HMKEfdOsLVZ0tbrVe4UjG2Obecg=
+	by mail.kernel.org (Postfix) with ESMTP id B69922067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 21:12:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CUAua5qV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgFDVMf (ORCPT
+        id S1728047AbgFDVMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 17:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59550 "EHLO
+        Thu, 4 Jun 2020 17:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgFDVMf (ORCPT
+        with ESMTP id S1726594AbgFDVMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 17:12:35 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A731C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 14:12:34 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id n24so9078432lji.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:12:34 -0700 (PDT)
+        Thu, 4 Jun 2020 17:12:36 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36130C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 14:12:36 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id k13so4372581vsm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iWfV8unn/jDE1IkKTi4eGizRqjMmsf8nkdeQumfmS/E=;
-        b=eLzKDDXnYRS3ogKAIKxWM8vlr/7ibcc+4K80kkfpHelwK6HG/xaXBI7lZRs20yuBnj
-         Q6PHndcgxKCdrbLWBQe/Arz9rHYXCpgLIyc+ywNXJz0I23n/DmY2AynhZ6lw9Y2KGg/6
-         iCRx1EhfcYmsGfUulJaHdN2J3/aIshUlzi+kk=
+        bh=2/2vvNqjDrDfa9zj4WkpMzbskQTo3mnO0g8KBrFA7s8=;
+        b=CUAua5qV8xF2sA5jNCA2iEaVCwy8+VpWn+NmTfcE6rq0kqEpaokEJWOgU5rdPmU2g7
+         1Vv5n3TRANrrPNT8DQXFfzcsyspUq7QIQNzjXHwb51Ovp3FYXom9Bk6Tt9wDXsmFiYI3
+         sQsGqUR7iG/5s865l6vTA02WgDgK6RP0D8h7w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iWfV8unn/jDE1IkKTi4eGizRqjMmsf8nkdeQumfmS/E=;
-        b=PtsUt3U7Bi8gBKt0qfETBxl73xNSXwztiFRX89EUAXxB3goFae5wUj8KnLIBHp6g9T
-         3+tzhgPkuIwldBJgLlIAOdFtFPm0p96peziEpqIbep+JGGw6kjK0ZMZCYHhrgNYxZWh2
-         jSTD76lAEcp2wg1ION0daAL0bC9yepE9qwT66PFffPWN5qMWTqff/3+kE23SoJ++Wmtl
-         C4UG8a7pV+iUtD8g1bvtu8nbL+dVbtMU4ZT5LKuSsngyG1kippaqgnCxeauaTnE7lvSD
-         TCjuYwO2cX2lSzHiJKV5Jak3QdsfDSeZ3KDMFL2O8AxGYwF1GFrq00g1QDNWLoa/3lpd
-         Kwbw==
-X-Gm-Message-State: AOAM5339VP1CfwVAha29pmvgahF1fdPqiy7izWUJIAzgjOsIxp6xTagQ
-        9dKjdMkZ9bY4JqNgJVoyxTUvGh1flKY=
-X-Google-Smtp-Source: ABdhPJwNRjyUpp2KtAy94AJ+Ct/3b6jegjbHKkmp74fD4zxvaNorMMNXB3FJKkU4IEojDJhBp3uxzg==
-X-Received: by 2002:a2e:8290:: with SMTP id y16mr3215560ljg.340.1591305152098;
-        Thu, 04 Jun 2020 14:12:32 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id s20sm170252lfb.48.2020.06.04.14.12.30
+        bh=2/2vvNqjDrDfa9zj4WkpMzbskQTo3mnO0g8KBrFA7s8=;
+        b=bz7PTPsrYFUi57dAvva8OO/MpgR1ti8YbfrpHGfYIXq/158tw+LZHATOWZ7VAX0R/g
+         5GKg5TnqD9IRa5SfD1l3yNbPicVSKyY/MvXzRk+v2pROo9wAQVPVqdEi8FFTeFtgN1TP
+         J87XYs0C0jTnkFU2mgD1LmN0srck8nbTxhOOZZtcJbUvwFYlFaCdD6c1Uk7+Urz5ZT7I
+         ZzBDjAmFrcgQ37CytYgg4bvZWI72iL1UPXX6eitlVtG9cK8bCfp2n2Em3uAdnWeZQYm5
+         OOhMh6JVZa0yNAU5KFnY9l6kJ5HksxymrKMF7poS+bNTBnweFnB6/SlBDi7WSRBXdDw5
+         qvrQ==
+X-Gm-Message-State: AOAM531nFLXkpgEOip/mAa4DWwpkO1k30fGn8vSd9zScN/oCgN5jR5vS
+        tZYG60yNCAl8exK8HriGT1Uj1OcBiXg=
+X-Google-Smtp-Source: ABdhPJxnS2HnhpSELozguuVLsLD2b1i80fzGZRhU0bm7CWM9L1CybFT8bMWNORxDKADhXJXCTsCDVQ==
+X-Received: by 2002:a67:1dc5:: with SMTP id d188mr5131206vsd.103.1591305155043;
+        Thu, 04 Jun 2020 14:12:35 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id b21sm418256uap.15.2020.06.04.14.12.34
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 14:12:31 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id c21so4489107lfb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:12:30 -0700 (PDT)
-X-Received: by 2002:a05:6512:62:: with SMTP id i2mr3473576lfo.152.1591305150398;
- Thu, 04 Jun 2020 14:12:30 -0700 (PDT)
+        Thu, 04 Jun 2020 14:12:34 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id g44so2229219uae.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 14:12:34 -0700 (PDT)
+X-Received: by 2002:a9f:2804:: with SMTP id c4mr5242531uac.8.1591305153580;
+ Thu, 04 Jun 2020 14:12:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200603232311.GA205619@roeck-us.net> <20200604083512.GN6857@suse.de>
- <CAHk-=wj2_YdxPaRFqBUUDZvtZKKG5To2KJhciJmDbchW2NFLnw@mail.gmail.com> <20200604140617.e340dd507ee68b0a05bd21cb@linux-foundation.org>
-In-Reply-To: <20200604140617.e340dd507ee68b0a05bd21cb@linux-foundation.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 4 Jun 2020 14:12:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjm+RrcTjB7KYCCsOouE2EyzRcwWUE9TVq6OCYYAt9Zyw@mail.gmail.com>
-Message-ID: <CAHk-=wjm+RrcTjB7KYCCsOouE2EyzRcwWUE9TVq6OCYYAt9Zyw@mail.gmail.com>
-Subject: Re: [PATCH] mm/vmalloc: track which page-table levels were modified
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Joerg Roedel <jroedel@suse.de>, Guenter Roeck <linux@roeck-us.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1591264879-25920-1-git-send-email-sumit.garg@linaro.org> <1591264879-25920-5-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1591264879-25920-5-git-send-email-sumit.garg@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 4 Jun 2020 14:12:22 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=URj6UiZgH_g3twcYgv=USGr7YUV5SkW3J-WYR1vs+MDw@mail.gmail.com>
+Message-ID: <CAD=FV=URj6UiZgH_g3twcYgv=USGr7YUV5SkW3J-WYR1vs+MDw@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] kdb: Switch to use safer dbg_io_ops over console APIs
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 2:06 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+Hi,
+
+On Thu, Jun 4, 2020 at 3:02 AM Sumit Garg <sumit.garg@linaro.org> wrote:
 >
-> As discussed over in
-> https://lore.kernel.org/linux-mm/20200604164814.GA7600@kernel.org/,
-> Mike's "mm: remove __ARCH_HAS_5LEVEL_HACK" patchset
-> (http://lkml.kernel.org/r/20200414153455.21744-1-rppt@kernel.org) is
-> expected to fix this.  5level-fixup.h gets removed.
+> @@ -433,7 +432,8 @@ static int kgdboc_earlycon_get_char(void)
+>  {
+>         char c;
+>
+> -       if (!earlycon->read(earlycon, &c, 1))
+> +       if (!kgdboc_earlycon_io_ops.cons->read(kgdboc_earlycon_io_ops.cons,
+> +                                              &c, 1))
+>                 return NO_POLL_CHAR;
+>
+>         return c;
+> @@ -441,7 +441,8 @@ static int kgdboc_earlycon_get_char(void)
+>
+>  static void kgdboc_earlycon_put_char(u8 chr)
+>  {
+> -       earlycon->write(earlycon, &chr, 1);
+> +       kgdboc_earlycon_io_ops.cons->write(kgdboc_earlycon_io_ops.cons, &chr,
+> +                                          1);
+>  }
 
-Ok, even better.
+The get_char / put_char functions are pretty unwieldy now.  If it were
+me I would have done:
 
-That said, the commentary about "why is p.._alloc_track() in such a
-core header file, when it's only used by two special cases" is
-probably still true regardless of the 5-level fixup header.. I assume
-Mike didn't do those kinds of changes?
+struct console *con =  kgdboc_earlycon_io_ops.cons;
 
-Yeah, I'm probably flailing at windmills, but I do dislike how we
-often end up just growing the very core headers that get included by
-everybody without ever trying to fix that uncontrolled growth..
+...and then used it so the lines didn't wrap in such a terrible way.  ;-)
 
-               Linus
+I'm not sure if I'd spin just for that, though.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+-Doug
