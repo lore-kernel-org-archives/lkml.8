@@ -2,108 +2,103 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15233C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE6532074B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667A12072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XpSqX/ok"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJpHUHZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgFDErR (ORCPT
+        id S1727027AbgFDEsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:47:17 -0400
-Received: from mail-eopbgr150054.outbound.protection.outlook.com ([40.107.15.54]:8928
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725950AbgFDErQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:47:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W4mzbMxzLVvDxEWq0AEBTMayIsaMSNNRK+mZbyv4xG5oEpOSl/iULstFQto7JJu12EKh7AIQDXXKCsBeUO94BtyLz/YFM5BYMU3DO2Zm3U5XU7dPctKFtAX4KHP/Z2yfFsiox5XajM8TNvFRwIN0vlCU2V4SOR5x4VcHcFlu7Axbyutwwukd01vsewninpVx7/vYaRXThp/1pqc9h+9PAlPFfZKqRE6Zkqd3Lssz+vp+8pO69fX72Sbs4xQJH4VMR7uWDjanPh3zlTnuqOHg6emUaap9O2KEJBfO/waO5DSTodTq1t46DKU2kRn1zZxTjc6WTu5Orgep98Tw83bjaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=noaHx6GA4sE4qeUfjrXWLwrGBpPZ5dHA5aXa4jYsxnM=;
- b=IiqIZE0lg8re64RbTul7O4zn1gZuM/bq/XP05HtDkjRj/sdVMuoOIMPonGQYLVQ4A9VrT4fILzqJ2GXhDxMfZAOoAkYu7HFAmThIs3nmdNCL1Zv+z+G0gTRIFgfpSDWybPYPp7yK2+2vvPG5NVwmJMpBkW4SFQ+vwYX8twkvBiYqdxM4agqUxuv+QP30VRwQFS+IgKj4MZt/B+3tUDV/2Pm8mq/y/sxDblNL3WY94ltUZ0yxBr/M0xBrbIRLVuzTJmNp0PedrYdb+EI+tFPvTr2Ey6rtKRS24J7BYKR57134HT0cFVtjIbHvdsC4qDMs3nFJ79OHurwJuuOu0xjFBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=noaHx6GA4sE4qeUfjrXWLwrGBpPZ5dHA5aXa4jYsxnM=;
- b=XpSqX/okyK1pY4VS1QASa0xHk6vWzMX3c5zCvEseeDR+pEWG8/jakF08VLO3Vesd0OkoSAjQL0GZd1vSghw9WlvD4tODUT4wG/9jMNoYGKU0nidltR91yPYuDC6Gd2qVC8y0DwN2s2K74AJ8ksMptz6Nbw4N8mpaWyJFbCgBcUs=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB6688.eurprd05.prod.outlook.com (2603:10a6:800:131::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 4 Jun
- 2020 04:47:13 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::2405:4594:97a:13c]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::2405:4594:97a:13c%2]) with mapi id 15.20.3045.024; Thu, 4 Jun 2020
- 04:47:13 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "efremov@linux.com" <efremov@linux.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Alex Vesker <valex@mellanox.com>
-CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net/mlx5: DR, Fix freeing in dr_create_rc_qp()
-Thread-Topic: [PATCH] net/mlx5: DR, Fix freeing in dr_create_rc_qp()
-Thread-Index: AQHWODQW08Et5AyQukqYq107OQeR4qjH5gKA
-Date:   Thu, 4 Jun 2020 04:47:13 +0000
-Message-ID: <71eddd29fce960fed5556083548d68368315f6c3.camel@mellanox.com>
-References: <20200601164526.19430-1-efremov@linux.com>
-In-Reply-To: <20200601164526.19430-1-efremov@linux.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.2 (3.36.2-1.fc32) 
-authentication-results: linux.com; dkim=none (message not signed)
- header.d=none;linux.com; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f599eb7f-4e5b-4dd7-18ed-08d8084259ba
-x-ms-traffictypediagnostic: VI1PR05MB6688:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB6688861F81343A19710EA2ADBE890@VI1PR05MB6688.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 04244E0DC5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: a4prBYqFb+5pssA7glNlr8ux+Ayz6VsdKYGua+ZBmdtETiR5TRzvwZOJOxsZG3CBQXGzRH7OW3NptBiCxLrXauKLUkQ4Ioryd066mAeqojrwTTTPrBgEh32HHkcx5Zz7o0D0Z/krN8wD8dd603zC9W6EmoyjNp5Nf70hJP+xDRdsAroKKIyeDF0RXJxw4sEcpvBDVeWWyBf1QoG57g2rUfFsGV2a0BqL1djaeiT+sT7OZb/2Vzq+EmRvs0uid3rbeMZNrJSYzFLXgBI/L2sAp8JJKkc61VDMFvrqITCAoMQWAGyWMicFKkd2/yHXWHyAfB2pSvsIFoYk8t6r0kgXSA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(76116006)(6486002)(5660300002)(478600001)(71200400001)(4744005)(2906002)(8676002)(8936002)(36756003)(6636002)(26005)(110136005)(4326008)(6506007)(91956017)(6512007)(186003)(66476007)(64756008)(66946007)(54906003)(86362001)(2616005)(66446008)(66556008)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: q727Na69tJDNxZUCAthSHI77Qw21KIViDB+TuTaYP04Qi2LxiucFelHkkGxdrdWrq+UpCGJMeZC8hoAcELbSj0loxlDlIXzlQ5sEvVZ/xxKpYQR1QHW0Aumb+8Q6OYrL2gGrJ48tsujSwL36HXq29p0lCOG6VMUwNRKHjU6dGD0idLQqFQpA3FHTqj5OO8hB+O/FBbJahy2sWLYDhYg5bGP4Y8nOUCfS4NMXX/rrJdOmqaqlcgj04+EAKRob5ZXaGDFWjHFw6UYKdxfo9cUqApgMHTIESB4Ys7TMubKxxe4VJR0lficdEO/bES8PJRODaNy9LdyDvUZaKVCmMrU+wxp3ENLmwQEnyhSLc/3VYQ3LqSwzwbXoboLuuz3nqzFOnCur8+zlmQobAHSCOWhRj4OtPSNXIwjVAb8haq3SSvfrmOSIJkikk3gOew4LR8UatdJ3SuQ++hMvu2wtBhmGjL4r5d3WMjol7WuAcz90XVM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D670B1CD12B599478A49F8D3DCB91643@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f599eb7f-4e5b-4dd7-18ed-08d8084259ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2020 04:47:13.6598
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nrYTWcJ9EiYoHogJnnjB04U63p5XRd9CfiGFXTYH0dPriHW3jdflOLZHoHqBJL7a6CD1QZlKHbeenMUmrmd/Mg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6688
+        Thu, 4 Jun 2020 00:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgFDEsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 00:48:14 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F3BC05BD43;
+        Wed,  3 Jun 2020 21:48:14 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u13so3875965wml.1;
+        Wed, 03 Jun 2020 21:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NiqkpM/w+JZs4P0eo38xaVvQUC+7sYCnFp9tM9zgNlA=;
+        b=RJpHUHZJ5rtlH079jZ34c9Ewd/nRRN5UOZHSp+yOrq7oq1X1YRuhV/xC7y/GC99ETN
+         r1z6+NUygzg7z4z1CLlUN9iJJmDnj+BY6uVNX0GnLjF39TbIPRHpOt9NUNfZ78ZATKLl
+         FnXo/Iy+OfVPLILhSPfkm7QIo7ipgGMwRzhPY/DOQ3fvPTW7eYZJy3Q2fKiCxszTLNGB
+         sQqjU2wy9G3k0eEkBMpb1pYgHZtU1XUhHKPFSP4hjPlXj3fX4c8A4XUAx+cqjMUzhyM2
+         eoMKw8uGEDBYEAil1sOLx5tdSMuGeJIJCEQ4WRNMetTUl3HvVEOGycjqNOA70ecj3F85
+         ulMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NiqkpM/w+JZs4P0eo38xaVvQUC+7sYCnFp9tM9zgNlA=;
+        b=OQvCVCxTNyB+9Tw4r3DUKIm8M/Y02Edq6o1z91/gpz5ySF6tmYCJBTTNt/kwPnscva
+         ZzhX4yFgAdobLcrDnPWWAU3jOPkN4m5E4pE4hsewgSIEMmRcqCk1dyMLLFFZo3KHExAA
+         PgLamNEpAW5sxOJOWYNgPjjR/0VVcCxfvGoUqQOo44renEve6IgpuM1D65jisjLx8LoU
+         yVHuXGMpBat8n4CR74WGNBiRI01skU7gYLZDj451B3s6GeeeEri4IHK5hTJ1zHfOFuT1
+         PL6g89oblaGYw14lZESoxYvotbJWEOGpvznx/k83FCLC/Hz4jBHcGGqSHE8mJJLyYxye
+         w/Ug==
+X-Gm-Message-State: AOAM533vYKFfwSK2IOA+hk75NSW/mJLbosnJ2h2zaqNpcZSkga6YVMq4
+        8S/8j1a+QJY6ih3YxQHlR6s=
+X-Google-Smtp-Source: ABdhPJzYH0zI5Nab6ZoyXhJ1nGO3ZWVm28otZxnBQpZbtdQXXLh9do4Nkd8vrhaCUrRwpae8ziyN0g==
+X-Received: by 2002:a7b:c353:: with SMTP id l19mr2222544wmj.187.1591246092837;
+        Wed, 03 Jun 2020 21:48:12 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id a15sm6349708wra.86.2020.06.03.21.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 21:48:12 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] soc: amlogic: meson-gx-socinfo: Fix S905X3 ID
+Date:   Thu,  4 Jun 2020 04:48:08 +0000
+Message-Id: <20200604044808.30995-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA2LTAxIGF0IDE5OjQ1ICswMzAwLCBEZW5pcyBFZnJlbW92IHdyb3RlOg0K
-PiBWYXJpYWJsZSAiaW4iIGluIGRyX2NyZWF0ZV9yY19xcCgpIGlzIGFsbG9jYXRlZCB3aXRoIGt2
-emFsbG9jKCkgYW5kDQo+IHNob3VsZCBiZSBmcmVlZCB3aXRoIGt2ZnJlZSgpLg0KPiANCj4gRml4
-ZXM6IDI5N2NjY2ViZGM1YSAoIm5ldC9tbHg1OiBEUiwgRXhwb3NlIGFuIGludGVybmFsIEFQSSB0
-byBpc3N1ZQ0KPiBSRE1BIG9wZXJhdGlvbnMiKQ0KPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9y
-Zw0KPiBTaWduZWQtb2ZmLWJ5OiBEZW5pcyBFZnJlbW92IDxlZnJlbW92QGxpbnV4LmNvbT4NCj4g
-DQoNCkFwcGxpZWQgdG8gbmV0LW1seDUsDQpUaGFua3MsDQpTYWVlZC4NCg==
+The current value is taken from Amlogic's 4.9 bsp kernel which appears
+to use the wrong ID. For comparison, here's before/after:
+
+[    0.152237] soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected
+[    0.152463] soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected
+
+Fixes c9cc9bec36d0 ("soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 01fc0d20a70d..c38a1e4db28b 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -68,7 +68,7 @@ static const struct meson_gx_package_id {
+ 	{ "S905X2", 0x28, 0x40, 0xf0 },
+ 	{ "S922X", 0x29, 0x40, 0xf0 },
+ 	{ "A311D", 0x29, 0x10, 0xf0 },
+-	{ "S905X3", 0x2b, 0x5, 0xf },
++	{ "S905X3", 0x2b, 0x10, 0xf0 },
+ 	{ "S905D3", 0x2b, 0xb0, 0xf0 },
+ 	{ "A113L", 0x2c, 0x0, 0xf8 },
+ };
+-- 
+2.17.1
+
