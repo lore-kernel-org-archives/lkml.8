@@ -2,124 +2,145 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0DEF206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:13:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lrrQ3nqJ"
+	by mail.kernel.org (Postfix) with ESMTP id A3C7220738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:16:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591294580;
+	bh=NwKcPM9opORdcXMXFoo6Zvka0pklrKSlzN6W/JgehYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kH/3PmJtw9o377oM63XT0D5RLQqhCezIAHSRq5AYjLwYaoNBvf3AaoDAnBgvhm8EE
+	 x8cQ5dvxzYVQ2sEhk43ZNyVmv3TZQGi1fooHsQavkkJRnDIqj0fKTVetfDhVFcZJww
+	 7It8Pg7d56iaS+Q2NaH5jruBqwpHVo2fOWrLG258=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbgFDSNv (ORCPT
+        id S1730362AbgFDSQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:13:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57320 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729856AbgFDSNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:13:50 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054ICJmT164296;
-        Thu, 4 Jun 2020 18:13:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=nzwZOlHPbMBuxy9DuovN5RoN5aL2B3OynDdOfCsfpvE=;
- b=lrrQ3nqJHmFQunu1FVaWsDgD5WJKNCj3+HDvqpLhwTbEuUj0MDcxk1JlU3nd/Q2JtAXX
- vq3wkA9Wi5ed4kZ4VZW3SwAorydLTGKX+rmrmM0Fbg3jj7fp2mYNBnPpdHA8PrBgJQjc
- 4Dao3pk/zLbNpPBm4K+40/8v5SwYrEUlgNJQT405BSje4fqD0nJFKpzfoh1WDv03hNVV
- wT+OylcNi4ConNZzDn0RoFr1zOP2V9u8p9EZSZDQc2PmstjXKThvehoF3tg2UoX03DkM
- F2Rc/izOYUv9krZ7cVYDEMua8floww+a9rO7PHJAaGeHvXBGPdAgMaBoSOB8jH6y/hWd fQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31ev96u679-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 04 Jun 2020 18:13:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054I86G0096243;
-        Thu, 4 Jun 2020 18:11:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31dju5d81f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Jun 2020 18:11:39 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 054IBade005799;
-        Thu, 4 Jun 2020 18:11:37 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 04 Jun 2020 11:11:36 -0700
-Date:   Thu, 4 Jun 2020 14:12:01 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, linux-mm@kvack.org,
+        Thu, 4 Jun 2020 14:16:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729856AbgFDSQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 14:16:19 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 110E3206C3;
+        Thu,  4 Jun 2020 18:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591294578;
+        bh=NwKcPM9opORdcXMXFoo6Zvka0pklrKSlzN6W/JgehYc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lJC/NMYNvsAQNHNCYCrZH4JXiRkKVtCEskxnNgz/ZKr9culCDGFxSOOnPmTJSsiu4
+         Rg3rETGfh8soY8g0zT1cpEu0xrZEy+SE69T3piYStco0q1KlTFLhODquEC2Yv+KkYG
+         ga+CKQvCZyGLbKloHGzDVV+UKwjDKDR+Jz21SlKw=
+Date:   Thu, 4 Jun 2020 13:21:23 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Sistare <steven.sistare@oracle.com>
-Subject: Re: [PATCH] x86/mm: use max memory block size with unaligned memory
- end
-Message-ID: <20200604181201.lqop72ihg5butlmz@ca-dmjordan1.us.oracle.com>
-References: <20200604035443.3267046-1-daniel.m.jordan@oracle.com>
- <5827baaf-0eb5-bcea-5d98-727485683512@redhat.com>
- <20200604172213.f5lufktpqvqjkv4u@ca-dmjordan1.us.oracle.com>
- <ebc31650-9e98-f286-6fc2-aafdd3cd9272@redhat.com>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] docs: deprecated.rst: Add note to the use of
+ struct_size() helper
+Message-ID: <20200604182123.GD10051@embeddedor>
+References: <20200604172138.GA21820@embeddedor>
+ <202006041047.9B3E8FB951@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ebc31650-9e98-f286-6fc2-aafdd3cd9272@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006040127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- malwarescore=0 priorityscore=1501 cotscore=-2147483648 impostorscore=0
- spamscore=0 phishscore=0 mlxscore=0 clxscore=1015 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006040128
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202006041047.9B3E8FB951@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:45:40PM +0200, David Hildenbrand wrote:
-> On 04.06.20 19:22, Daniel Jordan wrote:
-> > IMHO the root cause of this is really the small block size.  Building a cache
-> > on top to avoid iterating over tons of small blocks seems like papering over
-> > the problem, especially when one of the two affected paths in boot is a
+On Thu, Jun 04, 2020 at 10:49:19AM -0700, Kees Cook wrote:
+> On Thu, Jun 04, 2020 at 12:21:38PM -0500, Gustavo A. R. Silva wrote:
+> > Add a note to educate people about the proper use of struct_size() when
+> > the trailing array in the enclosing structure is a one-element array.
+> > 
+> > Zero-length and one-element arrays will soon be removed from the kernel,
+> > but in the meantime, it's worth letting people know how to correctly
+> > use struct_size() together with such constructs.
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> > 
+> > Kees,
+> >  
+> > This is not substitute for the patch I'll write about flexible-arrays
+> > and the deprecation of zero-lenght and one-element arrays.
 > 
-> The memory block size dictates your memory hot(un)plug granularity.
+> Hm, hm. I think I'd rather just get the 0/1-array docs written, since
+> that will mean this paragraph isn't needed at all. (Or rather, it can be
 
-Indeed.
+Yeah. My reasoning for is that it will take a while --at least one 
+development cycle more-- to completely get rid of all the 0/1-arrays.
+Also, this was motivated by the following comments from Christian
+König:
 
-> E.g., on powerpc that's 16MB so they have *a lot* of memory blocks.
-> That's why that's not papering over the problem. Increasing the memory
-> block size isn't always the answer.
+"May I suggest that we add a section how to correctly do this to
+Documentation/process/coding-style.rst or similar document?
 
-Ok.  If you don't mind, what's the purpose of hotplugging at that granularity?
-I'm simply curious.
+I've seen a bunch of different approaches and some even doesn't work
+with some gcc versions and result in a broken binary."[1]
 
-> > cautious check that might be ready to be removed by now[0]:
+> modified to say "if you're using struct_size() on a 1-array, stop using
+> a 1-array, see [link]". If someone is going to switch around their code,
+> they need to switch to flex at the same time, IMO.
 > 
-> Yeah, we discussed that somewhere already. My change only highlighted
-> the problem. And now that it's cheap, it can just stay unless there is a
-> very good reason not to do it.
 
-Agreed.
+I agree with this. I can add the comments in quotes you suggest to this
+patch.
 
-> > Yeah, but of course it's not as bad as it was now that it's fully parallelized.
+But I think we can add this note while I continue working on the flexible-array
+conversions. Once that work is complete, I can go back and update the
+documentation. :)
+
+What do you think?
+
+Thanks
+--
+Gustavo
+
+[1] https://lore.kernel.org/lkml/1065d63e-7959-e4b4-af4e-70607ba92296@amd.com/
+
+> > 
+> >  Documentation/process/deprecated.rst | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+> > index 652e2aa02a66c..0b7b37718bf96 100644
+> > --- a/Documentation/process/deprecated.rst
+> > +++ b/Documentation/process/deprecated.rst
+> > @@ -85,6 +85,17 @@ Instead, use the helper::
+> >  
+> >  	header = kzalloc(struct_size(header, item, count), GFP_KERNEL);
+> >  
+> > +NOTE: You might want to use the following form in case the trailing array
+> > +is a one-element array, as unlike zero-length arrays and flexible-array
+> > +members, `one-element arrays occupy at least as much space as a single
+> > +object of the type <https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
+> > +hence they contribute to the size of the enclosing structure::
+> > +
+> > +	header = kzalloc(struct_size(header, item, count - 1), GFP_KERNEL);
+> > +
+> > +It's also worth noting that one-element arrays --together with zero-length
+> > +arrays-- will soon be completely removed from the codebase and deprecated.
+> > +
+> >  See array_size(), array3_size(), and struct_size(),
+> >  for more details as well as the related check_add_overflow() and
+> >  check_mul_overflow() family of functions.
+> > -- 
+> > 2.27.0
+> > 
 > 
-> Right. I also observed that computing if a zone is contiguous can be
-> expensive.
-
-That's right, I remember that.  It's on my list :)
+> -- 
+> Kees Cook
