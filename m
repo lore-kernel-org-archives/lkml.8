@@ -2,114 +2,136 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F167C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F7120772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE89207DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e7eITrZA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EA8m89u9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgFDO1r (ORCPT
+        id S1729034AbgFDOc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:27:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgFDO1q (ORCPT
+        Thu, 4 Jun 2020 10:32:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59194 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728919AbgFDOc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:27:46 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A9FC08C5C4
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:27:46 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g12so2238744pll.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ELp8NKpDU/b4oaZzGkEuk3yIxekW0FfVsfMh0kEq3DQ=;
-        b=e7eITrZAAG4SVhaatsNGEFfKSAV4mgFFeMordqmQufFe6/vzeagmQ484X5shPhREQO
-         NcIW+cQNizrMWNfglE0Jh5V6uWSzvceN4EXsYppzfKNVQcK2K6MGcm3eAbNC9iODqDY1
-         7i/uriuA9VGz8WZ62VSr78LapWZNk/5N3ydBE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ELp8NKpDU/b4oaZzGkEuk3yIxekW0FfVsfMh0kEq3DQ=;
-        b=DHHcplpqTl/a9IRoDxBTlOsEfHmpVMGkmUkB4ACi+u7uJ7axZE3KUp6W0A4uMUpaR6
-         oyBuEwG5/sh9tWrygKrsSVwAseLKZGZiSDRQWGmiE+w5rWt6xkC+mi9RFD2IeufhXxxN
-         SeG6yrnBAEOAHfAc62EEjE4I6YqhHx98Mj/ZxF+f0cY4Hh84HB8pKhN+6aKgoGtA+e5w
-         VKnSciHZMIRBHK2bXUHx00Dlj0E6OiVm4Fm/zw5jbFid/D7ktVQ4T6rC2EdnikZDFRCr
-         qbtmWnX4z5a4wL4+JgyJgQJlopCH3utk8PHCJm8VjKj7fPEcfBePvRdrmCooHHJtebNv
-         4yzQ==
-X-Gm-Message-State: AOAM5315CH5R/tUhbpkgbNvUAtPO8RuSkqLDZ2zZ/vhVNg4xunZOrtTO
-        BFsQ6KtG83yIcvgIViBDyWHvGw==
-X-Google-Smtp-Source: ABdhPJyh46iXXKU9Sh1DXTFOzkFXYm4paCXLSWoWqbxFRDWCjy8xbqFVrhjjddGEPZlvsY+JnIndAg==
-X-Received: by 2002:a17:90b:188d:: with SMTP id mn13mr6391960pjb.84.1591280865425;
-        Thu, 04 Jun 2020 07:27:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j15sm5944936pjj.12.2020.06.04.07.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 07:27:44 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 07:27:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mm@kvack.org,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH 00/10] Remove uninitialized_var() macro
-Message-ID: <202006040727.265B0E586@keescook>
-References: <20200603233203.1695403-1-keescook@chromium.org>
- <20200604033347.GA3962068@ubuntu-n2-xlarge-x86>
- <CA+icZUU4Re5g3rRJ=WF3_KiCEc3CUmbH_PibTunuK_E1QskEjQ@mail.gmail.com>
+        Thu, 4 Jun 2020 10:32:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591281144;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=h9M1fLh8Ru9H4w+WFRAfiLMCmRmx0L8dSLxiYIXuu4E=;
+        b=EA8m89u9f8/g+TqsmQ3ZIOv2b/lDQrZViHjh3wwcFYyFitIOTM6RJ2vnHNK0syReTTUzTN
+        meke3oqv4RBmX0XZtTZRO1q/SUKqMPelHWdY+fAHRnPCO36cop1s2L2vQJp9sr9f2/hQhZ
+        2zAG7HYpcLkVPUsn0wHtyNSoxeqsV9Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-238-QJFS2nS7OyOa-MMajM20aw-1; Thu, 04 Jun 2020 10:32:20 -0400
+X-MC-Unique: QJFS2nS7OyOa-MMajM20aw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B75B1800D42;
+        Thu,  4 Jun 2020 14:32:02 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C6FB7CCC1;
+        Thu,  4 Jun 2020 14:32:00 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: nVMX: Inject #GP when nested_vmx_get_vmptr() fails to read guest memory
+Date:   Thu,  4 Jun 2020 16:31:58 +0200
+Message-Id: <20200604143158.484651-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+icZUU4Re5g3rRJ=WF3_KiCEc3CUmbH_PibTunuK_E1QskEjQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:26:58AM +0200, Sedat Dilek wrote:
-> On Thu, Jun 4, 2020 at 5:33 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Wed, Jun 03, 2020 at 04:31:53PM -0700, Kees Cook wrote:
-> > > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > > (or can in the future), and suppresses unrelated compiler warnings
-> > > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
-> > > either simply initialize the variable or make compiler changes.
-> > >
-> > > As recommended[2] by[3] Linus[4], remove the macro.
-> > [...]
-> > For the series, consider it:
-> >
-> > Tested-by: Nathan Chancellor <natechancellor@gmail.com> [build]
-> [...]
-> 
-> I tried with updated version (checkpatch) of your tree and see no
-> (new) warnings in my build-log.
-> 
-> Feel free to add my...
-> 
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Syzbot reports the following issue:
 
-Awesome! Thank you both! :)
+WARNING: CPU: 0 PID: 6819 at arch/x86/kvm/x86.c:618 kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
+...
+Call Trace:
+...
+RIP: 0010:kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
+...
+ nested_vmx_get_vmptr+0x1f9/0x2a0 arch/x86/kvm/vmx/nested.c:4638
+ handle_vmon arch/x86/kvm/vmx/nested.c:4767 [inline]
+ handle_vmon+0x168/0x3a0 arch/x86/kvm/vmx/nested.c:4728
+ vmx_handle_exit+0x29c/0x1260 arch/x86/kvm/vmx/vmx.c:6067
 
+'exception' we're trying to inject with kvm_inject_emulated_page_fault() comes from
+  nested_vmx_get_vmptr()
+   kvm_read_guest_virt()
+     kvm_read_guest_virt_helper()
+       vcpu->arch.walk_mmu->gva_to_gpa()
+
+but it is only set when GVA to GPA conversion fails. In case it doesn't but
+we still fail kvm_vcpu_read_guest_page(), X86EMUL_IO_NEEDED is returned and
+nested_vmx_get_vmptr() calls kvm_inject_emulated_page_fault() with zeroed
+'exception'. This happen when e.g. VMXON/VMPTRLD/VMCLEAR argument is MMIO.
+
+KVM could've handled the request correctly by going to userspace and
+performing I/O but there doesn't seem to be a good need for such requests
+in the first place. Sane guests should not call VMXON/VMPTRLD/VMCLEAR with
+anything but normal memory. Just inject #GP to find insane ones.
+
+Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 9c74a732b08d..05d57c3cb1ce 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4628,14 +4628,29 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
+ {
+ 	gva_t gva;
+ 	struct x86_exception e;
++	int r;
+ 
+ 	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
+ 				vmcs_read32(VMX_INSTRUCTION_INFO), false,
+ 				sizeof(*vmpointer), &gva))
+ 		return 1;
+ 
+-	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
+-		kvm_inject_emulated_page_fault(vcpu, &e);
++	r = kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
++	if (r != X86EMUL_CONTINUE) {
++		if (r == X86EMUL_PROPAGATE_FAULT) {
++			kvm_inject_emulated_page_fault(vcpu, &e);
++		} else {
++			/*
++			 * X86EMUL_IO_NEEDED is returned when kvm_vcpu_read_guest_page()
++			 * fails to read guest's memory (e.g. when 'gva' points to MMIO
++			 * space). While KVM could've handled the request correctly by
++			 * exiting to userspace and performing I/O, there doesn't seem
++			 * to be a real use-case behind such requests, just inject #GP
++			 * for now.
++			 */
++			kvm_inject_gp(vcpu, 0);
++		}
++
+ 		return 1;
+ 	}
+ 
 -- 
-Kees Cook
+2.25.4
+
