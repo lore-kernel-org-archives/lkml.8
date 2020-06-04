@@ -2,175 +2,154 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D27C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE01C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A95D206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F07F2075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgFDLs1 (ORCPT
+        id S1728010AbgFDLu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgFDLs0 (ORCPT
+        Thu, 4 Jun 2020 07:50:26 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37376 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgFDLu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:48:26 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F07C03E96D;
-        Thu,  4 Jun 2020 04:48:26 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 21C4126F; Thu,  4 Jun 2020 13:48:23 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 13:48:21 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 31/75] x86/head/64: Install boot GDT
-Message-ID: <20200604114821.GA30945@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-32-joro@8bytes.org>
- <20200518082313.GA25034@zn.tnic>
+        Thu, 4 Jun 2020 07:50:26 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m67so4798950oif.4
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 04:50:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tn4ciUEqYDRuzKpYldMo242AzTN0dml31bWeRYNSHM0=;
+        b=KJnrLSn0kiIjQoqS0lpyyT9rrb1jl/I56RqF9qBRdrQaxTzJy87ExvjIEzi00U3zu9
+         FqlN4mWk+rvpzlprQTGagqowEQDFMzRJ0sD7Y1scwSH6tSOBuf//0CtssTc0Gpk5VP91
+         Kg6Z6tmS7O1fpd/MTo7ItZzxAH6jhv4cJlG8U6OGdUnB7/rbY9k89PvhE5686kKle3fO
+         40ucxS4jK0ZSrZcjT7q+Dbxf+QF8OnPalS8wwT4y/4GsUkSy23ygxoXKhKnxswv2wkzD
+         7RRD+sTeAwFkkJMp7Eh12KHKMJ8AsvfitYW/08oO4U5Ozqth8RJnX105EP/SXgzGLfX4
+         pLvA==
+X-Gm-Message-State: AOAM533gZJcXjNHlLPcRswlMm3Vmmj7BfycnqforC/KVvx0bQ0oOLUn0
+        kcGKLA5evL3+TWLeN+fFUC5P77pkteG2hKSjWXw=
+X-Google-Smtp-Source: ABdhPJxtIxrW6tZGQvZm+OYoHtBBDGpxFSfJInGP0eTzA+QKXqvFWSJejqcgi6r7GLgku4bBTnF9BMUqZTv2w2xtbog=
+X-Received: by 2002:aca:1a19:: with SMTP id a25mr2821601oia.54.1591271425314;
+ Thu, 04 Jun 2020 04:50:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200518082313.GA25034@zn.tnic>
+References: <20200602223728.32722-1-richard.weiyang@gmail.com>
+In-Reply-To: <20200602223728.32722-1-richard.weiyang@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 4 Jun 2020 13:50:13 +0200
+Message-ID: <CAMuHMdUfnmm4bXVRvFOmG5DFYR+LtcZ1UviDszr9bByiN=DO+Q@mail.gmail.com>
+Subject: Re: [Patch v2] lib: test get_count_order/long in test_bitops.c
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 10:23:13AM +0200, Borislav Petkov wrote:
-> On Tue, Apr 28, 2020 at 05:16:41PM +0200, Joerg Roedel wrote:
-> > @@ -480,6 +500,22 @@ SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
-> >  SYM_DATA(phys_base, .quad 0x0)
-> >  EXPORT_SYMBOL(phys_base)
-> >
-> > +/* Boot GDT used when kernel addresses are not mapped yet */
-> > +SYM_DATA_LOCAL(boot_gdt_descr,		.word boot_gdt_end - boot_gdt)
-> > +SYM_DATA_LOCAL(boot_gdt_base,		.quad 0)
-> > +SYM_DATA_START(boot_gdt)
-> > +	.quad	0
-> > +	.quad   0x00cf9a000000ffff	/* __KERNEL32_CS */
-> > +	.quad   0x00af9a000000ffff	/* __KERNEL_CS */
-> > +	.quad   0x00cf92000000ffff	/* __KERNEL_DS */
-> > +	.quad	0			/* __USER32_CS - unused */
-> > +	.quad	0			/* __USER_DS   - unused */
-> > +	.quad	0			/* __USER_CS   - unused */
-> > +	.quad	0			/* unused */
-> > +	.quad   0x0080890000000000	/* TSS descriptor */
-> > +	.quad   0x0000000000000000	/* TSS continued */
-> 
-> Any chance you could use macros ala GDT_ENTRY_INIT() for those instead
-> of the naked values?
+Hi Wei,
 
-Yeah, seems to work. Updated patch attached.
+On Wed, Jun 3, 2020 at 1:11 AM Wei Yang <richard.weiyang@gmail.com> wrote:
+> Add some test for get_count_order/long in test_bitops.c.
+>
+> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 
-From 1350746f9063147a33156c0b56a7b12b1794f555 Mon Sep 17 00:00:00 2001
-From: Joerg Roedel <jroedel@suse.de>
-Date: Fri, 15 Nov 2019 13:49:55 +0100
-Subject: [PATCH 31/74] x86/head/64: Install boot GDT
+Thanks for your patch, which is now commit 7851d6639caeea40 ("lib:
+test get_count_order/long in test_bitops.c") in linux-next.
 
-Handling exceptions during boot requires a working GDT. The kernel GDT
-is not yet ready for use, so install a temporary boot GDT.
+> --- a/lib/test_bitops.c
+> +++ b/lib/test_bitops.c
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/kernel/head64.c  | 19 +++++++++++++++++++
- arch/x86/kernel/head_64.S | 25 +++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+> @@ -24,6 +28,26 @@ enum bitops_fun {
+>
+>  static DECLARE_BITMAP(g_bitmap, BITOPS_LENGTH);
+>
+> +unsigned int order_comb[][2] = {
+> +       {0x00000003,  2},
+> +       {0x00000004,  2},
+> +       {0x00001fff, 13},
+> +       {0x00002000, 13},
+> +       {0x50000000, 31},
+> +       {0x80000000, 31},
+> +       {0x80003000, 32},
+> +};
+> +
+> +unsigned long order_comb_long[][2] = {
+> +       {0x0000000300000000, 34},
+> +       {0x0000000400000000, 34},
+> +       {0x00001fff00000000, 45},
+> +       {0x0000200000000000, 45},
+> +       {0x5000000000000000, 63},
+> +       {0x8000000000000000, 63},
+> +       {0x8000300000000000, 64},
+> +};
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 206a4b6144c2..900c3372cc6a 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -61,6 +61,25 @@ unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
- EXPORT_SYMBOL(vmemmap_base);
- #endif
- 
-+/*
-+ * GDT used before %gs is set up and the kernel can use gdt_page. Needed for
-+ * early exception handling.
-+ */
-+struct desc_struct boot_gdt[GDT_ENTRIES] = {
-+	[GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(0xc09b, 0, 0xfffff),
-+	[GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(0xa09b, 0, 0xfffff),
-+	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
-+};
-+
-+/*
-+ * Address needs to be set at runtime because it references the boot_gdt while
-+ * the kernel still uses a direct mapping.
-+ */
-+struct desc_ptr boot_gdt_descr = {
-+	.size = sizeof(boot_gdt),
-+	.address = 0,
-+};
-+
- #define __head	__section(.head.text)
- 
- static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 4bbc770af632..62513dd1e0e4 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -72,6 +72,26 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
- 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
- 
-+	/* Setup boot GDT descriptor and load boot GDT */
-+	leaq	boot_gdt(%rip), %rax
-+	movq	%rax, boot_gdt_descr+2(%rip)
-+	lgdt	boot_gdt_descr(%rip)
-+
-+	/* New GDT is live - reload data segment registers */
-+	movl	$__KERNEL_DS, %eax
-+	movl	%eax, %ds
-+	movl	%eax, %ss
-+	movl	%eax, %es
-+
-+	/* Now switch to __KERNEL_CS so IRET works reliably */
-+	pushq	$__KERNEL_CS
-+	leaq	.Lon_kernel_cs(%rip), %rax
-+	pushq	%rax
-+	lretq
-+
-+.Lon_kernel_cs:
-+	UNWIND_HINT_EMPTY
-+
- 	/* Sanitize CPU configuration */
- 	call verify_cpu
- 
-@@ -143,6 +163,11 @@ SYM_CODE_START(secondary_startup_64)
- 1:
- 	UNWIND_HINT_EMPTY
- 
-+	/* Setup boot GDT descriptor and load boot GDT */
-+	leaq	boot_gdt(%rip), %rax
-+	movq	%rax, boot_gdt_descr+2(%rip)
-+	lgdt	boot_gdt_descr(%rip)
-+
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
+noreply@ellerman.id.au reported for m68k-allmodconfig:
+
+lib/test_bitops.c:42:3: error: unsigned conversion from 'long long
+int' to 'long unsigned int' changes value from '12884901888' to '0'
+[-Werror=overflow]
+lib/test_bitops.c:43:3: error: unsigned conversion from 'long long
+int' to 'long unsigned int' changes value from '17179869184' to '0'
+[-Werror=overflow]
+lib/test_bitops.c:44:3: error: unsigned conversion from 'long long
+int' to 'long unsigned int' changes value from '35180077121536' to '0'
+[-Werror=overflow]
+lib/test_bitops.c:45:3: error: unsigned conversion from 'long long
+int' to 'long unsigned int' changes value from '35184372088832' to '0'
+[-Werror=overflow]
+lib/test_bitops.c:46:3: error: unsigned conversion from 'long long
+int' to 'long unsigned int' changes value from '5764607523034234880'
+to '0' [-Werror=overflow]
+lib/test_bitops.c:47:3: error: conversion from 'long long unsigned
+int' to 'long unsigned int' changes value from '9223372036854775808'
+to '0' [-Werror=overflow]
+lib/test_bitops.c:48:3: error: conversion from 'long long unsigned
+int' to 'long unsigned int' changes value from '9223424813412909056'
+to '0' [-Werror=overflow]
+
+Indeed, on 32-bit, none of these values fit in unsigned long.
+
+>  static int __init test_bitops_startup(void)
+>  {
+>         pr_warn("Loaded test module\n");
+> @@ -32,6 +56,18 @@ static int __init test_bitops_startup(void)
+>         set_bit(BITOPS_11, g_bitmap);
+>         set_bit(BITOPS_31, g_bitmap);
+>         set_bit(BITOPS_88, g_bitmap);
+> +
+> +       for (i = 0; i < ARRAY_SIZE(order_comb); i++) {
+> +               if (order_comb[i][1] != get_count_order(order_comb[i][0]))
+> +                       pr_warn("get_count_order wrong for %x\n",
+> +                                      order_comb[i][0]); }
+> +
+> +       for (i = 0; i < ARRAY_SIZE(order_comb_long); i++) {
+> +               if (order_comb_long[i][1] !=
+> +                              get_count_order_long(order_comb_long[i][0]))
+> +                       pr_warn("get_count_order_long wrong for %lx\n",
+> +                                      order_comb_long[i][0]); }
+> +
+>         return 0;
+
+BTW, shouldn't get_count_order_long() be tested with the values in
+order_comb[], too?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.26.2
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
