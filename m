@@ -2,43 +2,42 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9553320657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E06207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgFDBr2 (ORCPT
+        id S1726759AbgFDBv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:47:28 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58974 "EHLO inva021.nxp.com"
+        Wed, 3 Jun 2020 21:51:58 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:32850 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbgFDBrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:47:25 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CED362011D0;
-        Thu,  4 Jun 2020 03:47:07 +0200 (CEST)
+        id S1726462AbgFDBv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:51:58 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C2B4E1A10DA;
+        Thu,  4 Jun 2020 03:51:56 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BCCB12011DF;
-        Thu,  4 Jun 2020 03:46:21 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DE2B41A0191;
+        Thu,  4 Jun 2020 03:51:51 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 08582402A5;
-        Thu,  4 Jun 2020 09:46:14 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8FC23402A5;
+        Thu,  4 Jun 2020 09:51:45 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, stigge@antcom.de,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        mpa@pengutronix.de, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: rtc: Convert imxdi rtc to json-schema
-Date:   Thu,  4 Jun 2020 09:35:55 +0800
-Message-Id: <1591234555-15187-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 0/3] Convert i.MX/MXS mmc binding to json-schema
+Date:   Thu,  4 Jun 2020 09:41:23 +0800
+Message-Id: <1591234886-15351-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,95 +45,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MXDI RTC binding to DT schema format using json-schema
+This patch series converts i.MX and MXS mmc binding to json-schema,
+fix some minor issues in original binding doc, such as node name should be 'mmc',
+compatible name for i.MX27, reg/interrupts should be required properties etc..
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- add "additionalProperties: false".
----
- .../devicetree/bindings/rtc/imxdi-rtc.txt          | 20 ----------
- .../devicetree/bindings/rtc/imxdi-rtc.yaml         | 44 ++++++++++++++++++++++
- 2 files changed, 44 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
+Compared to V1, this patch series adds "unevaluatedProperties: false" for
+each binding doc.
 
-diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-deleted file mode 100644
-index c797bc9..0000000
---- a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-+++ /dev/null
-@@ -1,20 +0,0 @@
--* i.MX25 Real Time Clock controller
--
--Required properties:
--- compatible: should be: "fsl,imx25-rtc"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- clocks: should contain the phandle for the rtc clock
--- interrupts: rtc alarm interrupt
--
--Optional properties:
--- interrupts: dryice security violation interrupt (second entry)
--
--Example:
--
--rtc@53ffc000 {
--	compatible = "fsl,imx25-rtc";
--	reg = <0x53ffc000 0x4000>;
--	clocks = <&clks 81>;
--	interrupts = <25 56>;
--};
-diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
-new file mode 100644
-index 0000000..06bd737
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/imxdi-rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: i.MX25 Real Time Clock controller
-+
-+maintainers:
-+  - Roland Stigge <stigge@antcom.de>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx25-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: rtc alarm interrupt
-+      - description: dryice security violation interrupt
-+    minItems: 1
-+    maxItems: 2
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    rtc@53ffc000 {
-+        compatible = "fsl,imx25-rtc";
-+        reg = <0x53ffc000 0x4000>;
-+        clocks = <&clks 81>;
-+        interrupts = <25>, <56>;
-+    };
+Anson Huang (3):
+  dt-bindings: mmc: Convert imx esdhc to json-schema
+  dt-bindings: mmc: Convert imx mmc to json-schema
+  dt-bindings: mmc: Convert mxs mmc to json-schema
+
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |  67 -----------
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     | 124 +++++++++++++++++++++
+ .../devicetree/bindings/mmc/fsl-imx-mmc.txt        |  23 ----
+ .../devicetree/bindings/mmc/fsl-imx-mmc.yaml       |  53 +++++++++
+ Documentation/devicetree/bindings/mmc/mxs-mmc.txt  |  27 -----
+ Documentation/devicetree/bindings/mmc/mxs-mmc.yaml |  58 ++++++++++
+ 6 files changed, 235 insertions(+), 117 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
+
 -- 
 2.7.4
 
