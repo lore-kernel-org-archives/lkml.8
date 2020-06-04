@@ -2,90 +2,97 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E58C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A23320829
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D7D20756
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Uz2Fe97+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hKAsiTFp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgFDDj5 (ORCPT
+        id S1726922AbgFDDq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:39:57 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:19964 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726604AbgFDDj4 (ORCPT
+        Wed, 3 Jun 2020 23:46:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgFDDqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:39:56 -0400
-X-UUID: 594cecd9cb784878b791891d003735b8-20200604
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=gg0xFQsrpVwavUKDGPkf/KTKDKCcT5COSQE37vYTZu4=;
-        b=Uz2Fe97+pGFfmbd7GLVLPa3P27PFL8rgTvzACaOi2WWmU/yTSWuIvKFwx4ChkNsakc0lnik5OJMTgoG18bVo2er8g11PHMHZJqbmJ+yHdenqacBaXwOG4Tc7PLGib65OcwGcQlyef48dW2KDFh+h5CJQZ+m7dCfz7x+YWWZ1ORo=;
-X-UUID: 594cecd9cb784878b791891d003735b8-20200604
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 850519545; Thu, 04 Jun 2020 11:39:54 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 4 Jun 2020 11:39:46 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Jun 2020 11:39:46 +0800
-Message-ID: <1591241986.29475.18.camel@mtkswgap22>
-Subject: Re: [PATCH] mm/memblock: export max_pfn for kernel modules
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Thu, 4 Jun 2020 11:39:46 +0800
-In-Reply-To: <20200603170624.GA202648@linux.ibm.com>
-References: <20200603161132.2441-1-miles.chen@mediatek.com>
-         <20200603170624.GA202648@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 3 Jun 2020 23:46:22 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6386C08C5C5
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 20:46:20 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a45so1724350pje.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 20:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AKUvLro9S597CUdKLkHtfULaMJzReX6aR4Vd+jg9MWw=;
+        b=hKAsiTFpLHHgYk7uxEc64hy/HUaA1WkUjC8d9BKcLM3A/W0jWDjCQVcYLc0TzJIb6c
+         CVvGbgMTwJtWW3d38WnReaNXfUDB6Z7+PjsIdPE8tJzwBE5kkiQFZuUsHl9gXF2t3hNz
+         P/mhkULSwbWlOZpcliQwUyTPCPRZerjJhSiPA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AKUvLro9S597CUdKLkHtfULaMJzReX6aR4Vd+jg9MWw=;
+        b=QvdQO4J3pNRF345GYh2nV/xg73B9nmkFLuWwQ8O5nCbQgnn5i0qa7RHCm7H/wma+wX
+         T9fSBOaeDiOhepUPLcj+oWLyERKWLc448bXNNDI2wxR6CC34fkJnkiQtDG1nTqKqiyKf
+         nbbF97dOcUn2WJ2REjwP9phv0yB7UAp+PHI0+uv657+eXAVnBVu3Gcp73G/Rn2yZoFDU
+         EGsiyT6oomuwAeep5PXUDYe0xufHyLlLK11WQSEE4xA1xhE7nASmXnwmKvykRaSGaj7K
+         exoVDumlmFiTD4E9jfrVSC/l/Bq8ZGUtOCR9O1I/lwfwi9A3OizEcz+6d6dJfzn+nNBD
+         rCyA==
+X-Gm-Message-State: AOAM532+P6yhdcap2F+Pw4RfMvD4uCeYMMPeHXmP8nReh+Sp2yqandBm
+        XOLrQaKW6cvKjH2d8k6C1LZpSA==
+X-Google-Smtp-Source: ABdhPJwgOC5Nh6YRgoFEBFoD4RiNjZ8EE9ykV4UyBnz631Lr2h8YJbe7vzR1a+QiANBM9x+EA79IfA==
+X-Received: by 2002:a17:90a:2461:: with SMTP id h88mr3702337pje.180.1591242379970;
+        Wed, 03 Jun 2020 20:46:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a5sm3056506pfi.41.2020.06.03.20.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 20:46:18 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 20:46:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 08/10] checkpatch: Remove awareness of
+ uninitialized_var() macro
+Message-ID: <202006032046.96A726426@keescook>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-9-keescook@chromium.org>
+ <ff9087b0571e1fc499bd8a4c9fd99bfc0357f245.camel@perches.com>
+ <202006031838.55722640DC@keescook>
+ <6f921002478544217903ee4bfbe3c400e169687f.camel@perches.com>
+ <202006031944.9551FAA68E@keescook>
+ <CA+icZUVg24VrpPgMdfsgPa+Wckci9XkzKUdtwhVB3ZW96uZOWw@mail.gmail.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUVg24VrpPgMdfsgPa+Wckci9XkzKUdtwhVB3ZW96uZOWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTAzIGF0IDIwOjA2ICswMzAwLCBNaWtlIFJhcG9wb3J0IHdyb3RlOg0K
-PiBPbiBUaHUsIEp1biAwNCwgMjAyMCBhdCAxMjoxMTozMkFNICswODAwLCBNaWxlcyBDaGVuIHdy
-b3RlOg0KPiA+IG1heF9wZm4gaXMgdWVzZCB0byBnZXQgdGhlIGhpZ2hlc3QgcGZuIGluIHRoZSBz
-eXN0ZW0uIERyaXZlcnMgbGlrZQ0KPiA+IGRyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgY2hlY2tz
-IG1heF9wZm4gdG8gc2VlIGlmIGl0IHNob3VsZCBlbmFibGUNCj4gPiBpdHMgIjRHQiBtb2RlIi4N
-Cj4gPiANCj4gPiBUaGlzIHBhdGNoIGV4cG9ydHMgdGhlIG1heF9wZm4gc3ltYm9sLCBzbyB3ZSBj
-YW4gYnVpbGQgdGhlIGRyaXZlciBhcw0KPiA+IGEga2VybmVsIG1vZHVsZS4NCj4gDQo+IFlvdSBj
-YW4gdXNlIHRvdGFscmFtX3BhZ2VzKCksIGxpa2UgZS5nLg0KPiBkcml2ZXJzL21lZGlhL3BsYXRm
-b3JtL210ay12cHUvbXRrX3ZwdS5jOg0KPiANCj4gJCBnaXQgZ3JlcCAtbnAgdG90YWxyYW1fcGFn
-ZXMgZHJpdmVycy9tZWRodHRwczovL2xrbWwub3JnL2xrbWwvMjAyMC81LzMwLzEyM2lhLw0KPiBk
-cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12cHUvbXRrX3ZwdS5jPTc3OT1zdGF0aWMgaW50IG10
-a192cHVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gZHJpdmVycy9tZWRp
-YS9wbGF0Zm9ybS9tdGstdnB1L210a192cHUuYzo4NjE6ICAgdnB1LT5lbmFibGVfNEdCID0gISEo
-dG90YWxyYW1fcGFnZXMoKSA+IChTWl8yRyA+PiBQQUdFX1NISUZUKSk7DQo+IA0KDQpUaGFua3Mg
-Zm9yIHRoZSBzdWdnZXN0aW9uLg0KdG90YWxyYW1fcGFnZXMoKSB3b3JrcyBhbmQgSSBjYW4gZm9s
-bG93IHRoaXMgZXhhbXBsZS4NCg0KTWlsZXMNCg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNaWxl
-cyBDaGVuIDxtaWxlcy5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgbW0vbWVtYmxv
-Y2suYyB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPiANCj4g
-PiBkaWZmIC0tZ2l0IGEvbW0vbWVtYmxvY2suYyBiL21tL21lbWJsb2NrLmMNCj4gPiBpbmRleCBj
-NzliYTZmOTkyMGMuLjNiMmIyMWVjZWJiNiAxMDA2NDQNCj4gPiAtLS0gYS9tbS9tZW1ibG9jay5j
-DQo+ID4gKysrIGIvbW0vbWVtYmxvY2suYw0KPiA+IEBAIC05OSw2ICs5OSw3IEBAIEVYUE9SVF9T
-WU1CT0woY29udGlnX3BhZ2VfZGF0YSk7DQo+ID4gIHVuc2lnbmVkIGxvbmcgbWF4X2xvd19wZm47
-DQo+ID4gIHVuc2lnbmVkIGxvbmcgbWluX2xvd19wZm47DQo+ID4gIHVuc2lnbmVkIGxvbmcgbWF4
-X3BmbjsNCj4gPiArRVhQT1JUX1NZTUJPTChtYXhfcGZuKTsNCj4gPiAgdW5zaWduZWQgbG9uZyBs
-b25nIG1heF9wb3NzaWJsZV9wZm47DQo+ID4gIA0KPiA+ICBzdGF0aWMgc3RydWN0IG1lbWJsb2Nr
-X3JlZ2lvbiBtZW1ibG9ja19tZW1vcnlfaW5pdF9yZWdpb25zW0lOSVRfTUVNQkxPQ0tfUkVHSU9O
-U10gX19pbml0ZGF0YV9tZW1ibG9jazsNCj4gPiAtLSANCj4gPiAyLjE4LjANCj4gDQoNCg==
+On Thu, Jun 04, 2020 at 04:53:34AM +0200, Sedat Dilek wrote:
+> can you push that change also to kees/linux.git#kspp/uninit/v5.7/macro ?
 
+Done! :)
+
+-- 
+Kees Cook
