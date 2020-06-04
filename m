@@ -2,101 +2,133 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5972A206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E67206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JDruNPPk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ElV8ZilR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgFDMGs (ORCPT
+        id S1728619AbgFDMG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728554AbgFDMGm (ORCPT
+        Thu, 4 Jun 2020 08:06:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58368 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728565AbgFDMGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:06:42 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE99C03E96E
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 05:06:42 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id w3so5658068qkb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 05:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jSQHC1o3f5m5emzxu9YBcPNRqKngKwzMlx+TKTi0XtU=;
-        b=JDruNPPkDTGBxJQk+jI2G9ZRH1SJmQtyus/t8H9KtBs8Rb9bGj1e1/ClynWK9gEbBt
-         HNqs7c/AEdpw4zCNLIOrzC5Ucd6TqJ/WwrO92NFNQ7GuGw4DK8IcjKP4jYtD7snAe5TV
-         EbAhGhVO9jTc/GFjwupNGZYe+owFtDNwy+IiVXJwWWYCw/LvGGu3mvWmnTLKootUzVYp
-         wBUdWNuAD+BbmlCaVCq8otnoeyQhpefh5XQbTMZbDph6YeNPhYhZ0mSQgHl0VzmNxUi2
-         7bp0NDj74Krnv/WHb1hoA6WXqF+9hYvtvmnAD5KROSA5bDkPaAHjX3DiaAuzTy5BhyzC
-         M70A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jSQHC1o3f5m5emzxu9YBcPNRqKngKwzMlx+TKTi0XtU=;
-        b=A5/azaVOWTYU6Dm4Np5lt95Z5vdeJegZtSU5UdbXtciZecJMw0rUkNP+UgCq+DL2f5
-         1coSGLkHh27KibtbSGwfR21lAxn0Jtn1yandMFq4DBW6Luq/HIoiWRCfkhb5+sN0X/0p
-         z//3OvxMXijPJldNDojPi8zjIWJJwSf4G+GtXtropDBdA8IgM+rFlxouRmK19pGcNQMo
-         nN5DMWR9W9fkVa6xSbhfs7sqMbhuyqMgAMPJG/aIWas6A/i77Kw6hrbFHcr1idYt05Vv
-         3YguLgwyDfGoE9oN/swc4xNTFdnHS/lfPWDYF/jpkJeA2lVWiYtsH6h9sKJC2Uup8zP4
-         J5PA==
-X-Gm-Message-State: AOAM533HYToDLFq9VaB45UXsroMYHYguO8SujG9VfymylLHaN+nb1pLo
-        WJTeH6PK78iIIMUsVlm2FSZ5/A2hXvkVWORTK+Ktvw==
-X-Google-Smtp-Source: ABdhPJyD7+lCfVAQJ1oyaF8Br8FLt6SIzAwugbG4sH7U8+avpScU5Ikt1971Gx8kBKqzvlH6XR8X0LSQxEeSj6gFrB4=
-X-Received: by 2002:a37:aac4:: with SMTP id t187mr3933753qke.263.1591272401774;
- Thu, 04 Jun 2020 05:06:41 -0700 (PDT)
+        Thu, 4 Jun 2020 08:06:44 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054C6fwf052343;
+        Thu, 4 Jun 2020 07:06:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591272401;
+        bh=/5DvSnU4MOcUhmIVb2t0IvpnhJjxvpDjLa+s3n+JNV8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ElV8ZilRUQt4fuaL+L2ncMjl2FiKvqDlw8DSYFrRXKQ//3XtmKv2wmDi7Sb1z1Hr7
+         MG+eRR1MLB1j8yginBliXh3y8oilm4Kb7Onfy/jqNzFFQVLJbmc+ShwUpEG4drjBuH
+         WenRnQlDLcklr5U1dyyWpHG460oehgQ3A+tel5yg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054C6fD8054816
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 07:06:41 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 07:06:41 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 07:06:41 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054C6fnP017331;
+        Thu, 4 Jun 2020 07:06:41 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v26 13/15] leds: lp5521: Add multicolor framework multicolor brightness support
+Date:   Thu, 4 Jun 2020 07:05:02 -0500
+Message-ID: <20200604120504.32425-14-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200604120504.32425-1-dmurphy@ti.com>
+References: <20200604120504.32425-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <20200516064507.19058-1-warthog618@gmail.com> <CACRpkdbputuoHFWL_FhUNR-ZywvJt=qYdaa+i2cLt-Odmgxe2w@mail.gmail.com>
- <20200525141902.GA27938@sol> <CACRpkda4PEYd5UGbLkq9w1RBbtOdZxuMQ75k-nu5YfoKTZ_azA@mail.gmail.com>
-In-Reply-To: <CACRpkda4PEYd5UGbLkq9w1RBbtOdZxuMQ75k-nu5YfoKTZ_azA@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 4 Jun 2020 14:06:31 +0200
-Message-ID: <CAMpxmJVzMJkPSrL4uhfCgjXb7CkLSOH3kW=aeb68LRNJenKRiQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 27 maj 2020 o 07:58 Linus Walleij <linus.walleij@linaro.org> napi=
-sa=C5=82(a):
->
-> On Mon, May 25, 2020 at 4:19 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> > > > +struct gpioline_config {
-> > > > +       __u8 default_values[GPIOLINES_MAX];
-> > >
-> > > So 32 bytes
-> > >
-> >
-> > Actually that one is 64 bytes, which is the same as v1, i.e. GPIOLINES_=
-MAX
-> > is the same as GPIOHANDLES_MAX - just renamed.
-> >
-> > On the subject of values, is there any reason to use a byte for each li=
-ne
-> > rather value than a bit?
->
-> Not really, other than making things simple for userspace.
->
+Add the multicolor brightness call back to support the multicolor
+framework. This function allows setting the brightness across
+grouped LED channels in a single call.
 
-I'm in favor of using bits here. I think we can rely on libgpiod to
-make things simple for user-space, the kernel interface can be as
-brief as possible.
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/leds/Kconfig       |  1 +
+ drivers/leds/leds-lp5521.c | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-Bart
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 8b28f73c810c..bdf8fc2652fb 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -398,6 +398,7 @@ config LEDS_LP55XX_COMMON
+ config LEDS_LP5521
+ 	tristate "LED Support for N.S. LP5521 LED driver chip"
+ 	depends on LEDS_CLASS && I2C
++	depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+ 	select LEDS_LP55XX_COMMON
+ 	help
+ 	  If you say yes here you get support for the National Semiconductor
+diff --git a/drivers/leds/leds-lp5521.c b/drivers/leds/leds-lp5521.c
+index 6ff81d6be789..ef8c3bfa8f3c 100644
+--- a/drivers/leds/leds-lp5521.c
++++ b/drivers/leds/leds-lp5521.c
+@@ -349,6 +349,25 @@ static int lp5521_run_selftest(struct lp55xx_chip *chip, char *buf)
+ 	return 0;
+ }
+ 
++static int lp5521_multicolor_brightness(struct lp55xx_led *led)
++{
++	struct lp55xx_chip *chip = led->chip;
++	int ret;
++	int i;
++
++	mutex_lock(&chip->lock);
++	for (i = 0; i < led->mc_cdev.num_colors; i++) {
++		ret = lp55xx_write(chip,
++				   LP5521_REG_LED_PWM_BASE +
++				   led->mc_cdev.subled_info[i].channel,
++				   led->mc_cdev.subled_info[i].brightness);
++		if (ret)
++			break;
++	}
++	mutex_unlock(&chip->lock);
++	return ret;
++}
++
+ static int lp5521_led_brightness(struct lp55xx_led *led)
+ {
+ 	struct lp55xx_chip *chip = led->chip;
+@@ -490,6 +509,7 @@ static struct lp55xx_device_config lp5521_cfg = {
+ 	.max_channel  = LP5521_MAX_LEDS,
+ 	.post_init_device   = lp5521_post_init_device,
+ 	.brightness_fn      = lp5521_led_brightness,
++	.multicolor_brightness_fn = lp5521_multicolor_brightness,
+ 	.set_led_current    = lp5521_set_led_current,
+ 	.firmware_cb        = lp5521_firmware_loaded,
+ 	.run_engine         = lp5521_run_engine,
+-- 
+2.26.2
+
