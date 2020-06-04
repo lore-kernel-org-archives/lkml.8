@@ -2,113 +2,108 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC31C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9116920738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B918420679
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="m7cad6rA"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iEIi1vpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgFDBRy (ORCPT
+        id S1727026AbgFDBWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:17:54 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:1598 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgFDBRy (ORCPT
+        Wed, 3 Jun 2020 21:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgFDBWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:17:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1591233473; x=1622769473;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=0DivikXZ8x9qa8yhcaXzmEKtkUwVteQDKTeeiHQh33I=;
-  b=m7cad6rAAfeVQ+7rrQUJMFdhWeb6dPJUU7WPQb4bHTJcnrhc1KIECZN/
-   7QW2ungKBsPZmLeyHq94tVVKF2ZwoM9kPY7RxwIXYsY46eBV1ePTqC1kP
-   nTGtuzGUrXYRNMGS0uZEae2PMVMJZ4TczuxaOk8ZWzKEZuavK6nZWGYlJ
-   gmqYVq9SA+KUlOmksQ8fQNmsWZI3VicP2/nTZQmAIXzOcf652hSsAplg/
-   vs+stF+e9vi7+IlV9O+/+2ce1sPbBZhyS4wRP2LcR7klRRM24QnOPdwPG
-   A/2bvYsrLrPnpTIwOzugmStsoYtnMNn6K4RwOSgOMjRIKRmHu6HvWEPg0
-   g==;
-IronPort-SDR: OthRJxWbN2NaEVEJ4Zq6/bd0ctj77ucWi3Rleq4VlT30DcsEx0YMaYVdP4B/xE8yL1vICdn0ed
- /X9UMdwpGnd8VN+Ht2Vxt+WVaWMpmVOun5ZXZp09H9VbITTb4gxfrxQIuwCQBtP8kx2DZzq+rC
- UuW3tbBMtZziwG345TRTmR4fMybzdhSVTodUZPtTVnd3laSjI6fVsC27CNmZJxF/NRbFAgcRtD
- Hf6HBWtaN4Xifu5rUWVpOHDRHS6atnLkdxcrdrsMdEz2xtda9AcrHyCtePoVsvU8rMqt9QRrnG
- u+U=
-X-IronPort-AV: E=Sophos;i="5.73,470,1583164800"; 
-   d="scan'208";a="248251573"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Jun 2020 09:17:52 +0800
-IronPort-SDR: mjx4IV6Uru6SI19YqzAouKHDbIRGsZ6vL7/a7EepeG2atLz43ARc1jH2d1/9j0lijkir0z0waS
- RaK9LBF2ll6O7rKLKhrD9ejxilwL8oel0=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 18:07:30 -0700
-IronPort-SDR: xVA/OvRNrOCIBdNknR7Np4B7Tvs3ve6yyRRphKpCpJjMAqy+BGHqKT+u8VUC3AUIe5DSUL/KtF
- M6BleKmT80Rw==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2020 18:17:52 -0700
-Date:   Thu, 4 Jun 2020 02:17:47 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     WANG Xuerui <kernel@xen0n.name>
-cc:     yuanjunqing <yuanjunqing66@163.com>, tsbogend@alpha.franken.de,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liulichao@loongson.cn, "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH] function:stacktrace/mips: Fix function:stacktrace for
- mips
-In-Reply-To: <43f35844-f78a-74a2-0e3d-184c3567d74f@xen0n.name>
-Message-ID: <alpine.LFD.2.21.2006040212460.9519@redsun52.ssa.fujisawa.hgst.com>
-References: <20200528123640.4285-1-yuanjunqing66@163.com> <11c90f15-0a25-e628-c8db-53343c351085@163.com> <43f35844-f78a-74a2-0e3d-184c3567d74f@xen0n.name>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 3 Jun 2020 21:22:47 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA52C03E96D;
+        Wed,  3 Jun 2020 18:22:47 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cp1G4XLKz9sRN;
+        Thu,  4 Jun 2020 11:22:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591233764;
+        bh=wXh6sMuV3RWs7MfhnDG4HbkOXO1FCrXgpCD6I81G640=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iEIi1vpjoC58WhDP9YUvXAzBVmFKs3Ip+53YsriZSkk2aO0eeKiLyOxcDaI/N9Q4s
+         vqX571PtUl0tpqs48UFcbd8A+Lem0gfy7hCE30QXgIHpMPZjo4Ru0kGqe5p5J0fkYQ
+         weQz3kZBSD2/s77jALTqfAgWQGOhsSFLm028qXZwluisO7wTlBq3lUgjvkCzFVL64O
+         Vt3vbdi/RGAwlmUyIHuP3ORGFzUAdaQ74iTa8SLqz5cJlgHDfm27cezKsDAvU8FPS2
+         Gb/4Qem9LezYVIm06SJEXKW6TMDPYpfNrZJElX1VyFX8qW7Z+Pxy+BXIkwe0CEqa+t
+         ylRnebHnn1ILw==
+Date:   Thu, 4 Jun 2020 11:22:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rohit Maheshwari <rohitm@chelsio.com>
+Subject: Re: linux-next: build warning after merge of the net-next tree
+Message-ID: <20200604112240.19c4168a@canb.auug.org.au>
+In-Reply-To: <20200602121735.1a2e5d0f@canb.auug.org.au>
+References: <20200602121735.1a2e5d0f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/2_/vz9Nvsrtp786S7FYg8lr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020, WANG Xuerui wrote:
+--Sig_/2_/vz9Nvsrtp786S7FYg8lr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On 2020/5/29 17:29, yuanjunqing wrote:
-> 
-> >> diff --git a/arch/mips/kernel/mcount.S b/arch/mips/kernel/mcount.S
-> >> index cff52b283e03..cd5545764e5f 100644
-> >> --- a/arch/mips/kernel/mcount.S
-> >> +++ b/arch/mips/kernel/mcount.S
-> >> @@ -87,8 +87,15 @@ EXPORT_SYMBOL(_mcount)
-> >>   	PTR_LA   t1, _etext
-> >>   	sltu     t3, t1, a0	/* t3 = (a0 > _etext) */
-> >>   	or       t1, t2, t3
-> >> +	PTR_LA	 t2, stlab-4 	/* t2: "function:stacktrace" return address */
-> >> +	move	 a1, AT		/* arg2: parent's return address */
-> >>   	beqz     t1, ftrace_call
-> >> -	 nop
-> >> +	 nop			/* "function:stacktrace" return address */
-> >> +stlab:
-> >> +	PTR_LA	t2, stlab-4
-> >> +	/* ftrace_call_end: ftrace_call return address */
-> >> +	beq	t2,ra, ftrace_call_end
-> >> +	nop
+Hi all,
 
- Broken delay slot indentation.
+On Tue, 2 Jun 2020 12:17:35 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> Hi all,
+>=20
+> After merging the net-next tree, today's linux-next build (powerpc
+> ppc64_defconfig) produced this warning:
+>=20
+> drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.c:666:13: warning: 'cxgb4_ul=
+d_in_use' defined but not used [-Wunused-function]
+>   666 | static bool cxgb4_uld_in_use(struct adapter *adap)
+>       |             ^~~~~~~~~~~~~~~~
+>=20
+> Introduced by commit
+>=20
+>   a3ac249a1ab5 ("cxgb4/chcr: Enable ktls settings at run time")
+>=20
+> CONFIG_CHELSIO_TLS_DEVICE is not set for this build.
 
-> >>   #if defined(KBUILD_MCOUNT_RA_ADDRESS) && defined(CONFIG_32BIT)
-> >>   	PTR_SUBU a0, a0, 16	/* arg1: adjust to module's recorded callsite */
-> >>   #else
-> >> @@ -98,7 +105,9 @@ EXPORT_SYMBOL(_mcount)
-> >>   	.globl ftrace_call
-> >>   ftrace_call:
-> >>   	nop	/* a placeholder for the call to a real tracing function */
-> >> -	 move	a1, AT		/* arg2: parent's return address */
-> >> +	move	ra, t2		/* t2: "function:stacktrace" return address */
+I am still getting this warning.
+--=20
+Cheers,
+Stephen Rothwell
 
- Likewise.  NB I haven't investigated if the change makes sense.  A more 
-detailed explanation in the change description is certainly needed.
+--Sig_/2_/vz9Nvsrtp786S7FYg8lr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-  Maciej
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YTOAACgkQAVBC80lX
+0GwV1Qf/baFyd+yCb4LwWnarTKmY5IZvDMDkB98BK0GfCWbiT1ZXsHTnOxJUPINW
+kpNfuUYSwu3SW+iroXI25T37B1QX0y4+2gSI3/BqAUobcUHKj81k0EIL4/++3IwN
+ljeNNW1C6QETsJLlIbwo4fH8W4lAD1g1FpDgaYfACQSkLeMPQVkPWj/MqCiz8cHp
+tT4Z2w2r0Stg+f7Z8rEUp2yjK0d3ynS5K5ZDNxZN0rSoQrD9POpRU0t0Td9QFKUP
+f211LCKU073wSvRFZRNYfNVKMXVy4lEDlFpEDCIa9kDrYeWjc+ej+n5Egeh0nueD
+d9x9C9syTWvA+leNEi+QXgFHEAYW5w==
+=blgk
+-----END PGP SIGNATURE-----
+
+--Sig_/2_/vz9Nvsrtp786S7FYg8lr--
