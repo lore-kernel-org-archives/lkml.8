@@ -2,173 +2,141 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73292C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F828207DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57EF6207D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 18:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Xp9f4OPO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kg/T8Gr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgFDSeA (ORCPT
+        id S1730492AbgFDSeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 14:34:00 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:56834 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730348AbgFDSeA (ORCPT
+        Thu, 4 Jun 2020 14:34:08 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:63968 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730471AbgFDSeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 14:34:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591295640; x=1622831640;
-  h=date:from:to:cc:message-id:references:mime-version:
-   in-reply-to:subject;
-  bh=HTqcTU628wYZT8oBd+ArbsC8bAoTC8fUsqm9xVXgmro=;
-  b=Xp9f4OPOff8jKD9jEy1DjSHAIcs2lzAnVrlmF0AHlIJCv2t4VyR2I90N
-   W2uPj+W/Lk5RB/+9ORMMpEcESt24L93jfYkl583RKiRRNFX49bmz4ONaR
-   B2P/P6uydCs3Meo0yV8sS5exYbOWuUKhWhAxbnRfUk0jqI/ddyiyO3P8K
-   0=;
-IronPort-SDR: Bp9sXjz5OL6Qmgdn1t2NjI2Ij78oRPs1ANk1UfVNxYHuSJrPGMGuWQ5o01KOARrU4ThWIT/DpG
- g10L4tLv3oVA==
-X-IronPort-AV: E=Sophos;i="5.73,472,1583193600"; 
-   d="scan'208";a="41639696"
-Subject: Re: [PATCH 09/12] x86/xen: save and restore steal clock
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 04 Jun 2020 18:33:58 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id 2AEAAA22B6;
-        Thu,  4 Jun 2020 18:33:56 +0000 (UTC)
-Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
- EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 4 Jun 2020 18:33:36 +0000
-Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
- EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 4 Jun 2020 18:33:36 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.60.234) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Thu, 4 Jun 2020 18:33:36 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 5663D403BB; Thu,  4 Jun 2020 18:33:36 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 18:33:36 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <jgross@suse.com>,
-        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kamatam@amazon.com>, <sstabellini@kernel.org>,
-        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
-        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
-        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
-        <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <anchalag@amazon.com>
-Message-ID: <20200604183336.GA25251@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1589926004.git.anchalag@amazon.com>
- <6f39a1594a25ab5325f34e1e297900d699cd92bf.1589926004.git.anchalag@amazon.com>
- <5edb4147-af12-3a0e-e8f7-5b72650209ac@oracle.com>
+        Thu, 4 Jun 2020 14:34:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591295645; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=b+m+f2wIQAOgddiFH2GauZEHY1uboxw/Z1poVAGvYyQ=;
+ b=kg/T8Gr6bc7sRACYzJNsvjkGOwJbJfLiLpVWu9GjWaOhtcnTZAOh0SBnjv6EKowPK/ZJtBg6
+ GwG77OAa4dO8En0Py9hfVehBQmdJMJERXuSf+kTpUdfzo/nztMtqXdOUXoJULbTryHwoeBmw
+ C48iusv97oiOtUGSHUxCuH+ftoU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5ed93e9cc0031c71c20ed0f5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 04 Jun 2020 18:34:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 00A70C433B2; Thu,  4 Jun 2020 18:34:03 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11E1AC433A1;
+        Thu,  4 Jun 2020 18:34:03 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5edb4147-af12-3a0e-e8f7-5b72650209ac@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 00:04:02 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Pradeep P V K <ppvk@codeaurora.org>, bjorn.andersson@linaro.org,
+        adrian.hunter@intel.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc-owner@vger.kernel.org,
+        rnayak@codeaurora.org, matthias@chromium.org
+Subject: Re: [PATCH V2 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
+ support
+In-Reply-To: <20200604170906.GP4525@google.com>
+References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
+ <1591269283-24084-2-git-send-email-ppvk@codeaurora.org>
+ <20200604170906.GP4525@google.com>
+Message-ID: <23d6da79d604ce5113d90a2adab17483@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 07:44:06PM -0400, Boris Ostrovsky wrote:
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+On 2020-06-04 22:39, Matthias Kaehlcke wrote:
+> On Thu, Jun 04, 2020 at 04:44:42PM +0530, Pradeep P V K wrote:
+>> Interconnect bandwidth scaling support is now added as a
+>> part of OPP [1]. So, make sure interconnect driver is ready
+>> before handling interconnect scaling.
+>> 
+>> This change is based on
+>> [1] [Patch v8] Introduce OPP bandwidth bindings
+>> (https://lkml.org/lkml/2020/5/12/493)
+>> 
+>> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
+>> for dev_pm_opp_of_add_table()
+>> (https://lkml.org/lkml/2020/5/5/491)
+>> 
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> ---
+>>  drivers/mmc/host/sdhci-msm.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>> 
+>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>> b/drivers/mmc/host/sdhci-msm.c
+>> index b277dd7..a13ff1b 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -14,6 +14,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/iopoll.h>
+>>  #include <linux/regulator/consumer.h>
+>> +#include <linux/interconnect.h>
+>> 
+>>  #include "sdhci-pltfm.h"
+>>  #include "cqhci.h"
+>> @@ -2070,6 +2071,18 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  	}
+>>  	msm_host->bulk_clks[0].clk = clk;
+>> 
+>> +	/* Make sure that ICC driver is ready for interconnect bandwdith
+>> +	 * scaling before registering the device for OPP.
+>> +	 */
+>> +	ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
+>> +	if (ret) {
+>> +		if (ret == -EPROBE_DEFER)
+>> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
 > 
+> I already commented on this on v1:
 > 
+>   This log seems to add little more than noise, or are there particular 
+> reasons
+>   why it is useful in this driver? Most drivers just return silently in 
+> case of
+>   deferred probing.
 > 
-> On 5/19/20 7:28 PM, Anchal Agarwal wrote:
-> > From: Munehisa Kamata <kamatam@amazon.com>
-> >
-> > Save steal clock values of all present CPUs in the system core ops
-> > suspend callbacks. Also, restore a boot CPU's steal clock in the system
-> > core resume callback. For non-boot CPUs, restore after they're brought
-> > up, because runstate info for non-boot CPUs are not active until then.
-> >
-> > Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
-> > Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
-> > ---
-> >  arch/x86/xen/suspend.c | 13 ++++++++++++-
-> >  arch/x86/xen/time.c    |  3 +++
-> >  2 files changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/xen/suspend.c b/arch/x86/xen/suspend.c
-> > index 784c4484100b..dae0f74f5390 100644
-> > --- a/arch/x86/xen/suspend.c
-> > +++ b/arch/x86/xen/suspend.c
-> > @@ -91,12 +91,20 @@ void xen_arch_suspend(void)
-> >  static int xen_syscore_suspend(void)
-> >  {
-> >       struct xen_remove_from_physmap xrfp;
-> > -     int ret;
-> > +     int cpu, ret;
-> >
-> >       /* Xen suspend does similar stuffs in its own logic */
-> >       if (xen_suspend_mode_is_xen_suspend())
-> >               return 0;
-> >
-> > +     for_each_present_cpu(cpu) {
-> > +             /*
-> > +              * Nonboot CPUs are already offline, but the last copy of
-> > +              * runstate info is still accessible.
-> > +              */
-> > +             xen_save_steal_clock(cpu);
-> > +     }
-> > +
-> >       xrfp.domid = DOMID_SELF;
-> >       xrfp.gpfn = __pa(HYPERVISOR_shared_info) >> PAGE_SHIFT;
-> >
-> > @@ -118,6 +126,9 @@ static void xen_syscore_resume(void)
-> >
-> >       pvclock_resume();
-> 
-> 
-> Doesn't make any difference but I think since this patch is where you
-> are dealing with clock then pvclock_resume() should be added here and
-> not in the earlier patch.
-> 
-> 
-> -boris
-I think the reason it may be in previous patch because it was a part
-of syscore_resume and steal clock fix came in later. 
-It could me moved to this patch that deals with all clock stuff.
+> If you think the log is really needed please explain why.
 
--Anchal
-> 
-> 
+Both the err logs seem redundant.
+EPROBE_DEFERS are rather readily
+noticeable through the return val.
+dev_.._find_icc_paths already prints
+err messages when we fail to get icc
+paths.
 
-> >
-> > +     /* Nonboot CPUs will be resumed when they're brought up */
-> > +     xen_restore_steal_clock(smp_processor_id());
-> > +
-> >       gnttab_resume();
-> >  }
-> >
-> > diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
-> > index c8897aad13cd..33d754564b09 100644
-> > --- a/arch/x86/xen/time.c
-> > +++ b/arch/x86/xen/time.c
-> > @@ -545,6 +545,9 @@ static void xen_hvm_setup_cpu_clockevents(void)
-> >  {
-> >       int cpu = smp_processor_id();
-> >       xen_setup_runstate_info(cpu);
-> > +     if (cpu)
-> > +             xen_restore_steal_clock(cpu);
-> > +
-> >       /*
-> >        * xen_setup_timer(cpu) - snprintf is bad in atomic context. Hence
-> >        * doing it xen_hvm_cpu_notify (which gets called by smp_init during
-> 
-> 
-> 
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
