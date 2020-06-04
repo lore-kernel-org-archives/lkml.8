@@ -2,80 +2,157 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE34C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4F8C433F1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24240206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEC22075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aHfI3s4W"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VVvxH1bH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgFDIN2 (ORCPT
+        id S1728103AbgFDINe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:13:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51600 "EHLO
+        Thu, 4 Jun 2020 04:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgFDINU (ORCPT
+        with ESMTP id S1727826AbgFDIMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:13:20 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D95CC03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=IfinYWvBdTCCIaneu/iWkUgHWl2JfGtLuUEKRHK9Vk4=; b=aHfI3s4WLnLBft+Nady6ib4iGZ
-        uFoN52/Xxc0nrWP7AIy7CcGExAT0vWzl2Aso3MNHXQVdS/19Rz25eI3ZI3fXBlQGPDDCddU3ukVcq
-        9LVWCCuqXhjNrqMqXKlFK9E/AlaWsR+KnBoH2I1jbnEch509QKak3HJ8zbsLTcFHmAp0NxVtHL7zN
-        iVGEF94kTcB9Q5gCXCPDR9GD2ddHv4G1q0fDGEp4ngGxUsABt9YxMEohAtBqIOAZZ7Hc+Azq/2CvN
-        HsJfdsFPiyI8x4556NOrRUX+om8x4kaWsATcFNirIVgWwj5pDKKJcqfy1EM1t8wEWhc/AJAYykJRO
-        KqLOir0w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgkzz-0004pC-Sy; Thu, 04 Jun 2020 08:13:15 +0000
-Date:   Thu, 4 Jun 2020 01:13:15 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thu, 4 Jun 2020 04:12:50 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0C3C03E96E
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 01:12:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f5so4624678wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 01:12:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OK1ZbpoTNfccVSYFcsXj8JWZN2H8wb6NBSYBSiY0g+w=;
+        b=VVvxH1bHV9p97ank/8LpaorTHKGsJwZyd+JirwJXy0+qZG4TB8H7Oydr9fEe+RFC1/
+         k1imVqgdJmEqRkZpgw7mIlLcSS5DA0RAvO2zX5M6vZPa7o9dsbw1v3gmCBgImxZgGaXs
+         civc/FbkkhZ5D3KeU5JL9OxvPlSRme8vDYfYA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OK1ZbpoTNfccVSYFcsXj8JWZN2H8wb6NBSYBSiY0g+w=;
+        b=tr6CZfaZmSCDALkHEbFxY3hhFroxF7NlEOpki+p3P6HnybpuQ4/tMY3lti6B3OxHIK
+         oSax6GV9MkvA2xm+IUJ+NeOghBdPcGHxJXsjq2H8CbkoeHQLDo/V/VlHk2H5/WfDBrl4
+         YEQ7NVfNe+7mgpt+cCBwPXXuYw/LzRGy2AS7KhciqWzad0znHf2iq15yZwff8G2m1Vua
+         BSN9XwvS24j5rBZJDXsIhocJcR6qIbTY1zm9M+Ogmy9LtmlCrf8ikMZ5jGpPsgV920/a
+         3+BGwvGX3e5pQ2cl5/KW3KyBNy3cOUS7nOJyv32h1PW7kwFFDYCCJK5OOPjy0i83F+iF
+         IvfA==
+X-Gm-Message-State: AOAM532lDBFNbc3FBENIFCwEdj7wxzm6DQxV8IOrfUz3BK8eMnUVevGL
+        3cnxouWUdue3RvSwtJtCogQuA3JcZgQ=
+X-Google-Smtp-Source: ABdhPJxSRgyDL97CLiAzJiTWnOVc3+E0KQ864iKHEkQpN+0FvKvYO/V8cL0dvx5C878kh5RZWIw8RA==
+X-Received: by 2002:a1c:df57:: with SMTP id w84mr3077102wmg.52.1591258367556;
+        Thu, 04 Jun 2020 01:12:47 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id f11sm6873305wrj.2.2020.06.04.01.12.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 01:12:46 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [git pull] drm for 5.8-rc1
-Message-ID: <20200604081315.GA23276@infradead.org>
-References: <CAPM=9txGww+omvateOTizZRV9_wLdAbq6uAz3DRa_S6bn1jQuQ@mail.gmail.com>
- <20200603201337.GA225528@ziepe.ca>
- <1d1ad025-e215-da23-5282-bbaf154fa979@amd.com>
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH 12/18] drm/amdgpu: DC also loves to allocate stuff where it shouldn't
+Date:   Thu,  4 Jun 2020 10:12:18 +0200
+Message-Id: <20200604081224.863494-13-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d1ad025-e215-da23-5282-bbaf154fa979@amd.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 10:10:21AM +0200, Christian König wrote:
-> Dave and Daniel explicitly said they want to have this and it is ok as long
-> as I open code it in the driver and keep it AMD internal.
+Not going to bother with a complete&pretty commit message, just
+offending backtrace:
 
-But it fundamentally is broken, and we've been through all the arguments
-why it is broken,  and it is not going to be any less broken because
-someone said they want this.
+        kvmalloc_node+0x47/0x80
+        dc_create_state+0x1f/0x60 [amdgpu]
+        dc_commit_state+0xcb/0x9b0 [amdgpu]
+        amdgpu_dm_atomic_commit_tail+0xd31/0x2010 [amdgpu]
+        commit_tail+0xa4/0x140 [drm_kms_helper]
+        drm_atomic_helper_commit+0x152/0x180 [drm_kms_helper]
+        drm_client_modeset_commit_atomic+0x1ea/0x250 [drm]
+        drm_client_modeset_commit_locked+0x55/0x190 [drm]
+        drm_client_modeset_commit+0x24/0x40 [drm]
 
-I have to say I'm really pissed that you guys just sneaked it in.  I've
-been hoping that graphics is getting a litter better, but this attitud
-of we sneak hacks into the driver code that just happen to work on some
-platform you care about instead because you're too lazy to do the proper
-thing has top stop right now.  drm has been creating so much more
-maintainaince nightmares and buggy code than any other subsysem just
-because of that attitude.
+v2: Found more in DC code, I'm just going to pile them all up.
+
+Cc: linux-media@vger.kernel.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: linux-rdma@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Christian KÃ¶nig <christian.koenig@amd.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ drivers/gpu/drm/amd/amdgpu/atom.c                 | 2 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 +-
+ drivers/gpu/drm/amd/display/dc/core/dc.c          | 4 +++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
+index 4cfc786699c7..1b0c674fab25 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atom.c
++++ b/drivers/gpu/drm/amd/amdgpu/atom.c
+@@ -1226,7 +1226,7 @@ static int amdgpu_atom_execute_table_locked(struct atom_context *ctx, int index,
+ 	ectx.abort = false;
+ 	ectx.last_jump = 0;
+ 	if (ws)
+-		ectx.ws = kcalloc(4, ws, GFP_KERNEL);
++		ectx.ws = kcalloc(4, ws, GFP_ATOMIC);
+ 	else
+ 		ectx.ws = NULL;
+ 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index adabfa929f42..c575e7394d03 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6833,7 +6833,7 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ 		struct dc_stream_update stream_update;
+ 	} *bundle;
+ 
+-	bundle = kzalloc(sizeof(*bundle), GFP_KERNEL);
++	bundle = kzalloc(sizeof(*bundle), GFP_ATOMIC);
+ 
+ 	if (!bundle) {
+ 		dm_error("Failed to allocate update bundle\n");
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
+index 45cfb7c45566..9a8e321a7a15 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
+@@ -1416,8 +1416,10 @@ bool dc_post_update_surfaces_to_stream(struct dc *dc)
+ 
+ struct dc_state *dc_create_state(struct dc *dc)
+ {
++	/* No you really cant allocate random crap here this late in
++	 * atomic_commit_tail. */
+ 	struct dc_state *context = kvzalloc(sizeof(struct dc_state),
+-					    GFP_KERNEL);
++					    GFP_ATOMIC);
+ 
+ 	if (!context)
+ 		return NULL;
+-- 
+2.26.2
+
