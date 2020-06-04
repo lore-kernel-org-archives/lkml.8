@@ -2,55 +2,115 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71086206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB90206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dY6XwrVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgFDQ1r (ORCPT
+        id S1729647AbgFDQ2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:27:47 -0400
-Received: from smtprelay0020.hostedemail.com ([216.40.44.20]:50000 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729641AbgFDQ1r (ORCPT
+        Thu, 4 Jun 2020 12:28:13 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51464 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729587AbgFDQ2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:27:47 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 3284018127182;
-        Thu,  4 Jun 2020 16:27:46 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cat20_611517626d98
-X-Filterd-Recvd-Size: 967
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jun 2020 16:27:45 +0000 (UTC)
-Message-ID: <e4981fd76a88e18376c4e634c235501b57d321e7.camel@perches.com>
-Subject: Re: [PATCH] coccinelle: api: add kzfree script
-From:   Joe Perches <joe@perches.com>
-To:     Denis Efremov <efremov@linux.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-Date:   Thu, 04 Jun 2020 09:27:43 -0700
-In-Reply-To: <20200604140805.111613-1-efremov@linux.com>
-References: <20200604140805.111613-1-efremov@linux.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Thu, 4 Jun 2020 12:28:13 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 054GS89Q024981;
+        Thu, 4 Jun 2020 11:28:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591288088;
+        bh=DbIrDosprZ370hynC/ymJXxIAmAhJt0icaNJ5m1eOQA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dY6XwrVtZSv+9Lsb308s6ra0dpmeHoiygHRlNpcF4bGk8PQhTFrhaEUjkERoztxMh
+         JDSqDS2AIJ4aU3zJfFoG/lopTh9DA+xQ7cI/lyBFl6ZptGQO6VPYnxM1tghxK6Gyq6
+         WLhHV4UmbuWDJCs8kNPZ45ORMFnTxgbUg1Qw5GhU=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 054GS84Z057086
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 11:28:08 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 11:28:07 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 11:28:07 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 054GS7rp108958;
+        Thu, 4 Jun 2020 11:28:07 -0500
+Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
+ family of RGB drivers
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-4-dmurphy@ti.com> <20200527135848.GB5011@amd>
+ <d22658c2-07e2-74e6-dc2b-4b64fd9789dd@ti.com>
+ <20200531190625.GA30537@duo.ucw.cz>
+ <c03ce8da-0895-2e1f-0a4c-2b3d9fae8d4d@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <06bb7ff7-0a41-f29f-ba2f-9cb041b5cdc7@ti.com>
+Date:   Thu, 4 Jun 2020 11:28:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <c03ce8da-0895-2e1f-0a4c-2b3d9fae8d4d@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-04 at 17:08 +0300, Denis Efremov wrote:
-> Check for memset() with 0 followed by kfree().
+Jacek
 
-Perhaps those uses should be memzero_explicit or kvfree_sensitive.
+On 6/1/20 4:34 AM, Jacek Anaszewski wrote:
+> Hi Pavel and Dan,
+>
+> On 5/31/20 9:06 PM, Pavel Machek wrote:
+>> Hi!
+>>
+>>>>> +          There can only be one instance of the ti,led-bank
+>>>>> +          property for each device node.  This is a required node 
+>>>>> is the LED
+>>>>> +          modules are to be backed.
+>>>> I don't understand the second sentence. Pretty sure it is not valid
+>>>> english.
+>>>
+>>>
+>>> If I make these changes is this still viable for 5.8 or would you 
+>>> then go
+>>> into 5.9?
+>>
+>> It really depends if we get -rc8 or not, and if you'll need to do any
+>> changes to C code or not...
+>
+> I think that we need to simmer such a big extension of the LED
+> subsystem for a whole cycle in linux-next, especially taking into
+> account addition of new sysfs interface, that is bit quirky.
+>
+> Effectively 5.8 seems to not have been viable since few weeks.
+>
+After thinking about this for a while I would actually think to have 
+this in 5.9.
 
+Either 5.7 or 5.8 will be the 2020 LTS and such a new interface would be 
+best suited for intermediate stable releases that get EOL'd faster.
+
+This way we don't have to back port bug fixes for 2 years.
+
+Dan
 
