@@ -2,131 +2,93 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0942CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D53D3207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:36:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfRnxFaC"
+	by mail.kernel.org (Postfix) with ESMTP id 22D50207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591245520;
+	bh=2lMQ7ysGCU8GBBi628ZDf5NUJ8tIyihWdEeZRWeBBRs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=wFcHKTN1c29l8kflCBGM+jMYg/aBOlgPZwZC1HW6Yhd3z7EPUlWMXOeJ3HL9AxIGk
+	 5ByaQS4CIHadNu3GsHc6KdSIbS5pCUyzTbBZ5dMCVTpQ941tkA/bFznNXSrSQPyswH
+	 46rnsrJ9T8JbH2FNnJ155ziPjt38zMaKh622seBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgFDEgS (ORCPT
+        id S1728490AbgFDEii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:36:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbgFDEgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:36:16 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DAEC05BD43;
-        Wed,  3 Jun 2020 21:36:16 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q24so550418pjd.1;
-        Wed, 03 Jun 2020 21:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2xpDF2Ski/AzNAcxs9cvvYgBD25WB8OjPMGHN4Zdggw=;
-        b=mfRnxFaCtnoj9sQ/h9BCPZV3JCpDSDCiCQBcWh8FQ7SmKFzIK4Nmb7Xwy30zT1hcRI
-         BdBz7HAlQ6hg7F3ouUKuXozyU8QzIcKx+jf3N4Lhk9qsPekg1iwWivOsL/BDiF/SvqSR
-         iz5fLMWbn8PNhvhdMN7YvJAa6nYtULixLfK3xrcY+tdCfVs/LifljsHp+oRdbCjl6czF
-         iSwg6GFZDSDk/nAM7XLfrMpeBhKElkWQCg7rvzMPJGoidiXgeFIKhO9q4yJARujxfON7
-         zAU7scxyWmDHe4lXIGyjRNyKSIOj2TKoPww7XlselBEdmEhH+8YHZEtLJ3rtcOaFUIfB
-         meRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2xpDF2Ski/AzNAcxs9cvvYgBD25WB8OjPMGHN4Zdggw=;
-        b=RDZCwaEyiIV8nA12d6sLMloGqy3bIVDwTYF2ems7P7wiWbQ9SWZf1WW2vs11sSTKKb
-         TJq84CkLoP8Tua4M9QuTNd7ndMcqlYq1H6Bj95JLA87CVLR11KaBtEToXn9xYJpfqTrA
-         8bmMFk0tsQC7sk/73ljLIshbh1T4fhQWP+wMWuIbAPYuK1rM6Nk/meMjiGojziTxv/Q9
-         aQjjkW9W0Wm/+PfA7W//huo1N4OQ2RESpuiTfJcsS6S3NDBYgU6UHHRp0STALImTxo5i
-         Fv2Qp5s+QhocPuO3LtYiLT4w8GI/YLesEBdKeZZVDtDEe1lLzFHiJsIiBzf3sAKHJh68
-         a1mA==
-X-Gm-Message-State: AOAM5337QcyfzAlVmkofVXUeyrgv3WPqumu0X4IdqkymG2i3XrtqKQc0
-        OXLNpbs/9b6EsFCFaCtZHbo=
-X-Google-Smtp-Source: ABdhPJwZd8LgTD+yRGTfGRpaoL0jPidjt/9faszZg2rhgwxRJxeSJcNg0LH9GPIeBfyhsbYYtGoNLw==
-X-Received: by 2002:a17:90a:9307:: with SMTP id p7mr3631526pjo.182.1591245376068;
-        Wed, 03 Jun 2020 21:36:16 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id a17sm540943pfi.203.2020.06.03.21.36.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 21:36:15 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 4 Jun 2020 13:36:13 +0900
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v6 03/14] videobuf2: handle V4L2 buffer cache flags
-Message-ID: <20200604043613.GA98819@jagdpanzerIV.localdomain>
-References: <20200514160153.3646-1-sergey.senozhatsky@gmail.com>
- <20200514160153.3646-4-sergey.senozhatsky@gmail.com>
- <b34ae09b-7c20-7255-6adc-3370680555cd@xs4all.nl>
- <CAAFQd5Cu5ex=YcuVfmEC1uNA4DZBSAF04LYtrw3-q22ZMc7_DA@mail.gmail.com>
- <cfb54bb3-a7dd-fafd-6b33-5500d6728a8f@xs4all.nl>
+        Thu, 4 Jun 2020 00:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726956AbgFDEih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 00:38:37 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04A91206C3;
+        Thu,  4 Jun 2020 04:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591245517;
+        bh=2lMQ7ysGCU8GBBi628ZDf5NUJ8tIyihWdEeZRWeBBRs=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=rjNKa+NoPrDtpvFIskphpRAzqIuZC2EDaeiH8NLviKFG4z0voPiz2uE07z0nrysfQ
+         2eLhdaruaSQ74UQKr1AOe02dy7ouM14/8cQEr/sK93Ykg+9oEquqLX/ary5lgIdgf1
+         J8RYhQkIfWZ8Ohep5Uxh6ufpuFKZW5VLYrPucY5o=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfb54bb3-a7dd-fafd-6b33-5500d6728a8f@xs4all.nl>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200603233203.1695403-7-keescook@chromium.org>
+References: <20200603233203.1695403-1-keescook@chromium.org> <20200603233203.1695403-7-keescook@chromium.org>
+Subject: Re: [PATCH 06/10] clk: st: Remove uninitialized_var() usage
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+To:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Date:   Wed, 03 Jun 2020 21:38:36 -0700
+Message-ID: <159124551620.69627.18245138803269803785@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/06/02 14:24), Hans Verkuil wrote:
-[..]
-> For vim2m (but looks the same for vivid/vimc/vicodec):
-> 
-> Streaming ioctls:
->         test read/write: OK (Not Supported)
->         test blocking wait: OK
->         Video Capture: Captured 8 buffers
->         test MMAP (no poll): OK
->         Video Capture: Captured 8 buffers
->         test MMAP (select): OK
->         Video Capture: Captured 8 buffers
->         test MMAP (epoll): OK
->         Video Capture: Captured 8 buffers
->         test USERPTR (no poll): OK
->         Video Capture: Captured 8 buffers
->         test USERPTR (select): OK
->                 fail: v4l2-test-buffers.cpp(1874): flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
->                 fail: v4l2-test-buffers.cpp(1937): setupDmaBuf(expbuf_node, node, q, exp_q)
->         test DMABUF (no poll): FAIL
->                 fail: v4l2-test-buffers.cpp(1874): flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
->                 fail: v4l2-test-buffers.cpp(1937): setupDmaBuf(expbuf_node, node, q, exp_q)
->         test DMABUF (select): FAIL
+Quoting Kees Cook (2020-06-03 16:31:59)
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just remove this variable since it was
+> actually unused:
+>=20
+> drivers/clk/st/clkgen-fsyn.c: In function \u2018quadfs_set_rate\u2019:
+> drivers/clk/st/clkgen-fsyn.c:793:6: warning: unused variable \u2018i\u201=
+9 [-Wunused-variable]
+>   793 |  int i;
+>       |      ^
+>=20
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.co=
+m/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=3D1TGqCR5vQkCzWJ0QxK6Cern=
+OU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz=
+9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=3DyVJu65TpLg=
+N_ybYNv0VEOKA@mail.gmail.com/
+>=20
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-This helps. I'm probably "holding v4l2-compliance wrong", but I have
-never seen that assertion triggering. The fix should be easy enough
-
----
-
-diff --git a/utils/v4l2-compliance/v4l2-test-buffers.cpp b/utils/v4l2-compliance/v4l2-test-buffers.cpp
-index 79b74e96..1ee12f96 100644
---- a/utils/v4l2-compliance/v4l2-test-buffers.cpp
-+++ b/utils/v4l2-compliance/v4l2-test-buffers.cpp
-@@ -1871,8 +1871,8 @@ static int setupDmaBuf(struct node *expbuf_node, struct node *node,
- 				fail_on_test(!buf.g_bytesused(p));
- 		}
- 		flags = buf.g_flags();
--		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE);
--		fail_on_test(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN);
-+		fail_on_test(!(flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE));
-+		fail_on_test(!(flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN));
- 		fail_on_test(flags & V4L2_BUF_FLAG_DONE);
- 		fail_on_test(buf.querybuf(node, i));
- 		fail_on_test(buf.check(q, Queued, i));
+Acked-by: Stephen Boyd <sboyd@kernel.org>
