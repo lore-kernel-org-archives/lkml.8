@@ -2,107 +2,107 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D86C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1724EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE582063A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E242C204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LjpZ15h1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d0UayAtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgFDRpW (ORCPT
+        id S1730187AbgFDRpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:45:22 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3877 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729998AbgFDRpV (ORCPT
+        Thu, 4 Jun 2020 13:45:43 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31715 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730144AbgFDRpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:45:21 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed932cf0000>; Thu, 04 Jun 2020 10:43:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 04 Jun 2020 10:45:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 04 Jun 2020 10:45:21 -0700
-Received: from [10.26.72.155] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Jun
- 2020 17:45:14 +0000
-Subject: Re: [PATCH] dmaengine: tegra210-adma: fix pm_runtime_get_sync failure
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <emamd001@umn.edu>, <wu000273@umn.edu>, <kjlu@umn.edu>,
-        <smccaman@umn.edu>
-References: <20200603184104.4475-1-navid.emamdoost@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <900909fe-fa15-fbca-80f7-79aeee721ed9@nvidia.com>
-Date:   Thu, 4 Jun 2020 18:45:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 13:45:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591292741;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qDo8p9BXXIxSVFgSR/pGZb84AN0JbtfR3XCYvCIeiuU=;
+        b=d0UayAtAkIpYAVTM02tedcydLs23PaKRexgLTm1y8q2WoDGm3G4X0y0LjjwO3qtqsujTyz
+        F9kBzNwGRpSfancsTCnsi4djbUp8N2tx5M0Y+qISIDWsoCTkMjA/VPke1rJ+92ibVhwFGT
+        hzz0nlI9EYmkYXkYk3wFXwuY7ioM1P4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-6Fol4DoTOHqdfoN9prVAzw-1; Thu, 04 Jun 2020 13:45:37 -0400
+X-MC-Unique: 6Fol4DoTOHqdfoN9prVAzw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3056D107ACF5;
+        Thu,  4 Jun 2020 17:45:35 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-114-122.rdu2.redhat.com [10.10.114.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BEF5B7B5ED;
+        Thu,  4 Jun 2020 17:45:34 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 4E25C223B92; Thu,  4 Jun 2020 13:45:34 -0400 (EDT)
+Date:   Thu, 4 Jun 2020 13:45:34 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] KVM: x86: Interrupt-based mechanism for
+ async_pf 'page present' notifications
+Message-ID: <20200604174534.GB99235@redhat.com>
+References: <20200525144125.143875-1-vkuznets@redhat.com>
+ <3be1df67-2e39-c7b7-b666-66cd4fe61406@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200603184104.4475-1-navid.emamdoost@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591292623; bh=Yp8fGQ4ljGEnhEj26i/7HtUSVGFm0+/zLsIjNIponmI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=LjpZ15h1i0/8xqTnfyw8GNkYEjTi3RjUqRjkRosKkcJTC4WsjIoFu2YCEr3SlmLxW
-         Zxfvhan8phHdoRyFU8sP+IG1uV0KM5UblaMiEsosQbTJqF+dYdY/ApewLIFlC3rLpv
-         Zj6FL1mKos+YSkr0y3uj1oMtmcX7LcWngN8hM+bv4exSVfuCTX0Yo75lJ/kB2ddjcW
-         6UjWjM8QiEWA2YjHMvgK9Wckow01aE5/rTN1e2vIe8lkReY/jATAhQhiecn5xrNYC1
-         O1Iwkjp4J5AJobfPS3dk1cW0odnHJPQh3NdUPnt7MCqoGVoN6PleYe7JoJKFZgjV9F
-         mDa3CaODQaOqA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3be1df67-2e39-c7b7-b666-66cd4fe61406@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 03/06/2020 19:41, Navid Emamdoost wrote:
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count. Call pm_runtime_put if
-> pm_runtime_get_sync fails.
+On Thu, May 28, 2020 at 01:04:55PM +0200, Paolo Bonzini wrote:
+> On 25/05/20 16:41, Vitaly Kuznetsov wrote:
+> > Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
+> > it seems that re-using #PF exception for a PV mechanism wasn't a great
+> > idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
+> > not present' events and normal APIC interrupts for 'page ready' events.
+> > This series does the later.
+> > 
+> > Changes since v1:
+> > - struct kvm_vcpu_pv_apf_data's fields renamed to 'flags' and 'token',
+> >   comments added [Vivek Goyal]
+> > - 'type1/2' names for APF events dropped from everywhere [Vivek Goyal]
+> > - kvm_arch_can_inject_async_page_present() renamed to 
+> >   kvm_arch_can_dequeue_async_page_present [Vivek Goyal]
+> > - 'KVM: x86: deprecate KVM_ASYNC_PF_SEND_ALWAYS' patch added.
+> > 
+> > v1: https://lore.kernel.org/kvm/20200511164752.2158645-1-vkuznets@redhat.com/
+> > QEMU patches for testing: https://github.com/vittyvk/qemu.git (async_pf2_v2 branch)
 > 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  drivers/dma/tegra210-adma.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index c4ce5dfb149b..e8c749cd3fe8 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -659,6 +659,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
->  	ret = pm_runtime_get_sync(tdc2dev(tdc));
->  	if (ret < 0) {
->  		free_irq(tdc->irq, tdc);
-> +		pm_runtime_put(tdc2dev(tdc));
->  		return ret;
->  	}
+> I'll do another round of review and queue patches 1-7; 8-9 will be
+> queued later and separately due to the conflicts with the interrupt
+> entry rework, but it's my job and you don't need to do anything else.
 
+Hi Paolo,
 
-Please do not send two patches with the same $subject that are fixing
-two different areas of the driver. In fact, please squash these two
-patches into a single fix and resend because they are fixing the same issue.
+I seee 1-7 got merged for 5.8. When you say patch 8-9 will be queue later,
+you mean later in 5.8 or it will held till 5.9 merge window opens.
 
-Jon
+Thanks
+Vivek
 
--- 
-nvpublic
