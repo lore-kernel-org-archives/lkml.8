@@ -2,912 +2,139 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B554EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84ADD206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACB3206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DzUT2XUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgFDT0U (ORCPT
+        id S1729212AbgFDT1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:26:20 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:49760 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728476AbgFDT0T (ORCPT
+        Thu, 4 Jun 2020 15:27:15 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50768 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726446AbgFDT1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:26:19 -0400
-Received: by mail-io1-f70.google.com with SMTP id h17so4199961ior.16
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:26:17 -0700 (PDT)
+        Thu, 4 Jun 2020 15:27:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591298832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q49Z4256vOBoq7DStqgcJEK9UupKdzcyujqiCc4dd9o=;
+        b=DzUT2XUkMO/dsYzB1jh/D4h7qN/eFnj4gqwFJbGyXoOvnn42OLXrDVlQssYV171X/rCoAX
+        px58Gma9tXyYbvE7+1i+i2M4tDiQauA28N75qTv04uQTZPMYRtnji50+XOdIO7g2puEHxY
+        Sf35INhZ+O0394hWDKetzpllhAav+PU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-JZN-XJmxMe23SM7RdBEA1Q-1; Thu, 04 Jun 2020 15:27:09 -0400
+X-MC-Unique: JZN-XJmxMe23SM7RdBEA1Q-1
+Received: by mail-wm1-f70.google.com with SMTP id v23so2273807wmj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:27:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=t1+7wYGhVtlGze+DWmzhSEjAeIv+k2jUWQ19PjIfolI=;
-        b=Jhi8yFX5wlYKeRFn6DJbXDqbdE3yD0jeAOT59iKzBxnXgjhdefW9xf6BjzlICyzJef
-         ZbtrfD3YhmcsLZaiQGt3m1lE9sV0K2/cVKrqFlzR8F/SLbSxptbMeQdXgWiA77hrG92q
-         4kMyahGGqFVH0WjE11LK6jyX015+8y94itM8D012O/iwjye9Na0nAPqsqxV6sQW+6d1Y
-         UchE8R3aaA+WPn/dDIBAOi1AOEjAVmsNiZlfhEvtO3UBgM2o1YoDtbL9+BlYgA/XFmve
-         SnBzf07j4k6DdKt2zVPwYdhmkOYW6/ecv/zyVp340zjcwmZ+vKzdiihNCG6LVleOVd8e
-         Yetg==
-X-Gm-Message-State: AOAM531B+fMJ2bO1MPxSpIa0Tb5cWnC2hb3wgv+4VX4/y8VQzBn7b40l
-        QFP9IbogS566Kg7OwrT83pIfBCm7lbrYF5hUK0jz3YzRMsEJ
-X-Google-Smtp-Source: ABdhPJzupru41smJ4VCvGSmAN+p0C9vn5yD8KxCjjHG7IJ0Aqrfg091MJ3L61WReLf86qRJkrUCFTTmktkDGuqRinI2vDYLiVRCl
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q49Z4256vOBoq7DStqgcJEK9UupKdzcyujqiCc4dd9o=;
+        b=GvJa6W3q8sTU2VvjGSJbmJUZqZDqOqQqeoQuNPGtEdaf9LRMop9EDYS+8u8uTJVvjP
+         rUoQorKg1ZSDQPu4I1HdjOekWwPZ+x4aAQ+2jAGvWnmKQZ1JsPho8p1IwyLz343BJ79p
+         GGWsfr/M4iKJrtnmlbwyDn9CK7EvqhQYYCY9Mm1oB/ancSb36uqQcDkPIEREC6Q6Gruf
+         mHpFuhJD2K7OVxAKbaeRMdm7lvogJhhE0bnBFnMvIfkcg6Oihko1kOE7YZG9xdax63VC
+         HzNxq8N2nM78z02bUmNd2w9J3tkAcSWNS0xHv//UkZxIGJhouHyLw8VQYz3ADUCThVO4
+         +Zhw==
+X-Gm-Message-State: AOAM530kwPWUxZi0Izg5m1gLVhlODb24w6zgLMkCdoI+2ZNTOyyqMBl4
+        ssBpG578pD6+1zihuhxzkg7PJIQcXFxVukzgunNqu/Th9D1eooItg5l+Ih7+PkpiQNTwRLVHGVE
+        klrrLuxy4Ql/LMSiHnTVXUZjB
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr5149985wmm.108.1591298828084;
+        Thu, 04 Jun 2020 12:27:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyvcnPpK6VBqKCpJV3bB7l7vAoUXzeRhj0mnBk/bmYIFW6j4ZT+bUa1mlOaLtCHj4EUtktr1A==
+X-Received: by 2002:a05:600c:c3:: with SMTP id u3mr5149966wmm.108.1591298827858;
+        Thu, 04 Jun 2020 12:27:07 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id y37sm10879481wrd.55.2020.06.04.12.27.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 12:27:07 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 15:27:05 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: MAINTAINERS: Wrong ordering in VIRTIO BALLOON
+Message-ID: <20200604152654-mutt-send-email-mst@kernel.org>
+References: <alpine.DEB.2.21.2005120717260.3701@felia>
+ <bb2eea77-72df-6c53-5397-de057ffc9dd8@redhat.com>
+ <80146d5713f8579a92b4da1e2b7d7626999dd9be.camel@perches.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e215:: with SMTP id z21mr5416220ioc.115.1591298776548;
- Thu, 04 Jun 2020 12:26:16 -0700 (PDT)
-Date:   Thu, 04 Jun 2020 12:26:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004eca9e05a7471e01@google.com>
-Subject: PANIC: double fault in mark_lock
-From:   syzbot <syzbot+4fceeb0d2fc702d5d41e@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, jakub@cloudflare.com,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org, lmb@cloudflare.com,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80146d5713f8579a92b4da1e2b7d7626999dd9be.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    39884604 mptcp: fix NULL ptr dereference in MP_JOIN error ..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=125d5d16100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=55b0bb710b7fdf44
-dashboard link: https://syzkaller.appspot.com/bug?extid=4fceeb0d2fc702d5d41e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4fceeb0d2fc702d5d41e@syzkaller.appspotmail.com
-
-traps: PANIC: double fault, error_code: 0x0
-double fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 29146 Comm: syz-executor.1 Not tainted 5.7.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-RIP: 0010:hlock_class kernel/locking/lockdep.c:179 [inline]
-RIP: 0010:mark_lock+0x116/0xf10 kernel/locking/lockdep.c:3912
-Code: 89 f8 48 c1 e8 03 0f b6 04 10 84 c0 74 08 3c 03 0f 8e e3 0b 00 00 0f b7 55 20 66 81 e2 ff 1f 0f b7 d2 be 08 00 00 00 48 89 d0 <48> 89 14 24 48 c1 f8 06 48 8d 3c c5 a0 a9 30 8c e8 85 42 58 00 48
-RSP: 0018:ffffc8fffffffff8 EFLAGS: 00010002
-RAX: 000000000000002c RBX: 1ffff92000000005 RCX: ffffffff815935f7
-RDX: 000000000000002c RSI: 0000000000000008 RDI: ffff88808fed2080
-RBP: ffff88808fed2a10 R08: 0000000000000000 R09: fffffbfff1861559
-R10: ffffffff8c30aac7 R11: fffffbfff1861558 R12: 0000000000000008
-R13: ffff88808fed2080 R14: 0000000000000005 R15: ffff88808fed2a30
-FS:  00000000015ee940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc8ffffffffe8 CR3: 000000009402e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- mark_usage kernel/locking/lockdep.c:3860 [inline]
- __lock_acquire+0x9a4/0x4c50 kernel/locking/lockdep.c:4309
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
- rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
- rcu_read_lock include/linux/rcupdate.h:601 [inline]
- sock_map_unhash+0x38/0x380 net/core/sock_map.c:1233
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- sock_map_unhash+0x303/0x380 net/core/sock_map.c:1238
- tcp_set_state+0x579/0x780 net/ipv4/tcp.c:2261
- tcp_done+0xdc/0x380 net/ipv4/tcp.c:4003
- tcp_reset+0x128/0x4e0 net/ipv4/tcp_input.c:4113
- tcp_validate_incoming+0xa51/0x16b0 net/ipv4/tcp_input.c:5514
- tcp_rcv_established+0x69a/0x1d90 net/ipv4/tcp_input.c:5722
- tcp_v6_do_rcv+0x418/0x1290 net/ipv6/tcp_ipv6.c:1449
- tcp_v6_rcv+0x2d07/0x3640 net/ipv6/tcp_ipv6.c:1682
- ip6_protocol_deliver_rcu+0x2e6/0x1660 net/ipv6/ip6_input.c:433
- ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ip6_input+0xcf/0x3d0 net/ipv6/ip6_input.c:483
- dst_input include/net/dst.h:441 [inline]
- ip6_rcv_finish+0x1d9/0x310 net/ipv6/ip6_input.c:76
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- ipv6_rcv+0xf8/0x3f0 net/ipv6/ip6_input.c:307
- __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5268
- __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5382
- process_backlog+0x21e/0x7a0 net/core/dev.c:6214
- napi_poll net/core/dev.c:6659 [inline]
- net_rx_action+0x4c2/0x1070 net/core/dev.c:6727
- __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
- </IRQ>
- do_softirq.part.0+0x10f/0x160 kernel/softirq.c:337
- do_softirq kernel/softirq.c:329 [inline]
- __local_bh_enable_ip+0x20e/0x270 kernel/softirq.c:189
- local_bh_enable include/linux/bottom_half.h:32 [inline]
- inet_csk_listen_stop+0x2b8/0xb20 net/ipv4/inet_connection_sock.c:1034
- tcp_close+0xe3d/0x1250 net/ipv4/tcp.c:2364
- inet_release+0xe4/0x1f0 net/ipv4/af_inet.c:428
- inet6_release+0x4c/0x70 net/ipv6/af_inet6.c:475
- __sock_release+0xcd/0x280 net/socket.c:605
- sock_close+0x18/0x20 net/socket.c:1278
- __fput+0x33e/0x880 fs/file_table.c:280
- task_work_run+0xf4/0x1b0 kernel/task_work.c:123
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop+0x2fa/0x360 arch/x86/entry/common.c:165
- prepare_exit_to_usermode arch/x86/entry/common.c:196 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
- do_syscall_64+0x6b1/0x7d0 arch/x86/entry/common.c:305
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x416661
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffefd7b28b0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000416661
-RDX: 0000000000000000 RSI: 0000000000000d9f RDI: 0000000000000004
-RBP: 0000000000000001 R08: 000000007b7b0d9f R09: 000000007b7b0da3
-R10: 00007ffefd7b29a0 R11: 0000000000000293 R12: 000000000078c900
-R13: 000000000078c900 R14: ffffffffffffffff R15: 000000000078bf0c
-Modules linked in:
----[ end trace 500deeb1423f1fcc ]---
-RIP: 0010:test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-RIP: 0010:hlock_class kernel/locking/lockdep.c:179 [inline]
-RIP: 0010:mark_lock+0x116/0xf10 kernel/locking/lockdep.c:3912
-Code: 89 f8 48 c1 e8 03 0f b6 04 10 84 c0 74 08 3c 03 0f 8e e3 0b 00 00 0f b7 55 20 66 81 e2 ff 1f 0f b7 d2 be 08 00 00 00 48 89 d0 <48> 89 14 24 48 c1 f8 06 48 8d 3c c5 a0 a9 30 8c e8 85 42 58 00 48
-RSP: 0018:ffffc8fffffffff8 EFLAGS: 00010002
-RAX: 000000000000002c RBX: 1ffff92000000005 RCX: ffffffff815935f7
-RDX: 000000000000002c RSI: 0000000000000008 RDI: ffff88808fed2080
-RBP: ffff88808fed2a10 R08: 0000000000000000 R09: fffffbfff1861559
-R10: ffffffff8c30aac7 R11: fffffbfff1861558 R12: 0000000000000008
-R13: ffff88808fed2080 R14: 0000000000000005 R15: ffff88808fed2a30
-FS:  00000000015ee940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc8ffffffffe8 CR3: 000000009402e000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+On Tue, May 12, 2020 at 09:23:45AM -0700, Joe Perches wrote:
+> On Tue, 2020-05-12 at 08:38 +0200, David Hildenbrand wrote:
+> > On 12.05.20 07:21, Lukas Bulwahn wrote:
+> > > Hi David,
+> > > 
+> > > with your commit 6d6b93b9afd8 ("MAINTAINERS: Add myself as virtio-balloon 
+> > > co-maintainer"), visible on next-20200508, ./scripts/checkpatch.pl -f 
+> > > MAINTAINERS complains:
+> > > 
+> > > WARNING: Misordered MAINTAINERS entry - list file patterns in alphabetic order
+> > > #17982: FILE: MAINTAINERS:17982:
+> > > +F:	include/uapi/linux/virtio_balloon.h
+> > > +F:	include/linux/balloon_compaction.h
+> > > 
+> > > This is due to wrong ordering of the entries in your submission. If you 
+> > > would like me to send you a patch fixing that, please just let me know.
+> > > 
+> > > It is a recent addition to checkpatch.pl to report ordering problems in 
+> > > MAINTAINERS, so you might have not seen that at submission time.
+> > 
+> > Thanks for the notification Lukas,
+> > 
+> > b962ee8622d0 ("checkpatch: additional MAINTAINER section entry ordering
+> > checks") is not in Linus' tree yet AFAIKS.
+> > 
+> > I can see that 3b50142d8528 ("MAINTAINERS: sort field names for all
+> > entries") is upstream. I do wonder if we should just do another batch
+> > update after the checkpatch patch is upstream instead, I guess more will
+> > pile up?
+> > 
+> > @mst, joe, what do you prefer?
+> > 
+> > 1. I can resend the original patch.
+> > 2. Lukas can send a fixup that we might want to squash.
+> > 3. We wait until the checkpatch change goes upstream and to a final
+> > batch update.
+> 
+> A fixup patch would work.
+> 
+> I think if Linus every once in awhile just before an -rc1 runs
+> scripts/parse-maintainers like:
+> 
+> commit 3b50142d8528 ("MAINTAINERS: sort field names for all entries")
+> 
+> then these sorts of individual patches would not matter much.
+> 
+> This first time the script was run, I think there was just 1 patch
+> conflict from -next to Linus' tree, and that scripted change was
+> fairly large.
+> 
+> As the changes will generally be smaller in the future, it's unlikely
+> there will be a significant number of conflicts.
+> 
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ok so just send a fixup patch pls.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
