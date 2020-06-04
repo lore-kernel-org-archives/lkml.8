@@ -2,114 +2,147 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B138C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57174C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C63204EF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F03B204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C0D4Ai1a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llD/wYAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbgFDUmB (ORCPT
+        id S1730007AbgFDUnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54834 "EHLO
+        Thu, 4 Jun 2020 16:43:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbgFDUmA (ORCPT
+        with ESMTP id S1729073AbgFDUnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:42:00 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9356AC08C5C0;
-        Thu,  4 Jun 2020 13:42:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RRQblA+6bnMhS+1SeeEZEKS/yygoKGFKeYypCO41S+w=; b=C0D4Ai1alqr8n5EZ4NTgLMZNjz
-        FhgjMiyvs2pElhVDljwJfczLn/lUbRXtxNiNgZlQ26DdYPKuvFDQcj+WPlebJAlKW13CQib6OpZLB
-        O1sZhbeGkYwrCro0S/96SpLGo/EuJX6bmfFEoZa5VHq8RJezHp0KiwdqcnzPWh0OsALyAC696r4WF
-        KFFKqcdLiszkPv3L5bz9uK35dmbij3evt7cNScCz5vIyUO4HFM2UrJHrzBx9PWKR8di8Vplku1MgN
-        SxxLVmSByLs94EzRvfh+cnSMfBhSuBFGd7BD4rgxW7dW+yiGBZd/CEjmVOt3k2WfWqjeEn0c6vLKh
-        8tRyt0dw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgwfv-0002aT-Rn; Thu, 04 Jun 2020 20:41:20 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 578649838B9; Thu,  4 Jun 2020 22:41:16 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 22:41:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org,
-        bigeasy@linutronix.de, sparclinux@vger.kernel.org,
-        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        heiko.carstens@de.ibm.com, linux-s390@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 1/5] sparc64: Fix asm/percpu.h build error
-Message-ID: <20200604204116.GD4496@worktop.programming.kicks-ass.net>
-References: <20200529213550.683440625@infradead.org>
- <20200529214203.673108357@infradead.org>
- <20200529.162917.1970892823680223252.davem@davemloft.net>
- <20200604165703.GG3976@hirez.programming.kicks-ass.net>
+        Thu, 4 Jun 2020 16:43:07 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D103CC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:43:06 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id c8so7906910iob.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=goYJSdVcb+PXjkKo7sE7PgZ+GNxicPpcCOMy+7tqyzw=;
+        b=llD/wYAJd5ogKwgpI3ySzRMGFAtDp2ag5fjbbtuYyEe1Hd5jXTFkSG4Pws7uMbIMBP
+         L9m91+6ZErrdqcHgxyLzT+JXzBaxT66TeVI8Sj5tPCvzQlcGASl1u8r+CUhXl6zcnh1F
+         KsUkVENtK3E9/gxk4Vw2jrHMYWxAl+ZYbS18DQcGOgoqXLNzqEKO3yvRIidG4ceMpPr5
+         tum/M/ECkmt4Bn5oOSIYy+nWUJEGt4SxkHSeeCLGiN6+Ox6XkNGRKqBXYKGXmIWKy9Xu
+         HjuGMgx7ozLm2Xleo9qwtWH5va/iySTvCY40F5u/HA6lTcpNp6CaNEbJR1LXGx9BlmUC
+         Z7ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=goYJSdVcb+PXjkKo7sE7PgZ+GNxicPpcCOMy+7tqyzw=;
+        b=AVnuQPywmz5tuE+BaCai4j4L1MVmo3r8TV7ddE9OpCx/NBpn0opb51kyy6qaI0WeNl
+         FhcS9s6hMYTO8vuzvDlndZyuPS2Jbtg3+In4ISyQUKUuUY7SdBxQSVineMbhsnHiAS1+
+         3tKY0rQMt5de6B0QKCKwNdI3BD5oMpDqA5G1bE3djc1RpPMYTSerIa+vNKu+EPZkTGK7
+         UNQgvKZc8RJkpZ12AJFFyf8X+eOKO8iC/AuTMgYuvyi2zLGLlz3u6lWkedZIkBh9x4n9
+         mbfUU36Ntr0v5ENHfqTYxNLep88nvsNrEZBMNOHk7dvuNybeVImTjFqt6XG/u/vRwxIx
+         T0mA==
+X-Gm-Message-State: AOAM531KzxSRylMZqcjutvcbKzf2eOswgz5NBXcs0hU/LcUWJir0r038
+        BOWTb2bxN9RlcyWdsj4iPkRQ5+dXfYeeeSTenRM=
+X-Google-Smtp-Source: ABdhPJx08psJHqNdE3JBxRw2ZGzs+7FxtfNUHI3lg/VukHaEHV5L4gmyELZn4FVq0n3KJbpTCPxaZifAZ8YrzI/yNSA=
+X-Received: by 2002:a05:6602:1204:: with SMTP id y4mr5721091iot.44.1591303386267;
+ Thu, 04 Jun 2020 13:43:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604165703.GG3976@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <042eddd4b87f0db3588a79d829afe6b23fa8365c.1590017578.git.syednwaris@gmail.com>
+ <202005310310.EOelU2v3%lkp@intel.com>
+In-Reply-To: <202005310310.EOelU2v3%lkp@intel.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Fri, 5 Jun 2020 02:12:54 +0530
+Message-ID: <CACG_h5oHmkAp68q0EFXZEWhG15EQSHLgx=78gZ72aLShZOztFA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/4] lib/test_bitmap.c: Add for_each_set_clump test cases
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 06:57:03PM +0200, Peter Zijlstra wrote:
+On Sun, May 31, 2020 at 12:50 AM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Syed,
+>
+> Thank you for the patch! Perhaps something to improve:
+>
+> [auto build test WARNING on b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce]
+>
+> url:    https://github.com/0day-ci/linux/commits/Syed-Nayyar-Waris/Introduce-the-for_each_set_clump-macro/20200524-130931
+> base:    b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
+> config: x86_64-randconfig-s021-20200529 (attached as .config)
+> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.1-243-gc100a7ab-dirty
+>         # save the attached .config to linux build tree
+>         make W=1 C=1 ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>
+> >> WARNING: modpost: lib/test_bitmap.o(.data+0xe80): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp1
+> The variable clump_test_data references
+> the variable __initconst clump_exp1
+> If the reference is valid then annotate the
+> variable with or __refdata (see linux/init.h) or name the variable:
+>
+> --
+> >> WARNING: modpost: lib/test_bitmap.o(.data+0xec8): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp2
+> The variable clump_test_data references
+> the variable __initconst clump_exp2
+> If the reference is valid then annotate the
+> variable with or __refdata (see linux/init.h) or name the variable:
+>
+> --
+> >> WARNING: modpost: lib/test_bitmap.o(.data+0xf10): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp3
+> The variable clump_test_data references
+> the variable __initconst clump_exp3
+> If the reference is valid then annotate the
+> variable with or __refdata (see linux/init.h) or name the variable:
+>
+> --
+> >> WARNING: modpost: lib/test_bitmap.o(.data+0xf58): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp4
+> The variable clump_test_data references
+> the variable __initconst clump_exp4
+> If the reference is valid then annotate the
+> variable with or __refdata (see linux/init.h) or name the variable:
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-> I think I see, what happens is that these headers end up in the VDSO
-> build, and that doesn't have these CFLAGS, because userspace.
-> 
-> Let me see what to do about that.
+HI All,
 
-I feel like the below is cheating, but it's the best I could find :/
-VDSO including kernel headers and the utter maze that our kernel headers
-are makes it really hard to untangle :/
+Regarding the above compilation warning reported by bot. I think this is
+different than GENMASK.
 
-This builds sparc64-defconfig and sparc64-all{no,mod}config.
+I am unable to reproduce the compilation warning.
 
-Dave, does this work for you, or should I try hardder?
+I ran the command:
+make W=1 C=1 ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'  lib/
 
----
- arch/sparc/include/asm/percpu_64.h  | 2 ++
- arch/sparc/include/asm/trap_block.h | 2 ++
- 2 files changed, 4 insertions(+)
+But the compilation warning didn't show up. Can anyone please point to me
+what I am doing wrong here? How shall I reproduce the warning? Thanks !
 
-diff --git a/arch/sparc/include/asm/percpu_64.h b/arch/sparc/include/asm/percpu_64.h
-index 32ef6f05cc565..a8786a4b90b6b 100644
---- a/arch/sparc/include/asm/percpu_64.h
-+++ b/arch/sparc/include/asm/percpu_64.h
-@@ -4,7 +4,9 @@
-
- #include <linux/compiler.h>
-
-+#ifndef BUILD_VDSO
- register unsigned long __local_per_cpu_offset asm("g5");
-+#endif
-
- #ifdef CONFIG_SMP
-
-diff --git a/arch/sparc/include/asm/trap_block.h b/arch/sparc/include/asm/trap_block.h
-index 0f6d0c4f66838..ace0d48e837e5 100644
---- a/arch/sparc/include/asm/trap_block.h
-+++ b/arch/sparc/include/asm/trap_block.h
-@@ -2,6 +2,8 @@
- #ifndef _SPARC_TRAP_BLOCK_H
- #define _SPARC_TRAP_BLOCK_H
-
-+#include <linux/threads.h>
-+
- #include <asm/hypervisor.h>
- #include <asm/asi.h>
-
-
+Regards
+Syed Nayyar Waris
