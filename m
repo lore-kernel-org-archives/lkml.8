@@ -2,127 +2,121 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06336C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D802AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDC43207ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B385C20738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 08:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BRJKJNTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgFDIhC (ORCPT
+        id S1727868AbgFDIiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 04:37:02 -0400
-Received: from mga05.intel.com ([192.55.52.43]:38350 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbgFDIhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 04:37:02 -0400
-IronPort-SDR: MGUUjyyv7ep65Qdb6engGOCSdxNSz9nTQ+2KVkNzuMXePHa0oaNJrLG2yu5F41xSb7zI5PNFVs
- Nbvz03AokKJw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 01:37:02 -0700
-IronPort-SDR: umU7JkR4go6XKX3rFPKdOm7SYTj7s6zF0R9Nn5IBO+OgexTgplino9hflqMrIn8M2JM7rBUdET
- 66B540yDxkew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
-   d="scan'208";a="304646950"
-Received: from alachman-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.44.241])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Jun 2020 01:36:56 -0700
-Date:   Thu, 4 Jun 2020 11:36:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
-        peterhuewe@gmx.de, jgg@ziepe.ca, gregkh@linuxfoundation.org,
-        jens.wiklander@linaro.org, linux-integrity@vger.kernel.org,
-        arnd@linaro.org, sumit.garg@linaro.org
-Subject: Re: [PATCHv6 1/3] optee: use uuid for sysfs driver entry
-Message-ID: <20200604083655.GA4026@linux.intel.com>
-References: <20200601150645.13412-1-maxim.uvarov@linaro.org>
- <20200601150645.13412-2-maxim.uvarov@linaro.org>
+        Thu, 4 Jun 2020 04:38:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgFDIiI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 04:38:08 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40495C05BD1E;
+        Thu,  4 Jun 2020 01:38:08 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49czgf4R3Sz9sSf;
+        Thu,  4 Jun 2020 18:38:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591259886;
+        bh=Fw81xUNRxSEfr/K2a41wO/SlsASJNJ6ZEGKglcUTBhU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BRJKJNTELzccZZlcQ6aC+MJCXwoHaorwVDckpFcIW+elWGhu5ytiSMqUSYA7u7m4/
+         1LjQOJr7oKKQgaMuL4yPS6aOrqIEneuvMe0Vizwjm4jrQj+RhBrcpIQ1mjs+lGargc
+         hjdOZACWqzp1XB8uoAFQi3E1onhKNn2Z6/cZ7sC0xGjnm5hNFuEOFw77nVnZNDwmgx
+         sAtwhadQZS/86XPNI3OtljWczqHFZXr/53kBThoq7ZOiaZQbneNccEh6a1knTTVJPd
+         MwxiB7YdROQninB0Mn7v+nTOBRmN5KXrW94buNHe2A4eGDXFkNAKanJN25cgSqbhYV
+         D/6udXo/aGZtg==
+Date:   Thu, 4 Jun 2020 18:38:05 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: linux-next: fix ups for clashes between akpm and powerpc trees
+Message-ID: <20200604183805.6f384b23@canb.auug.org.au>
+In-Reply-To: <20200604165246.436f02ba@canb.auug.org.au>
+References: <20200603202655.0ad0eacc@canb.auug.org.au>
+        <20200604165246.436f02ba@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200601150645.13412-2-maxim.uvarov@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/signed; boundary="Sig_/SvRqq+9lvuVyD6gXBTM7iQ2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 06:06:43PM +0300, Maxim Uvarov wrote:
-> With the evolving use-cases for TEE bus, now it's required to support
-> multi-stage enumeration process. But using a simple index doesn't
-> suffice this requirement and instead leads to duplicate sysfs entries.
-> So instead switch to use more informative device UUID for sysfs entry
-> like:
-> /sys/bus/tee/devices/optee-ta-<uuid>
-> 
-> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+--Sig_/SvRqq+9lvuVyD6gXBTM7iQ2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Why do you mean by duplicate sysfs entries?
+Hi all,
 
-> ---
->  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
->  MAINTAINERS                                       | 1 +
->  drivers/tee/optee/device.c                        | 6 +++---
->  3 files changed, 12 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> new file mode 100644
-> index 000000000000..0ae04ae5374a
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
-> @@ -0,0 +1,8 @@
-> +What:		/sys/bus/tee/devices/optee-ta-<uuid>/
-> +Date:           May 2020
-> +KernelVersion   5.7
-> +Contact:        tee-dev@lists.linaro.org
-> +Description:
-> +		OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
-> +		matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
-> +		are free to create needed API under optee-ta-<uuid> directory.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ecc0749810b0..6717afef2de3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
->  M:	Jens Wiklander <jens.wiklander@linaro.org>
->  L:	tee-dev@lists.linaro.org
->  S:	Maintained
-> +F:	Documentation/ABI/testing/sysfs-bus-optee-devices
->  F:	drivers/tee/optee/
->  
->  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
-> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-> index e3a148521ec1..ed3d1ddfa52b 100644
-> --- a/drivers/tee/optee/device.c
-> +++ b/drivers/tee/optee/device.c
-> @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
->  	return 0;
->  }
->  
-> -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
-> +static int optee_register_device(const uuid_t *device_uuid)
->  {
->  	struct tee_client_device *optee_device = NULL;
->  	int rc;
-> @@ -75,7 +75,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
->  		return -ENOMEM;
->  
->  	optee_device->dev.bus = &tee_bus_type;
-> -	dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
-> +	dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid);
+On Thu, 4 Jun 2020 16:52:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/=
+include/asm/book3s/64/pgtable.h
+> index 25c3cb8272c0..a6799723cd98 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> @@ -1008,6 +1008,12 @@ extern struct page *p4d_page(p4d_t p4d);
+>  #define pud_page_vaddr(pud)	__va(pud_val(pud) & ~PUD_MASKED_BITS)
+>  #define p4d_page_vaddr(p4d)	__va(p4d_val(p4d) & ~P4D_MASKED_BITS)
+> =20
+> +static inline unsigned long pgd_index(unsigned long address)
+> +{
+> +	return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
+> +}
+> +#define pgd_index pgd_index
+> +
+>  #define pte_ERROR(e) \
+>  	pr_err("%s:%d: bad pte %08lx.\n", __FILE__, __LINE__, pte_val(e))
+>  #define pmd_ERROR(e) \
 
-This code is and already was broken. If dev_set_name() returns -ENOMEM,
-the name will be a null pointer.
+I have added that hunk to linux-next for tomorrow as a fix for
+mm-consolidate-pgd_index-and-pgd_offset_k-definitions.
 
-Also, I don't get how you can just swap the name without potentially
-breaking the backwards compatiblity towards the user space.
+Its not strickly necessary, but Michael expressed a preference for the
+inline function.  I was wondering if pgd_index "Must be a compile-time
+constant" on one (or a few) architectures, then why not leave the
+default as an inline function and special case it as a macro where
+needed ...
 
-/Jarkko
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/SvRqq+9lvuVyD6gXBTM7iQ2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Ysu0ACgkQAVBC80lX
+0GwIpAf9HNqmGtGniydmF0H4hLlZjKycJ6U7wVQBWTZh40QmaBNhJo4Cq2mG4U0u
+SGEKP3LMv8GVAo6lyLyoIv53uAYcmrWv3L7iIAyd+1EPz44VURGXudmTXdLTH8mw
+s4jNwXbVxEOADoRs5r+cF/8+bofKdqC3ehJcd24NU9VEbadfcHOdGMfAVSyk6+Ox
+10pI2Wd1u4SxS/PS6j/XJU+6EZMyCz5TYFAsAnZzL/09NxqShgcz7f/Wp7vN3KUQ
+g72Ar0TulShJoWwbn3GOuqznN5nkkmMQSWd/1RyIs///jaDTKw4W28Wq8GkBEjdU
+S3RU07Z4DFQCS9UIQVm49RYneteAbw==
+=/0oI
+-----END PGP SIGNATURE-----
+
+--Sig_/SvRqq+9lvuVyD6gXBTM7iQ2--
