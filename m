@@ -2,154 +2,149 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81371C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 00:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF009C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 00:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D514207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 00:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bP8zHXM6"
+	by mail.kernel.org (Postfix) with ESMTP id CC4C7207F7
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 00:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbgFDAdf (ORCPT
+        id S1727806AbgFDAjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 20:33:35 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23575 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725936AbgFDAdf (ORCPT
+        Wed, 3 Jun 2020 20:39:51 -0400
+Received: from smtprelay0024.hostedemail.com ([216.40.44.24]:51102 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727793AbgFDAjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 20:33:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591230812;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=z0GcSxT2WNBSxlfmkg95uPwf3ZGL3Q7ykUANj5zGO7w=;
-        b=bP8zHXM6BebnlMYBLbVjv6tYBEKzZiDbNmsFoYEDjLRfofs/7fagZmjTJuo0ZWhSb/cFgN
-        T9u+g6E8fR/5gk3lvtMQ2xdiw05o+nrJcC8WiVV5suBPzC7redpSwBynPHSij2sjLGW4OT
-        bSx4t3bEVvbjXp7K4JEVF6IAsKCI1fM=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-YSwW9XWBP9KntNcc60P_jQ-1; Wed, 03 Jun 2020 20:33:31 -0400
-X-MC-Unique: YSwW9XWBP9KntNcc60P_jQ-1
-Received: by mail-qv1-f71.google.com with SMTP id j4so3043544qvt.20
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 17:33:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=z0GcSxT2WNBSxlfmkg95uPwf3ZGL3Q7ykUANj5zGO7w=;
-        b=S4PSBuH5vvikOtip9oj75n+VICtRCzAAaujaBod2Mblh9C2UBlfe/hcSqUsI/NxTO0
-         pJQhYr5eyLTkEsHKCGq38vwpGH4l9oaMZlQ9bXugCR6OAFRSflyg8ACQUgf5pkYMFksi
-         je4WDLbhYHYpxS9ehkNGcp62c6gSc3ulU2nmDOw7jP0OQYYgSeKvlQx+caineITXzrPj
-         PlHveMCALmxNCYEJq4zHVCiXtwsRMv4Nynab4r+dTHeD5pY9AceSwXpK1pcgRzB+O4pS
-         +6V8T0oO9vFsp9V0eePIL1fHH71CCz/2Ke2nuhGcUMiI1XQudwdzKkjYgcKJmM3ayzul
-         Mxyg==
-X-Gm-Message-State: AOAM532PJDtJzMxkTkzB6pfbmogaJbn0WrRqncIGsnI3TBORX2vtzV5c
-        oQQJSo9Crx91Zp8yeeKldnhAtRb8Lb13t5d1QH9h5U5xEuEBqADq0TUZrpY04vwt84VCjraHX06
-        /FrRNgdSBOloEjFkIZEQEOKc6
-X-Received: by 2002:ac8:339b:: with SMTP id c27mr2001846qtb.210.1591230810244;
-        Wed, 03 Jun 2020 17:33:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzLAqtZLyXW1qmZCBVVBSMCAd/hiQhcdwBWw2XvC2mofMUKO2j+DxwewPxvUEt5AscwPHRMyQ==
-X-Received: by 2002:ac8:339b:: with SMTP id c27mr2001822qtb.210.1591230809949;
-        Wed, 03 Jun 2020 17:33:29 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id 5sm2725501qko.14.2020.06.03.17.33.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 17:33:28 -0700 (PDT)
-Date:   Wed, 3 Jun 2020 17:33:27 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Qian Cai <cai@lca.pw>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] iommu: Move Intel and AMD drivers into their own
- subdirectory
-Message-ID: <20200604003327.hk7w7i5qs7z3z2w3@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Qian Cai <cai@lca.pw>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200602092616.24638-1-joro@8bytes.org>
- <148834f4-849e-acf1-c347-e25093aac518@linux.intel.com>
+        Wed, 3 Jun 2020 20:39:51 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 14EBB180A7FDD;
+        Thu,  4 Jun 2020 00:39:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: gate29_05050f526d93
+X-Filterd-Recvd-Size: 4251
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  4 Jun 2020 00:39:48 +0000 (UTC)
+Message-ID: <a3c22bbd360d2148bf097d3c55a89ea13e07b719.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: Avoid missing typo suggestions
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Wed, 03 Jun 2020 17:39:47 -0700
+In-Reply-To: <202006031618.DA25142@keescook>
+References: <202006031618.DA25142@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <148834f4-849e-acf1-c347-e25093aac518@linux.intel.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu Jun 04 20, Lu Baolu wrote:
->Hi Joerg,
->
->On 6/2/20 5:26 PM, Joerg Roedel wrote:
->>Hi,
->>
->>two small patches to move the Intel and AMD IOMMU drivers into their own
->>subdirectory under drivers/iommu/ to make the file structure a bit less
->>cluttered.
->>
->
->Does the MAINTAINERS file need to update?
->
->Best regards,
->baolu
->
+On Wed, 2020-06-03 at 16:19 -0700, Kees Cook wrote:
+> My codespell dictionary has a lot of capitalized words. For example:
+> 
+> MSDOS->MS-DOS
+> 
+> Since checkpatch uses case-insensitive matching, I get an undefined
+> variable warning and then empty suggestions for things like this:
+> 
+> Use of uninitialized value $typo_fix in concatenation (.) or string at ./scripts/checkpatch.pl line 2958.
+> 
+> WARNING: 'msdos' may be misspelled - perhaps ''?
+> +       struct msdos_dir_entry *de;
+> 
+> This fixes the matcher to avoid the warning, but it's still a rather
+> silly suggestion:
+> 
+> WARNING: 'msdos' may be misspelled - perhaps 'MS-DOS'?
+> +       struct msdos_dir_entry *de;
+> 
+> So I'm not really sure what to do with this ... filter out bad
+> suggestions instead?
 
-Yes, that should be updated to point at the new directories. Good catch.
+Hey Kees.
 
+Maybe this?
 
->>Regards,
->>
->>	Joerg
->>
->>Joerg Roedel (2):
->>   iommu/amd: Move AMD IOMMU driver into subdirectory
->>   iommu/vt-d: Move Intel IOMMU driver into subdirectory
->>
->>  drivers/iommu/Makefile                         | 18 +++++++++---------
->>  drivers/iommu/{ => amd}/amd_iommu.h            |  0
->>  drivers/iommu/{ => amd}/amd_iommu_types.h      |  0
->>  .../{amd_iommu_debugfs.c => amd/debugfs.c}     |  0
->>  drivers/iommu/{amd_iommu_init.c => amd/init.c} |  2 +-
->>  drivers/iommu/{amd_iommu.c => amd/iommu.c}     |  2 +-
->>  .../iommu/{amd_iommu_v2.c => amd/iommu_v2.c}   |  0
->>  .../iommu/{amd_iommu_quirks.c => amd/quirks.c} |  0
->>  .../{intel-iommu-debugfs.c => intel/debugfs.c} |  0
->>  drivers/iommu/{ => intel}/dmar.c               |  2 +-
->>  drivers/iommu/{ => intel}/intel-pasid.h        |  0
->>  drivers/iommu/{intel-iommu.c => intel/iommu.c} |  2 +-
->>  .../irq_remapping.c}                           |  2 +-
->>  drivers/iommu/{intel-pasid.c => intel/pasid.c} |  0
->>  drivers/iommu/{intel-svm.c => intel/svm.c}     |  0
->>  drivers/iommu/{intel-trace.c => intel/trace.c} |  0
->>  16 files changed, 14 insertions(+), 14 deletions(-)
->>  rename drivers/iommu/{ => amd}/amd_iommu.h (100%)
->>  rename drivers/iommu/{ => amd}/amd_iommu_types.h (100%)
->>  rename drivers/iommu/{amd_iommu_debugfs.c => amd/debugfs.c} (100%)
->>  rename drivers/iommu/{amd_iommu_init.c => amd/init.c} (99%)
->>  rename drivers/iommu/{amd_iommu.c => amd/iommu.c} (99%)
->>  rename drivers/iommu/{amd_iommu_v2.c => amd/iommu_v2.c} (100%)
->>  rename drivers/iommu/{amd_iommu_quirks.c => amd/quirks.c} (100%)
->>  rename drivers/iommu/{intel-iommu-debugfs.c => intel/debugfs.c} (100%)
->>  rename drivers/iommu/{ => intel}/dmar.c (99%)
->>  rename drivers/iommu/{ => intel}/intel-pasid.h (100%)
->>  rename drivers/iommu/{intel-iommu.c => intel/iommu.c} (99%)
->>  rename drivers/iommu/{intel_irq_remapping.c => intel/irq_remapping.c} (99%)
->>  rename drivers/iommu/{intel-pasid.c => intel/pasid.c} (100%)
->>  rename drivers/iommu/{intel-svm.c => intel/svm.c} (100%)
->>  rename drivers/iommu/{intel-trace.c => intel/trace.c} (100%)
->>
->
+btw: My codespell dictionary file moved to
+/usr/lib/python3/dist-packages/codespell_lib/data/dictionary.txt
+
+and I had to use --codespell --codespellfile=(above) so
+maybe there should be multiple lookups for this file
+like the array below.
+
+Are there other standard codespell dictionary locations?
+---
+ scripts/checkpatch.pl | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 5f00df2c3f59..52aa0dd53d80 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -59,7 +59,7 @@ my $minimum_perl_version = 5.10.0;
+ my $min_conf_desc_length = 4;
+ my $spelling_file = "$D/spelling.txt";
+ my $codespell = 0;
+-my $codespellfile = "/usr/share/codespell/dictionary.txt";
++my $codespellfile;
+ my $conststructsfile = "$D/const_structs.checkpatch";
+ my $typedefsfile = "";
+ my $color = "auto";
+@@ -716,7 +716,20 @@ if (open(my $spelling, '<', $spelling_file)) {
+ }
+ 
+ if ($codespell) {
+-	if (open(my $spelling, '<', $codespellfile)) {
++	if (!defined($codespellfile)) {
++		my @csfiles = ("/usr/share/codespell/dictionary.txt",
++			       "/usr/lib/python3/dist-packages/codespell_lib/data/dictionary.txt");
++		foreach my $csfile (@csfiles) {
++			if (-f $csfile) {
++				$codespellfile = $csfile;
++				last;
++			}
++		}
++	}
++
++	if (!defined($codespellfile)) {
++		warn "No codespell typos will be found - codespell dictionary not found\n";
++	} elsif (open(my $spelling, '<', $codespellfile)) {
+ 		while (<$spelling>) {
+ 			my $line = $_;
+ 
+@@ -2963,13 +2976,21 @@ sub process {
+ 			while ($rawline =~ /(?:^|[^a-z@])($misspellings)(?:\b|$|[^a-z@])/gi) {
+ 				my $typo = $1;
+ 				my $typo_fix = $spelling_fix{lc($typo)};
+-				$typo_fix = ucfirst($typo_fix) if ($typo =~ /^[A-Z]/);
+-				$typo_fix = uc($typo_fix) if ($typo =~ /^[A-Z]+$/);
++				$typo_fix = $spelling_fix{$typo} if (!defined($typo_fix));
++				$typo_fix = $spelling_fix{uc($typo)} if (!defined($typo_fix));
++				$typo_fix = 'unknown typo fix' if (!defined($typo_fix));
++				if ($typo =~ /^[A-Z]+$/) {
++					$typo_fix = uc($typo_fix);
++				} elsif ($typo =~ /^[A-Z]/) {
++					$typo_fix = ucfirst($typo_fix);
++				}
++
+ 				my $msg_level = \&WARN;
+ 				$msg_level = \&CHK if ($file);
+ 				if (&{$msg_level}("TYPO_SPELLING",
+ 						  "'$typo' may be misspelled - perhaps '$typo_fix'?\n" . $herecurr) &&
+-				    $fix) {
++				    $fix &&
++				    $typo_fix ne 'unknown typo fix') {
+ 					$fixed[$fixlinenr] =~ s/(^|[^A-Za-z@])($typo)($|[^A-Za-z@])/$1$typo_fix$3/;
+ 				}
+ 			}
 
