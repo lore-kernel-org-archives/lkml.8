@@ -2,104 +2,123 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD597C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB6D206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113772067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JHWy9+oa"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="evhiSuNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbgFDUZa (ORCPT
+        id S1729853AbgFDUZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52216 "EHLO
+        Thu, 4 Jun 2020 16:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729653AbgFDUZ2 (ORCPT
+        with ESMTP id S1729777AbgFDUZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:25:28 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A959DC08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:25:28 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id n2so2648853pld.13
+        Thu, 4 Jun 2020 16:25:29 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067E5C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:25:29 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a25so7514594ejg.5
         for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 13:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M8rV5wMhr+CTs8zWrj1I0mKf+otww3BG2ynj9BMAk9c=;
-        b=JHWy9+oaDCCQPV+LrS/GW4glpXwsJ+BPkxaB5OkyqvIZd+J91AYL13gzM4WSEoDndc
-         QUw7/nsDDwWp9iV0s+Rn/55R3wC9Ia+u4dqaENDPPa6W0HFrXn1sVQ1Q7PvFoXfFqbcC
-         HFzpYAH0ornyNVI3yDebE5rzy+eCafqkJO8s4=
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wp1xYo6k4Ed0Q77xnwXh8flp1gyMGXgNyJfMwsgW+Kg=;
+        b=evhiSuNKpPTp+xlYhHPUN38Ox9A/NzzEV4h1KCTaNexej2sn7dmxexT5wPV6QE9RGz
+         8s+clTM3p1CcSW8UaFOs+qvckgUkMZCWKQTkyDHU6S/fz724e8Vq0r4vnPsuXTIqOTMo
+         ImpLlbekhGKaz1aCRFpAKp2RoYziWLrVBv+kPju1pOuBuubQ+yvuGmBZxTi0FgAL/xGs
+         bstbfB866bgWjvF5BP1/Gb+lQVOxGlNCNdLiVkaiEjXFC1758lqtSdf2UsrBgT3xnK84
+         kIqKVoUgb2UoS9fHTo26sqjDx8ivjPSW9RvxOOS99pfOPNahG8izNyr51/w+pRl6e4bJ
+         3R5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M8rV5wMhr+CTs8zWrj1I0mKf+otww3BG2ynj9BMAk9c=;
-        b=jejZQ3XYrpnFDCn9+gRGonTOzeroeKQVY7NnZxd/laWqPpJ19A5/+oR6kch5briNMc
-         WbP0+jS0TtHX5pRrsQlNqNrJ+2/rxqzchZImuIOKVJzfXYU02cJh93imnNIarHKC/Ny7
-         r9AETIDCKLgbRC6SyLF7eQJlw1LeCPqFz+kNVr5/FfwPOHD+mAOtgPMQLXH369P6SHvJ
-         YM3sRNliEipSmINtOoWvXwHohDn2JK86BkjM7j4lR00bRPdffy29UXzvaxDo4/eH60Ef
-         pp+bbCHobzdeZ8ROjuEztF846/YxfpEu4FvB1Lo+lHx+L61q3MoJrvoH1tnXa2NvSfqI
-         yNUg==
-X-Gm-Message-State: AOAM530V7qVqtuQiahG+xvDbU0TteuQaD2NK0Ti4BlGNW9xJAytQ6VE4
-        TInGyJNB3s5rWLAQOc1uQcgbKQ==
-X-Google-Smtp-Source: ABdhPJx5gjx/wHBmJvPVxVDergI4eThW/vphGdEs2oI7RZWROvAHDSkMtileUpP9eLY3tOxuNmGaVg==
-X-Received: by 2002:a17:902:26f:: with SMTP id 102mr5844075plc.209.1591302328111;
-        Thu, 04 Jun 2020 13:25:28 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z20sm4742914pgv.52.2020.06.04.13.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wp1xYo6k4Ed0Q77xnwXh8flp1gyMGXgNyJfMwsgW+Kg=;
+        b=OVWXytAl4nIno8KL+sobx3wiCKGWzC/VfFvAxSfl2oDI+h9MhFnqxcnO1pHu7Zqe8a
+         p6Wq+e9coERbGwu1luRvnkrrkw/xNRD9kcjsOWTGCHTJESOBGzVWFhSJ2xTwxgLpCfIZ
+         NLmL/plvPRhpFmXmPa79fH8qK+S4U6QIAhCz+8abUE6xugGD0cp2Nk3ik/BiuNQX/j+2
+         ig6A4+lQ8z7+4Sv/cBGnzhq900BWQr7RpjIqxpiRe0znpCLoLanAwKKhTc1Gy2vguLWu
+         zjA3UseeK4au+qBLnp4/tvb4YUlL4aERKrdf4YJVe5KP/vG//2Ute6e4DImutlzszKTf
+         BcBw==
+X-Gm-Message-State: AOAM530nGWtCUQWMGvUhG1wWRqtt4mcvNU0n+IRZ1AtKRSAGXzWbkNCM
+        2+GAY7PbZgcqcy8teOmQ24ZPOw==
+X-Google-Smtp-Source: ABdhPJy0rnfMZ1ArAXpFdTF1Mqx8GK4Oc26nrumSGoUgDRR2u9udOp68JVQC+ShGFy3J/lNOJiw52w==
+X-Received: by 2002:a17:906:3844:: with SMTP id w4mr5771829ejc.313.1591302327676;
         Thu, 04 Jun 2020 13:25:27 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 13:25:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] docs: deprecated.rst: Add note to the use of
- struct_size() helper
-Message-ID: <202006041322.35912ABB@keescook>
-References: <20200604172138.GA21820@embeddedor>
- <202006041047.9B3E8FB951@keescook>
- <20200604182123.GD10051@embeddedor>
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id gx8sm2792246ejb.86.2020.06.04.13.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 13:25:26 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     axboe@kernel.dk, hch@lst.de, naresh.kamboju@linaro.org
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martijn Coenen <maco@android.com>
+Subject: [PATCH] loop: Fix wrong masking of status flags
+Date:   Thu,  4 Jun 2020 22:25:20 +0200
+Message-Id: <20200604202520.66459-1-maco@android.com>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604182123.GD10051@embeddedor>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 01:21:23PM -0500, Gustavo A. R. Silva wrote:
-> Yeah. My reasoning for is that it will take a while --at least one 
-> development cycle more-- to completely get rid of all the 0/1-arrays.
+In faf1d25440d6, loop_set_status() now assigns lo_status directly from
+the passed in lo_flags, but then fixes it up by masking out flags that
+can't be set by LOOP_SET_STATUS; unfortunately the mask was negated.
 
-Right -- but we need a place to point people when we tell them "please
-don't use 0-byte and 1-byte arrays", and the deprecated.rst is the place
-for that.
+Re-ran all ltp ioctl_loop tests, and they all passed.
 
-Having it in deprecated.rst once they're all gone only serves to explain
-why various compiler flags are enabled, etc. But while they're being
-removed, it serves as a single place to document the issue (as in, much
-of the flex-array patch commit log "boilerplate" can actually be
-repeated in deprecated.rst.
+Pass run of the previously failing one:
 
-> But I think we can add this note while I continue working on the flexible-array
-> conversions. Once that work is complete, I can go back and update the
-> documentation. :)
-> 
-> What do you think?
+tst_test.c:1247: INFO: Timeout per run is 0h 05m 00s
+tst_device.c:88: INFO: Found free device 0 '/dev/loop0'
+ioctl_loop01.c:49: PASS: /sys/block/loop0/loop/partscan = 0
+ioctl_loop01.c:50: PASS: /sys/block/loop0/loop/autoclear = 0
+ioctl_loop01.c:51: PASS: /sys/block/loop0/loop/backing_file =
+'/tmp/ZRJ6H4/test.img'
+ioctl_loop01.c:65: PASS: get expected lo_flag 12
+ioctl_loop01.c:67: PASS: /sys/block/loop0/loop/partscan = 1
+ioctl_loop01.c:68: PASS: /sys/block/loop0/loop/autoclear = 1
+ioctl_loop01.c:77: PASS: access /dev/loop0p1 succeeds
+ioctl_loop01.c:83: PASS: access /sys/block/loop0/loop0p1 succeeds
 
-I think we need to document it at the beginning of the work (and I
-should have asked for this earlier). So let's just add a new section on
-dynamic array usage, etc. It can include a note about struct_size() as
-an example for why 1-byte arrays are so weird. :)
+Summary:
+passed   8
+failed   0
+skipped  0
+warnings 0
 
+Fixes: faf1d25440d6 ("loop: Clean up LOOP_SET_STATUS lo_flags handling")
+Signed-off-by: Martijn Coenen <maco@android.com>
+---
+ drivers/block/loop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 4212288ab157..ad63e4247868 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1390,7 +1390,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+ 		goto out_unfreeze;
+ 
+ 	/* Mask out flags that can't be set using LOOP_SET_STATUS. */
+-	lo->lo_flags &= ~LOOP_SET_STATUS_SETTABLE_FLAGS;
++	lo->lo_flags &= LOOP_SET_STATUS_SETTABLE_FLAGS;
+ 	/* For those flags, use the previous values instead */
+ 	lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_SETTABLE_FLAGS;
+ 	/* For flags that can't be cleared, use previous values too */
 -- 
-Kees Cook
+2.27.0.278.ge193c7cf3a9-goog
+
