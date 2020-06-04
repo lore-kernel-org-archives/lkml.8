@@ -2,103 +2,94 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D80C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D793C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7479E2067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:34:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBRY4reO"
+	by mail.kernel.org (Postfix) with ESMTP id DE4532075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 20:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591302985;
+	bh=6tdvI6hVT12tR559Y0x/YhFiPVzayDyW2O1N/hc9g6c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OL5WP9CYDy7uOtI5DgaR2rVk3kKsrqIx9P0JRYkr//RudOXYjgAmecwmpH9s0SI44
+	 E5TSi6QMeEJGnvDSDjC+rVSTbtDPPpl6/fx1Q5YnydWOs8xgOab8A7poZNZF1zMe4p
+	 FexPemgC8kB4PmGAUDH0fW+cbl7YiiygDGMe8rYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbgFDUer (ORCPT
+        id S1729944AbgFDUgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 16:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbgFDUer (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 16:34:47 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155A0C08C5C0;
-        Thu,  4 Jun 2020 13:34:46 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id o5so7843631iow.8;
-        Thu, 04 Jun 2020 13:34:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=M7Q89Pnob7mEEdbxzMTbqBnOtmvjG5A2VHrtAnUPQ0w=;
-        b=bBRY4reOSBUGrcq3vOy11xefFwhEVWnsHPTs6UL45SJsQt2Z4zYs2OaYLIy5CcxW6U
-         XITN+hrws3EspCgRH69VuwulRjE3KEIh2IUY9jiUwnmE+Crv0oet1XmSl/PmMU8h2oCu
-         ZXijTnx8wBQlWU65Ia77+IsWascrMrNbSpRai2DWD0mMEaqmO7OJXkOLD0pQUsrcl2NL
-         h4v+Z06cNVIhKlUT3egIeOX02c+ij+RHGNSsry6Z8vQwYcYWL5RpkvDSXZAkt/sS0kpf
-         kNJJqbeM1DPUvIZsOlUvLNah0TpQ5rYT8RoALhHkxWrnn71wFwu7702plDhU4fPY8J4f
-         Wqiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=M7Q89Pnob7mEEdbxzMTbqBnOtmvjG5A2VHrtAnUPQ0w=;
-        b=eUolNRs8fINYWqR6uSSMBB8j0LVV41pmhle0JTQ1MygI9RZXNCQgiM+CCWsjFueFZm
-         x2fXd+14egrrzjDDIDWDVIRBighqqgEDTwSObK56UESxDdVs72QDI4dVEZzqbkyDVy/m
-         NCPm1kg0x4oQA/tCYNSkG9Hynm2DytSvMlcRZTDCLaE8yRQZ8P3q1/hythLSv5torQHJ
-         CllLVuwxVgUUQMz7M04fXr13eJdUUuRnaqj7YB/0QYGnY3QmB3Gm21UC1igslsulMflZ
-         m8Hc5Xl2AvWe/HZenoP4B05SjyYEEfW8nC8gUEkF06VaA8jnAxZ9juOcoFJFcXZCq1LP
-         D9Xg==
-X-Gm-Message-State: AOAM533x8o2sG85TlwOER2j7Z03dOMd2eN/uir/EKxjKA3D1DIfa9bbx
-        9LXTO47T0UZZxUEUycosc4M=
-X-Google-Smtp-Source: ABdhPJxuiZNAGq4D5Ba7EcCoWNGdaXWUKTsNjJghu9K8SoGaGdY5dQ4nTUo3EBGE5nnTuEd5VnkZug==
-X-Received: by 2002:a02:94e6:: with SMTP id x93mr6062206jah.116.1591302885465;
-        Thu, 04 Jun 2020 13:34:45 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id p10sm992141ilm.32.2020.06.04.13.34.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:34:45 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
-Subject: [PATCH] dmaengine: rcar-dmac: handle pm_runtime_get_sync failure
-Date:   Thu,  4 Jun 2020 15:34:30 -0500
-Message-Id: <20200604203432.12082-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 4 Jun 2020 16:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728721AbgFDUgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 16:36:24 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6040206E6;
+        Thu,  4 Jun 2020 20:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591302983;
+        bh=6tdvI6hVT12tR559Y0x/YhFiPVzayDyW2O1N/hc9g6c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Qq+Vitsm0LE8dgUTqTQ0PJt10JogRLNno17Te9gJX7oxFW7ATDBP35tpCOhVoRSDf
+         ZLU6bXMm6yBmbq5o/AWzp33kWB8jss/xeVh6VQgYho6GvCdUNO06ShJ+VY6nDm9gw3
+         UwiCaH4RqhPdb2XgCFpWNw4rgGS2KH5U7jjAZFbI=
+Date:   Thu, 4 Jun 2020 13:36:22 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, peterz@infradead.org,
+        jroedel@suse.de, Andy Lutomirski <luto@kernel.org>,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        manvanth@linux.vnet.ibm.com, linux-next@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linuxppc-dev@lists.ozlabs.org, hch@lst.de,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] mm: Fix pud_alloc_track()
+Message-Id: <20200604133622.c23b365066af0b14a9f04961@linux-foundation.org>
+In-Reply-To: <20200604164814.GA7600@kernel.org>
+References: <20200604074446.23944-1-joro@8bytes.org>
+        <20200604164814.GA7600@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+On Thu, 4 Jun 2020 19:48:14 +0300 Mike Rapoport <rppt@kernel.org> wrote:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/dma/sh/rcar-dmac.c | 1 +
- 1 file changed, 1 insertion(+)
+> On Thu, Jun 04, 2020 at 09:44:46AM +0200, Joerg Roedel wrote:
+> > From: Joerg Roedel <jroedel@suse.de>
+> > 
+> > The pud_alloc_track() needs to do different checks based on whether
+> > __ARCH_HAS_5LEVEL_HACK is defined, like it already does in
+> > pud_alloc(). Otherwise it causes boot failures on PowerPC.
+> > 
+> > Provide the correct implementations for both possible settings of
+> > __ARCH_HAS_5LEVEL_HACK to fix the boot problems.
+> 
+> There is a patch in mmotm [1] that completely removes
+> __ARCH_HAS_5LEVEL_HACK which is a part of the series [2] that updates
+> p4d folding accross architectures. This should fix boot on PowerPC and
+> the addition of pXd_alloc_track() for __ARCH_HAS_5LEVEL_HACK wouldn't be
+> necessary.
+> 
+> 
+> [1] https://github.com/hnaz/linux-mm/commit/cfae68792af3731ac902ea6ba5ed8df5a0f6bd2f
+> [2] https://lore.kernel.org/kvmarm/20200414153455.21744-1-rppt@kernel.org/
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 59b36ab5d684..dd7ca67c93ed 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1879,6 +1879,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
-+		pm_runtime_put(&pdev->dev);
- 		return ret;
- 	}
- 
--- 
-2.17.1
+That patchset is stacked up behind many other patches, including all
+the powerpc stuff in linux-next :(
 
+As it's a big bug fix, I'll pull those patches forward, hopefully send it
+all Linuswards later today...
