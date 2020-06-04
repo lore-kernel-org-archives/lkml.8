@@ -2,111 +2,128 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8013A2086A
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6DA207D0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgFDN7N (ORCPT
+        id S1728928AbgFDN7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:59:13 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:61597 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728337AbgFDN7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:59:12 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Jun 2020 19:28:00 +0530
-Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Jun 2020 19:27:34 +0530
-Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id EB4772186F; Thu,  4 Jun 2020 19:27:33 +0530 (IST)
-From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, robh@kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, tientzu@chromium.org,
-        seanpaul@chromium.org, rjliao@codeaurora.org, yshavit@google.com,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v1] Bluetooth: hci_qca: Fix double free during SSR timeout
-Date:   Thu,  4 Jun 2020 19:27:12 +0530
-Message-Id: <1591279032-7527-1-git-send-email-gubbaven@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 4 Jun 2020 09:59:46 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:1504 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728604AbgFDN7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 09:59:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49d6pf2rwCzB09Zt;
+        Thu,  4 Jun 2020 15:59:38 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id xNYjkAss7B_l; Thu,  4 Jun 2020 15:59:38 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49d6pf1vcCzB09Zq;
+        Thu,  4 Jun 2020 15:59:38 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30FE18B8C6;
+        Thu,  4 Jun 2020 15:59:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 7rmDmWjkLUfq; Thu,  4 Jun 2020 15:59:40 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [10.25.210.22])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B7C278B8C4;
+        Thu,  4 Jun 2020 15:59:39 +0200 (CEST)
+Subject: Re: linux-next: build failure on powerpc 8xx with 16k pages
+To:     Will Deacon <will@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        peterz@infradead.org
+References: <dc2b16e1-b719-5500-508d-ae97bf50c4a6@csgroup.eu>
+ <20200604111723.GA1267@willie-the-truck>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <96fdc23c-ca08-6b6a-ebdd-23cedfada77d@csgroup.eu>
+Date:   Thu, 4 Jun 2020 13:55:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200604111723.GA1267@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to race conditions between qca_hw_error and qca_controller_memdump
-during SSR timeout,the same pointer is freed twice. Which results to
-double free error. Now a lock is acquired while SSR state moved to timeout.
 
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 836949d..9110775 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -983,8 +983,11 @@ static void qca_controller_memdump(struct work_struct *work)
- 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
- 
- 		mutex_lock(&qca->hci_memdump_lock);
--		/* Skip processing the received packets if timeout detected. */
--		if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT) {
-+		/* Skip processing the received packets if timeout detected
-+		 * or memdump collection completed.
-+		 */
-+		if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
-+		    qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
- 			mutex_unlock(&qca->hci_memdump_lock);
- 			return;
- 		}
-@@ -1485,7 +1488,7 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- {
- 	struct hci_uart *hu = hci_get_drvdata(hdev);
- 	struct qca_data *qca = hu->priv;
--	struct qca_memdump_data *qca_memdump = qca->qca_memdump;
-+	struct qca_memdump_data *qca_memdump = NULL;
- 	char *memdump_buf = NULL;
- 
- 	set_bit(QCA_HW_ERROR_EVENT, &qca->flags);
-@@ -1509,9 +1512,10 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- 		qca_wait_for_dump_collection(hdev);
- 	}
- 
-+	mutex_lock(&qca->hci_memdump_lock);
- 	if (qca->memdump_state != QCA_MEMDUMP_COLLECTED) {
- 		bt_dev_err(hu->hdev, "clearing allocated memory due to memdump timeout");
--		mutex_lock(&qca->hci_memdump_lock);
-+		qca_memdump = qca->qca_memdump;
- 		if (qca_memdump)
- 			memdump_buf = qca_memdump->memdump_buf_head;
- 		vfree(memdump_buf);
-@@ -1520,8 +1524,13 @@ static void qca_hw_error(struct hci_dev *hdev, u8 code)
- 		qca->memdump_state = QCA_MEMDUMP_TIMEOUT;
- 		cancel_delayed_work(&qca->ctrl_memdump_timeout);
- 		skb_queue_purge(&qca->rx_memdump_q);
--		mutex_unlock(&qca->hci_memdump_lock);
-+	}
-+	mutex_unlock(&qca->hci_memdump_lock);
-+
-+	if (qca->memdump_state == QCA_MEMDUMP_TIMEOUT ||
-+	    qca->memdump_state == QCA_MEMDUMP_COLLECTED) {
- 		cancel_work_sync(&qca->ctrl_memdump_evt);
-+		skb_queue_purge(&qca->rx_memdump_q);
- 	}
- 
- 	clear_bit(QCA_HW_ERROR_EVENT, &qca->flags);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+On 06/04/2020 11:17 AM, Will Deacon wrote:
+> Hi, [+Peter]
+> 
+> On Thu, Jun 04, 2020 at 10:48:03AM +0000, Christophe Leroy wrote:
+>> Using mpc885_ads_defconfig with CONFIG_PPC_16K_PAGES instead of
+>> CONFIG_PPC_4K_PAGES, getting the following build failure:
+>>
+>>    CC      mm/gup.o
+>> In file included from ./include/linux/kernel.h:11:0,
+>>                   from mm/gup.c:2:
+>> In function 'gup_hugepte.constprop',
+>>      inlined from 'gup_huge_pd.isra.78' at mm/gup.c:2465:8:
+>> ./include/linux/compiler.h:392:38: error: call to '__compiletime_assert_257'
+>> declared with attribute error: Unsupported access size for
+>> {READ,WRITE}_ONCE().
+>>    _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>>                                        ^
+>> ./include/linux/compiler.h:373:4: note: in definition of macro
+>> '__compiletime_assert'
+>>      prefix ## suffix();    \
+>>      ^
+>> ./include/linux/compiler.h:392:2: note: in expansion of macro
+>> '_compiletime_assert'
+>>    _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>>    ^
+>> ./include/linux/compiler.h:405:2: note: in expansion of macro
+>> 'compiletime_assert'
+>>    compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long), \
+>>    ^
+>> ./include/linux/compiler.h:291:2: note: in expansion of macro
+>> 'compiletime_assert_rwonce_type'
+>>    compiletime_assert_rwonce_type(x);    \
+>>    ^
+>> mm/gup.c:2428:8: note: in expansion of macro 'READ_ONCE'
+>>    pte = READ_ONCE(*ptep);
+>>          ^
+>> In function 'gup_get_pte',
+>>      inlined from 'gup_pte_range' at mm/gup.c:2228:9,
+>>      inlined from 'gup_pmd_range' at mm/gup.c:2613:15,
+>>      inlined from 'gup_pud_range' at mm/gup.c:2641:15,
+>>      inlined from 'gup_p4d_range' at mm/gup.c:2666:15,
+>>      inlined from 'gup_pgd_range' at mm/gup.c:2694:15,
+>>      inlined from 'internal_get_user_pages_fast' at mm/gup.c:2785:3:
+> 
+> At first glance, this looks like a real bug in the 16k page code -- you're
+> loading the pte non-atomically on the fast GUP path and so you're prone to
+> tearing, which probably isn't what you want. For a short-term hack, I'd
+> suggest having CONFIG_HAVE_FAST_GUP depend on !CONFIG_PPC_16K_PAGES, but if
+> you want to support this them you'll need to rework your pte_t so that it
+> can be loaded atomically.
 
+What do you mean by *rework* pte_t ?
+pte are 32 bits words in size and are spread every 4 words in memory. 
+Therefore pte_t has to be 128 bits because unlike huge_pte handling 
+which always use huge_pte_offset() in loops, many many places in the 
+kernel do pte++, so we need the pte type to be the size of the interval 
+from one pte to the next one.
+
+Christophe
