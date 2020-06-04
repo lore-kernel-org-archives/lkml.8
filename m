@@ -2,141 +2,198 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54692C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349FE206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88223206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eckZslun"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WeEuDoa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbgFDKIz (ORCPT
+        id S1727834AbgFDKKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:08:55 -0400
-Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:60230
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725959AbgFDKIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:08:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JhIqpc61G6tqNXyaVT9iY11p36J37BC2Gfc9zI1G4Vk2TQRQo72sYLU6NG7xWb4v+Fq7nKbyz/RGRVeNzqm5vVmKA0xJVXUY4sXNjckaHL6azl5A9yBfPFGfH5P2SWMFC5CC9HDGeJHkus81LxlrohkvR6YRYVl5nPDT1U+1mcQWxB2E0J54+ZhPMsIZ3jN3lWFF8hyU9MXqtpYE64/TTDbonoZQNNCsW+RHkAUssLX0UnmOo/8X2T+Mya356P0PXDUUwR7miasiS5UFeIATAZSn+CkMaQrSxe7+MM7FJmPzCf8DFtcnAAaif09QqZ1VJaG8uCv2grXeBQauIUSp+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Dx6eHFgLEKz6c2DfdVEKREvxnkKJ0UnI0oPUyhNqoI=;
- b=Iye2qljuMS/iW+1hfg8QBoamQ+TrB3iwEdn/aslYRmAqhbTX7Df3seKRa0kTAjxxnIo6bAK0ap2B04weWaQQioTMOK6MWd0zz51P6hc0CkebHBH2sMo1Vo0Qd5PbzVAwWnAbV6mSyKZcZTu6R+GpqcOyS4YXU3aQ1pQBaS8wLvB0+7Sb1CZVGjvGz+UcAdcf7FHtk7YMqTCcV4ho4APgIDVsPzPYlqj4BAyNoUuwX8HukDT8S9K/gvUAlg1QlxEOXy4r6v4+J5qwvDr023I5nVQ0lq4bws7JxQ5V2FelHIu2Qs9DZMrnkZc0Ft+OJ5KpdCWqTGfZvwVzM1PKWNEuJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Dx6eHFgLEKz6c2DfdVEKREvxnkKJ0UnI0oPUyhNqoI=;
- b=eckZslundbBBPlMMWaQZAfBluUi9XfNhIDTvVFDln66YPhUN21FLy5se512C3CWkrRUDmYSlO5sZKq473jv5hCxERMvzWIyQWHIjCW/w6tVPx1FfrWInx1/GAahcovvUjIBWOVeMkjDgy4Qz96d5eWu+cqRKeSQHw43aV2kiN9M=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
- by VI1PR04MB5711.eurprd04.prod.outlook.com (2603:10a6:803:e7::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 4 Jun
- 2020 10:08:46 +0000
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd]) by VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd%4]) with mapi id 15.20.3066.018; Thu, 4 Jun 2020
- 10:08:46 +0000
-Subject: Re: [PATCH 1/1] crypto: caam - fix typo
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200604024013.5669-1-xypron.glpk@gmx.de>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <d32a1b32-ce88-3286-4e6c-3280150f4d54@nxp.com>
-Date:   Thu, 4 Jun 2020 13:08:43 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200604024013.5669-1-xypron.glpk@gmx.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4P190CA0023.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:200:56::33) To VI1PR04MB4046.eurprd04.prod.outlook.com
- (2603:10a6:803:4d::29)
+        Thu, 4 Jun 2020 06:10:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23575 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725959AbgFDKKc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 06:10:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591265430;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zGlJ8O4yA/W7bete/cF7FQcgVbI9QLdgYqKnnIFMKJ0=;
+        b=WeEuDoa8OiPxB16TXP+9ii33NDIdKJKthW+81pVi63d1Gu3bBhjtkQCVEHMxBX5ruZfkzh
+        iL+wV4K/QUInfOseiPHOlaYvUQ/dCn0wI2o0Pbpt3XUqo/UhoI66JYw7jrPGYAioW1lOQW
+        7OfhJUwj1M1Q9EeR6G/Yq0pRXqLk454=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-Rl7dM3-9MUW8UxWrEaulHA-1; Thu, 04 Jun 2020 06:10:28 -0400
+X-MC-Unique: Rl7dM3-9MUW8UxWrEaulHA-1
+Received: by mail-wr1-f70.google.com with SMTP id c14so2212203wrm.15
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 03:10:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zGlJ8O4yA/W7bete/cF7FQcgVbI9QLdgYqKnnIFMKJ0=;
+        b=GBwIS40Y8ewoKySitsuwE9gKqJ08crzlsrR9yCS/aLai5ZHzkw3r7BPbrM+4MIFSmB
+         oF5t0qNu9SOpC+L66SXIGg5Npr/jwFr+vkZhoVhDX/NNOtX1Y8on3k8A58q0gFaRIXC5
+         f4e/5EQgA2mNQtZa26SMKbxPf8AUgwALflRvGgXPXSQXjRKB8iGQ9p9dpfeVb3YFJOIm
+         zncqbEstPsGZppzXMu7IiWdVZp9ejCpivJfp2Ez8PTlHUhu3UeCDuJ6QaFo4NfPqt2BB
+         ExgIEk+eL1MT+yN2axiYSA3oIP0xoU4jClXroR7HqXGcRW1IeA2cE8ee40dF89Zz101s
+         LMZA==
+X-Gm-Message-State: AOAM532cY5wXamJyvJcJzxhPrmwz7y3L8Mw2cF3LMr/VqLNZ1SDBSfBl
+        HwrCgfI/lG5fjolzSe8grJu+2H9DyKnglTuRYzzb3sz1O6mvG9Ty1fMibwim4auysajNxdLv3un
+        BYq8oL8YA8KcIudDkF5bW08LW
+X-Received: by 2002:adf:a491:: with SMTP id g17mr3959308wrb.132.1591265427253;
+        Thu, 04 Jun 2020 03:10:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzijAVv5VHzZzhMi12UtVYg+WDrXlw/h6wDpYasdoiFD2bcBzxkW4hQDmgITXHqbv7FeNCrHw==
+X-Received: by 2002:adf:a491:: with SMTP id g17mr3959287wrb.132.1591265426992;
+        Thu, 04 Jun 2020 03:10:26 -0700 (PDT)
+Received: from redhat.com ([2a00:a040:185:f65:9a3b:8fff:fed3:ad8d])
+        by smtp.gmail.com with ESMTPSA id b187sm7095817wmd.26.2020.06.04.03.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 03:10:26 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 06:10:23 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH RFC] uaccess: user_access_begin_after_access_ok()
+Message-ID: <20200604054516-mutt-send-email-mst@kernel.org>
+References: <20200602084257.134555-1-mst@redhat.com>
+ <20200603014815.GR23230@ZenIV.linux.org.uk>
+ <20200603011810-mutt-send-email-mst@kernel.org>
+ <20200603165205.GU23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM4P190CA0023.EURP190.PROD.OUTLOOK.COM (2603:10a6:200:56::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Thu, 4 Jun 2020 10:08:44 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 69f0d98c-afba-417c-d351-08d8086f449a
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5711:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB5711E9E2B34333FCC139751B98890@VI1PR04MB5711.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
-X-Forefront-PRVS: 04244E0DC5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GI25Hwp91gxhbxLTeB9dfJX7oIYFcqjfAe9cVz+oO5OwpgQHhzYW41k+2oPucjgfpDNJrJWQmCtnKpxAWWHMHVeXiuWX6+csj9yOPeKvo6FzX/lEcye3ZobiTexnqg/Bq2JTpZZSD55SRukdvIQN1+oxHTJGJuAfmuJ9jPFW39yPtZhimLtD3n62xFnHtWkOnOR6QDQozdqOTpwmELpfkskAJmuNOwUzmbwmykKxSWQRhUGTSvFXtNVTIGw8JiZdi6imTHWRStcj8aESITfYuq5Wj3H+a4eNcR+YcDzuC9BzUPZqHveYmCKU9ZZmkjwy7fIRTQZrnF213mqtDCb47NHKjXYq5ykIbmOAlYOiZmmy2XWLDjvYMk/UThNUr22W
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(2616005)(6486002)(478600001)(66946007)(66556008)(86362001)(31696002)(31686004)(36756003)(956004)(66476007)(6636002)(2906002)(26005)(53546011)(16576012)(16526019)(5660300002)(52116002)(54906003)(186003)(4326008)(83380400001)(8676002)(316002)(110136005)(8936002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: UdyOQlvbZ/H5tJjbSiNTm/NXJmqoej0bkB3L5aSVnDFT/0xElVLMia4A2bp+aqK9ti6MbWI5wx63ZbLTEGEw+BLbMiNnn0JrQh58qmHDUMFnDhec5nYM3IKsGPkZpA8yCTWEM4T1NpJpRKDicQv+rt3+Vl0vf7uJWAZhBK8ypXkIr6OZriGamZr1kItQlFp5EmUdyHsSeBZLImrXgDQaHQgmhIKQtecKXaej4RAKYEUPHNFPvZ9uiH+Oky1ZGl89hYQCmp/vh3mQHnyslG6TFt6/esJFi6ZcJMZZ4gINbb6W8x2fXH2u5Jppx7/nnfVIK9S5kagVAEVP6yklHiy/oXSkgot22UophRFQeo6XwdbwlDNX5Z6KJ0iukt8csyGySiP+XV4zk7nI2eSts9v1goAc7Z0H27T36u73DmFvlNwe6acexRccNdls/EbIVN3sTDyBrdS0GTqQ/WYdDKDSihtZnpLbGV03kinzaUiMtt5poV5t6Zf2bsqctd/yPysm
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69f0d98c-afba-417c-d351-08d8086f449a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2020 10:08:46.1902
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tuyLsOZzoRFn8nJqMabh9R1SE+sIE90ct6ctp6onsrGIVy0Xpb4CDDWZHXksRmkGC1znjYzX2snJ3gHLOOb9ig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5711
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603165205.GU23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/2020 5:41 AM, Heinrich Schuchardt wrote:
-> %s/suppying/supplying/
+On Wed, Jun 03, 2020 at 05:52:05PM +0100, Al Viro wrote:
+> On Wed, Jun 03, 2020 at 01:29:00AM -0400, Michael S. Tsirkin wrote:
+> > On Wed, Jun 03, 2020 at 02:48:15AM +0100, Al Viro wrote:
+> > > On Tue, Jun 02, 2020 at 04:45:05AM -0400, Michael S. Tsirkin wrote:
+> > > > So vhost needs to poke at userspace *a lot* in a quick succession.  It
+> > > > is thus benefitial to enable userspace access, do our thing, then
+> > > > disable. Except access_ok has already been pre-validated with all the
+> > > > relevant nospec checks, so we don't need that.  Add an API to allow
+> > > > userspace access after access_ok and barrier_nospec are done.
+> > > 
+> > > BTW, what are you going to do about vq->iotlb != NULL case?  Because
+> > > you sure as hell do *NOT* want e.g. translate_desc() under STAC.
+> > > Disable it around the calls of translate_desc()?
+> > > 
+> > > How widely do you hope to stretch the user_access areas, anyway?
+> > 
+> > So ATM I'm looking at adding support for the packed ring format.
+> > That does something like:
+> > 
+> > get_user(flags, desc->flags)
+> > smp_rmb()
+> > if (flags & VALID)
+> > copy_from_user(&adesc, desc, sizeof adesc);
+> > 
+> > this would be a good candidate I think.
 > 
-This is good since it's not detected by the default kernel spellchecker.
+> Perhaps, once we get stac/clac out of raw_copy_from_user() (coming cycle,
+> probably).
 
-Would you be willing to append also the detected typos?
+That sounds good. Presumably raw_copy_from_user will be smart enough
+to optimize aligned 2 byte accesses for flags above?
 
-CHECK: 'interrrupt' may be misspelled - perhaps 'interrupt'?
-#57: FILE: drivers/crypto/caam/ctrl.c:57:
-+                * resets the done interrrupt and returns the RNG to idle.
+>  BTW, how large is the structure and how is it aligned?
 
-CHECK: 'occured' may be misspelled - perhaps 'occurred'?
-#159: FILE: drivers/crypto/caam/ctrl.c:159:
-+                * If an error occured in the descriptor, then
+It's a batch of 16 byte structures, aligned to 16 bytes.
+At the moment I used batch size of 64 which seems enough.
+Ideally we'd actually read the whole batch like this
+without stac/clac back and forth. E.g.
 
-CHECK: 'aquired' may be misspelled - perhaps 'acquired'?
-#267: FILE: drivers/crypto/caam/ctrl.c:267:
-+ *           entropy being aquired.
+	struct vring_desc adesc[64] = {};
 
-CHECK: 'paramters' may be misspelled - perhaps 'parameters'?
-#736: FILE: drivers/crypto/caam/ctrl.c:736:
-+        *  Read the Compile Time paramters and SCFGR to determine
+	stac()
+	for (i = 0; i < 64; ++i) {
+	 get_user(flags, desc[i].flags)
+	 smp_rmb()
+	 if (!(flags & VALID))
+		break;
+	 copy_from_user(&adesc[i], desc + i, sizeof adesc[i]);
+	}
+	clac()
 
-CHECK: 'modfiy' may be misspelled - perhaps 'modify'?
-#866: FILE: drivers/crypto/caam/ctrl.c:866:
-+                        * and the kick_trng(...) function will modfiy the
 
-CHECK: 'sucessful' may be misspelled - perhaps 'successful'?
-#868: FILE: drivers/crypto/caam/ctrl.c:868:
-+                        * interval, leading to a sucessful initialization of
 
-CHECK: 'Propogate' may be misspelled - perhaps 'Propagate'?
-#116: FILE: drivers/crypto/caam/desc.h:116:
-+/* Propogate DNR property to SharedDesc */
 
-CHECK: 'defintions' may be misspelled - perhaps 'definitions'?
-#456: FILE: drivers/crypto/caam/pdb.h:456:
-+       u32 sgf_ln; /* Use DSA_PDB_ defintions per above */
+> > > BTW, speaking of possible annotations: looks like there's a large
+> > > subset of call graph that can be reached only from vhost_worker()
+> > > or from several ioctls, with all uaccess limited to that subgraph
+> > > (thankfully).  Having that explicitly marked might be a good idea...
+> > 
+> > Sure. What's a good way to do that though? Any examples to follow?
+> > Or do you mean code comments?
+> 
+> Not sure...  FWIW, the part of call graph from "known to be only
+> used by vhost_worker" (->handle_kick/vhost_work_init callback/
+> vhost_poll_init callback) and "part of ->ioctl()" to actual uaccess
+> primitives is fairly large - the longest chain is
+> handle_tx_net ->
+>   handle_tx ->
+>     handle_tx_zerocopy ->
+>       get_tx_bufs ->
+> 	vhost_net_tx_get_vq_desc ->
+> 	  vhost_tx_batch ->
+> 	    vhost_net_signal_used ->
+> 	      vhost_add_used_and_signal_n ->
+> 		vhost_signal ->
+> 		  vhost_notify ->
+> 		    vhost_get_avail_flags ->
+> 		      vhost_get_avail ->
+> 			vhost_get_user ->
+> 			  __get_user()
+> i.e. 14 levels deep and the graph doesn't factorize well...
+> 
+> Something along the lines of "all callers of thus annotated function
+> must be annotated the same way themselves, any implicit conversion
+> of pointers to such functions to anything other than boolean yields
+> a warning, explicit cast is allowed only with __force", perhaps?
+> Then slap such annotations on vhost_{get,put,copy_to,copy_from}_user(),
+> on ->handle_kick(), a force-cast in the only caller of ->handle_kick()
+> and force-casts in the 3 callers in ->ioctl().
+> 
+> And propagate the annotations until the warnings stop, basically...
+> 
+> Shouldn't be terribly hard to teach sparse that kind of stuff and it
+> might be useful elsewhere.  It would act as a qualifier on function
+> pointers, with syntax ultimately expanding to __attribute__((something)).
+> I'll need to refresh my memories of the parser, but IIRC that shouldn't
+> require serious modifications.  Most of the work would be in
+> evaluate_call(), just before calling evaluate_symbol_call()...
+> I'll look into that; not right now, though.
 
-Thanks,
-Horia
+
+Thanks, that does sound useful!
+
+> BTW, __vhost_get_user() might be better off expanded in both callers -
+> that would get their structure similar to vhost_copy_{to,from}_user(),
+> especially if you expand __vhost_get_user_slow() as well.
+
+I agree, that does sound like a good cleanup.
+
+> Not sure I understand what's going with ->meta_iotlb[] - what are the
+> lifetime rules for struct vhost_iotlb_map and what prevents the pointers
+> from going stale?
+
+It can be zeroed at any point.
+We just try to call __vhost_vq_meta_reset whenever anything can go
+stale.
+
