@@ -2,150 +2,142 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C83C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64118206A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0322206A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UiJYyiPH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o2sza3EQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgFDP5i (ORCPT
+        id S1729645AbgFDP6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
+        Thu, 4 Jun 2020 11:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729216AbgFDP5h (ORCPT
+        with ESMTP id S1729302AbgFDP6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:57:37 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0F5C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:57:37 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id b7so2294611pju.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:57:37 -0700 (PDT)
+        Thu, 4 Jun 2020 11:58:35 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B74C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 08:58:34 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so2343151plv.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z02HjpdIyC/f+FSei9jV/KYu36NFQ5uAYMvx88TokgE=;
-        b=UiJYyiPHhL+5GtrxMVXWjvcLL6Qb6ycW1HR0pNl6xx96Ji5PVF2xsK4yG7NhyB73sH
-         JfdV1+OVGIkRnNEt/Ilns2vglxHs5OARDplc1i8yf5PN/5MSVwspv90DlARICMpyJ3Ja
-         NHisdCZ2Ihcjm/GmIb4s+HKitVRc9IbkqL5mc=
+         :content-disposition:in-reply-to:user-agent;
+        bh=06qJ6cVTAC2pzO5b4lUgwr6Obth7V4o6CCI1s1HWoM8=;
+        b=o2sza3EQSLRpzYpN/X7lDFGDRPvpEz9QvrHcKU9aufszRXcw9xjtiCVookzX0NuO71
+         I4RJ/AyC+4SHMIN4ZUu5Ar0q/0/iCsnmH6Y5QzXW3Cw+fDMhflNHieI603MW4ow4WAp+
+         VI/wtC5hGyhYPIfwR4gM9TDTe6lIPx8PwfUCn+Kbj31paIPXMHKJRw0sHbWQ3ikvpfbz
+         cuOKYz5cxAZYnA0xyd6ersRU9IxJuH9pJQuA5gIiWqgfiOO+XGJK8wWWnAQJn9Rd5Pkv
+         LYMJjBcKuS98wj3YXnK7tez4VcVLdO1FPfq16IifN3SQNjW8yoz3mNkHPkn4NWshCiRN
+         Eq6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z02HjpdIyC/f+FSei9jV/KYu36NFQ5uAYMvx88TokgE=;
-        b=TbXE5yrqfqWsyzfzcg3fwOIw31r5ycpc3CTap46yYqPbeY/WA4Oa9BB7I6TYUas6u1
-         SRYXY5lLpj/W2a/smhtcNdXXPx+9ChmUTNw7416uDae1cT73CFYu8MhVroqrjWORToM6
-         g7pXsBCNVwJsf9Pao5pXc6KirSq5ucpu9qFgUxf+z1IhBwe9L3LoVErClsHqIfdLaDCt
-         cpB6xZ9okiInbH0C37rTW3xgoDDn3yeB5HbWVCKBFcIglNeGqBgw4aqn568gOh3fDuYt
-         H9C7pU1iIT6ENbig+cypL/5ier5yw6SQiPxWsMqyyFheKZR1Yjama2iGg6QeEp925cmX
-         LwrA==
-X-Gm-Message-State: AOAM533dW/oHYHP9KZ1th5SUpZUQUTiinQjjZO0Z7IweCMYH5UNttAGM
-        mpitcd4LfKd0hrUKcXBXmPy1YTJCmV9/zA==
-X-Google-Smtp-Source: ABdhPJzAbcerGsniFWkInonNtK9waPikGTV4wg1tDPqm0XOFXk03xxeKyPpoHNFsKBzYlQyzuic08w==
-X-Received: by 2002:a17:90b:252:: with SMTP id fz18mr6292145pjb.96.1591286257215;
-        Thu, 04 Jun 2020 08:57:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j12sm5106491pfd.21.2020.06.04.08.57.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 08:57:36 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 08:57:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     glider@google.com
-Cc:     miklos@szeredi.hu, vgoyal@redhat.com,
-        linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        royyang@google.com, stable@vger.kernel.org
-Subject: Re: [PATCH] ovl: explicitly initialize error in ovl_copy_xattr()
-Message-ID: <202006040844.C50B47699@keescook>
-References: <20200604084245.161480-1-glider@google.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=06qJ6cVTAC2pzO5b4lUgwr6Obth7V4o6CCI1s1HWoM8=;
+        b=p4J9ntAr1vdLCymEk5YdC/QjSTXP8q0+8ZBu48VQB8gCov62vIYAf6Q727b+uU+Nmi
+         PMR5vO8MDIeu51hYjTeCVqKVFB4XQDrOFdPRQLBfnAeND9brFJ8dB1ggxj8/MYLfn9ys
+         oROfcZxojoIwKCL7vwXaifUmuJA8rC8xZRnBAfVnnkOPASHsQQqjslppbLWsMxvVrFIK
+         r0HhzyEtxps60uZ+tppLZ2Qt5TBR+Fi0c9FI6XNzHik0ms/7u95SRihjNbyicZtf/NEJ
+         FZ5YiAyC//UayQ4mPMLvzTTdA6zA27mfHpn/+X7BhzeyfWmqH/hddPRucd2nggfmYunw
+         39Gg==
+X-Gm-Message-State: AOAM532KChzM8WXXXSFqWGqyFl191Lfu0vDz04L2ye127hxif2QPG+Yl
+        OVxu83Q1Pt24vqJmq8WHSXU/
+X-Google-Smtp-Source: ABdhPJyBwhHPj0fPhtcHnXiEtDj84r5PWyFiNtW5durTy+YJ+7hFi+XbAAHDjmE/3/Hwpe99teUIkQ==
+X-Received: by 2002:a17:90a:64c9:: with SMTP id i9mr6902073pjm.135.1591286313848;
+        Thu, 04 Jun 2020 08:58:33 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6211:4cea:c404:4d38:8396:d1ee])
+        by smtp.gmail.com with ESMTPSA id r1sm4410185pgb.37.2020.06.04.08.58.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 04 Jun 2020 08:58:32 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 21:28:25 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: smmu/USB nodes and HDK855/HDK865
+ dts
+Message-ID: <20200604155825.GI16719@Mani-XPS-13-9360>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200604135221.GH16719@Mani-XPS-13-9360>
+ <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604084245.161480-1-glider@google.com>
+In-Reply-To: <200d1f60-781b-51c7-1a38-c955f59919de@marek.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 10:42:45AM +0200, glider@google.com wrote:
-> Under certain circumstances (we found this out running Docker on a
-> Clang-built kernel with CONFIG_INIT_STACK_ALL) ovl_copy_xattr() may
-> return uninitialized value of |error| from ovl_copy_xattr().
-> It is then returned by ovl_create() to lookup_open(), which casts it to
-> an invalid dentry pointer, that can be further read or written by the
-> lookup_open() callers.
+On Thu, Jun 04, 2020 at 10:06:19AM -0400, Jonathan Marek wrote:
+> On 6/4/20 9:52 AM, Manivannan Sadhasivam wrote:
+> > Hi,
+> > 
+> > On Sat, May 23, 2020 at 10:38:06PM -0400, Jonathan Marek wrote:
+> > > Add dts nodes for apps_smmu and USB for both sm8150 and sm8250.
+> > > 
+> > 
+> > I've tested this series on an SM8250 based board and able to get Type C (USB0)
+> > working. There are also couple of Type A ports (USB1) on that board behind a
+> > USB hub. It is probing fine but I don't see any activity while connecting a
+> > USB device. Will continue to debug and once I get them working, I'll add my
+> > Tested-by tag.
+> > 
 > 
-> The uninitialized value is returned when all the xattr on the file
-> are ovl_is_private_xattr(), which is actually a successful case,
-> therefore we initialize |error| with 0.
+> HDK865 also has a couple Type A ports, I am using them with devices already
+> plugged in during boot and I haven't hit a problem like that, but I think
+> I've seen the same issue when hotplugging. IIRC the behavior was a bit
+> weird, like plugging a device in the Type A port (USB1) nothing would
+> happen, but unplugging/replugging the type C port (USB0) would cause the
+> Type A port device to start working..
 > 
-> Signed-off-by: Alexander Potapenko <glider@google.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Roy Yang <royyang@google.com>
-> Cc: <stable@vger.kernel.org> # 4.1
+> Have you tried with the devices already plugged in before booting?
+> 
 
-Please include a Fixes (more below) and Link tags for details to help
-guide backporting, then you don't need to bother with with "# 4.1",
-the -stable tools will figure it out with a "Fixes" tag.
+Tried it but no luck :/ Also plugging and removing Type C doesn't make any
+difference.
 
-Thanks for the v2!
+Thanks,
+Mani
 
-Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1050405
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-> The bug seem to date back to at least v4.1 where the annotation has been
-> introduced (i.e. the compilers started noticing error could be used
-> before being initialized). I hovever didn't try to prove that the
-> problem is actually reproducible on such ancient kernels. We've seen it
-> on a real machine running v4.4 as well.
-
-It seems like it came from this, but that's v4.5:
-
-Fixes: e4ad29fa0d22 ("ovl: use a minimal buffer in ovl_copy_xattr")
-
-What did you find in v4.1? It looks like error isn't uninitialized in
-v4.1:
-
-int ovl_copy_xattr(struct dentry *old, struct dentry *new)
-{
-        ssize_t list_size, size;
-        char *buf, *name, *value;
-        int error;
-
-        if (!old->d_inode->i_op->getxattr ||
-            !new->d_inode->i_op->getxattr)
-                return 0;
-
-        list_size = vfs_listxattr(old, NULL, 0);
-        if (list_size <= 0) {
-                if (list_size == -EOPNOTSUPP)
-                        return 0;
-                return list_size;
-        }
-
-        buf = kzalloc(list_size, GFP_KERNEL);
-        if (!buf)
-                return -ENOMEM;
-
-        error = -ENOMEM;
-...
-
-But v4.1.52 backported the above patch (e4ad29fa0d22), which is why I
-don't try to figure these things out manually. Once we find the commit,
-the tools will figure it out. I think you just need:
-
-Fixes: e4ad29fa0d22 ("ovl: use a minimal buffer in ovl_copy_xattr")
-Cc: stable@vger.kernel.org
-
-and things like v4.1.52 will get fixed (if anyone is actually doing
-updates for v4.1.z any more...)
-
--- 
-Kees Cook
+> > Thanks,
+> > Mani
+> > 
+> > > Also add initial dts files for HDK855 and HDK865, based on mtp dts, with a
+> > > few changes. Notably, the HDK865 dts has regulator config changed a bit based
+> > > on downstream (I think sm8250-mtp.dts is wrong and copied too much from sm8150).
+> > > 
+> > > Jonathan Marek (6):
+> > >    arm64: dts: qcom: sm8150: add apps_smmu node
+> > >    arm64: dts: qcom: sm8250: add apps_smmu node
+> > >    arm64: dts: qcom: sm8150: Add secondary USB and PHY nodes
+> > >    arm64: dts: qcom: sm8250: Add USB and PHY device nodes
+> > >    arm64: dts: qcom: add sm8150 hdk dts
+> > >    arm64: dts: qcom: add sm8250 hdk dts
+> > > 
+> > >   arch/arm64/boot/dts/qcom/Makefile       |   2 +
+> > >   arch/arm64/boot/dts/qcom/sm8150-hdk.dts | 461 ++++++++++++++++++++++++
+> > >   arch/arm64/boot/dts/qcom/sm8150.dtsi    | 180 +++++++++
+> > >   arch/arm64/boot/dts/qcom/sm8250-hdk.dts | 454 +++++++++++++++++++++++
+> > >   arch/arm64/boot/dts/qcom/sm8250.dtsi    | 287 +++++++++++++++
+> > >   5 files changed, 1384 insertions(+)
+> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8150-hdk.dts
+> > >   create mode 100644 arch/arm64/boot/dts/qcom/sm8250-hdk.dts
+> > > 
+> > > -- 
+> > > 2.26.1
+> > > 
