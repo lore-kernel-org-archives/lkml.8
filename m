@@ -2,107 +2,217 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C738C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B301FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3596C206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9523F2075B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgFDXa6 (ORCPT
+        id S1726062AbgFDXm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 19:30:58 -0400
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:48317 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725920AbgFDXa5 (ORCPT
+        Thu, 4 Jun 2020 19:42:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14840 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725986AbgFDXm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 19:30:57 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id A45A6108319;
-        Fri,  5 Jun 2020 09:30:54 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jgzK1-0001Pa-Ln; Fri, 05 Jun 2020 09:30:53 +1000
-Date:   Fri, 5 Jun 2020 09:30:53 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Thu, 4 Jun 2020 19:42:26 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054NVr2U055203;
+        Thu, 4 Jun 2020 19:41:49 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31f9dej2du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 19:41:49 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 054NZB1T064637;
+        Thu, 4 Jun 2020 19:41:49 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31f9dej2dc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 19:41:48 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054NflaP003405;
+        Thu, 4 Jun 2020 23:41:47 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 31bf47ce9t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 23:41:47 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054NfiDv58458458
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jun 2020 23:41:44 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B7D1A405C;
+        Thu,  4 Jun 2020 23:41:44 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 42CDCA405B;
+        Thu,  4 Jun 2020 23:41:40 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.71.124])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Thu,  4 Jun 2020 23:41:39 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Fri, 05 Jun 2020 05:11:38 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
-Message-ID: <20200604233053.GW2040@dread.disaster.area>
-References: <20200604202340.29170-1-willy@infradead.org>
- <20200604225726.GU2040@dread.disaster.area>
- <20200604230519.GW19604@bombadil.infradead.org>
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v10 0/6] powerpc/papr_scm: Add support for reporting nvdimm health
+Date:   Fri,  5 Jun 2020 05:11:30 +0530
+Message-Id: <20200604234136.253703-1-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604230519.GW19604@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
-        a=jINDFZZm4DkczEFURbYA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-04_13:2020-06-04,2020-06-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ adultscore=0 impostorscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ suspectscore=0 cotscore=-2147483648 priorityscore=1501 mlxlogscore=988
+ lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006040160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 04:05:19PM -0700, Matthew Wilcox wrote:
-> On Fri, Jun 05, 2020 at 08:57:26AM +1000, Dave Chinner wrote:
-> > On Thu, Jun 04, 2020 at 01:23:40PM -0700, Matthew Wilcox wrote:
-> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > 
-> > > Test generic/019 often results in:
-> > > 
-> > > WARNING: at fs/iomap/buffered-io.c:1069 iomap_page_mkwrite_actor+0x57/0x70
-> > > 
-> > > Since this can happen due to a storage error, we should not WARN for it.
-> > > Just return -EIO, which will be converted to a SIGBUS for the hapless
-> > > task attempting to write to the page that we can't read.
-> > 
-> > Why didn't the "read" part of the fault which had the EIO error fail
-> > the page fault? i.e. why are we waiting until deep inside the write
-> > fault path to error out on a failed page read?
-> 
-> I have a hypothesis that I don't know how to verify.
-> 
-> First the task does a load from the page and we put a read-only PTE in
-> the page tables.  Then it writes to the page using write().  The page
-> gets written back, but hits an error in iomap_writepage_map()
-> which calls ClearPageUptodate().  Then the task with it mapped attempts
-> to store to it.
+Changes since v9 [1]:
+* Addressed review comments from Ira and Dan Williams.
+* Removed the contentious 'payload_version' field from struct
+  nd_pdsm_cmd_pkg.
+* Also removed code/defines related to handling of different version
+  of a pdsm payload struct.  
+* Consolidated validation checks for nd_pdsm_cmd_pkg in
+  is_cmd_valid().
+* Added a check in is_cmd_valid() to ensure reserved fields in struct
+  nd_pdsm_cmd_pkg are set to '0'.
+* Reworked papr_pdsm_health() to avoid removing code that was added in
+  initial part of this patch-series.
+* Added a new patch to the series to move out some proposed changes to
+  papr_scm_ndctl() in an independent patch.
+* Reworked papr_pdsm_health() to ensure correct payload_size in the
+  pdsm command package.
 
-Sure, but that's not really what I was asking: why isn't this
-!uptodate state caught before the page fault code calls
-->page_mkwrite? The page fault code has a reference to the page,
-after all, and in a couple of paths it even has the page locked.
+[1] https://lore.kernel.org/linux-nvdimm/20200602101438.73929-1-vaibhav@linux.ibm.com
+---
 
-What I'm trying to understand is why this needs to be fixed inside
-->page_mkwrite, because AFAICT if we have to fix this in the iomap
-code, we have the same "we got handed a bad page by the page fault"
-problem in every single ->page_mkwrite implementation....
+The PAPR standard[2][4] provides mechanisms to query the health and
+performance stats of an NVDIMM via various hcalls as described in
+Ref[3].  Until now these stats were never available nor exposed to the
+user-space tools like 'ndctl'. This is partly due to PAPR platform not
+having support for ACPI and NFIT. Hence 'ndctl' is unable to query and
+report the dimm health status and a user had no way to determine the
+current health status of a NDVIMM.
 
-> I haven't dug through what generic/019 does, so I don't know how plausible
-> this is.
+To overcome this limitation, this patch-set updates papr_scm kernel
+module to query and fetch NVDIMM health stats using hcalls described
+in Ref[3].  This health and performance stats are then exposed to
+userspace via sysfs and PAPR-NVDIMM-Specific-Methods(PDSM) issued by
+libndctl.
 
-# Run fsstress and fio(dio/aio and mmap) and simulate disk failure
-# check filesystem consistency at the end.
+These changes coupled with proposed ndtcl changes located at Ref[5]
+should provide a way for the user to retrieve NVDIMM health status
+using ndtcl.
 
-I don't think it is mixing buffered writes and mmap writes on the
-same file via fio. Maybe fsstress is triggering that, but the
-fsstress workload is single threaded so, again, I'm not sure it will
-do this.
+Below is a sample output using proposed kernel + ndctl for PAPR NVDIMM
+in a emulation environment:
 
-Cheers,
+ # ndctl list -DH
+[
+  {
+    "dev":"nmem0",
+    "health":{
+      "health_state":"fatal",
+      "shutdown_state":"dirty"
+    }
+  }
+]
 
-Dave.
+Dimm health report output on a pseries guest lpar with vPMEM or HMS
+based NVDIMMs that are in perfectly healthy conditions:
+
+ # ndctl list -d nmem0 -H
+[
+  {
+    "dev":"nmem0",
+    "health":{
+      "health_state":"ok",
+      "shutdown_state":"clean"
+    }
+  }
+]
+
+PAPR NVDIMM-Specific-Methods(PDSM)
+==================================
+
+PDSM requests are issued by vendor specific code in libndctl to
+execute certain operations or fetch information from NVDIMMS. PDSMs
+requests can be sent to papr_scm module via libndctl(userspace) and
+libnvdimm (kernel) using the ND_CMD_CALL ioctl command which can be
+handled in the dimm control function papr_scm_ndctl(). Current
+patchset proposes a single PDSM to retrieve NVDIMM health, defined in
+the newly introduced uapi header named 'papr_pdsm.h'. Support for
+more PDSMs will be added in future.
+
+Structure of the patch-set
+==========================
+
+The patch-set starts with a doc patch documenting details of hcall
+H_SCM_HEALTH. Second patch exports kernel symbol seq_buf_printf()
+thats used in subsequent patches to generate sysfs attribute content.
+
+Third patch implements support for fetching NVDIMM health information
+from PHYP and partially exposing it to user-space via a NVDIMM sysfs
+flag.
+
+Fourth patch updates papr_scm_ndctl() to handle a possible error case
+and also improve debug logging.
+
+Fifth patch deals with implementing support for servicing PDSM
+commands in papr_scm module.
+
+Finally the last patch implements support for servicing PDSM
+'PAPR_PDSM_HEALTH' that returns the NVDIMM health information to
+libndctl.
+
+References:
+[2] "Power Architecture Platform Reference"
+      https://en.wikipedia.org/wiki/Power_Architecture_Platform_Reference
+[3] commit 58b278f568f0
+     ("powerpc: Provide initial documentation for PAPR hcalls")
+[4] "Linux on Power Architecture Platform Reference"
+     https://members.openpowerfoundation.org/document/dl/469
+[5] https://github.com/vaibhav92/ndctl/tree/papr_scm_health_v10
+
+---
+
+Vaibhav Jain (6):
+  powerpc: Document details on H_SCM_HEALTH hcall
+  seq_buf: Export seq_buf_printf
+  powerpc/papr_scm: Fetch nvdimm health information from PHYP
+  powerpc/papr_scm: Improve error logging and handling papr_scm_ndctl()
+  ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
+  powerpc/papr_scm: Implement support for PAPR_PDSM_HEALTH
+
+ Documentation/ABI/testing/sysfs-bus-papr-pmem |  27 ++
+ Documentation/powerpc/papr_hcalls.rst         |  46 ++-
+ arch/powerpc/include/uapi/asm/papr_pdsm.h     | 131 +++++++
+ arch/powerpc/platforms/pseries/papr_scm.c     | 361 +++++++++++++++++-
+ include/uapi/linux/ndctl.h                    |   1 +
+ lib/seq_buf.c                                 |   1 +
+ 6 files changed, 554 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-pmem
+ create mode 100644 arch/powerpc/include/uapi/asm/papr_pdsm.h
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.26.2
+
