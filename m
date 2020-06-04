@@ -2,284 +2,159 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D69C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E73B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3B5206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 05:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="054Uqkhv"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="I3ELH3x/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgFDFUp (ORCPT
+        id S1726363AbgFDFnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 01:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725959AbgFDFUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 01:20:44 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F8FC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 22:20:44 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id h4so4913869iob.10
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 22:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oKNXmPZh2jB30BHUyHRPpl5a8wx5yENQJM5HVKTmIUg=;
-        b=054UqkhvVty3ow+lMQbK9j4Udt3zohY4MtWydjS8v+qaL1KEzL/lBvin5kq+w6wouX
-         hZI4wLQja9EIX1nva9plQnfwHl8FzoXwywvdWospv8P8d7E04VgKiRV9X8gRx2J9T1CC
-         JEXiaCtFU/kNPlAOilsNcnuQhrVealltviXyQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oKNXmPZh2jB30BHUyHRPpl5a8wx5yENQJM5HVKTmIUg=;
-        b=FVH3BOQj0HtXWA0nlicrMmryfbGoU0ISnRuMEowfWbi/5sV0sYlcPn6mKI/J8UxCJH
-         uW55iYwjZ6cbnDTaVRK671OpKFJ/t600FSsOi68WYt0djrOKrHtrZjVajODvWO861XwT
-         8Oyre899cAytUnqooagE9LJzmwkVvk0DMYTTwa4UeRNun5FX2e6tQpnQMtxTFndZZw4q
-         2WopKA8lfZ5htQ+ZC1TmbEBCcPswFCJ/Yvegmjp+BLb7oAOIu/Xdt5NOqHlGVfMn4glD
-         sUgmrcRdtZHskJ7bKsgs/5G5yCbtcq7QTFdHcyNhTFDZAwnPy33W0I/L3PPhJHhOFZMg
-         jBXA==
-X-Gm-Message-State: AOAM533tQv9nd+aWtq3GbdBxCARa0IFpCic5V4ow7WRhXzAnV+W+fVWd
-        tFASYbXkE+XtSNXy28brpw1n8Q==
-X-Google-Smtp-Source: ABdhPJz1JJFpDvHfIzAqgbnGUeuraT6RkK3cM76pgob/tqzC+lFOJzt//SUhOOU6QHvDtvw+nG2caw==
-X-Received: by 2002:a5d:9e51:: with SMTP id i17mr2607501ioi.8.1591248043464;
-        Wed, 03 Jun 2020 22:20:43 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id r17sm900698ilc.33.2020.06.03.22.20.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jun 2020 22:20:42 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 05:20:41 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-kernel@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        containers@lists.linux-foundation.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
- move fds across processes
-Message-ID: <20200604052040.GA16501@ircssh-2.c.rugged-nimbus-611.internal>
-References: <20200603011044.7972-1-sargun@sargun.me>
- <20200603011044.7972-2-sargun@sargun.me>
- <20200604012452.vh33nufblowuxfed@wittgenstein>
- <202006031845.F587F85A@keescook>
+        Thu, 4 Jun 2020 01:43:51 -0400
+Received: from mout.web.de ([212.227.17.11]:48187 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726003AbgFDFnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 01:43:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591249403;
+        bh=3MkFD5u516RHMXs9tkq7u9K3YawNQbXNaeFLtPqnKtQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=I3ELH3x/3D6qSmpDrl6cD8y2KG2tp5tbMj+Qfv9YpzGMIIwVe972QmH57+VgAQkYh
+         bSCsyUCtVOO20dU4qAnDsGWf8YOojtRy7uyVToqZY814GDfKw/j5Yupune1uBzydMm
+         mKUa10L1rXvME15InwNqd8ht3s2Kue7pi/iIvULA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mhnw2-1j307X1kG0-00drys; Thu, 04
+ Jun 2020 07:43:23 +0200
+Subject: Re: dmaengine: stm32-mdma: call pm_runtime_put if pm_runtime_get_sync
+ fails
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>, Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
+ <CAMuHMdU3wMT_pnh4NE9W9Su6qip_oObgd6OiRCwfuvouqjXKHA@mail.gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <3eca8df2-22ae-06e0-5809-c11e459915d5@web.de>
+Date:   Thu, 4 Jun 2020 07:43:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006031845.F587F85A@keescook>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAMuHMdU3wMT_pnh4NE9W9Su6qip_oObgd6OiRCwfuvouqjXKHA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KynnLDi6KBJoEMNje4oN1eTT3NNOBiFU90Q69446fFG5stNUo72
+ FmPpM60Wdq/d742po5l185fsNTdEDnhKVsx7aalLxglMhzAV90r4HJIuNIXyDynopO8z3cO
+ rSQX0gMpluWTpgfluIkxagVEvTHi5/jehR6PUJ27joHQ+P/nnEHIVLBgzdLIdNjGirWpTop
+ L+EIi5rZtfUcE6YQgH6lA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qeH4pHbZvq8=:jmti1En2s8gckqqZeTZkwb
+ S2shioru5R/hBxKDoGZEIcnMw/SwoBEyEPX059DjUeanDvCc7Fac9WiLMWPBD8AJQUSPGuKCk
+ CDDxPa8qm2v90HBzoLF92WP64GNbts+YMlr8bjCcCdh695FEjG1lIiVC3sRvPiWn0+Du931ui
+ Fc93bAeZ1RJKoEa+eXUzqCihuCA2Qz5ztiEE33lsfWcp7K+yQqeSxf7VlIlfOkLJTeRuzQwW8
+ OStLEkZ9W5WOYscIZs8ETeG4nO9ydJWWU1btmxy4Ec7tZ4VPSAQMg2sFUET7c7ET0TgDZq7xf
+ I0eZTkLk5qMx8LBtCHqZpK+1pTBEJQ/rqdhncwjgpdN95tCJMYGg+ShhPZbHtIe2V7c8Suka6
+ Dm9jvBe8SPEhv3eI3JLAFf6jdnk5KcWsNzfPGqVKaar+/u9j1Y6JYyQ5bbJNxP6IcUpdWwnZ9
+ cTG7tXpX4GjH5ZTGzHbLt4Qv7ZWRxT4y9OEeqiaDBXGLMMU+Q0JUxv+4WaVg1NDHX0zl3MTtn
+ RLeV8vsBuIoaqOyowaC0eRaDtK87AbVtNxMl3JUZDzSVRB2CrK44HXXaufPqxYNmBspRqRRIH
+ E9PzeatfbiLycom1n9IsyDLiTtDoIB5aX+OmRtwlCoN5HgfVKQL8qYDJ+fVcJI8kmaKRzI+Re
+ Bx336G8dL+2iEjO7QoK5OtoEpmP9raxiivSBRUjTlDG7bfjs9G8QcMOWWApTMU8JoXtC2ItFi
+ RcdPdFbO8Ire1AXb5qsh9qkouwcYqNv5s0Nz0B/71LCAsOP2vHlo9HYEtrwtNWNmvwhU1jNf8
+ vm+Q/EEBUHuNZ8FIZhFM0+fyve7dLAoCyTyWvMgSd3C7LoeEsd28BlF+H+ubwTlzuQ7sv6x1D
+ cFUF/gaF/PqL13J78WEXIu/OzIHvEhkXZqCT5gksVHT2c9d+qKgwXXwSt4NQMqj1rPavqqEMG
+ yCHyi4RAyQ0ODjosyaRSavc60sRq95c5pmzfrEKKIP6pJ7uMFZsY7dolAPSF2b/M9K9zd2+I7
+ UgzRX06sH1ZCiGQBTju0A4P04qVZjnnZyF1R9B/eE45meR+AgcQQb3c94sKFLloRj7MW+ac6Y
+ /Q10piqqruZ/1Z7ae91DnKbn7gGsUnqQl+vC1yj2Gh1uvQFeNUXKA9zOYH3xPpA+8EHBi/c/8
+ jinOPQC/S4lk4yUyY20RCgt3WNwTDlc+RAwzuBVvezI38NmgmZ1I+iE2zC0969K48rC+WTY04
+ 0PvWapH4m8KRnD3AY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 07:22:57PM -0700, Kees Cook wrote:
-> On Thu, Jun 04, 2020 at 03:24:52AM +0200, Christian Brauner wrote:
-> > On Tue, Jun 02, 2020 at 06:10:41PM -0700, Sargun Dhillon wrote:
-> > > Previously there were two chunks of code where the logic to receive file
-> > > descriptors was duplicated in net. The compat version of copying
-> > > file descriptors via SCM_RIGHTS did not have logic to update cgroups.
-> > > Logic to change the cgroup data was added in:
-> > > commit 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-> > > commit d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-> > > 
-> > > This was not copied to the compat path. This commit fixes that, and thus
-> > > should be cherry-picked into stable.
-> > > 
-> > > This introduces a helper (file_receive) which encapsulates the logic for
-> > > handling calling security hooks as well as manipulating cgroup information.
-> > > This helper can then be used other places in the kernel where file
-> > > descriptors are copied between processes
-> > > 
-> > > I tested cgroup classid setting on both the compat (x32) path, and the
-> > > native path to ensure that when moving the file descriptor the classid
-> > > is set.
-> > > 
-> > > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> > > Suggested-by: Kees Cook <keescook@chromium.org>
-> > > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > > Cc: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Cc: Daniel Wagner <daniel.wagner@bmw-carit.de>
-> > > Cc: David S. Miller <davem@davemloft.net>
-> > > Cc: Jann Horn <jannh@google.com>,
-> > > Cc: John Fastabend <john.r.fastabend@intel.com>
-> > > Cc: Tejun Heo <tj@kernel.org>
-> > > Cc: Tycho Andersen <tycho@tycho.ws>
-> > > Cc: stable@vger.kernel.org
-> > > Cc: cgroups@vger.kernel.org
-> > > Cc: linux-fsdevel@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > ---
-> > >  fs/file.c            | 35 +++++++++++++++++++++++++++++++++++
-> > >  include/linux/file.h |  1 +
-> > >  net/compat.c         | 10 +++++-----
-> > >  net/core/scm.c       | 14 ++++----------
-> > >  4 files changed, 45 insertions(+), 15 deletions(-)
-> > > 
-> > > diff --git a/fs/file.c b/fs/file.c
-> > > index abb8b7081d7a..5afd76fca8c2 100644
-> > > --- a/fs/file.c
-> > > +++ b/fs/file.c
-> > > @@ -18,6 +18,9 @@
-> > >  #include <linux/bitops.h>
-> > >  #include <linux/spinlock.h>
-> > >  #include <linux/rcupdate.h>
-> > > +#include <net/sock.h>
-> > > +#include <net/netprio_cgroup.h>
-> > > +#include <net/cls_cgroup.h>
-> > >  
-> > >  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
-> > >  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
-> > > @@ -931,6 +934,38 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
-> > >  	return err;
-> > >  }
-> > >  
-> > > +/*
-> > > + * File Receive - Receive a file from another process
-> > > + *
-> > > + * This function is designed to receive files from other tasks. It encapsulates
-> > > + * logic around security and cgroups. The file descriptor provided must be a
-> > > + * freshly allocated (unused) file descriptor.
-> > > + *
-> > > + * This helper does not consume a reference to the file, so the caller must put
-> > > + * their reference.
-> > > + *
-> > > + * Returns 0 upon success.
-> > > + */
-> > > +int file_receive(int fd, struct file *file)
-> > 
-> > This is all just a remote version of fd_install(), yet it deviates from
-> > fd_install()'s semantics and naming. That's not great imho. What about
-> > naming this something like:
-> > 
-> > fd_install_received()
-> > 
-> > and move the get_file() out of there so it has the same semantics as
-> > fd_install(). It seems rather dangerous to have a function like
-> > fd_install() that consumes a reference once it returned and another
-> > version of this that is basically the same thing but doesn't consume a
-> > reference because it takes its own. Seems an invitation for confusion.
-> > Does that make sense?
-> 
-> We have some competing opinions on this, I guess. What I really don't
-> like is the copy/pasting of the get_unused_fd_flags() and
-> put_unused_fd() needed by (nearly) all the callers. If it's a helper, it
-> should help. Specifically, I'd like to see this:
-> 
-> int file_receive(int fd, unsigned long flags, struct file *file,
-> 		 int __user *fdptr)
-> {
-> 	struct socket *sock;
-> 	int err;
-> 
-> 	err = security_file_receive(file);
-> 	if (err)
-> 		return err;
-> 
-> 	if (fd < 0) {
-> 		/* Install new fd. */
-> 		int new_fd;
-> 
-> 		err = get_unused_fd_flags(flags);
-> 		if (err < 0)
-> 			return err;
-> 		new_fd = err;
-> 
-> 		/* Copy fd to any waiting user memory. */
-> 		if (fdptr) {
-> 			err = put_user(new_fd, fdptr);
-> 			if (err < 0) {
-> 				put_unused_fd(new_fd);
-> 				return err;
-> 			}
-> 		}
-> 		fd_install(new_fd, get_file(file));
-> 		fd = new_fd;
-> 	} else {
-> 		/* Replace existing fd. */
-> 		err = replace_fd(fd, file, flags);
-> 		if (err)
-> 			return err;
-> 	}
-> 
-> 	/* Bump the cgroup usage counts. */
-> 	sock = sock_from_file(fd, &err);
-> 	if (sock) {
-> 		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> 		sock_update_classid(&sock->sk->sk_cgrp_data);
-> 	}
-> 
-> 	return fd;
-> }
-> 
-> If everyone else *really* prefers keeping the get_unused_fd_flags() /
-> put_unused_fd() stuff outside the helper, then I guess I'll give up,
-> but I think it is MUCH cleaner this way -- all 4 users trim down lots
-> of code duplication.
-> 
-> -- 
-> Kees Cook
-This seems weird that the function has two different return mechanisms
-depending on the value of fdptr, especially given that behaviour is
-only invoked by SCM, whereas the other callers (addfd, and pidfd_getfd)
-just want the FD value returned.
+>>> Calling pm_runtime_get_sync increments the counter even in case of
+>>> failure, causing incorrect ref count. Call pm_runtime_put if
+>>> pm_runtime_get_sync fails.
+>>
+>> Is it appropriate to copy a sentence from the change description
+>> into the patch subject?
+>>
+>> How do you think about a wording variant like the following?
+>>
+>>    The PM runtime reference counter is generally incremented by a call =
+of
+>>    the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D.
+>>    Thus call the function =E2=80=9Cpm_runtime_put=E2=80=9D also in two =
+error cases
+>>    to keep the reference counting consistent.
+>
+> IMHO the important part is "even in case of failure", which you dropped.
+> Missing that point was the root cause of the issue being fixed.
+> Hence I prefer the original description, FWIW.
 
-Won't this produce a "bad" result, if the user does:
+Would you like to comment any more of the presented patch review concerns?
 
-struct msghdr msg = {};
-struct cmsghdr *cmsg;
-struct iovec io = {
-	.iov_base = &c,
-	.iov_len = 1,
-};
+Can it make sense to combine any adjustments into a single patch
+according to the discussed software transformation pattern?
+https://lore.kernel.org/patchwork/project/lkml/list/?submitter=3D26544&sta=
+te=3D*&q=3Dengine%3A+stm32&archive=3Dboth
 
-msg.msg_iov = &io;
-msg.msg_iovlen = 1;
-msg.msg_control = NULL;
-msg.msg_controllen = sizeof(buf);
-
-recvmsg(sock, &msg, 0);
-----
-
-This will end up installing the FD, but it will efault, when
-scm_detach_fds tries to fill out the rest of the info. 
-
-I mean, we can easily solve this with a null pointer check
-in scm_detach_fds, but my fear is that user n will forget
-to do this, and make a mistake.
-
-Maybe it would be nice to have:
-
-/* Receives file descriptor and installs it in userspace at uptr. */
-static inline intfile_receive_user(struct file *file, unsigned long flags,
-				   int __user *fdptr)
-{
-	if (fdptr == NULL)
-		return -EFAULT;
-
-	return __file_receive(-1, flags, file, uptr);
-}
-
-And then just let pidfd_getfd, and seccomp_addfd call __file_receive
-directly, or offer a different helper like:
-
-static inline file_receive(long fd, struct *file, unsigned long flags)
-{
-	return __file_receive(fd, flags, file, NULL);
-}
+Regards,
+Markus
