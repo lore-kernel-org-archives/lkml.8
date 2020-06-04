@@ -2,133 +2,158 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57774C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAED20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3853207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:56:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S90pbrXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgFDOx6 (ORCPT
+        id S1729159AbgFDO4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:53:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:7508 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729115AbgFDOx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:53:58 -0400
-IronPort-SDR: 12LJ8/wV8Ft7m3YTxGepw3c8Yhy72NMhbO6OrV/5aRf6OVycD3H4u9pA2PgTP+51p2A89j2q3l
- BvJU3K3W8lMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 07:53:57 -0700
-IronPort-SDR: 8ETeAVtoSYMA43db23qetcezChvupW5d/MOYb+LcSrr6k/pIV2RwyqAHZSpqC3QdHWLcEvJAXD
- 0p5mi5Yv8yeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
-   d="scan'208";a="471444497"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga006.fm.intel.com with ESMTP; 04 Jun 2020 07:53:57 -0700
-Date:   Thu, 4 Jun 2020 07:53:57 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: nVMX: Inject #GP when nested_vmx_get_vmptr() fails
- to read guest memory
-Message-ID: <20200604145357.GA30223@linux.intel.com>
-References: <20200604143158.484651-1-vkuznets@redhat.com>
- <da7acd6f-204d-70e2-52aa-915a4d9163ef@redhat.com>
+        Thu, 4 Jun 2020 10:56:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbgFDO4o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 10:56:44 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F6EC08C5C5
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 07:56:43 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so3548699pgv.8
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B0VRWP1UqHBzaSQ/0VAH8ROzdZmpnLpk8DQEvJRbm6g=;
+        b=S90pbrXYQvAWuisADwIVqFJze1Gn3O7VI3b7ci34HlxsFIiSm55Agl3HtXdIfOtlj1
+         kFuWBlQoujZfnla0pnjl4P9hL71UlfgA047f6CDtcKWtqp78Vi3ktMNpDFcArsvn0Aa4
+         7gBNWjkF+L6ja8DfU5D6aFyeEosVd+IcgieMM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B0VRWP1UqHBzaSQ/0VAH8ROzdZmpnLpk8DQEvJRbm6g=;
+        b=ELBju6PG6b1Lg1ObYXXdAGjlL28vGnk1Wu5m5QZf6rO8kHoykKng7Cqk6KLxoakGFL
+         R+jHf0lTpyFAzku1P58Nas4GuRR73D17mKq9ZXDCc3E8HlntpMBPprpdmeXqQOmDoPVV
+         DOpBYX6yKNluGCFq31C45Pc8u18MlCSv4TJG/RYozdI7DafubDl3CNEW9iKFS/DKiUxA
+         l9YRqJY3l99sAnwNZ2yPzDxqD9/fss9pfX51TN7K6qJ7mpMwOKCHEgXoKcGaF3Wwcod+
+         ngDNUtJQdrZY/p6fKWT1CJONuyahMhJee227liVhG0xUNiUAx/88h8zBSLDWhIh4+8De
+         O+Gw==
+X-Gm-Message-State: AOAM530KFTQoKeqWKbBjquMLyCTmUZWcMsX3/ICQj5lP9/jn/MnVaArp
+        sQM0HyWD7tiMKMTwJKoW+nVijw==
+X-Google-Smtp-Source: ABdhPJwHMeBMoXoJ1oKRiY6CcT/MXQQ3/6BvMK96dAo5+DFFc+3InZktMIE/4pit2W9doT6CJHJfvw==
+X-Received: by 2002:a63:de18:: with SMTP id f24mr4660948pgg.415.1591282602661;
+        Thu, 04 Jun 2020 07:56:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y10sm4390985pgi.54.2020.06.04.07.56.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 07:56:41 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 07:56:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 01/10] x86/mm/numa: Remove uninitialized_var() usage
+Message-ID: <202006040745.525ECD1@keescook>
+References: <20200603233203.1695403-2-keescook@chromium.org>
+ <874krr8dps.fsf@nanos.tec.linutronix.de>
+ <CANiq72kLqvriYmMkdD3yU+xJwbn-68Eiu-fTNtC+Lb+1ZRM75g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <da7acd6f-204d-70e2-52aa-915a4d9163ef@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CANiq72kLqvriYmMkdD3yU+xJwbn-68Eiu-fTNtC+Lb+1ZRM75g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 04:40:52PM +0200, Paolo Bonzini wrote:
-> On 04/06/20 16:31, Vitaly Kuznetsov wrote:
-
-...
-
-> > KVM could've handled the request correctly by going to userspace and
-> > performing I/O but there doesn't seem to be a good need for such requests
-> > in the first place. Sane guests should not call VMXON/VMPTRLD/VMCLEAR with
-> > anything but normal memory. Just inject #GP to find insane ones.
-> > 
-> > Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
-> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > ---
-> >  arch/x86/kvm/vmx/nested.c | 19 +++++++++++++++++--
-> >  1 file changed, 17 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index 9c74a732b08d..05d57c3cb1ce 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -4628,14 +4628,29 @@ static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
-> >  {
-> >  	gva_t gva;
-> >  	struct x86_exception e;
-> > +	int r;
-> >  
-> >  	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
-> >  				vmcs_read32(VMX_INSTRUCTION_INFO), false,
-> >  				sizeof(*vmpointer), &gva))
-> >  		return 1;
-> >  
-> > -	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
-> > -		kvm_inject_emulated_page_fault(vcpu, &e);
-> > +	r = kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
-> > +	if (r != X86EMUL_CONTINUE) {
-> > +		if (r == X86EMUL_PROPAGATE_FAULT) {
-> > +			kvm_inject_emulated_page_fault(vcpu, &e);
-> > +		} else {
-> > +			/*
-> > +			 * X86EMUL_IO_NEEDED is returned when kvm_vcpu_read_guest_page()
-> > +			 * fails to read guest's memory (e.g. when 'gva' points to MMIO
-> > +			 * space). While KVM could've handled the request correctly by
-> > +			 * exiting to userspace and performing I/O, there doesn't seem
-> > +			 * to be a real use-case behind such requests, just inject #GP
-> > +			 * for now.
-> > +			 */
-> > +			kvm_inject_gp(vcpu, 0);
-> > +		}
-> > +
-> >  		return 1;
-> >  	}
-> >  
-> > 
+On Thu, Jun 04, 2020 at 01:41:07PM +0200, Miguel Ojeda wrote:
+> On Thu, Jun 4, 2020 at 9:58 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > but if we ever lose the 1 then the above will silently compile the code
+> > within the IS_ENABLED() section out.
 > 
-> Hi Vitaly,
-> 
-> looks good but we need to do the same in handle_vmread, handle_vmwrite,
-> handle_invept and handle_invvpid.  Which probably means adding something
-> like nested_inject_emulation_fault to commonize the inner "if".
+> Yeah, I believe `IS_ENABLED()` is only meant for Kconfig symbols, not
+> macro defs in general. A better option would be `__is_defined()` which
+> works for defined-to-nothing too.
 
-Can we just kill the guest already instead of throwing more hacks at this
-and hoping something sticks?  We already have one in
-kvm_write_guest_virt_system...
+Er? That's not what it looked like to me:
 
-  commit 541ab2aeb28251bf7135c7961f3a6080eebcc705
-  Author: Fuqian Huang <huangfq.daxian@gmail.com>
-  Date:   Thu Sep 12 12:18:17 2019 +0800
+#define IS_BUILTIN(option) __is_defined(option)
+#define IS_ENABLED(option) __or(IS_BUILTIN(option), IS_MODULE(option))
 
-    KVM: x86: work around leak of uninitialized stack contents
+But just to be sure, I just tested in with a real build:
 
-    Emulation of VMPTRST can incorrectly inject a page fault
-    when passed an operand that points to an MMIO address.
-    The page fault will use uninitialized kernel stack memory
-    as the CR2 and error code.
+[    3.242160] IS_ENABLED(TEST_UNDEF) false
+[    3.242691] __is_defined(TEST_UNDEF) false
+[    3.243240] IS_ENABLED(TEST_VALUE_EMPTY) false
+[    3.243794] __is_defined(TEST_VALUE_EMPTY) false
+[    3.244353] IS_ENABLED(TEST_VALUE_1) true
+[    3.244848] __is_defined(TEST_VALUE_1) true
 
-    The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
-    exit to userspace; however, it is not an easy fix, so for now just ensure
-    that the error code and CR2 are zero.
+and nope, it only works with a defined value present.
 
+diff --git a/init/main.c b/init/main.c
+index 03371976d387..378a9e54b6dc 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1406,6 +1406,34 @@ static int __ref kernel_init(void *unused)
+ 	 */
+ 	pti_finalize();
+ 
++#undef TEST_UNDEF
++	if (IS_ENABLED(TEST_UNDEF))
++		pr_info("IS_ENABLED(TEST_UNDEF) true\n");
++	else
++		pr_info("IS_ENABLED(TEST_UNDEF) false\n");
++	if (__is_defined(TEST_UNDEF))
++		pr_info("__is_defined(TEST_UNDEF) true\n");
++	else
++		pr_info("__is_defined(TEST_UNDEF) false\n");
++#define TEST_VALUE_EMPTY
++	if (IS_ENABLED(TEST_VALUE_EMPTY))
++		pr_info("IS_ENABLED(TEST_VALUE_EMPTY) true\n");
++	else
++		pr_info("IS_ENABLED(TEST_VALUE_EMPTY) false\n");
++	if (__is_defined(TEST_VALUE_EMPTY))
++		pr_info("__is_defined(TEST_VALUE_EMPTY) true\n");
++	else
++		pr_info("__is_defined(TEST_VALUE_EMPTY) false\n");
++#define TEST_VALUE_1 1
++	if (IS_ENABLED(TEST_VALUE_1))
++		pr_info("IS_ENABLED(TEST_VALUE_1) true\n");
++	else
++		pr_info("IS_ENABLED(TEST_VALUE_1) false\n");
++	if (__is_defined(TEST_VALUE_1))
++		pr_info("__is_defined(TEST_VALUE_1) true\n");
++	else
++		pr_info("__is_defined(TEST_VALUE_1) false\n");
++
+ 	system_state = SYSTEM_RUNNING;
+ 	numa_default_policy();
+ 
+
+which means a few other __is_defined() users are not correct too...
+
+-- 
+Kees Cook
