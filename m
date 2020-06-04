@@ -2,179 +2,235 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5248C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD66C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F25120657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591237272;
-	bh=ljZJBP9TOy6zclauyGJJVEZVNuk2SzD9kS/pIodTVNI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=er6bJ5Ufmt4h+XRqvOrjj9a+GPs/UJ/6DP2EKPf8q0PLo2Imt9gUNtK1HoxiDiZ70
-	 /GrFYB5pOR3fFkCIPm0Y0S2hD7SrH+GEIlQdb+tADb3GdtbyGF10/xq82wXb3wJPQz
-	 NKm4pnwWMbeMwJwX7wt4cBD0AAnhc7qNEmhJvUgo=
+	by mail.kernel.org (Postfix) with ESMTP id B3C5020657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 02:23:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qn2BQw97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgFDCVH (ORCPT
+        id S1726864AbgFDCXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 22:21:07 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:37617 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgFDCVH (ORCPT
+        Wed, 3 Jun 2020 22:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgFDCXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 22:21:07 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 0542KXGU019289;
-        Thu, 4 Jun 2020 11:20:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 0542KXGU019289
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591237234;
-        bh=T9r/TRCaX0W970ulkmT2ASlHD4cDKaD1gWaMUEyt/Ac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wK7zqBC0TshFIPuPAEipGKnbPJPDjBncCmz19ZsnDjbUEkOobX5gmwnUGrPLKGVSP
-         nKHHl77DVIhSPWQ+X/1twD+ki+VfknNqK4mvHz1XZNNAZPS6/fWrFQk/Y3QG3qleVF
-         oc/48N+P6+PAh9y2Xy3MIjOPY9xwyH/8/dOXKzmNjd1Vp3GtyX+DqQXjRLmqgHAJk8
-         mU3jigHEdrkPCiF1lJxTfpDM8NoVJobZ5pnNjJIm6YYA6netzDmSidDNIcS9OLE+Qn
-         UFAlWIizXKfSE2oQaZihufME/WSqShdcItC9E5aQLx5wahDJHEF+CD7wYH9I8+1iit
-         qysGFSiGxOHYw==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] efi/libstub: refactor Makefile to not use lib-y syntax
-Date:   Thu,  4 Jun 2020 11:20:31 +0900
-Message-Id: <20200604022031.164207-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200604022031.164207-1-masahiroy@kernel.org>
-References: <20200604022031.164207-1-masahiroy@kernel.org>
+        Wed, 3 Jun 2020 22:23:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD0EC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 19:22:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nm22so411994pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 19:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Yipjb/nJ+PoPYGY3bQlr0vEC5GDtsZwp9TVgxD0rnGk=;
+        b=Qn2BQw97F7bIZrtjDlecVedaFxpvLQXfHqx5ZIkhrdMftq1Uzxuvb3gxbs04al8f6z
+         dUNJTwOCuq0f5AzUIWaq/boxSUbsE7CQq5poZsErcM9jbnlKvwg3ugwzZmw6UY051thR
+         aeypVbCcCPa33vgHBqM+4kc/3K8/7P1pLFmH0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yipjb/nJ+PoPYGY3bQlr0vEC5GDtsZwp9TVgxD0rnGk=;
+        b=eNnU0vicC6qql6vTPBop6JDUMdHhq0v2N2kooHLxXcKafZlRiyAHZyejuX8ZBEMI4K
+         fRj7eI8sHOITyYeRre6X8H8gBE0W12FjT8nuOPvuFh19ZYgtChPqSVSQjmiVcD92lAOS
+         Hl90fqWwNfYUL6ky5rvb8y9d222bSo/uRDqtqcOVGPer1/NKs+Ucr+p91Dhk5H+Qo/BT
+         c1SNp22gUGUEC5zUO75/Gle5+MTL1X8AnDCx3MwoDWCXP/7aNGMC91iqoXLUBL14cNLr
+         EA8Xxm5Iq1LEtgKZbh9RUiBvV/dQbnEEhwZjb/ztgc6wdG4yuFoPEdTtvTG1HkEdSguJ
+         Q/Xw==
+X-Gm-Message-State: AOAM533vfl6qXUMqBksTaK+mfgeI/ypTD0Im8q4RI1+V9LJNPpaTgn+3
+        4TzsqsNRFEMe+GiB6CWTozk3Mg==
+X-Google-Smtp-Source: ABdhPJyecMU8uoaQFlZIapME+iRHy6MQjiZHyGdWTsN1FsR15QCal3RaNi3fnZYfnzICd0tiI8+uGQ==
+X-Received: by 2002:a17:90a:4d4e:: with SMTP id l14mr3326764pjh.10.1591237379271;
+        Wed, 03 Jun 2020 19:22:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y6sm3106283pfp.144.2020.06.03.19.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 19:22:58 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 19:22:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        containers@lists.linux-foundation.org,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Daniel Wagner <daniel.wagner@bmw-carit.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Fastabend <john.r.fastabend@intel.com>,
+        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] fs, net: Standardize on file_receive helper to
+ move fds across processes
+Message-ID: <202006031845.F587F85A@keescook>
+References: <20200603011044.7972-1-sargun@sargun.me>
+ <20200603011044.7972-2-sargun@sargun.me>
+ <20200604012452.vh33nufblowuxfed@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604012452.vh33nufblowuxfed@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation/kbuild/makefiles.rst says:
+On Thu, Jun 04, 2020 at 03:24:52AM +0200, Christian Brauner wrote:
+> On Tue, Jun 02, 2020 at 06:10:41PM -0700, Sargun Dhillon wrote:
+> > Previously there were two chunks of code where the logic to receive file
+> > descriptors was duplicated in net. The compat version of copying
+> > file descriptors via SCM_RIGHTS did not have logic to update cgroups.
+> > Logic to change the cgroup data was added in:
+> > commit 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+> > commit d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+> > 
+> > This was not copied to the compat path. This commit fixes that, and thus
+> > should be cherry-picked into stable.
+> > 
+> > This introduces a helper (file_receive) which encapsulates the logic for
+> > handling calling security hooks as well as manipulating cgroup information.
+> > This helper can then be used other places in the kernel where file
+> > descriptors are copied between processes
+> > 
+> > I tested cgroup classid setting on both the compat (x32) path, and the
+> > native path to ensure that when moving the file descriptor the classid
+> > is set.
+> > 
+> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > Suggested-by: Kees Cook <keescook@chromium.org>
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> > Cc: Daniel Wagner <daniel.wagner@bmw-carit.de>
+> > Cc: David S. Miller <davem@davemloft.net>
+> > Cc: Jann Horn <jannh@google.com>,
+> > Cc: John Fastabend <john.r.fastabend@intel.com>
+> > Cc: Tejun Heo <tj@kernel.org>
+> > Cc: Tycho Andersen <tycho@tycho.ws>
+> > Cc: stable@vger.kernel.org
+> > Cc: cgroups@vger.kernel.org
+> > Cc: linux-fsdevel@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  fs/file.c            | 35 +++++++++++++++++++++++++++++++++++
+> >  include/linux/file.h |  1 +
+> >  net/compat.c         | 10 +++++-----
+> >  net/core/scm.c       | 14 ++++----------
+> >  4 files changed, 45 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/fs/file.c b/fs/file.c
+> > index abb8b7081d7a..5afd76fca8c2 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -18,6 +18,9 @@
+> >  #include <linux/bitops.h>
+> >  #include <linux/spinlock.h>
+> >  #include <linux/rcupdate.h>
+> > +#include <net/sock.h>
+> > +#include <net/netprio_cgroup.h>
+> > +#include <net/cls_cgroup.h>
+> >  
+> >  unsigned int sysctl_nr_open __read_mostly = 1024*1024;
+> >  unsigned int sysctl_nr_open_min = BITS_PER_LONG;
+> > @@ -931,6 +934,38 @@ int replace_fd(unsigned fd, struct file *file, unsigned flags)
+> >  	return err;
+> >  }
+> >  
+> > +/*
+> > + * File Receive - Receive a file from another process
+> > + *
+> > + * This function is designed to receive files from other tasks. It encapsulates
+> > + * logic around security and cgroups. The file descriptor provided must be a
+> > + * freshly allocated (unused) file descriptor.
+> > + *
+> > + * This helper does not consume a reference to the file, so the caller must put
+> > + * their reference.
+> > + *
+> > + * Returns 0 upon success.
+> > + */
+> > +int file_receive(int fd, struct file *file)
+> 
+> This is all just a remote version of fd_install(), yet it deviates from
+> fd_install()'s semantics and naming. That's not great imho. What about
+> naming this something like:
+> 
+> fd_install_received()
+> 
+> and move the get_file() out of there so it has the same semantics as
+> fd_install(). It seems rather dangerous to have a function like
+> fd_install() that consumes a reference once it returned and another
+> version of this that is basically the same thing but doesn't consume a
+> reference because it takes its own. Seems an invitation for confusion.
+> Does that make sense?
 
-  Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
+We have some competing opinions on this, I guess. What I really don't
+like is the copy/pasting of the get_unused_fd_flags() and
+put_unused_fd() needed by (nearly) all the callers. If it's a helper, it
+should help. Specifically, I'd like to see this:
 
-This is because lib-y is inteded to be hooked to KBUILD_VMLINUX_LIBS,
-which is passed down to scripts/link-vmlinux.sh.
+int file_receive(int fd, unsigned long flags, struct file *file,
+		 int __user *fdptr)
+{
+	struct socket *sock;
+	int err;
 
-Besides, lib-y is not so interesting because objects from lib-y are
-mostly linked in normal usecases. For example, lib-y only saves 364
-bytes for x86_64_defconfig. You can see the details in commit
-7273ad2b08f8 ("kbuild: link lib-y objects to vmlinux forcibly when
-CONFIG_MODULES=y").
+	err = security_file_receive(file);
+	if (err)
+		return err;
 
-I think we should consider to deprecate lib-y syntax at some point
-because we should aim for better solution like dead code elimination
-or LTO.
+	if (fd < 0) {
+		/* Install new fd. */
+		int new_fd;
 
-Other than lib/ and arch/*/lib, this Makefile is the only user of
-lib-y. Replace lib-y with a custom rule.
+		err = get_unused_fd_flags(flags);
+		if (err < 0)
+			return err;
+		new_fd = err;
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+		/* Copy fd to any waiting user memory. */
+		if (fdptr) {
+			err = put_user(new_fd, fdptr);
+			if (err < 0) {
+				put_unused_fd(new_fd);
+				return err;
+			}
+		}
+		fd_install(new_fd, get_file(file));
+		fd = new_fd;
+	} else {
+		/* Replace existing fd. */
+		err = replace_fd(fd, file, flags);
+		if (err)
+			return err;
+	}
 
-Changes in v2:
-  - Add more description
+	/* Bump the cgroup usage counts. */
+	sock = sock_from_file(fd, &err);
+	if (sock) {
+		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+		sock_update_classid(&sock->sk->sk_cgrp_data);
+	}
 
- drivers/firmware/efi/libstub/Makefile | 49 +++++++++++++++------------
- 1 file changed, 27 insertions(+), 22 deletions(-)
+	return fd;
+}
 
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index cce4a7436052..7d81dc45cadf 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -44,7 +44,7 @@ OBJECT_FILES_NON_STANDARD	:= y
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
- KCOV_INSTRUMENT			:= n
- 
--lib-y				:= efi-stub-helper.o gop.o secureboot.o tpm.o \
-+stub-obj-y			:= efi-stub-helper.o gop.o secureboot.o tpm.o \
- 				   file.o mem.o random.o randomalloc.o pci.o \
- 				   skip_spaces.o lib-cmdline.o lib-ctype.o \
- 				   alignedmem.o relocate.o vsprintf.o
-@@ -55,15 +55,19 @@ efi-deps-y := fdt_rw.c fdt_ro.c fdt_wip.c fdt.c fdt_empty_tree.c fdt_sw.c
- $(obj)/lib-%.o: $(srctree)/lib/%.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
--lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o fdt.o string.o \
-+stub-obj-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o fdt.o string.o \
- 				   $(patsubst %.c,lib-%.o,$(efi-deps-y))
- 
--lib-$(CONFIG_ARM)		+= arm32-stub.o
--lib-$(CONFIG_ARM64)		+= arm64-stub.o
--lib-$(CONFIG_X86)		+= x86-stub.o
-+stub-obj-$(CONFIG_ARM)		+= arm32-stub.o
-+stub-obj-$(CONFIG_ARM64)	+= arm64-stub.o
-+stub-obj-$(CONFIG_X86)		+= x86-stub.o
- CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- 
-+targets				+= $(stub-obj-y)
-+stub-obj-y			:= $(patsubst %.o,%.stub.o, $(stub-obj-y))
-+targets				+= $(stub-obj-y)
-+
- #
- # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
- # .bss section, so the .bss section of the EFI stub needs to be included in the
-@@ -83,23 +87,6 @@ STUBCOPY_FLAGS-$(CONFIG_ARM)	+= --rename-section .data=.data.efistub	\
- 				   --rename-section .bss=.bss.efistub,load,alloc
- STUBCOPY_RELOC-$(CONFIG_ARM)	:= R_ARM_ABS
- 
--#
--# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
--# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
--# So let's apply the __init annotations at the section level, by prefixing
--# the section names directly. This will ensure that even all the inline string
--# literals are covered.
--# The fact that the stub and the kernel proper are essentially the same binary
--# also means that we need to be extra careful to make sure that the stub does
--# not rely on any absolute symbol references, considering that the virtual
--# kernel mapping that the linker uses is not active yet when the stub is
--# executing. So build all C dependencies of the EFI stub into libstub, and do
--# a verification pass to see if any absolute relocations exist in any of the
--# object files.
--#
--extra-y				:= $(lib-y)
--lib-y				:= $(patsubst %.o,%.stub.o,$(lib-y))
--
- STUBCOPY_FLAGS-$(CONFIG_ARM64)	+= --prefix-alloc-sections=.init \
- 				   --prefix-symbols=__efistub_
- STUBCOPY_RELOC-$(CONFIG_ARM64)	:= R_AARCH64_ABS
-@@ -121,3 +108,21 @@ quiet_cmd_stubcopy = STUBCPY $@
- 		/bin/false;						\
- 	fi;								\
- 	$(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
-+
-+# arm64 puts the stub in the kernel proper, which will unnecessarily retain all
-+# code indefinitely unless it is annotated as __init/__initdata/__initconst etc.
-+# So let's apply the __init annotations at the section level, by prefixing
-+# the section names directly. This will ensure that even all the inline string
-+# literals are covered.
-+# The fact that the stub and the kernel proper are essentially the same binary
-+# also means that we need to be extra careful to make sure that the stub does
-+# not rely on any absolute symbol references, considering that the virtual
-+# kernel mapping that the linker uses is not active yet when the stub is
-+# executing. So build all C dependencies of the EFI stub into libstub, and do
-+# a verification pass to see if any absolute relocations exist in any of the
-+# object files.
-+#
-+extra-y += lib.a
-+
-+$(obj)/lib.a: $(addprefix $(obj)/, $(stub-obj-y)) FORCE
-+	$(call if_changed,ar)
+If everyone else *really* prefers keeping the get_unused_fd_flags() /
+put_unused_fd() stuff outside the helper, then I guess I'll give up,
+but I think it is MUCH cleaner this way -- all 4 users trim down lots
+of code duplication.
+
 -- 
-2.25.1
-
+Kees Cook
