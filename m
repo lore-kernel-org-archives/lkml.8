@@ -2,93 +2,123 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1491206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E068C2067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="l4b8g311"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FFgTe2AK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgFDDCH (ORCPT
+        id S1727025AbgFDDFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:02:07 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:16223 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725992AbgFDDCH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:02:07 -0400
-X-UUID: be76835fb3214aa3b7f98be91c9e5e1e-20200604
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UrOXbDNOnHiFKXtwaHVgzKiUKHi9PYwsXdkt9BWMTQ0=;
-        b=l4b8g311ij1osd5rrSxatQoejISeR2FIM9I2BLjH5Z/lF5w8CdMBFRPcBp84q2OS4CxL9M56MOPd2wPBOp9D/552vfvJTfOKfHr0KlZa+rg9vZY3kxhFE+KCSJJutYqimi5pgAKHP6lUDwhjwveUlVkudm8n9bE0Ve4NyvBLQJA=;
-X-UUID: be76835fb3214aa3b7f98be91c9e5e1e-20200604
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 493531536; Thu, 04 Jun 2020 11:02:05 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 4 Jun 2020 11:02:03 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Jun 2020 11:02:03 +0800
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v4] usb: host: xhci-mtk: avoid runtime suspend when removing hcd
-Date:   Thu, 4 Jun 2020 11:01:53 +0800
-Message-ID: <1591239713-5081-1-git-send-email-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1591189767-21988-1-git-send-email-macpaul.lin@mediatek.com>
-References: <1591189767-21988-1-git-send-email-macpaul.lin@mediatek.com>
+        Wed, 3 Jun 2020 23:05:04 -0400
+Received: from ozlabs.org ([203.11.71.1]:50355 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbgFDDFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 23:05:03 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49crHK1n9tz9sSc;
+        Thu,  4 Jun 2020 13:05:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591239901;
+        bh=oFVbgP1R1QPEnlBkINM2rOnIrnrRGtuWrg9EHyvWszI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FFgTe2AKhcGRnvFcCuhH4ohzoilYpjIoTU2muryt4T7fp64RfpY1RF9J6vmWUG6/3
+         wy8vwjjPapK6dB9uL9IimiYZXHjDYmArMMrQTENelXFvs3A9fJTD71y1SMdZPtmgW9
+         a+UkTF4W1RCMDYyMXyLtk1vFTbA/s34c4DDPE11RIL4bVgqpacxBV5Wbbai5tFHkL3
+         5EoQtgsoYZopxQrMqQggf5LQvGSP3Hiq9TPp+FUOIYHC1eaZVC1L60jJFXJeZyuzvD
+         F0ad2WkwlJ4tX1c/21lhF/cl7qwXTjI7i24DreQEN8CdhQnP2/YicmZrD7XCNTpiLk
+         tZhQNz8OiwLFw==
+Date:   Thu, 4 Jun 2020 13:05:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: linux-next: manual merge of the kvm tree with the s390 tree
+Message-ID: <20200604130500.5b42014e@canb.auug.org.au>
+In-Reply-To: <20200529164613.526f5865@canb.auug.org.au>
+References: <20200529164613.526f5865@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: B6818B62397C1B7303376C105A3A0368FFDDA6D0DA11CA08A9A0942B6D3722342000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="Sig_/FodOnekiCk/xymcSjgVI_zB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2hlbiBydW50aW1lIHN1c3BlbmQgd2FzIGVuYWJsZWQsIHJ1bnRpbWUgc3VzcGVuZCBtaWdodCBo
-YXBwZW4NCndoZW4geGhjaSBpcyByZW1vdmluZyBoY2QuIFRoaXMgbWlnaHQgY2F1c2Uga2VybmVs
-IHBhbmljIHdoZW4gaGNkDQpoYXMgYmVlbiBmcmVlZCBidXQgcnVudGltZSBwbSBzdXNwZW5kIHJl
-bGF0ZWQgaGFuZGxlIG5lZWQgdG8NCnJlZmVyZW5jZSBpdC4NCg0KU2lnbmVkLW9mZi1ieTogTWFj
-cGF1bCBMaW4gPG1hY3BhdWwubGluQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBDaHVuZmVu
-ZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQpDYzogc3RhYmxlQHZnZXIua2VybmVs
-Lm9yZw0KLS0tDQpDaGFuZ2VzIGZvciB2MzoNCiAgLSBSZXBsYWNlIGJldHRlciBzZXF1ZW5jZSBm
-b3IgZGlzYWJsaW5nIHRoZSBwbV9ydW50aW1lIHN1c3BlbmQuDQpDaGFuZ2VzIGZvciB2NDoNCiAg
-LSBUaGFua3MgZm9yIFNlcmdlaSdzIHJldmlldywgdHlwbyBpbiBjb21taXQgZGVzY3JpcHRpb24g
-aGFzIGJlZW4gY29ycmVjdGVkLg0KDQogZHJpdmVycy91c2IvaG9zdC94aGNpLW10ay5jIHwgICAg
-NSArKystLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMgYi9kcml2ZXJzL3Vz
-Yi9ob3N0L3hoY2ktbXRrLmMNCmluZGV4IGJmYmRiM2MuLjY0MWQyNGUgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMNCisrKyBiL2RyaXZlcnMvdXNiL2hvc3QveGhjaS1t
-dGsuYw0KQEAgLTU4Nyw2ICs1ODcsOSBAQCBzdGF0aWMgaW50IHhoY2lfbXRrX3JlbW92ZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpDQogCXN0cnVjdCB4aGNpX2hjZAkqeGhjaSA9IGhjZF90
-b194aGNpKGhjZCk7DQogCXN0cnVjdCB1c2JfaGNkICAqc2hhcmVkX2hjZCA9IHhoY2ktPnNoYXJl
-ZF9oY2Q7DQogDQorCXBtX3J1bnRpbWVfcHV0X25vaWRsZSgmZGV2LT5kZXYpOw0KKwlwbV9ydW50
-aW1lX2Rpc2FibGUoJmRldi0+ZGV2KTsNCisNCiAJdXNiX3JlbW92ZV9oY2Qoc2hhcmVkX2hjZCk7
-DQogCXhoY2ktPnNoYXJlZF9oY2QgPSBOVUxMOw0KIAlkZXZpY2VfaW5pdF93YWtldXAoJmRldi0+
-ZGV2LCBmYWxzZSk7DQpAQCAtNTk3LDggKzYwMCw2IEBAIHN0YXRpYyBpbnQgeGhjaV9tdGtfcmVt
-b3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikNCiAJeGhjaV9tdGtfc2NoX2V4aXQobXRr
-KTsNCiAJeGhjaV9tdGtfY2xrc19kaXNhYmxlKG10ayk7DQogCXhoY2lfbXRrX2xkb3NfZGlzYWJs
-ZShtdGspOw0KLQlwbV9ydW50aW1lX3B1dF9zeW5jKCZkZXYtPmRldik7DQotCXBtX3J1bnRpbWVf
-ZGlzYWJsZSgmZGV2LT5kZXYpOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQotLSANCjEuNy45LjUNCg==
+--Sig_/FodOnekiCk/xymcSjgVI_zB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
+
+On Fri, 29 May 2020 16:46:13 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the kvm tree got a conflict in:
+>=20
+>   arch/s390/kvm/vsie.c
+>=20
+> between commit:
+>=20
+>   0b0ed657fe00 ("s390: remove critical section cleanup from entry.S")
+>=20
+> from the s390 tree and commit:
+>=20
+>   d075fc3154be ("KVM: s390: vsie: Move conditional reschedule")
+>=20
+> from the kvm tree.
+>=20
+> diff --cc arch/s390/kvm/vsie.c
+> index 4fde24a1856e,ef05b4e167fb..000000000000
+> --- a/arch/s390/kvm/vsie.c
+> +++ b/arch/s390/kvm/vsie.c
+> @@@ -1000,9 -1000,9 +1000,6 @@@ static int do_vsie_run(struct kvm_vcpu=20
+>  =20
+>   	handle_last_fault(vcpu, vsie_page);
+>  =20
+> - 	if (need_resched())
+> - 		schedule();
+>  -	if (test_cpu_flag(CIF_MCCK_PENDING))
+>  -		s390_handle_mcck();
+> --
+>   	srcu_read_unlock(&vcpu->kvm->srcu, vcpu->srcu_idx);
+>  =20
+>   	/* save current guest state of bp isolation override */
+
+This is now a conflict between the s390 tree and Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FodOnekiCk/xymcSjgVI_zB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7YZNwACgkQAVBC80lX
+0GwPsQf8CGKbVZ9HGrBHINGGEjuVqGkVwhAjRIZg4ZZ/n9+3Z8hPV7vCWLy3e718
+WmfsLjzh+xgKk0ixJSkwMU6MiRanKRhRpRfU4am7SsySn3XlzR8IKzhUWQhIEh90
+pA7DguWdEhRi3wlWbWkWzQm+MZgAHIq6WdQu93GZOK8F5YVAPylsxNfJE5eCzDMf
+R9roXewRjjn+jW9wLPzOwLuH5QfA0Nd6DBpd1zGqzJKuxLfKjKPVPVRw5FX9XXrg
+8gS5pkChS59bp4PXBPaH+vflqRk+OjafXEfZtnEaqXiCQ1U7JthA2UHOEnnABrUu
+G5fNnFXHhVwY3YvNeIxTxULrnlh2kg==
+=RTlh
+-----END PGP SIGNATURE-----
+
+--Sig_/FodOnekiCk/xymcSjgVI_zB--
