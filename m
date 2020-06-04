@@ -2,62 +2,181 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C018E2065C
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7954E2065C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:16:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpIhailS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgFDJQX (ORCPT
+        id S1727898AbgFDJQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:16:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50906 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbgFDJQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:16:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 51022AB87;
-        Thu,  4 Jun 2020 09:16:25 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 11:16:19 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] iommu: Don't attach deferred device in
- iommu_group_do_dma_attach
-Message-ID: <20200604091619.GO6857@suse.de>
-References: <20200604073142.74701-1-jsnitsel@redhat.com>
+        Thu, 4 Jun 2020 05:16:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgFDJQe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:16:34 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45607C03E96D
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:16:34 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id y13so2576063ybj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 02:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZ/1OA1lIfkBZzGhY/7MgoW8R4VpB8ChGNgUuwxq9eI=;
+        b=lpIhailSAHTDLeRhiB9ZtjJ0QiY2pjYaNPivllIVOQxUjafhECX7wzRtPm4wt7ocGZ
+         yIbe1HyFhPgCisQUbqfx4i5UTJ5spb9z0ySzBeeyPv+gXmwFG3ZYC5kRwNQZxS+D+UZI
+         IMiV4/wQ2SnGXxUM6FCEj+n7rkLfLw9Z29pOzfpC+U+ceurlbYVa3XM5eQMD+mLTtp1U
+         YRXfrfrG+RfHNQvtuSIfDBxFFe1Ep8fBxsXs5+t9LnbPCo+SYJ6fRBE+r+MMyW12hmw6
+         KRVkpIYXpAX8/yW8Ywf2uKYpf2mAW8DZwzfMfFsI1F2qMHFeFIsnQG0cc0xzdfsQogyL
+         JyLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZ/1OA1lIfkBZzGhY/7MgoW8R4VpB8ChGNgUuwxq9eI=;
+        b=nU3lKUR9f034JEp8pp6Z6fPKC/rfnacVhI+lkpsjbWfDGlq7dORL9HFlAJchmFYiq7
+         M53NAs76Sw4mhBhpNhevxLjRii8nA1VH+CCD6DecOTM0axlP74g9VXeAOx4s3lfzd2Ma
+         vwjvXTNeqlRzp5qIQ7A5yHqPdlx9wb/zRpozvXoBvPszuq4qiZbocEAv40N4/dOLejrB
+         fim3Gjz2JXpn5JdjzkJhhGKIGftkF+nJtF+kw+SIIQU8/UH6dDSBkH6Zy7/+bjUOwOHn
+         09SgGNlv5hN+ZvVCK51m0kwcMsjxtT0jADOduyKnsJlONvLZrMSF9a1l90bhdm/twzeA
+         x3Lw==
+X-Gm-Message-State: AOAM530nwD3ikJkd74emqaowO9PDG8pK+qne7W+ZIbPRWIDUz7oskurf
+        Yg/kVl4ytQ9rgeFXYz0JPr3JCAZgZnfFHUM4cZC2pA==
+X-Google-Smtp-Source: ABdhPJznz7G/EiOx2AkWCjZzyX47+72QghNX17aKbkdplodgFQ31LTBq32m8EB6m6azYa8JVUqYhyHay+txWPeD0zw0=
+X-Received: by 2002:a5b:345:: with SMTP id q5mr6093715ybp.494.1591262192787;
+ Thu, 04 Jun 2020 02:16:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604073142.74701-1-jsnitsel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200601150645.13412-1-maxim.uvarov@linaro.org>
+ <20200601150645.13412-2-maxim.uvarov@linaro.org> <20200604083655.GA4026@linux.intel.com>
+In-Reply-To: <20200604083655.GA4026@linux.intel.com>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Thu, 4 Jun 2020 12:16:21 +0300
+Message-ID: <CAD8XO3b4K6ozHwKf2NDJ482JQY6CPXKKxRuZgo5snP16i_5E=Q@mail.gmail.com>
+Subject: Re: [PATCHv6 1/3] optee: use uuid for sysfs driver entry
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de, Jason Gunthorpe <jgg@ziepe.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerry,
+On Thu, 4 Jun 2020 at 11:37, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Mon, Jun 01, 2020 at 06:06:43PM +0300, Maxim Uvarov wrote:
+> > With the evolving use-cases for TEE bus, now it's required to support
+> > multi-stage enumeration process. But using a simple index doesn't
+> > suffice this requirement and instead leads to duplicate sysfs entries.
+> > So instead switch to use more informative device UUID for sysfs entry
+> > like:
+> > /sys/bus/tee/devices/optee-ta-<uuid>
+> >
+> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> > Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> Why do you mean by duplicate sysfs entries?
+>
 
-On Thu, Jun 04, 2020 at 12:31:42AM -0700, Jerry Snitselaar wrote:
-> Attaching a deferred device should be delayed until dma api is called.
-> 
-> Cc: iommu@lists.linux-foundation.org
-> Suggested-by: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> ---
-> If you already have thrown a patch together, then ignore this. Also
-> feel free to swap out the signed-off-by with your's since
-> this is more your patch than mine. You can put a reviewed-by
-> and tested-by instead for me.
+Without this change it will try to register something like that:
+first stage w/o tee-supplicant:
+/sys/bus/tee/devices/optee-clnt0
+/sys/bus/tee/devices/optee-clnt1
+/sys/bus/tee/devices/optee-clnt3
+Then with tee-supplicant also index started with 0. I.e.
+/sys/bus/tee/devices/optee-clnt0
+/sys/bus/tee/devices/optee-clnt1
+...
 
-Yeah, I already have a patch, just not sent out yet. I updated it with
-your tags and will send it out shortly.
+So we need to increase global index or use some other unique names.
+
+
+
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+> >  MAINTAINERS                                       | 1 +
+> >  drivers/tee/optee/device.c                        | 6 +++---
+> >  3 files changed, 12 insertions(+), 3 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> > new file mode 100644
+> > index 000000000000..0ae04ae5374a
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+> > @@ -0,0 +1,8 @@
+> > +What:                /sys/bus/tee/devices/optee-ta-<uuid>/
+> > +Date:           May 2020
+> > +KernelVersion   5.7
+> > +Contact:        tee-dev@lists.linaro.org
+> > +Description:
+> > +             OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
+> > +             matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
+> > +             are free to create needed API under optee-ta-<uuid> directory.
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ecc0749810b0..6717afef2de3 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -12516,6 +12516,7 @@ OP-TEE DRIVER
+> >  M:   Jens Wiklander <jens.wiklander@linaro.org>
+> >  L:   tee-dev@lists.linaro.org
+> >  S:   Maintained
+> > +F:   Documentation/ABI/testing/sysfs-bus-optee-devices
+> >  F:   drivers/tee/optee/
+> >
+> >  OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+> > diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> > index e3a148521ec1..ed3d1ddfa52b 100644
+> > --- a/drivers/tee/optee/device.c
+> > +++ b/drivers/tee/optee/device.c
+> > @@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+> >       return 0;
+> >  }
+> >
+> > -static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> > +static int optee_register_device(const uuid_t *device_uuid)
+> >  {
+> >       struct tee_client_device *optee_device = NULL;
+> >       int rc;
+> > @@ -75,7 +75,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+> >               return -ENOMEM;
+> >
+> >       optee_device->dev.bus = &tee_bus_type;
+> > -     dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
+> > +     dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid);
+>
+> This code is and already was broken. If dev_set_name() returns -ENOMEM,
+> the name will be a null pointer.
+>
+
+Well in the current code base only 1% of drivers check the return code
+of dev_set_name(). But I don't  mind adding this check.
+
+
+> Also, I don't get how you can just swap the name without potentially
+> breaking the backwards compatiblity towards the user space.
+>
+> /Jarkko
+
+Backwards compatibility to what? API (stable, testing) are defined in
+Documentation. There was no doc for that. And user get notifications
+on uevent, so it's udev deal how to find proper sysfs entry.
 
 Regards,
-
-	Joerg
+Maxim.
