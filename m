@@ -2,116 +2,282 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6857E208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78390207D5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 10:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591267343;
-	bh=pz9jxsR7fg56nTvd7znls/4ExyVCIuWGVT4dgqTnomg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oHIzAT0Orm+xbQryXXAhgKIKUMOp1CEuxKAnOzwj20hhbF9XNAoz+4ME50w9/9ES6
-	 P3Rc5+TZwPuxaMK27bztTStMXzpgY06vmUV8voE8Ii0q5obEsFKT+wcq/BIkA22YrT
-	 k36VlY5fBuONQeLc3aw9whYgvUVLsxEVpnxcnNRA=
+	s=default; t=1591267557;
+	bh=7HIqpsm0tm+2XExfq0AzdkL8CefjTuY4JD+t1WaHJ4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F8r01fCjOO0FUcMWPM+35S4yNdiEHC52twLmDv6Ng5JEHouHes9kf+rc48tX/z7U0
+	 PB+M+p3wGEA3wJuUjHvp6fkr2ug9cXQzZwO80nBhBFc7YG/tNhkctVHPB5gDRRalbR
+	 0yb6LrkdSD0MZ7CDV53qdBWOK+mhDespBgIHrTv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbgFDKmV (ORCPT
+        id S1726240AbgFDKp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 06:42:21 -0400
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:39957 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgFDKmU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 06:42:20 -0400
-Received: by mail-oi1-f170.google.com with SMTP id t25so4641890oij.7;
-        Thu, 04 Jun 2020 03:42:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MtLNfsN/A/N2E3wGVViMKTHPXKwZLxoBNdSqzHaE8IA=;
-        b=TJgUvPw4HOhKa1RKyZx1yhqfeWlnJRqajjAbpdn8XEdkZ3L7yMKindhHxkfljFWGln
-         RDOjrSBcaKqdIKhBADlWaKzeKoR4P2ALaUrsc7+AzlwyRAQ5TlmL/MLNnjbcv/fkdQdZ
-         MZnlYmqUVrcesFft/AWRCnUKe+pVHTcXIpsLbP94vUNQ3yJH59gS9qhbtdaH73nOGoC3
-         E2jSWblAocsZsjqk+PGBGrS6qUhQRyB+aM+nV8fcq2ds3K2d14TsrdoT0gKidz9/p5Ab
-         K+3bl0JubX9WriK00QfqvqVIcsn0xk6qlmijCtmc+a/72QRpOJrkNlL18niPwHZUbvHO
-         J61g==
-X-Gm-Message-State: AOAM533I17OgN6WcOr0Ri9PWnsDl6ZGlC5fPimJCoS4NjyONFg5UlnRO
-        mEXfYu06dTZprE+GyftecJpdCb+YtbTFJbkHUhE=
-X-Google-Smtp-Source: ABdhPJy8rc2CM0Ibwow4BpUi881bLGZBqvgaLDrHV1YRcB5ipoLExPWRN9L10+GYyAKPX9xvchTgof73i4AGf3hzDdY=
-X-Received: by 2002:aca:ad88:: with SMTP id w130mr2754792oie.103.1591267339260;
- Thu, 04 Jun 2020 03:42:19 -0700 (PDT)
+        Thu, 4 Jun 2020 06:45:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgFDKpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 06:45:53 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ADEF206A2;
+        Thu,  4 Jun 2020 10:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591267552;
+        bh=7HIqpsm0tm+2XExfq0AzdkL8CefjTuY4JD+t1WaHJ4Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nXIxctdaDUfVJdM+aVx4FqqdFME3BCC7lIl7cnNWHBv+Ri7byDCS4FFYYUN6Ee9x6
+         Z1bV+VEf2rZESvfw5OOW4VO+j4l7ZmhyfBLlgMR7rWLCtPVrCC1bEr6rIYpehp+eNL
+         h2ZQ25FifK80ZDfBN33Btek9OiE549FI31YqnKcA=
+Date:   Thu, 4 Jun 2020 13:45:49 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 09/10] treewide: Remove uninitialized_var() usage
+Message-ID: <20200604104549.GC8834@unreal>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-10-keescook@chromium.org>
 MIME-Version: 1.0
-References: <f1773fdc-f6ef-ec28-0c0a-4a09e66ab63b@huawei.com>
- <20200603075200.hbyofgcyiwocl565@vireshk-i7> <CAJZ5v0iR3H+PFnJiroNmZcj-a4bCkvT6xB-nd2ntMvakWFOvAg@mail.gmail.com>
- <39d37e1b-7959-9a8f-6876-f2ed4c1dbc37@huawei.com> <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
-In-Reply-To: <20200604044140.xlv7h62jfowo3rxe@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 4 Jun 2020 12:42:06 +0200
-Message-ID: <CAJZ5v0jj5OS4oB7MYBqKeYejy_3Vz_2oy0hn-Xm=D7XAszM_vg@mail.gmail.com>
-Subject: Re: [Question]: about 'cpuinfo_cur_freq' shown in sysfs when the CPU
- is in idle state
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <Sudeep.Holla@arm.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603233203.1695403-10-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 6:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Wed, Jun 03, 2020 at 04:32:02PM -0700, Kees Cook wrote:
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings
+> (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> either simply initialize the variable or make compiler changes.
 >
-> On 04-06-20, 09:32, Xiongfeng Wang wrote:
-> > On 2020/6/3 21:39, Rafael J. Wysocki wrote:
-> > > The frequency value obtained by kicking the CPU out of idle
-> > > artificially is bogus, though.  You may as well return a random number
-> > > instead.
-> >
-> > Yes, it may return a randowm number as well.
-> >
-> > >
-> > > The frequency of a CPU in an idle state is in fact unknown in the case
-> > > at hand, so returning 0 looks like the cleanest option to me.
-> >
-> > I am not sure about how the user will use 'cpuinfo_cur_freq' in sysfs. If I
-> > return 0 when the CPU is idle, when I run a light load on the CPU, I will get a
-> > zero value for 'cpuinfo_cur_freq' when the CPU is idle. When the CPU is not
-> > idle, I will get a non-zero value. The user may feel odd about
-> > 'cpuinfo_cur_frreq' switching between a zero value and a non-zero value. They
-> > may hope it can return the frequency when the CPU execute instructions, namely
-> > in C0 state. I am not so sure about the user will look at 'cpuinfo_cur_freq'.
+> I preparation for removing[2] the[3] macro[4], remove all remaining
+> needless uses with the following script:
 >
-> This is what I was worried about as well. The interface to sysfs needs
-> to be robust. Returning frequency on some readings and 0 on others
-> doesn't look right to me as well. This will break scripts (I am not
-> sure if some scripts are there to look for these values) with the
-> randomness of values returned by it.
-
-The only thing the scripts need to do is to skip zeros (or anything
-less than the minimum hw frequency for that matter) coming from that
-attribute.
-
-> On reading values locally from the CPU, I thought about the case where
-> userspace can prevent a CPU going into idle just by reading its
-> frequency from sysfs (and so waste power), but the same can be done by
-> userspace to run arbitrary load on the CPUs.
+> git grep '\buninitialized_var\b' | cut -d: -f1 | sort -u | \
+> 	xargs perl -pi -e \
+> 		's/\buninitialized_var\(([^\)]+)\)/\1/g;
+> 		 s:\s*/\* (GCC be quiet|to make compiler happy) \*/$::g;'
 >
-> Can we do some sort of caching of the last frequency the CPU was
-> running at before going into idle ? Then we can just check if cpu is
-> idle and so return cached value.
+> drivers/video/fbdev/riva/riva_hw.c was manually tweaked to avoid
+> pathological white-space.
+>
+> No outstanding warnings were found building allmodconfig with GCC 9.3.0
+> for x86_64, i386, arm64, arm, powerpc, powerpc64le, s390x, mips, sparc64,
+> alpha, and m68k.
+>
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/arm/mach-sa1100/assabet.c                   |  2 +-
+>  arch/arm/mm/alignment.c                          |  2 +-
+>  arch/ia64/kernel/process.c                       |  2 +-
+>  arch/ia64/mm/discontig.c                         |  2 +-
+>  arch/ia64/mm/tlb.c                               |  2 +-
+>  arch/mips/lib/dump_tlb.c                         |  2 +-
+>  arch/mips/mm/init.c                              |  2 +-
+>  arch/mips/mm/tlb-r4k.c                           |  6 +++---
+>  arch/powerpc/kvm/book3s_64_mmu_radix.c           |  2 +-
+>  arch/powerpc/kvm/book3s_pr.c                     |  2 +-
+>  arch/powerpc/kvm/powerpc.c                       |  2 +-
+>  arch/powerpc/platforms/52xx/mpc52xx_pic.c        |  2 +-
+>  arch/s390/kernel/smp.c                           |  2 +-
+>  arch/x86/kernel/quirks.c                         | 10 +++++-----
+>  arch/x86/kvm/mmu/mmu.c                           |  2 +-
+>  arch/x86/kvm/mmu/paging_tmpl.h                   |  2 +-
+>  arch/x86/kvm/x86.c                               |  2 +-
+>  block/blk-merge.c                                |  2 +-
+>  drivers/acpi/acpi_pad.c                          |  2 +-
+>  drivers/ata/libata-scsi.c                        |  2 +-
+>  drivers/atm/zatm.c                               |  2 +-
+>  drivers/block/drbd/drbd_nl.c                     |  6 +++---
+>  drivers/block/rbd.c                              |  2 +-
+>  drivers/clk/clk-gate.c                           |  2 +-
+>  drivers/clk/spear/clk-vco-pll.c                  |  2 +-
+>  drivers/crypto/nx/nx-842-powernv.c               |  2 +-
+>  drivers/firewire/ohci.c                          | 14 +++++++-------
+>  drivers/gpu/drm/bridge/sil-sii8620.c             |  2 +-
+>  drivers/gpu/drm/drm_edid.c                       |  2 +-
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c          |  6 +++---
+>  drivers/gpu/drm/i915/display/intel_fbc.c         |  2 +-
+>  drivers/gpu/drm/i915/gt/intel_lrc.c              |  2 +-
+>  drivers/gpu/drm/i915/intel_uncore.c              |  2 +-
+>  drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c  |  4 ++--
+>  drivers/i2c/busses/i2c-rk3x.c                    |  2 +-
+>  drivers/ide/ide-acpi.c                           |  2 +-
+>  drivers/ide/ide-atapi.c                          |  2 +-
+>  drivers/ide/ide-io-std.c                         |  4 ++--
+>  drivers/ide/ide-io.c                             |  8 ++++----
+>  drivers/ide/ide-sysfs.c                          |  2 +-
+>  drivers/ide/umc8672.c                            |  2 +-
+>  drivers/idle/intel_idle.c                        |  2 +-
+>  drivers/infiniband/core/uverbs_cmd.c             |  4 ++--
+>  drivers/infiniband/hw/cxgb4/cm.c                 |  2 +-
+>  drivers/infiniband/hw/cxgb4/cq.c                 |  2 +-
+>  drivers/infiniband/hw/mlx4/qp.c                  |  6 +++---
+>  drivers/infiniband/hw/mlx5/cq.c                  |  6 +++---
+>  drivers/infiniband/hw/mlx5/devx.c                |  2 +-
+>  drivers/infiniband/hw/mlx5/qp.c                  |  2 +-
+>  drivers/infiniband/hw/mthca/mthca_qp.c           | 10 +++++-----
+>  drivers/infiniband/sw/siw/siw_qp_rx.c            |  2 +-
+>  drivers/input/serio/serio_raw.c                  |  2 +-
+>  drivers/input/touchscreen/sur40.c                |  2 +-
+>  drivers/iommu/intel-iommu.c                      |  2 +-
+>  drivers/md/dm-io.c                               |  2 +-
+>  drivers/md/dm-ioctl.c                            |  2 +-
+>  drivers/md/dm-snap-persistent.c                  |  2 +-
+>  drivers/md/dm-table.c                            |  2 +-
+>  drivers/md/dm-writecache.c                       |  2 +-
+>  drivers/md/raid5.c                               |  2 +-
+>  drivers/media/dvb-frontends/rtl2832.c            |  2 +-
+>  drivers/media/tuners/qt1010.c                    |  4 ++--
+>  drivers/media/usb/gspca/vicam.c                  |  2 +-
+>  drivers/media/usb/uvc/uvc_video.c                |  8 ++++----
+>  drivers/memstick/host/jmb38x_ms.c                |  2 +-
+>  drivers/memstick/host/tifm_ms.c                  |  2 +-
+>  drivers/mmc/host/sdhci.c                         |  2 +-
+>  drivers/mtd/nand/raw/nand_ecc.c                  |  2 +-
+>  drivers/mtd/nand/raw/s3c2410.c                   |  2 +-
+>  drivers/mtd/parsers/afs.c                        |  4 ++--
+>  drivers/mtd/ubi/eba.c                            |  2 +-
+>  drivers/net/can/janz-ican3.c                     |  2 +-
+>  drivers/net/ethernet/broadcom/bnx2.c             |  4 ++--
+>  .../net/ethernet/mellanox/mlx5/core/pagealloc.c  |  4 ++--
+>  drivers/net/ethernet/neterion/s2io.c             |  2 +-
+>  drivers/net/ethernet/qlogic/qla3xxx.c            |  2 +-
+>  drivers/net/ethernet/sun/cassini.c               |  2 +-
+>  drivers/net/ethernet/sun/niu.c                   |  6 +++---
+>  drivers/net/wan/z85230.c                         |  2 +-
+>  drivers/net/wireless/ath/ath10k/core.c           |  2 +-
+>  drivers/net/wireless/ath/ath6kl/init.c           |  2 +-
+>  drivers/net/wireless/ath/ath9k/init.c            |  2 +-
+>  drivers/net/wireless/broadcom/b43/debugfs.c      |  2 +-
+>  drivers/net/wireless/broadcom/b43/dma.c          |  2 +-
+>  drivers/net/wireless/broadcom/b43/lo.c           |  2 +-
+>  drivers/net/wireless/broadcom/b43/phy_n.c        |  2 +-
+>  drivers/net/wireless/broadcom/b43/xmit.c         | 12 ++++++------
+>  .../net/wireless/broadcom/b43legacy/debugfs.c    |  2 +-
+>  drivers/net/wireless/broadcom/b43legacy/main.c   |  2 +-
+>  drivers/net/wireless/intel/iwlegacy/3945.c       |  2 +-
+>  drivers/net/wireless/intel/iwlegacy/4965-mac.c   |  2 +-
+>  .../net/wireless/realtek/rtlwifi/rtl8192cu/hw.c  |  4 ++--
+>  drivers/pci/pcie/aer.c                           |  2 +-
+>  drivers/platform/x86/hdaps.c                     |  4 ++--
+>  drivers/scsi/dc395x.c                            |  2 +-
+>  drivers/scsi/pm8001/pm8001_hwi.c                 |  2 +-
+>  drivers/scsi/pm8001/pm80xx_hwi.c                 |  2 +-
+>  drivers/ssb/driver_chipcommon.c                  |  4 ++--
+>  drivers/tty/cyclades.c                           |  2 +-
+>  drivers/tty/isicom.c                             |  2 +-
+>  drivers/usb/musb/cppi_dma.c                      |  2 +-
+>  drivers/usb/storage/sddr55.c                     |  4 ++--
+>  drivers/vhost/net.c                              |  6 +++---
+>  drivers/video/fbdev/matrox/matroxfb_maven.c      |  6 +++---
+>  drivers/video/fbdev/pm3fb.c                      |  6 +++---
+>  drivers/video/fbdev/riva/riva_hw.c               |  3 +--
+>  drivers/virtio/virtio_ring.c                     |  6 +++---
+>  fs/afs/dir.c                                     |  2 +-
+>  fs/afs/security.c                                |  2 +-
+>  fs/dlm/netlink.c                                 |  2 +-
+>  fs/erofs/data.c                                  |  4 ++--
+>  fs/erofs/zdata.c                                 |  2 +-
+>  fs/f2fs/data.c                                   |  2 +-
+>  fs/fat/dir.c                                     |  2 +-
+>  fs/fuse/control.c                                |  4 ++--
+>  fs/fuse/cuse.c                                   |  2 +-
+>  fs/fuse/file.c                                   |  2 +-
+>  fs/gfs2/aops.c                                   |  2 +-
+>  fs/gfs2/bmap.c                                   |  2 +-
+>  fs/gfs2/lops.c                                   |  2 +-
+>  fs/hfsplus/unicode.c                             |  2 +-
+>  fs/isofs/namei.c                                 |  4 ++--
+>  fs/jffs2/erase.c                                 |  2 +-
+>  fs/nfsd/nfsctl.c                                 |  2 +-
+>  fs/ocfs2/alloc.c                                 |  4 ++--
+>  fs/ocfs2/dir.c                                   | 14 +++++++-------
+>  fs/ocfs2/extent_map.c                            |  4 ++--
+>  fs/ocfs2/namei.c                                 |  2 +-
+>  fs/ocfs2/refcounttree.c                          |  2 +-
+>  fs/ocfs2/xattr.c                                 |  2 +-
+>  fs/omfs/file.c                                   |  2 +-
+>  fs/overlayfs/copy_up.c                           |  4 ++--
+>  fs/ubifs/commit.c                                |  6 +++---
+>  fs/ubifs/dir.c                                   |  2 +-
+>  fs/ubifs/file.c                                  |  4 ++--
+>  fs/ubifs/journal.c                               |  4 ++--
+>  fs/ubifs/lpt.c                                   |  2 +-
+>  fs/ubifs/tnc.c                                   |  6 +++---
+>  fs/ubifs/tnc_misc.c                              |  4 ++--
+>  fs/udf/balloc.c                                  |  2 +-
+>  fs/xfs/xfs_bmap_util.c                           |  2 +-
+>  include/net/flow_offload.h                       |  2 +-
+>  kernel/async.c                                   |  4 ++--
+>  kernel/audit.c                                   |  2 +-
+>  kernel/debug/kdb/kdb_io.c                        |  2 +-
+>  kernel/dma/debug.c                               |  2 +-
+>  kernel/events/core.c                             |  2 +-
+>  kernel/events/uprobes.c                          |  2 +-
+>  kernel/exit.c                                    |  2 +-
+>  kernel/futex.c                                   | 14 +++++++-------
+>  kernel/locking/lockdep.c                         | 16 ++++++++--------
+>  kernel/trace/ring_buffer.c                       |  2 +-
+>  lib/radix-tree.c                                 |  2 +-
+>  lib/test_lockup.c                                |  2 +-
+>  mm/frontswap.c                                   |  2 +-
+>  mm/ksm.c                                         |  2 +-
+>  mm/memcontrol.c                                  |  2 +-
+>  mm/memory.c                                      |  2 +-
+>  mm/mempolicy.c                                   |  4 ++--
+>  mm/page_alloc.c                                  |  2 +-
+>  mm/percpu.c                                      |  2 +-
+>  mm/slub.c                                        |  4 ++--
+>  mm/swap.c                                        |  4 ++--
+>  net/dccp/options.c                               |  2 +-
+>  net/ipv4/netfilter/nf_socket_ipv4.c              |  6 +++---
+>  net/ipv6/ip6_flowlabel.c                         |  2 +-
+>  net/ipv6/netfilter/nf_socket_ipv6.c              |  2 +-
+>  net/netfilter/nf_conntrack_ftp.c                 |  2 +-
+>  net/netfilter/nfnetlink_log.c                    |  2 +-
+>  net/netfilter/nfnetlink_queue.c                  |  4 ++--
+>  net/sched/cls_flow.c                             |  2 +-
+>  net/sched/sch_cake.c                             |  2 +-
+>  net/sched/sch_cbq.c                              |  2 +-
+>  net/sched/sch_fq_codel.c                         |  2 +-
+>  net/sched/sch_fq_pie.c                           |  2 +-
+>  net/sched/sch_hfsc.c                             |  2 +-
+>  net/sched/sch_htb.c                              |  2 +-
+>  net/sched/sch_sfq.c                              |  2 +-
+>  net/sunrpc/svcsock.c                             |  4 ++--
+>  net/sunrpc/xprtsock.c                            | 10 +++++-----
+>  net/tls/tls_sw.c                                 |  2 +-
+>  sound/core/control_compat.c                      |  2 +-
+>  sound/isa/sb/sb16_csp.c                          |  2 +-
+>  sound/usb/endpoint.c                             |  2 +-
+>  184 files changed, 284 insertions(+), 285 deletions(-)
 
-That is an option, but it looks like in this case the cpuinfo_cur_freq
-attribute should not be present at all, as per the documentation.
-
-Cheers!
+Thanks,
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com> # drivers/infiniband and mlx4/mlx5
