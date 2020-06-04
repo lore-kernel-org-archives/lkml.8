@@ -2,66 +2,133 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4750C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF697206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89C1206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgFDMTB (ORCPT
+        id S1728349AbgFDMTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:19:01 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37134 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbgFDMTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:19:00 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jgopP-0008CD-Ij; Thu, 04 Jun 2020 22:18:36 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 04 Jun 2020 22:18:35 +1000
-Date:   Thu, 4 Jun 2020 22:18:35 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, phemadri@marvell.com, jsrikanth@marvell.com,
-        horia.geanta@nxp.com, gustavo@embeddedor.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] crypto: cavium/nitrox - Fix
- 'nitrox_get_first_device()' when ndevlist is fully iterated
-Message-ID: <20200604121835.GB24286@gondor.apana.org.au>
-References: <20200530133537.582843-1-christophe.jaillet@wanadoo.fr>
+        Thu, 4 Jun 2020 08:19:08 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:43626 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727944AbgFDMTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 08:19:07 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1D19A1C0BD2; Thu,  4 Jun 2020 14:19:06 +0200 (CEST)
+Date:   Thu, 4 Jun 2020 14:19:05 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
+Subject: [GIT PULL] LEDs changes for v5.8-rc1
+Message-ID: <20200604121905.GA4931@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
 Content-Disposition: inline
-In-Reply-To: <20200530133537.582843-1-christophe.jaillet@wanadoo.fr>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 03:35:37PM +0200, Christophe JAILLET wrote:
-> When a list is completely iterated with 'list_for_each_entry(x, ...)', x is
-> not NULL at the end.
-> 
-> While at it, remove a useless initialization of the ndev variable. It
-> is overridden by 'list_for_each_entry'.
-> 
-> Fixes: f2663872f073 ("crypto: cavium - Register the CNN55XX supported crypto algorithms.")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> v2: Do not introduce an extra variable to check if the list has been fully
->     iterated. Test with "if (&ndev->list == &ndevlist)" instead
-> ---
->  drivers/crypto/cavium/nitrox/nitrox_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/=
+leds-5.8-rc1
+
+for you to fetch changes up to 59ea3c9faf3235b66bc31ca883d59ce58b8b2b27:
+
+  leds: add aw2013 driver (2020-05-25 12:56:39 +0200)
+
+----------------------------------------------------------------
+LEDs pull request for 5.8-rc1.
+
+New drivers: aw2013, sgm3140, ariel, and some fixes. Nothing much to
+see here, next release should be more interesting.
+
+----------------------------------------------------------------
+Colin Ian King (1):
+      leds: trigger: remove redundant assignment to variable ret
+
+Denis Osterland-Heim (1):
+      leds: pwm: check result of led_pwm_set() in led_pwm_add()
+
+Linus Walleij (5):
+      leds: lm355x: Drop surplus include
+      leds: lp3952: Include the right header
+      leds: lt3593: Drop surplus include
+      leds: tca6507: Include the right header
+      leds: netxbig: Convert to use GPIO descriptors
+
+Lubomir Rintel (1):
+      leds: ariel: Add driver for status LEDs on Dell Wyse 3020
+
+Luca Weiss (2):
+      dt-bindings: leds: Add binding for sgm3140
+      leds: add sgm3140 driver
+
+Nikita Travkin (2):
+      dt-bindings: leds: Add binding for aw2013
+      leds: add aw2013 driver
+
+Tomi Valkeinen (1):
+      leds: tlc591xxt: hide error on EPROBE_DEFER
+
+ .../devicetree/bindings/leds/leds-aw2013.yaml      |  91 +++++
+ .../devicetree/bindings/leds/leds-sgm3140.yaml     |  62 +++
+ drivers/leds/Kconfig                               |  29 ++
+ drivers/leds/Makefile                              |   3 +
+ drivers/leds/leds-ariel.c                          | 133 +++++++
+ drivers/leds/leds-aw2013.c                         | 436 +++++++++++++++++=
+++++
+ drivers/leds/leds-lm355x.c                         |   1 -
+ drivers/leds/leds-lp3952.c                         |   2 +-
+ drivers/leds/leds-lt3593.c                         |   1 -
+ drivers/leds/leds-netxbig.c                        | 148 +++----
+ drivers/leds/leds-pwm.c                            |  16 +-
+ drivers/leds/leds-sgm3140.c                        | 320 +++++++++++++++
+ drivers/leds/leds-tca6507.c                        |   2 +-
+ drivers/leds/leds-tlc591xx.c                       |   5 +-
+ drivers/leds/trigger/ledtrig-timer.c               |   4 +-
+ 15 files changed, 1173 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-aw2013.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+ create mode 100644 drivers/leds/leds-ariel.c
+ create mode 100644 drivers/leds/leds-aw2013.c
+ create mode 100644 drivers/leds/leds-sgm3140.c
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXtjmuQAKCRAw5/Bqldv6
+8u48AJ47Nco4fZbvtuQJwKDHcNHcgKOSRwCgtQoaxP2tbH7XobuH4CGyLtEFCNY=
+=Asf1
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
