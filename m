@@ -2,106 +2,235 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C3AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01B1D207D0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D30E2067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:38:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZpWBi1fi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mifopRg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgFDWhT (ORCPT
+        id S1728235AbgFDWiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:37:19 -0400
-Received: from ozlabs.org ([203.11.71.1]:45293 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgFDWhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:37:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49dLHw3mX2z9sSJ;
-        Fri,  5 Jun 2020 08:37:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591310236;
-        bh=C2mPrjZW5spl9pNtMe+LHqh77Ct8qznvaw9r9mc0xNE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZpWBi1fiQGJn/EgEX8aiX5lB3zWrsm9t97v/xz1riyF0ni9MXA9PVcuwNll8JCjk8
-         ZnOhJ417QAnynI22Dpr3Ne5EP1cVg7tOWrdid7cv+wLJ+WJg1TeDk9p+zcm/SzfvFs
-         swuubwBP/H6Nl+swYcTWYvMNTr76PEF7swdmDruzm41dJxLf6R8UzhO50qpwfNz3Fl
-         OLezvrkureNSiBlhnp4B+MJKXeuAgMa/a0vKj0ZoDj4rowwtotwFtdODd3ryajX6SO
-         C7lC9MhLk4fIof4vFmYxCzOFW5s+qYfHnxXc3p8txTvyKYOMh1cRm9Ye/ZLvqZRP/I
-         /ghnQjPy4ZJpw==
-Date:   Fri, 5 Jun 2020 08:37:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: linux-next: build failure after merge of the origin tree
-Message-ID: <20200605083715.1a6c29ce@canb.auug.org.au>
+        Thu, 4 Jun 2020 18:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728041AbgFDWiB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 18:38:01 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 321D1C08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 15:38:01 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i12so1736109pju.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 15:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ORpTC9E5uWw4nJVLuPu5+95Od037mXPJYxD/DvOmRCg=;
+        b=mifopRg5zwZSoWPB0rqPWzu76NS00gnxaStDOF9gaTZQ2HjwYDWPZXIuQvcAxJVBFL
+         rfHaM4mLRn8BmJzFqZyCrXPFpf4viP1YWWiMuIxE4PgryIL9eY7DMSQuTUn+iHBTb9JY
+         ZWXQDvrN6PvFEHp2vL4NEJXgdh53vIseRZfj4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ORpTC9E5uWw4nJVLuPu5+95Od037mXPJYxD/DvOmRCg=;
+        b=P8xpqtCfyOEjYnGXh/AaTGc/qZOGP9IQl1i12TozymuDDDTlowcP3hRdlgKEUJUfHn
+         KK3hUNp+Co396gXHPSm9y5bCV23bE6xJHQ3tQl7aozAQzOcyphly2vkNZiSlnIt6goS0
+         l+Tuc4H7B9NFkvIfYAhqughynAczaaGF9TSuSaRjCXyT7uerdnYgEaT7F3l4/cGhyHXs
+         TJyH9wD+WmMZnBqpZCpXKGZH0pOaB5bLeqBMK/3x41ScN9vDHhVay6u4A9vN0svSf/vx
+         vhOb3ca4IAG+hI6+S0kI41sP+8xFlLKHp/3ebQnO5KVELNqjrq0xHZo1Bqh+qG/8rErU
+         11/Q==
+X-Gm-Message-State: AOAM533bjiKsSaR8W0V9WHBA3A6RZ3YJyORKToMVMx9eaOihw/CgrYLs
+        fo93JS2abRxtBK6jQoJfEqbOxQ==
+X-Google-Smtp-Source: ABdhPJxoRyg7vN0rXVhDIZ+/Hr+4ozPGYOxwW0LAyLqSrArkNfAKIlCPsrx3rpTTcFtqmNba4cPDOw==
+X-Received: by 2002:a17:90a:b781:: with SMTP id m1mr7817051pjr.14.1591310280580;
+        Thu, 04 Jun 2020 15:38:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q201sm5334685pfq.40.2020.06.04.15.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 15:37:59 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 15:37:58 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, arjan@linux.intel.com,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, Tony Luck <tony.luck@intel.com>,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 7/9] x86: Add support for function granular KASLR
+Message-ID: <202006041525.CB0293F898@keescook>
+References: <20200521165641.15940-1-kristen@linux.intel.com>
+ <20200521165641.15940-8-kristen@linux.intel.com>
+ <202005211301.4853672E2@keescook>
+ <7d95c165766be97843f11d2695d1538f94ceb1d4.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9/.eRZ7rhdTdRkf4S8x/Dhj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7d95c165766be97843f11d2695d1538f94ceb1d4.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9/.eRZ7rhdTdRkf4S8x/Dhj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 04, 2020 at 10:27:24AM -0700, Kristen Carlson Accardi wrote:
+> On Thu, 2020-05-21 at 14:08 -0700, Kees Cook wrote:
+> > On Thu, May 21, 2020 at 09:56:38AM -0700, Kristen Carlson Accardi
+> > wrote:
+> > > [...]
+> > > +/*
+> > > + * This is an array of pointers to sections headers for randomized
+> > > sections
+> > > + */
+> > > +Elf64_Shdr **sections;
+> > 
+> > Given the creation of the Elf_Shdr etc macros in the header, should
+> > all
+> > of the Elf64 things in here be updated to use the size-agnostic
+> > macros?
+> > (Is anyone actually going to run a 32-bit kernel with fgkaslr some
+> > day?)
+> 
+> I suppose it's not impossible, just ... not useful. I will make the
+> update.
 
-Hi all,
+Yeah. I figure it might just look cleaner? Or, I guess, drop the other
+macros? I guess I wasn't sure why those macros got touched and then
+didn't get used.
 
-After merging the origin tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+> > > [...]
+> > > +	/*
+> > > +	 * we are going to need to regenerate the markers table, which is a
+> > > +	 * table of offsets into the compressed stream every 256 symbols.
+> > > +	 * this code copied almost directly from scripts/kallsyms.c
+> > > +	 */
+> > 
+> > Can any of this kallsyms sorting code be reasonably reused instead
+> > of copy/pasting? Or is this mostly novel in that it's taking the
+> > output
+> > of that earlier sort, which isn't the input format scripts/kallsyms.c
+> > uses?
+> 
+> No - I cut out only code blocks from scripts/kallsyms.c, but there was
+> no neat way to reuse entire functions without majorly refactoring a lot
+> of stuff in scripts/kallsyms.c
 
-kernel/module.c: In function 'do_init_module':
-kernel/module.c:3593:2: error: implicit declaration of function 'module_ena=
-ble_ro'; did you mean 'module_enable_x'? [-Werror=3Dimplicit-function-decla=
-ration]
- 3593 |  module_enable_ro(mod, true);
-      |  ^~~~~~~~~~~~~~~~
-      |  module_enable_x
+Hmm. I wonder if there might be a way to carve out what you need into
+lib/ and then #include it as a separate compilation unit? I'm always
+worried about cut/pasted code getting out of sync.
 
-Caused by commit
+> > > [...]
+> > > +#include "../../../../lib/extable.c"
+> > 
+> > Now that the earlier linking glitches have been sorted out, I wonder if
+> > it might be nicer to add this as a separate compilation unit, similar to
+> > how early_serial_console.c is done? (Or, I guess, more specifically, why
+> > can't this be in utils.c?)
+> 
+> The problem with putting this in utils.c was because there was an
+> inline function (static) that I use that is defined in extable.c
+> (ex_to_insn). If I move this to utils.c I'm not sure how to keep re-
+> using this inline function without modifying it with a define like
+> STATIC. I thought it was cleaner to just leave it alone and do it this
+> way.
 
-  e6eff4376e28 ("module: Make module_enable_ro() static again")
+Hm, I see. I guess if this becomes fragile in the future, the special
+inlines can be moved to lib/extable.h and then things can be carved out
+into a separate compilation unit.
 
-This config has neither CONFIG_ARCH_HAS_STRICT_MODULE_RWX or
-CONFIG_ARCH_HAS_STRICT_MODULE_RWX set.  This failure was hidden in
-linux-next due to commit
+> > > [...]
+> > > +		if (!strcmp(sname, ".text")) {
+> > > +			text = s;
+> > > +			continue;
+> > > +		}
+> > 
+> > Check text is still NULL here?
+> > 
+> > Also, why the continue? This means the section isn't included in the
+> > sections[] array? (Obviously things still work, but I don't
+> > understand
+> > why.)
+> 
+> I don't include .text in the sections[] array because sections[] is
+> only for sections to be randomized, and we don't randomize .text.
 
-  db991af02f11 ("module: break nested ARCH_HAS_STRICT_MODULE_RWX and STRICT=
-_MODULE_RWX #ifdefs")
+Yeah, I got myself confused there originally. I actuallyed realized my
+mistake on this later when I was explaining how FGKASLR worked in the
+thread with tglx. :)
 
-from the modules tree. I have cherry-picked that commit for today.
+> > > +
+> > > +		if (!strcmp(sname, ".data..percpu")) {
+> > > +			/* get start addr for later */
+> > > +			percpu = s;
+> > 
+> > Similar, check percpu is still NULL here?
+> > 
+> > Also, is a "continue" intended here? (This is kind of the reverse of
+> > the "continue" question above.) I think you get the same result
+> > during
+> > the next "if", but I was expecting this block to look like the .text
+> > test above.
+> 
+> You are right, I could have put a continue here and saved the next
+> compare.
 
---=20
-Cheers,
-Stephen Rothwell
+Cool; yeah, it was just a "wait, is that right?" when looking at it.
 
---Sig_/9/.eRZ7rhdTdRkf4S8x/Dhj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> > > diff --git a/arch/x86/boot/compressed/misc.c
+> > > b/arch/x86/boot/compressed/misc.c
+> > > index 9652d5c2afda..5f08922fd12a 100644
+> > > --- a/arch/x86/boot/compressed/misc.c
+> > > +++ b/arch/x86/boot/compressed/misc.c
+> > > @@ -26,9 +26,6 @@
+> > >   * it is not safe to place pointers in static structures.
+> > >   */
+> > >  
+> > > -/* Macros used by the included decompressor code below. */
+> > > -#define STATIC		static
+> > 
+> > Can you split the STATIC macro rearrangement out into a separate
+> > patch?
+> > I think it deserves a dedicated commit log to explain why it's
+> > changing
+> > the way it is (i.e. we end up with "STATIC" no longer meaning
+> > "static"
+> > in misc.c now
+> 
+> This change was made to fix the issue of having malloc_ptr be declared
+> locally rather than globally - (that weird problem I was having that
+> made it so I had to #include all the .c files until I figured out what
+> the issue was. If I separate out the change, then I feel like the
+> commit doesn't make sense out of this context. What if I put a big
+> comment in misc.h?
 
------BEGIN PGP SIGNATURE-----
+I think it's fine to split it out with a commit log describing what it's
+_about_ to fix, "without this, any other code using misc.h ..." and/or
+"in the next patches we'll need this because ..."
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Zd5sACgkQAVBC80lX
-0GzgiAf5AYMgODfx+jFXqWYVYpHuplHsNBiS9KiFhWOjH1vF+FeM+qyDdC3/RhWa
-eR2tK6ffnkCV/44yY9h5UMY/LBUVa/nEniBd5P2LDg88MV95j61E2CsCK57TNwAd
-sdTWghV5InfBDvPjfvNrSUQGkUoa8NokHb24BFhAZFAlorWRyP6gXlGSV2sgZAju
-g6/X1GPENidChAFeBI1suBX24DOnNSdpX4MY8lfX50eUHloL8H/Fk7bCqnQF1vHf
-6RSU65gCoXO0TPPyWf3KyB6WG5coezBZ6M4JQw+M0fyxrqEnHCv661UIFDrGkoUe
-VMR9L/pTlvF6EH9SBU9jtrC+xlj9/w==
-=9MAn
------END PGP SIGNATURE-----
+> > > [...]
+> > > +		(void)adjust_address(&extended);
+> > 
+> > I don't think "(void)" needed here?
+> 
+> I can delete it - it's not "needed", but was done to show an
+> intentional discard of the return value from adjust_address.
 
---Sig_/9/.eRZ7rhdTdRkf4S8x/Dhj--
+The code style in the kernel seems to be to not include these (since
+it's a call-site override) and instead use __must_check on the function
+when the results MUST be checked. This way, all call-sites suddenly
+light up when the attribute gets added and we don't end up with places
+that might get masked, etc.
+
+> The rest of your feedback incorporated into v3.
+
+Awesome!
+
+-- 
+Kees Cook
