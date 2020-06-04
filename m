@@ -2,226 +2,150 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED803C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B9F2075B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487802087D
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bKEL5N+l"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="khjHaUxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgFDTjA (ORCPT
+        id S1729566AbgFDTkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:39:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
+        Thu, 4 Jun 2020 15:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbgFDTi7 (ORCPT
+        with ESMTP id S1728865AbgFDTkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:38:59 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A97C08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:38:57 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 9so8796751ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:38:57 -0700 (PDT)
+        Thu, 4 Jun 2020 15:40:22 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D53CC08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:40:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t7so3998374pgt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:40:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EC5OcEtQhTge4l+YJjdaj9zLNH3vvY9AIXosw8Q5X1Q=;
-        b=bKEL5N+lXZlTR8RT4w88Q2zpLpHg4+ir80lB97eDS31qZVtEzZhYnc0xAn6Bawtk/d
-         8dKD7DwCjCqAlDXugJa+r1mDKQXwqgUboJRohkcQgT07Gr1LN5U60kgovgcMAuVmpjeL
-         ZCkhsOFen1HbtibyX1iiZjKu0ZPjoZHNtlrKmf4Ki5t2EkvWE9pj27R4+TdESSFnrk2e
-         MFHWadn1hlnkguPn9rMHg1ehFiWPQEZvamlOZ/N5JlRqfizXKyEIM50L7iF/enlp9lm/
-         BrBWhoTKFEK/aoCBb23kBoTsPYA1QUR4+WpAyefdZHzDQP5CyWZDUMWCGUiV48s5dZp/
-         mABw==
+         :cc:content-transfer-encoding;
+        bh=kJllNW+A+qSZYDyNUy0KaOA5QFyWsX/L5wjqGF/eTNE=;
+        b=khjHaUxxHWq27mRVrCP90N/AIWBHw0Raqt4MSawehwogpV8OkvENICvoOfJVZkx0HE
+         hNogTV16/NwZXxCOSGv2dPerVjZRRpPeRIGxaNDeieFVvkNGOsQPbUA4jVsw+RGMJM/1
+         DZ4Ka7WSW9usbnCAubZ33uZYz1CuVXU1e5wwsVkAh0ownQvTfrX26uwpcMSg4c4FVlB9
+         J0MlT9xW0GEK1fvgfb3wjQTvPWdI4UdS6GZdlbET89acNH1Dsv7O3JvR2loOOenQdzRS
+         7VBqB+LvcFYGppvlPdjlWc/cGF5adEw1HB5y4y0ezzkfiCva7K4+HnNEtlnj/NWpd7fY
+         2hVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EC5OcEtQhTge4l+YJjdaj9zLNH3vvY9AIXosw8Q5X1Q=;
-        b=ehkt4Khsr/6naLrDNbEQYHHqwSAJGcuOX+d51/MnhD3FcX23qM/fq8MO2+2jYHD/95
-         q3EK/w1Z3+K47FPKGBqUpP73Hn06sO4aMV7TcfMYfRp2R3vprRIIkrwnefZaeqXUyS6p
-         gd0V9zYuolEuZE2JK/3bEYuHDiES84AzeLtVC3naJJKMtGOUFb158lu030DFIuJlJGC7
-         azfjMLQM7R+pBqQWBjudzBU0VNtZixY2YV8da4oQYvipVEq+51lbxkZi8Whlw/TlL17e
-         9FH8j87kpf/y7C3yfhKV3RIyUTyNNS6d7gGuVD2z40NhRQf3tbh+ACbhsf1SWx6Deay7
-         ZfyQ==
-X-Gm-Message-State: AOAM531WAqsjfkFUontnGBma2CIgw2N7Uwh4SAYEgV623PgDORSdSE1R
-        Ds8QhN7U0bzIpX/idH40LI+lz2HS/YfJ/f61OvklLg==
-X-Google-Smtp-Source: ABdhPJzH4hCPoN9DQ3CStQ4Mw0y8xn738oIzhgaGEGbe9EAsDN89kcJ68Wzk0ppYx7/p4J7/dHa9+9+M1am9gyKUrO8=
-X-Received: by 2002:a2e:b0e9:: with SMTP id h9mr2744476ljl.307.1591299535843;
- Thu, 04 Jun 2020 12:38:55 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kJllNW+A+qSZYDyNUy0KaOA5QFyWsX/L5wjqGF/eTNE=;
+        b=t/YQSm2JZ0erUmXAagLPyd/yQyuZHkkfKp23lRNEH6m7NQ+EmiMnp8eKRA8pIhS4Y1
+         LUvJYXV4p9CplckFUzfyyeN/Auk8sM7kGAsgahM4v0IS5x1KhJR2fQeW5szpK7RndfXl
+         CedseuN1strWuVPvwi7M257yZ2bokvLW2B0wrKpExbyZGVvzi6kiK6URMYqeucLtaMLL
+         uGCQhjfVNUUqCZKp4JMSJ3kOMbp41GbclNZhgH4P0xbBRAvNFe4qnc/wbkx2CB9fCIQf
+         m8GKqCDZkzzFSvq0NcFrJpwHHgKvuCMWqeiL6nBqcmsuYKJCDAx35ww3cECw1qIVOLbd
+         pwaw==
+X-Gm-Message-State: AOAM5308XMZm7bNE7ivqUPbgvdTAv4RVdAaWznj+k9aZQTOMfPeORQmK
+        88oaBtO0oeuKUuEyYnIkoTEJEUZbvR4kejbxPXmpXA==
+X-Google-Smtp-Source: ABdhPJyYElZ0dKBuAEJ4uM9aYg7zNwG3YltGgh77s2eCEowEEsdqVj0Qq+w+v4Ujopd3NJrASj7ulK+YFsUqdUSAiYg=
+X-Received: by 2002:a63:5644:: with SMTP id g4mr5715275pgm.381.1591299621501;
+ Thu, 04 Jun 2020 12:40:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
- <20200601232542.GA473883@bjorn-Precision-5520> <20200602050626.GA2174820@kroah.com>
- <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
- <20200603060751.GA465970@kroah.com> <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
- <20200603121613.GA1488883@kroah.com>
-In-Reply-To: <20200603121613.GA1488883@kroah.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 4 Jun 2020 12:38:18 -0700
-Message-ID: <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
-Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
- "whitelisted" drivers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatxjain@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Zubin Mithra <zsm@google.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200603233203.1695403-1-keescook@chromium.org> <20200603233203.1695403-8-keescook@chromium.org>
+In-Reply-To: <20200603233203.1695403-8-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 4 Jun 2020 12:40:09 -0700
+Message-ID: <CAKwvOdnQCCV7SHq+nbRd0O0A+P035kU4t5vPDs8T=BhNQ2cbdA@mail.gmail.com>
+Subject: Re: [PATCH 07/10] spi: davinci: Remove uninitialized_var() usage
+To:     Kees Cook <keescook@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        mporter@ti.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-I spent some more thoughts into this...
-
-On Wed, Jun 3, 2020 at 5:16 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Jun 3, 2020 at 4:32 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> On Wed, Jun 03, 2020 at 04:51:18AM -0700, Rajat Jain wrote:
-> > Hello,
-> >
-> > >
-> > > > Thanks for the pointer! I'm still looking at the details yet, but a
-> > > > quick look (usb_dev_authorized()) seems to suggest that this API is
-> > > > "device based". The multiple levels of "authorized" seem to take shape
-> > > > from either how it is wired or from userspace choice. Once authorized,
-> > > > USB device or interface is authorized to be used by *anyone* (can be
-> > > > attached to any drivers). Do I understand it right that it does not
-> > > > differentiate between drivers?
-> > >
-> > > Yes, and that is what you should do, don't fixate on drivers.  Users
-> > > know how to control and manage devices.  Us kernel developers are
-> > > responsible for writing solid drivers and getting them merged into the
-> > > kernel tree and maintaining them over time.  Drivers in the kernel
-> > > should always be trusted, ...
-> >
-> > 1) Yes, I agree that this would be ideal, and this should be our
-> > mission. I should clarify that I may have used the wrong term
-> > "Trusted/Certified drivers". I didn't really mean that the drivers may
-> > be malicious by intent. What I really meant is that a driver may have
-> > an attack surface, which is a vulnerability that may be exploited.
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just remove this variable since it was
+> actually unused:
 >
-> Any code has such a thing, proving otherwise is a tough problem :)
+> drivers/spi/spi-davinci.c: In function =E2=80=98davinci_spi_bufs=E2=80=99=
+:
+> drivers/spi/spi-davinci.c:579:11: warning: unused variable =E2=80=98rx_bu=
+f_count=E2=80=99 [-Wunused-variable]
+>   579 |  unsigned rx_buf_count;
+>       |           ^~~~~~~~~~~~
 >
-> > Realistically speaking, finding vulnerabilities in drivers, creating
-> > attacks to exploit them, and fixing them is a never ending cat and
-> > mouse game. At Least "identifying the vulnerabilities" part is better
-> > performed by security folks rather than driver writers.
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.co=
+m/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=3D1TGqCR5vQkCzWJ0QxK6Cern=
+OU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz=
+9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=3DyVJu65TpLg=
+N_ybYNv0VEOKA@mail.gmail.com/
 >
-> Are you sure about that?  It's hard to prove a negative :)
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes 048177ce3b39 ("spi: spi-davinci: convert to DMA engine API")
+
+> ---
+>  drivers/spi/spi-davinci.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> > Earlier in the
-> > thread I had mentioned certain studies/projects that identified and
-> > exploited such vulnerabilities in the drivers. I should have used the
-> > term "Vetted Drivers" maybe to convey the intent better - drivers that
-> > have been vetted by a security focussed team (admin). What I'm
-> > advocating here is an administrator's right to control the drivers
-> > that he wants to allow for external ports on his systems.
+> diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
+> index f71c497393a6..f50c0c79cbdf 100644
+> --- a/drivers/spi/spi-davinci.c
+> +++ b/drivers/spi/spi-davinci.c
+> @@ -576,7 +576,6 @@ static int davinci_spi_bufs(struct spi_device *spi, s=
+truct spi_transfer *t)
+>         u32 errors =3D 0;
+>         struct davinci_spi_config *spicfg;
+>         struct davinci_spi_platform_data *pdata;
+> -       unsigned uninitialized_var(rx_buf_count);
 >
-> That's an odd thing, but sure, if you want to write up such a policy for
-> your systems, great.  But that policy does not belong in the kernel, it
-> belongs in userspace.
+>         dspi =3D spi_master_get_devdata(spi->master);
+>         pdata =3D &dspi->pdata;
+> --
+> 2.25.1
 >
-> > 2) In addition to the problem of driver negligences / vulnerabilities
-> > to be exploited, we ran into another problem with the "whitelist
-> > devices only" approach. We did start with the "device based" approach
-> > only initially - but quickly realized that anything we use to
-> > whitelist an external device can only be based on the info provided by
-> > *that device* itself. So until we have devices that exchange
-> > certificates with kernel [1], it is easy for a malicious device to
-> > spoof a whitelisted device (by presenting the same VID:DID or any
-> > other data that is used by us to whitelist it).
-> >
-> > [1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
-> >
-> > I hope that helps somewhat clarify how / why we reached here?
->
-> Kind of, I still think all you need to do is worry about controling the
-> devices and if a driver should bind to it or not.  Again, much like USB
-> has been doing for a very long time now.  The idea of "spoofing" ids
-> also is not new, and has been around for a very long time as well, and
-> again, the controls that the USB core gives you allows you to make any
-> type of policy decision you want to, in userspace.
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/clang-built-linux/20200603233203.1695403-8-keescook%40chromium.org.
 
-Er, *currently* it doesn't allow the userspace to make the particular
-policy I want to, right? Specifically, today an administrator can not
-control which USB *drivers* he wants to allow on an *external* USB
-port. He can only control which USB devices he wants to authorize, but
-once authorized, they are free to bind to any of the USB drivers. So
-if I want to allow the administrator to implement a policy that allows
-him to control the drivers for external ports, we'll need to enhance
-the current code (whether we want to do it specific to a bus, or more
-generically in the driver core). Are we on the same page?
 
-To implement the policy that I want to in the driver core, what is
-missing today in driver core is a distinction between "internal" and
-"external" devices. Some buses have this knowledge locally today (PCI
-has "untrusted" flag which can be used, USB uses hcd->wireless and
-hub->port->connect_type) but it is not shared with the core.
 
-So just to make sure if I'm thinking in the right direction, this is
-what I'm thinking:
-
-1) The device core needs a notion of internal vs external devices (a
-flag) - a knowledge that needs to be filled in by the bus as it
-discovers the device.
-
-2) The driver core needs to allow an admin to provide a whitelist of
-drivers for external devices. (Via Command line or a driver flag.
-Default = everything is whitelisted).
-
-3) While matching a driver to a device, the driver core needs to
-impose the whitelist if the device is external, and if the
-administrator has provided a whitelist.
-
-Any bus that wants to use this can use it if it wants to, for external devices.
-
-Thoughts?
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> So please, in summary:
->         - don't think this is some new type of thing, it's an old issue
->           transferred to yet-another-hardware-bus.  Not to say this is
->           not important, just please look at the work that others have
->           done in the past to help mitigate and solve this (reading the
->           Wireless USB spec should help you out here too, as they
->           detailed all of this.)
->         - do copy what USB did, by moving that logic into the driver
->           core so that all busses who want to take advantage of this
->           type of functionality, easily can do so.
->
-> thanks,
->
-> greg k-h
+--=20
+Thanks,
+~Nick Desaulniers
