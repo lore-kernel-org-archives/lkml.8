@@ -2,191 +2,124 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE73C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD1C20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C4A207F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HTk9blkn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AaAdvH9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgFDN2a (ORCPT
+        id S1728587AbgFDN3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:28:30 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:46093 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728533AbgFDN22 (ORCPT
+        Thu, 4 Jun 2020 09:29:37 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39962 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726415AbgFDN3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:28:28 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200604132826euoutp016624cadff636e0238cf8742bcf72c28b~VWkeMZHCY2985629856euoutp01k
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 13:28:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200604132826euoutp016624cadff636e0238cf8742bcf72c28b~VWkeMZHCY2985629856euoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591277306;
-        bh=rQhEujvdCub17kDRdV7XcRmQnjRGEuw4sAkltLJjWEw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=HTk9blknIgpL+VgH1uxuvXmD2ue/AE+3wN1onWhwLukvAUTT89h7+ZO5QXCFgxykv
-         ueCAxBUg5XBupZYD3mMITxZ8M5U99O8VdGnH9REfKPEUwfu87Vb/qLDFxJBir+tMZA
-         RZQ9+lqGzp1eXlOfVgffi2pTiLhr4TPakdiGYTWQ=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200604132826eucas1p10ef27317919d02b41863129351f4f23f~VWkd5s9Da1331913319eucas1p14;
-        Thu,  4 Jun 2020 13:28:26 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 65.06.60698.AF6F8DE5; Thu,  4
-        Jun 2020 14:28:26 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200604132826eucas1p22f1d6e0121994e4579fca30f6b53e03b~VWkdo1G8U0300503005eucas1p2s;
-        Thu,  4 Jun 2020 13:28:26 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200604132826eusmtrp2aa584879f4bccf6009be867d2c23f547~VWkdn9nCt0897308973eusmtrp2C;
-        Thu,  4 Jun 2020 13:28:26 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-95-5ed8f6fa8a71
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 6E.75.08375.9F6F8DE5; Thu,  4
-        Jun 2020 14:28:26 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200604132825eusmtip203543a6a26b8a72a3973ba67c34eef2a~VWkcy6kGH1944419444eusmtip2L;
-        Thu,  4 Jun 2020 13:28:25 +0000 (GMT)
-Subject: Re: [PATCH v2] soc: samsung: Add simple voltage coupler for
- Exynos5800
-To:     Dmitry Osipenko <digetx@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <3fffeb5b-85d5-7528-9edf-2a047d57e9a1@samsung.com>
-Date:   Thu, 4 Jun 2020 15:28:24 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        Thu, 4 Jun 2020 09:29:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591277375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UHW0elg334+EX9xWdFEPkYJk1jedIAwRKPuLSP3ktnU=;
+        b=AaAdvH9lm2p4/Liok4RIOpHS+qVaxMFBv5kRistlb5SAWP/YS3ONqyojb3Zm2SbHfQp60e
+        mKuONgadqzXcqJKTbiZjoMPFl2ccU5X1KNx2zvaIvX70GGD1g/2jNT2w1vawkmY1zPr4Tg
+        LiJa/tEYvoWsk8j+dkRMw20yOqD4GuY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-274-5qP1k4cHMi-ZXAMBGiroMQ-1; Thu, 04 Jun 2020 09:29:33 -0400
+X-MC-Unique: 5qP1k4cHMi-ZXAMBGiroMQ-1
+Received: by mail-wr1-f69.google.com with SMTP id w4so2443292wrl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:29:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UHW0elg334+EX9xWdFEPkYJk1jedIAwRKPuLSP3ktnU=;
+        b=WLnBgX2TUn8L6elYS/Xzvz3J/QE8QkDfOUDk2H7sWM/okPBieooXRtvSLXq/7Hq5EC
+         3/J//Vi+43x2cF3QEH/00usgCOsGIgmtafW06pcEDdiBQSIIILbmPGh9HOLXx/XngV19
+         eUcAoW2r+iiaqNxyjwQ32OuSj3erdVxsGG36CtSoG2BrmEhc/UcXIr80w0ro0qZlYduC
+         M9ldfLoEjXvr+3qAygc6zeDBquJ0oVCuvW+9UxFZKQBELB08M/GkLznpfhVXrFZw1MXG
+         X6K5o9sM4dLkEC7bkZB/ghJHVlS9jCUWsuUwrkqawRi21eIGBFeEmp5i2dGebDT0ypZx
+         Z17w==
+X-Gm-Message-State: AOAM532Nz/OAL75gdDQLD669BTXKwLSTMU+IIcS7lseIMowiINRAZ1Vi
+        eOrTff0ZsnqRbpGpF20RfdF8kMvq6y/I8zqwzxvLQd+nMqDVGvZmjy2hHddJWOGUMn9MdVmHkg4
+        o6uHKl6MPBQzW1G7q03J3l+Np
+X-Received: by 2002:a05:600c:4401:: with SMTP id u1mr4017460wmn.36.1591277368155;
+        Thu, 04 Jun 2020 06:29:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz9t/DEHjp8gQ1fl4/0vDSbAs3hZgC2IqMlIOVkhFw8ORBM1VevinmP9FqFYcIWLvyp3Hs8og==
+X-Received: by 2002:a05:600c:4401:: with SMTP id u1mr4017441wmn.36.1591277367926;
+        Thu, 04 Jun 2020 06:29:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:a0c0:5d2e:1d35:17bb? ([2001:b07:6468:f312:a0c0:5d2e:1d35:17bb])
+        by smtp.gmail.com with ESMTPSA id a6sm7362518wrn.38.2020.06.04.06.29.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 06:29:27 -0700 (PDT)
+Subject: Re: [patch V9 00/39] x86/entry: Rework leftovers (was part V)
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200521200513.656533920@linutronix.de>
+ <5e68aa83-feac-2aa7-10ee-aebebc60c83e@citrix.com>
+ <20200522211706.GZ2483@worktop.programming.kicks-ass.net>
+ <83474edd-195f-f10b-9fe9-8ee168344e29@citrix.com>
+ <20200604132537.GA3976@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <c150c709-15d6-b126-4522-364b6663dcd5@redhat.com>
+Date:   Thu, 4 Jun 2020 15:29:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <4a5874c1-6b4e-2da5-4dd1-dd5537fe6de7@gmail.com>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604132537.GA3976@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fOzo7DyXEqvmgZLcmyUodFh0orCTv1ITLtS6C18jAtb+yo
-        ZVCYls3hyoSVLksRK++35hWVadIILyuvywvmBUTRrKZmYppnp4vffs/z/J/L/+XFEfEE3wkP
-        j4qlFVGyCAkmRGve/ezav7JkCvGqUDuQlZnlfFIzNomRAwtTfLL42wQgjcYKAfn5+SceudSr
-        5JE9DdkYaVa3ATLT2MwjZ5c7eeTQix6U7Gjv5pNr/ZUoqWxbQsjKReo4QdVrRwRUVVEqRg33
-        N2LUo19elK7vAUo91BUBymCq5VHmKpdz+EXh0VA6IjyeVnj6XhaGGZPH+TFLjjc16y/RRFBi
-        pwJWOCQOQKVaz1cBIS4mCgCc1g1iXLAA4ELTMp9ViQkzgE1Zx1QAt3SoSiku/RrAxdlATj8P
-        YLI6B2MLdkQAbMmttUy1J+4CqEudQtgCQnQgsGzGiWWMkELVnMrSICJ84ePBfAHLKOEKR8x1
-        FnYggmHa6AzCaWzh+6xJlGUrwge++joPuJnbYXL1sz/zHeHgZA6Ps6bGYXGNC8cnoX4oBePY
-        Ds4YdAKOt8L1elYv3OBkAMe6SgVckAZgT1Im4FRH4HDXCsbaR4g9sLzBk0ufgJmF2Rj3KjbQ
-        NGfL3WADM2qeIlxaBJUpYk69C2oNZf/WtnzoRtKBRLvJmXaTG+0mN9r/e3MBWgQc6TgmUk4z
-        3lH0DQ9GFsnERck9rkZHVoGNr9e+ZlisA82rV1oBgQOJtcj00RQi5svimYTIVgBxRGIv8uts
-        DxGLQmUJt2hF9CVFXATNtAJnHJU4irzzpoPFhFwWS1+n6Rha8bfKw62cEkHYQGHzNX2Zh82+
-        C9WjmvNDhSqfgJ5JvyC3bUVBU6290reHdxCufaXS/BLG81TfPd7E3vtuX/zlgelJB33U3tbS
-        6CDnndqGupaz82diy11UT1YP/UD0uxMWHdxHTvv2Ao+5Jr0iK+NJo21wxYhmiyQ8LzVmCrO5
-        c9tz9fvgm3H/AgnKhMmk7oiCkf0GHlMq83YDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xe7q/vt2IM/jexGSxccZ6VoupD5+w
-        WVz/8pzVYvXHx4wW589vYLd4MPcmk8W3Kx1MFpd3zWGz+Nx7hNFixvl9TBZvfpxlsrg97zKL
-        xZnTl1gt/l3byGLRceQbs8XGrx4OAh47Z91l99i0qpPN4861PWwe/X8NPLZcbWfx6NuyitHj
-        +I3tTB6fN8kFcETp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSW
-        pRbp2yXoZZxvfsRa8E28Yur/pSwNjGuEuxg5OCQETCS61np0MXJxCAksZZRYsWQpYxcjJ1Bc
-        RuLktAZWCFtY4s+1LjaIoreMEj37NzODJIQFAiUOLtjOCpIQEWhklJi1YRc7iMMscI5Z4viH
-        V1AtPxglLh59wwbSwiZgKNH1tgvM5hWwk5h4awk7iM0ioCJx9/MOMFtUIFaie/EPdogaQYmT
-        M5+wgNicArYSyz68B7uPWcBMYt7mh8wQtrxE89bZULa4xK0n85kmMArNQtI+C0nLLCQts5C0
-        LGBkWcUoklpanJueW2yoV5yYW1yal66XnJ+7iREY7duO/dy8g/HSxuBDjAIcjEo8vDcu3ogT
-        Yk0sK67MPcQowcGsJMLrdPZ0nBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnAxNRXkm8oamh
-        uYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxphsOSuTZ1/a18999IzTpkIo
-        4PAcgYKpZZtEbF/UZWRpbSq5wl9dWbdu15kVC2aWaX56G80R8t/ZOnWj05mS2ylWa1ZPTNbV
-        Zpafu6jf56rstij7Z9IM4c07T6Tefn7I9My1Q8WcHQ8CVAR0+me21Mj9k9ih/IUj3SeMUSla
-        t6VMxelI0kt+JZbijERDLeai4kQAvii5hQwDAAA=
-X-CMS-MailID: 20200604132826eucas1p22f1d6e0121994e4579fca30f6b53e03b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200602130931eucas1p1cd784c8f692fa91dc566504543a927de
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200602130931eucas1p1cd784c8f692fa91dc566504543a927de
-References: <57cf3a15-5d9b-7636-4c69-60742e8cfae6@samsung.com>
-        <CGME20200602130931eucas1p1cd784c8f692fa91dc566504543a927de@eucas1p1.samsung.com>
-        <20200602130211.2727-1-m.szyprowski@samsung.com>
-        <4a5874c1-6b4e-2da5-4dd1-dd5537fe6de7@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+On 04/06/20 15:25, Peter Zijlstra wrote:
+> It being enabled through IA32_DEBUGCTL instead of through DR7 means that
+> the current code doesn't disable it and this then means we can have
+> nested #DB again.
 
-On 02.06.2020 17:15, Dmitry Osipenko wrote:
-> 02.06.2020 16:02, Marek Szyprowski пишет:
->> Add a simple custom voltage regulator coupler for Exynos5800 SoCs, which
->> require coupling between "vdd_arm" and "vdd_int" regulators. This coupler
->> ensures that the voltage balancing for the coupled regulators is done
->> only when clients for the each regulator apply their constraints, so the
->> voltage values don't go beyond the bootloader-selected operation point
->> during the boot process. This also ensures proper voltage balancing if
->> any of the client driver is missing.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->>   (...)
-> Hello Marek,
->
-> Does this mean that you're going to allow to violate the coupling
-> constraints while coupled regulator has no consumers?
->
-> I don't think that you may want to skip the coupled balancing ever.
-> Instead you may want to assume that the min-voltage constraint equals to
-> the current regulator's voltage while the coupled regulator has no
-> consumers.
->
-> Yours variant of the balancer doesn't prevent the voltage dropping on
-> regulator's enabling while coupled regulator doesn't have active
-> consumers. This is the problem which we previously had once OPP code was
-> changed to enable regulator.
->
-> Secondly, yours variant of the balancer also doesn't handle the case
-> where set_voltage() is invoked while one of the couples doesn't have
-> active consumers because voltage of this couple may drop more than
-> allowed on the voltage re-balancing.
-Indeed. I've focused on disabling balancing when there are no consumers 
-and I didn't notice that the max_spread might be violated in such case.
-> I'd suggest to simply change the regulator_get_optimal_voltage() to
-> limit the desired_min_uV to the current voltage if coupled regulator has
-> no consumers.
+/me bangs head on door
 
-Right, this sounds like a best solution. I have an idea to try to add it 
-again to the core as a simple check: if regultor is boot_on, use current 
-voltage as min_uV until a consumer is registered. I've checked and this 
-approach fixes the issue. I will submit a patch in a few minutes.
+> Who sodding throught this was a good idea ?! What happened to #AC that
+> SLD currently uses?
 
-> I don't think that any of the today's upstream kernel coupled-regulator
-> users really need to support the case where a regulator couple is
-> allowed *not* to have active consumers, so for now it should be fine to
-> change the core code to accommodate the needs of the Exynos regulators
-> (IMO). We may get back to this later on once there will be a real need
-> support that case.
->
-> Please also note that I'm assuming that each of the coupled regulators
-> doesn't have more than one consumer at a time in yours case (correct?),
-> because yours solution won't work well in a case of multiple consumers.
-> There is no universal solution for this bootstrapping problem yet.
+It was per-core and (presumably) considered unfixable?
 
-There are only a single consumers for each coupled regulator (cpufreq 
-for vdd_arm and devfreq for vdd_int).
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Paolo
 
