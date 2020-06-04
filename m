@@ -8,37 +8,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30837C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03A9C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7CD207ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF892065C
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Qrzqbvym"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bW5R80Kp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgFDJIM (ORCPT
+        id S1728493AbgFDJIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:08:12 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:61454 "EHLO
+        Thu, 4 Jun 2020 05:08:15 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:40299 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727937AbgFDJIJ (ORCPT
+        with ESMTP id S1728049AbgFDJIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:08:09 -0400
-X-UUID: b4f99f646285407b8ea9ffeaae011a37-20200604
+        Thu, 4 Jun 2020 05:08:12 -0400
+X-UUID: 2983abcc2d2b479c8928d05ed5f9e960-20200604
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=1t3HNytBAi0W3bOjbjl3A2ri2OH+ls+Xo4TSymJgodk=;
-        b=QrzqbvymSbwD3IXKIgUYw7ZjfLeWo/ver+E015cQrhh7xfXe9xmpPFdVDkDDu/m8IczjQ7LxdLwx1tbBVDaxw6JN4v4FvD4K5UOvuAZL2QDqZdco/4C1ncxL/b1feTgSAUYTZt1auy8PSr+gKzMI8VECYDMZFOgpDfHGEz9oAOo=;
-X-UUID: b4f99f646285407b8ea9ffeaae011a37-20200604
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=51Q/BrpkoBDx3k26Ti/j+oiGnanwsh55IVVK3mN0szc=;
+        b=bW5R80KpViX7DhvH7mpoPd8uezTOXm1wzEKq/l4DeCuiHau1JUUk1E08O+K62ToB3iBCEPvWKQPQtfji7ixEk+gRFvIOv1BCNOMF3oOo1osXFaWJLZsqEXz3va/m5/qvuMu9FqrczKeveVy5OlkueRL5fxP33tMEwISqg3y3jAU=;
+X-UUID: 2983abcc2d2b479c8928d05ed5f9e960-20200604
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
         (envelope-from <xia.jiang@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 250685954; Thu, 04 Jun 2020 17:08:06 +0800
+        with ESMTP id 2119825636; Thu, 04 Jun 2020 17:08:09 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 4 Jun 2020 17:08:03 +0800
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 4 Jun 2020 17:08:08 +0800
 Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Jun 2020 17:08:02 +0800
+ Transport; Thu, 4 Jun 2020 17:08:05 +0800
 From:   Xia Jiang <xia.jiang@mediatek.com>
 To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
@@ -55,9 +55,9 @@ CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <mojahsu@chromium.org>, <drinkcat@chromium.org>,
         <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>,
         Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH RESEND v9 03/18] media: platform: Improve getting and requesting irq flow for bug fixing
-Date:   Thu, 4 Jun 2020 17:05:38 +0800
-Message-ID: <20200604090553.10861-5-xia.jiang@mediatek.com>
+Subject: [PATCH RESEND v9 06/18] media: platform: Delete the resetting hardware flow in the system PM ops
+Date:   Thu, 4 Jun 2020 17:05:41 +0800
+Message-ID: <20200604090553.10861-8-xia.jiang@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20200604090553.10861-1-xia.jiang@mediatek.com>
 References: <20200604090553.10861-1-xia.jiang@mediatek.com>
@@ -70,28 +70,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RGVsZXRlIHBsYXRmb3JtX2dldF9yZXNvdXJjZSBvcGVyYXRpb24gZm9yIGlycS4NClJldHVybiBh
-Y3R1YWwgdmFsdWUgcmF0aGVyIHRoYW4gRUlOVkFMIHdoZW4gZmFpbCB0byBnZXQgYW5kIHJlcXVl
-c3QNCmlycS4NCg0KUmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+
-DQpTaWduZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhpYS5qaWFuZ0BtZWRpYXRlay5jb20+DQotLS0N
-CnY5OiBubyBjaGFuZ2VzDQotLS0NCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210
-a19qcGVnX2NvcmUuYyB8IDcgKystLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KyksIDUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3Jt
-L210ay1qcGVnL210a19qcGVnX2NvcmUuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpw
-ZWcvbXRrX2pwZWdfY29yZS5jDQppbmRleCA2N2EwMjJkMDRkZjcuLjI2Nzc1ODA5NDFiMCAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5j
-DQorKysgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0K
-QEAgLTExMDMsMTIgKzExMDMsMTAgQEAgc3RhdGljIGludCBtdGtfanBlZ19wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAkJcmV0dXJuIHJldDsNCiAJfQ0KIA0KLQlyZXMgPSBw
-bGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9JUlEsIDApOw0KIAlkZWNfaXJx
-ID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsNCi0JaWYgKCFyZXMgfHwgZGVjX2lycSA8IDAp
-IHsNCisJaWYgKGRlY19pcnEgPCAwKSB7DQogCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJGYWlsZWQg
-dG8gZ2V0IGRlY19pcnEgJWQuXG4iLCBkZWNfaXJxKTsNCi0JCXJldCA9IC1FSU5WQUw7DQotCQly
-ZXR1cm4gcmV0Ow0KKwkJcmV0dXJuIGRlY19pcnE7DQogCX0NCiANCiAJcmV0ID0gZGV2bV9yZXF1
-ZXN0X2lycSgmcGRldi0+ZGV2LCBkZWNfaXJxLCBtdGtfanBlZ19kZWNfaXJxLCAwLA0KQEAgLTEx
-MTYsNyArMTExNCw2IEBAIHN0YXRpYyBpbnQgbXRrX2pwZWdfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikNCiAJaWYgKHJldCkgew0KIAkJZGV2X2VycigmcGRldi0+ZGV2LCAiRmFp
-bGVkIHRvIHJlcXVlc3QgZGVjX2lycSAlZCAoJWQpXG4iLA0KIAkJCWRlY19pcnEsIHJldCk7DQot
-CQlyZXQgPSAtRUlOVkFMOw0KIAkJZ290byBlcnJfcmVxX2lycTsNCiAJfQ0KIA0KLS0gDQoyLjE4
-LjANCg==
+RGVsZXRlIHRoZSByZXNldHRpbmcgaGFyZHdhcmUgZmxvdyBpbiBzdXNwZW5kIGFuZCByZXN1bWUg
+ZnVuY3Rpb24NCmJlY2F1c2UgdGhhdCByZXNldHRpbmcgb3BlcmF0aW9uIHdpbGwgYmUgZG9uZSBp
+biBkZXZpY2VfcnVuKCkuDQoNClNpZ25lZC1vZmYtYnk6IFhpYSBKaWFuZyA8eGlhLmppYW5nQG1l
+ZGlhdGVrLmNvbT4NCi0tLQ0Kdjk6IG5ldyBwYXRjaA0KLS0tDQogZHJpdmVycy9tZWRpYS9wbGF0
+Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMgfCAyIC0tDQogMSBmaWxlIGNoYW5nZWQsIDIg
+ZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1q
+cGVnL210a19qcGVnX2NvcmUuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRr
+X2pwZWdfY29yZS5jDQppbmRleCBmYjYyNDM4NTk2OWUuLjdmNzQ1OTcyNjJmYyAxMDA2NDQNCi0t
+LSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQorKysg
+Yi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KQEAgLTEx
+OTEsNyArMTE5MSw2IEBAIHN0YXRpYyBfX21heWJlX3VudXNlZCBpbnQgbXRrX2pwZWdfcG1fc3Vz
+cGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0KIAlzdHJ1Y3QgbXRrX2pwZWdfZGV2ICpqcGVn
+ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQogDQotCW10a19qcGVnX2RlY19yZXNldChqcGVnLT5k
+ZWNfcmVnX2Jhc2UpOw0KIAltdGtfanBlZ19jbGtfb2ZmKGpwZWcpOw0KIA0KIAlyZXR1cm4gMDsN
+CkBAIC0xMjAyLDcgKzEyMDEsNiBAQCBzdGF0aWMgX19tYXliZV91bnVzZWQgaW50IG10a19qcGVn
+X3BtX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogCXN0cnVjdCBtdGtfanBlZ19kZXYgKmpw
+ZWcgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCiANCiAJbXRrX2pwZWdfY2xrX29uKGpwZWcpOw0K
+LQltdGtfanBlZ19kZWNfcmVzZXQoanBlZy0+ZGVjX3JlZ19iYXNlKTsNCiANCiAJcmV0dXJuIDA7
+DQogfQ0KLS0gDQoyLjE4LjANCg==
 
