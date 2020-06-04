@@ -2,71 +2,75 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B856FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92CAD207DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827B220823
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O51Osu4U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bTpVL1yf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgFDNx3 (ORCPT
+        id S1728896AbgFDNxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47832 "EHLO
+        Thu, 4 Jun 2020 09:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728740AbgFDNx3 (ORCPT
+        with ESMTP id S1728740AbgFDNxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:53:29 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A1FC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:53:28 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x13so6205793wrv.4
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:53:28 -0700 (PDT)
+        Thu, 4 Jun 2020 09:53:31 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB22C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 06:53:30 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so6221135wrt.5
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RNKgisTvCxKeIfzFNw79PawPgsdQpi+VTBw2eOrL7UI=;
-        b=O51Osu4UdCOGnotGhmGHJ94XsvwJxmD+RL/BS27sj3XsP9eR4kHTb7INzvbmhlBvlN
-         rkWYTnjyEYtr0YDzMY3DYmpmeBHD2VZQvLtyScigshpv1/y2n7nlH55NZ53DLwvzu8by
-         F1ZhUQ3WBqgq9FXPVN5C5mTbOQ6NvqI0rcuRpD0nK/pH2TBrBdpobdxf3G3nRR1vekki
-         iO3f9lHdG9jEFpKK4mFfiAuFO/Pa8ZBPE2z6kKu7JTDk6G+cEQaRzinD7/0foyg048Gh
-         9khvPqsS5YZSCB+wa+8s2lk2PFqPmadl0+6QZSiJcMHWbBEI+8U71HcphuUVlhgucVKj
-         mTrg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Fs26md6QbBGAquJwpk095GGSGBX/m/yeaPP+lwPf4x8=;
+        b=bTpVL1yfwhHL564oV9oXTuVi5bwYohXzTpcKvqoytnCDbbMUIAeZsrdq92E0qwRRSg
+         UfSDj3lzKt+diIWgtJqYc2UKsOBY/ArWO+KMdr64+3lR8Puu98hTn/h1lbs8pZD3z0a5
+         6ShQ9QS2p4Zr3km9dLUyszhnICzksvQjbCrHKAfOpH8DBiP7RsMzrXzBw1bJT3KiwTm3
+         9xZUp0uS871oMpIXbSrQ/0KnqXJ/ZEg8yRFTESmOv1jd2O4crFzKduVGLDXRc8vcZgCD
+         uUtou4MeMzMCIRxtSYLva3dOgaRLMh0YBcvkdPYbchEEWfISZiUqH0diRmCqtZ42LoKm
+         G+jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RNKgisTvCxKeIfzFNw79PawPgsdQpi+VTBw2eOrL7UI=;
-        b=hAM/muYrkECpwFZDkHBSWR4+WMRlWH4O46WLjmV6JFo0iiWHCvxm4ZochuWKO20SvE
-         zHaszyiqkeDTXkD/rO70/APK9t7HmXnI3GW41o/NqOkSkK8IsczNTOjo3MqPRnizl9t1
-         8/29Qmtnh8gVtVo4y5flrEFp3uL8pHQS++mvV7+2+MWKt5WCpYEXmJAbZz23PSMajZQY
-         dMwxGS20HYRO4AGVD7OnskfQGGNxfrPzrjoeSiWScfvZjXMjyQGkryesPykJXb63CyYy
-         2u1vKc2NpqT7BH0whwM1UUFXsuIkB2KdPA11ZsIygrXWzl2xyFwUo+mbt0iC/nsEoJH2
-         Jifg==
-X-Gm-Message-State: AOAM533i0aA2mZERK5JJKuN9S75Saggnr08je12z7iPbnGEIv5ca25iQ
-        pMGbQdv/xDCj9JRvfknwmna+6w==
-X-Google-Smtp-Source: ABdhPJxqdqJHN5Y5b9X1Q7kP0UxYnF1bBarO0Pdw4x0ipWE20qFJ7SzK27MiQOP21FgZk4r2/ND1+Q==
-X-Received: by 2002:adf:e782:: with SMTP id n2mr4462910wrm.417.1591278807326;
-        Thu, 04 Jun 2020 06:53:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Fs26md6QbBGAquJwpk095GGSGBX/m/yeaPP+lwPf4x8=;
+        b=VHDsCFM3LhGGpfQ7mFAkn5Rrdu9pFOYHjnkCaNk+81xd52mGObU1aHanpOAVHSvE7L
+         6UlVOMXRcks/6SHVOwZ1emfn5EqgGbap9dp6TUfIqgB98tFf/DbK0HmIz2fJhhYjbV9L
+         P4WbqyCyH2Fnp3Akpj5ks9vrV3f3LCiHTd7DgkgWv2kKGOSKcX2AHtLEc2ZZOKKSQQxT
+         ztxk4ISqLSWUbCUTBabx21PG3nNq5mKco/MT6jUAt32DN780JQZudk7sHeDnNqiw6QgW
+         F3BGU8We3Po6V/j06vIJpDMGg4L5kdL1Y/VSaVVE0OpGMbEQErW1Q0mr8WWkkZHXqfD/
+         MXwQ==
+X-Gm-Message-State: AOAM530jOPKfoUYI8nVmSHnH8ql8LvWqvKyi3RQTQKJnLj3S/lfu6mJ1
+        2ACryeaLrVwfVkmK1tgGXDOe2Q==
+X-Google-Smtp-Source: ABdhPJwqpOH22rRrTWj54Pu3JjP2wensOE1kRwQ6BI5hptsY6t27TXlnHJBKfdM8GJs/L3uqecz/Pw==
+X-Received: by 2002:a5d:4dc9:: with SMTP id f9mr4441675wru.407.1591278809353;
+        Thu, 04 Jun 2020 06:53:29 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:22:5867:d2c6:75f4])
-        by smtp.gmail.com with ESMTPSA id i74sm8185599wri.49.2020.06.04.06.53.25
+        by smtp.gmail.com with ESMTPSA id i74sm8185599wri.49.2020.06.04.06.53.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 06:53:26 -0700 (PDT)
+        Thu, 04 Jun 2020 06:53:28 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     hverkuil-cisco@xs4all.nl
 Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Maxime Jourdan <mjourdan@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 0/5] media: meson: vdec: Add support for compressed framebuffer
-Date:   Thu,  4 Jun 2020 15:53:12 +0200
-Message-Id: <20200604135317.9235-1-narmstrong@baylibre.com>
+Subject: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel formats
+Date:   Thu,  4 Jun 2020 15:53:13 +0200
+Message-Id: <20200604135317.9235-2-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200604135317.9235-1-narmstrong@baylibre.com>
+References: <20200604135317.9235-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,51 +78,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset add support for compressed framebuffer while decoding VP9
-8bit and 10bit streams.
+From: Maxime Jourdan <mjourdan@baylibre.com>
 
-First, it adds two generic Compressed Framebuffer pixel formats to be used
+Add two generic Compressed Framebuffer pixel formats to be used
 with a modifier when imported back in another subsystem like DRM/KMS.
+
+These pixel formats represents generic 8bits and 10bits compressed buffers
+with a vendor specific layout.
 
 These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_YUV420_10BIT
 used to describe the underlying compressed buffers used for ARM Framebuffer
 Compression. In the Amlogic case, the compression is different but the
 underlying buffer components is the same.
 
-Then, in order to handle Compressed Framebuffer support, we need to handle
-the switch between 8bit and 10bit frame output.
-Add the necessary changes to decode VP9 8bit and 10bit streams into
-compressed buffers to be imported back into DRM/KMS using a modifier.
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+ include/uapi/linux/videodev2.h       | 9 +++++++++
+ 2 files changed, 11 insertions(+)
 
-Finally, add the necessary to add support for negociating the compressed buffer
-pixel format with the V4L2 M2M consumer, and allocating the right
-buffers in this case.
-
-Until a proper mechanism exists to pass a modifier along the pixel format,
-only the generic V4L2_PIX_FMT_YUV420_8BIT and V4L2_PIX_FMT_YUV420_10BIT
-format are passed in v4l2_pix_format_mplane struct for consumer.
-
-Maxime Jourdan (5):
-  media: videodev2: add Compressed Framebuffer pixel formats
-  media: meson: vdec: handle bitdepth on source change
-  media: meson: vdec: update compressed buffer helpers
-  media: meson: vdec: add support for compressed output for VP9 decoder
-  media: meson: vdec: handle compressed output pixel format negociation
-    with consumer
-
- drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
- drivers/staging/media/meson/vdec/codec_h264.c |   3 +-
- .../media/meson/vdec/codec_hevc_common.c      | 133 +++++++-----------
- .../media/meson/vdec/codec_hevc_common.h      |  13 +-
- drivers/staging/media/meson/vdec/codec_vp9.c  |  29 ++--
- drivers/staging/media/meson/vdec/vdec.c       |  46 ++++++
- drivers/staging/media/meson/vdec/vdec.h       |   4 +
- .../staging/media/meson/vdec/vdec_helpers.c   |  68 +++++++--
- .../staging/media/meson/vdec/vdec_helpers.h   |  11 +-
- .../staging/media/meson/vdec/vdec_platform.c  |   9 +-
- include/uapi/linux/videodev2.h                |   9 ++
- 11 files changed, 203 insertions(+), 124 deletions(-)
-
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 2322f08a98be..8f14adfd5bc5 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
+ 		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
+ 		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
++		case V4L2_PIX_FMT_YUV420_8BIT:	descr = "Compressed YUV 4:2:0 8-bit Format"; break;
++		case V4L2_PIX_FMT_YUV420_10BIT:	descr = "Compressed YUV 4:2:0 10-bit Format"; break;
+ 		default:
+ 			if (fmt->description[0])
+ 				return;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index c3a1cf1c507f..90b9949acb8a 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -705,6 +705,15 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /* Fast Walsh Hadamard Transform (vicodec) */
+ #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W', 'H') /* Stateless FWHT (vicodec) */
+ 
++/*
++ * Compressed Luminance+Chrominance meta-formats
++ * In these formats, the component ordering is specified (Y, followed by U
++ * then V), but the exact Linear layout is undefined.
++ * These formats can only be used with a non-Linear modifier.
++ */
++#define V4L2_PIX_FMT_YUV420_8BIT	v4l2_fourcc('Y', 'U', '0', '8') /* 1-plane YUV 4:2:0 8-bit */
++#define V4L2_PIX_FMT_YUV420_10BIT	v4l2_fourcc('Y', 'U', '1', '0') /* 1-plane YUV 4:2:0 10-bit */
++
+ /*  Vendor-specific formats   */
+ #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
+ #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
 -- 
 2.22.0
 
