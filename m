@@ -2,217 +2,118 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4582C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ED7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED73206DC
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D697A206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEoLIkc1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O25wYAeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgFDR7K (ORCPT
+        id S1730451AbgFDR7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57738 "EHLO
+        Thu, 4 Jun 2020 13:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730349AbgFDR7C (ORCPT
+        with ESMTP id S1730187AbgFDR7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:59:02 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F9DC08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:59:02 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id n24so8413160lji.10
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:59:02 -0700 (PDT)
+        Thu, 4 Jun 2020 13:59:24 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E120C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:59:24 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a127so3583209pfa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Eox8fZ0WSYZz73QuDot1O+nsmoLfoZMQmPTJJxk9miI=;
-        b=gEoLIkc1pocbO4N8OJKp6LfOD8S1cJhZ0LzXzYJix/Dll52mKdTe4lMqmDAR3QXTes
-         Jf7KK9mDdfksqKM8BW51iVka+4MGUGK2pkMEL6N/rTdlh2h9gcgd5pnIagw30A23otV1
-         Kr7t50eOliuKRvNcTghjf05M0AeCRN9R5+o6nE5wn3Z5sqT3xZsm6SVLezGxalw6NVYn
-         4tQB25qT1RgQpKd0SeLwmZH6jc+V5xBQcZAlCexGTrgRwezqF7dK1/SZzKNRdW6KK6CM
-         27qw46aZCa+HBLfnP+OUn2WU0ktDcWNKgLid8SvSSWLF6i+SFzpkCUKh9tGojY8vUOGG
-         j9yA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2qJ1KmR7n31K99rmmaGKTiex9LAFKCkmBxAmhTYhJxo=;
+        b=O25wYAeOqYLKutlDyi60xIlbTuDdCOT5e2XYNOsNGhC4B+NaMg3VxpH/LIFlYcKegJ
+         T2d7Nsibm7xBSN7jaERDrF77NKlRLBhUJZhYCNyaOF8giEp3RryXOHyVxA+KlQtlUkqU
+         MR3J/581kbOBBRQlO36Kq+wpxgAQjeV+sg00s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Eox8fZ0WSYZz73QuDot1O+nsmoLfoZMQmPTJJxk9miI=;
-        b=p/EY9wnlvvnuDLh3HM9JY4k+m6XkRBmEiZv5RlNQxPBX17E01pQakczPmuGgMgPPRl
-         kHytHGlv4mbQnuOJS9yr39zkiOVNm3oqnB+5ivMLpjgpdi79Prfkm0MOKsb0ZyM3FmzK
-         5H1CoRH5F8gXwwpDL8LGmIlemeMXziX506U6vUOg7XeP/dl/nf6/uaL2Rao5grs7a+yu
-         WFp0o+tbtram336800jSSSGfdclGyC0NTh3W7ELJ0lI+iC3/yq3RVmdLtzB1ELm72Ws7
-         Yk/06jv+QenwpynukxEqaoG1xUkIZWWiMYuxH7WqlNTZEzoq598QHXlx51ew8fzW7JYr
-         3fiQ==
-X-Gm-Message-State: AOAM532WrMT+i3ppYWvaBWlhXaKGv2Y9eV0SIoTfD9v/mAttSNPbTnCh
-        nxLsknm3BCwXoe9NsjF1LeYTFXdKlBI=
-X-Google-Smtp-Source: ABdhPJzm2N1gqT4XxUKze+9nfP7lMPt1+n0rBlf4WlLJwUakJswwxWWEWwCHglUF8EO5p9fHR/H39w==
-X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr2622479ljm.34.1591293540445;
-        Thu, 04 Jun 2020 10:59:00 -0700 (PDT)
-Received: from localhost.localdomain ([176.59.41.83])
-        by smtp.gmail.com with ESMTPSA id y17sm72404lfa.77.2020.06.04.10.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 10:58:59 -0700 (PDT)
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
-        linux-integrity@vger.kernel.org, arnd@linaro.org,
-        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
-Subject: [PATCHv8 3/3] tpm_ftpm_tee: register driver on TEE bus
-Date:   Thu,  4 Jun 2020 20:58:51 +0300
-Message-Id: <20200604175851.758-4-maxim.uvarov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200604175851.758-1-maxim.uvarov@linaro.org>
-References: <20200604175851.758-1-maxim.uvarov@linaro.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2qJ1KmR7n31K99rmmaGKTiex9LAFKCkmBxAmhTYhJxo=;
+        b=hCv2Sp0Ku9jLIfBEd/I76eKz3WEpW/SqcO1vCBTaERRVOpMS9364+KgtTBuDs/+60J
+         GK2uW+uUXgkj1drh0x++DpoZRIMkbugYAI6Be8eXvi8PCQ+qJQ9HqfiZEA2fLNCwUzy6
+         Do2l7z8ASjKaLRvNe2edgCGIG32Mh/4f2GDgWJh0Q0yRKTYacz4iyNRGb9layhOI6Tja
+         VuYkVyEZtqV+eneWscUkPMlzq+G4ue9xA9lXXR7D7MrHKy1wk0Wq8hIc/PZkB6U4uo4G
+         opd4DbajVaDAnlNIka/tx/llSnRHStaQlDPndvKRDRAI/d6804Ekqu7oH0NruJNakS8j
+         zKNQ==
+X-Gm-Message-State: AOAM5309rlpYweGdZzgfkOZOXT2420RsNVU4kgQEc49xpMMHtunxJevu
+        o06fpAYPFoujxu8MekGmc4+VRw==
+X-Google-Smtp-Source: ABdhPJy8aqjpj6isz3vL3kGOUE53Wgd2Jl+2f1JtJGfWBzh0MNQ1ovSw5R16ThJEKXvXpFgxlTMkiA==
+X-Received: by 2002:a63:454c:: with SMTP id u12mr5625732pgk.153.1591293563926;
+        Thu, 04 Jun 2020 10:59:23 -0700 (PDT)
+Received: from evgreen-glaptop.cheshire.ch ([2601:646:c780:1404:1c5a:73fa:6d5a:5a3c])
+        by smtp.gmail.com with ESMTPSA id q13sm2568927pfk.8.2020.06.04.10.59.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 04 Jun 2020 10:59:23 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     kuabhs@google.com.org, sujitka@chromium.org,
+        Evan Green <evgreen@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Govind Singh <govinds@qti.qualcomm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michal Kazior <michal.kazior@tieto.com>,
+        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH] ath10k: Acquire tx_lock in tx error paths
+Date:   Thu,  4 Jun 2020 10:59:11 -0700
+Message-Id: <20200604105901.1.I5b8b0c7ee0d3e51a73248975a9da61401b8f3900@changeid>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OP-TEE based fTPM Trusted Application depends on tee-supplicant to
-provide NV RAM implementation based on RPMB secure storage. So this
-dependency can be resolved via TEE bus where we only invoke fTPM
-driver probe once fTPM device is registered on the bus which is only
-true after the tee-supplicant is up and running. Additionally, TEE bus
-provides auto device enumeration.
+ath10k_htt_tx_free_msdu_id() has a lockdep assertion that htt->tx_lock
+is held. Acquire the lock in a couple of error paths when calling that
+function to ensure this condition is met.
 
-Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@linaro.org>
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+Fixes: 6421969f248fd ("ath10k: refactor tx pending management")
+Fixes: e62ee5c381c59 ("ath10k: Add support for htt_data_tx_desc_64
+descriptor")
+Signed-off-by: Evan Green <evgreen@chromium.org>
 ---
- drivers/char/tpm/tpm_ftpm_tee.c | 70 ++++++++++++++++++++++++++++-----
- 1 file changed, 60 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-index 22bf553ccf9d..28da638360d8 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.c
-+++ b/drivers/char/tpm/tpm_ftpm_tee.c
-@@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
-  * Return:
-  *	On success, 0. On failure, -errno.
-  */
--static int ftpm_tee_probe(struct platform_device *pdev)
-+static int ftpm_tee_probe(struct device *dev)
- {
- 	int rc;
- 	struct tpm_chip *chip;
--	struct device *dev = &pdev->dev;
- 	struct ftpm_tee_private *pvt_data = NULL;
- 	struct tee_ioctl_open_session_arg sess_arg;
- 
-@@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
- 	return rc;
+ drivers/net/wireless/ath/ath10k/htt_tx.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/ath10k/htt_tx.c b/drivers/net/wireless/ath/ath10k/htt_tx.c
+index e9d12ea708b62..e8c00af2cce1d 100644
+--- a/drivers/net/wireless/ath/ath10k/htt_tx.c
++++ b/drivers/net/wireless/ath/ath10k/htt_tx.c
+@@ -1545,7 +1545,9 @@ static int ath10k_htt_tx_32(struct ath10k_htt *htt,
+ err_unmap_msdu:
+ 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
+ err_free_msdu_id:
++	spin_lock_bh(&htt->tx_lock);
+ 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
++	spin_unlock_bh(&htt->tx_lock);
+ err:
+ 	return res;
  }
- 
-+static int ftpm_plat_tee_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	return ftpm_tee_probe(dev);
-+}
-+
- /**
-  * ftpm_tee_remove() - remove the TPM device
-  * @pdev: the platform_device description.
-@@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
-  * Return:
-  *	0 always.
-  */
--static int ftpm_tee_remove(struct platform_device *pdev)
-+static int ftpm_tee_remove(struct device *dev)
- {
--	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
-+	struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
- 
- 	/* Release the chip */
- 	tpm_chip_unregister(pvt_data->chip);
-@@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
- 	return 0;
+@@ -1752,7 +1754,9 @@ static int ath10k_htt_tx_64(struct ath10k_htt *htt,
+ err_unmap_msdu:
+ 	dma_unmap_single(dev, skb_cb->paddr, msdu->len, DMA_TO_DEVICE);
+ err_free_msdu_id:
++	spin_lock_bh(&htt->tx_lock);
+ 	ath10k_htt_tx_free_msdu_id(htt, msdu_id);
++	spin_unlock_bh(&htt->tx_lock);
+ err:
+ 	return res;
  }
- 
-+static int ftpm_plat_tee_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	return ftpm_tee_remove(dev);
-+}
-+
- /**
-  * ftpm_tee_shutdown() - shutdown the TPM device
-  * @pdev: the platform_device description.
-  */
--static void ftpm_tee_shutdown(struct platform_device *pdev)
-+static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
- {
- 	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
- 
-@@ -347,17 +360,54 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
- 
--static struct platform_driver ftpm_tee_driver = {
-+static struct platform_driver ftpm_tee_plat_driver = {
- 	.driver = {
- 		.name = "ftpm-tee",
- 		.of_match_table = of_match_ptr(of_ftpm_tee_ids),
- 	},
--	.probe = ftpm_tee_probe,
--	.remove = ftpm_tee_remove,
--	.shutdown = ftpm_tee_shutdown,
-+	.shutdown = ftpm_plat_tee_shutdown,
-+	.probe = ftpm_plat_tee_probe,
-+	.remove = ftpm_plat_tee_remove,
-+};
-+
-+/* UUID of the fTPM TA */
-+static const struct tee_client_device_id optee_ftpm_id_table[] = {
-+	{UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
-+		   0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
-+	{}
- };
- 
--module_platform_driver(ftpm_tee_driver);
-+MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
-+
-+static struct tee_client_driver ftpm_tee_driver = {
-+	.id_table	= optee_ftpm_id_table,
-+	.driver		= {
-+		.name		= "optee-ftpm",
-+		.bus		= &tee_bus_type,
-+		.probe		= ftpm_tee_probe,
-+		.remove		= ftpm_tee_remove,
-+	},
-+};
-+
-+static int __init ftpm_mod_init(void)
-+{
-+	int rc;
-+
-+	rc = platform_driver_register(&ftpm_tee_plat_driver);
-+	if (rc)
-+		return rc;
-+
-+	return driver_register(&ftpm_tee_driver.driver);
-+}
-+
-+static void __exit ftpm_mod_exit(void)
-+{
-+	platform_driver_unregister(&ftpm_tee_plat_driver);
-+	driver_unregister(&ftpm_tee_driver.driver);
-+}
-+
-+module_init(ftpm_mod_init);
-+module_exit(ftpm_mod_exit);
- 
- MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
- MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
 -- 
-2.17.1
+2.24.1
 
