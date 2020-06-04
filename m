@@ -2,116 +2,136 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC59FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B694C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8B320679
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C011204EF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 03:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMh2NLBL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h2Mvt9jh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgFDDrF (ORCPT
+        id S1726774AbgFDDzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 23:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbgFDDrB (ORCPT
+        Wed, 3 Jun 2020 23:55:17 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33686 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725959AbgFDDzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 23:47:01 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C60CC03E96D;
-        Wed,  3 Jun 2020 20:47:01 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t7so2949930pgt.3;
-        Wed, 03 Jun 2020 20:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NxEaSPQeIOPRkfXUqBGWXS3DhANeE89pJJUJwsIWN6U=;
-        b=XMh2NLBLCV1jRAsM/ApPVYMn0b8sSfJSvOD39kjJ1Om9Wed9iwphuhaPW9wZ3rsBHv
-         u8UUaLG7LjbGEYX+lAyn6swrDVh9AvFtLNGkHG7klLKXrNclPthMtPF0i2sh2fLO3ys5
-         wwT90Pe51q16aPifitePxyi03f77GMxf4NvhwVuaMusm7QLwD7q0iLO+TUj49JVRlbNe
-         6cyzApJCV7abeGs6zUhOHAfrRSSPel6w+A6rfY006mPcSKCANZernfLy0CFifmBw7JAm
-         XzUF0f/amIWLBpuMk7lrwlZdWFc2dYJbjwYnxzaY/mSz2cMDGqig2Qns1uSdl28izDXv
-         BrJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NxEaSPQeIOPRkfXUqBGWXS3DhANeE89pJJUJwsIWN6U=;
-        b=dXmeR56coD0mjaGzIh8a+wyEXDa3+yr4fULC+UgluqkCharkuPMiDPWzgZtpOW5dVH
-         DH7Km1eCYzGZ3EG36uDtYO3kEGZCXjpTq8/trqEbE9X43sTsgSDouKxDG49ujVt7qLFD
-         H5q8qx76/gIPzhgM8RKHUJE76lF7n0bYITtNGc1/FJA4c0yIkGr0lVOSA/sFQDwgxA33
-         nb+x0Rd43QcyF/OiqbE+jAvrqdm2KCf9hdeMVdvLcKxRW4UDYD4TcpRdsihMs4FMvUah
-         4uU5uuvUKEHJh/lBzJ4zFLoiMs2EyLKtGNmefr3X2eaFktOYvC/JyEABgvNLyCnCLBDv
-         7GNg==
-X-Gm-Message-State: AOAM533X+S7JwNCXhiZire7vlDVB+YWPCIIwX2+JhqeFmlMRrAdjs3JS
-        S+AVBXOmMTI+Tu7GbIE565dymmtx
-X-Google-Smtp-Source: ABdhPJyuRIpehL8ILBEuAv8MYZ88AthlobDOSBfpKUE+4FSI+ipnlgCRqSzcWpGqCddTssyAUSN10g==
-X-Received: by 2002:a05:6a00:150c:: with SMTP id q12mr2251871pfu.270.1591242420517;
-        Wed, 03 Jun 2020 20:47:00 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id p19sm3083367pff.116.2020.06.03.20.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 20:46:59 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
-        linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        Martin Sperl <kernel@martin.sperl.org>, lukas@wunner.de
-Subject: [PATCH 1/3] dt-bindings: spi: Document bcm2711 and bcm7211 SPI compatible
-Date:   Wed,  3 Jun 2020 20:46:53 -0700
-Message-Id: <20200604034655.15930-2-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200604034655.15930-1-f.fainelli@gmail.com>
-References: <20200604034655.15930-1-f.fainelli@gmail.com>
+        Wed, 3 Jun 2020 23:55:16 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0543qUMV129253;
+        Thu, 4 Jun 2020 03:54:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=Z6Q9Wq0yQ9bYp+C/bSDjX1Q1JFM5hLt2P2p/aVt1ixU=;
+ b=h2Mvt9jhAjmuJDQf5LnGjf46WdYyN920Yi6mmXKJiQzn0dRY1fnmYxrAfEQ8xvVraODM
+ FCaR3RGaHPuMiNLN3V3UMpILWWXjH+5QkzOod+P0JGhRUX82gnFmmfahYH9Tz4KIvF21
+ rwwsVmgzGkDO6c0ywQ0iADNxEkSyXwEQOWouXghyNpTwNfWG8ghtrFRFfALjKy1JZuAK
+ YQ4t5CX7k2lLgdPi8kyXpcQQ7GIcX39wJl1bfi4+RIbMFKqwAk1qw2o1nsIqewJNjWPv
+ 2/I2LMkqT/lHdqaBfsff4vriYFWITse67cL/U7YMoc3DaSOnm8Qvg/i/4jCAJJQeQ/Cg hA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31bewr4eqy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 04 Jun 2020 03:54:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0543rTBt168559;
+        Thu, 4 Jun 2020 03:54:51 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 31ej0ysgp8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Jun 2020 03:54:51 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0543snsW032028;
+        Thu, 4 Jun 2020 03:54:49 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Jun 2020 20:54:48 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH] x86/mm: use max memory block size with unaligned memory end
+Date:   Wed,  3 Jun 2020 23:54:43 -0400
+Message-Id: <20200604035443.3267046-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006040022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 bulkscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 cotscore=-2147483648
+ lowpriorityscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006040022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM2711 and BCM7211 chips use the BCM2835 SPI controller, but there
-are severl instances of those in the system and they all share the same
-interrupt line. Document specific compatible strings such that the
-driver can take appropriate actions.
+Some of our servers spend 14 out of the 21 seconds of kernel boot
+initializing memory block sysfs directories and then creating symlinks
+between them and the corresponding nodes.  The slowness happens because
+the machines get stuck with the smallest supported memory block size on
+x86 (128M), which results in 16,288 directories to cover the 2T of
+installed RAM, and each of these paths does a linear search of the
+memory blocks for every block id, with atomic ops at each step.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Commit 078eb6aa50dc ("x86/mm/memory_hotplug: determine block size based
+on the end of boot memory") chooses the block size based on alignment
+with memory end.  That addresses hotplug failures in qemu guests, but
+for bare metal systems whose memory end isn't aligned to the smallest
+size, it leaves them at 128M.
+
+For such systems, use the largest supported size (2G) to minimize
+overhead on big machines.  That saves nearly all of the 14 seconds so
+the kernel boots 3x faster.
+
+There are some simple ways to avoid the linear searches, but for now it
+makes no difference with a 2G block.
+
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 ---
- Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/mm/init_64.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
-index f11f295c8450..3d55dd64b1be 100644
---- a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
-+++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
-@@ -5,7 +5,8 @@ SPI0, and the other known as the "Universal SPI Master"; part of the
- auxiliary block. This binding applies to the SPI0 controller.
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 8b5f73f5e207c..d388127d1b519 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1390,6 +1390,15 @@ static unsigned long probe_memory_block_size(void)
+ 		goto done;
+ 	}
  
- Required properties:
--- compatible: Should be "brcm,bcm2835-spi".
-+- compatible: Should be one of "brcm,bcm2835-spi" for BCM2835/2836/2837 or
-+  "brcm,bcm2711-spi" for BCM2711 or "brcm,bcm7211-spi" for BCM7211.
- - reg: Should contain register location and length.
- - interrupts: Should contain interrupt.
- - clocks: The clock feeding the SPI controller.
++	/*
++	 * Memory end isn't aligned to any allowed block size, so default to
++	 * the largest to minimize overhead on large memory systems.
++	 */
++	if (!IS_ALIGNED(boot_mem_end, MIN_MEMORY_BLOCK_SIZE)) {
++		bz = MAX_BLOCK_SIZE;
++		goto done;
++	}
++
+ 	/* Find the largest allowed block size that aligns to memory end */
+ 	for (bz = MAX_BLOCK_SIZE; bz > MIN_MEMORY_BLOCK_SIZE; bz >>= 1) {
+ 		if (IS_ALIGNED(boot_mem_end, bz))
+
+base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
 -- 
-2.17.1
+2.26.2
 
