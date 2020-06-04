@@ -2,124 +2,139 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D201C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E6E20657
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9553320657
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 01:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgFDBrV (ORCPT
+        id S1727990AbgFDBr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 3 Jun 2020 21:47:21 -0400
-Received: from smtprelay0142.hostedemail.com ([216.40.44.142]:36934 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgFDBrT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 3 Jun 2020 21:47:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C6C99837F24C;
-        Thu,  4 Jun 2020 01:47:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: actor89_4e0069c26d93
-X-Filterd-Recvd-Size: 3931
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jun 2020 01:47:14 +0000 (UTC)
-Message-ID: <6f921002478544217903ee4bfbe3c400e169687f.camel@perches.com>
-Subject: Re: [PATCH 08/10] checkpatch: Remove awareness of
- uninitialized_var() macro
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mm@kvack.org, clang-built-linux@googlegroups.com
-Date:   Wed, 03 Jun 2020 18:47:13 -0700
-In-Reply-To: <202006031838.55722640DC@keescook>
-References: <20200603233203.1695403-1-keescook@chromium.org>
-         <20200603233203.1695403-9-keescook@chromium.org>
-         <ff9087b0571e1fc499bd8a4c9fd99bfc0357f245.camel@perches.com>
-         <202006031838.55722640DC@keescook>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 3 Jun 2020 21:47:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58974 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727973AbgFDBrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 3 Jun 2020 21:47:25 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CED362011D0;
+        Thu,  4 Jun 2020 03:47:07 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BCCB12011DF;
+        Thu,  4 Jun 2020 03:46:21 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 08582402A5;
+        Thu,  4 Jun 2020 09:46:14 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, stigge@antcom.de,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2] dt-bindings: rtc: Convert imxdi rtc to json-schema
+Date:   Thu,  4 Jun 2020 09:35:55 +0800
+Message-Id: <1591234555-15187-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-06-03 at 18:40 -0700, Kees Cook wrote:
-> On Wed, Jun 03, 2020 at 05:02:29PM -0700, Joe Perches wrote:
-> > On Wed, 2020-06-03 at 16:32 -0700, Kees Cook wrote:
-> > > Using uninitialized_var() is dangerous as it papers over real bugs[1]
-> > > (or can in the future), and suppresses unrelated compiler warnings
-> > > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
-> > > either simply initialize the variable or make compiler changes.
-> > > 
-> > > In preparation for removing[2] the[3] macro[4], effectively revert
-> > > commit 16b7f3c89907 ("checkpatch: avoid warning about uninitialized_var()")
-> > > and remove all remaining mentions of uninitialized_var().
-> > > 
-> > > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
-> > > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
-> > > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
-> > > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
-> > 
-> > nack.  see below.
-> > 
-> > I'd prefer a simple revert, but it shouldn't
-> > be done here.
-> 
-> What do you mean? (I can't understand this and "fine by me" below?)
+Convert the i.MXDI RTC binding to DT schema format using json-schema
 
-I did write "other than that"...
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- add "additionalProperties: false".
+---
+ .../devicetree/bindings/rtc/imxdi-rtc.txt          | 20 ----------
+ .../devicetree/bindings/rtc/imxdi-rtc.yaml         | 44 ++++++++++++++++++++++
+ 2 files changed, 44 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
 
-I mean that the original commit fixed 2 issues,
-one with the uninitialized_var addition, and
-another with the missing void function declaration.
-
-I think I found the missing void function bit because
-the uninitialized_var use looked like a function so I
-fixed both things at the same time.
-
-If you change it, please just remove the bit that
-checks for uninitialized_var.
-
-Thanks, Joe
-
-> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > []
-> > > @@ -4075,7 +4074,7 @@ sub process {
-> > >  		}
-> > >  
-> > >  # check for function declarations without arguments like "int foo()"
-> > > -		if ($line =~ /(\b$Type\s*$Ident)\s*\(\s*\)/) {
-> > > +		if ($line =~ /(\b$Type\s+$Ident)\s*\(\s*\)/) {
-> > 
-> > This isn't right because $Type includes a possible trailing *
-> > where there isn't a space between $Type and $Ident
-> 
-> Ah, hm, that was changed in the mentioned commit:
-> 
-> -               if ($line =~ /(\b$Type\s+$Ident)\s*\(\s*\)/) {
-> +               if ($line =~ /(\b$Type\s*$Ident)\s*\(\s*\)/) {
-> 
-> > e.g.:	int *bar(void);
-> > 
-> > Other than that, fine by me...
-> 
-> Thanks for looking it over! I'll adjust it however you'd like. :)
-> 
+diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
+deleted file mode 100644
+index c797bc9..0000000
+--- a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-* i.MX25 Real Time Clock controller
+-
+-Required properties:
+-- compatible: should be: "fsl,imx25-rtc"
+-- reg: physical base address of the controller and length of memory mapped
+-  region.
+-- clocks: should contain the phandle for the rtc clock
+-- interrupts: rtc alarm interrupt
+-
+-Optional properties:
+-- interrupts: dryice security violation interrupt (second entry)
+-
+-Example:
+-
+-rtc@53ffc000 {
+-	compatible = "fsl,imx25-rtc";
+-	reg = <0x53ffc000 0x4000>;
+-	clocks = <&clks 81>;
+-	interrupts = <25 56>;
+-};
+diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
+new file mode 100644
+index 0000000..06bd737
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rtc/imxdi-rtc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: i.MX25 Real Time Clock controller
++
++maintainers:
++  - Roland Stigge <stigge@antcom.de>
++
++properties:
++  compatible:
++    const: fsl,imx25-rtc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: rtc alarm interrupt
++      - description: dryice security violation interrupt
++    minItems: 1
++    maxItems: 2
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    rtc@53ffc000 {
++        compatible = "fsl,imx25-rtc";
++        reg = <0x53ffc000 0x4000>;
++        clocks = <&clks 81>;
++        interrupts = <25>, <56>;
++    };
+-- 
+2.7.4
 
