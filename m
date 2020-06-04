@@ -2,188 +2,207 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B06C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C4320663
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716B1207D5
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 11:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="t3AEgxuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgFDLSm (ORCPT
+        id S1727916AbgFDLSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 07:18:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33388 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgFDLSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 07:18:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EF205ABF4;
-        Thu,  4 Jun 2020 11:18:42 +0000 (UTC)
-Message-ID: <d1f54bfccb7aa91949ddb2c1643308a52ab0c161.camel@suse.de>
-Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Marek Vasut <marex@denx.de>, mbrugger@suse.com,
-        u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        mark.kettenis@xs4all.nl
-Date:   Thu, 04 Jun 2020 13:18:37 +0200
-In-Reply-To: <ec76c8bb-63c1-8ccc-c1d5-5878bc01343b@denx.de>
-References: <20200505162607.334-1-nsaenzjulienne@suse.de>
-         <2a8f0190c9d418cee89451c7dc3a227b9d0b5f45.camel@suse.de>
-         <bf73b73e-c251-7ac8-c245-a3b3d2be2420@denx.de>
-         <9aea19124817a3d9fa004ec495ea6d1036d2dc8d.camel@suse.de>
-         <c32541a5-2dce-1fb2-7f3d-dfe03bcfb52c@denx.de>
-         <c29968027d3a555de89eae7599dcfd513744076f.camel@suse.de>
-         <ec76c8bb-63c1-8ccc-c1d5-5878bc01343b@denx.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rz87Kq66AL3pHD2lR4/F"
-User-Agent: Evolution 3.36.2 
+        Thu, 4 Jun 2020 07:18:50 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:42537 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgFDLSt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 07:18:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1591269529; x=1622805529;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=Qil4CHTe9zc+4qSWiwfHINBzR6yECNz+NaYOle+YSdE=;
+  b=t3AEgxuDms8WwFRf4q+9WMN6S+xA0vXQJrBV3CJajjFpICkRdClqIQCU
+   WcCjNWfpucWBhghoigUSpM3azQETuvDA2eExadOdyIsglCx8ZaLJtoKcD
+   /p5gtrsdNf9A1QoEA0aLw6+EKlHj6fpaIvq7BjWJMROLIyFl/aKE9NYJf
+   s=;
+IronPort-SDR: 1V684L6BWiC3yvDiZT0UEWaWau9eDZ9TCdD43ZQNpdVhQb/dZZ31ltqHFAwFDK3kTgp7NAAy+l
+ IXlqRIBf2HVw==
+X-IronPort-AV: E=Sophos;i="5.73,472,1583193600"; 
+   d="scan'208";a="49788679"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 Jun 2020 11:18:44 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id 622C2A3941;
+        Thu,  4 Jun 2020 11:18:33 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Jun 2020 11:18:32 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.34) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 4 Jun 2020 11:18:16 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <benh@kernel.crashing.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <sblbir@amazon.com>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <snu@amazon.de>, <vbabka@suse.cz>,
+        <vdavydov.dev@gmail.com>, <yang.shi@linux.alibaba.com>,
+        <ying.huang@intel.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v9 4/8] mm/damon/schemes: Implement a debugfs interface
+Date:   Thu, 4 Jun 2020 13:17:57 +0200
+Message-ID: <20200604111757.7659-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526075702.27339-5-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D19UWC001.ant.amazon.com (10.43.162.64) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 26 May 2020 09:56:58 +0200 SeongJae Park <sjpark@amazon.com> wrote:
 
---=-rz87Kq66AL3pHD2lR4/F
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> This commit implements a debugfs interface for the data access
+> monitoring oriented memory management schemes.  It is supposed to be
+> used by administrators and/or privileged user space programs.  Users can
+> read and update the rules using ``<debugfs>/damon/schemes`` file.  The
+> format is::
+> 
+>     <min/max size> <min/max access frequency> <min/max age> <action>
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> ---
+>  mm/damon.c | 176 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 174 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/damon.c b/mm/damon.c
+> index 6a07649d1f5d..bcc732e8735c 100644
+> --- a/mm/damon.c
+> +++ b/mm/damon.c
+> @@ -173,6 +173,29 @@ static void damon_destroy_task(struct damon_task *t)
+>  	damon_free_task(t);
+>  }
+> +
+> +/*
+> + * Converts a string into an array of struct damos pointers
+> + *
+> + * Returns an array of struct damos pointers that converted if the conversion
+> + * success, or NULL otherwise.
+> + */
+> +static struct damos **str_to_schemes(const char *str, ssize_t len,
+> +				ssize_t *nr_schemes)
+> +{
+> +	struct damos *scheme, **schemes;
+> +	const int max_nr_schemes = 256;
+> +	int pos = 0, parsed, ret;
+> +	unsigned int min_sz, max_sz, min_nr_a, max_nr_a, min_age, max_age;
+> +	unsigned int action;
+> +
+> +	schemes = kmalloc_array(max_nr_schemes, sizeof(scheme),
+> +			GFP_KERNEL);
+> +	if (!schemes)
+> +		return NULL;
+> +
+> +	*nr_schemes = 0;
+> +	while (pos < len && *nr_schemes < max_nr_schemes) {
+> +		ret = sscanf(&str[pos], "%u %u %u %u %u %u %u%n",
+> +				&min_sz, &max_sz, &min_nr_a, &max_nr_a,
+> +				&min_age, &max_age, &action, &parsed);
+> +		if (ret != 7)
+> +			break;
+> +		if (action >= DAMOS_ACTION_LEN) {
+> +			pr_err("wrong action %d\n", action);
+> +			goto fail;
+> +		}
+> +
+> +		pos += parsed;
+> +		scheme = damon_new_scheme(min_sz, max_sz, min_nr_a, max_nr_a,
+> +				min_age, max_age, action);
+> +		if (!scheme)
+> +			goto fail;
+> +
+> +		schemes[*nr_schemes] = scheme;
+> +		*nr_schemes += 1;
+> +	}
+> +	if (!*nr_schemes)
+> +		goto fail;
+> +	return schemes;
+> +fail:
+> +	free_schemes_arr(schemes, *nr_schemes);
+> +	return NULL;
+> +}
+> +
+> +static ssize_t debugfs_schemes_write(struct file *file, const char __user *buf,
+> +		size_t count, loff_t *ppos)
+> +{
+> +	struct damon_ctx *ctx = &damon_user_ctx;
+> +	char *kbuf;
+> +	struct damos **schemes;
+> +	ssize_t nr_schemes = 0, ret;
+> +	int err;
+> +
+> +	if (*ppos)
+> +		return -EINVAL;
+> +
+> +	kbuf = kmalloc(count, GFP_KERNEL);
+> +	if (!kbuf)
+> +		return -ENOMEM;
+> +
+> +	ret = simple_write_to_buffer(kbuf, count, ppos, buf, count);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	schemes = str_to_schemes(kbuf, ret, &nr_schemes);
 
-On Mon, 2020-06-01 at 17:27 +0200, Marek Vasut wrote:
-> On 6/1/20 4:41 PM, Nicolas Saenz Julienne wrote:
-> > On Mon, 2020-06-01 at 13:12 +0200, Marek Vasut wrote:
-> > > On 6/1/20 1:09 PM, Nicolas Saenz Julienne wrote:
-> > > > On Mon, 2020-06-01 at 12:53 +0200, Marek Vasut wrote:
-> > > > > On 6/1/20 12:47 PM, Nicolas Saenz Julienne wrote:
-> > > > > > On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote=
-:
-> > > > > > > Newer revisions of the RPi4 need their xHCI chip, VL805, firm=
-ware
-> > > > > > > to
-> > > > > > > be
-> > > > > > > loaded explicitly. Earlier versions didn't need that as they =
-where
-> > > > > > > using
-> > > > > > > an EEPROM for that purpose. This series takes care of setting=
- up
-> > > > > > > the
-> > > > > > > relevant infrastructure and run the firmware loading routine =
-at
-> > > > > > > the
-> > > > > > > right moment.
-> > > > > > >=20
-> > > > > > > Note that this builds on top of Sylwester Nawrocki's "USB hos=
-t
-> > > > > > > support
-> > > > > > > for Raspberry Pi 4 board" series.
-> > > > > > >=20
-> > > > > > > ---
-> > > > > >=20
-> > > > > > Please don't forget about this series. The new 8GB RPi4 contain=
-s
-> > > > > > this HW
-> > > > > > design
-> > > > > > change and USB will not work without it. See this discussion on=
- the
-> > > > > > downstream
-> > > > > > kernel github, where other OS/bootloaders are hitting the issue=
-:
-> > > > > >=20
-> > > > > > https://github.com/raspberrypi/firmware/issues/1402
-> > > > > >=20
-> > > > > > Otherwise, the Linux version of this is already in linux-next:
-> > > > > >=20
-> > > > > >=20
-> >=20
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-drivers/usb/host/pci-quirks.c?h=3Dnext-20200529&id=3Dc65822fef4adc0ba40c37a=
-47337376ce75f7a7bc
-> > > > > We're already at 2020.07-rc3 , so unless this is a bugfix (does n=
-ot
-> > > > > look
-> > > > > that way), this will have to wait for next release cycle.
-> > > >=20
-> > > > Of course. As long as it eventually gets in I'm happy (not implying=
- this
-> > > > specific series is flawless, but the overall mechanism). I'm just
-> > > > worried
-> > > > this
-> > > > gets lost.
-> > > >=20
-> > > > > Also, it seems
-> > > > > there was a lengthy ongoing discussion, is that already sorted ou=
-t ?
-> > > >=20
-> > > > Well, there was some discussion on how to incorporate the platform
-> > > > specific
-> > > > callback into XCHI's code. Which this revision of the series addres=
-ses.
-> > > > But,
-> > > > IIRC, that's pretty much it as far as discussion is concerned.
-> > >=20
-> > > Oh, right, since the firmware loading hook looks like a reset hook, w=
-hy
-> > > isn't that implemented via reset controller API instead ?
-> >=20
-> > That could be pretty clean, I hadn't though about it that way. Some
-> > questions:
-> >=20
-> > - Being a PCIe device the XHCI controller doesn't show up in the device=
--
-> > tree. I
-> >   guess it could be added as a child node of pcie-brcmstb, but is that =
-even
-> >   acceptable?
->=20
-> Yes, there are other such DTs .
->=20
-> > - Same goes for xhci-pci being a consumer of the reset controller. Give=
-n the
-> >   reset scheme is board specific (the chip can be found all over the pl=
-ace,
-> > but
-> >   the firmware loading scheme is 100% RPi specific), to what extent we =
-can
-> >   introduce that as a binding?
->=20
-> I'm not sure what you're asking me here, you'll just have some reset
-> controller in a DT and a phandle from the xhci-controller to this reset
-> controller.
-
-Sorry I wasn't clear, overall my concern here is that xhic-pci maintainers,
-both in u-boot y linux (as I'd like to have the same solution on both sides=
-,
-since it involves changes in dt), might see it as too platform specific to =
-add
-it into an otherwise generic xhci-pci implmentation.
-
-But nevermind, I'll just post the series and see what happens :).
-
-Regards,
-Nicolas
+In case of wrong input, 'str_to_schemes()' could return NULL with non-zero
+nr_schemes, but the case is not handled here.  I will properly handle the case
+in the next spin.
 
 
---=-rz87Kq66AL3pHD2lR4/F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Thanks,
+SeongJae Park
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7Y2I0ACgkQlfZmHno8
-x/7tiQgAlYpWM4m3PSWPJdp1KwO3Por2fHNbKzjlqimLUrsgr79OFqZsK57qZowc
-Oszt7W/gV0NlVanYKaL7pIphgJq25H0f95TEM+hfQpNCRdAmBmIbF346dGD0rx/Q
-t+OcjafuC2I8V0TFYlqk+xCIrmwsDQ/Ee+s3PL+TpVkbN8XGhhPHMLMjHBCpF/0u
-y4Na9QSwpoK2bRnITH7j7YaUZi1bsOaCN/xv05JT+0oIK339J5CruNK4Na7LWQ1f
-L4nqwH02nF3z+SxCFonC0rVLvLamQI93qzwMUwlBGIAbvmoYFRw+jmz2Fz9ylR52
-r+3YjBCTLDB/FZFzdl1uiJ12ziRNgQ==
-=/X9Y
------END PGP SIGNATURE-----
-
---=-rz87Kq66AL3pHD2lR4/F--
-
+> +
+> +	mutex_lock(&ctx->kdamond_lock);
+> +	if (ctx->kdamond) {
+> +		ret = -EBUSY;
+> +		goto unlock_out;
+> +	}
+> +
+> +	err = damon_set_schemes(ctx, schemes, nr_schemes);
+> +	if (err)
+> +		ret = err;
+> +	else
+> +		nr_schemes = 0;
+> +unlock_out:
+> +	mutex_unlock(&ctx->kdamond_lock);
+> +	free_schemes_arr(schemes, nr_schemes);
+> +out:
+> +	kfree(kbuf);
+> +	return ret;
+> +}
+> +
