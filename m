@@ -2,162 +2,136 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7857C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70255C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA09B206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FEC206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:24:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oV9H7ygV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgFDRWb (ORCPT
+        id S1730083AbgFDRYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:22:31 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42574 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730043AbgFDRWa (ORCPT
+        Thu, 4 Jun 2020 13:24:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35332 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729998AbgFDRYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:22:30 -0400
-Received: from 89-64-85-58.dynamic.chello.pl (89.64.85.58) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 27bd5aa14999d311; Thu, 4 Jun 2020 19:22:27 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        youling257@gmail.com, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: [PATCH] ACPI: PM: Avoid using power resources if there are none for D0
-Date:   Thu, 04 Jun 2020 19:22:26 +0200
-Message-ID: <13388608.OHKVb9tm6R@kreacher>
-In-Reply-To: <d084b424-a340-a24a-d681-c92d80d8421d@redhat.com>
-References: <20200603194659.185757-1-hdegoede@redhat.com> <CAJZ5v0g7rhiWs0ZeGGS5OoSMH7DiVT1D-EUgX5HFXYkcvXcm2Q@mail.gmail.com> <d084b424-a340-a24a-d681-c92d80d8421d@redhat.com>
+        Thu, 4 Jun 2020 13:24:05 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054HGWua094785;
+        Thu, 4 Jun 2020 17:23:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=G/Sb2Wxr/3pPoUovNdxaMT0I7DZc8Om+RvsuQbMjB1k=;
+ b=oV9H7ygV/qI6eMjxUACM2sbO+kxUYVMZApUqxByRSSulM4iu8YYwcbZepjv4kETihn7X
+ Vq8nYFe/3EaD+o2fSf/1ekfvwjDuncR6ZoJ+/2FCHYfcHiT0zbAjWzlC2Rvxof6jnihU
+ BXKA5HHR527TvCxqrYuxn7E3ub1Oi7/Gx9Sm9XvNUWlY8OXmS1covD0YO8CPbtKCvWZR
+ 03uPipzs9Dh58Qd0V4Z1gujF48OCo+h3YzT3hEQ9UQdH2BtL3iY5d+UrURgatirlJLQh
+ IDVK4KMvesJYxEABchRW/ztC9v0w41lff7aeHYBLNIbTLG0m1aPPY2+tTbuPirjSMBFy 1w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31evap2x6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 04 Jun 2020 17:23:51 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054HI6wY029235;
+        Thu, 4 Jun 2020 17:21:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31dju5b6kq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Jun 2020 17:21:50 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 054HLms2026140;
+        Thu, 4 Jun 2020 17:21:48 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Jun 2020 10:21:48 -0700
+Date:   Thu, 4 Jun 2020 13:22:13 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Sistare <steven.sistare@oracle.com>
+Subject: Re: [PATCH] x86/mm: use max memory block size with unaligned memory
+ end
+Message-ID: <20200604172213.f5lufktpqvqjkv4u@ca-dmjordan1.us.oracle.com>
+References: <20200604035443.3267046-1-daniel.m.jordan@oracle.com>
+ <5827baaf-0eb5-bcea-5d98-727485683512@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5827baaf-0eb5-bcea-5d98-727485683512@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006040120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006040120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Jun 04, 2020 at 09:22:03AM +0200, David Hildenbrand wrote:
+> On 04.06.20 05:54, Daniel Jordan wrote:
+> > Some of our servers spend 14 out of the 21 seconds of kernel boot
+> > initializing memory block sysfs directories and then creating symlinks
+> > between them and the corresponding nodes.  The slowness happens because
+> > the machines get stuck with the smallest supported memory block size on
+> > x86 (128M), which results in 16,288 directories to cover the 2T of
+> > installed RAM, and each of these paths does a linear search of the
+> > memory blocks for every block id, with atomic ops at each step.
+> 
+> With 4fb6eabf1037 ("drivers/base/memory.c: cache memory blocks in xarray
+> to accelerate lookup") merged by Linus' today (strange, I thought this
+> would be long upstream)
 
-As recently reported, some platforms provide a list of power
-resources for device power state D3hot, through the _PR3 object,
-but they do not provide a list of power resources for device power
-state D0.
+Ah, thanks for pointing this out!  It was only posted to LKML so I missed it.
 
-Among other things, this causes acpi_device_get_power() to return
-D3hot as the current state of the device in question if all of the
-D3hot power resources are "on", because it sees the power_resources
-flag set and calls acpi_power_get_inferred_state() which finds that
-D3hot is the shallowest power state with all of the associated power
-resources turned "on", so that's what it returns.  Moreover, that
-value takes precedence over the acpi_dev_pm_explicit_get() return
-value, because it means a deeper power state.  The device may very
-well be in D0 physically at that point, however.
+> all linear searches should be gone and at least
+> the performance observation in this patch no longer applies.
 
-Moreover, the presence of _PR3 without _PR0 for a given device
-means that only one D3-level power state can be supported by it.
-Namely, because there are no power resources to turn "off" when
-transitioning the device from D0 into D3cold (which should be
-supported since _PR3 is present), the evaluation of _PS3 should
-be sufficient to put it straight into D3cold, but this means that
-the effect of turning "on" the _PR3 power resources is unclear,
-so it is better to avoid doing that altogether.  Consequently,
-there is no practical way do distinguish D3cold from D3hot for
-the device in question and the power states of it can be labeled
-so that D3hot is the deepest supported one (and Linux assumes
-that putting a device into D3hot via ACPI may cause power to be
-removed from it anyway, for legacy reasons).
+The performance numbers as stated, that's certainly true, but this patch on top
+still improves kernel boot by 7%.  It's a savings of half a second -- I'll take
+it.
 
-To work around the problem described above modify the ACPI
-enumeration of devices so that power resources are only used
-for device power management if the list of D0 power resources
-is not empty and make it mart D3cold as supported only if that
-is the case and the D3hot list of power resources is not empty
-too.
+IMHO the root cause of this is really the small block size.  Building a cache
+on top to avoid iterating over tons of small blocks seems like papering over
+the problem, especially when one of the two affected paths in boot is a
+cautious check that might be ready to be removed by now[0]:
 
-Fixes: ef85bdbec444 ("ACPI / scan: Consolidate extraction of power resources lists")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205057
-Link: https://lore.kernel.org/linux-acpi/20200603194659.185757-1-hdegoede@redhat.com/
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/device_pm.c |    2 +-
- drivers/acpi/scan.c      |   28 +++++++++++++++++++---------
- 2 files changed, 20 insertions(+), 10 deletions(-)
+    static int init_memory_block(struct memory_block **memory,
+    			     unsigned long block_id, unsigned long state)
+    {
+            ...
+    	mem = find_memory_block_by_id(block_id);
+    	if (mem) {
+    		put_device(&mem->dev);
+    		return -EEXIST;
+    	}
 
-Index: linux-pm/drivers/acpi/scan.c
-===================================================================
---- linux-pm.orig/drivers/acpi/scan.c
-+++ linux-pm/drivers/acpi/scan.c
-@@ -919,12 +919,9 @@ static void acpi_bus_init_power_state(st
- 
- 		if (buffer.length && package
- 		    && package->type == ACPI_TYPE_PACKAGE
--		    && package->package.count) {
--			int err = acpi_extract_power_resources(package, 0,
--							       &ps->resources);
--			if (!err)
--				device->power.flags.power_resources = 1;
--		}
-+		    && package->package.count)
-+			acpi_extract_power_resources(package, 0, &ps->resources);
-+
- 		ACPI_FREE(buffer.pointer);
- 	}
- 
-@@ -971,14 +968,27 @@ static void acpi_bus_get_power_flags(str
- 		acpi_bus_init_power_state(device, i);
- 
- 	INIT_LIST_HEAD(&device->power.states[ACPI_STATE_D3_COLD].resources);
--	if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
--		device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
- 
--	/* Set defaults for D0 and D3hot states (always valid) */
-+	/* Set the defaults for D0 and D3hot (always supported). */
- 	device->power.states[ACPI_STATE_D0].flags.valid = 1;
- 	device->power.states[ACPI_STATE_D0].power = 100;
- 	device->power.states[ACPI_STATE_D3_HOT].flags.valid = 1;
- 
-+	/*
-+	 * Use power resources only if the D0 list of them is populated, because
-+	 * some platforms may provide _PR3 only to indicate D3cold support and
-+	 * in those cases the power resources list returned by it may be bogus.
-+	 */
-+	if (!list_empty(&device->power.states[ACPI_STATE_D0].resources)) {
-+		device->power.flags.power_resources = 1;
-+		/*
-+		 * D3cold is supported if the D3hot list of power resources is
-+		 * not empty.
-+		 */
-+		if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
-+			device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
-+	}
-+
- 	if (acpi_bus_init_power(device))
- 		device->flags.power_manageable = 0;
- }
-Index: linux-pm/drivers/acpi/device_pm.c
-===================================================================
---- linux-pm.orig/drivers/acpi/device_pm.c
-+++ linux-pm/drivers/acpi/device_pm.c
-@@ -186,7 +186,7 @@ int acpi_device_set_power(struct acpi_de
- 		 * possibly drop references to the power resources in use.
- 		 */
- 		state = ACPI_STATE_D3_HOT;
--		/* If _PR3 is not available, use D3hot as the target state. */
-+		/* If D3cold is not supported, use D3hot as the target state. */
- 		if (!device->power.states[ACPI_STATE_D3_COLD].flags.valid)
- 			target_state = state;
- 	} else if (!device->power.states[state].flags.valid) {
+Anyway, I guess I'll redo the changelog and post again.
 
+> The memmap init should nowadays consume most time.
 
+Yeah, but of course it's not as bad as it was now that it's fully parallelized.
 
+[0] https://lore.kernel.org/linux-mm/a8e96df6-dc6d-037f-491c-92182d4ada8d@redhat.com/
