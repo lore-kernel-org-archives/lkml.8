@@ -2,147 +2,163 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ABBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A489206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE16206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R+Yz0Foz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mF2U8UxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgFDTU0 (ORCPT
+        id S1728900AbgFDTYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42016 "EHLO
+        Thu, 4 Jun 2020 15:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgFDTUZ (ORCPT
+        with ESMTP id S1728793AbgFDTYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:20:25 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E590C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:20:24 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id l26so6299308wme.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:20:24 -0700 (PDT)
+        Thu, 4 Jun 2020 15:24:09 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF978C08C5C0;
+        Thu,  4 Jun 2020 12:24:08 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d128so6829065wmc.1;
+        Thu, 04 Jun 2020 12:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ouAgXFl2oDrnxvULrGgv6WgEdc2JkyMXoReqxIRdap0=;
-        b=R+Yz0FozPBPFPWc9NPwI1q5KqS9DoWZ/gt2LO6RAy54U7fhmfoVIQx4iJFexNJvfwh
-         o2w8wi/pvxVgDgw+7urh6y2tN4oEuicJLi65AOGp58A1yEiCZjPGole59Qj9LfFL5m0u
-         okppwEX3a7ZzsWzYHtsiE6A9XfOw6cmaOBdT8jPp3vd12VzXvCPVukPWaXuMLrHFJWWR
-         tvs3N0hTMVfY4Ykwrq3C82U0R3yCNN5T1ioQqvuD1ERevyIa5MFgw9DFQc73DIfMWHvI
-         WDbPuDBFGWZcG7w/LmJyW/1A64WcKkyCWXrMukydp5ce4Cfeq9nsXl1kiXNT6zLS/Tks
-         wZXw==
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=q+PI4mSW3hU9EGkD/4I3ChRw5KU5Dr09pD47YpfNefk=;
+        b=mF2U8UxQHftK/YaAWDrsR+fjBjvoLWfWdCBL7bwfrc75IEPflQ/NcoM/YHSOUF7YoF
+         9C0kisGFTOckNmXMuCsg2f/wDz0tYUKh+r/Jpmh4U3lR4A7xYmlvkn3+BVdaLZeju9r2
+         92uuuiAFPY8eoWpAgNEFUL29f0LRXQyse9b6Ea3hNekqupyPrk2hlLSQKTkpNr3tDykB
+         hIHedS/Y74lR1icvWl3ZwHx3aQSOAORU0Pz85uEoVVRt3TueA1mpKOo7tzKIHlRQDMNG
+         TGVDyLgy/nYIFIeVxzI6xw4EIzNIbbKaKn8voqcu7ObcKTqxv8yhkFL+Rh7XctXHiBRX
+         lT7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ouAgXFl2oDrnxvULrGgv6WgEdc2JkyMXoReqxIRdap0=;
-        b=gB7P4hkEEuOmihMZa+C4xiJX6/VJJXKz3VYwqUmG9MgDwLuZbr7d1Fx052aHk85DoC
-         yZYH2ZbdtHvRM+KpHSp5pz98KCjbq3RVLQh2o4pWXRstXp4zVYQ21NrvDY0OefbEtNVF
-         Q21bARt/H277+A5fW0tyYAYmdMnN1pPf30KXVDbjTRm1Qkt+87PfdLTAkBBvV+drTAab
-         lb8+rPLU3rQL+5KQb4QxPj12tnW7xnnog/+zZ7YIvZcT29+E92YsfBsT4lxB/oVQJS98
-         ZLItQ6BaSxu8ZFqtpB6r3QkvWGFvXh62Vo9fgv3eqh0WaBBv3veCED49QkehImiwI2Eq
-         wUAA==
-X-Gm-Message-State: AOAM531U6TYxLcyvVxbYudA9AqXXRhK8F7Qc63pza3MvKpSzjgI+cXgc
-        GbIi5GV72PpQp8DSACYF8wjcW66881T9m+yf/8VY7Q==
-X-Google-Smtp-Source: ABdhPJw23Qj+XqKUo8d9Yi8zLVFZDmhHc9ZyRZ5y8DYBKe3GyWRTZppjy7dTb8VyjV1fNr9PaqujNnTfPtIXywE5Tec=
-X-Received: by 2002:a1c:6884:: with SMTP id d126mr5337742wmc.121.1591298422679;
- Thu, 04 Jun 2020 12:20:22 -0700 (PDT)
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=q+PI4mSW3hU9EGkD/4I3ChRw5KU5Dr09pD47YpfNefk=;
+        b=ktXJI69M6dfZMPkS7HVI83b4gqxHp2L+U8B+4X9tlDK2rNQ87sXuDBuYcwAXDJnx2p
+         jZebec9NbLyphytDpCvNgWqHCpJ8wu5u6eBkIYF7agV/3MG/Cn9MYUIYJXKnIiB4pBye
+         7PelrnpqCHNF4dm2NCQKvXYdsqtPxJE7rTeZuNr0XbD9HZ+uGzAu4PzWTY37tHUFR7Mu
+         PkZI9QjgM55rcOWGeZXlUkeJ/BAMs4gy3f42GONu/qyt7+c7Oc3Br1Z0rRj0EsRBTXXd
+         0T+UkygQae1t3ZVN3FEN8JvXGSCE9DYY7YcEtV2/zPRMVZahXUn6hms4Z+5PawkAYkeR
+         Jfjw==
+X-Gm-Message-State: AOAM533JRZoOAk1EACA2MHz7pFJ+DPOSexx7lu7G8B50vV3AA5oNBiqi
+        hlJCsezL3MFsfMKiYkLDYBgjVpBm
+X-Google-Smtp-Source: ABdhPJwdUED4l/rXgx6IOkHLEXR2LzsitvtqyqGS43cRzrl9vijDHBX/CK3BQG44AmIPHP6aK6lKtQ==
+X-Received: by 2002:a1c:ed0b:: with SMTP id l11mr5741299wmh.31.1591298646284;
+        Thu, 04 Jun 2020 12:24:06 -0700 (PDT)
+Received: from [192.168.43.208] ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id f128sm8630506wme.1.2020.06.04.12.24.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 12:24:05 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1591196426.git.asml.silence@gmail.com>
+ <414b9a24-2e70-3637-0b98-10adf3636c37@kernel.dk>
+ <f5370eb3-af80-5481-3589-675befa41009@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFmKBOQBEAC76ZFxLAKpDw0bKQ8CEiYJRGn8MHTUhURL02/7n1t0HkKQx2K1fCXClbps
+ bdwSHrhOWdW61pmfMbDYbTj6ZvGRvhoLWfGkzujB2wjNcbNTXIoOzJEGISHaPf6E2IQx1ik9
+ 6uqVkK1OMb7qRvKH0i7HYP4WJzYbEWVyLiAxUj611mC9tgd73oqZ2pLYzGTqF2j6a/obaqha
+ +hXuWTvpDQXqcOZJXIW43atprH03G1tQs7VwR21Q1eq6Yvy2ESLdc38EqCszBfQRMmKy+cfp
+ W3U9Mb1w0L680pXrONcnlDBCN7/sghGeMHjGKfNANjPc+0hzz3rApPxpoE7HC1uRiwC4et83
+ CKnncH1l7zgeBT9Oa3qEiBlaa1ZCBqrA4dY+z5fWJYjMpwI1SNp37RtF8fKXbKQg+JuUjAa9
+ Y6oXeyEvDHMyJYMcinl6xCqCBAXPHnHmawkMMgjr3BBRzODmMr+CPVvnYe7BFYfoajzqzq+h
+ EyXSl3aBf0IDPTqSUrhbmjj5OEOYgRW5p+mdYtY1cXeK8copmd+fd/eTkghok5li58AojCba
+ jRjp7zVOLOjDlpxxiKhuFmpV4yWNh5JJaTbwCRSd04sCcDNlJj+TehTr+o1QiORzc2t+N5iJ
+ NbILft19Izdn8U39T5oWiynqa1qCLgbuFtnYx1HlUq/HvAm+kwARAQABtDFQYXZlbCBCZWd1
+ bmtvdiAoc2lsZW5jZSkgPGFzbWwuc2lsZW5jZUBnbWFpbC5jb20+iQJOBBMBCAA4FiEE+6Ju
+ PTjTbx479o3OWt5b1Glr+6UFAlmKBOQCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ
+ Wt5b1Glr+6WxZA//QueaKHzgdnOikJ7NA/Vq8FmhRlwgtP0+E+w93kL+ZGLzS/cUCIjn2f4Q
+ Mcutj2Neg0CcYPX3b2nJiKr5Vn0rjJ/suiaOa1h1KzyNTOmxnsqE5fmxOf6C6x+NKE18I5Jy
+ xzLQoktbdDVA7JfB1itt6iWSNoOTVcvFyvfe5ggy6FSCcP+m1RlR58XxVLH+qlAvxxOeEr/e
+ aQfUzrs7gqdSd9zQGEZo0jtuBiB7k98t9y0oC9Jz0PJdvaj1NZUgtXG9pEtww3LdeXP/TkFl
+ HBSxVflzeoFaj4UAuy8+uve7ya/ECNCc8kk0VYaEjoVrzJcYdKP583iRhOLlZA6HEmn/+Gh9
+ 4orG67HNiJlbFiW3whxGizWsrtFNLsSP1YrEReYk9j1SoUHHzsu+ZtNfKuHIhK0sU07G1OPN
+ 2rDLlzUWR9Jc22INAkhVHOogOcc5ajMGhgWcBJMLCoi219HlX69LIDu3Y34uIg9QPZIC2jwr
+ 24W0kxmK6avJr7+n4o8m6sOJvhlumSp5TSNhRiKvAHB1I2JB8Q1yZCIPzx+w1ALxuoWiCdwV
+ M/azguU42R17IuBzK0S3hPjXpEi2sK/k4pEPnHVUv9Cu09HCNnd6BRfFGjo8M9kZvw360gC1
+ reeMdqGjwQ68o9x0R7NBRrtUOh48TDLXCANAg97wjPoy37dQE7e5Ag0EWYoE5AEQAMWS+aBV
+ IJtCjwtfCOV98NamFpDEjBMrCAfLm7wZlmXy5I6o7nzzCxEw06P2rhzp1hIqkaab1kHySU7g
+ dkpjmQ7Jjlrf6KdMP87mC/Hx4+zgVCkTQCKkIxNE76Ff3O9uTvkWCspSh9J0qPYyCaVta2D1
+ Sq5HZ8WFcap71iVO1f2/FEHKJNz/YTSOS/W7dxJdXl2eoj3gYX2UZNfoaVv8OXKaWslZlgqN
+ jSg9wsTv1K73AnQKt4fFhscN9YFxhtgD/SQuOldE5Ws4UlJoaFX/yCoJL3ky2kC0WFngzwRF
+ Yo6u/KON/o28yyP+alYRMBrN0Dm60FuVSIFafSqXoJTIjSZ6olbEoT0u17Rag8BxnxryMrgR
+ dkccq272MaSS0eOC9K2rtvxzddohRFPcy/8bkX+t2iukTDz75KSTKO+chce62Xxdg62dpkZX
+ xK+HeDCZ7gRNZvAbDETr6XI63hPKi891GeZqvqQVYR8e+V2725w+H1iv3THiB1tx4L2bXZDI
+ DtMKQ5D2RvCHNdPNcZeldEoJwKoA60yg6tuUquvsLvfCwtrmVI2rL2djYxRfGNmFMrUDN1Xq
+ F3xozA91q3iZd9OYi9G+M/OA01husBdcIzj1hu0aL+MGg4Gqk6XwjoSxVd4YT41kTU7Kk+/I
+ 5/Nf+i88ULt6HanBYcY/+Daeo/XFABEBAAGJAjYEGAEIACAWIQT7om49ONNvHjv2jc5a3lvU
+ aWv7pQUCWYoE5AIbDAAKCRBa3lvUaWv7pfmcEACKTRQ28b1y5ztKuLdLr79+T+LwZKHjX++P
+ 4wKjEOECCcB6KCv3hP+J2GCXDOPZvdg/ZYZafqP68Yy8AZqkfa4qPYHmIdpODtRzZSL48kM8
+ LRzV8Rl7J3ItvzdBRxf4T/Zseu5U6ELiQdCUkPGsJcPIJkgPjO2ROG/ZtYa9DvnShNWPlp+R
+ uPwPccEQPWO/NP4fJl2zwC6byjljZhW5kxYswGMLBwb5cDUZAisIukyAa8Xshdan6C2RZcNs
+ rB3L7vsg/R8UCehxOH0C+NypG2GqjVejNZsc7bgV49EOVltS+GmGyY+moIzxsuLmT93rqyII
+ 5rSbbcTLe6KBYcs24XEoo49Zm9oDA3jYvNpeYD8rDcnNbuZh9kTgBwFN41JHOPv0W2FEEWqe
+ JsCwQdcOQ56rtezdCJUYmRAt3BsfjN3Jn3N6rpodi4Dkdli8HylM5iq4ooeb5VkQ7UZxbCWt
+ UVMKkOCdFhutRmYp0mbv2e87IK4erwNHQRkHUkzbsuym8RVpAZbLzLPIYK/J3RTErL6Z99N2
+ m3J6pjwSJY/zNwuFPs9zGEnRO4g0BUbwGdbuvDzaq6/3OJLKohr5eLXNU3JkT+3HezydWm3W
+ OPhauth7W0db74Qd49HXK0xe/aPrK+Cp+kU1HRactyNtF8jZQbhMCC8vMGukZtWaAwpjWiiH bA==
+Subject: Re: [PATCH v3 0/4] forbid fix {SQ,IO}POLL
+Message-ID: <d1d92d99-c6b1-fc6e-ea1d-6c2e5097d83f@gmail.com>
+Date:   Thu, 4 Jun 2020 22:22:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200528195442.190116-1-surenb@google.com> <20200604131215.GB4117@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200604131215.GB4117@hirez.programming.kicks-ass.net>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Thu, 4 Jun 2020 12:20:10 -0700
-Message-ID: <CAJuCfpHNfOCRks_Ftbk7tEXsXs7AjPVUuxevKOtQWp9DCE4+8A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] psi: eliminate kthread_worker from psi trigger
- scheduling mechanism
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
-        Shakeel Butt <shakeelb@google.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f5370eb3-af80-5481-3589-675befa41009@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 6:12 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, May 28, 2020 at 12:54:42PM -0700, Suren Baghdasaryan wrote:
-> > Each psi group requires a dedicated kthread_delayed_work and
-> > kthread_worker. Since no other work can be performed using psi_group's
-> > kthread_worker, the same result can be obtained using a task_struct and
-> > a timer directly. This makes psi triggering simpler by removing lists
-> > and locks involved with kthread_worker usage and eliminates the need for
-> > poll_scheduled atomic use in the hot path.
-> >
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> > This patch is meant to address Peter's request in [1] to pull
-> > kthread_queue_delayed_work() out from under rq->lock. This should also address
-> > the lockdep warning about possibility of a circular dependency described in [2]
->
-> I think you could've just fixed kthread_queue_delayed_work(), that code
-> is sub-optimal.
+On 04/06/2020 20:06, Jens Axboe wrote:
+> On 6/3/20 12:51 PM, Jens Axboe wrote:
+>> On 6/3/20 9:03 AM, Pavel Begunkov wrote:
+>>> The first one adds checks {SQPOLL,IOPOLL}. IOPOLL check can be
+>>> moved in the common path later, or rethinked entirely, e.g.
+>>> not io_iopoll_req_issued()'ed for unsupported opcodes.
+>>>
+>>> 3 others are just cleanups on top.
+>>>
+>>>
+>>> v2: add IOPOLL to the whole bunch of opcodes in [1/4].
+>>>     dirty and effective.
+>>> v3: sent wrong set in v2, re-sending right one 
+>>>
+>>> Pavel Begunkov (4):
+>>>   io_uring: fix {SQ,IO}POLL with unsupported opcodes
+>>>   io_uring: do build_open_how() only once
+>>>   io_uring: deduplicate io_openat{,2}_prep()
+>>>   io_uring: move send/recv IOPOLL check into prep
+>>>
+>>>  fs/io_uring.c | 94 ++++++++++++++++++++++++++-------------------------
+>>>  1 file changed, 48 insertions(+), 46 deletions(-)
+>>
+>> Thanks, applied.
+> 
+> #1 goes too far, provide/remove buffers is fine with iopoll. I'll
+> going to edit the patch.
 
-Ok, let me look into it some more. My understanding was that the
-worker->lock in kthread_queue_delayed_work() was needed to synchronize
-worker->delayed_work_list access. But maybe I'm missing something... I
-assume you are talking about optimizing this beyond what
-https://lkml.org/lkml/2020/5/4/1148 was doing?
+Conceptually it should work, but from a quick look:
 
-BTW, any objections against taking https://lkml.org/lkml/2020/5/4/1148
-? It's not the ultimate fix but it is an improvement since it gets
-some of the operations that were unnecessarily under worker->lock out
-of it.
+- io_provide_buffers() drops a ref from req->refs, which should've
+been used by iopoll*. E.g. io_complete_rw_iopoll() doesn't do that.
 
->
-> But I suppose this works too.
+- it doesn't set REQ_F_IOPOLL_COMPLETED, thus iopoll* side will
+call req->file->iopoll().
 
-In PSI's case there is always one work for each worker, so the
-delayed_work_list and work_list are not needed and therefore I can
-replace kthread_worker machinery with a task and a timer.
-I think I can simplify this a bit further. For example
-group->poll_wakeup doesn't have to be an atomic. Originally I wanted
-to avoid a possibility of a race when poll_timer_fn sets it and
-psi_poll_worker resets it and as a result misses a wakeup, however if
-psi_poll_worker resets it before calling psi_poll_work then there is
-no harm in missing a wakeup because we called psi_poll_work and did
-the required work anyway.
-
-One question about this patch I'm not sure about and wanted to ask you
-Peter is whether it's ok to call mod_timer from within a hotpath
-(while holding rq->lock). As I described in the additional comment,
-there is a possibility of a race between when I check timer_pending
-and the call to mod_timer, so it's possible that mod_timer might be
-called both from psi_poll_work (psi poll work handler) and from
-psi_task_change (hotpath under rq->lock). I see that mod_timer takes
-base->lock spinlock, and IIUC such a race might block the hotpath and
-therefore is unacceptable. If this is true I'll need to revive the
-poll_scheduled atomic to close this race and then I can change
-mod_timer into add_timer.
-WDYT? And sorry for my ignorance if this is a trivial question. I'm
-not sure about the rules when it comes to rq->locks.
-
-Thanks,
-Suren.
-
->
-> --
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
->
+-- 
+Pavel Begunkov
