@@ -2,154 +2,271 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE58C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C039C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD3FD206E6
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BD7320772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:40:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AN3Ft1Bx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgFDPjq (ORCPT
+        id S1729595AbgFDPkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:39:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39479 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729552AbgFDPjp (ORCPT
+        Thu, 4 Jun 2020 11:40:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21314 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729542AbgFDPkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:39:45 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a9so4324430ljn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 08:39:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=e7/w2NxuGsJDOKyH7Ce9iZKJqnhDXepkq9OXCeLBAeY=;
-        b=ByXhPqCcRRHZXuuKLen8KIPFDMqMDblh2QJggu2EQDLBfHoZERfgKgX09AGMN7mzt/
-         8kRoEZd+flsFbtTaeqrFlryZTPcjefwxzbrQYes71T5pYFnyR/QDaCbUK1e7upxPgaen
-         +BOQTaSj1eIVtSTCGONhjXDEAFBqs13olG1Xc6Y7ZHeNxY/l2e5KJMDsLnF9YO11tSH0
-         RnNRZg4D2Gm4LWNngtvDwg/RN++q0AHFtiwJ8G7CTahg3Q5i7W5i8LC9fMtjSulXSjM1
-         I262uOBBhLdwLnqkhJkdJyy2WIjvkS4tL1yxb0BDa1XBnT9G8FGE4JxJfNPGFYoat0Za
-         DRaA==
-X-Gm-Message-State: AOAM532DDMgW4V7RwD/Rzxc1gQbsWZUvxUjA0mP2K5fGtzFZINCg+Nzu
-        hWijjqVxaPACP/rwx4iLEuABKNhc
-X-Google-Smtp-Source: ABdhPJzakZvqPuCOEzltsSOTYrg5K2qSTasMr12h+2HkxYqve7EvQb34lVMCwUKOkQOkHWv2jaGxmA==
-X-Received: by 2002:a2e:9e88:: with SMTP id f8mr256763ljk.193.1591285182802;
-        Thu, 04 Jun 2020 08:39:42 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id i8sm2477lfl.72.2020.06.04.08.39.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 08:39:42 -0700 (PDT)
-Reply-To: efremov@linux.com
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-References: <20200604140805.111613-1-efremov@linux.com>
- <alpine.DEB.2.21.2006041614300.2577@hadrien>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [PATCH] coccinelle: api: add kzfree script
-Message-ID: <a188acce-348b-b106-9180-708c3050ef8d@linux.com>
-Date:   Thu, 4 Jun 2020 18:39:41 +0300
+        Thu, 4 Jun 2020 11:40:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591285207;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=j7Xq9+WeNhyCr/KzEPWJaZZBLidwABLT+Mzl9B23jMM=;
+        b=AN3Ft1BxmCuqVd1eaj7HJlIvgOmtrpCS502CZaapQjNPX1K2DI0X3ImtY9qj768/M1Cozl
+        CFhQLwrKob9zGpxxWolbOgoGAy1XYJxkqFjpYWg76dwLP6OLoa7p4F7Jdf82a85ZAkWBzR
+        YiWqCiPjxQW7PiWwqMBG6+Fj3YT91s0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-jNs3Ihj3PECCD929tz65nA-1; Thu, 04 Jun 2020 11:40:05 -0400
+X-MC-Unique: jNs3Ihj3PECCD929tz65nA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 211751902EA0;
+        Thu,  4 Jun 2020 15:39:59 +0000 (UTC)
+Received: from [10.36.112.96] (ovpn-112-96.ams2.redhat.com [10.36.112.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 850AF60BF4;
+        Thu,  4 Jun 2020 15:39:50 +0000 (UTC)
+Subject: Re: [RFC v2 7/9] mm/damon: Implement callbacks for physical memory
+ monitoring
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        Jonathan.Cameron@Huawei.com, aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, dwmw@amazon.com, foersleo@amazon.de,
+        irogers@google.com, jolsa@redhat.com, kirill@shutemov.name,
+        mark.rutland@arm.com, mgorman@suse.de, minchan@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        rdunlap@infradead.org, riel@surriel.com, rientjes@google.com,
+        rostedt@goodmis.org, sblbir@amazon.com, shakeelb@google.com,
+        shuah@kernel.org, sj38.park@gmail.com, snu@amazon.de,
+        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200604152336.4826-1-sjpark@amazon.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <3be79702-2ac5-5c5b-b913-3c93aadf0aec@redhat.com>
+Date:   Thu, 4 Jun 2020 17:39:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2006041614300.2577@hadrien>
+In-Reply-To: <20200604152336.4826-1-sjpark@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04.06.20 17:23, SeongJae Park wrote:
+> On Thu, 4 Jun 2020 16:58:13 +0200 David Hildenbrand <david@redhat.com> wrote:
+> 
+>> On 04.06.20 09:26, SeongJae Park wrote:
+>>> On Wed, 3 Jun 2020 18:09:21 +0200 David Hildenbrand <david@redhat.com> wrote:
+>>>
+>>>> On 03.06.20 16:11, SeongJae Park wrote:
+>>>>> From: SeongJae Park <sjpark@amazon.de>
+>>>>>
+>>>>> This commit implements the four callbacks (->init_target_regions,
+>>>>> ->update_target_regions, ->prepare_access_check, and ->check_accesses)
+>>>>> for the basic access monitoring of the physical memory address space.
+>>>>> By setting the callback pointers to point those, users can easily
+>>>>> monitor the accesses to the physical memory.
+>>>>>
+>>>>> Internally, it uses the PTE Accessed bit, as similar to that of the
+>>>>> virtual memory support.  Also, it supports only page frames that
+>>>>> supported by idle page tracking.  Acutally, most of the code is stollen
+>>>>> from idle page tracking.  Users who want to use other access check
+>>>>> primitives and monitor the frames that not supported with this
+>>>>> implementation could implement their own callbacks on their own.
+>>>>>
+>>>>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+>>>>> ---
+>>>>>  include/linux/damon.h |   5 ++
+>>>>>  mm/damon.c            | 184 ++++++++++++++++++++++++++++++++++++++++++
+>>>>>  2 files changed, 189 insertions(+)
+>>>>>
+>>>>> diff --git a/include/linux/damon.h b/include/linux/damon.h
+>>>>> index 1a788bfd1b4e..f96503a532ea 100644
+>>>>> --- a/include/linux/damon.h
+>>>>> +++ b/include/linux/damon.h
+>>>>> @@ -216,6 +216,11 @@ void kdamond_update_vm_regions(struct damon_ctx *ctx);
+>>>>>  void kdamond_prepare_vm_access_checks(struct damon_ctx *ctx);
+>>>>>  unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx);
+>>>>>  
+>>>>> +void kdamond_init_phys_regions(struct damon_ctx *ctx);
+>>>>> +void kdamond_update_phys_regions(struct damon_ctx *ctx);
+>>>>> +void kdamond_prepare_phys_access_checks(struct damon_ctx *ctx);
+>>>>> +unsigned int kdamond_check_phys_accesses(struct damon_ctx *ctx);
+>>>>> +
+>>>>>  int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
+>>>>>  int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
+>>>>>  		unsigned long aggr_int, unsigned long regions_update_int,
+>>>>> diff --git a/mm/damon.c b/mm/damon.c
+>>>>> index f5cbc97a3bbc..6a5c6d540580 100644
+>>>>> --- a/mm/damon.c
+>>>>> +++ b/mm/damon.c
+>>>>> @@ -19,7 +19,9 @@
+>>>>>  #include <linux/mm.h>
+>>>>>  #include <linux/module.h>
+>>>>>  #include <linux/page_idle.h>
+>>>>> +#include <linux/pagemap.h>
+>>>>>  #include <linux/random.h>
+>>>>> +#include <linux/rmap.h>
+>>>>>  #include <linux/sched/mm.h>
+>>>>>  #include <linux/sched/task.h>
+>>>>>  #include <linux/slab.h>
+>>>>> @@ -480,6 +482,11 @@ void kdamond_init_vm_regions(struct damon_ctx *ctx)
+>>>>>  	}
+>>>>>  }
+>>>>>  
+>>>>> +/* Do nothing.  Users should set the initial regions by themselves */
+>>>>> +void kdamond_init_phys_regions(struct damon_ctx *ctx)
+>>>>> +{
+>>>>> +}
+>>>>> +
+>>>>>  static void damon_mkold(struct mm_struct *mm, unsigned long addr)
+>>>>>  {
+>>>>>  	pte_t *pte = NULL;
+>>>>> @@ -611,6 +618,178 @@ unsigned int kdamond_check_vm_accesses(struct damon_ctx *ctx)
+>>>>>  	return max_nr_accesses;
+>>>>>  }
+>>>>>  
+>>>>> +/* access check functions for physical address based regions */
+>>>>> +
+>>>>> +/* This code is stollen from page_idle.c */
+>>>>> +static struct page *damon_phys_get_page(unsigned long pfn)
+>>>>> +{
+>>>>> +	struct page *page;
+>>>>> +	pg_data_t *pgdat;
+>>>>> +
+>>>>> +	if (!pfn_valid(pfn))
+>>>>> +		return NULL;
+>>>>> +
+>>>>
+>>>> Who provides these pfns? Can these be random pfns, supplied unchecked by
+>>>> user space? Or are they at least mapped into some user space process?
+>>>
+>>> Your guess is right, users can give random physical address and that will be
+>>> translated into pfn.
+>>>
+>>
+>> Note the difference to idle tracking: "Idle page tracking only considers
+>> user memory pages", this is very different to your use case. Note that
+>> this is why there is no pfn_to_online_page() check in page idle code.
+> 
+> My use case is same to that of idle page.  I also ignore non-user pages.
+> Actually, this function is for filtering of the non-user pages, which is simply
+> stollen from the page_idle.
+
+Okay, that is valuable information, I missed that. The comment in
+page_idle.c is actually pretty valuable.
+
+In both cases, user space can provide random physical address but you
+will only care about user pages. Understood.
+
+That turns things less dangerous. :)
+
+>>>> IOW, do we need a pfn_to_online_page() to make sure the memmap even was
+>>>> initialized?
+>>>
+>>> Thank you for pointing out this!  I will use it in the next spin.  Also, this
+>>> code is stollen from page_idle_get_page().  Seems like it should also be
+>>> modified to use it.  I will send the patch for it, either.
+>>
+>> pfn_to_online_page() will only succeed for system RAM pages, not
+>> dax/pmem (ZONE_DEVICE). dax/pmem needs special care.
+>>
+>> I can spot that you are taking references to random struct pages. This
+>> looks dangerous to me and might mess in complicated ways with page
+>> migration/isolation/onlining/offlining etc. I am not sure if we want that.
+> 
+> AFAIU, page_idle users can also pass random pfns by randomly accessing the
+> bitmap file.  Am I missing something?
+
+I am definitely no expert on page idle tracking. If that is the case,
+then we'll also need pfn_to_online_page() handling (and might have to
+care about ZONE_DEVICE, not hard but needs some extra LOCs).
+
+I am still not sure if grabbing references on theoretically isolated
+pageblocks is okay, but that's just complicated stuff and as you state,
+is already performed. At least I can read "With such an indicator of
+user pages we can skip isolated pages". So isolated pages during page
+migration are properly handled.
 
 
-On 6/4/20 5:15 PM, Julia Lawall wrote:
-> Did you try ... here but find that some subexpressions of E could be
-> modified in between?
+Instead of stealing, factor out, document, and reuse? That makes it
+clearer that you are not inventing the wheel, and if we have to fix
+something, we only have to fix at a single point.
 
-Yes, I tried to use "... when != E = E1 when != &E" and results were bad.
-Now, I've tried forall and when strict. Here are examples:
+-- 
+Thanks,
 
-// forall added
-// Works well, suitable for v2. One additional catch in w1 driver.
-@r depends on !patch && !(file in "lib/test_kasan.c") && !(file in "mm/slab_common.c") forall@
-expression *E; // pointer. Results are equal as if we use E.
-position p;
-@@
+David / dhildenb
 
-* memset(E, 0, ...);
-  ... when != E // Is it enough to match &E, E = E1?
-* kfree(E)@p;
-
-//no forall, when strict
-//results are bad, too many false positives
-@r depends on !patch && !(file in "lib/test_kasan.c") && !(file in "mm/slab_common.c")@
-expression *E;
-position p;
-@@
-
-* memset(E, 0, ...);
-  ... when != E // E is not enough here
-      when strict
-* kfree(E)@p;
-
-I guess that the difference is that "forall" requires that whole pattern should occur on
-every path, "when strict" states that kfree should be called on every path after memset.
-This results in missed uses of E in loops and under conditions. How can I state in this
-case that E should not occur at all (in all paths) in between memset, kfree even as a
-subexpression?
-
-// Doesn't work well
-  ... when != E
-      when != if (...) { ... E ... }
-      when != for(...;...;...) { ... E ... }
-
-
-Regards,
-Denis
