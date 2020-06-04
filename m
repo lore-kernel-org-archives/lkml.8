@@ -2,186 +2,153 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E30C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ECAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 388FF20772
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1F0206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 14:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgFDOVJ (ORCPT
+        id S1728961AbgFDOXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 10:21:09 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34005 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgFDOVJ (ORCPT
+        Thu, 4 Jun 2020 10:23:15 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:39679 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbgFDOXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 10:21:09 -0400
-Received: by mail-lj1-f195.google.com with SMTP id b6so7548039ljj.1;
-        Thu, 04 Jun 2020 07:21:06 -0700 (PDT)
+        Thu, 4 Jun 2020 10:23:14 -0400
+Received: by mail-il1-f197.google.com with SMTP id o12so4076428ilf.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 07:23:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=J6TfZlfrQ+6pMX2hHDDP8t9Nk7dVuxY81TYpz6EJCyU=;
-        b=ZQ5NDAI+Taen4txFDJXnZBmEttBL4xs0tFnmkN6iItKM4eC6OdUbZC3UQdqK6vh2Fy
-         zwlnxJYCSqaet7iVJLAW/xsz2O2pLoeCoEvnRjBUz26S0N/NSEroDGP3hzwF2c2ljMI9
-         /qSXqwfIyLRafdI5PW+DzIHaRwxqQNgPhogzIWEVG5QeURFRMa8iKExck66OUk2x2aUP
-         1FrZLRscDXpSdbDoPJM7VyxMp5scPOAYIi9vErZHJ6Hkc49DzRTJOX/yHUp7DeNfjQ9p
-         7s+bpwWTRdz7QGCCSrggMBbVaeaj5yoQqtDAAOw4TrIGFYCsiHnHlJds83TI3FKoFK+Q
-         K60w==
-X-Gm-Message-State: AOAM530aQnEZjV4dk+0+lx6uGCTBo7eV3lGP26sXoVH7LCL8v8KSqENw
-        ffbQN0ZsIuAF63XwEJjSs98=
-X-Google-Smtp-Source: ABdhPJymD585zXM0Q6JK97iKEwX5so+S1uf8cMFApbaRae0PwDbU2ihqFSly9Q4XDoxZfpQgUFCITw==
-X-Received: by 2002:a2e:a548:: with SMTP id e8mr2462880ljn.76.1591280466043;
-        Thu, 04 Jun 2020 07:21:06 -0700 (PDT)
-Received: from [10.9.0.26] ([185.248.161.177])
-        by smtp.gmail.com with ESMTPSA id y7sm1212190ljd.77.2020.06.04.07.20.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 07:21:05 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH 5/5] gcc-plugins/stackleak: Don't instrument
- vgettimeofday.c in arm64 VDSO
-To:     Jann Horn <jannh@google.com>, Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Sven Schnelle <svens@stackframe.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Mathias Krause <minipli@googlemail.com>,
-        PaX Team <pageexec@freemail.hu>,
-        Brad Spengler <spender@grsecurity.net>,
-        Laura Abbott <labbott@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-kbuild@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>, gcc@gcc.gnu.org,
-        notify@kernel.org
-References: <20200604134957.505389-1-alex.popov@linux.com>
- <20200604134957.505389-6-alex.popov@linux.com>
- <20200604135806.GA3170@willie-the-truck>
- <CAG48ez0H_+EBd1wekk2oddSzLsgzincyZb_dB+s5atudB23YyA@mail.gmail.com>
-From:   Alexander Popov <alex.popov@linux.com>
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- j3lCqPk=
-Message-ID: <ab7b6e17-69c5-dce9-a0ae-d12964319433@linux.com>
-Date:   Thu, 4 Jun 2020 17:20:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ChhcWL3hTFWCpFWNbyNbxXqvn5rlljlRuJpYLklKBw0=;
+        b=LgfNwMZNfJsLoGxyEyvt1xwEwHXzjER85FFG4bmduVqCVVG75RYs+9MFr+GvzJC+x4
+         fqP8AqINKcaNTOPnc7HtutMt3Gx9gw59+pX+Pu3Hp1VStoj1JQ1sFNO2kLmb4T8TL02C
+         MRbewTcXxd7L1ZgMFunR60/icTqO1Q696dcvsfLuVikQEBpgvEWajLcuChLOgCFXZWDQ
+         1a972GjIXIq7sj0fv4V04SFfY6KGPp4ejLY+gNlmyB/F+5kJJM6ldgSMo58/xVGghjWy
+         lC08wMc838uExgyPi9jQK0wwleBx3vLoMQWqVjzNeeaAqFJ9n+DCT38ou0MFek0/Ov2d
+         bjUw==
+X-Gm-Message-State: AOAM5325M3q+eQluJPqvi+bzhVT7a/cOWBerQ/ZpXTm2rr2j+gnUFeCl
+        XSbjSkIlhhrUOilUlmX4lWHznkQWHkQo/pfWbBVMlBV7cX65
+X-Google-Smtp-Source: ABdhPJzKv56bUdfAsAiMeZJczlzOSCzOIr6s3IHnhpRAJVSmYLG7E+6UvtqjfxLBo4IZNA4/elWFCKEXkaegRZ/BtXgmwXe5cD1t
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez0H_+EBd1wekk2oddSzLsgzincyZb_dB+s5atudB23YyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:a158:: with SMTP id v85mr3321556ili.21.1591280593441;
+ Thu, 04 Jun 2020 07:23:13 -0700 (PDT)
+Date:   Thu, 04 Jun 2020 07:23:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000829d9805a742e264@google.com>
+Subject: general protection fault in ima_free_template_entry
+From:   syzbot <syzbot+223310b454ba6b75974e@syzkaller.appspotmail.com>
+To:     dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, roberto.sassu@huawei.com,
+        serge@hallyn.com, syzkaller-bugs@googlegroups.com,
+        zohar@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.2020 17:14, Jann Horn wrote:
-> On Thu, Jun 4, 2020 at 3:58 PM Will Deacon <will@kernel.org> wrote:
->> On Thu, Jun 04, 2020 at 04:49:57PM +0300, Alexander Popov wrote:
->>> Don't try instrumenting functions in arch/arm64/kernel/vdso/vgettimeofday.c.
->>> Otherwise that can cause issues if the cleanup pass of stackleak gcc plugin
->>> is disabled.
->>>
->>> Signed-off-by: Alexander Popov <alex.popov@linux.com>
->>> ---
->>>  arch/arm64/kernel/vdso/Makefile | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
->>> index 3862cad2410c..9b84cafbd2da 100644
->>> --- a/arch/arm64/kernel/vdso/Makefile
->>> +++ b/arch/arm64/kernel/vdso/Makefile
->>> @@ -32,7 +32,8 @@ UBSAN_SANITIZE                      := n
->>>  OBJECT_FILES_NON_STANDARD    := y
->>>  KCOV_INSTRUMENT                      := n
->>>
->>> -CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -fasynchronous-unwind-tables
->>> +CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -fasynchronous-unwind-tables \
->>> +             $(DISABLE_STACKLEAK_PLUGIN)
->>
->> I can pick this one up via arm64, thanks. Are there any other plugins we
->> should be wary of? 
+Hello,
 
-I can't tell exactly. I'm sure Kees has the whole picture.
+syzbot found the following crash on:
 
->> It looks like x86 filters out $(GCC_PLUGINS_CFLAGS)
->> when building the vDSO.
+HEAD commit:    e7b08814 Add linux-next specific files for 20200529
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12d7b391100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1e62421a5de6da96
+dashboard link: https://syzkaller.appspot.com/bug?extid=223310b454ba6b75974e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108575d2100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13291661100000
 
-Yes, that's why building x86 vDSO doesn't need $(DISABLE_STACKLEAK_PLUGIN).
+The bug was bisected to:
 
-> Maybe at some point we should replace exclusions based on
-> GCC_PLUGINS_CFLAGS and KASAN_SANITIZE and UBSAN_SANITIZE and
-> OBJECT_FILES_NON_STANDARD and so on with something more generic...
-> something that says "this file will not be built into the normal
-> kernel, it contains code that runs in realmode / userspace / some
-> similarly weird context, and none of our instrumentation
-> infrastructure is available there"...
+commit aa724fe18a8a8285d0071c3bfc932efb090d142d
+Author: Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Wed Mar 25 10:47:09 2020 +0000
 
-Good idea. I would also add 'notrace' to that list.
+    ima: Switch to dynamically allocated buffer for template digests
 
-Best regards,
-Alexander
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1616e896100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1516e896100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1116e896100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+223310b454ba6b75974e@syzkaller.appspotmail.com
+Fixes: aa724fe18a8a ("ima: Switch to dynamically allocated buffer for template digests")
+
+RBP: 000000000000dcd4 R08: 0000000000000002 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402160
+R13: 00000000004021f0 R14: 0000000000000000 R15: 0000000000000000
+general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
+CPU: 0 PID: 6811 Comm: syz-executor925 Not tainted 5.7.0-rc7-next-20200529-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:ima_free_template_entry+0x4a/0x170 security/integrity/ima/ima_api.c:27
+Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 25 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 5d 10 48 8d 7b 20 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e d1 00 00 00 8b 5b 20 31 ff 89
+RSP: 0018:ffffc900018e7598 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff9200031cece
+RDX: 0000000000000004 RSI: ffffffff836d8716 RDI: 0000000000000020
+RBP: ffff88809a078d80 R08: 0000000000000000 R09: ffffed1015cc719c
+R10: ffff8880ae638cdb R11: ffffed1015cc719b R12: ffffc900018e7670
+R13: ffffffff8a06d650 R14: ffff88809a078d90 R15: 00000000fffffff4
+FS:  0000000000bc7880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a6570000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ ima_alloc_init_template+0x3de/0x570 security/integrity/ima/ima_api.c:80
+ ima_add_violation+0x109/0x1e0 security/integrity/ima/ima_api.c:148
+ ima_rdwr_violation_check security/integrity/ima/ima_main.c:140 [inline]
+ process_measurement+0x1144/0x1750 security/integrity/ima/ima_main.c:237
+ ima_file_check+0xb9/0x100 security/integrity/ima/ima_main.c:491
+ do_open fs/namei.c:3236 [inline]
+ path_openat+0x17a4/0x27d0 fs/namei.c:3351
+ do_filp_open+0x192/0x260 fs/namei.c:3378
+ do_sys_openat2+0x585/0x7a0 fs/open.c:1173
+ do_sys_open+0xc3/0x140 fs/open.c:1189
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x441219
+Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffca22cc218 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441219
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000180
+RBP: 000000000000dcd4 R08: 0000000000000002 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402160
+R13: 00000000004021f0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace d5e7ae4ed8ee55df ]---
+RIP: 0010:ima_free_template_entry+0x4a/0x170 security/integrity/ima/ima_api.c:27
+Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 25 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 5d 10 48 8d 7b 20 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e d1 00 00 00 8b 5b 20 31 ff 89
+RSP: 0018:ffffc900018e7598 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1ffff9200031cece
+RDX: 0000000000000004 RSI: ffffffff836d8716 RDI: 0000000000000020
+RBP: ffff88809a078d80 R08: 0000000000000000 R09: ffffed1015cc719c
+R10: ffff8880ae638cdb R11: ffffed1015cc719b R12: ffffc900018e7670
+R13: ffffffff8a06d650 R14: ffff88809a078d90 R15: 00000000fffffff4
+FS:  0000000000bc7880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1d9c03f078 CR3: 00000000a6570000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
