@@ -2,102 +2,173 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21393C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0E2206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED649206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 19:57:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UJqmJXRM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IV6lJXWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgFDT53 (ORCPT
+        id S1729411AbgFDT5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 15:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728991AbgFDT52 (ORCPT
+        Thu, 4 Jun 2020 15:57:55 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35623 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728991AbgFDT5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 15:57:28 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51542C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 12:57:28 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p21so3961181pgm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 12:57:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=17b2aaxx9AWik+/H6nkchZPzWER/WcSta2U6qBhKjfI=;
-        b=UJqmJXRMu1MCMIknBTQnQbAcYFvoypy/3vBe+OATtsjD/2iSOyg5q2yQ/edgeCLPSd
-         bn8wZpbzUnj4rYWdkqMW5g9R2NMAPbfWz9eCOAazkyIzP83AmLPbYiaOpAM/Y8hfr9l0
-         zPslHOc7sqHKhoejCEYWz1TIpXbjQlC7UPrO8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=17b2aaxx9AWik+/H6nkchZPzWER/WcSta2U6qBhKjfI=;
-        b=jH9/phfczWFOzxIYFtGoRU3qM99gyv7RkzXwGFkBpctqd1ResoM4mEpLTqgdkV4/hK
-         YOD+L7ZstqTh9zYNLe+sZ6NVRNHY5Xq59OpJE0fBvfkk2WYgFI1lov6XZvcnkMIuLHZC
-         TtI1Je0yOZMfRLVjTBW7X6pwvvGyaU1tzlas/BOo5SoOB0Ja931DIaMY+6YHH5hqBTi4
-         VbFi2hX0ycVUKjnex643UglLMrg+LsuE0NwaXtQXOBYOif/aiAJ1eYGdPSD1jySu02MB
-         /aTJAAYidjAJDDKdw18AZzg8qMsN455/0tUU7/rVQNb8tpWul95srqHx9bi6rJQSxGsz
-         wYNw==
-X-Gm-Message-State: AOAM531VEuMZgYSQd3u6ydF18Hf5pyKnyh8ZxToipN8CXJDzbge6atYh
-        9tNYtXsBqeSGUPdggyjynR+y+JNRlrjSnQ==
-X-Google-Smtp-Source: ABdhPJwN5n5f0TKfN423aURRb4ZD2T087OtrXyelKJTyJ/6QqMLlLTeoMVmKyvSJ1+0DhyBpwVEeEg==
-X-Received: by 2002:aa7:9d01:: with SMTP id k1mr6059050pfp.6.1591300647119;
-        Thu, 04 Jun 2020 12:57:27 -0700 (PDT)
-Received: from mathewk1.lan ([161.97.192.125])
-        by smtp.gmail.com with ESMTPSA id p19sm5324130pff.116.2020.06.04.12.57.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 12:57:26 -0700 (PDT)
-From:   Mathew King <mathewk@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mathew King <mathewk@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH] acpi: battery: Always read fresh battery state on update
-Date:   Thu,  4 Jun 2020 13:56:58 -0600
-Message-Id: <20200604195658.66201-1-mathewk@chromium.org>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+        Thu, 4 Jun 2020 15:57:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591300673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=G1kd6xwQuWcQevYgiN5E77Wh4Al+ZX6bmwJ65V9TlV0=;
+        b=IV6lJXWQXaMsksDi3B5jxtKopyc6NEJdBXJXcr7XRs7UQIy61ou6Ddy4iogVoaIupu+rpQ
+        G3/2mX4IPAOBoXMaNaYMQH4iL9Hc2bv2D9o4lfirMRVsMSvbgD1KCv9tNJBsU7ahnpuSVk
+        9xrVD0z/UyXZr6MwK7DmeivjrcS0NFo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-raNl8zeOO4quuV5b7wLdXA-1; Thu, 04 Jun 2020 15:57:49 -0400
+X-MC-Unique: raNl8zeOO4quuV5b7wLdXA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A13F464;
+        Thu,  4 Jun 2020 19:57:47 +0000 (UTC)
+Received: from localhost (ovpn-116-137.gru2.redhat.com [10.97.116.137])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FCA27CCD8;
+        Thu,  4 Jun 2020 19:57:45 +0000 (UTC)
+Date:   Thu, 4 Jun 2020 16:57:44 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>, tiwai@suse.de,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] ima: Call ima_calc_boot_aggregate() in
+ ima_eventdigest_init()
+Message-ID: <20200604195744.GS2970@glitch>
+References: <20200603150821.8607-1-roberto.sassu@huawei.com>
+ <20200603150821.8607-2-roberto.sassu@huawei.com>
+ <1591221815.5146.31.camel@linux.ibm.com>
+ <20200604191207.GR2970@glitch>
+ <1591299320.5146.53.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1591299320.5146.53.camel@linux.ibm.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="N+qDRRsDvMgizTft"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the ACPI battery receives a notification event it should always
-read the battery state fresh from the ACPI device and not use the cached
-state. Currently the cached state stays valid and the new state may not
-be read when a notification occurs. This can lead to a udev event
-showing that the battery has changed but the sysfs state will still have
-the cached state values. This change invalidates the update time forcing
-the state to be updated before notifying the power_supply subsystem of
-the change.
+--N+qDRRsDvMgizTft
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mathew King <mathewk@chromium.org>
----
- drivers/acpi/battery.c | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Jun 04, 2020 at 03:35:20PM -0400, Mimi Zohar wrote:
+> On Thu, 2020-06-04 at 16:12 -0300, Bruno Meneguele wrote:
+> > On Wed, Jun 03, 2020 at 06:03:35PM -0400, Mimi Zohar wrote:
+> > > Hi Roberto,
+> > >=20
+> > > On Wed, 2020-06-03 at 17:08 +0200, Roberto Sassu wrote:
+> > > > If the template field 'd' is chosen and the digest to be added to t=
+he
+> > > > measurement entry was not calculated with SHA1 or MD5, it is
+> > > > recalculated with SHA1, by using the passed file descriptor. Howeve=
+r, this
+> > > > cannot be done for boot_aggregate, because there is no file descrip=
+tor.
+> > > >=20
+> > > > This patch adds a call to ima_calc_boot_aggregate() in
+> > > > ima_eventdigest_init(), so that the digest can be recalculated also=
+ for the
+> > > > boot_aggregate entry.
+> > > >=20
+> > > > Cc: stable@vger.kernel.org # 3.13.x
+> > > > Fixes: 3ce1217d6cd5d ("ima: define template fields library and new =
+helpers")
+> > > > Reported-by: Takashi Iwai <tiwai@suse.de>
+> > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > >=20
+> > > Thanks, Roberto.
+> > >=20
+> > > I've pushed both patches out to the next-integrity branch and would
+> > > appreciate some additional testing.
+> > >=20
+> > > thanks,
+> > >=20
+> > > Mimi
+> > >=20
+> >=20
+> > Hi Mimi and Roberto,
+> >=20
+> > FWIW, I've tested this patch manually and things went fine, with no
+> > unexpected behavior or results.=20
+>=20
+> Thanks, Bruno!
+>=20
+> > However, wouldn't it be worth add a note in kmsg about the
+> > ima_calc_boot_aggregate() being called with an algo different from the
+> > system's default? Just to let the user know he won't find a sha256 when
+> > check the measurement. But that's something we can add later too.
+>=20
+> There's no guarantees that the IMA default crypto algorithm will be
+> used for calculating the boot_aggregate. =A0The algorithm is dependent
+> on the TPM. =A0For example, the default IMA algorithm could be sha256,
+> but on a system with TPM 1.2, the boot_aggregate would have to be
+> sha1.
 
-diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-index 366c389175d8..ab7fa4879fbe 100644
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -981,6 +981,7 @@ static int acpi_battery_update(struct acpi_battery *battery, bool resume)
- 		acpi_battery_init_alarm(battery);
- 	}
- 
-+	battery->update_time = 0;
- 	result = acpi_battery_get_state(battery);
- 	if (result)
- 		return result;
--- 
-2.27.0.rc2.251.g90737beb825-goog
+Ah Indeed.. it makes sense.
+
+>=20
+> This patch addresses a mismatch between the template format field ('d'
+> field) and the larger digest. =A0We could require the "ima_template_fmt"
+> specified on the boot command line define an appropriate format, but
+> Roberto decided to support the situation where both "d" and "d-ng" are
+> defined.
+
+Yes, personally I also prefer to "fail earlier" or to be more stricter
+on user definitions, but I also understand going the other way allowing
+both d & d-ng.
+
+>=20
+> Mimi
+>=20
+
+thanks Mimi.
+
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--N+qDRRsDvMgizTft
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl7ZUjgACgkQYdRkFR+R
+okMoZgf/YKUFxFPcsI8P3M88CPBksamyJpDCfsFn0+pFPHLS2y6My9cUdESk33Pc
+SygUKgfNnw2sCPsawDBq3UE3IIQ33rI4XTGRuJR1PmJHz/s9qITC4aBugkC2ufDv
+a5sw/TCUHvUopciZGg4ryAIM+crwCqjiGUe7WHX6VunpaYjE724CNLP57Dg2GqGe
+r8OYClMIuRhyVtTfa3hjlFNiQdiymCXrguUBj1ss7YXxPpJAyB86Rdc1OHITFFl5
+SUPt1g5z8v3xIRoClUNiUyLKqI3hJ5U/OKndzsfzlmjhOPVbkfFe30EJHfW5vMT/
+PggXwoxgm0PKYxHxT+BBUFDAY6/9ag==
+=1GTw
+-----END PGP SIGNATURE-----
+
+--N+qDRRsDvMgizTft--
 
