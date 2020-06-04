@@ -2,63 +2,117 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41079C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23293206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32887206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 12:31:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fbwz9OjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbgFDM3e (ORCPT
+        id S1727965AbgFDMbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 08:29:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:43864 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbgFDM3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 08:29:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBBE61FB;
-        Thu,  4 Jun 2020 05:29:32 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 972253F6CF;
-        Thu,  4 Jun 2020 05:29:31 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 13:29:25 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: linux-next: Fixes tag needs some work in the scmi tree
-Message-ID: <20200604122925.GA12397@bogus>
-References: <20200604221328.2e6b8d98@canb.auug.org.au>
+        Thu, 4 Jun 2020 08:31:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60472 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgFDMbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 08:31:04 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054CGWMQ169869;
+        Thu, 4 Jun 2020 12:30:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=p50nfK6c0axXgdD+SiJnP8v0Oz8oiv+sqt/hvkFeNoo=;
+ b=fbwz9OjAIC1zG3T7hrypOKrzqF5niOCCEq4QDRimlzjtXE6va0WnNZXOKlYpkV6GaCxN
+ CSi614YXQOvjhURSN+MuKR9FNNCnkk51VTpjUDKHaC8fV45QO2dW68MH5oN976eyBiYu
+ o4svG+LlSHir/yLNhwRg1tWsFICMjY2XvJZgeV53DjCV4lag301x2+MIbCY4kzrTzLxf
+ p0ZSYkcL8lObe3rfgdc75jfFhJhhhA4xYtreVRengsV9Fsa559i4wDnix6xdkH36RujZ
+ XWZO/6AJm5Vv1wonW7UAyLRychnX3yyt8fhZkNVdit2nmtGhftY2Uy4RCjkWmnBGOzLx xg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31evap1dpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 04 Jun 2020 12:30:50 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 054CE48u123956;
+        Thu, 4 Jun 2020 12:30:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 31c25v543f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 04 Jun 2020 12:30:50 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 054CUlxV008967;
+        Thu, 4 Jun 2020 12:30:48 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 04 Jun 2020 05:30:47 -0700
+Date:   Thu, 4 Jun 2020 15:30:38 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Joe Perches <joe@perches.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
+ which is unused and broken
+Message-ID: <20200604123038.GG22511@kadam>
+References: <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
+ <20200601183102.GS30374@kadam>
+ <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
+ <20200604083120.GF22511@kadam>
+ <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>
+ <alpine.DEB.2.21.2006041147360.2577@hadrien>
+ <32232229031e02edcc268b1074c9bac44012ee35.camel@perches.com>
+ <alpine.DEB.2.21.2006041228520.2577@hadrien>
+ <10e54ee84bd44171ef329bed9e7e6a946bae61ba.camel@perches.com>
+ <alpine.DEB.2.21.2006041328570.2577@hadrien>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604221328.2e6b8d98@canb.auug.org.au>
+In-Reply-To: <alpine.DEB.2.21.2006041328570.2577@hadrien>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006040086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9641 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006040086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 10:13:28PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   8a8cd9a91081 ("arm: dts: vexpress: Move mcc node back into motherboard node")
-> 
-> Fixes tag
-> 
->   Fixes: d9258898ad49 ("arm64: dts: arm: vexpress: Move fixed devices out of bus node")
-> 
+On Thu, Jun 04, 2020 at 01:42:12PM +0200, Julia Lawall wrote:
+> OK, I recall a discussion with Dan where he suggested that some things
+> that were not actually bug fixes could also merit a Fixes tag.  But it's
+> probably better if he weighs in directly.
 
-Sorry for that, I must have checked it. Will fix it.
+I generally think Fixes should only be used for "real bug" fixes.
 
--- 
-Regards,
-Sudeep
+The one exception is when I'm reviewing a patch that fixes an "unused
+assignment" static checker warning is that I know which commit
+introduced the warning.  I don't have strong feelings if it's in the
+Fixes tag or if it's just mentioned in the commit message.  But it
+helps me when I'm reviewing if I don't have to grovel through git
+history myself.  Also I think that it's always a good exercise for
+people fixing patches to look at how the bug was introduced.
+
+regards,
+dan carpenter
