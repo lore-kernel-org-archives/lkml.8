@@ -2,115 +2,101 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E59C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C20C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38FF62072E
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF302072E
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 15:14:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CVOVrcVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgFDPMe (ORCPT
+        id S1729331AbgFDPOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 11:12:34 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52430 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgFDPMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 11:12:34 -0400
-IronPort-SDR: frujNjvOChJT6U5SDYK4x32C9NP9iD+6Ya2lsSR7wWJkp8jTfhJalcMvxWYnt9zxTgYyksmQVj
- +JWed1BNQJ/A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 08:12:33 -0700
-IronPort-SDR: OajrGnr5CSBpEfskgXPM/GYq0IN+aJoCCDiz+asYCfXVrUIiloBzNwlVPbD0JWRBz0P66bgpQX
- DPJzhp2RvP6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
-   d="scan'208";a="269442517"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga003.jf.intel.com with ESMTP; 04 Jun 2020 08:12:33 -0700
-Date:   Thu, 4 Jun 2020 08:12:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     20200604024304.14643-1-xiaoyao.li@intel.com
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v2] KVM: x86: Assign correct value to array.maxnent
-Message-ID: <20200604151233.GC30223@linux.intel.com>
-References: <20200604041636.1187-1-xiaoyao.li@intel.com>
+        Thu, 4 Jun 2020 11:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729170AbgFDPOK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 11:14:10 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08D1C08C5C0;
+        Thu,  4 Jun 2020 08:14:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=hqxSBMYgaMHcJppIVN2RkGs74NNJ8ayw/b2Z0TVTbhA=; b=CVOVrcVcDpuy53BE6gQxo+e3Yi
+        sxkkl2mIhbuJQ3FE79005adrbaFHVLxFilL8esm+M+NCIITHg3vbfDzVnp/RU5A0stVgPzpmXlNFN
+        wMNldE7MvonsWjSkfmpwaZvo9yneALcl8AtBRAmwXBKiB1qHZbcbOgciXTMO7oFavTMXrGpKBIqtM
+        axTB8Xl5JJzyk25FPjUj4ABcYkfUhyk17BkMhRWitZIO4LTdYT9YtExy2g1a+JsTie/cKiOYWImiL
+        nv1K9nIj+YN5W4ELlsLB2itDS+WBKh48GHmvYhfj86RJ74uTnHR/KlnBgy28cp0BqqYfvYR5aZ+w3
+        UXS19Hig==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jgrZE-0003Jb-Qh; Thu, 04 Jun 2020 15:14:04 +0000
+Subject: Re: [PATCH v7 5/5] drivers/tty/serial: add LiteUART driver
+To:     Mateusz Holenko <mholenko@antmicro.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+References: <20200604121142.2964437-0-mholenko@antmicro.com>
+ <20200604121142.2964437-5-mholenko@antmicro.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <418aa34e-af6c-3a3c-8d22-e7a122963b8f@infradead.org>
+Date:   Thu, 4 Jun 2020 08:14:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604041636.1187-1-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200604121142.2964437-5-mholenko@antmicro.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 12:16:36PM +0800, Xiaoyao Li wrote:
-> Delay the assignment of array.maxnent to use correct value for the case
-> cpuid->nent > KVM_MAX_CPUID_ENTRIES.
-> 
-> Fixes: e53c95e8d41e ("KVM: x86: Encapsulate CPUID entries and metadata in struct")
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
-> v2:
->    - remove "const" of maxnent to fix build error.
-> ---
->  arch/x86/kvm/cpuid.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 253b8e875ccd..3d88ddf781d0 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -426,7 +426,7 @@ EXPORT_SYMBOL_GPL(kvm_set_cpu_caps);
->  
->  struct kvm_cpuid_array {
->  	struct kvm_cpuid_entry2 *entries;
-> -	const int maxnent;
-> +	int maxnent;
->  	int nent;
->  };
->  
-> @@ -870,7 +870,6 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
->  
->  	struct kvm_cpuid_array array = {
->  		.nent = 0,
-> -		.maxnent = cpuid->nent,
->  	};
->  	int r, i;
->  
-> @@ -887,6 +886,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
->  	if (!array.entries)
->  		return -ENOMEM;
->  
-> +	array.maxnent = cpuid->nent;
+Hi--
 
-Eh, I'd vote to just do:
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 253b8e875ccd..1e5b1ee75a76 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -870,7 +870,7 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
-
-        struct kvm_cpuid_array array = {
-                .nent = 0,
--               .maxnent = cpuid->nent,
-+               .maxnent = min(cpuid->nent, (u32)KVM_MAX_CPUID_ENTRIES),
-        };
-        int r, i;
-
-
-
+On 6/4/20 3:14 AM, Mateusz Holenko wrote:
+> +config SERIAL_LITEUART
+> +	tristate "LiteUART serial port support"
+> +	depends on HAS_IOMEM
+> +	depends on OF || COMPILE_TEST
+> +	depends on LITEX_SOC_CONTROLLER
+> +	select SERIAL_CORE
+> +	help
+> +	  This driver is for the FPGA-based LiteUART serial controller from LiteX
+> +	  SoC builder.
 > +
->  	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
->  		r = get_cpuid_func(&array, funcs[i], type);
->  		if (r)
-> -- 
-> 2.18.2
-> 
+> +	  Say 'Y' here if you wish to use the LiteUART serial controller.
+> +	  Otherwise, say 'N'.
+
+That last paragraph seems to say that Y and N are the only choices here.
+It can also be set to M ...
+
+-- 
+~Randy
+
