@@ -2,102 +2,127 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E557820738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D654206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 17:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V4z9JKfd"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dp1MW0oL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbgFDR5P (ORCPT
+        id S1730402AbgFDR6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 13:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57418 "EHLO
+        Thu, 4 Jun 2020 13:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730008AbgFDR5N (ORCPT
+        with ESMTP id S1730326AbgFDR6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 13:57:13 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EC4C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:57:13 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t16so2486929plo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:57:13 -0700 (PDT)
+        Thu, 4 Jun 2020 13:58:02 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28319C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 10:58:01 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c185so6987303qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 10:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=V76SN9ULYTXcj2nfE4XluNWJ/apYyE25p/aMUS5j4DU=;
-        b=V4z9JKfdEWs9MDeS/EPBuIqMb1/3Id2oYdNI6PRplwSaLTUpCWcNBTKmcMdU9XPQLz
-         VZPPPCjrTJm2TNz6/jfXB7ZbPyocg07b7HSOMxqFd4NKlQmzWIKUqhCYUuvGNWGlvi12
-         fKhvas9WXyTTn5rzMJzhq4H482u029HNUa5t0=
+        bh=ylFM7xcrRPttXnSFsxxMsniM496bjo9TahOp0BQ4KWQ=;
+        b=dp1MW0oLsIVpf8P1GqlJ7ywKbTALgi380UyzwJhLZxxjLZbExXSS3+DNraBRJx+RxA
+         2YNRIqPWKCJwUAt2Ionyk91M424aXFCth771TTbwhKuAi/5z09C6/Wr39Wytw6IFYat4
+         ROGMU+gTfjKOfKx/KnMfK4lHl61/+H90NG+NU9ft1Ad329Ugd8oNWQRmnDyTDrH84VcG
+         NHqJ/pa7Z8WtA7tv5ssR9OBolcmhh/Z0Chu/DqhjQRZD68jbMjVitMLn9/18eeVfDBtl
+         W6iFo32dBc0/Xz9TBC1xS9lWFSwriSPTsiMKkjJI2/Fy1v0kJA0h8NiDLZa3m0zxOiRF
+         iMLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=V76SN9ULYTXcj2nfE4XluNWJ/apYyE25p/aMUS5j4DU=;
-        b=dqUFqfKRlMJvnCy2cpkPzvn4D+3e3514YTRPm1DppRaGitNmnHKfF6TZXT3qcuPYeF
-         3zW5OmoplvlfvXKDOCuWtvXvwHIOyNTXlYmLmt7znSw7w8Mbh3Kiusj3oQ+gqCnOM27l
-         7sFNj9jcdSiBEA7jyWEdySDN5jVTLP4kLD8ydp5G83AE4/ULOOypmar9YXwyM/s48mJv
-         qwLQARHGXB+seq0Xwn07XVyL2zOwUD3dpo6kdD3bsDbqzkHGExArcRT00Rc71mQoKy4P
-         ne4tjZY8KkWAnTpe5GvzG6J4dCUhi6y1KUecGbSA95nSs2LJTxWW0Z/x5yB0dsZKS755
-         Xa0g==
-X-Gm-Message-State: AOAM533p9poKfCV4oefum93/mHxSQ6tgqWx60k+KVAIGDbGaeOKaG6FZ
-        QIPNQIDa8UYaTZ/613gFyauCbA==
-X-Google-Smtp-Source: ABdhPJyO8qGrlBRmUktz1P+Kkq0V7ss4Vc6dU/2Mx+l6qK8PjAByRudw9CWP/5XjkhsROEMzxXc8Sg==
-X-Received: by 2002:a17:90a:5d14:: with SMTP id s20mr7784264pji.9.1591293427831;
-        Thu, 04 Jun 2020 10:57:07 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y18sm3281756pfn.177.2020.06.04.10.57.06
+        bh=ylFM7xcrRPttXnSFsxxMsniM496bjo9TahOp0BQ4KWQ=;
+        b=oIvx8MzqYTVYAA8ARtm1w3qKHuJU58xHNhC2/zV59QHkBwneiEmIXRF3r1drU56GzE
+         24PNkUcOcwg8PCEcc1L8SS1HXvimfHVbEcPkQpXuhwt5pRqmlBWL4+q8weZ0A0fRh25d
+         TRqvVKx+asBSAcOsmGVxFWuzyIip+KYxG65RY0L8QlQGnr2zi7lUJH8QYtxlYVa3qZc8
+         0zQapJyZVRKzVG2bdV2YfVDH5nv0xDRRR6BxdZBJgLFEzqs00CGrFoAEnYy3VDStDRm6
+         XsP9UBV/O1QRQBc7s2+gyOjb1cS72ce76uuG5RrwG5Qk4KDDUUQwnIQvKbGsLHIz3jml
+         nEKQ==
+X-Gm-Message-State: AOAM530LHhZhlSRpbPetzg7b4y7REXeshJxvMQd3kOT0NiwwUu//vYAv
+        hK//qJPGQFdNfSMdfaNtkqaVmQ==
+X-Google-Smtp-Source: ABdhPJzYt2lslt13YiEsonKEZ+jBx4HFt1d65mCYXH6vxqHPQIS81ppOdKBUfUx77lLK8R8poNgzug==
+X-Received: by 2002:ae9:ebd2:: with SMTP id b201mr5788109qkg.409.1591293480332;
+        Thu, 04 Jun 2020 10:58:00 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id t43sm5788444qtj.85.2020.06.04.10.57.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 10:57:07 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 10:57:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Waiman Long <longman@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: slub freelist issue / BUG: unable to handle page fault for
- address: 000000003ffe0018
-Message-ID: <202006041054.874AA564@keescook>
-References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
- <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
- <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+        Thu, 04 Jun 2020 10:57:59 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jgu7r-001H95-GE; Thu, 04 Jun 2020 14:57:59 -0300
+Date:   Thu, 4 Jun 2020 14:57:59 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 09/10] treewide: Remove uninitialized_var() usage
+Message-ID: <20200604175759.GQ6578@ziepe.ca>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-10-keescook@chromium.org>
+ <20200604132306.GO6578@ziepe.ca>
+ <202006040757.0DFC3F28E@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+In-Reply-To: <202006040757.0DFC3F28E@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
-> On 2020-06-04 19:18, Vlastimil Babka wrote:
-> > On 6/4/20 7:14 PM, Vegard Nossum wrote:
+On Thu, Jun 04, 2020 at 07:59:40AM -0700, Kees Cook wrote:
+> On Thu, Jun 04, 2020 at 10:23:06AM -0300, Jason Gunthorpe wrote:
+> > On Wed, Jun 03, 2020 at 04:32:02PM -0700, Kees Cook wrote:
+> > > Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> > > (or can in the future), and suppresses unrelated compiler warnings
+> > > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> > > either simply initialize the variable or make compiler changes.
 > > > 
-> > > Hi all,
+> > > I preparation for removing[2] the[3] macro[4], remove all remaining
+> > > needless uses with the following script:
 > > > 
-> > > I ran into a boot problem with latest linus/master
-> > > (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests like this:
+> > > git grep '\buninitialized_var\b' | cut -d: -f1 | sort -u | \
+> > > 	xargs perl -pi -e \
+> > > 		's/\buninitialized_var\(([^\)]+)\)/\1/g;
+> > > 		 s:\s*/\* (GCC be quiet|to make compiler happy) \*/$::g;'
+> > > 
+> > > drivers/video/fbdev/riva/riva_hw.c was manually tweaked to avoid
+> > > pathological white-space.
+> > > 
+> > > No outstanding warnings were found building allmodconfig with GCC 9.3.0
+> > > for x86_64, i386, arm64, arm, powerpc, powerpc64le, s390x, mips, sparc64,
+> > > alpha, and m68k.
 > > 
-> > Hi, what's the .config you use?
+> > At least in the infiniband part I'm confident that old gcc versions
+> > will print warnings after this patch.
+> > 
+> > As the warnings are wrong, do we care? Should old gcc maybe just -Wno-
+> > the warning?
 > 
-> Pretty much x86_64 defconfig minus a few options (PCI, USB, ...)
+> I *think* a lot of those are from -Wmaybe-uninitialized, but Linus just
+> turned that off unconditionally in v5.7:
+> 78a5255ffb6a ("Stop the ad-hoc games with -Wno-maybe-initialized")
 
-Oh yes indeed. I immediately crash in the same way with this config. I'll
-start digging...
+Yah, that alone is justification enough to do this purge.
 
-(defconfig finishes boot)
-
--Kees
-
--- 
-Kees Cook
+Jason
