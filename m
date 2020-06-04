@@ -2,175 +2,130 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F133FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 193F52067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B333F206DC
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 07:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TF4Zj3IZ"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="wHU4dNYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgFDHta (ORCPT
+        id S1726552AbgFDHvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 03:49:30 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:54549 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725950AbgFDHt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 03:49:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49cybV3gm4z9sSc;
-        Thu,  4 Jun 2020 17:49:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591256967;
-        bh=o+OWDom/fYwGhP1oWFmSJHDLHpi/7YbUUe8i95I5KR0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TF4Zj3IZINV5x8p+m/3ufAgGFCfpde+kvrjCdi7a9hAReoumikHofSYWtlZvv/CM8
-         p6UWPKJ250sAVk1Tj0CM9phkTfWQhL6xSBCOHAXoNqM9jFU5Q+oVsymD47GuHpUFoI
-         jjNjk8dYl0vWJJaSV4yGeiBNyT4xvcHTFBZWUcKS0AR4wDAO3mSlqoEsZI8MIKSZ/6
-         w0WLpA3ji7n0Wf3OWozpi0wZNzXc4ZjOMFjVsxvF/M987a6Za8Xm8txrJN2CHM7HUq
-         sZto9Nk5rqfI37+iZdiqnhEMPvmOS3qq/nio7xHgR/OHsqgX6DWNbUoDdaOCphuJoH
-         lPt5/v+2aJuyg==
-Date:   Thu, 4 Jun 2020 17:49:25 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: linux-next: fix ups for clashes between akpm and powerpc trees
-Message-ID: <20200604174925.3610fdd1@canb.auug.org.au>
-In-Reply-To: <20200604165246.436f02ba@canb.auug.org.au>
-References: <20200603202655.0ad0eacc@canb.auug.org.au>
-        <20200604165246.436f02ba@canb.auug.org.au>
+        Thu, 4 Jun 2020 03:51:43 -0400
+Received: from mail-mw2nam10on2111.outbound.protection.outlook.com ([40.107.94.111]:47712
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725950AbgFDHvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 03:51:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kHjHpy6OAynVIlk4r0ci5Q+Do/R9TmtjAk5tg656tCNYw5pf7aT3KxowsPB3vOWzNtikFE6FBktZQgx+25+yjWwncgzzSZ3XUOvLgckAH5Fkdik3XKXutBK2YQT3MmB3SYrzcZSO4KSw60AuNhu6KnR9h2JfFYASflsJvgTUoXRnhSP5cWVfDvx/tSRhGw0O+BWYochYlYgFSYAS6vaOsoiGyps5QC/J+WPMIprg7Vumi7xNB832a5YaELe5CDLRT5IorSlMbirlTqUfRBAr21+hcivk4oKfpqWDIriNJ7X0vmRAUgqtq8qHZYVvKpioVjNzbqZrQMcP8fgKjWdq2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+3mVKoW7JkzpuVgFoR2zPA3o8TzAU16P0Y+IhmTyAYI=;
+ b=cHfaKtLwAlVD4UcTDSvkip4zQxFStt8PLfJ/Ou0hnn8nx0oFB4xUcHUkHA/aSVacHeS9u8PqBquezbXkd7NWAk2zF2z1m5FLoAucy4F9aQun6nd54Xw6nkJ4CPJSB/DIhZXOqOlOHqJoW5Nej7yTkV3+DNymSxLj1gM7zxf8FU6h6NtY5/LPrWs2k9CeQXWL5SCP729Ezd9LhFKRAU9y+hLlRsIf9WUGmYxE3V8zAXD9/gioQXjGPcfGRwPrDT+KFrimeblO/UYIsHCBWcSx5Rj4jWw0CQ+OXzb5nqO20ePuJNnudA085gOsMbX0E0bru5mAc4I4jdoJySVpssZf6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+3mVKoW7JkzpuVgFoR2zPA3o8TzAU16P0Y+IhmTyAYI=;
+ b=wHU4dNYL3PFDBeY9DX3HgQzdb2zTMvcXasu82Rq8jJEQJOKqEujEXgBC/7T8Hv3gjsHZw7suqzF0etkgIALDZUvyJ6XcdwDHsK27ac5ZGa5fQjCH91cRZCPQLZ4cB1qRdnGSM9S8d/wZvcoan7mH2IqC3Net5veHRwKBvT8h8ts=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB6818.namprd04.prod.outlook.com (2603:10b6:a03:224::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 4 Jun
+ 2020 07:51:39 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::844e:398b:2165:631b]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::844e:398b:2165:631b%7]) with mapi id 15.20.3066.018; Thu, 4 Jun 2020
+ 07:51:38 +0000
+Date:   Thu, 4 Jun 2020 15:51:28 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     devel@driverdev.osuosl.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v11 2/2] drm/bridge: anx7625: Add anx7625 MIPI DSI/DPI to
+ DP bridge driver
+Message-ID: <20200604075128.GA2581@xin-VirtualBox>
+References: <cover.1589511894.git.xji@analogixsemi.com>
+ <3946984ac1024b53b72c2eb39ee41967a2bf9c3d.1589511894.git.xji@analogixsemi.com>
+ <CAJMQK-hkrsgbvi91=uBhPfn0scwTSh3OJBGLcy9tC3GYiW1i9Q@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJMQK-hkrsgbvi91=uBhPfn0scwTSh3OJBGLcy9tC3GYiW1i9Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK0PR01CA0055.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::19) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/69NJy6MsPMSFE8YRasJztRC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK0PR01CA0055.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::19) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3066.18 via Frontend Transport; Thu, 4 Jun 2020 07:51:38 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 269944bd-f3dc-4bf8-0a26-08d8085c1ccb
+X-MS-TrafficTypeDiagnostic: BY5PR04MB6818:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB681874DBBC06AA6C83D9BDC8C7890@BY5PR04MB6818.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 04244E0DC5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CKZXna2MjkOzc8n5Aw9zUSid2oOvTbN0AniWspBtlQ0o+2l0Sj8EJpnUalzCGtv91leco6Fjkln2YindeOgtyng5DXcTk9jchNoktBJxX8lem1dR2M+i979uQwh90RnLwPYiApgpOa1W5o4Qih6+OtrPbWc+DfK5iI2RpcKdWFsED94MfB1x+WR3eJGR9LCiLVcJGAJKiD61RjxKzhzcAytcj3QgxhNXWnc9Q2kyQsoyogDbJkXl8kN9/AAcT27rLe4sdqvfGotKU+75i60TW18p/nuiyY+BHGI3t6hYSo7ly5NSvbitS3zeAbqeH9TTZiR0OqdzMu3NIaB4EIKG7VaER3HyLPZRXD3T7d7NcJDpyM0HiWNmk6TCP7WwXAiVUABklS+OfNf/SYWZhwF1vA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(136003)(39840400004)(376002)(346002)(186003)(16526019)(86362001)(8676002)(956004)(66476007)(8936002)(966005)(66946007)(6916009)(7416002)(6666004)(33716001)(316002)(6496006)(52116002)(66556008)(54906003)(478600001)(33656002)(26005)(9686003)(53546011)(107886003)(4326008)(4744005)(2906002)(55016002)(5660300002)(1076003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ZJPaVOMUxtE7pVMYNFmVe866UPB0dQ8Iaa2MCgb7+b44Uv9J4c6iATCfxUGtWiuLWm7k9KC7kebjXn5f85hyXacAcI6uEmLcncuFH6/Kfg8wfiW7mq+l4yXkvSGXl98qg49TpsgirHyAWMtWKimDOK3W+tkI0R0/whY43tehHhdDqMmI3KyW453IQBVEHajJq+SnNj35yI/3R1s8xUtLehTm023/YMOySjuivunYW4FrQEB60bdx0YaAzRNxJsoil76uFznP6raNAfCm4cchT0rRHrebkdITCKH8DofhjgmqbdyW8ohk9utpUHk3d0ORR1AWrrOcG1Xnj/PkejCX7mK5o3qjRfa+Cm6sq9LiuDBSLBR74XzFaGJfmrvV9oYQoCs7H4f/uif6XA7DRksOhq47SuSBhQu/cLiepjudATQjfyR5hVLntxqFvPSbnNGl6BqpUu9AVfNk3qUDVxqjdvGk/hxVsQspMcGCPAoyJnI=
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 269944bd-f3dc-4bf8-0a26-08d8085c1ccb
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2020 07:51:38.8267
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8/psuGyIkh7DAAI/DwZFO6hmfJEijtD4YtwxsKTKCgMylid2XmP2hbi4MJ7OJs/MC1baj2H86KsvK7LDto1EBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB6818
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/69NJy6MsPMSFE8YRasJztRC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 01, 2020 at 12:14:09PM +0800, Hsin-Yi Wang wrote:
+> On Fri, May 15, 2020 at 2:53 PM Xin Ji <xji@analogixsemi.com> wrote:
+> 
+> > +
+> > +static int anx7625_bridge_attach(struct drm_bridge *bridge)
+> 
+> Latest drm_bridge api:
+> 
+> int (*attach)(struct drm_bridge *bridge,
+>      enum drm_bridge_attach_flags flags);
+> 
+> https://elixir.bootlin.com/linux/v5.7-rc7/source/include/drm/drm_bridge.h#L70
+> 
+> > +{
+> > +       struct anx7625_data *ctx = bridge_to_anx7625(bridge);
+> > +       int err;
+Hi Hsin-Yi, thanks for the comment, I'll fix it in the version v12
 
-Hi all,
-
-On Thu, 4 Jun 2020 16:52:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/=
-include/asm/nohash/32/pgtable.h
-> index c188a6f64bcd..1927e1b653f2 100644
-> --- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-> +++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-> @@ -205,10 +205,6 @@ static inline void pmd_clear(pmd_t *pmdp)
->  	*pmdp =3D __pmd(0);
->  }
-> =20
-> -
-> -/* to find an entry in a kernel page-table-directory */
-> -#define pgd_offset_k(address) pgd_offset(&init_mm, address)
-> -
->  /* to find an entry in a page-table-directory */
->  #define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
->  #define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
-> @@ -241,7 +237,7 @@ static inline pte_basic_t pte_update(struct mm_struct=
- *mm, unsigned long addr, p
->  	pte_basic_t old =3D pte_val(*p);
->  	pte_basic_t new =3D (old & ~(pte_basic_t)clr) | set;
->  	int num, i;
-> -	pmd_t *pmd =3D pmd_offset(pud_offset(pgd_offset(mm, addr), addr), addr);
-> +	pmd_t *pmd =3D pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, addr), a=
-ddr), addr), addr);
-> =20
->  	if (!huge)
->  		num =3D PAGE_SIZE / SZ_4K;
-> @@ -341,6 +337,10 @@ static inline int pte_young(pte_t pte)
->  	pfn_to_page((__pa(pmd_val(pmd)) >> PAGE_SHIFT))
->  #endif
-> =20
-> +#define pte_offset_kernel(dir, addr)	\
-> +	(pmd_bad(*(dir)) ? NULL : (pte_t *)pmd_page_vaddr(*(dir)) + \
-> +				  pte_index(addr))
-> +
->  /*
->   * Encode and decode a swap entry.
->   * Note that the bits we use in a PTE for representing a swap entry
-
-Sorry, that ended up:
-
-diff --cc arch/powerpc/include/asm/nohash/32/pgtable.h
-index 639f3b3713ec,eb8538c85077..1927e1b653f2
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@@ -204,13 -205,6 +205,9 @@@ static inline void pmd_clear(pmd_t *pmd
-  	*pmdp =3D __pmd(0);
-  }
- =20
--=20
-- /* to find an entry in a kernel page-table-directory */
-- #define pgd_offset_k(address) pgd_offset(&init_mm, address)
--=20
- +/* to find an entry in a page-table-directory */
- +#define pgd_index(address)	 ((address) >> PGDIR_SHIFT)
- +#define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
- =20
-  /*
-   * PTE updates. This function is called whenever an existing
-@@@ -240,7 -234,7 +237,7 @@@ static inline pte_basic_t pte_update(st
-  	pte_basic_t old =3D pte_val(*p);
-  	pte_basic_t new =3D (old & ~(pte_basic_t)clr) | set;
-  	int num, i;
---	pmd_t *pmd =3D pmd_offset(pud_offset(pgd_offset(mm, addr), addr), addr);
-++	pmd_t *pmd =3D pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, addr), ad=
-dr), addr), addr);
- =20
-  	if (!huge)
-  		num =3D PAGE_SIZE / SZ_4K;
-@@@ -342,15 -334,6 +337,10 @@@ static inline int pte_young(pte_t pte
-  	pfn_to_page((__pa(pmd_val(pmd)) >> PAGE_SHIFT))
-  #endif
- =20
-- /* Find an entry in the third-level page table.. */
-- #define pte_index(address)		\
-- 	(((address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
- +#define pte_offset_kernel(dir, addr)	\
- +	(pmd_bad(*(dir)) ? NULL : (pte_t *)pmd_page_vaddr(*(dir)) + \
- +				  pte_index(addr))
-- #define pte_offset_map(dir, addr)	pte_offset_kernel((dir), (addr))
-- static inline void pte_unmap(pte_t *pte) { }
- +
-  /*
-   * Encode and decode a swap entry.
-   * Note that the bits we use in a PTE for representing a swap entry
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/69NJy6MsPMSFE8YRasJztRC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Yp4UACgkQAVBC80lX
-0GyHnQf/QfJYu4Zm/K1coGpmfqJ0CrINNBc+VTkdq8SquTaz0YjZM4zwrZl6SHGi
-u6QCmXtEKNHepvQ0SXcqjmVvH5LziPld+oarfG8xtAOn2dGj4nti79BfBga/7XCR
-zBbZgzBGO3OqFUOoXbKMNxnnpKZQZcZiJXgKzhASpgWJeuEfAproDvdu+yO1m8T2
-YiknvWQ3K//h6mjlN/Ik15LY8B5vAok7irW74ALL0BaEEwpltjWtQStyTx/HMqhH
-4oi4F2dUzBJkn7wm61q8TElLd1lMn3q90cB5MLsOwYkaZHRqz8smvQXXrTZzk52c
-TqyGTGobcOw7NOxiZnx0Z+CdPsAGlg==
-=IJ7k
------END PGP SIGNATURE-----
-
---Sig_/69NJy6MsPMSFE8YRasJztRC--
+Thanks,
+Xin
