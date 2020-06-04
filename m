@@ -2,107 +2,118 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F60AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5006206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tj6LbMn6"
+	by mail.kernel.org (Postfix) with ESMTP id 7A50B2067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 22:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591310126;
+	bh=MEOgu/bZys0u6+e1umJ8QePVm2Ua1OaSBE4AWlWpoQg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qZVCmTYZHIw7fqvNwf62fGpOREAPO6ljC3p8nSTjhFi6QKXPLcqK3NAQVX6K/ammK
+	 kVl0LyVqvn+Qv9kjhhKyjWp2acPRs7em84356hfRwTHo4jGx9NQ6D5e2ve+kKnabse
+	 GlJEynGg5y/flEyov4gZV+SqkR392EPnPnQR0Z1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgFDWbo (ORCPT
+        id S1728005AbgFDWfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 18:31:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgFDWbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 18:31:44 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED78C08C5C0;
-        Thu,  4 Jun 2020 15:31:43 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id q10so2624093uaj.13;
-        Thu, 04 Jun 2020 15:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PfEYd36uNS5qZ/DmqxgTWEQjvkvDJRLoeb63Roelzwk=;
-        b=Tj6LbMn6UyG3JUPUV/sMlJ8usV/UM3I4ztQC0b0Mu0ilDXAH+9P1GlkIrPVFeVGLct
-         0t983yThVyG6apg9+KRWO2QK61Iz4bR88SPWv08fRAVjQwx/4sZLFHHmtIAZq00tHUq7
-         BZad9OndhJ+smFsF8JVmPXuDkldZ9RIR/ZegWtBVhq4iyx4Y9MJRooHHpFqtbHiphyxd
-         7zIYB6tHZrFMmHek8AmzE3Vc2uX6qMGOnyhSWNiLb7Wikglg3PZL6S23S18iMo9YSGvW
-         Dhldh+cv7LMWa7PwSxDAsbN0M1FexyEeC9hNjCgpVOxnIWbaBHyVJ+W3hyjKLFJEBcs6
-         QZyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PfEYd36uNS5qZ/DmqxgTWEQjvkvDJRLoeb63Roelzwk=;
-        b=BtMOe8+nFl0mgEOfTf9rG1orTo+3hBwQdE7J3uB0d3ucuQat5o78T1aY0bZ7BpMHFn
-         ZtNgtGt4hZbSm5KYdgnbC3ryezibjEZUCF0n6wuvu8nDHaU6l8TE0yDGyeSaIlWPB0nI
-         Udb8kwefqEmqy8wnW/uNdxUa0aYIF+N+vjn0H+7DONmjHm4n0vttUhahSGbTNuBdiRIr
-         vyHLtn1bw6KHDV41Vt63FkyFIb+6QkUrelAh7q3Ybfp9IBNR+3cFDe4Lsi41CehgyO2+
-         /8fYjy9IF62zN5OYbdfXLeSrsUb0kZpONB3JA1UkIkL3HHIO+nDrXf7A4U5VbuJXsAJ6
-         8n+w==
-X-Gm-Message-State: AOAM531qG7wzl20+zzPW8dQMK+zQ/TXlYnR+5bVhRmw7kBzrl7HNwFjN
-        ITMEV5mn9lVNmWF1NaPscoQRT+4JurENfa542es6fQU9mV9hUA==
-X-Google-Smtp-Source: ABdhPJxVvTM0lkxS+yAx50VUv48ZUUiznz8nPSRSMxuFnPwxmXdagoX2HbK2MZtP465LnHOR6MbYzcPifjNmdeORFGo=
-X-Received: by 2002:a9f:2823:: with SMTP id c32mr5537785uac.99.1591309902922;
- Thu, 04 Jun 2020 15:31:42 -0700 (PDT)
+        Thu, 4 Jun 2020 18:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgFDWfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 18:35:24 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC44E207D0;
+        Thu,  4 Jun 2020 22:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591310123;
+        bh=MEOgu/bZys0u6+e1umJ8QePVm2Ua1OaSBE4AWlWpoQg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BE/cimWL1fxy2xDBjfBdbGWHjejXHv+zobgC3vWXLf6g7cBqxIYp6OPWSRKn7npbJ
+         AkT21BNXT/LHUigkFl2RnBEMRGlAANYhXzWc4tt8o+Gf0EAUynRaZ3JODmdMKkOJVx
+         uoEojIOOqAiv5F77Uw0elTvUl2yfo/mq3UB7+LtI=
+Received: by mail-ot1-f46.google.com with SMTP id k15so6093932otp.8;
+        Thu, 04 Jun 2020 15:35:23 -0700 (PDT)
+X-Gm-Message-State: AOAM533sD7BiCgStOWpO0B0JHbb9tvyL2rS9UB3QOJwAqlOccH2WQptD
+        MdcRGZ3QPI8kPk832RrvS4T+R9/Wi1RhQd1atQ==
+X-Google-Smtp-Source: ABdhPJzkQ0ECUGnTkq9aILlT8NpeEXpYUdHrewIf+FkntnjfP0WzjzXVahCaByGUnjlH4byjrUqVIMhUJuUYcnWRjxs=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr5557846ots.192.1591310123034;
+ Thu, 04 Jun 2020 15:35:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200518173450.097837707@linuxfoundation.org> <20200518173452.813559136@linuxfoundation.org>
- <CAPJ9Yc8YOeqeO4mo80iVMf3ay+CkdMvYzJY1BqXMNPcKzL6_zg@mail.gmail.com> <20200604201712.GB1308830@kroah.com>
-In-Reply-To: <20200604201712.GB1308830@kroah.com>
-From:   =?UTF-8?Q?David_Bala=C5=BEic?= <xerces9@gmail.com>
-Date:   Fri, 5 Jun 2020 00:31:31 +0200
-Message-ID: <CAPJ9Yc-0jocU2WJP_27hQa43XFwGWJJx0LBNXShoryZE1K54sQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 12/80] pppoe: only process PADT targeted at local interfaces
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
+References: <20200526164652.2331-1-dmurphy@ti.com> <20200526164652.2331-2-dmurphy@ti.com>
+ <20200527014902.GA859634@bogus> <20200527133948.GA5011@amd>
+ <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
+ <20200602200436.GA6535@amd> <CAL_JsqLaycpi4EtXK-7GV49fm0GbPmPsrNwz2WSBFFO_zdQG0Q@mail.gmail.com>
+ <20200604125111.GA7222@duo.ucw.cz>
+In-Reply-To: <20200604125111.GA7222@duo.ucw.cz>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 4 Jun 2020 16:35:11 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
+Message-ID: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings documention
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        devicetree@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 4 Jun 2020 at 22:17, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Thu, Jun 4, 2020 at 6:51 AM Pavel Machek <pavel@ucw.cz> wrote:
 >
-> On Thu, Jun 04, 2020 at 08:39:00PM +0200, David Bala=C5=BEic wrote:
-> > Hi!
+> On Tue 2020-06-02 15:44:32, Rob Herring wrote:
+> > On Tue, Jun 2, 2020 at 2:04 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > On Wed 2020-05-27 08:35:06, Rob Herring wrote:
+> > > > On Wed, May 27, 2020 at 7:39 AM Pavel Machek <pavel@ucw.cz> wrote:
+> > > > >
+> > > > > Hi!
+> > > > >
+> > > > > Thanks for reviews!
+> > > > >
+> > > > > > > +additionalProperties: false
+> > > > > > > +...
+> > > > > > > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> > > > > >
+> > > > > > This isn't a binding file. Belongs in another patch.
+> > > > >
+> > > > > These constants are directly related to the binding. It makes sense to
+> > > > > go in one patch...
+> > > >
+> > > > Yes, the header does go in this patch, but kernel subsystem files do not.
+> > > >
+> > > > Part of the reason for separating is we generate a DT only repository
+> > > > which filters out all the kernel code. Ideally this is just filtering
+> > > > out commits and the commit messages still make sens
+> > >
+> > > Well, but the patch can't be split like that. Otherwise we risk null
+> > > pointer dereferences when one part is applied but not the second one.
 > >
-> > Is there a good reason this did not land in 4.14 branch?
-> >
-> > Openwrt is using that and so it missed this patch.
-> >
-> > Any chance it goes in in next round?
+> > There's no risk because you are supposed to apply both patches. I
+> > don't apply binding patches that are a part of a series like this.
 >
-> Does it apply and build cleanly?
->
-> I don't know why I didn't backport it further, something must have
-> broke...
+> Yes, this is always guaranteed to happen, because "git bisect"
+> understand patch series. Oh, wait.
 
-The patch from the above applies to linux-4.14.183
+What!? If the binding patch with the header comes first, how would
+bisect build the driver change without the header?
 
-If I apply it manually (open pppoe.c in editor and add the two lines
-from the patch) then it builds.
-Until LD      vmlinux.o when I run out of disk space...
-I applied it by editor because the first time something went wrong
-when copying the patch from the email and it did not apply.
+> Patches are supposed to be correct on their own. If your repository
+> filtering can not handle that, you need to fix that...
 
-So it looks OK, but someone else should try it too.
-My build system is not exactly great.. (it is a VM I created for
-openwrt builds and it is after midnight and I don't feel like
-extending the virtual disk.. sorry, maybe tomorrow).
+I'm just asking you to follow the process that *everyone* else is
+following and works. It's not really about the repository filtering.
+That doesn't care. A binding ABI is defined by the schema and any
+defines it has. That is the logical unit that stands on its own.
 
-Regards,
-David
+Rob
