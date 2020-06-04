@@ -3,45 +3,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC0EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E2C20738
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF1720738
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 16:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbgFDQSz (ORCPT
+        id S1729786AbgFDQTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 12:18:55 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64026 "EHLO mga07.intel.com"
+        Thu, 4 Jun 2020 12:19:00 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7759 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726026AbgFDQSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 12:18:54 -0400
-IronPort-SDR: 2XA3lqAwREO9vAMCwPjXwbRVbQp6B1i3g712zXuLL2igBg1UwWpmM2uiZV/W5YksWjbVEtTa7F
- oS0rsbmUWjSQ==
+        id S1726026AbgFDQS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 12:18:59 -0400
+IronPort-SDR: p6ulycz1BjVKGsPvAT97ZS1HzX+RX+Zv1FXt7CuYLMIc3CLyVxocIHzzUO8EfYEoaKQaXccg/D
+ yjlPr7aguN8Q==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 09:18:54 -0700
-IronPort-SDR: 3iesOQnqNij0d8jQrL1vlVnsBWlqzag1PwNzpIyAUCSuuFsTtf4Ia+xDhPP7ofX5yP13y0Vvbo
- mXfiE+oCQBqQ==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 09:18:59 -0700
+IronPort-SDR: 4pH9rXEgoa7VHTTCbMevjcgWw/Zqc+MwnmVbdk5RMyPg+fP6s7aHUwZDNRhhpemQWgErwdDikT
+ QJ5y6/I7vv8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,472,1583222400"; 
-   d="scan'208";a="258931335"
+   d="scan'208";a="378459559"
 Received: from lkp-server02.sh.intel.com (HELO 6de3076d9aaa) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Jun 2020 09:18:52 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 04 Jun 2020 09:18:57 -0700
 Received: from kbuild by 6de3076d9aaa with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jgsZv-00002L-Vn; Thu, 04 Jun 2020 16:18:51 +0000
-Date:   Fri, 05 Jun 2020 00:18:25 +0800
+        id 1jgsa1-00002O-4w; Thu, 04 Jun 2020 16:18:57 +0000
+Date:   Fri, 05 Jun 2020 00:18:22 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 8abcfb969c86dffd06fc02bb9d727dd52977f336
-Message-ID: <5ed91ed1.FU5f3IsxWGEZM/2w%lkp@intel.com>
+Subject: [tip:WIP.core/headers] BUILD SUCCESS
+ 1d8fcbb76bb17762ca92a79a7db5af98f2fd9fe8
+Message-ID: <5ed91ece.tlop7Avl2x5ljpTW%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,10 +51,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 8abcfb969c86dffd06fc02bb9d727dd52977f336  Merge branch 'WIP.core/headers'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.core/headers
+branch HEAD: 1d8fcbb76bb17762ca92a79a7db5af98f2fd9fe8  compiler.h: Move instrumentation_begin()/end() into new <linux/instrumentation.h> header
 
-elapsed time: 480m
+elapsed time: 482m
 
 configs tested: 98
 configs skipped: 1
