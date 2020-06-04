@@ -2,72 +2,180 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C363C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED87206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE8B207D3
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 09:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591263712;
+	bh=1Q3d66uzBYSZVsxgnp/NnELnCNnx2g8D9fS4fWf1tZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JnJ1t3JZz1I+qvCGjMqW5bjgoQwsYUoaY77PXSaTsJEAKnGBnWQFsmMg2fFj1afOV
+	 Uz6KHQb2NBOpt4Zd/YrH0rHoNah529Fhx1SswKH0IcmB4zaPtWEntx5WaeXAdXR8wv
+	 DRTLga1ykM2MrrYtINsoeMn9sOOrebu3QqrSXmbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgFDJke (ORCPT
+        id S1728187AbgFDJlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 05:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgFDJke (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 05:40:34 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2644C03E96D
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 02:40:33 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:c96f:783c:a430:4a5a])
-        by andre.telenet-ops.be with bizsmtp
-        id mxgX2200t0MBGRv01xgXJU; Thu, 04 Jun 2020 11:40:32 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jgmMR-0001SK-Rn; Thu, 04 Jun 2020 11:40:31 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jgmMR-0003xi-Qh; Thu, 04 Jun 2020 11:40:31 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] media: Remove superfluous dependency for MEDIA_SUPPORT_FILTER
-Date:   Thu,  4 Jun 2020 11:40:30 +0200
-Message-Id: <20200604094030.14564-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 4 Jun 2020 05:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbgFDJlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:41:51 -0400
+Received: from kernel.org (unknown [87.71.78.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FDC206C3;
+        Thu,  4 Jun 2020 09:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591263710;
+        bh=1Q3d66uzBYSZVsxgnp/NnELnCNnx2g8D9fS4fWf1tZU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C4SWVhgke8okNdSNThzzm+pvB0BBxC+L9XfiRpfWwdENE32NTRySuxE9r/7AGBN52
+         VQ5bSYln8QHw7vVdtvRzDfqt4APeQDd4kA7Xe8CNmHjvD48410i6h4eSQt1s7mqDXL
+         qqxMB94j2dQ/XCuBIdXsQpiPRrpdWdkx5G8lu2ug=
+Date:   Thu, 4 Jun 2020 12:41:33 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
+ pagefault/preempt twice
+Message-ID: <20200604094133.GC202650@kernel.org>
+References: <20200518184843.3029640-1-ira.weiny@intel.com>
+ <20200519165422.GA5838@roeck-us.net>
+ <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
+ <20200519194215.GA71941@roeck-us.net>
+ <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
+ <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
+ <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
+ <20200603135736.e7b5ded0082a81ae6d9067a0@linux-foundation.org>
+ <20200603211416.GA1740285@iweiny-DESK2.sc.intel.com>
+ <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3538c8ad-674e-d310-d870-4ef6888092ed@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MEDIA_SUPPORT_FILTER configuration option is located inside a block
-protected by "#if MEDIA_SUPPORT", so there is no need to have an
-explicit dependency on MEDIA_SUPPORT.  Drop it.
+On Wed, Jun 03, 2020 at 04:44:17PM -0700, Guenter Roeck wrote:
+> 
+> sparc32 smp images in next-20200603 still crash for me with a spinlock
+> recursion. s390 images hang early in boot. Several others (alpha, arm64,
+> various ppc) don't even compile. I can run some more bisects over time,
+> but this is becoming a full-time job :-(.
 
-Fixes: c6774ee035dcb878 ("media: Kconfig: make filtering devices optional")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+I've been able to bisect s390 hang to commit b614345f52bc ("x86/entry:
+Clarify irq_{enter,exit}_rcu()").
+
+After this commit, lockdep_hardirq_exit() is called twice on s390 (and
+others) - one time in irq_exit_rcu() and another one in irq_exit():
+
+/**
+ * irq_exit_rcu() - Exit an interrupt context without updating RCU
+ *
+ * Also processes softirqs if needed and possible.
+ */
+void irq_exit_rcu(void)
+{
+	__irq_exit_rcu();
+	 /* must be last! */
+	lockdep_hardirq_exit();
+}
+
+/**
+ * irq_exit - Exit an interrupt context, update RCU and lockdep
+ *
+ * Also processes softirqs if needed and possible.
+ */
+void irq_exit(void)
+{
+	irq_exit_rcu();
+	rcu_irq_exit();
+	 /* must be last! */
+	lockdep_hardirq_exit();
+}
+
+Removing the call in irq_exit() make s390 boot again, and judgung by the
+x86 entry code, the comment /* must be last! */ is stale...
+
+@Peter, @Thomas, can you comment please?
+
+From e51d50ee6f4d1f446decf91c2c67230da14ff82c Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Thu, 4 Jun 2020 12:37:03 +0300
+Subject: [PATCH] softirq: don't call lockdep_hardirq_exit() twice
+
+After commit b614345f52bc ("x86/entry: Clarify irq_{enter,exit}_rcu()")
+lockdep_hardirq_exit() is called twice on every architecture that uses
+irq_exit(): one time in irq_exit_rcu() and another one in irq_exit().
+
+Remove the extra call in irq_exit().
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- drivers/media/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/softirq.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-index a6d073f2e036aa34..6222b3ae220ba85b 100644
---- a/drivers/media/Kconfig
-+++ b/drivers/media/Kconfig
-@@ -24,7 +24,6 @@ if MEDIA_SUPPORT
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index a3eb6eba8c41..7523f4ce4c1d 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -427,7 +427,6 @@ static inline void __irq_exit_rcu(void)
+ void irq_exit_rcu(void)
+ {
+ 	__irq_exit_rcu();
+-	 /* must be last! */
+ 	lockdep_hardirq_exit();
+ }
  
- config MEDIA_SUPPORT_FILTER
- 	bool "Filter media drivers"
--	depends on MEDIA_SUPPORT
- 	default y if !EMBEDDED && !EXPERT
- 	help
- 	   Configuring the media subsystem can be complex, as there are
+@@ -440,8 +439,6 @@ void irq_exit(void)
+ {
+ 	irq_exit_rcu();
+ 	rcu_irq_exit();
+-	 /* must be last! */
+-	lockdep_hardirq_exit();
+ }
+ 
+ /*
 -- 
-2.17.1
+2.26.2
 
+
+
+> Guenter
+
+-- 
+Sincerely yours,
+Mike.
