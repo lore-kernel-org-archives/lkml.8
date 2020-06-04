@@ -2,124 +2,320 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE73C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C4A207F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:29:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AaAdvH9l"
+	by mail.kernel.org (Postfix) with ESMTP id 9D3E920772
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 13:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgFDN3h (ORCPT
+        id S1728617AbgFDNaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 09:29:37 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39962 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726415AbgFDN3g (ORCPT
+        Thu, 4 Jun 2020 09:30:20 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:53201 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728599AbgFDNaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 09:29:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591277375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UHW0elg334+EX9xWdFEPkYJk1jedIAwRKPuLSP3ktnU=;
-        b=AaAdvH9lm2p4/Liok4RIOpHS+qVaxMFBv5kRistlb5SAWP/YS3ONqyojb3Zm2SbHfQp60e
-        mKuONgadqzXcqJKTbiZjoMPFl2ccU5X1KNx2zvaIvX70GGD1g/2jNT2w1vawkmY1zPr4Tg
-        LiJa/tEYvoWsk8j+dkRMw20yOqD4GuY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-274-5qP1k4cHMi-ZXAMBGiroMQ-1; Thu, 04 Jun 2020 09:29:33 -0400
-X-MC-Unique: 5qP1k4cHMi-ZXAMBGiroMQ-1
-Received: by mail-wr1-f69.google.com with SMTP id w4so2443292wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 06:29:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UHW0elg334+EX9xWdFEPkYJk1jedIAwRKPuLSP3ktnU=;
-        b=WLnBgX2TUn8L6elYS/Xzvz3J/QE8QkDfOUDk2H7sWM/okPBieooXRtvSLXq/7Hq5EC
-         3/J//Vi+43x2cF3QEH/00usgCOsGIgmtafW06pcEDdiBQSIIILbmPGh9HOLXx/XngV19
-         eUcAoW2r+iiaqNxyjwQ32OuSj3erdVxsGG36CtSoG2BrmEhc/UcXIr80w0ro0qZlYduC
-         M9ldfLoEjXvr+3qAygc6zeDBquJ0oVCuvW+9UxFZKQBELB08M/GkLznpfhVXrFZw1MXG
-         X6K5o9sM4dLkEC7bkZB/ghJHVlS9jCUWsuUwrkqawRi21eIGBFeEmp5i2dGebDT0ypZx
-         Z17w==
-X-Gm-Message-State: AOAM532Nz/OAL75gdDQLD669BTXKwLSTMU+IIcS7lseIMowiINRAZ1Vi
-        eOrTff0ZsnqRbpGpF20RfdF8kMvq6y/I8zqwzxvLQd+nMqDVGvZmjy2hHddJWOGUMn9MdVmHkg4
-        o6uHKl6MPBQzW1G7q03J3l+Np
-X-Received: by 2002:a05:600c:4401:: with SMTP id u1mr4017460wmn.36.1591277368155;
-        Thu, 04 Jun 2020 06:29:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz9t/DEHjp8gQ1fl4/0vDSbAs3hZgC2IqMlIOVkhFw8ORBM1VevinmP9FqFYcIWLvyp3Hs8og==
-X-Received: by 2002:a05:600c:4401:: with SMTP id u1mr4017441wmn.36.1591277367926;
-        Thu, 04 Jun 2020 06:29:27 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:a0c0:5d2e:1d35:17bb? ([2001:b07:6468:f312:a0c0:5d2e:1d35:17bb])
-        by smtp.gmail.com with ESMTPSA id a6sm7362518wrn.38.2020.06.04.06.29.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 06:29:27 -0700 (PDT)
-Subject: Re: [patch V9 00/39] x86/entry: Rework leftovers (was part V)
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20200521200513.656533920@linutronix.de>
- <5e68aa83-feac-2aa7-10ee-aebebc60c83e@citrix.com>
- <20200522211706.GZ2483@worktop.programming.kicks-ass.net>
- <83474edd-195f-f10b-9fe9-8ee168344e29@citrix.com>
- <20200604132537.GA3976@hirez.programming.kicks-ass.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c150c709-15d6-b126-4522-364b6663dcd5@redhat.com>
-Date:   Thu, 4 Jun 2020 15:29:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200604132537.GA3976@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 4 Jun 2020 09:30:20 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Jun 2020 19:00:13 +0530
+Received: from vbadigan-linux.qualcomm.com ([10.206.24.109])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Jun 2020 18:59:54 +0530
+Received: by vbadigan-linux.qualcomm.com (Postfix, from userid 76677)
+        id 1CBAE4C01; Thu,  4 Jun 2020 18:59:52 +0530 (IST)
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bradley Bolen <bradleybolen@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [RFC V1] mmc: core: Add partial initialization support
+Date:   Thu,  4 Jun 2020 18:59:37 +0530
+Message-Id: <1591277381-7734-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/20 15:25, Peter Zijlstra wrote:
-> It being enabled through IA32_DEBUGCTL instead of through DR7 means that
-> the current code doesn't disable it and this then means we can have
-> nested #DB again.
+From: Maya Erez <merez@codeaurora.org>
 
-/me bangs head on door
+This change adds the ability to partially initialize
+the MMC card by using card Sleep/Awake sequence (CMD5).
+Card will be sent to Sleep state during runtime/system suspend
+and will be woken up during runtime/system resume.
+By using this sequence the card doesn't need full initialization
+which gives time reduction in system/runtime resume path.
 
-> Who sodding throught this was a good idea ?! What happened to #AC that
-> SLD currently uses?
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ drivers/mmc/core/mmc.c   | 146 ++++++++++++++++++++++++++++++++++++++++++++---
+ include/linux/mmc/card.h |   4 ++
+ include/linux/mmc/host.h |   2 +
+ 3 files changed, 143 insertions(+), 9 deletions(-)
 
-It was per-core and (presumably) considered unfixable?
-
-Paolo
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index de94fbe629bd..5c6444113c92 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -1892,7 +1892,13 @@ static int mmc_can_sleep(struct mmc_card *card)
+ 	return (card && card->ext_csd.rev >= 3);
+ }
+ 
+-static int mmc_sleep(struct mmc_host *host)
++static int mmc_can_sleepawake(struct mmc_host *host)
++{
++	return host && (host->caps2 & MMC_CAP2_SLEEP_AWAKE) && host->card &&
++		(host->card->ext_csd.rev >= 3);
++}
++
++static int mmc_sleepawake(struct mmc_host *host, bool sleep)
+ {
+ 	struct mmc_command cmd = {};
+ 	struct mmc_card *card = host->card;
+@@ -1902,13 +1908,16 @@ static int mmc_sleep(struct mmc_host *host)
+ 	/* Re-tuning can't be done once the card is deselected */
+ 	mmc_retune_hold(host);
+ 
+-	err = mmc_deselect_cards(host);
+-	if (err)
+-		goto out_release;
++	if (sleep) {
++		err = mmc_deselect_cards(host);
++		if (err)
++			goto out_release;
++	}
+ 
+ 	cmd.opcode = MMC_SLEEP_AWAKE;
+ 	cmd.arg = card->rca << 16;
+-	cmd.arg |= 1 << 15;
++	if (sleep)
++		cmd.arg |= 1 << 15;
+ 
+ 	/*
+ 	 * If the max_busy_timeout of the host is specified, validate it against
+@@ -1939,6 +1948,9 @@ static int mmc_sleep(struct mmc_host *host)
+ 	if (!cmd.busy_timeout || !(host->caps & MMC_CAP_WAIT_WHILE_BUSY))
+ 		mmc_delay(timeout_ms);
+ 
++	if (!sleep)
++		err = mmc_select_card(card);
++
+ out_release:
+ 	mmc_retune_release(host);
+ 	return err;
+@@ -2016,6 +2028,69 @@ static void mmc_detect(struct mmc_host *host)
+ 	}
+ }
+ 
++static int mmc_cache_card_ext_csd(struct mmc_host *host)
++{
++	int err;
++	u8 *ext_csd;
++	struct mmc_card *card = host->card;
++
++	err = mmc_get_ext_csd(card, &ext_csd);
++	if (err || !ext_csd) {
++		pr_err("%s: %s: mmc_get_ext_csd failed (%d)\n",
++			mmc_hostname(host), __func__, err);
++		return err;
++	}
++
++	/* only cache read/write fields that the sw changes */
++	card->ext_csd.raw_ext_csd_cmdq = ext_csd[EXT_CSD_CMDQ_MODE_EN];
++	card->ext_csd.raw_ext_csd_cache_ctrl = ext_csd[EXT_CSD_CACHE_CTRL];
++	card->ext_csd.raw_ext_csd_bus_width = ext_csd[EXT_CSD_BUS_WIDTH];
++	card->ext_csd.raw_ext_csd_hs_timing = ext_csd[EXT_CSD_HS_TIMING];
++
++	kfree(ext_csd);
++
++	return 0;
++}
++
++static int mmc_test_awake_ext_csd(struct mmc_host *host)
++{
++	int err;
++	u8 *ext_csd;
++	struct mmc_card *card = host->card;
++
++	err = mmc_get_ext_csd(card, &ext_csd);
++	if (err) {
++		pr_err("%s: %s: mmc_get_ext_csd failed (%d)\n",
++			mmc_hostname(host), __func__, err);
++		return err;
++	}
++
++	/* only compare read/write fields that the sw changes */
++	pr_debug("%s: %s: type(cached:current) cmdq(%d:%d) cache_ctrl(%d:%d) bus_width (%d:%d) timing(%d:%d)\n",
++		mmc_hostname(host), __func__,
++		card->ext_csd.raw_ext_csd_cmdq,
++		ext_csd[EXT_CSD_CMDQ_MODE_EN],
++		card->ext_csd.raw_ext_csd_cache_ctrl,
++		ext_csd[EXT_CSD_CACHE_CTRL],
++		card->ext_csd.raw_ext_csd_bus_width,
++		ext_csd[EXT_CSD_BUS_WIDTH],
++		card->ext_csd.raw_ext_csd_hs_timing,
++		ext_csd[EXT_CSD_HS_TIMING]);
++
++	err = !((card->ext_csd.raw_ext_csd_cmdq ==
++			ext_csd[EXT_CSD_CMDQ_MODE_EN]) &&
++		(card->ext_csd.raw_ext_csd_cache_ctrl ==
++			ext_csd[EXT_CSD_CACHE_CTRL]) &&
++		(card->ext_csd.raw_ext_csd_bus_width ==
++			ext_csd[EXT_CSD_BUS_WIDTH]) &&
++		(card->ext_csd.raw_ext_csd_hs_timing ==
++			ext_csd[EXT_CSD_HS_TIMING]));
++
++	kfree(ext_csd);
++
++	return err;
++}
++
+ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+ {
+ 	int err = 0;
+@@ -2034,8 +2109,12 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+ 	if (mmc_can_poweroff_notify(host->card) &&
+ 		((host->caps2 & MMC_CAP2_FULL_PWR_CYCLE) || !is_suspend))
+ 		err = mmc_poweroff_notify(host->card, notify_type);
+-	else if (mmc_can_sleep(host->card))
+-		err = mmc_sleep(host);
++	if (mmc_can_sleepawake(host)) {
++		memcpy(&host->cached_ios, &host->ios, sizeof(host->cached_ios));
++		mmc_cache_card_ext_csd(host);
++	}
++	if (mmc_can_sleep(host->card))
++		err = mmc_sleepawake(host, true);
+ 	else if (!mmc_host_is_spi(host))
+ 		err = mmc_deselect_cards(host);
+ 
+@@ -2048,6 +2127,43 @@ static int _mmc_suspend(struct mmc_host *host, bool is_suspend)
+ 	return err;
+ }
+ 
++static int mmc_partial_init(struct mmc_host *host)
++{
++	int err = 0;
++	struct mmc_card *card = host->card;
++
++	mmc_set_bus_width(host, host->cached_ios.bus_width);
++	mmc_set_timing(host, host->cached_ios.timing);
++	if (host->cached_ios.enhanced_strobe) {
++		host->ios.enhanced_strobe = true;
++		if (host->ops->hs400_enhanced_strobe)
++			host->ops->hs400_enhanced_strobe(host, &host->ios);
++	}
++	mmc_set_clock(host, host->cached_ios.clock);
++	mmc_set_bus_mode(host, host->cached_ios.bus_mode);
++
++	if (!mmc_card_hs400es(card) &&
++			(mmc_card_hs200(card) || mmc_card_hs400(card)))
++		err = mmc_execute_tuning(card);
++
++	/*
++	 * The ext_csd is read to make sure the card did not went through
++	 * Power-failure during sleep period.
++	 * A subset of the W/E_P, W/C_P register will be tested. In case
++	 * these registers values are different from the values that were
++	 * cached during suspend, we will conclude that a Power-failure occurred
++	 * and will do full initialization sequence.
++	 */
++	err = mmc_test_awake_ext_csd(host);
++	if (err) {
++		pr_debug("%s: %s: fail on ext_csd read (%d)\n",
++			mmc_hostname(host), __func__, err);
++		goto out;
++	}
++out:
++	return err;
++}
++
+ /*
+  * Suspend callback
+  */
+@@ -2070,7 +2186,7 @@ static int mmc_suspend(struct mmc_host *host)
+  */
+ static int _mmc_resume(struct mmc_host *host)
+ {
+-	int err = 0;
++	int err = -EINVAL;
+ 
+ 	mmc_claim_host(host);
+ 
+@@ -2078,7 +2194,19 @@ static int _mmc_resume(struct mmc_host *host)
+ 		goto out;
+ 
+ 	mmc_power_up(host, host->card->ocr);
+-	err = mmc_init_card(host, host->card->ocr, host->card);
++
++	if (mmc_can_sleepawake(host)) {
++		err = mmc_sleepawake(host, false);
++		if (!err)
++			err = mmc_partial_init(host);
++		else
++			pr_err("%s: %s: awake failed (%d), fallback to full init\n",
++				mmc_hostname(host), __func__, err);
++	}
++
++	if (err)
++		err = mmc_init_card(host, host->card->ocr, host->card);
++
+ 	mmc_card_clr_suspended(host->card);
+ 
+ out:
+diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+index cf3780a6ccc4..2f4c8d3d5763 100644
+--- a/include/linux/mmc/card.h
++++ b/include/linux/mmc/card.h
+@@ -85,6 +85,8 @@ struct mmc_ext_csd {
+ 	unsigned int            data_tag_unit_size;     /* DATA TAG UNIT size */
+ 	unsigned int		boot_ro_lock;		/* ro lock support */
+ 	bool			boot_ro_lockable;
++	u8			raw_ext_csd_cmdq;	/* 15 */
++	u8			raw_ext_csd_cache_ctrl;	/* 33 */
+ 	bool			ffu_capable;	/* Firmware upgrade support */
+ 	bool			cmdq_en;	/* Command Queue enabled */
+ 	bool			cmdq_support;	/* Command Queue supported */
+@@ -95,7 +97,9 @@ struct mmc_ext_csd {
+ 	u8			raw_partition_support;	/* 160 */
+ 	u8			raw_rpmb_size_mult;	/* 168 */
+ 	u8			raw_erased_mem_count;	/* 181 */
++	u8			raw_ext_csd_bus_width;	/* 183 */
+ 	u8			strobe_support;		/* 184 */
++	u8			raw_ext_csd_hs_timing;	/* 185 */
+ 	u8			raw_ext_csd_structure;	/* 194 */
+ 	u8			raw_card_type;		/* 196 */
+ 	u8			raw_driver_strength;	/* 197 */
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index d4a50e5dc111..a69abe9f032b 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -375,6 +375,7 @@ struct mmc_host {
+ #define MMC_CAP2_CQE_DCMD	(1 << 24)	/* CQE can issue a direct command */
+ #define MMC_CAP2_AVOID_3_3V	(1 << 25)	/* Host must negotiate down from 3.3V */
+ #define MMC_CAP2_MERGE_CAPABLE	(1 << 26)	/* Host can merge a segment over the segment size */
++#define MMC_CAP2_SLEEP_AWAKE	(1 << 27)	/* Use Sleep/Awake (CMD5) */
+ 
+ 	int			fixed_drv_type;	/* fixed driver type for non-removable media */
+ 
+@@ -393,6 +394,7 @@ struct mmc_host {
+ 	spinlock_t		lock;		/* lock for claim and bus ops */
+ 
+ 	struct mmc_ios		ios;		/* current io bus settings */
++	struct mmc_ios		cached_ios;
+ 
+ 	/* group bitfields together to minimize padding */
+ 	unsigned int		use_spi_crc:1;
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
