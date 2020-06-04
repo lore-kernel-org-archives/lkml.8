@@ -2,195 +2,150 @@ Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E48C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D07520679
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F602074B
+	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 04:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nmlYusCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgFDECE (ORCPT
+        id S1726301AbgFDECg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 00:02:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:39950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbgFDECE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 00:02:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06F2D55D;
-        Wed,  3 Jun 2020 21:02:03 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.78.173])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BCBF03F6CF;
-        Wed,  3 Jun 2020 21:01:59 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     hughd@google.com, daniel.m.jordan@oracle.com, willy@infradead.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2] mm/vmstat: Add events for THP migration without split
-Date:   Thu,  4 Jun 2020 09:30:45 +0530
-Message-Id: <1591243245-23052-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 4 Jun 2020 00:02:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgFDECf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 00:02:35 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C23C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed,  3 Jun 2020 21:02:34 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id s88so518396pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jun 2020 21:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dDMZ76EfQNqsSp5sb7mLI8JiO94mOeQpyrT6zdtd3HQ=;
+        b=nmlYusCXDFiVqFXgxwlUm0gg3wIorQtKPNmSn8kUxXy2o8ATDLsqSlFD0o61OtpLts
+         2zSeOvR5nnDD2//h685p30vwSekGc1q/jRAs6eegsS86q8t4Z7JAaLx7yfVY1EK9Xiau
+         DCT2MBSjsLxms0BiWDCQF4Q6VgKuWrTFT33kU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dDMZ76EfQNqsSp5sb7mLI8JiO94mOeQpyrT6zdtd3HQ=;
+        b=oLWbLexm4/g1ilSaNeLZImMWgvszmS/G/RPKuCmPt113AZbne1lo28W0mlSyZJuXc4
+         zW216hspZqAlTRBpfP6WUjIVGNnAF5bK0P6rplCdMf+IbIZK8LCwN6z1bUft6pXe7qo/
+         8fsnswqc6QeGhxy65suFZG6p0Zk4u7e9oy5fUBnF5ACHpqPD5ZMB5qqhBSras2gSO+HX
+         VRMFAyOJ4S159aL8vivRvkB+kQsBiBN2DdkGVB7pXoV3+bQ0x3SKVxrVCD7AP2hb7ska
+         6dfZaAxXwkLrCIPw+sX6RInIyqRs264x2PJDag2fibZbekuBHDZfzR9c3s4jPE1VSGGf
+         VDHQ==
+X-Gm-Message-State: AOAM5331AMkKcaAUQbkuUlhJpLJORD3Az6wQDt1oZuZUcbhCD6TgTP6s
+        /06I/r2BUIYBvlWznAcOFeoRHQ==
+X-Google-Smtp-Source: ABdhPJxQ/Dd1yetZm6iahM4ViylSUD/mRnchtrTt1NIbGDNSI6TVF94FWNWMrr2lFeqPK0TXyTqNmA==
+X-Received: by 2002:a17:902:b710:: with SMTP id d16mr2968382pls.28.1591243353758;
+        Wed, 03 Jun 2020 21:02:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q6sm1193902pff.163.2020.06.03.21.02.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 21:02:32 -0700 (PDT)
+Date:   Wed, 3 Jun 2020 21:02:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 09/10] treewide: Remove uninitialized_var() usage
+Message-ID: <202006032048.E7B1D18A1@keescook>
+References: <20200603233203.1695403-1-keescook@chromium.org>
+ <20200603233203.1695403-10-keescook@chromium.org>
+ <20200604033315.GA1131596@ubuntu-n2-xlarge-x86>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604033315.GA1131596@ubuntu-n2-xlarge-x86>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the following new VM events which will help in validating THP migration
-without split. Statistics reported through these new events will help in
-performance debugging.
+On Wed, Jun 03, 2020 at 08:33:15PM -0700, Nathan Chancellor wrote:
+> On Wed, Jun 03, 2020 at 04:32:02PM -0700, Kees Cook wrote:
+> > Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> > (or can in the future), and suppresses unrelated compiler warnings
+> > (e.g. "unused variable"). If the compiler thinks it is uninitialized,
+> > either simply initialize the variable or make compiler changes.
+> > 
+> > I preparation for removing[2] the[3] macro[4], remove all remaining
+> > needless uses with the following script:
+> > 
+> > git grep '\buninitialized_var\b' | cut -d: -f1 | sort -u | \
+> > 	xargs perl -pi -e \
+> > 		's/\buninitialized_var\(([^\)]+)\)/\1/g;
+> > 		 s:\s*/\* (GCC be quiet|to make compiler happy) \*/$::g;'
+> > 
+> > drivers/video/fbdev/riva/riva_hw.c was manually tweaked to avoid
+> > pathological white-space.
+> > 
+> > No outstanding warnings were found building allmodconfig with GCC 9.3.0
+> > for x86_64, i386, arm64, arm, powerpc, powerpc64le, s390x, mips, sparc64,
+> > alpha, and m68k.
+> > 
+> > [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> > [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> > [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> > [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> <snip>
+> 
+> > diff --git a/arch/powerpc/kvm/book3s_pr.c b/arch/powerpc/kvm/book3s_pr.c
+> > index a0f6813f4560..a71fa7204882 100644
+> > --- a/arch/powerpc/kvm/book3s_pr.c
+> > +++ b/arch/powerpc/kvm/book3s_pr.c
+> > @@ -1829,7 +1829,7 @@ static int kvmppc_vcpu_run_pr(struct kvm_run *kvm_run, struct kvm_vcpu *vcpu)
+> >  {
+> >  	int ret;
+> >  #ifdef CONFIG_ALTIVEC
+> > -	unsigned long uninitialized_var(vrsave);
+> > +	unsigned long vrsave;
+> >  #endif
+> 
+> This variable is actually unused:
+> 
+> ../arch/powerpc/kvm/book3s_pr.c:1832:16: warning: unused variable 'vrsave' [-Wunused-variable]
+>         unsigned long vrsave;
+>                       ^
+> 1 warning generated.
+> 
+> It has been unused since commit 99dae3bad28d ("KVM: PPC: Load/save
+> FP/VMX/VSX state directly to/from vcpu struct").
+> 
+> $ git grep vrsave 99dae3bad28d8fdd32b7bfdd5e2ec7bb2d4d019d arch/powerpc/kvm/book3s_pr.c
+> 99dae3bad28d8fdd32b7bfdd5e2ec7bb2d4d019d:arch/powerpc/kvm/book3s_pr.c:  unsigned long uninitialized_var(vrsave);
+> 
+> I would nuke the whole '#ifdef' block.
 
-1. THP_MIGRATION_SUCCESS
-2. THP_MIGRATION_FAILURE
+Ah, thanks! I wonder why I don't have CONFIG_ALTIVEC in any of my ppc
+builds. Hmmm.
 
-THP_MIGRATION_FAILURE in particular represents an event when a THP could
-not be migrated as a single entity following an allocation failure and
-ended up getting split into constituent normal pages before being retried.
-This event, along with PGMIGRATE_SUCCESS and PGMIGRATE_FAIL will help in
-quantifying and analyzing THP migration events including both success and
-failure cases.
+-Kees
 
-Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-[hughd: fixed oops on NULL newpage]
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Changes in V2:
-
-- Dropped PMD reference both from code and commit message per Matthew
-- Added documentation and updated the commit message per Daniel
-
-Changes in V1: (https://patchwork.kernel.org/patch/11564497/)
-
-- Changed function name as thp_pmd_migration_success() per John
-- Folded in a fix (https://patchwork.kernel.org/patch/11563009/) from Hugh
-
-Changes in RFC V2: (https://patchwork.kernel.org/patch/11554861/)
-
-- Decopupled and renamed VM events from their implementation per Zi and John
-- Added THP_PMD_MIGRATION_FAILURE VM event upon allocation failure and split
-
-Changes in RFC V1: (https://patchwork.kernel.org/patch/11542055/)
-
- Documentation/vm/page_migration.rst | 15 +++++++++++++++
- include/linux/vm_event_item.h       |  4 ++++
- mm/migrate.c                        | 23 +++++++++++++++++++++++
- mm/vmstat.c                         |  4 ++++
- 4 files changed, 46 insertions(+)
-
-diff --git a/Documentation/vm/page_migration.rst b/Documentation/vm/page_migration.rst
-index 1d6cd7db4e43..67e9b067fed7 100644
---- a/Documentation/vm/page_migration.rst
-+++ b/Documentation/vm/page_migration.rst
-@@ -253,5 +253,20 @@ which are function pointers of struct address_space_operations.
-      PG_isolated is alias with PG_reclaim flag so driver shouldn't use the flag
-      for own purpose.
- 
-+Quantifying Migration
-+=====================
-+Following events can be used to quantify page migration.
-+
-+- PGMIGRATE_SUCCESS
-+- PGMIGRATE_FAIL
-+- THP_MIGRATION_SUCCESS
-+- THP_MIGRATION_FAILURE
-+
-+THP_MIGRATION_FAILURE in particular represents an event when a THP could not be
-+migrated as a single entity following an allocation failure and ended up getting
-+split into constituent normal pages before being retried. This event, along with
-+PGMIGRATE_SUCCESS and PGMIGRATE_FAIL will help in quantifying and analyzing THP
-+migration events including both success and failure cases.
-+
- Christoph Lameter, May 8, 2006.
- Minchan Kim, Mar 28, 2016.
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index ffef0f279747..6459265461df 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -91,6 +91,10 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		THP_ZERO_PAGE_ALLOC_FAILED,
- 		THP_SWPOUT,
- 		THP_SWPOUT_FALLBACK,
-+#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-+		THP_MIGRATION_SUCCESS,
-+		THP_MIGRATION_FAILURE,
-+#endif
- #endif
- #ifdef CONFIG_MEMORY_BALLOON
- 		BALLOON_INFLATE,
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 7160c1556f79..0bb1dbb891bb 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1170,6 +1170,20 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
- #define ICE_noinline
- #endif
- 
-+#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-+static inline void thp_migration_success(bool success)
-+{
-+	if (success)
-+		count_vm_event(THP_MIGRATION_SUCCESS);
-+	else
-+		count_vm_event(THP_MIGRATION_FAILURE);
-+}
-+#else
-+static inline void thp_migration_success(bool success)
-+{
-+}
-+#endif
-+
- /*
-  * Obtain the lock on page, remove all ptes and migrate the page
-  * to the newly allocated page in newpage.
-@@ -1232,6 +1246,14 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
- 	 * we want to retry.
- 	 */
- 	if (rc == MIGRATEPAGE_SUCCESS) {
-+		/*
-+		 * When the page to be migrated has been freed from under
-+		 * us, that is considered a MIGRATEPAGE_SUCCESS, but no
-+		 * newpage has been allocated. It should not be counted
-+		 * as a successful THP migration.
-+		 */
-+		if (newpage && PageTransHuge(newpage))
-+			thp_migration_success(true);
- 		put_page(page);
- 		if (reason == MR_MEMORY_FAILURE) {
- 			/*
-@@ -1474,6 +1496,7 @@ int migrate_pages(struct list_head *from, new_page_t get_new_page,
- 					unlock_page(page);
- 					if (!rc) {
- 						list_safe_reset_next(page, page2, lru);
-+						thp_migration_success(false);
- 						goto retry;
- 					}
- 				}
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 96d21a792b57..4ce1ab2e9704 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1274,6 +1274,10 @@ const char * const vmstat_text[] = {
- 	"thp_zero_page_alloc_failed",
- 	"thp_swpout",
- 	"thp_swpout_fallback",
-+#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-+	"thp_migration_success",
-+	"thp_migration_failure",
-+#endif
- #endif
- #ifdef CONFIG_MEMORY_BALLOON
- 	"balloon_inflate",
 -- 
-2.20.1
-
+Kees Cook
