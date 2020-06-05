@@ -2,65 +2,125 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7393AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E920C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD4E2067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C9972067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Soo0Yocp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgFEOCk (ORCPT
+        id S1728042AbgFEODu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgFEOCi (ORCPT
+        Fri, 5 Jun 2020 10:03:50 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:63614 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728023AbgFEODu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:02:38 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0C5C08C5C2;
-        Fri,  5 Jun 2020 07:02:38 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jhCvV-003aum-2W; Fri, 05 Jun 2020 14:02:29 +0000
-Date:   Fri, 5 Jun 2020 15:02:29 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-afs@lists.infradead.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] afs: Improvements for v5.8
-Message-ID: <20200605140229.GI23230@ZenIV.linux.org.uk>
-References: <2240660.1591289899@warthog.procyon.org.uk>
- <20200605135003.GH23230@ZenIV.linux.org.uk>
+        Fri, 5 Jun 2020 10:03:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591365830; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=ZPrxxS+20A8R406jZPIf8TWcYL+cMfqMteAA8b140DQ=;
+ b=Soo0YocpPdpeQoX+22O+X75dFi87sSBg+mPf+YJig2VvvNO0lktN+MY5guiDkdgDMaDRTlwU
+ UQih2jhofZxGcGgAGo7p9bS9MXM9GPUwWNww0hx5gXTlE3Vuyuym8xqbcELL8k8eaSUQAApH
+ TrJlQOy53EFABZLTgOQ2OpndTUU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5eda50a344a25e0052a8d7f9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 14:03:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1E0D0C433CB; Fri,  5 Jun 2020 14:03:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4031C433C6;
+        Fri,  5 Jun 2020 14:03:13 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605135003.GH23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 19:33:13 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree-owner@vger.kernel.org
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
+In-Reply-To: <20200529031520.GA1799770@builder.lan>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-2-jonathan@marek.ca>
+ <20200529025246.GV279327@builder.lan>
+ <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
+ <20200529031520.GA1799770@builder.lan>
+Message-ID: <91eb7ee0e549b10724c724aebfd91996@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 02:50:03PM +0100, Al Viro wrote:
-> On Thu, Jun 04, 2020 at 05:58:19PM +0100, David Howells wrote:
-> > Hi Linus,
-> > 
-> > Is it too late to put in a pull request for AFS changes?  Apologies - I was
-> > holding off and hoping that I could get Al to review the changes I made to
-> > the core VFS change commit (first in the series) in response to his earlier
-> > review comments.  I have an ack for the Ext4 changes made, though.  If you
-> > would prefer it to be held off at this point, fair enough.
-> > 
-> > Note that the series also got rebased to -rc7 to remove the dependency on
-> > fix patches that got merged through the net tree.
+On 2020-05-29 08:45, Bjorn Andersson wrote:
+> On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
 > 
-> FWIW, I can live with fs/inode.c part in its current form
+>> 
+>> 
+>> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
+>> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
+>> >
+>> > > Add the apps_smmu node for sm8150. Note that adding the iommus field for
+>> > > UFS is required because initializing the iommu removes the bypass mapping
+>> > > that created by the bootloader.
+>> > >
+>> >
+>> > Unrelated to the patch itself; how do you disable the splash screen on
+>> > 8150? "fastboot oem select-display-panel none" doesn't seem to work for
+>> > me on the MTP - and hence this would prevent my device from booting.
+>> >
+>> > Thanks,
+>> > Bjorn
+>> >
+>> 
+>> I don't have a MTP, but on HDK855, "fastboot oem select-display-panel 
+>> none"
+>> combined with setting the physical switch to HDMI mode (which switches 
+>> off
+>> the 1440x2560 panel) gets it to not setup the display at all (just the
+>> fastboot command isn't enough).
+>> 
+> 
+> Okay, I don't think we have anything equivalent on the MTP, but good to
+> know.
+> 
 
-Which is to say,
-ACKed-by: Al Viro <viro@zeniv.linux.org.uk> (fs/inode.c part)
-I have not checked the AFS part of the series and AFAICS
-ext4 one at least doesn't make things any worse there.
+Actually I tried out this in SM8150 MTP and it works fine for me,
+
+"fastboot set_active a; fastboot set_active b; fastboot set_active a; 
+fastboot oem select-display-panel none; fastboot reboot bootloader; 
+fastboot boot boot-sm8150.img"
+
+Also I need to switch slots everytime like above, otherwise I always see 
+some error
+while loading the boot image.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
