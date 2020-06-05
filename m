@@ -2,172 +2,100 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A405207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591323882;
-	bh=YQtG1+E9SrqAmxEtDAvp5km0QQeWwy9JUKjo7pm80Ts=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ae13sTbV6rcGFLTTymE8xyMvNT3VbHuqVyBWpESAp118Uef6hYEIQbZHPG+GYrLtl
-	 ah+giDKT1x85TL2hfch0/7CMzHNiUp6Wq7kyJ4x7JIH35JmmDCovb2itylDpqAkcj+
-	 eGFcMNCJ1Cn33pm9z9fdnNRUtwHgilxgCvWQPRUI=
+	by mail.kernel.org (Postfix) with ESMTP id CE1B220823
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dlsw39Lq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgFECYl (ORCPT
+        id S1726084AbgFECY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:24:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgFECYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:24:40 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EE902074B;
-        Fri,  5 Jun 2020 02:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591323880;
-        bh=YQtG1+E9SrqAmxEtDAvp5km0QQeWwy9JUKjo7pm80Ts=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RAAAOa54T9fzg+pPeAtX+MJm7Mn0tqYsWTdPcvIvXgJjAZOyPH+8YMOlfOt1xyv5/
-         wuDLcJnY2hL3loxljR4ldHx5LDLMsTsTnHihQy8YmXcqIUmSKg07tBBEclwPPaE3ek
-         6KBy3XzC1Sz3Fh+u59DdcNlRCosoDt9CQtKzlLkk=
-Date:   Thu, 4 Jun 2020 21:29:45 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] docs: deprecated.rst: Add zero-length and one-element arrays
-Message-ID: <20200605022945.GA520@embeddedor>
+        Thu, 4 Jun 2020 22:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgFECYz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:24:55 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2210C08C5C0;
+        Thu,  4 Jun 2020 19:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=stJtg0wxxcvkO2KnmFzvC8cjE/GKPMguH7eI3OkCIjE=; b=dlsw39Lq+8x+7Fsa+OMvugjnLW
+        5PhSYwe7QfPCTwih92cnLlHdsGCAevjOpC+oH+MQFVSMzNosQ060m5FkUY7/wvsYACpZgsADgpzXA
+        ZqeoPyDk33Ckc++5paPfznuVMa3exc7J+D+KjPIhejJmuV9wYPtTNADysH2NQBKRKOFhoTIwj+mtP
+        wNe7UtGqQ41NJdOW7hNvDQLCkEBHyWNJqSSy/EwkoJdvIbiUw9Tq80orwM5nTMVKO3GoO5McrGrZG
+        83ppFGuAx/Do7vdAip99r4CDNxrEhmoxHyjRmQCiCJLYl9j4APZGMv6RDZadFRr41kKNH8Cuv0Uad
+        EfSmYszA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jh22N-0001gw-4v; Fri, 05 Jun 2020 02:24:51 +0000
+Date:   Thu, 4 Jun 2020 19:24:51 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
+Message-ID: <20200605022451.GZ19604@bombadil.infradead.org>
+References: <20200604202340.29170-1-willy@infradead.org>
+ <20200604225726.GU2040@dread.disaster.area>
+ <20200604230519.GW19604@bombadil.infradead.org>
+ <20200604233053.GW2040@dread.disaster.area>
+ <20200604235050.GX19604@bombadil.infradead.org>
+ <20200605003159.GX2040@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200605003159.GX2040@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add zero-length and one-element arrays to the list.
+On Fri, Jun 05, 2020 at 10:31:59AM +1000, Dave Chinner wrote:
+> On Thu, Jun 04, 2020 at 04:50:50PM -0700, Matthew Wilcox wrote:
+> > > Sure, but that's not really what I was asking: why isn't this
+> > > !uptodate state caught before the page fault code calls
+> > > ->page_mkwrite? The page fault code has a reference to the page,
+> > > after all, and in a couple of paths it even has the page locked.
+> > 
+> > If there's already a PTE present, then the page fault code doesn't
+> > check the uptodate bit.  Here's the path I'm looking at:
+> > 
+> > do_wp_page()
+> >  -> vm_normal_page()
+> >  -> wp_page_shared()
+> >      -> do_page_mkwrite()
+> > 
+> > I don't see anything in there that checked Uptodate.
+> 
+> Yup, exactly the code I was looking at when I asked this question.
+> The kernel has invalidated the contents of a page, yet we still have
+> it mapped into userspace as containing valid contents, and we don't
+> check it at all when userspace generates a protection fault on the
+> page?
 
-While I continue replacing zero-length and one-element arrays with
-flexible-array members, I need a reference to point people to, so
-they don't introduce more instances of such arrays. And while here,
-add a note to the "open-coded arithmetic in allocator arguments"
-section, on the use of struct_size() and the arrays-to-deprecate
-mentioned here.
+Right.  The iomap error path only clears PageUptodate.  It doesn't go
+to the effort of unmapping the page from userspace, so userspace has a
+read-only view of a !Uptodate page.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- Documentation/process/deprecated.rst | 84 ++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+> > I think the iomap code is the only filesystem which clears PageUptodate
+> > on errors. 
+> 
+> I don't think you looked very hard. A quick scan shows at least
+> btrfs, f2fs, hostfs, jffs2, reiserfs, vboxfs and anything using the
+> iomap path will call ClearPageUptodate() on a write IO error.
 
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index 652e2aa02a66c..622c8ac72a615 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -85,6 +85,12 @@ Instead, use the helper::
- 
- 	header = kzalloc(struct_size(header, item, count), GFP_KERNEL);
- 
-+NOTE: If you are using struct_size() on a structure containing a zero-length
-+or a one-element array as a trailing array member, stop using such arrays
-+and switch to `flexible arrays
-+<https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays>`_
-+instead.
-+
- See array_size(), array3_size(), and struct_size(),
- for more details as well as the related check_add_overflow() and
- check_mul_overflow() family of functions.
-@@ -200,3 +206,81 @@ All switch/case blocks must end in one of:
- * continue;
- * goto <label>;
- * return [expression];
-+
-+Zero-length and one-element arrays
-+----------------------------------
-+Old code in the kernel uses the zero-length and one-element array extensions
-+to the C90 standard, but the `preferred mechanism to declare variable-length
-+types
-+<https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_
-+such as these ones is a `flexible array member`, introduced in C99::
-+
-+        struct something {
-+                int length;
-+                char data[];
-+        };
-+
-+        struct something *instance;
-+
-+        instance = kmalloc(struct_size(instance, data, size), GFP_KERNEL);
-+        instance->length = size;
-+        memcpy(instance->data, source, size);
-+
-+By making use of the mechanism above, we get a compiler error in case the
-+flexible array does not occur last in the structure, which helps to prevent
-+some kind of `undefined behavior <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=76497732932f15e7323dc805e8ea8dc11bb587cf>`_ bugs from being inadvertently introduced to
-+the codebase.
-+
-+It is also important to notice that zero-length and one-element arrays pose
-+confusion for things like sizeof() and `CONFIG_FORTIFY_SOURCE`. For instance,
-+there is no mechanism that warns us that the following application of the
-+sizeof() operator to a zero-length array always results in zero::
-+
-+        struct something {
-+                int length;
-+                char data[0];
-+        };
-+
-+        struct something *instance;
-+
-+        instance = kmalloc(struct_size(instance, data, size), GFP_KERNEL);
-+        instance->length = size;
-+        memcpy(instance->data, source, size);
-+        ...
-+        size = sizeof(instance->data);
-+
-+At the last line of code above, ``size`` turns out to be zero --when one might have
-+thought differently. Here are a couple examples of this issue `link 1
-+<https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f2cd32a443da694ac4e28fbf4ac6f9d5cc63a539>`_,
-+`link 2
-+<https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ab91c2a89f86be2898cee208d492816ec238b2cf>`_.
-+On the other hand, `flexible array members have incomplete type, and so the sizeof()
-+operator may not be applied <https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
-+so any  misuse of such  operator will be immediately noticed at build time.
-+
-+
-+With respect to one-element arrays, one has to be acutely aware that `such arrays
-+occupy at least as much space as a single object of the type
-+<https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
-+hence they contribute to the size of the enclosing structure. This is prone
-+to error every time people want to calculate the total size of dynamic memory
-+to allocate for a structure containing an array of this kind as a member::
-+
-+        struct something {
-+                int length;
-+                char data[1];
-+        };
-+
-+        struct something *instance;
-+
-+        instance = kmalloc(struct_size(instance, data, size - 1), GFP_KERNEL);
-+        instance->length = size;
-+        memcpy(instance->data, source, size);
-+
-+In the example above, we had to remember to calculate ``size - 1`` when using
-+the struct_size() helper, otherwise we would have --unintentionally-- allocated
-+memory for one too many ``data`` objects. The cleanest and least error-prone way
-+to implement this is through the use of a `flexible array member`, which is
-+exemplified at the `beginning
-+<https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays>`_
-+of this section.
--- 
-2.27.0
+I'll give you btrfs and jffs2, but I don't think it's true for f2fs.
+The only other filesystem using the iomap bufferd IO paths today
+is zonefs, afaik.
 
