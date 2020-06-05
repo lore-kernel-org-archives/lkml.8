@@ -2,53 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C65C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6854C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5623E208E4
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2DF2086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366698;
-	bh=nZhiGEfILEKMt44G8xrubVFUgbwYyN4KAnoxAwiFdG0=;
+	s=default; t=1591366700;
+	bh=ZGMog9yqu0TCyJN1EWr5F2XERNVBALJNbXJoL/6fjq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ob+SGGzmJNkQa5Tcw9rIvC1bAABKqIUkbEUSyXY11PmRvh1D/a8LC7bCyZzaqYjOe
-	 uSBYdKg36y3nYF2MkjcnKzygJpncAKv0Fv8T0wkdUY/WQb1ouzzQSMMsxpG8VfUyfo
-	 evgiFOudTv7y8LjGXH/l0xrwEaWMzpxml98jjKgY=
+	b=eBGfAKv4MpGPZoqlVexfcz5G8t3InveDSANxD60I+2VBQByn1mtCabK4O91Z5s/+U
+	 7D6pVc+MQsqK7kFmkCVW5mk2Cfl5ikzfJYUhHYx8bJHhY/w1GldtCGtolkcGVdkCrs
+	 qvrx/GAG7V0rLbcmw75QHAeqP33EOEMU9xwH5xG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgFEOSR (ORCPT
+        id S1728648AbgFEOST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48456 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728586AbgFEOSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:03 -0400
+        id S1728047AbgFEOSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:18:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DCF02086A;
-        Fri,  5 Jun 2020 14:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D478208C9;
+        Fri,  5 Jun 2020 14:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366682;
-        bh=nZhiGEfILEKMt44G8xrubVFUgbwYyN4KAnoxAwiFdG0=;
+        s=default; t=1591366692;
+        bh=ZGMog9yqu0TCyJN1EWr5F2XERNVBALJNbXJoL/6fjq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X+e/6Jn5meqKiw9UxtdOxczvINjDcUJ3fGL1BzDQMb5A+W+3294M6XMViQFs8hn3q
-         L330NEyW5JqR9xJxUUnog64ZbI6oUVkVLfMdhY2I6o9sZTWB15jjVkFjQ7bo5GGiHX
-         55F35RNA2KEtXBaECUa+VK8+L30ZAfyVsV6wwcIM=
+        b=Itjjys8oYcaTTjEBVM/ltNBzPK/wSO7McofwuEIU0urzRgRt/nP7F3KFhCGDf8uez
+         cQ0MxC8n3UCW2ge5X6UFvXhZxYp98x19l2ykN6oPM8y48qGtZeX+jCgz2pH5Cx0oii
+         HMPH5tcG0JrJ9btjR6rwNINQPFi5yZsnRSNvOZJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 11/38] media: staging: ipu3-imgu: Move alignment attribute to field
-Date:   Fri,  5 Jun 2020 16:14:54 +0200
-Message-Id: <20200605140253.247509122@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 15/38] drm/i915: fix port checks for MST support on gen >= 11
+Date:   Fri,  5 Jun 2020 16:14:58 +0200
+Message-Id: <20200605140253.489209653@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -61,46 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Lucas De Marchi <lucas.demarchi@intel.com>
 
-commit 8c038effd893920facedf18c2c0976cec4a33408 upstream.
+[ Upstream commit 10d987fd1b7baceaafa78d805e71427ab735b4e4 ]
 
-Move the alignment attribute of struct ipu3_uapi_awb_fr_config_s to the
-field in struct ipu3_uapi_4a_config, the other location where the struct
-is used.
+Both Ice Lake and Elkhart Lake (gen 11) support MST on all external
+connections except DDI A. Tiger Lake (gen 12) supports on all external
+connections.
 
-Fixes: commit c9d52c114a9f ("media: staging: imgu: Address a compiler warning on alignment")
-Reported-by: Tomasz Figa <tfiga@chromium.org>
-Tested-by: Bingbu Cao <bingbu.cao@intel.com>
-Cc: stable@vger.kernel.org # for v5.3 and up
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Move the check to happen inside intel_dp_mst_encoder_init() and add
+specific platform checks.
 
+v2: Replace != with == checks for ports on gen < 11 (Ville)
+
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191015164029.18431-3-lucas.demarchi@intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/ipu3/include/intel-ipu3.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/display/intel_dp.c     |  7 ++-----
+ drivers/gpu/drm/i915/display/intel_dp_mst.c | 22 +++++++++++++++------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
 
---- a/drivers/staging/media/ipu3/include/intel-ipu3.h
-+++ b/drivers/staging/media/ipu3/include/intel-ipu3.h
-@@ -450,7 +450,7 @@ struct ipu3_uapi_awb_fr_config_s {
- 	__u32 bayer_sign;
- 	__u8 bayer_nf;
- 	__u8 reserved2[7];
--} __attribute__((aligned(32))) __packed;
-+} __packed;
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index 9b15ac4f2fb6..4ab6531a4a74 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -7218,11 +7218,8 @@ intel_dp_init_connector(struct intel_digital_port *intel_dig_port,
+ 		intel_connector->get_hw_state = intel_connector_get_hw_state;
  
- /**
-  * struct ipu3_uapi_4a_config - 4A config
-@@ -466,7 +466,8 @@ struct ipu3_uapi_4a_config {
- 	struct ipu3_uapi_ae_grid_config ae_grd_config;
- 	__u8 padding[20];
- 	struct ipu3_uapi_af_config_s af_config;
--	struct ipu3_uapi_awb_fr_config_s awb_fr_config;
-+	struct ipu3_uapi_awb_fr_config_s awb_fr_config
-+		__attribute__((aligned(32)));
- } __packed;
+ 	/* init MST on ports that can support it */
+-	if (HAS_DP_MST(dev_priv) && !intel_dp_is_edp(intel_dp) &&
+-	    (port == PORT_B || port == PORT_C ||
+-	     port == PORT_D || port == PORT_F))
+-		intel_dp_mst_encoder_init(intel_dig_port,
+-					  intel_connector->base.base.id);
++	intel_dp_mst_encoder_init(intel_dig_port,
++				  intel_connector->base.base.id);
  
- /**
+ 	if (!intel_edp_init_connector(intel_dp, intel_connector)) {
+ 		intel_dp_aux_fini(intel_dp);
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+index 600873c796d0..74d45a0eecb8 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@ -653,21 +653,31 @@ intel_dp_mst_encoder_active_links(struct intel_digital_port *intel_dig_port)
+ int
+ intel_dp_mst_encoder_init(struct intel_digital_port *intel_dig_port, int conn_base_id)
+ {
++	struct drm_i915_private *i915 = to_i915(intel_dig_port->base.base.dev);
+ 	struct intel_dp *intel_dp = &intel_dig_port->dp;
+-	struct drm_device *dev = intel_dig_port->base.base.dev;
++	enum port port = intel_dig_port->base.port;
+ 	int ret;
+ 
+-	intel_dp->can_mst = true;
++	if (!HAS_DP_MST(i915) || intel_dp_is_edp(intel_dp))
++		return 0;
++
++	if (INTEL_GEN(i915) < 12 && port == PORT_A)
++		return 0;
++
++	if (INTEL_GEN(i915) < 11 && port == PORT_E)
++		return 0;
++
+ 	intel_dp->mst_mgr.cbs = &mst_cbs;
+ 
+ 	/* create encoders */
+ 	intel_dp_create_fake_mst_encoders(intel_dig_port);
+-	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, dev,
++	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, &i915->drm,
+ 					   &intel_dp->aux, 16, 3, conn_base_id);
+-	if (ret) {
+-		intel_dp->can_mst = false;
++	if (ret)
+ 		return ret;
+-	}
++
++	intel_dp->can_mst = true;
++
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
 
 
