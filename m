@@ -2,121 +2,99 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 036D920663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366892;
-	bh=ZX1tnruJSvdsfDaH4vcNnaq0VG75PQYjQCUTI1CB0R4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQVMUnD9TD+pTnsnAbo3PEoYyo4LaZgKp0xtPEdFNAuo3y1cOrk3nkzRpD9ZKf77Q
-	 P25Xb3XlgT03UoPaanZVAX2owe4t5zMONxz7BXyzQBDM9TQXR5lfgjbqSNJaiZmv9/
-	 jtnbAcwvoDWlex7pRARAWqhvyz5KCQumRm/8I7Jo=
+	by mail.kernel.org (Postfix) with ESMTP id 9442920663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mM0dkv5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgFEOVa (ORCPT
+        id S1728667AbgFEOVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:21:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbgFEOUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:20:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE102070B;
-        Fri,  5 Jun 2020 14:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366812;
-        bh=ZX1tnruJSvdsfDaH4vcNnaq0VG75PQYjQCUTI1CB0R4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4qeqkGu1N98yY+Bqbjivrtt8+u8xn1SYHSPy4QIMx5PZ9v4RhV+lDOj30pQ0CQHv
-         3XwcwRqR5yRreycdBJBqJqjlLk8jOnCNjYnIq4ffH7b1ygi4iOvB272WqBGLfbinOt
-         yzTZur7Ezs6F58hfm5WpwdGAz4htlyGj0B7loIo0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/28] net: smsc911x: Fix runtime PM imbalance on error
-Date:   Fri,  5 Jun 2020 16:15:30 +0200
-Message-Id: <20200605140254.054763694@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
-References: <20200605140252.338635395@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 5 Jun 2020 10:21:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729029AbgFEOVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:21:25 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFA4C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:21:24 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u5so5202971pgn.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=yGP/Kfk+N8F8iZAeQuKesLiAArFiMOYLOk6KSc6Id+U=;
+        b=mM0dkv5fgPUEDI5+Ig/8tYdMEQmoq5Dzw8QTDcSds5R0+fQNHXb4dUYu1nC+79LLo5
+         AASqF7MxiF78fW0sLSHZTi7h9+wBVO8sWFHgviQ/Eb398TEPl1k94wIUW4Oxz2pozRcS
+         qXcKXSCrV1kTgEZCQM4OOzAsC2tk6MzytRuZo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=yGP/Kfk+N8F8iZAeQuKesLiAArFiMOYLOk6KSc6Id+U=;
+        b=Q4CB1iZWMPissc/Ge0KWSRLyzyZbFFeuo+r01+di4YTv86baGadzOcIFmVOe0y80h3
+         cLs8K1kR5N57r1u+mEY8K97RoID7ZxsVMlQnsHzLoSMRcyS1NjM4M0wNfq9BAzM2xtU/
+         IRpTKt6pOpLMFntbowOln/Yqz2+VgHmOE1XWVrFt25eyFb6GWOmuw17xT9zoaXTVMlX7
+         tDkAhc2ZLy/JHqSm3TQeQKg7n02dLnDJcm78xJ6WJTH7CA3v/40Msc5IUgzmtegDnXXp
+         Cx/UiqFmc8znIePefW09VtiRAqa2Bc6CawJKw0VHtAIdD0Kb70b1KdMyFCUFkWMX+FIZ
+         Gaiw==
+X-Gm-Message-State: AOAM533iS8uEKnvPlBSkuKKIAEESFmI8W/fFBeOmy7ic/L+8zUYKBBMp
+        suIteAxTg1R0ZRGbBLVK5af/Mw==
+X-Google-Smtp-Source: ABdhPJwKFbHKpewYCO4uc2+sCQtwLv9h6tPVlXqTY10U5LySFMOcXvTJZbnlv1WBth8q9WueJjPOZw==
+X-Received: by 2002:a63:3347:: with SMTP id z68mr10089302pgz.61.1591366883923;
+        Fri, 05 Jun 2020 07:21:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x191sm7750890pfd.37.2020.06.05.07.21.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 07:21:23 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 07:21:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Joe Perches <joe@perches.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ethtool: Fix comment mentioning typo in IS_ENABLED()
+Message-ID: <202006050720.D741B4C@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+This has no code changes, but it's a typo noticed in other clean-ups,
+so we might as well fix it. IS_ENABLED() takes full names, and should
+have the "CONFIG_" prefix.
 
-[ Upstream commit 539d39ad0c61b35f69565a037d7586deaf6d6166 ]
-
-Remove runtime PM usage counter decrement when the
-increment function has not been called to keep the
-counter balanced.
-
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Joe Perches <joe@perches.com>
+Link: https://lore.kernel.org/lkml/b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/ethtool_netlink.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
-index ce4bfecc26c7..ae80a223975d 100644
---- a/drivers/net/ethernet/smsc/smsc911x.c
-+++ b/drivers/net/ethernet/smsc/smsc911x.c
-@@ -2515,20 +2515,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
- 
- 	retval = smsc911x_init(dev);
- 	if (retval < 0)
--		goto out_disable_resources;
-+		goto out_init_fail;
- 
- 	netif_carrier_off(dev);
- 
- 	retval = smsc911x_mii_init(pdev, dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
- 	}
- 
- 	retval = register_netdev(dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
- 	} else {
- 		SMSC_TRACE(pdata, probe,
- 			   "Network interface: \"%s\"", dev->name);
-@@ -2569,9 +2569,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--out_disable_resources:
-+out_init_fail:
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+out_disable_resources:
- 	(void)smsc911x_disable_resources(pdev);
- out_enable_resources_fail:
- 	smsc911x_free_resources(pdev);
+diff --git a/include/linux/ethtool_netlink.h b/include/linux/ethtool_netlink.h
+index 8fbe4f97ffad..1e7bf78cb382 100644
+--- a/include/linux/ethtool_netlink.h
++++ b/include/linux/ethtool_netlink.h
+@@ -67,5 +67,5 @@ static inline int ethnl_cable_test_step(struct phy_device *phydev, u32 first,
+ {
+ 	return -EOPNOTSUPP;
+ }
+-#endif /* IS_ENABLED(ETHTOOL_NETLINK) */
++#endif /* IS_ENABLED(CONFIG_ETHTOOL_NETLINK) */
+ #endif /* _LINUX_ETHTOOL_NETLINK_H_ */
 -- 
 2.25.1
 
 
-
+-- 
+Kees Cook
