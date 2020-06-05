@@ -2,181 +2,196 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EADC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E27C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7C020659
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184282067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dI/nXDSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgFENPa (ORCPT
+        id S1726965AbgFENPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:15:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:61808 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbgFENP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:15:29 -0400
-IronPort-SDR: hDay6+sP/Xbm6Cdru3WbeELqAe9tguzQLXjLNKS916hDlpki4t4fO5K+EXJblEEuU+4DW3j+hd
- YghXPkuZ7upw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 06:15:28 -0700
-IronPort-SDR: 8z64UIpITHvnMyk+hpzKUgfEq+GlBhraZiuh97RJehWFeDVXSXsoR2BA/l3B/XSSk2a/rUPVZY
- 91vGmgg9lXIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
-   d="scan'208";a="258028176"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Jun 2020 06:15:23 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jhCBx-00B2CL-6c; Fri, 05 Jun 2020 16:15:25 +0300
-Date:   Fri, 5 Jun 2020 16:15:25 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO
- controller
-Message-ID: <20200605131525.GK2428291@smile.fi.intel.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-7-michael@walle.cc>
- <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
- <216db3154b46bd80202873df055bb3f3@walle.cc>
+        Fri, 5 Jun 2020 09:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbgFENPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:15:31 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5BDC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 06:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EHiSND5nLUtypK0tVLnzwgoG6lLcXNjxaMcDwTHkmro=; b=dI/nXDSpm6ffGMTdKggh9hW/hS
+        N4BiSMJ340o1kBcZqORdaSJZ/MQmvoYWppBgdaPmLS6e1ls5bQMz1qchssDbEA0TR50GLXqWPMT5k
+        io2x37DnePXxU5IuED3puM8GCLcZLbyX/W3HLmN5UO759zbiHTYGRPcEntpIXMngmqQbwrEJcGh9P
+        esB2hDwKWJCgm9Z+02XMob8KzH3HIB71cvvZdChv+VVj5+s7Oywllv1e23Z1Mi1Se2tDhVXKK7ns+
+        tU4q9LXJgDPgZoi+Y36w1RqKikhStUpqI3sC0GC/bwpHsA0ZHBi3nD5owpiCBES00HzPiBrIuokNm
+        vyqUwpvQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhCBS-0001id-HC; Fri, 05 Jun 2020 13:14:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 692D3301A7A;
+        Fri,  5 Jun 2020 15:14:51 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2C3DA21A74B35; Fri,  5 Jun 2020 15:14:51 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 15:14:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
+Message-ID: <20200605131451.GE2750@hirez.programming.kicks-ass.net>
+References: <20200604225445.GA32319@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <216db3154b46bd80202873df055bb3f3@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200604225445.GA32319@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 02:42:53PM +0200, Michael Walle wrote:
-> Am 2020-06-05 14:00, schrieb Andy Shevchenko:
-> > On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+On Thu, Jun 04, 2020 at 03:54:45PM -0700, Paul E. McKenney wrote:
 
-> > > +       return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev),
-> > > regmap,
-> > 
-> > It seems regmap needs to be converted to use fwnode.
-> 
-> Mhh, this _np functions was actually part of this series in the
-> beginning.
+> BUG: kernel NULL pointer dereference, address: 0000000000000150
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 0 P4D 0 
+> Oops: 0000 [#1] PREEMPT SMP PTI
+> CPU: 9 PID: 196 Comm: rcu_torture_rea Not tainted 5.7.0+ #3923
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.11.0-2.el7 04/01/2014
+> RIP: 0010:check_preempt_wakeup+0xb1/0x180
+> Code: 83 ea 01 48 8b 9b 48 01 00 00 39 d0 75 f2 48 39 bb 50 01 00 00 75 05 48 85 ff 75 29 48 8b ad 48 01 00 00 48 8b 9b 48 01 00 00 <48> 8b bd 50 01 00 00 48 39 bb 50 01 00 00 0f 95 c2 48 85 ff 0f 94
 
-Then, please, make them fwnode aware rather than OF centric.
+That is:
 
-> > > IRQF_ONESHOT, 0,
-> > > +                                          irq_chip, &gpio->irq_data);
+All code
+========
+   0:	83 ea 01             	sub    $0x1,%edx
+   3:	48 8b 9b 48 01 00 00 	mov    0x148(%rbx),%rbx
+   a:	39 d0                	cmp    %edx,%eax
+   c:	75 f2                	jne    0x0
+   e:	48 39 bb 50 01 00 00 	cmp    %rdi,0x150(%rbx)
+  15:	75 05                	jne    0x1c
+  17:	48 85 ff             	test   %rdi,%rdi
+  1a:	75 29                	jne    0x45
+  1c:	48 8b ad 48 01 00 00 	mov    0x148(%rbp),%rbp
+  23:	48 8b 9b 48 01 00 00 	mov    0x148(%rbx),%rbx
+  2a:*	48 8b bd 50 01 00 00 	mov    0x150(%rbp),%rdi		<-- trapping instruction
+  31:	48 39 bb 50 01 00 00 	cmp    %rdi,0x150(%rbx)
+  38:	0f 95 c2             	setne  %dl
+  3b:	48 85 ff             	test   %rdi,%rdi
+  3e:	0f                   	.byte 0xf
+  3f:	94                   	xchg   %eax,%esp
 
-...
+> RSP: 0018:ffffaccdc02ecd38 EFLAGS: 00010006
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffafa0bc20
+> RDX: 0000000000000000 RSI: ffff946b5df50000 RDI: ffff946b5f469340
+> RBP: 0000000000000000 R08: ffff946b5df80d00 R09: 0000000000000001
 
-> > > +       dev_id = platform_get_device_id(pdev);
-> > > +       if (dev_id)
-> > > +               type = dev_id->driver_data;
-> > 
-> > Oh, no. In new code we don't need this. We have facilities to provide
-> > platform data in a form of fwnode.
-> 
-> Ok I'll look into that.
-> 
-> But I already have a question, so there are of_property_read_xx(), which
-> seems to be the old functions, then there is device_property_read_xx() and
-> fwnode_property_read_xx(). What is the difference between the latter two?
+And you have RBP == NULL and RBX == NULL
 
-It's easy. device_*() requires struct device to be established for this, so,
-operates only against devices, while the fwnode_*() operates on pure data which
-might or might not be related to any devices. If you understand OF examples
-better, consider device node vs. child of such node.
+Now, my compiler generates very similar code for this function and tells
+me this is:
 
-...
+  check_preempt_wakeup()
+    find_matching_se()
+      is_same_group()
+        if (se->cfs_rq == pse->cfs_rq) <-- *BOOM*
 
-> > > +       if (irq_support &&
-> > 
-> > Why do you need this flag? Can't simple IRQ number be sufficient?
-> 
-> I want to make sure, the is no misconfiguration. Eg. only GPIO
-> flavors which has irq_support set, have the additional interrupt
-> registers.
+and pahole gives us (for struct sched_entity):
 
-In gpio-dwapb, for example, we simple check two things: a) hardware limitation
-(if IRQ is assigned to a proper port) and b) if there is any IRQ comes from DT,
-ACPI, etc.
+  struct sched_entity *      parent;                                               /* 0x148   0x8 */
+  struct cfs_rq *            cfs_rq;                                               /* 0x150   0x8 */
 
-> > > +           device_property_read_bool(&pdev->dev,
-> > > "interrupt-controller")) {
-> > > +               irq = platform_get_irq(pdev, 0);
-> > > +               if (irq < 0)
-> > > +                       return irq;
-> > > +
-> > > +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
-> > > +                                            base, irq);
-> > > +               if (ret)
-> > > +                       return ret;
-> > > +
-> > > +               config.irq_domain =
-> > > regmap_irq_get_domain(gpio->irq_data);
-> > > +       }
+apparently both your @se and @pse are NULL.
 
-...
+Which shouldn't be possible..
 
-> > > +       { .compatible = "kontron,sl28cpld-gpio",
-> > > +         .data = (void *)SL28CPLD_GPIO },
-> > > +       { .compatible = "kontron,sl28cpld-gpi",
-> > > +         .data = (void *)SL28CPLD_GPI },
-> > > +       { .compatible = "kontron,sl28cpld-gpo",
-> > > +         .data = (void *)SL28CPLD_GPO },
-> > 
-> > All above can be twice less LOCs.
-> 
-> They are longer than 80 chars. Or do I miss something?
+I also don't see a relation to my recent changes here:
 
-We have 100 :-)
+> Call Trace:
+>  <IRQ>
+>  check_preempt_curr+0x5d/0x90
+>  ttwu_do_wakeup.isra.93+0xf/0x100
+>  sched_ttwu_pending+0x66/0x90
+>  smp_call_function_single_interrupt+0x2d/0xf0
+>  call_function_single_interrupt+0xf/0x20
 
-...
+Since I would expect that to blow up much earlier, like @p == NULL or
+something along those lines.
 
-> > > +               .name = KBUILD_MODNAME,
-> > 
-> > This actually not good idea in long term. File name can change and break
-> > an ABI.
-> 
-> Ahh an explanation, why this is bad. Ok makes sense, although to be fair,
-> .id_table should be used for the driver name matching. I'm not sure if
-> this is used somewhere else, though.
+Could you perhaps try something like the below ? It would splat when we
+run ouf of hierarchy to ascend, which is the only semi sane scenario for
+ending up where you are.
 
-I saw in my practice chain of renames for a driver. Now, if somebody
-somewhere would like to instantiate a platform driver by its name...
-Oops, ABI breakage.
+Are you actively using cgroups or just whatever systemd decides to gift
+you? Can you perhaps dump /proc/sched_debug while your test is running?
 
-And of course using platform data for such device makes less sense.
+---
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 35f4cc024dcfc..7aace0a5921e9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -416,8 +416,6 @@ static inline struct sched_entity *parent_entity(struct sched_entity *se)
+ static void
+ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+ {
+-	int se_depth, pse_depth;
+-
+ 	/*
+ 	 * preemption test can be made between sibling entities who are in the
+ 	 * same cfs_rq i.e who have a common parent. Walk up the hierarchy of
+@@ -425,23 +423,22 @@ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+ 	 * parent.
+ 	 */
+ 
+-	/* First walk up until both entities are at same depth */
+-	se_depth = (*se)->depth;
+-	pse_depth = (*pse)->depth;
+-
+-	while (se_depth > pse_depth) {
+-		se_depth--;
+-		*se = parent_entity(*se);
+-	}
+-
+-	while (pse_depth > se_depth) {
+-		pse_depth--;
+-		*pse = parent_entity(*pse);
+-	}
+-
+ 	while (!is_same_group(*se, *pse)) {
+-		*se = parent_entity(*se);
+-		*pse = parent_entity(*pse);
++		int se_depth = (*se)->depth;
++		int pse_depth = (*pse)->depth;
++
++		if (se_depth <= pse_depth) {
++			struct sched_entity *parent = parent_entity(*pse);
++			if (WARN_ON_ONCE(!parent))
++				return;
++			*pse = parent;
++		}
++		if (se_depth >= pse_depth) {
++			struct sched_entity *parent = parent_entity(*se);
++			if (WARN_ON_ONCE(!parent))
++				return;
++			*se = parent_entity(*se);
++		}
+ 	}
+ }
+ 
