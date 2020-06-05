@@ -2,140 +2,319 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 045482074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rhWN8qCv"
+	by mail.kernel.org (Postfix) with ESMTP id C98142074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgFEPjj (ORCPT
+        id S1728203AbgFEPj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:39:39 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:37295 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgFEPji (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:39:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1591371578; x=1622907578;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=bpxi5R4bZVMT/3MFEoBfMtJ94Rym4esyRQkAw8vEPzE=;
-  b=rhWN8qCv7RMgVHc/VHcpY7aFwUQzLaqZttX6qEi0w38/cSUbFC4tO7Vc
-   dEUF9h3oZGR39lQZc0IkI6tKL8ury0zvAQ4oaAK8DNbKhR2QE6TP0hTqc
-   xZby2CrjxuRu4D6YWEyp58DkeYJmSCkhwCl9pt/qZuRlKjp8RYvN/oPYd
-   Y=;
-IronPort-SDR: 5oiTao/Y/+2/exBBlvBCg+94gByxVMIU/9O22P8t8Z8AeIwNGDtJumrAR2ISQ4Z93kHTD+Jt0A
- ePERMDp7myjg==
-X-IronPort-AV: E=Sophos;i="5.73,476,1583193600"; 
-   d="scan'208";a="34687396"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 Jun 2020 15:39:36 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id EC151A1C39;
-        Fri,  5 Jun 2020 15:39:34 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 5 Jun 2020 15:39:34 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.90) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 5 Jun 2020 15:39:24 +0000
-Subject: Re: [PATCH v3 01/18] nitro_enclaves: Add ioctl interface definition
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-CC:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        "Colm MacCarthaigh" <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        "Matt Wilson" <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-2-andraprs@amazon.com>
- <20200527084959.GA29137@stefanha-x1.localdomain>
- <a95de3ee4b722d418fd6cf662233cb024928804e.camel@kernel.crashing.org>
- <d639afa5-cca6-3707-4c80-40ee1bf5bcb5@amazon.com>
- <20200605081503.GA59410@stefanha-x1.localdomain>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <8dbf6822-d835-8c1f-64ff-3e07a77aa8f9@amazon.com>
-Date:   Fri, 5 Jun 2020 18:39:15 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Fri, 5 Jun 2020 11:39:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:57254 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728139AbgFEPj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 11:39:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C67E31B;
+        Fri,  5 Jun 2020 08:39:55 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC4873F305;
+        Fri,  5 Jun 2020 08:39:53 -0700 (PDT)
+References: <20200605130519.4184-1-benjamin.gaignard@st.com> <20200605130519.4184-3-benjamin.gaignard@st.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     hugues.fruchet@st.com, mchehab@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        vincent.guittot@linaro.org, rjw@rjwysocki.net
+Subject: Re: [PATCH v4 2/3] media: stm32-dcmi: Set minimum cpufreq requirement
+In-reply-to: <20200605130519.4184-3-benjamin.gaignard@st.com>
+Date:   Fri, 05 Jun 2020 16:39:51 +0100
+Message-ID: <jhj3679iks8.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200605081503.GA59410@stefanha-x1.localdomain>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.90]
-X-ClientProxiedBy: EX13D05UWB003.ant.amazon.com (10.43.161.26) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 05/06/20 14:05, Benjamin Gaignard wrote:
+> Before start streaming set cpufreq minimum frequency requirement.
+> The cpufreq governor will adapt the frequencies and we will have
+> no latency for handling interrupts.
+> The frequency requirement is retrieved from the device-tree node.
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
-On 05/06/2020 11:15, Stefan Hajnoczi wrote:
-> On Mon, Jun 01, 2020 at 10:20:18AM +0300, Paraschiv, Andra-Irina wrote:
->>
->> On 01/06/2020 06:02, Benjamin Herrenschmidt wrote:
->>> On Wed, 2020-05-27 at 09:49 +0100, Stefan Hajnoczi wrote:
->>>> What about feature bits or a API version number field? If you add
->>>> features to the NE driver, how will userspace detect them?
->>>>
->>>> Even if you intend to always compile userspace against the exact kernel
->>>> headers that the program will run on, it can still be useful to have an
->>>> API version for informational purposes and to easily prevent user
->>>> errors (running a new userspace binary on an old kernel where the API =
-is
->>>> different).
->>>>
->>>> Finally, reserved struct fields may come in handy in the future. That
->>>> way userspace and the kernel don't need to explicitly handle multiple
->>>> struct sizes.
->>> Beware, Greg might disagree :)
->>>
->>> That said, yes, at least a way to query the API version would be
->>> useful.
->> I see there are several thoughts with regard to extensions possibilities=
-. :)
->>
->> I added an ioctl for getting the API version, we have now a way to query
->> that info. Also, I updated the sample in this patch series to check for =
-the
->> API version.
-> Great. The ideas are orthogonal and not all of them need to be used
-> together. As long as their is a way of extending the API cleanly in the
-> future then extensions can be made without breaking userspace.
+It's all quite nicer without the dcmi_{get, put}_cpu_policy() functions!
+Sadly I was overzealous in trimming my previous reply, and I also trimmed
+some of my own comments, sorry about that.
 
-Agree, as we achieve the ultimate goal of having a stable interface, =
+I've added the MIA comments down below, and with those taken into account:
 
-open for extensions without breaking changes.
+(for the IRQ affinity part):
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 
-Thanks,
-Andra
+> ---
+> version 4:
+> - simplify irq affinity handling by using only dcmi_irq_notifier_notify()
+>
+>  drivers/media/platform/stm32/stm32-dcmi.c | 122 ++++++++++++++++++++++++++++--
+>  1 file changed, 114 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index b8931490b83b..c2389776a958 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -13,10 +13,13 @@
+>
+>  #include <linux/clk.h>
+>  #include <linux/completion.h>
+> +#include <linux/cpufreq.h>
+> +#include <linux/cpumask.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -99,6 +102,8 @@ enum state {
+>
+>  #define OVERRUN_ERROR_THRESHOLD	3
+>
+> +static DEFINE_PER_CPU(struct freq_qos_request, qos_req);
+> +
+>  struct dcmi_graph_entity {
+>       struct v4l2_async_subdev asd;
+>
+> @@ -133,6 +138,7 @@ struct stm32_dcmi {
+>       struct resource			*res;
+>       struct reset_control		*rstc;
+>       int				sequence;
+> +	int				irq;
+>       struct list_head		buffers;
+>       struct dcmi_buf			*active;
+>
+> @@ -173,6 +179,10 @@ struct stm32_dcmi {
+>       struct media_device		mdev;
+>       struct media_pad		vid_cap_pad;
+>       struct media_pipeline		pipeline;
+> +
+> +	u32				min_frequency;
+> +	cpumask_var_t			boosted;
+> +	struct irq_affinity_notify	notify;
+>  };
+>
+>  static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+> @@ -722,6 +732,90 @@ static void dcmi_pipeline_stop(struct stm32_dcmi *dcmi)
+>       dcmi_pipeline_s_stream(dcmi, 0);
+>  }
+>
+> +static void dcmi_get_min_frequency(struct stm32_dcmi *dcmi)
+> +{
+> +	struct device_node *np = dcmi->mdev.dev->of_node;
+> +
+> +	dcmi->min_frequency = FREQ_QOS_MIN_DEFAULT_VALUE;
+> +
+> +	of_property_read_u32(np, "st,stm32-dcmi-min-frequency",
+> +			     &dcmi->min_frequency);
+> +}
+> +
+> +static void dcmi_irq_notifier_notify(struct irq_affinity_notify *notify,
+> +				     const cpumask_t *mask)
+> +{
+> +	struct stm32_dcmi *dcmi = container_of(notify,
+> +					       struct stm32_dcmi,
+> +					       notify);
+> +	struct cpufreq_policy *p;
+> +	int cpu;
+> +
+> +	/*
+> +	 * For all boosted CPUs check if it is still the case
+> +	 * if not remove the request
+> +	 */
+> +	for_each_cpu(cpu, dcmi->boosted) {
+> +		if (cpumask_test_cpu(cpu, mask))
+> +			continue;
+> +
+> +		p = cpufreq_cpu_get(cpu);
+> +		if (!p)
+> +			continue;
+> +
+> +		freq_qos_remove_request(&per_cpu(qos_req, cpu));
+> +		cpumask_andnot(dcmi->boosted, dcmi->boosted, p->cpus);
+> +
+> +		cpufreq_cpu_put(p);
+> +	}
+> +
+> +	/*
+> +	 * For CPUs in the mask check if they are boosted if not add
+> +	 * a request
+> +	 */
+> +	for_each_cpu(cpu, mask) {
+> +		if (cpumask_test_cpu(cpu, dcmi->boosted))
+> +			continue;
+> +
+> +		p = cpufreq_cpu_get(cpu);
+> +		if (!p)
+> +			continue;
+> +
+> +		freq_qos_add_request(&p->constraints, &per_cpu(qos_req, cpu),
+> +				     FREQ_QOS_MIN, dcmi->min_frequency);
+> +		cpumask_or(dcmi->boosted, dcmi->boosted, p->cpus);
+> +		cpufreq_cpu_put(p);
+> +	}
+> +}
+> +
+> +static void dcmi_irq_notifier_release(struct kref *ref)
+> +{
+> +	/*
+> +	 * This is required by affinity notifier. We don't have anything to
+> +	 * free here.
+> +	 */
+> +}
+> +
+> +static void dcmi_set_min_frequency(struct stm32_dcmi *dcmi, s32 freq)
+> +{
+> +	struct irq_affinity_notify *notify = &dcmi->notify;
+> +
+> +	if (freq) {
+> +		dcmi_irq_notifier_notify(notify,
+> +					 irq_get_affinity_mask(dcmi->irq));
+> +
+> +		notify->notify = dcmi_irq_notifier_notify;
+> +		notify->release = dcmi_irq_notifier_release;
 
+Couldn't we set these at probe time?
 
+> +		irq_set_affinity_notifier(dcmi->irq, notify);
 
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar=
- Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in R=
-omania. Registration number J22/2621/2005.
+I think you also want to do that before calling into
+dcmi_irq_notifier_notify(), in case the affinity changes in the middle of
+it (which wouldn't be detected because the notifier wouldn't be registered
+at that point). And because of that, you'd have to reinstore the
+mutex.
 
+Again, that was supposed to be in my previous email, sorry :(
+
+> +	} else {
+> +		struct cpumask clear;
+> +
+> +		irq_set_affinity_notifier(dcmi->irq, NULL);
+> +		cpumask_clear(&clear);
+> +		dcmi_irq_notifier_notify(notify, &clear);
+> +	}
+> +}
+> +
+>  static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  {
+>       struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+> @@ -736,11 +830,13 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>               goto err_release_buffers;
+>       }
+>
+> +	dcmi_set_min_frequency(dcmi, dcmi->min_frequency);
+> +
+>       ret = media_pipeline_start(&dcmi->vdev->entity, &dcmi->pipeline);
+>       if (ret < 0) {
+>               dev_err(dcmi->dev, "%s: Failed to start streaming, media pipeline start error (%d)\n",
+>                       __func__, ret);
+> -		goto err_pm_put;
+> +		goto err_drop_qos;
+>       }
+>
+>       ret = dcmi_pipeline_start(dcmi);
+> @@ -835,7 +931,8 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  err_media_pipeline_stop:
+>       media_pipeline_stop(&dcmi->vdev->entity);
+>
+> -err_pm_put:
+> +err_drop_qos:
+> +	dcmi_set_min_frequency(dcmi, FREQ_QOS_MIN_DEFAULT_VALUE);
+>       pm_runtime_put(dcmi->dev);
+>
+>  err_release_buffers:
+> @@ -863,6 +960,8 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+>
+>       media_pipeline_stop(&dcmi->vdev->entity);
+>
+> +	dcmi_set_min_frequency(dcmi, FREQ_QOS_MIN_DEFAULT_VALUE);
+> +
+>       spin_lock_irq(&dcmi->irqlock);
+>
+>       /* Disable interruptions */
+> @@ -1838,7 +1937,6 @@ static int dcmi_probe(struct platform_device *pdev)
+>       struct vb2_queue *q;
+>       struct dma_chan *chan;
+>       struct clk *mclk;
+> -	int irq;
+>       int ret = 0;
+>
+>       match = of_match_device(of_match_ptr(stm32_dcmi_of_match), &pdev->dev);
+> @@ -1879,9 +1977,9 @@ static int dcmi_probe(struct platform_device *pdev)
+>       dcmi->bus.bus_width = ep.bus.parallel.bus_width;
+>       dcmi->bus.data_shift = ep.bus.parallel.data_shift;
+>
+> -	irq = platform_get_irq(pdev, 0);
+> -	if (irq <= 0)
+> -		return irq ? irq : -ENXIO;
+> +	dcmi->irq = platform_get_irq(pdev, 0);
+> +	if (dcmi->irq <= 0)
+> +		return dcmi->irq ? dcmi->irq : -ENXIO;
+>
+>       dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>       if (!dcmi->res) {
+> @@ -1895,11 +1993,12 @@ static int dcmi_probe(struct platform_device *pdev)
+>               return PTR_ERR(dcmi->regs);
+>       }
+>
+> -	ret = devm_request_threaded_irq(&pdev->dev, irq, dcmi_irq_callback,
+> +	ret = devm_request_threaded_irq(&pdev->dev, dcmi->irq,
+> +					dcmi_irq_callback,
+>                                       dcmi_irq_thread, IRQF_ONESHOT,
+>                                       dev_name(&pdev->dev), dcmi);
+>       if (ret) {
+> -		dev_err(&pdev->dev, "Unable to request irq %d\n", irq);
+> +		dev_err(&pdev->dev, "Unable to request irq %d\n", dcmi->irq);
+>               return ret;
+>       }
+>
+> @@ -1930,6 +2029,9 @@ static int dcmi_probe(struct platform_device *pdev)
+>       dcmi->state = STOPPED;
+>       dcmi->dma_chan = chan;
+>
+> +	if (!alloc_cpumask_var(&dcmi->boosted, GFP_KERNEL))
+> +		return -ENODEV;
+> +
+>       q = &dcmi->queue;
+>
+>       dcmi->v4l2_dev.mdev = &dcmi->mdev;
+> @@ -2022,6 +2124,8 @@ static int dcmi_probe(struct platform_device *pdev)
+>
+>       dev_info(&pdev->dev, "Probe done\n");
+>
+> +	dcmi_get_min_frequency(dcmi);
+> +
+>       platform_set_drvdata(pdev, dcmi);
+>
+>       pm_runtime_enable(&pdev->dev);
+> @@ -2049,6 +2153,8 @@ static int dcmi_remove(struct platform_device *pdev)
+>
+>       pm_runtime_disable(&pdev->dev);
+>
+> +	free_cpumask_var(dcmi->boosted);
+> +
+>       v4l2_async_notifier_unregister(&dcmi->notifier);
+>       v4l2_async_notifier_cleanup(&dcmi->notifier);
+>       media_entity_cleanup(&dcmi->vdev->entity);
