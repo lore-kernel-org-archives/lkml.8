@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0831BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11DD02065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D616E2065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YTkZfuza"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yYiav+kM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgFENWe (ORCPT
+        id S1727048AbgFENWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39826 "EHLO
+        Fri, 5 Jun 2020 09:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgFENW1 (ORCPT
+        with ESMTP id S1726848AbgFENW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:22:27 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 318D9C08C5C4
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 06:22:27 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k26so9120357wmi.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 06:22:27 -0700 (PDT)
+        Fri, 5 Jun 2020 09:22:26 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC4F9C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 06:22:24 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id r15so9092658wmh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 06:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B90P5vlRjcmc/HwmlTNh5ez1pbs9ga7qbMLqz94WeAc=;
-        b=YTkZfuzam21k+uBt0acIuHPSgWol4t9gl77sHHb0fCSWzBFXoGCJliwFNTqsttd+AF
-         qtG/4YyJse4VKAOpBl7G1blPNzVVKsKoDWzWj4UXjvgAdw8JX29fx0ejWQy08+oKs5Dv
-         WprF3Nft8aVQ16a1n1ccsooduEpWognLe1f1P8GiXz3fGs+n1sDxlY2j7pTVqemseUk0
-         kG/3KCz5+UlMh7EARDuudE7NV3tPDG1JBMqeRXYWUEOL5BhuPEHCfG3rWnS6tzJHeorJ
-         7I8gAiNYwQcv0fx+jJ28f7Z/rJlJDa7HfKq4aPIFZYnKik7nbdG4smPYqqGN7o3UF27Q
-         jS6g==
+        bh=xAlKxt3CeRGgnokjPKgwbHDWms7QUL6gxBaF1E7hzHQ=;
+        b=yYiav+kMyZ2Ix7WiVK7dI5HnTMjAng05HBGjcV43tWiZ6XDmWimy/6ZQNI7sxlIeF0
+         ny/pb2rEHxegQzT78UTHLx57Bavu+D8NPjlonHJRBg6EZ9iiNlX+eQ7e1zjdEgQSejc6
+         f20Onq0IJRAlGwXVdIKKG73OrUMooHFJPdDDKhBMmrFbRI7PzSYUnX5X7YwtML9MBhpb
+         N6Ue6HDCNLoLE/Pwz9P/J0wj27Hid2yPPeQdp0icf93cf5xbDIpv2D/dhNngYGAyL/sg
+         bDY9CaZ+0Fse6H5ZAjs5SGLwks3JyrNKZq5zD9AEb66Zor5YraVenWPJFPis3j/fjPgY
+         0C8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B90P5vlRjcmc/HwmlTNh5ez1pbs9ga7qbMLqz94WeAc=;
-        b=S/oB3MXVXa0Nxep9r8rRMoUsNrsMI4FFJm4Lbmsc6ceBLWqDMp/hvsNjxlJGOTarrP
-         ftIEVcnb3oCGSlBHYoyeAudd2H2+corPbRWT5vr7M36KGJ1zR/aY8iENoddfikFRMn96
-         fGLyahC+zffGgkfhRA+bI3AalO2SY12eS+knhvNt8y2ckq42ftbjhK8npO0+cRj3oKpc
-         d532M8Gc7pvz5R+3aRX7PpW8xAPjHfrRyAdswFG2fUz3fEBaaTfUDZgQ0Dijm0jgcvkK
-         XhQL7nYDh+G7SaKyy17npJt2VcpWnPPNOwb40vaEAthwwOFNxEid90SU+zonUPOBxGgi
-         2iQw==
-X-Gm-Message-State: AOAM530jngErDIsFy+oqjhx4/GjSDJit8b7+1l38e9Fid2+7y9En3CL8
-        nGvqHO+PDEwMfqjCEK1dQWEY6A==
-X-Google-Smtp-Source: ABdhPJyIAgP4Nu6MeJ5AZk9gWIJ9ycHXjBABtQl48AzXyVO5HV3VWQMGZqu06mldUl+jLuwYIcLGMg==
-X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr2853782wmr.49.1591363345886;
-        Fri, 05 Jun 2020 06:22:25 -0700 (PDT)
+        bh=xAlKxt3CeRGgnokjPKgwbHDWms7QUL6gxBaF1E7hzHQ=;
+        b=n+/hHY3AD9NcqwrMkZ3Pf/iHRrBGdXcsYYbc4/ZDI94S4Xb8mtzl99Y4vqgOIJeOtq
+         NafI8nw0+TJh8eRxPY0+qgmJtBN7b2we1dIx7knf73/w6m/hFWSBZHztyDGVdcHJfpvN
+         v0yFjZ9Qvq79N+YLUlyKegL90bA3RabkT9GJ2WxuYGMp9CFq3s8XEchBkZD/rH0UFBW4
+         7hEN++M5w8izoPacLU3ZyoOR1jNVZvZlAY//yXhnFlUA47GzJ47ej5Soax5bpC3Xxbvf
+         RxXo/pUINjQQqP7lrLBkLJEhUDa45r8c6DPtS4ZE/Cs2biBGCJ0N0QeEER5bnx8tB1qj
+         ON0g==
+X-Gm-Message-State: AOAM533Wh1AZD072inh17tdinRZcI++1kkoOsyE1hcyeM4dxObvCY5nX
+        9hdJKwa8MemadyqQCQSFjVS77A==
+X-Google-Smtp-Source: ABdhPJyt8YO6c3MFb5eo6VCQfHwV4YCdIkN/j71Gnogub1Z5Ahg9B5DQxJEiYFr2NP7rx7grZEK9JQ==
+X-Received: by 2002:a7b:c0cc:: with SMTP id s12mr2780173wmh.111.1591363343349;
+        Fri, 05 Jun 2020 06:22:23 -0700 (PDT)
 Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 1sm11419211wmz.13.2020.06.05.06.22.24
+        by smtp.gmail.com with ESMTPSA id 1sm11419211wmz.13.2020.06.05.06.22.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 06:22:25 -0700 (PDT)
+        Fri, 05 Jun 2020 06:22:22 -0700 (PDT)
 From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     Jason Wessel <jason.wessel@windriver.com>,
         Douglas Anderson <dianders@chromium.org>
@@ -67,9 +67,9 @@ Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
         pmladek@suse.com, sergey.senozhatsky@gmail.com, will@kernel.org,
         kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
         patches@linaro.org
-Subject: [RFC PATCH 3/4] kgdb: Add NOKPROBE labels on the trap handler functions
-Date:   Fri,  5 Jun 2020 14:21:29 +0100
-Message-Id: <20200605132130.1411255-4-daniel.thompson@linaro.org>
+Subject: [RFC PATCH 1/4] kgdb: Honour the kprobe blacklist when setting breakpoints
+Date:   Fri,  5 Jun 2020 14:21:27 +0100
+Message-Id: <20200605132130.1411255-2-daniel.thompson@linaro.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200605132130.1411255-1-daniel.thompson@linaro.org>
 References: <20200605132130.1411255-1-daniel.thompson@linaro.org>
@@ -80,98 +80,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently kgdb honours the kprobe blacklist but doesn't place its own
-trap handling code on the list. Add macros to discourage attempting to
-use kgdb to debug itself.
+Currently kgdb has absolutely no safety rails in place to discourage or
+prevent a user from placing a breakpoint in dangerous places such as
+the debugger's own trap entry/exit and other places where it is not safe
+to take synchronous traps.
 
-These changes do not make it impossible to provoke recursive trapping
-since they do not cover all the calls that can be made on kgdb's entry
-logic. However going much further whilst we are sharing the kprobe
-blacklist risks reducing the capabilities of kprobe and this is a bad
-trade off (especially so given kgdb's users are currently conditioned to
-avoid recursive traps).
+Modify the default implementation of kgdb_validate_break_address() so
+that we honour the kprobe blacklist (if there is one). The resulting
+blacklist will include code that kgdb could, in fact, debug but I think
+we can assume that anyone with sufficient knowledge to meaningfully
+debug that code would trivially be able to find and remove the safety
+rail if they need to.
 
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
- kernel/debug/debug_core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ kernel/debug/debug_core.c | 11 +++++++++++
+ kernel/debug/kdb/kdb_bp.c |  9 +++++++++
+ 2 files changed, 20 insertions(+)
 
 diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 4a2df4509fe1..21d1d91da4bb 100644
+index ef94e906f05a..81f56d616e04 100644
 --- a/kernel/debug/debug_core.c
 +++ b/kernel/debug/debug_core.c
-@@ -184,6 +184,7 @@ int __weak kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- 	return probe_kernel_write((char *)bpt->bpt_addr,
- 				  (char *)bpt->saved_instr, BREAK_INSTR_SIZE);
- }
-+NOKPROBE_SYMBOL(kgdb_arch_remove_breakpoint);
+@@ -56,6 +56,7 @@
+ #include <linux/vmacache.h>
+ #include <linux/rcupdate.h>
+ #include <linux/irq.h>
++#include <linux/kprobes.h>
  
- int __weak kgdb_validate_break_address(unsigned long addr)
+ #include <asm/cacheflush.h>
+ #include <asm/byteorder.h>
+@@ -188,6 +189,16 @@ int __weak kgdb_validate_break_address(unsigned long addr)
  {
-@@ -321,6 +322,7 @@ static void kgdb_flush_swbreak_addr(unsigned long addr)
- 	/* Force flush instruction cache if it was outside the mm */
- 	flush_icache_range(addr, addr + BREAK_INSTR_SIZE);
- }
-+NOKPROBE_SYMBOL(kgdb_flush_swbreak_addr);
+ 	struct kgdb_bkpt tmp;
+ 	int err;
++
++	/*
++	 * Disallow breakpoints that are marked as unsuitable for kprobing.
++	 * This check is a little over-zealous because it does include
++	 * code that kgdb is entirely capable of debugging but in exchange
++	 * we can avoid recursive trapping (and all the problems that brings).
++	 */
++	if (within_kprobe_blacklist(addr))
++		return -EINVAL;
++
+ 	/* Validate setting the breakpoint and then removing it.  If the
+ 	 * remove fails, the kernel needs to emit a bad message because we
+ 	 * are deep trouble not being able to put things back the way we
+diff --git a/kernel/debug/kdb/kdb_bp.c b/kernel/debug/kdb/kdb_bp.c
+index d7ebb2c79cb8..ec4940146612 100644
+--- a/kernel/debug/kdb/kdb_bp.c
++++ b/kernel/debug/kdb/kdb_bp.c
+@@ -306,6 +306,15 @@ static int kdb_bp(int argc, const char **argv)
+ 	if (!template.bp_addr)
+ 		return KDB_BADINT;
  
- /*
-  * SW breakpoint management:
-@@ -411,6 +413,7 @@ int dbg_deactivate_sw_breakpoints(void)
- 	}
- 	return ret;
- }
-+NOKPROBE_SYMBOL(dbg_deactivate_sw_breakpoints);
- 
- int dbg_remove_sw_break(unsigned long addr)
- {
-@@ -567,6 +570,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
- 
- 	return 1;
- }
-+NOKPROBE_SYMBOL(kgdb_reenter_check);
- 
- static void dbg_touch_watchdogs(void)
- {
-@@ -801,6 +805,7 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 
- 	return kgdb_info[cpu].ret_state;
- }
-+NOKPROBE_SYMBOL(kgdb_cpu_enter);
- 
- /*
-  * kgdb_handle_exception() - main entry point from a kernel exception
-@@ -845,6 +850,7 @@ kgdb_handle_exception(int evector, int signo, int ecode, struct pt_regs *regs)
- 		arch_kgdb_ops.enable_nmi(1);
- 	return ret;
- }
-+NOKPROBE_SYMBOL(kgdb_handle_exception);
- 
- /*
-  * GDB places a breakpoint at this function to know dynamically loaded objects.
-@@ -879,6 +885,7 @@ int kgdb_nmicallback(int cpu, void *regs)
- #endif
- 	return 1;
- }
-+NOKPROBE_SYMBOL(kgdb_nmicallback);
- 
- int kgdb_nmicallin(int cpu, int trapnr, void *regs, int err_code,
- 							atomic_t *send_ready)
-@@ -904,6 +911,7 @@ int kgdb_nmicallin(int cpu, int trapnr, void *regs, int err_code,
- #endif
- 	return 1;
- }
-+NOKPROBE_SYMBOL(kgdb_nmicallin);
- 
- static void kgdb_console_write(struct console *co, const char *s,
-    unsigned count)
-@@ -1204,7 +1212,6 @@ noinline void kgdb_breakpoint(void)
- 	atomic_dec(&kgdb_setting_breakpoint);
- }
- EXPORT_SYMBOL_GPL(kgdb_breakpoint);
--NOKPROBE_SYMBOL(kgdb_breakpoint);
- 
- static int __init opt_kgdb_wait(char *str)
- {
++	/*
++	 * This check is redundant (since the breakpoint machinery should
++	 * be doing the same check during kdb_bp_install) but gives the
++	 * user immediate feedback.
++	 */
++	diag = kgdb_validate_break_address(template.bp_addr);
++	if (diag)
++		return diag;
++
+ 	/*
+ 	 * Find an empty bp structure to allocate
+ 	 */
 -- 
 2.25.4
 
