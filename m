@@ -2,130 +2,209 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED54CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 485FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFD4120810
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20246206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jVF836jp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgFESqe (ORCPT
+        id S1728215AbgFESqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:46:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62166 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728129AbgFESqb (ORCPT
+        Fri, 5 Jun 2020 14:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbgFESqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:46:31 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055IWlAX122783;
-        Fri, 5 Jun 2020 14:46:29 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31fjmfj308-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 14:46:28 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055IjoFO022049;
-        Fri, 5 Jun 2020 18:46:25 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 31f2q411bj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 18:46:25 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055Ij8xN62390710
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jun 2020 18:45:08 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E1E442041;
-        Fri,  5 Jun 2020 18:46:23 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F1EE4204C;
-        Fri,  5 Jun 2020 18:46:22 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.181.45])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jun 2020 18:46:22 +0000 (GMT)
-Message-ID: <1591382782.5816.36.camel@linux.ibm.com>
-Subject: Re: [PATCH] IMA: Add log statements for failure conditions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     tusharsu@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>
-Date:   Fri, 05 Jun 2020 14:46:22 -0400
-In-Reply-To: <20200604163243.2575-1-nramas@linux.microsoft.com>
-References: <20200604163243.2575-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-05_05:2020-06-04,2020-06-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=2
- cotscore=-2147483648 priorityscore=1501 spamscore=0 mlxlogscore=999
- phishscore=0 clxscore=1011 malwarescore=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050137
+        Fri, 5 Jun 2020 14:46:40 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3E8C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 11:46:39 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q24so3215331pjd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 11:46:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9Da0IbFTrNfj9bJaxBOpwux7VHsiRSXba/ar+wuI/Gg=;
+        b=jVF836jpngEgOt8ljxat1BJiqjwfDFPTZi7flYc19znEdTtBiJY2eDmgaMXonEp3C+
+         iWjBg2OuU07b6zg0WeVRxc5RnyYkAhaGEWnN8MtUXutRFmKURQdumN+fTjo3nl7eUcx/
+         GoTrOUw5R2c69SKrEU01/XQVZdHNeb6jdGtQ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9Da0IbFTrNfj9bJaxBOpwux7VHsiRSXba/ar+wuI/Gg=;
+        b=bMV1nr5VogB5VmskA2YWhHqqkDEh9nWZVM8cp2eX9tV7o+BzBKh4q3hvvH9eNeUYOl
+         v7U/c3TBuU0th6hn5zgdmkNeTYEHAhXcYCHz6CbPBg9Yyuzacox9ysH7/4K6rlcWl6RV
+         4jSg0EyUp83Z2q3NAjADX4dOjN3TZ6WrohisYRciX5eja3sST2lh/SmhHv36mH2u58UU
+         k6cp7SWJfxNWB1vYIlK5Q4oBaaUO4wE+twN2oeDG1rGIsS5mgo5sWAFo/czvm6162DEq
+         l3uijNb+J7cIGYyldB5Ya1nQUkbikBWIk1fSoEVntJ2lvpAkp+5G55a6I/bHPmgLMH4Y
+         iZ+w==
+X-Gm-Message-State: AOAM530qKblVimCVgpFEQ4chmeOfNh0l7y94u09o4FHTGyWD4rjJBEqB
+        5asrynhkVYbxqQCzN4TaBC1ORg==
+X-Google-Smtp-Source: ABdhPJya74OMyihjnTjGxzZFaoi1KSfjgwyxOOnrXbzf31ztL16rMNupMZQ5aig3yL4AWuICkr/eRg==
+X-Received: by 2002:a17:902:b582:: with SMTP id a2mr7488097pls.224.1591382798721;
+        Fri, 05 Jun 2020 11:46:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m12sm8493256pjs.41.2020.06.05.11.46.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 11:46:37 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 11:46:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+Message-ID: <202006051053.A61A42374C@keescook>
+References: <202006041054.874AA564@keescook>
+ <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
+ <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
+ <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+ <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+ <202006050828.F85A75D13@keescook>
+ <92d994be-e4f5-b186-4ad7-21828de44967@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92d994be-e4f5-b186-4ad7-21828de44967@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing Paul Moore]
-
-Hi Lakshmi,
-
-On Thu, 2020-06-04 at 09:32 -0700, Lakshmi Ramasubramanian wrote:
-> The final log statement in process_buffer_measurement() for failure
-> condition is at debug level. This does not log the message unless
-> the system log level is raised which would significantly increase
-> the messages in the system log. Change this log message to error level,
-> and add eventname and ima_hooks enum to the message for better triaging
-> failures in the function.
+On Fri, Jun 05, 2020 at 06:55:27PM +0200, Vlastimil Babka wrote:
 > 
-> ima_alloc_key_entry() does not log a message for failure condition.
-> Add an error message for failure condition in this function.
+> On 6/5/20 5:44 PM, Kees Cook wrote:
+> > On Fri, Jun 05, 2020 at 04:44:51PM +0200, Vegard Nossum wrote:
+> >> On 2020-06-05 16:08, Vlastimil Babka wrote:
+> >> > On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
+> >> > > On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+> >> > > > 
+> >> > > > On 2020-06-05 11:36, Vegard Nossum wrote:
+> >> > > > > 
+> >> > > > > On 2020-06-05 11:11, Vlastimil Babka wrote:
+> >> > > > > > So, with Kees' patch reverted, booting with slub_debug=F (or even more
+> >> > > > > > specific slub_debug=F,ftrace_event_field) also hits this bug below. I
+> >> > > > > > wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
+> >> > > > > > further in history. So it's not new at all, and likely very specific to
+> >> > > > > > your config+QEMU? (and related to the ACPI error messages that precede
+> >> > > > > > it?).
+> >> > [...]
+> >> > [    0.140408] ------------[ cut here ]------------
+> >> > [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+> >> > [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+> > 
+> > Ah yes! Good. I had improved this check recently too, and I was worried
+> > the freelist pointer patch was somehow blocking it, but I see now that
+> > the failing config didn't have CONFIG_SLAB_FREELIST_HARDENED=y. Once
+> > SLAB_CONSISTENCY_CHECKS was enabled ("slub_debug=F"), it started
+> > tripping. Whew.
+> > 
+> > I wonder if that entire test block should just be removed from
+> > cache_from_obj():
+> > 
+> >         if (!memcg_kmem_enabled() &&
+> >             !IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+> >             !unlikely(s->flags & SLAB_CONSISTENCY_CHECKS))
+> >                 return s;
+> > 
+> > and make this test unconditional? It's mostly only called during free(),
+> > and shouldn't be too expensive to be made unconditional. Hmm.
 > 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> Hmm I have a different idea. The whole cache_from_obj() was added because of
+> kmemcg (commit b9ce5ef49f00d) where per-memcg cache can be different from the
+> root one. And I just realized this usecase can go away with Roman's series [1].
+> But cache_from_obj() also kept the original SLUB consistency check case, and you
+> added the freelist hardening case. If kmemcg use case went away it would be nice
+> to avoid the virt_to_cache() and check completely again, unless in debugging or
+> hardened kernel.
 
-These messages should probably be turned into audit messages.  Look at
-integerity_audit_msg().
+Is it that expensive? (I'm fine with it staying behind debug/hardening,
+but if we can make it on by default, that'd be safer.)
 
-Mimi
+> Furthermore, the original SLUB debugging case was an unconditional pr_err() plus
+> WARN_ON_ONCE(1), which was kept by commit b9ce5ef49f00d.  With freelist
+> hardening this all changed to WARN_ONCE. So the second and later cases are not
+> reported at all for hardening and also not for explicitly enabled debugging like
+> in this case, which is IMHO not ideal.
 
-> ---
->  security/integrity/ima/ima_main.c       | 3 ++-
->  security/integrity/ima/ima_queue_keys.c | 2 ++
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 9d0abedeae77..3b371f31597b 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -756,7 +756,8 @@ void process_buffer_measurement(const void *buf, int size,
+Oh, I have no problem with WARN vs WARN_ONCE -- there's no reason to
+split this. And I'd love the hardening side to gain the tracking call
+too, if it's available.
+
+I had just used WARN_ONCE() since sometimes it can be very noisy to keep
+warning for some condition that might not be correctable.
+
+> So I propose the following - the freelist hardening case keeps the WARN_ONCE,
+> but also a one-line pr_err() for each case so they are not silent. The SLUB
+> debugging case is always a full warning, and printing the tracking info if
+> enabled and available. Pure kmemcg case does virt_to_cache() for now (until
+> hopefully removed by Roman's series) but no checking at all. Would that work for
+> everyone?
+> [...]
+> @@ -520,9 +528,18 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+>  		return s;
 >  
->  out:
->  	if (ret < 0)
-> -		pr_devel("%s: failed, result: %d\n", __func__, ret);
-> +		pr_err("%s failed. eventname: %s, func: %d, result: %d\n",
-> +		       __func__, eventname, func, ret);
->  
->  	return;
->  }
-> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-> index cb3e3f501593..e51d0eb08d8a 100644
-> --- a/security/integrity/ima/ima_queue_keys.c
-> +++ b/security/integrity/ima/ima_queue_keys.c
-> @@ -88,6 +88,8 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
->  
->  out:
->  	if (rc) {
-> +		pr_err("%s failed. keyring: %s, result: %d\n",
-> +		       __func__, keyring->description, rc);
->  		ima_free_key_entry(entry);
->  		entry = NULL;
->  	}
+>  	cachep = virt_to_cache(x);
+> -	WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
+> -		  "%s: Wrong slab cache. %s but object is from %s\n",
+> -		  __func__, s->name, cachep->name);
+> +	if (unlikely(s->flags & SLAB_CONSISTENCY_CHECKS)) {
+> +		if (WARN(cachep && !slab_equal_or_root(cachep, s),
+> +			  "%s: Wrong slab cache. %s but object is from %s\n",
+> +			  __func__, s->name, cachep->name))
+> +			slab_print_tracking(cachep, x);
+> +	} else if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED)) {
+> +		if (unlikely(cachep && !slab_equal_or_root(cachep, s))) {
+> +			pr_err("%s: Wrong slab cache. %s but object is from %s\n",
+> +				  __func__, s->name, cachep->name);
+> +			WARN_ON_ONCE(1);
+> +		}
+> +	}
 
+How about just this (in addition to your slab_print_tracking() refactor):
+
+diff --git a/mm/slab.h b/mm/slab.h
+index 207c83ef6e06..107b7f6db3c3 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -520,9 +520,10 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+ 		return s;
+ 
+ 	cachep = virt_to_cache(x);
+-	WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
++	if (WARN(cachep && !slab_equal_or_root(cachep, s),
+ 		  "%s: Wrong slab cache. %s but object is from %s\n",
+-		  __func__, s->name, cachep->name);
++		  __func__, s->name, cachep->name))
++		slab_print_tracking(cachep, x);
+ 	return cachep;
+ }
+ 
+
+-- 
+Kees Cook
