@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63038C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F622086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322E5208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366621;
-	bh=5ytxPpxU0m3lHoVVGX4RTX2V48UhxcGD1rEGh/T19/c=;
+	s=default; t=1591366625;
+	bh=04t9itlU1J/2xv4vUewI0M8oZPMJaRDzx3JulnAkUFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jVu3MPpMMNxWMoQn/EdRQRcPcp98HkOu5qZ7rwvLt1X20mbPoCJibhrlQyf8XReBO
-	 s/PA4CNEFACew7i6RQfMI2QAPjEKTFn8zkvNNPTPg67JDV8emMW3paepQgqiNXgpj7
-	 kFVocNka8lkoHhB6jPVYJrRv71ZHqPsaqoZEAqFA=
+	b=Le0UP/AKf/oWj1OV6VB/noq/PZvM/ZEwhUtNHK2YIjjg4g50xiHgI9pUc3YeIR/hq
+	 vVVXj8BbSEGPXIWawE9tFLjOKGD958LUq+GKUkeoxgBNWtDOJFkcSlaYp95W6D9Z+f
+	 4z7rdS4fZGvdg/REodoUF5C5L893fJFYoewgpXE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgFEORA (ORCPT
+        id S1728381AbgFEORE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45982 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgFEOQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:48 -0400
+        id S1728312AbgFEOQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631CF20835;
-        Fri,  5 Jun 2020 14:16:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EECA20835;
+        Fri,  5 Jun 2020 14:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366607;
-        bh=5ytxPpxU0m3lHoVVGX4RTX2V48UhxcGD1rEGh/T19/c=;
+        s=default; t=1591366610;
+        bh=04t9itlU1J/2xv4vUewI0M8oZPMJaRDzx3JulnAkUFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z+1Zk3GAHb5VyLeSqvzIn8rFSkxF22GRvyWvmJ3bCsw7XweT7MRuF6ZaVLWEhYS9e
-         g8qCa0G94t8548Xox4rwvzrNuxzni6ei7FZwZ9ZaON6gUuf+pmiO5TSgR1qkxrPLOh
-         OTpIEllt3EpU4HhduuDlCDunrndA2Ya9fzCvOXdY=
+        b=is+SIp8swWgEo6uES4MQYy697JEDxB1+PLQXA3x6h91o0OIkcQ7GZgzL6sqksQxjE
+         tl+1JLCEZzRoPgjsB1SkON17bpH8KYfOVaePkNBaRsrMLgfUGA1eYgYRt9fCZsW2d4
+         YaDSzRy8FtmP9jZiAeR4zp0cv90jpEQ2BiHSPfI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vladimir Stempen <vladimir.stempen@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 21/43] drm/amd/display: DP training to set properly SCRAMBLING_DISABLE
-Date:   Fri,  5 Jun 2020 16:14:51 +0200
-Message-Id: <20200605140153.634806305@linuxfoundation.org>
+Subject: [PATCH 5.6 22/43] riscv: Fix print_vm_layout build error if NOMMU
+Date:   Fri,  5 Jun 2020 16:14:52 +0200
+Message-Id: <20200605140153.686917117@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -63,72 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Stempen <vladimir.stempen@amd.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit b6ef55ccba7ed00fc10e3e6f619c8f886162427f ]
+[ Upstream commit 8fa3cdff05f009855a6a99a7d77a41004009bbab ]
 
-[Why]
-DP training sequence to set SCRAMBLING_DISABLE bit properly based on
-training pattern - per DP Spec.
+arch/riscv/mm/init.c: In function ‘print_vm_layout’:
+arch/riscv/mm/init.c:68:37: error: ‘FIXADDR_START’ undeclared (first use in this function);
+arch/riscv/mm/init.c:69:20: error: ‘FIXADDR_TOP’ undeclared
+arch/riscv/mm/init.c:70:37: error: ‘PCI_IO_START’ undeclared
+arch/riscv/mm/init.c:71:20: error: ‘PCI_IO_END’ undeclared
+arch/riscv/mm/init.c:72:38: error: ‘VMEMMAP_START’ undeclared
+arch/riscv/mm/init.c:73:20: error: ‘VMEMMAP_END’ undeclared (first use in this function);
 
-[How]
-Update dpcd_pattern.v1_4.SCRAMBLING_DISABLE with 1 for TPS1, TPS2, TPS3,
-but not for TPS4.
-
-Signed-off-by: Vladimir Stempen <vladimir.stempen@amd.com>
-Reviewed-by: Wenjing Liu <Wenjing.Liu@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/core/dc_link_dp.c  | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/riscv/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 1b6c75a4dd60..fbcd979438e2 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -220,6 +220,30 @@ static enum dpcd_training_patterns
- 	return dpcd_tr_pattern;
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 157924baa191..1dc26384a6c4 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -46,7 +46,7 @@ static void setup_zero_page(void)
+ 	memset((void *)empty_zero_page, 0, PAGE_SIZE);
  }
  
-+static uint8_t dc_dp_initialize_scrambling_data_symbols(
-+	struct dc_link *link,
-+	enum dc_dp_training_pattern pattern)
-+{
-+	uint8_t disable_scrabled_data_symbols = 0;
-+
-+	switch (pattern) {
-+	case DP_TRAINING_PATTERN_SEQUENCE_1:
-+	case DP_TRAINING_PATTERN_SEQUENCE_2:
-+	case DP_TRAINING_PATTERN_SEQUENCE_3:
-+		disable_scrabled_data_symbols = 1;
-+		break;
-+	case DP_TRAINING_PATTERN_SEQUENCE_4:
-+		disable_scrabled_data_symbols = 0;
-+		break;
-+	default:
-+		ASSERT(0);
-+		DC_LOG_HW_LINK_TRAINING("%s: Invalid HW Training pattern: %d\n",
-+			__func__, pattern);
-+		break;
-+	}
-+	return disable_scrabled_data_symbols;
-+}
-+
- static inline bool is_repeater(struct dc_link *link, uint32_t offset)
+-#ifdef CONFIG_DEBUG_VM
++#if defined(CONFIG_MMU) && defined(CONFIG_DEBUG_VM)
+ static inline void print_mlk(char *name, unsigned long b, unsigned long t)
  {
- 	return (!link->is_lttpr_mode_transparent && offset != 0);
-@@ -252,6 +276,9 @@ static void dpcd_set_lt_pattern_and_lane_settings(
- 	dpcd_pattern.v1_4.TRAINING_PATTERN_SET =
- 		dc_dp_training_pattern_to_dpcd_training_pattern(link, pattern);
- 
-+	dpcd_pattern.v1_4.SCRAMBLING_DISABLE =
-+		dc_dp_initialize_scrambling_data_symbols(link, pattern);
-+
- 	dpcd_lt_buffer[DP_TRAINING_PATTERN_SET - DP_TRAINING_PATTERN_SET]
- 		= dpcd_pattern.raw;
- 
+ 	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
 -- 
 2.25.1
 
