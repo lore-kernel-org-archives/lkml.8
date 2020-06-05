@@ -2,97 +2,111 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB85C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A66BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5E2D206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591369268;
-	bh=atSo0Qb+rMrsZv5QANKFcbcUcwoez30MfjPtT8ppNS8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EbOsIoCcz/CKAeTpMxzI3Lfwb28A6EwiD97fSFH4csY27zfT9Eis92Eg6YLRErs1C
-	 QG8TjceV7IdeFdxkeaXxhXeM9cJYwrK7N9NPNMnSNAWbZIQ5ONG4IuPVtI6AZKQMti
-	 Yntp28v1NPC+XHk2MdShQ6V0cOFP+lwzTV1slVb0=
+	by mail.kernel.org (Postfix) with ESMTP id D72642065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:01:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Sxoay7F4";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="Zz/eImY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgFEPBH (ORCPT
+        id S1728151AbgFEPBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 5 Jun 2020 11:01:10 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:55500 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgFEPBH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jun 2020 11:01:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgFEPBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:01:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 6AE7ED27C6;
+        Fri,  5 Jun 2020 11:01:04 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=RQ5UuhFDdm6pYUURqgzo84j9G7A=; b=Sxoay7
+        F4gA4GZdu5Zg9uUlmAkW1Zt5FcDuXuyxgJg0J1/2YOTh+oGVFPS2XCXNhnKxruau
+        MDtfSlY0eXyRJHtGFbaGy1GRIGwT91daJ30IGzYPPomdVWXXQA2tHr5SlWDA734m
+        bZRjhWd3q6ijPU6K2wBSKxViPDDqydIEEmReM=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 61111D27C5;
+        Fri,  5 Jun 2020 11:01:04 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=kGSNSFs79QpTCdEy/syIPtk8e7qpRSOVx3t4YYHSTPo=; b=Zz/eImY/hca3rOTLiCqOYWoaV6plgEo+kdFnlRPQFzRcUQoLXjJn0FtfTD7ckQtTqowgcbv/qHCqzK+ScMEpsSblxLiajcMT9GhFudy2osyOw0c/0yOkmdHSrAU5J6sKLf0oVK0xHwQO8Q2r0bmcLvvl02K0jlrhpKiphQGd6bE=
+Received: from yoda.home (unknown [24.203.50.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F232065C;
-        Fri,  5 Jun 2020 15:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591369266;
-        bh=atSo0Qb+rMrsZv5QANKFcbcUcwoez30MfjPtT8ppNS8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iNOTh3GVfGr8Oi8u3jquG56gWGC7TwnPsXkrbsAbPb8no4OYQZMIe9uExtbQjaTy9
-         gN0gj1O7xUzlW4M5FuRDzTu1MTHRk5b2MVEdO6hxErTu4/ctKjd4fisO4gD4RRctgv
-         mk+YqE/s7yEhcLm0OsNy9zGIzVtS6bdm06fJsPTI=
-Date:   Fri, 5 Jun 2020 16:01:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com,
-        vkoul@kernel.org, will.deacon@arm.com, shawnguo@kernel.org,
-        festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v9 05/14] spi: imx: fallback to PIO if dma setup failure
-Message-ID: <20200605150103.GG5413@sirena.org.uk>
-References: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
- <1591392755-19136-6-git-send-email-yibin.gong@nxp.com>
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 263D0D27C0;
+        Fri,  5 Jun 2020 11:01:01 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 25E392DA01E9;
+        Fri,  5 Jun 2020 11:00:59 -0400 (EDT)
+Date:   Fri, 5 Jun 2020 11:00:59 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     =?ISO-8859-15?Q?Philippe_Mathieu-Daud=E9?= <f4bug@amsat.org>
+cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: clean up kernel_{read,write} & friends v2
+In-Reply-To: <d67deb88-73a8-4c57-6b37-c62190422d65@amsat.org>
+Message-ID: <nycvar.YSQ.7.77.849.2006051039350.1353413@knanqh.ubzr>
+References: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com> <20200528054043.621510-1-hch@lst.de> <22778.1590697055@warthog.procyon.org.uk> <f89f0f7f-83b4-72c6-7d08-cb6eaeccd443@schaufler-ca.com> <3aea7a1c10e94ea2964fa837ae7d8fe2@AcuMS.aculab.com>
+ <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com> <d67deb88-73a8-4c57-6b37-c62190422d65@amsat.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+sHJum3is6Tsg7/J"
-Content-Disposition: inline
-In-Reply-To: <1591392755-19136-6-git-send-email-yibin.gong@nxp.com>
-X-Cookie: Air is water with holes in it.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/mixed; boundary="8323328-1427214125-1591369259=:1353413"
+X-Pobox-Relay-ID: 5EB18F9E-A73D-11EA-B614-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---+sHJum3is6Tsg7/J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--8323328-1427214125-1591369259=:1353413
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 06, 2020 at 05:32:26AM +0800, Robin Gong wrote:
-> Fallback to PIO in case dma setup failed. For example, sdma firmware not
-> updated but ERR009165 workaroud added in kernel.
+On Fri, 5 Jun 2020, Philippe Mathieu-Daud=C3=A9 wrote:
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+> Unfortunately refreshable braille displays have that "hardware
+> limitations". 80 cells displays are very expensive.
+> Visual impairments is rarely a "choice".
+> Relaxing the 80-char limit make it harder for blind developers
+> to contribute.
 
---+sHJum3is6Tsg7/J
-Content-Type: application/pgp-signature; name="signature.asc"
+Well, not really.
 
------BEGIN PGP SIGNATURE-----
+It is true that 80-cells displays are awfully expensive. IMHO they are=20
+also unwieldy due to their size: they are hardly portable, and they=20
+require your hands to move twice as far which may sometimes impair=20
+reading efficiency. So I never liked them.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7aXi8ACgkQJNaLcl1U
-h9ACrwf/RD2Rv/jpt2YPaf64q5u9KvPJTvEmVU5U5Bntbxu4kMr9w/H6cT0QyhUg
-pfOGftQDcUXm9x+HC0Q+xC3+bPmgzzzbjGZLxMfVfgvpyV6JJ+GhTVX/LjR6Jpi+
-eyVMWffvIVKSZH8PO+nymh1/fcrOLbz3g+6D7fQJ+XNh7XmJJV0ysIpE/43KLvZs
-X4netF+zcPwX2jBYdDpP0WRi+yzBDaJSNv3rV2AJgxO0Yug7d31On8HkRYxCoMaz
-q0RJ/8s/ol2Pv0uT8GaVF7wJbDLA4XKhR53l4EeaBluFn9bh9lLYf9i3Mi53mbJQ
-2XlQLzL/GxTo2szSSv9mBII/D6nXaA==
-=LU0r
------END PGP SIGNATURE-----
+My braille display has 40 cells only. So even with a 80-cells limit I=20
+always had to pan the display to see the whole line anyway.
 
---+sHJum3is6Tsg7/J--
+My text console is set to 160x128. The trick here is to have the number=20
+of columns be a multiple of the braille display's width to avoid dead=20
+areas when panning to the right.
+
+So if you ask me, I'm not against relaxing the 80 columns limit for=20
+code. What really matters to me is that I can stay clear of any GUI.
+
+
+Nicolas
+--8323328-1427214125-1591369259=:1353413--
