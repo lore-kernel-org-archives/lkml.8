@@ -2,104 +2,118 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA160C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1ED32065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9154A2065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g6yt5mow"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RHT0AR+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgFEV0k (ORCPT
+        id S1728504AbgFEV1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgFEV0j (ORCPT
+        Fri, 5 Jun 2020 17:27:23 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:38376 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728475AbgFEV1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:26:39 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F37D5C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 14:26:38 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id n2so4182444pld.13
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 14:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VeRb96m3xb6MVLzkZ/9bi8Q4G4C90sZuPgPUM9psnlg=;
-        b=g6yt5mowRomsCxHiTj+rCKQTPIaAlRT3+6FakMUq17fUAUSWHCWdqhopSjjJkFIDA5
-         dfGjWJilOucVdz4mqVU7cY+rQEki0+UNYc/UVTAG3xfptu0L1WsBJMzErpMNcjTeoyGy
-         ZG4IzyxBW7zpLK2FoAUiqwNhUmpEqqjumjDtE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VeRb96m3xb6MVLzkZ/9bi8Q4G4C90sZuPgPUM9psnlg=;
-        b=YmnmKSswxi27sJHf42vQuwL0OHJyA9n1GnUPnMzaccE6yEezcxBXp3ercWGtrDcKXI
-         beymdZsm1j7tO8OBJiy4dbfdLFYLW037bqW/zoxoDQG6Lw+XB0/3dMYELs1X6kvSi7/m
-         HPnOq0uuCp/k22sFjvu+Yjq9PatQPpj+2riWxNc3wnKbLls+u+Hh4C0y43M95tupvG+F
-         PFM46YXIcHY+n5avshYDR1/1gO9bMk7wOM4wHHIWVSPMfGQoO+u2mmd8Eu0VbZtM87xR
-         35OvBeR6Nq15l/oSC5QxPw2WNBPGxg8HoBIEx0b8HqVyNK1A/TMSR6PFfuTqUd8auEcm
-         9UIA==
-X-Gm-Message-State: AOAM530x/0eZkcHMqaljUFBnVPoz39XrwLwr/lyK8/RTSuHIOZnhkBME
-        iuC0dNKmDGLpFe0GnEuJPVn2bw==
-X-Google-Smtp-Source: ABdhPJw0V3kMeUm0jvO13avWqD+DqRkUeahiiWaS1x3LL2XqbIN2sZ84eMR0ycj8tzYPERJRxmEJ8g==
-X-Received: by 2002:a17:90a:ac0f:: with SMTP id o15mr5167862pjq.105.1591392398559;
-        Fri, 05 Jun 2020 14:26:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o18sm528652pfu.138.2020.06.05.14.26.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 14:26:37 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 14:26:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     jmorris@namei.org, sashal@kernel.org, pmladek@suse.com,
-        ebiederm@xmission.com, anton@enomsg.org, ccross@android.com,
-        tony.luck@intel.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kexec: dump kmessage before machine_kexec
-Message-ID: <202006051426.4F06C696@keescook>
-References: <20200605194642.62278-1-pasha.tatashin@soleen.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605194642.62278-1-pasha.tatashin@soleen.com>
+        Fri, 5 Jun 2020 17:27:19 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 4446830D85B;
+        Fri,  5 Jun 2020 14:27:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 4446830D85B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1591392438;
+        bh=ghQG1exvCaXXlRvSsLKTAcuAVtnxwVxDWUkAuQvaBmQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RHT0AR+WZfx7zFfSi2yPAnNK551GiGwds36BPyt5Lr/9w5BYp7oqYmI/59J1abpCZ
+         ZN4UY3/CbmBXfub2USgWCbnE6k0j8VWkjSIc3F0cQk/34yBRGs3HWv/IZViUZ6d2U5
+         6zdjwY/xzLgIbVeVe1E3fnEUY9kl1iZCSAXZWtYc=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id C615D14008B;
+        Fri,  5 Jun 2020 14:27:16 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 02/12] ata: ahci_brcm: Fix use of BCM7216 reset controller
+Date:   Fri,  5 Jun 2020 17:26:42 -0400
+Message-Id: <20200605212706.7361-3-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200605212706.7361-1-james.quinlan@broadcom.com>
+References: <20200605212706.7361-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 03:46:42PM -0400, Pavel Tatashin wrote:
-> kmsg_dump(KMSG_DUMP_SHUTDOWN) is called before
-> machine_restart(), machine_halt(), machine_power_off(), the only one that
-> is missing is  machine_kexec().
-> 
-> The dmesg output that it contains can be used to study the shutdown
-> performance of both kernel and systemd during kexec reboot.
-> 
-> Here is example of dmesg data collected after kexec:
-> 
-> root@dplat-cp22:~# cat /sys/fs/pstore/dmesg-ramoops-0 | tail
-> ...
-> <6>[   70.914592] psci: CPU3 killed (polled 0 ms)
-> <5>[   70.915705] CPU4: shutdown
-> <6>[   70.916643] psci: CPU4 killed (polled 4 ms)
-> <5>[   70.917715] CPU5: shutdown
-> <6>[   70.918725] psci: CPU5 killed (polled 0 ms)
-> <5>[   70.919704] CPU6: shutdown
-> <6>[   70.920726] psci: CPU6 killed (polled 4 ms)
-> <5>[   70.921642] CPU7: shutdown
-> <6>[   70.922650] psci: CPU7 killed (polled 0 ms)
-> 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+A reset controller "rescal" is shared between the AHCI driver and the PCIe
+driver for the BrcmSTB 7216 chip.  The code is modified to allow this
+sharing and to deassert() properly.
 
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+
+Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
+Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller
+name")
+---
+ drivers/ata/ahci_brcm.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+index 6853dbb4131d..c4ea555573dd 100644
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *of_id;
+ 	struct device *dev = &pdev->dev;
+-	const char *reset_name = NULL;
+ 	struct brcm_ahci_priv *priv;
+ 	struct ahci_host_priv *hpriv;
+ 	struct resource *res;
+@@ -452,11 +451,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 
+ 	/* Reset is optional depending on platform and named differently */
+ 	if (priv->version == BRCM_SATA_BCM7216)
+-		reset_name = "rescal";
++		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev,
++								     "rescal");
+ 	else
+-		reset_name = "ahci";
+-
+-	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
++		priv->rcdev = devm_reset_control_get_optional(&pdev->dev,
++							      "ahci");
+ 	if (IS_ERR(priv->rcdev))
+ 		return PTR_ERR(priv->rcdev);
+ 
+@@ -479,10 +478,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 		break;
+ 	}
+ 
+-	if (priv->version == BRCM_SATA_BCM7216)
+-		ret = reset_control_reset(priv->rcdev);
+-	else
+-		ret = reset_control_deassert(priv->rcdev);
++	ret = reset_control_deassert(priv->rcdev);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
-Kees Cook
+2.17.1
+
