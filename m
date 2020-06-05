@@ -2,55 +2,105 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A66C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA8982067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0759D207D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591384691;
+	bh=PQB1Qt7SuEmoEadO+t4LgnSIisVvIjh+A77iGzGr9kw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZEda78fc/SxR2MhrMGHPB7abikowABVHSLnhX29Wx2dSJ9Ur73TPHLPnpE/S6urCg
+	 zhWNGHqTEMuZEodfACIRfpbfnE/eIaO3W4b87kvwoDue3je7oIZ8HKxEIWnDlfN1q7
+	 zj02wB/ObBYFjm59Xx4onl7FwJ2XpNtD2siux6CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgFETPP (ORCPT
+        id S1727884AbgFETSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 15:15:15 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:39556 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727064AbgFETPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 15:15:14 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Fri, 5 Jun 2020 12:15:10 -0700
-Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 35C76B008B;
-        Fri,  5 Jun 2020 15:15:14 -0400 (EDT)
-From:   Ajay Kaher <akaher@vmware.com>
-To:     <fan_yang@sjtu.edu.cn>
-CC:     <dan.j.williams@intel.com>, <kirill.shutemov@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <gregkh@linuxfoundation.org>, <srivatsab@vmware.com>,
-        <srivatsa@csail.mit.edu>, <akaher@vmware.com>
-Subject: Re: [PATCH v3] mm: Fix mremap not considering huge pmd devmap
-Date:   Sat, 6 Jun 2020 00:44:36 +0530
-Message-ID: <1591384476-31924-1-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <B9824572-C3C0-4D3B-88B8-D3A34D645653@sjtu.edu.cn>
-References: <B9824572-C3C0-4D3B-88B8-D3A34D645653@sjtu.edu.cn>
+        Fri, 5 Jun 2020 15:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbgFETSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 15:18:09 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA85207D3;
+        Fri,  5 Jun 2020 19:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591384689;
+        bh=PQB1Qt7SuEmoEadO+t4LgnSIisVvIjh+A77iGzGr9kw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uQamtu/hlwYDWDSymi+RM62VDi4LcA5Ie+5PL3kUTi5xKYExl4ZBUQ65JlPB0vein
+         uyqCNxyL3cvrZ+IqgB7PsZD57jEvs+5apzy5+l6uhdLnaq3PnffiHIoStQJB03QHU7
+         SSIhoXfqgtbEh9AtJBb/ZR1HM7HdEASWRYwKEtfQ=
+Date:   Fri, 5 Jun 2020 12:18:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Bean Huo <huobean@gmail.com>
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] scsi: ufs: Add SPDX GPL-2.0 to replace GPL v2
+ boilerplate
+Message-ID: <20200605191807.GJ1373@sol.localdomain>
+References: <20200605191439.19313-1-huobean@gmail.com>
+ <20200605191439.19313-2-huobean@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: akaher@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605191439.19313-2-huobean@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Fan, this scenario works to reproduce on v4.9.
+On Fri, Jun 05, 2020 at 09:14:38PM +0200, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
+> 
+> Add SPDX GPL-2.0 to UFS driver files that specified the GPL
+> version 2 license, remove the full boilerplate text.
+> 
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
+>  drivers/scsi/ufs/ufs.h           | 27 +--------------------------
+>  drivers/scsi/ufs/ufshcd-pci.c    | 25 +------------------------
+>  drivers/scsi/ufs/ufshcd-pltfrm.c | 27 +--------------------------
+>  drivers/scsi/ufs/ufshcd.c        | 30 +-----------------------------
+>  drivers/scsi/ufs/ufshcd.h        | 27 +--------------------------
+>  drivers/scsi/ufs/ufshci.h        | 27 +--------------------------
+>  6 files changed, 6 insertions(+), 157 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+> index c70845d41449..4df9150769b7 100644
+> --- a/drivers/scsi/ufs/ufs.h
+> +++ b/drivers/scsi/ufs/ufs.h
+> @@ -1,36 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Universal Flash Storage Host controller driver
+> - *
+> - * This code is based on drivers/scsi/ufs/ufs.h
+>   * Copyright (C) 2011-2013 Samsung India Software Operations
+>   *
+>   * Authors:
+>   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+>   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - * See the COPYING file in the top-level directory or visit
+> - * <http://www.gnu.org/licenses/gpl-2.0.html>
 
-And following fix works for v4.9:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-4.9.y&id=44cb51d5b4a736446b728bbde8407844d71843ef
+This actually says GPL v2 or later.  Not GPL v2 only.
 
--Ajay 
-
+- Eric
