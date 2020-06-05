@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE18C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5035C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7FE2075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B002020820
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366562;
-	bh=UQfNMTHAc2f9gnIpSWOEPRseL9YyyO0D2SIx74i2LB4=;
+	s=default; t=1591366566;
+	bh=Pkcwu9AqmId6jd12wS0uGd4NuEHW69FIQ87ZrnjzgDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=foRMlAohJf3+ofrD6iDVAyq47lFW9OVkcytCMRpKJ1IPy6aDIKQvzM+R2zqrGZts8
-	 AulfOydIQm1BjUCD4qAzQ5H6Sk5H+K34N3qPBVv7qT4NpOHw/rxTCb4TGSo1cxqenA
-	 81RUOavkWFEhisgKlslRvZDufEh/Z4JdWb0m8chQ=
+	b=jyxkTmrkVtQn8vMf9UVX1RGX/gHi3gNjYY3Fa+dAXOtv68mSJ1pMye+4wgwQTc87Y
+	 nAs7POV3C4Zcea5ZafdY48FWumgTSKSs7YpicUactVWavwGA0aHyi5bkl5X4xUwFJU
+	 ulswY+QFSnal4ZC2I2u9dYqJwl3fx6zNcJl3DCus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFEOQB (ORCPT
+        id S1728139AbgFEOQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:16:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44794 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgFEOP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:15:58 -0400
+        id S1728103AbgFEOQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90619206A2;
-        Fri,  5 Jun 2020 14:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17E4A2063A;
+        Fri,  5 Jun 2020 14:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366558;
-        bh=UQfNMTHAc2f9gnIpSWOEPRseL9YyyO0D2SIx74i2LB4=;
+        s=default; t=1591366562;
+        bh=Pkcwu9AqmId6jd12wS0uGd4NuEHW69FIQ87ZrnjzgDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7G4AkdIdwvzueEBxJsTWBwAsGKukLl49iSVe0NFtEtG+fbBTybOrHHW4V34YG6uy
-         xqGyAznXxfsD8gaef5oYQnZmtDJx8tDsTDlLDq/RTYMDaQqjbuSwLRlwCQf4fkUmNI
-         1NhH9rB5m3AYRj53oSjyOgTx/5wv7U4A1fFzTc2g=
+        b=ekEZpPyO2KpUhpJ7MpaNRLRzgr0+D/xVCK1d2EE3Tyo+bQl8TGaEuV9BeDSIWgSYX
+         8Z1HMJojYx1vnTVfCn+FnDopJDpyOZL7BSkBH/E4HXxyjDM5Uv09qrCyFmeov1MLKS
+         L37jQ/JU+F0u8a8JSZxzse15MtNWQDMEfugJSTUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 02/14] mm: Fix mremap not considering huge pmd devmap
-Date:   Fri,  5 Jun 2020 16:14:52 +0200
-Message-Id: <20200605135951.176220041@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 5.7 04/14] HID: multitouch: enable multi-input as a quirk for some devices
+Date:   Fri,  5 Jun 2020 16:14:54 +0200
+Message-Id: <20200605135951.286187746@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605135951.018731965@linuxfoundation.org>
 References: <20200605135951.018731965@linuxfoundation.org>
@@ -61,56 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fan Yang <Fan_Yang@sjtu.edu.cn>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-commit 5bfea2d9b17f1034a68147a8b03b9789af5700f9 upstream.
+commit 40d5bb87377a599d0405af765290f28aaa6abb1e upstream.
 
-The original code in mm/mremap.c checks huge pmd by:
+Two touchpad/trackstick combos are currently not behaving properly.
+They define a mouse emulation collection, as per Win8 requirements,
+but also define a separate mouse collection for the trackstick.
 
-		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
+The way the kernel currently treat the collections is that it
+merges both in one device. However, given that the first mouse
+collection already defines X,Y and left, right buttons, when
+mapping the events from the second mouse collection, hid-multitouch
+sees that these events are already mapped, and simply ignores them.
 
-However, a DAX mapped nvdimm is mapped as huge page (by default) but it
-is not transparent huge page (_PAGE_PSE | PAGE_DEVMAP).  This commit
-changes the condition to include the case.
+To be able to report events from the tracktick, add a new quirked
+class for it, and manually add the 2 devices we know about.
 
-This addresses CVE-2020-10757.
-
-Fixes: 5c7fb56e5e3f ("mm, dax: dax-pmd vs thp-pmd vs hugetlbfs-pmd")
-Cc: <stable@vger.kernel.org>
-Reported-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Signed-off-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Tested-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Tested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=207235
+Cc: stable@vger.kernel.org
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/pgtable.h |    1 +
- mm/mremap.c                    |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-multitouch.c |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -257,6 +257,7 @@ static inline int pmd_large(pmd_t pte)
- }
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+ #define MT_QUIRK_ASUS_CUSTOM_UP		BIT(17)
+ #define MT_QUIRK_WIN8_PTP_BUTTONS	BIT(18)
+ #define MT_QUIRK_SEPARATE_APP_REPORT	BIT(19)
++#define MT_QUIRK_FORCE_MULTI_INPUT	BIT(20)
  
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
- static inline int pmd_trans_huge(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -266,7 +266,7 @@ unsigned long move_page_tables(struct vm
- 		new_pmd = alloc_new_pmd(vma->vm_mm, vma, new_addr);
- 		if (!new_pmd)
- 			break;
--		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
-+		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd) || pmd_devmap(*old_pmd)) {
- 			if (extent == HPAGE_PMD_SIZE) {
- 				bool moved;
- 				/* See comment in move_ptes() */
+ #define MT_INPUTMODE_TOUCHSCREEN	0x02
+ #define MT_INPUTMODE_TOUCHPAD		0x03
+@@ -189,6 +190,7 @@ static void mt_post_parse(struct mt_devi
+ #define MT_CLS_WIN_8				0x0012
+ #define MT_CLS_EXPORT_ALL_INPUTS		0x0013
+ #define MT_CLS_WIN_8_DUAL			0x0014
++#define MT_CLS_WIN_8_FORCE_MULTI_INPUT		0x0015
+ 
+ /* vendor specific classes */
+ #define MT_CLS_3M				0x0101
+@@ -279,6 +281,15 @@ static const struct mt_class mt_classes[
+ 			MT_QUIRK_CONTACT_CNT_ACCURATE |
+ 			MT_QUIRK_WIN8_PTP_BUTTONS,
+ 		.export_all_inputs = true },
++	{ .name = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
++		.quirks = MT_QUIRK_ALWAYS_VALID |
++			MT_QUIRK_IGNORE_DUPLICATES |
++			MT_QUIRK_HOVERING |
++			MT_QUIRK_CONTACT_CNT_ACCURATE |
++			MT_QUIRK_STICKY_FINGERS |
++			MT_QUIRK_WIN8_PTP_BUTTONS |
++			MT_QUIRK_FORCE_MULTI_INPUT,
++		.export_all_inputs = true },
+ 
+ 	/*
+ 	 * vendor specific classes
+@@ -1714,6 +1725,11 @@ static int mt_probe(struct hid_device *h
+ 	if (id->group != HID_GROUP_MULTITOUCH_WIN_8)
+ 		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
+ 
++	if (mtclass->quirks & MT_QUIRK_FORCE_MULTI_INPUT) {
++		hdev->quirks &= ~HID_QUIRK_INPUT_PER_APP;
++		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
++	}
++
+ 	timer_setup(&td->release_timer, mt_expired_timeout, 0);
+ 
+ 	ret = hid_parse(hdev);
+@@ -1926,6 +1942,11 @@ static const struct hid_device_id mt_dev
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
+ 
++	/* Elan devices */
++	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_ELAN, 0x313a) },
++
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
+@@ -2056,6 +2077,11 @@ static const struct hid_device_id mt_dev
+ 		MT_USB_DEVICE(USB_VENDOR_ID_STANTUM_STM,
+ 			USB_DEVICE_ID_MTP_STM)},
+ 
++	/* Synaptics devices */
++	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
++		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
++			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
++
+ 	/* TopSeed panels */
+ 	{ .driver_data = MT_CLS_TOPSEED,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_TOPSEED2,
 
 
