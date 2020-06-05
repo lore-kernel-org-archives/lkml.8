@@ -8,67 +8,68 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD21C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A31C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 255112077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9876B2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUIJaYZY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LC9xGG5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgFEQ0q (ORCPT
+        id S1728387AbgFEQ05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40840 "EHLO
+        Fri, 5 Jun 2020 12:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbgFEQ0e (ORCPT
+        with ESMTP id S1728300AbgFEQ0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:26:34 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66C06C08C5C5;
-        Fri,  5 Jun 2020 09:26:34 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r10so5335895pgv.8;
-        Fri, 05 Jun 2020 09:26:34 -0700 (PDT)
+        Fri, 5 Jun 2020 12:26:44 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D001C08C5C2;
+        Fri,  5 Jun 2020 09:26:43 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id v24so3825970plo.6;
+        Fri, 05 Jun 2020 09:26:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fueseL5wyjqHmp/EINkLjCle5ZJWz4SZll2cBBMMoIo=;
-        b=nUIJaYZYkrn+NijNw3IyxCjOJU7xMm84eMHKy5wvWH2Pr2v5seb962AJ3NwN9SWUSk
-         3pbjkA7z7X5fda0JvTeq08VTwcdnLkJ9WOn67TT2dGvh4ZYiV1OhKuTOzAy5tm8yZqno
-         hDabC4RfeKq3Wsj+qWUrFfl7k0pXzSJTK0ry+bECrK/nqHoOF4nM8vGlLbbIkfZrwYkO
-         EIGLIamOTOIVerTnozi2L5k9f7308f2j2sJbHJ0kMnF4ZhnTAtJgFvL78dk3rWpvGWHD
-         eWUuu0qWvDCYS08dZ/Up3OygMkLZITyIDr06L4NWlJrgurA/oYFtq8qMZXvktBnyK1oh
-         fbbQ==
+        bh=s6oLxuZtz92MCMs+Rc0jAsvvKy4fsrw+h3fzX94hKHI=;
+        b=LC9xGG5Mpl7l9RocA+JmkF3GXVhNsllocgKi08w3I/rV5Pvheph3idCf9rJfkJF8gy
+         c7m05ERn1FldKvEFXHMxvLJl8BT/nIyf+QIMw6iNMcdl55IbZR8msVD2gZOxoIIiTl5c
+         +TNOJa8uLfw6SVEhHf23IWYJQZ7PNisgeQFKyQ6AHCEdkqddGzlViSu1PJeadPTxc1SB
+         k7bUzlJLicjyQlwYVVI88Sz+NXj2YxLFUY+5fxEyCjOjRUJJ5k44nhdLmifKv51p0FZH
+         pROVUBhPNRg5GClRhqXYL0L29RXYn761O+su/eqXL40VciugEtlWAz+quQv7sSI10Rtq
+         ItMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fueseL5wyjqHmp/EINkLjCle5ZJWz4SZll2cBBMMoIo=;
-        b=KfDR5TW7I3g1M8PGV4ii75RS6jCq9rxZBA8Eq9djwoWGRnC0rqumNCaqBtRBNoTMii
-         9ncy98gE9jmP4BaN2p/1aV6SZO1YvVRoVmyRdzEscFzCqiwNulis+nEqNsdEm3NFmbJL
-         wtdGt93ATMkuVfiLoRNWWhJI0pFpQA2CVkiKQJdcCIwMjdOMaQ7aU4Xaf2fm5gUrKETx
-         OavjVsr22u9jf3yZJfIpOKzCOYZNLedudqetlL3SjqUpxdReA7SgvA4svhfoTPrrHXLJ
-         hN/JicyPBlyKkjRenjjch19nd4pEQboBbmWWJTFIl7jpN4wVWdwfopAUu3/ZGpjJiquD
-         EQLg==
-X-Gm-Message-State: AOAM531swIbXvToPjIRCJlYYQaIGool41TeFD2Z3ZR4RfQb7w8gWMiPO
-        7Ofs0wKboYMEDPBGvn4lj4Rhf+NS
-X-Google-Smtp-Source: ABdhPJzDKmT6IpB88utVE+CnCj6Mz/rXrSRYIZWebzvHb8KFaCquBtHj9sUHxWPIoy8dlgHvpiU+iQ==
-X-Received: by 2002:a62:5346:: with SMTP id h67mr9899045pfb.284.1591374393527;
-        Fri, 05 Jun 2020 09:26:33 -0700 (PDT)
+        bh=s6oLxuZtz92MCMs+Rc0jAsvvKy4fsrw+h3fzX94hKHI=;
+        b=PQ9f9Ade/gUzyZy5S9Vo6KGNqSRI3aLOEzYtuUDr54I0cG8JkE9QgZl57A01/tDrYn
+         +HLGOlEpaGzJ2uS/jh474dYOf2ipJpqRGjB8ogX+Kt7tA6QZfI1H8me3c+ekbqQHFENL
+         CYWfAct77rlVM4t3QnpTJ/TpyHdo/Q502xotZ5k+1jrRvF2UeuFcr+KWPqoQOvR2g9zn
+         o/vUZrPFTxEdl11j8l3GgY2FtIYcBbKWJRDdHEd5+BR3AovQupx1yH0O1WRvZyMEFOlX
+         WtjJLocZ2yyz5us39xEyAzYAmrTrC1FYz4XNIO1wCNOOgL5KpgyM9GB/2X+CDy6/OZXc
+         KKSA==
+X-Gm-Message-State: AOAM530F358/FxuRXdvSKQmnWEB5nkTF5QMGR6f4CjkV3YwdvnqRQ+nN
+        czKPO8nTnLe5sHrYQI1Pb7yoFrz+
+X-Google-Smtp-Source: ABdhPJzGvAyLDr9UoI4bW8o5yZzXk+PoTpDmgdFNhxX7kuEbHzhX2mG+MBfWxqp5UKeyXBsErABbZw==
+X-Received: by 2002:a17:90a:d487:: with SMTP id s7mr3858502pju.37.1591374402616;
+        Fri, 05 Jun 2020 09:26:42 -0700 (PDT)
 Received: from localhost.localdomain ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.31
+        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 09:26:32 -0700 (PDT)
+        Fri, 05 Jun 2020 09:26:41 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 X-Google-Original-From: Florian Fainelli <florian.fainelli@broadcom.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Jaedon Shin <jaedon.shin@gmail.com>,
+Cc:     stable@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab@s-opensource.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Michael Krufky <mkrufky@linuxtv.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Shuah Khan <shuah@kernel.org>,
+        Jaedon Shin <jaedon.shin@gmail.com>,
         Colin Ian King <colin.king@canonical.com>,
         Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
         Satendra Singh Thakur <satendra.t@samsung.com>,
@@ -76,9 +77,9 @@ Cc:     stable@vger.kernel.org, Jaedon Shin <jaedon.shin@gmail.com>,
         (V4L/DVB)),
         linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
         infrastructure))
-Subject: [PATCH stable 4.9 17/21] media: dvb_frontend: Add unlocked_ioctl in dvb_frontend.c
-Date:   Fri,  5 Jun 2020 09:25:14 -0700
-Message-Id: <20200605162518.28099-18-florian.fainelli@broadcom.com>
+Subject: [PATCH stable 4.9 21/21] media: dvb_frontend: fix return error code
+Date:   Fri,  5 Jun 2020 09:25:18 -0700
+Message-Id: <20200605162518.28099-22-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
 References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
@@ -87,69 +88,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaedon Shin <jaedon.shin@gmail.com>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-commit a2282fd1fe2ebcda480426dbfaaa7c4e87e27399 upstream
+commit 330dada5957e3ca0c8811b14c45e3ac42c694651 upstream
 
-Adds unlocked ioctl function directly in dvb_frontend.c instead of using
-dvb_generic_ioctl().
+The correct error code when a function is not defined is
+-ENOTSUPP. It was typoed wrong as -EOPNOTSUPP, with,
+unfortunately, exists, but it is not used by the DVB core.
 
-Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+Thanks-to: Geert Uytterhoeven <geert@linux-m68k.org>
+Thanks-to: Arnd Bergmann <arnd@arndb.de>
+
+To make me revisit this code.
+
+Fixes: a9cb97c3e628 ("media: dvb_frontend: be sure to init dvb_frontend_handle_ioctl() return code")
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/media/dvb-core/dvb_frontend.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 6f9ee78a1870..dacc467e24af 100644
+index 740dedf03361..cd45b3894661 100644
 --- a/drivers/media/dvb-core/dvb_frontend.c
 +++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -1926,7 +1926,8 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
- 	return r;
- }
- 
--static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
-+static int dvb_frontend_do_ioctl(struct file *file, unsigned int cmd,
-+				 void *parg)
- {
- 	struct dvb_device *dvbdev = file->private_data;
+@@ -2265,7 +2265,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
  	struct dvb_frontend *fe = dvbdev->priv;
-@@ -1969,6 +1970,17 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
- 	return err;
- }
- 
-+static long dvb_frontend_ioctl(struct file *file, unsigned int cmd,
-+			       unsigned long arg)
-+{
-+	struct dvb_device *dvbdev = file->private_data;
-+
-+	if (!dvbdev)
-+		return -ENODEV;
-+
-+	return dvb_usercopy(file, cmd, arg, dvb_frontend_do_ioctl);
-+}
-+
- static int dtv_set_frontend(struct dvb_frontend *fe)
- {
  	struct dvb_frontend_private *fepriv = fe->frontend_priv;
-@@ -2638,7 +2650,7 @@ static int dvb_frontend_release(struct inode *inode, struct file *file)
+ 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+-	int i, err = -EOPNOTSUPP;
++	int i, err = -ENOTSUPP;
  
- static const struct file_operations dvb_frontend_fops = {
- 	.owner		= THIS_MODULE,
--	.unlocked_ioctl	= dvb_generic_ioctl,
-+	.unlocked_ioctl	= dvb_frontend_ioctl,
- 	.poll		= dvb_frontend_poll,
- 	.open		= dvb_frontend_open,
- 	.release	= dvb_frontend_release,
-@@ -2706,7 +2718,6 @@ int dvb_register_frontend(struct dvb_adapter* dvb,
- #if defined(CONFIG_MEDIA_CONTROLLER_DVB)
- 		.name = fe->ops.info.name,
- #endif
--		.kernel_ioctl = dvb_frontend_ioctl
- 	};
+ 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
  
- 	dev_dbg(dvb->device, "%s:\n", __func__);
 -- 
 2.17.1
 
