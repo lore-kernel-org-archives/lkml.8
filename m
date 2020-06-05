@@ -2,78 +2,79 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76469C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFE5206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497C8207D0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591392042;
+	bh=+gORxLkVIxEdqWco6HED7TCdyMYtJr7q3ukaReKzwKY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ufkx2Hc6nwtoH6Fv0Gl01tGsz/a0nL/lgj43qzVyraFTA61aztv+hLt8GxP1/tgDb
+	 ps7RxA3dhQFGrwZwc1MmEcaOXzf7icmTr0x09GNfcKwky2jxaDWiepJnwMDxz6RcKc
+	 0ATAgj00V3RA/YH65Naa1TxEBMl2q4VwiCsCgIg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgFEVTh (ORCPT
+        id S1728445AbgFEVUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:19:37 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:10401 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728253AbgFEVTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:19:34 -0400
-X-IronPort-AV: E=Sophos;i="5.73,477,1583190000"; 
-   d="scan'208";a="453259960"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 23:19:33 +0200
-Date:   Fri, 5 Jun 2020 23:19:32 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH] coccinelle: api: add kvfree script
-In-Reply-To: <43cead50-05f8-67ce-c1de-ce3acefb0dec@linux.com>
-Message-ID: <alpine.DEB.2.21.2006052318310.28300@hadrien>
-References: <20200605204237.85055-1-efremov@linux.com> <alpine.DEB.2.21.2006052249160.28300@hadrien> <43cead50-05f8-67ce-c1de-ce3acefb0dec@linux.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
+        Fri, 5 Jun 2020 17:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbgFEVUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:20:40 -0400
+Received: from X1 (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8E39206DB;
+        Fri,  5 Jun 2020 21:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591392039;
+        bh=+gORxLkVIxEdqWco6HED7TCdyMYtJr7q3ukaReKzwKY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SAe8mBsBRKq4WLKnMZu0Pl1S3mSc5KqR/AfF3SnCG6FEpJjnubaRrNGmXLBMkcrNA
+         K+cmGvckrgvnU2VryDBY04S3YztNndvzVWmZ1Nqd3JKl8EJjOWRndbi/EPUiU22RgH
+         LEFGcSL4w8o6ksMTo4nnC7nbCFaRFGQs/+3XcP14=
+Date:   Fri, 5 Jun 2020 14:20:39 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
+        dave@stgolabs.net, manfred@colorfullife.com,
+        mm-commits@vger.kernel.org
+Subject: Re: + ipc-convert-ipcs_idr-to-xarray-update.patch added to -mm tree
+Message-Id: <20200605142039.b8a81c08bf5ba34fa0181545@linux-foundation.org>
+In-Reply-To: <20200605201134.GJ19604@bombadil.infradead.org>
+References: <20200420181310.c18b3c0aa4dc5b3e5ec1be10@linux-foundation.org>
+        <20200424014753.DfBuzjmzo%akpm@linux-foundation.org>
+        <20200605195848.GB5393@lca.pw>
+        <20200605201134.GJ19604@bombadil.infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 5 Jun 2020 13:11:34 -0700 Matthew Wilcox <willy@infradead.org> wrote:
 
+> On Fri, Jun 05, 2020 at 03:58:48PM -0400, Qian Cai wrote:
+> > This will trigger,
+> > 
+> > [ 8853.759549] LTP: starting semget05
+> > [ 8867.257088] BUG: sleeping function called from invalid context at mm/slab.h:567
+> > [ 8867.270259] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 22556, name: semget05
+> > [ 8867.270309] 2 locks held by semget05/22556:
+> > [ 8867.270345]  #0: 00000000512de7e0 (&ids->rwsem){++++}-{3:3}, at: ipcget+0x4e/0x230
+> > [ 8867.270426]  #1: 00000000552b9018 (&new->lock){+.+.}-{2:2}, at: ipc_addid+0xf4/0xf50
+> 
+> Did the fix for this not make it into -next?
 
-On Sat, 6 Jun 2020, Denis Efremov wrote:
+I don't think I've seen this fix before.  And I'm unclear on how it
+pertains to the current patch(es) in -mm.  And it has no changelog!
 
-> On 6/5/20 11:51 PM, Julia Lawall wrote:
-> > Is there a strong reason for putting the choice rule first?  It may make
-> > things somewhat slower than necessary, if it matches in many places,
-> > because the opportunity rule will have to detect that it doesn't care
-> > about all of those places.
->
-> No, I didn't know that order of rules matters. I just checked it, my PC
-> shows no difference in exec time if I swap these rules.
-
-OK, probably choice doesn't match in very many places, so there is not
-much impact.
-
-julia
-
->
-> "choice" doesn't check the size. "opportunity" is more strict.
-> The motivation for adding 2 rules is that we could recommend to use
-> kvmalloc* only when there is a size condition. At the same time, we
-> should skip all if (...) {kmalloc()} else {vmalloc()},
-> res = kmalloc() if (!res) {vmalloc()} cases as false positives.
->
-> It seems that it's not possible to use subexpression rule
-> "expression size <= choice.E" in this case.
->
-> > Also, there is no need to exceed 80 characters here.  You can put a
-> > newline in the middle of a \( ... \)
->
-> Ok, I will fix it in v2 after all comments/suggestions.
->
-> Thanks,
-> Denis
->
+Perhaps it would be best to do a formal send of the latest version?
