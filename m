@@ -2,387 +2,184 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB90C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B840D20659
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA04E20814
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dvkTMPPA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tYaQ3fCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgFEL7R (ORCPT
+        id S1726557AbgFEMBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:59:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53335 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726303AbgFEL7P (ORCPT
+        Fri, 5 Jun 2020 08:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbgFEMBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:59:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591358353;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=mxwh1xC29UBQwrK34p7n7N+1k3tNOzXKm1hVG0/SjCw=;
-        b=dvkTMPPACKD75vdK0kkksmDyvbWWoxhhCrm80BOzw173h+R4SaC8pmX7OlaIbhuWy/LQQM
-        zoXVSGRXXQ8Mjv6BWl3Jv5PXIDW5/uyHbuxPnbZtresheMAs9WoYOglU/tvZy7yB75v2tv
-        NuAt3r8PG0vRoXSRvpKkvqhRha651uo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-kdWgtLIDPkmc42XH3ejItg-1; Fri, 05 Jun 2020 07:59:11 -0400
-X-MC-Unique: kdWgtLIDPkmc42XH3ejItg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C5C88018A7;
-        Fri,  5 Jun 2020 11:59:10 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.93])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B45915D9DA;
-        Fri,  5 Jun 2020 11:59:07 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] KVM: nVMX: Properly handle kvm_read/write_guest_virt*() result
-Date:   Fri,  5 Jun 2020 13:59:05 +0200
-Message-Id: <20200605115906.532682-1-vkuznets@redhat.com>
+        Fri, 5 Jun 2020 08:01:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8BCC08C5C2;
+        Fri,  5 Jun 2020 05:01:00 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s88so2644973pjb.5;
+        Fri, 05 Jun 2020 05:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Xf0VKrmkHeAJFwaoucbXABKRmsaGZeECCqgdfD3J2s=;
+        b=tYaQ3fCRjkKhBvGrmDqpWE015RUF+OhT+4CSQYciswYQW+XoCZjEZxlXAum1/YUKrd
+         K9PHXdqnhMWsxWT7E2CSDhXqBR3tg/yhSKxI94MXIuQoY/fILsKhYTaQzpiSWoM/6MSr
+         GzXXsAB8LdUIVivCc1r7cqFsi8/FhhiHSrjA9+0Q1lWgc/pI6EFFaITTwv13WiEYNPZl
+         HyFPB3z+YmFLc3j0k1IE+6d1yM+8jDF8Ws7GcuIYPQiVhSYjeYdhnODyb+XxiuSYGNYp
+         QkvwXV3krpkE6XWNsMUyXCTpXXMKBYxgMxz7osqQKgnZV3nU1AQzKKS6AAHq4GDexQVL
+         lf9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Xf0VKrmkHeAJFwaoucbXABKRmsaGZeECCqgdfD3J2s=;
+        b=Veyf5mWJOxPRaAaR9oCG78gY1MUZd+kwE2BLM3DNofTroO8PTOJetD99L/zxPzgBjd
+         UG41pRI6X9h+xWxkvIgm70WggVe7Av2tuktKiCI7gp3ISvHKlujvvr/5IQ73X9LaNDPg
+         29uUbSKySLGruCq8JQOhCJiJ9yj+QXeF9zOaEIXUIzsdOv6rAqzScC2Qln/aueb428px
+         WIdRRurxBaUsi0pT7T5N70cER6STGqpQ/5mIy/aiRroZPZt6K84noi4IQv8O04skZXCR
+         EzQCe1SVzGknrCdE6KljBOWyy8QPn6S3nfZzIbZy09KqjuREpliNHNt4cWPZ771dDwJN
+         JlCA==
+X-Gm-Message-State: AOAM530qYNBPKNVtUfsF5I3eX5MclXHBKfletVelx0DwAsHtJCaap9TC
+        Ea2h/LxfpL3V6gs2YT2nkQ8BFxYZDTa8ElJB/dI=
+X-Google-Smtp-Source: ABdhPJwACy0B38AavuEf6WMnT76KysnsvN8UpWw4wnOgQGpEezjfzKwDqPqc7U2vaZTzr539FT2ktvxUQOnmdxD8EuY=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr2734229pjq.228.1591358460238;
+ Fri, 05 Jun 2020 05:01:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-7-michael@walle.cc>
+In-Reply-To: <20200604211039.12689-7-michael@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Jun 2020 15:00:48 +0300
+Message-ID: <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Syzbot reports the following issue:
+On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
 
-WARNING: CPU: 0 PID: 6819 at arch/x86/kvm/x86.c:618
- kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
+> Add support for the GPIO controller of the sl28 board management
+> controller. This driver is part of a multi-function device.
+>
+> A controller has 8 lines. There are three different flavors:
+> full-featured GPIO with interrupt support, input-only and output-only.
+
 ...
-Call Trace:
+
+> +#include <linux/of_device.h>
+
+I think also not needed.
+But wait...
+
+> +       return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev), regmap,
+
+It seems regmap needs to be converted to use fwnode.
+
+> +                                          irq, IRQF_SHARED | IRQF_ONESHOT, 0,
+> +                                          irq_chip, &gpio->irq_data);
+
 ...
-RIP: 0010:kvm_inject_emulated_page_fault+0x210/0x290 arch/x86/kvm/x86.c:618
+
+> +       if (!pdev->dev.parent)
+> +               return -ENODEV;
+
+Are we expecting to get shot into foot? I mean why we need this check?
+
+> +       dev_id = platform_get_device_id(pdev);
+> +       if (dev_id)
+> +               type = dev_id->driver_data;
+
+Oh, no. In new code we don't need this. We have facilities to provide
+platform data in a form of fwnode.
+
+> +       else
+> +               type = (uintptr_t)of_device_get_match_data(&pdev->dev);
+
+So does this. device_get_match_data().
+
+> +       if (!type)
+> +               return -ENODEV;
+
 ...
- nested_vmx_get_vmptr+0x1f9/0x2a0 arch/x86/kvm/vmx/nested.c:4638
- handle_vmon arch/x86/kvm/vmx/nested.c:4767 [inline]
- handle_vmon+0x168/0x3a0 arch/x86/kvm/vmx/nested.c:4728
- vmx_handle_exit+0x29c/0x1260 arch/x86/kvm/vmx/vmx.c:6067
 
-'exception' we're trying to inject with kvm_inject_emulated_page_fault()
-comes from:
+> +       if (irq_support &&
 
-  nested_vmx_get_vmptr()
-   kvm_read_guest_virt()
-     kvm_read_guest_virt_helper()
-       vcpu->arch.walk_mmu->gva_to_gpa()
+Why do you need this flag? Can't simple IRQ number be sufficient?
 
-but it is only set when GVA to GPA conversion fails. In case it doesn't but
-we still fail kvm_vcpu_read_guest_page(), X86EMUL_IO_NEEDED is returned and
-nested_vmx_get_vmptr() calls kvm_inject_emulated_page_fault() with zeroed
-'exception'. This happen when the argument is MMIO.
+> +           device_property_read_bool(&pdev->dev, "interrupt-controller")) {
+> +               irq = platform_get_irq(pdev, 0);
+> +               if (irq < 0)
+> +                       return irq;
+> +
+> +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
+> +                                            base, irq);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               config.irq_domain = regmap_irq_get_domain(gpio->irq_data);
+> +       }
 
-Paolo also noticed that nested_vmx_get_vmptr() is not the only place in
-KVM code where kvm_read/write_guest_virt*() return result is mishandled.
-All VMX instructions along with INVPCID/INVVPID/INVEPT have the same
-issue. This was already noticed before, e.g. see commit 541ab2aeb282 ("KVM:
-x86: work around leak of uninitialized stack contents") but was never fully
-fixed.
+...
 
-KVM could've handled the request correctly by going to userspace and
-performing I/O but there doesn't seem to be a good need for such requests
-in the first place.
+> +static const struct of_device_id sl28cpld_gpio_of_match[] = {
 
-Introduce vmx_handle_memory_failure() as an interim solution.
+> +       { .compatible = "kontron,sl28cpld-gpio",
+> +         .data = (void *)SL28CPLD_GPIO },
+> +       { .compatible = "kontron,sl28cpld-gpi",
+> +         .data = (void *)SL28CPLD_GPI },
+> +       { .compatible = "kontron,sl28cpld-gpo",
+> +         .data = (void *)SL28CPLD_GPO },
 
-Note, nested_vmx_get_vmptr() now has three possible outcomes: OK, PF,
-KVM_EXIT_INTERNAL_ERROR and callers need to know if userspace exit is
-needed (for KVM_EXIT_INTERNAL_ERROR) in case of failure. We don't seem
-to have a good enum describing this tristate, just add "int *ret" to
-nested_vmx_get_vmptr() interface to pass the information.
+All above can be twice less LOCs.
 
-Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 78 +++++++++++++++++++++------------------
- arch/x86/kvm/vmx/vmx.c    | 34 +++++++++++++++--
- arch/x86/kvm/vmx/vmx.h    |  2 +
- 3 files changed, 74 insertions(+), 40 deletions(-)
+> +       {},
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 9c74a732b08d..bcb50724be38 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4624,19 +4624,24 @@ void nested_vmx_pmu_entry_exit_ctls_update(struct kvm_vcpu *vcpu)
- 	}
- }
- 
--static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer)
-+static int nested_vmx_get_vmptr(struct kvm_vcpu *vcpu, gpa_t *vmpointer,
-+				int *ret)
- {
- 	gva_t gva;
- 	struct x86_exception e;
-+	int r;
- 
- 	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
- 				vmcs_read32(VMX_INSTRUCTION_INFO), false,
--				sizeof(*vmpointer), &gva))
--		return 1;
-+				sizeof(*vmpointer), &gva)) {
-+		*ret = 1;
-+		return -EINVAL;
-+	}
- 
--	if (kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e)) {
--		kvm_inject_emulated_page_fault(vcpu, &e);
--		return 1;
-+	r = kvm_read_guest_virt(vcpu, gva, vmpointer, sizeof(*vmpointer), &e);
-+	if (r != X86EMUL_CONTINUE) {
-+		*ret = vmx_handle_memory_failure(vcpu, r, &e);
-+		return -EINVAL;
- 	}
- 
- 	return 0;
-@@ -4764,8 +4769,8 @@ static int handle_vmon(struct kvm_vcpu *vcpu)
- 		return 1;
- 	}
- 
--	if (nested_vmx_get_vmptr(vcpu, &vmptr))
--		return 1;
-+	if (nested_vmx_get_vmptr(vcpu, &vmptr, &ret))
-+		return ret;
- 
- 	/*
- 	 * SDM 3: 24.11.5
-@@ -4838,12 +4843,13 @@ static int handle_vmclear(struct kvm_vcpu *vcpu)
- 	u32 zero = 0;
- 	gpa_t vmptr;
- 	u64 evmcs_gpa;
-+	int r;
- 
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
- 
--	if (nested_vmx_get_vmptr(vcpu, &vmptr))
--		return 1;
-+	if (nested_vmx_get_vmptr(vcpu, &vmptr, &r))
-+		return r;
- 
- 	if (!page_address_valid(vcpu, vmptr))
- 		return nested_vmx_failValid(vcpu,
-@@ -4902,7 +4908,7 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
- 	u64 value;
- 	gva_t gva = 0;
- 	short offset;
--	int len;
-+	int len, r;
- 
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
-@@ -4943,10 +4949,9 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
- 					instr_info, true, len, &gva))
- 			return 1;
- 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
--		if (kvm_write_guest_virt_system(vcpu, gva, &value, len, &e)) {
--			kvm_inject_emulated_page_fault(vcpu, &e);
--			return 1;
--		}
-+		r = kvm_write_guest_virt_system(vcpu, gva, &value, len, &e);
-+		if (r != X86EMUL_CONTINUE)
-+			return vmx_handle_memory_failure(vcpu, r, &e);
- 	}
- 
- 	return nested_vmx_succeed(vcpu);
-@@ -4987,7 +4992,7 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
- 	unsigned long field;
- 	short offset;
- 	gva_t gva;
--	int len;
-+	int len, r;
- 
- 	/*
- 	 * The value to write might be 32 or 64 bits, depending on L1's long
-@@ -5017,10 +5022,9 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
- 		if (get_vmx_mem_address(vcpu, exit_qualification,
- 					instr_info, false, len, &gva))
- 			return 1;
--		if (kvm_read_guest_virt(vcpu, gva, &value, len, &e)) {
--			kvm_inject_emulated_page_fault(vcpu, &e);
--			return 1;
--		}
-+		r = kvm_read_guest_virt(vcpu, gva, &value, len, &e);
-+		if (r != X86EMUL_CONTINUE)
-+			return vmx_handle_memory_failure(vcpu, r, &e);
- 	}
- 
- 	field = kvm_register_readl(vcpu, (((instr_info) >> 28) & 0xf));
-@@ -5103,12 +5107,13 @@ static int handle_vmptrld(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	gpa_t vmptr;
-+	int r;
- 
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
- 
--	if (nested_vmx_get_vmptr(vcpu, &vmptr))
--		return 1;
-+	if (nested_vmx_get_vmptr(vcpu, &vmptr, &r))
-+		return r;
- 
- 	if (!page_address_valid(vcpu, vmptr))
- 		return nested_vmx_failValid(vcpu,
-@@ -5170,6 +5175,7 @@ static int handle_vmptrst(struct kvm_vcpu *vcpu)
- 	gpa_t current_vmptr = to_vmx(vcpu)->nested.current_vmptr;
- 	struct x86_exception e;
- 	gva_t gva;
-+	int r;
- 
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
-@@ -5181,11 +5187,11 @@ static int handle_vmptrst(struct kvm_vcpu *vcpu)
- 				true, sizeof(gpa_t), &gva))
- 		return 1;
- 	/* *_system ok, nested_vmx_check_permission has verified cpl=0 */
--	if (kvm_write_guest_virt_system(vcpu, gva, (void *)&current_vmptr,
--					sizeof(gpa_t), &e)) {
--		kvm_inject_emulated_page_fault(vcpu, &e);
--		return 1;
--	}
-+	r = kvm_write_guest_virt_system(vcpu, gva, (void *)&current_vmptr,
-+					sizeof(gpa_t), &e);
-+	if (r != X86EMUL_CONTINUE)
-+		return vmx_handle_memory_failure(vcpu, r, &e);
-+
- 	return nested_vmx_succeed(vcpu);
- }
- 
-@@ -5209,7 +5215,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
- 	struct {
- 		u64 eptp, gpa;
- 	} operand;
--	int i;
-+	int i, r;
- 
- 	if (!(vmx->nested.msrs.secondary_ctls_high &
- 	      SECONDARY_EXEC_ENABLE_EPT) ||
-@@ -5236,10 +5242,9 @@ static int handle_invept(struct kvm_vcpu *vcpu)
- 	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
- 			vmx_instruction_info, false, sizeof(operand), &gva))
- 		return 1;
--	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
--		kvm_inject_emulated_page_fault(vcpu, &e);
--		return 1;
--	}
-+	r = kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e);
-+	if (r != X86EMUL_CONTINUE)
-+		return vmx_handle_memory_failure(vcpu, r, &e);
- 
- 	/*
- 	 * Nested EPT roots are always held through guest_mmu,
-@@ -5291,6 +5296,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 		u64 gla;
- 	} operand;
- 	u16 vpid02;
-+	int r;
- 
- 	if (!(vmx->nested.msrs.secondary_ctls_high &
- 	      SECONDARY_EXEC_ENABLE_VPID) ||
-@@ -5318,10 +5324,10 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 	if (get_vmx_mem_address(vcpu, vmx_get_exit_qual(vcpu),
- 			vmx_instruction_info, false, sizeof(operand), &gva))
- 		return 1;
--	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
--		kvm_inject_emulated_page_fault(vcpu, &e);
--		return 1;
--	}
-+	r = kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e);
-+	if (r != X86EMUL_CONTINUE)
-+		return vmx_handle_memory_failure(vcpu, r, &e);
-+
- 	if (operand.vpid >> 16)
- 		return nested_vmx_failValid(vcpu,
- 			VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 170cc76a581f..d9083f80ec87 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1600,6 +1600,32 @@ static int skip_emulated_instruction(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+/*
-+ * Handles kvm_read/write_guest_virt*() result and either injects #PF or returns
-+ * KVM_EXIT_INTERNAL_ERROR for cases not currently handled by KVM. Return value
-+ * indicates whether exit to userspace is needed.
-+ */
-+int vmx_handle_memory_failure(struct kvm_vcpu *vcpu, int r,
-+			      struct x86_exception *e)
-+{
-+	if (r == X86EMUL_PROPAGATE_FAULT) {
-+		kvm_inject_emulated_page_fault(vcpu, e);
-+		return 1;
-+	}
-+
-+	/*
-+	 * In case kvm_read/write_guest_virt*() failed with X86EMUL_IO_NEEDED
-+	 * while handling a VMX instruction KVM could've handled the request
-+	 * correctly by exiting to userspace and performing I/O but there
-+	 * doesn't seem to be a real use-case behind such requests, just return
-+	 * KVM_EXIT_INTERNAL_ERROR for now.
-+	 */
-+	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
-+	vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
-+	vcpu->run->internal.ndata = 0;
-+
-+	return 0;
-+}
- 
- /*
-  * Recognizes a pending MTF VM-exit and records the nested state for later
-@@ -5486,6 +5512,7 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
- 		u64 pcid;
- 		u64 gla;
- 	} operand;
-+	int r;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_INVPCID)) {
- 		kvm_queue_exception(vcpu, UD_VECTOR);
-@@ -5508,10 +5535,9 @@ static int handle_invpcid(struct kvm_vcpu *vcpu)
- 				sizeof(operand), &gva))
- 		return 1;
- 
--	if (kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e)) {
--		kvm_inject_emulated_page_fault(vcpu, &e);
--		return 1;
--	}
-+	r = kvm_read_guest_virt(vcpu, gva, &operand, sizeof(operand), &e);
-+	if (r != X86EMUL_CONTINUE)
-+		return vmx_handle_memory_failure(vcpu, r, &e);
- 
- 	if (operand.pcid >> 12 != 0) {
- 		kvm_inject_gp(vcpu, 0);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 672c28f17e49..8a83b5edc820 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -355,6 +355,8 @@ struct shared_msr_entry *find_msr_entry(struct vcpu_vmx *vmx, u32 msr);
- void pt_update_intercept_for_msr(struct vcpu_vmx *vmx);
- void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp);
- int vmx_find_msr_index(struct vmx_msrs *m, u32 msr);
-+int vmx_handle_memory_failure(struct kvm_vcpu *vcpu, int r,
-+			      struct x86_exception *e);
- 
- #define POSTED_INTR_ON  0
- #define POSTED_INTR_SN  1
+No comma.
+
+> +};
+
+
+...
+
+> +               .name = KBUILD_MODNAME,
+
+This actually not good idea in long term. File name can change and break an ABI.
+
 -- 
-2.25.4
-
+With Best Regards,
+Andy Shevchenko
