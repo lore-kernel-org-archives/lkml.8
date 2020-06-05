@@ -2,101 +2,92 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C79C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DDEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1A0207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C902074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FjJJwJCc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="H8+UL+o0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgFEVHa (ORCPT
+        id S1728297AbgFEVJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgFEVH3 (ORCPT
+        Fri, 5 Jun 2020 17:09:11 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:57316 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbgFEVJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:07:29 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E143C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 14:07:29 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so4181061plo.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 14:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LAKOPXbe4RPyKHwWm8SyOT1HEgYJl1gtZcKOt6lUg6c=;
-        b=FjJJwJCcf9AvvSyyshowMJu/voV+MLp0TA3WCFDzlRbz7EjF1WrlqA+c4PDQTjbA5b
-         brD8n1tfCs4jieTe0se2Q4IciRQUKhmKKrzlbDGyZhO/VvGMHb1tRrqGRtg8I/Sm5Gex
-         pwrQhBd4qfmx9o2usDhyuWrosKBbMETOBq3v8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LAKOPXbe4RPyKHwWm8SyOT1HEgYJl1gtZcKOt6lUg6c=;
-        b=nEwX2szpB5YGYElSylQAMheAddL474MNX5U/qXgyeGEI1da5HJK5Pj64Rg8iDCKsmU
-         m6Kgh8H2ja4msS+MY2norD7DsAuDSJ5qIKYmGapB3aj2B9ySYdMcQ/11NYx0nGS6g3wU
-         bYMVhHLDVlaPjw20eLH2RR9Qy3+F8JOoXGbAs2Jw7Kok0WZoNz9gwRAhGj32NZ5MnoTk
-         DL+ug0fjs1vNacSss5cB6Ac9ypxZKcPGiCHLbP7u5CQKmczHPUL6uvJyOiFl+tjnCpkR
-         9wbhW4bElRSpMYnviB1EWRByjgqKMA+mXdThihN2HOOOdIxaM9G+X9Hl6WM3M/IT+fPc
-         EzIQ==
-X-Gm-Message-State: AOAM530tV2pSH/zP/5QtJZSH0ANZcGUnuufOYP8Y088zQJEEGcyHIiVd
-        FsXIIEZ5dT4GR0Id9dLsUzZ9ug==
-X-Google-Smtp-Source: ABdhPJynPweyb9yyxMtn15+LBtzfHV7x58u9sRCi1LH2+vF1aXgbJMfpp86VUeLqomjGYKh/hm6pIg==
-X-Received: by 2002:a17:90a:db90:: with SMTP id h16mr5145656pjv.119.1591391248908;
-        Fri, 05 Jun 2020 14:07:28 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u7sm450764pfu.162.2020.06.05.14.07.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 14:07:27 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 14:07:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
-        Jann Horn <jannh@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-Subject: Re: [RFC PATCH 5/5] mm, slub: make reclaim_account attribute
- read-only
-Message-ID: <202006051407.2B00B067@keescook>
-References: <20200602141519.7099-1-vbabka@suse.cz>
- <20200602141519.7099-6-vbabka@suse.cz>
+        Fri, 5 Jun 2020 17:09:10 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 921A220B7185;
+        Fri,  5 Jun 2020 14:09:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 921A220B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1591391349;
+        bh=i39FaZtY2X+kPAkTUw9+JdMbvXH6kXdMemItCH/9QYg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=H8+UL+o0s1ovdZmsSenHvljW70R+sD7tC/FyO+IktV1H/0jkcnoL6TxRShse5RtBx
+         TnDqTHhp0IPI4e4ox1kS+pXCGj5yrduev0crKSSIqJkIltRXf7V5s8ws0KXQWa3NHv
+         HfNSFN/I5lFhmpQ2uW1B5fGVjDejG/lq5j/4PZrE=
+Subject: Re: [PATCH] IMA: Add log statements for failure conditions
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        tusharsu@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        linux-audit@redhat.com
+References: <20200604163243.2575-1-nramas@linux.microsoft.com>
+ <1591382782.5816.36.camel@linux.ibm.com>
+ <CAHC9VhS-EP=Kk3GKRzAGAYa5mqupkLQCHz_m_DgoAKRWcSTgLA@mail.gmail.com>
+ <8dfb3fa6-5c1f-d644-7d21-72a9448c52cc@linux.microsoft.com>
+ <CAHC9VhS8gmrWxt75aHAE16PWAay7sUrffZiT0A8VLugwexK4Uw@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <48ff60f1-df93-5ce7-a254-8bfd1dba2ade@linux.microsoft.com>
+Date:   Fri, 5 Jun 2020 14:09:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602141519.7099-6-vbabka@suse.cz>
+In-Reply-To: <CAHC9VhS8gmrWxt75aHAE16PWAay7sUrffZiT0A8VLugwexK4Uw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:15:19PM +0200, Vlastimil Babka wrote:
-> The attribute reflects the SLAB_RECLAIM_ACCOUNT cache flag. It's not clear why
-> this attribute was writable in the first place, as it's tied to how the cache
-> is used by its creator, it's not a user tunable. Furthermore:
-> 
-> - it affects slab merging, but that's not being checked while toggled
-> - if affects whether __GFP_RECLAIMABLE flag is used to allocate page, but
->   the runtime toggle doesn't update allocflags
-> - it affects cache_vmstat_idx() so runtime toggle might lead to incosistency
->   of NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE
-> 
-> Thus make it read-only.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+On 6/5/20 1:49 PM, Paul Moore wrote:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+>> Since a pr_xyz() call was already present, I just wanted to change the
+>> log level to keep the code change to the minimum. But if audit log is
+>> the right approach for this case, I'll update.
+> 
+> Generally we reserve audit for things that are required for various
+> security certifications and/or "security relevant".  From what you
+> mentioned above, it seems like this would fall into the second
+> category if not the first.
+> 
+> Looking at your patch it doesn't look like you are trying to record
+> anything special so you may be able to use the existing
+> integrity_audit_msg(...) helper.  Of course then the question comes
+> down to the audit record type (the audit_msgno argument), the
+> operation (op), and the comm/cause (cause).
+> 
+> Do you feel that any of the existing audit record types are a good fit for this?
+> 
 
--- 
-Kees Cook
+Maybe I can use the audit_msgno "AUDIT_INTEGRITY_PCR" with appropriate 
+strings for "op" and "cause".
+
+Mimi - please let me know if you think this audit_msgno would be ok to 
+use. I see this code used, for instance, for boot aggregate measurement.
+
+integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL, boot_aggregate_name, op,
+		    audit_cause, result, 0);
+
+thanks,
+  -lakshmi
