@@ -2,100 +2,62 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D14E206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:05:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SLS407qU"
+	by mail.kernel.org (Postfix) with ESMTP id 194C320897
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgFENFn (ORCPT
+        id S1726942AbgFENGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:05:43 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13986 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726719AbgFENFe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:05:34 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055D2RnM005857;
-        Fri, 5 Jun 2020 15:05:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=8N3eVj4nAPochlinsyGa/KTizCaO/PHeruM6iKW/aDc=;
- b=SLS407qU1Z9F+tF6q5vFRFJR785CroSIa1H4SlRTUAq1DcayxdSrZILrWXbQvkSs38as
- t4BhMYV2SEcX97GziY6PhSm9leR3QDIQAi1rUPHO0B6PEY7t2zLWMP9OWTeOYGoLDp6J
- A1vkrJhJjTzfrXze2kPk0DgOOSdtNCGx71Mn8x4RNLykjeyvKsJZTcj6zpir65+5RQu3
- GC29ctnlyt4vw2TEx7qzJ/0qH5BMIRcWIgep/5nDXGw4ZYemdk3OcW1bC1cUzaTi1sw9
- TL+fuoQL2jboRji1sapVjuS14HJ1voCn/af6zC4LQ49o850gcYm81Njn/YiIr8r+jIET Tw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31fasmbkcp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 15:05:22 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EA26A100034;
-        Fri,  5 Jun 2020 15:05:21 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B435B2C50BF;
-        Fri,  5 Jun 2020 15:05:21 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 5 Jun 2020 15:05:21
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <linux-media@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
-        <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v4 0/3] DCMI set minimum cpufreq requirement
-Date:   Fri, 5 Jun 2020 15:05:16 +0200
-Message-ID: <20200605130519.4184-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 5 Jun 2020 09:06:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33080 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726854AbgFENF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:05:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1F23BAEE8;
+        Fri,  5 Jun 2020 13:05:59 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 15:05:55 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Yannick Cote <ycote@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        joe.lawrence@redhat.com, linux-kernel@vger.kernel.org,
+        pmladek@suse.com, kamalesh@linux.vnet.ibm.com
+Subject: Re: [PATCH v2 1/4] selftests/livepatch: simplify test-klp-callbacks
+ busy target tests
+In-Reply-To: <20200603182058.109470-2-ycote@redhat.com>
+Message-ID: <alpine.LSU.2.21.2006051505230.23532@pobox.suse.cz>
+References: <20200603182058.109470-1-ycote@redhat.com> <20200603182058.109470-2-ycote@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-05_04:2020-06-04,2020-06-05 signatures=0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series allow to STM32 camera interface (DCMI) to require a minimum
-frequency to the CPUs before start streaming frames from the sensor.
-The minimum frequency requirement is provided in the devide-tree node.
+On Wed, 3 Jun 2020, Yannick Cote wrote:
 
-Setting a minimum frequency for the CPUs is needed to ensure a quick handling
-of the interrupts between two sensor frames and avoid dropping half of them.
+> From: Joe Lawrence <joe.lawrence@redhat.com>
+> 
+> The test-klp-callbacks script includes a few tests which rely on kernel
+> task timings that may not always execute as expected under system load.
+> These may generate out of sequence kernel log messages that result in
+> test failure.
+> 
+> Instead of using sleep timing windows to orchestrate these tests, add a
+> block_transition module parameter to communicate the test purpose and
+> utilize flush_queue() to serialize the test module's task output.
+> 
+> Suggested-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
 
-version 4:
-- simplify irq affinity handling by using only dcmi_irq_notifier_notify() 
+Acked-by: Miroslav Benes <mbenes@suse.cz>
 
-version 3:
-- add a cpumask field to track boosted CPUs
-- add irq_affinity_notify callback
-- protect cpumask field with a mutex 
-
-Benjamin Gaignard (3):
-  dt-bindings: media: stm32-dcmi: Add DCMI min frequency property
-  media: stm32-dcmi: Set minimum cpufreq requirement
-  ARM: dts: stm32: Set DCMI frequency requirement for stm32mp15x
-
- .../devicetree/bindings/media/st,stm32-dcmi.yaml   |   8 ++
- arch/arm/boot/dts/stm32mp151.dtsi                  |   1 +
- drivers/media/platform/stm32/stm32-dcmi.c          | 122 +++++++++++++++++++--
- 3 files changed, 123 insertions(+), 8 deletions(-)
-
--- 
-2.15.0
-
+M
