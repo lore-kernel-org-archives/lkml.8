@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA298C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B46C0206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853B3204EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367106;
-	bh=2+TLxM3G8QfbMlQcupi4uaoiUaXyEpZ8gudy8Moj2iY=;
+	s=default; t=1591367114;
+	bh=usTWkI/BDbEZqG7b7JXwId/H5vjLUwle1vR+sF0fBd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7M34Bdt/VhryGLZOxtUPYBi/8GJMLvyofMxtXzzEci8HMRQwfiy6UgMaV7g1aFoL
-	 Re9mMFc7tOqcTR/sRwMlXQH2gpNvX1nDqW/drg522otnXG1saOC4Q1mb2sh0P9J/Eo
-	 ZnC+8k3xy9EuGDUOlQ6aH13XzfhnrHnQaxJSYUy4=
+	b=CfdEFn0i8KZ7h/gOoi07MTx04spyEZEVnVU9cgByqb0+MuTcWECOgkFruTMFXRe6c
+	 DJcNUONpTiNwDN1TVaHsOSil6sJOKBooSTcI/2j+NG/ywOBMAo2I0vlvPh/HX6fRJK
+	 Mt5gygtMonRUqggac5SeRLvkOhqlQIL5LnFvBsVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgFEOZG (ORCPT
+        id S1728327AbgFEOZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:25:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46236 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728347AbgFEOQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:57 -0400
+        id S1728315AbgFEOQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8415B20835;
-        Fri,  5 Jun 2020 14:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 394C5208B8;
+        Fri,  5 Jun 2020 14:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366617;
-        bh=2+TLxM3G8QfbMlQcupi4uaoiUaXyEpZ8gudy8Moj2iY=;
+        s=default; t=1591366614;
+        bh=usTWkI/BDbEZqG7b7JXwId/H5vjLUwle1vR+sF0fBd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yascjMMdbbacvJBj5T8hgyukCA4FLzwSe6Yj+ediCA/ezyEDSzZBZcGEdfeUn+5KI
-         CbhHlL5qP9ZtG43h9cLkjhjATDJTOdI96flxRw98Qka+j5zRf7hTbQc3JQDemW3yAK
-         lew0uykjBAWHeG4nJTjr4Kahb0gs6oiLMzBhToG0=
+        b=ee7Bha+c7EXb8Z1HsdEW/jGYcJ6STecPjSZz7vpzMYThXtZFL+WBHCXa4yxXu/HlF
+         otOGT0MNKPj+Cj/P2mpINPAVoEln5whQJEWOKulKAJAbImN/sboGldroG0NHODeVGv
+         aOW7sQ1rCjVeJAEVpm6BSAHd1Oze8dY8+I5yIE7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 25/43] net: ethernet: ti: fix some return value check of cpsw_ale_create()
-Date:   Fri,  5 Jun 2020 16:14:55 +0200
-Message-Id: <20200605140153.842363853@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 24/43] null_blk: return error for invalid zone size
+Date:   Fri,  5 Jun 2020 16:14:54 +0200
+Message-Id: <20200605140153.790067538@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -61,71 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit 3469660d1b15ccfdf7b33295c306b6298ca730aa ]
+[ Upstream commit e274832590211c4b1b1e807ca66fad8b5bb8b328 ]
 
-cpsw_ale_create() can return both NULL and PTR_ERR(), but all of
-the caller only check NULL for error handling. This patch convert
-it to only return PTR_ERR() in all error cases, and the caller using
-IS_ERR() instead of NULL test.
+In null_init_zone_dev() check if the zone size is larger than device
+capacity, return error if needed.
 
-Fixes: 4b41d3436796 ("net: ethernet: ti: cpsw: allow untagged traffic on host port")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This also fixes the following oops :-
+
+null_blk: changed the number of conventional zones to 4294967295
+BUG: kernel NULL pointer dereference, address: 0000000000000010
+PGD 7d76c5067 P4D 7d76c5067 PUD 7d240c067 PMD 0
+Oops: 0002 [#1] SMP NOPTI
+CPU: 4 PID: 5508 Comm: nullbtests.sh Tainted: G OE 5.7.0-rc4lblk-fnext0
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e4
+RIP: 0010:null_init_zoned_dev+0x17a/0x27f [null_blk]
+RSP: 0018:ffffc90007007e00 EFLAGS: 00010246
+RAX: 0000000000000020 RBX: ffff8887fb3f3c00 RCX: 0000000000000007
+RDX: 0000000000000000 RSI: ffff8887ca09d688 RDI: ffff888810fea510
+RBP: 0000000000000010 R08: ffff8887ca09d688 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8887c26e8000
+R13: ffffffffa05e9390 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007fcb5256f740(0000) GS:ffff888810e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000010 CR3: 000000081e8fe000 CR4: 00000000003406e0
+Call Trace:
+ null_add_dev+0x534/0x71b [null_blk]
+ nullb_device_power_store.cold.41+0x8/0x2e [null_blk]
+ configfs_write_file+0xe6/0x150
+ vfs_write+0xba/0x1e0
+ ksys_write+0x5f/0xe0
+ do_syscall_64+0x60/0x250
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7fcb51c71840
+
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw_ale.c    | 2 +-
- drivers/net/ethernet/ti/cpsw_priv.c   | 4 ++--
- drivers/net/ethernet/ti/netcp_ethss.c | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/block/null_blk_zoned.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index ecdbde539eb7..4eb14b174c1a 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -917,7 +917,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
- 
- 	ale = devm_kzalloc(params->dev, sizeof(*ale), GFP_KERNEL);
- 	if (!ale)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	ale->p0_untag_vid_mask =
- 		devm_kmalloc_array(params->dev, BITS_TO_LONGS(VLAN_N_VID),
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
-index 97a058ca60ac..d0b6c418a870 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.c
-+++ b/drivers/net/ethernet/ti/cpsw_priv.c
-@@ -490,9 +490,9 @@ int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
- 	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
- 
- 	cpsw->ale = cpsw_ale_create(&ale_params);
--	if (!cpsw->ale) {
-+	if (IS_ERR(cpsw->ale)) {
- 		dev_err(dev, "error initializing ale engine\n");
--		return -ENODEV;
-+		return PTR_ERR(cpsw->ale);
+diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
+index ed34785dd64b..5dc955f5ea0a 100644
+--- a/drivers/block/null_blk_zoned.c
++++ b/drivers/block/null_blk_zoned.c
+@@ -20,6 +20,10 @@ int null_zone_init(struct nullb_device *dev)
+ 		pr_err("zone_size must be power-of-two\n");
+ 		return -EINVAL;
  	}
++	if (dev->zone_size > dev->size) {
++		pr_err("Zone size larger than device capacity\n");
++		return -EINVAL;
++	}
  
- 	dma_params.dev		= dev;
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index fb36115e9c51..fdbae734acce 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -3704,9 +3704,9 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
- 		ale_params.nu_switch_ale = true;
- 	}
- 	gbe_dev->ale = cpsw_ale_create(&ale_params);
--	if (!gbe_dev->ale) {
-+	if (IS_ERR(gbe_dev->ale)) {
- 		dev_err(gbe_dev->dev, "error initializing ale engine\n");
--		ret = -ENODEV;
-+		ret = PTR_ERR(gbe_dev->ale);
- 		goto free_sec_ports;
- 	} else {
- 		dev_dbg(gbe_dev->dev, "Created a gbe ale engine\n");
+ 	dev->zone_size_sects = dev->zone_size << ZONE_SIZE_SHIFT;
+ 	dev->nr_zones = dev_size >>
 -- 
 2.25.1
 
