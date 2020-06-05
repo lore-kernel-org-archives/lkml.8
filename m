@@ -2,315 +2,247 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C41BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922B0207ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:54:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ih0Dzkh3"
+	by mail.kernel.org (Postfix) with ESMTP id 44D692074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgFERy4 (ORCPT
+        id S1728041AbgFERzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:54:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31837 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726245AbgFERyy (ORCPT
+        Fri, 5 Jun 2020 13:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgFERzs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:54:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591379692;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CwEysuJdbwoH5QRplHYoPNF4uXtwe2BfyVY9WubCPCg=;
-        b=ih0Dzkh3+1pOwxLQcuMBJlhojabqAXJ/sY0e8BywrrEcE8M0L7aE/JMd79i3ZrvxbIQ/ir
-        xBIPUJ7gc3d4EEOwVx7EFAcsW3V++XfGdoZukyVwCvd2cyWCTsQ0CKRM2jxkx+FtImCm6f
-        H+BQkW0+IimMI5mu0E2/ueC/jod5wQ0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-211-Mip1JpoiOYOJFK_xjm5fCw-1; Fri, 05 Jun 2020 13:54:44 -0400
-X-MC-Unique: Mip1JpoiOYOJFK_xjm5fCw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A428018FF662;
-        Fri,  5 Jun 2020 17:54:42 +0000 (UTC)
-Received: from x1.home (ovpn-112-195.phx2.redhat.com [10.3.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A66F05C296;
-        Fri,  5 Jun 2020 17:54:41 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 11:54:41 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "He, Shaopeng" <shaopeng.he@intel.com>
-Cc:     "Zhao, Yan Y" <yan.y.zhao@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Zeng, Xin" <xin.zeng@intel.com>,
-        "Yuan, Hang" <hang.yuan@intel.com>
-Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
- VFIO_IRQ_TYPE_REMAP_BAR_REGION
-Message-ID: <20200605115441.24020184@x1.home>
-In-Reply-To: <MW3PR11MB46671722B459551BB9CEBF4AE5860@MW3PR11MB4667.namprd11.prod.outlook.com>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
-        <20200518025245.14425-1-yan.y.zhao@intel.com>
-        <20200529154547.19a6685f@x1.home>
-        <20200601065726.GA5906@joy-OptiPlex-7040>
-        <20200601104307.259b0fe1@x1.home>
-        <20200602082858.GA8915@joy-OptiPlex-7040>
-        <20200602133435.1ab650c5@x1.home>
-        <20200603014058.GA12300@joy-OptiPlex-7040>
-        <20200603170452.7f172baf@x1.home>
-        <20200604024228.GD12300@joy-OptiPlex-7040>
-        <20200603221058.1927a0fc@x1.home>
-        <MW3PR11MB46671722B459551BB9CEBF4AE5860@MW3PR11MB4667.namprd11.prod.outlook.com>
-Organization: Red Hat
+        Fri, 5 Jun 2020 13:55:48 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF7BC08C5C2;
+        Fri,  5 Jun 2020 10:55:47 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 301462A45BD
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     axboe@kernel.dk, corbet@lwn.net, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com, rdunlap@infradead.org,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH v2] docs: block: Create blk-mq documentation
+Date:   Fri,  5 Jun 2020 14:55:36 -0300
+Message-Id: <20200605175536.19681-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jun 2020 00:26:10 +0000
-"He, Shaopeng" <shaopeng.he@intel.com> wrote:
+Create a documentation providing a background and explanation around the
+operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Thursday, June 4, 2020 12:11 PM
-> > 
-> > On Wed, 3 Jun 2020 22:42:28 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:  
-> > > > On Tue, 2 Jun 2020 21:40:58 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >  
-> > > > > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:  
-> > > > > > I'm not at all happy with this.  Why do we need to hide the
-> > > > > > migration sparse mmap from the user until migration time?  What
-> > > > > > if instead we introduced a new
-> > > > > > VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability where  
-> > the  
-> > > > > > existing capability is the normal runtime sparse setup and the
-> > > > > > user is required to use this new one prior to enabled
-> > > > > > device_state with _SAVING.  The vendor driver could then simply
-> > > > > > track mmap vmas to the region and refuse to change device_state
-> > > > > > if there are outstanding mmaps conflicting with the _SAVING
-> > > > > > sparse mmap layout.  No new IRQs required, no new irqfds, an
-> > > > > > incremental change to the protocol, backwards compatible to the  
-> > extent that a vendor driver requiring this will automatically fail migration.  
-> > > > > >  
-> > > > > right. looks we need to use this approach to solve the problem.
-> > > > > thanks for your guide.
-> > > > > so I'll abandon the current remap irq way for dirty tracking
-> > > > > during live migration.
-> > > > > but anyway, it demos how to customize irq_types in vendor drivers.
-> > > > > then, what do you think about patches 1-5?  
-> > > >
-> > > > In broad strokes, I don't think we've found the right solution yet.
-> > > > I really question whether it's supportable to parcel out vfio-pci
-> > > > like this and I don't know how I'd support unraveling whether we
-> > > > have a bug in vfio-pci, the vendor driver, or how the vendor driver
-> > > > is making use of vfio-pci.
-> > > >
-> > > > Let me also ask, why does any of this need to be in the kernel?  We
-> > > > spend 5 patches slicing up vfio-pci so that we can register a vendor
-> > > > driver and have that vendor driver call into vfio-pci as it sees fit.
-> > > > We have two patches creating device specific interrupts and a BAR
-> > > > remapping scheme that we've decided we don't need.  That brings us
-> > > > to the actual i40e vendor driver, where the first patch is simply
-> > > > making the vendor driver work like vfio-pci already does, the second
-> > > > patch is handling the migration region, and the third patch is
-> > > > implementing the BAR remapping IRQ that we decided we don't need.
-> > > > It's difficult to actually find the small bit of code that's
-> > > > required to support migration outside of just dealing with the
-> > > > protocol we've defined to expose this from the kernel.  So why are
-> > > > we trying to do this in the kernel?  We have quirk support in QEMU,
-> > > > we can easily flip MemoryRegions on and off, etc.  What access to
-> > > > the device outside of what vfio-pci provides to the user, and
-> > > > therefore QEMU, is necessary to implement this migration support for
-> > > > i40e VFs?  Is this just an exercise in making use of the migration
-> > > > interface?  Thanks,
-> > > >  
-> > > hi Alex
-> > >
-> > > There was a description of intention of this series in RFC v1
-> > > (https://www.spinics.net/lists/kernel/msg3337337.html).
-> > > sorry, I didn't include it in starting from RFC v2.
-> > >
-> > > "
-> > > The reason why we don't choose the way of writing mdev parent driver
-> > > is that  
-> > 
-> > I didn't mention an mdev approach, I'm asking what are we accomplishing by
-> > doing this in the kernel at all versus exposing the device as normal through
-> > vfio-pci and providing the migration support in QEMU.  Are you actually
-> > leveraging having some sort of access to the PF in supporting migration of the
-> > VF?  Is vfio-pci masking the device in a way that prevents migrating the state
-> > from QEMU?
-> >   
-> > > (1) VFs are almost all the time directly passthroughed. Directly
-> > > binding to vfio-pci can make most of the code shared/reused. If we
-> > > write a vendor specific mdev parent driver, most of the code (like
-> > > passthrough style of rw/mmap) still needs to be copied from vfio-pci
-> > > driver, which is actually a duplicated and tedious work.
-> > > (2) For features like dynamically trap/untrap pci bars, if they are in
-> > > vfio-pci, they can be available to most people without repeated code
-> > > copying and re-testing.
-> > > (3) with a 1:1 mdev driver which passes through VFs most of the time,
-> > > people have to decide whether to bind VFs to vfio-pci or mdev parent
-> > > driver before it runs into a real migration need. However, if vfio-pci
-> > > is bound initially, they have no chance to do live migration when
-> > > there's a need later.
-> > > "
-> > > particularly, there're some devices (like NVMe) they purely reply on
-> > > vfio-pci to do device pass-through and they have no standalone parent
-> > > driver to do mdev way.
-> > >
-> > > I think live migration is a general requirement for most devices and
-> > > to interact with the migration interface requires vendor drivers to do
-> > > device specific tasks like geting/seting device state,
-> > > starting/stopping devices, tracking dirty data, report migration
-> > > capabilities... all those works need be in kernel.  
-> > 
-> > I think Alex Graf proved they don't necessarily need to be done in kernel back
-> > in 2015: https://www.youtube.com/watch?v=4RFsSgzuFso
-> > He was able to achieve i40e VF live migration by only hacking QEMU.  In this
-> > series you're allowing a vendor driver to interpose itself between the user
-> > (QEMU) and vfio-pci such that we switch to the vendor code during migration.
-> > Why can't that interpose layer be in QEMU rather than the kernel?  It seems
-> > that it only must be in the kernel if we need to provide migration state via
-> > backdoor, perhaps like going through the PF.  So what access to the i40e VF
-> > device is not provided to the user through vfio-pci that is necessary to
-> > implement migration of this device?  The tasks listed above are mostly
-> > standard device driver activities and clearly vfio-pci allows userspace device
-> > drivers.
-> >   
-> > > do you think it's better to create numerous vendor quirks in vfio-pci?  
-> > 
-> > In QEMU, perhaps.  Alternatively, let's look at exactly what access is not
-> > provided through vfio-pci that's necessary for this and decide if we want to
-> > enable that access or if cracking vfio-pci wide open for vendor drivers to pick
-> > and choose when and how to use it is really the right answer.
-> >   
-> > > as to this series, though patch 9/10 currently only demos reporting a
-> > > migration region, it actually shows the capability iof vendor driver
-> > > to customize device regions. e.g. in patch 10/10, it customizes the
-> > > BAR0 to be read/write. and though we abandoned the REMAP BAR irq_type
-> > > in patch
-> > > 10/10 for migration purpose, I have to say this irq_type has its usage
-> > > in other use cases, where synchronization is not a hard requirement
-> > > and all it needs is a notification channel from kernel to use. this
-> > > series just provides a possibility for vendors to customize device
-> > > regions and irqs.  
-> > 
-> > I don't disagree that a device specific interrupt might be useful, but I would
-> > object to implementing this one only as an artificial use case.
-> > We can wait for a legitimate use case to implement that.
-> >   
-> > > for interfaces exported in patch 3/10-5/10, they anyway need to be
-> > > exported for writing mdev parent drivers that pass through devices at
-> > > normal time to avoid duplication. and yes, your worry about  
-> > 
-> > Where are those parent drivers?  What are their actual requirements?
-> >   
-> > > identification of bug sources is reasonable. but if a device is
-> > > binding to vfio-pci with a vendor module loaded, and there's a bug,
-> > > they can do at least two ways to identify if it's a bug in vfio-pci itself.
-> > > (1) prevent vendor modules from loading and see if the problem exists
-> > > with pure vfio-pci.
-> > > (2) do what's demoed in patch 8/10, i.e. do nothing but simply pass
-> > > all operations to vfio-pci.  
-> > 
-> > The code split is still extremely ad-hoc, there's no API.  An mdev driver isn't
-> > even a sub-driver of vfio-pci like you're trying to accomplish here, there
-> > would need to be a much more defined API when the base device isn't even a
-> > vfio_pci_device.  I don't see how this series would directly enable an mdev
-> > use case.
-> >   
-> > > so, do you think this series has its merit and we can continue
-> > > improving it?  
-> > 
-> > I think this series is trying to push an artificial use case that is perhaps better
-> > done in userspace.  What is the actual interaction with the VF device that can
-> > only be done in the host kernel for this example?  Thanks,  
-> 
-> Hi Alex,
-> 
-> As shared in KVM Forum last November(https://www.youtube.com/watch?v=aiCCUFXxVEA),
-> we already have one PoC working internally. This series is part of that, if going well,
-> we plan to support it in our future network, storage, security etc. device drivers.
-> 
-> This series has two enhancements to support passthrough device live migration:
-> general support for SR-IOV live migration and Software assisted dirty page tracking.
-> We tried PoC for other solutions too, but this series seems to work the best
-> balancing on feasibility, code duplication, performance etc.
-> 
-> We are more focusing on enabling our latest E810 NIC product now, but we
-> will check again how we could make it public earlier, as low quality i40e PoC
-> or formal E810 driver, so you may see "the actual interaction" more clearly.
+The reference for writing this documentation was the source code and
+"Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+Systems", by Axboe et al.
 
-"General support for SR-IOV live migration" is not a thing, there's
-always device specific code.  "Software assisted dirty page tracking"
-implies to me trapping and emulating device accesses in order to learn
-about DMA targets, which is something that we can also do in QEMU.
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+---
+Changes from v1:
+- Fixed typos
+- Reworked blk_mq_hw_ctx
 
-In your list of "balancing on feasibility, code duplication,
-performance, etc", an explicit mention of security is strikingly
-lacking.  The first two are rather obvious, it's more feasible to
-implement features like migration for any device once the code
-necessary for such a feature is buried in a vendor driver surrounded by
-a small development community.  The actual protocol of the device state
-is hidden behind an interface that's opaque to userspace and requires
-trust that the vendor has implemented a robust scheme and ultimately
-relying on the vendor for ongoing support.  Reducing code duplication by
-exporting the guts of vfio-pci makes that even easier.  Vendors drivers
-get to ad-hoc pick and choose how and when they interact with vfio-pci,
-leaving vfio-pci with objects and device state it can't really trust.
-The performance claim is harder to justify as the path to trapping a
-region in the kernel vendor driver necessarily passes through trapping
-that same region in QEMU.  Maintaining a dirty bitmap in the vfio IOMMU
-backend and later retrieving it via the dirty page tracking actually
-sounds like more overhead than setting dirty bits within QEMU.
+Hello,
 
-But then there's the entire security aspect where the same thing that I
-think makes this more feasible for the vendor driver opens the door for
-a much larger attack surface from the user (ie. we're intentionally
-choosing to open the door to vendor drivers running privileged inside
-the host kernel, reviewed and supported by smaller communities).
-Additionally, by masquerading these vendor drivers behind vfio-pci, we
-simplify usage for the user, but also prevent them from making an
-informed decision of the security risk of binding a device to
-"vfio-pci".  Is it really vfio-pci, or is it i40e_vf_migration, which
-may or may not share common code with vfio-pci?  VFIO already supports
-a plugin bus driver architecture, vendors can already supply their own,
-but users/admin must choose to use it.  I originally thought that's
-something we should abstract for the user, but I'm beginning to see
-that might actually be the one remaining leverage point we have to
-architect secure interfaces rather than turning vfio into a playground
-of insecure and abandoned vendor drivers.
+This commit was tested using "make htmldocs" and the HTML output has
+been verified.
 
-VFIO migration support is trying to provide a solution for device
-specific state and dirty page tracking, but I don't think the desire to
-make use of this migration interface in and of itself as justification
-for an in-kernel vendor driver.  We assume with mdevs that we're
-exposing a portion of a device to the user and the mediation of that
-portion of the device contains state and awareness of page dirtying
-that we can extract for migration.  Implementing that state awareness
-and dirty page tracking in the host kernel for the sole purpose of
-being able to extract it via the migration interface seems like a
-non-goal and unwise security choice.  Thanks,
+Thanks,
+	André
+---
+ Documentation/block/blk-mq.rst | 154 +++++++++++++++++++++++++++++++++
+ Documentation/block/index.rst  |   1 +
+ 2 files changed, 155 insertions(+)
+ create mode 100644 Documentation/block/blk-mq.rst
 
-Alex
+diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
+new file mode 100644
+index 000000000000..1f702adbc577
+--- /dev/null
++++ b/Documentation/block/blk-mq.rst
+@@ -0,0 +1,154 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++================================================
++Multi-Queue Block IO Queueing Mechanism (blk-mq)
++================================================
++
++The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
++devices to achieve a huge number of input/output operations per second (IOPS)
++through queueing and submitting IO requests to block devices simultaneously,
++benefiting from the parallelism offered by modern storage devices.
++
++Introduction
++============
++
++Background
++----------
++
++Magnetic hard disks have been the de facto standard from the beginning of the
++development of the kernel. The Block IO subsystem aimed to achieve the best
++performance possible for those devices with a high penalty when doing random
++access, and the bottleneck was the mechanical moving parts, a lot more slower
++than any layer on the storage stack. One example of such optimization technique
++involves ordering read/write requests accordingly to the current position of
++the hard disk head.
++
++However, with the development of Solid State Drives and Non-Volatile Memories
++without mechanical parts nor random access penalty and capable of performing
++high parallel access, the bottleneck of the stack had moved from the storage
++device to the operating system. In order to  take advantage of the parallelism
++in those devices design, the multi-queue mechanism was introduced.
++
++The former design had a single queue to store block IO requests with a single
++lock. That did not scale well in SMP systems due to dirty data in cache and the
++bottleneck of having a single lock for multiple processors. This setup also
++suffered with congestion when different processes (or the same process, moving
++to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
++spawns multiple queues with individual entry points local to the CPU, removing
++the need for a lock. A deeper explanation on how this works is covered in the
++following section (`Operation`_).
++
++Operation
++---------
++
++When the userspace performs IO to a block device (reading or writing a file,
++for instance), blk-mq takes action: it will store and manage IO requests to
++the block device, acting as middleware between the userspace (and a file
++system, if present) and the block device driver.
++
++blk-mq has two group of queues: software staging queues and hardware dispatch
++queues. When the request arrives at the block layer, it will try the shortest
++path possible: send it directly to the hardware queue. However, there are two
++cases that it might not do that: if there's an IO scheduler attached at the
++layer or if we want to try to merge requests. In both cases, requests will be
++sent to the software queue.
++
++Then, after the requests are processed by software queues, they will be placed
++at the hardware queue, a second stage queue were the hardware has direct access
++to process those requests. However, if the hardware does not have enough
++resources to accept more requests, blk-mq will places requests on a temporary
++queue, to be sent in the future, when the hardware is able.
++
++Software staging queues
++~~~~~~~~~~~~~~~~~~~~~~~
++
++The block IO subsystem adds requests (represented by struct
++:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
++sent directly to the driver. A request is a collection of BIOs. They arrived at
++the block layer through the data structure struct :c:type:`bio`. The block
++layer will then build a new structure from it, the struct :c:type:`request`
++that will be used to communicate with the device driver. Each queue has its
++own lock and the number of queues is defined by a per-CPU or per-node basis.
++
++The staging queue can be used to merge requests for adjacent sectors. For
++instance, requests for sector 3-6, 6-7, 7-9 can become one request for 3-9.
++Even if random access to SSDs and NVMs have the same time of response compared
++to sequential access, grouped requests for sequential access decreases the
++number of individual requests. This technique of merging requests is called
++plugging.
++
++Along with that, the requests can be reordered to ensure fairness of system
++resources (e.g. to ensure that no application suffers from starvation) and/or to
++improve IO performance, by an IO scheduler.
++
++IO Schedulers
++^^^^^^^^^^^^^
++
++There are several schedulers implemented by the block layer, each one following
++a heuristic to improve the IO performance. They are "pluggable" (as in plug
++and play), in the sense of they can be selected at run time using sysfs. You
++can read more about Linux's IO schedulers `here
++<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
++happens only between requests in the same queue, so it is not possible to merge
++requests from different queues, otherwise there would be cache trashing and a
++need to have a lock for each queue. After the scheduling, the requests are
++eligible to be sent to the hardware. One of the possible schedulers to be
++selected is the NOOP scheduler, the most straightforward one, that implements a
++simple FIFO, without performing any reordering. This is useful in the following
++scenarios: when scheduling will be performed in a next step somewhere in the
++stack, like block device controllers; the actual sector position of blocks are
++transparent for the host, meaning it hasn't enough information to take a proper
++decision; or the overhead of reordering is higher than the handicap of
++non-sequential accesses.
++
++Hardware dispatch queues
++~~~~~~~~~~~~~~~~~~~~~~~~
++
++The hardware queues (represented by struct :c:type:`blk_mq_hw_ctx`) have a 1:1
++correspondence to the device driver's submission queues, and are the last step
++of the block layer submission code before the low level device driver taking
++ownership of the request. To run this queue, the block layer removes requests
++from the associated software queues and tries to dispatch to the hardware.
++
++If it's not possible to send the requests directly to hardware, they will be
++added to a linked list (:c:type:`hctx->dispatch`) of requests. Then,
++next time the block layer runs a queue, it will send the requests laying at the
++:c:type:`dispatch` list first, to ensure a fairness dispatch with those
++requests that were ready to be sent first. The number of hardware queues
++depends on the number of hardware contexts supported by the hardware and its
++device driver, but it will not be more than the number of cores of the system.
++There is no reordering at this stage, and each software queue has a set of
++hardware queues to send requests for.
++
++.. note::
++
++        Neither the block layer nor the device protocols guarantee
++        the order of completion of requests. This must be handled by
++        higher layers, like the filesystem.
++
++Tag-based completion
++~~~~~~~~~~~~~~~~~~~~
++
++In order to indicate which request has been completed, every request is
++identified by an integer, ranging from 0 to the dispatch queue size. This tag
++is generated by the block layer and later reused by the device driver, removing
++the need to create a redundant identifier. When a request is completed in the
++drive, the tag is sent back to the block layer to notify it of the finalization.
++This removes the need to do a linear search to find out which IO has been
++completed.
++
++Further reading
++---------------
++
++- `Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems <http://kernel.dk/blk-mq.pdf>`_
++
++- `NOOP scheduler <https://en.wikipedia.org/wiki/Noop_scheduler>`_
++
++- `Null block device driver <https://www.kernel.org/doc/html/latest/block/null_blk.html>`_
++
++Source code documentation
++=========================
++
++.. kernel-doc:: include/linux/blk-mq.h
++
++.. kernel-doc:: block/blk-mq.c
+diff --git a/Documentation/block/index.rst b/Documentation/block/index.rst
+index 3fa7a52fafa4..3a3f38322185 100644
+--- a/Documentation/block/index.rst
++++ b/Documentation/block/index.rst
+@@ -10,6 +10,7 @@ Block
+    bfq-iosched
+    biodoc
+    biovecs
++   blk-mq
+    capability
+    cmdline-partition
+    data-integrity
+-- 
+2.27.0
 
