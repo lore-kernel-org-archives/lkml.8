@@ -2,156 +2,167 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B871C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEFC2053B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BBD620820
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgFEKGe (ORCPT
+        id S1726095AbgFEKIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:06:34 -0400
-Received: from segapp02.wistron.com ([103.200.3.19]:51703 "EHLO
-        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726444AbgFEKGe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:06:34 -0400
-Received: from EXCHAPP04.whq.wistron (unverified [10.37.38.27]) by TWNHUMSW4.wistron.com
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdf921276e5c0a816729a0@TWNHUMSW4.wistron.com>;
- Fri, 5 Jun 2020 18:06:30 +0800
-Received: from EXCHAPP03.whq.wistron (10.37.38.26) by EXCHAPP04.whq.wistron
- (10.37.38.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 5 Jun 2020
- 18:06:29 +0800
-Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP03.whq.wistron
- (10.37.38.26) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Fri, 5 Jun 2020 18:06:29 +0800
-From:   Ben Pai <Ben_Pai@wistron.com>
-To:     <joel@jms.id.au>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-CC:     <claire_ku@wistron.com>, Ben Pai <Ben_Pai@wistron.com>
-Subject: [PATCH v1 2/2] ARM: dts: aspeed: mihawk: Add 8 tmp401 thermal sensor
-Date:   Fri, 5 Jun 2020 18:06:28 +0800
-Message-ID: <20200605100628.14807-1-Ben_Pai@wistron.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 5 Jun 2020 06:08:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:53160 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgFEKIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 06:08:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C5CC2B;
+        Fri,  5 Jun 2020 03:08:18 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B9B0C3F52E;
+        Fri,  5 Jun 2020 03:08:15 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 11:08:13 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 1/7] mm: Add functions to track page directory
+ modifications
+Message-ID: <20200605100813.GA31371@gaia>
+References: <20200515140023.25469-1-joro@8bytes.org>
+ <20200515140023.25469-2-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: DDB9BC0458D24F053680539219F4C8D39E075093F38EDD5C6560CD8C1B8894672000:8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515140023.25469-2-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+Hi Joerg,
+
+On Fri, May 15, 2020 at 04:00:17PM +0200, Joerg Roedel wrote:
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 5a323422d783..022fe682af9e 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2078,13 +2078,54 @@ static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
+>  	return (unlikely(p4d_none(*p4d)) && __pud_alloc(mm, p4d, address)) ?
+>  		NULL : pud_offset(p4d, address);
+>  }
+> +
+> +static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
+> +				     unsigned long address,
+> +				     pgtbl_mod_mask *mod_mask)
+> +
+> +{
+> +	if (unlikely(pgd_none(*pgd))) {
+> +		if (__p4d_alloc(mm, pgd, address))
+> +			return NULL;
+> +		*mod_mask |= PGTBL_PGD_MODIFIED;
+> +	}
+> +
+> +	return p4d_offset(pgd, address);
+> +}
+> +
+>  #endif /* !__ARCH_HAS_5LEVEL_HACK */
+>  
+> +static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
+> +				     unsigned long address,
+> +				     pgtbl_mod_mask *mod_mask)
+> +{
+> +	if (unlikely(p4d_none(*p4d))) {
+> +		if (__pud_alloc(mm, p4d, address))
+> +			return NULL;
+> +		*mod_mask |= PGTBL_P4D_MODIFIED;
+> +	}
+> +
+> +	return pud_offset(p4d, address);
+> +}
+
+This patch causes a kernel panic on arm64 (and possibly powerpc, I
+haven't tried). arm64 still uses the 5level-fixup.h and pud_alloc()
+checks for the empty p4d with pgd_none() instead of p4d_none().
+
+The patch below fixes it:
+
+-----------------------8<-----------------------------------
+From 8fb5f4c1e0983bb501c8ec71f9bb9dd344b80e87 Mon Sep 17 00:00:00 2001
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Fri, 5 Jun 2020 10:56:03 +0100
+Subject: [PATCH] mm: Use pgd_none() in pud_alloc_track() with
+ __ARCH_HAS_5LEVEL_HACK
+
+Commit d8626138009b ("mm: add functions to track page directory
+modifications") introduced the pud_alloc_track() function checking for
+an empty p4d using p4d_none(). However, when __ARCH_HAS_5LEVEL_HACK is
+defined, the pud_alloc() counterpart checks for an empty p4d using
+pgd_none(). Since p4d_none() is always 0 in this case, no pud would be
+allocated and the kernel panics during boot on arm64 (at least).
+
+Until all architectures are moved away from the 5level-fixup.h, define a
+pud_alloc_track() that matches the __ARCH_HAS_5LEVEL_HACK pud_alloc().
+
+Fixes: d8626138009b ("mm: add functions to track page directory modifications")
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 40 +++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ include/linux/mm.h | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-index 25ffe65fbdc0..5bf1f13dda3b 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
-@@ -834,6 +834,11 @@
- 					line-name = "smbus0";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index fda41eb7f1c8..9d3761a1fad5 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2106,8 +2106,6 @@ static inline p4d_t *p4d_alloc_track(struct mm_struct *mm, pgd_t *pgd,
+ 	return p4d_offset(pgd, address);
+ }
  
- 		bus9_mux232: i2c@1 {
-@@ -854,6 +859,11 @@
- 					line-name = "smbus1";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
+-#endif /* !__ARCH_HAS_5LEVEL_HACK */
+-
+ static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
+ 				     unsigned long address,
+ 				     pgtbl_mod_mask *mod_mask)
+@@ -2121,6 +2119,23 @@ static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
+ 	return pud_offset(p4d, address);
+ }
  
- 		bus9_mux233: i2c@2 {
-@@ -897,6 +907,11 @@
- 					line-name = "smbus2";
- 				};
- 			};
++#else /* __ARCH_HAS_5LEVEL_HACK */
 +
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus9_mux236: i2c@1 {
-@@ -917,6 +932,11 @@
- 					line-name = "smbus3";
- 				};
- 			};
++static inline pud_t *pud_alloc_track(struct mm_struct *mm, p4d_t *p4d,
++				     unsigned long address,
++				     pgtbl_mod_mask *mod_mask)
++{
++	if (unlikely(pgd_none(*p4d))) {
++		if (__pud_alloc(mm, p4d, address))
++			return NULL;
++		*mod_mask |= PGTBL_P4D_MODIFIED;
++	}
 +
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus9_mux237: i2c@2 {
-@@ -979,6 +999,11 @@
- 					line-name = "smbus4";
- 				};
- 			};
++	return pud_offset(p4d, address);
++}
 +
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux240: i2c@1 {
-@@ -999,6 +1024,11 @@
- 					line-name = "smbus5";
- 				};
- 			};
++#endif /* !__ARCH_HAS_5LEVEL_HACK */
 +
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux241: i2c@2 {
-@@ -1042,6 +1072,11 @@
- 					line-name = "smbus6";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux244: i2c@1 {
-@@ -1062,6 +1097,11 @@
- 					line-name = "smbus7";
- 				};
- 			};
-+
-+			tmp431@4c {
-+				compatible = "ti,tmp401";
-+				reg = <0x4c>;
-+			};
- 		};
- 
- 		bus10_mux245: i2c@2 {
--- 
-2.17.1
-
+ static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+ {
+ 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
