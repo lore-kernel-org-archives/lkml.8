@@ -2,94 +2,98 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7905C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49705C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74770206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591358215;
-	bh=oSwDvF2HU130EvUxrW4K+FAYW63WcZKsc0kz0JPY/Iw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HqjaWIZKkLuYzrX5aEOowd6kYUq5qZ37WpHgg6JlGCEN8/69q06GaSj3SyoVAL0nB
-	 WNOxyuB+cAumg3fn0+H5sZdzDHXg9MN2Pk2jT1Ft1BzsvgX6IzTxjxJ4KSALpvrZDH
-	 /L3qvegILwzT2yRyRLeAst8VZu1xyoKG12dAd7To=
+	by mail.kernel.org (Postfix) with ESMTP id 1EBF520659
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:59:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PG9m5Qhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgFEL4z (ORCPT
+        id S1726484AbgFEL7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:56:55 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44339 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgFEL4y (ORCPT
+        Fri, 5 Jun 2020 07:59:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46533 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726365AbgFEL7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:56:54 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e5so7351197ote.11;
-        Fri, 05 Jun 2020 04:56:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qInNzFs9OuInC8XUdISfvho2DGF8I27nH1b8Z9VVeDA=;
-        b=j5JzhS49igjJPCiKhvbCUw8tHRafRRt5fj/pYCDuMjW+zEUJmXI0tseXCONtO1fV6e
-         lzBDHS3P6ux8UHfMHa54FMY26YIxPru/LLkbWXYWNSlbMrBmDM1oVM2MavUlqeZ3h6Kb
-         RDEe4YBspnvsIuWPPs1pe5/ReSsBwZNlHOJyhlXBs372xYgGidHR2P+9OIcA/X7EBKS+
-         HV6LkBG2+KA7byPJ9zTdtRF/QEB5AMTqsKRKrw3CqBjqeC0u1TECBkrWdGBS09cXbHMN
-         Lby+kUzQWKj0nnUFBOaSeJDUGoU5wN/aFU5EEhfmIxZsjxITKpSx/tDuoSmloTn15YjV
-         +ZJg==
-X-Gm-Message-State: AOAM530XUO6MWPjmCnKq9lST2UvhVu/cBmnMGkU6ipbmifZEi5RQ2Ypo
-        z/6APCQ2a+Dw5cka/WmRAcSSUqUPJDKqRvW6r+8=
-X-Google-Smtp-Source: ABdhPJxRLaIx3AEGb1LLnk6ZGsFvh4ZBuPVgMUwGbOd63KGxEAuLoT1dNUTMppRydnaZ9O3PLo5VZ1HV+Bn9eWw2Yxo=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr701232otb.262.1591358212129;
- Fri, 05 Jun 2020 04:56:52 -0700 (PDT)
+        Fri, 5 Jun 2020 07:59:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591358355;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LKLxozwE9yOiueToAj/LCbZmtKtjyMDIjDUUZ06KkvY=;
+        b=PG9m5QhprnO+Bi9N6cYxR956UJF/RAa0STaTOPnVd/ubgFe0kKj6GAT290dEbwsKAPjQY2
+        zIi5S6JABXosoVb4cwSaS55Yq/8wwXa4fP+yil/qHh5T90/McTtu9Ulq9uoz9Ug4sNl2SS
+        G68in4j01h2awQgPh6ePSyfvYoqutSQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-106-MKba7rfnPkekL33pkDZqkw-1; Fri, 05 Jun 2020 07:59:13 -0400
+X-MC-Unique: MKba7rfnPkekL33pkDZqkw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8693E800688;
+        Fri,  5 Jun 2020 11:59:12 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A83B35D9DA;
+        Fri,  5 Jun 2020 11:59:10 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] Revert "KVM: x86: work around leak of uninitialized stack contents"
+Date:   Fri,  5 Jun 2020 13:59:06 +0200
+Message-Id: <20200605115906.532682-2-vkuznets@redhat.com>
+In-Reply-To: <20200605115906.532682-1-vkuznets@redhat.com>
+References: <20200605115906.532682-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-References: <20200531210059.647066-1-christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20200531210059.647066-1-christophe.jaillet@wanadoo.fr>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 5 Jun 2020 13:56:41 +0200
-Message-ID: <CAJZ5v0gCZtAxsLi8LdDDDnUg6resj8WvKOberoJ+9VznwWpmAQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel: power: swap: mark a function as __init to save
- some memory
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 31, 2020 at 11:01 PM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> 'swsusp_header_init()' is only called via 'core_initcall'.
-> It can be marked as __init to save a few bytes of memory.
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  kernel/power/swap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/power/swap.c b/kernel/power/swap.c
-> index ca0fcb5ced71..01e2858b5fe3 100644
-> --- a/kernel/power/swap.c
-> +++ b/kernel/power/swap.c
-> @@ -1590,7 +1590,7 @@ int swsusp_unmark(void)
->  }
->  #endif
->
-> -static int swsusp_header_init(void)
-> +static int __init swsusp_header_init(void)
->  {
->         swsusp_header = (struct swsusp_header*) __get_free_page(GFP_KERNEL);
->         if (!swsusp_header)
-> --
+handle_vmptrst()/handle_vmread() stopped injecting #PF unconditionally
+and switched to nested_vmx_handle_memory_failure() which just kills the
+guest with KVM_EXIT_INTERNAL_ERROR in case of MMIO access, zeroing
+'exception' in kvm_write_guest_virt_system() is not needed anymore.
 
-Applied as 5.8-rc material under the "PM: hibernate: Add __init
-annotation to swsusp_header_init()" subject, thanks!
+This reverts commit 541ab2aeb28251bf7135c7961f3a6080eebcc705.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/x86.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 9e41b5135340..0097a97d331f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5647,13 +5647,6 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
+ 	/* kvm_write_guest_virt_system can pull in tons of pages. */
+ 	vcpu->arch.l1tf_flush_l1d = true;
+ 
+-	/*
+-	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
+-	 * is returned, but our callers are not ready for that and they blindly
+-	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
+-	 * uninitialized kernel stack memory into cr2 and error code.
+-	 */
+-	memset(exception, 0, sizeof(*exception));
+ 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+ 					   PFERR_WRITE_MASK, exception);
+ }
+-- 
+2.25.4
+
