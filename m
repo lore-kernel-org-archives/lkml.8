@@ -2,99 +2,280 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C56CC20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417022074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c8v0ke1r"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NRNhyOkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgFEI2E (ORCPT
+        id S1726181AbgFEI2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:28:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44430 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725986AbgFEI2E (ORCPT
+        Fri, 5 Jun 2020 04:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbgFEI2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:28:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591345683;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DYpkxStnfZ66XOBjO2aZKWdxDJeGvoZauHZhn66WLNE=;
-        b=c8v0ke1rUbqeTnwGeU3h2YcbG4vVBFZNHv8CXZ8bnPplA2n2K152e1qBhy7WyyoytPsYrK
-        ZPF0+E2+yeY2WsoaLpB8nX6lTgfkUrZhq0OoBq+LIV7Bo5dL3+Vl4zmX7QHV0bwHqTZUEZ
-        zGwH/US09fEt1WfyTkk9srCWGxorKME=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-to5q0RB2N2iPxRnn0gQmMg-1; Fri, 05 Jun 2020 04:27:59 -0400
-X-MC-Unique: to5q0RB2N2iPxRnn0gQmMg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B00B3801503;
-        Fri,  5 Jun 2020 08:27:57 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9D8DA7B605;
-        Fri,  5 Jun 2020 08:27:57 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 0CA0318095FF;
-        Fri,  5 Jun 2020 08:27:57 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 04:27:56 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     LTP List <ltp@lists.linux.it>,
-        open list <linux-kernel@vger.kernel.org>,
-        chrubis <chrubis@suse.cz>, Arnd Bergmann <arnd@arndb.de>,
-        maco@android.com, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Richard Palethorpe <rpalethorpe@suse.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        lkft-triage@lists.linaro.org
-Message-ID: <203212099.14886500.1591345676708.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CA+G9fYuGwcE3zyMFQPpfA0CyW=4WOg9V=kCfKhS7b8930jQofA@mail.gmail.com>
-References: <CA+G9fYuGwcE3zyMFQPpfA0CyW=4WOg9V=kCfKhS7b8930jQofA@mail.gmail.com>
-Subject: Re: LTP: syscalls: regression on mainline - ioctl_loop01 mknod07
- setns01
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.17.25, 10.4.195.24]
-Thread-Topic: syscalls: regression on mainline - ioctl_loop01 mknod07 setns01
-Thread-Index: h8xjKV6yHmjuKbXhHe5kzYYXrqSt/g==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Fri, 5 Jun 2020 04:28:43 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCB7C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:28:43 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id y7so11163622ybj.15
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 01:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=q4xtHULh8K3VSLAHr6h+7DTr9q0n8BVN7sADFLbNyog=;
+        b=NRNhyOkZW2AHP6pjt01FNdyqIoohsNLcNf6YvMUTcMA63i6H3CSfkhOPKKziRZWP81
+         ijFHHm+IHydhxdQQOkmrgl9SYC6W9tBejccem+OO5IWr0vGbm0Z4QeFP2MyFoEYAn1b4
+         EppDtMY64DGA0vz1picXrZhcG2dTlLTh/Gb70X2/q+S5m2TI/Ybfp4drphvE9ElkUl0z
+         VkA8tdUZLo7ESn2xZFOaVmY6fhn/IOKARHpk7zMqdWWSSUHUF9j83n2y0OCsTupWaRkp
+         140gvtVTTHlGSoIoRxLpKM4bTJ0VNoQf/KesCdGRzVe0FOQT0gavKVGNWUU6I+bQCop6
+         i0mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=q4xtHULh8K3VSLAHr6h+7DTr9q0n8BVN7sADFLbNyog=;
+        b=JNOWGBZYavEHAkRCBfBGBKT/yqKYzn9TZH0XhZyodcInbqNM3+JHSLK9FUadd1uLlA
+         Fn0qSjFYWutwciqgggdvdM0k6yxJ3jC61hf6LZAZ6+JNlotDoCZ2pQEHJKV9Ma0HvYtb
+         atPgLnsJ6lPvWwSe9d/Hon3RcqokpbUZpdpBj+MyBrMKnOyvz23OrB4NZbgzGp9Q9HgC
+         yeKOtIFtiSAAHveFobVeeHWqsj25f9zNU47TEGDmtrYEDNAPAIW9vevyfpcmWHz44RPs
+         E8jyHLcFAwbPsAkNxdF4/ia4XcDFCdcNSwlTK1kAM6yH5xyhMyYBvAZPWbCF80/j6ZxY
+         KmPQ==
+X-Gm-Message-State: AOAM532wBXXBpiNr28dpeSS+WlYoZG0Eo/x8NL4YhR/j5cWm7l3uT2ZQ
+        Gc6uBiaP1YS7RN9iHv0BazXxmDV2kQ==
+X-Google-Smtp-Source: ABdhPJzIAplfiGvvUAXfws2Vg4mMgLkpukHSy8NK0gsF4gPzeFXpJ99PYxD9sjpRwcytsiX/05iyw/k3Jw==
+X-Received: by 2002:a25:b882:: with SMTP id w2mr14553588ybj.160.1591345722977;
+ Fri, 05 Jun 2020 01:28:42 -0700 (PDT)
+Date:   Fri,  5 Jun 2020 10:28:38 +0200
+Message-Id: <20200605082839.226418-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+Subject: [PATCH -tip v3 1/2] kcov: Make runtime functions noinstr-compatible
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     peterz@infradead.org, bp@alien8.de, tglx@linutronix.de,
+        mingo@kernel.org, clang-built-linux@googlegroups.com,
+        paulmck@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While we lack a compiler attribute to add to noinstr that would disable
+KCOV, make the KCOV runtime functions return if the caller is in a
+noinstr section, and mark them noinstr.
 
+Declare write_comp_data() as __always_inline to ensure it is inlined,
+which also reduces stack usage and removes one extra call from the
+fast-path.
 
------ Original Message -----
-> Following three test cases reported as regression on Linux mainline kernel
-> on x86_64, arm64, arm and i386
-> 
->   ltp-syscalls-tests:
->     * ioctl_loop01
->     * mknod07
+In future, our compilers may provide an attribute to implement
+__no_sanitize_coverage, which can then be added to noinstr, and the
+checks added in this patch can be guarded by an #ifdef checking if the
+compiler has such an attribute or not.
 
-Test updated:
-  https://github.com/linux-test-project/ltp/commit/13fcfa2d6bdd1fb71c4528b47170e8e8fb3a8a32
+Signed-off-by: Marco Elver <elver@google.com>
+---
+Applies to -tip only currently, because of the use of instrumentation.h
+markers.
 
->     * setns01
+v3:
+* Remove objtool hack, and instead properly mark __sanitizer_cov
+  functions as noinstr.
+* Add comment about .entry.text.
 
-commit 303cc571d107 ("nsproxy: attach to namespaces via pidfds")
-changed errno that is returned for regular file from EINVAL to EBADF.
-This appears to fit more current man page, so I think we need to fix
-test to accept both. (I'm looking into that)
+v2: https://lkml.kernel.org/r/20200604145635.21565-1-elver@google.com
+* Rewrite based on Peter's and Andrey's feedback -- v1 worked because we
+  got lucky. Let's not rely on luck, as it will be difficult to ensure the
+  same conditions remain true in future.
+
+v1: https://lkml.kernel.org/r/20200604095057.259452-1-elver@google.com
+
+Note: There are a set of KCOV patches from Andrey in -next:
+https://lkml.kernel.org/r/cover.1585233617.git.andreyknvl@google.com --
+Git cleanly merges this patch with those patches, and no merge conflict
+is expected.
+---
+ kernel/kcov.c | 59 +++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 45 insertions(+), 14 deletions(-)
+
+diff --git a/kernel/kcov.c b/kernel/kcov.c
+index 8accc9722a81..84cdc30d478e 100644
+--- a/kernel/kcov.c
++++ b/kernel/kcov.c
+@@ -6,6 +6,7 @@
+ #include <linux/compiler.h>
+ #include <linux/errno.h>
+ #include <linux/export.h>
++#include <linux/instrumentation.h>
+ #include <linux/types.h>
+ #include <linux/file.h>
+ #include <linux/fs.h>
+@@ -24,6 +25,7 @@
+ #include <linux/refcount.h>
+ #include <linux/log2.h>
+ #include <asm/setup.h>
++#include <asm/sections.h>
+ 
+ #define kcov_debug(fmt, ...) pr_debug("%s: " fmt, __func__, ##__VA_ARGS__)
+ 
+@@ -172,20 +174,38 @@ static notrace unsigned long canonicalize_ip(unsigned long ip)
+ 	return ip;
+ }
+ 
++/* Return true if @ip is within a noinstr section. */
++static __always_inline bool within_noinstr_section(unsigned long ip)
++{
++	/*
++	 * Note: .entry.text is also considered noinstr, but for now, since all
++	 * .entry.text code lives in .S files, these are never instrumented.
++	 */
++	return (unsigned long)__noinstr_text_start <= ip &&
++	       ip < (unsigned long)__noinstr_text_end;
++}
++
+ /*
+  * Entry point from instrumented code.
+  * This is called once per basic-block/edge.
+  */
+-void notrace __sanitizer_cov_trace_pc(void)
++void noinstr __sanitizer_cov_trace_pc(void)
+ {
+ 	struct task_struct *t;
+ 	unsigned long *area;
+-	unsigned long ip = canonicalize_ip(_RET_IP_);
++	unsigned long ip;
+ 	unsigned long pos;
+ 
++	if (unlikely(within_noinstr_section(_RET_IP_)))
++		return;
++
++	instrumentation_begin();
++
+ 	t = current;
+ 	if (!check_kcov_mode(KCOV_MODE_TRACE_PC, t))
+-		return;
++		goto out;
++
++	ip = canonicalize_ip(_RET_IP_);
+ 
+ 	area = t->kcov_area;
+ 	/* The first 64-bit word is the number of subsequent PCs. */
+@@ -194,19 +214,27 @@ void notrace __sanitizer_cov_trace_pc(void)
+ 		area[pos] = ip;
+ 		WRITE_ONCE(area[0], pos);
+ 	}
++
++out:
++	instrumentation_end();
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_pc);
+ 
+ #ifdef CONFIG_KCOV_ENABLE_COMPARISONS
+-static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
++static __always_inline void write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
+ {
+ 	struct task_struct *t;
+ 	u64 *area;
+ 	u64 count, start_index, end_pos, max_pos;
+ 
++	if (unlikely(within_noinstr_section(ip)))
++		return;
++
++	instrumentation_begin();
++
+ 	t = current;
+ 	if (!check_kcov_mode(KCOV_MODE_TRACE_CMP, t))
+-		return;
++		goto out;
+ 
+ 	ip = canonicalize_ip(ip);
+ 
+@@ -229,61 +257,64 @@ static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
+ 		area[start_index + 3] = ip;
+ 		WRITE_ONCE(area[0], count + 1);
+ 	}
++
++out:
++	instrumentation_end();
+ }
+ 
+-void notrace __sanitizer_cov_trace_cmp1(u8 arg1, u8 arg2)
++void noinstr __sanitizer_cov_trace_cmp1(u8 arg1, u8 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(0), arg1, arg2, _RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_cmp1);
+ 
+-void notrace __sanitizer_cov_trace_cmp2(u16 arg1, u16 arg2)
++void noinstr __sanitizer_cov_trace_cmp2(u16 arg1, u16 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(1), arg1, arg2, _RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_cmp2);
+ 
+-void notrace __sanitizer_cov_trace_cmp4(u32 arg1, u32 arg2)
++void noinstr __sanitizer_cov_trace_cmp4(u32 arg1, u32 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(2), arg1, arg2, _RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_cmp4);
+ 
+-void notrace __sanitizer_cov_trace_cmp8(u64 arg1, u64 arg2)
++void noinstr __sanitizer_cov_trace_cmp8(u64 arg1, u64 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(3), arg1, arg2, _RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_cmp8);
+ 
+-void notrace __sanitizer_cov_trace_const_cmp1(u8 arg1, u8 arg2)
++void noinstr __sanitizer_cov_trace_const_cmp1(u8 arg1, u8 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(0) | KCOV_CMP_CONST, arg1, arg2,
+ 			_RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_const_cmp1);
+ 
+-void notrace __sanitizer_cov_trace_const_cmp2(u16 arg1, u16 arg2)
++void noinstr __sanitizer_cov_trace_const_cmp2(u16 arg1, u16 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(1) | KCOV_CMP_CONST, arg1, arg2,
+ 			_RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_const_cmp2);
+ 
+-void notrace __sanitizer_cov_trace_const_cmp4(u32 arg1, u32 arg2)
++void noinstr __sanitizer_cov_trace_const_cmp4(u32 arg1, u32 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(2) | KCOV_CMP_CONST, arg1, arg2,
+ 			_RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_const_cmp4);
+ 
+-void notrace __sanitizer_cov_trace_const_cmp8(u64 arg1, u64 arg2)
++void noinstr __sanitizer_cov_trace_const_cmp8(u64 arg1, u64 arg2)
+ {
+ 	write_comp_data(KCOV_CMP_SIZE(3) | KCOV_CMP_CONST, arg1, arg2,
+ 			_RET_IP_);
+ }
+ EXPORT_SYMBOL(__sanitizer_cov_trace_const_cmp8);
+ 
+-void notrace __sanitizer_cov_trace_switch(u64 val, u64 *cases)
++void noinstr __sanitizer_cov_trace_switch(u64 val, u64 *cases)
+ {
+ 	u64 i;
+ 	u64 count = cases[0];
+-- 
+2.27.0.278.ge193c7cf3a9-goog
 
