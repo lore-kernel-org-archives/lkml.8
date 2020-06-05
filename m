@@ -2,234 +2,456 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926AB206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I12g0M++"
+	by mail.kernel.org (Postfix) with ESMTP id DC4CC2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgFEVkz (ORCPT
+        id S1728916AbgFEVku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:40:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51508 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728256AbgFEVkm (ORCPT
+        Fri, 5 Jun 2020 17:40:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49042 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728893AbgFEVkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:40:42 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055LW58Y017757;
-        Fri, 5 Jun 2020 21:40:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=92xTSdf3wbaz+/R0fTMy2xdg8meNwxO0k6N5Ns/wDW0=;
- b=I12g0M++UVMsOKnKxZcKguNHd2Ee2K3XHYVMz5W+kwyrJwTgQ+rx/3GAEgJtmYkCQlrv
- L94Lm2/njmucq9/7aq+y5QU3b9Qg6DBpgFVoo+9c6grxnVxtdg3tZjoXRS/DthdOv0ny
- k5DEiRJzwz3RGKN0iBfUtzHORGW8u16ZPVGV/4//99bLNnju6Bm8MNM2FbuuABzAyerI
- Vy5koEnazbwUixVGRRtBnOIYWO+vSMsiIV2NwuutbF2/INXiv19Rsw45WfKln1wi8D3P
- Q4o+XrAJ7Mf3GusxPtRQLtipZw0ZiMm1nl3ZaNJ90cFuX//h+eQIW40o1j/HVH8jeNS/ HQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 31f9244twh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 05 Jun 2020 21:40:02 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055LYB2I033194;
-        Fri, 5 Jun 2020 21:40:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 31f927ra3d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jun 2020 21:40:01 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 055LdwSK029799;
-        Fri, 5 Jun 2020 21:39:58 GMT
-Received: from [10.39.238.70] (/10.39.238.70)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jun 2020 14:39:58 -0700
-Subject: Re: [PATCH 03/12] x86/xen: Introduce new function to map
- HYPERVISOR_shared_info on Resume
-To:     Anchal Agarwal <anchalag@amazon.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, jgross@suse.com, linux-pm@vger.kernel.org,
-        linux-mm@kvack.org, kamatam@amazon.com, sstabellini@kernel.org,
-        konrad.wilk@oracle.com, roger.pau@citrix.com, axboe@kernel.dk,
-        davem@davemloft.net, rjw@rjwysocki.net, len.brown@intel.com,
-        pavel@ucw.cz, peterz@infradead.org, eduval@amazon.com,
-        sblbir@amazon.com, xen-devel@lists.xenproject.org,
-        vkuznets@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org
-References: <cover.1589926004.git.anchalag@amazon.com>
- <529f544a64bb93b920bf86b1d3f86d93b0a4219b.1589926004.git.anchalag@amazon.com>
- <72989b50-0c13-7a2b-19e2-de4a3646c83f@oracle.com>
- <20200604230307.GB25251@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <9644a5f1-e1f8-5fe1-3135-cc6b4baf893b@oracle.com>
-Date:   Fri, 5 Jun 2020 17:39:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 17:40:23 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055LVwvh101855;
+        Fri, 5 Jun 2020 17:40:18 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31f9dfm16n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 17:40:18 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055LbxoM131856;
+        Fri, 5 Jun 2020 17:40:18 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31f9dfm16c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 17:40:18 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055LZBff027082;
+        Fri, 5 Jun 2020 21:40:17 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03wdc.us.ibm.com with ESMTP id 31bf495gwe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 21:40:17 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055LeG6I32375106
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jun 2020 21:40:16 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A9A4AC05B;
+        Fri,  5 Jun 2020 21:40:16 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98A0CAC05E;
+        Fri,  5 Jun 2020 21:40:15 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.146.208])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Jun 2020 21:40:15 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v8 13/16] s390/zcrypt: Notify driver on config changed and scan complete callbacks
+Date:   Fri,  5 Jun 2020 17:40:01 -0400
+Message-Id: <20200605214004.14270-14-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200605214004.14270-1-akrowiak@linux.ibm.com>
+References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200604230307.GB25251@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9643 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006050159
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9643 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 impostorscore=0
- adultscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 bulkscore=0
- lowpriorityscore=0 cotscore=-2147483648 phishscore=0 spamscore=0
- malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050159
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-05_07:2020-06-04,2020-06-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ adultscore=0 impostorscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ suspectscore=3 cotscore=-2147483648 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006050157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/20 7:03 PM, Anchal Agarwal wrote:
-> On Sat, May 30, 2020 at 07:02:01PM -0400, Boris Ostrovsky wrote:
->> CAUTION: This email originated from outside of the organization. Do no=
-t click links or open attachments unless you can confirm the sender and k=
-now the content is safe.
->>
->>
->>
->> On 5/19/20 7:25 PM, Anchal Agarwal wrote:
->>> Introduce a small function which re-uses shared page's PA allocated
->>> during guest initialization time in reserve_shared_info() and not
->>> allocate new page during resume flow.
->>> It also  does the mapping of shared_info_page by calling
->>> xen_hvm_init_shared_info() to use the function.
->>>
->>> Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
->>> ---
->>>  arch/x86/xen/enlighten_hvm.c | 7 +++++++
->>>  arch/x86/xen/xen-ops.h       | 1 +
->>>  2 files changed, 8 insertions(+)
->>>
->>> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hv=
-m.c
->>> index e138f7de52d2..75b1ec7a0fcd 100644
->>> --- a/arch/x86/xen/enlighten_hvm.c
->>> +++ b/arch/x86/xen/enlighten_hvm.c
->>> @@ -27,6 +27,13 @@
->>>
->>>  static unsigned long shared_info_pfn;
->>>
->>> +void xen_hvm_map_shared_info(void)
->>> +{
->>> +     xen_hvm_init_shared_info();
->>> +     if (shared_info_pfn)
->>> +             HYPERVISOR_shared_info =3D __va(PFN_PHYS(shared_info_pf=
-n));
->>> +}
->>> +
->>
->> AFAICT it is only called once so I don't see a need for new routine.
->>
->>
-> HYPERVISOR_shared_info can only be mapped in this scope without refacto=
-ring
-> much of the code.
+From: Harald Freudenberger <freude@linux.ibm.com>
 
+This patch intruduces an extension to the ap bus to notify drivers
+on crypto config changed and bus scan complete events.
+Two new callbacks are introduced for ap_drivers:
 
-Refactoring what? All am suggesting is
+  void (*on_config_changed)(struct ap_config_info *new_config_info,
+                            struct ap_config_info *old_config_info);
+  void (*on_scan_complete)(struct ap_config_info *new_config_info,
+                            struct ap_config_info *old_config_info);
 
---- a/arch/x86/xen/suspend.c
-+++ b/arch/x86/xen/suspend.c
-@@ -124,7 +124,9 @@ static void xen_syscore_resume(void)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return;
-=C2=A0
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* No need to setup vcpu_info =
-as it's already moved off */
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xen_hvm_map_shared_info();
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xen_hvm_init_shared_info();
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (shared_info_pfn)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 HYPERVISOR_shared_info =3D __va(PFN_PHYS(shared_info_pfn));
-=C2=A0
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pvclock_resume();
+Both callbacks are optional. Both callbacks are only triggered
+when QCI information is available (facility bit 12):
 
->> And is it possible for shared_info_pfn to be NULL in resume path (whic=
-h
->> is where this is called)?
->>
->>
-> I don't think it should be, still a sanity check but I don't think its =
-needed there
-> because hibernation will fail in any case if thats the case.=20
+* The on_config_changed callback is invoked at the start of the AP bus scan
+  function when it determines that the host AP configuration information
+  has changed since the previous scan. This is done by storing
+  an old and current QCI info struct and comparing them. If there is any
+  difference, the callback is invoked.
 
+  Note that when the AP bus scan detects that AP adapters or domains have
+  been removed from the host's AP configuration, it will remove the
+  associated devices from the AP bus subsystem's device model. This
+  callback gives the device driver a chance to respond to the removal
+  of the AP devices in bulk rather than one at a time as its remove
+  callback is invoked. It will also allow the device driver to do any
+  any cleanup prior to giving control back to the bus piecemeal. This is
+  particularly important for the vfio_ap driver because there may be
+  guests using the queues at the time.
 
-If shared_info_pfn is NULL you'd have problems long before hibernation
-started. We set it in xen_hvm_guest_init() and never touch again.
+* The on_scan_complete callback is invoked after the ap bus scan is
+  complete if the host AP configuration data has changed.
 
+  Note that when the AP bus scan detects that adapters or domains have
+  been added to the host's configuration, it will create new devices in
+  the AP bus subsystem's device model. This callback also allows the driver
+  to process all of the new devices in bulk.
 
-In fact, I'd argue that it should be __ro_after_init.
+Please note that changes to the apmask and aqmask do not trigger
+these two callbacks since the bus scan function is not invoked by changes
+to those masks.
 
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/ap_bus.c | 175 ++++++++++++++++++++++++++---------
+ drivers/s390/crypto/ap_bus.h |  12 +++
+ 2 files changed, 142 insertions(+), 45 deletions(-)
 
-> However, HYPERVISOR_shared_info does needs to be re-mapped on resume as=
- its been
-> marked to dummy address on suspend. Its also safe in case va changes.
-> Does the answer your question?
-
-
-I wasn't arguing whether HYPERVISOR_shared_info needs to be set, I was
-only saying that shared_info_pfn doesn't need to be tested.
-
-
--boris
-
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index 40cb5861dad3..0b4a67051138 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -73,8 +73,12 @@ struct ap_perms ap_perms;
+ EXPORT_SYMBOL(ap_perms);
+ DEFINE_MUTEX(ap_perms_mutex);
+ EXPORT_SYMBOL(ap_perms_mutex);
++DEFINE_MUTEX(ap_config_lock);
++
++/* current and old qci info structs */
++static struct ap_config_info *ap_config_info;
++static struct ap_config_info *ap_old_config_info;
+ 
+-static struct ap_config_info *ap_configuration;
+ static bool initialised;
+ 
+ /*
+@@ -183,8 +187,8 @@ static int ap_apft_available(void)
+  */
+ static inline int ap_qact_available(void)
+ {
+-	if (ap_configuration)
+-		return ap_configuration->qact;
++	if (ap_config_info)
++		return ap_config_info->qact;
+ 	return 0;
+ }
+ 
+@@ -213,13 +217,15 @@ static void ap_init_configuration(void)
+ 	if (!ap_configuration_available())
+ 		return;
+ 
+-	ap_configuration = kzalloc(sizeof(*ap_configuration), GFP_KERNEL);
+-	if (!ap_configuration)
+-		return;
+-	if (ap_query_configuration(ap_configuration) != 0) {
+-		kfree(ap_configuration);
+-		ap_configuration = NULL;
++	/* allocate current qci info struct */
++	ap_config_info = kzalloc(sizeof(*ap_config_info), GFP_KERNEL);
++	if (!ap_config_info)
+ 		return;
++
++	/* fetch qci info into the current qci info struct */
++	if (ap_query_configuration(ap_config_info)) {
++		kfree(ap_config_info);
++		ap_config_info = NULL;
+ 	}
+ }
+ 
+@@ -242,10 +248,10 @@ static inline int ap_test_config(unsigned int *field, unsigned int nr)
+  */
+ static inline int ap_test_config_card_id(unsigned int id)
+ {
+-	if (!ap_configuration)	/* QCI not supported */
+-		/* only ids 0...3F may be probed */
++	if (!ap_config_info)
++		/* QCI not available, only ids 0...3F may be probed */
+ 		return id < 0x40 ? 1 : 0;
+-	return ap_test_config(ap_configuration->apm, id);
++	return ap_test_config(ap_config_info->apm, id);
+ }
+ 
+ /*
+@@ -259,9 +265,9 @@ static inline int ap_test_config_card_id(unsigned int id)
+  */
+ int ap_test_config_usage_domain(unsigned int domain)
+ {
+-	if (!ap_configuration)	/* QCI not supported */
++	if (!ap_config_info)  /* QCI not supported */
+ 		return domain < 16;
+-	return ap_test_config(ap_configuration->aqm, domain);
++	return ap_test_config(ap_config_info->aqm, domain);
+ }
+ EXPORT_SYMBOL(ap_test_config_usage_domain);
+ 
+@@ -275,9 +281,9 @@ EXPORT_SYMBOL(ap_test_config_usage_domain);
+  */
+ int ap_test_config_ctrl_domain(unsigned int domain)
+ {
+-	if (!ap_configuration)	/* QCI not supported */
++	if (!ap_config_info)  /* QCI not supported */
+ 		return 0;
+-	return ap_test_config(ap_configuration->adm, domain);
++	return ap_test_config(ap_config_info->adm, domain);
+ }
+ EXPORT_SYMBOL(ap_test_config_ctrl_domain);
+ 
+@@ -953,45 +959,45 @@ static BUS_ATTR_RW(ap_domain);
+ 
+ static ssize_t ap_control_domain_mask_show(struct bus_type *bus, char *buf)
+ {
+-	if (!ap_configuration)	/* QCI not supported */
+-		return scnprintf(buf, PAGE_SIZE, "not supported\n");
++	if (!ap_config_info)  /* QCI not supported */
++		return snprintf(buf, PAGE_SIZE, "not supported\n");
+ 
+-	return scnprintf(buf, PAGE_SIZE,
+-			 "0x%08x%08x%08x%08x%08x%08x%08x%08x\n",
+-			 ap_configuration->adm[0], ap_configuration->adm[1],
+-			 ap_configuration->adm[2], ap_configuration->adm[3],
+-			 ap_configuration->adm[4], ap_configuration->adm[5],
+-			 ap_configuration->adm[6], ap_configuration->adm[7]);
++	return snprintf(buf, PAGE_SIZE,
++			"0x%08x%08x%08x%08x%08x%08x%08x%08x\n",
++			ap_config_info->adm[0], ap_config_info->adm[1],
++			ap_config_info->adm[2], ap_config_info->adm[3],
++			ap_config_info->adm[4], ap_config_info->adm[5],
++			ap_config_info->adm[6], ap_config_info->adm[7]);
+ }
+ 
+ static BUS_ATTR_RO(ap_control_domain_mask);
+ 
+ static ssize_t ap_usage_domain_mask_show(struct bus_type *bus, char *buf)
+ {
+-	if (!ap_configuration)	/* QCI not supported */
+-		return scnprintf(buf, PAGE_SIZE, "not supported\n");
++	if (!ap_config_info)  /* QCI not supported */
++		return snprintf(buf, PAGE_SIZE, "not supported\n");
+ 
+-	return scnprintf(buf, PAGE_SIZE,
+-			 "0x%08x%08x%08x%08x%08x%08x%08x%08x\n",
+-			 ap_configuration->aqm[0], ap_configuration->aqm[1],
+-			 ap_configuration->aqm[2], ap_configuration->aqm[3],
+-			 ap_configuration->aqm[4], ap_configuration->aqm[5],
+-			 ap_configuration->aqm[6], ap_configuration->aqm[7]);
++	return snprintf(buf, PAGE_SIZE,
++			"0x%08x%08x%08x%08x%08x%08x%08x%08x\n",
++			ap_config_info->aqm[0], ap_config_info->aqm[1],
++			ap_config_info->aqm[2], ap_config_info->aqm[3],
++			ap_config_info->aqm[4], ap_config_info->aqm[5],
++			ap_config_info->aqm[6], ap_config_info->aqm[7]);
+ }
+ 
+ static BUS_ATTR_RO(ap_usage_domain_mask);
+ 
+ static ssize_t ap_adapter_mask_show(struct bus_type *bus, char *buf)
+ {
+-	if (!ap_configuration)	/* QCI not supported */
+-		return scnprintf(buf, PAGE_SIZE, "not supported\n");
++	if (!ap_config_info)  /* QCI not supported */
++		return snprintf(buf, PAGE_SIZE, "not supported\n");
+ 
+-	return scnprintf(buf, PAGE_SIZE,
+-			 "0x%08x%08x%08x%08x%08x%08x%08x%08x\n",
+-			 ap_configuration->apm[0], ap_configuration->apm[1],
+-			 ap_configuration->apm[2], ap_configuration->apm[3],
+-			 ap_configuration->apm[4], ap_configuration->apm[5],
+-			 ap_configuration->apm[6], ap_configuration->apm[7]);
++	return snprintf(buf, PAGE_SIZE,
++			"0x%08x%08x%08x%08x%08x%08x%08x%08x\n",
++			ap_config_info->apm[0], ap_config_info->apm[1],
++			ap_config_info->apm[2], ap_config_info->apm[3],
++			ap_config_info->apm[4], ap_config_info->apm[5],
++			ap_config_info->apm[6], ap_config_info->apm[7]);
+ }
+ 
+ static BUS_ATTR_RO(ap_adapter_mask);
+@@ -1079,7 +1085,7 @@ static ssize_t ap_max_domain_id_show(struct bus_type *bus, char *buf)
+ {
+ 	int max_domain_id;
+ 
+-	if (ap_configuration)
++	if (ap_config_info)
+ 		max_domain_id = ap_max_domain_id ? : -1;
+ 	else
+ 		max_domain_id = 15;
+@@ -1373,6 +1379,50 @@ static int ap_get_compatible_type(ap_qid_t qid, int rawtype, unsigned int func)
+ 	return comp_type;
+ }
+ 
++/* Helper function for notify_config_changed */
++static int __drv_notify_config_changed(struct device_driver *drv, void *data)
++{
++	struct ap_driver *ap_drv = to_ap_drv(drv);
++
++	if (try_module_get(drv->owner)) {
++		if (ap_drv->on_config_changed)
++			ap_drv->on_config_changed(ap_config_info,
++						  ap_old_config_info);
++		module_put(drv->owner);
++	}
++
++	return 0;
++}
++
++/* Notify all drivers about an qci config change */
++static inline void notify_config_changed(void)
++{
++	bus_for_each_drv(&ap_bus_type, NULL, NULL,
++			 __drv_notify_config_changed);
++}
++
++/* Helper function for notify_scan_complete */
++static int __drv_notify_scan_complete(struct device_driver *drv, void *data)
++{
++	struct ap_driver *ap_drv = to_ap_drv(drv);
++
++	if (try_module_get(drv->owner)) {
++		if (ap_drv->on_scan_complete)
++			ap_drv->on_scan_complete(ap_config_info,
++						 ap_old_config_info);
++		module_put(drv->owner);
++	}
++
++	return 0;
++}
++
++/* Notify all drivers about bus scan complete */
++static inline void notify_scan_complete(void)
++{
++	bus_for_each_drv(&ap_bus_type, NULL, NULL,
++			 __drv_notify_scan_complete);
++}
++
+ /*
+  * Helper function to be used with bus_find_dev
+  * matches for the card device with the given id
+@@ -1555,23 +1605,57 @@ static void _ap_scan_bus_adapter(int id)
+ 		put_device(&ac->ap_dev.device);
+ }
+ 
++static int ap_config_changed(void)
++{
++	int cfg_chg = 0;
++
++	if (ap_config_info) {
++		if (!ap_old_config_info) {
++			ap_old_config_info = kzalloc(
++				sizeof(*ap_old_config_info), GFP_KERNEL);
++			if (!ap_old_config_info)
++				return 0;
++		} else {
++			memcpy(ap_old_config_info, ap_config_info,
++			       sizeof(struct ap_config_info));
++		}
++		ap_query_configuration(ap_config_info);
++		cfg_chg = memcmp(ap_config_info,
++				 ap_old_config_info,
++				 sizeof(struct ap_config_info)) != 0;
++	}
++
++	return cfg_chg;
++}
++
+ /**
+  * ap_scan_bus(): Scan the AP bus for new devices
+  * Runs periodically, workqueue timer (ap_config_time)
+  */
+ static void ap_scan_bus(struct work_struct *unused)
+ {
+-	int id;
++	int id, config_changed = 0;
+ 
+ 	AP_DBF(DBF_DEBUG, "%s running\n", __func__);
+ 
+-	ap_query_configuration(ap_configuration);
++	mutex_lock(&ap_config_lock);
++
++	/* config change notify */
++	config_changed = ap_config_changed();
++	if (config_changed)
++		notify_config_changed();
+ 	ap_select_domain();
+ 
+ 	/* loop over all possible adapters */
+ 	for (id = 0; id < AP_DEVICES; id++)
+ 		_ap_scan_bus_adapter(id);
+ 
++	/* scan complete notify */
++	if (config_changed)
++		notify_scan_complete();
++
++	mutex_unlock(&ap_config_lock);
++
+ 	/* check if there is at least one queue available with default domain */
+ 	if (ap_domain_index >= 0) {
+ 		struct device *dev =
+@@ -1654,7 +1738,7 @@ static int __init ap_module_init(void)
+ 	/* Get AP configuration data if available */
+ 	ap_init_configuration();
+ 
+-	if (ap_configuration)
++	if (ap_config_info)
+ 		max_domain_id =
+ 			ap_max_domain_id ? ap_max_domain_id : AP_DOMAINS - 1;
+ 	else
+@@ -1723,7 +1807,8 @@ static int __init ap_module_init(void)
+ out:
+ 	if (ap_using_interrupts())
+ 		unregister_adapter_interrupt(&ap_airq);
+-	kfree(ap_configuration);
++	kfree(ap_config_info);
++	kfree(ap_old_config_info);
+ 	return rc;
+ }
+ device_initcall(ap_module_init);
+diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+index 7d9646251bfd..491ca8543398 100644
+--- a/drivers/s390/crypto/ap_bus.h
++++ b/drivers/s390/crypto/ap_bus.h
+@@ -137,6 +137,18 @@ struct ap_driver {
+ 	int (*probe)(struct ap_device *);
+ 	void (*remove)(struct ap_device *);
+ 	bool (*in_use)(unsigned long *apm, unsigned long *aqm);
++	/*
++	 * Called at the start of the ap bus scan function when
++	 * the crypto config information (qci) has changed.
++	 */
++	void (*on_config_changed)(struct ap_config_info *new_config_info,
++				  struct ap_config_info *old_config_info);
++	/*
++	 * Called at the end of the ap bus scan function when
++	 * the crypto config information (qci) has changed.
++	 */
++	void (*on_scan_complete)(struct ap_config_info *new_config_info,
++				 struct ap_config_info *old_config_info);
+ };
+ 
+ #define to_ap_drv(x) container_of((x), struct ap_driver, driver)
+-- 
+2.21.1
 
