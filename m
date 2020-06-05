@@ -2,207 +2,321 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1444DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B95C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CB3206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E369206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SRH3WRx6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cg4PIktu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgFEJgy (ORCPT
+        id S1726308AbgFEJhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:36:54 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56547 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726291AbgFEJgx (ORCPT
+        Fri, 5 Jun 2020 05:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgFEJhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:36:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591349811;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=1rlOZyMPwx6i+zE1nR5fGGCMec/zDQQDIPW7PFTof6o=;
-        b=SRH3WRx6h630Cxdb8r2loc7KpPxNoFWOuZk6fJwrPy6lGgeYbiuxDihGlygrQSWFlRaikV
-        0/d13Y70ouAXpnHl3/ckO3iasU5THo+Ew+A8Q8FH6er21hAbTm/XeWtRpTXGqZz48VX0V6
-        mooIfPg9naAjuylD9vBNxclTSAhxCPc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-288-K-pnhr5JMqiI6rt9YliBkg-1; Fri, 05 Jun 2020 05:36:49 -0400
-X-MC-Unique: K-pnhr5JMqiI6rt9YliBkg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4FD084B8A0;
-        Fri,  5 Jun 2020 09:36:47 +0000 (UTC)
-Received: from [10.36.114.72] (ovpn-114-72.ams2.redhat.com [10.36.114.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E8015D9DA;
-        Fri,  5 Jun 2020 09:36:46 +0000 (UTC)
-Subject: Re: [PATCH 2/2] scripts/spelling: Add a few more typos
-To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        SeongJae Park <sjpark@amazon.de>
-References: <20200605092502.18018-1-sjpark@amazon.com>
- <20200605092502.18018-3-sjpark@amazon.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <3e56face-4502-59bb-cda9-2701d00a462a@redhat.com>
-Date:   Fri, 5 Jun 2020 11:36:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 05:37:19 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174EDC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 02:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BgAFCtadeCSjQRZFGbfYeltR3Qq+KbUhZM6A9E2cTTE=; b=Cg4PIktuLqiYrCXmIxHVdi6EXk
+        uSbGcD0kxpjDBDAvGDF5eyNyGPqlqg+F8fnt9bCT0PtdXm5qgHmyoqLxgXIdZVx+E1oUFzCIM0bFt
+        6+k89fGt47x7R9rT9kKnslfNaibS+b3qG7Le09GgW1rZq6D5vqS0J92m1ZZVO1FQfXooqjv2te949
+        NYQBiz5/8W5c8erV0G+iMnNrCW3EUqmExAoSG0Rir9Wkb+fLWyMoBSg87mFNYvvyIxVK/I1pemujM
+        BG9W9noCHuicIyge+PSUd/djseUw+gifMP+4nDwJCi5DY2IWhAUOIZtHZFEILSs30EFVvy5vCpcf5
+        EhWzsOQg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jh8mh-0004SU-SF; Fri, 05 Jun 2020 09:37:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2D8EB306064;
+        Fri,  5 Jun 2020 11:37:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9C77921A73960; Fri,  5 Jun 2020 11:37:04 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 11:37:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net, sfr@canb.auug.org.au,
+        linux@roeck-us.net
+Subject: Re: [RFC][PATCH 5/7] irq_work, smp: Allow irq_work on
+ call_single_queue
+Message-ID: <20200605093704.GB2948@hirez.programming.kicks-ass.net>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.011635912@infradead.org>
+ <20200528234031.GB551@lenoir>
+ <20200529133641.GM706495@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200605092502.18018-3-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529133641.GM706495@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.06.20 11:25, SeongJae Park wrote:
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> This commit adds typos I found from another works.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> ---
->  scripts/spelling.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-> index d9cd24cf0d40..c45e9afaab2d 100644
-> --- a/scripts/spelling.txt
-> +++ b/scripts/spelling.txt
-> @@ -59,6 +59,7 @@ actualy||actually
->  acumulating||accumulating
->  acumulative||accumulative
->  acumulator||accumulator
-> +acutally||actually
->  adapater||adapter
->  addional||additional
->  additionaly||additionally
-> @@ -249,6 +250,7 @@ calescing||coalescing
->  calle||called
->  callibration||calibration
->  callled||called
-> +callser||caller
->  calucate||calculate
->  calulate||calculate
->  cancelation||cancellation
-> @@ -671,6 +673,7 @@ hanlde||handle
->  hanled||handled
->  happend||happened
->  harware||hardware
-> +havind||having
->  heirarchically||hierarchically
->  helpfull||helpful
->  hexdecimal||hexadecimal
-> @@ -845,6 +848,7 @@ logile||logfile
->  loobpack||loopback
->  loosing||losing
->  losted||lost
-> +maangement||management
->  machinary||machinery
->  maibox||mailbox
->  maintainance||maintenance
-> @@ -905,6 +909,7 @@ modfiy||modify
->  modulues||modules
->  momery||memory
->  memomry||memory
-> +monitring||monitoring
->  monochorome||monochrome
->  monochromo||monochrome
->  monocrome||monochrome
-> @@ -1010,6 +1015,7 @@ partiton||partition
->  pased||passed
->  passin||passing
->  pathes||paths
-> +pattrns||patterns
->  pecularities||peculiarities
->  peformance||performance
->  peforming||performing
-> @@ -1256,6 +1262,7 @@ shoule||should
->  shrinked||shrunk
->  siginificantly||significantly
->  signabl||signal
-> +significanly||significantly
->  similary||similarly
->  similiar||similar
->  simlar||similar
-> @@ -1371,6 +1378,7 @@ thead||thread
->  therfore||therefore
->  thier||their
->  threds||threads
-> +threee||three
->  threshhold||threshold
->  thresold||threshold
->  throught||through
-> @@ -1410,6 +1418,7 @@ tyep||type
->  udpate||update
->  uesd||used
->  uknown||unknown
-> +usccess||success
->  usupported||unsupported
->  uncommited||uncommitted
->  unconditionaly||unconditionally
-> 
+On Fri, May 29, 2020 at 03:36:41PM +0200, Peter Zijlstra wrote:
+> Maybe I can anonymous-union my way around it, dunno. I'll think about
+> it. I'm certainly not proud of this. But at least the BUILD_BUG_ON()s
+> should catch the more blatant breakage here.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+How's this then? Differently ugly, but at least it compiles with that
+horrible struct randomization junk enabled.
 
--- 
-Thanks,
+---
+ include/linux/irq_work.h  |   28 ++++++-------------
+ include/linux/sched.h     |    4 +-
+ include/linux/smp.h       |   25 ++++++-----------
+ include/linux/smp_types.h |   66 ++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/core.c       |    6 ++--
+ kernel/smp.c              |   18 ------------
+ 6 files changed, 89 insertions(+), 58 deletions(-)
 
-David / dhildenb
-
+--- a/include/linux/irq_work.h
++++ b/include/linux/irq_work.h
+@@ -2,7 +2,7 @@
+ #ifndef _LINUX_IRQ_WORK_H
+ #define _LINUX_IRQ_WORK_H
+ 
+-#include <linux/llist.h>
++#include <linux/smp_types.h>
+ 
+ /*
+  * An entry can be in one of four states:
+@@ -13,26 +13,16 @@
+  * busy      NULL, 2 -> {free, claimed} : callback in progress, can be claimed
+  */
+ 
+-/* flags share CSD_FLAG_ space */
+-
+-#define IRQ_WORK_PENDING	BIT(0)
+-#define IRQ_WORK_BUSY		BIT(1)
+-
+-/* Doesn't want IPI, wait for tick: */
+-#define IRQ_WORK_LAZY		BIT(2)
+-/* Run hard IRQ context, even on RT */
+-#define IRQ_WORK_HARD_IRQ	BIT(3)
+-
+-#define IRQ_WORK_CLAIMED	(IRQ_WORK_PENDING | IRQ_WORK_BUSY)
+-
+-/*
+- * structure shares layout with single_call_data_t.
+- */
+ struct irq_work {
+-	struct llist_node llnode;
+-	atomic_t flags;
++	union {
++		struct __call_single_node node;
++		struct {
++			struct llist_node llnode;
++			atomic_t flags;
++		};
++	};
+ 	void (*func)(struct irq_work *);
+-};
++} __no_randomize_layout;
+ 
+ static inline
+ void init_irq_work(struct irq_work *work, void (*func)(struct irq_work *))
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -32,6 +32,7 @@
+ #include <linux/posix-timers.h>
+ #include <linux/rseq.h>
+ #include <linux/kcsan.h>
++#include <linux/smp_types.h>
+ 
+ /* task_struct member predeclarations (sorted alphabetically): */
+ struct audit_context;
+@@ -654,9 +655,8 @@ struct task_struct {
+ 	unsigned int			ptrace;
+ 
+ #ifdef CONFIG_SMP
+-	struct llist_node		wake_entry;
+-	unsigned int			wake_entry_type;
+ 	int				on_cpu;
++	struct __call_single_node	wake_entry;
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ 	/* Current CPU: */
+ 	unsigned int			cpu;
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -12,32 +12,25 @@
+ #include <linux/list.h>
+ #include <linux/cpumask.h>
+ #include <linux/init.h>
+-#include <linux/llist.h>
++#include <linux/smp_types.h>
+ 
+ typedef void (*smp_call_func_t)(void *info);
+ typedef bool (*smp_cond_func_t)(int cpu, void *info);
+ 
+-enum {
+-	CSD_FLAG_LOCK		= 0x01,
+-
+-	/* IRQ_WORK_flags */
+-
+-	CSD_TYPE_ASYNC		= 0x00,
+-	CSD_TYPE_SYNC		= 0x10,
+-	CSD_TYPE_IRQ_WORK	= 0x20,
+-	CSD_TYPE_TTWU		= 0x30,
+-	CSD_FLAG_TYPE_MASK	= 0xF0,
+-};
+-
+ /*
+  * structure shares (partial) layout with struct irq_work
+  */
+ struct __call_single_data {
+-	struct llist_node llist;
+-	unsigned int flags;
++	union {
++		struct __call_single_node node;
++		struct {
++			struct llist_node llist;
++			unsigned int flags;
++		};
++	};
+ 	smp_call_func_t func;
+ 	void *info;
+-};
++} __no_randomize_layout;
+ 
+ /* Use __aligned() to avoid to use 2 cache lines for 1 csd */
+ typedef struct __call_single_data call_single_data_t
+--- /dev/null
++++ b/include/linux/smp_types.h
+@@ -0,0 +1,66 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_SMP_TYPES_H
++#define __LINUX_SMP_TYPES_H
++
++#include <linux/llist.h>
++
++enum {
++	CSD_FLAG_LOCK		= 0x01,
++
++	IRQ_WORK_PENDING	= 0x01,
++	IRQ_WORK_BUSY		= 0x02,
++	IRQ_WORK_LAZY		= 0x04, /* No IPI, wait for tick */
++	IRQ_WORK_HARD_IRQ	= 0x08, /* IRQ context on PREEMPT_RT */
++
++	IRQ_WORK_CLAIMED	= (IRQ_WORK_PENDING | IRQ_WORK_BUSY),
++
++	CSD_TYPE_ASYNC		= 0x00,
++	CSD_TYPE_SYNC		= 0x10,
++	CSD_TYPE_IRQ_WORK	= 0x20,
++	CSD_TYPE_TTWU		= 0x30,
++
++	CSD_FLAG_TYPE_MASK	= 0xF0,
++};
++
++/*
++ * struct __call_single_node is the primary type on
++ * smp.c:call_single_queue.
++ *
++ * flush_smp_call_function_queue() only reads the type from
++ * __call_single_node::u_flags as a regular load, the above
++ * (anonymous) enum defines all the bits of this word.
++ *
++ * Other bits are not modified until the type is known.
++ *
++ * CSD_TYPE_SYNC/ASYNC:
++ *	struct {
++ *		struct llist_node node;
++ *		unsigned int flags;
++ *		smp_call_func_t func;
++ *		void *info;
++ *	};
++ *
++ * CSD_TYPE_IRQ_WORK:
++ *	struct {
++ *		struct llist_node node;
++ *		atomic_t flags;
++ *		void (*func)(struct irq_work *);
++ *	};
++ *
++ * CSD_TYPE_TTWU:
++ *	struct {
++ *		struct llist_node node;
++ *		unsigned int flags;
++ *	};
++ *
++ */
++
++struct __call_single_node {
++	struct llist_node	llist;
++	union {
++		unsigned int	u_flags;
++		atomic_t	a_flags;
++	};
++} __no_randomize_layout;
++
++#endif /* __LINUX_SMP_TYPES_H */
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2293,7 +2293,7 @@ void sched_ttwu_pending(void *arg)
+ 	rq_lock_irqsave(rq, &rf);
+ 	update_rq_clock(rq);
+ 
+-	llist_for_each_entry_safe(p, t, llist, wake_entry)
++	llist_for_each_entry_safe(p, t, llist, wake_entry.llist)
+ 		ttwu_do_activate(rq, p, p->sched_remote_wakeup ? WF_MIGRATED : 0, &rf);
+ 
+ 	rq_unlock_irqrestore(rq, &rf);
+@@ -2322,7 +2322,7 @@ static void __ttwu_queue_wakelist(struct
+ 	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
+ 
+ 	WRITE_ONCE(rq->ttwu_pending, 1);
+-	__smp_call_single_queue(cpu, &p->wake_entry);
++	__smp_call_single_queue(cpu, &p->wake_entry.llist);
+ }
+ 
+ void wake_up_if_idle(int cpu)
+@@ -2763,7 +2763,7 @@ static void __sched_fork(unsigned long c
+ #endif
+ 	init_numa_balancing(clone_flags, p);
+ #ifdef CONFIG_SMP
+-	p->wake_entry_type = CSD_TYPE_TTWU;
++	p->wake_entry.u_flags = CSD_TYPE_TTWU;
+ #endif
+ }
+ 
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -669,24 +669,6 @@ void __init smp_init(void)
+ {
+ 	int num_nodes, num_cpus;
+ 
+-	/*
+-	 * Ensure struct irq_work layout matches so that
+-	 * flush_smp_call_function_queue() can do horrible things.
+-	 */
+-	BUILD_BUG_ON(offsetof(struct irq_work, llnode) !=
+-		     offsetof(struct __call_single_data, llist));
+-	BUILD_BUG_ON(offsetof(struct irq_work, func) !=
+-		     offsetof(struct __call_single_data, func));
+-	BUILD_BUG_ON(offsetof(struct irq_work, flags) !=
+-		     offsetof(struct __call_single_data, flags));
+-
+-	/*
+-	 * Assert the CSD_TYPE_TTWU layout is similar enough
+-	 * for task_struct to be on the @call_single_queue.
+-	 */
+-	BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+-		     offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist));
+-
+ 	idle_threads_init();
+ 	cpuhp_threads_init();
+ 
