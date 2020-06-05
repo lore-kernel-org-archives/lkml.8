@@ -2,149 +2,154 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7BA2074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88452074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:30:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="4FmlkDJ/"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hINNALY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgFEIaV (ORCPT
+        id S1726213AbgFEIar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:30:21 -0400
-Received: from mail-eopbgr750089.outbound.protection.outlook.com ([40.107.75.89]:4357
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725986AbgFEIaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:30:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n1fsN5TJ7nE3lJObOaeznCmPlHI1ujtQWpQuCYu0oDK7aHz1R6n4ovCAWxJaLCIMdfnqxotQdRyfjhQwLn1vxqpGDIt3nj/1af/luFx/8ITP1DynGokxToy6STXtuBkoXpJQbGFFGkHcPv9XLUpTwWJ+KFXBCx2ee0XT9WS489RvKXPsoVC4Vz3DqKaHuT15LZ/EWB4YTve3MOi8gMuZM1LmUUpBdlno5jjZvBhDYhqsoAGeuVBNdEhFyjQvE24s95JoYzfDX8c02SokuVtXcQe8oicPAwKhll+nsWJVt++P89iiWcaVOiEEhAPOyHHGtggIn6DQwH8vwyGwOgP5gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RlIY35sSAkhhyE5Yx/QV3T0MEr4hUbB/90b5vlWJ6eo=;
- b=F8sv7mqNaVhsy/0jn0l7SDCSxJgYaLq4jK42glUH2E0Ri1YsdVv8RYKlkOMSHZ4YmDft0omsdW+6M4Ick+qkFNxrCsWCuLliuF4P+bYfLtjs0OEhzFF8OPOUNexjqw+pzQNnNVTJRVnZyAwQX71ghl98pmWLVkchO5oAWt6/XxJKvLKjzXrHI5zhpywXuZ14ZAD3JGZHI0ComQz4eyHdzfUYRhnjDA1w7MMklhTJZ8FErPqiMuJv1bgKayLPk7vfj/DBERMsx+9WTE6f4XQgsTE1uguDhrW0FXrygTxd7hH0AgfGadSyhMgV85RsX+mBxJR5ZRTbYol+ssIUvScbag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RlIY35sSAkhhyE5Yx/QV3T0MEr4hUbB/90b5vlWJ6eo=;
- b=4FmlkDJ/jwg5GB0WyndDOEbSf8l2FHSzgqpg4RZ+AeHHpJxoa6151no7MdZfvoP8klcyhAGVdG8syHng2omzfKPOto9BgaB09JGAywGFA9yXPK1nVVy6pY+NM+6rez3jpOQl3Et+pLIVyCrjSq5IyPlqqSzuW8gid2+X2Nu8TGk=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from MW2PR12MB2586.namprd12.prod.outlook.com (2603:10b6:907:11::21)
- by MW2PR12MB2427.namprd12.prod.outlook.com (2603:10b6:907:a::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
- 2020 08:30:10 +0000
-Received: from MW2PR12MB2586.namprd12.prod.outlook.com
- ([fe80::693d:7e71:3a0d:b6d4]) by MW2PR12MB2586.namprd12.prod.outlook.com
- ([fe80::693d:7e71:3a0d:b6d4%7]) with mapi id 15.20.3066.018; Fri, 5 Jun 2020
- 08:30:09 +0000
-Subject: Re: [PATCH 13/18] drm/amdgpu/dc: Stop dma_resv_lock inversion in
- commit_tail
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        linaro-mm-sig@lists.linaro.org,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        linux-media@vger.kernel.org
-References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
- <20200604081224.863494-14-daniel.vetter@ffwll.ch>
-From:   Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Message-ID: <e0bfd872-5d38-6718-a23d-6b14b3c14f25@amd.com>
-Date:   Fri, 5 Jun 2020 10:30:01 +0200
+        Fri, 5 Jun 2020 04:30:47 -0400
+Received: from mout.web.de ([212.227.15.14]:34623 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725986AbgFEIaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:30:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591345837;
+        bh=YMUSygJK/1CfsirIVydQxFMpeFiWKiHb6Bd0D6hIBWE=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=hINNALY5Shh3lbAOMWoQ0H9xw525JMbvHdlX0B/VmElK4rNiwH1RMcL3SLsZdQrjd
+         TlwTHRYYgahurH6PQPL48uYOuM37r0eRL48obD7y5YulhiWMkI/vjs0OEIQRYuVKnd
+         MEJCrvxjXKBT6GvPgx54xgocZfKNbTWcskQbCzjs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.102.114]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LnBTZ-1j2ryr42yj-00hKtz; Fri, 05
+ Jun 2020 10:30:37 +0200
+To:     Jason Yan <yanaijie@huawei.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     hulkci@huawei.com, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH v2] block: Fix use-after-free in blkdev_get()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
+Date:   Fri, 5 Jun 2020 10:30:35 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200604081224.863494-14-daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: fr
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PR0P264CA0188.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1c::32) To MW2PR12MB2586.namprd12.prod.outlook.com
- (2603:10b6:907:11::21)
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.100.219] (109.190.135.109) by PR0P264CA0188.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1c::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 08:30:06 +0000
-X-Originating-IP: [109.190.135.109]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: bb324d56-271f-4356-2754-08d8092aa87c
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2427:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MW2PR12MB24275F7354CC06AAFE2C148C8D860@MW2PR12MB2427.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-Forefront-PRVS: 0425A67DEF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 810Kczd3PTLYFhIDGBMqwZu2HH3fiXBmzDv7Kedl9vnnXD/3JIiiGHD7cIAETelLJJW2wWoYFhmjevG5kHBvps3Y1Mvg/nVkrS9CPUH/L2RFEWH7ASZjlas5QSLsurU4zH66FXYYnm7XwUUFybCIZ0ri1r7X5dVhda9dijpbiNLKR2BsIz9sAyU5ghusvXvFIot7QNonP5Nq0qoOSm8ADKeekJk4e1n7v7agLN9trI2+kdTicKjKyx5M6KBwIP3baKzD7Lk4GCOitTLbW6zOjvNopS3QRgq2G1yMhY5fJXBitnKVXlyFFPVSboC0/vg20pRIsUsSzuLoLkD2sY0Y9C9BcuTl5I8bDvbXYw6+v+E3QOJkoU7F38BjM5NWbSmW
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2586.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(39860400002)(136003)(366004)(346002)(31696002)(8936002)(478600001)(86362001)(54906003)(5660300002)(6486002)(6666004)(110136005)(8676002)(55236004)(316002)(16576012)(53546011)(66946007)(26005)(31686004)(16526019)(186003)(2906002)(66556008)(66476007)(83380400001)(36756003)(956004)(2616005)(4326008)(7416002)(52116002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: KWj9D+1sTSyKCbiraKO70pvR6tuws1tf5LLVW9wBhc1OwJtYcGR3DnFPseTNwn17xZYejtmfR4JRI/dTjMfkXExTR7aA6b6IRPoyj0a/T0XSFX2V4V39DUioHkSYD8QiBkJ3IkcKQIVmSyLwmymtbYfYU+exTNRXMxe6EBW1ElSqeG7XQk3XzLo73BdaIUuNtsgqG96xK2PLEtMrzxfOkUmjze5sWOgM5oegmwpvg7QJ8q+H+9JlFMx7/dhXMqqJN6DP37+UDUY9ngNuiYU4kWUnW7OpSB/6IKfGT4Z2IDW6Jkc53XzrG4nLa5BKBOkA+tDqHVLxyEPmVMsH0r8LpPQZcsRwvqZ2FHB2rsK4iFqcDUTlubAwz9oSVEUDpZDkB5KLrzIAE0e1nnDlNiajfd2C5PXBewD7o0UdaM9zl5LIg20xSlM6rekELEhTYHp403k+fwD7MA74XaKpv3P3ladACQzbEgFg2axBf6t8gUXOWz0MhbZAt/+2KXFNYmpE
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb324d56-271f-4356-2754-08d8092aa87c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 08:30:09.7937
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +xfdZI8gCJOL2JBDjKfXizcMW9aTh6gxHH2+jZ6NrDK2hBEtDfB3TDHzj43+i884cxij4I2FeA/ZS24JIkmJdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR12MB2427
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pZTNExEyMmWyixWDPTWYbdbk4w3QJ76Wkvj+qIgO/VkU/p2Z0Z2
+ gxv6hZJ30bWF9sKOW/2jpnMYFq4L9l8F5jLD/QOquAajZw4UE9zFh0ojVSJFqOVNtUY5qII
+ Z8jaHhi7Ultr2agz+pLni3IPxtWOgh9yTQT3KDYPYt9H0QaH05C74Kz2+od3UNV66wiwQV/
+ lBbmE/pRjEvzDCD6Oi1dg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cXpuJYfXKGE=:5mIHmeYz+SPaOqdGZJMV0S
+ f3j6l4Py283kfFVq7utFNC2vVGohXgjBcUe29Af55kK6fIL8ssIYFwqXQb78FQzTZfhVW04nZ
+ fwt1OjrD5KcTCKpDGODW18rsvpi0eY0/opOSSgsDCGZFbSROIbphQF/qLhPl9VhJZzQStpgmB
+ 2XMy3+c9xKn+H7ESbezc6nyaPTHlDEcKgLRB60Qc5aAerjKgrf5lbYjKM3nMsHm42MctwfLb4
+ or7hf8MY9loQyTV7d/EjXvXIm+YCq9uo4S26ncfop71rWF3L4vaT6WzXiWxPvi9dALHG4B3Di
+ d+eJshatv/5hWl+LkDIXIiOSJ52yf1wynL5eYx4dEuwBd8Hs426L0qPxN6HppZP1K0N5jmOmz
+ 63gg3KllmUq47iP02JuQRzlHDAEPhPpZQHGj3tLaB+Laog6FWkc/xjvsNgk4843BnrhthiWjQ
+ 20tOyIxahCgG3oWCghM85AsX+DqqAbo0WumYXi54g4h/x9KJfJLaoSWdXxmHdAWSWHJbUJD8z
+ XIjK+88Ik3hEtINTaF28YBKmC/Pr06rMY755AKFlRI+snfk0uVxeQouGtilOEPqPrPcG8HI+Q
+ HjlVb+R4IuhgWwlfQhaIgLe9ltQomHJ5LvX01wKbgsSYQdcg/560tkxj69drw5MuXKrDxJQTO
+ 6/s+wUoZToOpTysKGg92VCJRB0u7BnCVdhTXVJ8zPV+QVWcyPVb2HJUkvXMO1MRCA469KuZHE
+ 0JQqDOXX1oGKJXlXHYTk6FdpEBVIGtn53TTLz89ZIgKeiBfHox8LEAyjd72EM+na7HHDhjO++
+ /AF6oS7xrn4wIh8J/8fZTM61s04n+Mdrb6mV8+SKS369eC7kDUl98qENUuwWttIhNZJCV+vzP
+ xE2R+nrN2m7mto/4enRGQp1nr9ocC1WIqPXIHc/x7m7xcxF8PN5jyj7+Y1F2UOPSldgYQpF84
+ M7MaBQxj4FhSv+ZTixAvEuUoLbWXtj0j4J4neIS5qFpmdCWQS5SvI+JcOxEkhK8EdHGX56nrg
+ +UJq4UiRd20c9oeGWC3zOb/gbDmZftqandceGlTQ+1ax/9l0sx9t9dO+atovPEH7VOwt0q2xZ
+ lPdf2oJx03WnNnPMtR1kGgTNgJO3VLmMp3ZWuU7bAudXAqn2JCiDQPpNAbC3BooNchvi6DKZ1
+ nfkBEP3c/GJ7uqr6FGVtS3sP9TPv4XK3/147MFPtZjL3Lk9JUY5BszzBEFsEm8jxtuhnR8Vem
+ H+NQDXwscDb/OQxN3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+> =E2=80=A6 released the refcount of the bdev (actually the refcount of
+> the bdev inode).
 
-On 04/06/2020 10:12, Daniel Vetter wrote:
-[...]
-> @@ -6910,7 +6910,11 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
->  		 * explicitly on fences instead
->  		 * and in general should be called for
->  		 * blocking commit to as per framework helpers
-> +		 *
-> +		 * Yes, this deadlocks, since you're calling dma_resv_lock in a
-> +		 * path that leads to a dma_fence_signal(). Don't do that.
->  		 */
-> +#if 0
->  		r = amdgpu_bo_reserve(abo, true);
->  		if (unlikely(r != 0))
->  			DRM_ERROR("failed to reserve buffer before flip\n");
-> @@ -6920,6 +6924,12 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
->  		tmz_surface = amdgpu_bo_encrypted(abo);
->  
->  		amdgpu_bo_unreserve(abo);
-> +#endif
-> +		/*
-> +		 * this races anyway, so READ_ONCE isn't any better or worse
-> +		 * than the stuff above. Except the stuff above can deadlock.
-> +		 */
-> +		tiling_flags = READ_ONCE(abo->tiling_flags);
-
-With this change "tmz_surface" won't be initialized properly.
-Adding the following line should fix it:
-
-  tmz_surface = READ_ONCE(abo->flags) & AMDGPU_GEM_CREATE_ENCRYPTED;
+Wording adjustments:
+=E2=80=A6 released the reference count of the block device inode.
 
 
-Pierre-Eric
+> =E2=80=A6 access bdev after =E2=80=A6
+
+=E2=80=A6 access block device after =E2=80=A6
 
 
->  
->  		fill_dc_plane_info_and_addr(
->  			dm->adev, new_plane_state, tiling_flags,
-> 
+> accually bdev is =E2=80=A6
+
+bdev is =E2=80=A6
+
+
+> =E2=80=A6 This may leads to use-after-free if the refcount is =E2=80=A6
+
+=E2=80=A6 This results in an use after free if the reference count =E2=80=
+=A6
+
+
+> following scenerio:
+
+following scenario:
+
+
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
+e?
+
+Regards,
+Markus
