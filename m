@@ -2,52 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C56AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401E72074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D162063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367117;
-	bh=D0nourJT4cPZYNOqGjUCpq3oY9EB+0oI1CxFUfFKk4g=;
+	s=default; t=1591367126;
+	bh=GnMgnxYhRI8NeT2MgBln2uWfNJFU6Be3XUbVAerzCfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thUjUv6J3kBHuUWEBKoV/5DfJtepdoF13DGRHoo74A1Zepd3DfZKtJRgtpo/wXMdY
-	 Sn4Ed1X66Ve7pIjNZ2uYZfpmx49BJeaGnDNYl8HlhMOGokhCEGUKpG+5F7r6qWgKtf
-	 n2GZrphseQ8FWio4jcETXC9WyrFcTGjlHctiPKf8=
+	b=PfuwlYZhScTT1LJywoafA2ZMcazdjmhYJ5Yh8k1HQBXAAmnWobwtkovufxGLDKuIV
+	 qRLhJGR3R2P1hiP/uttkVUbFNT8eMAV4ApOF8LSP2FT2IpLP1ljQSzHwFkGFMk68Wk
+	 IxQjvrt3ZvtEptGuzoHaT9Udi6X38NBZ6k2NpJBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgFEOZQ (ORCPT
+        id S1727997AbgFEOQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728335AbgFEOQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:53 -0400
+        id S1728224AbgFEOQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBC45208A9;
-        Fri,  5 Jun 2020 14:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF3722086A;
+        Fri,  5 Jun 2020 14:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366612;
-        bh=D0nourJT4cPZYNOqGjUCpq3oY9EB+0oI1CxFUfFKk4g=;
+        s=default; t=1591366585;
+        bh=GnMgnxYhRI8NeT2MgBln2uWfNJFU6Be3XUbVAerzCfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uJF2WVcfiTmKtDPViHs3880U5VW3SeV2JOcobI6aQcnNyRgv8u+ybuhbV7DnJyQD0
-         kU4RbAVtfMkkUNbNN/HvoQd0xGSKXLwa5T3997bXa8YA+6Rf6C8CHJMoXQ7YPZ/Sx6
-         5addNElEnsOrFqhup4vct242T4EtAp9UpMKDC5mc=
+        b=Wg9Ed38ReQ+3dh+a6CFuDYvusAKEbsSAm3ZxtdaAvVnKKP6J9oTIuhqaWAOSD/kxK
+         ZKG8K5I0msD8WzLH62MM4542jEF2lCRxbd/6cildFG69/lU8qu8dmI+HhvcQ28I8x5
+         vDCcelcDSO2Wa7DuM0R6ziYBURTtTL5d37OB5oQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 23/43] wireguard: selftests: use newer iproute2 for gcc-10
-Date:   Fri,  5 Jun 2020 16:14:53 +0200
-Message-Id: <20200605140153.738574711@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 12/43] io_uring: initialize ctx->sqo_wait earlier
+Date:   Fri,  5 Jun 2020 16:14:42 +0200
+Message-Id: <20200605140153.167206701@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,36 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit ee3c1aa3f34b7842c1557cfe5d8c3f7b8c692de8 ]
+[ Upstream commit 583863ed918136412ddf14de2e12534f17cfdc6f ]
 
-gcc-10 switched to defaulting to -fno-common, which broke iproute2-5.4.
-This was fixed in iproute-5.6, so switch to that. Because we're after a
-stable testing surface, we generally don't like to bump these
-unnecessarily, but in this case, being able to actually build is a basic
-necessity.
+Ensure that ctx->sqo_wait is initialized as soon as the ctx is allocated,
+instead of deferring it to the offload setup. This fixes a syzbot
+reported lockdep complaint, which is really due to trying to wake_up
+on an uninitialized wait queue:
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
+RDX: 0000000000000001 RSI: 0000000020000140 RDI: 000000000000047b
+RBP: 0000000000010475 R08: 0000000000000001 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402260
+R13: 00000000004022f0 R14: 0000000000000000 R15: 0000000000000000
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 1 PID: 7090 Comm: syz-executor222 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:913 [inline]
+ register_lock_class+0x1664/0x1760 kernel/locking/lockdep.c:1225
+ __lock_acquire+0x104/0x4c50 kernel/locking/lockdep.c:4234
+ lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
+ __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
+ io_cqring_ev_posted+0xa5/0x1e0 fs/io_uring.c:1160
+ io_poll_remove_all fs/io_uring.c:4357 [inline]
+ io_ring_ctx_wait_and_kill+0x2bc/0x5a0 fs/io_uring.c:7305
+ io_uring_create fs/io_uring.c:7843 [inline]
+ io_uring_setup+0x115e/0x22b0 fs/io_uring.c:7870
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x441319
+Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+
+Reported-by: syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/wireguard/qemu/Makefile | 2 +-
+ fs/io_uring.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/wireguard/qemu/Makefile b/tools/testing/selftests/wireguard/qemu/Makefile
-index 90598a425c18..4bdd6c1a19d3 100644
---- a/tools/testing/selftests/wireguard/qemu/Makefile
-+++ b/tools/testing/selftests/wireguard/qemu/Makefile
-@@ -44,7 +44,7 @@ endef
- $(eval $(call tar_download,MUSL,musl,1.2.0,.tar.gz,https://musl.libc.org/releases/,c6de7b191139142d3f9a7b5b702c9cae1b5ee6e7f57e582da9328629408fd4e8))
- $(eval $(call tar_download,IPERF,iperf,3.7,.tar.gz,https://downloads.es.net/pub/iperf/,d846040224317caf2f75c843d309a950a7db23f9b44b94688ccbe557d6d1710c))
- $(eval $(call tar_download,BASH,bash,5.0,.tar.gz,https://ftp.gnu.org/gnu/bash/,b4a80f2ac66170b2913efbfb9f2594f1f76c7b1afd11f799e22035d63077fb4d))
--$(eval $(call tar_download,IPROUTE2,iproute2,5.4.0,.tar.xz,https://www.kernel.org/pub/linux/utils/net/iproute2/,fe97aa60a0d4c5ac830be18937e18dc3400ca713a33a89ad896ff1e3d46086ae))
-+$(eval $(call tar_download,IPROUTE2,iproute2,5.6.0,.tar.xz,https://www.kernel.org/pub/linux/utils/net/iproute2/,1b5b0e25ce6e23da7526ea1da044e814ad85ba761b10dd29c2b027c056b04692))
- $(eval $(call tar_download,IPTABLES,iptables,1.8.4,.tar.bz2,https://www.netfilter.org/projects/iptables/files/,993a3a5490a544c2cbf2ef15cf7e7ed21af1845baf228318d5c36ef8827e157c))
- $(eval $(call tar_download,NMAP,nmap,7.80,.tar.bz2,https://nmap.org/dist/,fcfa5a0e42099e12e4bf7a68ebe6fde05553383a682e816a7ec9256ab4773faa))
- $(eval $(call tar_download,IPUTILS,iputils,s20190709,.tar.gz,https://github.com/iputils/iputils/archive/s20190709.tar.gz/#,a15720dd741d7538dd2645f9f516d193636ae4300ff7dbc8bfca757bf166490a))
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 832e042531bc..8bdf2629f7fd 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -822,6 +822,7 @@ static struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
+ 		goto err;
+ 
+ 	ctx->flags = p->flags;
++	init_waitqueue_head(&ctx->sqo_wait);
+ 	init_waitqueue_head(&ctx->cq_wait);
+ 	INIT_LIST_HEAD(&ctx->cq_overflow_list);
+ 	init_completion(&ctx->completions[0]);
+@@ -6004,7 +6005,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ {
+ 	int ret;
+ 
+-	init_waitqueue_head(&ctx->sqo_wait);
+ 	mmgrab(current->mm);
+ 	ctx->sqo_mm = current->mm;
+ 
 -- 
 2.25.1
 
