@@ -2,101 +2,142 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF665C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35922086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591319577;
-	bh=TIPus6gLZUqRCrDwXh04rz7C8bizFW3qdvMap51arRc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZAjn1gl3RMHXsSBEapfOKrtvt1NvsMGUOzQYtPUcNntejLjRIz6+lzWNGMu72uLGb
-	 QVHb18CeZVDkMTCB+p8VSTCBEfbRhdbeaZMAEcu7nHeFuGgTG09IpFavG4/fJCsUn7
-	 JNuhpMDK2St3xNLEgi2ZVm4RAiNYLfPjY8KDQl98=
+	by mail.kernel.org (Postfix) with ESMTP id F343820823
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgFEBM4 (ORCPT
+        id S1726123AbgFEBT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 21:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgFEBM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 21:12:56 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C098207ED;
-        Fri,  5 Jun 2020 01:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591319575;
-        bh=TIPus6gLZUqRCrDwXh04rz7C8bizFW3qdvMap51arRc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H4ZfSJ4ijkcGAzuSUpydSU/l1U0WIm0FYmZJi5YLeRIIAhzEv23EJV4f2GpnCReZb
-         mkGDynfcqOD1AFrbfSvefkXY3qHxGjREI5xKDoSeoqAxn+uNOBjbgV48nRYL0rd5r6
-         nFNmYnT+iXg2kghSpVh8mlfkJcbYq1QFKYyzHw+I=
-Date:   Thu, 4 Jun 2020 21:12:54 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     David =?utf-8?Q?Bala=C5=BEic?= <xerces9@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 4.19 12/80] pppoe: only process PADT targeted at local
- interfaces
-Message-ID: <20200605011254.GR1407771@sasha-vm>
-References: <20200518173450.097837707@linuxfoundation.org>
- <20200518173452.813559136@linuxfoundation.org>
- <CAPJ9Yc8YOeqeO4mo80iVMf3ay+CkdMvYzJY1BqXMNPcKzL6_zg@mail.gmail.com>
- <20200604201712.GB1308830@kroah.com>
- <CAPJ9Yc-0jocU2WJP_27hQa43XFwGWJJx0LBNXShoryZE1K54sQ@mail.gmail.com>
+        Thu, 4 Jun 2020 21:19:58 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725863AbgFEBT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 21:19:58 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 049E4A98727A423C7765;
+        Fri,  5 Jun 2020 09:19:55 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Fri, 5 Jun 2020 09:19:54 +0800
+Received: from [10.65.91.233] (10.65.91.233) by dggeme762-chm.china.huawei.com
+ (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Fri, 5 Jun
+ 2020 09:19:54 +0800
+Subject: Re: [PATCH v2] crypto: hisilicon - allow smaller reads in debugfs
+To:     <b6da310b-e633-9f74-f7af-7791d803aaf5@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20200602135409.GA59808@mwanda>
+From:   Shukun Tan <tanshukun1@huawei.com>
+Message-ID: <3e9b204f-ef53-31c5-afcd-e0791224c2b0@huawei.com>
+Date:   Fri, 5 Jun 2020 09:19:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPJ9Yc-0jocU2WJP_27hQa43XFwGWJJx0LBNXShoryZE1K54sQ@mail.gmail.com>
+In-Reply-To: <20200602135409.GA59808@mwanda>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.91.233]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 12:31:31AM +0200, David Balažic wrote:
->On Thu, 4 Jun 2020 at 22:17, Greg Kroah-Hartman
-><gregkh@linuxfoundation.org> wrote:
->>
->> On Thu, Jun 04, 2020 at 08:39:00PM +0200, David Balažic wrote:
->> > Hi!
->> >
->> > Is there a good reason this did not land in 4.14 branch?
->> >
->> > Openwrt is using that and so it missed this patch.
->> >
->> > Any chance it goes in in next round?
->>
->> Does it apply and build cleanly?
->>
->> I don't know why I didn't backport it further, something must have
->> broke...
->
->The patch from the above applies to linux-4.14.183
->
->If I apply it manually (open pppoe.c in editor and add the two lines
->from the patch) then it builds.
->Until LD      vmlinux.o when I run out of disk space...
->I applied it by editor because the first time something went wrong
->when copying the patch from the email and it did not apply.
->
->So it looks OK, but someone else should try it too.
->My build system is not exactly great.. (it is a VM I created for
->openwrt builds and it is after midnight and I don't feel like
->extending the virtual disk.. sorry, maybe tomorrow).
+Hi Dan,
 
-Hm, indeed it looks ok for 4.14 (and 4.9, 4.4) so I've queued it up,
-thank you.
+On 2020/6/2 21:54, Dan Carpenter wrote:
+> Originally this code rejected any read less than 256 bytes.  There
+> is no need for this artificial limit.  We should just use the normal
+> helper functions to read a string from the kernel.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> v2: Use simple_read_from_buffer().  The v1 was slightly half arsed
+> because I left the original check for:
+> 
+> 	if (*pos)
+> 		return 0;
+> 
+> So it could result in partial reads.  The new code means that if you
+> want to read the buffer one byte at a time, that's fine or if you want
+> to read it in one 256 byte chunk that's also fine.  Plus it deletes 21
+> lines of code and is a lot cleaner.
+> 
 
--- 
+In fact, In our original design, we do not hope the user do the partial reads.
+Thank you for your work, but I still insist on adding this limit.
+
 Thanks,
-Sasha
+Shukun
+
+>  drivers/crypto/hisilicon/qm.c | 33 ++++++---------------------------
+>  1 file changed, 6 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+> index 9bb263cec6c30..13ccb9e29a2e1 100644
+> --- a/drivers/crypto/hisilicon/qm.c
+> +++ b/drivers/crypto/hisilicon/qm.c
+> @@ -1064,19 +1064,10 @@ static ssize_t qm_cmd_read(struct file *filp, char __user *buffer,
+>  	char buf[QM_DBG_READ_LEN];
+>  	int len;
+>  
+> -	if (*pos)
+> -		return 0;
+> -
+> -	if (count < QM_DBG_READ_LEN)
+> -		return -ENOSPC;
+> +	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n",
+> +			"Please echo help to cmd to get help information");
+>  
+> -	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n",
+> -		       "Please echo help to cmd to get help information");
+> -
+> -	if (copy_to_user(buffer, buf, len))
+> -		return -EFAULT;
+> -
+> -	return (*pos = len);
+> +	return simple_read_from_buffer(buffer, count, pos, buf, len);
+>  }
+>  
+>  static void *qm_ctx_alloc(struct hisi_qm *qm, size_t ctx_size,
+> @@ -2691,24 +2682,12 @@ static ssize_t qm_status_read(struct file *filp, char __user *buffer,
+>  {
+>  	struct hisi_qm *qm = filp->private_data;
+>  	char buf[QM_DBG_READ_LEN];
+> -	int val, cp_len, len;
+> -
+> -	if (*pos)
+> -		return 0;
+> -
+> -	if (count < QM_DBG_READ_LEN)
+> -		return -ENOSPC;
+> +	int val, len;
+>  
+>  	val = atomic_read(&qm->status.flags);
+> -	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
+> -	if (!len)
+> -		return -EFAULT;
+> -
+> -	cp_len = copy_to_user(buffer, buf, len);
+> -	if (cp_len)
+> -		return -EFAULT;
+> +	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
+>  
+> -	return (*pos = len);
+> +	return simple_read_from_buffer(buffer, count, pos, buf, len);
+>  }
+>  
+>  static const struct file_operations qm_status_fops = {
+> 
