@@ -2,105 +2,84 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C72C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0759D207D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:18:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591384691;
-	bh=PQB1Qt7SuEmoEadO+t4LgnSIisVvIjh+A77iGzGr9kw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZEda78fc/SxR2MhrMGHPB7abikowABVHSLnhX29Wx2dSJ9Ur73TPHLPnpE/S6urCg
-	 zhWNGHqTEMuZEodfACIRfpbfnE/eIaO3W4b87kvwoDue3je7oIZ8HKxEIWnDlfN1q7
-	 zj02wB/ObBYFjm59Xx4onl7FwJ2XpNtD2siux6CE=
+	by mail.kernel.org (Postfix) with ESMTP id 5664A206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgFETSK (ORCPT
+        id S1728088AbgFETWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 15:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726963AbgFETSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 15:18:09 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BA85207D3;
-        Fri,  5 Jun 2020 19:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591384689;
-        bh=PQB1Qt7SuEmoEadO+t4LgnSIisVvIjh+A77iGzGr9kw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uQamtu/hlwYDWDSymi+RM62VDi4LcA5Ie+5PL3kUTi5xKYExl4ZBUQ65JlPB0vein
-         uyqCNxyL3cvrZ+IqgB7PsZD57jEvs+5apzy5+l6uhdLnaq3PnffiHIoStQJB03QHU7
-         SSIhoXfqgtbEh9AtJBb/ZR1HM7HdEASWRYwKEtfQ=
-Date:   Fri, 5 Jun 2020 12:18:07 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Bean Huo <huobean@gmail.com>
-Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        Fri, 5 Jun 2020 15:22:45 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46773 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727806AbgFETWn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 15:22:43 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z9so13071845ljh.13;
+        Fri, 05 Jun 2020 12:22:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u3eZ7mL6mFM01PKlmqjTQsyiKjw3u8JrGHY34L8anUM=;
+        b=uRC/FLX7G6ET1Q97f3P81rPPqcegQUN6cSKoSZPSnXjrx+5twmv0k6aoTvsz0/uBOK
+         EO5yvnJK4llgh7ksipY8K4dlFC6ZJ/ndtJK276UXL7VTd/8/DutjHZjGMhbMw48qmiJw
+         lrCGgrbfvzZ+m7ZmqqsWjq9/XSywzSTx/R6l/fW2y+ThjhLISOPrx1kN+FjVc2A8Cxsk
+         7hfw8SWCxxx+1v+TYkT9KKu9FpTilPRgh5DoEmD1x0mftvJ7/3r6C7yolv+vM4ANUd1R
+         QmVxBpZS8C/zEqwmbfMh96Jl6ulVywulAu/nVnukc0RILdaz7vOdyiYAUtW/uIZtyK2s
+         7jkw==
+X-Gm-Message-State: AOAM533D0hZW31g+txk6ZLisw/5FmRQjMmaJMEBCIqnFtsadMPsHzkBX
+        5nRSPp81RMd1Ob4N04ik9bk=
+X-Google-Smtp-Source: ABdhPJxl8k1NIvglkEw1dVGG/SGuEX0lmR7gxxVj8EctcxXnNDqOxxj+X2HFswA0sou507Kl0ADy5g==
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr4991886ljo.276.1591384961808;
+        Fri, 05 Jun 2020 12:22:41 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id w6sm1118983ljw.11.2020.06.05.12.22.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 12:22:41 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] scsi: ufs: Add SPDX GPL-2.0 to replace GPL v2
- boilerplate
-Message-ID: <20200605191807.GJ1373@sol.localdomain>
-References: <20200605191439.19313-1-huobean@gmail.com>
- <20200605191439.19313-2-huobean@gmail.com>
+Subject: [PATCH] net/mlx5: Use kfree(ft->g) in arfs_create_groups()
+Date:   Fri,  5 Jun 2020 22:22:35 +0300
+Message-Id: <20200605192235.79241-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605191439.19313-2-huobean@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 09:14:38PM +0200, Bean Huo wrote:
-> From: Bean Huo <beanhuo@micron.com>
-> 
-> Add SPDX GPL-2.0 to UFS driver files that specified the GPL
-> version 2 license, remove the full boilerplate text.
-> 
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  drivers/scsi/ufs/ufs.h           | 27 +--------------------------
->  drivers/scsi/ufs/ufshcd-pci.c    | 25 +------------------------
->  drivers/scsi/ufs/ufshcd-pltfrm.c | 27 +--------------------------
->  drivers/scsi/ufs/ufshcd.c        | 30 +-----------------------------
->  drivers/scsi/ufs/ufshcd.h        | 27 +--------------------------
->  drivers/scsi/ufs/ufshci.h        | 27 +--------------------------
->  6 files changed, 6 insertions(+), 157 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-> index c70845d41449..4df9150769b7 100644
-> --- a/drivers/scsi/ufs/ufs.h
-> +++ b/drivers/scsi/ufs/ufs.h
-> @@ -1,36 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * Universal Flash Storage Host controller driver
-> - *
-> - * This code is based on drivers/scsi/ufs/ufs.h
->   * Copyright (C) 2011-2013 Samsung India Software Operations
->   *
->   * Authors:
->   *	Santosh Yaraganavi <santosh.sy@samsung.com>
->   *	Vinayak Holikatti <h.vinayak@samsung.com>
-> - *
-> - * This program is free software; you can redistribute it and/or
-> - * modify it under the terms of the GNU General Public License
-> - * as published by the Free Software Foundation; either version 2
-> - * of the License, or (at your option) any later version.
-> - * See the COPYING file in the top-level directory or visit
-> - * <http://www.gnu.org/licenses/gpl-2.0.html>
+Use kfree() instead of kvfree() on ft->g in arfs_create_groups() because
+the memory is allocated with kcalloc().
 
-This actually says GPL v2 or later.  Not GPL v2 only.
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Eric
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
+index 014639ea06e3..c4c9d6cda7e6 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
+@@ -220,7 +220,7 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
+ 			sizeof(*ft->g), GFP_KERNEL);
+ 	in = kvzalloc(inlen, GFP_KERNEL);
+ 	if  (!in || !ft->g) {
+-		kvfree(ft->g);
++		kfree(ft->g);
+ 		kvfree(in);
+ 		return -ENOMEM;
+ 	}
+-- 
+2.26.2
+
