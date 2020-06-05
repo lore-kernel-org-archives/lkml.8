@@ -2,99 +2,145 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9206EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52917C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7CB207D0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iMNl+3uY"
+	by mail.kernel.org (Postfix) with ESMTP id 35AA0207D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgFEIyi (ORCPT
+        id S1726210AbgFEIzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:54:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54868 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726135AbgFEIyg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:54:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591347274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0r/b2eFY9+k9/mVafvta/fNndA6rDDpBttvueSmSAvo=;
-        b=iMNl+3uY+6xbsO8RuZ0xqzwOKxT6BTorX1vbNItNsocg7/Ytt8QNuXFNzBYFAvwl1r1gy2
-        K0RZlwBaMxVgtOEZL4WgA+TbpX9eNOgcc3OgEynVXdP4WsZ4oS0WCExOVobaaokiifFErF
-        UTaPGFaOhTQcs1uJuar2uU7R2r7w21w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-kMNLCwG-MMGG8qw_EOqPGw-1; Fri, 05 Jun 2020 04:54:31 -0400
-X-MC-Unique: kMNLCwG-MMGG8qw_EOqPGw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B6EC107ACF9;
-        Fri,  5 Jun 2020 08:54:28 +0000 (UTC)
-Received: from [10.72.12.233] (ovpn-12-233.pek2.redhat.com [10.72.12.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 918D519C58;
-        Fri,  5 Jun 2020 08:54:19 +0000 (UTC)
-Subject: Re: [PATCH 5/6] vdpa: introduce virtio pci driver
-From:   Jason Wang <jasowang@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rob.miller@broadcom.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-References: <20200529080303.15449-1-jasowang@redhat.com>
- <20200529080303.15449-6-jasowang@redhat.com>
- <20200602010332-mutt-send-email-mst@kernel.org>
- <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
-Message-ID: <6b1d1ef3-d65e-08c2-5b65-32969bb5ecbc@redhat.com>
-Date:   Fri, 5 Jun 2020 16:54:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 04:55:16 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5856 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbgFEIzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:55:16 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 16EA57C305DFFA9FA863;
+        Fri,  5 Jun 2020 16:55:14 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 5 Jun 2020 16:55:06 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: allow writeback on error status filesystem
+Date:   Fri, 5 Jun 2020 16:54:53 +0800
+Message-ID: <20200605085453.45717-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <5dbb0386-beeb-5bf4-d12e-fb5427486bb8@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+    71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
+            |
+             --71.06%--wb_writeback
+                       |
+                       |--68.96%--__writeback_inodes_wb
+                       |          |
+                       |           --68.95%--writeback_sb_inodes
+                       |                     |
+                       |                     |--65.08%--__writeback_single_inode
+                       |                     |          |
+                       |                     |           --64.35%--do_writepages
+                       |                     |                     |
+                       |                     |                     |--59.83%--f2fs_write_node_pages
+                       |                     |                     |          |
+                       |                     |                     |           --59.74%--f2fs_sync_node_pages
+                       |                     |                     |                     |
+                       |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
+                       |                     |                     |                     |          |
+                       |                     |                     |                     |           --27.90%--find_get_pages_range_tag
 
-On 2020/6/2 下午3:08, Jason Wang wrote:
->>
->>> +static const struct pci_device_id vp_vdpa_id_table[] = {
->>> +    { PCI_DEVICE(PCI_VENDOR_ID_REDHAT_QUMRANET, PCI_ANY_ID) },
->>> +    { 0 }
->>> +};
->> This looks like it'll create a mess with either virtio pci
->> or vdpa being loaded at random. Maybe just don't specify
->> any IDs for now. Down the road we could get a
->> distinct vendor ID or a range of device IDs for this.
->
->
-> Right, will do.
->
-> Thanks 
+If filesystem was injected w/ checkpoint errror, before umount, kworker
+will always hold one core in order to writeback a large number of node
+pages, that looks not reasonable, to avoid that, we can allow data/node
+write in such case, since we can force all data/node writes with OPU mode,
+and clear recovery flag on node, and checkpoint is not allowed as well,
+so we don't need to worry about writeback's effect on data/node in
+previous checkpoint, then with this way, it can decrease memory footprint
+cost by node/data pages and avoid looping into data/node writeback
+process.
 
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/data.c | 19 ++++++++++++-------
+ fs/f2fs/node.c |  7 +++++--
+ 2 files changed, 17 insertions(+), 9 deletions(-)
 
-Rethink about this. If we don't specify any ID, the binding won't work.
-
-How about using a dedicated subsystem vendor id for this?
-
-Thanks
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 9d40db50cd65..2b3c846181bb 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2519,6 +2519,8 @@ bool f2fs_should_update_outplace(struct inode *inode, struct f2fs_io_info *fio)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 
++	if (unlikely(f2fs_cp_error(sbi)))
++		return true;
+ 	if (f2fs_lfs_mode(sbi))
+ 		return true;
+ 	if (S_ISDIR(inode->i_mode))
+@@ -2702,13 +2704,16 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+ 	/* we should bypass data pages to proceed the kworkder jobs */
+ 	if (unlikely(f2fs_cp_error(sbi))) {
+ 		mapping_set_error(page->mapping, -EIO);
+-		/*
+-		 * don't drop any dirty dentry pages for keeping lastest
+-		 * directory structure.
+-		 */
+-		if (S_ISDIR(inode->i_mode))
+-			goto redirty_out;
+-		goto out;
++
++		if (has_not_enough_free_secs(sbi, 0, 0)) {
++			/*
++			 * don't drop any dirty dentry pages for keeping lastest
++			 * directory structure.
++			 */
++			if (S_ISDIR(inode->i_mode))
++				goto redirty_out;
++			goto out;
++		}
+ 	}
+ 
+ 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 03e24df1c84f..372c04efad38 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -1527,7 +1527,10 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+ 			unlock_page(page);
+ 			return 0;
+ 		}
+-		goto redirty_out;
++		if (has_not_enough_free_secs(sbi, 0, 0))
++			goto redirty_out;
++		set_fsync_mark(page, 0);
++		set_dentry_mark(page, 0);
+ 	}
+ 
+ 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+@@ -1568,7 +1571,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+ 		goto redirty_out;
+ 	}
+ 
+-	if (atomic && !test_opt(sbi, NOBARRIER))
++	if (atomic && !test_opt(sbi, NOBARRIER) && !f2fs_cp_error(sbi))
+ 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
+ 
+ 	/* should add to global list before clearing PAGECACHE status */
+-- 
+2.18.0.rc1
 
