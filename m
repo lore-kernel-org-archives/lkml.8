@@ -2,117 +2,227 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54C720772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07F52053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgFEKGU (ORCPT
+        id S1726500AbgFEKG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:06:20 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:56292 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726324AbgFEKGU (ORCPT
+        Fri, 5 Jun 2020 06:06:27 -0400
+Received: from segapp02.wistron.com ([103.200.3.19]:51683 "EHLO
+        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726296AbgFEKGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:06:20 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0U-djnUn_1591351570;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U-djnUn_1591351570)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 05 Jun 2020 18:06:11 +0800
-Subject: Re: [PATCH RFC v4 00/13] virtio-mem: paravirtualized memory
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20191212171137.13872-1-david@redhat.com>
- <9acc5d04-c8e9-ef53-85e4-709030997ca6@redhat.com>
- <1cfa9edb-47ea-1495-4e28-4cf391eab44c@linux.alibaba.com>
- <d6cd1870-1012-cb3d-7d29-8e5ad2703717@redhat.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <fe476535-3e98-0682-559c-73adde22e7ab@linux.alibaba.com>
-Date:   Fri, 5 Jun 2020 18:06:10 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Fri, 5 Jun 2020 06:06:24 -0400
+Received: from EXCHAPP02.whq.wistron (unverified [10.37.38.25]) by TWNHUMSW4.wistron.com
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdf9212466fc0a816729a0@TWNHUMSW4.wistron.com>;
+ Fri, 5 Jun 2020 18:06:18 +0800
+Received: from EXCHAPP03.whq.wistron (10.37.38.26) by EXCHAPP02.whq.wistron
+ (10.37.38.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 5 Jun 2020
+ 18:06:17 +0800
+Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP03.whq.wistron
+ (10.37.38.26) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Fri, 5 Jun 2020 18:06:17 +0800
+From:   Ben Pai <Ben_Pai@wistron.com>
+To:     <joel@jms.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <claire_ku@wistron.com>, Ben Pai <Ben_Pai@wistron.com>
+Subject: [PATCH v1 1/2] ARM: dts: aspeed: mihawk: IO expander uses TCA9554 driver
+Date:   Fri, 5 Jun 2020 18:06:14 +0800
+Message-ID: <20200605100614.14726-1-Ben_Pai@wistron.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <d6cd1870-1012-cb3d-7d29-8e5ad2703717@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 046AADC4E7378F668BD1404E8B899BEBBB327568BE24F0CF5C33F311765E568B2000:8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Set smbus_en of IO expander to 1 in order to be able to read sensor.
 
+Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 112 ++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
 
-在 2020/6/5 下午5:08, David Hildenbrand 写道:
-> Please use the virtio-mem-v4 branch for now, v5 is still under
-> construction (and might be scrapped completely if v4 goes upstream as is).
-> 
-> Looks like a DMA issue. Your're hotplugging 1GB, which should not really
-> eat too much memory. There was a similar issue reported by Hui in [1],
-> which boiled down to wrong usage of the swiotlb parameter.
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+index eac6ed2bbc67..25ffe65fbdc0 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+@@ -820,12 +820,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus0 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus0";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux232: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus1 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus1";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux233: i2c@2 {
+@@ -855,12 +883,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus2 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus2";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux236: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus3 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus3";
++				};
++			};
+ 		};
+ 
+ 		bus9_mux237: i2c@2 {
+@@ -909,12 +965,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus4 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus4";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux240: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus5 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus5";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux241: i2c@2 {
+@@ -944,12 +1028,40 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus6 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus6";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux244: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			tca9554@39 {
++				compatible = "ti,tca9554";
++				reg = <0x39>;
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				smbus7 {
++					gpio-hog;
++					gpios = <4 GPIO_ACTIVE_HIGH>;
++					output-high;
++					line-name = "smbus7";
++				};
++			};
+ 		};
+ 
+ 		bus10_mux245: i2c@2 {
+-- 
+2.17.1
 
-I have no swiotbl=noforce set, and sometime no swiotlb error reported, like
-(qemu) [   41.591308] e1000 0000:00:03.0: dma_direct_map_page: overflow 0x000000011fd470da+54 of device mask ffffffff
-[   41.592431] e1000 0000:00:03.0: TX DMA map failed
-[   41.593031] e1000 0000:00:03.0: dma_direct_map_page: overflow 0x000000011fd474da+54 of device mask ffffff
-...
-[   63.049464] ata_piix 0000:00:01.1: dma_direct_map_sg: overflow 0x0000000107db2000+4096 of device mask ffffffff
-[   63.068297] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
-[   63.069057] ata1.00: failed command: READ DMA
-[   63.069580] ata1.00: cmd c8/00:20:40:bd:d2/00:00:00:00:00/e0 tag 0 dma 16384 in
-[   63.069580]          res 50/00:00:3f:30:80/00:00:00:00:00/a0 Emask 0x40 (internal error) 
-> 
-> In such cases you should always try to reproduce with hotplug of a
-> sam-sized DIMM. E.g., hotplugging a 1GB DIMM should result in the same
-> issue.
-> 
-> What does your .config specify for CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE?
-
-Yes, it's set. 
-
-I had tried the v2/v4 version, which has the same issue.
-Is this related with virtio-mem start address too low?
-
-Thanks a lot!
-> 
-> I'll try to reproduce with v4 briefly.
-> 
-> [1]
-> https://lkml.kernel.org/r/9708F43A-9BD2-4377-8EE8-7FB1D95C6F69@linux.alibaba.com
