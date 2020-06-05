@@ -2,116 +2,144 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C168CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC7A9206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="It7x1aur"
+	by mail.kernel.org (Postfix) with ESMTP id A1D7C206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgFELQA (ORCPT
+        id S1726874AbgFELRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:16:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38264 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726465AbgFELP6 (ORCPT
+        Fri, 5 Jun 2020 07:17:20 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53692 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbgFELRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:15:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591355757;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I8a2f7F+3vcKM6ztM/s5dArCF02jWdgvQcQyvf03Ew0=;
-        b=It7x1aurSz7sqSBEFlTeOvv4g6OA/D+B1Oz5hIOro/lTp+uwYOCDZ4UeKJOUZ2EzEHLP+x
-        ZunuzfhzXqwVsR0SJva1SnmqNc+KTVIOUgxjhMGVT9+V9PFuihmVAu4tiwR435AcVayW+5
-        nhFYVp0J+NDYM+k2tWAE/dJa554WxMk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-TD5crfOYM5Sor3dcPbqebw-1; Fri, 05 Jun 2020 07:15:55 -0400
-X-MC-Unique: TD5crfOYM5Sor3dcPbqebw-1
-Received: by mail-wm1-f71.google.com with SMTP id p24so2900093wmc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 04:15:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I8a2f7F+3vcKM6ztM/s5dArCF02jWdgvQcQyvf03Ew0=;
-        b=bgGH5O3UnT2Y1RbS2rv7i5t/1h2W7SqPOJnFnwub2F6HehdcbjzneXqXrwdbO2AiDY
-         0XjuBKluXFFGH5ZPQTDM2vOzNuJ3ZLWvoA7GliKm3zAhTVXrpgX7fV2NxldNExNz4Q6i
-         hXbXu9/KMGDmNr3CqkbfcdQA/sOqS0/bR/bS0JbR8rHgK+g38RwCWsgbamQYqbo3Taw0
-         DQCUf+uybrveoXYkXX6McLTDxJKO5mPcZ3lYyVCT/w6jRB+nrQC8+1cuWKcLU+RpARM9
-         N+UWvuwcw6dg0xiqoKjipJGenCgyKhfZvv9QRtbDBg61NKweNqGmh9Q1HX8eKTbkphT6
-         RF7A==
-X-Gm-Message-State: AOAM533SYyjHiAztOK8F1PuJ6nGYKxBeP18Z+sdlVBJJ3aN0tj8yiiGl
-        7sJMGVrAcuvsqNOfJxf+0gGMRxxaFCmngCY3uOKy5hTMi9xgT1d+exFev0bGBYPSSEcQw/KwlCx
-        M4yBKvLgCeqXfiRc5XpkTJYbD
-X-Received: by 2002:a7b:c951:: with SMTP id i17mr2133195wml.44.1591355754775;
-        Fri, 05 Jun 2020 04:15:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzVGG6rFBv8a0ZRPRpzrY2u/qF8bg879nEI6FUkBwSoWqVtIk43Mjl/J9pn3/3MezPpMKQYiA==
-X-Received: by 2002:a7b:c951:: with SMTP id i17mr2133161wml.44.1591355754512;
-        Fri, 05 Jun 2020 04:15:54 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.243.176])
-        by smtp.gmail.com with ESMTPSA id q1sm10556883wmc.12.2020.06.05.04.15.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 04:15:53 -0700 (PDT)
-Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiBbUEFUQ0hdW3Y2XSBLVk06IFg4Njog?=
- =?UTF-8?Q?support_APERF/MPERF_registers?=
-To:     "Li,Rongqing" <lirongqing@baidu.com>,
-        Like Xu <like.xu@linux.intel.com>,
-        "like.xu@intel.com" <like.xu@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
-        "wei.huang2@amd.com" <wei.huang2@amd.com>
-References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
- <be39b88c-bfb7-0634-c53b-f00d8fde643c@intel.com>
- <c21c6ffa19b6483ea57feab3f98f279c@baidu.com>
- <3a88bd63-ff51-ad70-d92e-893660c63bca@linux.intel.com>
- <c67d15322f9942aa92b6cf57011c0abe@baidu.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d4edabf8-b8c6-e60b-1a78-6aaa9bb7b5e1@redhat.com>
-Date:   Fri, 5 Jun 2020 13:15:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 5 Jun 2020 07:17:20 -0400
+Received: from 89-64-83-87.dynamic.chello.pl (89.64.83.87) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 01eedc837bead76a; Fri, 5 Jun 2020 13:17:17 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+Date:   Fri, 05 Jun 2020 13:17:15 +0200
+Message-ID: <10490419.gsntqH5CaE@kreacher>
+In-Reply-To: <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
+References: <20200413134611.478441-1-enric.balletbo@collabora.com> <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com> <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <c67d15322f9942aa92b6cf57011c0abe@baidu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/20 11:41, Li,Rongqing wrote:
->>
->> As you said, "Pass-though: it is only suitable for KVM_HINTS_REALTIME", which
->> means, KVM needs to make sure the kvm->arch.aperfmperf_mode value could
->> "only" be set to KVM_APERFMPERF_PT when the check
->> kvm_para_has_hint(KVM_HINTS_REALTIME) is passed.
->>
-> pining vcpu can ensure that guest get correct mperf/aperf, but a user
-> has the choice to not pin, at that condition, do not think it is bug, this wants to say
+On Tuesday, April 14, 2020 4:35:38 PM CEST Enric Balletbo i Serra wrote:
+> Hi Rafael,
+> 
+> On 13/4/20 22:41, Rafael J. Wysocki wrote:
+> > On Mon, Apr 13, 2020 at 3:46 PM Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com> wrote:
+> >>
+> >> This driver attaches to the ChromeOS ACPI device and then exports the values
+> >> reported by the ACPI in a sysfs directory. These values are not exported
+> >> via the standard ACPI tables, hence a specific driver is needed to do
+> >> it.
+> > 
+> > So how exactly are they exported?
+> > 
+> 
+> They are exported through sysfs.
+> 
+> >> The ACPI values are presented in the string form (numbers as decimal
+> >> values) or binary blobs, and can be accessed as the contents of the
+> >> appropriate read only files in the standard ACPI devices sysfs directory tree.
+> > 
+> > My understanding based on a cursory look at the patch is that there is
+> > an ACPI device with _HID equal to "GGL0001"  and one or more special
+> > methods under it that return values which you want to export over
+> > sysfs as binary attributes.  They appear to be read-only.
+> > 
+> 
+> Exactly, there is an ACPI device equal to "GGL0001" and one special method
+> called MLST that returns a list of the other control methods supported by the
+> Chrome OS hardware device. The driver calls the special MLST method and goes
+> through the list.
+> 
+> > I guess that these data are to be consubed by user space?
+> > 
+> 
+> Yes, this is used by user space, to be more specific ChromeOS userspace uses it.
 
-Also, userspace can also pin without exposing KVM_HINTS_REALTIME.  So
-it's better not to check.
+Well, let me start over.
 
-Paolo
+The subject and changelog of this patch are not precise enough IMO and there is
+not enough information in the latter.
+
+It is not clear what "ACPI driver for ChromeOS" means.  There may be many ACPI
+drivers in a Linux-based system as a rule.
+
+It is unclear what the ChromeOS ACPI device is and why it is there.  Is there
+any documentation of it you can point me to?
+
+It is unclear what you mean by "These values are not exported via the standard
+ACPI tables".
+
+It looks like (but it is not actually documented in any way) the idea is to
+get to the ACPI device object with _HID returning "GGL0001", evaluate the
+MLST method under it and then evaluate the methods listed by it and export the
+data returned by them via sysfs, under the "GGL0001" device on the "acpi" bus.
+Is this correct?
+
+If so, there is a couple of issues here.
+
+First off, GGL0001 is not a valid ACPI device ID, because the GGL prefix is not
+present in the list at https://uefi.org/acpi_id_list
+
+There are two ways to address that.  One would be to take the GOOG prefix
+(present in the list above), append a proper unique number (if I were to
+guess, I would say that 0001 had been reserved already) to it and then
+put the resulting device ID into the firmware, to be returned _HID for the
+device in question (you can add a _CID returning "GGL0001" so it can be
+found by the old invalid ID at least from the kernel).  The other one would
+be to properly register the GGL prefix for Google and establish a process for
+allocating IDs with that prefix internally.
+
+Next, device attributes in sysfs are part of the kernel ABI and once defined,
+they cannot change (exceptions happen, but rarely), so you must guarantee
+that whatever appears in there, will always be present for devices with the
+given device ID in the future in the same format.
+
+Can you actually guarantee that?  If so, what is that guarantee based on?
+
+Thanks!
+
+
 
