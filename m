@@ -2,145 +2,151 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8958C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FFE20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jarSB6Qs"
+	by mail.kernel.org (Postfix) with ESMTP id 845A42074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591366825;
+	bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MfN9/eAdBUAOmskVuNZnsAszd6QZ6phA/Q2SJBTg/VltkXoFfMRlVJqQcfitD0zIN
+	 6kr0zrdk0OSi1LidMj/Psgo8L9T3Xwl4zNwYMe/Zt/fU20JzfvyQp/KG3bvwGhzFuH
+	 TXue2M2zeRZx9CLXgOvqQj1+D+f1coN/rCsFVRkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgFEOUS (ORCPT
+        id S1728450AbgFEOUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728889AbgFEOTz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728886AbgFEOTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jun 2020 10:19:55 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F16FC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:19:55 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s10so5235333pgm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=I/KKVhuE8TSr5CEPiD/eAOjx+oGBg92j9fEZOcTd8zg=;
-        b=jarSB6Qs7gLwZLwAII57y/JKWmy3ExqgUg4+qPkwLvqLeaEWf1Kixa0LjlOiCp5DkE
-         iCWhitxnz+om4kZ6TOMl20AvHbhxvPjnM3uoi2UXR9fkMS25nSr4jQnu8W7AZGeI6Rdr
-         TdVp/eUHb7jMMzX2WNXMl1/zWXVpFdErX2PJ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=I/KKVhuE8TSr5CEPiD/eAOjx+oGBg92j9fEZOcTd8zg=;
-        b=uRcix9BCvqX0BuRB1A+YGr8+nZ+D4MkDTrRk9dyUR/d4Wjqidk7+kfxL3OjvcYFp+Z
-         FIJV/opkToeF9jReoQq+xok7NvuTV9L4xLzTrQndzAqaZ/tQxqCKbZv5wbbds4QJ2Wys
-         TULcpBzN9D55iOBYXv+QMlRXDRW1/kq0V6QD8RQ1oRFd4l+AlRbPDU/PHVG4dH8IYJKc
-         ts2kMILSzEwImhwTFmSa3XO8lxEHQkn1QTuLoRnRAwcBOo8V+bzqqEcKylAWKHNeTKFD
-         uq+gwobyYHqkDNMDMt1bsl1PJwXP0dJRQAljd2fB3iPUpAkeQgK9YCg4wvIJDtD3dHpg
-         BVkQ==
-X-Gm-Message-State: AOAM531QnZD81K7b1Ahet5VBW07LNvSBlTV/tXqp0mArQGONu+cjNUnS
-        /BOPK0w0dahpz78/80ksPsCVkA==
-X-Google-Smtp-Source: ABdhPJz7HFAhlb37GBve0BZLBLu80nmLbK9xyenwxebfEX6BJX1qGBnd3RV1CVMHJdneQ+1UKXbDhw==
-X-Received: by 2002:a63:f854:: with SMTP id v20mr10018864pgj.0.1591366794973;
-        Fri, 05 Jun 2020 07:19:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x11sm7568429pfm.196.2020.06.05.07.19.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 07:19:54 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 07:19:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Joe Perches <joe@perches.com>, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/i915: Fix comments mentioning typo in IS_ENABLED()
-Message-ID: <202006050718.9D4FCFC2E@keescook>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFBF208FE;
+        Fri,  5 Jun 2020 14:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591366794;
+        bh=8su1/yDtzEiYTbiR3qLGi+y6W6cRci67Qbj9Nl2n2BQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HuDuZf+LRBavA0RdJeUoYxb9y5i2b5DsKaFlMlZUV0mfcligjpSLjFFqO3XxOK4T9
+         qdfKILbkNPJprBQftaBkbVLAP9rUhxyI/vgQvZmosFSK+EUJOisZIspqFRo9MDpF71
+         VcV2zwgN5hh3vu7BIxNNRRqzV+2/vFzcfY/jT+z8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 20/28] i2c: altera: Fix race between xfer_msg and isr thread
+Date:   Fri,  5 Jun 2020 16:15:22 +0200
+Message-Id: <20200605140253.578688178@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
+References: <20200605140252.338635395@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This has no code changes, but the typo is clearly getting copy/pasted,
-so better to avoid this now and fix the typo. IS_ENABLED() takes full
-names, and must have the "CONFIG_" prefix.
+From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
 
-Reported-by: Joe Perches <joe@perches.com>
-Link: https://lore.kernel.org/lkml/b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
+[ Upstream commit 5d4c7977499a736f3f80826bdc9744344ad55589 ]
+
+Use a mutex to protect access to idev->msg_len, idev->buf, etc. which
+are modified by both altr_i2c_xfer_msg() and altr_i2c_isr().
+
+This is the minimal fix for easy backporting. A cleanup to remove the
+spinlock will be added later.
+
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+[wsa: updated commit message]
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma-buf/selftests.h                          | 2 +-
- drivers/gpu/drm/i915/selftests/i915_live_selftests.h | 2 +-
- drivers/gpu/drm/i915/selftests/i915_mock_selftests.h | 2 +-
- drivers/gpu/drm/i915/selftests/i915_perf_selftests.h | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-altera.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma-buf/selftests.h b/drivers/dma-buf/selftests.h
-index 55918ef9adab..bc8cea67bf1e 100644
---- a/drivers/dma-buf/selftests.h
-+++ b/drivers/dma-buf/selftests.h
-@@ -5,7 +5,7 @@
-  * a module parameter. It must be unique and legal for a C identifier.
-  *
-  * The function should be of type int function(void). It may be conditionally
-- * compiled using #if IS_ENABLED(DRM_I915_SELFTEST).
-+ * compiled using #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST).
-  *
-  * Tests are executed in order by igt/dmabuf_selftest
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index 8915ee30a5b4..1d59eede537b 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -81,6 +81,7 @@
+  * @isr_mask: cached copy of local ISR enables.
+  * @isr_status: cached copy of local ISR status.
+  * @lock: spinlock for IRQ synchronization.
++ * @isr_mutex: mutex for IRQ thread.
   */
-diff --git a/drivers/gpu/drm/i915/selftests/i915_live_selftests.h b/drivers/gpu/drm/i915/selftests/i915_live_selftests.h
-index 5dd5d81646c4..e42ea9c6703b 100644
---- a/drivers/gpu/drm/i915/selftests/i915_live_selftests.h
-+++ b/drivers/gpu/drm/i915/selftests/i915_live_selftests.h
-@@ -11,7 +11,7 @@
-  * a module parameter. It must be unique and legal for a C identifier.
-  *
-  * The function should be of type int function(void). It may be conditionally
-- * compiled using #if IS_ENABLED(DRM_I915_SELFTEST).
-+ * compiled using #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST).
-  *
-  * Tests are executed in order by igt/drv_selftest
-  */
-diff --git a/drivers/gpu/drm/i915/selftests/i915_mock_selftests.h b/drivers/gpu/drm/i915/selftests/i915_mock_selftests.h
-index 6a2be7d0dd95..4be044198af9 100644
---- a/drivers/gpu/drm/i915/selftests/i915_mock_selftests.h
-+++ b/drivers/gpu/drm/i915/selftests/i915_mock_selftests.h
-@@ -11,7 +11,7 @@
-  * a module parameter. It must be unique and legal for a C identifier.
-  *
-  * The function should be of type int function(void). It may be conditionally
-- * compiled using #if IS_ENABLED(DRM_I915_SELFTEST).
-+ * compiled using #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST).
-  *
-  * Tests are executed in order by igt/drv_selftest
-  */
-diff --git a/drivers/gpu/drm/i915/selftests/i915_perf_selftests.h b/drivers/gpu/drm/i915/selftests/i915_perf_selftests.h
-index d8da142985eb..c2389f8a257d 100644
---- a/drivers/gpu/drm/i915/selftests/i915_perf_selftests.h
-+++ b/drivers/gpu/drm/i915/selftests/i915_perf_selftests.h
-@@ -11,7 +11,7 @@
-  * a module parameter. It must be unique and legal for a C identifier.
-  *
-  * The function should be of type int function(void). It may be conditionally
-- * compiled using #if IS_ENABLED(DRM_I915_SELFTEST).
-+ * compiled using #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST).
-  *
-  * Tests are executed in order by igt/i915_selftest
-  */
+ struct altr_i2c_dev {
+ 	void __iomem *base;
+@@ -97,6 +98,7 @@ struct altr_i2c_dev {
+ 	u32 isr_mask;
+ 	u32 isr_status;
+ 	spinlock_t lock;	/* IRQ synchronization */
++	struct mutex isr_mutex;
+ };
+ 
+ static void
+@@ -256,10 +258,11 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
+ 	struct altr_i2c_dev *idev = _dev;
+ 	u32 status = idev->isr_status;
+ 
++	mutex_lock(&idev->isr_mutex);
+ 	if (!idev->msg) {
+ 		dev_warn(idev->dev, "unexpected interrupt\n");
+ 		altr_i2c_int_clear(idev, ALTR_I2C_ALL_IRQ);
+-		return IRQ_HANDLED;
++		goto out;
+ 	}
+ 	read = (idev->msg->flags & I2C_M_RD) != 0;
+ 
+@@ -312,6 +315,8 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
+ 		complete(&idev->msg_complete);
+ 		dev_dbg(idev->dev, "Message Complete\n");
+ 	}
++out:
++	mutex_unlock(&idev->isr_mutex);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -323,6 +328,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
+ 	u32 value;
+ 	u8 addr = i2c_8bit_addr_from_msg(msg);
+ 
++	mutex_lock(&idev->isr_mutex);
+ 	idev->msg = msg;
+ 	idev->msg_len = msg->len;
+ 	idev->buf = msg->buf;
+@@ -347,6 +353,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
+ 		altr_i2c_int_enable(idev, imask, true);
+ 		altr_i2c_fill_tx_fifo(idev);
+ 	}
++	mutex_unlock(&idev->isr_mutex);
+ 
+ 	time_left = wait_for_completion_timeout(&idev->msg_complete,
+ 						ALTR_I2C_XFER_TIMEOUT);
+@@ -420,6 +427,7 @@ static int altr_i2c_probe(struct platform_device *pdev)
+ 	idev->dev = &pdev->dev;
+ 	init_completion(&idev->msg_complete);
+ 	spin_lock_init(&idev->lock);
++	mutex_init(&idev->isr_mutex);
+ 
+ 	ret = device_property_read_u32(idev->dev, "fifo-size",
+ 				       &idev->fifo_size);
 -- 
 2.25.1
 
 
--- 
-Kees Cook
+
