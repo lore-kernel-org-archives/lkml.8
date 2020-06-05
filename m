@@ -2,116 +2,224 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC284207D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="bvdXoLAg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LDnvWhsH"
+	by mail.kernel.org (Postfix) with ESMTP id DAA87206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591396913;
+	bh=+dqh54p7mpKjI0bGIC1Gd/+aKgUlzS+cFoN/jtX/PRc=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=m6xga9TbPk0yJIGV8CzEHWZVPQ/gAc5tccx70UlzoHdfqpeGJ2RugtW2490GZ8oJm
+	 60a0MHEoTptU9rXi5WfJXPGqb+BRKgK7UeLT5Fpy5CsX+lUt6fjOenoEvEN0IF0gIA
+	 agoxUOY0RqqvxxycB4Yv9uKnNA9bXazW153orLWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgFEWgi (ORCPT
+        id S1728363AbgFEWlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:36:38 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:53735 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728013AbgFEWgi (ORCPT
+        Fri, 5 Jun 2020 18:41:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbgFEWlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:36:38 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 514CC5C01ED;
-        Fri,  5 Jun 2020 18:36:37 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 05 Jun 2020 18:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=oh/OAYaFEQ3HxW5W1KPC5V+cDOo
-        ZKlRbij/OZk0Nz/0=; b=bvdXoLAgqqupdoLaD502Zxzh/3CRStByByu8XkRr6yD
-        HHBQQpXUYelxiWYkDIbTcSqYKkIGYoUzpy7lQ63zYqN5x056z8fgVHoGHL4UnlmP
-        hMTizZWLkXcGKWj5qVnwQlwMy1mQqyzvIDDFc4D6bBPPFSqQC3WOzB7Ty8tDzFCE
-        z0/x5Mkb/1qofThsxI3MdHg+XPxAcI/WAkl+0rQTE5NoLcOBJI9ux6h2eEUAtp9j
-        D829PUV+BCMsF5q6qRuqX1DcCBZUyBqinaHgDzo+Bef6D2hapzjRmNFD5fM/sIbb
-        NvM4Xdk44/icj35oW6gtfW0bgteefzCx7pldF8NXjXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=oh/OAY
-        aFEQ3HxW5W1KPC5V+cDOoZKlRbij/OZk0Nz/0=; b=LDnvWhsHCwf8xPC7r0ocZ4
-        UvRX4HsdXQK54QO9T2vta/i20Cwh91HiipypI15vX4B8wZaWpx8lnww6aJJQ75Tm
-        Xy2jHNyJzzmqcKEv0HV3Vmiv/r1a8gfZSWHd0jaMqnpb8WL6mMlu9j3TG2yZAbjS
-        eEidO7r4jKN2Cy7E4l8P8vNdBjws7VB8W5ofhES/LP5C2V1g7P0DG1dhlwjQDwkD
-        6gEOpe4la1TEyjLKHaO0pq4XyG9Hj6rH+cn7DJMJS5b+mxe/oPDFDyYCYU/y+bDh
-        ADR0uD/1pXf3c90DZ2BkIkmrn1gHenDGQsOX7iIflE5I7q7z2RfVqCwAYY0HHnvg
-        ==
-X-ME-Sender: <xms:9MjaXo2rX9V5EH3JyH6PjEj9uC3IY62mPrrWfKie8cOl4hTUNosVIg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudeggedgtdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
-    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucggtffrrg
-    htthgvrhhnpedukefhkeelueegveetheelffffjeegleeuudelfeefuedtleffueejfffh
-    ueffudenucfkphepieejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdr
-    uggv
-X-ME-Proxy: <xmx:9MjaXjHVzoHjkL5ZJZ1rQP3-fqPCLgcAoXMcbWME682G2-USSu1eQA>
-    <xmx:9MjaXg4kJxejztwxvefvM5qba-PkKhwnylWCHF369mbGYKtJjUA3Tg>
-    <xmx:9MjaXh1a2qutynR4YcU0-BqItLm-V_Gl5rZt9YQMG0lJwXordEju2Q>
-    <xmx:9cjaXgRDUjFsEQG74RKUNS6W5QPWJdcMm1mT21iKBsvgv4RfYdSODw>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7A3683060F09;
-        Fri,  5 Jun 2020 18:36:36 -0400 (EDT)
-Date:   Fri, 5 Jun 2020 15:36:35 -0700
-From:   Andres Freund <andres@anarazel.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-Message-ID: <20200605223635.6xesl7u4lxszvico@alap3.anarazel.de>
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <20200604005916.niy2mejjcsx4sv6t@alap3.anarazel.de>
- <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
- <6eeff14f-befc-a5cc-08da-cb77f811fbdf@kernel.dk>
- <20200605202028.d57nklzpeolukni7@alap3.anarazel.de>
- <20200605203613.ogfilu2edcsfpme4@alap3.anarazel.de>
- <75bfe993-008d-71ce-7637-369f130bd984@kernel.dk>
- <3539a454-5321-0bdc-b59c-06f60cc64b56@kernel.dk>
- <34aadc75-5b8a-331e-e149-45e1547b543e@kernel.dk>
- <20200605223044.tnh7qsox7zg5uk53@alap3.anarazel.de>
+        Fri, 5 Jun 2020 18:41:49 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA393C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 15:41:47 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id j18so580522lji.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 15:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Mae4jOlihjfAZDZDhTPFsGOTgOiZjtEf9k7k3F8fM7I=;
+        b=E3W1dtzmFKFhCyu+O5OE4z2hPwO2tZ6sGQvElxznmj+8Ev3u49IP1hB5edjQq4eSlq
+         lsrphGci2bIunBYoxyg0OKawiQn91gGQ7TW12/BDWz/AmP8hoALE+iWwiR0RcmGkQNsd
+         vEDNqnVCDEBUdyc94cJ4cwBO4+YZDASsvOkzc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Mae4jOlihjfAZDZDhTPFsGOTgOiZjtEf9k7k3F8fM7I=;
+        b=I2SzgIX5qrmml9JoY3AyGcl5eLMwlNOtmZVNN2xwg351X6KVP9cihxO+R0BpfC6toV
+         dFIp1x/BxCWc7dIUq4//+bRrVcqsx3Bp8awSN3Xp8vRwCcs4aLtM+6ckugta0JklP9nG
+         1Z45dSDCPJaQpe1NpZMTkSQzXLkIzdBTSn+LF0WCrcyy1+eMMi9jrgrcIzQceDH6d1W0
+         BwLwhC5bPA/B+MeUkByr9a4St5vDAxy6BhWtwqgTSHBF929kDVGH9jCWC3oSIipJil78
+         oIr4OEc+7YNZNOMrf7t0/PZgKz+y0IG2Xwm21fpEBH7B/Ca0mpwnYIrsPCFfrE9r1iXm
+         UleQ==
+X-Gm-Message-State: AOAM530RU5r52WGP5XPNsAAvaK1KCOu9l3abWkTDmFj5BfneaZSLmvvZ
+        e53az9SfUesAQAKJasX+YZxceo9c3fU=
+X-Google-Smtp-Source: ABdhPJy6LQWxUMzaYemv84XfhKuTuF0sPTSazHNSHtGZuojkwnb0aCUVdOpKqyVmtDsVMZhNjlsDyg==
+X-Received: by 2002:a2e:9b4b:: with SMTP id o11mr5661472ljj.407.1591396905543;
+        Fri, 05 Jun 2020 15:41:45 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id c8sm1459415lfc.46.2020.06.05.15.41.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 15:41:44 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id z9so13604822ljh.13
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 15:41:44 -0700 (PDT)
+X-Received: by 2002:a2e:b5d9:: with SMTP id g25mr6109684ljn.285.1591396903743;
+ Fri, 05 Jun 2020 15:41:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605223044.tnh7qsox7zg5uk53@alap3.anarazel.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 5 Jun 2020 15:41:27 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj0QUaYcLHKG=_fw65NqhGbqvnU958SkHak9mg9qNwR+A@mail.gmail.com>
+Message-ID: <CAHk-=wj0QUaYcLHKG=_fw65NqhGbqvnU958SkHak9mg9qNwR+A@mail.gmail.com>
+Subject: Hang on wireless removal..
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+So I think there's something wrong with wireless networking, and
+(likely) in particular turning off wireless. And I think the problem
+came in this merge window, because now my machine hangs on shutdown.
 
-On 2020-06-05 15:30:44 -0700, Andres Freund wrote:
-> On 2020-06-05 15:21:34 -0600, Jens Axboe wrote:
-> > >> I can reproduce this, and I see what it is. I'll send out a patch soonish.
-> > > 
-> > > Thinko, can you try with this on top?
-> > 
-> > Sorry that was incomplete, please use this one!
-> 
-> That seems to fix it! Yay.
-> 
-> 
-> Bulk buffered reads somehow don't quite seem to be performing that well
-> though, looking into it. Could be on the pg side too.
+My new desktop is otherwise working fine, but it has some unnecessary
+wireless capability on the motherboard, in the form of a Intel Wi-Fi 6
+AX200 module that I don't use (since I end up using wired gig ethernet
+instead).
 
-While looking into that, I played with setting
-/sys/<dev>/queue/read_ahead_kb to 0 and noticed that seems to result in
-all/most IO done in workers. Is that to be expected?
+And while debugging the shutdown hang (symptom: systemd waits forever
+for NetworkManager and WPA supplicant), I turned off the WiFi.
 
-Greetings,
+And what do you know, things went all sideways.
 
-Andres Freund
+They went sideways because everything that wants the rtnl lock seems
+to just hang.
+
+Example:
+
+  kworker/57:2    D    0  1592      2 0x80004080
+  Workqueue: events_power_efficient reg_check_chans_work [cfg80211]
+  Call Trace:
+   __schedule+0x30b/0x4b0
+   ? schedule+0x77/0xa0
+   ? schedule_preempt_disabled+0xa/0x10
+   ? __mutex_lock+0x264/0x410
+   ? psi_group_change+0x44/0x260
+   ? reg_check_chans_work+0x1d/0x300 [cfg80211]
+   ? __switch_to_asm+0x42/0x70
+   ? process_one_work+0x1fa/0x3f0
+   ? worker_thread+0x25d/0x480
+   ? kthread+0x121/0x130
+   ? process_one_work+0x3f0/0x3f0
+   ? kthread_blkcg+0x30/0x30
+   ? ret_from_fork+0x22/0x30
+  kworker/60:2    D    0  1926      2 0x80004000
+  Workqueue: ipv6_addrconf addrconf_verify_work
+  Call Trace:
+   __schedule+0x30b/0x4b0
+   ? schedule+0x77/0xa0
+   ? schedule_preempt_disabled+0xa/0x10
+   ? __mutex_lock+0x264/0x410
+   ? addrconf_verify_work+0xa/0x20
+   ? process_one_work+0x1fa/0x3f0
+   ? worker_thread+0x25d/0x480
+   ? kthread+0x121/0x130
+   ? process_one_work+0x3f0/0x3f0
+   ? kthread_blkcg+0x30/0x30
+   ? ret_from_fork+0x22/0x30
+  NetworkManager  D    0  4329      1 0x00004000
+  Call Trace:
+   __schedule+0x30b/0x4b0
+   ? schedule+0x77/0xa0
+   ? schedule_preempt_disabled+0xa/0x10
+   ? __mutex_lock+0x264/0x410
+   ? __netlink_dump_start+0xa7/0x300
+   ? rtnl_dellink+0x3c0/0x3c0
+   ? rtnetlink_rcv_msg+0x375/0x3d0
+   ? poll_freewait+0x35/0xa0
+   ? do_sys_poll+0x58f/0x5f0
+   ? rtnl_dellink+0x3c0/0x3c0
+   ? __ia32_compat_sys_ppoll_time64+0x120/0x120
+   ? ip_output+0x6a/0xd0
+   ? ip_mc_finish_output+0x120/0x120
+   ? avc_has_perm+0x34/0xa0
+   ? rtnetlink_bind+0x30/0x30
+   ? netlink_rcv_skb+0xfb/0x130
+   ? netlink_unicast+0x1bf/0x2e0
+   ? netlink_sendmsg+0x385/0x410
+   ? __sys_sendto+0x21f/0x230
+   ? move_addr_to_user+0x97/0xc0
+   ? alloc_file_pseudo+0x9b/0xd0
+   ? sock_alloc_file+0xc4/0x100
+   ? __x64_sys_sendto+0x22/0x30
+   ? do_syscall_64+0x5e/0xd0
+   ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+and perhaps most interestingly, wpa_supplicant is waiting for some of
+those workqueues that are waiting for the lock:
+
+  wpa_supplicant  D    0  2162      1 0x00004000
+  Call Trace:
+   __schedule+0x30b/0x4b0
+   ? schedule+0x77/0xa0
+   ? schedule_timeout+0x22/0x150
+   ? ttwu_queue+0xf4/0x120
+   ? wait_for_common+0xac/0x110
+   ? __flush_work+0x200/0x230
+   ? put_pwq+0x70/0x70
+   ? __cfg80211_unregister_wdev+0x95/0x130 [cfg80211]
+   ? ieee80211_if_remove+0xa3/0xe0 [mac80211]
+   ? ieee80211_del_iface+0xe/0x20 [mac80211]
+   ? rdev_del_virtual_intf+0x2b/0xc0 [cfg80211]
+   ? genl_rcv_msg+0x451/0x570
+   ? genl_unbind+0xb0/0xb0
+   ? netlink_rcv_skb+0xfb/0x130
+   ? genl_rcv+0x24/0x40
+   ? netlink_unicast+0x1bf/0x2e0
+   ? netlink_sendmsg+0x385/0x410
+   ? ____sys_sendmsg+0x26b/0x290
+   ? __sys_sendmsg+0x128/0x180
+   ? selinux_socket_setsockopt+0xc3/0xd0
+   ? __cgroup_bpf_run_filter_setsockopt+0x99/0x290
+   ? netlink_setsockopt+0x38/0x4d0
+   ? __sys_setsockopt+0x11b/0x1b0
+   ? do_syscall_64+0x5e/0xd0
+   ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+which explains why systemd waits for that one too.
+
+So something seems to have never released the rtnl lock.
+
+In fact, I suspect it's exactly that wpa_supplicant itself that
+deadlocks on it and holds the rntl lock while it does that
+"flush_work()". Which in turn waits for things to go away, but they'll
+never go away because they need the rtnl lock. That wpa_supplicant is
+holding.
+
+If I were a betting man, I'd suspect it's due to commit 6cd536fe62ef
+("cfg80211: change internal management frame registration API"), which
+seems to move that
+
+        flush_work(&wdev->mgmt_registrations_update_wk);
+
+into __cfg80211_unregister_wdev(). But honestly, that's just a guess.
+
+I'd bisect this and verify things, but I'm really hoping I don't have to.
+
+I still have a number of pull requests for the merge window, so
+instead I'm sending this email out with my current guesses, and I hope
+someody will say "Yeah, you're right, the fix is already pending", or
+"No Linus, you're barking up completely the wrong tree, but I think I
+know what the problem is".
+
+Btw, I'm not a networking person, but I have to say, I've seen rtnl
+lock problems enough over time even as an outsider to have grown to
+really hate that thing. Am I wrong? It really seems to get involved
+much too much, and held in really awkward places.
+
+Am I wrong?
+
+             Linus
