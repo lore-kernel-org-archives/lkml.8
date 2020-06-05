@@ -2,109 +2,120 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0050BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3500B20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E50206F0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ra7efnOL"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="QTElvvtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgFEOXk (ORCPT
+        id S1728376AbgFEOXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:23:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
+        Fri, 5 Jun 2020 10:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728613AbgFEOSJ (ORCPT
+        with ESMTP id S1728387AbgFEOXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7054EC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:18:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o8so5184158pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:18:09 -0700 (PDT)
+        Fri, 5 Jun 2020 10:23:33 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F318C08C5C4
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:23:32 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so10330985ejd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:23:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=USN5B+36EcRDvKeTHs/GkNSI7LnmTqCKEsfrMETXyQE=;
-        b=Ra7efnOLfD0+wUXmYY7DVNDt/rW9NMuVsI1UU+XztgDo+6gMX4GEbUE9hx8dDLpDXy
-         8FNlNVgPK/hVwbNyMs969KelxavrGUQAWwp2rsdgzRGrXDxKgUUFRZBuxDp08B2uXDCM
-         ZdFejcna1GLfF1h8KoK+qNFR8Uu5Wiwbjlwms=
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XgY4I2DT6NHuEBJVBWH5xaWHKtAb7Acjuq8xM3DNBZs=;
+        b=QTElvvtJbPz7O4l0N2vXVv9mj1TLExtC0raNDMa24L8UfKR1yYUuYHL9CxjaruDrjh
+         aefJM28+QoU0J+hH7LcJY9hLj2TeIZpO1d1afTdHbgITtKVt276YnRSIFQtqPC3dyyfI
+         ovRyDY8g9W4NZLaLUUq/4fqdIhDWT8EwOvTWA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=USN5B+36EcRDvKeTHs/GkNSI7LnmTqCKEsfrMETXyQE=;
-        b=mwdnpdFJ6xsG7NSQwTNSvh0cPKYvZk6RlEwhysD65os5/7AUxc2TW2fpAcHfNs5OLI
-         4Cu9YL0d4AsPAR55ES0KOfFXCBxZBsYBWG+ik5CMCY8Wje/PCPRgSgCdoTws/8pmgjvB
-         vLgruU2hRp6z8ET6D3+mWAwRsOzEuHjV8Qt53Q6P/tNoJmoW3Nz+ZLo+A40wueH0Idgj
-         RaW2cXd2i9DElBPs8lae1deJ46s4nz536vMH3ZMmCW2s+aZ49+TuFvddKGP2i2nUKupZ
-         wdQ4rFUO5nX67vlmazdk5SpRjjbBzg7MjAGiDjMc5i0gqK9uw8CaekpCiIeL3LxpkRVJ
-         qGxw==
-X-Gm-Message-State: AOAM533IO0B/4hhgqO4VEqT+Q8zp6HzFEtMuNmS5l3TzkSOYlu9zgELH
-        u6nbKM99haPVRSX/mHmTwD8eIb8Mr9gLXw==
-X-Google-Smtp-Source: ABdhPJw+cA2osm5Y+j4AMSvnB/mesuJpia/pW9F2HIgjysQk3y1ignos3bJQFnCz+S/rIB2VMgBX9g==
-X-Received: by 2002:a63:1f42:: with SMTP id q2mr9422739pgm.357.1591366688871;
-        Fri, 05 Jun 2020 07:18:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l25sm6707192pgn.19.2020.06.05.07.18.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XgY4I2DT6NHuEBJVBWH5xaWHKtAb7Acjuq8xM3DNBZs=;
+        b=m7TSc3xTwUNsJQs3vy2oMRaeLmotV1ZeIdkWDdk5JKu73xGm+8+E85+drjbIAS/PB1
+         57wKa6UPhK9ut66RiDtAoUZEqe8/bV9H1PA+cd8wLaRvtbkJwiXGy1LCjCNBkGkQwOih
+         +HUEFPE1HjOqjE9bGy9p1590OnHXYcFdO7bdTZHz7g4diWsket9W/drugkFDTDoHz29h
+         6CJTjFCdSthzX/CLKjTROojXSjhifvDOrx66jOpVQmLMmAr8pvjgmL4IHTFbe3BxLJdf
+         PG3vle+B5m8Vg70txjJCMBIsMqM6nFLtKcvpX+cIXsmcj2Azr0KxwX7C052ErZ3cB8Be
+         pGCw==
+X-Gm-Message-State: AOAM531ci+LhelwJgyrb+VH/d3OcKALbRLnpKfyERX8yki0WZFET6kF7
+        0iT+nb6R1sIeEN7s395RhpGHKQ==
+X-Google-Smtp-Source: ABdhPJx6dbhFdXcLh9Fw1Irene3+drPlsNF3oWeBEhsMBqDdvPnhWWVIhBS0bvJAttcjyHDwhAkrGQ==
+X-Received: by 2002:a17:906:cb97:: with SMTP id mf23mr4356134ejb.468.1591367011198;
+        Fri, 05 Jun 2020 07:23:31 -0700 (PDT)
+Received: from prevas-ravi.prevas.se (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
+        by smtp.gmail.com with ESMTPSA id qp16sm4421833ejb.64.2020.06.05.07.23.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 07:18:07 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 07:18:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Joe Perches <joe@perches.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/mm: Fix typo in IS_ENABLED()
-Message-ID: <202006050717.A2F9809E@keescook>
+        Fri, 05 Jun 2020 07:23:30 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
+Date:   Fri,  5 Jun 2020 16:23:00 +0200
+Message-Id: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
+Just something like open(/usr/include/sys/stat.h) causes five calls of
+generic_permission -> acl_permission_check -> in_group_p; if the
+compiler first tried /usr/local/include/..., that would be a few
+more.
 
-IS_ENABLED() matches names exactly, so the missing "CONFIG_" prefix
-means this code would never be built.
+Altogether, on a bog-standard Ubuntu 20.04 install, a workload
+consisting of compiling lots of userspace programs (i.e., calling lots
+of short-lived programs that all need to get their shared libs mapped
+in, and the compilers poking around looking for system headers - lots
+of /usr/lib, /usr/bin, /usr/include/ accesses) puts in_group_p around
+0.1% according to perf top. With an artificial load such as
 
-Also fixes a missing newline in pr_warn().
+  while true ; do find /usr/ -print0 | xargs -0 stat > /dev/null ; done
 
-Signed-off-by: Joe Perches <joe@perches.com>
-Link: https://lore.kernel.org/lkml/b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
+that jumps to over 0.4%.
+
+System-installed files are almost always 0755 (directories and
+binaries) or 0644, so in most cases, we can avoid the binary search
+and the cost of pulling the cred->groups array and in_group_p() .text
+into the cpu cache.
+
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/namei.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 8ed2411c3f39..cf2e1b06e5d4 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -660,11 +660,10 @@ static void __init htab_init_page_sizes(void)
- 		 * Pick a size for the linear mapping. Currently, we only
- 		 * support 16M, 1M and 4K which is the default
- 		 */
--		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
-+		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
- 		    (unsigned long)_stext % 0x1000000) {
- 			if (mmu_psize_defs[MMU_PAGE_16M].shift)
--				pr_warn("Kernel not 16M aligned, "
--					"disabling 16M linear map alignment");
-+				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
- 			aligned = false;
+diff --git a/fs/namei.c b/fs/namei.c
+index d81f73ff1a8b..c6f0c6643db5 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -303,7 +303,12 @@ static int acl_permission_check(struct inode *inode, int mask)
+ 				return error;
  		}
  
+-		if (in_group_p(inode->i_gid))
++		/*
++		 * If the "group" and "other" permissions are the same,
++		 * there's no point calling in_group_p() to decide which
++		 * set to use.
++		 */
++		if ((((mode >> 3) ^ mode) & 7) && in_group_p(inode->i_gid))
+ 			mode >>= 3;
+ 	}
+ 
 -- 
-2.25.1
+2.23.0
 
-
--- 
-Kees Cook
