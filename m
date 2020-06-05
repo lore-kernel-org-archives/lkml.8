@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D127C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2EA02086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D089208A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366759;
-	bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
+	s=default; t=1591366763;
+	bh=wa6/VyqRftc183tLN+IpPw5dqH9ERY51scjelX0jqUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=emJtYRNpWkAcyLGBLXQYxTjsaBo+rtdlw3fvF65D0pCVai/E2ShGC2/o0w2SPS3gp
-	 inHk2otoUtjzuEc5Hx1xzr0/5FyabU89Xe6SSccDFb8/Tx8c3quJIrdvwA3QbLCdr/
-	 twpW69Oz1CsNmkqKh4YBvv+vUEEnORhBMq/Fu0bc=
+	b=2YsSr+XpwbVsMztAlfGfeakiC1v/I7zGCe8vDDzGelihvV1wE6T+47aYetOFoSvGG
+	 996Rc3K16XTc7fYu6o9pTNIeZKbLC/LNfEsOK4Xkldta8OWZ0V60jtiddXr4Z22bJY
+	 Iz0ra7R/nW3joDsVPEKuMVPiLvSOK6ilmGbeNo3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgFEOTT (ORCPT
+        id S1728833AbgFEOTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49922 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728800AbgFEOTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:11 -0400
+        id S1728816AbgFEOTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE828208B8;
-        Fri,  5 Jun 2020 14:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92EC6208A7;
+        Fri,  5 Jun 2020 14:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366751;
-        bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
+        s=default; t=1591366758;
+        bh=wa6/VyqRftc183tLN+IpPw5dqH9ERY51scjelX0jqUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gdkDmpwhJ1dkLFqvAgoXmFLnE0OvRqGWG1xV2GUXsOSz2BdxQfzMTjmCOjcgoBcUN
-         Ihos2ZwBmdCZzHmuSCIPp2H+ozXmey3fockagSVxIO9mQ8yw9l+e08qfENYIpLotNL
-         SHDlDNUb5wB3QHoknkWnEnVm/qrIsTfzoQWjWkJ0=
+        b=Jh3A+P9Ro89p8TgC6p4e5uDULAYh5g+AlqMxX4tJaST91Vw0NVlN/MuyaYATA9MV4
+         P4yp/2nWVreOWW9yqsWUyu8+W9riJ+3vXbE8JT5j4Nx7t2QTG9tP5Hkm63D3cLCtLe
+         FXg705r6HIQDOooTqYj8z48FVdE9/rnRdJapo8as=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 33/38] s390/mm: fix set_huge_pte_at() for empty ptes
-Date:   Fri,  5 Jun 2020 16:15:16 +0200
-Message-Id: <20200605140254.825987686@linuxfoundation.org>
+Subject: [PATCH 5.4 36/38] net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
+Date:   Fri,  5 Jun 2020 16:15:19 +0200
+Message-Id: <20200605140254.981119618@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -61,56 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Jonathan McDowell <noodles@earth.li>
 
-[ Upstream commit ac8372f3b4e41015549b331a4f350224661e7fc6 ]
+[ Upstream commit a96ac8a0045e3cbe3e5af6d1b3c78c6c2065dec5 ]
 
-On s390, the layout of normal and large ptes (i.e. pmds/puds) differs.
-Therefore, set_huge_pte_at() does a conversion from a normal pte to
-the corresponding large pmd/pud. So, when converting an empty pte, this
-should result in an empty pmd/pud, which would return true for
-pmd/pud_none().
+The ipq806x_gmac_probe() function enables the PTP clock but not the
+appropriate interface clocks. This means that if the bootloader hasn't
+done so attempting to bring up the interface will fail with an error
+like:
 
-However, after conversion we also mark the pmd/pud as large, and
-therefore present. For empty ptes, this will result in an empty pmd/pud
-that is also marked as large, and pmd/pud_none() would not return true.
+[   59.028131] ipq806x-gmac-dwmac 37600000.ethernet: Failed to reset the dma
+[   59.028196] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_hw_setup: DMA engine initialization failed
+[   59.034056] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_open: Hw setup failed
 
-There is currently no issue with this behaviour, as set_huge_pte_at()
-does not seem to be called for empty ptes. It would be valid though, so
-let's fix this by not marking empty ptes as large in set_huge_pte_at().
+This patch, a slightly cleaned up version of one posted by Sergey
+Sergeev in:
 
-This was found by testing a patch from from Anshuman Khandual, which is
-currently discussed on LKML ("mm/debug: Add more arch page table helper
-tests").
+https://forum.openwrt.org/t/support-for-mikrotik-rb3011uias-rm/4064/257
 
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+correctly enables the clock; we have already configured the source just
+before this.
+
+Tested on a MikroTik RB3011.
+
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/hugetlbpage.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index 5674710a4841..7dfae86afa47 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -159,10 +159,13 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
- 		rste &= ~_SEGMENT_ENTRY_NOEXEC;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 0d21082ceb93..4d75158c64b2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -318,6 +318,19 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
+ 	/* Enable PTP clock */
+ 	regmap_read(gmac->nss_common, NSS_COMMON_CLK_GATE, &val);
+ 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
++	switch (gmac->phy_mode) {
++	case PHY_INTERFACE_MODE_RGMII:
++		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
++			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++		val |= NSS_COMMON_CLK_GATE_GMII_RX_EN(gmac->id) |
++				NSS_COMMON_CLK_GATE_GMII_TX_EN(gmac->id);
++		break;
++	default:
++		/* We don't get here; the switch above will have errored out */
++		unreachable();
++	}
+ 	regmap_write(gmac->nss_common, NSS_COMMON_CLK_GATE, val);
  
- 	/* Set correct table type for 2G hugepages */
--	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3)
--		rste |= _REGION_ENTRY_TYPE_R3 | _REGION3_ENTRY_LARGE;
--	else
-+	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
-+		if (likely(pte_present(pte)))
-+			rste |= _REGION3_ENTRY_LARGE;
-+		rste |= _REGION_ENTRY_TYPE_R3;
-+	} else if (likely(pte_present(pte)))
- 		rste |= _SEGMENT_ENTRY_LARGE;
-+
- 	clear_huge_pte_skeys(mm, rste);
- 	pte_val(*ptep) = rste;
- }
+ 	if (gmac->phy_mode == PHY_INTERFACE_MODE_SGMII) {
 -- 
 2.25.1
 
