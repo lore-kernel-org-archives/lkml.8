@@ -2,52 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8197EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D92F2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8E220663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366920;
-	bh=PLNJeXxTBPc66RzOoR4Z0fys6oMg6bP2vmEK7g3T1FI=;
+	s=default; t=1591366923;
+	bh=71BL5Z1ecs5DImypsWO4GB/7Dn3Y5DY64CvQ/lzXbV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qun3WEQDKb4A/bgFjAjDfYNZxmyuVTxmGD8sgL4/rj1DLt2jGs5PFHmPgr5Sssv3h
-	 hhQhbhCKodRPE0PecD31ShuQn8tF+59kxFtDwaTa63j58Byy/iDfCYCOVohSg7LLl9
-	 kiYdOnoW52rNCoE7V1xnEaFlc8FSGapvm7Wz3ZMI=
+	b=xrExuhq3rdJab+ZGei/ZNhzi056i+L7q/Kk5YDMSiR9uCOcFNBWWi4LtOMxOatc6I
+	 EgrwrEzBmFFNyxilBd/hL9lOyEQkvSXknkGa8EMk4V0ywgTezDXKc4nk7ZKpWjs/hC
+	 1Fup4XS/4gmNP/309fyXcYDPMNKBQYxP8wF/0iTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgFEOV6 (ORCPT
+        id S1728317AbgFEOTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:21:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50742 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgFEOTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:48 -0400
+        id S1728836AbgFEOTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EA4F2086A;
-        Fri,  5 Jun 2020 14:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C899208C9;
+        Fri,  5 Jun 2020 14:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366787;
-        bh=PLNJeXxTBPc66RzOoR4Z0fys6oMg6bP2vmEK7g3T1FI=;
+        s=default; t=1591366769;
+        bh=71BL5Z1ecs5DImypsWO4GB/7Dn3Y5DY64CvQ/lzXbV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrtY0Ec8l7I83SCw0rbRw0ICUr3DV4IUScR019u5LodMsS+HGZZkgDtZYHWTKIMsN
-         L5zGtcu3rboyK3o/zWNbp9bJZPQdrVNwlBlAymAGo/5vOdOt4UuKzVBYKV1g0TGynL
-         PH50ne3mGyGXJR9VkoIznzC75jBeq6VXHUVyfAx0=
+        b=bJuo78KwvmRVet2oCM4/0F27/HXy6D9mt4kbboZJxvFLPsBGi3YmMHR+mP1sI4Dsa
+         v84z46hGAo3o3kjgSycylQhvW4ZiWeXDMbkYmloUt8W6XXoVazTzzJ0VB14Fu20p/R
+         LYqEAlw7CwUOwDJ00AOdp8hQu32cJwkSmR9jkgxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 18/28] ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT
-Date:   Fri,  5 Jun 2020 16:15:20 +0200
-Message-Id: <20200605140253.459654744@linuxfoundation.org>
+        stable@vger.kernel.org, DENG Qingfang <dqfext@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 10/28] net: dsa: mt7530: set CPU port to fallback mode
+Date:   Fri,  5 Jun 2020 16:15:12 +0200
+Message-Id: <20200605140252.956351161@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -60,38 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: DENG Qingfang <dqfext@gmail.com>
 
-[ Upstream commit 799587d5731db9dcdafaac4002463aa7d9cd6cf7 ]
+commit 38152ea37d8bdaffa22603e0a5b5b86cfa8714c9 upstream.
 
-Elide invalid configuration EZNPS + ARCv2, triggered by a
-make allyesconfig build.
+Currently, setting a bridge's self PVID to other value and deleting
+the default VID 1 renders untagged ports of that VLAN unable to talk to
+the CPU port:
 
-Granted the root cause is in source code (asm/barrier.h) where we check
-for ARCv2 before PLAT_EZNPS, but it is better to avoid such combinations
-at onset rather then baking subtle nuances into code.
+	bridge vlan add dev br0 vid 2 pvid untagged self
+	bridge vlan del dev br0 vid 1 self
+	bridge vlan add dev sw0p0 vid 2 pvid untagged
+	bridge vlan del dev sw0p0 vid 1
+	# br0 cannot send untagged frames out of sw0p0 anymore
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+That is because the CPU port is set to security mode and its PVID is
+still 1, and untagged frames are dropped due to VLAN member violation.
+
+Set the CPU port to fallback mode so untagged frames can pass through.
+
+Fixes: 83163f7dca56 ("net: dsa: mediatek: add VLAN support for MT7530")
+Signed-off-by: DENG Qingfang <dqfext@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arc/plat-eznps/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/mt7530.c |   11 ++++++++---
+ drivers/net/dsa/mt7530.h |    6 ++++++
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arc/plat-eznps/Kconfig b/arch/arc/plat-eznps/Kconfig
-index ce908e2c5282..71378bfec8d0 100644
---- a/arch/arc/plat-eznps/Kconfig
-+++ b/arch/arc/plat-eznps/Kconfig
-@@ -6,6 +6,7 @@
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -860,10 +860,15 @@ mt7530_port_set_vlan_aware(struct dsa_sw
+ 		   PCR_MATRIX_MASK, PCR_MATRIX(MT7530_ALL_MEMBERS));
  
- menuconfig ARC_PLAT_EZNPS
- 	bool "\"EZchip\" ARC dev platform"
-+	depends on ISA_ARCOMPACT
- 	select CPU_BIG_ENDIAN
- 	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
- 	select EZNPS_GIC
--- 
-2.25.1
-
+ 	/* Trapped into security mode allows packet forwarding through VLAN
+-	 * table lookup.
++	 * table lookup. CPU port is set to fallback mode to let untagged
++	 * frames pass through.
+ 	 */
+-	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
+-		   MT7530_PORT_SECURITY_MODE);
++	if (dsa_is_cpu_port(ds, port))
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_FALLBACK_MODE);
++	else
++		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
++			   MT7530_PORT_SECURITY_MODE);
+ 
+ 	/* Set the port as a user port which is to be able to recognize VID
+ 	 * from incoming packets before fetching entry within the VLAN table.
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -148,6 +148,12 @@ enum mt7530_port_mode {
+ 	/* Port Matrix Mode: Frames are forwarded by the PCR_MATRIX members. */
+ 	MT7530_PORT_MATRIX_MODE = PORT_VLAN(0),
+ 
++	/* Fallback Mode: Forward received frames with ingress ports that do
++	 * not belong to the VLAN member. Frames whose VID is not listed on
++	 * the VLAN table are forwarded by the PCR_MATRIX members.
++	 */
++	MT7530_PORT_FALLBACK_MODE = PORT_VLAN(1),
++
+ 	/* Security Mode: Discard any frame due to ingress membership
+ 	 * violation or VID missed on the VLAN table.
+ 	 */
 
 
