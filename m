@@ -2,114 +2,163 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F765C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFB0206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527402053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:50:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="sqcvTJCe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dfwQ7fK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgFEUtr (ORCPT
+        id S1728170AbgFEUuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 16:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53912 "EHLO
+        Fri, 5 Jun 2020 16:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728112AbgFEUtq (ORCPT
+        with ESMTP id S1728112AbgFEUuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 16:49:46 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9227BC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 13:49:44 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id x93so8448830ede.9
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 13:49:44 -0700 (PDT)
+        Fri, 5 Jun 2020 16:50:23 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E84C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 13:50:22 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id f3so5495490pfd.11
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 13:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=21Q9/cXvccHpfKM5LJV8/84Rguo7Ngf33rA3ZIRa5vs=;
-        b=sqcvTJCeVrWypB/+l+MMABvt/tV4gk+UOcn117JmtbQTP51NyXkUXKf2Prk5sIyncf
-         HZO+JH/P2bkvCU3MnR4gYluBkZiySlU1+V1L3b+Ith0tbtKvUJlUwMzJcxEbxdQ+zAHf
-         cZ38i/Z/j3e9ouUixxMOfm6mthAcTEc0GF6O/yg3tFxUUNx3WmaRGX4ej0WbArcaxl88
-         FhNFZ5psvs05EKcJhSFeCaR6Ip9ZmbrDIpvOxkSOpaeU3+r2vGVDGise4cL+DMMtmBEt
-         WaMGiqMKGXOzP4UeujYsrAF1B916+Xgwjvh3X8cYR4hig/3EN3CZylV0vJyn8APrYscz
-         I8Sg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nOiKknFW8NZXsdzDqOG6mcYAn5/jYpz6ewpTk+cA3EU=;
+        b=dfwQ7fK2Xky7i0j86o9Lh3WLEhaSimawUnAPO83BlEeX3Ub6v3sq67ZLvBVxJHD3vP
+         BxHfnJCIXhewm5tjT3dmjJZOEExpl0d0SdQH93CanTMt43MM+S7qQvkOytNlhWp8oISy
+         1KwcRIbn4xMkCiB8szpJGuAeGKNR/Q4fi2qFk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=21Q9/cXvccHpfKM5LJV8/84Rguo7Ngf33rA3ZIRa5vs=;
-        b=O8QnWNTqLM5rUv9LTBZGHMKdUGjA8Odyuesekwoszc3MVAugvWwYF+U3Q2qor8cHks
-         ahalInlA96d7qPF0q4rRqO+j5x0FjT3x96nqcj/Se1hc0G+K3RJ1nNivVEnAqLWd9UqK
-         mVrLPBbL0SBDwu9yTqjrf12CIRkqIoQM4oKgAWOvWRxK4uBIxGUsxoWbl5wG0otCC12W
-         MV5OeNid/2ZXZX/EAmZsKwYUd8y0Y3Ms0Wgud0znreB49Zlx9Li0c3gRO3dDWYtg3SvL
-         FNzs5FrFB25jaBhDPR6sj7a9VtGgTbnSPKQGB8ENY71jQeHPL2nOAW88qCI2W7WkNLN7
-         FBGw==
-X-Gm-Message-State: AOAM531HSBIbatkshblCQ796aONy7M3+iwGVhYcaDWFoOYlHBiDwNkS9
-        t3PmNtRwslOVzCGG06M8Lpzq336rxzklfFgEuZvj
-X-Google-Smtp-Source: ABdhPJx8T/cpE+4mff+a8QGPcmAGE5mv7vBpaH31a5ydwUTia6v9NmR0TJm+SgSptgqBn0B9v/5hdv8UgtqffyiA2r4=
-X-Received: by 2002:a05:6402:1d29:: with SMTP id dh9mr10952923edb.269.1591390183122;
- Fri, 05 Jun 2020 13:49:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nOiKknFW8NZXsdzDqOG6mcYAn5/jYpz6ewpTk+cA3EU=;
+        b=NhsQm8qyRGmfdcRD7ZR53VMEp1HvhmYZabdV0r62CqkrSERYu+XsO/Tp4IwprUeD59
+         jwmx3FYHivTWCwboJcpGpwUyHThlKC7BQBhHB5EGYeGhXdIwMlyoOu3I/oZA9F2FR5rm
+         2nXLgsomuNc4tWS++z2uoArwHx5xYxTdfdf7q6UfsKVJ5XPqoCJO1Qi60f4rv18G8b6t
+         1fyKHniM8Wb+QXKOKvXDh69IQ+gElWOE3kwQe4zkMFnaGwtc3QGhpJy1ucLAKdsXtRKh
+         JBLQ1BPwfDOJvZazr+XXKlZqLLf/HSih1mdt28wRPGcrD1v9McmLoGiRaDPkS0T6brK2
+         Nmmg==
+X-Gm-Message-State: AOAM533qWF48fgEolLQQmM9yKDSmwB/IKFn8EcZ6uQQgzTeCNeYHPrv+
+        VdAiBN4ImS+oIswD/18AwP2NBQ==
+X-Google-Smtp-Source: ABdhPJwkvhK/NCswQ2V0KmJYDz4etb37wiRdKTHEc7kLc+BeGNkI0CMyUBfbt6cb0bbVGeuLoC50/g==
+X-Received: by 2002:a63:658:: with SMTP id 85mr10808736pgg.181.1591390222418;
+        Fri, 05 Jun 2020 13:50:22 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id 63sm445152pfd.65.2020.06.05.13.50.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 13:50:21 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
+Cc:     len.brown@intel.com, chromeos-bluetooth-upstreaming@chromium.org,
+        linux-pm@vger.kernel.org, rafael@kernel.org,
+        todd.e.brandt@linux.intel.com, rui.zhang@intel.com,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH v3] Bluetooth: Allow suspend even when preparation has failed
+Date:   Fri,  5 Jun 2020 13:50:15 -0700
+Message-Id: <20200605135009.v3.1.I0ec31d716619532fc007eac081e827a204ba03de@changeid>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-References: <20200604163243.2575-1-nramas@linux.microsoft.com>
- <1591382782.5816.36.camel@linux.ibm.com> <CAHC9VhS-EP=Kk3GKRzAGAYa5mqupkLQCHz_m_DgoAKRWcSTgLA@mail.gmail.com>
- <8dfb3fa6-5c1f-d644-7d21-72a9448c52cc@linux.microsoft.com>
-In-Reply-To: <8dfb3fa6-5c1f-d644-7d21-72a9448c52cc@linux.microsoft.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 5 Jun 2020 16:49:32 -0400
-Message-ID: <CAHC9VhS8gmrWxt75aHAE16PWAay7sUrffZiT0A8VLugwexK4Uw@mail.gmail.com>
-Subject: Re: [PATCH] IMA: Add log statements for failure conditions
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        tusharsu@linux.microsoft.com, linux-kernel@vger.kernel.org,
-        linux-audit@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 3:54 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
-> On 6/5/20 12:37 PM, Paul Moore wrote:
->
-> > If it's audit related, it's generally best to CC the linux-audit list,
-> > not just me (fixed).
-> >
-> > It's not clear to me what this pr_err() is trying to indicate other
-> > than *something* failed.  Can someone provide some more background on
-> > this message?
->
-> process_buffer_measurement() is currently used to measure
-> "kexec command line", "keys", and "blacklist-hash". If there was any
-> error in the measurement, this pr_err() will indicate which of the above
-> measurement failed and the related error code.
->
-> Please let me know if you need more info on this one.
+It is preferable to allow suspend even when Bluetooth has problems
+preparing for sleep. When Bluetooth fails to finish preparing for
+suspend, log the error and allow the suspend notifier to continue
+instead.
 
-That helps, thank you.
+To also make it clearer why suspend failed, change bt_dev_dbg to
+bt_dev_err when handling the suspend timeout.
 
-> Since a pr_xyz() call was already present, I just wanted to change the
-> log level to keep the code change to the minimum. But if audit log is
-> the right approach for this case, I'll update.
+Fixes: dd522a7429b07e ("Bluetooth: Handle LE devices during suspend")
+Reported-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+To verify this is properly working, I added an additional change to
+hci_suspend_wait_event to always return -16. This validates that suspend
+continues even when an error has occurred during the suspend
+preparation.
 
-Generally we reserve audit for things that are required for various
-security certifications and/or "security relevant".  From what you
-mentioned above, it seems like this would fall into the second
-category if not the first.
+Example on Chromebook:
+[   55.834524] PM: Syncing filesystems ... done.
+[   55.841930] PM: Preparing system for sleep (s2idle)
+[   55.940492] Bluetooth: hci_core.c:hci_suspend_notifier() hci0: Suspend notifier action (3) failed: -16
+[   55.940497] Freezing user space processes ... (elapsed 0.001 seconds) done.
+[   55.941692] OOM killer disabled.
+[   55.941693] Freezing remaining freezable tasks ... (elapsed 0.000 seconds) done.
+[   55.942632] PM: Suspending system (s2idle)
 
-Looking at your patch it doesn't look like you are trying to record
-anything special so you may be able to use the existing
-integrity_audit_msg(...) helper.  Of course then the question comes
-down to the audit record type (the audit_msgno argument), the
-operation (op), and the comm/cause (cause).
+I ran this through a suspend_stress_test in the following scenarios:
+* Peer classic device connected: 50+ suspends
+* No devices connected: 100 suspends
+* With the above test case returning -EBUSY: 50 suspends
 
-Do you feel that any of the existing audit record types are a good fit for this?
+I also ran this through our automated testing for suspend and wake on
+BT from suspend continues to work.
 
+
+Changes in v3:
+- Changed printf format for unsigned long
+
+Changes in v2:
+- Added fixes and reported-by tags
+
+ net/bluetooth/hci_core.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index dbe2d79f233fba..83ce665d3cbfb0 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3289,10 +3289,10 @@ static int hci_suspend_wait_event(struct hci_dev *hdev)
+ 				     WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
+ 
+ 	if (ret == 0) {
+-		bt_dev_dbg(hdev, "Timed out waiting for suspend");
++		bt_dev_err(hdev, "Timed out waiting for suspend events");
+ 		for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
+ 			if (test_bit(i, hdev->suspend_tasks))
+-				bt_dev_dbg(hdev, "Bit %d is set", i);
++				bt_dev_err(hdev, "Suspend timeout bit: %d", i);
+ 			clear_bit(i, hdev->suspend_tasks);
+ 		}
+ 
+@@ -3360,12 +3360,15 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
+ 		ret = hci_change_suspend_state(hdev, BT_RUNNING);
+ 	}
+ 
+-	/* If suspend failed, restore it to running */
+-	if (ret && action == PM_SUSPEND_PREPARE)
+-		hci_change_suspend_state(hdev, BT_RUNNING);
+-
+ done:
+-	return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
++	/* We always allow suspend even if suspend preparation failed and
++	 * attempt to recover in resume.
++	 */
++	if (ret)
++		bt_dev_err(hdev, "Suspend notifier action (%lu) failed: %d",
++			   action, ret);
++
++	return NOTIFY_STOP;
+ }
+ 
+ /* Alloc HCI device */
 -- 
-paul moore
-www.paul-moore.com
+2.27.0.278.ge193c7cf3a9-goog
+
