@@ -2,126 +2,58 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5998C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7FB5206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891D42053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgFENuF (ORCPT
+        id S1727769AbgFENuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:50:05 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:54221 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbgFENuE (ORCPT
+        Fri, 5 Jun 2020 09:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbgFENuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:50:04 -0400
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4FDF4240009;
-        Fri,  5 Jun 2020 13:49:55 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 15:53:15 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        michael.dege@renesas.com, gotthard.voellmeke@renesas.com,
-        efriedrich@de.adit-jv.com, mrodin@de.adit-jv.com,
-        ChaitanyaKumar.Borah@in.bosch.com,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Message-ID: <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20200527071555.GA23912@lxhi-065.adit-jv.com>
- <20200605132900.on527xcggg6f6pil@uno.localdomain>
- <20200605134124.GA28734@lxhi-065.adit-jv.com>
+        Fri, 5 Jun 2020 09:50:17 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C32C08C5C2;
+        Fri,  5 Jun 2020 06:50:16 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jhCjT-003agQ-4G; Fri, 05 Jun 2020 13:50:03 +0000
+Date:   Fri, 5 Jun 2020 14:50:03 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-afs@lists.infradead.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] afs: Improvements for v5.8
+Message-ID: <20200605135003.GH23230@ZenIV.linux.org.uk>
+References: <2240660.1591289899@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605134124.GA28734@lxhi-065.adit-jv.com>
+In-Reply-To: <2240660.1591289899@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniu
+On Thu, Jun 04, 2020 at 05:58:19PM +0100, David Howells wrote:
+> Hi Linus,
+> 
+> Is it too late to put in a pull request for AFS changes?  Apologies - I was
+> holding off and hoping that I could get Al to review the changes I made to
+> the core VFS change commit (first in the series) in response to his earlier
+> review comments.  I have an ack for the Ext4 changes made, though.  If you
+> would prefer it to be held off at this point, fair enough.
+> 
+> Note that the series also got rebased to -rc7 to remove the dependency on
+> fix patches that got merged through the net tree.
 
-On Fri, Jun 05, 2020 at 03:41:24PM +0200, Eugeniu Rosca wrote:
-> Hi Jacopo,
->
-> On Fri, Jun 05, 2020 at 03:29:00PM +0200, Jacopo Mondi wrote:
-> > On Wed, May 27, 2020 at 09:15:55AM +0200, Eugeniu Rosca wrote:
-> > > Could you kindly share the cross compilation steps for your kmsxx fork?
-> >
-> > I usually build it on the target :)
->
-> Interesting approach. With ARM getting more and more potent, why not? :)
->
-
-For 'small' utilities like kmsxx it's doable
-
-> >
-> > > Just out of curiosity, have you ever tried to pull the display's HDMI
-> > > cable while reading from CM2_LUT_TBL?
-> >
-> > Ahem, not really :) Did I get you right, you mean disconnecting the
-> > HDMI cable from the board ?
->
-> Right.
->
-
-So, no, I have not tried. Do you see any intersting failure with the
-mainline version ?
-
-> > >
-> > > At least with the out-of-tree CMM implementation [*], this sends the
-> > > R-Car3 reference targets into an unrecoverable freeze, with no lockup
-> > > reported by the kernel (i.e. looks like an serious HW issue).
-> > >
-> > > >
-> > > > CMM functionalities are retained between suspend/resume cycles (tested with
-> > > > suspend-to-idle) without requiring a re-programming of the LUT tables.
-> > >
-> > > Hmm. Is this backed up by any statement in the HW User's manual?
-> > > This comes in contrast with the original Renesas CMM implementation [**]
-> > > which does make use of suspend (where the freeze actually happens).
-> > >
-> > > Can we infer, based on your statement, that we could also get rid of
-> > > the suspend callback in [**]?
-> >
-> > As Geert (thanks) explained what I've tested with is suspend-to-idle,
-> > which retains the state of the LUT tables (and I assume other
-> > not-yet-implemented CMM features, like CLU). I recall the out-of-tree
-> > driver has suspend/resume routines but I never really tested that.
->
-> I see. JFYI, there is a flaw in the suspend handling in the out-of-tree
-> CMM patch [*], which renders the SoC unresponsive on HDMI hotplug. The
-> fix is currently under review. Hopefully it will make its way to [*]
-> in the nearest future. Just to keep in mind for the moment when CMM
-> s2ram will become a mainline feature.
-
-Thanks, let's keep this in mind. Next week I'll run a few tests again
-with s2ram and will get back to you.
-
-Thanks
-  j
-
->
-> > >
-> > > [*] https://github.com/renesas-rcar/du_cmm
-> > > [**] https://github.com/renesas-rcar/du_cmm/blob/c393ed49834bdbc/meta-rcar-gen3/recipes-kernel/linux/linux-renesas/0001-drm-rcar-du-Add-DU-CMM-support.patch#L1912
->
-> --
-> Best regards,
-> Eugeniu Rosca
+FWIW, I can live with fs/inode.c part in its current form
