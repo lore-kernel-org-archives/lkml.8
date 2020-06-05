@@ -2,180 +2,109 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A10EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F38C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F13D207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B7D207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgFEEjg (ORCPT
+        id S1726186AbgFEEjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:39:36 -0400
-Received: from m9a0013g.houston.softwaregrp.com ([15.124.64.91]:44574 "EHLO
-        m9a0013g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgFEEjf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:39:35 -0400
-Received: FROM m9a0013g.houston.softwaregrp.com (15.121.0.190) BY m9a0013g.houston.softwaregrp.com WITH ESMTP;
- Fri,  5 Jun 2020 04:38:35 +0000
-Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
- M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
+        Fri, 5 Jun 2020 00:39:46 -0400
+Received: from mx24.baidu.com ([111.206.215.185]:60194 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725968AbgFEEjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 00:39:44 -0400
+X-Greylist: delayed 954 seconds by postgrey-1.27 at vger.kernel.org; Fri, 05 Jun 2020 00:39:42 EDT
+Received: from BJHW-Mail-Ex14.internal.baidu.com (unknown [10.127.64.37])
+        by Forcepoint Email with ESMTPS id 5A5E9675E2089BB4C91E;
+        Fri,  5 Jun 2020 12:23:42 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ BJHW-Mail-Ex14.internal.baidu.com (10.127.64.37) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 5 Jun 2020 04:38:57 +0000
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (15.124.72.14) by
- M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Fri, 5 Jun 2020 04:38:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UvNfgNYIGyDdskRWmJnze/q+G58DMMR4sZVWuUi+ncPUT3WLeUNoBuYDJPKdlaAnDinlPZ8SD9evW0c0x5fO2CmQsqaTLg8GzEmybftPUni9groS2Zkrs70rgwmiLq5QsqGNCJAE/vYmyAN1xs67+L7ALrVboVGuVQim7pa7b0iT/ab3tuaQxUW335VfvcvP9L7Qdjsh4zMxY92EMOHM3I9BitqBu52UkakypnvhybmtHOEHv27p+Q2mNN6i9QbaEJ3qqRpL/dqViyb2Yn/yK9IVk9kahFNdQgwUNMywbWpkn42cX8zMU/YbTozJet6aObYimecr5iBVSRa6whaN+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7z/YJ2jHJg7BMc4knEiVmUpMCeW/zb5eYaljU6VgHCc=;
- b=gy2YVzfIWRowMzHDlTlH6tC5iDSmu2tebGFfB4aWyRFI79QIHkp9kRu1iNTjTpvyMUdzFsQwJRF7oFHjQ3i7KqhtdjCmgjUQqkolOBrqiRFXUj43ZVOj/29kMWwi/sJedWN9Tt5ypA56bINw7Ri8E5+O5xuIFoliTI3s/1ajQtxnfHQi5RFspVlOJYJRfDeNtMjMMaBKY//SHZjRfDXwOHM9IsPIFAZHbb2p4asjWpWlQW0YJmmiiKaR/3cWb8fHk6H/r3WG2DlC0rLtdmkjYWIo4H226+dYgk/KeHMH9+C2Y7Sc9iecayfsdnMDbcvbYgjOhtXlT+DdzmSWpltNYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: broadcom.com; dkim=none (message not signed)
- header.d=none;broadcom.com; dmarc=none action=none header.from=suse.com;
-Received: from MW3PR18MB3658.namprd18.prod.outlook.com (2603:10b6:303:54::24)
- by MW3PR18MB3466.namprd18.prod.outlook.com (2603:10b6:303:58::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
- 2020 04:38:56 +0000
-Received: from MW3PR18MB3658.namprd18.prod.outlook.com
- ([fe80::2da0:153f:7d56:210d]) by MW3PR18MB3658.namprd18.prod.outlook.com
- ([fe80::2da0:153f:7d56:210d%5]) with mapi id 15.20.3066.018; Fri, 5 Jun 2020
- 04:38:56 +0000
-Date:   Fri, 5 Jun 2020 12:38:46 +0800
-From:   Kai Liu <kai.liu@suse.com>
-To:     Chandrakanth Patil <chandrakanth.patil@broadcom.com>
-CC:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Xiaoming Gao <newtongao@tencent.com>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>,
-        <xiakaixu1987@gmail.com>, <jejb@linux.ibm.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by
- JBOD
-Message-ID: <20200605043846.f3ciid3xpvdgumh6@suse.com>
-References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
- <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com>
- <4779a72c878774e4e3525aae8932feda@mail.gmail.com>
- <20200604155009.63mhbsoaoq6yra77@suse.com>
- <4285a7ff366d7f5cfb5cae582dadf878@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <4285a7ff366d7f5cfb5cae582dadf878@mail.gmail.com>
-User-Agent: NeoMutt/20200501
-X-ClientProxiedBy: SG2PR06CA0091.apcprd06.prod.outlook.com
- (2603:1096:3:14::17) To MW3PR18MB3658.namprd18.prod.outlook.com
- (2603:10b6:303:54::24)
+ 15.1.1713.5; Fri, 5 Jun 2020 12:23:41 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Fri, 5 Jun 2020 12:23:36 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     "like.xu@intel.com" <like.xu@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
+        "wei.huang2@amd.com" <wei.huang2@amd.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3Y2XSBLVk06IFg4Njogc3VwcG9ydCBBUEVSRi9N?=
+ =?utf-8?Q?PERF_registers?=
+Thread-Topic: [PATCH][v6] KVM: X86: support APERF/MPERF registers
+Thread-Index: AQHWOtrZ4X/t3pkmBEG7o3WCZUgoeKjIxz2AgAChEWA=
+Date:   Fri, 5 Jun 2020 04:23:36 +0000
+Message-ID: <c21c6ffa19b6483ea57feab3f98f279c@baidu.com>
+References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+ <be39b88c-bfb7-0634-c53b-f00d8fde643c@intel.com>
+In-Reply-To: <be39b88c-bfb7-0634-c53b-f00d8fde643c@intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.198.27]
+x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex14_2020-06-05 12:23:42:248
+x-baidu-bdmsfe-viruscheck: BJHW-Mail-Ex14_GRAY_Inside_WithoutAtta_2020-06-05
+ 12:23:42:216
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (45.122.156.254) by SG2PR06CA0091.apcprd06.prod.outlook.com (2603:1096:3:14::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 04:38:55 +0000
-X-Originating-IP: [45.122.156.254]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 89e8389d-f187-4c6b-4dd9-08d8090a5b50
-X-MS-TrafficTypeDiagnostic: MW3PR18MB3466:
-X-Microsoft-Antispam-PRVS: <MW3PR18MB3466497194527454BAC65B6D98860@MW3PR18MB3466.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0425A67DEF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Oiup2pHYY1+POwK9RHz93ZUa0F2o+VMBvqfrB6/W7f0nIreqK7cWEFpfkae4WYRSQQ0bCxbiRgM2GKwN2OyeXy8u+NGa2rgBRlKo6z1lA4N8MFyrE1arsO2bWQ9tuQPr9gVCijb22vvPVh549FdYzmgCzAkLBgXLNHKN42+FelhZN6Jqh3qkn0cqSIMn+8e4I61SiVrrvY1zqRpMPTXEvQqZFLJMSA7ByjGtWiIbKMqrvWVz5gqm5hU6FzongikuLNkaEk2o0bgro8kabViI1sR9S8p0BnQxninkwOxW9/G/wlx3auWG5BGV3WDxJUsx3v3tSHMFzTKqhBiVASgBwQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR18MB3658.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(396003)(136003)(39860400002)(36756003)(66946007)(4326008)(6486002)(478600001)(2906002)(66556008)(8936002)(8676002)(5660300002)(66476007)(6916009)(7416002)(1076003)(54906003)(6496006)(83380400001)(26005)(6666004)(86362001)(186003)(316002)(16526019)(956004)(44832011)(2616005)(52116002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: cwpIVRTbJwtpRIVDYqhU+fN99D/wwZukpocuYjRUtoSLUn2GR8oK9es78VXf8ta1VcbxKotTLlnzBstStzQ++i5LVISagISluedd2DUM1MVbBYT+Ph9SWh8cqxxL5dPrBTCOX5vpxcNJIS/OLEiEUULrxi1YefGj0v6azNgoabTAPotzb3QgBg6LVoQ3W+XsHIb8MA7saDXXTeFN9QUU2XwNd04CpF8U+/mM8xhM6VfNP6P+2j8CIU4GcsHuKsFBpNXavrFYvL5hwcE52CjmN1/fmRCS5TBUvHZtBvAEmZuTjU3V4kKqGNmE0etausjr4+I/QQFQH2iqglEeest2qA2QqbVilG0CJx1QTaWOBydEsL235WgePdCU5v4FX1eRWiZ0zEplknyaBAeL/7pB60O9WqTFYQ6qdKdhzEkehvIgXh4jaq/sw4XtqwDz2EyfGgW14S40/NAw/I8mb7CAD7F04smgjpufF4WFjLORzXVjYr8qgpxUy0m3VhsAhCm7
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89e8389d-f187-4c6b-4dd9-08d8090a5b50
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 04:38:56.3429
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Hcvt2Mpmt4SbXLYNFLBjJt5xZEywwD85USz0/1rmdfNe2BeXXOF7bSCpjymTHO6MA2WCR+Pu7/VBhM0fTMNsCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR18MB3466
-X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/05 Fri 01:05, Chandrakanth Patil wrote:
->
->Hi Kai Liu,
->
->Gen3 (Invader) and Gen3.5 (Ventura/Aero) generations of controllers are
->affected.
-
-Hi Chandrakanth,
-
-My card is not one of these but it's also problematic:
-
-# lspci -nn|grep 3408
-02:00.0 RAID bus controller [0104]: Broadcom / LSI MegaRAID Tri-Mode SAS3408 [1000:0017] (rev 01)
-
-According to megaraid_sas.h it's Tomcat:
-
-#define PCI_DEVICE_ID_LSI_TOMCAT                    0x0017
-
-According to product information on broadcom.com the card model is 
-9440-8i. So I tried to upgrade to the latest firmware version 
-51.13.0-3223 but I got these error:
-
-# ./storcli64 /c0 download file=9440-8i_nopad.rom
-Download Completed.
-Flashing image to adapter...
-CLI Version = 007.1316.0000.0000 Mar 12, 2020
-Operating system = Linux 5.3.18-0.g6748ac9-default
-Controller = 0
-Status = Failure
-Description = image corrupted
-
-I tried few more versions from broadcom website, they all failed with 
-the same "image corrupted" error.
-
-Here is the controller information:
-
-# ./storcli64 /c0 show
-Generating detailed summary of the adapter, it may take a while to complete.
-
-CLI Version = 007.1316.0000.0000 Mar 12, 2020
-Operating system = Linux 5.3.18-0.g6748ac9-default
-Controller = 0
-Status = Success
-Description = None
-
-Product Name = SAS3408
-Serial Number = 033FAT10K8000236
-SAS Address =  57c1cf15516f4000
-PCI Address = 00:02:00:00
-System Time = 06/05/2020 12:36:59
-Mfg. Date = 00/00/00
-Controller Time = 06/05/2020 04:36:58
-FW Package Build = 50.6.3-0109
-BIOS Version = 7.06.02.2_0x07060502
-FW Version = 5.060.01-2262
-Driver Name = megaraid_sas
-Driver Version = 07.713.01.00-rc1
-Vendor Id = 0x1000
-Device Id = 0x17
-SubVendor Id = 0x19E5
-SubDevice Id = 0xD213
-Host Interface = PCI-E
-Device Interface = SAS-12G
-Bus Number = 2
-Device Number = 0
-Function Number = 0
-Domain ID = 0
-Drive Groups = 3
-
-
-Thanks,
-Kai Liu
+DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFh1LCBMaWtlIFttYWls
+dG86bGlrZS54dUBpbnRlbC5jb21dDQo+IOWPkemAgeaXtumXtDogMjAyMOW5tDbmnIg15pelIDEw
+OjMyDQo+IOaUtuS7tuS6ujogTGksUm9uZ3FpbmcgPGxpcm9uZ3FpbmdAYmFpZHUuY29tPg0KPiDm
+ioTpgIE6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGt2bUB2Z2VyLmtlcm5lbC5vcmc7
+IHg4NkBrZXJuZWwub3JnOw0KPiBocGFAenl0b3IuY29tOyBicEBhbGllbjguZGU7IG1pbmdvQHJl
+ZGhhdC5jb207IHRnbHhAbGludXRyb25peC5kZTsNCj4gam1hdHRzb25AZ29vZ2xlLmNvbTsgd2Fu
+cGVuZ2xpQHRlbmNlbnQuY29tOyB2a3V6bmV0c0ByZWRoYXQuY29tOw0KPiBzZWFuLmouY2hyaXN0
+b3BoZXJzb25AaW50ZWwuY29tOyBwYm9uemluaUByZWRoYXQuY29tOyB4aWFveWFvLmxpQGludGVs
+LmNvbTsNCj4gd2VpLmh1YW5nMkBhbWQuY29tDQo+IOS4u+mimDogUmU6IFtQQVRDSF1bdjZdIEtW
+TTogWDg2OiBzdXBwb3J0IEFQRVJGL01QRVJGIHJlZ2lzdGVycw0KPiANCj4gSGkgUm9uZ1Fpbmcs
+DQo+IA0KPiBPbiAyMDIwLzYvNSA5OjQ0LCBMaSBSb25nUWluZyB3cm90ZToNCj4gPiBHdWVzdCBr
+ZXJuZWwgcmVwb3J0cyBhIGZpeGVkIGNwdSBmcmVxdWVuY3kgaW4gL3Byb2MvY3B1aW5mbywgdGhp
+cyBpcw0KPiA+IGNvbmZ1c2VkIHRvIHVzZXIgd2hlbiB0dXJibyBpcyBlbmFibGUsIGFuZCBhcGVy
+Zi9tcGVyZiBjYW4gYmUgdXNlZCB0bw0KPiA+IHNob3cgY3VycmVudCBjcHUgZnJlcXVlbmN5IGFm
+dGVyIDdkNTkwNWRjMTRhDQo+ID4gIih4ODYgLyBDUFU6IEFsd2F5cyBzaG93IGN1cnJlbnQgQ1BV
+IGZyZXF1ZW5jeSBpbiAvcHJvYy9jcHVpbmZvKSINCj4gPiBzbyBndWVzdCBzaG91bGQgc3VwcG9y
+dCBhcGVyZi9tcGVyZiBjYXBhYmlsaXR5DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGltcGxlbWVudHMg
+YXBlcmYvbXBlcmYgYnkgdGhyZWUgbW9kZTogbm9uZSwgc29mdHdhcmUNCj4gPiBlbXVsYXRpb24s
+IGFuZCBwYXNzLXRocm91Z2gNCj4gPg0KPiA+IE5vbmU6IGRlZmF1bHQgbW9kZSwgZ3Vlc3QgZG9l
+cyBub3Qgc3VwcG9ydCBhcGVyZi9tcGVyZg0KPiBzL05vbmUvTm90ZQ0KPiA+DQo+ID4gU29mdHdh
+cmUgZW11bGF0aW9uOiB0aGUgcGVyaW9kIG9mIGFwZXJmL21wZXJmIGluIGd1ZXN0IG1vZGUgYXJl
+DQo+ID4gYWNjdW11bGF0ZWQgYXMgZW11bGF0ZWQgdmFsdWUNCj4gPg0KPiA+IFBhc3MtdGhvdWdo
+OiBpdCBpcyBvbmx5IHN1aXRhYmxlIGZvciBLVk1fSElOVFNfUkVBTFRJTUUsIEJlY2F1c2UgdGhh
+dA0KPiA+IGhpbnQgZ3VhcmFudGVlcyB3ZSBoYXZlIGEgMToxIHZDUFU6Q1BVIGJpbmRpbmcgYW5k
+IGd1YXJhbnRlZWQgbm8NCj4gPiBvdmVyLWNvbW1pdC4NCj4gVGhlIGZsYWcgIktWTV9ISU5UU19S
+RUFMVElNRSAwIiAoaW4gdGhlIERvY3VtZW50YXRpb24vdmlydC9rdm0vY3B1aWQucnN0KQ0KPiBp
+cyBjbGFpbWVkIGFzICJndWVzdCBjaGVja3MgdGhpcyBmZWF0dXJlIGJpdCB0byBkZXRlcm1pbmUg
+dGhhdCB2Q1BVcyBhcmUgbmV2ZXINCj4gcHJlZW1wdGVkIGZvciBhbiB1bmxpbWl0ZWQgdGltZSBh
+bGxvd2luZyBvcHRpbWl6YXRpb25zIi4NCj4gDQo+IEkgY291bGRuJ3Qgc2VlIGl0cyByZWxhdGlv
+bnNoaXAgd2l0aCAiMToxIHZDUFU6IHBDUFUgYmluZGluZyIuDQo+IFRoZSBwYXRjaCBkb2Vzbid0
+IGNoZWNrIHRoaXMgZmxhZyBhcyB3ZWxsIGZvciB5b3VyIHBhc3MtdGhyb3VnaCBwdXJwb3NlLg0K
+PiANCj4gVGhhbmtzLA0KPiBMaWtlIFh1DQoNCg0KSSB0aGluayB0aGlzIGlzIHVzZXIgc3BhY2Ug
+am9icyB0byBiaW5kIEhJTlRfUkVBTFRJTUUgYW5kIG1wZXJmIHBhc3N0aHJvdWdoLCBLVk0ganVz
+dCBkbyB3aGF0IHVzZXJzcGFjZSB3YW50cy4NCg0KYW5kIHRoaXMgZ2l2ZXMgdXNlciBzcGFjZSBh
+IHBvc3NpYmlsaXR5LCBndWVzdCBoYXMgcGFzc3Rocm91Z2ggbXBlcmZhcGVyZiB3aXRob3V0IEhJ
+TlRfUkVBTFRJTUUsIGd1ZXN0IGNhbiBnZXQgY29hcnNlIGNwdSBmcmVxdWVuY3kgd2l0aG91dCBw
+ZXJmb3JtYW5jZSBlZmZlY3QgaWYgZ3Vlc3QgY2FuIGVuZHVyZSBlcnJvciBmcmVxdWVuY3kgb2Nj
+YXNpb25hbGx5DQoNCg0KLUxpIA0KDQo=
