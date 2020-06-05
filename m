@@ -2,152 +2,93 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B21C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C312063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD960206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SnhpLZp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgFESpP (ORCPT
+        id S1728025AbgFESqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:45:15 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:52515 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgFESpP (ORCPT
+        Fri, 5 Jun 2020 14:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgFESqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:45:15 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 668CA3C0579;
-        Fri,  5 Jun 2020 20:45:12 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qq7PiBWcn3Pm; Fri,  5 Jun 2020 20:45:06 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 9C8B13C00B5;
-        Fri,  5 Jun 2020 20:45:06 +0200 (CEST)
-Received: from vmlxhi-121.adit-jv.com (10.72.92.132) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 5 Jun 2020
- 20:45:06 +0200
-Date:   Fri, 5 Jun 2020 20:44:59 +0200
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Michael Rodin <mrodin@de.adit-jv.com>, <michael@rodin.online>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>
-Subject: Re: [PATCH] rcar-vin: rcar-csi2: Correct the selection of hsfreqrange
-Message-ID: <20200605184426.GA5206@vmlxhi-121.adit-jv.com>
-References: <20200512213045.GC2542285@oden.dyn.berto.se>
- <1590596167-17403-1-git-send-email-mrodin@de.adit-jv.com>
+        Fri, 5 Jun 2020 14:46:18 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C9DC08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 11:46:18 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n23so5577433pgb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 11:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CJNgAE8W4L7bDdkEn/de45xF1mTctBl3JZOgDeiH31E=;
+        b=SnhpLZp4Omylm5YzCyZ+OziHEXjtNTiqVN8OXyS3vg3li2fxjVapcJ/c5vgfnrWGM3
+         4Ab3R9zlXs8J5L8+wANYt4y6QbjY1rI8meKI9a3WtyPJ34oBIu5M/WqJzGSG0/8+e0B0
+         isJK3X9mHFI0PyyRNU4nDwhw+z32JYnn5ySqQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CJNgAE8W4L7bDdkEn/de45xF1mTctBl3JZOgDeiH31E=;
+        b=QuWzfzwX3VGkyFyNerDzcZ4g1rh+ik3SMCKuHvMnPe9SEgv6M/3N2ruk3Yg0R/GTwY
+         ATCU79UscNzXwmhPOIEhHen64yjzp4VNGrlfSXCdp/JNoxqt8PqgQ8nG7sizip6Mp+CL
+         BAQyBI8MqqENSP+then/tb/HEfdz1tpRuBVMbYGuxQsBbfzVR3f8psCG3kUywsWz7FrP
+         Du7TmDIA3WFzi9LcEDtoD5vHGm41VZil8GaI64OKFLsTb7dQcNwz9dWveqnZZELeyKCt
+         LfcCe5+exw4buzcuFld/jQ79IIN7lfQbkK4h4qM6dCApg1oBHyLNUwGnGZ+G/Au2JXpt
+         SNDw==
+X-Gm-Message-State: AOAM533/u2EmBZREC3yiFKGzQj6va092za20YqPbSURK2e2lhZKfbGXu
+        kNheAd/d//lz/dDnLUyO94L5Pg==
+X-Google-Smtp-Source: ABdhPJwA+d7fJQcL5nPsCQ4cEYnUF+r4G7dUXN+b7g8/2ykdGsMs6nbt78RG4NKopns6i2hTyJ/7aw==
+X-Received: by 2002:a63:fc0e:: with SMTP id j14mr10998607pgi.264.1591382778281;
+        Fri, 05 Jun 2020 11:46:18 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id j130sm312505pfd.94.2020.06.05.11.46.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 11:46:17 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     linux-bluetooth@vger.kernel.org,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Zijun Hu <zijuhu@codeaurora.org>, linux-kernel@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Claire Chang <tientzu@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH 0/3] 
+Date:   Fri,  5 Jun 2020 11:46:08 -0700
+Message-Id: <20200605184611.252218-1-mka@chromium.org>
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1590596167-17403-1-git-send-email-mrodin@de.adit-jv.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.92.132]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Niklas and Suresh,
+This series includes a fix for a possible race in qca_suspend() and
+some minor refactoring of the same function.
 
-Renesas confirmed that there is a typo in the Hardware Manual (Table 25.9):
-The correct range for 220 Mbps is 197.125-244.125 and not 197.125 - 224.125
-so the both patches are correct, we can do configuration based only on
-the "default" bit rates. I would say that now we can correct the commit
-message with respect to the exception value and use these patches. I would
-additionally add a warning for bitrates below 80 Mbps. They seem to work
-(for example Raspberry Pi camera), however they are not officially supported
-so the user needs to be warned.
 
-On Wed, May 27, 2020 at 06:16:07PM +0200, Michael Rodin wrote:
-> From: Suresh Udipi <sudipi@jp.adit-jv.com>
-> 
-> hsfreqrange should be chosen based on the calculated mbps which
-> is closer to the default bit rate  and within the range as per
-> table[1]. But current calculation always selects first value which
-> is greater than or equal to the calculated mbps which may lead
-> to chosing a wrong range in some cases.
-> 
-> For example for 360 mbps for H3/M3N
-> Existing logic selects
-> Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
-> 
-> This hsfreqrange is out of range.
-> 
-> The logic is changed to get the default value which is closest to the
-> calculated value [1]
-> 
-> Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
-> 
-> [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
-> 
-> There is one exectpion value 227Mbps, which may cause out of
-> range. This needs to be further handled if required.
-> 
-> Fixes: ADIT v4.14 commit 9e568b895ee0 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-> 
-> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-> ---
->  drivers/media/platform/rcar-vin/rcar-csi2.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> index c473a56..73d9830 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> @@ -199,6 +199,7 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
->  /* PHY Frequency Control */
->  #define PHYPLL_REG			0x68
->  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
-> +#define PHYPLL_HSFREQRANGE_MAX		1500
->  
->  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
->  	{ .mbps =   80, .reg = 0x00 },
-> @@ -446,16 +447,23 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
->  static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
->  {
->  	const struct rcsi2_mbps_reg *hsfreq;
-> +	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
->  
-> -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
-> -		if (hsfreq->mbps >= mbps)
-> -			break;
-> -
-> -	if (!hsfreq->mbps) {
-> +	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
->  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
->  		return -ERANGE;
->  	}
->  
-> +	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
-> +		if (hsfreq->mbps >= mbps)
-> +			break;
-> +		hsfreq_prev = hsfreq;
-> +	}
-> +
-> +	if (hsfreq_prev &&
-> +	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
-> +		hsfreq = hsfreq_prev;
-> +
->  	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
->  
->  	return 0;
-> -- 
-> 2.7.4
-> 
+Matthias Kaehlcke (3):
+  Bluetooth: hci_qca: Only remove TX clock vote after TX is completed
+  Bluetooth: hci_qca: Skip serdev wait when no transfer is pending
+  Bluetooth: hci_qca: Refactor error handling in qca_suspend()
+
+ drivers/bluetooth/hci_qca.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
 -- 
-Best Regards,
-Michael
+2.27.0.278.ge193c7cf3a9-goog
+
