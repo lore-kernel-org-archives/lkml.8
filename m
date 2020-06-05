@@ -5,190 +5,535 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5302CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7312074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B76D2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uyo+mH9X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pViyF2rY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgFEQ2n (ORCPT
+        id S1728041AbgFEQ2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:28:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41046 "EHLO
+        Fri, 5 Jun 2020 12:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbgFEQ1l (ORCPT
+        with ESMTP id S1727779AbgFEQ0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:27:41 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDFA9C08C5C2;
-        Fri,  5 Jun 2020 09:27:41 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id v13so8077422otp.4;
-        Fri, 05 Jun 2020 09:27:41 -0700 (PDT)
+        Fri, 5 Jun 2020 12:26:21 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA89C08C5C2;
+        Fri,  5 Jun 2020 09:26:21 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r10so5335423pgv.8;
+        Fri, 05 Jun 2020 09:26:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GUCJSurd1+2mih37yJICMDA0iRTJL0v8tyZ1IpuaG+8=;
-        b=Uyo+mH9X1aBtxkmIuq4QbBFF+YchMadv/oubGzNwTi8c5SWHwOdtN8sDfQ6MCApNOm
-         VSplXDTjILJhdGUKYne5sjnuycUNvmGpJk0vqE7JvovGyRRiPO72/84Bi05PZVlDHVE1
-         qn4PHhSN3cZRFhhskf+tAoDBtJxjy0Ob8uqM+mvgtFYZ86CN+01frlTMMQRboQs2yoaY
-         9JZ7ZvybXv2c54SEl2ykQcrUYyxhTOM4XbNKdh6XDiOeZobsM3etBlueZmVkCoQ0tLjo
-         1HV/7PiZy5dcbtS37T4qHbUkwlOtszseBHpzjvLYQ17myMtqOEHXkRfJCzSvKE+7rIMW
-         wibg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=h7GMiEUFly34W6euhCTBI4Vi3nlGj61crwNdB4LakO0=;
+        b=pViyF2rYBNiOnbRrQNw0NqNvo/69q4GLNmfeA0aVKtGplGv9pTYIpM6fdMn2EZfl+o
+         IIbvRII+u8lxX5spmKvpjmY+dSzDsMviDAQPDysQoC5TOMFq3/hjjaQxceiNm9ndGCLr
+         7pIPyUhgofmO0C0qjArO0KBDZcUhYFPbnu9ap27mvja4APWiixkF9LbO96lRiz+UHfIw
+         Rp0j7iLBe9C+GHbqdBdhd6eSct9OUc6P5Nd4RqFKuEDHvMC2WEjA5VIEWyQyUKnE1lMi
+         6/6rkhaQRW110OSjlkbZ8Xv4nWmLkt5GTTIvklS7/c2oflNpxswjSyroyEPUacxN9+UI
+         GZHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GUCJSurd1+2mih37yJICMDA0iRTJL0v8tyZ1IpuaG+8=;
-        b=nzskQxARd94iKS1SIl2Qv8YmB1v2Ejlh5ykL8m1FqqSdbp3Mk5JoTkPUpKYu3nstRR
-         AmXx8IYbmsdhFUySBMIvpsW/8jU/pxK/h6CGuMMaW4MaB3Z8cuzkAKv0M0irJFelo6DH
-         FFfYy9ivGx8llxIglo5npJTL/1oLsx8D/WkL/8dKD1NHEY2inY+aoFv/tt9a8s5pnuph
-         VcCAC+SEEwSjP94hDd3ASzn9mvMKQqC1GZPgfeY1SYfg1aE6IJCWAnfSewpQJ6ZYymP2
-         O1KlsolpJ3SVJr4vVHWE2Ql8wjloypClK1waH6DQB3ApE44/MuZvbLPTVPfX+9y1ZX2e
-         p3uw==
-X-Gm-Message-State: AOAM532WdDPWbrRALG+rlxnkHZY890uQceK+zgw+IuQnuokBCpNFT/4P
-        +jppc1Lq1R84qtGIPuyrE/Q=
-X-Google-Smtp-Source: ABdhPJxLVoZCXKxpWmkB6pKQ9FNKprWw7ILYevffof0FspBctnSHnNMPLP4lBdgmwjld96TqRQyA2g==
-X-Received: by 2002:a9d:560d:: with SMTP id e13mr8184619oti.55.1591374461205;
-        Fri, 05 Jun 2020 09:27:41 -0700 (PDT)
-Received: from frodo.hsd1.co.comcast.net ([2601:284:8204:6ba0::aaac])
-        by smtp.googlemail.com with ESMTPSA id z13sm813894ooa.28.2020.06.05.09.27.39
+         :references;
+        bh=h7GMiEUFly34W6euhCTBI4Vi3nlGj61crwNdB4LakO0=;
+        b=JkCYFidI0twzXIN7F/3CVM4qqzeXd4pSH9LwuywK4dR1x4u3L3xT2LImPZ0aEBjmCb
+         JmCorgRK7A8bXqCncCk4FrXeyHpt8QPUAXmBS2w2ax+hH3sqIgJXwFgPnZK0pfm0auAE
+         73BGRHbd9sKRDjLjRIDluDW1WTAgNKMwwhe8R5DQF1iSeBApNJ7AaaxusG30iYUOULd8
+         3/M2kMI+fSTKFgQoFWlK6LsWr4/sHDVwVT6aq9VEaovWjo6fDGRa/Y/9uSJXuloUp8Qj
+         iDuN8L0+A+WxQvp1MczXcI4AuKXrjybkAfh7uM3YKEbrnHFqVWnUxBYDOu4/9jSRiT8o
+         1ayg==
+X-Gm-Message-State: AOAM532kDSXt0ngDUibIiSUUhDCFECfg+69lwJhdqtdXZSTXVf7lFlHN
+        Edj6anP8gy6/vhxg4weCb8LZyYhx
+X-Google-Smtp-Source: ABdhPJzRIP/gIQo9Dk0GcBQy1zrppFa20rhEprLSvKmfuvBPPCoKOLkwLd5wn1KmtvIs+o+ibZtKtg==
+X-Received: by 2002:aa7:9293:: with SMTP id j19mr10050340pfa.96.1591374380248;
+        Fri, 05 Jun 2020 09:26:20 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 09:27:40 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, gregkh@linuxfoundation.org
-Cc:     linux@rasmusvillemoes.dk, Jim Cromie <jim.cromie@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH 04/16] dyndbg: rename __verbose section to __dyndbg
-Date:   Fri,  5 Jun 2020 10:26:33 -0600
-Message-Id: <20200605162645.289174-5-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200605162645.289174-1-jim.cromie@gmail.com>
-References: <20200605162645.289174-1-jim.cromie@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 05 Jun 2020 09:26:19 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+X-Google-Original-From: Florian Fainelli <florian.fainelli@broadcom.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Krufky <mkrufky@linuxtv.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>,
+        Jaedon Shin <jaedon.shin@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
+        Satendra Singh Thakur <satendra.t@samsung.com>,
+        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
+        (V4L/DVB)),
+        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
+        infrastructure))
+Subject: [PATCH stable 4.9 11/21] media: dvb_frontend: cleanup ioctl handling logic
+Date:   Fri,  5 Jun 2020 09:25:08 -0700
+Message-Id: <20200605162518.28099-12-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
+References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dyndbg populates its callsite info into __verbose section, change that
-to a more specific and descriptive name, __dyndbg.
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-Also, per checkpatch:
-  simplify __attribute(..) to __section(__dyndbg) declaration.
+commit d73dcf0cdb95a47f7e4e991ab63dd30f6eb67b4e upstream
 
-and 1 spelling fix
+Currently, there are two handlers for ioctls:
+ - dvb_frontend_ioctl_properties()
+ - dvb_frontend_ioctl_legacy()
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+Despite their names, both handles non-legacy DVB ioctls.
+
+Besides that, there's no reason why to not handle all ioctls
+on a single handler function.
+
+So, merge them into a single function (dvb_frontend_handle_ioctl)
+and reorganize the ioctl's to indicate what's the current DVB
+API and what's deprecated.
+
+Despite the big diff, the handling logic for each ioctl is the
+same as before.
+
+Reviewed-by: Shuah Khan <shuahkh@osg.samsung.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- include/asm-generic/vmlinux.lds.h |  6 +++---
- include/linux/dynamic_debug.h     |  4 ++--
- kernel/module.c                   |  2 +-
- lib/dynamic_debug.c               | 12 ++++++------
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/media/dvb-core/dvb_frontend.c | 328 +++++++++++++-------------
+ 1 file changed, 158 insertions(+), 170 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 71e387a5fe90..a117f2757a0d 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -320,9 +320,9 @@
- 	*(__tracepoints)						\
- 	/* implement dynamic printk debug */				\
- 	. = ALIGN(8);							\
--	__start___verbose = .;						\
--	KEEP(*(__verbose))                                              \
--	__stop___verbose = .;						\
-+	__start___dyndbg = .;						\
-+	KEEP(*(__dyndbg))						\
-+	__stop___dyndbg = .;						\
- 	LIKELY_PROFILE()		       				\
- 	BRANCH_PROFILE()						\
- 	TRACE_PRINTKS()							\
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index 4cf02ecd67de..802480ea8708 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -80,7 +80,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 
- #define DEFINE_DYNAMIC_DEBUG_METADATA(name, fmt)		\
- 	static struct _ddebug  __aligned(8)			\
--	__attribute__((section("__verbose"))) name = {		\
-+	__section(__dyndbg) name = {				\
- 		.modname = KBUILD_MODNAME,			\
- 		.function = __func__,				\
- 		.filename = __FILE__,				\
-@@ -133,7 +133,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 
- /*
-  * "Factory macro" for generating a call to func, guarded by a
-- * DYNAMIC_DEBUG_BRANCH. The dynamic debug decriptor will be
-+ * DYNAMIC_DEBUG_BRANCH. The dynamic debug descriptor will be
-  * initialized using the fmt argument. The function will be called with
-  * the address of the descriptor as first argument, followed by all
-  * the varargs. Note that fmt is repeated in invocations of this
-diff --git a/kernel/module.c b/kernel/module.c
-index 646f1e2330d2..c66b18261a6e 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3200,7 +3200,7 @@ static int find_module_sections(struct module *mod, struct load_info *info)
- 	if (section_addr(info, "__obsparm"))
- 		pr_warn("%s: Ignoring obsolete parameters\n", mod->name);
- 
--	info->debug = section_objs(info, "__verbose",
-+	info->debug = section_objs(info, "__dyndbg",
- 				   sizeof(*info->debug), &info->num_debug);
- 
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index c446f51be21a..5b06ac91420f 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -1296,10 +1296,8 @@ static int dtv_get_frontend(struct dvb_frontend *fe,
  	return 0;
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 5900c043e979..e17d4e2661d8 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -39,8 +39,8 @@
+ }
  
- #include <rdma/ib_verbs.h>
+-static int dvb_frontend_ioctl_legacy(struct file *file,
+-			unsigned int cmd, void *parg);
+-static int dvb_frontend_ioctl_properties(struct file *file,
+-			unsigned int cmd, void *parg);
++static int dvb_frontend_handle_ioctl(struct file *file,
++				     unsigned int cmd, void *parg);
  
--extern struct _ddebug __start___verbose[];
--extern struct _ddebug __stop___verbose[];
-+extern struct _ddebug __start___dyndbg[];
-+extern struct _ddebug __stop___dyndbg[];
+ static int dtv_property_process_get(struct dvb_frontend *fe,
+ 				    const struct dtv_frontend_properties *c,
+@@ -1801,12 +1799,12 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
+ 		break;
+ 	case DTV_VOLTAGE:
+ 		c->voltage = tvp->u.data;
+-		r = dvb_frontend_ioctl_legacy(file, FE_SET_VOLTAGE,
++		r = dvb_frontend_handle_ioctl(file, FE_SET_VOLTAGE,
+ 			(void *)c->voltage);
+ 		break;
+ 	case DTV_TONE:
+ 		c->sectone = tvp->u.data;
+-		r = dvb_frontend_ioctl_legacy(file, FE_SET_TONE,
++		r = dvb_frontend_handle_ioctl(file, FE_SET_TONE,
+ 			(void *)c->sectone);
+ 		break;
+ 	case DTV_CODE_RATE_HP:
+@@ -1913,14 +1911,13 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
+ 	return r;
+ }
  
- struct ddebug_table {
- 	struct list_head link;
-@@ -1019,14 +1019,14 @@ static int __init dynamic_debug_init(void)
- 	int n = 0, entries = 0, modct = 0;
- 	int verbose_bytes = 0;
+-static int dvb_frontend_ioctl(struct file *file,
+-			unsigned int cmd, void *parg)
++static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
+ {
+ 	struct dvb_device *dvbdev = file->private_data;
+ 	struct dvb_frontend *fe = dvbdev->priv;
+ 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+-	int err = -EOPNOTSUPP;
++	int err;
  
--	if (&__start___verbose == &__stop___verbose) {
-+	if (&__start___dyndbg == &__stop___dyndbg) {
- 		pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
- 		return 1;
+ 	dev_dbg(fe->dvb->device, "%s: (%d)\n", __func__, _IOC_NR(cmd));
+ 	if (down_interruptible(&fepriv->sem))
+@@ -1938,121 +1935,13 @@ static int dvb_frontend_ioctl(struct file *file,
+ 		return -EPERM;
  	}
--	iter = __start___verbose;
-+	iter = __start___dyndbg;
- 	modname = iter->modname;
- 	iter_start = iter;
--	for (; iter < __stop___verbose; iter++) {
-+	for (; iter < __stop___dyndbg; iter++) {
- 		entries++;
- 		verbose_bytes += strlen(iter->modname) + strlen(iter->function)
- 			+ strlen(iter->filename) + strlen(iter->format);
-@@ -1049,7 +1049,7 @@ static int __init dynamic_debug_init(void)
- 	ddebug_init_success = 1;
- 	vpr_info("%d modules, %d entries and %d bytes in ddebug tables, %d bytes in (readonly) verbose section\n",
- 		 modct, entries, (int)(modct * sizeof(struct ddebug_table)),
--		 verbose_bytes + (int)(__stop___verbose - __start___verbose));
-+		 verbose_bytes + (int)(__stop___dyndbg - __start___dyndbg));
  
- 	/* apply ddebug_query boot param, dont unload tables on err */
- 	if (ddebug_setup_string[0] != '\0') {
+-	if ((cmd == FE_SET_PROPERTY) || (cmd == FE_GET_PROPERTY))
+-		err = dvb_frontend_ioctl_properties(file, cmd, parg);
+-	else {
+-		c->state = DTV_UNDEFINED;
+-		err = dvb_frontend_ioctl_legacy(file, cmd, parg);
+-	}
++	c->state = DTV_UNDEFINED;
++	err = dvb_frontend_handle_ioctl(file, cmd, parg);
+ 
+ 	up(&fepriv->sem);
+ 	return err;
+ }
+ 
+-static int dvb_frontend_ioctl_properties(struct file *file,
+-			unsigned int cmd, void *parg)
+-{
+-	struct dvb_device *dvbdev = file->private_data;
+-	struct dvb_frontend *fe = dvbdev->priv;
+-	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+-	int err, i;
+-
+-	dev_dbg(fe->dvb->device, "%s:\n", __func__);
+-
+-	switch(cmd) {
+-	case FE_SET_PROPERTY: {
+-		struct dtv_properties *tvps = parg;
+-		struct dtv_property *tvp = NULL;
+-
+-		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n",
+-			__func__, tvps->num);
+-		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n",
+-			__func__, tvps->props);
+-
+-		/*
+-		 * Put an arbitrary limit on the number of messages that can
+-		 * be sent at once
+-		 */
+-		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
+-			return -EINVAL;
+-
+-		tvp = memdup_user(tvps->props, tvps->num * sizeof(*tvp));
+-		if (IS_ERR(tvp))
+-			return PTR_ERR(tvp);
+-
+-		for (i = 0; i < tvps->num; i++) {
+-			err = dtv_property_process_set(fe, tvp + i, file);
+-			if (err < 0) {
+-				kfree(tvp);
+-				return err;
+-			}
+-			(tvp + i)->result = err;
+-		}
+-
+-		if (c->state == DTV_TUNE)
+-			dev_dbg(fe->dvb->device, "%s: Property cache is full, tuning\n", __func__);
+-
+-		kfree(tvp);
+-		break;
+-	}
+-	case FE_GET_PROPERTY: {
+-		struct dtv_properties *tvps = parg;
+-		struct dtv_property *tvp = NULL;
+-		struct dtv_frontend_properties getp = fe->dtv_property_cache;
+-
+-		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n",
+-			__func__, tvps->num);
+-		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n",
+-			__func__, tvps->props);
+-
+-		/*
+-		 * Put an arbitrary limit on the number of messages that can
+-		 * be sent at once
+-		 */
+-		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
+-			return -EINVAL;
+-
+-		tvp = memdup_user(tvps->props, tvps->num * sizeof(*tvp));
+-		if (IS_ERR(tvp))
+-			return PTR_ERR(tvp);
+-
+-		/*
+-		 * Let's use our own copy of property cache, in order to
+-		 * avoid mangling with DTV zigzag logic, as drivers might
+-		 * return crap, if they don't check if the data is available
+-		 * before updating the properties cache.
+-		 */
+-		if (fepriv->state != FESTATE_IDLE) {
+-			err = dtv_get_frontend(fe, &getp, NULL);
+-			if (err < 0) {
+-				kfree(tvp);
+-				return err;
+-			}
+-		}
+-		for (i = 0; i < tvps->num; i++) {
+-			err = dtv_property_process_get(fe, &getp, tvp + i, file);
+-			if (err < 0) {
+-				kfree(tvp);
+-				return err;
+-			}
+-			(tvp + i)->result = err;
+-		}
+-
+-		if (copy_to_user((void __user *)tvps->props, tvp,
+-				 tvps->num * sizeof(struct dtv_property))) {
+-			kfree(tvp);
+-			return -EFAULT;
+-		}
+-		kfree(tvp);
+-		break;
+-	}
+-	default:
+-		return -ENOTSUPP;
+-	} /* switch */
+-	return 0;
+-}
+-
+ static int dtv_set_frontend(struct dvb_frontend *fe)
+ {
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+@@ -2190,16 +2079,105 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
+ }
+ 
+ 
+-static int dvb_frontend_ioctl_legacy(struct file *file,
+-			unsigned int cmd, void *parg)
++static int dvb_frontend_handle_ioctl(struct file *file,
++				     unsigned int cmd, void *parg)
+ {
+ 	struct dvb_device *dvbdev = file->private_data;
+ 	struct dvb_frontend *fe = dvbdev->priv;
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+ 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+-	int err = -EOPNOTSUPP;
++	int i, err;
++
++	dev_dbg(fe->dvb->device, "%s:\n", __func__);
++
++	switch(cmd) {
++	case FE_SET_PROPERTY: {
++		struct dtv_properties *tvps = parg;
++		struct dtv_property *tvp = NULL;
++
++		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n",
++			__func__, tvps->num);
++		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n",
++			__func__, tvps->props);
++
++		/*
++		 * Put an arbitrary limit on the number of messages that can
++		 * be sent at once
++		 */
++		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
++			return -EINVAL;
++
++		tvp = memdup_user(tvps->props, tvps->num * sizeof(*tvp));
++		if (IS_ERR(tvp))
++			return PTR_ERR(tvp);
++
++		for (i = 0; i < tvps->num; i++) {
++			err = dtv_property_process_set(fe, tvp + i, file);
++			if (err < 0) {
++				kfree(tvp);
++				return err;
++			}
++			(tvp + i)->result = err;
++		}
++
++		if (c->state == DTV_TUNE)
++			dev_dbg(fe->dvb->device, "%s: Property cache is full, tuning\n", __func__);
++
++		kfree(tvp);
++		break;
++	}
++	case FE_GET_PROPERTY: {
++		struct dtv_properties *tvps = parg;
++		struct dtv_property *tvp = NULL;
++		struct dtv_frontend_properties getp = fe->dtv_property_cache;
++
++		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n",
++			__func__, tvps->num);
++		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n",
++			__func__, tvps->props);
++
++		/*
++		 * Put an arbitrary limit on the number of messages that can
++		 * be sent at once
++		 */
++		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
++			return -EINVAL;
++
++		tvp = memdup_user(tvps->props, tvps->num * sizeof(*tvp));
++		if (IS_ERR(tvp))
++			return PTR_ERR(tvp);
++
++		/*
++		 * Let's use our own copy of property cache, in order to
++		 * avoid mangling with DTV zigzag logic, as drivers might
++		 * return crap, if they don't check if the data is available
++		 * before updating the properties cache.
++		 */
++		if (fepriv->state != FESTATE_IDLE) {
++			err = dtv_get_frontend(fe, &getp, NULL);
++			if (err < 0) {
++				kfree(tvp);
++				return err;
++			}
++		}
++		for (i = 0; i < tvps->num; i++) {
++			err = dtv_property_process_get(fe, &getp, tvp + i, file);
++			if (err < 0) {
++				kfree(tvp);
++				return err;
++			}
++			(tvp + i)->result = err;
++		}
++
++		if (copy_to_user((void __user *)tvps->props, tvp,
++				 tvps->num * sizeof(struct dtv_property))) {
++			kfree(tvp);
++			return -EFAULT;
++		}
++		kfree(tvp);
++		break;
++	}
+ 
+-	switch (cmd) {
+ 	case FE_GET_INFO: {
+ 		struct dvb_frontend_info* info = parg;
+ 
+@@ -2263,42 +2241,6 @@ static int dvb_frontend_ioctl_legacy(struct file *file,
+ 		break;
+ 	}
+ 
+-	case FE_READ_BER:
+-		if (fe->ops.read_ber) {
+-			if (fepriv->thread)
+-				err = fe->ops.read_ber(fe, (__u32 *) parg);
+-			else
+-				err = -EAGAIN;
+-		}
+-		break;
+-
+-	case FE_READ_SIGNAL_STRENGTH:
+-		if (fe->ops.read_signal_strength) {
+-			if (fepriv->thread)
+-				err = fe->ops.read_signal_strength(fe, (__u16 *) parg);
+-			else
+-				err = -EAGAIN;
+-		}
+-		break;
+-
+-	case FE_READ_SNR:
+-		if (fe->ops.read_snr) {
+-			if (fepriv->thread)
+-				err = fe->ops.read_snr(fe, (__u16 *) parg);
+-			else
+-				err = -EAGAIN;
+-		}
+-		break;
+-
+-	case FE_READ_UNCORRECTED_BLOCKS:
+-		if (fe->ops.read_ucblocks) {
+-			if (fepriv->thread)
+-				err = fe->ops.read_ucblocks(fe, (__u32 *) parg);
+-			else
+-				err = -EAGAIN;
+-		}
+-		break;
+-
+ 	case FE_DISEQC_RESET_OVERLOAD:
+ 		if (fe->ops.diseqc_reset_overload) {
+ 			err = fe->ops.diseqc_reset_overload(fe);
+@@ -2350,6 +2292,23 @@ static int dvb_frontend_ioctl_legacy(struct file *file,
+ 		}
+ 		break;
+ 
++	case FE_DISEQC_RECV_SLAVE_REPLY:
++		if (fe->ops.diseqc_recv_slave_reply)
++			err = fe->ops.diseqc_recv_slave_reply(fe, (struct dvb_diseqc_slave_reply*) parg);
++		break;
++
++	case FE_ENABLE_HIGH_LNB_VOLTAGE:
++		if (fe->ops.enable_high_lnb_voltage)
++			err = fe->ops.enable_high_lnb_voltage(fe, (long) parg);
++		break;
++
++	case FE_SET_FRONTEND_TUNE_MODE:
++		fepriv->tune_mode_flags = (unsigned long) parg;
++		err = 0;
++		break;
++
++	/* DEPRECATED dish control ioctls */
++
+ 	case FE_DISHNETWORK_SEND_LEGACY_CMD:
+ 		if (fe->ops.dishnetwork_send_legacy_command) {
+ 			err = fe->ops.dishnetwork_send_legacy_command(fe,
+@@ -2414,16 +2373,46 @@ static int dvb_frontend_ioctl_legacy(struct file *file,
+ 		}
+ 		break;
+ 
+-	case FE_DISEQC_RECV_SLAVE_REPLY:
+-		if (fe->ops.diseqc_recv_slave_reply)
+-			err = fe->ops.diseqc_recv_slave_reply(fe, (struct dvb_diseqc_slave_reply*) parg);
++	/* DEPRECATED statistics ioctls */
++
++	case FE_READ_BER:
++		if (fe->ops.read_ber) {
++			if (fepriv->thread)
++				err = fe->ops.read_ber(fe, (__u32 *) parg);
++			else
++				err = -EAGAIN;
++		}
+ 		break;
+ 
+-	case FE_ENABLE_HIGH_LNB_VOLTAGE:
+-		if (fe->ops.enable_high_lnb_voltage)
+-			err = fe->ops.enable_high_lnb_voltage(fe, (long) parg);
++	case FE_READ_SIGNAL_STRENGTH:
++		if (fe->ops.read_signal_strength) {
++			if (fepriv->thread)
++				err = fe->ops.read_signal_strength(fe, (__u16 *) parg);
++			else
++				err = -EAGAIN;
++		}
++		break;
++
++	case FE_READ_SNR:
++		if (fe->ops.read_snr) {
++			if (fepriv->thread)
++				err = fe->ops.read_snr(fe, (__u16 *) parg);
++			else
++				err = -EAGAIN;
++		}
++		break;
++
++	case FE_READ_UNCORRECTED_BLOCKS:
++		if (fe->ops.read_ucblocks) {
++			if (fepriv->thread)
++				err = fe->ops.read_ucblocks(fe, (__u32 *) parg);
++			else
++				err = -EAGAIN;
++		}
+ 		break;
+ 
++	/* DEPRECATED DVBv3 ioctls */
++
+ 	case FE_SET_FRONTEND:
+ 		err = dvbv3_set_delivery_system(fe);
+ 		if (err)
+@@ -2450,11 +2439,10 @@ static int dvb_frontend_ioctl_legacy(struct file *file,
+ 		err = dtv_get_frontend(fe, &getp, parg);
+ 		break;
+ 	}
+-	case FE_SET_FRONTEND_TUNE_MODE:
+-		fepriv->tune_mode_flags = (unsigned long) parg;
+-		err = 0;
+-		break;
+-	}
++
++	default:
++		return -ENOTSUPP;
++	} /* switch */
+ 
+ 	return err;
+ }
 -- 
-2.26.2
+2.17.1
 
