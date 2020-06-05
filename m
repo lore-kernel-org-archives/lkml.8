@@ -2,107 +2,193 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE58C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13BC8207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:00:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AUp8k3jC"
+	by mail.kernel.org (Postfix) with ESMTP id CCF28207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726919AbgFELAj (ORCPT
+        id S1726955AbgFELD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:00:39 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42970 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgFELAi (ORCPT
+        Fri, 5 Jun 2020 07:03:58 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60254 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgFELD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:00:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055AuhAU009940;
-        Fri, 5 Jun 2020 11:00:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=V0ubaUIN8W9lc6XMfm+T9kuHl5SLdA5xza5SBaAtBI0=;
- b=AUp8k3jC/5PRtTKKyrZReG6odvTBwW5ig9t0XdLrUL5hAnVeJgcw3Qbox02bVruKtZWK
- lV9kbAXkCBdUT9tIhJzJC4bLlverzAc9d9Ozo8MfD7WKAkSkd0zgn7se0s/WWJlMHWU7
- bGhkxYaKS7f0nAVKywCIzdul/RVaP8o52XlzNMcn8QemvV5HmRbvfXW58z0l8toJIRQb
- 7vdpcvOmK7bEcWE2SUwlvNnxDFV95T8gdQgLRBbaq8Ib7w+dJF9y1i+wOK1ucL80/9F7
- LCyZxAdS5iGNU7lPRstrBKuXjOEU5sh02kNVE2iF/BiixueJHnCllLnl+XoqDCe3yohc rg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 31f91dtac0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 05 Jun 2020 11:00:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055AxR9V016558;
-        Fri, 5 Jun 2020 11:00:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 31f92sksmy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jun 2020 11:00:29 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 055B0SBY004168;
-        Fri, 5 Jun 2020 11:00:28 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jun 2020 04:00:27 -0700
-Date:   Fri, 5 Jun 2020 14:00:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Michal Simek <michal.simek@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>
-Cc:     Rajan Vaja <rajan.vaja@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] soc: xilinx: Fix error code in zynqmp_pm_probe()
-Message-ID: <20200605110020.GA978434@mwanda>
+        Fri, 5 Jun 2020 07:03:57 -0400
+Received: from 89-64-83-87.dynamic.chello.pl (89.64.83.87) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id af71f79f98609352; Fri, 5 Jun 2020 13:03:53 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Len Brown <lenb@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+Date:   Fri, 05 Jun 2020 13:03:51 +0200
+Message-ID: <2607373.kaDJAmNJUW@kreacher>
+In-Reply-To: <20200413141259.GA3458877@kroah.com>
+References: <20200413134611.478441-1-enric.balletbo@collabora.com> <20200413141259.GA3458877@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 spamscore=0 suspectscore=0 mlxlogscore=879 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006050084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- clxscore=1011 cotscore=-2147483648 malwarescore=0 adultscore=0
- priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=913 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050084
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This should be returning PTR_ERR() but it returns IS_ERR() instead.
+On Monday, April 13, 2020 4:12:59 PM CEST Greg Kroah-Hartman wrote:
+> Meta-comment to the ACPI developers, shouldn't all of this happen
+> "automatically" with the existing ACPI entries in sysfs?
 
-Fixes: ffdbae28d9d1 ("drivers: soc: xilinx: Use mailbox IPI callback")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/soc/xilinx/zynqmp_power.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm not quite sure what you mean by "all of this" here.
 
-diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
-index 31ff49fcd078b..c556623dae024 100644
---- a/drivers/soc/xilinx/zynqmp_power.c
-+++ b/drivers/soc/xilinx/zynqmp_power.c
-@@ -205,7 +205,7 @@ static int zynqmp_pm_probe(struct platform_device *pdev)
- 		rx_chan = mbox_request_channel_byname(client, "rx");
- 		if (IS_ERR(rx_chan)) {
- 			dev_err(&pdev->dev, "Failed to request rx channel\n");
--			return IS_ERR(rx_chan);
-+			return PTR_ERR(rx_chan);
- 		}
- 	} else if (of_find_property(pdev->dev.of_node, "interrupts", NULL)) {
- 		irq = platform_get_irq(pdev, 0);
--- 
-2.26.2
+Can you please explain?
+
+> If not, is this driver the proper way to do this?
+> 
+> Minor review comments below:
+> 
+> 
+> On Mon, Apr 13, 2020 at 03:46:11PM +0200, Enric Balletbo i Serra wrote:
+> > +What:		/sys/bus/acpi/devices/GGL0001:00/BINF.{0,1,4}
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Description:
+> > +		This file is reserved and doesn't shows useful information
+> > +		for now.
+> 
+> Then do not even have it present.  sysfs should never export files that
+> nothing can be done with them, userspace "knows" that if a file is not
+> present, it can not use it.  Bring it back when it is useful.
+> 
+> > +What:		/sys/bus/acpi/devices/GGL0001:00/MECK
+> > +Date:		April 2020
+> > +KernelVersion:	5.8
+> > +Description:
+> > +		This binary file returns the SHA-1 or SHA-256 hash that is
+> > +		read out of the Management Engine extend registers during
+> > +		boot. The hash is exported vi ACPI so the OS can verify that
+> > +		the Management Engine firmware has not changed. If Management
+> > +		Engine is not present, or if the firmware was unable to read the
+> > +		extend registers, this buffer can be zero.
+> 
+> The size is zero, or the contents are 0?
+> 
+> > +static char *chromeos_acpi_alloc_name(char *name, int count, int index)
+> > +{
+> > +	char *str;
+> > +
+> > +	if (count == 1)
+> > +		str = kstrdup(name, GFP_KERNEL);
+> > +	else
+> > +		str = kasprintf(GFP_KERNEL, "%s.%d", name, index);
+> 
+> That's crazy, make this more obvious that "count" affects the name so
+> much.  As it is, no one would know this unless they read the function
+> code, and not just the name.
+> 
+> 
+> > +/**
+> > + * chromeos_acpi_add_group() - Create a sysfs group including attributes
+> > + *			       representing a nested ACPI package.
+> > + *
+> > + * @adev: ACPI device.
+> > + * @obj: Package contents as returned by ACPI.
+> > + * @name: Name of the group.
+> > + * @num_attrs: Number of attributes of this package.
+> > + * @index: Index number of this particular group.
+> > + *
+> > + * The created group is called @name in case there is a single instance, or
+> > + * @name.@index otherwise.
+> > + *
+> > + * All group and attribute storage allocations are included in the lists for
+> > + * tracking of allocated memory.
+> > + *
+> > + * Return: 0 on success, negative errno on failure.
+> > + */
+> 
+> Meta-comment, no need for kerneldoc on static functions.  It's nice to
+> see, but nothing is going to notice them...
+> 
+> > +static int chromeos_acpi_add_method(struct acpi_device *adev, char *name)
+> > +{
+> > +	struct device *dev = &adev->dev;
+> > +	struct acpi_buffer output;
+> > +	union acpi_object *obj;
+> > +	acpi_status status;
+> > +	int ret = 0;
+> > +
+> > +	output.length = ACPI_ALLOCATE_BUFFER;
+> > +
+> > +	status = acpi_evaluate_object(adev->handle, name, NULL, &output);
+> > +	if (ACPI_FAILURE(status)) {
+> > +		dev_err(dev, "failed to retrieve %s (%d)\n", name, status);
+> > +		return status;
+> > +	}
+> > +
+> > +	obj = output.pointer;
+> > +	if (obj->type == ACPI_TYPE_PACKAGE)
+> > +		ret = chromeos_acpi_handle_package(adev, obj, name);
+> > +
+> > +	kfree(output.pointer);
+> 
+> Why the need for 'obj' at all in this function?  Minor nit.
+> 
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int chromeos_acpi_device_add(struct acpi_device *adev)
+> > +{
+> > +	struct chromeos_acpi_attribute_group *aag = chromeos_acpi.root;
+> > +	struct device *dev = &adev->dev;
+> > +	int i, ret;
+> > +
+> > +	aag = kzalloc(sizeof(*aag), GFP_KERNEL);
+> > +	if (!aag)
+> > +		return -ENOMEM;
+> > +
+> > +	INIT_LIST_HEAD(&aag->attribs);
+> > +	INIT_LIST_HEAD(&aag->list);
+> > +	INIT_LIST_HEAD(&chromeos_acpi.groups);
+> > +
+> > +	chromeos_acpi.root = aag;
+> > +
+> > +	/*
+> > +	 * Attempt to add methods by querying the device's MLST method
+> > +	 * for the list of methods.
+> > +	 */
+> > +	if (!chromeos_acpi_process_mlst(adev))
+> > +		return 0;
+> > +
+> > +	dev_info(dev, "falling back to default list of methods\n");
+> 
+> Is this debugging code left over?  If not, make it an error, and what
+> would a user be able to do with it?
+
+Or use dev_dbg() to print it, possibly?
+
+Cheers!
+
+
 
