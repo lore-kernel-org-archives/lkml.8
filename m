@@ -2,117 +2,145 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4217BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAC5206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:45:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eGAfBDDR"
+	by mail.kernel.org (Postfix) with ESMTP id E78F2206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgFEOpY (ORCPT
+        id S1728118AbgFEOrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:45:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgFEOpY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:45:24 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B660AC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2KqS9GDLfei9p1sb6woUsx+zVR7cGlA+3c0QP7ohtJE=; b=eGAfBDDR7VUNIJzUpO+py0WWxs
-        BZuhWABbN4umtgrUOxi0KQDThDNapT2Y1yAdhk3iFtrsXKYHw/WUrd4VIEdLR+nl+sj/NMFPTHclo
-        Tzsf+CuoDXhf8R3h8hX01pjeC7EQEnF0xUk+YjSs641SLUg/TjCKTkkpg1NJYj7RMtvidKG048JC+
-        c7mb8z+X8AGcls8wVUy01BRpMh+uTth0oq9WQy/ammynLRuK7vkPMB3CtEm8bMU39GJz5gNyAqQeo
-        TruqEvcTdD8xVNDN7AMnFDMbf8aUFd4pcqOML6X7ulX/hZJQVRMRJ4h3QXrOunvTUGgO4l3PLtmPM
-        9Bcb+IMA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jhDac-0004EE-OP; Fri, 05 Jun 2020 14:44:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3D3D8301ABC;
-        Fri,  5 Jun 2020 16:44:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 27DB921A74B41; Fri,  5 Jun 2020 16:44:57 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 16:44:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        sumit.garg@linaro.org, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, will@kernel.org,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [RFC PATCH 0/4] kgdb: Honour the kprobe blacklist when setting
- breakpoints
-Message-ID: <20200605144457.GD2948@hirez.programming.kicks-ass.net>
-References: <20200605132130.1411255-1-daniel.thompson@linaro.org>
- <20200605142953.GP2750@hirez.programming.kicks-ass.net>
+        Fri, 5 Jun 2020 10:47:23 -0400
+Received: from raptor.unsafe.ru ([5.9.43.93]:53116 "EHLO raptor.unsafe.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727113AbgFEOrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:47:23 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by raptor.unsafe.ru (Postfix) with ESMTPSA id 29B20209AF;
+        Fri,  5 Jun 2020 14:47:19 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 16:47:14 +0200
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 0/2] proc: use subset option to hide some top-level
+ procfs entries
+Message-ID: <20200605144714.7voi2hgtg5r2oiql@comp-core-i7-2640m-0182e6>
+References: <20200604200413.587896-1-gladkov.alexey@gmail.com>
+ <87ftbah8q2.fsf@x220.int.ebiederm.org>
+ <20200605000838.huaeqvgpvqkyg3wh@comp-core-i7-2640m-0182e6>
+ <87zh9idu3h.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200605142953.GP2750@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87zh9idu3h.fsf@x220.int.ebiederm.org>
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Fri, 05 Jun 2020 14:47:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 04:29:53PM +0200, Peter Zijlstra wrote:
-> On Fri, Jun 05, 2020 at 02:21:26PM +0100, Daniel Thompson wrote:
-> > kgdb has traditionally adopted a no safety rails approach to breakpoint
-> > placement. If the debugger is commanded to place a breakpoint at an
-> > address then it will do so even if that breakpoint results in kgdb
-> > becoming inoperable.
-> > 
-> > A stop-the-world debugger with memory peek/poke does intrinsically
-> > provide its operator with the means to hose their system in all manner
-> > of exciting ways (not least because stopping-the-world is already a DoS
-> > attack ;-) ) but the current no safety rail approach is not easy to
-> > defend, especially given kprobes provides us with plenty of machinery to
-> > mark parts of the kernel where breakpointing is discouraged.
-> > 
-> > This patchset introduces some safety rails by using the existing
-> > kprobes infrastructure. It does not cover all locations where
-> > breakpoints can cause trouble but it will definitely block off several
-> > avenues, including the architecture specific parts that are handled by
-> > arch_within_kprobe_blacklist().
-> > 
-> > This patch is an RFC because:
-> > 
-> > 1. My workstation is still chugging through the compile testing.
-> > 
-> > 2. Patch 4 needs more runtime testing.
-> > 
-> > 3. The code to extract the kprobe blacklist code (patch 4 again) needs
-> >    more review especially for its impact on arch specific code.
-> > 
-> > To be clear I do plan to do the detailed review of the kprobe blacklist
-> > stuff but would like to check the direction of travel first since the
-> > change is already surprisingly big and maybe there's a better way to
-> > organise things.
+On Thu, Jun 04, 2020 at 11:17:38PM -0500, Eric W. Biederman wrote:
+> >> I am not going to seriously look at this for merging until after the
+> >> merge window closes. 
+> >
+> > OK. I'll wait.
 > 
-> Thanks for doing these patches, esp 1-3 look very good to me.
+> That will mean your patches can be based on -rc1.
+
+OK.
+
+> > Do you suggest to allow a user to mount procfs with hidepid=2,subset=pid
+> > options? If so then this is an interesting idea.
 > 
-> I've taken the liberty to bounce the entire set to Masami-San, who is
-> the kprobes maintainer for comments as well.
+> The key part would be subset=pid.  You would still need to be root in
+> your user namespace, and mount namespace.  You would not need to have a
+> separate copy of proc with nothing hidden already mounted.
 
-OK, after having had a second look, one thing we can perhaps address
-with the last patch, or perhaps on top of that, is extending the
-kprobes_blacklist() with data regions.
+Can you tell me more about your idea ? I thought I understood it, but it
+seems my understanding is different.
 
-Because these patches only exclude kgdb from setting breakpoints on
-code; data breakpoints do not match what we do with
-arch_build_bp_info().
+I thought that you are suggesting that you move in the direction of
+allowing procfs to mount an unprivileged user.
 
+> > I can not agree with this because I do not touch on other options.
+> > The hidepid and subset=pid has no relation to the visibility of regular
+> > files. On the other hand, in procfs there is absolutely no way to restrict
+> > access other than selinux.
+> 
+> Untrue.  At a practical level the user namespace greatly restricts
+> access to proc because many of the non-process files are limited to
+> global root only.
+
+I am not worried about the files created in procfs by the kernel itself
+because the permissions are set correctly and are checked correctly.
+
+I worry about kernel modules, especially about modules out of tree.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/rndis.c#n904
+
+I certainly understand that 0660 is not 0666, but still.
+
+> > I know that java uses meminfo for sure.
+> >
+> > The purpose of this patch is to isolate the container from unwanted files
+> > in procfs.
+> 
+> If what we want is the ability not to use the original but to have
+> a modified version of these files.  We probably want empty files that
+> serve as mount points.
+> 
+> Or possibly a version of these files that takes into account
+> restrictions.  In either even we need to do the research through real
+> programs and real kernel options to see what is our best option for
+> exporting the limitations that programs have and deciding on the long
+> term API for that.
+
+Yes, but that's a slightly different story. It would be great if all of
+these files provide modified information.
+
+My patch is about those files that we don’t know about and which we don’t
+want.
+
+> If we research things and we decide the best way to let java know of
+> it's limitations is to change /proc/meminfo.  That needs to be a change
+> that always applies to meminfo and is not controlled by options.
+> 
+> > For now I'm just trying ti create a better way to restrict access in
+> > the procfs than this since procfs is used in containers.
+> 
+> Docker historically has been crap about having a sensible policy.  The
+> problem is that Docker wanted to allow real root in a container and
+> somehow make it safe by blocking access to proc files and by dropping
+> capabilities.
+> 
+> Practically everything that Docker has done is much better and simpler by
+> restricting the processes to a user namespace, with a root user whose
+> uid is not the global root user.
+> 
+> Which is why I want us to make certain we are doing something that makes
+> sense, and is architecturally sound.
+
+Ok. Then ignore this patchset.
+
+> You have cleared the big hurdle and proc now has options that are
+> usable.   I really appreciate that.  I am not opposed to the general
+> direction you are going to find a way to make proc more usable.  I just
+> want our next step to be solid.
+
+-- 
+Rgrds, legion
 
