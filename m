@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E6B020820
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF311207F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgFEXmj (ORCPT
+        id S1728492AbgFEXmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 19:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 19:42:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbgFEXmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 19:42:25 -0400
+        id S1728374AbgFEXmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 19:42:23 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2C35207DF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 16B5720772;
         Fri,  5 Jun 2020 23:42:23 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jhLyg-002sDy-VX; Fri, 05 Jun 2020 19:42:22 -0400
-Message-ID: <20200605234222.837956181@goodmis.org>
+        id 1jhLyg-002sBN-4I; Fri, 05 Jun 2020 19:42:22 -0400
+Message-ID: <20200605234222.017604168@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Fri, 05 Jun 2020 19:41:56 -0400
+Date:   Fri, 05 Jun 2020 19:41:51 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -38,8 +38,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: [PATCH RT 7/8] mm/zswap: Use local lock to protect per-CPU data
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH RT 2/8] fs/dcache: Include swait.h header
 References: <20200605234149.965509211@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,95 +56,28 @@ If anyone has any objections, please let me know.
 
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-This is an incremental update of the zswap patch. Addtional spots were
-identified, which were lacking proper locking, during the rework of the
-patch for upstream.
-The complete patch description is available as commit
-   79410590ae87e ("mm/zswap: Use local lock to protect per-CPU data")
+Include the swait.h header so it compiles even if not all patches are
+applied.
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- mm/zswap.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ fs/proc/base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 21d2d3ed3d6d..3c9644b51f3f 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -372,6 +372,8 @@ static struct zswap_entry *zswap_entry_find_get(struct rb_root *root,
- * per-cpu code
- **********************************/
- static DEFINE_PER_CPU(u8 *, zswap_dstmem);
-+/* Used for zswap_dstmem and tfm */
-+static DEFINE_LOCAL_IRQ_LOCK(zswap_cpu_lock);
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 2dcd8fb3abb5..dc6cfa5de1df 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -95,6 +95,7 @@
+ #include <linux/sched/stat.h>
+ #include <linux/posix-timers.h>
+ #include <trace/events/oom.h>
++#include <linux/swait.h>
+ #include "internal.h"
+ #include "fd.h"
  
- static int zswap_dstmem_prepare(unsigned int cpu)
- {
-@@ -889,10 +891,11 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 		dlen = PAGE_SIZE;
- 		src = (u8 *)zhdr + sizeof(struct zswap_header);
- 		dst = kmap_atomic(page);
--		tfm = *get_cpu_ptr(entry->pool->tfm);
-+		local_lock(zswap_cpu_lock);
-+		tfm = *this_cpu_ptr(entry->pool->tfm);
- 		ret = crypto_comp_decompress(tfm, src, entry->length,
- 					     dst, &dlen);
--		put_cpu_ptr(entry->pool->tfm);
-+		local_unlock(zswap_cpu_lock);
- 		kunmap_atomic(dst);
- 		BUG_ON(ret);
- 		BUG_ON(dlen != PAGE_SIZE);
-@@ -981,8 +984,6 @@ static void zswap_fill_page(void *ptr, unsigned long value)
- 	memset_l(page, value, PAGE_SIZE / sizeof(unsigned long));
- }
- 
--/* protect zswap_dstmem from concurrency */
--static DEFINE_LOCAL_IRQ_LOCK(zswap_dstmem_lock);
- /*********************************
- * frontswap hooks
- **********************************/
-@@ -1060,7 +1061,8 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	}
- 
- 	/* compress */
--	dst = get_locked_var(zswap_dstmem_lock, zswap_dstmem);
-+	local_lock(zswap_cpu_lock);
-+	dst = *this_cpu_ptr(&zswap_dstmem);
- 	tfm = *this_cpu_ptr(entry->pool->tfm);
- 	src = kmap_atomic(page);
- 	ret = crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
-@@ -1088,7 +1090,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	memcpy(buf, &zhdr, hlen);
- 	memcpy(buf + hlen, dst, dlen);
- 	zpool_unmap_handle(entry->pool->zpool, handle);
--	put_locked_var(zswap_dstmem_lock, zswap_dstmem);
-+	local_unlock(zswap_cpu_lock);
- 
- 	/* populate entry */
- 	entry->offset = offset;
-@@ -1116,7 +1118,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	return 0;
- 
- put_dstmem:
--	put_locked_var(zswap_dstmem_lock, zswap_dstmem);
-+	local_unlock(zswap_cpu_lock);
- 	zswap_pool_put(entry->pool);
- freepage:
- 	zswap_entry_cache_free(entry);
-@@ -1161,9 +1163,10 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- 	if (zpool_evictable(entry->pool->zpool))
- 		src += sizeof(struct zswap_header);
- 	dst = kmap_atomic(page);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
-+	local_lock(zswap_cpu_lock);
-+	tfm = *this_cpu_ptr(entry->pool->tfm);
- 	ret = crypto_comp_decompress(tfm, src, entry->length, dst, &dlen);
--	put_cpu_ptr(entry->pool->tfm);
-+	local_unlock(zswap_cpu_lock);
- 	kunmap_atomic(dst);
- 	zpool_unmap_handle(entry->pool->zpool, entry->handle);
- 	BUG_ON(ret);
 -- 
 2.26.2
 
