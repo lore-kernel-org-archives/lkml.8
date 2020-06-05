@@ -8,61 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD30C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2042D208B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D89A2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAb4EpHZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1bTgBJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgFEQ0t (ORCPT
+        id S1728357AbgFEQ0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:26:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
+        Fri, 5 Jun 2020 12:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728024AbgFEQ0c (ORCPT
+        with ESMTP id S1728244AbgFEQ0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:26:32 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E80C08C5C4;
-        Fri,  5 Jun 2020 09:26:32 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d66so5131226pfd.6;
-        Fri, 05 Jun 2020 09:26:32 -0700 (PDT)
+        Fri, 5 Jun 2020 12:26:41 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20648C08C5C2;
+        Fri,  5 Jun 2020 09:26:41 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ne5so323358pjb.5;
+        Fri, 05 Jun 2020 09:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wS0FplcEHKkha537ftRtmFe7oqwpBZmXOkXwoZ5YLM4=;
-        b=HAb4EpHZ44cieamqBez4audEeYm3SXN4/aZbWIt2ZuhGrVTwrcBbtQqvGusVckRJvr
-         ZhqX/bYEkRPiItVanv4svAFj7fTcYwKnAyGfmAK2Ra1yTR8x7mnsIzWyV4KuJc6uImJD
-         vng4u5XZvV50sqQFzjOc6JhAyZ04VGwNvaWmYNP220hfRtv+67rFrRfQeCeHcdVC9RJV
-         Vkemu6oMd430RJXXY6Nb9MOejIWqUjHXdTZDQ2OUMdrLINaN8eYzrUEhGa8lmtqqAX7a
-         eWAyudL6idmnQTR5mwDt1gQJ8nzxXvFHnBZMETUY2gycPizY3e8FszasbBF66j891GtS
-         FiOQ==
+        bh=jV4daFGWsjhFnvffgzn/EdlePMcCRTFOIwlzfJCB7vg=;
+        b=Q1bTgBJ8HMzy/86+TG56pOicptFiM5AtNDIh0w9tYHpnfvbs7cIaCjosUGRfiO+jpA
+         IoAN0M+oDA1aRUo5+iNjk6/yR8QHpv8s1tqMtoc1LqgUOmB6HLLn/oB7SoD88wUvHbIM
+         ooVEc16/+UmDtik4ehrqrjGy3822X2i7e1AE3eQZ8uV4qOQG7t1rNQMJJV29jTCH/zTL
+         vNTS7kWubY0CWdV5jTt8w801IOuCN6a8D8gLmlZ9oluErqwc1YpWeNQLTLstTLMf1kLy
+         XUKwL2XQ1wMgR2giDakXUC2aA5b46r8Z7VJTQbCuhPMU75Uz14/ccCWgxKGskuErRGfg
+         uNZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=wS0FplcEHKkha537ftRtmFe7oqwpBZmXOkXwoZ5YLM4=;
-        b=SwzUV7sM4OvmeexKmCQdO/a0LjTEnvNDFe6F5KSZJKlylTKoS5t8fm7fxumD1FBNxd
-         qWTgpSxnz+vI3GhoCrydqe1+i1G1QZRD2bRCwBIR4v054BO+m95dePVrRhUue7LWl4CZ
-         d/p7luuhHKQZg0bE2SHRph2lP0R7if0IRqR7j5CsOEs4Nz6qT2z2mTr6/Zmmi0FGq7DP
-         0fXd8w2cIJ0YkYOIgJijLp0qsDXwAxiJAwv6a4nwvKI8HCksxSVG+IxUZbdclhfnVdCB
-         lbccsiccoGNjATtS8Idc6lm8AIAB9ALpkF6ccyDrUx8wse+Rc1yAyMDhCGV98t0HQcFI
-         E8QQ==
-X-Gm-Message-State: AOAM531+bZu0+WYtjtLnApitF8dBqn0wH0zg9ud7fDkiRYIQTZump5qC
-        xSYZf1CrrIzypqJfszBKX0jPpZ3M
-X-Google-Smtp-Source: ABdhPJzcYCZRxmnFkP119aIzW0clCUkfzwjLLEkg+1TcV+0cA27hNYWVx35erGXIXjHjGJqV3MeFiw==
-X-Received: by 2002:aa7:97bd:: with SMTP id d29mr9863623pfq.262.1591374391294;
-        Fri, 05 Jun 2020 09:26:31 -0700 (PDT)
+        bh=jV4daFGWsjhFnvffgzn/EdlePMcCRTFOIwlzfJCB7vg=;
+        b=DhCppuI+2a0b/gUW7XKXgIANybB2mICU6v6gleA7NY6jN9vxt47Sz7wQzvwPpaJDjl
+         C4HyrE8qcAW1skralf8IiXGYcC+TKl5Fe6OCor8lc+Rubu10qj+JqpGRQp4MGfCzHdrc
+         rtpjZHpUUL2WQcmsRQDpP5FjoWk8FN/gWgkgjkDHAZ0t16xiEcuulA1BsSmlTHbJImbs
+         Im3ujcFI2nVRxC/yUGAcOSqwoD9HMkbT3gk0NQGMr71/0D4ZaCtmiE+K5bi6MfeiQA65
+         bmZIfisLMvuvrd2jIaPXS3PV94i54lR7A/IF7Ger+OPqvZsBj6suavb48gmlacwwdPPY
+         qPXg==
+X-Gm-Message-State: AOAM530Mn6ypGBD4YrCgFZcVMVED+o2HeAcq/wGp6H2WutSyKthvMzv5
+        g33d9USBIuTfWLTPkDQIDB0a7bOh
+X-Google-Smtp-Source: ABdhPJyfwzO5S6XEAP00SbLLtWAexdM+5vcogfl2B+Tnm13qnaE41Xn9B+pv7ADE7jfI2wyBG8GV0w==
+X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr3985903pjb.20.1591374400291;
+        Fri, 05 Jun 2020 09:26:40 -0700 (PDT)
 Received: from localhost.localdomain ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.29
+        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 09:26:30 -0700 (PDT)
+        Fri, 05 Jun 2020 09:26:39 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 X-Google-Original-From: Florian Fainelli <florian.fainelli@broadcom.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     stable@vger.kernel.org,
+        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
         Mauro Carvalho Chehab <mchehab@s-opensource.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -71,15 +72,14 @@ Cc:     stable@vger.kernel.org,
         Shuah Khan <shuah@kernel.org>,
         Jaedon Shin <jaedon.shin@gmail.com>,
         Colin Ian King <colin.king@canonical.com>,
-        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
         Satendra Singh Thakur <satendra.t@samsung.com>,
         linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
         (V4L/DVB)),
         linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
         infrastructure))
-Subject: [PATCH stable 4.9 16/21] media: dvb_frontend: be sure to init dvb_frontend_handle_ioctl() return code
-Date:   Fri,  5 Jun 2020 09:25:13 -0700
-Message-Id: <20200605162518.28099-17-florian.fainelli@broadcom.com>
+Subject: [PATCH stable 4.9 20/21] media: dvb_frontend: fix wrong cast in compat_ioctl
+Date:   Fri,  5 Jun 2020 09:25:17 -0700
+Message-Id: <20200605162518.28099-21-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
 References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
@@ -88,59 +88,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 
-commit a9cb97c3e628902e37583d8a40bb28cf76522cf1 upstream
+commit 5c6c9c4830b76d851d38829611b3c3e4be0f5cdf upstream
 
-As smatch warned:
-	drivers/media/dvb-core/dvb_frontend.c:2468 dvb_frontend_handle_ioctl() error: uninitialized symbol 'err'.
+FE_GET_PROPERTY has always failed as following situations:
+  - Use compatible ioctl
+  - The array of 'struct dtv_property' has 2 or more items
 
-The ioctl handler actually got a regression here: before changeset
-d73dcf0cdb95 ("media: dvb_frontend: cleanup ioctl handling logic"),
-the code used to return -EOPNOTSUPP if an ioctl handler was not
-implemented on a driver. After the change, it may return a random
-value.
+This patch fixes wrong cast to a pointer 'struct dtv_property' from a
+pointer of 2nd or after item of 'struct compat_dtv_property' array.
 
-Fixes: d73dcf0cdb95 ("media: dvb_frontend: cleanup ioctl handling logic")
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Tested-by: Daniel Scheller <d.scheller@gmx.net>
+Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/dvb-core/dvb_frontend.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index a9ae9e509205..6f9ee78a1870 100644
+index 34f55a2ba071..740dedf03361 100644
 --- a/drivers/media/dvb-core/dvb_frontend.c
 +++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -2113,7 +2113,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
- 	struct dvb_frontend *fe = dvbdev->priv;
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
--	int i, err;
-+	int i, err = -EOPNOTSUPP;
- 
- 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
- 
-@@ -2148,6 +2148,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
- 			}
+@@ -2081,7 +2081,7 @@ static int dvb_frontend_handle_compat_ioctl(struct file *file, unsigned int cmd,
  		}
- 		kfree(tvp);
-+		err = 0;
- 		break;
- 	}
- 	case FE_GET_PROPERTY: {
-@@ -2198,6 +2199,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
- 			return -EFAULT;
- 		}
- 		kfree(tvp);
-+		err = 0;
- 		break;
- 	}
- 
+ 		for (i = 0; i < tvps->num; i++) {
+ 			err = dtv_property_process_get(
+-			    fe, &getp, (struct dtv_property *)tvp + i, file);
++			    fe, &getp, (struct dtv_property *)(tvp + i), file);
+ 			if (err < 0) {
+ 				kfree(tvp);
+ 				return err;
 -- 
 2.17.1
 
