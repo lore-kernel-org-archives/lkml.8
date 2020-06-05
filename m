@@ -2,456 +2,712 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A009FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E756C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A242077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B71207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591386601;
+	bh=+XaUpauUs4Sz82Zn3O+pDwIG7Q/0efyaJAryEeHacmc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=osFCm0A78/hOdHs1zBRuXkdPeY2p9xLIL4iPfYMie5EYsr6dtaNobXa3jKT6eNQ5z
+	 AVxmsrAdOlXC2QuAXMMrP1IFHnr+NCxEC3eNttEZ0dwE1a180UEQ/+TI+vLiu/C/St
+	 3pTrFbD9V2w/8mP0IfsJt2LafNSSLnK/teXz3OfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgFETtz (ORCPT
+        id S1728146AbgFETuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 15:49:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:55172 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgFETtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 15:49:55 -0400
-IronPort-SDR: jakY/k8mbdtw4IkXuOyQ9+KoX6HZlRNOk9DGSu3dnTnOJq1XxJgKC7+jhQCppwoVb4eq7e8750
- grUrtfBEMC+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 12:49:53 -0700
-IronPort-SDR: kZJiUilvSXQgxhS9SaePojTNPAiMQnf0ZZeOxGEKwRKC+flG0if93p4sTKM+dDNeTJORQNDHeJ
- cGHdzb6Z2hJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="348539251"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2020 12:49:53 -0700
-Date:   Fri, 5 Jun 2020 12:49:53 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v10 5/6] ndctl/papr_scm,uapi: Add support for PAPR nvdimm
- specific methods
-Message-ID: <20200605194952.GS1505637@iweiny-DESK2.sc.intel.com>
-References: <20200604234136.253703-1-vaibhav@linux.ibm.com>
- <20200604234136.253703-6-vaibhav@linux.ibm.com>
+        Fri, 5 Jun 2020 15:50:00 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:43505 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgFETt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 15:49:58 -0400
+Received: by mail-ua1-f65.google.com with SMTP id v6so3711665uam.10
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 12:49:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VfzC8wd5K5g+6N1fpX8jQGHXP3h/pK94/GlZP0UFN1E=;
+        b=SDcQIkKdEka8VOsWbmT9FGNDapG7EBuFkJE5hLonZBX3ECWNhj5elpWBfWy4OOqLzt
+         Kt3LpU1kyWlRjKr6yCdwMmEBLaiUpTI6TAkvbV+nbH4YGyT46XWp5aIsGmeNJBaBTxh0
+         KZUX0rReIf41lfHsjn1FUKbCVlWM0ISk/QXeVAEf7VS9X8968e2mG7uLOCRFvuV6kbgh
+         5mMih9SDyM6A0jUPuSKx0075aGZwwSx9twRPFCcAoueMz9rLC01bAFDItWd5DJEVDTcW
+         bzrCT1LXfCASxbcvVRGIRIrtG1jHoAo4GHlpJDTK44xX0LI9oDwc6eJU7QdOMzldk0P6
+         fOYA==
+X-Gm-Message-State: AOAM530db95VtI6ANxfQ2pfC4Nm8u7/4cSjPDvVWKnR6Bk8/efczNvLj
+        vHGJbHLMMC7kod1qRqGz4aY=
+X-Google-Smtp-Source: ABdhPJySnKi9Qe2oxv4NEFiwpjw0zyQ3MLBbiwqIdaUw7B1Gg3nGLABItqRgcdT08zO8Xw5PiqxJKg==
+X-Received: by 2002:ab0:3f0:: with SMTP id 103mr3416147uau.71.1591386595489;
+        Fri, 05 Jun 2020 12:49:55 -0700 (PDT)
+Received: from google.com (239.145.196.35.bc.googleusercontent.com. [35.196.145.239])
+        by smtp.gmail.com with ESMTPSA id k21sm1029801uan.14.2020.06.05.12.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 12:49:54 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 19:49:53 +0000
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/5] mm: memcg/percpu: account percpu memory to memory
+ cgroups
+Message-ID: <20200605194953.GB224745@google.com>
+References: <20200528232508.1132382-1-guro@fb.com>
+ <20200528232508.1132382-3-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604234136.253703-6-vaibhav@linux.ibm.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200528232508.1132382-3-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 05:11:35AM +0530, Vaibhav Jain wrote:
-> Introduce support for PAPR NVDIMM Specific Methods (PDSM) in papr_scm
-> module and add the command family NVDIMM_FAMILY_PAPR to the white list
-> of NVDIMM command sets. Also advertise support for ND_CMD_CALL for the
-> nvdimm command mask and implement necessary scaffolding in the module
-> to handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+On Thu, May 28, 2020 at 04:25:05PM -0700, Roman Gushchin wrote:
+> Percpu memory is becoming more and more widely used by various
+> subsystems, and the total amount of memory controlled by the percpu
+> allocator can make a good part of the total memory.
 > 
-> The layout of the PDSM request as we expect from libnvdimm/libndctl is
-> described in newly introduced uapi header 'papr_pdsm.h' which
-> defines a new 'struct nd_pdsm_cmd_pkg' header. This header is used
-> to communicate the PDSM request via member
-> 'nd_cmd_pkg.nd_command' and size of payload that need to be
-> sent/received for servicing the PDSM.
+> As an example, bpf maps can consume a lot of percpu memory,
+> and they are created by a user. Also, some cgroup internals
+> (e.g. memory controller statistics) can be quite large.
+> On a machine with many CPUs and big number of cgroups they
+> can consume hundreds of megabytes.
 > 
-> A new function is_cmd_valid() is implemented that reads the args to
-> papr_scm_ndctl() and performs sanity tests on them. A new function
-> papr_scm_service_pdsm() is introduced and is called from
-> papr_scm_ndctl() in case of a PDSM request is received via ND_CMD_CALL
-> command from libnvdimm.
+> So the lack of memcg accounting is creating a breach in the memory
+> isolation. Similar to the slab memory, percpu memory should be
+> accounted by default.
 > 
-> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+> To implement the perpcu accounting it's possible to take the slab
+> memory accounting as a model to follow. Let's introduce two types of
+> percpu chunks: root and memcg. What makes memcg chunks different is
+> an additional space allocated to store memcg membership information.
+> If __GFP_ACCOUNT is passed on allocation, a memcg chunk should be be
+> used. If it's possible to charge the corresponding size to the target
+> memory cgroup, allocation is performed, and the memcg ownership data
+> is recorded. System-wide allocations are performed using root chunks,
+> so there is no additional memory overhead.
+> 
+> To implement a fast reparenting of percpu memory on memcg removal,
+> we don't store mem_cgroup pointers directly: instead we use obj_cgroup
+> API, introduced for slab accounting.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 > ---
-> Changelog:
+>  mm/percpu-internal.h |  57 ++++++++++++-
+>  mm/percpu-km.c       |   5 +-
+>  mm/percpu-stats.c    |  36 +++++----
+>  mm/percpu-vm.c       |   5 +-
+>  mm/percpu.c          | 186 ++++++++++++++++++++++++++++++++++++++-----
+>  5 files changed, 248 insertions(+), 41 deletions(-)
 > 
-> v9..v10:
-> * Simplified 'struct nd_pdsm_cmd_pkg' by removing the
->   'payload_version' field.
-> * Removed the corrosponding documentation on versioning and backward
->   compatibility from 'papr_pdsm.h'
-> * Reduced the size of reserved fields to 4-bytes making 'struct
->   nd_pdsm_cmd_pkg' 64 + 8 bytes long.
-> * Updated is_cmd_valid() to enforce validation checks on pdsm
->   commands. [ Dan Williams ]
-> * Added check for reserved fields being set to '0' in is_cmd_valid()
->   [ Ira ]
-> * Moved changes for checking cmd_rc == NULL and logging improvements
->   to a separate prelim patch [ Ira ].
-> * Moved  pdsm package validation checks from papr_scm_service_pdsm()
->   to is_cmd_valid().
-> * Marked papr_scm_service_pdsm() return type as 'void' since errors
->   are reported in nd_pdsm_cmd_pkg.cmd_status field.
-> 
-> Resend:
-> * Added ack from Aneesh.
-> 
-> v8..v9:
-> * Reduced the usage of term SCM replacing it with appropriate
->   replacement [ Dan Williams, Aneesh ]
-> * Renamed 'papr_scm_pdsm.h' to 'papr_pdsm.h'
-> * s/PAPR_SCM_PDSM_*/PAPR_PDSM_*/g
-> * s/NVDIMM_FAMILY_PAPR_SCM/NVDIMM_FAMILY_PAPR/g
-> * Minor updates to 'papr_psdm.h' to replace usage of term 'SCM'.
-> * Minor update to patch description.
-> 
-> v7..v8:
-> * Removed the 'payload_offset' field from 'struct
->   nd_pdsm_cmd_pkg'. Instead command payload is always assumed to start
->   at 'nd_pdsm_cmd_pkg.payload'. [ Aneesh ]
-> * To enable introducing new fields to 'struct nd_pdsm_cmd_pkg',
->   'reserved' field of 10-bytes is introduced. [ Aneesh ]
-> * Fixed a typo in "Backward Compatibility" section of papr_scm_pdsm.h
->   [ Ira ]
-> 
-> Resend:
-> * None
-> 
-> v6..v7 :
-> * Removed the re-definitions of __packed macro from papr_scm_pdsm.h
->   [Mpe].
-> * Removed the usage of __KERNEL__ macros in papr_scm_pdsm.h [Mpe].
-> * Removed macros that were unused in papr_scm.c from papr_scm_pdsm.h
->   [Mpe].
-> * Made functions defined in papr_scm_pdsm.h as static inline. [Mpe]
-> 
-> v5..v6 :
-> * Changed the usage of the term DSM to PDSM to distinguish it from the
->   ACPI term [ Dan Williams ]
-> * Renamed papr_scm_dsm.h to papr_scm_pdsm.h and updated various struct
->   to reflect the new terminology.
-> * Updated the patch description and title to reflect the new terminology.
-> * Squashed patch to introduce new command family in 'ndctl.h' with
->   this patch [ Dan Williams ]
-> * Updated the papr_scm_pdsm method starting index from 0x10000 to 0x0
->   [ Dan Williams ]
-> * Removed redundant license text from the papr_scm_psdm.h file.
->   [ Dan Williams ]
-> * s/envelop/envelope/ at various places [ Dan Williams ]
-> * Added '__packed' attribute to command package header to gaurd
->   against different compiler adding paddings between the fields.
->   [ Dan Williams]
-> * Converted various pr_debug to dev_debug [ Dan Williams ]
-> 
-> v4..v5 :
-> * None
-> 
-> v3..v4 :
-> * None
-> 
-> v2..v3 :
-> * Updated the patch prefix to 'ndctl/uapi' [Aneesh]
-> 
-> v1..v2 :
-> * None
-> ---
->  arch/powerpc/include/uapi/asm/papr_pdsm.h |  98 +++++++++++++++++++
->  arch/powerpc/platforms/pseries/papr_scm.c | 113 +++++++++++++++++++++-
->  include/uapi/linux/ndctl.h                |   1 +
->  3 files changed, 207 insertions(+), 5 deletions(-)
->  create mode 100644 arch/powerpc/include/uapi/asm/papr_pdsm.h
-> 
-> diff --git a/arch/powerpc/include/uapi/asm/papr_pdsm.h b/arch/powerpc/include/uapi/asm/papr_pdsm.h
-> new file mode 100644
-> index 000000000000..8b1a4f8fa316
-> --- /dev/null
-> +++ b/arch/powerpc/include/uapi/asm/papr_pdsm.h
-> @@ -0,0 +1,98 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> diff --git a/mm/percpu-internal.h b/mm/percpu-internal.h
+> index 0468ba500bd4..0cf36337eb47 100644
+> --- a/mm/percpu-internal.h
+> +++ b/mm/percpu-internal.h
+> @@ -5,6 +5,27 @@
+>  #include <linux/types.h>
+>  #include <linux/percpu.h>
+>  
 > +/*
-> + * PAPR nvDimm Specific Methods (PDSM) and structs for libndctl
+> + * There are two chunk types: root and memcg-aware.
+> + * Chunks of each type have separate slots list.
 > + *
-> + * (C) Copyright IBM 2020
-> + *
-> + * Author: Vaibhav Jain <vaibhav at linux.ibm.com>
+> + * Memcg-aware chunks have an attached vector of obj_cgroup
+> + * pointers, which is used to store memcg membership data
+> + * of a percpu object. Obj_cgroups are ref-counted pointers
+> + * to a memory cgroup with an ability to switch dynamically
+> + * to the parent memory cgroup. This allows to reclaim a deleted
+> + * memory cgroup without reclaiming of all outstanding objects,
+> + * which do hold a reference at it.
 > + */
-> +
-> +#ifndef _UAPI_ASM_POWERPC_PAPR_PDSM_H_
-> +#define _UAPI_ASM_POWERPC_PAPR_PDSM_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/*
-> + * PDSM Envelope:
-> + *
-> + * The ioctl ND_CMD_CALL transfers data between user-space and kernel via
-> + * envelope which consists of a header and user-defined payload sections.
-> + * The header is described by 'struct nd_pdsm_cmd_pkg' which expects a
-> + * payload following it and accessible via 'nd_pdsm_cmd_pkg.payload' field.
-> + * There is reserved field that can used to introduce new fields to the
-> + * structure in future. It also tries to ensure that 'nd_pdsm_cmd_pkg.payload'
-> + * lies at a 8-byte boundary.
-> + *
-> + *  +-------------+---------------------+---------------------------+
-> + *  |   64-Bytes  |       8-Bytes       |       Max 184-Bytes       |
-> + *  +-------------+---------------------+---------------------------+
-> + *  |               nd_pdsm_cmd_pkg     |                           |
-> + *  |-------------+                     |                           |
-> + *  |  nd_cmd_pkg |                     |                           |
-> + *  +-------------+---------------------+---------------------------+
-> + *  | nd_family   |                     |                           |
-> + *  | nd_size_out | cmd_status          |                           |
-> + *  | nd_size_in  | reserved            |     payload               |
-> + *  | nd_command  |                     |                           |
-> + *  | nd_fw_size  |                     |                           |
-> + *  +-------------+---------------------+---------------------------+
-> + *
-> + * PDSM Header:
-> + *
-> + * The header is defined as 'struct nd_pdsm_cmd_pkg' which embeds a
-> + * 'struct nd_cmd_pkg' instance. The PDSM command is assigned to member
-> + * 'nd_cmd_pkg.nd_command'. Apart from size information of the envelope which is
-> + * contained in 'struct nd_cmd_pkg', the header also has members following
-> + * members:
-> + *
-> + * 'cmd_status'		: (Out) Errors if any encountered while servicing PDSM.
-> + * 'reserved'		: Not used, reserved for future and should be set to 0.
-> + *
-> + * PDSM Payload:
-> + *
-> + * The layout of the PDSM Payload is defined by various structs shared between
-> + * papr_scm and libndctl so that contents of payload can be interpreted. During
-> + * servicing of a PDSM the papr_scm module will read input args from the payload
-> + * field by casting its contents to an appropriate struct pointer based on the
-> + * PDSM command. Similarly the output of servicing the PDSM command will be
-> + * copied to the payload field using the same struct.
-> + *
-> + * 'libnvdimm' enforces a hard limit of 256 bytes on the envelope size, which
-> + * leaves around 184 bytes for the envelope payload (ignoring any padding that
-> + * the compiler may silently introduce).
-> + *
-> + */
-> +
-> +/* PDSM-header + payload expected with ND_CMD_CALL ioctl from libnvdimm */
-> +struct nd_pdsm_cmd_pkg {
-> +	struct nd_cmd_pkg hdr;	/* Package header containing sub-cmd */
-> +	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
-> +	__u16 reserved[2];	/* Ignored and to be used in future */
-> +	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
-> +} __packed;
-> +
-> +/*
-> + * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
-> + * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
-> + */
-> +enum papr_pdsm {
-> +	PAPR_PDSM_MIN = 0x0,
-> +	PAPR_PDSM_MAX,
+
+nit: do you mind reflowing this to 80 characters and doing 2 spaces
+after each period to keep the formatting uniform.
+
+> +enum pcpu_chunk_type {
+> +	PCPU_CHUNK_ROOT,
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	PCPU_CHUNK_MEMCG,
+> +#endif
+> +	PCPU_NR_CHUNK_TYPES,
+> +	PCPU_FAIL_ALLOC = PCPU_NR_CHUNK_TYPES
 > +};
 > +
-> +/* Convert a libnvdimm nd_cmd_pkg to pdsm specific pkg */
-> +static inline struct nd_pdsm_cmd_pkg *nd_to_pdsm_cmd_pkg(struct nd_cmd_pkg *cmd)
-> +{
-> +	return (struct nd_pdsm_cmd_pkg *)cmd;
-> +}
-> +
-> +/* Return the payload pointer for a given pcmd */
-> +static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
-> +{
-> +	if (pcmd->hdr.nd_size_in == 0 && pcmd->hdr.nd_size_out == 0)
-> +		return NULL;
-> +	else
-> +		return (void *)(pcmd->payload);
-> +}
-
-I just realized these were in the uapi header.  You don't want to do this as
-this code gets built into any user space program that uses it and there may be
-license issues if the user space code is not a compatible license.
-
-Ira
-
-> +
-> +#endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
-> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-> index 6512fe6a2874..05eb56ecab5e 100644
-> --- a/arch/powerpc/platforms/pseries/papr_scm.c
-> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
-> @@ -15,13 +15,15 @@
->  #include <linux/seq_buf.h>
+>  /*
+>   * pcpu_block_md is the metadata block struct.
+>   * Each chunk's bitmap is split into a number of full blocks.
+> @@ -54,6 +75,9 @@ struct pcpu_chunk {
+>  	int			end_offset;	/* additional area required to
+>  						   have the region end page
+>  						   aligned */
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	struct obj_cgroup	**obj_cgroups;	/* vector of object cgroups */
+> +#endif
 >  
->  #include <asm/plpar_wrappers.h>
-> +#include <asm/papr_pdsm.h>
+>  	int			nr_pages;	/* # of pages served by this chunk */
+>  	int			nr_populated;	/* # of populated pages */
+> @@ -63,7 +87,7 @@ struct pcpu_chunk {
 >  
->  #define BIND_ANY_ADDR (~0ul)
+>  extern spinlock_t pcpu_lock;
 >  
->  #define PAPR_SCM_DIMM_CMD_MASK \
->  	((1ul << ND_CMD_GET_CONFIG_SIZE) | \
->  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
-> -	 (1ul << ND_CMD_SET_CONFIG_DATA))
-> +	 (1ul << ND_CMD_SET_CONFIG_DATA) | \
-> +	 (1ul << ND_CMD_CALL))
+> -extern struct list_head *pcpu_slot;
+> +extern struct list_head *pcpu_chunk_lists;
+>  extern int pcpu_nr_slots;
+>  extern int pcpu_nr_empty_pop_pages;
 >  
->  /* DIMM health bitmap bitmap indicators */
->  /* SCM device is unable to persist memory contents */
-> @@ -349,22 +351,117 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
->  	return 0;
+> @@ -106,6 +130,37 @@ static inline int pcpu_chunk_map_bits(struct pcpu_chunk *chunk)
+>  	return pcpu_nr_pages_to_map_bits(chunk->nr_pages);
 >  }
 >  
-> +/*
-> + * Do a sanity checks on the inputs args to dimm-control function and return
-> + * '0' if valid. This also does validation on ND_CMD_CALL sub-command packages.
-> + */
-> +static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
-> +			unsigned int buf_len)
+> +#ifdef CONFIG_MEMCG_KMEM
+> +static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
 > +{
-> +	unsigned long cmd_mask = PAPR_SCM_DIMM_CMD_MASK;
-> +	struct nd_pdsm_cmd_pkg *pkg;
-> +	struct nd_cmd_pkg *nd_cmd;
-> +	struct papr_scm_priv *p;
-> +	enum papr_pdsm pdsm;
-> +
-> +	/* Only dimm-specific calls are supported atm */
-> +	if (!nvdimm)
-> +		return -EINVAL;
-> +
-> +	/* get the provider data from struct nvdimm */
-> +	p = nvdimm_provider_data(nvdimm);
-> +
-> +	if (!test_bit(cmd, &cmd_mask)) {
-> +		dev_dbg(&p->pdev->dev, "Unsupported cmd=%u\n", cmd);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* For CMD_CALL verify pdsm request */
-> +	if (cmd == ND_CMD_CALL) {
-> +		/* Verify the envelope package */
-> +		if (!buf || buf_len < sizeof(struct nd_pdsm_cmd_pkg)) {
-> +			dev_dbg(&p->pdev->dev, "Invalid pkg size=%u\n",
-> +				buf_len);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* Verify that the nd_cmd_pkg.nd_family is correct */
-> +		nd_cmd = (struct nd_cmd_pkg *)buf;
-> +		if (nd_cmd->nd_family != NVDIMM_FAMILY_PAPR) {
-> +			dev_dbg(&p->pdev->dev, "Invalid pkg family=0x%llx\n",
-> +				nd_cmd->nd_family);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* Get the pdsm request package and the command */
-> +		pkg = nd_to_pdsm_cmd_pkg(nd_cmd);
-> +		pdsm = pkg->hdr.nd_command;
-> +
-> +		/* Verify if the psdm command is valid */
-> +		if (pdsm <= PAPR_PDSM_MIN || pdsm >= PAPR_PDSM_MAX) {
-> +			dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Invalid PDSM\n", pdsm);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* We except a payload with all PDSM commands */
-> +		if (!pdsm_cmd_to_payload(pkg)) {
-> +			dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Empty payload\n", pdsm);
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* Ensure reserved fields of the pdsm header are set to 0 */
-> +		if (pkg->reserved[0] || pkg->reserved[1]) {
-> +			dev_dbg(&p->pdev->dev,
-> +				"PDSM[0x%x]: Invalid reserved field usage\n", pdsm);
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	/* Let the command be further processed */
-> +	return 0;
+> +	if (chunk->obj_cgroups)
+> +		return PCPU_CHUNK_MEMCG;
+> +	return PCPU_CHUNK_ROOT;
 > +}
 > +
-> +/*
-> + * For a given pdsm request call an appropriate service function.
-> + * Note: Use 'nd_pdsm_cmd_pkg.cmd_status to report psdm servicing errors. Hence
-> + * function marked as void.
-> + */
-> +static void papr_scm_service_pdsm(struct papr_scm_priv *p,
-> +				  struct nd_pdsm_cmd_pkg *pkg)
+> +static bool pcpu_is_memcg_chunk(enum pcpu_chunk_type chunk_type)
 > +{
-> +	const enum papr_pdsm pdsm = pkg->hdr.nd_command;
-> +
-> +	dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Servicing..\n", pdsm);
-> +
-> +	/* Call pdsm service function */
-> +	switch (pdsm) {
-> +	default:
-> +		dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Unsupported PDSM request\n",
-> +			pdsm);
-> +		pkg->cmd_status = -ENOENT;
-> +		break;
-> +	}
+> +	return chunk_type == PCPU_CHUNK_MEMCG;
 > +}
 > +
->  static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
->  			  struct nvdimm *nvdimm, unsigned int cmd, void *buf,
->  			  unsigned int buf_len, int *cmd_rc)
+> +#else
+> +static enum pcpu_chunk_type pcpu_chunk_type(struct pcpu_chunk *chunk)
+> +{
+> +	return PCPU_CHUNK_ROOT;
+> +}
+> +
+> +static bool pcpu_is_memcg_chunk(enum pcpu_chunk_type chunk_type)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+> +static struct list_head *pcpu_chunk_list(enum pcpu_chunk_type chunk_type)
+> +{
+> +	return &pcpu_chunk_lists[pcpu_nr_slots *
+> +				 pcpu_is_memcg_chunk(chunk_type)];
+> +}
+> +
+>  #ifdef CONFIG_PERCPU_STATS
+>  
+>  #include <linux/spinlock.h>
+> diff --git a/mm/percpu-km.c b/mm/percpu-km.c
+> index 20d2b69a13b0..35c9941077ee 100644
+> --- a/mm/percpu-km.c
+> +++ b/mm/percpu-km.c
+> @@ -44,7 +44,8 @@ static void pcpu_depopulate_chunk(struct pcpu_chunk *chunk,
+>  	/* nada */
+>  }
+>  
+> -static struct pcpu_chunk *pcpu_create_chunk(gfp_t gfp)
+> +static struct pcpu_chunk *pcpu_create_chunk(enum pcpu_chunk_type type,
+> +					    gfp_t gfp)
 >  {
->  	struct nd_cmd_get_config_size *get_size_hdr;
-> +	struct nd_pdsm_cmd_pkg *call_pkg = NULL;
->  	struct papr_scm_priv *p;
->  	int rc;
+>  	const int nr_pages = pcpu_group_sizes[0] >> PAGE_SHIFT;
+>  	struct pcpu_chunk *chunk;
+> @@ -52,7 +53,7 @@ static struct pcpu_chunk *pcpu_create_chunk(gfp_t gfp)
+>  	unsigned long flags;
+>  	int i;
 >  
-> -	/* Only dimm-specific calls are supported atm */
-> -	if (!nvdimm)
-> -		return -EINVAL;
+> -	chunk = pcpu_alloc_chunk(gfp);
+> +	chunk = pcpu_alloc_chunk(type, gfp);
+>  	if (!chunk)
+>  		return NULL;
+>  
+> diff --git a/mm/percpu-stats.c b/mm/percpu-stats.c
+> index 32558063c3f9..c8400a2adbc2 100644
+> --- a/mm/percpu-stats.c
+> +++ b/mm/percpu-stats.c
+> @@ -34,11 +34,15 @@ static int find_max_nr_alloc(void)
+>  {
+>  	struct pcpu_chunk *chunk;
+>  	int slot, max_nr_alloc;
+> +	enum pcpu_chunk_type type;
+>  
+>  	max_nr_alloc = 0;
+> -	for (slot = 0; slot < pcpu_nr_slots; slot++)
+> -		list_for_each_entry(chunk, &pcpu_slot[slot], list)
+> -			max_nr_alloc = max(max_nr_alloc, chunk->nr_alloc);
+> +	for (type = 0; type < PCPU_NR_CHUNK_TYPES; type++)
+> +		for (slot = 0; slot < pcpu_nr_slots; slot++)
+> +			list_for_each_entry(chunk, &pcpu_chunk_list(type)[slot],
+> +					    list)
+> +				max_nr_alloc = max(max_nr_alloc,
+> +						   chunk->nr_alloc);
+>  
+>  	return max_nr_alloc;
+>  }
+> @@ -129,6 +133,9 @@ static void chunk_map_stats(struct seq_file *m, struct pcpu_chunk *chunk,
+>  	P("cur_min_alloc", cur_min_alloc);
+>  	P("cur_med_alloc", cur_med_alloc);
+>  	P("cur_max_alloc", cur_max_alloc);
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	P("memcg_aware", pcpu_is_memcg_chunk(pcpu_chunk_type(chunk)));
+> +#endif
+>  	seq_putc(m, '\n');
+>  }
+>  
+> @@ -137,6 +144,7 @@ static int percpu_stats_show(struct seq_file *m, void *v)
+>  	struct pcpu_chunk *chunk;
+>  	int slot, max_nr_alloc;
+>  	int *buffer;
+> +	enum pcpu_chunk_type type;
+>  
+>  alloc_buffer:
+>  	spin_lock_irq(&pcpu_lock);
+> @@ -202,18 +210,18 @@ static int percpu_stats_show(struct seq_file *m, void *v)
+>  		chunk_map_stats(m, pcpu_reserved_chunk, buffer);
+>  	}
+>  
+> -	for (slot = 0; slot < pcpu_nr_slots; slot++) {
+> -		list_for_each_entry(chunk, &pcpu_slot[slot], list) {
+> -			if (chunk == pcpu_first_chunk) {
+> -				seq_puts(m, "Chunk: <- First Chunk\n");
+> -				chunk_map_stats(m, chunk, buffer);
 > -
->  	/* Use a local variable in case cmd_rc pointer is NULL */
->  	if (!cmd_rc)
->  		cmd_rc = &rc;
+> -
+> -			} else {
+> -				seq_puts(m, "Chunk:\n");
+> -				chunk_map_stats(m, chunk, buffer);
+> +	for (type = 0; type < PCPU_NR_CHUNK_TYPES; type++) {
+> +		for (slot = 0; slot < pcpu_nr_slots; slot++) {
+> +			list_for_each_entry(chunk, &pcpu_chunk_list(type)[slot],
+> +					    list) {
+> +				if (chunk == pcpu_first_chunk) {
+> +					seq_puts(m, "Chunk: <- First Chunk\n");
+> +					chunk_map_stats(m, chunk, buffer);
+> +				} else {
+> +					seq_puts(m, "Chunk:\n");
+> +					chunk_map_stats(m, chunk, buffer);
+> +				}
+>  			}
+> -
+>  		}
+>  	}
 >  
-> +	*cmd_rc = is_cmd_valid(nvdimm, cmd, buf, buf_len);
-> +	if (*cmd_rc) {
-> +		pr_debug("Invalid cmd=0x%x. Err=%d\n", cmd, *cmd_rc);
-> +		return *cmd_rc;
+> diff --git a/mm/percpu-vm.c b/mm/percpu-vm.c
+> index a2b395acef89..e46f7a6917f9 100644
+> --- a/mm/percpu-vm.c
+> +++ b/mm/percpu-vm.c
+> @@ -328,12 +328,13 @@ static void pcpu_depopulate_chunk(struct pcpu_chunk *chunk,
+>  	pcpu_free_pages(chunk, pages, page_start, page_end);
+>  }
+>  
+> -static struct pcpu_chunk *pcpu_create_chunk(gfp_t gfp)
+> +static struct pcpu_chunk *pcpu_create_chunk(enum pcpu_chunk_type type,
+> +					    gfp_t gfp)
+>  {
+>  	struct pcpu_chunk *chunk;
+>  	struct vm_struct **vms;
+>  
+> -	chunk = pcpu_alloc_chunk(gfp);
+> +	chunk = pcpu_alloc_chunk(type, gfp);
+>  	if (!chunk)
+>  		return NULL;
+>  
+> diff --git a/mm/percpu.c b/mm/percpu.c
+> index aa36b78d45a6..85f5755c9114 100644
+> --- a/mm/percpu.c
+> +++ b/mm/percpu.c
+> @@ -37,9 +37,14 @@
+>   * takes care of normal allocations.
+>   *
+>   * The allocator organizes chunks into lists according to free size and
+> - * tries to allocate from the fullest chunk first.  Each chunk is managed
+> - * by a bitmap with metadata blocks.  The allocation map is updated on
+> - * every allocation and free to reflect the current state while the boundary
+> + * memcg-awareness.  To make a percpu allocation memcg-aware the __GFP_ACCOUNT
+> + * flag should be passed.  All memcg-aware allocations are sharing one set
+> + * of chunks and all unaccounted allocations and allocations performed
+> + * by processes belonging to the root memory cgroup are using the second set.
+> + *
+> + * The allocator tries to allocate from the fullest chunk first. Each chunk
+> + * is managed by a bitmap with metadata blocks.  The allocation map is updated
+> + * on every allocation and free to reflect the current state while the boundary
+>   * map is only updated on allocation.  Each metadata block contains
+>   * information to help mitigate the need to iterate over large portions
+>   * of the bitmap.  The reverse mapping from page to chunk is stored in
+> @@ -81,6 +86,7 @@
+>  #include <linux/kmemleak.h>
+>  #include <linux/sched.h>
+>  #include <linux/sched/mm.h>
+> +#include <linux/memcontrol.h>
+>  
+>  #include <asm/cacheflush.h>
+>  #include <asm/sections.h>
+> @@ -160,7 +166,7 @@ struct pcpu_chunk *pcpu_reserved_chunk __ro_after_init;
+>  DEFINE_SPINLOCK(pcpu_lock);	/* all internal data structures */
+>  static DEFINE_MUTEX(pcpu_alloc_mutex);	/* chunk create/destroy, [de]pop, map ext */
+>  
+> -struct list_head *pcpu_slot __ro_after_init; /* chunk list slots */
+> +struct list_head *pcpu_chunk_lists __ro_after_init; /* chunk list slots */
+>  
+>  /* chunks which need their map areas extended, protected by pcpu_lock */
+>  static LIST_HEAD(pcpu_map_extend_chunks);
+> @@ -500,6 +506,9 @@ static void __pcpu_chunk_move(struct pcpu_chunk *chunk, int slot,
+>  			      bool move_front)
+>  {
+>  	if (chunk != pcpu_reserved_chunk) {
+> +		struct list_head *pcpu_slot;
+> +
+> +		pcpu_slot = pcpu_chunk_list(pcpu_chunk_type(chunk));
+>  		if (move_front)
+>  			list_move(&chunk->list, &pcpu_slot[slot]);
+>  		else
+> @@ -1341,6 +1350,10 @@ static struct pcpu_chunk * __init pcpu_alloc_first_chunk(unsigned long tmp_addr,
+>  		panic("%s: Failed to allocate %zu bytes\n", __func__,
+>  		      alloc_size);
+>  
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	/* first chunk isn't memcg-aware */
+> +	chunk->obj_cgroups = NULL;
+> +#endif
+>  	pcpu_init_md_blocks(chunk);
+>  
+>  	/* manage populated page bitmap */
+> @@ -1380,7 +1393,7 @@ static struct pcpu_chunk * __init pcpu_alloc_first_chunk(unsigned long tmp_addr,
+>  	return chunk;
+>  }
+>  
+> -static struct pcpu_chunk *pcpu_alloc_chunk(gfp_t gfp)
+> +static struct pcpu_chunk *pcpu_alloc_chunk(enum pcpu_chunk_type type, gfp_t gfp)
+>  {
+>  	struct pcpu_chunk *chunk;
+>  	int region_bits;
+> @@ -1408,6 +1421,16 @@ static struct pcpu_chunk *pcpu_alloc_chunk(gfp_t gfp)
+>  	if (!chunk->md_blocks)
+>  		goto md_blocks_fail;
+>  
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	if (pcpu_is_memcg_chunk(type)) {
+> +		chunk->obj_cgroups =
+> +			pcpu_mem_zalloc(pcpu_chunk_map_bits(chunk) *
+> +					sizeof(struct obj_cgroup *), gfp);
+> +		if (!chunk->obj_cgroups)
+> +			goto objcg_fail;
+> +	}
+> +#endif
+> +
+>  	pcpu_init_md_blocks(chunk);
+>  
+>  	/* init metadata */
+> @@ -1415,6 +1438,8 @@ static struct pcpu_chunk *pcpu_alloc_chunk(gfp_t gfp)
+>  
+>  	return chunk;
+>  
+> +objcg_fail:
+> +	pcpu_mem_free(chunk->md_blocks);
+>  md_blocks_fail:
+>  	pcpu_mem_free(chunk->bound_map);
+>  bound_map_fail:
+> @@ -1429,6 +1454,9 @@ static void pcpu_free_chunk(struct pcpu_chunk *chunk)
+>  {
+>  	if (!chunk)
+>  		return;
+> +#ifdef CONFIG_MEMCG_KMEM
+> +	pcpu_mem_free(chunk->obj_cgroups);
+> +#endif
+>  	pcpu_mem_free(chunk->md_blocks);
+>  	pcpu_mem_free(chunk->bound_map);
+>  	pcpu_mem_free(chunk->alloc_map);
+> @@ -1505,7 +1533,8 @@ static int pcpu_populate_chunk(struct pcpu_chunk *chunk,
+>  			       int page_start, int page_end, gfp_t gfp);
+>  static void pcpu_depopulate_chunk(struct pcpu_chunk *chunk,
+>  				  int page_start, int page_end);
+> -static struct pcpu_chunk *pcpu_create_chunk(gfp_t gfp);
+> +static struct pcpu_chunk *pcpu_create_chunk(enum pcpu_chunk_type type,
+> +					    gfp_t gfp);
+>  static void pcpu_destroy_chunk(struct pcpu_chunk *chunk);
+>  static struct page *pcpu_addr_to_page(void *addr);
+>  static int __init pcpu_verify_alloc_info(const struct pcpu_alloc_info *ai);
+> @@ -1547,6 +1576,77 @@ static struct pcpu_chunk *pcpu_chunk_addr_search(void *addr)
+>  	return pcpu_get_page_chunk(pcpu_addr_to_page(addr));
+>  }
+>  
+> +#ifdef CONFIG_MEMCG_KMEM
+> +static enum pcpu_chunk_type pcpu_memcg_pre_alloc_hook(size_t size, gfp_t gfp,
+> +						     struct obj_cgroup **objcgp)
+> +{
+> +	struct obj_cgroup *objcg;
+> +
+> +	if (!memcg_kmem_enabled() || !(gfp & __GFP_ACCOUNT) ||
+> +	    memcg_kmem_bypass())
+> +		return PCPU_CHUNK_ROOT;
+> +
+> +	objcg = get_obj_cgroup_from_current();
+> +	if (!objcg)
+> +		return PCPU_CHUNK_ROOT;
+> +
+> +	if (obj_cgroup_charge(objcg, gfp, size * num_possible_cpus())) {
+> +		obj_cgroup_put(objcg);
+> +		return PCPU_FAIL_ALLOC;
 > +	}
 > +
->  	p = nvdimm_provider_data(nvdimm);
->  
->  	switch (cmd) {
-> @@ -385,6 +482,12 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
->  		*cmd_rc = papr_scm_meta_set(p, buf);
->  		break;
->  
-> +	case ND_CMD_CALL:
-> +		call_pkg = nd_to_pdsm_cmd_pkg(buf);
-> +		papr_scm_service_pdsm(p, call_pkg);
-> +		*cmd_rc = 0;
-> +		break;
+> +	*objcgp = objcg;
+> +	return PCPU_CHUNK_MEMCG;
+> +}
 > +
->  	default:
->  		dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
->  		*cmd_rc = -EINVAL;
-> diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
-> index de5d90212409..0e09dc5cec19 100644
-> --- a/include/uapi/linux/ndctl.h
-> +++ b/include/uapi/linux/ndctl.h
-> @@ -244,6 +244,7 @@ struct nd_cmd_pkg {
->  #define NVDIMM_FAMILY_HPE2 2
->  #define NVDIMM_FAMILY_MSFT 3
->  #define NVDIMM_FAMILY_HYPERV 4
-> +#define NVDIMM_FAMILY_PAPR 5
+> +static void pcpu_memcg_post_alloc_hook(struct obj_cgroup *objcg,
+> +				       struct pcpu_chunk *chunk, int off,
+> +				       size_t size)
+> +{
+> +	if (!objcg)
+> +		return;
+> +
+> +	if (chunk) {
+> +		chunk->obj_cgroups[off >> PCPU_MIN_ALLOC_SHIFT] = objcg;
+> +	} else {
+> +		obj_cgroup_uncharge(objcg, size * num_possible_cpus());
+> +		obj_cgroup_put(objcg);
+> +	}
+> +}
+> +
+> +static void pcpu_memcg_free_hook(struct pcpu_chunk *chunk, int off, size_t size)
+> +{
+> +	struct obj_cgroup *objcg;
+> +
+> +	if (!pcpu_is_memcg_chunk(pcpu_chunk_type(chunk)))
+> +		return;
+> +
+> +	objcg = chunk->obj_cgroups[off >> PCPU_MIN_ALLOC_SHIFT];
+> +	chunk->obj_cgroups[off >> PCPU_MIN_ALLOC_SHIFT] = NULL;
+> +
+> +	obj_cgroup_uncharge(objcg, size * num_possible_cpus());
+> +
+> +	obj_cgroup_put(objcg);
+> +}
+> +
+> +#else /* CONFIG_MEMCG_KMEM */
+> +static enum pcpu_chunk_type pcpu_memcg_pre_alloc_hook(size_t size, gfp_t gfp,
+> +						     struct mem_cgroup **memcgp)
+> +{
+> +	return PCPU_CHUNK_ROOT;
+> +}
+> +
+> +static void pcpu_memcg_post_alloc_hook(struct mem_cgroup *memcg,
+> +				       struct pcpu_chunk *chunk, int off,
+> +				       size_t size)
+> +{
+> +}
+> +
+> +static void pcpu_memcg_free_hook(struct pcpu_chunk *chunk, int off, size_t size)
+> +{
+> +}
+> +#endif /* CONFIG_MEMCG_KMEM */
+> +
+>  /**
+>   * pcpu_alloc - the percpu allocator
+>   * @size: size of area to allocate in bytes
+> @@ -1568,6 +1668,9 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+>  	gfp_t pcpu_gfp;
+>  	bool is_atomic;
+>  	bool do_warn;
+> +	enum pcpu_chunk_type type;
+> +	struct list_head *pcpu_slot;
+> +	struct obj_cgroup *objcg = NULL;
+>  	static int warn_limit = 10;
+>  	struct pcpu_chunk *chunk, *next;
+>  	const char *err;
+> @@ -1602,16 +1705,23 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+>  		return NULL;
+>  	}
 >  
->  #define ND_IOCTL_CALL			_IOWR(ND_IOCTL, ND_CMD_CALL,\
->  					struct nd_cmd_pkg)
+> +	type = pcpu_memcg_pre_alloc_hook(size, gfp, &objcg);
+> +	if (unlikely(type == PCPU_FAIL_ALLOC))
+> +		return NULL;
+> +	pcpu_slot = pcpu_chunk_list(type);
+> +
+>  	if (!is_atomic) {
+>  		/*
+>  		 * pcpu_balance_workfn() allocates memory under this mutex,
+>  		 * and it may wait for memory reclaim. Allow current task
+>  		 * to become OOM victim, in case of memory pressure.
+>  		 */
+> -		if (gfp & __GFP_NOFAIL)
+> +		if (gfp & __GFP_NOFAIL) {
+>  			mutex_lock(&pcpu_alloc_mutex);
+> -		else if (mutex_lock_killable(&pcpu_alloc_mutex))
+> +		} else if (mutex_lock_killable(&pcpu_alloc_mutex)) {
+> +			pcpu_memcg_post_alloc_hook(objcg, NULL, 0, size);
+>  			return NULL;
+> +		}
+>  	}
+>  
+>  	spin_lock_irqsave(&pcpu_lock, flags);
+> @@ -1637,7 +1747,8 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+>  restart:
+>  	/* search through normal chunks */
+>  	for (slot = pcpu_size_to_slot(size); slot < pcpu_nr_slots; slot++) {
+> -		list_for_each_entry_safe(chunk, next, &pcpu_slot[slot], list) {
+> +		list_for_each_entry_safe(chunk, next, &pcpu_slot[slot],
+> +					 list) {
+
+nit: this line change doesn't do anything. Can you please remove it.
+
+>  			off = pcpu_find_block_fit(chunk, bits, bit_align,
+>  						  is_atomic);
+>  			if (off < 0) {
+> @@ -1666,7 +1777,7 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+>  	}
+>  
+>  	if (list_empty(&pcpu_slot[pcpu_nr_slots - 1])) {
+> -		chunk = pcpu_create_chunk(pcpu_gfp);
+> +		chunk = pcpu_create_chunk(type, pcpu_gfp);
+>  		if (!chunk) {
+>  			err = "failed to allocate new chunk";
+>  			goto fail;
+> @@ -1723,6 +1834,8 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+>  	trace_percpu_alloc_percpu(reserved, is_atomic, size, align,
+>  			chunk->base_addr, off, ptr);
+>  
+> +	pcpu_memcg_post_alloc_hook(objcg, chunk, off, size);
+> +
+>  	return ptr;
+>  
+>  fail_unlock:
+> @@ -1744,6 +1857,9 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
+>  	} else {
+>  		mutex_unlock(&pcpu_alloc_mutex);
+>  	}
+> +
+> +	pcpu_memcg_post_alloc_hook(objcg, NULL, 0, size);
+> +
+>  	return NULL;
+>  }
+>  
+> @@ -1803,8 +1919,8 @@ void __percpu *__alloc_reserved_percpu(size_t size, size_t align)
+>  }
+>  
+>  /**
+> - * pcpu_balance_workfn - manage the amount of free chunks and populated pages
+> - * @work: unused
+> + * __pcpu_balance_workfn - manage the amount of free chunks and populated pages
+> + * @type: chunk type
+>   *
+>   * Reclaim all fully free chunks except for the first one.  This is also
+>   * responsible for maintaining the pool of empty populated pages.  However,
+> @@ -1813,11 +1929,12 @@ void __percpu *__alloc_reserved_percpu(size_t size, size_t align)
+>   * allocation causes the failure as it is possible that requests can be
+>   * serviced from already backed regions.
+>   */
+> -static void pcpu_balance_workfn(struct work_struct *work)
+> +static void __pcpu_balance_workfn(enum pcpu_chunk_type type)
+>  {
+>  	/* gfp flags passed to underlying allocators */
+>  	const gfp_t gfp = GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN;
+>  	LIST_HEAD(to_free);
+> +	struct list_head *pcpu_slot = pcpu_chunk_list(type);
+>  	struct list_head *free_head = &pcpu_slot[pcpu_nr_slots - 1];
+>  	struct pcpu_chunk *chunk, *next;
+>  	int slot, nr_to_pop, ret;
+> @@ -1915,7 +2032,7 @@ static void pcpu_balance_workfn(struct work_struct *work)
+>  
+>  	if (nr_to_pop) {
+>  		/* ran out of chunks to populate, create a new one and retry */
+> -		chunk = pcpu_create_chunk(gfp);
+> +		chunk = pcpu_create_chunk(type, gfp);
+>  		if (chunk) {
+>  			spin_lock_irq(&pcpu_lock);
+>  			pcpu_chunk_relocate(chunk, -1);
+> @@ -1927,6 +2044,20 @@ static void pcpu_balance_workfn(struct work_struct *work)
+>  	mutex_unlock(&pcpu_alloc_mutex);
+>  }
+>  
+> +/**
+> + * pcpu_balance_workfn - manage the amount of free chunks and populated pages
+> + * @work: unused
+> + *
+> + * Call __pcpu_balance_workfn() for each chunk type.
+> + */
+> +static void pcpu_balance_workfn(struct work_struct *work)
+> +{
+> +	enum pcpu_chunk_type type;
+> +
+> +	for (type = 0; type < PCPU_NR_CHUNK_TYPES; type++)
+> +		__pcpu_balance_workfn(type);
+> +}
+> +
+>  /**
+>   * free_percpu - free percpu area
+>   * @ptr: pointer to area to free
+> @@ -1941,8 +2072,9 @@ void free_percpu(void __percpu *ptr)
+>  	void *addr;
+>  	struct pcpu_chunk *chunk;
+>  	unsigned long flags;
+> -	int off;
+> +	int size, off;
+>  	bool need_balance = false;
+> +	struct list_head *pcpu_slot;
+>  
+>  	if (!ptr)
+>  		return;
+> @@ -1956,7 +2088,11 @@ void free_percpu(void __percpu *ptr)
+>  	chunk = pcpu_chunk_addr_search(addr);
+>  	off = addr - chunk->base_addr;
+>  
+> -	pcpu_free_area(chunk, off);
+> +	size = pcpu_free_area(chunk, off);
+> +
+> +	pcpu_slot = pcpu_chunk_list(pcpu_chunk_type(chunk));
+> +
+> +	pcpu_memcg_free_hook(chunk, off, size);
+>  
+>  	/* if there are more than one fully free chunks, wake up grim reaper */
+>  	if (chunk->free_bytes == pcpu_unit_size) {
+> @@ -2267,6 +2403,7 @@ void __init pcpu_setup_first_chunk(const struct pcpu_alloc_info *ai,
+>  	int map_size;
+>  	unsigned long tmp_addr;
+>  	size_t alloc_size;
+> +	enum pcpu_chunk_type type;
+>  
+>  #define PCPU_SETUP_BUG_ON(cond)	do {					\
+>  	if (unlikely(cond)) {						\
+> @@ -2384,13 +2521,18 @@ void __init pcpu_setup_first_chunk(const struct pcpu_alloc_info *ai,
+>  	 * empty chunks.
+>  	 */
+>  	pcpu_nr_slots = __pcpu_size_to_slot(pcpu_unit_size) + 2;
+> -	pcpu_slot = memblock_alloc(pcpu_nr_slots * sizeof(pcpu_slot[0]),
+> -				   SMP_CACHE_BYTES);
+> -	if (!pcpu_slot)
+> +	pcpu_chunk_lists = memblock_alloc(pcpu_nr_slots *
+> +					  sizeof(pcpu_chunk_lists[0]) *
+> +					  PCPU_NR_CHUNK_TYPES,
+> +					  SMP_CACHE_BYTES);
+> +	if (!pcpu_chunk_lists)
+>  		panic("%s: Failed to allocate %zu bytes\n", __func__,
+> -		      pcpu_nr_slots * sizeof(pcpu_slot[0]));
+> -	for (i = 0; i < pcpu_nr_slots; i++)
+> -		INIT_LIST_HEAD(&pcpu_slot[i]);
+> +		      pcpu_nr_slots * sizeof(pcpu_chunk_lists[0]) *
+> +		      PCPU_NR_CHUNK_TYPES);
+> +
+> +	for (type = 0; type < PCPU_NR_CHUNK_TYPES; type++)
+> +		for (i = 0; i < pcpu_nr_slots; i++)
+> +			INIT_LIST_HEAD(&pcpu_chunk_list(type)[i]);
+>  
+>  	/*
+>  	 * The end of the static region needs to be aligned with the
 > -- 
-> 2.26.2
+> 2.25.4
 > 
+
+There were just 2 minor nits. Do you mind resending with them fixed as
+I'm not sure I'll be carrying these patches or not.
+
+Acked-by: Dennis Zhou <dennis@kernel.org>
+
+Thanks,
+Dennis
