@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37945206FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987E6206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W/10+ZA/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i41lqYoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgFESq1 (ORCPT
+        id S1728164AbgFESq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34662 "EHLO
+        Fri, 5 Jun 2020 14:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgFESqX (ORCPT
+        with ESMTP id S1728129AbgFESq0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:46:23 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D0B7C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 11:46:23 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v24so4063827plo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 11:46:23 -0700 (PDT)
+        Fri, 5 Jun 2020 14:46:26 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A656C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 11:46:25 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o6so5629114pgh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 11:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Db/Gm4BeoJW6NqmdsTHnrKmt8poh4eKp40QU8EXC28s=;
-        b=W/10+ZA/PhUPpgG2XIwOlVrsgp35BOoaVW2TDVRzf+W7w0UnHTDmw0ieOnWvlN3vdP
-         PFj5GknvyJkFXDq/PPl9Jk+ySjCWshsIMbIW2TegEREdo0boT/Ym/nQS8RpmJyH1BxrV
-         2IkY/rzZIK/yYybOfCdmK3whjSMgxbpx6yX5w=
+        bh=JhzYHKvdQtmn/u3Ni8ya8R48LHH3rdnvSdBrewLu5k4=;
+        b=i41lqYocUx3+ZNZY/212s2DaUIWl1vrB9Z7fj0qpcDJHUaBBHP2o+yVISBfn0Y4sEj
+         nDzwq5keH/rr1fCEJvwXBjXi2Kd5/ZpAJbxkmlutS4lqhpRenwXmTphYNPY9D2MmISP5
+         FUboCT6imy55vB3+dm6v9nobWuokqvNJ2Zr/k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Db/Gm4BeoJW6NqmdsTHnrKmt8poh4eKp40QU8EXC28s=;
-        b=aaLJ8VpfCADAjWMGMQ49TR2mKvwPfetjIW1OhIFWy1D0s8TlVIRWPA5lXcwNOcbvwu
-         zlH9M79LEXQjV++Wjb6xmw0Jj5yh1h1dDGlc++EtA5HDJqqHKbD2Vuzz+y2/5pPbALmt
-         f181XSzvvPX7fbDTMWPBt61JQCmma6S793r7IPtvHJUKo7+fA7KwrJB2lroVMU8U6tvY
-         vD0gOVBuxT5RKVvcIqdDQI8C+uwaYvRQ7wH+UVGE5u/d6eKobjjVDuxR9PW1U2VwcKD/
-         mFNsKxUCIV7z9qlC1UWdU2Tq48mk1RkilpfVB+42xEz1by7wOIut9zqvMDI9IYL6jGsv
-         0E4w==
-X-Gm-Message-State: AOAM532fEZHU6+68a2hThxJJ+38CxNrevRfZo93Y1b8dlSY7i5OmcNW4
-        +QG2qsCUJdggnIK3JWjAk6Jz+w==
-X-Google-Smtp-Source: ABdhPJxgwwx3U8FhEfyBF8XeXfPMutpv4xe50ifCJaUL8ETmcyboqaMCFgbkn1oxbLIBfwVBPzdw0w==
-X-Received: by 2002:a17:90b:882:: with SMTP id bj2mr4851194pjb.122.1591382782676;
-        Fri, 05 Jun 2020 11:46:22 -0700 (PDT)
+        bh=JhzYHKvdQtmn/u3Ni8ya8R48LHH3rdnvSdBrewLu5k4=;
+        b=YVubpGJBtmcgGvsNv0tITr48eI357vfCKLbLLttSijR6C99/v+EQXOWwu77GSB63IF
+         8sA9u2HELFkvv6fMkA+s133H9zWd2IFN5XlTX5u/Q6IpbDqAtAa4GMr5Ux4ewPdvDtXj
+         X2ajwCXjPguiyAippq/kCy402GOT7LbU1GEDUAy70iFzdYP8Dl4QIoa6q2613sto8+P7
+         aCAjwlhON2XhNCA9dEy/cZW5088USjWdphTnQe8NGoPy0n8AChOmU6+Wh90Dgm0qBw4F
+         Hgn6EiWP3v8h9yy+Op60lV0pE4z/kelJokOQiBpYxvfm+eAWhllQI0fG0l6uQq/zKFnE
+         gvFw==
+X-Gm-Message-State: AOAM5304SaWgdjS+vgL0w0MHgQsD2g4ohBMxnl3q9Qf7y5qUV0t01+8R
+        TyMGUppe3p4r385wZI+oYzoetg==
+X-Google-Smtp-Source: ABdhPJwelWUinwmWNJnCRScNIf8pUY19AIVEka6dRO9dLs0VBOstGXsHxxpRO9qaapucx7H5cAxKng==
+X-Received: by 2002:aa7:85da:: with SMTP id z26mr10736885pfn.13.1591382784923;
+        Fri, 05 Jun 2020 11:46:24 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id a20sm268894pff.147.2020.06.05.11.46.21
+        by smtp.gmail.com with ESMTPSA id n189sm282147pfn.108.2020.06.05.11.46.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 11:46:22 -0700 (PDT)
+        Fri, 05 Jun 2020 11:46:24 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Marcel Holtmann <marcel@holtmann.org>,
         Johan Hedberg <johan.hedberg@gmail.com>
@@ -66,9 +66,9 @@ Cc:     linux-bluetooth@vger.kernel.org,
         Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
         Claire Chang <tientzu@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 2/3] Bluetooth: hci_qca: Skip serdev wait when no transfer is pending
-Date:   Fri,  5 Jun 2020 11:46:10 -0700
-Message-Id: <20200605114552.2.I2a095adb2a9a98b15c11d7310db142b27f8cab28@changeid>
+Subject: [PATCH 3/3] Bluetooth: hci_qca: Refactor error handling in qca_suspend()
+Date:   Fri,  5 Jun 2020 11:46:11 -0700
+Message-Id: <20200605114552.3.Ib9b5e6e81ea31cdc964cd0562ef4985a6c6c5154@changeid>
 X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
 In-Reply-To: <20200605184611.252218-1-mka@chromium.org>
 References: <20200605184611.252218-1-mka@chromium.org>
@@ -79,51 +79,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qca_suspend() calls serdev_device_wait_until_sent() regardless of
-whether a transfer is pending. While it does no active harm since
-the function should return immediately it makes the code more
-confusing. Add a flag to track whether a transfer is pending and
-only call serdev_device_wait_until_sent() is needed.
+If waiting for IBS sleep times out jump to the error handler, this is
+easier to read than multiple 'if' branches and a fall through to the
+error handler.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 
- drivers/bluetooth/hci_qca.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_qca.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index b1d82d32892e9..90ffd8ca1fb0d 100644
+index 90ffd8ca1fb0d..cf76f128e9834 100644
 --- a/drivers/bluetooth/hci_qca.c
 +++ b/drivers/bluetooth/hci_qca.c
-@@ -2050,6 +2050,7 @@ static int __maybe_unused qca_suspend(struct device *dev)
- 	struct hci_uart *hu = &qcadev->serdev_hu;
- 	struct qca_data *qca = hu->priv;
- 	unsigned long flags;
-+	bool tx_pending = false;
- 	int ret = 0;
- 	u8 cmd;
- 
-@@ -2083,6 +2084,7 @@ static int __maybe_unused qca_suspend(struct device *dev)
- 
- 		qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
- 		qca->ibs_sent_slps++;
-+		tx_pending = true;
- 		break;
- 
- 	case HCI_IBS_TX_ASLEEP:
-@@ -2099,8 +2101,10 @@ static int __maybe_unused qca_suspend(struct device *dev)
- 	if (ret < 0)
- 		goto error;
- 
--	serdev_device_wait_until_sent(hu->serdev,
--				      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
-+	if (tx_pending) {
-+		serdev_device_wait_until_sent(hu->serdev,
-+					      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
-+	}
- 
+@@ -2109,18 +2109,16 @@ static int __maybe_unused qca_suspend(struct device *dev)
  	/* Wait for HCI_IBS_SLEEP_IND sent by device to indicate its Tx is going
  	 * to sleep, so that the packet does not wake the system later.
+ 	 */
+-
+ 	ret = wait_event_interruptible_timeout(qca->suspend_wait_q,
+ 			qca->rx_ibs_state == HCI_IBS_RX_ASLEEP,
+ 			msecs_to_jiffies(IBS_BTSOC_TX_IDLE_TIMEOUT_MS));
+-
+-	if (ret > 0) {
+-		qca_wq_serial_tx_clock_vote_off(&qca->ws_tx_vote_off);
+-		return 0;
++	if (ret == 0) {
++		ret = -ETIMEDOUT;
++		goto error;
+ 	}
+ 
+-	if (ret == 0)
+-		ret = -ETIMEDOUT;
++	qca_wq_serial_tx_clock_vote_off(&qca->ws_tx_vote_off);
++	return 0;
+ 
+ error:
+ 	clear_bit(QCA_SUSPENDING, &qca->flags);
 -- 
 2.27.0.278.ge193c7cf3a9-goog
 
