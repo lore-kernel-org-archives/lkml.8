@@ -2,57 +2,64 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0718C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B8FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80DF92074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD9220878
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367145;
-	bh=EUyRpb3EQAr3VgeyKmxe4l/6m82tQ6ZFBOGR+llSCE0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFYjb6KdTyyi35UISKvJswlriHIq2YP7jzNvoB9Lnv17ie6kp1w9j8a3R+wFDsAKy
-	 XQniBfQrrhUMK17QZaDTeIgvY4mWAk/O0U/XufftrQUZ2kcrJ8Y+iIWheHzr+7b9Hw
-	 AszVDhKuL47Ig1EOxpq5zCj+mGuTKP9RHBqWAZZg=
+	s=default; t=1591367149;
+	bh=JU4stAOq1lN3utFdATiHTwbtxQpBWg4NpI7D+Sezy30=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SnjhvcVdFyBWZTYgww88nHHxqwRT3xA/9PoMMbi62YmyYnFDuHHWnZNiRhOteSp52
+	 TUa1ljMIKEW3KFkLQFB3On8mfzRzR4f1qlMfnCXIJFGi/HdtgkWTSTZxKog/0EbZas
+	 AWv/CHPjBM8Re35rEsKCLYTFSUCK+F1MXN3cOe7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgFEOZo (ORCPT
+        id S1728228AbgFEOQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbgFEOQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:32 -0400
+        id S1728200AbgFEOQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F6AB2075B;
-        Fri,  5 Jun 2020 14:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF3F208A7;
+        Fri,  5 Jun 2020 14:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366591;
-        bh=EUyRpb3EQAr3VgeyKmxe4l/6m82tQ6ZFBOGR+llSCE0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKMG6og3TG8ORfExXpwBHLrR16jaN1VjJ/vqG7Z0zOVAAgkh35+Pr2Yyr9Cy/m3HS
-         uCnSbhvo77mzy2VbbM1UyObo+0k3k4LtMwiHz2sEJSwhXBHGCIcy0Am7g061C3D5D9
-         alMZ90iCnNY/VJ7qXE0n42ILKy0iVJg2Yxfsfb8Q=
+        s=default; t=1591366576;
+        bh=JU4stAOq1lN3utFdATiHTwbtxQpBWg4NpI7D+Sezy30=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EEKpefyiqVs562U9Gxl3ytexS5sctlwGJ4z2LkE/woU351lb2IQ/1dO8FarfTSNCM
+         wb4Jr1iDrSvbRawJKkSxho4HwtskiZdQR0kJ7f/WkghAfWTrfFgcJQBSaxF+qz9agr
+         +Ze5MlzgrjW5Rax+klKEds9KxmufLnMqFY+BL7zo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 15/43] net: phy: propagate an error back to the callers of phy_sfp_probe
-Date:   Fri,  5 Jun 2020 16:14:45 +0200
-Message-Id: <20200605140153.322521877@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.7 00/14] 5.7.1-rc1 review
+Date:   Fri,  5 Jun 2020 16:14:50 +0200
+Message-Id: <20200605135951.018731965@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
-References: <20200605140152.493743366@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.7.1-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.1-rc1
+X-KernelTest-Deadline: 2020-06-07T13:59+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,52 +67,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+This is the start of the stable review cycle for the 5.7.1 release.
+There are 14 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit e3f2d5579c0b8ad9d1fb6a5813cee38a86386e05 ]
+Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
+Anything received after that time might be too late.
 
-The compilation warning below reveals that the errors returned from
-the sfp_bus_add_upstream() call are not propagated to the callers.
-Fix it by returning "ret".
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.1-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+and the diffstat can be found below.
 
-14:37:51 drivers/net/phy/phy_device.c: In function 'phy_sfp_probe':
-14:37:51 drivers/net/phy/phy_device.c:1236:6: warning: variable 'ret'
-   set but not used [-Wunused-but-set-variable]
-14:37:51  1236 |  int ret;
-14:37:51       |      ^~~
+thanks,
 
-Fixes: 298e54fa810e ("net: phy: add core phylib sfp support")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/phy/phy_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+greg k-h
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 28e3c5c0e3c3..faca0d84f5af 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1239,7 +1239,7 @@ int phy_sfp_probe(struct phy_device *phydev,
- 		  const struct sfp_upstream_ops *ops)
- {
- 	struct sfp_bus *bus;
--	int ret;
-+	int ret = 0;
- 
- 	if (phydev->mdio.dev.fwnode) {
- 		bus = sfp_bus_find_fwnode(phydev->mdio.dev.fwnode);
-@@ -1251,7 +1251,7 @@ int phy_sfp_probe(struct phy_device *phydev,
- 		ret = sfp_bus_add_upstream(bus, phydev, ops);
- 		sfp_bus_put(bus);
- 	}
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL(phy_sfp_probe);
- 
--- 
-2.25.1
+-------------
+Pseudo-Shortlog of commits:
 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.7.1-rc1
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    airo: Fix read overflows sending packets
+
+DENG Qingfang <dqfext@gmail.com>
+    net: dsa: mt7530: set CPU port to fallback mode
+
+Sakari Ailus <sakari.ailus@linux.intel.com>
+    media: staging: ipu3-imgu: Move alignment attribute to field
+
+Sakari Ailus <sakari.ailus@linux.intel.com>
+    media: Revert "staging: imgu: Address a compiler warning on alignment"
+
+Jérôme Pouiller <jerome.pouiller@silabs.com>
+    mmc: fix compilation of user API
+
+Daniel Axtens <dja@axtens.net>
+    kernel/relay.c: handle alloc_percpu returning NULL in relay_open
+
+Herbert Xu <herbert@gondor.apana.org.au>
+    crypto: api - Fix use-after-free and race in crypto_spawn_alg
+
+Matthew Garrett <matthewgarrett@google.com>
+    mt76: mt76x02u: Add support for newer versions of the XBox One wifi adapter
+
+Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
+    p54usb: add AirVasT USB stick device-id
+
+Julian Sax <jsbc@gmx.de>
+    HID: i2c-hid: add Schneider SCL142ALM to descriptor override
+
+Benjamin Tissoires <benjamin.tissoires@redhat.com>
+    HID: multitouch: enable multi-input as a quirk for some devices
+
+Scott Shumate <scott.shumate@gmail.com>
+    HID: sony: Fix for broken buttons on DS3 USB dongles
+
+Fan Yang <Fan_Yang@sjtu.edu.cn>
+    mm: Fix mremap not considering huge pmd devmap
+
+Brad Love <brad@nextdimension.cc>
+    media: dvbdev: Fix tuner->demod media controller link
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                        |  4 ++--
+ arch/x86/include/asm/pgtable.h                  |  1 +
+ crypto/algapi.c                                 | 22 +++++++++++++++------
+ crypto/api.c                                    |  3 ++-
+ crypto/internal.h                               |  1 +
+ drivers/hid/hid-multitouch.c                    | 26 +++++++++++++++++++++++++
+ drivers/hid/hid-sony.c                          | 17 ++++++++++++++++
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c        |  8 ++++++++
+ drivers/media/dvb-core/dvbdev.c                 |  5 +++--
+ drivers/net/dsa/mt7530.c                        | 11 ++++++++---
+ drivers/net/dsa/mt7530.h                        |  6 ++++++
+ drivers/net/wireless/cisco/airo.c               | 12 ++++++++++++
+ drivers/net/wireless/intersil/p54/p54usb.c      |  1 +
+ drivers/net/wireless/mediatek/mt76/mt76x02.h    |  1 +
+ drivers/net/wireless/mediatek/mt76/mt76x2/usb.c |  1 +
+ drivers/staging/media/ipu3/include/intel-ipu3.h |  7 ++++---
+ include/uapi/linux/mmc/ioctl.h                  |  1 +
+ kernel/relay.c                                  |  5 +++++
+ mm/mremap.c                                     |  2 +-
+ 19 files changed, 116 insertions(+), 18 deletions(-)
 
 
