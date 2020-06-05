@@ -2,197 +2,183 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2000DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22B7207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3292086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3dlX4HR"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="QYOVtlB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgFEGgY (ORCPT
+        id S1726189AbgFEGgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbgFEGgW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:36:22 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9682FC08C5C2;
-        Thu,  4 Jun 2020 23:36:22 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u13so7350418wml.1;
-        Thu, 04 Jun 2020 23:36:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6A+Yc/NcIwBkdU7I3CB2KCsuXoL3rpyUZTqoR0EzSg8=;
-        b=N3dlX4HRWIqNWFCX93secDfZiwMU1Ju9hkUtdPWp8v5KS524hXTrfhbdvCewJRi7Wg
-         hHhj5NeDmzbRinC07HMvOzkv9r5uFM/bCMB2cN36voTuE0z3aWbGA7md0doqRd+sKzWu
-         QhvybNNLUyPClnlia9IJpWa9OdglaDsB1RWx8KSoIsBPBy1KqtDBez+aERH024UzAHlv
-         KtkKZb7WpgDz9TKy10oNAcqtLsYjf1zPHmo6gQ/hb5KNGKqsSr7xIvfJZE+RdKeJNDBp
-         HBBSIXYYYOAGh7qtExGVlET2EFuohIi75h5/HbiBJfa2KkwjAillg2/6rvBRxrUoYX4w
-         SmQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6A+Yc/NcIwBkdU7I3CB2KCsuXoL3rpyUZTqoR0EzSg8=;
-        b=ZW++Js6HbeRGftSOYywkXyT0k0matJNPSjnzKS+qrTpxxvu2aLyTGXcrUdaoWu2/gM
-         Kd10F9+q3wSVGWH7XE7jc7PJQqQFfzAnqRf5iD+QLPTLvRFDtJRPQNVEgHZo7zmNZTR0
-         UF3RGkEHB5T6QAj8lD8S8ZezebcZl2Bd+pWX4vGe3gbvaULd1rFwV6B7qPNtFO/RNfbn
-         rs2AsdGScmMpptnQaCa06l57BWQxFpu+7u5FTCJQUKZ+5xIjcJ2hAmDM8YFctWKO8s1R
-         H8Ss5jdy2Z9KaIetYpKWJVEdIimQnGp2MpN6LFHSU5OPr2//V80bGw7eFNelKXg8XE+/
-         yXoA==
-X-Gm-Message-State: AOAM533HMZOsQCNVNLjQ1Ef0MqKCJg8Gb5BDB14KyP9E/1dZGquEj2bg
-        EHYeWUT/bkcFFieV9+Exn8LPSIdA
-X-Google-Smtp-Source: ABdhPJw8f8JI3DbnRJc4v0j6Y8s5RDEkjiIgirZ9MRvFQtf4pVBBGZGGOamsht6XhfANeF6ah9rYxw==
-X-Received: by 2002:a1c:5987:: with SMTP id n129mr1093340wmb.60.1591338981121;
-        Thu, 04 Jun 2020 23:36:21 -0700 (PDT)
-Received: from [192.168.1.43] (181.red-88-10-103.dynamicip.rima-tde.net. [88.10.103.181])
-        by smtp.gmail.com with ESMTPSA id n7sm10832794wrx.82.2020.06.04.23.36.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 23:36:20 -0700 (PDT)
-Subject: Re: clean up kernel_{read,write} & friends v2
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Nicolas Pitre <nico@fluxnic.net>, Joe Perches <joe@perches.com>
-References: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
- <20200528054043.621510-1-hch@lst.de>
- <22778.1590697055@warthog.procyon.org.uk>
- <f89f0f7f-83b4-72c6-7d08-cb6eaeccd443@schaufler-ca.com>
- <3aea7a1c10e94ea2964fa837ae7d8fe2@AcuMS.aculab.com>
- <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Message-ID: <d67deb88-73a8-4c57-6b37-c62190422d65@amsat.org>
-Date:   Fri, 5 Jun 2020 08:36:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 5 Jun 2020 02:36:48 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60820 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbgFEGgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 02:36:47 -0400
+IronPort-SDR: d7ckQZGBK6ARJaOgyvemrRoVpiDkO+W5MIqqyYOgzMcxow9ri4sjMXwHf2yUg3PT/LSPEOWCX0
+ LcbomDW6UzwA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 23:36:46 -0700
+IronPort-SDR: TXA1OSg/gf9Ggbb0Lk1H5U2fuXPLgicKdO6MwxsvyNza6YhEaIienQNHlw5xRWF/CHBUgbBlBW
+ m2c1lmNyd7Yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,475,1583222400"; 
+   d="scan'208";a="257950045"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by fmsmga007.fm.intel.com with ESMTP; 04 Jun 2020 23:36:46 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 4 Jun 2020 23:36:45 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 4 Jun 2020 23:36:45 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 4 Jun 2020 23:36:45 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 4 Jun 2020 23:36:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZF6IYp2VuNSNTIXQMCEZM2C9HaQm7XG8GKnaa9hcUohbTB65PFa875ql5O7VoOnOVowqS8DM3Syv2dmnhiAOzKqmuR3HOQ/63bMr2sxiOm28/qDhNivIz2mGvkIZ2exDfMs6zS1x0IWLZ9TO2//3KAPL5Rqg8QaMZ/r8CVM7igoZSPzkQ390PnpI2JDXNWcuTxpO1yB3rpFE37CJcnJuIAbfcgsRbNx/yHwaYoH2YWHMUGCv4cNB/oHAZxgKIPfZ+a2f+2hRDBucSduZulQK8Szh8lSY6fKQKYM+CFDDuVajVg42Hl65d0PET6TgrhU2ylyMFWAmrHhV6sYIVNp/YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bt6igjb9YpZy4lfUbuKwdkSyqn2SH3AHUOe06JV9j50=;
+ b=Hsj2Vj50gzQOL/0cF515jxLwH68lHoone1Jyi7goXLioQjEWZj+p83leXreoaK27oTc7GAxQudEs+4DhOMDeeTUU7rlB8a8g6CtoCI9bwlGwV9XEaTes59gJCmbVacace8OqFJUL4fLWktIL6TX+JubWLFRJ+o8+VSKxHidfLPya52nJawYF6JPlJLRZtfe+Os075ZkEVBBXjnLWkc8/c/rzGRsKFMV16WoruOTJRi4BBvxpzqO4yNRQWa/9BkiKwBqaOfsnlZrDPj4ydbQ83f72CcE9IFxdX5p44TuRYhGoFFku+QroNrnzgoYjt8iWDdw+DwPY+HIrzmPheMoBpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bt6igjb9YpZy4lfUbuKwdkSyqn2SH3AHUOe06JV9j50=;
+ b=QYOVtlB1kArdwpay5raNnbRevJZEAuPEofdBRsqQkvaWwheUm9Wk+xdiwYZsR/pT/wxn6L9oepnPDitJAAj+YMrRCRa2L9FhUhQNxuSmfHLclnQiDYDnJgsnaNChko5FwaajzLF4D/9ugDYivQImSbg4EZPuQ8M2lyxA2Cxx7QQ=
+Received: from BN6PR11MB1939.namprd11.prod.outlook.com (2603:10b6:404:ff::18)
+ by BN6PR11MB1747.namprd11.prod.outlook.com (2603:10b6:404:102::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 5 Jun
+ 2020 06:36:42 +0000
+Received: from BN6PR11MB1939.namprd11.prod.outlook.com
+ ([fe80::28d8:4c35:7dcb:4e20]) by BN6PR11MB1939.namprd11.prod.outlook.com
+ ([fe80::28d8:4c35:7dcb:4e20%6]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
+ 06:36:42 +0000
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "See, Chin Liang" <chin.liang.see@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Nguyen, Dinh" <dinh.nguyen@intel.com>,
+        "Westergreen, Dalon" <dalon.westergreen@intel.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        "Tan, Ley Foon" <ley.foon.tan@intel.com>
+Subject: RE: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
+ documentation
+Thread-Topic: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
+ documentation
+Thread-Index: AQHWOkLNBKZdtzZwnESIhu+vAPDAqqjJCPCAgAB7o1A=
+Date:   Fri, 5 Jun 2020 06:36:42 +0000
+Message-ID: <BN6PR11MB1939E6BAE4121A5D0340BAB0F2860@BN6PR11MB1939.namprd11.prod.outlook.com>
+References: <20200604073256.25702-1-joyce.ooi@intel.com>
+ <20200604073256.25702-11-joyce.ooi@intel.com>
+ <20200604222311.GA4151468@bogus>
+In-Reply-To: <20200604222311.GA4151468@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [42.189.134.147]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 83a29671-bb51-4d02-0cae-08d8091acf8f
+x-ms-traffictypediagnostic: BN6PR11MB1747:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR11MB1747C996D78838FED7B30D54F2860@BN6PR11MB1747.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0425A67DEF
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Eu/gJaCoO9o41Hv1InbCbU2FB5lqDdU92QRTd4rpwJ+7ecMzB4CpiJuHbyYnREyunaArDgLFXC60fPQCKL5PRefmIyU6M97JKPEfTcn+ePGxGnEU5pUq2FyDMbXG5B0pB+fbtK5wBHZt8N+/XQy2pKATKZBDYr+A/UbXGG3AppUHvRHHQYe0vOyERunhHilEpsme60gAREuhd2B7GW2RomBG0UQ/qyLsC4tDrqcuLiNQFAQHt66rG3/GFb9kPpMCgBnP6aLwNlFPRoa6QcSLRflhPEtl7Gd2YTw65TnXEnGZMEZO2o29NzLaNaN3X4j+
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB1939.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(39860400002)(376002)(366004)(396003)(4326008)(186003)(478600001)(6506007)(66946007)(26005)(33656002)(66476007)(15650500001)(2906002)(53546011)(5660300002)(83380400001)(52536014)(8676002)(316002)(54906003)(71200400001)(66556008)(55016002)(86362001)(64756008)(66446008)(6916009)(7696005)(8936002)(9686003)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: MJIVCkqdjQSv9kwEJ9LWEfpJsrQWAleaU4/qAWr2llhRe0i9vgaoQ0AMXMQ6yXkO0IFXV+mukIAaujYfbqxAx/TQZ62gbyvtX/PJ+QUELGHXdU6Am43X2XzzkZCl4z0oNr9TQhv2B21fI/e4LFZraqwJd9WE+zARzFkof+BYy74ctgK/LNnSNMwTEGCsn4dC7045icx/youCZDZiTUzWgkZiINXoELTzzI0ZYAsxTRYTMYdoLx7LR/tgJZRwawlijLaBANfTAq32GJmojECYYG5J/9O61XfxZSBl6MRe4FIe82JLDCa/sa8+JK74VQzW4tsHHee3qMnP1+v4RiyAU052wglKbr5PAszHcfSqsxMrssUc/DM86bWurFPtHaMsN2H8nFiXh5pt/5KrmYN5/AU5qFP73fXbfJJRvMAyT4y6WlUc/jmxwoNN8gZK3h/Zf8bOe4wDH/7VHTsRJnKZ3p6J3uQa0XaLnyip+FWn9Bn+ehlwuuZJOO9W/9oRuVU8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83a29671-bb51-4d02-0cae-08d8091acf8f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2020 06:36:42.7354
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9FTttcEEAZpE4goQU0wg0VmzHh7FjmoXWONT/LoRsJ4LA9pcCeArwikiq797wpGrslWXnBQ7lPvfgd5DM8YmzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1747
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Friday, June 5, 2020 6:23 AM
+> To: Ooi, Joyce <joyce.ooi@intel.com>
+> Cc: David S . Miller <davem@davemloft.net>; Jakub Kicinski
+> <kuba@kernel.org>; Thor Thayer <thor.thayer@linux.intel.com>;
+> netdev@vger.kernel.org; Rob Herring <robh+dt@kernel.org>; See, Chin
+> Liang <chin.liang.see@intel.com>; linux-kernel@vger.kernel.org; Nguyen,
+> Dinh <dinh.nguyen@intel.com>; Westergreen, Dalon
+> <dalon.westergreen@intel.com>; devicetree@vger.kernel.org; Dalon
+> Westergreen <dalon.westergreen@linux.intel.com>; Tan, Ley Foon
+> <ley.foon.tan@intel.com>
+> Subject: Re: [PATCH v3 10/10] net: eth: altera: update devicetree binding=
+s
+> documentation
+>=20
+> On Thu, 04 Jun 2020 15:32:56 +0800, Ooi, Joyce wrote:
+> > From: Dalon Westergreen <dalon.westergreen@intel.com>
+> >
+> > Update devicetree bindings documentation to include msgdma prefetcher
+> > and ptp bindings.
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+> > Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+> > ---
+> > v2: no change
+> > v3: no change
+> > ---
+> >  .../devicetree/bindings/net/altera_tse.txt         | 103
+> +++++++++++++++++----
+> >  1 file changed, 84 insertions(+), 19 deletions(-)
+> >
+>=20
+>=20
+> Please add Acked-by/Reviewed-by tags when posting new versions.
+> However, there's no need to repost patches *only* to add the tags. The
+> upstream maintainer will do that for acks received on the version they ap=
+ply.
+>=20
+> If a tag was not added on purpose, please state why and what changed.
 
-On 5/29/20 9:19 PM, Linus Torvalds wrote:
-> On Fri, May 29, 2020 at 6:08 AM David Laight <David.Laight@aculab.com> wrote:
->>
->> A wide monitor is for looking at lots of files.
-> 
-> Not necessarily.
-> 
-> Excessive line breaks are BAD. They cause real and every-day problems.
-> 
-> They cause problems for things like "grep" both in the patterns and in
-> the output, since grep (and a lot of other very basic unix utilities)
-> is fundamentally line-based.
-> 
-> So the fact is, many of us have long long since skipped the whole
-> "80-column terminal" model, for the same reason that we have many more
-> lines than 25 lines visible at a time.
-> 
-> And honestly, I don't want to see patches that make the kernel reading
-> experience worse for me and likely for the vast majority of people,
-> based on the argument that some odd people have small terminal
-> windows.
-> 
-> If you or Christoph have 80 character lines, you'll get possibly ugly
-> wrapped output. Tough. That's _your_ choice. Your hardware limitations
-> shouldn't be a pain for the rest of us.
+Noted, will do that next time.
 
-Unfortunately refreshable braille displays have that "hardware
-limitations". 80 cells displays are very expensive.
-Visual impairments is rarely a "choice".
-Relaxing the 80-char limit make it harder for blind developers
-to contribute.
-
-> Longer lines are fundamentally useful. My monitor is not only a lot
-> wider than it is tall, my fonts are universally narrower than they are
-> tall. Long lines are natural.
-> 
-> When I tile my terminal windows on my display, I can have 6 terminals
-> visible at one time, and that's because I have them three wide. And I
-> could still fit 80% of a fourth one side-by-side.
-> 
-> And guess what? That's with my default "100x50" terminal window (go to
-> your gnome terminal settings, you'll find that the 80x25 thing is just
-> an initial default that you can change), not with some 80x25 one. And
-> that's with a font that has anti-aliasing and isn't some pixelated
-> mess.
-> 
-> And most of my terminals actually end up being dragged wider and
-> taller than that. I checked, and my main one is 142x76 characters
-> right now, because it turns out that wider (and taller) terminals are
-> useful not just for source code.
-> 
-> Have you looked at "ps ax" output lately? Or used "top"? Or done "git
-> diff --stat" or any number of things where it turns out that 80x25 is
-> really really limiting, and is simply NO LONGER RELEVANT to most of
-> us.
-> 
-> So no. I do not care about somebody with a 80x25 terminal window
-> getting line wrapping.
-> 
-> For exactly the same reason I find it completely irrelevant if
-> somebody says that their kernel compile takes 10 hours because they
-> are doing kernel development on a Raspberry PI with 4GB of RAM.
-> 
-> People with restrictive hardware shouldn't make it more inconvenient
-> for people who have better resources. Yes, we'll accommodate things to
-> within reasonable limits. But no, 80-column terminals in 2020 isn't
-> "reasonable" any more as far as I'm concerned. People commonly used
-> 132-column terminals even back in the 80's, for chrissake, don't try
-> to make 80 columns some immovable standard.
-> 
-> If you choose to use a 80-column terminal, you can live with the line
-> wrapping. It's just that simple.
-> 
-> And longer lines are simply useful. Part of that is that we aren't
-> programming in the 80's any more, and our source code is fundamentally
-> wider as a result.
-> 
-> Yes, local iteration variables are still called 'i', because more
-> context just isn't helpful for some anonymous counter. Being concise
-> is still a good thing, and overly verbose names are not inherently
-> better.
-> 
-> But still - it's entirely reasonable to have variable names that are
-> 10-15 characters and it makes the code more legible. Writing things
-> out instead of using abbreviations etc.
-> 
-> And yes, we do use wide tabs, because that makes indentation something
-> you can visually see in the structure at a glance and on a
-> whole-function basis, rather than something you have to try to
-> visually "line up" things for or count spaces.
-> 
-> So we have lots of fairly fundamental issues that fairly easily make
-> for longer lines in many circumstances.
-> 
-> And yes, we do line breaks at some point. But there really isn't any
-> reason to make that point be 80 columns any more.
-> 
->                   Linus
-
-Regards,
-
-Phil.
