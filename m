@@ -2,55 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0718C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9032063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DF92074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367140;
-	bh=hlKiCg2RNDT/gKW+Zea75Lq46LZTVe35HoTVcsPU+Gs=;
+	s=default; t=1591367145;
+	bh=EUyRpb3EQAr3VgeyKmxe4l/6m82tQ6ZFBOGR+llSCE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mN1rVdbtOFiifisLGIcV7WTr+JdNxfr6GtIReZWzB0z/mvajx7Y+0FOwD0BfELZji
-	 vy0D64iAey6xUwolkCNG36YfKoE4H7nY1tqfwh9GGSK3vDImBWC53yjw2GgZa1Lkrh
-	 LMlntyrYt9/m8Ix60wv7Vp3qeS7aUx7YO8HXV8DE=
+	b=BFYjb6KdTyyi35UISKvJswlriHIq2YP7jzNvoB9Lnv17ie6kp1w9j8a3R+wFDsAKy
+	 XQniBfQrrhUMK17QZaDTeIgvY4mWAk/O0U/XufftrQUZ2kcrJ8Y+iIWheHzr+7b9Hw
+	 AszVDhKuL47Ig1EOxpq5zCj+mGuTKP9RHBqWAZZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgFEOZi (ORCPT
+        id S1728866AbgFEOZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:25:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45722 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728256AbgFEOQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:34 -0400
+        id S1728250AbgFEOQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8002086A;
-        Fri,  5 Jun 2020 14:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F6AB2075B;
+        Fri,  5 Jun 2020 14:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366594;
-        bh=hlKiCg2RNDT/gKW+Zea75Lq46LZTVe35HoTVcsPU+Gs=;
+        s=default; t=1591366591;
+        bh=EUyRpb3EQAr3VgeyKmxe4l/6m82tQ6ZFBOGR+llSCE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InWOadnLoWEBMsCFHRTsDu1ZkhPqxpGm8wyS5IVovqhJ5/5JhGkDjfbAs+58CySV0
-         e8Y62F27QgIdmOQw2ptLl0YwxExK8v5FUdYiJj7qOk84MEAw30kH980mnKz+m0qIHm
-         8Hvz1nKuR02DnLYjAUPl33MTcH1zs6+qF/r7++4w=
+        b=EKMG6og3TG8ORfExXpwBHLrR16jaN1VjJ/vqG7Z0zOVAAgkh35+Pr2Yyr9Cy/m3HS
+         uCnSbhvo77mzy2VbbM1UyObo+0k3k4LtMwiHz2sEJSwhXBHGCIcy0Am7g061C3D5D9
+         alMZ90iCnNY/VJ7qXE0n42ILKy0iVJg2Yxfsfb8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 16/43] x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
-Date:   Fri,  5 Jun 2020 16:14:46 +0200
-Message-Id: <20200605140153.373869549@linuxfoundation.org>
+Subject: [PATCH 5.6 15/43] net: phy: propagate an error back to the callers of phy_sfp_probe
+Date:   Fri,  5 Jun 2020 16:14:45 +0200
+Message-Id: <20200605140153.322521877@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -63,65 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit d7110a26e5905ec2fe3fc88bc6a538901accb72b ]
+[ Upstream commit e3f2d5579c0b8ad9d1fb6a5813cee38a86386e05 ]
 
-When building with Clang + -Wtautological-compare and
-CONFIG_CPUMASK_OFFSTACK unset:
+The compilation warning below reveals that the errors returned from
+the sfp_bus_add_upstream() call are not propagated to the callers.
+Fix it by returning "ret".
 
-  arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL &&
-              ^~~~~~~~~~~    ~~~~
-  arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-              ^~~~~~~~~~~    ~~~~
-  2 warnings generated.
+14:37:51 drivers/net/phy/phy_device.c: In function 'phy_sfp_probe':
+14:37:51 drivers/net/phy/phy_device.c:1236:6: warning: variable 'ret'
+   set but not used [-Wunused-but-set-variable]
+14:37:51  1236 |  int ret;
+14:37:51       |      ^~~
 
-Commit
-
-  f7e30f01a9e2 ("cpumask: Add helper cpumask_available()")
-
-added cpumask_available() to fix warnings of this nature. Use that here
-so that clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's
-value.
-
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/982
-Link: https://lkml.kernel.org/r/20200408205323.44490-1-natechancellor@gmail.com
+Fixes: 298e54fa810e ("net: phy: add core phylib sfp support")
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/mmio-mod.c | 4 ++--
+ drivers/net/phy/phy_device.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index 673de6063345..92530af38b09 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -372,7 +372,7 @@ static void enter_uniprocessor(void)
- 	int cpu;
- 	int err;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 28e3c5c0e3c3..faca0d84f5af 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1239,7 +1239,7 @@ int phy_sfp_probe(struct phy_device *phydev,
+ 		  const struct sfp_upstream_ops *ops)
+ {
+ 	struct sfp_bus *bus;
+-	int ret;
++	int ret = 0;
  
--	if (downed_cpus == NULL &&
-+	if (!cpumask_available(downed_cpus) &&
- 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
- 		pr_notice("Failed to allocate mask\n");
- 		goto out;
-@@ -402,7 +402,7 @@ static void leave_uniprocessor(void)
- 	int cpu;
- 	int err;
+ 	if (phydev->mdio.dev.fwnode) {
+ 		bus = sfp_bus_find_fwnode(phydev->mdio.dev.fwnode);
+@@ -1251,7 +1251,7 @@ int phy_sfp_probe(struct phy_device *phydev,
+ 		ret = sfp_bus_add_upstream(bus, phydev, ops);
+ 		sfp_bus_put(bus);
+ 	}
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL(phy_sfp_probe);
  
--	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-+	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
- 	for_each_cpu(cpu, downed_cpus) {
 -- 
 2.25.1
 
