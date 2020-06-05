@@ -2,130 +2,123 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77009C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAB5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D31C2075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xlk62jXK"
+	by mail.kernel.org (Postfix) with ESMTP id A48FA207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFEQuc (ORCPT
+        id S1726995AbgFEQvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:50:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbgFEQuc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:50:32 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08035C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 09:50:32 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x11so3870596plv.9
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 09:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ndEcXCs8HGuPHBOdpnF2uLFbc3ITmk/itvLe9IIcUiU=;
-        b=Xlk62jXKawdC+etFgmEFosi/YT8NT6D9l2F73XSAZNGxkX2UY9WcpdjfyDofKtxBQf
-         jTUPkPxzIcaRaoCR/D8Zny8DRqfbh3kN7xcy02PoPBTh+0q7fmDoJuEPmtuVoOZAB/9L
-         SGT3S/HklpUYKV5N155golYzamAdRU2nD8gT0eCtE+I/5pfXVZ4pDnDS04QOd2R3sUqr
-         lGKPBwMlmSiJEQIUcI8ud7mbvG7vcpDu4k119MEl3k9qfS533ms9FZF9x5O0F54gzMcc
-         UyDVnAk9Mp+Bly4ytTs3qOZgNITrwYnqlV2BVCu1tlfH96IEAztSBvVZTXN5IlF4QqyC
-         U+GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ndEcXCs8HGuPHBOdpnF2uLFbc3ITmk/itvLe9IIcUiU=;
-        b=hujlE36HqxiSJP5e/JxiHW3Yf29nveJn07oRmjl7hpnc+VTKcEuBrDGGWuCvkGK5iY
-         Y2QpSi94vcAe9pk13Dtl+KM/9g97H38gnlbnEyLsbZFt2B+oKXncxf7J7a4HZ5c1v2jh
-         vJE2FvWAf22FySItYcalG9Oot4a/LL669U4NCbOnUVlz6XnGH8qh1wiYk6sOTk7/xxgG
-         3XIVnYVUnaeRszJZmUFl8mAisp1YfbBNC3/2IUoGJvpsIsraZr1Mjnj7ibpI2rjuCDIP
-         4aeKpshi33+VIL0O8NrvnjFHr1JnFN4NnAO6D4xpfIYEaKkxk+VkyK/JTVthC+XvX/+1
-         AqxQ==
-X-Gm-Message-State: AOAM533jOHU/dTNwdN/ygfIxamYfEbUk/v310cXLCpVs2KANRHVhIjk/
-        YnwmLPnl30w4Y+FeRESolLGFTb9ztApfm3hNASZsow==
-X-Google-Smtp-Source: ABdhPJwv+Rw4H3S/iIHOOJaJcaYtpVE9O7+KE2P9K5hP4ONryexsry1kAgoq7JbNH+9g9m7ZsHOyhuxg0GZB54kiJ9U=
-X-Received: by 2002:a17:90a:4802:: with SMTP id a2mr3849393pjh.25.1591375831319;
- Fri, 05 Jun 2020 09:50:31 -0700 (PDT)
+        Fri, 5 Jun 2020 12:51:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33158 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgFEQvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 12:51:17 -0400
+IronPort-SDR: VYTyUCeDZWDyKYS185id1RtOV0Ef1Z5wMyZiRzMtdUJKOOuSk0W11rjPOK2HexK6mX2CvI6RTI
+ l9bJZLW5ZCHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 09:51:16 -0700
+IronPort-SDR: 7Arn7IAbvIVYlIlpzd7oXzQ9tQZ2H13N8ezxBepmWVr3of8JU7PwRIaupEp7p+9SDDyua7+/dC
+ 4PXxKndlm/kA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="313248012"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.143.24]) ([10.249.143.24])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Jun 2020 09:51:14 -0700
+Subject: Re: schedutil issue with serial workloads
+To:     Alexander Monakov <amonakov@ispras.ru>
+References: <alpine.LNX.2.20.13.2006042341160.3984@monopod.intra.ispras.ru>
+Cc:     linux-kernel@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>, qperret@google.com,
+        juri.lelli@redhat.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <c3145e26-56c8-4979-513c-cfac191e989b@intel.com>
+Date:   Fri, 5 Jun 2020 18:51:12 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200605082839.226418-1-elver@google.com> <20200605082839.226418-2-elver@google.com>
-In-Reply-To: <20200605082839.226418-2-elver@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 5 Jun 2020 09:50:20 -0700
-Message-ID: <CAKwvOd=EOQ8g43aC2=aW1kKPmroPCjBJ_1yDwo_zTCgvCuDG5A@mail.gmail.com>
-Subject: Re: [PATCH -tip v3 2/2] kcov: Unconditionally add -fno-stack-protector
- to compiler options
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <alpine.LNX.2.20.13.2006042341160.3984@monopod.intra.ispras.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 1:28 AM Marco Elver <elver@google.com> wrote:
->
-> Unconditionally add -fno-stack-protector to KCOV's compiler options, as
-> all supported compilers support the option. This saves a compiler
-> invocation to determine if the option is supported.
->
-> Because Clang does not support -fno-conserve-stack, and
-> -fno-stack-protector was wrapped in the same cc-option, we were missing
-> -fno-stack-protector with Clang. Unconditionally adding this option
-> fixes this for Clang.
->
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Marco Elver <elver@google.com>
+On 6/4/2020 11:29 PM, Alexander Monakov wrote:
+> Hello,
 
-Thanks for considering the suggestion.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Hi,
 
-> ---
-> v3:
-> * Do not wrap -fno-stack-protector in cc-option, since all KCOV-supported
->   compilers support the option as pointed out by Nick.
-> ---
->  kernel/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Let's make more people see your report.
+
++Peter, Giovanni, Quentin, Juri, Valentin, Vincent, Doug, and linux-pm.
+
+> this is a question/bugreport about behavior of schedutil on serial workloads
+> such as rsync, or './configure', or 'make install'. These workloads are
+> such that there's no single task that takes a substantial portion of CPU
+> time, but at any moment there's at least one runnable task, and overall
+> the workload is compute-bound. To run the workload efficiently, cpufreq
+> governor should select a high frequency.
 >
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index ce8716a04d0e..71971eb39ee7 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -35,7 +35,7 @@ KCOV_INSTRUMENT_stacktrace.o := n
->  KCOV_INSTRUMENT_kcov.o := n
->  KASAN_SANITIZE_kcov.o := n
->  KCSAN_SANITIZE_kcov.o := n
-> -CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-> +CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack) -fno-stack-protector
+> Assume the system is idle except for the workload in question.
 >
->  # cond_syscall is currently not LTO compatible
->  CFLAGS_sys_ni.o = $(DISABLE_LTO)
-> --
-> 2.27.0.278.ge193c7cf3a9-goog
->
+> Sadly, schedutil will select the lowest frequency, unless the workload is
+> confined to one core with taskset (in which case it will select the
+> highest frequency, correctly though somewhat paradoxically).
+
+That's because the CPU utilization generated by the workload on all CPUs 
+is small.
+
+Confining it to one CPU causes the utilization of this one to grow and 
+so schedutil selects a higher frequency for it.
+
+> This sounds like it should be a known problem, but I couldn't find any
+> mention of it in the documentation.
+
+Well, what would you expect to happen instead of what you see?
 
 
--- 
-Thanks,
-~Nick Desaulniers
+> I was able to replicate the effect with a pair of 'ping-pong' programs
+> that get a token, burn some cycles to simulate work, and pass the token.
+> Thus, each program has 50% CPU utilization. To repeat my test:
+>
+> gcc -O2 pingpong.c -o pingpong
+> mkfifo ping
+> mkfifo pong
+> taskset -c 0 ./pingpong 1000000 < ping > pong &
+> taskset -c 1 ./pingpong 1000000 < pong > ping &
+> echo > ping
+>
+> #include <stdio.h>
+> #include <unistd.h>
+> int main(int argc, char *argv[])
+> {
+> 	unsigned i, n;
+> 	sscanf(argv[1], "%u", &n);
+> 	for (;;) {
+> 		char c;
+> 		read(0, &c, 1);
+> 		for (i = n; i; i--)
+> 			asm("" :: "r"(i));
+> 		write(1, &c, 1);
+> 	}
+> }
+>
+> Alexander
+
+
