@@ -2,145 +2,149 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8610C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF0502077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:10:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mgNuAmUw"
+	by mail.kernel.org (Postfix) with ESMTP id C50752077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgFERK4 (ORCPT
+        id S1727018AbgFERNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgFERKz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:10:55 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430EFC08C5C2;
-        Fri,  5 Jun 2020 10:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bFULnDIrcoo5vNAMnbXJrSEdqEqeynJptngL9eBaw6Q=; b=mgNuAmUwerwSjSW1bP6sifoPS
-        oyVwlxDFU7+6K95DTJN/uwBCgVG6qcNHeOgU0MVAnOt2q4JbtLYZfrweVP3G/cqYVPqZhl4W5CNjN
-        MJbvyHd2J4Nql52XeMpptQ1Q+13NExysoGAIKH08TLLVx6OhYbIet0IQZ+GLXOUHr/vV/7udIPsdW
-        o5OdwuPmPbbxZm2flSEafet9dPMWGpM+vtWRxxT/KECZBkTHOS9SGFTw+q8GjqeGfstsqeVV5KVwj
-        T9X+Gd/EDJEsZ6PVmiL58axOmosAqd9bJDfLU42hHldolIO3DWkVp2mqLn7n31Pwm/5v/M7JzwmyY
-        jrApGxyYw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:49774)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jhFrf-0002d2-8n; Fri, 05 Jun 2020 18:10:43 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jhFrW-0007dl-Ma; Fri, 05 Jun 2020 18:10:34 +0100
-Date:   Fri, 5 Jun 2020 18:10:34 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 7/8] net: phy: Add Synopsys DesignWare XPCS MDIO
- module
-Message-ID: <20200605171034.GF1605@shell.armlinux.org.uk>
-References: <cover.1583742615.git.Jose.Abreu@synopsys.com>
- <7d9880643585e4347027538df2a722dde54156cf.1583742616.git.Jose.Abreu@synopsys.com>
+        Fri, 5 Jun 2020 13:13:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:62614 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgFERNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 13:13:14 -0400
+IronPort-SDR: m78o2lRndsVRUxuXvV9mueNAVtBf6Su0AzxPpTyjp39kn8c3uclHFALrh0Us1QpUkCxYvV4hnY
+ bQi7gYYAk3fw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 10:13:14 -0700
+IronPort-SDR: 8dXeibKw9Oymx4zZCYxphg3R+QpK3j/MMW6EYOklYlz1iNt6dXs2V1i7rgC+IijYWiuL9QozSq
+ vrfI0EMm/8Og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="273530919"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga006.jf.intel.com with ESMTP; 05 Jun 2020 10:13:13 -0700
+Date:   Fri, 5 Jun 2020 10:13:13 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v10 4/6] powerpc/papr_scm: Improve error logging and
+ handling papr_scm_ndctl()
+Message-ID: <20200605171313.GO1505637@iweiny-DESK2.sc.intel.com>
+References: <20200604234136.253703-1-vaibhav@linux.ibm.com>
+ <20200604234136.253703-5-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d9880643585e4347027538df2a722dde54156cf.1583742616.git.Jose.Abreu@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200604234136.253703-5-vaibhav@linux.ibm.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jose,
+On Fri, Jun 05, 2020 at 05:11:34AM +0530, Vaibhav Jain wrote:
+> Since papr_scm_ndctl() can be called from outside papr_scm, its
+> exposed to the possibility of receiving NULL as value of 'cmd_rc'
+> argument. This patch updates papr_scm_ndctl() to protect against such
+> possibility by assigning it pointer to a local variable in case cmd_rc
+> == NULL.
+> 
+> Finally the patch also updates the 'default' clause of the switch-case
+> block removing a 'return' statement thereby ensuring that value of
+> 'cmd_rc' is always logged when papr_scm_ndctl() returns.
+> 
+> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+> ---
+> Changelog:
+> 
+> v9..v10
+> * New patch in the series
 
-I just tripped over a bug while grepping for something else and
-reading a bit of this driver:
+Thanks for making this a separate patch it is easier to see what is going on
+here.
 
-On Mon, Mar 09, 2020 at 09:36:26AM +0100, Jose Abreu wrote:
-> +static int xpcs_read_lpa(struct mdio_xpcs_args *xpcs,
-> +			 struct phylink_link_state *state)
-> +{
-> +	int ret;
+> ---
+>  arch/powerpc/platforms/pseries/papr_scm.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> index 0c091622b15e..6512fe6a2874 100644
+> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> @@ -355,11 +355,16 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>  {
+>  	struct nd_cmd_get_config_size *get_size_hdr;
+>  	struct papr_scm_priv *p;
+> +	int rc;
+>  
+>  	/* Only dimm-specific calls are supported atm */
+>  	if (!nvdimm)
+>  		return -EINVAL;
+>  
+> +	/* Use a local variable in case cmd_rc pointer is NULL */
+> +	if (!cmd_rc)
+> +		cmd_rc = &rc;
 > +
-> +	ret = xpcs_read(xpcs, MDIO_MMD_AN, MDIO_STAT1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (!(ret & MDIO_AN_STAT1_LPABLE)) {
-> +		phylink_clear(state->lp_advertising, Autoneg);
-> +		return 0;
-> +	}
-> +
-> +	phylink_set(state->lp_advertising, Autoneg);
-> +
-> +	/* Clause 73 outcome */
-> +	ret = xpcs_read(xpcs, MDIO_MMD_AN, DW_SR_AN_LP_ABL3);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret & DW_C73_2500KX)
-> +		phylink_set(state->lp_advertising, 2500baseX_Full);
-> +
-> +	ret = xpcs_read(xpcs, MDIO_MMD_AN, DW_SR_AN_LP_ABL2);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret & DW_C73_1000KX)
-> +		phylink_set(state->lp_advertising, 1000baseKX_Full);
-> +	if (ret & DW_C73_10000KX4)
-> +		phylink_set(state->lp_advertising, 10000baseKX4_Full);
-> +	if (ret & DW_C73_10000KR)
-> +		phylink_set(state->lp_advertising, 10000baseKR_Full);
-> +
-> +	ret = xpcs_read(xpcs, MDIO_MMD_AN, DW_SR_AN_LP_ABL1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret & DW_C73_PAUSE)
-> +		phylink_set(state->lp_advertising, Pause);
-> +	if (ret & DW_C73_ASYM_PAUSE)
-> +		phylink_set(state->lp_advertising, Asym_Pause);
-> +
-> +	linkmode_and(state->lp_advertising, state->lp_advertising,
-> +		     state->advertising);
 
-This is incorrect - you should not mask the link partner's advertisement
-with our advertisement like this; consider the table in 802.3 for
-resolving the pause modes, where simply doing a bitwise-and operation
-between the two advertisements would severely restrict the resulting
-resolution to either symmetric pause or nothing at all.
+This protects you from the NULL.  However...
 
-You want to do this when you resolve the speed, but only _temporarily_
-in order to resolve the speed - you do not want to write back the
-result to state->lp_advertising.
+>  	p = nvdimm_provider_data(nvdimm);
+>  
+>  	switch (cmd) {
+> @@ -381,12 +386,13 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>  		break;
+>  
+>  	default:
+> -		return -EINVAL;
+> +		dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
+> +		*cmd_rc = -EINVAL;
 
-You may wish to fix that.
+... I think you are conflating rc and cmd_rc...
 
-Thanks.
+>  	}
+>  
+>  	dev_dbg(&p->pdev->dev, "returned with cmd_rc = %d\n", *cmd_rc);
+>  
+> -	return 0;
+> +	return *cmd_rc;
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+... this changes the behavior of the current commands.  Now if the underlying
+papr_scm_meta_[get|set]() fails you return that failure as rc rather than 0.
+
+Is that ok?
+
+Also 'logging cmd_rc' in the invalid cmd case does not seem quite right unless
+you really want rc to be cmd_rc.
+
+The architecture is designed to separate errors which occur in the kernel vs
+errors in the firmware/dimm.  Are they always the same?  The current code
+differentiates them.
+
+Ira
+
+>  }
+>  
+>  static ssize_t flags_show(struct device *dev,
+> -- 
+> 2.26.2
+> 
