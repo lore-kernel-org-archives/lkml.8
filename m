@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D86C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB282208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2539E208C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366741;
-	bh=Pkcwu9AqmId6jd12wS0uGd4NuEHW69FIQ87ZrnjzgDk=;
+	s=default; t=1591366745;
+	bh=/+psG/TnWWOYGagcAsbidUdz7CsKvovDDASWLY2rwGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=My5jIfDkEjtR5WmIPcyI3Tr2dS9nk5unqcsdtCGqnRyvpOZZDumIpI88WEZ23sCsG
-	 pefM2Rv63zhEit6ZQ2ykSwQiQVmKbs1bsPcpWTSwTTIPHDPLNN8KXz+Ai28cAGzPdK
-	 bQrV7FVVQftAXMZbGjjGiTkgCXHXuRa6uCRS2eKA=
+	b=M6/YMkZtifJ2cuA4PwuO3S8A84vsLMyJZN42EjIKsp/rwg19tQuUwbQus39rvNKVc
+	 U1Dn5+NN5lSsjdVstUEOnAdZdZn32HZrOqGRcMs8rLLUNd05WyXKsfYfYz21ZWOuHw
+	 SD6IXtNQGzWk8SlOHMs8CoIdflHwUpyWWeRbXTgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgFEOTA (ORCPT
+        id S1728781AbgFEOTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49530 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728758AbgFEOSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:54 -0400
+        id S1728776AbgFEOTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B23582086A;
-        Fri,  5 Jun 2020 14:18:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 846FD2086A;
+        Fri,  5 Jun 2020 14:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366733;
-        bh=Pkcwu9AqmId6jd12wS0uGd4NuEHW69FIQ87ZrnjzgDk=;
+        s=default; t=1591366740;
+        bh=/+psG/TnWWOYGagcAsbidUdz7CsKvovDDASWLY2rwGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIrGMrwMMT8B5xl65aUZNFG/3G94Q7euIxoIW6W1/G3Mk55GLLfgHHtc4KB/gevyO
-         sBAxlictvWxX5TZweQuPKShlekEeIhW6wbyzF5mAJlQBCToDEt5jAODgC05LjMzVHo
-         8xc2KEn+z8HdYhuBYgG/5Cekf+eF9PkrCjAQRgXc=
+        b=aVtiXYJk1CwZ86sBQ1o90s59mPToogQ3N3ZH7uLT7QA1FdTmOpsfN2UQPNx7RSwGz
+         KVQZ3Q/xY1Er6WmAyH0maoTcGj9hh//qe1aJ5+p1S+P2iwhpbS+NRVQR9oSIiknxrb
+         OOCYjL/kOxJhwmCmghKc0lB3z6mqyZqAgQMaHJl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 5.4 04/38] HID: multitouch: enable multi-input as a quirk for some devices
-Date:   Fri,  5 Jun 2020 16:14:47 +0200
-Message-Id: <20200605140252.802099142@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
+        Felix Fietkau <nbd@nbd.name>
+Subject: [PATCH 5.4 07/38] mt76: mt76x02u: Add support for newer versions of the XBox One wifi adapter
+Date:   Fri,  5 Jun 2020 16:14:50 +0200
+Message-Id: <20200605140252.988544163@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -60,102 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+From: Matthew Garrett <matthewgarrett@google.com>
 
-commit 40d5bb87377a599d0405af765290f28aaa6abb1e upstream.
+commit b2934279c3e9719145ff4090d4ab951e340df17e upstream.
 
-Two touchpad/trackstick combos are currently not behaving properly.
-They define a mouse emulation collection, as per Win8 requirements,
-but also define a separate mouse collection for the trackstick.
+The current version has a new USB ID and reports as an 0x7632 device.
+Adding the IDs results in it working out of the box.
 
-The way the kernel currently treat the collections is that it
-merges both in one device. However, given that the first mouse
-collection already defines X,Y and left, right buttons, when
-mapping the events from the second mouse collection, hid-multitouch
-sees that these events are already mapped, and simply ignores them.
-
-To be able to report events from the tracktick, add a new quirked
-class for it, and manually add the 2 devices we know about.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=207235
-Cc: stable@vger.kernel.org
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-multitouch.c |   26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/net/wireless/mediatek/mt76/mt76x02.h    |    1 +
+ drivers/net/wireless/mediatek/mt76/mt76x2/usb.c |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
- #define MT_QUIRK_ASUS_CUSTOM_UP		BIT(17)
- #define MT_QUIRK_WIN8_PTP_BUTTONS	BIT(18)
- #define MT_QUIRK_SEPARATE_APP_REPORT	BIT(19)
-+#define MT_QUIRK_FORCE_MULTI_INPUT	BIT(20)
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02.h
+@@ -212,6 +212,7 @@ static inline bool is_mt76x0(struct mt76
+ static inline bool is_mt76x2(struct mt76x02_dev *dev)
+ {
+ 	return mt76_chip(&dev->mt76) == 0x7612 ||
++	       mt76_chip(&dev->mt76) == 0x7632 ||
+ 	       mt76_chip(&dev->mt76) == 0x7662 ||
+ 	       mt76_chip(&dev->mt76) == 0x7602;
+ }
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
+@@ -18,6 +18,7 @@ static const struct usb_device_id mt76x2
+ 	{ USB_DEVICE(0x7392, 0xb711) },	/* Edimax EW 7722 UAC */
+ 	{ USB_DEVICE(0x0846, 0x9053) },	/* Netgear A6210 */
+ 	{ USB_DEVICE(0x045e, 0x02e6) },	/* XBox One Wireless Adapter */
++	{ USB_DEVICE(0x045e, 0x02fe) },	/* XBox One Wireless Adapter */
+ 	{ },
+ };
  
- #define MT_INPUTMODE_TOUCHSCREEN	0x02
- #define MT_INPUTMODE_TOUCHPAD		0x03
-@@ -189,6 +190,7 @@ static void mt_post_parse(struct mt_devi
- #define MT_CLS_WIN_8				0x0012
- #define MT_CLS_EXPORT_ALL_INPUTS		0x0013
- #define MT_CLS_WIN_8_DUAL			0x0014
-+#define MT_CLS_WIN_8_FORCE_MULTI_INPUT		0x0015
- 
- /* vendor specific classes */
- #define MT_CLS_3M				0x0101
-@@ -279,6 +281,15 @@ static const struct mt_class mt_classes[
- 			MT_QUIRK_CONTACT_CNT_ACCURATE |
- 			MT_QUIRK_WIN8_PTP_BUTTONS,
- 		.export_all_inputs = true },
-+	{ .name = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-+		.quirks = MT_QUIRK_ALWAYS_VALID |
-+			MT_QUIRK_IGNORE_DUPLICATES |
-+			MT_QUIRK_HOVERING |
-+			MT_QUIRK_CONTACT_CNT_ACCURATE |
-+			MT_QUIRK_STICKY_FINGERS |
-+			MT_QUIRK_WIN8_PTP_BUTTONS |
-+			MT_QUIRK_FORCE_MULTI_INPUT,
-+		.export_all_inputs = true },
- 
- 	/*
- 	 * vendor specific classes
-@@ -1714,6 +1725,11 @@ static int mt_probe(struct hid_device *h
- 	if (id->group != HID_GROUP_MULTITOUCH_WIN_8)
- 		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
- 
-+	if (mtclass->quirks & MT_QUIRK_FORCE_MULTI_INPUT) {
-+		hdev->quirks &= ~HID_QUIRK_INPUT_PER_APP;
-+		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
-+	}
-+
- 	timer_setup(&td->release_timer, mt_expired_timeout, 0);
- 
- 	ret = hid_parse(hdev);
-@@ -1926,6 +1942,11 @@ static const struct hid_device_id mt_dev
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
-+	/* Elan devices */
-+	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-+		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-+			USB_VENDOR_ID_ELAN, 0x313a) },
-+
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
-@@ -2056,6 +2077,11 @@ static const struct hid_device_id mt_dev
- 		MT_USB_DEVICE(USB_VENDOR_ID_STANTUM_STM,
- 			USB_DEVICE_ID_MTP_STM)},
- 
-+	/* Synaptics devices */
-+	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-+		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-+			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
-+
- 	/* TopSeed panels */
- 	{ .driver_data = MT_CLS_TOPSEED,
- 		MT_USB_DEVICE(USB_VENDOR_ID_TOPSEED2,
 
 
