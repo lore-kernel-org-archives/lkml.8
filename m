@@ -2,135 +2,149 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B359C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C20C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46DB52074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDDE206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYTZ6Ydg"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="pplRLbuM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgFELGe (ORCPT
+        id S1726945AbgFELHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbgFELGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:06:13 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6F4C08C5C2;
-        Fri,  5 Jun 2020 04:05:39 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id x14so9323703wrp.2;
-        Fri, 05 Jun 2020 04:05:39 -0700 (PDT)
+        Fri, 5 Jun 2020 07:07:54 -0400
+Received: from mail-co1nam11on2082.outbound.protection.outlook.com ([40.107.220.82]:6134
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726507AbgFELHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 07:07:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XJ0FcBYZBBRoK0w4futHpKkx6TzPBD5DO84+Q67f8QLkxOP/8YM6qbNBBYy0s6yEQXjGWjdfhZ8TuqTmKw2eAbjygqjps+3QvTOOa59bHcQ1E388HxcRCYOjKo+16jADZbTjmDMHTRQwKExnFQL522kN4u9ZEgTipRPOsVbPGPj0H9Vvk7jlaUlB8ibLviw1yWmKKAB3XZs+el048FAh9s5mV2HVPSdoDuZ51DVA9VlN0gnoGKpFFk1mF2Wq0PLnMowXWUkgvFc6Y5eBPaRFkthjEq4Rf/KjG+I9rzWR9Pg7qF9/nwUoUoeSplK0k/4iZHdHQsu2i02wwu111UUXbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ik0XCRDqVwwOuciP5ij4Sy+ot28ozVbQ7LZbXtfU+Lg=;
+ b=FICFou71lDM2xRwHNCsFe//LKUMiCjq0XP/QWMlAzZfqShXv1P6dOhkbNshTpRlexawkqszakDIF/D5D+wMkzPtIxckhkQ9QH9hAYt+4F4yK0Uks7NmkpiUzxMZuk+NesRfz15K9F9bS5kZ43bZ83vQF06CCwFBxI34ieWVDR0JqAn0heV4pwySHAcrIkdSar/rZ7mcNCGQKPAN86lNav7uh0/j3CR2zfCn7JI9mqEZVstrXuYFzLRRQdbcgmpURLpoYJebAcfHHKtImgfR6vDXHMwmw/y9xh5a/cbc9djmxcF0rszFDJpHljBuNXb/WOseCNVHmGJiljYr7V0YxNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=79WkwIDyqMiX32euMiWXXxC5SiRfx2kHzXerVEMHJjs=;
-        b=sYTZ6YdgN1/Sbp6SOZVZyHY8MCy2iGnmI/oTKmBJXvTbh1W3iYrxkGHPnNBzqIci55
-         7E//pIMpiOlxA0YgiAhyqj9dJdzUpMrhVBCwKxlayIKCHcN4hcoNd98lKBFsth9L3N9s
-         8/QNalT/mv2w0kX2AMj0a/ETLmx8R+28y/IQJ11xfOurh/YD7l5/KqFYSnrdPlstINWK
-         uaroFYmvBHrZvIr59E4NktiM/HXOeebmkgj4eo7L4R8e0lAA1Ep0NO2yW0vYLd5pN8D0
-         J/MV+tFOr4kb2aSIn+qnv2wGr+/isoues/LsuxVeNDLnk0sYBCuv8ofN8uuL7C3GhDKy
-         qSwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=79WkwIDyqMiX32euMiWXXxC5SiRfx2kHzXerVEMHJjs=;
-        b=HoJT1EPm19JAEOmar1ww9OHBjQ+iuGIM1QbwvhNS6rEIeR9x+0RBYUalXhvUgUfP63
-         9VgjZtW/9lHOq5VfkcwNYLy8AUxTl+lAqP9j/915yq18sO35k86R7ztxDzbtWEHQa6hF
-         tuiUPOsbYIiF3osmZ9fR1Th8BtQhARWb/slo99Awld2na+1uLrV3LC5DrU2UhXZos9B8
-         vPMH7JMAml1XfvokS6Ggvl9YmriVvWQniGPQ8owL6VdTer6+p3A3slLcmqSxfM9bn+/K
-         iJPgkDSfzcXXmYeHgamiQI7iNT+EBR3Z9Dg4UiPNVEC/QwZjGnc9GLLPuAiQPX2r62i5
-         HZLQ==
-X-Gm-Message-State: AOAM530sApEP2urH0/PnqtqyySyCMlrubEeKMuXW1w097cIF89HhkxTR
-        m8h1IeukVUVd3Y8JFRC4VNaDihZy
-X-Google-Smtp-Source: ABdhPJwH9qoXN/4AI5aIZz4mwTcaxFGasA4tRMeBaSNWUBNVfiqh3elNUjOpJJ+knPG3GEEH0uRaUA==
-X-Received: by 2002:adf:cd08:: with SMTP id w8mr8861357wrm.36.1591355137981;
-        Fri, 05 Jun 2020 04:05:37 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id h12sm11364322wro.80.2020.06.05.04.05.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 04:05:37 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 13:05:35 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     davem@davemloft.net, sparclinux@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Fail to build tftpboot.img
-Message-ID: <20200605110535.GA9025@Red>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ik0XCRDqVwwOuciP5ij4Sy+ot28ozVbQ7LZbXtfU+Lg=;
+ b=pplRLbuMxw6LagaibqlPsv9OlqBJ+etddK8cWuoVggeCdOmXC6flSLLF0jnCbTMXWe7HKvjFl/mmbkQIth9+2ZazzPK03t61fnZMjUZujtRTz30YLk/QYPx3S4DGNU56cdZqu9WAxWthZtsUjPaCxdgZZDcwaFuIlP13uf1wQ9U=
+Received: from SN6PR01CA0024.prod.exchangelabs.com (2603:10b6:805:b6::37) by
+ BY5PR02MB6258.namprd02.prod.outlook.com (2603:10b6:a03:1b1::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
+ 2020 11:07:51 +0000
+Received: from SN1NAM02FT018.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:b6:cafe::82) by SN6PR01CA0024.outlook.office365.com
+ (2603:10b6:805:b6::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend
+ Transport; Fri, 5 Jun 2020 11:07:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT018.mail.protection.outlook.com (10.152.72.122) with Microsoft SMTP
+ Server id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 11:07:51
+ +0000
+Received: from [149.199.38.66] (port=45043 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jhABi-0000ej-RU; Fri, 05 Jun 2020 04:07:02 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jhACV-0007tP-5u; Fri, 05 Jun 2020 04:07:51 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jhACR-0007t2-Fz; Fri, 05 Jun 2020 04:07:47 -0700
+Subject: Re: [PATCH] soc: xilinx: Fix error code in zynqmp_pm_probe()
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Tejas Patel <tejas.patel@xilinx.com>
+Cc:     Rajan Vaja <rajan.vaja@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20200605110020.GA978434@mwanda>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <951de328-3647-ea49-ecec-1f0f98ceb4b1@xilinx.com>
+Date:   Fri, 5 Jun 2020 13:07:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200605110020.GA978434@mwanda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(39860400002)(396003)(46966005)(36756003)(8936002)(336012)(83380400001)(31686004)(426003)(186003)(81166007)(26005)(9786002)(47076004)(31696002)(356005)(2616005)(82310400002)(82740400003)(54906003)(478600001)(44832011)(110136005)(70206006)(2906002)(316002)(4326008)(8676002)(6636002)(6666004)(70586007)(5660300002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a6d2e917-f5c5-4d28-2f0b-08d80940b069
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6258:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB62587C5F12AD9158C1173602C6860@BY5PR02MB6258.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
+X-Forefront-PRVS: 0425A67DEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hYfliUgxGG6e7BW/A6Yg7frorBlDM2j8FUj/7aXR1PaMJBINYB+h+SSn65ikDOxcPLvizJbnzJiNSEbefA5v5q7aXwipafBways4hgy17WEvaJdqxJUUsM7fn013euGtD+3+T6LO86J0VpRPoP1DjegbuIX3EAkCxl4PjObGxtNb5y9wE9vYUjRiF4a3WuEbQLHPoXG+F+vdY5kePATYGrRlMRS6RVKNQfQxJuKmDaWD0VI1+sGXdYXW8FoRlfzV14L93pvxUuRkDQvw9j9XdSEwUfg11Yo+zeLfwg+Oba1jonYMp4/owVnNqrtWuBYKD6tVPGm9mIgf17DnyC4sg4/w0PKCN0pVgcM08ZJEPDTpJ6ECtN/lfQUs2ZVcr84Nr6WQFbuZRpNTc4OrbNT80soEJaQUyWyoeyL3k1MMlbvhr1j4Tj6BWgpKX4HdlO7d
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 11:07:51.5085
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6d2e917-f5c5-4d28-2f0b-08d80940b069
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6258
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On 05. 06. 20 13:00, Dan Carpenter wrote:
+> This should be returning PTR_ERR() but it returns IS_ERR() instead.
+> 
+> Fixes: ffdbae28d9d1 ("drivers: soc: xilinx: Use mailbox IPI callback")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/soc/xilinx/zynqmp_power.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
+> index 31ff49fcd078b..c556623dae024 100644
+> --- a/drivers/soc/xilinx/zynqmp_power.c
+> +++ b/drivers/soc/xilinx/zynqmp_power.c
+> @@ -205,7 +205,7 @@ static int zynqmp_pm_probe(struct platform_device *pdev)
+>  		rx_chan = mbox_request_channel_byname(client, "rx");
+>  		if (IS_ERR(rx_chan)) {
+>  			dev_err(&pdev->dev, "Failed to request rx channel\n");
+> -			return IS_ERR(rx_chan);
+> +			return PTR_ERR(rx_chan);
+>  		}
+>  	} else if (of_find_property(pdev->dev.of_node, "interrupts", NULL)) {
+>  		irq = platform_get_irq(pdev, 0);
+> 
 
-For reinstalling an old SPARC machine , I need a netboot image.
-I tried to create it via make tftpboot.img but got:
-BUILD: sparc to /home/compile/crossbuild/next/sparc/sparc64/defconfig
-make[1]: Entering directory '/usr/src/crossbuild/next/sparc/sparc64/defconfig'
-  GEN     Makefile
-scripts/kconfig/conf  --syncconfig Kconfig
-  GEN     Makefile
-  CALL    /linux-next/scripts/atomic/check-atomics.sh
-  CALL    /linux-next/scripts/checksyscalls.sh
-<stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-  CHK     include/generated/compile.h
-  GZIP    kernel/config_data.gz
-  CC      kernel/configs.o
-  AR      kernel/built-in.a
-  GEN     .version
-  CHK     include/generated/compile.h
-  UPD     include/generated/compile.h
-  CC      init/version.o
-  AR      init/built-in.a
-  LD      vmlinux.o
-  MODPOST vmlinux.symvers
-WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation failed, symbol will not be versioned.
-  MODINFO modules.builtin.modinfo
-  GEN     modules.builtin
-  LD      .tmp_vmlinux.kallsyms1
-  KSYM    .tmp_vmlinux.kallsyms1.o
-  LD      .tmp_vmlinux.kallsyms2
-  KSYM    .tmp_vmlinux.kallsyms2.o
-  LD      vmlinux
-  SYSMAP  System.map
-  MODPOST Module.symvers
-  STRIP   arch/sparc/boot/image
-  kernel: arch/sparc/boot/image is ready
-  ELFTOAOUT arch/sparc/boot/tftpboot.img
-PT 0 Entry: Loadable to 0x400000[0x5288d0] from 0x0[0x4ca694] align 0x100000
-PT 1 Entry: Note
-PT 2 Entry: unknown
-  PIGGY   arch/sparc/boot/tftpboot.img
-lseek: Invalid argument
-make[2]: *** [/linux-next/arch/sparc/boot/Makefile:72: arch/sparc/boot/tftpboot.img] Error 1
-make[2]: *** Deleting file 'arch/sparc/boot/tftpboot.img'
-make[1]: *** [arch/sparc/Makefile:76: tftpboot.img] Error 2
-make[1]: Leaving directory '/usr/src/crossbuild/next/sparc/sparc64/defconfig'
-make: *** [Makefile:185: __sub-make] Error 2
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
 
-I got this result on both linux-next and 5.6.15
-
-I have straced the process:
-22495 openat(AT_FDCWD, "arch/sparc/boot/tftpboot.img", O_RDWR) = 3              
-22495 read(3, "\1\3\1\7\0\0\0\0\0Lf\224\0\0\0\0\0\0\0\0\0\0\0\0\0\5\342<\0\0\0\0"..., 512) = 512
-22495 lseek(3, 0, SEEK_SET)             = 0                                     
-22495 read(3, "\1\3\1\7\0\0\0\0\0Lf\224\0\0\0\0\0\0\0\0\0\0\0\0\0\5\342<\0\0\0\0"..., 1024) = 1024
-22495 lseek(3, -480, SEEK_SET)          = -1 EINVAL (Argument invalide)         
-22495 dup(2)                            = 4                                     
-22495 fcntl(4, F_GETFL)                 = 0x402 (flags O_RDWR|O_APPEND)         
-22495 fstat(4, {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0x1a), ...}) = 0    
-22495 write(4, "lseek: Invalid argument\n", 24) = 24                            
-22495 close(4)                          = 0                                     
-
-Regards
+Thanks,
+Michal
