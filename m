@@ -2,144 +2,123 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE63C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 485FD207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558B1207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ja1P8eya"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ooV6D/FP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgFEIGf (ORCPT
+        id S1726190AbgFEIHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:06:35 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42693 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726148AbgFEIGf (ORCPT
+        Fri, 5 Jun 2020 04:07:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgFEIHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:06:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591344394; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=049ityVEOxtL3FukO3eAXaJK1CB8e5f03uXhxkkdNhc=;
- b=ja1P8eya8l4GrXCQFzB8gGixnb88oWnSUFRyTguFraK4v6mp+Ubr1F6XkCTjoPS8WmnE5QHc
- WYfxOTOmqBjPJ/mcVz6zzf1mANbfLiy8NZJtsgOmlNm0s4QCyaf67E1gGN2HJ1o8AXPhRJRs
- jjkLWKx6i5QRvJgXvJNwpshWhNc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ed9fd0044a25e0052009122 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 08:06:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A1B09C43391; Fri,  5 Jun 2020 08:06:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27E7CC433CB;
-        Fri,  5 Jun 2020 08:06:21 +0000 (UTC)
+        Fri, 5 Jun 2020 04:07:49 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441F1C08C5C2;
+        Fri,  5 Jun 2020 01:07:49 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id m2so2404756pjv.2;
+        Fri, 05 Jun 2020 01:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mh4Ou1kljVhmduS90PzlDrAXnymKkFPOJ7HMxIuD1Kw=;
+        b=ooV6D/FPWvYy0szimNsEbMVLx4ELEjsAq6byLimowmFrpxqQOOnGvbGhMR9bBWXX+H
+         rsS/Z/gP8h2jLc7FvWubJLY4ouB+hb7PbdRl3uqWatLg1z9wjEOhfekVDH3u0+GYkp4b
+         mNUVgP3DzqQ5ipr3hMG4iWbNbaA0zmL08KVHfWfQiDMT/In9+o3QfSgQ8ScQPPCkNqlZ
+         WuPaBoCowYeyAHNhrYJ4euXf0b8vKiOtJtwO6Wj+w2sdFw8VgkF+Qmzz0rT5TktKtUeB
+         C6lCJCvuk3uPzweD1gpoHmpODgP2ppvphW7rJMppm2pyjDNMpZ+fLlrLc6g22StiXcA9
+         7dxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mh4Ou1kljVhmduS90PzlDrAXnymKkFPOJ7HMxIuD1Kw=;
+        b=dMk8Qx0edR84yIg+wpzgyR0F3MgoTL3Dbnd2+jRHH7lJ7DNo3ZoZ1cIR4eTl0lhbHu
+         9rgDg0G7BTxkGmfhxz4tVnTlIzNJwPaPKlocoGN3l2iQOkGkRhCmbf7jrxEJCCG6yZco
+         Lz935zdR9pnymshzgXc0aF3aX2xF7RGCRYYkhEX1jAti+VW4ak54cSOp33p9BAo7Qno3
+         P5bttYvukyyTdyiK0JoD9+aPG6y4PaCVfHTqrIXEJ/gnxawc/Of+eXjU8Pn0xU1cN8uT
+         lGLOXG+hixI2LD5VOFyUjgYzWhQCA1X0nm5hE5GJ+mcfh1ZY9U38kEXZTRrO85I1DTar
+         5qiA==
+X-Gm-Message-State: AOAM531cWFhT4NspKMxJu9bTePYEsWyU6k4YYPZCdHMc+93gfR5Xo+fO
+        1OGZ+MFI3Tz156eyAdqjsg6rp3gwho/FHkNh8oQ=
+X-Google-Smtp-Source: ABdhPJyxNexTfAEaebDSZO4i7E1Zrn1WbnacURd4rREtFFQ7AxnFLe4wpe5cp8So8FlFIxnRiJLHBWwprn7jbMq6GlQ=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr1570669pjd.181.1591344468760;
+ Fri, 05 Jun 2020 01:07:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 13:36:21 +0530
-From:   ppvk@codeaurora.org
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, bjorn.andersson@linaro.org,
-        adrian.hunter@intel.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc-owner@vger.kernel.org,
-        rnayak@codeaurora.org, matthias@chromium.org
-Subject: Re: [PATCH V2 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
- support
-In-Reply-To: <23d6da79d604ce5113d90a2adab17483@codeaurora.org>
-References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
- <1591269283-24084-2-git-send-email-ppvk@codeaurora.org>
- <20200604170906.GP4525@google.com>
- <23d6da79d604ce5113d90a2adab17483@codeaurora.org>
-Message-ID: <dad8aba58bc3828a05da122555a54db8@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-4-michael@walle.cc>
+In-Reply-To: <20200604211039.12689-4-michael@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Jun 2020 11:07:32 +0300
+Message-ID: <CAHp75VfMSbAMPg2ZLO6kE-9vkQCt0a+=Lji8V5ngY7xdUbfiMQ@mail.gmail.com>
+Subject: Re: [PATCH v4 03/11] irqchip: add sl28cpld interrupt controller support
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-05 00:04, Sibi Sankar wrote:
-> On 2020-06-04 22:39, Matthias Kaehlcke wrote:
->> On Thu, Jun 04, 2020 at 04:44:42PM +0530, Pradeep P V K wrote:
->>> Interconnect bandwidth scaling support is now added as a
->>> part of OPP [1]. So, make sure interconnect driver is ready
->>> before handling interconnect scaling.
->>> 
->>> This change is based on
->>> [1] [Patch v8] Introduce OPP bandwidth bindings
->>> (https://lkml.org/lkml/2020/5/12/493)
->>> 
->>> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
->>> for dev_pm_opp_of_add_table()
->>> (https://lkml.org/lkml/2020/5/5/491)
->>> 
->>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->>> ---
->>>  drivers/mmc/host/sdhci-msm.c | 13 +++++++++++++
->>>  1 file changed, 13 insertions(+)
->>> 
->>> diff --git a/drivers/mmc/host/sdhci-msm.c 
->>> b/drivers/mmc/host/sdhci-msm.c
->>> index b277dd7..a13ff1b 100644
->>> --- a/drivers/mmc/host/sdhci-msm.c
->>> +++ b/drivers/mmc/host/sdhci-msm.c
->>> @@ -14,6 +14,7 @@
->>>  #include <linux/slab.h>
->>>  #include <linux/iopoll.h>
->>>  #include <linux/regulator/consumer.h>
->>> +#include <linux/interconnect.h>
->>> 
->>>  #include "sdhci-pltfm.h"
->>>  #include "cqhci.h"
->>> @@ -2070,6 +2071,18 @@ static int sdhci_msm_probe(struct 
->>> platform_device *pdev)
->>>  	}
->>>  	msm_host->bulk_clks[0].clk = clk;
->>> 
->>> +	/* Make sure that ICC driver is ready for interconnect bandwdith
->>> +	 * scaling before registering the device for OPP.
->>> +	 */
->>> +	ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
->>> +	if (ret) {
->>> +		if (ret == -EPROBE_DEFER)
->>> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
->> 
->> I already commented on this on v1:
->> 
->>   This log seems to add little more than noise, or are there 
->> particular reasons
->>   why it is useful in this driver? Most drivers just return silently 
->> in case of
->>   deferred probing.
->> 
->> If you think the log is really needed please explain why.
-> 
-Sorry. i forget to remove this print on V2. i will address this in my 
-next patch set.
+On Fri, Jun 5, 2020 at 12:13 AM Michael Walle <michael@walle.cc> wrote:
+>
+> Add support for the interrupt controller inside the sl28 CPLD management
+> controller.
+>
+> The interrupt controller can handle at most 8 interrupts and is really
+> simplistic and consists only of an interrupt mask and an interrupt
+> pending register.
 
-> Both the err logs seem redundant.
-> EPROBE_DEFERS are rather readily
-> noticeable through the return val.
-> dev_.._find_icc_paths already prints
-> err messages when we fail to get icc
-> paths.
+...
 
-True. i will remove this too in my next patch set.
+> +config SL28CPLD_INTC
+> +       bool
 
+Same Q: Why not module?
+
+...
+
+> +static const struct of_device_id sl28cpld_intc_of_match[] = {
+> +       { .compatible = "kontron,sl28cpld-intc" },
+
+> +       {},
+
+There is no point to have comma in terminator line.
+
+> +};
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
