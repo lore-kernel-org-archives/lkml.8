@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE27C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72475C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7F42074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4EE208E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366959;
-	bh=pcwZ8QAtQqf2jGKfibADVbKbceKZrKRWppgjgQ5/tFw=;
+	s=default; t=1591366962;
+	bh=i1PfMsBvUSIG0yNBlmGABRb1fF2BKTZp1A1FBnuK4zM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jE6Nn0JBnOTPB3AAlD2C1u79Bb/BEBj07QI5bpNptyC5DbfweiEnt8bH7DNJnRW9d
-	 C4n9vRz+wIWK4k6n53sQlw0pi3tO0Fd4YrHBJujQRw6Ga9UESPvXOCsDlbdfatXQ8o
-	 xBgTx2dC00UHSjaC1o4xta8gsxsVHzZPC6CpokbI=
+	b=ZFMa/22qmTHQq4KLamtyv5w/P5xJneRkf5fvr25Wws3O/KABewUoiha4UtSlihR3H
+	 l8GcosEs8JZpqRsHnaf23F1DiZeazA/sfG+azO1irSCEdfjtX7KQt/+JVfLYh7krI1
+	 TB7D31K1h/pbCy1+DLpVz4kC+yI+Apop9mfeS/Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgFEOWj (ORCPT
+        id S1728824AbgFEOWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:22:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49618 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:22:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbgFEOS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:58 -0400
+        id S1728762AbgFEOSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:18:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 401702086A;
-        Fri,  5 Jun 2020 14:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1161208A9;
+        Fri,  5 Jun 2020 14:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366737;
-        bh=pcwZ8QAtQqf2jGKfibADVbKbceKZrKRWppgjgQ5/tFw=;
+        s=default; t=1591366735;
+        bh=i1PfMsBvUSIG0yNBlmGABRb1fF2BKTZp1A1FBnuK4zM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iz/2Xez7sSWVf+aEUNFO5MBT09HUit3rVJ8XF44q7fowI1ZjE+BM9VGcz2I7KVaC/
-         ivcHEHL9vgakwDVex9LzMoOI1DxEnuEo5WtNpIFGB9EpUGFZgVPGrlNe4YXuObj3LN
-         r04irxHbKvo9+3nzPUW3fnjbG2umMsRBEgfvFg/A=
+        b=sjOV4QHhfFd6PbqwwDD7DhjaXcfe+rUSbBm9y8n3KBlt6KJ5qDGiqlCDfqZU7sY1N
+         QszthtYhP5LGxV18INwacidqUhnPpp2tcU9RHkg5EHAE8hVUuKvWgQOF9XdyG8jGf1
+         d685vX6/KASQOyYvOYLfVGqu9cg8O3ruy4npQMwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Giuseppe Marco Randazzo <gmrandazzo@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH 5.4 06/38] p54usb: add AirVasT USB stick device-id
-Date:   Fri,  5 Jun 2020 16:14:49 +0200
-Message-Id: <20200605140252.924682018@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.4 05/38] HID: i2c-hid: add Schneider SCL142ALM to descriptor override
+Date:   Fri,  5 Jun 2020 16:14:48 +0200
+Message-Id: <20200605140252.863088099@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -61,35 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
+From: Julian Sax <jsbc@gmx.de>
 
-commit 63e49a9fdac1b4e97ac26cb3fe953f210d83bc53 upstream.
+commit 6507ef10660efdfee93f0f3b9fac24b5e4d83e56 upstream.
 
-This patch adds the AirVasT USB wireless devices 124a:4026
-to the list of supported devices. It's using the ISL3886
-usb firmware. Without this modification, the wiki adapter
-is not recognized.
+This device uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com> [formatted, reworded]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200405220659.45621-1-chunkeey@gmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intersil/p54/p54usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/wireless/intersil/p54/p54usb.c
-+++ b/drivers/net/wireless/intersil/p54/p54usb.c
-@@ -61,6 +61,7 @@ static const struct usb_device_id p54u_t
- 	{USB_DEVICE(0x0db0, 0x6826)},	/* MSI UB54G (MS-6826) */
- 	{USB_DEVICE(0x107b, 0x55f2)},	/* Gateway WGU-210 (Gemtek) */
- 	{USB_DEVICE(0x124a, 0x4023)},	/* Shuttle PN15, Airvast WM168g, IOGear GWU513 */
-+	{USB_DEVICE(0x124a, 0x4026)},	/* AirVasT USB wireless device */
- 	{USB_DEVICE(0x1435, 0x0210)},	/* Inventel UR054G */
- 	{USB_DEVICE(0x15a9, 0x0002)},	/* Gemtek WUBI-100GW 802.11g */
- 	{USB_DEVICE(0x1630, 0x0005)},	/* 2Wire 802.11g USB (v1) / Z-Com */
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -389,6 +389,14 @@ static const struct dmi_system_id i2c_hi
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Schneider SCL142ALM",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "SCHNEIDER"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SCL142ALM"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
+ 
 
 
