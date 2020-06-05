@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E82FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6EA20E65
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666C7208A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366781;
-	bh=hdTdm917EtRampf7Yvwgw4mSbIBi5+48PdnjaXNUQTk=;
+	s=default; t=1591366788;
+	bh=MYJqfoYIbEzY1UIFb/rjRLJvQvUWngWnN24BHuAkXuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qw59waIW3SNqBG6g/zdXXGRk6hTytZiEd0FfUWX37gueCp6xWU7mGhFVqpRNRPH9M
-	 o9tsVVQYgCdlts8Ikm6mkQoyJ5RXMrXDec9yvzZtrALDBGzvHsWqmwF03+/8I90q8S
-	 n0TRtLStSQKDvc+nFya64sTSIaTPUBeDXHXf666k=
+	b=Do/IqHjT0Vu/mIBdHOXBOHi2EKdoX/YZN1ebBaltRBKn28d1yJ+wthJhVACmMw9DF
+	 e3vYnSrcUecrIHGPscTPmSBxtCElolTh/7ypC/wBHS0UdS/+q5Vz8dzt6/rGqYUgpb
+	 zSLfpoIiBtfeuI0N1d2RKqsPDObxcbzJ2uXDpIHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgFEOTk (ORCPT
+        id S1728878AbgFEOTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:19:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50310 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727973AbgFEOT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:27 -0400
+        id S1728846AbgFEOTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7188208A9;
-        Fri,  5 Jun 2020 14:19:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF078208A9;
+        Fri,  5 Jun 2020 14:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366767;
-        bh=hdTdm917EtRampf7Yvwgw4mSbIBi5+48PdnjaXNUQTk=;
+        s=default; t=1591366774;
+        bh=MYJqfoYIbEzY1UIFb/rjRLJvQvUWngWnN24BHuAkXuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T46Z5o/Gz7tqUk2Y0qVLYw83nL20O+JsCIQlB3M6l/8V/MAaGMcUEnlVoj7w3CYBt
-         ySOnrgAkJgLhoB/rTv8N9mRypmtSKhYaD8qPm7UJ2KZ2GjcLKU5FDtJbm0Fwk62DEH
-         Tj5H6fGqyCBdGFtTByWk8335T1ZvscNBzOsRgV/U=
+        b=kQpmU2EDQ8G6iT2ratAgjJWDELIkZ/AOFUKkkjtB5/47ToXXAKwxp6uVLEO7hdjiJ
+         6H3nWzaNdF4NmcaHqIVzOPSmD44AQIlpwSSECACOrAn0UQQ9hAlPLV+8O+FdKSaAuB
+         v5AHV1kSh9ottvVQU9rNWwfzKQBNMYwUnQ1Bruao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/28] Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race window"
-Date:   Fri,  5 Jun 2020 16:15:03 +0200
-Message-Id: <20200605140252.421219691@linuxfoundation.org>
+        stable@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 12/28] drm/i915: fix port checks for MST support on gen >= 11
+Date:   Fri,  5 Jun 2020 16:15:14 +0200
+Message-Id: <20200605140253.085150761@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,70 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Lucas De Marchi <lucas.demarchi@intel.com>
 
-[ Upstream commit d8ef4b38cb69d907f9b0e889c44d05fc0f890977 ]
+[ Upstream commit 10d987fd1b7baceaafa78d805e71427ab735b4e4 ]
 
-This reverts commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
-cgroup_rstat_updated() race window").
+Both Ice Lake and Elkhart Lake (gen 11) support MST on all external
+connections except DDI A. Tiger Lake (gen 12) supports on all external
+connections.
 
-The commit was added in anticipation of memcg rstat conversion which needed
-synchronous accounting for the event counters (e.g. oom kill count). However,
-the conversion didn't get merged due to percpu memory overhead concern which
-couldn't be addressed at the time.
+Move the check to happen inside intel_dp_mst_encoder_init() and add
+specific platform checks.
 
-Unfortunately, the patch's addition of smp_mb() to cgroup_rstat_updated()
-meant that every scheduling event now had to go through an additional full
-barrier and Mel Gorman noticed it as 1% regression in netperf UDP_STREAM test.
+v2: Replace != with == checks for ports on gen < 11 (Ville)
 
-There's no need to have this barrier in tree now and even if we need
-synchronous accounting in the future, the right thing to do is separating that
-out to a separate function so that hot paths which don't care about
-synchronous behavior don't have to pay the overhead of the full barrier. Let's
-revert.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Mel Gorman <mgorman@techsingularity.net>
-Link: http://lkml.kernel.org/r/20200409154413.GK3818@techsingularity.net
-Cc: v4.18+
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191015164029.18431-3-lucas.demarchi@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/rstat.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/i915/intel_dp.c     |  7 ++-----
+ drivers/gpu/drm/i915/intel_dp_mst.c | 22 ++++++++++++++++------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index bb95a35e8c2d..d0ed410b4127 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -32,12 +32,9 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
- 		return;
+diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
+index 20cd4c8acecc..77a2f7fc2b37 100644
+--- a/drivers/gpu/drm/i915/intel_dp.c
++++ b/drivers/gpu/drm/i915/intel_dp.c
+@@ -6288,11 +6288,8 @@ intel_dp_init_connector(struct intel_digital_port *intel_dig_port,
+ 		intel_connector->get_hw_state = intel_connector_get_hw_state;
  
- 	/*
--	 * Paired with the one in cgroup_rstat_cpu_pop_upated().  Either we
--	 * see NULL updated_next or they see our updated stat.
--	 */
--	smp_mb();
--
--	/*
-+	 * Speculative already-on-list test. This may race leading to
-+	 * temporary inaccuracies, which is fine.
-+	 *
- 	 * Because @parent's updated_children is terminated with @parent
- 	 * instead of NULL, we can tell whether @cgrp is on the list by
- 	 * testing the next pointer for NULL.
-@@ -133,13 +130,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
- 		*nextp = rstatc->updated_next;
- 		rstatc->updated_next = NULL;
+ 	/* init MST on ports that can support it */
+-	if (HAS_DP_MST(dev_priv) && !intel_dp_is_edp(intel_dp) &&
+-	    (port == PORT_B || port == PORT_C ||
+-	     port == PORT_D || port == PORT_F))
+-		intel_dp_mst_encoder_init(intel_dig_port,
+-					  intel_connector->base.base.id);
++	intel_dp_mst_encoder_init(intel_dig_port,
++				  intel_connector->base.base.id);
  
--		/*
--		 * Paired with the one in cgroup_rstat_cpu_updated().
--		 * Either they see NULL updated_next or we see their
--		 * updated stat.
--		 */
--		smp_mb();
--
- 		return pos;
- 	}
+ 	if (!intel_edp_init_connector(intel_dp, intel_connector)) {
+ 		intel_dp_aux_fini(intel_dp);
+diff --git a/drivers/gpu/drm/i915/intel_dp_mst.c b/drivers/gpu/drm/i915/intel_dp_mst.c
+index 58ba14966d4f..c7d52c66ff29 100644
+--- a/drivers/gpu/drm/i915/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/intel_dp_mst.c
+@@ -588,21 +588,31 @@ intel_dp_create_fake_mst_encoders(struct intel_digital_port *intel_dig_port)
+ int
+ intel_dp_mst_encoder_init(struct intel_digital_port *intel_dig_port, int conn_base_id)
+ {
++	struct drm_i915_private *i915 = to_i915(intel_dig_port->base.base.dev);
+ 	struct intel_dp *intel_dp = &intel_dig_port->dp;
+-	struct drm_device *dev = intel_dig_port->base.base.dev;
++	enum port port = intel_dig_port->base.port;
+ 	int ret;
+ 
+-	intel_dp->can_mst = true;
++	if (!HAS_DP_MST(i915) || intel_dp_is_edp(intel_dp))
++		return 0;
++
++	if (INTEL_GEN(i915) < 12 && port == PORT_A)
++		return 0;
++
++	if (INTEL_GEN(i915) < 11 && port == PORT_E)
++		return 0;
++
+ 	intel_dp->mst_mgr.cbs = &mst_cbs;
+ 
+ 	/* create encoders */
+ 	intel_dp_create_fake_mst_encoders(intel_dig_port);
+-	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, dev,
++	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, &i915->drm,
+ 					   &intel_dp->aux, 16, 3, conn_base_id);
+-	if (ret) {
+-		intel_dp->can_mst = false;
++	if (ret)
+ 		return ret;
+-	}
++
++	intel_dp->can_mst = true;
++
+ 	return 0;
+ }
  
 -- 
 2.25.1
