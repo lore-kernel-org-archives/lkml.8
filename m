@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1620AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6812C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8703207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88279208B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359945;
-	bh=l4goMsgBlX7Qdo2R6HC4NAyX8/LlC3Ade5FePF2ZsME=;
+	s=default; t=1591359947;
+	bh=54typoRF8Tvny5IH0PE2zsAGMMhiZ4Tyavp4nm8Gvm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KxjRTSZ8abiPxJuZM9EDxDWhLy5EYtYnE7Hhno/WiiMdxj2QONqFmOGAiEMy1ACcg
-	 vXEG3OBCsahZ8+5o5d857zLW/z4qsCQR+A0gmGlI/IFYL2C4f6NsjTa2bcxeiyp9cW
-	 5AMkemUa8wEEyo+/B0ga/PetMAFylFTKmhqbtgYw=
+	b=r63TmWS1bqpufeY7YyGKyQ2zkYSWMToQseVA7lmmB8/sa1HGDlvlc65TEKFAIXK9O
+	 mSppEOiiG2twGvtUElBiOqDA+6nxINUhkvipKP8NmO+IcqcenaGza6mXBa+/tDSQRk
+	 N8isOXO8V7poiMdvocnPs1dWPbfWVhG++JUma/pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgFEMZo (ORCPT
+        id S1726947AbgFEMZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57002 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgFEMZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:34 -0400
+        id S1726862AbgFEMZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40B0A2075B;
-        Fri,  5 Jun 2020 12:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 219E2207D5;
+        Fri,  5 Jun 2020 12:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359934;
-        bh=l4goMsgBlX7Qdo2R6HC4NAyX8/LlC3Ade5FePF2ZsME=;
+        s=default; t=1591359936;
+        bh=54typoRF8Tvny5IH0PE2zsAGMMhiZ4Tyavp4nm8Gvm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKO48Us345OfDmSot9pl9Gj3z0XcLzDYdJW6DbYpx/rMME6NQPh/hK8aw8WsztMGa
-         nf9g/d4wrNwZSFs3kGg9BY6WmCQNVZz5LBj86z4AQJ+yitd0pfZoGinZReU+BcqwgQ
-         fGSGPp4zDFuju//w8qwBmhhQi+tg/0GR48nXTtpc=
+        b=k+pLiW3niA2DhswkT2MlbzTB9q9sAk1sVP5F9RNWgBvchOSVKOpZOV11pkk3Ci84m
+         x7aRo9yR23bekoLxVrODzWJTEQ1NGEF+6Lq+BjaCrJHs5PslzHT5Nix5U8gJOjcCFC
+         U0orxi5JPrPR/il7XvksOVouI0uB/QQ8u1rgWd14=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Bloch <markb@mellanox.com>, Dexuan Cui <decui@microsoft.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 13/17] net/mlx5: Fix crash upon suspend/resume
-Date:   Fri,  5 Jun 2020 08:25:12 -0400
-Message-Id: <20200605122517.2882338-13-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 15/17] NFC: st21nfca: add missed kfree_skb() in an error path
+Date:   Fri,  5 Jun 2020 08:25:14 -0400
+Message-Id: <20200605122517.2882338-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122517.2882338-1-sashal@kernel.org>
 References: <20200605122517.2882338-1-sashal@kernel.org>
@@ -61,61 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Bloch <markb@mellanox.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 8fc3e29be9248048f449793502c15af329f35c6e ]
+[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
 
-Currently a Linux system with the mlx5 NIC always crashes upon
-hibernation - suspend/resume.
+st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
+Add the missed function call to fix it.
 
-Add basic callbacks so the NIC could be suspended and resumed.
-
-Fixes: 9603b61de1ee ("mlx5: Move pci device handling from mlx5_ib to mlx5_core")
-Tested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Mark Bloch <markb@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/nfc/st21nfca/dep.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index 4a08e4eef283..20e12e14cfa8 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1552,6 +1552,22 @@ static void shutdown(struct pci_dev *pdev)
- 	mlx5_pci_disable_device(dev);
- }
+diff --git a/drivers/nfc/st21nfca/dep.c b/drivers/nfc/st21nfca/dep.c
+index 60acdfd1cb8c..856a10c293f8 100644
+--- a/drivers/nfc/st21nfca/dep.c
++++ b/drivers/nfc/st21nfca/dep.c
+@@ -173,8 +173,10 @@ static int st21nfca_tm_send_atr_res(struct nfc_hci_dev *hdev,
+ 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
+ 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
+ 						  gb_len);
+-		if (r < 0)
++		if (r < 0) {
++			kfree_skb(skb);
+ 			return r;
++		}
+ 	}
  
-+static int mlx5_suspend(struct pci_dev *pdev, pm_message_t state)
-+{
-+	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
-+
-+	mlx5_unload_one(dev, false);
-+
-+	return 0;
-+}
-+
-+static int mlx5_resume(struct pci_dev *pdev)
-+{
-+	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
-+
-+	return mlx5_load_one(dev, false);
-+}
-+
- static const struct pci_device_id mlx5_core_pci_table[] = {
- 	{ PCI_VDEVICE(MELLANOX, PCI_DEVICE_ID_MELLANOX_CONNECTIB) },
- 	{ PCI_VDEVICE(MELLANOX, 0x1012), MLX5_PCI_DEV_IS_VF},	/* Connect-IB VF */
-@@ -1595,6 +1611,8 @@ static struct pci_driver mlx5_core_driver = {
- 	.id_table       = mlx5_core_pci_table,
- 	.probe          = init_one,
- 	.remove         = remove_one,
-+	.suspend        = mlx5_suspend,
-+	.resume         = mlx5_resume,
- 	.shutdown	= shutdown,
- 	.err_handler	= &mlx5_err_handler,
- 	.sriov_configure   = mlx5_core_sriov_configure,
+ 	info->dep_info.curr_nfc_dep_pni = 0;
 -- 
 2.25.1
 
