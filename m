@@ -2,103 +2,101 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F756C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C20062065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="po8SjU+x"
+	by mail.kernel.org (Postfix) with ESMTP id 3B8DE2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgFENYy (ORCPT
+        id S1727037AbgFENZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbgFENYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:24:53 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2EEC08C5C2;
-        Fri,  5 Jun 2020 06:24:53 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 5so2730505pjd.0;
-        Fri, 05 Jun 2020 06:24:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jPqXVXtc79WvvXrvoTaGf7nAStvx0qycYwpo7dn0l7I=;
-        b=po8SjU+xeLGS/x5kQxzffs1xCB73Sg6n7CKyBKbx6rFCIqftfj+iLPDSGxs3gz/h5E
-         55cL4Euz5fojnDLCYjzMbz9jj6JisyyMvLR3bwt1FNhZQeB9H7V505d/TBPCHwOlEgra
-         YV+r2rhgDzeAO2fxRfoq3ssckxu2VACyYNF/XS6h0ZKK1hQOpMEW+E02btINHF0jbksa
-         d3qZgSMQU+f7nkfaXqZD/RTl9+0wy/vuF7yynwpk42lRWDSMYdslMbOhknpnmk296tOU
-         UoDAdTP5gkYKcDvzWMOy8jNCQwZVql77xTqOXfDpXx2jc8wtuxYL+5H6QEIGZgYWn3mJ
-         axFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jPqXVXtc79WvvXrvoTaGf7nAStvx0qycYwpo7dn0l7I=;
-        b=ETqfL/FZblo6OSv+Z2yLTG8EXGYyHtVlMo52ZDw8F9xtXX0tqiqAjiELsOnzXhAioU
-         jcRvr22kIfLQxB4N72Y0aaijlGrj+j/zi2X28okNhrt3t/spAQCTua9xXorEhIYWPNMk
-         n9nHFJMS8dtC5RO9kh7QPdemuQ2mdwILxhVbhiGMcLBoiTBiLqdUk2kytBLgeBCikPB6
-         Q32LckUYOI7hNTMXD5OshmutLF6HS/275suRvOZMHljJTxwxYgMDXLSEV8gm/ZyivYPE
-         f327g/0PKpbowvTsIjJ6DbSV3VrWtZs3uir0RgjxuSOhctYVFPjo+bVqdAYJLp3Mjtlj
-         0ySw==
-X-Gm-Message-State: AOAM531yv1y1e94wec6N/7RB0lVYN2sUia2Xk14zdeQtYr2vzWoEzsP4
-        NeuYPy8K02+LzEFietUm5wg=
-X-Google-Smtp-Source: ABdhPJzJ8umEQm9+tlcdEcU5noDuJ4Ha4pG1ay6Bymt+BZanw+lR+ILLP+FeTLOJdOKUIKbqD0eq4Q==
-X-Received: by 2002:a17:902:7487:: with SMTP id h7mr9913280pll.155.1591363492420;
-        Fri, 05 Jun 2020 06:24:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r1sm6609677pgb.37.2020.06.05.06.24.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Jun 2020 06:24:51 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 06:24:50 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v4 11/11] module: Make module_enable_ro() static again
-Message-ID: <20200605132450.GA257550@roeck-us.net>
-References: <cover.1588173720.git.jpoimboe@redhat.com>
- <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
+        Fri, 5 Jun 2020 09:25:44 -0400
+Received: from verein.lst.de ([213.95.11.211]:58491 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726812AbgFENZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:25:44 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id EB3AC6736F; Fri,  5 Jun 2020 15:25:41 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 15:25:41 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: kprobes string reading broken on s390
+Message-ID: <20200605132541.GB31829@lst.de>
+References: <20200605110533.GA57038@tuxmaker.boeblingen.de.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200605110533.GA57038@tuxmaker.boeblingen.de.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:24:53AM -0500, Josh Poimboeuf wrote:
-> Now that module_enable_ro() has no more external users, make it static
-> again.
+Yes, this looks correct.  You probably want to write a small changelog
+and add a Fixes tag, though.
+
+On Fri, Jun 05, 2020 at 01:05:34PM +0200, Sven Schnelle wrote:
+> Hi Christoph,
 > 
-> Suggested-by: Jessica Yu <jeyu@kernel.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Acked-by: Miroslav Benes <mbenes@suse.cz>
-
-Apparently this patch made it into the upstream kernel on its own,
-not caring about its dependencies. Results are impressive.
-
-Build results:
-	total: 155 pass: 101 fail: 54
-Qemu test results:
-	total: 431 pass: 197 fail: 234
-
-That means bisects will be all but impossible until this is fixed.
-Was that really necessary ?
-
-Guenter
+> with the latest linux-next i noticed that some tests in the
+> ftrace test suites are failing on s390, namely:
+> 
+> [FAIL] Kprobe event symbol argument
+> [FAIL] Kprobe event with comm arguments
+> 
+> The following doesn't work anymore:
+> 
+> cd /sys/kernel/tracing
+> echo 'p:testprobe _do_fork comm=$comm ' >kprobe_events
+> echo 1 >/sys/kernel/tracing/events/kprobes/testprobe/enable
+> cat /sys/kernel/tracing/trace
+> 
+> it will just show
+> 
+> test.sh-519   [012] ....    18.580625: testprobe: (_do_fork+0x0/0x3c8) comm=(fault)
+> 
+> Looking at d411a9c4e95a ("tracing/kprobes: handle mixed kernel/userspace probes
+> better") i see that there are two helpers for reading strings:
+> 
+> fetch_store_string_user() -> read string from user space
+> fetch_store_string() -> read string from kernel space(?)
+> 
+> but in the end both are using strncpy_from_user_nofault(), but i would
+> think that fetch_store_string() should use strncpy_from_kernel_nofault().
+> However, i'm not sure about the exact semantics of fetch_store_string(),
+> as there where a lot of wrong assumptions in the past, especially since
+> on x86 you usually don't fail if you use the same function for accessing kernel
+> and userspace although it's technically wrong.
+> 
+> Regards,
+> Sven
+> 
+> commit 81408eab8fcc79dc0871a95462b13176d3446f5e
+> Author: Sven Schnelle <svens@linux.ibm.com>
+> Date:   Fri Jun 5 13:01:24 2020 +0200
+> 
+>     kprobes: use strncpy_from_kernel_nofault() in fetch_store_string()
+> 
+>     Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index b1f21d558e45..ea8d0b094f1b 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1278,7 +1278,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
+>  	 * Try to get string again, since the string can be changed while
+>  	 * probing.
+>  	 */
+> -	ret = strncpy_from_user_nofault(__dest, (void *)addr, maxlen);
+> +	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
+>  	if (ret >= 0)
+>  		*(u32 *)dest = make_data_loc(ret, __dest - base);
+>  
+---end quoted text---
