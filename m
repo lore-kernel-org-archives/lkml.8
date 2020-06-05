@@ -2,154 +2,93 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79484C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A87C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E25B206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811812075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aHJYJsMb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DcMnVH1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgFEQSX (ORCPT
+        id S1726759AbgFEQSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
+        Fri, 5 Jun 2020 12:18:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgFEQSW (ORCPT
+        with ESMTP id S1726040AbgFEQS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:18:22 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC2FC08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 09:18:22 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id f7so10733983ejq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 09:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vpo49UJFTmSx2mVUsrH28W7y/nNRaB3b36oLAS+p92Q=;
-        b=aHJYJsMb22tG8d+gaPHApZ/tpiU+Utl/q5ezXcD7IBh6i14VFMTNAn3iKGTYzl9+oZ
-         fXMlTcG2luZhZla1FdD+RJp2R5ShgCq/lzOj9Uild832J5HmD4Oe5Zcn4qTJ9D1sFJ5R
-         o61nFJEdB/JCfG1Rr5kUUl7T//qEt2dyJp/hBhG96v7ghOCEzSJ7nyY+SMoxHw4YSR38
-         weJDn3jbdMQH4CUxySkqrBPY1tGSS0up8IS6usWN93qdJbFSHWZJSJpz5gHU9EDb+I9N
-         8xc4edyapwLnCSTxPiYhIu1JUw26ZUqPTrCzMGqqXVPXT44/qpynOg2FUMaXC8dpB2n/
-         HoMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vpo49UJFTmSx2mVUsrH28W7y/nNRaB3b36oLAS+p92Q=;
-        b=sziZKi/MlDj/czM4KesbgEjRAP5S/NMLccqK5p+d3ihckO/4FoE9qQ4WxUc9RpPE31
-         44NEPTjvCVJ8u9rzKbgrnDUFm/LFWNU7JIxqsDkX1cO4CcBJ8nlV21SXv9dEDSmyfjmi
-         3Q8ZohM9a9hd52q0jm7hU7Hb4vTVhZ2WnyhR3KglZqmuB2TsbJqF8OOGBaBeOBqPJR3I
-         8QlcDXddzdFegzvcg2xbH6Q4iANHiXaN6AWh9tXnvDoOpem1jHh43nq5K+B9H2Emjmcs
-         9OeZhE12zmooQs5edOfTNSqXIYHcg8NghahCaK93zu1b4keGRa/EDcdLKRtILEH1hlFT
-         kUkA==
-X-Gm-Message-State: AOAM530w+P/sttUGRKstq4QbtbhqRUrCvrnNG1q1a8BMFMe8cWEOvAsT
-        JVrrMqrzcf3bAK7HaVosWxWnlkakGs+Zvl98pl7a8g==
-X-Google-Smtp-Source: ABdhPJw1DRbILjMBDs/PGCB8WikMVjkwtv8vwPKMzkgz902Ioiz5SZnc1WlrFrqZ7fC4TSn++yU0F1pQ9TBruhSDbsQ=
-X-Received: by 2002:a17:906:bcfc:: with SMTP id op28mr4055950ejb.237.1591373900985;
- Fri, 05 Jun 2020 09:18:20 -0700 (PDT)
+        Fri, 5 Jun 2020 12:18:29 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8B1C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 09:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=utNI+MJiTsn2M/U2LdUZJZhP8QgBIUppz4EFqbydICQ=; b=DcMnVH1eeOjboyoQ+gRrYAcCyS
+        46RZsQvjM4nxsU2esHscYyjqQ5edut8vaP/p08P3+Am7IbAycNYmQnxgYcML+74qlFbudvkM6f+hZ
+        LK9iX1uhdpdi+lBJ+qeKvEaD5s0T7+WbgHsJRZnu+f8uRul7/AfktTr6KFjda10YtdE4eNFjDbUX/
+        3xXOmN5h8JfZuF+Do0ZjFt0UJ/wdtmyMzGJ7XTGHwofLMQB/i375bCuyc9hhusqW7AceqK4KExgut
+        0xRTTx9NEYCTQ6E1h+OgveY3oMUT43JygzMwNjOw+6eftMRejVawk3tD4N/n5NiAzqrN1u3Kx0LxC
+        mlNf5ymQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhF2c-000626-LE; Fri, 05 Jun 2020 16:17:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6DA17301A7A;
+        Fri,  5 Jun 2020 18:17:54 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B7D61214D7C2F; Fri,  5 Jun 2020 18:17:54 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 18:17:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net, sfr@canb.auug.org.au,
+        linux@roeck-us.net, keescook@chromium.org
+Subject: Re: [RFC][PATCH 5/7] irq_work, smp: Allow irq_work on
+ call_single_queue
+Message-ID: <20200605161754.GK3976@hirez.programming.kicks-ass.net>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.011635912@infradead.org>
+ <20200528234031.GB551@lenoir>
+ <20200529133641.GM706495@hirez.programming.kicks-ass.net>
+ <20200605093704.GB2948@hirez.programming.kicks-ass.net>
+ <20200605150207.GA9599@lenoir>
 MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0gq55A7880dOJD7skwx7mnjsqbCqEGFvEo552U9W2zH3Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gq55A7880dOJD7skwx7mnjsqbCqEGFvEo552U9W2zH3Q@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Jun 2020 09:18:09 -0700
-Message-ID: <CAPcyv4gQNPNOmSVrp7epS5_10qLUuGbutQ2xz7LXnpEhkWeA_w@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: Drop rcu usage for MMIO mappings
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Stable <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605150207.GA9599@lenoir>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 6:32 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Fri, May 8, 2020 at 1:55 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Recently a performance problem was reported for a process invoking a
-> > non-trival ASL program. The method call in this case ends up
-> > repetitively triggering a call path like:
-> >
-> >     acpi_ex_store
-> >     acpi_ex_store_object_to_node
-> >     acpi_ex_write_data_to_field
-> >     acpi_ex_insert_into_field
-> >     acpi_ex_write_with_update_rule
-> >     acpi_ex_field_datum_io
-> >     acpi_ex_access_region
-> >     acpi_ev_address_space_dispatch
-> >     acpi_ex_system_memory_space_handler
-> >     acpi_os_map_cleanup.part.14
-> >     _synchronize_rcu_expedited.constprop.89
-> >     schedule
-> >
-> > The end result of frequent synchronize_rcu_expedited() invocation is
-> > tiny sub-millisecond spurts of execution where the scheduler freely
-> > migrates this apparently sleepy task. The overhead of frequent scheduler
-> > invocation multiplies the execution time by a factor of 2-3X.
-> >
-> > For example, performance improves from 16 minutes to 7 minutes for a
-> > firmware update procedure across 24 devices.
-> >
-> > Perhaps the rcu usage was intended to allow for not taking a sleeping
-> > lock in the acpi_os_{read,write}_memory() path which ostensibly could be
-> > called from an APEI NMI error interrupt?
->
-> Not really.
->
-> acpi_os_{read|write}_memory() end up being called from non-NMI
-> interrupt context via acpi_hw_{read|write}(), respectively, and quite
-> obviously ioremap() cannot be run from there, but in those cases the
-> mappings in question are there in the list already in all cases and so
-> the ioremap() isn't used then.
->
-> RCU is there to protect these users from walking the list while it is
-> being updated.
->
-> > Neither rcu_read_lock() nor ioremap() are interrupt safe, so add a WARN_ONCE() to validate that rcu
-> > was not serving as a mechanism to avoid direct calls to ioremap().
->
-> But it would produce false-positives if the IRQ context was not NMI,
-> wouldn't it?
->
-> > Even the original implementation had a spin_lock_irqsave(), but that is not
-> > NMI safe.
->
-> Which is not a problem (see above).
->
-> > APEI itself already has some concept of avoiding ioremap() from
-> > interrupt context (see erst_exec_move_data()), if the new warning
-> > triggers it means that APEI either needs more instrumentation like that
-> > to pre-emptively fail, or more infrastructure to arrange for pre-mapping
-> > the resources it needs in NMI context.
->
-> Well, I'm not sure about that.
+On Fri, Jun 05, 2020 at 05:02:08PM +0200, Frederic Weisbecker wrote:
+> On Fri, Jun 05, 2020 at 11:37:04AM +0200, Peter Zijlstra wrote:
+> >  struct irq_work {
+> > -	struct llist_node llnode;
+> > -	atomic_t flags;
+> > +	union {
+> > +		struct __call_single_node node;
+> > +		struct {
+> > +			struct llist_node llnode;
+> > +			atomic_t flags;
+> > +		};
+> > +	};
+> 
+> So why not just embed struct __call_single_node in
+> struct irq_work and struct __call_single_data ?
+> 
+> Is the point of that anonymous second union layer to
+> shorten the lines while accessing members?
 
-Right, this patch set is about 2-3 generations behind the architecture
-of the fix we are discussing internally, you might mention that.
+To cut down on all the churn. irq_work is small and could easily be
+fixed up, but csd is used in quite a few places.
 
-The fix we are looking at now is to pre-map operation regions in a
-similar manner as the way APEI resources are pre-mapped. The
-pre-mapping would arrange for synchronize_rcu_expedited() to be elided
-on each dynamic mapping attempt. The other piece is to arrange for
-operation-regions to be mapped at their full size at once rather than
-a page at a time.
+
