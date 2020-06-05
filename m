@@ -2,58 +2,58 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F88C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75C6F207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7DB206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="etJv22Ui"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N87sRbGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgFEQAU (ORCPT
+        id S1728118AbgFEQA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:00:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36710 "EHLO
+        Fri, 5 Jun 2020 12:00:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726727AbgFEQAT (ORCPT
+        with ESMTP id S1727798AbgFEQAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:00:19 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89248C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 09:00:19 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bg4so3796748plb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 09:00:19 -0700 (PDT)
+        Fri, 5 Jun 2020 12:00:21 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B2BC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 09:00:21 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id b5so5082999pfp.9
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 09:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/0tj7ZRQcqs9EAMR7yZ0YohYSJEyPMdy0UQUKUwvaMk=;
-        b=etJv22UiizXcOPPR3QeA8jUp00pOEYSdiCq8cCt5HTmL1jQ4/toR6XXIwLOa79kL3X
-         ICYfwWpUBHiMGKWBUKSWBezDpOO4mZgjtt+2LNCWQVvfWZzVGgRi7Rqn16a04nTuBkAI
-         o/xXMJAQurA2tye7S7Hf4piSybDvjCjQxO2l4=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sFzuPg87lia15bj0MACfGhh8dROQtUU99JStdLteJm8=;
+        b=N87sRbGURjNVH3cGexUjqOcgDYvYJMy8VoG9ckFH0aB1QHhjcmTB3IoUw+n7gla5Gl
+         Nu4+9An1lTW5DFM57UkJtPrMYk4gc1B2g3ORLnaocIqUJYsZ+6I4d5lvKJr/btsT+ObU
+         4d5/LypDNzjbQvWdIBOtLpeN/dS/2bG1Wvp5E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/0tj7ZRQcqs9EAMR7yZ0YohYSJEyPMdy0UQUKUwvaMk=;
-        b=jrVVmb20kTAtwMwB82lXVjZwBzAvqEpAvLptFxwgpxvrWfBRlB+XY6LclBJz4Em/Rj
-         kxN9JEfUalSFzt8RkxeZOX3PXJNN+zsHdnPcJFqWClb26pCz3TLCj2OfDkHDeohVzVxh
-         b2zHbgfzTTB5Jse9G/N2hFFRKEYAxiZDAIy4fH00rEJ7iNSpXjnMwdexoxgSoyRGU1jO
-         n7NfEFD9KNDVuk4EYHiQhbM+q+Feb//3ORK+Lw8RFacsHCRBYa58srGBsJive1pXaLf6
-         C2dkknfR5OvqkueQdmRhCTw17Uhmm/ZlldlvEnS9sbtyadwLtkJ4AsV5VlBXLsQ/ohZb
-         TuyQ==
-X-Gm-Message-State: AOAM533nsWAWTZR6mSIuNnjJRktE17ztUtCG1bmXzER47QkqbUnY7W5O
-        3ZJIg63s0XuhKujU6aFMhXeR0A==
-X-Google-Smtp-Source: ABdhPJw47pfX2wU4KqgnZEv6dlZXrppX08ucCGrHpYKRci0esfbebI7oZ/Y+rv79S512gq1xF0XpNg==
-X-Received: by 2002:a17:90a:a405:: with SMTP id y5mr3778701pjp.15.1591372818957;
-        Fri, 05 Jun 2020 09:00:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sFzuPg87lia15bj0MACfGhh8dROQtUU99JStdLteJm8=;
+        b=RdiOZqFV4851tRJqpv3Tl5398QtxUTZw8vdDgBE9nW0eL2zPRqKqz42dONrkV8qdMd
+         heoM5+QCxI4Bm4QcUoHbNqPS5qtmuBp9zahgMlWBIAIGfwvw0lPnjo6aKRjyxe4sAvMX
+         pHktp4BIQYNfq9L00i73Jaya3m8WCOnKPlt3fk1xucUve3sZiXFInwjYaum8SPBxFlea
+         k3I0bc6kv/pNbXPV6ovNrBN8tt4LMc6pTc4ZMAKon33w4fLtf3NTKHzd+i59MTgHTmZs
+         ViXuFROnZd07a4D+vXClMr9GOB6upg9KWP719+QYt+U+S3C0yMAOLTDUNgtN0KPDUeqo
+         hjnA==
+X-Gm-Message-State: AOAM5335R2W5fLQfMR50m2gO7QzpHArLxuO5O5yKwqdjwR2NPwo2C75h
+        rx7e9pE7dkfTHmxquXCAa51seQ==
+X-Google-Smtp-Source: ABdhPJzZcH6mbwWsYQHLkHWiTXgnP9bVA4PXBKPDvl3u7f6oXPodSpEarfATZfskj2IlzdjeiODrfg==
+X-Received: by 2002:a63:3384:: with SMTP id z126mr9940695pgz.7.1591372820569;
+        Fri, 05 Jun 2020 09:00:20 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h15sm56993pgl.12.2020.06.05.09.00.17
+        by smtp.gmail.com with ESMTPSA id gm11sm8391860pjb.9.2020.06.05.09.00.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 05 Jun 2020 09:00:18 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -66,12 +66,10 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Eric Biggers <ebiggers3@gmail.com>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] exec: Move S_ISREG() check earlier
-Date:   Fri,  5 Jun 2020 09:00:12 -0700
-Message-Id: <20200605160013.3954297-3-keescook@chromium.org>
+Subject: [PATCH v2 0/3] Relocate execve() sanity checks
+Date:   Fri,  5 Jun 2020 09:00:10 -0700
+Message-Id: <20200605160013.3954297-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200605160013.3954297-1-keescook@chromium.org>
-References: <20200605160013.3954297-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,128 +77,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The execve(2)/uselib(2) syscalls have always rejected non-regular
-files. Recently, it was noticed that a deadlock was introduced when trying
-to execute pipes, as the S_ISREG() test was happening too late. This was
-fixed in commit 73601ea5b7b1 ("fs/open.c: allow opening only regular files
-during execve()"), but it was added after inode_permission() had already
-run, which meant LSMs could see bogus attempts to execute non-regular
-files.
+Hi,
 
-Move the test into the other inode type checks (which already look
-for other pathological conditions[1]). Since there is no need to use
-FMODE_EXEC while we still have access to "acc_mode", also switch the
-test to MAY_EXEC.
+While looking at the code paths for the proposed O_MAYEXEC flag, I saw
+some things that looked like they should be fixed up.
 
-Also include a comment with the redundant S_ISREG() checks at the end of
-execve(2)/uselib(2) to note that they are present to avoid any mistakes.
+  exec: Change uselib(2) IS_SREG() failure to EACCES
+	This just regularizes the return code on uselib(2).
 
-My notes on the call path, and related arguments, checks, etc:
+  exec: Move S_ISREG() check earlier
+	This moves the S_ISREG() check even earlier than it was already.
 
-do_open_execat()
-    struct open_flags open_exec_flags = {
-        .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-        .acc_mode = MAY_EXEC,
-        ...
-    do_filp_open(dfd, filename, open_flags)
-        path_openat(nameidata, open_flags, flags)
-            file = alloc_empty_file(open_flags, current_cred());
-            do_open(nameidata, file, open_flags)
-                may_open(path, acc_mode, open_flag)
-		    /* new location of MAY_EXEC vs S_ISREG() test */
-                    inode_permission(inode, MAY_OPEN | acc_mode)
-                        security_inode_permission(inode, acc_mode)
-                vfs_open(path, file)
-                    do_dentry_open(file, path->dentry->d_inode, open)
-                        /* old location of FMODE_EXEC vs S_ISREG() test */
-                        security_file_open(f)
-                        open()
+  exec: Move path_noexec() check earlier
+	This adds the path_noexec() check to the same place as the
+	S_ISREG() check.
+
+v2:
+- move checks into may_open() using acc_mode instead of f_mode to correctly
+  compose with other inode file type tests[1].
+- drop the FMODE_EXEC f_flags -> f_mode change for now since it remains
+  unclear if it's useful (and is not needed any more for this series).
+v1: https://lore.kernel.org/linux-api/20200518055457.12302-1-keescook@chromium.org/
+
+Thanks!
+
+-Kees
 
 [1] https://lore.kernel.org/lkml/202006041910.9EF0C602@keescook/
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/exec.c  | 14 ++++++++++++--
- fs/namei.c |  6 ++++--
- fs/open.c  |  6 ------
- 3 files changed, 16 insertions(+), 10 deletions(-)
+Kees Cook (3):
+  exec: Change uselib(2) IS_SREG() failure to EACCES
+  exec: Move S_ISREG() check earlier
+  exec: Move path_noexec() check earlier
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 30735ce1dc0e..2b708629dcd6 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -139,8 +139,13 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
- 	if (IS_ERR(file))
- 		goto out;
- 
-+	/*
-+	 * may_open() has already checked for this, so it should be
-+	 * impossible to trip now. But we need to be extra cautious
-+	 * and check again at the very end too.
-+	 */
- 	error = -EACCES;
--	if (!S_ISREG(file_inode(file)->i_mode))
-+	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
- 		goto exit;
- 
- 	if (path_noexec(&file->f_path))
-@@ -860,8 +865,13 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
- 	if (IS_ERR(file))
- 		goto out;
- 
-+	/*
-+	 * may_open() has already checked for this, so it should be
-+	 * impossible to trip now. But we need to be extra cautious
-+	 * and check again at the very end too.
-+	 */
- 	err = -EACCES;
--	if (!S_ISREG(file_inode(file)->i_mode))
-+	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
- 		goto exit;
- 
- 	if (path_noexec(&file->f_path))
-diff --git a/fs/namei.c b/fs/namei.c
-index a320371899cf..0a759b68d66e 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2835,16 +2835,18 @@ static int may_open(const struct path *path, int acc_mode, int flag)
- 	case S_IFLNK:
- 		return -ELOOP;
- 	case S_IFDIR:
--		if (acc_mode & MAY_WRITE)
-+		if (acc_mode & (MAY_WRITE | MAY_EXEC))
- 			return -EISDIR;
- 		break;
- 	case S_IFBLK:
- 	case S_IFCHR:
- 		if (!may_open_dev(path))
- 			return -EACCES;
--		/*FALLTHRU*/
-+		fallthrough;
- 	case S_IFIFO:
- 	case S_IFSOCK:
-+		if (acc_mode & MAY_EXEC)
-+			return -EACCES;
- 		flag &= ~O_TRUNC;
- 		break;
- 	}
-diff --git a/fs/open.c b/fs/open.c
-index 719b320ede52..bb16e4e3cd57 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -753,12 +753,6 @@ static int do_dentry_open(struct file *f,
- 		return 0;
- 	}
- 
--	/* Any file opened for execve()/uselib() has to be a regular file. */
--	if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) {
--		error = -EACCES;
--		goto cleanup_file;
--	}
--
- 	if (f->f_mode & FMODE_WRITE && !special_file(inode->i_mode)) {
- 		error = get_write_access(inode);
- 		if (unlikely(error))
+ fs/exec.c  | 23 ++++++++++++++---------
+ fs/namei.c | 10 ++++++++--
+ fs/open.c  |  6 ------
+ 3 files changed, 22 insertions(+), 17 deletions(-)
+
 -- 
 2.25.1
 
