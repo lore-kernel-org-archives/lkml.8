@@ -2,176 +2,130 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1927C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF60C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C12F1207F7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B782207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgFEFJ0 convert rfc822-to-8bit (ORCPT
+        id S1726142AbgFEFKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 01:09:26 -0400
-Received: from smtp180.sjtu.edu.cn ([202.120.2.180]:42920 "EHLO
-        smtp180.sjtu.edu.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFEFJ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 01:09:26 -0400
-Received: from proxy01.sjtu.edu.cn (smtp185.sjtu.edu.cn [202.120.2.185])
-        by smtp180.sjtu.edu.cn (Postfix) with ESMTPS id 7E3DA1008CA2F;
-        Fri,  5 Jun 2020 13:09:22 +0800 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by proxy01.sjtu.edu.cn (Postfix) with ESMTP id 6F64220426A48;
-        Fri,  5 Jun 2020 13:09:22 +0800 (CST)
-X-Virus-Scanned: amavisd-new at proxy01.sjtu.edu.cn
-Received: from proxy01.sjtu.edu.cn ([127.0.0.1])
-        by localhost (proxy01.sjtu.edu.cn [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id dMvMIeiIXkov; Fri,  5 Jun 2020 13:09:22 +0800 (CST)
-Received: from fans-air.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
-        (Authenticated sender: Fan_Yang@sjtu.edu.cn)
-        by proxy01.sjtu.edu.cn (Postfix) with ESMTPSA id 80AD220426998;
-        Fri,  5 Jun 2020 13:09:15 +0800 (CST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v3] mm: Fix mremap not considering huge pmd devmap
-From:   Fan Yang <Fan_Yang@sjtu.edu.cn>
-In-Reply-To: <1591295025-1080-1-git-send-email-akaher@vmware.com>
-Date:   Fri, 5 Jun 2020 13:09:15 +0800
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        gregkh@linuxfoundation.org, srivatsab@vmware.com,
-        srivatsa@csail.mit.edu
-Content-Transfer-Encoding: 8BIT
-Message-Id: <B9824572-C3C0-4D3B-88B8-D3A34D645653@sjtu.edu.cn>
-References: <FB4049FE-AC4A-4B13-B39D-B96393EFCCB8@sjtu.edu.cn>
- <1591295025-1080-1-git-send-email-akaher@vmware.com>
-To:     Ajay Kaher <akaher@vmware.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 5 Jun 2020 01:10:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:21900 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgFEFKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 01:10:10 -0400
+IronPort-SDR: GF9rJsIpdPDqTCZsWnDhkiNGYGJ9eMDSzSNerqBaDTC/R42iP5R2FtKApIfcjL5/pLb1j7oiy2
+ byBzoMz+2Pnw==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 22:10:09 -0700
+IronPort-SDR: 4idtIugdnOHQYK2nosQvAUNWjA4rL6bAZOJwhqMG8P8YiBjNHy5yvSIA3oUSYEWxW9LZRDSuZc
+ TLH/up3j8ssQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,475,1583222400"; 
+   d="asc'?scan'208";a="445768791"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.160.147])
+  by orsmga005.jf.intel.com with ESMTP; 04 Jun 2020 22:10:07 -0700
+Date:   Fri, 5 Jun 2020 12:54:30 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Julian Stecklina <julian.stecklina@cyberus-technology.de>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        Thomas Prescher <thomas.prescher@cyberus-technology.de>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/i915/gvt: print actionable error message when gm
+ runs out
+Message-ID: <20200605045430.GS5687@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200603123321.263895-1-julian.stecklina@cyberus-technology.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tuFXEhzhBeitrIAu"
+Content-Disposition: inline
+In-Reply-To: <20200603123321.263895-1-julian.stecklina@cyberus-technology.de>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ajay,
 
-> On Jun 5, 2020 at 02:23，Ajay Kaher <akaher@vmware.com> wrote：
-> 
-> So, v4.9.y should be vulnerable, however not able to reproduce on v4.9.y.
-> Does any specific scenerio need to test for v4.9.y?
-> 
-> For v4.9, modified test program as MAP_SHARED_VALIDATE is not available:
-> - return mmap(NULL, REGION_PM_SIZE, PROT, MAP_SHARED_VALIDATE|MAP_SYNC,
-> + return mmap(NULL, REGION_PM_SIZE, PROT, MAP_SHARED|MAP_SYNC,
-> 
-> Let me know if I need to test some other way for v4.9.y.
-> 
+--tuFXEhzhBeitrIAu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I further looked into this.  In v4.9, fsdax (mount a dax file
-system, then open, mmap, mremap) does not suffer this issue
-because fsdax does not use huge page (FS_DAX_PMD is marked
-BROKEN).
+On 2020.06.03 14:33:21 +0200, Julian Stecklina wrote:
+> When a user tries to allocate too many or too big vGPUs and runs out
+> of graphics memory, the resulting error message is not actionable and
+> looks like an internal error.
+>=20
+> Change the error message to clearly point out what actions a user can
+> take to resolve this situation.
+>=20
+> Cc: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+> ---
+>  drivers/gpu/drm/i915/gvt/aperture_gm.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/aperture_gm.c b/drivers/gpu/drm/i91=
+5/gvt/aperture_gm.c
+> index 0d6d598713082..5c5c8e871dae2 100644
+> --- a/drivers/gpu/drm/i915/gvt/aperture_gm.c
+> +++ b/drivers/gpu/drm/i915/gvt/aperture_gm.c
+> @@ -69,9 +69,12 @@ static int alloc_gm(struct intel_vgpu *vgpu, bool high=
+_gm)
+>  				  start, end, flags);
+>  	mmio_hw_access_post(gt);
+>  	mutex_unlock(&gt->ggtt->vm.mutex);
+> -	if (ret)
+> -		gvt_err("fail to alloc %s gm space from host\n",
+> -			high_gm ? "high" : "low");
+> +	if (ret) {
+> +		gvt_err("vgpu%d: failed to allocate %s gm space from host\n",
+> +			vgpu->id, high_gm ? "high" : "low");
+> +		gvt_err("vgpu%d: destroying vGPUs, decreasing vGPU memory size or incr=
+easing GPU aperture size may resolve this\n",
+> +			vgpu->id);
 
-fs/dax.c:dax_pmd_fault:
+Currently we can't decrease vGPU mem size as defined by mdev type,
+so actually you may try different vGPU type. And aperture size is
+also handled for supported vGPU mdev types, so assume user should
+already be awared of that too. I just don't want us to be too chatty. :)
 
-        if (!IS_ENABLED(CONFIG_FS_DAX_PMD))
-                return VM_FAULT_FALLBACK;
+> +	}
+> =20
+>  	return ret;
+>  }
+> --=20
+> 2.26.2
+>=20
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
 
-fs/Kconfig:
+--=20
+Open Source Technology Center, Intel ltd.
 
-config FS_DAX_PMD
-        bool
-        default FS_DAX
-        depends on FS_DAX
-        depends on ZONE_DEVICE
-        depends on TRANSPARENT_HUGEPAGE
-        depends on BROKEN
+$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
 
+--tuFXEhzhBeitrIAu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-However, I can re-produce the issue for the devdax mode.  Here is how
-I re-produce it:
+-----BEGIN PGP SIGNATURE-----
 
-1. It seems some interface changed for ndctl.  So I use an old
-   commit (4295f1ea614a26e1304ed590fb7209c8c78270ab) in the repo
-   https://github.com/pmem/ndctl.
-2. sudo ./ndctl/ndctl create-namespace -f -t pmem -m dax -e 'namespace0.0'
-3. then use the following program:
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXtnQBgAKCRCxBBozTXgY
+J/c4AKCKRut0XbYE1ZzbeKKaRdpwFEG8cgCfRE5+/HXqXZ4OypqRUdPCM+ACVTk=
+=2IF1
+-----END PGP SIGNATURE-----
 
-#define _GNU_SOURCE
-#include <sys/mman.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <errno.h>
-
-#define PROT                    PROT_READ|PROT_WRITE
-
-#define REGION_PM_TMP_PATH      "/dev/dax0.0"
-
-#define REGION_MEM_SIZE 1024ULL*1024*1024*2
-#define REGION_PM_SIZE  1024ULL*1024*1024*4
-#define REMAP_MEM_OFF   1024ULL*1024*1024*1
-#define REMAP_PM_OFF    1024ULL*1024*1024*3
-#define REMAP_SIZE      1024ULL*1024*1024*1
-
-#define REGION_MEM_PTR  ((void *)0x7fd400000000ULL)
-#define REGION_PM_PTR   ((void *)0x4fd300000000ULL)
-
-char * map_tmp_pm_region(void)
-{
-        int fd;
-
-        fd = open(REGION_PM_TMP_PATH, O_RDWR, 0644);
-        if (fd < 0) {
-                perror(REGION_PM_TMP_PATH);
-                exit(-1);
-        }
-
-        return mmap(REGION_PM_PTR, REGION_PM_SIZE, PROT, MAP_SHARED|MAP_SYNC,
-                   fd, 0);
-}
-
-int main(int argc, char **argv)
-{
-        char *regm, *regp, *remap;
-        int ret;
-
-        regm = mmap(REGION_MEM_PTR, REGION_MEM_SIZE, PROT, MAP_PRIVATE|MAP_ANONYMOUS,
-                    -1, 0);
-        if (regm == MAP_FAILED) {
-                perror("regm");
-                return -1;
-        }
-
-        regp = map_tmp_pm_region();
-        if (regp == MAP_FAILED) {
-                perror("regp");
-                return -1;
-        }
-
-        memset(regm, 'a', REGION_MEM_SIZE);
-        memset(regp, 'i', REGION_PM_SIZE);
-
-        remap = mremap(regp + REMAP_PM_OFF, REMAP_SIZE, REMAP_SIZE,
-                       MREMAP_MAYMOVE|MREMAP_FIXED, regm + REMAP_MEM_OFF);
-        if (remap != regm + REMAP_MEM_OFF) {
-                perror("mremap");
-                return -1;
-        }
-
-        *(regm + REMAP_MEM_OFF) = 0x00;
-        return 0;
-}
-
-4. Then I was able to see the "Corrupted page table" message in dmesg.
-
-Best regards,
-Fan
-
+--tuFXEhzhBeitrIAu--
