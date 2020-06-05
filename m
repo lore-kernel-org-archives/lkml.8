@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF40C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40F7F20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288BD2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367090;
-	bh=9mlew+T5MYTclm4qpeBkC48ikEN7pUijM+H1WgFcwLo=;
+	s=default; t=1591367095;
+	bh=6lfb7wQDy8XOEZ/WYA0tSYBztD39KIGmFvRx0mhnJ4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pwe9hyQC/vXZID0Qh4zCo/YdVYvmtm8au+CGBNd1dgNmzzRZJKl8oroq5IyRl6OJA
-	 dDHB4EqvakJQTZwKQH24X5U7lSRcOdLa3nZC9e6+5tU9fasC1WxKo3oLdI4d0HVGde
-	 DfgV6H528e6LwQBlWTSLxgejsNMQg5PUvzqaQAjA=
+	b=y4httkOXRx2wib1sCwb4P1ylsHxPq70FesKu+Kgs5XfKzCNYislMehquuW/jaUt+T
+	 BKckL+3rS47+MdjclpAcaxkvr7aty9gHBUpa3ffLJ+sT7iC45OgLUl1RV68G7fSk/L
+	 4bWx6+ACvF758Q+tiOovvz4J9ZBrLTdC1fUWo+Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgFEOYt (ORCPT
+        id S1728842AbgFEOYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46542 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgFEORL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:11 -0400
+        id S1728395AbgFEORJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C85B208B8;
-        Fri,  5 Jun 2020 14:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB88D206A2;
+        Fri,  5 Jun 2020 14:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366630;
-        bh=9mlew+T5MYTclm4qpeBkC48ikEN7pUijM+H1WgFcwLo=;
+        s=default; t=1591366628;
+        bh=6lfb7wQDy8XOEZ/WYA0tSYBztD39KIGmFvRx0mhnJ4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ANVgxI0dNvZJiliBvcU/T52sppjU8QwW++74FvQAToIef09NIigSYOggqoLb0T9B0
-         tKlYG69S+HbegTWYuwszUOqXaRevTUEyZpPL1+mWkeQWTOdXFTBSgNeA4zR5j1QOvt
-         Rk+GVtOg3wUbou3ZBAhcNjdIiOk6YxxOOT3TBWN0=
+        b=kJC5i0fRBni/Jaa/ZSHcdbEMqnrx2NjyCZedG1jSCAzx6km+p3by6OxxplNtz/RsT
+         99b2TU7kmz2/GebFXK7xtmpFvlkhsvLaVvtDetX9QYo+Vq/piwsskT7ro8SNE1yZF1
+         stLPuF9yvEYYfssRIpt5sB5L84VCZgIaEAXhjYAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Paul Greco <pmgreco@us.ibm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 30/43] net: smsc911x: Fix runtime PM imbalance on error
-Date:   Fri,  5 Jun 2020 16:15:00 +0200
-Message-Id: <20200605140154.101716876@linuxfoundation.org>
+Subject: [PATCH 5.6 03/43] ARC: Fix ICCM & DCCM runtime size checks
+Date:   Fri,  5 Jun 2020 16:14:33 +0200
+Message-Id: <20200605140152.683629598@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,61 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit 539d39ad0c61b35f69565a037d7586deaf6d6166 ]
+[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
 
-Remove runtime PM usage counter decrement when the
-increment function has not been called to keep the
-counter balanced.
+As of today the ICCM and DCCM size checks are incorrectly using
+mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
+and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
+runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix that.
+
+Reported-by: Paul Greco <pmgreco@us.ibm.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arc/kernel/setup.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
-index 49a6a9167af4..fc168f85e7af 100644
---- a/drivers/net/ethernet/smsc/smsc911x.c
-+++ b/drivers/net/ethernet/smsc/smsc911x.c
-@@ -2493,20 +2493,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index aa41af6ef4ac..efdedf83b954 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -11,6 +11,7 @@
+ #include <linux/clocksource.h>
+ #include <linux/console.h>
+ #include <linux/module.h>
++#include <linux/sizes.h>
+ #include <linux/cpu.h>
+ #include <linux/of_clk.h>
+ #include <linux/of_fdt.h>
+@@ -409,12 +410,12 @@ static void arc_chk_core_config(void)
+ 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
+ 		panic("Linux built with incorrect DCCM Base address\n");
  
- 	retval = smsc911x_init(dev);
- 	if (retval < 0)
--		goto out_disable_resources;
-+		goto out_init_fail;
+-	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
++	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
+ 		panic("Linux built with incorrect DCCM Size\n");
+ #endif
  
- 	netif_carrier_off(dev);
+ #ifdef CONFIG_ARC_HAS_ICCM
+-	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
++	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
+ 		panic("Linux built with incorrect ICCM Size\n");
+ #endif
  
- 	retval = smsc911x_mii_init(pdev, dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
- 	}
- 
- 	retval = register_netdev(dev);
- 	if (retval) {
- 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
--		goto out_disable_resources;
-+		goto out_init_fail;
- 	} else {
- 		SMSC_TRACE(pdata, probe,
- 			   "Network interface: \"%s\"", dev->name);
-@@ -2547,9 +2547,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
--out_disable_resources:
-+out_init_fail:
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+out_disable_resources:
- 	(void)smsc911x_disable_resources(pdev);
- out_enable_resources_fail:
- 	smsc911x_free_resources(pdev);
 -- 
 2.25.1
 
