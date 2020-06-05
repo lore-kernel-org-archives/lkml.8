@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666C7208A9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D6B208A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366788;
-	bh=MYJqfoYIbEzY1UIFb/rjRLJvQvUWngWnN24BHuAkXuQ=;
+	s=default; t=1591366793;
+	bh=YsWL4UNeilZQmF1Ddb65gbkdot7lbixcLGXm29cNmJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Do/IqHjT0Vu/mIBdHOXBOHi2EKdoX/YZN1ebBaltRBKn28d1yJ+wthJhVACmMw9DF
-	 e3vYnSrcUecrIHGPscTPmSBxtCElolTh/7ypC/wBHS0UdS/+q5Vz8dzt6/rGqYUgpb
-	 zSLfpoIiBtfeuI0N1d2RKqsPDObxcbzJ2uXDpIHc=
+	b=wgPbMi+xjEPQv5qQB4fKM8UKCfIqVc6JPz48O2YTgty2AHHm7/UaZRTemUae+RRHA
+	 Z/K7MHz45N84mtYPv8RErIITQsSUCFOnhpnCeHRlnIWvPXWVgsq91XLV3GUIn78wBl
+	 jolGNfxaaEnNNttnDFBO7SuvseX3vucl+4Fw4If0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgFEOTr (ORCPT
+        id S1728346AbgFEOTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbgFEOTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:35 -0400
+        id S1728305AbgFEOTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF078208A9;
-        Fri,  5 Jun 2020 14:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BA45208A9;
+        Fri,  5 Jun 2020 14:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366774;
-        bh=MYJqfoYIbEzY1UIFb/rjRLJvQvUWngWnN24BHuAkXuQ=;
+        s=default; t=1591366778;
+        bh=YsWL4UNeilZQmF1Ddb65gbkdot7lbixcLGXm29cNmJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQpmU2EDQ8G6iT2ratAgjJWDELIkZ/AOFUKkkjtB5/47ToXXAKwxp6uVLEO7hdjiJ
-         6H3nWzaNdF4NmcaHqIVzOPSmD44AQIlpwSSECACOrAn0UQQ9hAlPLV+8O+FdKSaAuB
-         v5AHV1kSh9ottvVQU9rNWwfzKQBNMYwUnQ1Bruao=
+        b=qcaDyFpE5B8eBOqfvvIM4olLQiouGYfkcNeN+80P4uZ/SfEf6S8+2f/s3kVOrPcgm
+         qM1rk4MczyhbyIujTU1XSVbnjrfhmLQTmjEpfQY8UfTrZZazVoSPk8kiim3Air65l9
+         keDi1m4V0xqVB8zcXcJAGoYkyBmkz3yqxW82irNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas De Marchi <lucas.demarchi@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 12/28] drm/i915: fix port checks for MST support on gen >= 11
-Date:   Fri,  5 Jun 2020 16:15:14 +0200
-Message-Id: <20200605140253.085150761@linuxfoundation.org>
+        stable@vger.kernel.org, Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Nageswara R Sastry <nasastry@in.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 14/28] powerpc/powernv: Avoid re-registration of imc debugfs directory
+Date:   Fri,  5 Jun 2020 16:15:16 +0200
+Message-Id: <20200605140253.217864212@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -60,88 +61,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas De Marchi <lucas.demarchi@intel.com>
+From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
 
-[ Upstream commit 10d987fd1b7baceaafa78d805e71427ab735b4e4 ]
+[ Upstream commit 48e626ac85b43cc589dd1b3b8004f7f85f03544d ]
 
-Both Ice Lake and Elkhart Lake (gen 11) support MST on all external
-connections except DDI A. Tiger Lake (gen 12) supports on all external
-connections.
+export_imc_mode_and_cmd() function which creates the debugfs interface
+for imc-mode and imc-command, is invoked when each nest pmu units is
+registered.
 
-Move the check to happen inside intel_dp_mst_encoder_init() and add
-specific platform checks.
+When the first nest pmu unit is registered, export_imc_mode_and_cmd()
+creates 'imc' directory under `/debug/powerpc/`. In the subsequent
+invocations debugfs_create_dir() function returns, since the directory
+already exists.
 
-v2: Replace != with == checks for ports on gen < 11 (Ville)
+The recent commit <c33d442328f55> (debugfs: make error message a bit
+more verbose), throws a warning if we try to invoke
+`debugfs_create_dir()` with an already existing directory name.
 
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191015164029.18431-3-lucas.demarchi@intel.com
+Address this warning by making the debugfs directory registration in
+the opal_imc_counters_probe() function, i.e invoke
+export_imc_mode_and_cmd() function from the probe function.
+
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Tested-by: Nageswara R Sastry <nasastry@in.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191127072035.4283-1-anju@linux.vnet.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_dp.c     |  7 ++-----
- drivers/gpu/drm/i915/intel_dp_mst.c | 22 ++++++++++++++++------
- 2 files changed, 18 insertions(+), 11 deletions(-)
+ arch/powerpc/platforms/powernv/opal-imc.c | 39 ++++++++++-------------
+ 1 file changed, 16 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
-index 20cd4c8acecc..77a2f7fc2b37 100644
---- a/drivers/gpu/drm/i915/intel_dp.c
-+++ b/drivers/gpu/drm/i915/intel_dp.c
-@@ -6288,11 +6288,8 @@ intel_dp_init_connector(struct intel_digital_port *intel_dig_port,
- 		intel_connector->get_hw_state = intel_connector_get_hw_state;
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 649fb268f446..5399682797d0 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -63,10 +63,6 @@ static void export_imc_mode_and_cmd(struct device_node *node,
  
- 	/* init MST on ports that can support it */
--	if (HAS_DP_MST(dev_priv) && !intel_dp_is_edp(intel_dp) &&
--	    (port == PORT_B || port == PORT_C ||
--	     port == PORT_D || port == PORT_F))
--		intel_dp_mst_encoder_init(intel_dig_port,
--					  intel_connector->base.base.id);
-+	intel_dp_mst_encoder_init(intel_dig_port,
-+				  intel_connector->base.base.id);
+ 	imc_debugfs_parent = debugfs_create_dir("imc", powerpc_debugfs_root);
  
- 	if (!intel_edp_init_connector(intel_dp, intel_connector)) {
- 		intel_dp_aux_fini(intel_dp);
-diff --git a/drivers/gpu/drm/i915/intel_dp_mst.c b/drivers/gpu/drm/i915/intel_dp_mst.c
-index 58ba14966d4f..c7d52c66ff29 100644
---- a/drivers/gpu/drm/i915/intel_dp_mst.c
-+++ b/drivers/gpu/drm/i915/intel_dp_mst.c
-@@ -588,21 +588,31 @@ intel_dp_create_fake_mst_encoders(struct intel_digital_port *intel_dig_port)
- int
- intel_dp_mst_encoder_init(struct intel_digital_port *intel_dig_port, int conn_base_id)
- {
-+	struct drm_i915_private *i915 = to_i915(intel_dig_port->base.base.dev);
- 	struct intel_dp *intel_dp = &intel_dig_port->dp;
--	struct drm_device *dev = intel_dig_port->base.base.dev;
-+	enum port port = intel_dig_port->base.port;
- 	int ret;
+-	/*
+-	 * Return here, either because 'imc' directory already exists,
+-	 * Or failed to create a new one.
+-	 */
+ 	if (!imc_debugfs_parent)
+ 		return;
  
--	intel_dp->can_mst = true;
-+	if (!HAS_DP_MST(i915) || intel_dp_is_edp(intel_dp))
-+		return 0;
-+
-+	if (INTEL_GEN(i915) < 12 && port == PORT_A)
-+		return 0;
-+
-+	if (INTEL_GEN(i915) < 11 && port == PORT_E)
-+		return 0;
-+
- 	intel_dp->mst_mgr.cbs = &mst_cbs;
+@@ -139,7 +135,6 @@ static int imc_get_mem_addr_nest(struct device_node *node,
+ 	}
  
- 	/* create encoders */
- 	intel_dp_create_fake_mst_encoders(intel_dig_port);
--	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, dev,
-+	ret = drm_dp_mst_topology_mgr_init(&intel_dp->mst_mgr, &i915->drm,
- 					   &intel_dp->aux, 16, 3, conn_base_id);
--	if (ret) {
--		intel_dp->can_mst = false;
-+	if (ret)
- 		return ret;
--	}
-+
-+	intel_dp->can_mst = true;
-+
+ 	pmu_ptr->imc_counter_mmaped = true;
+-	export_imc_mode_and_cmd(node, pmu_ptr);
+ 	kfree(base_addr_arr);
+ 	kfree(chipid_arr);
  	return 0;
+@@ -155,7 +150,7 @@ static int imc_get_mem_addr_nest(struct device_node *node,
+  *		    and domain as the inputs.
+  * Allocates memory for the struct imc_pmu, sets up its domain, size and offsets
+  */
+-static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
++static struct imc_pmu *imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
+ {
+ 	int ret = 0;
+ 	struct imc_pmu *pmu_ptr;
+@@ -163,27 +158,23 @@ static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
+ 
+ 	/* Return for unknown domain */
+ 	if (domain < 0)
+-		return -EINVAL;
++		return NULL;
+ 
+ 	/* memory for pmu */
+ 	pmu_ptr = kzalloc(sizeof(*pmu_ptr), GFP_KERNEL);
+ 	if (!pmu_ptr)
+-		return -ENOMEM;
++		return NULL;
+ 
+ 	/* Set the domain */
+ 	pmu_ptr->domain = domain;
+ 
+ 	ret = of_property_read_u32(parent, "size", &pmu_ptr->counter_mem_size);
+-	if (ret) {
+-		ret = -EINVAL;
++	if (ret)
+ 		goto free_pmu;
+-	}
+ 
+ 	if (!of_property_read_u32(parent, "offset", &offset)) {
+-		if (imc_get_mem_addr_nest(parent, pmu_ptr, offset)) {
+-			ret = -EINVAL;
++		if (imc_get_mem_addr_nest(parent, pmu_ptr, offset))
+ 			goto free_pmu;
+-		}
+ 	}
+ 
+ 	/* Function to register IMC pmu */
+@@ -194,14 +185,14 @@ static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
+ 		if (pmu_ptr->domain == IMC_DOMAIN_NEST)
+ 			kfree(pmu_ptr->mem_info);
+ 		kfree(pmu_ptr);
+-		return ret;
++		return NULL;
+ 	}
+ 
+-	return 0;
++	return pmu_ptr;
+ 
+ free_pmu:
+ 	kfree(pmu_ptr);
+-	return ret;
++	return NULL;
  }
  
+ static void disable_nest_pmu_counters(void)
+@@ -258,6 +249,7 @@ int get_max_nest_dev(void)
+ static int opal_imc_counters_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *imc_dev = pdev->dev.of_node;
++	struct imc_pmu *pmu;
+ 	int pmu_count = 0, domain;
+ 	bool core_imc_reg = false, thread_imc_reg = false;
+ 	u32 type;
+@@ -273,6 +265,7 @@ static int opal_imc_counters_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	for_each_compatible_node(imc_dev, NULL, IMC_DTB_UNIT_COMPAT) {
++		pmu = NULL;
+ 		if (of_property_read_u32(imc_dev, "type", &type)) {
+ 			pr_warn("IMC Device without type property\n");
+ 			continue;
+@@ -294,9 +287,13 @@ static int opal_imc_counters_probe(struct platform_device *pdev)
+ 			break;
+ 		}
+ 
+-		if (!imc_pmu_create(imc_dev, pmu_count, domain)) {
+-			if (domain == IMC_DOMAIN_NEST)
++		pmu = imc_pmu_create(imc_dev, pmu_count, domain);
++		if (pmu != NULL) {
++			if (domain == IMC_DOMAIN_NEST) {
++				if (!imc_debugfs_parent)
++					export_imc_mode_and_cmd(imc_dev, pmu);
+ 				pmu_count++;
++			}
+ 			if (domain == IMC_DOMAIN_CORE)
+ 				core_imc_reg = true;
+ 			if (domain == IMC_DOMAIN_THREAD)
+@@ -304,10 +301,6 @@ static int opal_imc_counters_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	/* If none of the nest units are registered, remove debugfs interface */
+-	if (pmu_count == 0)
+-		debugfs_remove_recursive(imc_debugfs_parent);
+-
+ 	/* If core imc is not registered, unregister thread-imc */
+ 	if (!core_imc_reg && thread_imc_reg)
+ 		unregister_thread_imc();
 -- 
 2.25.1
 
