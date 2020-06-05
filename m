@@ -7,124 +7,141 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFD03207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60405207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591331046;
-	bh=Ger2JKf4foukIoxJhsp2lpcdnsKngWBWA02v1OQp51Y=;
+	s=default; t=1591331212;
+	bh=xGbrbzv9hPwjqcy73km558vyrkxcWK3YVwClCXHm1lU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AhsZRFr3v78eQ1z1P2RKD+TjZlIEdOBOh2mKMnxlBjHO2noVKL1xaSfNKmdoGMVyv
-	 1q3PI/0CH5j52rjebru7Ylg+HwGz0kxJd9ONZflnj7X2sMEUD8HcbE+gM4nW3wcY8l
-	 majFYzJ9zZDQtF3aAsc8z3qED2srP4JoogcdxjQM=
+	b=rM6und+3iRUQ5VhkoiH0bysklxPbyrImtM3ZsLeb5BiYPSLUEqg9+41M4vOGXo8IC
+	 e2ISwt2Dyl6Vn2zBxMD2WqlAIYpaO4ylH082zEhA21PndN/nt5CjIL1H6u0gr8fyLI
+	 /KhCEzBod999DiDC+3cJcDItPgTY1xsO8A5Y+PAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgFEEYF (ORCPT
+        id S1726156AbgFEE0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56694 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 00:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgFEEYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:24:04 -0400
+        id S1725280AbgFEE0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 00:26:51 -0400
 Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C98CA206E6;
-        Fri,  5 Jun 2020 04:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D92EC206E6;
+        Fri,  5 Jun 2020 04:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591331044;
-        bh=Ger2JKf4foukIoxJhsp2lpcdnsKngWBWA02v1OQp51Y=;
+        s=default; t=1591331210;
+        bh=xGbrbzv9hPwjqcy73km558vyrkxcWK3YVwClCXHm1lU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0wRsVBPYDfhuBPXJhNEprgX7yrwQg0lkOBlGoz4O9jEC+lVNlLQWhfMSciuYkRSKF
-         tR2wZxyLj9N1kziXCwugwlLQRH47af8NFACLXOevvhB6Wi/eonfPM8oDsgehwYXdGg
-         XThOmBu1ey/i1g9+k9IDIgZUxKvQoijjfHVxPMfY=
-Date:   Thu, 4 Jun 2020 21:24:02 -0700
+        b=BNX5OC0vSSannJRbSrOwiKzyIcinK9DVwkj9LbOitwi8+1YxpLND7Kq1ij15Ar4n7
+         FVQG/kiH40wGeS0jqnOfB1L/06Ugu3UtWfXus+yY5NuE11wFsmnWDMCzio1IjeI0LV
+         8y4MmP/cfgU9GAGXPhTKmXEMjZHqyYJls4Texdys=
+Date:   Thu, 4 Jun 2020 21:26:48 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     kvm@vger.kernel.org
-Cc:     syzbot <syzbot+f196caa45793d6374707@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: memory leak in do_eventfd
-Message-ID: <20200605042402.GO2667@sol.localdomain>
-References: <0000000000001daa8d05a61e3440@google.com>
+To:     linux-rdma@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     syzbot <syzbot+407fd358a932bbf639c6@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: general protection fault in kobject_get (2)
+Message-ID: <20200605042648.GP2667@sol.localdomain>
+References: <0000000000009a6d4305a60d2c6b@google.com>
+ <20200520055641.GA2242221@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000001daa8d05a61e3440@google.com>
+In-Reply-To: <20200520055641.GA2242221@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Cc kvm mailing list]
+On Wed, May 20, 2020 at 07:56:41AM +0200, Greg KH wrote:
+> On Tue, May 19, 2020 at 09:53:16PM -0700, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    d00f26b6 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> > git tree:       net-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1316343c100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=26d0bd769afe1a2c
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=407fd358a932bbf639c6
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > 
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+407fd358a932bbf639c6@syzkaller.appspotmail.com
+> > 
+> > general protection fault, probably for non-canonical address 0xdffffc0000000013: 0000 [#1] PREEMPT SMP KASAN
+> > KASAN: null-ptr-deref in range [0x0000000000000098-0x000000000000009f]
+> > CPU: 1 PID: 16682 Comm: syz-executor.3 Not tainted 5.7.0-rc4-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > RIP: 0010:kobject_get+0x30/0x150 lib/kobject.c:640
+> > Code: 53 e8 d4 7e c6 fd 4d 85 e4 0f 84 a2 00 00 00 e8 c6 7e c6 fd 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 e7 00 00 00
+> > RSP: 0018:ffffc9000772f240 EFLAGS: 00010203
+> > RAX: dffffc0000000000 RBX: ffffffff85acfca0 RCX: ffffc9000fc67000
+> > RDX: 0000000000000013 RSI: ffffffff83acadfa RDI: 000000000000009c
+> > RBP: 0000000000000060 R08: ffff8880a8dfa4c0 R09: ffffed100a03f403
+> > R10: ffff8880501fa017 R11: ffffed100a03f402 R12: 0000000000000060
+> > R13: ffffc9000772f3c0 R14: ffff88805d1ec4e8 R15: ffff88805d1ec580
+> > FS:  00007f1ebed26700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00000000004d88f0 CR3: 00000000a86c4000 CR4: 00000000001406e0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >  get_device+0x20/0x30 drivers/base/core.c:2620
+> >  __ib_get_client_nl_info+0x1d4/0x2a0 drivers/infiniband/core/device.c:1863
+> >  ib_get_client_nl_info+0x30/0x180 drivers/infiniband/core/device.c:1883
+> >  nldev_get_chardev+0x52b/0xa40 drivers/infiniband/core/nldev.c:1625
+> >  rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+> >  rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+> >  rdma_nl_rcv+0x586/0x900 drivers/infiniband/core/netlink.c:259
+> >  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+> >  netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+> >  netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+> >  sock_sendmsg_nosec net/socket.c:652 [inline]
+> >  sock_sendmsg+0xcf/0x120 net/socket.c:672
+> >  ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+> >  ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+> >  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+> >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> > RIP: 0033:0x45c829
+> > Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > RSP: 002b:00007f1ebed25c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> > RAX: ffffffffffffffda RBX: 00000000004ff720 RCX: 000000000045c829
+> > RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
+> > RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> > R13: 00000000000009ad R14: 00000000004d5f10 R15: 00007f1ebed266d4
+> > Modules linked in:
+> > ---[ end trace 239938a6c4c3c99f ]---
+> > RIP: 0010:kobject_get+0x30/0x150 lib/kobject.c:640
+> > Code: 53 e8 d4 7e c6 fd 4d 85 e4 0f 84 a2 00 00 00 e8 c6 7e c6 fd 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 e7 00 00 00
+> > RSP: 0018:ffffc9000772f240 EFLAGS: 00010203
+> > RAX: dffffc0000000000 RBX: ffffffff85acfca0 RCX: ffffc9000fc67000
+> > RDX: 0000000000000013 RSI: ffffffff83acadfa RDI: 000000000000009c
+> > RBP: 0000000000000060 R08: ffff8880a8dfa4c0 R09: ffffed100a03f403
+> > R10: ffff8880501fa017 R11: ffffed100a03f402 R12: 0000000000000060
+> > R13: ffffc9000772f3c0 R14: ffff88805d1ec4e8 R15: ffff88805d1ec580
+> > FS:  00007f1ebed26700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 000000000073fad4 CR3: 00000000a86c4000 CR4: 00000000001406e0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> Looks like an IB/rdma issue, poke those developers please :)
+> 
 
-On Wed, May 20, 2020 at 06:12:17PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    5a9ffb95 Merge tag '5.7-rc5-smb3-fixes' of git://git.samba..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10b72a02100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f8295ae5b3f8268d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f196caa45793d6374707
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17585b76100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12500a02100000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f196caa45793d6374707@syzkaller.appspotmail.com
-> 
-> BUG: memory leak
-> unreferenced object 0xffff888117169ac0 (size 64):
->   comm "syz-executor012", pid 6609, jiffies 4294942172 (age 13.720s)
->   hex dump (first 32 bytes):
->     01 00 00 00 ff ff ff ff 00 00 00 00 00 c9 ff ff  ................
->     d0 9a 16 17 81 88 ff ff d0 9a 16 17 81 88 ff ff  ................
->   backtrace:
->     [<00000000351bb234>] kmalloc include/linux/slab.h:555 [inline]
->     [<00000000351bb234>] do_eventfd+0x35/0xf0 fs/eventfd.c:418
->     [<00000000c2f69a77>] __do_sys_eventfd fs/eventfd.c:443 [inline]
->     [<00000000c2f69a77>] __se_sys_eventfd fs/eventfd.c:441 [inline]
->     [<00000000c2f69a77>] __x64_sys_eventfd+0x14/0x20 fs/eventfd.c:441
->     [<0000000086d6f989>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
->     [<000000006c5bcb63>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> BUG: memory leak
-> unreferenced object 0xffff888117169100 (size 64):
->   comm "syz-executor012", pid 6609, jiffies 4294942172 (age 13.720s)
->   hex dump (first 32 bytes):
->     e8 99 dd 00 00 c9 ff ff e8 99 dd 00 00 c9 ff ff  ................
->     00 00 00 20 00 00 00 00 00 00 00 00 00 00 00 00  ... ............
->   backtrace:
->     [<00000000436d2955>] kmalloc include/linux/slab.h:555 [inline]
->     [<00000000436d2955>] kzalloc include/linux/slab.h:669 [inline]
->     [<00000000436d2955>] kvm_assign_ioeventfd_idx+0x4f/0x270 arch/x86/kvm/../../../virt/kvm/eventfd.c:798
->     [<00000000e89390cc>] kvm_assign_ioeventfd arch/x86/kvm/../../../virt/kvm/eventfd.c:934 [inline]
->     [<00000000e89390cc>] kvm_ioeventfd+0xbb/0x194 arch/x86/kvm/../../../virt/kvm/eventfd.c:961
->     [<00000000ba9f6732>] kvm_vm_ioctl+0x1e6/0x1030 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3670
->     [<000000005da94937>] vfs_ioctl fs/ioctl.c:47 [inline]
->     [<000000005da94937>] ksys_ioctl+0xa6/0xd0 fs/ioctl.c:771
->     [<00000000a583d097>] __do_sys_ioctl fs/ioctl.c:780 [inline]
->     [<00000000a583d097>] __se_sys_ioctl fs/ioctl.c:778 [inline]
->     [<00000000a583d097>] __x64_sys_ioctl+0x1a/0x20 fs/ioctl.c:778
->     [<0000000086d6f989>] do_syscall_64+0x6e/0x220 arch/x86/entry/common.c:295
->     [<000000006c5bcb63>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000001daa8d05a61e3440%40google.com.
+If you want people to receive your email, you need to send it to them.
+
++Cc linux-rdma and maintainers of drivers/infiniband/.
+
+- Eric
