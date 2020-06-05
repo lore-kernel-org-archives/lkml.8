@@ -2,144 +2,299 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10288C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18154C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D8C206FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFBB206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgFEShx (ORCPT
+        id S1727917AbgFESiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:37:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45536 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726294AbgFEShw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:37:52 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055IW5Gv123119;
-        Fri, 5 Jun 2020 14:37:27 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31f9dfg0s5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 14:37:27 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055IZdZb142400;
-        Fri, 5 Jun 2020 14:37:26 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31f9dfg0rc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 14:37:26 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055IZoGE002136;
-        Fri, 5 Jun 2020 18:37:24 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03fra.de.ibm.com with ESMTP id 31bf47d60d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 18:37:24 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055IbLk263242476
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jun 2020 18:37:21 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D0E074C044;
-        Fri,  5 Jun 2020 18:37:21 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDBF64C04A;
-        Fri,  5 Jun 2020 18:37:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.181.45])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jun 2020 18:37:18 +0000 (GMT)
-Message-ID: <1591382238.5816.27.camel@linux.ibm.com>
-Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        ebiederm@xmission.com, jeyu@kernel.org, jmorris@namei.org,
-        paul@paul-moore.com, stephen.smalley.work@gmail.com,
-        eparis@parisplace.org, nayna@linux.ibm.com,
-        dan.carpenter@oracle.com, skhan@linuxfoundation.org,
-        geert@linux-m68k.org, tglx@linutronix.de, bauerman@linux.ibm.com,
-        dhowells@redhat.com, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 05 Jun 2020 14:37:18 -0400
-In-Reply-To: <1c68c0c7-1b0a-dfec-0e50-1b65eedc3dc7@broadcom.com>
-References: <20200513152108.25669-1-mcgrof@kernel.org>
-         <20200513181736.GA24342@infradead.org>
-         <20200515212933.GD11244@42.do-not-panic.com>
-         <20200518062255.GB15641@infradead.org>
-         <1589805462.5111.107.camel@linux.ibm.com>
-         <7525ca03-def7-dfe2-80a9-25270cb0ae05@broadcom.com>
-         <202005221551.5CA1372@keescook>
-         <c48a80f5-a09c-6747-3db8-be23a260a0cb@broadcom.com>
-         <1590288736.5111.431.camel@linux.ibm.com>
-         <1c68c0c7-1b0a-dfec-0e50-1b65eedc3dc7@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-05_05:2020-06-04,2020-06-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- adultscore=0 impostorscore=0 phishscore=0 malwarescore=0 clxscore=1011
- suspectscore=0 cotscore=-2147483648 priorityscore=1501 mlxlogscore=984
- lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050134
+        Fri, 5 Jun 2020 14:38:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31968 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbgFESh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 14:37:58 -0400
+IronPort-SDR: vLPJ5WyL/6ieNk5H3rEUu9alBlVFtyfuNscYexC11n3vijIl11q1j5oDDI53G2tvmzHUj4pBJa
+ w0ABha0iPpaw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 11:37:56 -0700
+IronPort-SDR: XLGHK0NKxft8w+26C1EGhoXqar93pIvKWb4FA2W8x1kRtDPqXKRVvHjUWPxgGaLnUzGCVw0Hzw
+ AGCWAaC/yg3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="258101884"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Jun 2020 11:37:56 -0700
+Date:   Fri, 5 Jun 2020 11:36:56 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v10 6/6] powerpc/papr_scm: Implement support for
+ PAPR_PDSM_HEALTH
+Message-ID: <20200605183655.GP1505637@iweiny-DESK2.sc.intel.com>
+References: <20200604234136.253703-1-vaibhav@linux.ibm.com>
+ <20200604234136.253703-7-vaibhav@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604234136.253703-7-vaibhav@linux.ibm.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-05 at 11:15 -0700, Scott Branden wrote:
-> Hi Mimi,
+On Fri, Jun 05, 2020 at 05:11:36AM +0530, Vaibhav Jain wrote:
+> This patch implements support for PDSM request 'PAPR_PDSM_HEALTH'
+> that returns a newly introduced 'struct nd_papr_pdsm_health' instance
+> containing dimm health information back to user space in response to
+> ND_CMD_CALL. This functionality is implemented in newly introduced
+> papr_pdsm_health() that queries the nvdimm health information and
+> then copies this information to the package payload whose layout is
+> defined by 'struct nd_papr_pdsm_health'.
 > 
-> On 2020-05-23 7:52 p.m., Mimi Zohar wrote:
-> > Scott, the change should be straight forward.  The additional patch
-> > needs to:
-> > - define a new kernel_read_file_id enumeration, like
-> > FIRMWARE_PARTIAL_READ.
-> > - Currently ima_read_file() has a comment about pre-allocated firmware
-> > buffers.  Update ima_read_file() to call process_measurement() for the
-> > new enumeration FIRMWARE_PARTIAL_READ and update ima_post_read_file()
-> > to return immediately.
-> Should this be what is in ima_read_file?
-> {
->      enum ima_hooks func;
->      u32 secid;
-
-Please don't remove the existing comment.
-
->      if (read_id != READING_FIRMWARE_PARTIAL_READ)
->          return 0;
+> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+> ---
+> Changelog:
 > 
->      if (!file) { /* should never happen */
->          if (ima_appraise & IMA_APPRAISE_ENFORCE)
->              return -EACCES;
->          return 0;
->      }
+> v9..v10:
+> * Removed code in papr_pdsm_health that performed validation on pdsm
+>   payload version and corrosponding struct and defines used for
+>   validation of payload version.
+> * Dropped usage of struct papr_pdsm_health in 'struct
+>   papr_scm_priv'. Instead papr_psdm_health() now uses
+>   'papr_scm_priv.health_bitmap' to populate the pdsm payload.
+> * Above change also fixes the problem where this patch was removing
+>   the code that was previously introduced in this patch-series.
+>   [ Ira ]
+> * Introduced a new def ND_PDSM_ENVELOPE_HDR_SIZE that indicates the
+>   space allocated to 'struct nd_pdsm_cmd_pkg' fields except 'struct
+>   nd_cmd_pkg'. This def is useful in validating payload sizes.
+> * Reworked papr_pdsm_health() to enforce a specific payload size for
+>   'PAPR_PDSM_HEALTH' pdsm request.
+> 
+> Resend:
+> * Added ack from Aneesh.
+> 
+> v8..v9:
+> * s/PAPR_SCM_PDSM_HEALTH/PAPR_PDSM_HEALTH/g  [ Dan , Aneesh ]
+> * s/PAPR_SCM_PSDM_DIMM_*/PAPR_PDSM_DIMM_*/g
+> * Renamed papr_scm_get_health() to papr_psdm_health()
+> * Updated patch description to replace papr-scm dimm with nvdimm.
+> 
+> v7..v8:
+> * None
+> 
+> Resend:
+> * None
+> 
+> v6..v7:
+> * Updated flags_show() to use seq_buf_printf(). [Mpe]
+> * Updated papr_scm_get_health() to use newly introduced
+>   __drc_pmem_query_health() bypassing the cache [Mpe].
+> 
+> v5..v6:
+> * Added attribute '__packed' to 'struct nd_papr_pdsm_health_v1' to
+>   gaurd against possibility of different compilers adding different
+>   paddings to the struct [ Dan Williams ]
+> 
+> * Updated 'struct nd_papr_pdsm_health_v1' to use __u8 instead of
+>   'bool' and also updated drc_pmem_query_health() to take this into
+>   account. [ Dan Williams ]
+> 
+> v4..v5:
+> * None
+> 
+> v3..v4:
+> * Call the DSM_PAPR_SCM_HEALTH service function from
+>   papr_scm_service_dsm() instead of papr_scm_ndctl(). [Aneesh]
+> 
+> v2..v3:
+> * Updated struct nd_papr_scm_dimm_health_stat_v1 to use '__xx' types
+>   as its exported to the userspace [Aneesh]
+> * Changed the constants DSM_PAPR_SCM_DIMM_XX indicating dimm health
+>   from enum to #defines [Aneesh]
+> 
+> v1..v2:
+> * New patch in the series
+> ---
+>  arch/powerpc/include/uapi/asm/papr_pdsm.h | 33 +++++++++++
+>  arch/powerpc/platforms/pseries/papr_scm.c | 70 +++++++++++++++++++++++
+>  2 files changed, 103 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/uapi/asm/papr_pdsm.h b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+> index 8b1a4f8fa316..c4c990ede5d4 100644
+> --- a/arch/powerpc/include/uapi/asm/papr_pdsm.h
+> +++ b/arch/powerpc/include/uapi/asm/papr_pdsm.h
+> @@ -71,12 +71,17 @@ struct nd_pdsm_cmd_pkg {
+>  	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
+>  } __packed;
+>  
+> +/* Calculate size used by the pdsm header fields minus 'struct nd_cmd_pkg' */
+> +#define ND_PDSM_ENVELOPE_HDR_SIZE \
+> +	(sizeof(struct nd_pdsm_cmd_pkg) - sizeof(struct nd_cmd_pkg))
+> +
 
-This checks for any IMA appraise rule.  You want to enforce firmware
-signature checking only if there is a firmware appraise rule.  Refer
-to ima_post_read_file().
+This is kind of a weird name for this.
 
->      security_task_getsecid(current, &secid);
->      return process_measurement(file, current_cred(), secid, NULL,
->                     0, MAY_READ, FILE_CHECK);
+Isn't this just the ND PDSM header size?  What is 'envelope' mean here?
 
-The read_idmap enumeration should be updated similar to the other
-firmware.  Keep the code generic.  Refer to ima_post_read_file().
- func will be defined as FIRMWARE_CHECK.
+>  /*
+>   * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
+>   * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
+>   */
+>  enum papr_pdsm {
+>  	PAPR_PDSM_MIN = 0x0,
+> +	PAPR_PDSM_HEALTH,
+>  	PAPR_PDSM_MAX,
+>  };
+>  
+> @@ -95,4 +100,32 @@ static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
+>  		return (void *)(pcmd->payload);
+>  }
+>  
+> +/* Various nvdimm health indicators */
+> +#define PAPR_PDSM_DIMM_HEALTHY       0
+> +#define PAPR_PDSM_DIMM_UNHEALTHY     1
+> +#define PAPR_PDSM_DIMM_CRITICAL      2
+> +#define PAPR_PDSM_DIMM_FATAL         3
+> +
+> +/*
+> + * Struct exchanged between kernel & ndctl in for PAPR_PDSM_HEALTH
+> + * Various flags indicate the health status of the dimm.
+> + *
+> + * dimm_unarmed		: Dimm not armed. So contents wont persist.
+> + * dimm_bad_shutdown	: Previous shutdown did not persist contents.
+> + * dimm_bad_restore	: Contents from previous shutdown werent restored.
+> + * dimm_scrubbed	: Contents of the dimm have been scrubbed.
+> + * dimm_locked		: Contents of the dimm cant be modified until CEC reboot
+> + * dimm_encrypted	: Contents of dimm are encrypted.
+> + * dimm_health		: Dimm health indicator. One of PAPR_PDSM_DIMM_XXXX
+> + */
+> +struct nd_papr_pdsm_health {
+> +	__u8 dimm_unarmed;
+> +	__u8 dimm_bad_shutdown;
+> +	__u8 dimm_bad_restore;
+> +	__u8 dimm_scrubbed;
+> +	__u8 dimm_locked;
+> +	__u8 dimm_encrypted;
+> +	__u16 dimm_health;
+> +} __packed;
+> +
+>  #endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */
+> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> index 05eb56ecab5e..984942be24c1 100644
+> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> @@ -421,6 +421,72 @@ static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>  	return 0;
+>  }
+>  
+> +/* Fetch the DIMM health info and populate it in provided package. */
+> +static int papr_pdsm_health(struct papr_scm_priv *p,
+> +			    struct nd_pdsm_cmd_pkg *pkg)
+> +{
+> +	int rc;
+> +	struct nd_papr_pdsm_health health = { 0 };
+> +	u16 copysize = sizeof(struct nd_papr_pdsm_health);
+> +	u16 payload_size = pkg->hdr.nd_size_out - ND_PDSM_ENVELOPE_HDR_SIZE;
+> +
+> +	/* Ensure correct payload size that can hold struct nd_papr_pdsm_health */
+> +	if (payload_size != copysize) {
+> +		dev_dbg(&p->pdev->dev,
+> +			"Unexpected payload-size (%u). Expected (%u)",
+> +			pkg->hdr.nd_size_out, copysize);
+> +		rc = -ENOSPC;
+> +		goto out;
+> +	}
+> +
+> +	/* Ensure dimm health mutex is taken preventing concurrent access */
+> +	rc = mutex_lock_interruptible(&p->health_mutex);
+> +	if (rc)
+> +		goto out;
+> +
+> +	/* Always fetch upto date dimm health data ignoring cached values */
+> +	rc = __drc_pmem_query_health(p);
+> +	if (rc) {
+> +		mutex_unlock(&p->health_mutex);
+> +		goto out;
+> +	}
+> +
+> +	/* update health struct with various flags derived from health bitmap */
+> +	health = (struct nd_papr_pdsm_health) {
+> +		.dimm_unarmed = p->health_bitmap & PAPR_PMEM_UNARMED_MASK,
+> +		.dimm_bad_shutdown = p->health_bitmap & PAPR_PMEM_BAD_SHUTDOWN_MASK,
+> +		.dimm_bad_restore = p->health_bitmap & PAPR_PMEM_BAD_RESTORE_MASK,
+> +		.dimm_encrypted = p->health_bitmap & PAPR_PMEM_ENCRYPTED,
+> +		.dimm_locked = p->health_bitmap & PAPR_PMEM_SCRUBBED_AND_LOCKED,
+> +		.dimm_scrubbed = p->health_bitmap & PAPR_PMEM_SCRUBBED_AND_LOCKED,
 
-thanks,
+Are you sure these work?  These are not assignments to a bool so I don't think
+gcc will do what you want here.
 
-Mimi
+Ira
+
+> +		.dimm_health = PAPR_PDSM_DIMM_HEALTHY,
+> +	};
+> +
+> +	/* Update field dimm_health based on health_bitmap flags */
+> +	if (p->health_bitmap & PAPR_PMEM_HEALTH_FATAL)
+> +		health.dimm_health = PAPR_PDSM_DIMM_FATAL;
+> +	else if (p->health_bitmap & PAPR_PMEM_HEALTH_CRITICAL)
+> +		health.dimm_health = PAPR_PDSM_DIMM_CRITICAL;
+> +	else if (p->health_bitmap & PAPR_PMEM_HEALTH_UNHEALTHY)
+> +		health.dimm_health = PAPR_PDSM_DIMM_UNHEALTHY;
+> +
+> +	/* struct populated hence can release the mutex now */
+> +	mutex_unlock(&p->health_mutex);
+> +
+> +	dev_dbg(&p->pdev->dev, "Copying payload size=%u\n", copysize);
+> +
+> +	/* Copy the health struct to the payload */
+> +	memcpy(pdsm_cmd_to_payload(pkg), &health, copysize);
+> +
+> +	/* Update fw size including size of struct nd_pdsm_cmd_pkg fields */
+> +	pkg->hdr.nd_fw_size = copysize + ND_PDSM_ENVELOPE_HDR_SIZE;
+> +
+> +out:
+> +	dev_dbg(&p->pdev->dev, "completion code = %d\n", rc);
+> +
+> +	return rc;
+> +}
+> +
+>  /*
+>   * For a given pdsm request call an appropriate service function.
+>   * Note: Use 'nd_pdsm_cmd_pkg.cmd_status to report psdm servicing errors. Hence
+> @@ -435,6 +501,10 @@ static void papr_scm_service_pdsm(struct papr_scm_priv *p,
+>  
+>  	/* Call pdsm service function */
+>  	switch (pdsm) {
+> +	case PAPR_PDSM_HEALTH:
+> +		pkg->cmd_status = papr_pdsm_health(p, pkg);
+> +		break;
+> +
+>  	default:
+>  		dev_dbg(&p->pdev->dev, "PDSM[0x%x]: Unsupported PDSM request\n",
+>  			pdsm);
+> -- 
+> 2.26.2
+> 
