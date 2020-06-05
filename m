@@ -2,153 +2,136 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD39C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A540BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE25D206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CEB4206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slC13LUI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hBjPJaEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgFEOOt (ORCPT
+        id S1728016AbgFEOP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgFEOOt (ORCPT
+        Fri, 5 Jun 2020 10:15:28 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:13629 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726553AbgFEOP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:14:49 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8838C08C5C2;
-        Fri,  5 Jun 2020 07:14:48 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id c1so5655904vsc.11;
-        Fri, 05 Jun 2020 07:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=92tfzhWVlr2aeqK6HzMd7FHEFDVr/SwIXq1vTN+sBsE=;
-        b=slC13LUI63Z1B/lBFeHzqxfKXgHGu+NWsOaWx/VY3tEIMAz36JD2glQbgAOqnCdXbr
-         vcJoMUqM1fMC4H4ja7kjAkGBV8O28unPretRpywWtW9KDU3RkUc15rSc7Onpivvqzdfw
-         SVboV6cjc7XBfCVbQKKB8foHRY2gSgkTSfYs68RQmE69KBrm6rbOBrM+p03DAe3omKG2
-         GsAjLEuDzhg8NN7ew4JTjebwu69A/Y8G5Zwd3lpuczD/gi8N+9ovP4AUZoCqoQIwjsc0
-         CpGc3tKy8ZoDo3NHDt4K5McRKhuNv1DkmxfHtPQM45sWoMsaF3nBj3QOf6ex3gX2zoAo
-         F2dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=92tfzhWVlr2aeqK6HzMd7FHEFDVr/SwIXq1vTN+sBsE=;
-        b=ZxH/tY2zuX5fWVfInWuwC0oiwsQM9PcCO6oSalDlHG1tt7xuuICzCyNf4tP9Y9cMYX
-         RZZKXC8PPVzuGCZMRE88/5cD6AqB7jw7qztmDBBQJd/e4QhnF67UFtcVkJMRjTeRjxqR
-         PcYXGP35PjcWPyEgdPHG9AQSbdUVyLeFkb9z1qBZCz8tiZiVUeMQwOoG+9DR+AuzsIEX
-         eDuIpt6gZNyk8PGHDOPGn9cDn/1ntxUvH+VFBWxQBg6623gBut6CS3zZ+QiUHzsCpPLz
-         hFByCgzN/EElpdcT6nG370+A6ep69FKY/eYCNOux4B423489sLvxngPzauuKNdGHzh15
-         +Y9A==
-X-Gm-Message-State: AOAM531c8z0Nl2XM4HJ489OXQkgdWugeZurM71BhQkUiUlzO/QhauNdr
-        gSTr04isaE9U1omtX302D+zHw5c5+S5SD7KTisM=
-X-Google-Smtp-Source: ABdhPJxwwCSalJFjI5Abuw6mc/isptPZeXUnUU8oFM57642z1EvQWUDOIZOqC/bjcW+INW9fkNsyYq792j8ZcgxWh/k=
-X-Received: by 2002:a67:b149:: with SMTP id z9mr6882548vsl.85.1591366487388;
- Fri, 05 Jun 2020 07:14:47 -0700 (PDT)
+        Fri, 5 Jun 2020 10:15:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591366527; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=wedy4cKwLDkJueE39OQ5A/Ljrp4rU5VxwwQZUZ2wqrI=;
+ b=hBjPJaEPLutlToyvVLnwUek1PoBAX/LmfRcCpw2Bx0j+y6en65SMd7rOGiJPG3gZNmb6KHpO
+ 1EZXrSPRJVceoiehjZBODlDZLw0CW0v2bfL5J6arsFrqj3sE21vIxdC9alX1dYLdx2InqyRn
+ 1lJsy4H9HWlKnjef8hs0l5oRNnI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5eda5368ea0dfa490ee91cc7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 14:15:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 00B07C43391; Fri,  5 Jun 2020 14:15:03 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4ECBBC433CA;
+        Fri,  5 Jun 2020 14:15:03 +0000 (UTC)
 MIME-Version: 1.0
-References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
- <CACvgo50eb5_jp_6B5tkV9cX_X2_y2Xnavu+wvUUhHN5FsV9hiw@mail.gmail.com>
- <cd61dd742e73b89794fc1b812d9fdcd9@codeaurora.org> <CACvgo50b+m2+onak=AZfgihkBXEP9POjMR52087v==-puLdkQQ@mail.gmail.com>
- <8742ac6fbd498fdc22dcd469c3a2d52a@codeaurora.org>
-In-Reply-To: <8742ac6fbd498fdc22dcd469c3a2d52a@codeaurora.org>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Fri, 5 Jun 2020 15:11:24 +0100
-Message-ID: <CACvgo52Rz+QzA4k7ttg6Gh124fZBAfaX0nrPpaMTECvr_8D2zw@mail.gmail.com>
-Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
-        "Kristian H . Kristensen" <hoegsberg@chromium.org>,
-        mka@chromium.org, devicetree-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 19:45:03 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree-owner@vger.kernel.org
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
+In-Reply-To: <d35d2d1b64622ae83ffd9a963aadcad4@codeaurora.org>
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-2-jonathan@marek.ca>
+ <d35d2d1b64622ae83ffd9a963aadcad4@codeaurora.org>
+Message-ID: <66453e142fb3798b86159a5d473efabb@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 at 17:10, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Emil,
->
-> On 2020-06-02 21:09, Emil Velikov wrote:
-> > On Tue, 2 Jun 2020 at 15:49, Sai Prakash Ranjan
-> > <saiprakash.ranjan@codeaurora.org> wrote:
-> >>
-> >> Hi Emil,
-> >>
-> >> On 2020-06-02 19:43, Emil Velikov wrote:
-> >> > Hi Krishna,
-> >> >
-> >> > On Tue, 2 Jun 2020 at 08:17, Krishna Manikandan
-> >> > <mkrishn@codeaurora.org> wrote:
-> >> >>
-> >> >> Define shutdown callback for display drm driver,
-> >> >> so as to disable all the CRTCS when shutdown
-> >> >> notification is received by the driver.
-> >> >>
-> >> >> This change will turn off the timing engine so
-> >> >> that no display transactions are requested
-> >> >> while mmu translations are getting disabled
-> >> >> during reboot sequence.
-> >> >>
-> >> >> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-> >> >>
-> >> > AFAICT atomics is setup in msm_drm_ops::bind and shutdown in
-> >> > msm_drm_ops::unbind.
-> >> >
-> >> > Are you saying that unbind never triggers? If so, then we should
-> >> > really fix that instead, since this patch seems more like a
-> >> > workaround.
-> >> >
-> >>
-> >> Which path do you suppose that the unbind should be called from,
-> >> remove
-> >> callback? Here we are talking about the drivers which are builtin,
-> >> where
-> >> remove callbacks are not called from the driver core during
-> >> reboot/shutdown,
-> >> instead shutdown callbacks are called which needs to be defined in
-> >> order
-> >> to
-> >> trigger unbind. So AFAICS there is nothing to be fixed.
-> >>
-> > Interesting - in drm effectively only drm panels implement .shutdown.
-> > So my naive assumption was that .remove was used implicitly by core,
-> > as part of the shutdown process. Yet that's not the case, so it seems
-> > that many drivers could use some fixes.
-> >
-> > Then again, that's an existing problem which is irrelevant for msm.
-> > -Emil
->
-> To give more context, we are actually targeting the clients/consumers
-> of SMMU/IOMMU here because we have to make sure that before the supplier
-> (SMMU) shuts down, its consumers/clients need to be shutdown properly.
-> Now the ordering of this is taken care in the SMMU driver via
-> device_link
-> which makes sure that consumer shutdown callbacks are called first, but
-> we
-> need to define shutdown callbacks for all its consumers to make sure we
-> actually shutdown the clients or else it would invite the crashes during
-> reboot
-> which in this case was seen for display.
->
-Thank you very much for the extra details. I think other DRM drivers
-will be safe as-is.
+On 2020-05-25 15:07, Sai Prakash Ranjan wrote:
+> Hi Jonathan,
+> 
+> On 2020-05-24 08:08, Jonathan Marek wrote:
+>> Add the apps_smmu node for sm8150. Note that adding the iommus field 
+>> for
+>> UFS is required because initializing the iommu removes the bypass 
+>> mapping
+>> that created by the bootloader.
+>> 
+>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8150.dtsi | 91 
+>> ++++++++++++++++++++++++++++
+>>  1 file changed, 91 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> index a36512d1f6a1..acb839427b12 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+>> @@ -442,6 +442,8 @@ ufs_mem_hc: ufshc@1d84000 {
+>>  			resets = <&gcc GCC_UFS_PHY_BCR>;
+>>  			reset-names = "rst";
+>> 
+>> +			iommus = <&apps_smmu 0x300 0>;
+>> +
+>>  			clock-names =
+>>  				"core_clk",
+>>  				"bus_aggr_clk",
+>> @@ -706,6 +708,7 @@ usb_1_dwc3: dwc3@a600000 {
+>>  				compatible = "snps,dwc3";
+>>  				reg = <0 0x0a600000 0 0xcd00>;
+>>  				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+>> +				iommus = <&apps_smmu 0x140 0>;
+>>  				snps,dis_u2_susphy_quirk;
+>>  				snps,dis_enblslpm_quirk;
+>>  				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+>> @@ -742,6 +745,94 @@ spmi_bus: spmi@c440000 {
+>>  			cell-index = <0>;
+>>  		};
+>> 
+>> +		apps_smmu: iommu@15000000 {
+>> +			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
+> 
+> This should be qcom,sm8150-smmu-500 and also you need to update the 
+> arm-smmu
+> binding with this compatible in a separate patch.
+> 
 
--Emil
+I tested out this series with my coresight patches for enabling SMMU 
+translation
+for ETR on SM8150, it works fine. With this above comment addressed and 
+with
+Bjorn's comments on commit description addressed,
+
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
