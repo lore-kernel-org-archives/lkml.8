@@ -2,202 +2,108 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBACFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8629C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEFC0206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86EF206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GS49tDs2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgFEOhO (ORCPT
+        id S1728044AbgFEOjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:37:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55328 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgFEOhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:37:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 794F2AFDB;
-        Fri,  5 Jun 2020 14:37:14 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8AD4D1E1281; Fri,  5 Jun 2020 16:37:10 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 16:37:10 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     viro@zeniv.linux.org.uk, axboe@kernel.dk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH v3] block: Fix use-after-free in blkdev_get()
-Message-ID: <20200605143710.GA13248@quack2.suse.cz>
-References: <20200605104558.16686-1-yanaijie@huawei.com>
+        Fri, 5 Jun 2020 10:39:47 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33360 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727113AbgFEOjq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:39:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591367985;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PnvUqYN28+V8X3M6jVAizyPBLaqCQtBB/Ka3BDvnqh0=;
+        b=GS49tDs2fL1GTglcN1S2FCKiUU8jJL7Yzv2jchbkbjiHlsBaWHhGCbCXPL7gcnLxzEZt7o
+        ZlPvBFD08VLGC4Ob1R9rURrbyBubuYlKPII0LSALNj+b9SUpcUTIPd0sKsmy8YHSv3CMrH
+        F/BIO3w45oMHWEmSr/hkcmsruJrB96k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-0EJL752QOnyPg-caT1FYbg-1; Fri, 05 Jun 2020 10:39:43 -0400
+X-MC-Unique: 0EJL752QOnyPg-caT1FYbg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38CA7EC1B6;
+        Fri,  5 Jun 2020 14:39:42 +0000 (UTC)
+Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2F23060C05;
+        Fri,  5 Jun 2020 14:39:36 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 09:39:34 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v4 11/11] module: Make module_enable_ro() static again
+Message-ID: <20200605143934.g7mq6y3xhibpb4zr@treble>
+References: <cover.1588173720.git.jpoimboe@redhat.com>
+ <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
+ <20200605132450.GA257550@roeck-us.net>
+ <20200605142009.GA5150@linux-8ccs.fritz.box>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200605104558.16686-1-yanaijie@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200605142009.GA5150@linux-8ccs.fritz.box>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 05-06-20 18:45:58, Jason Yan wrote:
-> In blkdev_get() we call __blkdev_get() to do some internal jobs and if
-> there is some errors in __blkdev_get(), the bdput() is called which
-> means we have released the refcount of the bdev (actually the refcount of
-> the bdev inode). This means we cannot access bdev after that point. But
-> accually bdev is still accessed in blkdev_get() after calling
-> __blkdev_get(). This may leads to use-after-free if the refcount is the
-> last one we released in __blkdev_get(). Let's take a look at the
-> following scenerio:
+On Fri, Jun 05, 2020 at 04:20:10PM +0200, Jessica Yu wrote:
+> +++ Guenter Roeck [05/06/20 06:24 -0700]:
+> > On Wed, Apr 29, 2020 at 10:24:53AM -0500, Josh Poimboeuf wrote:
+> > > Now that module_enable_ro() has no more external users, make it static
+> > > again.
+> > > 
+> > > Suggested-by: Jessica Yu <jeyu@kernel.org>
+> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > Acked-by: Miroslav Benes <mbenes@suse.cz>
+> > 
+> > Apparently this patch made it into the upstream kernel on its own,
+> > not caring about its dependencies. Results are impressive.
+> > 
+> > Build results:
+> > 	total: 155 pass: 101 fail: 54
+> > Qemu test results:
+> > 	total: 431 pass: 197 fail: 234
+> > 
+> > That means bisects will be all but impossible until this is fixed.
+> > Was that really necessary ?
 > 
->   CPU0            CPU1                    CPU2
-> blkdev_open     blkdev_open           Remove disk
->                   bd_acquire
-> 		  blkdev_get
-> 		    __blkdev_get      del_gendisk
-> 					bdev_unhash_inode
->   bd_acquire          bdev_get_gendisk
->     bd_forget           failed because of unhashed
-> 	  bdput
-> 	              bdput (the last one)
-> 		        bdev_evict_inode
-> 
-> 	  	    access bdev => use after free
-> 
-> [  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
-> [  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
-> [  459.352347]
-> [  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
-> [  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> [  459.354947] Call Trace:
-> [  459.355337]  dump_stack+0x111/0x19e
-> [  459.355879]  ? __lock_acquire+0x24c1/0x31b0
-> [  459.356523]  print_address_description+0x60/0x223
-> [  459.357248]  ? __lock_acquire+0x24c1/0x31b0
-> [  459.357887]  kasan_report.cold+0xae/0x2d8
-> [  459.358503]  __lock_acquire+0x24c1/0x31b0
-> [  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
-> [  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
-> [  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
-> [  459.361123]  ? finish_task_switch+0x125/0x600
-> [  459.361812]  ? finish_task_switch+0xee/0x600
-> [  459.362471]  ? mark_held_locks+0xf0/0xf0
-> [  459.363108]  ? __schedule+0x96f/0x21d0
-> [  459.363716]  lock_acquire+0x111/0x320
-> [  459.364285]  ? blkdev_get+0xce/0xbe0
-> [  459.364846]  ? blkdev_get+0xce/0xbe0
-> [  459.365390]  __mutex_lock+0xf9/0x12a0
-> [  459.365948]  ? blkdev_get+0xce/0xbe0
-> [  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
-> [  459.367130]  ? blkdev_get+0xce/0xbe0
-> [  459.367678]  ? destroy_inode+0xbc/0x110
-> [  459.368261]  ? mutex_trylock+0x1a0/0x1a0
-> [  459.368867]  ? __blkdev_get+0x3e6/0x1280
-> [  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
-> [  459.370114]  ? blkdev_get+0xce/0xbe0
-> [  459.370656]  blkdev_get+0xce/0xbe0
-> [  459.371178]  ? find_held_lock+0x2c/0x110
-> [  459.371774]  ? __blkdev_get+0x1280/0x1280
-> [  459.372383]  ? lock_downgrade+0x680/0x680
-> [  459.373002]  ? lock_acquire+0x111/0x320
-> [  459.373587]  ? bd_acquire+0x21/0x2c0
-> [  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
-> [  459.374780]  blkdev_open+0x202/0x290
-> [  459.375325]  do_dentry_open+0x49e/0x1050
-> [  459.375924]  ? blkdev_get_by_dev+0x70/0x70
-> [  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
-> [  459.377192]  ? inode_permission+0xbe/0x3a0
-> [  459.377818]  path_openat+0x148c/0x3f50
-> [  459.378392]  ? kmem_cache_alloc+0xd5/0x280
-> [  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  459.379802]  ? path_lookupat.isra.0+0x900/0x900
-> [  459.380489]  ? __lock_is_held+0xad/0x140
-> [  459.381093]  do_filp_open+0x1a1/0x280
-> [  459.381654]  ? may_open_dev+0xf0/0xf0
-> [  459.382214]  ? find_held_lock+0x2c/0x110
-> [  459.382816]  ? lock_downgrade+0x680/0x680
-> [  459.383425]  ? __lock_is_held+0xad/0x140
-> [  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
-> [  459.384668]  ? _raw_spin_unlock+0x1f/0x30
-> [  459.385280]  ? __alloc_fd+0x448/0x560
-> [  459.385841]  do_sys_open+0x3c3/0x500
-> [  459.386386]  ? filp_open+0x70/0x70
-> [  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-> [  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
-> [  459.388342]  ? do_syscall_64+0x1a/0x520
-> [  459.388930]  do_syscall_64+0xc3/0x520
-> [  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  459.390248] RIP: 0033:0x416211
-> [  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
-> 04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
->    05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
->       01
-> [  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-> [  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
-> [  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
-> [  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
-> [  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
-> [  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
-> [  459.400168]
-> [  459.400430] Allocated by task 20132:
-> [  459.401038]  kasan_kmalloc+0xbf/0xe0
-> [  459.401652]  kmem_cache_alloc+0xd5/0x280
-> [  459.402330]  bdev_alloc_inode+0x18/0x40
-> [  459.402970]  alloc_inode+0x5f/0x180
-> [  459.403510]  iget5_locked+0x57/0xd0
-> [  459.404095]  bdget+0x94/0x4e0
-> [  459.404607]  bd_acquire+0xfa/0x2c0
-> [  459.405113]  blkdev_open+0x110/0x290
-> [  459.405702]  do_dentry_open+0x49e/0x1050
-> [  459.406340]  path_openat+0x148c/0x3f50
-> [  459.406926]  do_filp_open+0x1a1/0x280
-> [  459.407471]  do_sys_open+0x3c3/0x500
-> [  459.408010]  do_syscall_64+0xc3/0x520
-> [  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [  459.409415]
-> [  459.409679] Freed by task 1262:
-> [  459.410212]  __kasan_slab_free+0x129/0x170
-> [  459.410919]  kmem_cache_free+0xb2/0x2a0
-> [  459.411564]  rcu_process_callbacks+0xbb2/0x2320
-> [  459.412318]  __do_softirq+0x225/0x8ac
-> 
-> Fix this by delaying bdput() to the end of blkdev_get() which means we
-> have finished accessing bdev.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Sigh, I am really sorry about this. We made a mistake in handling
+> inter-tree dependencies between livepatching and modules-next,
+> unfortunately :-( Merging the modules-next pull request next should
+> resolve the module_enable_ro() not defined for
+> !ARCH_HAS_STRICT_MODULE_RWX build issue. The failure was hidden in
+> linux-next since both trees were always merged together. Again, it
+> doesn't excuse us from build testing our separate trees more
+> rigorously.
 
-Thanks for the patch! It looks good to me. Just one nit below:
+This is mostly my fault for basing my patches on linux-next -- oops.
 
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 47860e589388..d7b74e44ad5a 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -1566,7 +1566,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
->  	if (!for_part) {
->  		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
->  		if (ret != 0) {
-> -			bdput(bdev);
->  			return ret;
->  		}
-
-No need for braces here after you remove bdput(). With this fixed, feel
-free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
+We've also been trained to be lazy by the 0-day bot, which has been
+slacking lately.
 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Josh
+
