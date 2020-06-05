@@ -2,137 +2,1330 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A76CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44388C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D94320659
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:58:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XqCGXaCF"
+	by mail.kernel.org (Postfix) with ESMTP id C97AD20659
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgFEI6k (ORCPT
+        id S1726233AbgFEI6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:58:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46768 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgFEI6k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:58:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0558uYfN010639;
-        Fri, 5 Jun 2020 08:58:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=jhhoHlbMVTvrxxWURRJM87CrhANr1Lb8nHbTGVwVaxI=;
- b=XqCGXaCF8duhkFI7qPClQvI2vt834JKCKgH8wP4BmMSrIoOLCeESxLORTjmm+6U6qw+T
- f6PfOh8W9agf6S/DPAnUD0NkwHNN7UCo+c86cQ/XKo930ymRAnafyjbf5XrWJVfz5D45
- kvqZoj5Rz5zaHZyt0U69J8Hy71PPbsy5vl88uqWTJY7WMT/bS2raF9AZ0u1NieYSZyme
- CLYBPFH/aDAj2uqgQwMoRpRTtc4cHOQ+pJX+e5i4ar4gj9i8TGEV0N64bLQKdamDneTT
- rjIXDPfnfDtiLG+0831AbFKirCLdfdh3N7NqbWJwRiLl2LoiP8BpJK6w84YkNnsQX/a0 hQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31f91dswcr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 05 Jun 2020 08:58:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0558wAKY158400;
-        Fri, 5 Jun 2020 08:58:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 31f926x4c8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jun 2020 08:58:10 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0558w1Cd032161;
-        Fri, 5 Jun 2020 08:58:01 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jun 2020 01:58:01 -0700
-Date:   Fri, 5 Jun 2020 11:57:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-Cc:     "kbuild@lists.01.org" <kbuild@lists.01.org>,
-        "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "lkp@intel.com" <lkp@intel.com>, Dan Carpenter <error27@gmail.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 1/3] dma-direct: provide the ability to reserve per-numa
- CMA
-Message-ID: <20200605085751.GQ30374@kadam>
-References: <20200603024231.61748-2-song.bao.hua@hisilicon.com>
- <20200604113631.GP30374@kadam>
- <B926444035E5E2439431908E3842AFD24E0011@DGGEMI525-MBS.china.huawei.com>
+        Fri, 5 Jun 2020 04:58:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:52020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbgFEI6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:58:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEADD2B;
+        Fri,  5 Jun 2020 01:58:43 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.7])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82ED03F52E;
+        Fri,  5 Jun 2020 01:58:38 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 09:58:30 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200605085830.GA32372@bogus>
+References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
+ <20200528192005.GA494874@bogus>
+ <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
+ <20200603180435.GB23722@bogus>
+ <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
+ <20200604092052.GD8814@bogus>
+ <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
+ <20200605045645.GD12397@bogus>
+ <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="vtzGhvizbBRQ85DL"
 Content-Disposition: inline
-In-Reply-To: <B926444035E5E2439431908E3842AFD24E0011@DGGEMI525-MBS.china.huawei.com>
+In-Reply-To: <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006050070
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- clxscore=1015 cotscore=-2147483648 malwarescore=0 adultscore=0
- priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 06:04:31AM +0000, Song Bao Hua (Barry Song) wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
-> > Sent: Thursday, June 4, 2020 11:37 PM
-> > To: kbuild@lists.01.org; Song Bao Hua (Barry Song)
-> > <song.bao.hua@hisilicon.com>; hch@lst.de; m.szyprowski@samsung.com;
-> > robin.murphy@arm.com; catalin.marinas@arm.com
-> > Cc: lkp@intel.com; Dan Carpenter <error27@gmail.com>;
-> > kbuild-all@lists.01.org; iommu@lists.linux-foundation.org;
-> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Linuxarm
-> > <linuxarm@huawei.com>; Jonathan Cameron
-> > <jonathan.cameron@huawei.com>; John Garry <john.garry@huawei.com>
-> > Subject: Re: [PATCH 1/3] dma-direct: provide the ability to reserve per-numa
-> > CMA
-> > 
-> > Hi Barry,
-> > 
-> > url:
-> > https://github.com/0day-ci/linux/commits/Barry-Song/support-per-numa-CM
-> > A-for-ARM-server/20200603-104821
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
-> > for-next/core
-> > config: x86_64-randconfig-m001-20200603 (attached as .config)
-> > compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-> > 
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> 
-> Dan, thanks! Good catch!
-> as this patch has not been in mainline yet, is it correct to add these "reported-by" in patch v2?
 
-These are just an automated email from the zero day bot.  I look over
-the Smatch warnings and then forward them on.
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-regards,
-dan carpenter
+On Fri, Jun 05, 2020 at 01:30:54AM -0500, Jassi Brar wrote:
+> On Thu, Jun 4, 2020 at 11:56 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> >
+> > > >>     bash-1526  [000]  1149.472553: scmi_xfer_begin:      transfer_id=1538 msg_id=6 protocol_id=21 seq=0 poll=0
+> > > >>      <idle>-0     [001]  1149.472733: scmi_xfer_begin:      transfer_id=1539 msg_id=7 protocol_id=19 seq=1 poll=1
+> > > >
+> > > Here another request is started before the first is finished.
+> >
+> > Ah, the prints are when the client requested. It is not when the mailbox
+> > started it. So this just indicates the beginning of the transfer from the
+> > client.
+> >
+> There maybe condition on a sensor read to finish within 1ms, but there
+> is no condition for the read to _start_ at this very moment (usually
+> there are sleeps in the path to sensor requests).
+>
 
+Again I wasn't clear. The trace logs are at the point just before calling
+mbox_send_messages. So any delay in sensor drivers won't get include. It
+is after the point sensor driver request to read the value and before we
+send the request via mailbox.
+
+> > > If you want this to work you have to serialise access to the single
+> > > physical channel and/or run the remote firmware in asynchronous mode -
+> > > that is, the firmware ack the bit as soon as it sees and starts
+> > > working in the background, so that we return in ~3usec always, while
+> > > the data returns whenever it is ready.
+> >
+> > Yes it does that for few requests like DVFS while it uses synchronous
+> > mode for few others. While ideally I agree everything in asynchronous
+> > most is better, I don't know there may be reasons for such design.
+> >
+> The reason is that, if the firmware works asynchronously, every call
+> would return in ~3usec and you won't think you need virtual channels.
+>
+
+I really wish that was the case. Life would have been much simpler. I
+did remember one reason after my earlier email. For DVFS, OSPM need
+not rely on response. It operates in fire and forget mode. While sensors
+we need the value back. And one main reason for not making the call
+async in the specification is that it needs to support platforms without
+Rx interrupts or even transport like SMC which may not have reverse path
+without as real mailbox.
+
+> You have shared only 'bad' log without serialising access. Please
+> share log after serialising access to the channel and the 'good' log
+> with virtual channels.  That should put the topic to rest.
+>
+
+I didn't realise that, sorry for missing that earlier. Attached both
+now, thanks for asking.
+
+--
+Regards,
+Sudeep
+
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="good_trace.txt"
+
+            bash-1062  [000]   103.333397: scmi_xfer_begin:      transfer_id=1191 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1062  [000]   103.333464: scmi_xfer_end:        transfer_id=1191 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   103.353821: scmi_xfer_begin:      transfer_id=1192 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [000]   103.354003: scmi_xfer_begin:      transfer_id=1193 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]   103.354062: scmi_xfer_end:        transfer_id=1193 msg_id=7 protocol_id=19 seq=1 status=0
+     migration/0-11    [000]   103.354119: scmi_xfer_begin:      transfer_id=1194 msg_id=7 protocol_id=19 seq=1 poll=1
+     migration/0-11    [000]   103.354224: scmi_xfer_end:        transfer_id=1194 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   103.354504: scmi_xfer_end:        transfer_id=1192 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.354707: scmi_xfer_begin:      transfer_id=1195 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.355037: scmi_xfer_end:        transfer_id=1195 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.355215: scmi_xfer_begin:      transfer_id=1196 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.355878: scmi_xfer_end:        transfer_id=1196 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.356031: scmi_xfer_begin:      transfer_id=1197 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.356408: scmi_xfer_end:        transfer_id=1197 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.356581: scmi_xfer_begin:      transfer_id=1198 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.357642: scmi_xfer_end:        transfer_id=1198 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.357797: scmi_xfer_begin:      transfer_id=1199 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.358476: scmi_xfer_end:        transfer_id=1199 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.358626: scmi_xfer_begin:      transfer_id=1200 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.359283: scmi_xfer_end:        transfer_id=1200 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.359434: scmi_xfer_begin:      transfer_id=1201 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.360073: scmi_xfer_end:        transfer_id=1201 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.360246: scmi_xfer_begin:      transfer_id=1202 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.360477: scmi_xfer_end:        transfer_id=1202 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.360631: scmi_xfer_begin:      transfer_id=1203 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.360694: scmi_xfer_end:        transfer_id=1203 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.360846: scmi_xfer_begin:      transfer_id=1204 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.360907: scmi_xfer_end:        transfer_id=1204 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.361058: scmi_xfer_begin:      transfer_id=1205 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.361119: scmi_xfer_end:        transfer_id=1205 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.361294: scmi_xfer_begin:      transfer_id=1206 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.361357: scmi_xfer_end:        transfer_id=1206 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.361528: scmi_xfer_begin:      transfer_id=1207 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.361885: scmi_xfer_end:        transfer_id=1207 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.362040: scmi_xfer_begin:      transfer_id=1208 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.362104: scmi_xfer_end:        transfer_id=1208 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.362256: scmi_xfer_begin:      transfer_id=1209 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.362319: scmi_xfer_end:        transfer_id=1209 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.362492: scmi_xfer_begin:      transfer_id=1210 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.362897: scmi_xfer_end:        transfer_id=1210 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.363047: scmi_xfer_begin:      transfer_id=1211 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.363450: scmi_xfer_end:        transfer_id=1211 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.363598: scmi_xfer_begin:      transfer_id=1212 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   103.364076: scmi_xfer_begin:      transfer_id=1213 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   103.364129: scmi_xfer_end:        transfer_id=1213 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   103.364140: scmi_xfer_end:        transfer_id=1212 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.364410: scmi_xfer_begin:      transfer_id=1214 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   103.364550: scmi_xfer_begin:      transfer_id=1215 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   103.364558: scmi_xfer_end:        transfer_id=1214 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   103.364601: scmi_xfer_end:        transfer_id=1215 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   103.364736: scmi_xfer_begin:      transfer_id=1216 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.364803: scmi_xfer_end:        transfer_id=1216 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.365008: scmi_xfer_begin:      transfer_id=1217 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.365070: scmi_xfer_end:        transfer_id=1217 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   103.365245: scmi_xfer_begin:      transfer_id=1218 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   103.365306: scmi_xfer_end:        transfer_id=1218 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [004]   103.397691: scmi_xfer_begin:      transfer_id=1219 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   103.397778: scmi_xfer_end:        transfer_id=1219 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   104.386362: scmi_xfer_begin:      transfer_id=1220 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   104.386429: scmi_xfer_end:        transfer_id=1220 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   104.389005: scmi_xfer_begin:      transfer_id=1221 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   104.389180: scmi_xfer_begin:      transfer_id=1222 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   104.389239: scmi_xfer_end:        transfer_id=1222 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   104.389295: scmi_xfer_end:        transfer_id=1221 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.389548: scmi_xfer_begin:      transfer_id=1223 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.390181: scmi_xfer_end:        transfer_id=1223 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.390377: scmi_xfer_begin:      transfer_id=1224 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.390895: scmi_xfer_end:        transfer_id=1224 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.391085: scmi_xfer_begin:      transfer_id=1225 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.391298: scmi_xfer_end:        transfer_id=1225 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.391512: scmi_xfer_begin:      transfer_id=1226 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.392115: scmi_xfer_end:        transfer_id=1226 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.392288: scmi_xfer_begin:      transfer_id=1227 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.392953: scmi_xfer_end:        transfer_id=1227 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.393129: scmi_xfer_begin:      transfer_id=1228 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.393790: scmi_xfer_end:        transfer_id=1228 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.393968: scmi_xfer_begin:      transfer_id=1229 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.394584: scmi_xfer_end:        transfer_id=1229 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.394797: scmi_xfer_begin:      transfer_id=1230 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.394995: scmi_xfer_end:        transfer_id=1230 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.395173: scmi_xfer_begin:      transfer_id=1231 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.395400: scmi_xfer_end:        transfer_id=1231 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.395581: scmi_xfer_begin:      transfer_id=1232 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.395806: scmi_xfer_end:        transfer_id=1232 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.395979: scmi_xfer_begin:      transfer_id=1233 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.396045: scmi_xfer_end:        transfer_id=1233 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.396260: scmi_xfer_begin:      transfer_id=1234 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.396325: scmi_xfer_end:        transfer_id=1234 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.396509: scmi_xfer_begin:      transfer_id=1235 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.396574: scmi_xfer_end:        transfer_id=1235 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.396751: scmi_xfer_begin:      transfer_id=1236 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.396815: scmi_xfer_end:        transfer_id=1236 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.396992: scmi_xfer_begin:      transfer_id=1237 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   104.397052: scmi_xfer_begin:      transfer_id=1238 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   104.397106: scmi_xfer_end:        transfer_id=1238 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   104.397119: scmi_xfer_end:        transfer_id=1237 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.397525: scmi_xfer_begin:      transfer_id=1239 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.398021: scmi_xfer_end:        transfer_id=1239 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.398337: scmi_xfer_begin:      transfer_id=1240 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.398757: scmi_xfer_end:        transfer_id=1240 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.399056: scmi_xfer_begin:      transfer_id=1241 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   104.399585: scmi_xfer_begin:      transfer_id=1242 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   104.399602: scmi_xfer_end:        transfer_id=1241 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   104.399638: scmi_xfer_end:        transfer_id=1242 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   104.399909: scmi_xfer_begin:      transfer_id=1243 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.400298: scmi_xfer_end:        transfer_id=1243 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.400609: scmi_xfer_begin:      transfer_id=1244 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.400884: scmi_xfer_end:        transfer_id=1244 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.401212: scmi_xfer_begin:      transfer_id=1245 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.401297: scmi_xfer_end:        transfer_id=1245 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   104.401644: scmi_xfer_begin:      transfer_id=1246 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   104.402066: scmi_xfer_end:        transfer_id=1246 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [004]   104.409524: scmi_xfer_begin:      transfer_id=1247 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   104.409588: scmi_xfer_end:        transfer_id=1247 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   104.425570: scmi_xfer_begin:      transfer_id=1248 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   104.425629: scmi_xfer_end:        transfer_id=1248 msg_id=7 protocol_id=19 seq=0 status=0
+   kworker/u12:1-51    [005]   104.964849: scmi_xfer_begin:      transfer_id=1249 msg_id=7 protocol_id=19 seq=0 poll=1
+   kworker/u12:1-51    [005]   104.964918: scmi_xfer_end:        transfer_id=1249 msg_id=7 protocol_id=19 seq=0 status=0
+        modprobe-1396  [000]   104.980292: scmi_xfer_begin:      transfer_id=1250 msg_id=7 protocol_id=19 seq=0 poll=1
+        modprobe-1396  [000]   104.980355: scmi_xfer_end:        transfer_id=1250 msg_id=7 protocol_id=19 seq=0 status=0
+   kworker/u12:7-210   [005]   104.990761: scmi_xfer_begin:      transfer_id=1251 msg_id=7 protocol_id=19 seq=0 poll=1
+   kworker/u12:7-210   [005]   104.990826: scmi_xfer_end:        transfer_id=1251 msg_id=7 protocol_id=19 seq=0 status=0
+        modprobe-1399  [000]   105.002118: scmi_xfer_begin:      transfer_id=1252 msg_id=7 protocol_id=19 seq=0 poll=1
+        modprobe-1399  [000]   105.002178: scmi_xfer_end:        transfer_id=1252 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   105.408103: scmi_xfer_begin:      transfer_id=1253 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   105.408171: scmi_xfer_end:        transfer_id=1253 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   105.409919: scmi_xfer_begin:      transfer_id=1254 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   105.410093: scmi_xfer_begin:      transfer_id=1255 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   105.410152: scmi_xfer_end:        transfer_id=1255 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   105.410210: scmi_xfer_end:        transfer_id=1254 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.410407: scmi_xfer_begin:      transfer_id=1256 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.410743: scmi_xfer_end:        transfer_id=1256 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.410923: scmi_xfer_begin:      transfer_id=1257 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.411275: scmi_xfer_end:        transfer_id=1257 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.411467: scmi_xfer_begin:      transfer_id=1258 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.411796: scmi_xfer_end:        transfer_id=1258 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.412013: scmi_xfer_begin:      transfer_id=1259 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.412608: scmi_xfer_end:        transfer_id=1259 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.412786: scmi_xfer_begin:      transfer_id=1260 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.413463: scmi_xfer_end:        transfer_id=1260 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.413638: scmi_xfer_begin:      transfer_id=1261 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.414301: scmi_xfer_end:        transfer_id=1261 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.414484: scmi_xfer_begin:      transfer_id=1262 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.415092: scmi_xfer_end:        transfer_id=1262 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.415302: scmi_xfer_begin:      transfer_id=1263 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.415498: scmi_xfer_end:        transfer_id=1263 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.415677: scmi_xfer_begin:      transfer_id=1264 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.415903: scmi_xfer_end:        transfer_id=1264 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.416077: scmi_xfer_begin:      transfer_id=1265 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.416309: scmi_xfer_end:        transfer_id=1265 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.416486: scmi_xfer_begin:      transfer_id=1266 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.416714: scmi_xfer_end:        transfer_id=1266 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.416931: scmi_xfer_begin:      transfer_id=1267 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.417123: scmi_xfer_end:        transfer_id=1267 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.417297: scmi_xfer_begin:      transfer_id=1268 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.417363: scmi_xfer_end:        transfer_id=1268 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.417564: scmi_xfer_begin:      transfer_id=1269 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.417650: scmi_xfer_end:        transfer_id=1269 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.417828: scmi_xfer_begin:      transfer_id=1270 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.417893: scmi_xfer_end:        transfer_id=1270 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.418103: scmi_xfer_begin:      transfer_id=1271 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   105.418505: scmi_xfer_begin:      transfer_id=1272 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   105.418559: scmi_xfer_end:        transfer_id=1272 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   105.418571: scmi_xfer_end:        transfer_id=1271 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.418885: scmi_xfer_begin:      transfer_id=1273 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.419341: scmi_xfer_end:        transfer_id=1273 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.419639: scmi_xfer_begin:      transfer_id=1274 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   105.420167: scmi_xfer_begin:      transfer_id=1275 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   105.420181: scmi_xfer_end:        transfer_id=1274 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   105.420220: scmi_xfer_end:        transfer_id=1275 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   105.420480: scmi_xfer_begin:      transfer_id=1276 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.420883: scmi_xfer_end:        transfer_id=1276 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.421193: scmi_xfer_begin:      transfer_id=1277 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.421278: scmi_xfer_end:        transfer_id=1277 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.421653: scmi_xfer_begin:      transfer_id=1278 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.422093: scmi_xfer_end:        transfer_id=1278 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   105.422402: scmi_xfer_begin:      transfer_id=1279 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   105.422678: scmi_xfer_end:        transfer_id=1279 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [004]   105.429488: scmi_xfer_begin:      transfer_id=1280 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   105.429552: scmi_xfer_end:        transfer_id=1280 msg_id=7 protocol_id=19 seq=0 status=0
+     kworker/0:3-1180  [000]   105.909768: scmi_xfer_begin:      transfer_id=1281 msg_id=7 protocol_id=19 seq=0 poll=1
+     kworker/0:3-1180  [000]   105.909831: scmi_xfer_end:        transfer_id=1281 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   106.428692: scmi_xfer_begin:      transfer_id=1282 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   106.428759: scmi_xfer_end:        transfer_id=1282 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   106.430480: scmi_xfer_begin:      transfer_id=1283 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   106.430654: scmi_xfer_begin:      transfer_id=1284 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   106.430712: scmi_xfer_end:        transfer_id=1284 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   106.430771: scmi_xfer_end:        transfer_id=1283 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.430969: scmi_xfer_begin:      transfer_id=1285 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.431304: scmi_xfer_end:        transfer_id=1285 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.431491: scmi_xfer_begin:      transfer_id=1286 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.431836: scmi_xfer_end:        transfer_id=1286 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.432013: scmi_xfer_begin:      transfer_id=1287 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.432356: scmi_xfer_end:        transfer_id=1287 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.432562: scmi_xfer_begin:      transfer_id=1288 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.433169: scmi_xfer_end:        transfer_id=1288 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.433392: scmi_xfer_begin:      transfer_id=1289 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.434162: scmi_xfer_end:        transfer_id=1289 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.434339: scmi_xfer_begin:      transfer_id=1290 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.434971: scmi_xfer_end:        transfer_id=1290 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.435146: scmi_xfer_begin:      transfer_id=1291 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.435764: scmi_xfer_end:        transfer_id=1291 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.435967: scmi_xfer_begin:      transfer_id=1292 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.436169: scmi_xfer_end:        transfer_id=1292 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.436345: scmi_xfer_begin:      transfer_id=1293 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.436576: scmi_xfer_end:        transfer_id=1293 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.436751: scmi_xfer_begin:      transfer_id=1294 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.436980: scmi_xfer_end:        transfer_id=1294 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.437156: scmi_xfer_begin:      transfer_id=1295 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.437398: scmi_xfer_end:        transfer_id=1295 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.437618: scmi_xfer_begin:      transfer_id=1296 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.437845: scmi_xfer_end:        transfer_id=1296 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.438025: scmi_xfer_begin:      transfer_id=1297 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.438262: scmi_xfer_end:        transfer_id=1297 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.438440: scmi_xfer_begin:      transfer_id=1298 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.438507: scmi_xfer_end:        transfer_id=1298 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.438689: scmi_xfer_begin:      transfer_id=1299 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   106.438751: scmi_xfer_begin:      transfer_id=1300 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   106.438805: scmi_xfer_end:        transfer_id=1300 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   106.438817: scmi_xfer_end:        transfer_id=1299 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.439192: scmi_xfer_begin:      transfer_id=1301 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.439609: scmi_xfer_end:        transfer_id=1301 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.439915: scmi_xfer_begin:      transfer_id=1302 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.440334: scmi_xfer_end:        transfer_id=1302 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.440631: scmi_xfer_begin:      transfer_id=1303 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   106.441031: scmi_xfer_begin:      transfer_id=1304 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   106.441050: scmi_xfer_end:        transfer_id=1303 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   106.441084: scmi_xfer_end:        transfer_id=1304 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   106.441380: scmi_xfer_begin:      transfer_id=1305 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.441781: scmi_xfer_end:        transfer_id=1305 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.442092: scmi_xfer_begin:      transfer_id=1306 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.442366: scmi_xfer_end:        transfer_id=1306 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.442676: scmi_xfer_begin:      transfer_id=1307 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.442947: scmi_xfer_end:        transfer_id=1307 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   106.443253: scmi_xfer_begin:      transfer_id=1308 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   106.443536: scmi_xfer_end:        transfer_id=1308 msg_id=6 protocol_id=21 seq=0 status=0
+           sleep-1401  [004]   106.449303: scmi_xfer_begin:      transfer_id=1309 msg_id=7 protocol_id=19 seq=0 poll=1
+           sleep-1401  [004]   106.449366: scmi_xfer_end:        transfer_id=1309 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   106.465340: scmi_xfer_begin:      transfer_id=1310 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   106.465446: scmi_xfer_end:        transfer_id=1310 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   107.449657: scmi_xfer_begin:      transfer_id=1311 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   107.449725: scmi_xfer_end:        transfer_id=1311 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   107.451392: scmi_xfer_begin:      transfer_id=1312 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   107.451565: scmi_xfer_begin:      transfer_id=1313 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   107.451624: scmi_xfer_end:        transfer_id=1313 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   107.451682: scmi_xfer_end:        transfer_id=1312 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.451878: scmi_xfer_begin:      transfer_id=1314 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.452216: scmi_xfer_end:        transfer_id=1314 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.452408: scmi_xfer_begin:      transfer_id=1315 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.452749: scmi_xfer_end:        transfer_id=1315 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.452925: scmi_xfer_begin:      transfer_id=1316 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.453278: scmi_xfer_end:        transfer_id=1316 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.453497: scmi_xfer_begin:      transfer_id=1317 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.454089: scmi_xfer_end:        transfer_id=1317 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.454271: scmi_xfer_begin:      transfer_id=1318 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.454930: scmi_xfer_end:        transfer_id=1318 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.455103: scmi_xfer_begin:      transfer_id=1319 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.455739: scmi_xfer_end:        transfer_id=1319 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.455915: scmi_xfer_begin:      transfer_id=1320 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.456531: scmi_xfer_end:        transfer_id=1320 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.456745: scmi_xfer_begin:      transfer_id=1321 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.456936: scmi_xfer_end:        transfer_id=1321 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.457134: scmi_xfer_begin:      transfer_id=1322 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.457375: scmi_xfer_end:        transfer_id=1322 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.457556: scmi_xfer_begin:      transfer_id=1323 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.457782: scmi_xfer_end:        transfer_id=1323 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.457960: scmi_xfer_begin:      transfer_id=1324 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.458186: scmi_xfer_end:        transfer_id=1324 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.458397: scmi_xfer_begin:      transfer_id=1325 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.458593: scmi_xfer_end:        transfer_id=1325 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.458768: scmi_xfer_begin:      transfer_id=1326 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.458998: scmi_xfer_end:        transfer_id=1326 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.459179: scmi_xfer_begin:      transfer_id=1327 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.459245: scmi_xfer_end:        transfer_id=1327 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.459422: scmi_xfer_begin:      transfer_id=1328 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.459488: scmi_xfer_end:        transfer_id=1328 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.459701: scmi_xfer_begin:      transfer_id=1329 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   107.460103: scmi_xfer_begin:      transfer_id=1330 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   107.460156: scmi_xfer_end:        transfer_id=1330 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   107.460169: scmi_xfer_end:        transfer_id=1329 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.460483: scmi_xfer_begin:      transfer_id=1331 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.460939: scmi_xfer_end:        transfer_id=1331 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.461281: scmi_xfer_begin:      transfer_id=1332 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   107.461983: scmi_xfer_begin:      transfer_id=1333 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   107.462000: scmi_xfer_end:        transfer_id=1332 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   107.462036: scmi_xfer_end:        transfer_id=1333 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   107.462300: scmi_xfer_begin:      transfer_id=1334 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.462695: scmi_xfer_end:        transfer_id=1334 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.463001: scmi_xfer_begin:      transfer_id=1335 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.463280: scmi_xfer_end:        transfer_id=1335 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.463590: scmi_xfer_begin:      transfer_id=1336 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.463859: scmi_xfer_end:        transfer_id=1336 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   107.464158: scmi_xfer_begin:      transfer_id=1337 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   107.464445: scmi_xfer_end:        transfer_id=1337 msg_id=6 protocol_id=21 seq=0 status=0
+           sleep-1402  [004]   107.470202: scmi_xfer_begin:      transfer_id=1338 msg_id=7 protocol_id=19 seq=0 poll=1
+           sleep-1402  [004]   107.470266: scmi_xfer_end:        transfer_id=1338 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   107.489219: scmi_xfer_begin:      transfer_id=1339 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   107.489319: scmi_xfer_end:        transfer_id=1339 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   108.470298: scmi_xfer_begin:      transfer_id=1340 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   108.470366: scmi_xfer_end:        transfer_id=1340 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   108.472032: scmi_xfer_begin:      transfer_id=1341 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   108.472213: scmi_xfer_begin:      transfer_id=1342 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   108.472271: scmi_xfer_end:        transfer_id=1342 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   108.472331: scmi_xfer_end:        transfer_id=1341 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.472529: scmi_xfer_begin:      transfer_id=1343 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.472865: scmi_xfer_end:        transfer_id=1343 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.473119: scmi_xfer_begin:      transfer_id=1344 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.473607: scmi_xfer_end:        transfer_id=1344 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.473801: scmi_xfer_begin:      transfer_id=1345 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.474013: scmi_xfer_end:        transfer_id=1345 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.474229: scmi_xfer_begin:      transfer_id=1346 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.474825: scmi_xfer_end:        transfer_id=1346 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.475013: scmi_xfer_begin:      transfer_id=1347 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.475662: scmi_xfer_end:        transfer_id=1347 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.475834: scmi_xfer_begin:      transfer_id=1348 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.476472: scmi_xfer_end:        transfer_id=1348 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.476647: scmi_xfer_begin:      transfer_id=1349 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.477263: scmi_xfer_end:        transfer_id=1349 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.477472: scmi_xfer_begin:      transfer_id=1350 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.477668: scmi_xfer_end:        transfer_id=1350 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.477848: scmi_xfer_begin:      transfer_id=1351 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.478073: scmi_xfer_end:        transfer_id=1351 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.478248: scmi_xfer_begin:      transfer_id=1352 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.478479: scmi_xfer_end:        transfer_id=1352 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.478656: scmi_xfer_begin:      transfer_id=1353 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.478883: scmi_xfer_end:        transfer_id=1353 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.479095: scmi_xfer_begin:      transfer_id=1354 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.479291: scmi_xfer_end:        transfer_id=1354 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.479466: scmi_xfer_begin:      transfer_id=1355 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.479697: scmi_xfer_end:        transfer_id=1355 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.479873: scmi_xfer_begin:      transfer_id=1356 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.479939: scmi_xfer_end:        transfer_id=1356 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.480119: scmi_xfer_begin:      transfer_id=1357 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.480184: scmi_xfer_end:        transfer_id=1357 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.480397: scmi_xfer_begin:      transfer_id=1358 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   108.480798: scmi_xfer_begin:      transfer_id=1359 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   108.480851: scmi_xfer_end:        transfer_id=1359 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   108.480864: scmi_xfer_end:        transfer_id=1358 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.481192: scmi_xfer_begin:      transfer_id=1360 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.481826: scmi_xfer_end:        transfer_id=1360 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.482133: scmi_xfer_begin:      transfer_id=1361 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   108.482661: scmi_xfer_begin:      transfer_id=1362 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   108.482678: scmi_xfer_end:        transfer_id=1361 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   108.482715: scmi_xfer_end:        transfer_id=1362 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   108.482979: scmi_xfer_begin:      transfer_id=1363 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.483372: scmi_xfer_end:        transfer_id=1363 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.483688: scmi_xfer_begin:      transfer_id=1364 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.483957: scmi_xfer_end:        transfer_id=1364 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.484267: scmi_xfer_begin:      transfer_id=1365 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.484538: scmi_xfer_end:        transfer_id=1365 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   108.484835: scmi_xfer_begin:      transfer_id=1366 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   108.485153: scmi_xfer_end:        transfer_id=1366 msg_id=6 protocol_id=21 seq=0 status=0
+           sleep-1403  [004]   108.491061: scmi_xfer_begin:      transfer_id=1367 msg_id=7 protocol_id=19 seq=0 poll=1
+           sleep-1403  [004]   108.491124: scmi_xfer_end:        transfer_id=1367 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   108.509030: scmi_xfer_begin:      transfer_id=1368 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   108.509136: scmi_xfer_end:        transfer_id=1368 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   109.491168: scmi_xfer_begin:      transfer_id=1369 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   109.491236: scmi_xfer_end:        transfer_id=1369 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   109.493024: scmi_xfer_begin:      transfer_id=1370 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   109.493198: scmi_xfer_begin:      transfer_id=1371 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   109.493256: scmi_xfer_end:        transfer_id=1371 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   109.493317: scmi_xfer_end:        transfer_id=1370 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.493516: scmi_xfer_begin:      transfer_id=1372 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.493850: scmi_xfer_end:        transfer_id=1372 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.494045: scmi_xfer_begin:      transfer_id=1373 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.494381: scmi_xfer_end:        transfer_id=1373 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.494558: scmi_xfer_begin:      transfer_id=1374 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.494899: scmi_xfer_end:        transfer_id=1374 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.495119: scmi_xfer_begin:      transfer_id=1375 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.495710: scmi_xfer_end:        transfer_id=1375 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.495895: scmi_xfer_begin:      transfer_id=1376 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.496557: scmi_xfer_end:        transfer_id=1376 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.496748: scmi_xfer_begin:      transfer_id=1377 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.497535: scmi_xfer_end:        transfer_id=1377 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.497714: scmi_xfer_begin:      transfer_id=1378 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.498326: scmi_xfer_end:        transfer_id=1378 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.498538: scmi_xfer_begin:      transfer_id=1379 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.498731: scmi_xfer_end:        transfer_id=1379 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.498909: scmi_xfer_begin:      transfer_id=1380 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.499139: scmi_xfer_end:        transfer_id=1380 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.499317: scmi_xfer_begin:      transfer_id=1381 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.499546: scmi_xfer_end:        transfer_id=1381 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.499723: scmi_xfer_begin:      transfer_id=1382 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.499951: scmi_xfer_end:        transfer_id=1382 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.500164: scmi_xfer_begin:      transfer_id=1383 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.500358: scmi_xfer_end:        transfer_id=1383 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.500533: scmi_xfer_begin:      transfer_id=1384 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.500769: scmi_xfer_end:        transfer_id=1384 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.500952: scmi_xfer_begin:      transfer_id=1385 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.501082: scmi_xfer_end:        transfer_id=1385 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.501262: scmi_xfer_begin:      transfer_id=1386 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.501327: scmi_xfer_end:        transfer_id=1386 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.501538: scmi_xfer_begin:      transfer_id=1387 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.501943: scmi_xfer_end:        transfer_id=1387 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.502118: scmi_xfer_begin:      transfer_id=1388 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   109.502519: scmi_xfer_begin:      transfer_id=1389 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   109.502573: scmi_xfer_end:        transfer_id=1389 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   109.502585: scmi_xfer_end:        transfer_id=1388 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.502889: scmi_xfer_begin:      transfer_id=1390 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   109.503528: scmi_xfer_begin:      transfer_id=1391 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   109.503545: scmi_xfer_end:        transfer_id=1390 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   109.503580: scmi_xfer_end:        transfer_id=1391 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   109.503852: scmi_xfer_begin:      transfer_id=1392 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.504073: scmi_xfer_end:        transfer_id=1392 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.504380: scmi_xfer_begin:      transfer_id=1393 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.504740: scmi_xfer_end:        transfer_id=1393 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.505055: scmi_xfer_begin:      transfer_id=1394 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.505310: scmi_xfer_end:        transfer_id=1394 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   109.505616: scmi_xfer_begin:      transfer_id=1395 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   109.505895: scmi_xfer_end:        transfer_id=1395 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [004]   109.512728: scmi_xfer_begin:      transfer_id=1396 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   109.512792: scmi_xfer_end:        transfer_id=1396 msg_id=7 protocol_id=19 seq=0 status=0
+     kworker/0:3-1180  [000]   109.908949: scmi_xfer_begin:      transfer_id=1397 msg_id=7 protocol_id=19 seq=0 poll=1
+     kworker/0:3-1180  [000]   109.909011: scmi_xfer_end:        transfer_id=1397 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   110.512012: scmi_xfer_begin:      transfer_id=1398 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   110.512079: scmi_xfer_end:        transfer_id=1398 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   110.513805: scmi_xfer_begin:      transfer_id=1399 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   110.513985: scmi_xfer_begin:      transfer_id=1400 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   110.514043: scmi_xfer_end:        transfer_id=1400 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   110.514106: scmi_xfer_end:        transfer_id=1399 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.514304: scmi_xfer_begin:      transfer_id=1401 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.514636: scmi_xfer_end:        transfer_id=1401 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.514830: scmi_xfer_begin:      transfer_id=1402 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.515170: scmi_xfer_end:        transfer_id=1402 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.515347: scmi_xfer_begin:      transfer_id=1403 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.515684: scmi_xfer_end:        transfer_id=1403 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.515895: scmi_xfer_begin:      transfer_id=1404 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.516523: scmi_xfer_end:        transfer_id=1404 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.516710: scmi_xfer_begin:      transfer_id=1405 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.517436: scmi_xfer_end:        transfer_id=1405 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.517608: scmi_xfer_begin:      transfer_id=1406 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.518244: scmi_xfer_end:        transfer_id=1406 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.518422: scmi_xfer_begin:      transfer_id=1407 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.519036: scmi_xfer_end:        transfer_id=1407 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.519254: scmi_xfer_begin:      transfer_id=1408 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.519444: scmi_xfer_end:        transfer_id=1408 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.519621: scmi_xfer_begin:      transfer_id=1409 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.519848: scmi_xfer_end:        transfer_id=1409 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.520025: scmi_xfer_begin:      transfer_id=1410 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.520252: scmi_xfer_end:        transfer_id=1410 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.520424: scmi_xfer_begin:      transfer_id=1411 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.520690: scmi_xfer_end:        transfer_id=1411 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.520900: scmi_xfer_begin:      transfer_id=1412 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.521097: scmi_xfer_end:        transfer_id=1412 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.521270: scmi_xfer_begin:      transfer_id=1413 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.521505: scmi_xfer_end:        transfer_id=1413 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.521682: scmi_xfer_begin:      transfer_id=1414 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.521748: scmi_xfer_end:        transfer_id=1414 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.521927: scmi_xfer_begin:      transfer_id=1415 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.521992: scmi_xfer_end:        transfer_id=1415 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.522206: scmi_xfer_begin:      transfer_id=1416 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   110.522607: scmi_xfer_begin:      transfer_id=1417 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   110.522661: scmi_xfer_end:        transfer_id=1417 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   110.522673: scmi_xfer_end:        transfer_id=1416 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.522987: scmi_xfer_begin:      transfer_id=1418 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.523440: scmi_xfer_end:        transfer_id=1418 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.523746: scmi_xfer_begin:      transfer_id=1419 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   110.524146: scmi_xfer_begin:      transfer_id=1420 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   110.524165: scmi_xfer_end:        transfer_id=1419 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   110.524198: scmi_xfer_end:        transfer_id=1420 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   110.524464: scmi_xfer_begin:      transfer_id=1421 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.524914: scmi_xfer_end:        transfer_id=1421 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.525220: scmi_xfer_begin:      transfer_id=1422 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.525495: scmi_xfer_end:        transfer_id=1422 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.525810: scmi_xfer_begin:      transfer_id=1423 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.526080: scmi_xfer_end:        transfer_id=1423 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   110.526389: scmi_xfer_begin:      transfer_id=1424 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   110.526660: scmi_xfer_end:        transfer_id=1424 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [003]   110.536525: scmi_xfer_begin:      transfer_id=1425 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [003]   110.536588: scmi_xfer_end:        transfer_id=1425 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   110.548655: scmi_xfer_begin:      transfer_id=1426 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   110.548761: scmi_xfer_end:        transfer_id=1426 msg_id=7 protocol_id=19 seq=0 status=0
+      irqbalance-540   [003]   111.115371: scmi_xfer_begin:      transfer_id=1427 msg_id=7 protocol_id=19 seq=0 poll=1
+      irqbalance-540   [003]   111.115438: scmi_xfer_end:        transfer_id=1427 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [005]   111.128404: scmi_xfer_begin:      transfer_id=1428 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [005]   111.128493: scmi_xfer_end:        transfer_id=1428 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   111.532936: scmi_xfer_begin:      transfer_id=1429 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   111.533004: scmi_xfer_end:        transfer_id=1429 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   111.534670: scmi_xfer_begin:      transfer_id=1430 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   111.534844: scmi_xfer_begin:      transfer_id=1431 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   111.534902: scmi_xfer_end:        transfer_id=1431 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [004]   111.534969: scmi_xfer_end:        transfer_id=1430 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [004]   111.535185: scmi_xfer_begin:      transfer_id=1432 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [004]   111.535497: scmi_xfer_end:        transfer_id=1432 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [004]   111.535694: scmi_xfer_begin:      transfer_id=1433 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [004]   111.536030: scmi_xfer_end:        transfer_id=1433 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [004]   111.536211: scmi_xfer_begin:      transfer_id=1434 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.536639: scmi_xfer_end:        transfer_id=1434 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.536866: scmi_xfer_begin:      transfer_id=1435 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.537461: scmi_xfer_end:        transfer_id=1435 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.537651: scmi_xfer_begin:      transfer_id=1436 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.538299: scmi_xfer_end:        transfer_id=1436 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.538471: scmi_xfer_begin:      transfer_id=1437 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.539108: scmi_xfer_end:        transfer_id=1437 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.539279: scmi_xfer_begin:      transfer_id=1438 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.539900: scmi_xfer_end:        transfer_id=1438 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.540113: scmi_xfer_begin:      transfer_id=1439 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.540333: scmi_xfer_end:        transfer_id=1439 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.540514: scmi_xfer_begin:      transfer_id=1440 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.540711: scmi_xfer_end:        transfer_id=1440 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.540890: scmi_xfer_begin:      transfer_id=1441 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.541118: scmi_xfer_end:        transfer_id=1441 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.541293: scmi_xfer_begin:      transfer_id=1442 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.541515: scmi_xfer_end:        transfer_id=1442 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.541732: scmi_xfer_begin:      transfer_id=1443 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.541917: scmi_xfer_end:        transfer_id=1443 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.542092: scmi_xfer_begin:      transfer_id=1444 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.542237: scmi_xfer_end:        transfer_id=1444 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.542414: scmi_xfer_begin:      transfer_id=1445 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.542480: scmi_xfer_end:        transfer_id=1445 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.542657: scmi_xfer_begin:      transfer_id=1446 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.542722: scmi_xfer_end:        transfer_id=1446 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.542933: scmi_xfer_begin:      transfer_id=1447 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [003]   111.543334: scmi_xfer_begin:      transfer_id=1448 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [003]   111.543388: scmi_xfer_end:        transfer_id=1448 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   111.543400: scmi_xfer_end:        transfer_id=1447 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.543713: scmi_xfer_begin:      transfer_id=1449 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.544167: scmi_xfer_end:        transfer_id=1449 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.544498: scmi_xfer_begin:      transfer_id=1450 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   111.545148: scmi_xfer_begin:      transfer_id=1451 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   111.545163: scmi_xfer_end:        transfer_id=1450 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   111.545201: scmi_xfer_end:        transfer_id=1451 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   111.545470: scmi_xfer_begin:      transfer_id=1452 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.545862: scmi_xfer_end:        transfer_id=1452 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.546178: scmi_xfer_begin:      transfer_id=1453 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.546445: scmi_xfer_end:        transfer_id=1453 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.546756: scmi_xfer_begin:      transfer_id=1454 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.547025: scmi_xfer_end:        transfer_id=1454 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   111.547331: scmi_xfer_begin:      transfer_id=1455 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   111.547419: scmi_xfer_end:        transfer_id=1455 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [004]   111.556350: scmi_xfer_begin:      transfer_id=1456 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   111.556414: scmi_xfer_end:        transfer_id=1456 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   111.572465: scmi_xfer_begin:      transfer_id=1457 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   111.572570: scmi_xfer_end:        transfer_id=1457 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   112.553812: scmi_xfer_begin:      transfer_id=1458 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   112.553879: scmi_xfer_end:        transfer_id=1458 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   112.555578: scmi_xfer_begin:      transfer_id=1459 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   112.555751: scmi_xfer_begin:      transfer_id=1460 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   112.555810: scmi_xfer_end:        transfer_id=1460 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   112.555872: scmi_xfer_end:        transfer_id=1459 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.556068: scmi_xfer_begin:      transfer_id=1461 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.556499: scmi_xfer_end:        transfer_id=1461 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.556706: scmi_xfer_begin:      transfer_id=1462 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.556996: scmi_xfer_end:        transfer_id=1462 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.557176: scmi_xfer_begin:      transfer_id=1463 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.557491: scmi_xfer_end:        transfer_id=1463 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.557698: scmi_xfer_begin:      transfer_id=1464 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.558307: scmi_xfer_end:        transfer_id=1464 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.558494: scmi_xfer_begin:      transfer_id=1465 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.559143: scmi_xfer_end:        transfer_id=1465 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.559319: scmi_xfer_begin:      transfer_id=1466 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.559954: scmi_xfer_end:        transfer_id=1466 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.560157: scmi_xfer_begin:      transfer_id=1467 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.560794: scmi_xfer_end:        transfer_id=1467 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.561008: scmi_xfer_begin:      transfer_id=1468 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.561202: scmi_xfer_end:        transfer_id=1468 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.561381: scmi_xfer_begin:      transfer_id=1469 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.561607: scmi_xfer_end:        transfer_id=1469 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.561783: scmi_xfer_begin:      transfer_id=1470 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.562015: scmi_xfer_end:        transfer_id=1470 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.562188: scmi_xfer_begin:      transfer_id=1471 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.562419: scmi_xfer_end:        transfer_id=1471 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.562636: scmi_xfer_begin:      transfer_id=1472 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.562827: scmi_xfer_end:        transfer_id=1472 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.563005: scmi_xfer_begin:      transfer_id=1473 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.563236: scmi_xfer_end:        transfer_id=1473 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.563412: scmi_xfer_begin:      transfer_id=1474 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.563479: scmi_xfer_end:        transfer_id=1474 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.563659: scmi_xfer_begin:      transfer_id=1475 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.563724: scmi_xfer_end:        transfer_id=1475 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.563936: scmi_xfer_begin:      transfer_id=1476 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [004]   112.564215: scmi_xfer_begin:      transfer_id=1477 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [004]   112.564270: scmi_xfer_end:        transfer_id=1477 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   112.564753: scmi_xfer_end:        transfer_id=1476 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.565064: scmi_xfer_begin:      transfer_id=1478 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.565483: scmi_xfer_end:        transfer_id=1478 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.565782: scmi_xfer_begin:      transfer_id=1479 msg_id=6 protocol_id=21 seq=0 poll=0
+ irq/14-mhu_link-190   [001]   112.566310: scmi_xfer_begin:      transfer_id=1480 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1391  [003]   112.566327: scmi_xfer_end:        transfer_id=1479 msg_id=6 protocol_id=21 seq=0 status=0
+ irq/14-mhu_link-190   [001]   112.566364: scmi_xfer_end:        transfer_id=1480 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   112.566627: scmi_xfer_begin:      transfer_id=1481 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.567023: scmi_xfer_end:        transfer_id=1481 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.567330: scmi_xfer_begin:      transfer_id=1482 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.567609: scmi_xfer_end:        transfer_id=1482 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.567926: scmi_xfer_begin:      transfer_id=1483 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.568213: scmi_xfer_end:        transfer_id=1483 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   112.568526: scmi_xfer_begin:      transfer_id=1484 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   112.568802: scmi_xfer_end:        transfer_id=1484 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [003]   112.576154: scmi_xfer_begin:      transfer_id=1485 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [003]   112.576217: scmi_xfer_end:        transfer_id=1485 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   112.592211: scmi_xfer_begin:      transfer_id=1486 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   112.592305: scmi_xfer_end:        transfer_id=1486 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [004]   113.574961: scmi_xfer_begin:      transfer_id=1487 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [004]   113.575029: scmi_xfer_end:        transfer_id=1487 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1391  [003]   113.576843: scmi_xfer_begin:      transfer_id=1488 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]   113.577017: scmi_xfer_begin:      transfer_id=1489 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]   113.577076: scmi_xfer_end:        transfer_id=1489 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1391  [003]   113.577136: scmi_xfer_end:        transfer_id=1488 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1391  [003]   113.577333: scmi_xfer_begin:      transfer_id=1490 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1391  [003]   113.577670: scmi_xfer_end:        transfer_id=1490 msg_id=6 protocol_id=21 seq=0 status=0
+
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="bad_trace.txt"
+
+            bash-1019  [005]  1149.452340: scmi_xfer_begin:      transfer_id=1537 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1019  [005]  1149.452407: scmi_xfer_end:        transfer_id=1537 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [000]  1149.472553: scmi_xfer_begin:      transfer_id=1538 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.472733: scmi_xfer_begin:      transfer_id=1539 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.472842: scmi_xfer_end:        transfer_id=1539 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1149.483040: scmi_xfer_begin:      transfer_id=1540 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.483043: scmi_xfer_end:        transfer_id=1540 msg_id=7 protocol_id=19 seq=1 status=0
+         rs:main-543   [003]  1149.493031: scmi_xfer_begin:      transfer_id=1541 msg_id=7 protocol_id=19 seq=1 poll=1
+         rs:main-543   [003]  1149.493047: scmi_xfer_end:        transfer_id=1541 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [000]  1149.507033: scmi_xfer_begin:      transfer_id=1542 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1149.507044: scmi_xfer_end:        transfer_id=1542 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [000]  1149.516068: scmi_xfer_end:        transfer_id=1538 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [000]  1149.516559: scmi_xfer_begin:      transfer_id=1543 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.516729: scmi_xfer_begin:      transfer_id=1544 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.516837: scmi_xfer_end:        transfer_id=1544 msg_id=7 protocol_id=19 seq=1 status=-110
+     ksoftirqd/0-9     [000]  1149.519065: scmi_xfer_begin:      transfer_id=1545 msg_id=7 protocol_id=19 seq=1 poll=1
+     ksoftirqd/0-9     [000]  1149.519072: scmi_xfer_end:        transfer_id=1545 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [001]  1149.526878: scmi_xfer_begin:      transfer_id=1546 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.526882: scmi_xfer_end:        transfer_id=1546 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [000]  1149.551119: scmi_xfer_begin:      transfer_id=1547 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1149.551138: scmi_xfer_end:        transfer_id=1547 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [000]  1149.560191: scmi_xfer_end:        transfer_id=1543 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [000]  1149.560690: scmi_xfer_begin:      transfer_id=1548 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.560859: scmi_xfer_begin:      transfer_id=1549 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.560968: scmi_xfer_end:        transfer_id=1549 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [000]  1149.562882: scmi_xfer_begin:      transfer_id=1550 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1149.562887: scmi_xfer_end:        transfer_id=1550 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [001]  1149.570877: scmi_xfer_begin:      transfer_id=1551 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.570881: scmi_xfer_end:        transfer_id=1551 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [000]  1149.595116: scmi_xfer_begin:      transfer_id=1552 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1149.595135: scmi_xfer_end:        transfer_id=1552 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [000]  1149.604204: scmi_xfer_end:        transfer_id=1548 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [000]  1149.604698: scmi_xfer_begin:      transfer_id=1553 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.604867: scmi_xfer_begin:      transfer_id=1554 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.604976: scmi_xfer_end:        transfer_id=1554 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [000]  1149.606880: scmi_xfer_begin:      transfer_id=1555 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1149.606886: scmi_xfer_end:        transfer_id=1555 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [001]  1149.614877: scmi_xfer_begin:      transfer_id=1556 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.614880: scmi_xfer_end:        transfer_id=1556 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [000]  1149.639031: scmi_xfer_begin:      transfer_id=1557 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1149.639050: scmi_xfer_end:        transfer_id=1557 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [000]  1149.648098: scmi_xfer_end:        transfer_id=1553 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [000]  1149.648620: scmi_xfer_begin:      transfer_id=1558 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.649207: scmi_xfer_begin:      transfer_id=1559 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.649315: scmi_xfer_end:        transfer_id=1559 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [000]  1149.650878: scmi_xfer_begin:      transfer_id=1560 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1149.650884: scmi_xfer_end:        transfer_id=1560 msg_id=7 protocol_id=19 seq=1 status=0
+     rcu_preempt-10    [003]  1149.679208: scmi_xfer_begin:      transfer_id=1561 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [003]  1149.679228: scmi_xfer_end:        transfer_id=1561 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1149.692154: scmi_xfer_end:        transfer_id=1558 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1149.692812: scmi_xfer_begin:      transfer_id=1562 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.693420: scmi_xfer_begin:      transfer_id=1563 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.693529: scmi_xfer_end:        transfer_id=1563 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [003]  1149.711204: scmi_xfer_begin:      transfer_id=1564 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [003]  1149.711223: scmi_xfer_end:        transfer_id=1564 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1149.736236: scmi_xfer_end:        transfer_id=1562 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1149.736909: scmi_xfer_begin:      transfer_id=1565 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.737492: scmi_xfer_begin:      transfer_id=1566 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.737602: scmi_xfer_end:        transfer_id=1566 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [003]  1149.779073: scmi_xfer_begin:      transfer_id=1567 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [003]  1149.779092: scmi_xfer_end:        transfer_id=1567 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1149.780198: scmi_xfer_end:        transfer_id=1565 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1149.780864: scmi_xfer_begin:      transfer_id=1568 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.781495: scmi_xfer_end:        transfer_id=1568 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.781883: scmi_xfer_begin:      transfer_id=1569 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.782160: scmi_xfer_end:        transfer_id=1569 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.782483: scmi_xfer_begin:      transfer_id=1570 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.782749: scmi_xfer_end:        transfer_id=1570 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.783211: scmi_xfer_begin:      transfer_id=1571 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.783595: scmi_xfer_end:        transfer_id=1571 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.783948: scmi_xfer_begin:      transfer_id=1572 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.784193: scmi_xfer_end:        transfer_id=1572 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.784574: scmi_xfer_begin:      transfer_id=1573 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.784828: scmi_xfer_end:        transfer_id=1573 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.785154: scmi_xfer_begin:      transfer_id=1574 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.785419: scmi_xfer_end:        transfer_id=1574 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.785740: scmi_xfer_begin:      transfer_id=1575 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.785830: scmi_xfer_end:        transfer_id=1575 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.786147: scmi_xfer_begin:      transfer_id=1576 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.786240: scmi_xfer_end:        transfer_id=1576 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.786610: scmi_xfer_begin:      transfer_id=1577 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.787116: scmi_xfer_end:        transfer_id=1577 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.787436: scmi_xfer_begin:      transfer_id=1578 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.788026: scmi_xfer_end:        transfer_id=1578 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.788365: scmi_xfer_begin:      transfer_id=1579 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.788957: scmi_xfer_end:        transfer_id=1579 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.789271: scmi_xfer_begin:      transfer_id=1580 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.789473: scmi_xfer_begin:      transfer_id=1581 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.789582: scmi_xfer_end:        transfer_id=1581 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [003]  1149.815053: scmi_xfer_begin:      transfer_id=1582 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [003]  1149.815065: scmi_xfer_end:        transfer_id=1582 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1149.832118: scmi_xfer_end:        transfer_id=1580 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1149.832542: scmi_xfer_begin:      transfer_id=1583 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.832717: scmi_xfer_begin:      transfer_id=1584 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.832825: scmi_xfer_end:        transfer_id=1584 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1149.842867: scmi_xfer_begin:      transfer_id=1585 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.842870: scmi_xfer_end:        transfer_id=1585 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1149.876220: scmi_xfer_end:        transfer_id=1583 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1149.876896: scmi_xfer_begin:      transfer_id=1586 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1149.877073: scmi_xfer_begin:      transfer_id=1587 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1149.877182: scmi_xfer_end:        transfer_id=1587 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [003]  1149.915093: scmi_xfer_begin:      transfer_id=1588 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [003]  1149.915112: scmi_xfer_end:        transfer_id=1588 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1149.920198: scmi_xfer_end:        transfer_id=1586 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1149.920867: scmi_xfer_begin:      transfer_id=1589 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1149.921111: scmi_xfer_end:        transfer_id=1589 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1149.922531: scmi_xfer_begin:      transfer_id=1590 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1526  [005]  1149.922589: scmi_xfer_end:        transfer_id=1590 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [000]  1149.934887: scmi_xfer_begin:      transfer_id=1591 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1149.934969: scmi_xfer_end:        transfer_id=1591 msg_id=7 protocol_id=19 seq=0 status=0
+   kworker/u13:0-1497  [003]  1149.944998: scmi_xfer_begin:      transfer_id=1592 msg_id=7 protocol_id=19 seq=0 poll=1
+   kworker/u13:0-1497  [003]  1149.945062: scmi_xfer_end:        transfer_id=1592 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [000]  1149.962941: scmi_xfer_begin:      transfer_id=1593 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1149.963050: scmi_xfer_end:        transfer_id=1593 msg_id=7 protocol_id=19 seq=0 status=-110
+          <idle>-0     [000]  1150.947518: scmi_xfer_begin:      transfer_id=1594 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1150.947586: scmi_xfer_end:        transfer_id=1594 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1150.950155: scmi_xfer_begin:      transfer_id=1595 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1150.950327: scmi_xfer_begin:      transfer_id=1596 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1150.950436: scmi_xfer_end:        transfer_id=1596 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [000]  1150.958904: scmi_xfer_begin:      transfer_id=1597 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1150.958911: scmi_xfer_end:        transfer_id=1597 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1150.992119: scmi_xfer_end:        transfer_id=1595 msg_id=6 protocol_id=21 seq=0 status=-110
+          <idle>-0     [001]  1150.992161: scmi_xfer_begin:      transfer_id=1598 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [001]  1150.992216: scmi_xfer_end:        transfer_id=1598 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1150.992603: scmi_xfer_begin:      transfer_id=1599 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.992908: scmi_xfer_end:        transfer_id=1599 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.993241: scmi_xfer_begin:      transfer_id=1600 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.993328: scmi_xfer_end:        transfer_id=1600 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.993657: scmi_xfer_begin:      transfer_id=1601 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.993742: scmi_xfer_end:        transfer_id=1601 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.994129: scmi_xfer_begin:      transfer_id=1602 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.994627: scmi_xfer_end:        transfer_id=1602 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.995058: scmi_xfer_begin:      transfer_id=1603 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.995792: scmi_xfer_end:        transfer_id=1603 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.996110: scmi_xfer_begin:      transfer_id=1604 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.996827: scmi_xfer_end:        transfer_id=1604 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.997160: scmi_xfer_begin:      transfer_id=1605 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.997803: scmi_xfer_end:        transfer_id=1605 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.998198: scmi_xfer_begin:      transfer_id=1606 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.998287: scmi_xfer_end:        transfer_id=1606 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.998611: scmi_xfer_begin:      transfer_id=1607 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.998698: scmi_xfer_end:        transfer_id=1607 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.999089: scmi_xfer_begin:      transfer_id=1608 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.999404: scmi_xfer_end:        transfer_id=1608 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1150.999715: scmi_xfer_begin:      transfer_id=1609 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1150.999979: scmi_xfer_end:        transfer_id=1609 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.000368: scmi_xfer_begin:      transfer_id=1610 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.000607: scmi_xfer_end:        transfer_id=1610 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.000927: scmi_xfer_begin:      transfer_id=1611 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.001114: scmi_xfer_end:        transfer_id=1611 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.001432: scmi_xfer_begin:      transfer_id=1612 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.001521: scmi_xfer_end:        transfer_id=1612 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.001837: scmi_xfer_begin:      transfer_id=1613 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.001930: scmi_xfer_end:        transfer_id=1613 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.002302: scmi_xfer_begin:      transfer_id=1614 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1151.002696: scmi_xfer_begin:      transfer_id=1615 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1151.002803: scmi_xfer_end:        transfer_id=1615 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [005]  1151.043973: scmi_xfer_end:        transfer_id=1614 msg_id=6 protocol_id=21 seq=0 status=-110
+     rcu_preempt-10    [004]  1151.044107: scmi_xfer_begin:      transfer_id=1616 msg_id=7 protocol_id=19 seq=0 poll=1
+     rcu_preempt-10    [004]  1151.044166: scmi_xfer_end:        transfer_id=1616 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1151.044384: scmi_xfer_begin:      transfer_id=1617 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.045191: scmi_xfer_end:        transfer_id=1617 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.045525: scmi_xfer_begin:      transfer_id=1618 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.046144: scmi_xfer_end:        transfer_id=1618 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.046456: scmi_xfer_begin:      transfer_id=1619 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.046723: scmi_xfer_end:        transfer_id=1619 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.047177: scmi_xfer_begin:      transfer_id=1620 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.047472: scmi_xfer_end:        transfer_id=1620 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.047810: scmi_xfer_begin:      transfer_id=1621 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.048051: scmi_xfer_end:        transfer_id=1621 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.048360: scmi_xfer_begin:      transfer_id=1622 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1151.048715: scmi_xfer_end:        transfer_id=1622 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1151.049880: scmi_xfer_begin:      transfer_id=1623 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1526  [005]  1151.049938: scmi_xfer_end:        transfer_id=1623 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [000]  1151.074998: scmi_xfer_begin:      transfer_id=1624 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1151.075060: scmi_xfer_end:        transfer_id=1624 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [000]  1152.053922: scmi_xfer_begin:      transfer_id=1625 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1152.053989: scmi_xfer_end:        transfer_id=1625 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1152.055670: scmi_xfer_begin:      transfer_id=1626 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1152.055842: scmi_xfer_begin:      transfer_id=1627 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1152.055951: scmi_xfer_end:        transfer_id=1627 msg_id=7 protocol_id=19 seq=1 status=-110
+       in:imklog-541   [000]  1152.064028: scmi_xfer_begin:      transfer_id=1628 msg_id=7 protocol_id=19 seq=1 poll=1
+       in:imklog-541   [000]  1152.064035: scmi_xfer_end:        transfer_id=1628 msg_id=7 protocol_id=19 seq=1 status=0
+     kworker/0:0-1376  [000]  1152.075118: scmi_xfer_begin:      transfer_id=1629 msg_id=7 protocol_id=19 seq=1 poll=1
+     kworker/0:0-1376  [000]  1152.075128: scmi_xfer_end:        transfer_id=1629 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1152.100040: scmi_xfer_end:        transfer_id=1626 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1152.100511: scmi_xfer_begin:      transfer_id=1630 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1152.100687: scmi_xfer_begin:      transfer_id=1631 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1152.100796: scmi_xfer_end:        transfer_id=1631 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1152.110785: scmi_xfer_begin:      transfer_id=1632 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1152.110788: scmi_xfer_end:        transfer_id=1632 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1152.143925: scmi_xfer_end:        transfer_id=1630 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1152.144397: scmi_xfer_begin:      transfer_id=1633 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1152.144571: scmi_xfer_begin:      transfer_id=1634 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1152.144680: scmi_xfer_end:        transfer_id=1634 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1152.154784: scmi_xfer_begin:      transfer_id=1635 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1152.154787: scmi_xfer_end:        transfer_id=1635 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1152.188124: scmi_xfer_end:        transfer_id=1633 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1152.188780: scmi_xfer_begin:      transfer_id=1636 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1152.188956: scmi_xfer_begin:      transfer_id=1637 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1152.189065: scmi_xfer_end:        transfer_id=1637 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [005]  1152.232101: scmi_xfer_end:        transfer_id=1636 msg_id=6 protocol_id=21 seq=0 status=-110
+          <idle>-0     [000]  1152.232193: scmi_xfer_begin:      transfer_id=1638 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1152.232254: scmi_xfer_end:        transfer_id=1638 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1152.232799: scmi_xfer_begin:      transfer_id=1639 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.233510: scmi_xfer_end:        transfer_id=1639 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.233854: scmi_xfer_begin:      transfer_id=1640 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.234574: scmi_xfer_end:        transfer_id=1640 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.235024: scmi_xfer_begin:      transfer_id=1641 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.235764: scmi_xfer_end:        transfer_id=1641 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.236128: scmi_xfer_begin:      transfer_id=1642 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.236757: scmi_xfer_end:        transfer_id=1642 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.237155: scmi_xfer_begin:      transfer_id=1643 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.237396: scmi_xfer_end:        transfer_id=1643 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.237705: scmi_xfer_begin:      transfer_id=1644 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.237976: scmi_xfer_end:        transfer_id=1644 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.238288: scmi_xfer_begin:      transfer_id=1645 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.238559: scmi_xfer_end:        transfer_id=1645 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.238928: scmi_xfer_begin:      transfer_id=1646 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.239226: scmi_xfer_end:        transfer_id=1646 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.239622: scmi_xfer_begin:      transfer_id=1647 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.239860: scmi_xfer_end:        transfer_id=1647 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.240175: scmi_xfer_begin:      transfer_id=1648 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.240448: scmi_xfer_end:        transfer_id=1648 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.240762: scmi_xfer_begin:      transfer_id=1649 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.240852: scmi_xfer_end:        transfer_id=1649 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.241164: scmi_xfer_begin:      transfer_id=1650 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.241256: scmi_xfer_end:        transfer_id=1650 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.241634: scmi_xfer_begin:      transfer_id=1651 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.242060: scmi_xfer_end:        transfer_id=1651 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.242372: scmi_xfer_begin:      transfer_id=1652 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1152.242767: scmi_xfer_begin:      transfer_id=1653 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1152.242874: scmi_xfer_end:        transfer_id=1653 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [004]  1152.282994: scmi_xfer_begin:      transfer_id=1654 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [004]  1152.283014: scmi_xfer_end:        transfer_id=1654 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1152.284310: scmi_xfer_end:        transfer_id=1652 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1152.284867: scmi_xfer_begin:      transfer_id=1655 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.285452: scmi_xfer_end:        transfer_id=1655 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.285773: scmi_xfer_begin:      transfer_id=1656 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.286058: scmi_xfer_end:        transfer_id=1656 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.286361: scmi_xfer_begin:      transfer_id=1657 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.286632: scmi_xfer_end:        transfer_id=1657 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.287086: scmi_xfer_begin:      transfer_id=1658 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.287477: scmi_xfer_end:        transfer_id=1658 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.287800: scmi_xfer_begin:      transfer_id=1659 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1152.288071: scmi_xfer_end:        transfer_id=1659 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1152.289294: scmi_xfer_begin:      transfer_id=1660 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1526  [005]  1152.289352: scmi_xfer_end:        transfer_id=1660 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [000]  1152.314930: scmi_xfer_begin:      transfer_id=1661 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1152.315036: scmi_xfer_end:        transfer_id=1661 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [000]  1153.293994: scmi_xfer_begin:      transfer_id=1662 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1153.294062: scmi_xfer_end:        transfer_id=1662 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1153.295825: scmi_xfer_begin:      transfer_id=1663 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1153.295999: scmi_xfer_begin:      transfer_id=1664 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1153.296108: scmi_xfer_end:        transfer_id=1664 msg_id=7 protocol_id=19 seq=1 status=-110
+ systemd-journal-262   [000]  1153.304319: scmi_xfer_begin:      transfer_id=1665 msg_id=7 protocol_id=19 seq=1 poll=1
+ systemd-journal-262   [000]  1153.304334: scmi_xfer_end:        transfer_id=1665 msg_id=7 protocol_id=19 seq=1 status=0
+     rcu_preempt-10    [004]  1153.334921: scmi_xfer_begin:      transfer_id=1666 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [004]  1153.334932: scmi_xfer_end:        transfer_id=1666 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1153.339954: scmi_xfer_end:        transfer_id=1663 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1153.340511: scmi_xfer_begin:      transfer_id=1667 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.340754: scmi_xfer_end:        transfer_id=1667 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.341098: scmi_xfer_begin:      transfer_id=1668 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.341338: scmi_xfer_end:        transfer_id=1668 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.341649: scmi_xfer_begin:      transfer_id=1669 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.341912: scmi_xfer_end:        transfer_id=1669 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.342273: scmi_xfer_begin:      transfer_id=1670 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.342949: scmi_xfer_end:        transfer_id=1670 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.343292: scmi_xfer_begin:      transfer_id=1671 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.344044: scmi_xfer_end:        transfer_id=1671 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.344359: scmi_xfer_begin:      transfer_id=1672 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1153.344965: scmi_xfer_begin:      transfer_id=1673 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1153.345074: scmi_xfer_end:        transfer_id=1673 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [004]  1153.386931: scmi_xfer_begin:      transfer_id=1674 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [004]  1153.386951: scmi_xfer_end:        transfer_id=1674 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1153.388087: scmi_xfer_end:        transfer_id=1672 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1153.388729: scmi_xfer_begin:      transfer_id=1675 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.389361: scmi_xfer_end:        transfer_id=1675 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.389766: scmi_xfer_begin:      transfer_id=1676 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.390008: scmi_xfer_end:        transfer_id=1676 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.390324: scmi_xfer_begin:      transfer_id=1677 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.390588: scmi_xfer_end:        transfer_id=1677 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.391015: scmi_xfer_begin:      transfer_id=1678 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.391253: scmi_xfer_end:        transfer_id=1678 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.391570: scmi_xfer_begin:      transfer_id=1679 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.391844: scmi_xfer_end:        transfer_id=1679 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.392241: scmi_xfer_begin:      transfer_id=1680 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.392478: scmi_xfer_end:        transfer_id=1680 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.392803: scmi_xfer_begin:      transfer_id=1681 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.393068: scmi_xfer_end:        transfer_id=1681 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.393388: scmi_xfer_begin:      transfer_id=1682 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.393478: scmi_xfer_end:        transfer_id=1682 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.393793: scmi_xfer_begin:      transfer_id=1683 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.393885: scmi_xfer_end:        transfer_id=1683 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.394306: scmi_xfer_begin:      transfer_id=1684 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.394765: scmi_xfer_end:        transfer_id=1684 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.395077: scmi_xfer_begin:      transfer_id=1685 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.395513: scmi_xfer_end:        transfer_id=1685 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.395814: scmi_xfer_begin:      transfer_id=1686 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.396427: scmi_xfer_end:        transfer_id=1686 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.396737: scmi_xfer_begin:      transfer_id=1687 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1153.396942: scmi_xfer_begin:      transfer_id=1688 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1153.397051: scmi_xfer_end:        transfer_id=1688 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [004]  1153.438939: scmi_xfer_begin:      transfer_id=1689 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [004]  1153.438957: scmi_xfer_end:        transfer_id=1689 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1153.440057: scmi_xfer_end:        transfer_id=1687 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1153.440699: scmi_xfer_begin:      transfer_id=1690 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.440941: scmi_xfer_end:        transfer_id=1690 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.441271: scmi_xfer_begin:      transfer_id=1691 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.441358: scmi_xfer_end:        transfer_id=1691 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1153.441668: scmi_xfer_begin:      transfer_id=1692 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1153.441777: scmi_xfer_end:        transfer_id=1692 msg_id=6 protocol_id=21 seq=0 status=0
+          <idle>-0     [001]  1153.450939: scmi_xfer_begin:      transfer_id=1693 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [001]  1153.451048: scmi_xfer_end:        transfer_id=1693 msg_id=7 protocol_id=19 seq=0 status=-110
+          <idle>-0     [001]  1153.462865: scmi_xfer_begin:      transfer_id=1694 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [001]  1153.462921: scmi_xfer_end:        transfer_id=1694 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [001]  1154.447474: scmi_xfer_begin:      transfer_id=1695 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [001]  1154.447534: scmi_xfer_end:        transfer_id=1695 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1154.449108: scmi_xfer_begin:      transfer_id=1696 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.449211: scmi_xfer_end:        transfer_id=1696 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.449591: scmi_xfer_begin:      transfer_id=1697 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.449668: scmi_xfer_end:        transfer_id=1697 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.449977: scmi_xfer_begin:      transfer_id=1698 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.450059: scmi_xfer_end:        transfer_id=1698 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.450373: scmi_xfer_begin:      transfer_id=1699 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.450448: scmi_xfer_end:        transfer_id=1699 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.450900: scmi_xfer_begin:      transfer_id=1700 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.451492: scmi_xfer_end:        transfer_id=1700 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.451807: scmi_xfer_begin:      transfer_id=1701 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.452323: scmi_xfer_end:        transfer_id=1701 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.452634: scmi_xfer_begin:      transfer_id=1702 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.453116: scmi_xfer_end:        transfer_id=1702 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.453433: scmi_xfer_begin:      transfer_id=1703 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.453902: scmi_xfer_end:        transfer_id=1703 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.454278: scmi_xfer_begin:      transfer_id=1704 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.454360: scmi_xfer_end:        transfer_id=1704 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.454673: scmi_xfer_begin:      transfer_id=1705 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.454753: scmi_xfer_end:        transfer_id=1705 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.455067: scmi_xfer_begin:      transfer_id=1706 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.455144: scmi_xfer_end:        transfer_id=1706 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.455455: scmi_xfer_begin:      transfer_id=1707 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.455538: scmi_xfer_end:        transfer_id=1707 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.455919: scmi_xfer_begin:      transfer_id=1708 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.455997: scmi_xfer_end:        transfer_id=1708 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.456312: scmi_xfer_begin:      transfer_id=1709 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.456390: scmi_xfer_end:        transfer_id=1709 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.456704: scmi_xfer_begin:      transfer_id=1710 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.456782: scmi_xfer_end:        transfer_id=1710 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.457095: scmi_xfer_begin:      transfer_id=1711 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.457173: scmi_xfer_end:        transfer_id=1711 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.457549: scmi_xfer_begin:      transfer_id=1712 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1154.457937: scmi_xfer_begin:      transfer_id=1713 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1154.458041: scmi_xfer_end:        transfer_id=1713 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1154.470688: scmi_xfer_begin:      transfer_id=1714 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1154.470691: scmi_xfer_end:        transfer_id=1714 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1154.499934: scmi_xfer_end:        transfer_id=1712 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1154.500367: scmi_xfer_begin:      transfer_id=1715 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1154.500853: scmi_xfer_begin:      transfer_id=1716 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1154.500960: scmi_xfer_end:        transfer_id=1716 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [005]  1154.543907: scmi_xfer_end:        transfer_id=1715 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1154.544319: scmi_xfer_begin:      transfer_id=1717 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.544368: scmi_xfer_begin:      transfer_id=1718 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1526  [005]  1154.544704: scmi_xfer_end:        transfer_id=1718 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [005]  1154.588006: scmi_xfer_end:        transfer_id=1717 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1154.588654: scmi_xfer_begin:      transfer_id=1719 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1154.588832: scmi_xfer_begin:      transfer_id=1720 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1154.588941: scmi_xfer_end:        transfer_id=1720 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [005]  1154.632058: scmi_xfer_end:        transfer_id=1719 msg_id=6 protocol_id=21 seq=0 status=-110
+          <idle>-0     [000]  1154.632144: scmi_xfer_begin:      transfer_id=1721 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1154.632205: scmi_xfer_end:        transfer_id=1721 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1154.632700: scmi_xfer_begin:      transfer_id=1722 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.632942: scmi_xfer_end:        transfer_id=1722 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.633275: scmi_xfer_begin:      transfer_id=1723 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.633526: scmi_xfer_end:        transfer_id=1723 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.633838: scmi_xfer_begin:      transfer_id=1724 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1154.634105: scmi_xfer_end:        transfer_id=1724 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1154.635444: scmi_xfer_begin:      transfer_id=1725 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1526  [005]  1154.635505: scmi_xfer_end:        transfer_id=1725 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [003]  1154.662873: scmi_xfer_begin:      transfer_id=1726 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [003]  1154.662937: scmi_xfer_end:        transfer_id=1726 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [003]  1155.639503: scmi_xfer_begin:      transfer_id=1727 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [003]  1155.639570: scmi_xfer_end:        transfer_id=1727 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [005]  1155.641223: scmi_xfer_begin:      transfer_id=1728 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1155.641395: scmi_xfer_begin:      transfer_id=1729 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1155.641503: scmi_xfer_end:        transfer_id=1729 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [000]  1155.650787: scmi_xfer_begin:      transfer_id=1730 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1155.650802: scmi_xfer_end:        transfer_id=1730 msg_id=7 protocol_id=19 seq=1 status=0
+     rcu_preempt-10    [000]  1155.682908: scmi_xfer_begin:      transfer_id=1731 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [000]  1155.682927: scmi_xfer_end:        transfer_id=1731 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [005]  1155.683842: scmi_xfer_end:        transfer_id=1728 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [005]  1155.684505: scmi_xfer_begin:      transfer_id=1732 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1155.684749: scmi_xfer_end:        transfer_id=1732 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1155.685089: scmi_xfer_begin:      transfer_id=1733 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1155.685331: scmi_xfer_end:        transfer_id=1733 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1155.685644: scmi_xfer_begin:      transfer_id=1734 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1155.685909: scmi_xfer_end:        transfer_id=1734 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1155.686273: scmi_xfer_begin:      transfer_id=1735 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1155.687059: scmi_xfer_end:        transfer_id=1735 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1155.687418: scmi_xfer_begin:      transfer_id=1736 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [005]  1155.688093: scmi_xfer_end:        transfer_id=1736 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [005]  1155.688413: scmi_xfer_begin:      transfer_id=1737 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [005]  1155.689077: scmi_xfer_begin:      transfer_id=1738 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [005]  1155.689185: scmi_xfer_end:        transfer_id=1738 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [002]  1155.689518: scmi_xfer_end:        transfer_id=1737 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [002]  1155.689813: scmi_xfer_begin:      transfer_id=1739 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.690540: scmi_xfer_end:        transfer_id=1739 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.690901: scmi_xfer_begin:      transfer_id=1740 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.691236: scmi_xfer_end:        transfer_id=1740 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.691426: scmi_xfer_begin:      transfer_id=1741 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.691875: scmi_xfer_end:        transfer_id=1741 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.692068: scmi_xfer_begin:      transfer_id=1742 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.692368: scmi_xfer_end:        transfer_id=1742 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.692546: scmi_xfer_begin:      transfer_id=1743 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.692895: scmi_xfer_end:        transfer_id=1743 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.693118: scmi_xfer_begin:      transfer_id=1744 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1155.693380: scmi_xfer_begin:      transfer_id=1745 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1155.693488: scmi_xfer_end:        transfer_id=1745 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [000]  1155.702882: scmi_xfer_begin:      transfer_id=1746 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1155.702890: scmi_xfer_end:        transfer_id=1746 msg_id=7 protocol_id=19 seq=1 status=0
+     rcu_preempt-10    [000]  1155.734837: scmi_xfer_begin:      transfer_id=1747 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [000]  1155.734856: scmi_xfer_end:        transfer_id=1747 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1155.735861: scmi_xfer_end:        transfer_id=1744 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1155.736506: scmi_xfer_begin:      transfer_id=1748 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.736751: scmi_xfer_end:        transfer_id=1748 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.737091: scmi_xfer_begin:      transfer_id=1749 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.737330: scmi_xfer_end:        transfer_id=1749 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.737640: scmi_xfer_begin:      transfer_id=1750 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.737735: scmi_xfer_end:        transfer_id=1750 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.738109: scmi_xfer_begin:      transfer_id=1751 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.738778: scmi_xfer_end:        transfer_id=1751 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.739094: scmi_xfer_begin:      transfer_id=1752 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.739673: scmi_xfer_end:        transfer_id=1752 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.739991: scmi_xfer_begin:      transfer_id=1753 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.740603: scmi_xfer_end:        transfer_id=1753 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.740917: scmi_xfer_begin:      transfer_id=1754 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.741185: scmi_xfer_end:        transfer_id=1754 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.741494: scmi_xfer_begin:      transfer_id=1755 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.741761: scmi_xfer_end:        transfer_id=1755 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.742078: scmi_xfer_begin:      transfer_id=1756 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.742350: scmi_xfer_end:        transfer_id=1756 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.742711: scmi_xfer_begin:      transfer_id=1757 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1155.742965: scmi_xfer_end:        transfer_id=1757 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1155.744099: scmi_xfer_begin:      transfer_id=1758 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1526  [004]  1155.744156: scmi_xfer_end:        transfer_id=1758 msg_id=7 protocol_id=19 seq=0 status=0
+     ksoftirqd/0-9     [000]  1155.766839: scmi_xfer_begin:      transfer_id=1759 msg_id=7 protocol_id=19 seq=0 poll=1
+     ksoftirqd/0-9     [000]  1155.766902: scmi_xfer_end:        transfer_id=1759 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [005]  1156.747828: scmi_xfer_begin:      transfer_id=1760 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [005]  1156.747895: scmi_xfer_end:        transfer_id=1760 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [004]  1156.749593: scmi_xfer_begin:      transfer_id=1761 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1156.749772: scmi_xfer_begin:      transfer_id=1762 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1156.749880: scmi_xfer_end:        transfer_id=1762 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [000]  1156.758687: scmi_xfer_begin:      transfer_id=1763 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [000]  1156.758694: scmi_xfer_end:        transfer_id=1763 msg_id=7 protocol_id=19 seq=1 status=0
+ systemd-journal-262   [000]  1156.761548: scmi_xfer_begin:      transfer_id=1764 msg_id=7 protocol_id=19 seq=1 poll=1
+ systemd-journal-262   [000]  1156.761558: scmi_xfer_end:        transfer_id=1764 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1156.791787: scmi_xfer_end:        transfer_id=1761 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1156.792273: scmi_xfer_begin:      transfer_id=1765 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1156.792448: scmi_xfer_begin:      transfer_id=1766 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1156.792557: scmi_xfer_end:        transfer_id=1766 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1156.802616: scmi_xfer_begin:      transfer_id=1767 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1156.802619: scmi_xfer_end:        transfer_id=1767 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1156.835929: scmi_xfer_end:        transfer_id=1765 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1156.836613: scmi_xfer_begin:      transfer_id=1768 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1156.836789: scmi_xfer_begin:      transfer_id=1769 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1156.836898: scmi_xfer_end:        transfer_id=1769 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [000]  1156.878805: scmi_xfer_begin:      transfer_id=1770 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [000]  1156.878824: scmi_xfer_end:        transfer_id=1770 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1156.879938: scmi_xfer_end:        transfer_id=1768 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1156.880585: scmi_xfer_begin:      transfer_id=1771 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.880829: scmi_xfer_end:        transfer_id=1771 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.881217: scmi_xfer_begin:      transfer_id=1772 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.881864: scmi_xfer_end:        transfer_id=1772 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.882193: scmi_xfer_begin:      transfer_id=1773 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.882968: scmi_xfer_end:        transfer_id=1773 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.883305: scmi_xfer_begin:      transfer_id=1774 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.883998: scmi_xfer_end:        transfer_id=1774 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.884319: scmi_xfer_begin:      transfer_id=1775 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.884965: scmi_xfer_end:        transfer_id=1775 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.885353: scmi_xfer_begin:      transfer_id=1776 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.885595: scmi_xfer_end:        transfer_id=1776 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.885911: scmi_xfer_begin:      transfer_id=1777 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.886172: scmi_xfer_end:        transfer_id=1777 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.886485: scmi_xfer_begin:      transfer_id=1778 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.886764: scmi_xfer_end:        transfer_id=1778 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.887070: scmi_xfer_begin:      transfer_id=1779 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.887340: scmi_xfer_end:        transfer_id=1779 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.887730: scmi_xfer_begin:      transfer_id=1780 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.887973: scmi_xfer_end:        transfer_id=1780 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.888289: scmi_xfer_begin:      transfer_id=1781 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.888552: scmi_xfer_end:        transfer_id=1781 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.888864: scmi_xfer_begin:      transfer_id=1782 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1156.888918: scmi_xfer_begin:      transfer_id=1783 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1156.889025: scmi_xfer_end:        transfer_id=1783 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1156.902596: scmi_xfer_begin:      transfer_id=1784 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1156.902599: scmi_xfer_end:        transfer_id=1784 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1156.931852: scmi_xfer_end:        transfer_id=1782 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1156.932504: scmi_xfer_begin:      transfer_id=1785 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1156.932686: scmi_xfer_begin:      transfer_id=1786 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1156.932795: scmi_xfer_end:        transfer_id=1786 msg_id=7 protocol_id=19 seq=1 status=-110
+     rcu_preempt-10    [000]  1156.974803: scmi_xfer_begin:      transfer_id=1787 msg_id=7 protocol_id=19 seq=1 poll=1
+     rcu_preempt-10    [000]  1156.974822: scmi_xfer_end:        transfer_id=1787 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1156.975934: scmi_xfer_end:        transfer_id=1785 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1156.976657: scmi_xfer_begin:      transfer_id=1788 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.977245: scmi_xfer_end:        transfer_id=1788 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.977563: scmi_xfer_begin:      transfer_id=1789 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.978168: scmi_xfer_end:        transfer_id=1789 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.978471: scmi_xfer_begin:      transfer_id=1790 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.979200: scmi_xfer_end:        transfer_id=1790 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.979541: scmi_xfer_begin:      transfer_id=1791 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.979774: scmi_xfer_end:        transfer_id=1791 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.980091: scmi_xfer_begin:      transfer_id=1792 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.980359: scmi_xfer_end:        transfer_id=1792 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.980676: scmi_xfer_begin:      transfer_id=1793 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.980935: scmi_xfer_end:        transfer_id=1793 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.981248: scmi_xfer_begin:      transfer_id=1794 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1156.981519: scmi_xfer_end:        transfer_id=1794 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1156.982681: scmi_xfer_begin:      transfer_id=1795 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1526  [004]  1156.982755: scmi_xfer_end:        transfer_id=1795 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [005]  1157.006787: scmi_xfer_begin:      transfer_id=1796 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [005]  1157.006850: scmi_xfer_end:        transfer_id=1796 msg_id=7 protocol_id=19 seq=0 status=0
+          <idle>-0     [005]  1157.986340: scmi_xfer_begin:      transfer_id=1797 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [005]  1157.986407: scmi_xfer_end:        transfer_id=1797 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [004]  1157.988153: scmi_xfer_begin:      transfer_id=1798 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1157.988334: scmi_xfer_begin:      transfer_id=1799 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1157.988443: scmi_xfer_end:        transfer_id=1799 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [004]  1157.998657: scmi_xfer_begin:      transfer_id=1800 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [004]  1157.998672: scmi_xfer_end:        transfer_id=1800 msg_id=7 protocol_id=19 seq=1 status=0
+          <idle>-0     [001]  1157.998761: scmi_xfer_begin:      transfer_id=1801 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1157.998887: scmi_xfer_end:        transfer_id=1801 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [004]  1158.031749: scmi_xfer_end:        transfer_id=1798 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.032301: scmi_xfer_begin:      transfer_id=1802 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1158.032478: scmi_xfer_begin:      transfer_id=1803 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.032587: scmi_xfer_end:        transfer_id=1803 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1158.042571: scmi_xfer_begin:      transfer_id=1804 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.042574: scmi_xfer_end:        transfer_id=1804 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1158.075723: scmi_xfer_end:        transfer_id=1802 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.076168: scmi_xfer_begin:      transfer_id=1805 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1158.076343: scmi_xfer_begin:      transfer_id=1806 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.076452: scmi_xfer_end:        transfer_id=1806 msg_id=7 protocol_id=19 seq=1 status=-110
+          <idle>-0     [001]  1158.086569: scmi_xfer_begin:      transfer_id=1807 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.086572: scmi_xfer_end:        transfer_id=1807 msg_id=7 protocol_id=19 seq=1 status=0
+            bash-1526  [004]  1158.119894: scmi_xfer_end:        transfer_id=1805 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.120541: scmi_xfer_begin:      transfer_id=1808 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1158.120718: scmi_xfer_begin:      transfer_id=1809 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.120828: scmi_xfer_end:        transfer_id=1809 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [004]  1158.163900: scmi_xfer_end:        transfer_id=1808 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.164606: scmi_xfer_begin:      transfer_id=1810 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.164668: scmi_xfer_begin:      transfer_id=1811 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1526  [004]  1158.165059: scmi_xfer_end:        transfer_id=1811 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [004]  1158.207881: scmi_xfer_end:        transfer_id=1810 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.208551: scmi_xfer_begin:      transfer_id=1812 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1158.209160: scmi_xfer_begin:      transfer_id=1813 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.209269: scmi_xfer_end:        transfer_id=1813 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [004]  1158.251885: scmi_xfer_end:        transfer_id=1812 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.252538: scmi_xfer_begin:      transfer_id=1814 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.252599: scmi_xfer_begin:      transfer_id=1815 msg_id=7 protocol_id=19 seq=1 poll=1
+            bash-1526  [004]  1158.252987: scmi_xfer_end:        transfer_id=1815 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [004]  1158.295885: scmi_xfer_end:        transfer_id=1814 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.296535: scmi_xfer_begin:      transfer_id=1816 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1158.297100: scmi_xfer_begin:      transfer_id=1817 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.297209: scmi_xfer_end:        transfer_id=1817 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [004]  1158.339884: scmi_xfer_end:        transfer_id=1816 msg_id=6 protocol_id=21 seq=0 status=-110
+          <idle>-0     [000]  1158.339974: scmi_xfer_begin:      transfer_id=1818 msg_id=7 protocol_id=19 seq=0 poll=1
+          <idle>-0     [000]  1158.340035: scmi_xfer_end:        transfer_id=1818 msg_id=7 protocol_id=19 seq=0 status=0
+            bash-1526  [004]  1158.340607: scmi_xfer_begin:      transfer_id=1819 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.340852: scmi_xfer_end:        transfer_id=1819 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.341180: scmi_xfer_begin:      transfer_id=1820 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.341433: scmi_xfer_end:        transfer_id=1820 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.341750: scmi_xfer_begin:      transfer_id=1821 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.342012: scmi_xfer_end:        transfer_id=1821 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.342325: scmi_xfer_begin:      transfer_id=1822 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.342684: scmi_xfer_end:        transfer_id=1822 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.343316: scmi_xfer_begin:      transfer_id=1823 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.343561: scmi_xfer_end:        transfer_id=1823 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.343897: scmi_xfer_begin:      transfer_id=1824 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.344137: scmi_xfer_end:        transfer_id=1824 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.344456: scmi_xfer_begin:      transfer_id=1825 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.344725: scmi_xfer_end:        transfer_id=1825 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.345037: scmi_xfer_begin:      transfer_id=1826 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.345304: scmi_xfer_end:        transfer_id=1826 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.345681: scmi_xfer_begin:      transfer_id=1827 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.346116: scmi_xfer_end:        transfer_id=1827 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.346426: scmi_xfer_begin:      transfer_id=1828 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.347116: scmi_xfer_end:        transfer_id=1828 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.347424: scmi_xfer_begin:      transfer_id=1829 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.348039: scmi_xfer_end:        transfer_id=1829 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.348350: scmi_xfer_begin:      transfer_id=1830 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.348614: scmi_xfer_end:        transfer_id=1830 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.348918: scmi_xfer_begin:      transfer_id=1831 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.349200: scmi_xfer_end:        transfer_id=1831 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.349514: scmi_xfer_begin:      transfer_id=1832 msg_id=6 protocol_id=21 seq=0 poll=0
+            bash-1526  [004]  1158.349774: scmi_xfer_end:        transfer_id=1832 msg_id=6 protocol_id=21 seq=0 status=0
+            bash-1526  [004]  1158.350087: scmi_xfer_begin:      transfer_id=1833 msg_id=6 protocol_id=21 seq=0 poll=0
+          <idle>-0     [001]  1158.350297: scmi_xfer_begin:      transfer_id=1834 msg_id=7 protocol_id=19 seq=1 poll=1
+          <idle>-0     [001]  1158.350406: scmi_xfer_end:        transfer_id=1834 msg_id=7 protocol_id=19 seq=1 status=-110
+            bash-1526  [004]  1158.391883: scmi_xfer_end:        transfer_id=1833 msg_id=6 protocol_id=21 seq=0 status=-110
+            bash-1526  [004]  1158.393960: scmi_xfer_begin:      transfer_id=1835 msg_id=7 protocol_id=19 seq=0 poll=1
+            bash-1526  [004]  1158.394020: scmi_xfer_end:        transfer_id=1835 msg_id=7 protocol_id=19 seq=0 status=0
+
+--vtzGhvizbBRQ85DL--
