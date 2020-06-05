@@ -2,68 +2,92 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB01DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 801ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC550207D0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591391734;
-	bh=KsA5/eoO5bcA2oE6HJOuUDNy5txaV/ZnJBGEp3uGcK8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=qx0K+BATufnvhCu4UbcBEdeJJ8/JDA26k2uXFJTc+qVVsTH2jovWQ2vYi8Kfs683D
-	 Vb0WllLMrhB3vlOhOKKp0UGSyrj633V+iEl0aPgj73qCMbKVyBpaN8YUKEOHFUnbed
-	 Z7pqqNn+4HCmkioMKdhrauSGMg6B+COW43S43q3w=
+	by mail.kernel.org (Postfix) with ESMTP id 3CFDD206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Y1Q6AJdF";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Y1Q6AJdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgFEVPd (ORCPT
+        id S1728497AbgFEVSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:15:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbgFEVPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:15:16 -0400
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591391716;
-        bh=KsA5/eoO5bcA2oE6HJOuUDNy5txaV/ZnJBGEp3uGcK8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=eY43VEk0m8ZGH1PRELRqwlm9pfYgXissAD96oNb6HMaY97Hzs22xlaIvK2C11ZnRu
-         ItO4oofKFTgVCWbemcmDvaKP3oxrNubE+bGjG/0lw9D6M5XwcxDAxPiXzYWgssWhnG
-         ZXJkRIJlFhjDWZxHoq0/AHgPz/Y0cCv2o0Ju8iGE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200604195131.GA362249@ziepe.ca>
-References: <20200604195131.GA362249@ziepe.ca>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200604195131.GA362249@ziepe.ca>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: fba97dc7fc76b2c9a909fa0b3786d30a9899f5cf
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 242b23319809e05170b3cc0d44d3b4bd202bb073
-Message-Id: <159139171609.26946.18224052473915997990.pr-tracker-bot@kernel.org>
-Date:   Fri, 05 Jun 2020 21:15:16 +0000
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Fri, 5 Jun 2020 17:18:14 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55214 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728248AbgFEVSO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:18:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id A9DD88EE17B;
+        Fri,  5 Jun 2020 14:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591391893;
+        bh=fvQ5lXXp/5KD4vDVeCdckFEdmRAm58yLylnHAerd8EU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Y1Q6AJdFWs4C6umRRKaOSsAkd/aZ6/KFnDKUFTM3cXGn6h86cY8WVEgtgKRezjGvf
+         QgB4Lh5qDjbdFrE3JKJDJlQK1fupF4Y4YDgbMV+T2FXYGD0Kv5QjpOM/6VXROHazGI
+         6akCNl4ynYPVK+eWThXfjCi7o3PAX1v4XL1eLbBg=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3JikwkIJJBpC; Fri,  5 Jun 2020 14:18:13 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E5F0F8EE0CE;
+        Fri,  5 Jun 2020 14:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591391893;
+        bh=fvQ5lXXp/5KD4vDVeCdckFEdmRAm58yLylnHAerd8EU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Y1Q6AJdFWs4C6umRRKaOSsAkd/aZ6/KFnDKUFTM3cXGn6h86cY8WVEgtgKRezjGvf
+         QgB4Lh5qDjbdFrE3JKJDJlQK1fupF4Y4YDgbMV+T2FXYGD0Kv5QjpOM/6VXROHazGI
+         6akCNl4ynYPVK+eWThXfjCi7o3PAX1v4XL1eLbBg=
+Message-ID: <1591391891.4728.96.camel@HansenPartnership.com>
+Subject: Re: [GIT PULL] first round of SCSI updates for the 5.6+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 05 Jun 2020 14:18:11 -0700
+In-Reply-To: <CAHk-=wjiQmscZHzOYKmMpFoy4h4xF1Mvf9O8i6qtTtS38t6Wsg@mail.gmail.com>
+References: <1591332925.3685.16.camel@HansenPartnership.com>
+         <CAHk-=wjiQmscZHzOYKmMpFoy4h4xF1Mvf9O8i6qtTtS38t6Wsg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 4 Jun 2020 16:51:31 -0300:
+On Fri, 2020-06-05 at 14:11 -0700, Linus Torvalds wrote:
+> On Thu, Jun 4, 2020 at 9:55 PM James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+> > 
+> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-
+> > misc
+> 
+>    "Already up to date."
+> 
+> Did you forget to force a push? That scsi-misc tag is your tag from
+> April 10.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+Um, no, shuffles feet ... I actually tagged the wrong branch:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/242b23319809e05170b3cc0d44d3b4bd202bb073
+https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git/tag/?h=scsi-fixes
 
-Thank you!
+I've tagged the right branch now if you repull the scsi-misc tag. 
+Sorry about that; I think it's finger memory from so many fixes
+updates.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+James
+
