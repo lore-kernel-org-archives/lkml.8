@@ -2,142 +2,144 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A86AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD156C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273812065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954C2206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgFEMt3 (ORCPT
+        id S1726776AbgFEMwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:49:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53850 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbgFEMt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:49:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7335AAD85;
-        Fri,  5 Jun 2020 12:49:30 +0000 (UTC)
-Message-ID: <400023013d9b53b0f4647909387d844f1a959d09.camel@suse.de>
-Subject: Re: [PATCH v3 22/25] clk: bcm: rpi: Give firmware clocks a name
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 05 Jun 2020 14:49:25 +0200
-In-Reply-To: <135a5d32e42d9a117e264f1f52ac9fb6b9dc20e6.1590594293.git-series.maxime@cerno.tech>
-References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
-         <135a5d32e42d9a117e264f1f52ac9fb6b9dc20e6.1590594293.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-6BoIZ1J7R/yVno28uORR"
-User-Agent: Evolution 3.36.2 
+        Fri, 5 Jun 2020 08:52:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37986 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgFEMwE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:52:04 -0400
+Received: by mail-oi1-f193.google.com with SMTP id c194so8108722oig.5;
+        Fri, 05 Jun 2020 05:52:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0l1qYzvXi/GO1NNvXjYET+2paPoc72Q4SdiakMSrAJE=;
+        b=NMiI0cxm3L5FK+XtkUqxfkfr16nI8LXlr6zv2XNGDXyMN5Rt1ttn0qhKXMEMtCpiIR
+         rvZZcqwQrQvaDVA2S1v2j1fvnG9+Qaxw40pcFFaFh/ERXgX5g9gOyw271xfoCNDQYy+l
+         CESBmJzj9C63rBx73CiXDS7QcW5TBOp4TFb274Byvj4DD01yLc6V3MVoGZa8Omgu4B86
+         Yv0lZ2KtbUceWzGjeq3vHYbw5kmV7pCNWrfPAw9UudKFtGSuqHarOOEC1EJMTTV+eJbf
+         GJefnoOypP8BsxzQWnWtC60fu9aVf4BXrD1EsfyPVjeosA2JNIYiqK1CzGf+bjeLVdPY
+         0Q0A==
+X-Gm-Message-State: AOAM530GlO5HQszfC6hPJUihsZSTy/zUCqltYggG3mFdx+k/oRH+8kEF
+        glM1aXIsqJrqs0swTMnhpGkt1Ab/sY9I3CoQZBgYok5Z
+X-Google-Smtp-Source: ABdhPJytYGDFbxN/XEq2VGE23sTUMKtd1U9+zTazCFQWHGPrv/2hO4eOc8uC8OCmgaeeBGlB90o3SnUqaReY8OrFTNk=
+X-Received: by 2002:aca:1a19:: with SMTP id a25mr1815274oia.54.1591361523495;
+ Fri, 05 Jun 2020 05:52:03 -0700 (PDT)
 MIME-Version: 1.0
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 5 Jun 2020 14:51:52 +0200
+Message-ID: <CAMuHMdXgSWHd-w_vgv-2mrYwJ2trcdDNniKFGCDGbn3ts-CkjA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for
+ iWave G21D-Q7 board based on RZ/G1H
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prabhakar,
 
---=-6BoIZ1J7R/yVno28uORR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-On Wed, 2020-05-27 at 17:45 +0200, Maxime Ripard wrote:
-> We've registered the firmware clocks using their ID as name, but it's muc=
-h
-> more convenient to register them using their proper name. Since the
-> firmware doesn't provide it, we have to duplicate it.
->=20
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/clk/bcm/clk-raspberrypi.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
-> raspberrypi.c
-> index 8d3acf3ee053..cee634cb5323 100644
-> --- a/drivers/clk/bcm/clk-raspberrypi.c
-> +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> @@ -36,6 +36,23 @@ enum rpi_firmware_clk_id {
->  	RPI_FIRMWARE_NUM_CLK_ID,
->  };
-> =20
-> +static char *rpi_firmware_clk_names[] =3D {
-> +	[RPI_FIRMWARE_EMMC_CLK_ID]	=3D "emmc",
-> +	[RPI_FIRMWARE_UART_CLK_ID]	=3D "uart",
-> +	[RPI_FIRMWARE_ARM_CLK_ID]	=3D "arm",
-> +	[RPI_FIRMWARE_CORE_CLK_ID]	=3D "core",
-> +	[RPI_FIRMWARE_V3D_CLK_ID]	=3D "v3d",
-> +	[RPI_FIRMWARE_H264_CLK_ID]	=3D "h264",
-> +	[RPI_FIRMWARE_ISP_CLK_ID]	=3D "isp",
-> +	[RPI_FIRMWARE_SDRAM_CLK_ID]	=3D "sdram",
-> +	[RPI_FIRMWARE_PIXEL_CLK_ID]	=3D "pixel",
-> +	[RPI_FIRMWARE_PWM_CLK_ID]	=3D "pwm",
-> +	[RPI_FIRMWARE_HEVC_CLK_ID]	=3D "hevc",
-> +	[RPI_FIRMWARE_EMMC2_CLK_ID]	=3D "emmc2",
-> +	[RPI_FIRMWARE_M2MC_CLK_ID]	=3D "m2mc",
-> +	[RPI_FIRMWARE_PIXEL_BVB_CLK_ID]	=3D "pixel-bvb",
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> @@ -0,0 +1,37 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the iWave-RZ/G1H Qseven board
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
+> +
+> +/dts-v1/;
+> +#include "r8a7742-iwg21m.dtsi"
+> +
+> +/ {
+> +       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+> +       compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
+> +
+> +       aliases {
+> +               serial2 = &scifa2;
+> +       };
+> +
+> +       chosen {
+> +               bootargs = "ignore_loglevel root=/dev/mmcblk0p1 rw rootwait";
+> +               stdout-path = "serial2:115200n8";
+> +       };
 > +};
 > +
->  #define RPI_FIRMWARE_STATE_ENABLE_BIT	BIT(0)
->  #define RPI_FIRMWARE_STATE_WAIT_BIT	BIT(1)
-> =20
-> @@ -343,7 +360,9 @@ static struct clk_hw *raspberrypi_clk_register(struct
-> raspberrypi_clk *rpi,
->  	data->rpi =3D rpi;
->  	data->id =3D id;
-> =20
-> -	init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL, "fw-clk-%u", id);
-> +	init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL,
-> +				   "fw-clk-%s",
-> +				   rpi_firmware_clk_names[id]);
->  	init.ops =3D &raspberrypi_firmware_clk_ops;
->  	init.flags =3D CLK_GET_RATE_NOCACHE;
-> =20
-> @@ -367,8 +386,8 @@ static struct clk_hw *raspberrypi_clk_register(struct
-> raspberrypi_clk *rpi,
->  		return ERR_PTR(ret);
->  	}
-> =20
-> -	dev_info(rpi->dev, "Clock %d frequency range: min %u, max %u\n",
-> -		 id, min_rate, max_rate);
-> +	dev_info(rpi->dev, "Clock %s frequency range: min %u, max %u\n",
-> +		 rpi_firmware_clk_names[id], min_rate, max_rate);
+> +&pfc {
+> +       scifa2_pins: scifa2 {
+> +               groups = "scifa2_data_c";
 
-I belive this might change. Otherwise:
+Upon second look, I think this group is wrong.  While labeled SCIFA2 in
+the SOM schematics, these signals seem to be connected to a debugging
+interface.
 
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+The real UART2 seems to be present on the camera daughter board.  Those
+signals are labeled "SCIFA2" in the camera board schematics, but "SCIF2"
+in the SOM schematics.  This is OK, as "scif2_data" and "scifa2_data"
+share the same pins, so you can choose either SCIF2 or SCIFA2 to drive
+them.
 
-Regards,
-Nicolas
+If I'm right, please change the group, and move all serial2 descriptions
+to the camera board DTS.
 
+> +               function = "scifa2";
+> +       };
+> +};
+> +
+> +&scifa2 {
+> +       pinctrl-0 = <&scifa2_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +};
 
---=-6BoIZ1J7R/yVno28uORR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Gr{oetje,eeting}s,
 
------BEGIN PGP SIGNATURE-----
+                        Geert
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7aP1UACgkQlfZmHno8
-x/4I8wf+NnWnFjJw0qH9nDGFXtvQQsS46VYH+/3Yq9GiuXvy1QwmQT9m2+ccW6CJ
-tMMkIsE2hJLoi4gO9EZSN5JV1lH0Og/xPxdNmyCn9sGFTIkFIDdM8QMHktC0V79k
-wsyq5qNw3WgywB8l9k8EyFls41sLxhi53tI9Qt/DXW7cNr2sx164JVgPCwc4wlO5
-WS+5CKWxhQPhLmWWpl0YzB3SnRMQROvu536EDJnjcrf7Y+j8du492UUqLylmIaNz
-QkEoR5YInC/jxgdx9o09Jp46D13Exf6frU6vS18ic792fDX4AWhqVMocjdjNcW+K
-xE8gA09s5OQ9+K+olo6lL0HBuQtD0Q==
-=UER2
------END PGP SIGNATURE-----
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=-6BoIZ1J7R/yVno28uORR--
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
