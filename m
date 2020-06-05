@@ -2,111 +2,103 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6626AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC71C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311DB20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CDC20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgFENZw (ORCPT
+        id S1727111AbgFEN0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:25:52 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53265 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbgFENZt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:25:49 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id E7135C0008;
-        Fri,  5 Jun 2020 13:25:39 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 15:29:00 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        laurent.pinchart@ideasonboard.com,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        michael.dege@renesas.com, gotthard.voellmeke@renesas.com,
-        efriedrich@de.adit-jv.com, mrodin@de.adit-jv.com,
-        ChaitanyaKumar.Borah@in.bosch.com,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Message-ID: <20200605132900.on527xcggg6f6pil@uno.localdomain>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20200527071555.GA23912@lxhi-065.adit-jv.com>
+        Fri, 5 Jun 2020 09:26:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:16169 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726931AbgFEN0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:26:00 -0400
+IronPort-SDR: sjSG+MwpU7tDcBFJzmoDFNhpoyXMHvgt6gZkmnhYKDcYyaCgnjuQ+uHENMwB/634CgX3Dq+z3F
+ e+nNIYuRzXeQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 06:25:59 -0700
+IronPort-SDR: QqxE7vVCy+o4w+yOREYmgWZnFs85Wh6JiXNHvhNhepNpRslwIXDBPaaHax64B+3tgyJr2LBEAt
+ oaWmWd4bnrag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
+   d="scan'208";a="294688917"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Jun 2020 06:25:56 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jhCMA-00B2K3-BC; Fri, 05 Jun 2020 16:25:58 +0300
+Date:   Fri, 5 Jun 2020 16:25:58 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
+Subject: Re: [PATCH RESEND] lib: fix bitmap_parse() on 64-bit big endian archs
+Message-ID: <20200605132558.GM2428291@smile.fi.intel.com>
+References: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
+ <CAHp75VdM2yrpd2d3pK2RkmbhF3yiM4=fiTXL4i3yu3AxV3wY-A@mail.gmail.com>
+ <20200518115059.GA19150@oc3871087118.ibm.com>
+ <20200602102430.GA17703@oc3871087118.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527071555.GA23912@lxhi-065.adit-jv.com>
+In-Reply-To: <20200602102430.GA17703@oc3871087118.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Eugeniu,
-   sorry for the late reply
+On Tue, Jun 02, 2020 at 12:24:31PM +0200, Alexander Gordeev wrote:
+> On Mon, May 18, 2020 at 01:50:59PM +0200, Alexander Gordeev wrote:
+> > On Mon, May 18, 2020 at 02:33:43PM +0300, Andy Shevchenko wrote:
+> > > On Mon, May 18, 2020 at 1:40 PM Alexander Gordeev
+> > > <agordeev@linux.ibm.com> wrote:
+> > > >
+> > > > Commit 2d6261583be0 ("lib: rework bitmap_parse()") does
+> > > > not take into account order of halfwords on 64-bit big
+> > > > endian architectures.
+> > > 
+> > > Thanks for report and the patch!
+> > > 
+> > > Did it work before? Can we have a test case for that that we will see
+> > > the failure?
+> > 
+> > The test exists and enabled with CONFIG_TEST_BITMAP.
+> > It does not appear ever passed before on 64 BE.
+> > It does not fail on 64 LE for me either.
+> 
+> Hi Andy et al,
+> 
+> Any feedback on the fix? Does it work on 64 LE for you?
 
-On Wed, May 27, 2020 at 09:15:55AM +0200, Eugeniu Rosca wrote:
-> Hi Jacopo,
->
-> On Tue, Oct 15, 2019 at 12:46:13PM +0200, Jacopo Mondi wrote:
->  ----8<---
->
-> > * Testing
-> > I have tested by injecting a color inversion LUT table and enabling/disabling it
-> > every 50 displayed frames:
-> > https://jmondi.org/cgit/kmsxx/log/?h=gamma_lut
->
-> Could you kindly share the cross compilation steps for your kmsxx fork?
->
+Test case, please.
 
-I usually build it on the target :)
+Yes, you can simulate BE test case on LE platform and vise versa.
 
-> Just out of curiosity, have you ever tried to pull the display's HDMI
-> cable while reading from CM2_LUT_TBL?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Ahem, not really :) Did I get you right, you mean disconnecting the
-HDMI cable from the board ?
 
->
-> At least with the out-of-tree CMM implementation [*], this sends the
-> R-Car3 reference targets into an unrecoverable freeze, with no lockup
-> reported by the kernel (i.e. looks like an serious HW issue).
->
-> >
-> > CMM functionalities are retained between suspend/resume cycles (tested with
-> > suspend-to-idle) without requiring a re-programming of the LUT tables.
->
-> Hmm. Is this backed up by any statement in the HW User's manual?
-> This comes in contrast with the original Renesas CMM implementation [**]
-> which does make use of suspend (where the freeze actually happens).
->
-> Can we infer, based on your statement, that we could also get rid of
-> the suspend callback in [**]?
-
-As Geert (thanks) explained what I've tested with is suspend-to-idle,
-which retains the state of the LUT tables (and I assume other
-not-yet-implemented CMM features, like CLU). I recall the out-of-tree
-driver has suspend/resume routines but I never really tested that.
-
-Thanks
-   j
-
->
-> [*] https://github.com/renesas-rcar/du_cmm
-> [**] https://github.com/renesas-rcar/du_cmm/blob/c393ed49834bdbc/meta-rcar-gen3/recipes-kernel/linux/linux-renesas/0001-drm-rcar-du-Add-DU-CMM-support.patch#L1912
->
-> --
-> Best regards,
-> Eugeniu Rosca
