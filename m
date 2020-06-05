@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035F72075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42A620823
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7CLR+n7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRsBh9rY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgFEQ3C (ORCPT
+        id S1728711AbgFEQ3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40784 "EHLO
+        Fri, 5 Jun 2020 12:29:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgFEQ0T (ORCPT
+        with ESMTP id S1727037AbgFEQ0M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:26:19 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FEB8C08C5C4;
-        Fri,  5 Jun 2020 09:26:19 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g12so3820798pll.10;
-        Fri, 05 Jun 2020 09:26:19 -0700 (PDT)
+        Fri, 5 Jun 2020 12:26:12 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B23EC08C5C3;
+        Fri,  5 Jun 2020 09:26:12 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 64so5120575pfg.8;
+        Fri, 05 Jun 2020 09:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=P9QFzVDXmyF/4FAK3YhuPZVq3F8vZzWLPk9FHl2uNlY=;
-        b=B7CLR+n7xCrM/7jGBaWosCExnekVU0GmOisXCHtPqSoYy+yNncf0PeQsqqCsYn7pmy
-         qwelSsGwTrair18RdjQNiKk5vIiWOvq+gGaa+6jROE+qlFyLNlA6KZ84NbWNtxxD9OOK
-         zlXfrtCnl+4/U/sYBRVQ4+kEMFgG9qnuBqy1xHAd7h3UZgXh45fEp246L7ukIDsc+pR4
-         Hn3zfRXtHXUP9XJ15TXVxaIQWzhe9WAT814y0Cun9vZUVvDNENUjy114GCvatc3NN9bb
-         z4uFq0Nu8fK+1uowop7CvZ66FwpW5Eb+UHzDZkA3xejPn1WZSambm9eXut2rAhlDKu90
-         yEXw==
+        bh=dASDXMiZEph5YCTisMlHTdhBBOP44OwUKjYtbrazK0w=;
+        b=lRsBh9rYlD3/klFZqakJ0sVqCrjSPf2sDijjIOPnDVwZ7apuHjMIwwQDkp0+o754gF
+         4/xGNuMr+V1FHGugjT8Ie3mOvRMgbkxkDzn1B1wmUksTu/6TkerWdC4b5JgLu6MmHpVq
+         qGU0/l0rodSFQVrMSXc6gP4B7Pqb9bcYNABfaqO0EyBbBVsnEskMDEt8tJxFCGtU/EQe
+         i36ujV6luk8DndCyrMCvPNxMMfB34OiDPeljv9TEbLLh1INxeEBEOOVMaFI1bmu1XC+J
+         oOshsyJtmIG+waJl7NW2fTf6KGn3GipfU5B45FbpYN7hvkgZ8TLEm6+UYw1cS+qD75L8
+         9+iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=P9QFzVDXmyF/4FAK3YhuPZVq3F8vZzWLPk9FHl2uNlY=;
-        b=f2eCGtPQrJwAtpG0pG5P/7PMrQxXPCAGQ4Y5IVbRuG01j3hdp7urrLMesPca8r2S+J
-         +I3jqNAmGQwoyiTV2DCxwRqAB+ILk7K27pFWJUS/CG83YhAhdF2OE7041ItNbbBWq1Y0
-         Og5gOH/ow1hpTiqmQY1dP6FENp/6SCoPdXl29Lkv5qfgWiqhZTsTeoUz1/XHXGWkkEtv
-         9uF6oxMWy5JXcA1jK8pO0j8awEuJs8rGMg0NPn+5tG4nXP+KZhgkrEL+A4QEiF5GZS1o
-         7apcnrkDs6qEUxSkninFLLj+CaTYltmtksZVUFuH5YWK6WqSqDxSvqFA3DDGBsJDfob6
-         uOqA==
-X-Gm-Message-State: AOAM533ERb4rrANqQ6lkd492CCRKTAtdHZjTZkOPCWTOROAzQr7JvvAw
-        uk4sqUYsvmZmIxnB5+EfPV+zZKwI
-X-Google-Smtp-Source: ABdhPJzLsTKKOuLCzSt+NPiC0yKqidFmbux2ObQg9JpxfsHKAa649lwl+xLQS+4u1vaRYtZhPh1hUQ==
-X-Received: by 2002:a17:902:b716:: with SMTP id d22mr9269877pls.33.1591374378165;
-        Fri, 05 Jun 2020 09:26:18 -0700 (PDT)
+        bh=dASDXMiZEph5YCTisMlHTdhBBOP44OwUKjYtbrazK0w=;
+        b=jYpXyNsYad1wDZFYYagu/wWmccRmASORfeJwti5T59pcWhouLMfzbubtL+DcU0ssxn
+         QQK2lQv9Xi02wRLGPAA8yB9IJ3mL4gMvO/X66MvM8A1G2WWsjq7320WeeVkrfA6nHDOG
+         jfnog2fb+dtSP4I+kN/HUy+Xte5+ZHlu/hKZnQOvX0c4YYO57H+HE9wLkD02MILcDtRh
+         rfXXHTFAIXH2RPr5G9Dh5Zs6RnWfuhfCtIseJO13v65ZqYAEVA5/imdlRqrP9kFK7naa
+         y1MLPxZQTPYpjyUx/ZUeOPCRc/JvzTTITTjcQo8QPHEvzbX4V7eb33/szFJBXfpTGpme
+         L8qQ==
+X-Gm-Message-State: AOAM531AuyWN6mhHlqDRaVgXuzWen0wNtzDbgQEeAb/ioi0o5QQ5tJWV
+        /nlxBOSvnKhkQILSWsWSu3EmWjga
+X-Google-Smtp-Source: ABdhPJwXx/cGe9xW2SYlzP6+8kzFsQ21N0G0adYtcyJqEYt6Q8PYpLKRa6OKd3iLBwEm+8laxXxzXg==
+X-Received: by 2002:a63:7519:: with SMTP id q25mr9985787pgc.224.1591374371249;
+        Fri, 05 Jun 2020 09:26:11 -0700 (PDT)
 Received: from localhost.localdomain ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.16
+        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 09:26:17 -0700 (PDT)
+        Fri, 05 Jun 2020 09:26:10 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 X-Google-Original-From: Florian Fainelli <florian.fainelli@broadcom.com>
 To:     linux-kernel@vger.kernel.org
@@ -77,9 +77,9 @@ Cc:     stable@vger.kernel.org,
         (V4L/DVB)),
         linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
         infrastructure))
-Subject: [PATCH stable 4.9 10/21] media: dvb_frontend: cleanup dvb_frontend_ioctl_properties()
-Date:   Fri,  5 Jun 2020 09:25:07 -0700
-Message-Id: <20200605162518.28099-11-florian.fainelli@broadcom.com>
+Subject: [PATCH stable 4.9 07/21] media: stv6110: get rid of a srate dead code
+Date:   Fri,  5 Jun 2020 09:25:04 -0700
+Message-Id: <20200605162518.28099-8-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
 References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
@@ -90,152 +90,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-commit 2b5df42b8dec69fb926a242007fd462343db4408 upstream
+commit 282996925b4d78f9795d176f7fb409281c98d56d upstream
 
-Use a switch() on this function, just like on other ioctl
-handlers and handle parameters inside each part of the
-switch.
+The stv6110 has a weird code that checks if get_property
+and set_property ioctls are defined. If they're, it initializes
+a "srate" var from properties cache. Otherwise, it sets to
+15MBaud, with won't make any sense.
 
-That makes it easier to integrate with the already existing
-ioctl handler function.
+Thankfully, it seems that someone else discovered the issue in
+the past, as "srate" is currently not used anywhere!
 
-Reviewed-by: Shuah Khan <shuahkh@osg.samsung.com>
+So, get rid of that really weird dead code logic.
+
+Reported-by: Honza Petrous <jpetrous@gmail.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 83 ++++++++++++++++-----------
- 1 file changed, 51 insertions(+), 32 deletions(-)
+ drivers/media/dvb-frontends/stv6110.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 2bf55a786e29..c446f51be21a 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -1956,21 +1956,25 @@ static int dvb_frontend_ioctl_properties(struct file *file,
- 	struct dvb_frontend *fe = dvbdev->priv;
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
--	int err = 0;
--
--	struct dtv_properties *tvps = parg;
--	struct dtv_property *tvp = NULL;
--	int i;
-+	int err, i;
+diff --git a/drivers/media/dvb-frontends/stv6110.c b/drivers/media/dvb-frontends/stv6110.c
+index 66a5a7f2295c..93262b13c644 100644
+--- a/drivers/media/dvb-frontends/stv6110.c
++++ b/drivers/media/dvb-frontends/stv6110.c
+@@ -263,11 +263,9 @@ static int stv6110_get_frequency(struct dvb_frontend *fe, u32 *frequency)
+ static int stv6110_set_frequency(struct dvb_frontend *fe, u32 frequency)
+ {
+ 	struct stv6110_priv *priv = fe->tuner_priv;
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	u8 ret = 0x04;
+ 	u32 divider, ref, p, presc, i, result_freq, vco_freq;
+ 	s32 p_calc, p_calc_opt = 1000, r_div, r_div_opt = 0, p_val;
+-	s32 srate;
  
- 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
+ 	dprintk("%s, freq=%d kHz, mclk=%d Hz\n", __func__,
+ 						frequency, priv->mclk);
+@@ -278,13 +276,6 @@ static int stv6110_set_frequency(struct dvb_frontend *fe, u32 frequency)
+ 				((((priv->mclk / 1000000) - 16) & 0x1f) << 3);
  
--	if (cmd == FE_SET_PROPERTY) {
--		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n", __func__, tvps->num);
--		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n", __func__, tvps->props);
-+	switch(cmd) {
-+	case FE_SET_PROPERTY: {
-+		struct dtv_properties *tvps = parg;
-+		struct dtv_property *tvp = NULL;
-+
-+		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n",
-+			__func__, tvps->num);
-+		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n",
-+			__func__, tvps->props);
- 
--		/* Put an arbitrary limit on the number of messages that can
--		 * be sent at once */
--		if ((tvps->num == 0) || (tvps->num > DTV_IOCTL_MAX_MSGS))
-+		/*
-+		 * Put an arbitrary limit on the number of messages that can
-+		 * be sent at once
-+		 */
-+		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
- 			return -EINVAL;
- 
- 		tvp = memdup_user(tvps->props, tvps->num * sizeof(*tvp));
-@@ -1979,23 +1983,34 @@ static int dvb_frontend_ioctl_properties(struct file *file,
- 
- 		for (i = 0; i < tvps->num; i++) {
- 			err = dtv_property_process_set(fe, tvp + i, file);
--			if (err < 0)
--				goto out;
-+			if (err < 0) {
-+				kfree(tvp);
-+				return err;
-+			}
- 			(tvp + i)->result = err;
- 		}
- 
- 		if (c->state == DTV_TUNE)
- 			dev_dbg(fe->dvb->device, "%s: Property cache is full, tuning\n", __func__);
- 
--	} else if (cmd == FE_GET_PROPERTY) {
-+		kfree(tvp);
-+		break;
-+	}
-+	case FE_GET_PROPERTY: {
-+		struct dtv_properties *tvps = parg;
-+		struct dtv_property *tvp = NULL;
- 		struct dtv_frontend_properties getp = fe->dtv_property_cache;
- 
--		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n", __func__, tvps->num);
--		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n", __func__, tvps->props);
-+		dev_dbg(fe->dvb->device, "%s: properties.num = %d\n",
-+			__func__, tvps->num);
-+		dev_dbg(fe->dvb->device, "%s: properties.props = %p\n",
-+			__func__, tvps->props);
- 
--		/* Put an arbitrary limit on the number of messages that can
--		 * be sent at once */
--		if ((tvps->num == 0) || (tvps->num > DTV_IOCTL_MAX_MSGS))
-+		/*
-+		 * Put an arbitrary limit on the number of messages that can
-+		 * be sent at once
-+		 */
-+		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
- 			return -EINVAL;
- 
- 		tvp = memdup_user(tvps->props, tvps->num * sizeof(*tvp));
-@@ -2010,28 +2025,32 @@ static int dvb_frontend_ioctl_properties(struct file *file,
- 		 */
- 		if (fepriv->state != FESTATE_IDLE) {
- 			err = dtv_get_frontend(fe, &getp, NULL);
--			if (err < 0)
--				goto out;
-+			if (err < 0) {
-+				kfree(tvp);
-+				return err;
-+			}
- 		}
- 		for (i = 0; i < tvps->num; i++) {
- 			err = dtv_property_process_get(fe, &getp, tvp + i, file);
--			if (err < 0)
--				goto out;
-+			if (err < 0) {
-+				kfree(tvp);
-+				return err;
-+			}
- 			(tvp + i)->result = err;
- 		}
- 
- 		if (copy_to_user((void __user *)tvps->props, tvp,
- 				 tvps->num * sizeof(struct dtv_property))) {
--			err = -EFAULT;
--			goto out;
-+			kfree(tvp);
-+			return -EFAULT;
- 		}
--
+ 	/* BB_GAIN = db/2 */
+-	if (fe->ops.set_property && fe->ops.get_property) {
+-		srate = c->symbol_rate;
+-		dprintk("%s: Get Frontend parameters: srate=%d\n",
+-							__func__, srate);
 -	} else
--		err = -EOPNOTSUPP;
+-		srate = 15000000;
 -
--out:
--	kfree(tvp);
--	return err;
-+		kfree(tvp);
-+		break;
-+	}
-+	default:
-+		return -ENOTSUPP;
-+	} /* switch */
-+	return 0;
- }
+ 	priv->regs[RSTV6110_CTRL2] &= ~0x0f;
+ 	priv->regs[RSTV6110_CTRL2] |= (priv->gain & 0x0f);
  
- static int dtv_set_frontend(struct dvb_frontend *fe)
 -- 
 2.17.1
 
