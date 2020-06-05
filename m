@@ -2,92 +2,142 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFDD206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781B3206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Y1Q6AJdF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Y1Q6AJdF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9uEVO9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgFEVSO (ORCPT
+        id S1728426AbgFEVT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:18:14 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55214 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728248AbgFEVSO (ORCPT
+        Fri, 5 Jun 2020 17:19:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbgFEVT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:18:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id A9DD88EE17B;
-        Fri,  5 Jun 2020 14:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591391893;
-        bh=fvQ5lXXp/5KD4vDVeCdckFEdmRAm58yLylnHAerd8EU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Y1Q6AJdFWs4C6umRRKaOSsAkd/aZ6/KFnDKUFTM3cXGn6h86cY8WVEgtgKRezjGvf
-         QgB4Lh5qDjbdFrE3JKJDJlQK1fupF4Y4YDgbMV+T2FXYGD0Kv5QjpOM/6VXROHazGI
-         6akCNl4ynYPVK+eWThXfjCi7o3PAX1v4XL1eLbBg=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3JikwkIJJBpC; Fri,  5 Jun 2020 14:18:13 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E5F0F8EE0CE;
-        Fri,  5 Jun 2020 14:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1591391893;
-        bh=fvQ5lXXp/5KD4vDVeCdckFEdmRAm58yLylnHAerd8EU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Y1Q6AJdFWs4C6umRRKaOSsAkd/aZ6/KFnDKUFTM3cXGn6h86cY8WVEgtgKRezjGvf
-         QgB4Lh5qDjbdFrE3JKJDJlQK1fupF4Y4YDgbMV+T2FXYGD0Kv5QjpOM/6VXROHazGI
-         6akCNl4ynYPVK+eWThXfjCi7o3PAX1v4XL1eLbBg=
-Message-ID: <1591391891.4728.96.camel@HansenPartnership.com>
-Subject: Re: [GIT PULL] first round of SCSI updates for the 5.6+ merge window
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 05 Jun 2020 14:18:11 -0700
-In-Reply-To: <CAHk-=wjiQmscZHzOYKmMpFoy4h4xF1Mvf9O8i6qtTtS38t6Wsg@mail.gmail.com>
-References: <1591332925.3685.16.camel@HansenPartnership.com>
-         <CAHk-=wjiQmscZHzOYKmMpFoy4h4xF1Mvf9O8i6qtTtS38t6Wsg@mail.gmail.com>
+        Fri, 5 Jun 2020 17:19:28 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8ACC08C5C2;
+        Fri,  5 Jun 2020 14:19:27 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 5so3352028pjd.0;
+        Fri, 05 Jun 2020 14:19:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wpIJ/pCsCHfvMrUjgnLtjwLHPcHaPzmZRezwzKb361g=;
+        b=D9uEVO9pBGBuM5rac9wGkOcr0GyHQpJh+pyiTwwl4iR+n8MT0M8tnX76R8O3Erohyt
+         EgCEGnv4Mz82lsf7a9akAwu34HW2vqe7iywOWhpUtUkLfpZmBZfDKKpeROyYLIz/Q/9a
+         rVVTBUC8cb7ary8XzT2Axnq/WuPSe3OfTb+cx54B1Sd0kslAc3h6S2iBStuNex94GU7b
+         mDrIor/QDPWPPok3o1LPVI9hc+jsBy3DbeNpEIKujOSXLRYqUlg9Yzqck5pY8r5bnHMx
+         KahFrX/fv73aD5HFjXluO9dCAmxd4zhpoKXGu/oj1o/ZfE0bEOXanH6mfuhV60ZDBRI6
+         dWIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wpIJ/pCsCHfvMrUjgnLtjwLHPcHaPzmZRezwzKb361g=;
+        b=XdbHsrSsgW8R9qaKOQWwqVSOb4cW9DlsgIWQw8QraWHauKLTjiRrvQql30XKNURWQg
+         COYrLaIycu4VvhhGkya14+EYAuGJmCSV54ikKruxTKJvcrO2TjJKWcURqMoNH8uvFj8j
+         txOKipFbeac6c4GisFSMn1qGXlEYDj3BmkVcGxSWk7VZcj7kxdqE6Kf/g9FFr0QE5Rps
+         DyPI7WFOhhZohNWjEdpr1TYHlGfUz0NxOuULrUSm9teG0xNHDIQEsxPhmUlP4hMcdT+K
+         szYIwKbAEt5LawJCCq+oMumJD0vfeodDVBl3/gY791+Kw7h+thUVjlYjRrZS9sPGQC35
+         DkWw==
+X-Gm-Message-State: AOAM533petZ5ZCYxdAjH+wpjFwgHZ9eVHBaNQ3m0swH73hSHzR80dCKC
+        zKZ3tBu63Yi3I8ZrdYcy1zjxGdc+f1yt3aJXgiY=
+X-Google-Smtp-Source: ABdhPJxXNB8ca/IQamWPxX4c7rhF1Ss/vRoiBGn2rbgdaO/EsyN0ZDTBvKrDVxNQzxgEJDIyY06sXaaxVufze1JWhZE=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr4991653pjd.181.1591391967317;
+ Fri, 05 Jun 2020 14:19:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-7-michael@walle.cc>
+ <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
+ <216db3154b46bd80202873df055bb3f3@walle.cc> <20200605131525.GK2428291@smile.fi.intel.com>
+ <bf587fc3f907d58609a0ea3d65cd5b37@walle.cc>
+In-Reply-To: <bf587fc3f907d58609a0ea3d65cd5b37@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 6 Jun 2020 00:19:10 +0300
+Message-ID: <CAHp75Vcqv8rdqfBdttLb2vgj12AOUAOFK+ya7MZtRT+0_U+rYA@mail.gmail.com>
+Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-05 at 14:11 -0700, Linus Torvalds wrote:
-> On Thu, Jun 4, 2020 at 9:55 PM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> > 
-> > git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-
-> > misc
-> 
->    "Already up to date."
-> 
-> Did you forget to force a push? That scsi-misc tag is your tag from
-> April 10.
+On Fri, Jun 5, 2020 at 9:44 PM Michael Walle <michael@walle.cc> wrote:
+> Am 2020-06-05 15:15, schrieb Andy Shevchenko:
+> > On Fri, Jun 05, 2020 at 02:42:53PM +0200, Michael Walle wrote:
+> >> Am 2020-06-05 14:00, schrieb Andy Shevchenko:
+> >> > On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
 
-Um, no, shuffles feet ... I actually tagged the wrong branch:
+...
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git/tag/?h=scsi-fixes
+> >> > > +       if (irq_support &&
+> >> >
+> >> > Why do you need this flag? Can't simple IRQ number be sufficient?
+> >>
+> >> I want to make sure, the is no misconfiguration. Eg. only GPIO
+> >> flavors which has irq_support set, have the additional interrupt
+> >> registers.
+> >
+> > In gpio-dwapb, for example, we simple check two things: a) hardware
+> > limitation
+> > (if IRQ is assigned to a proper port) and b) if there is any IRQ comes
+> > from DT,
+> > ACPI, etc.
+>
+> I can't follow you here. irq_support is like your (a); or the
+> "pp->idx == 0" in your example.
 
-I've tagged the right branch now if you repull the scsi-misc tag. 
-Sorry about that; I think it's finger memory from so many fixes
-updates.
+And you have type already. Why do you need to duplicate it? Moreover,
+is it protection from wrong type to have interrupts?
 
-James
+You can move this all stuff under corresponding switch-case.
 
+> >> > > +           device_property_read_bool(&pdev->dev,
+> >> > > "interrupt-controller")) {
+> >> > > +               irq = platform_get_irq(pdev, 0);
+> >> > > +               if (irq < 0)
+> >> > > +                       return irq;
+> >> > > +
+> >> > > +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
+> >> > > +                                            base, irq);
+> >> > > +               if (ret)
+> >> > > +                       return ret;
+> >> > > +
+> >> > > +               config.irq_domain =
+> >> > > regmap_irq_get_domain(gpio->irq_data);
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
