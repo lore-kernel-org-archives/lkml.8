@@ -2,215 +2,112 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2561AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87130C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 094B72077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647CF2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:11:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TOJoy37I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgFESLJ (ORCPT
+        id S1728171AbgFESLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:11:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47988 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgFESLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:11:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2843AF48;
-        Fri,  5 Jun 2020 18:11:07 +0000 (UTC)
-Message-ID: <977dd9ba222d8c513b09743da5cb53fd14bfd9a0.camel@suse.de>
-Subject: Re: [PATCH v3 004/105] clk: bcm: Add BCM2711 DVP driver
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     devicetree@vger.kernel.org, Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 05 Jun 2020 20:11:01 +0200
-In-Reply-To: <20200605174329.hf5d6oulmcewzw63@gilmour.lan>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
-         <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-         <faacbc33174e77500e04e609a654c5810045cb42.camel@suse.de>
-         <20200605174329.hf5d6oulmcewzw63@gilmour.lan>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+FKCCfaEGN1+KOjI+Hug"
-User-Agent: Evolution 3.36.2 
+        Fri, 5 Jun 2020 14:11:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52808 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgFESLO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 14:11:14 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055I8CQ5102490;
+        Fri, 5 Jun 2020 18:10:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=a4XaveQpAaQa2mw3il6Qi66Kdmgjqk/04IfyDbfuZOQ=;
+ b=TOJoy37INOWoUNxh4EAkC3tJJh/ECSCuvtOhWAS4NSeZyCjRrCsD3Z6EetUvUSKmEpeZ
+ E3ytfPKjbZvHXMkE1Swau4LvjbD5QlmLYz+FR3/6i34071X0mYTEReOpYGAdX4KGVbCp
+ myCums3m3orFSmWW+bojM2PR10BZE0EX8efh9tHMtZg2v1HwZ+JhXz3bXXzUhdErnbFe
+ IK3q+Ui7W47bNb+YTwqM4kpK2eT9tP5bLdgaroFCzxRztvvp+RtWr5v7XJhA2Mxft5F2
+ ozk92BhoV8J20fNyWVJGvnWMPaD/Qq3hMbyn5ImjbQFbYgh9MDypv9SYYQkDz196ksQX OA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31f926445u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 05 Jun 2020 18:10:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055I88MV181261;
+        Fri, 5 Jun 2020 18:08:58 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 31f928aagq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Jun 2020 18:08:58 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 055I8tPQ026391;
+        Fri, 5 Jun 2020 18:08:56 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 05 Jun 2020 11:08:54 -0700
+Date:   Fri, 5 Jun 2020 21:08:45 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        hulkci@huawei.com, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH v2] block: Fix use-after-free in blkdev_get()
+Message-ID: <20200605180845.GU30374@kadam>
+References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
+ <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
+ <20200605094353.GS30374@kadam>
+ <20200605144236.GB13248@quack2.suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605144236.GB13248@quack2.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9643 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 adultscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9643 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
+ suspectscore=0 cotscore=-2147483648 bulkscore=0 clxscore=1015
+ impostorscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ spamscore=0 lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-+FKCCfaEGN1+KOjI+Hug
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2020-06-05 at 19:43 +0200, Maxime Ripard wrote:
-> Hi Nicolas,
->=20
-> On Thu, Jun 04, 2020 at 07:26:07PM +0200, Nicolas Saenz Julienne wrote:
-> > On Wed, 2020-05-27 at 17:47 +0200, Maxime Ripard wrote:
-> > > The HDMI block has a block that controls clocks and reset signals to =
-the
-> > > HDMI0 and HDMI1 controllers.
-> >=20
-> > Why not having two separate drivers?
->=20
-> They share the same address space, so it wouldn't really make sense to
-> split it into two drivers and an MFD, especially when the clock/reset
-> association is fairly common.
+On Fri, Jun 05, 2020 at 04:42:36PM +0200, Jan Kara wrote:
+> On Fri 05-06-20 12:43:54, Dan Carpenter wrote:
+> > I wonder if maybe the best fix is to re-add the "if (!res) " check back
+> > to blkdev_get().
+> 
+> Well, it won't be that simple since we need to call bd_abort_claiming()
+> under bdev->bd_mutex. And the fact that __blkdev_get() frees the reference
+> you pass to it is somewhat subtle and surprising so I think we are better
+> off getting rid of that.
 
 Fair enough.
 
->=20
-> > > Let's expose that through a clock driver implementing a clock and res=
-et
-> > > provider.
-> > >=20
-> > > Cc: Michael Turquette <mturquette@baylibre.com>
-> > > Cc: Stephen Boyd <sboyd@kernel.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: linux-clk@vger.kernel.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > ---
-> > >  drivers/clk/bcm/Kconfig           |  11 +++-
-> > >  drivers/clk/bcm/Makefile          |   1 +-
-> > >  drivers/clk/bcm/clk-bcm2711-dvp.c | 127 ++++++++++++++++++++++++++++=
-+++-
-> > >  3 files changed, 139 insertions(+)
-> > >  create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
-> > >=20
-> > > diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> > > index 8c83977a7dc4..784f12c72365 100644
-> > > --- a/drivers/clk/bcm/Kconfig
-> > > +++ b/drivers/clk/bcm/Kconfig
-> > > @@ -1,4 +1,15 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > +
-> > > +config CLK_BCM2711_DVP
-> > > +	tristate "Broadcom BCM2711 DVP support"
-> > > +	depends on ARCH_BCM2835 ||COMPILE_TEST
-> > > +	depends on COMMON_CLK
-> > > +	default ARCH_BCM2835
-> > > +	select RESET_SIMPLE
-> > > +	help
-> > > +	  Enable common clock framework support for the Broadcom BCM2711
-> > > +	  DVP Controller.
-> > > +
-> > >  config CLK_BCM2835
-> > >  	bool "Broadcom BCM2835 clock support"
-> > >  	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-> > > diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> > > index 0070ddf6cdd2..2c1349062147 100644
-> > > --- a/drivers/clk/bcm/Makefile
-> > > +++ b/drivers/clk/bcm/Makefile
-> > > @@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-kona-setup.o
-> > >  obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm281xx.o
-> > >  obj-$(CONFIG_CLK_BCM_KONA)	+=3D clk-bcm21664.o
-> > >  obj-$(CONFIG_COMMON_CLK_IPROC)	+=3D clk-iproc-armpll.o clk-iproc-pll=
-.o
-> > > clk-iproc-asiu.o
-> > > +obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2711-dvp.o
-> > >  obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2835.o
-> > >  obj-$(CONFIG_CLK_BCM2835)	+=3D clk-bcm2835-aux.o
-> > >  obj-$(CONFIG_CLK_RASPBERRYPI)	+=3D clk-raspberrypi.o
-> > > diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-
-> > > bcm2711-
-> > > dvp.c
-> > > new file mode 100644
-> > > index 000000000000..c1c4b5857d32
-> > > --- /dev/null
-> > > +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
-> > > @@ -0,0 +1,127 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > +// Copyright 2020 Cerno
-> > > +
-> > > +#include <linux/clk-provider.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/reset-controller.h>
-> > > +#include <linux/reset/reset-simple.h>
-> > > +
-> > > +#define DVP_HT_RPI_SW_INIT	0x04
-> > > +#define DVP_HT_RPI_MISC_CONFIG	0x08
-> > > +
-> > > +#define NR_CLOCKS	2
-> > > +#define NR_RESETS	6
-> > > +
-> > > +struct clk_dvp {
-> > > +	struct clk_hw_onecell_data	*data;
-> > > +	struct reset_simple_data	reset;
-> > > +};
-> > > +
-> > > +static const struct clk_parent_data clk_dvp_parent =3D {
-> > > +	.index	=3D 0,
-> > > +};
-> > > +
-> > > +static int clk_dvp_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct clk_hw_onecell_data *data;
-> > > +	struct resource *res;
-> > > +	struct clk_dvp *dvp;
-> > > +	void __iomem *base;
-> > > +	int ret;
-> > > +
-> > > +	dvp =3D devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
-> > > +	if (!dvp)
-> > > +		return -ENOMEM;
-> > > +	platform_set_drvdata(pdev, dvp);
-> > > +
-> > > +	dvp->data =3D devm_kzalloc(&pdev->dev,
-> > > +				 struct_size(dvp->data, hws, NR_CLOCKS),
-> > > +				 GFP_KERNEL);
-> > > +	if (!dvp->data)
-> > > +		return -ENOMEM;
-> > > +	data =3D dvp->data;
-> > > +
-> > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	base =3D devm_ioremap_resource(&pdev->dev, res);
-> >=20
-> > I think the cool function to use these days is
-> > devm_platform_get_and_ioremap_resource().
->=20
-> i'll change it, thanks!
+Jason Yan sent a v3 of this patch that frees "whole".  I've looked it
+over pretty close and I think it's probably correct.
 
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+(not that my opinion should count for much because I don't know this
+code very well at all).
 
-Regards,
-Nicolas
-
-
---=-+FKCCfaEGN1+KOjI+Hug
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7airUACgkQlfZmHno8
-x/6RAwgAoMvooAyRe7S9Zeth+KfsqdhHw7fSaIfcyW+1B1hAhY9U35yLYXdM9MqY
-aYWnkeHuMN+ic3frCKcxnR4ySNuiDgvYl9jFOhaEZZePo7dnVoLVrOTaMBs421SQ
-0+roDhCtWXx2tUMKkNLK7w7YRMyDrHP0xFO0+3gFV0k4dD4bBQYwTpT7Yz9k6Big
-wDDlyAeh+Tj5UlMZ7ADJx4Du6nPMDk0P/urKo0AyrnegExOBwlDLKDInRHZg5+G8
-VzgHMoQylpyo3hTBHpSYv2ZXtk3MwvJHi22o42gDzKSfsy6xCrI+/FxdJ+JFmd5i
-Eb0zIV6tEQZNERBn5IILIGn3CWeKzA==
-=i89s
------END PGP SIGNATURE-----
-
---=-+FKCCfaEGN1+KOjI+Hug--
+regards,
+dan carpenter
 
