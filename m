@@ -2,178 +2,115 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F560C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8077206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAD7206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Y0H7ex29";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Y0H7ex29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgFEVlr (ORCPT
+        id S1729022AbgFEVly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:41:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15628 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728865AbgFEVkU (ORCPT
+        Fri, 5 Jun 2020 17:41:54 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:55416 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728727AbgFEVlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:40:20 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055LY98S187497;
-        Fri, 5 Jun 2020 17:40:16 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31f903vgt4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 17:40:15 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055LYG8T188144;
-        Fri, 5 Jun 2020 17:40:15 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31f903vgsw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 17:40:15 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055LYdm8020857;
-        Fri, 5 Jun 2020 21:40:14 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 31bwg41m08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 21:40:14 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055LeCAv54788382
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jun 2020 21:40:13 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E24ABAC059;
-        Fri,  5 Jun 2020 21:40:12 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79883AC060;
-        Fri,  5 Jun 2020 21:40:12 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.146.208])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jun 2020 21:40:12 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v8 07/16] s390/vfio-ap: sysfs attribute to display the guest's matrix
-Date:   Fri,  5 Jun 2020 17:39:55 -0400
-Message-Id: <20200605214004.14270-8-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200605214004.14270-1-akrowiak@linux.ibm.com>
-References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-05_07:2020-06-04,2020-06-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- spamscore=0 adultscore=0 bulkscore=0 malwarescore=0 cotscore=-2147483648
- phishscore=0 suspectscore=3 impostorscore=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050159
+        Fri, 5 Jun 2020 17:41:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id A01C58EE17B;
+        Fri,  5 Jun 2020 14:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591393310;
+        bh=48ApKiNXm1HVa5YUU3DA6ohP4QLZPkpj74quohwZYgg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Y0H7ex29UCo8zPQYDi5nCfRpjQWAm775FNM/UFgVrZh8rLlEge0bx+egKbRxEdFsF
+         CY0SlgpElW2MMZHaVxCQ2EGsnkoXF+Liw172+53rQ+Du4in2k3oDMlgSsQksCkvN7p
+         8OpMbLJvv5TRPstNgVE4jVP+fBLHNzwTOp6IuZJw=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 92iVsJ_6Q6Tk; Fri,  5 Jun 2020 14:41:50 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 06C268EE0CE;
+        Fri,  5 Jun 2020 14:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1591393310;
+        bh=48ApKiNXm1HVa5YUU3DA6ohP4QLZPkpj74quohwZYgg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Y0H7ex29UCo8zPQYDi5nCfRpjQWAm775FNM/UFgVrZh8rLlEge0bx+egKbRxEdFsF
+         CY0SlgpElW2MMZHaVxCQ2EGsnkoXF+Liw172+53rQ+Du4in2k3oDMlgSsQksCkvN7p
+         8OpMbLJvv5TRPstNgVE4jVP+fBLHNzwTOp6IuZJw=
+Message-ID: <1591393308.4728.100.camel@HansenPartnership.com>
+Subject: Re: [GIT PULL] first round of SCSI updates for the 5.6+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 05 Jun 2020 14:41:48 -0700
+In-Reply-To: <CAHk-=wjy8sMqjft6ALTo28UECex84uiYEo=BJbLUJ_CHrPmOEQ@mail.gmail.com>
+References: <1591332925.3685.16.camel@HansenPartnership.com>
+         <CAHk-=wjiQmscZHzOYKmMpFoy4h4xF1Mvf9O8i6qtTtS38t6Wsg@mail.gmail.com>
+         <1591391891.4728.96.camel@HansenPartnership.com>
+         <CAHk-=wjy8sMqjft6ALTo28UECex84uiYEo=BJbLUJ_CHrPmOEQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The matrix of adapters and domains configured in a guest's CRYCB may
-differ from the matrix of adapters and domains assigned to the matrix mdev,
-so this patch introduces a sysfs attribute to display the matrix of a guest
-using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
-guest using the matrix mdev can be displayed as follows:
+On Fri, 2020-06-05 at 14:25 -0700, Linus Torvalds wrote:
+> On Fri, Jun 5, 2020 at 2:18 PM James Bottomley
+> <James.Bottomley@hansenpartnership.com> wrote:
+> > 
+> > Um, no, shuffles feet ... I actually tagged the wrong branch:
+> 
+> Ok, now I see the changes, but I see more than you reported.
+> 
+> These seem to be new compared to your pull request:
+> 
+> Al Viro (4):
+>       scsi: hpsa: Lift {BIG_,}IOCTL_Command_struct copy{in,out} into
+> hpsa_ioctl()
+>       scsi: hpsa: Don't bother with vmalloc for
+> BIG_IOCTL_Command_struct
+>       scsi: hpsa: Get rid of compat_alloc_user_space()
+>       scsi: hpsa: hpsa_ioctl(): Tidy up a bit
+> 
+> Can Guo (1):
+>       scsi: ufs: Don't update urgent bkops level when toggling auto
+> bkops
+> 
+> Stanley Chu (1):
+>       scsi: ufs: Remove redundant urgent_bkop_lvl initialization
+> 
+> They don't look alarming, but I don't like how I don't see what you
+> _claim_ I should see.
+> 
+> Hmm?
 
-   cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
+Ah right, my MO is to do the first push and then start gathering for
+the second.  pushing the tag again picked up the new stuff I've been
+gathering.  Let me rewind the tag back to where it was for the original
+push and then try again.
 
-If a guest is not using the matrix mdev at the time the crycb is displayed,
-an error (ENODEV) will be returned.
+Done.  You should now see no stray additional patches on the scsi-misc
+tag.
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+Sorry again, I believe I've actually fully verified the diffstat
+matches this time ... (famous last words ..)
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index b5ed36e2c948..779659074776 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1086,6 +1086,63 @@ static ssize_t matrix_show(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RO(matrix);
- 
-+static ssize_t guest_matrix_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct mdev_device *mdev = mdev_from_dev(dev);
-+	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-+	char *bufpos = buf;
-+	unsigned long apid;
-+	unsigned long apqi;
-+	unsigned long apid1;
-+	unsigned long apqi1;
-+	unsigned long napm_bits = matrix_mdev->shadow_apcb.apm_max + 1;
-+	unsigned long naqm_bits = matrix_mdev->shadow_apcb.aqm_max + 1;
-+	int nchars = 0;
-+	int n;
-+
-+	if (!vfio_ap_mdev_has_crycb(matrix_mdev))
-+		return -ENODEV;
-+
-+	apid1 = find_first_bit_inv(matrix_mdev->shadow_apcb.apm, napm_bits);
-+	apqi1 = find_first_bit_inv(matrix_mdev->shadow_apcb.aqm, naqm_bits);
-+
-+	mutex_lock(&matrix_dev->lock);
-+
-+	if ((apid1 < napm_bits) && (apqi1 < naqm_bits)) {
-+		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
-+				     napm_bits) {
-+			for_each_set_bit_inv(apqi,
-+					     matrix_mdev->shadow_apcb.aqm,
-+					     naqm_bits) {
-+				n = sprintf(bufpos, "%02lx.%04lx\n", apid,
-+					    apqi);
-+				bufpos += n;
-+				nchars += n;
-+			}
-+		}
-+	} else if (apid1 < napm_bits) {
-+		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
-+				     napm_bits) {
-+			n = sprintf(bufpos, "%02lx.\n", apid);
-+			bufpos += n;
-+			nchars += n;
-+		}
-+	} else if (apqi1 < naqm_bits) {
-+		for_each_set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm,
-+				     naqm_bits) {
-+			n = sprintf(bufpos, ".%04lx\n", apqi);
-+			bufpos += n;
-+			nchars += n;
-+		}
-+	}
-+
-+	mutex_unlock(&matrix_dev->lock);
-+
-+	return nchars;
-+}
-+static DEVICE_ATTR_RO(guest_matrix);
-+
- static struct attribute *vfio_ap_mdev_attrs[] = {
- 	&dev_attr_assign_adapter.attr,
- 	&dev_attr_unassign_adapter.attr,
-@@ -1095,6 +1152,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
- 	&dev_attr_unassign_control_domain.attr,
- 	&dev_attr_control_domains.attr,
- 	&dev_attr_matrix.attr,
-+	&dev_attr_guest_matrix.attr,
- 	NULL,
- };
- 
--- 
-2.21.1
+James
+
 
