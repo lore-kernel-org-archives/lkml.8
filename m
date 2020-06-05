@@ -2,168 +2,156 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55192C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C531D20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE3F207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gGxoGVWl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U/9yUmpt"
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="TR82pwPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgFEJ2J (ORCPT
+        id S1726270AbgFEJ3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:28:09 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:48019 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726177AbgFEJ2I (ORCPT
+        Fri, 5 Jun 2020 05:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgFEJ3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:28:08 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 16D90993;
-        Fri,  5 Jun 2020 05:28:07 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 05 Jun 2020 05:28:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=u
-        ayn6jo7ImJYjdlSiOadfkn6my1yynKqoqutqre9njM=; b=gGxoGVWl0d10b8/67
-        usbzFBkOj/G/QK+zNYA8TYPV7Z2PlS/qBKPwwFa2/nrW0WV8N+/kNGjuuZbglrj6
-        zIoAdkeLWWhiFlp++ritI5YhEU0MQs8LLW5ePiFzmpblMDmFbz1ZEvoYS4HoAJ3N
-        GJFHMnj5EFp4DeXfRt6HIxVmbtvjw+hThVbSOlQKvL67WjtAJuiHpl9VCbty1wTr
-        MOAAJ+VIFBnb6As+0/1lVGOZAD0BCVp2rE7dTWIfM0HhkBP5iG5anh0zVr1vDVcZ
-        9y8o+5XXYbWuTCTOpSl/HkJbd7JYqUKkU4i5VKhJKSZOEnzzjmFNHJlsSL205myh
-        1JPWA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=uayn6jo7ImJYjdlSiOadfkn6my1yynKqoqutqre9n
-        jM=; b=U/9yUmptNwqwVmCPjAst3HBHXETZDP+uL5Yev9vm1VxuyBioL7R6diOSo
-        hXw6RAy3nC8s22mUIHdM3FRKJWAPLNHeXpkZtLBSYO8N/2UtQ3dccKkTCya4YD8U
-        cx0MJELjtLOXKNMQMTm5JkN5xL0AZ4IJN8dmpWOE4sPNuv4aNGjIEnSoAcjqMwSO
-        xOZTgYxhOcKKrRI21+ptmF84vCSNnHCC4Ia4ZJIZ/LAWSDiNVszJOBm5SnWTWoNK
-        Ccyt5wDA6l/ZkjcrFacbXEScIkaaDEt/UEXxEOd2eZTY2RWQQoi8iBEZcaXO/+Wh
-        pc6b6+UHJAw6kdFQ8+gxEjRfkOycA==
-X-ME-Sender: <xms:JRDaXuAKr8Ogo62ytZyauPnyo69Vi6jiywu5itziUN7DylK7Fe3iSA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudegfedgudefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpefgjeettdejgffgffdvteeutdehtdehgeehueetkeefgefhtdetjeekledu
-    gedvudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:JRDaXoj9wiOQt19b5WF0PoAAJsnbvZF3pYYJaNYdTm-s0tlV-n-SdQ>
-    <xmx:JRDaXhl7jgqAoNciri9gqOlxTeU7z2xy-u2O-A5HJc0ocvRLHhExjw>
-    <xmx:JRDaXsxLMu_khGHBGXF7Ko-GqovTsduIsjrc4vPb4OWwG8Twcq0t2w>
-    <xmx:JhDaXhNPxAZUb-c7SZMCVJA_hjJP7qkcdLVl3F8rJugAU1-hFvDTmA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 351523280060;
-        Fri,  5 Jun 2020 05:28:05 -0400 (EDT)
-Date:   Fri, 5 Jun 2020 11:28:02 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH v3 12/25] clk: bcm: rpi: Use CCF boundaries instead of
- rolling our own
-Message-ID: <20200605092802.xkoazjnin7xyqkoy@gilmour.lan>
-References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
- <eb1b2838f1c3c006c24bcb9816f75e1351c63b05.1590594293.git-series.maxime@cerno.tech>
- <e096d89ab881d69b2477b209838a308f9de114b1.camel@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <e096d89ab881d69b2477b209838a308f9de114b1.camel@suse.de>
+        Fri, 5 Jun 2020 05:29:19 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51FEC08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 02:29:18 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c17so10839137lji.11
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 02:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=XZQcxpnQFsR7dWRW2bG4ja76wOXb2EtshnLCYBAPPiw=;
+        b=TR82pwPBsSgXOb0+f4945e2lD/2gWu6GXR2oxCrjQEnpVbxzZmgDnoNut8X0zEclKV
+         x3Z0wHpA3k6cf7iPIxihyfJfy/Jc1wpHceBqTTVKY5FB1MnO5HtOPVA7feFdi89lmFKx
+         QMwqHrSSiGeKJ1QbVAmJ0ixM470umlmITvHIoym9x4fNefevuixCI+3C/erRx8tFlr73
+         x1W1wdg7/OvDi9I3CxArJGA1jHYCf85r1YLOfa3XAlKRCRfwousM97XBQKmM0BzQFoZE
+         oVim+Lt9reUyQ+iSW1N424xyrWhgQuUSxNMyhj/z0rrsFrG6zQ2qe/SYaxB9v8d9BJa/
+         yPzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XZQcxpnQFsR7dWRW2bG4ja76wOXb2EtshnLCYBAPPiw=;
+        b=X/ovydRLyxCv6gt75TZsb6Ww5g5lO4qBskRhl3iU0WQBT+D1l7aqZauhDDyvUZVKKx
+         eMaXLYHMJKw0gk5un0a/A+5qA/cp08uh2RcKTDuCsr0F3Atqwt1hQ1Z0NDORZRx761Sb
+         tSvDKDAJL+6eQ4zmDC7LRzxmbBN/PFvdhRZ/YMWHk/TEP8SKEGadsgpRjL8XOa67vyxg
+         F4wnyNGJMG7DyfIEw6WBSuYixzUjMqLdoRR84CNL1xC2eOf4ACm92U62dDCsZeQszfLK
+         nyxSP9mv6uryW9VvZuS4HyGV2KfnxDNcHyPKqgJw+9tn5HPfG+BMvu1tAncv4PoyhCIh
+         DI5w==
+X-Gm-Message-State: AOAM532osrcZA5oSoSUUTCXJeM0ic9OMCAv80R4Z9lRJG+EO8apvAJb6
+        9vOj2BN3QRAvoLsECDLrayz7Yw==
+X-Google-Smtp-Source: ABdhPJxefoujOSS1MdEm7C/o48gKms2QHlyTzibqrq7EaZsF9hmiG3VfW4hlY8WBaNOO6+n59G6mFA==
+X-Received: by 2002:a2e:9192:: with SMTP id f18mr4638080ljg.383.1591349356572;
+        Fri, 05 Jun 2020 02:29:16 -0700 (PDT)
+Received: from localhost.localdomain ([109.204.235.119])
+        by smtp.googlemail.com with ESMTPSA id a1sm746471lfi.36.2020.06.05.02.29.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 02:29:15 -0700 (PDT)
+From:   john mathew <john.mathew@unikie.com>
+X-Google-Original-From: john mathew <John.Mathew@unikie.com>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        willy@infradead.org, valentin.schneider@arm.com,
+        srikar@linux.vnet.ibm.com, john mathew <John.Mathew@unikie.com>
+Subject: [RFC PATCH v7 0/3] scheduler: Add scheduler overview
+Date:   Fri,  5 Jun 2020 12:29:03 +0300
+Message-Id: <20200605092906.29478-1-John.Mathew@unikie.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+This patch series updates the scheduler documentation to add more topics
+wrt to scheduler overview. New sections are added to provide a brief
+overview of the kernel structs used by the scheduler, scheduler invocation,
+context switch and Capacity Aware Scheduling. Previous version of
+the patch was reviewed at:
+https://lore.kernel.org/lkml/20200527084421.4673-1-John.Mathew@unikie.com/
 
-On Thu, Jun 04, 2020 at 08:02:22PM +0200, Nicolas Saenz Julienne wrote:
-> On Wed, 2020-05-27 at 17:45 +0200, Maxime Ripard wrote:
-> > The raspberrypi firmware clock driver has a min_rate / max_rate clampin=
-g by
-> > storing the info it needs in a private structure.
-> >=20
-> > However, the CCF already provides such a facility, so we can switch to =
-it
-> > to remove the boilerplate.
-> >=20
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > ---
-> >  drivers/clk/bcm/clk-raspberrypi.c | 18 ++++++++----------
-> >  1 file changed, 8 insertions(+), 10 deletions(-)
-> >=20
-> > diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
-> > raspberrypi.c
-> > index a20492fade6a..e135ad28d38d 100644
-> > --- a/drivers/clk/bcm/clk-raspberrypi.c
-> > +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> > @@ -36,9 +36,6 @@ struct raspberrypi_clk {
-> >  	struct rpi_firmware *firmware;
-> >  	struct platform_device *cpufreq;
-> > =20
-> > -	unsigned long min_rate;
-> > -	unsigned long max_rate;
-> > -
-> >  	struct clk_hw pllb;
-> >  };
-> > =20
-> > @@ -142,13 +139,11 @@ static int raspberrypi_fw_pll_set_rate(struct clk=
-_hw
-> > *hw, unsigned long rate,
-> >  static int raspberrypi_pll_determine_rate(struct clk_hw *hw,
-> >  					  struct clk_rate_request *req)
-> >  {
-> > -	struct raspberrypi_clk *rpi =3D container_of(hw, struct raspberrypi_c=
-lk,
-> > -						   pllb);
-> >  	u64 div, final_rate;
-> >  	u32 ndiv, fdiv;
-> > =20
-> >  	/* We can't use req->rate directly as it would overflow */
-> > -	final_rate =3D clamp(req->rate, rpi->min_rate, rpi->max_rate);
-> > +	final_rate =3D clamp(req->rate, req->min_rate, req->max_rate);
-> > =20
-> >  	div =3D (u64)final_rate << A2W_PLL_FRAC_BITS;
-> >  	do_div(div, req->best_parent_rate);
-> > @@ -215,12 +210,15 @@ static int raspberrypi_register_pllb(struct
-> > raspberrypi_clk *rpi)
-> >  	dev_info(rpi->dev, "CPU frequency range: min %u, max %u\n",
-> >  		 min_rate, max_rate);
-> > =20
-> > -	rpi->min_rate =3D min_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
-> > -	rpi->max_rate =3D max_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
-> > -
-> >  	rpi->pllb.init =3D &init;
-> > =20
-> > -	return devm_clk_hw_register(rpi->dev, &rpi->pllb);
-> > +	ret =3D devm_clk_hw_register(rpi->dev, &rpi->pllb);
-> > +	if (!ret)
-> > +		clk_hw_set_rate_range(&rpi->pllb,
-> > +				      min_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE,
-> > +				      max_rate *
-> > RPI_FIRMWARE_PLLB_ARM_DIV_RATE);
->=20
-> Isn't there a potential race here? Albeit unlikely, cpufreq could show
-> up and call clk_round_rate() in between the registration and you
-> setting the ranges.
+version 7:
+ -Fix overview description
+ -Removed rst headers
+ -Removed kernel-doc for struct rq and meged it as struct
+  member comments
 
-IIRC, driver's probe are not called in parallel but in sequence, so we
-should be covered here.
+version 6:
+ -Fix typos.
 
-Maxime
+version 5:
+ -Fix description error on CAS
+
+version 4:
+ -Added section on Capacity-Aware Scheduling
+ -Reworded CFS recently added features.
+ -Removed vruntime description from scheduler structs
+ -Added description of idle and stopper sched classses
+
+version 3:
+ -Fix spelling, spacing and typo errors.
+
+version 2:
+- Remove :c:func: directive as it was redundant
+- Limit document width (line symbol count) to 75
+- Replace dot file with ASCII art
+- Describe prepare_task_switch(), ASID use, 
+  kernel/user transtion, MIPS FPU affinity correctly
+- Add missing references to files
+- Removed internal APIs from scheduler API reference
+- Described rq struct member as kernel-doc comments
+- Replaced CFS history with CFS current status
+- Added documentation for sched_class fields
+- Refined explanation of context swtich functionality
+- Replace CFS history with recent changes
+- Added kernel-doc comments for struct rq
+
+John Mathew (3):
+  docs: scheduler: Restructure scheduler documentation.
+  docs: scheduler: Add scheduler overview documentation
+  docs: scheduler: Add introduction to scheduler context-switch
+
+ Documentation/scheduler/arch-specific.rst     |  14 +
+ Documentation/scheduler/cfs-overview.rst      |  59 ++++
+ Documentation/scheduler/context-switching.rst | 126 ++++++++
+ Documentation/scheduler/index.rst             |  33 +-
+ .../scheduler/mips-context-switch.rst         |  89 ++++++
+ Documentation/scheduler/overview.rst          | 290 ++++++++++++++++++
+ Documentation/scheduler/sched-cas.rst         |  92 ++++++
+ .../scheduler/sched-data-structs.rst          | 176 +++++++++++
+ Documentation/scheduler/sched-debugging.rst   |  14 +
+ Documentation/scheduler/sched-features.rst    |  21 ++
+ Documentation/scheduler/scheduler-api.rst     |  25 ++
+ .../scheduler/x86-context-switch.rst          |  64 ++++
+ kernel/sched/core.c                           |  21 +-
+ kernel/sched/sched.h                          |  61 ++++
+ 14 files changed, 1068 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/scheduler/arch-specific.rst
+ create mode 100644 Documentation/scheduler/cfs-overview.rst
+ create mode 100644 Documentation/scheduler/context-switching.rst
+ create mode 100644 Documentation/scheduler/mips-context-switch.rst
+ create mode 100644 Documentation/scheduler/overview.rst
+ create mode 100644 Documentation/scheduler/sched-cas.rst
+ create mode 100644 Documentation/scheduler/sched-data-structs.rst
+ create mode 100644 Documentation/scheduler/sched-debugging.rst
+ create mode 100644 Documentation/scheduler/sched-features.rst
+ create mode 100644 Documentation/scheduler/scheduler-api.rst
+ create mode 100644 Documentation/scheduler/x86-context-switch.rst
+
+-- 
+2.17.1
+
