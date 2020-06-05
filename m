@@ -2,91 +2,146 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1419C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07835C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC1BC2053B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360826;
-	bh=xpvqA3tUrKpFVjIy0L5X1rBEqvmG8UahUOyHRdxhxVw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DNuPh0og6Bo40wMYFa7QpdwqCFOsY+zWhxzHfFegMJDYgL7egdaDZ10EiUe/7rmyx
-	 GqG4fuKDKoXXyDA3MrtxH09ztJBj4G2kI7WoTQgRm/Y+zzvNma9BTlnNK8Zyq7jgpr
-	 8K0gTLPet07ClhMuV27x29Wi3w+yzKEmob8P+Znw=
+	by mail.kernel.org (Postfix) with ESMTP id D9FA92065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:41:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y0FSL3jo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgFEMk0 (ORCPT
+        id S1726755AbgFEMlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:40:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726592AbgFEMkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:40:25 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D9282053B;
-        Fri,  5 Jun 2020 12:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591360825;
-        bh=xpvqA3tUrKpFVjIy0L5X1rBEqvmG8UahUOyHRdxhxVw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dZVEBsLtJuQPz0VpaajNcVC0S5hzJ4dZNsAde/SEicOs4miQLK1m8duqV4kSfWYpM
-         Fy25Af+zKOKKtJ/xfdkf9pVV6gCM7JlNsfHey1zpV+ep9Lci4lDDZ74/0GACvus4ZR
-         av4cV/fSOdC1otRR7No+IYt/YvTC3Yb4nzJ9Q+WY=
-Date:   Fri, 5 Jun 2020 14:40:20 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     mani@kernel.org
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patong.mxl@gmail.com
-Subject: Re: [PATCH v3 0/2] Add support for MaxLinear/Exar USB to serial
- converters
-Message-ID: <20200605144020.2c72add5@coco.lan>
-In-Reply-To: <20200430184924.31690-1-mani@kernel.org>
-References: <20200430184924.31690-1-mani@kernel.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 5 Jun 2020 08:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbgFEMlr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:41:47 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8063AC08C5C4
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 05:41:46 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id c194so8085437oig.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 05:41:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b8lHa3VSsS3EH4GstrmtufuSPQnby9wIaLbKSXX2gR4=;
+        b=Y0FSL3jop1Ktvp+81IKa884hHcJEOFCxyltl1k0MHEops3eSwWVVNdvKPpCE7Zx9WU
+         //QeTiDmbXPc/dqdkmu7fHeWYxTzH103/85ltphoFY/gEm8OQl2oqXW4w61a7KN1Jhgb
+         CSloh85q5YYyHCGG2UV5knxi5s6dBfhtE6irk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b8lHa3VSsS3EH4GstrmtufuSPQnby9wIaLbKSXX2gR4=;
+        b=WNbJhFEcQOR2X0qZVcArvoDdfX8kdO2QSKdlx7vBhic1ntv3Xok9mwzc+k2/C/2H9x
+         7ktWMeUbXF1AOuCnXuw7S9/MGFuIX+Vire9L0l5h8OG2zC52hfCwypL0u6YMquuwMoMI
+         0+2js2tUxxA1ZZGY7CF0pKZkNB0EVi+gZjfzmzwfb4jJS4bpD9TTvOZ4qvdRxFXHYPcd
+         sosKigin8GjTSuVq1j7ErwSN/N/l6KrLC0ua6TNyesJqF8yydITgGfmeRwuatpErWxp0
+         m6UingOsHfUhMyRxiPrpCjOc0lDSCIuvWrhrykSLNnJbSoqkzDxZGdhn80uOXaGKIRw2
+         wfWA==
+X-Gm-Message-State: AOAM530q0WBwZxhtFMXFKQeECapQfEkIV5jHAZMZ7y4NJEFwiPDXgDX5
+        tlrmKTLkXz36EadONomrPqOWKQn4k8ND5ilnvMICJQ==
+X-Google-Smtp-Source: ABdhPJxDBFuxj/jT06KYKDwsSDsZtaJk7DJpn+CTYVJxr0/W+a1EfH/HPafid8DVkUdwYip+bwgoQY+h1NITtsGMh7k=
+X-Received: by 2002:aca:ed42:: with SMTP id l63mr1645633oih.101.1591360905783;
+ Fri, 05 Jun 2020 05:41:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-14-daniel.vetter@ffwll.ch> <e0bfd872-5d38-6718-a23d-6b14b3c14f25@amd.com>
+In-Reply-To: <e0bfd872-5d38-6718-a23d-6b14b3c14f25@amd.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri, 5 Jun 2020 14:41:34 +0200
+Message-ID: <CAKMK7uG6VN93ZS3Rbi6edvDAMefXJ6CotMx5j916VcUy2nuvqQ@mail.gmail.com>
+Subject: Re: [PATCH 13/18] drm/amdgpu/dc: Stop dma_resv_lock inversion in commit_tail
+To:     Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri,  1 May 2020 00:19:22 +0530
-mani@kernel.org escreveu:
+On Fri, Jun 5, 2020 at 10:30 AM Pierre-Eric Pelloux-Prayer
+<pierre-eric.pelloux-prayer@amd.com> wrote:
+>
+> Hi Daniel,
+>
+> On 04/06/2020 10:12, Daniel Vetter wrote:
+> [...]
+> > @@ -6910,7 +6910,11 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+> >                * explicitly on fences instead
+> >                * and in general should be called for
+> >                * blocking commit to as per framework helpers
+> > +              *
+> > +              * Yes, this deadlocks, since you're calling dma_resv_lock in a
+> > +              * path that leads to a dma_fence_signal(). Don't do that.
+> >                */
+> > +#if 0
+> >               r = amdgpu_bo_reserve(abo, true);
+> >               if (unlikely(r != 0))
+> >                       DRM_ERROR("failed to reserve buffer before flip\n");
+> > @@ -6920,6 +6924,12 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+> >               tmz_surface = amdgpu_bo_encrypted(abo);
+> >
+> >               amdgpu_bo_unreserve(abo);
+> > +#endif
+> > +             /*
+> > +              * this races anyway, so READ_ONCE isn't any better or worse
+> > +              * than the stuff above. Except the stuff above can deadlock.
+> > +              */
+> > +             tiling_flags = READ_ONCE(abo->tiling_flags);
+>
+> With this change "tmz_surface" won't be initialized properly.
+> Adding the following line should fix it:
+>
+>   tmz_surface = READ_ONCE(abo->flags) & AMDGPU_GEM_CREATE_ENCRYPTED;
 
-> From: Manivannan Sadhasivam <mani@kernel.org>
-> 
-> Hello,
-> 
-> This series adds support for MaxLinear/Exar USB to serial converters.
-> This driver only supports XR21V141X series but it can easily be extended
-> to other series in future.
-> 
-> This driver is inspired from the initial one submitted by Patong Yang:
-> 
-> https://patchwork.kernel.org/patch/10543261/
-> 
-> While the initial driver was a custom tty USB driver exposing whole
-> new serial interface ttyXRUSBn, this version is completely based on USB
-> serial core thus exposing the interfaces as ttyUSBn. This will avoid
-> the overhead of exposing a new USB serial interface which the userspace
-> tools are unaware of.
-> 
-> This series has been tested with Hikey970 board hosting XR21V141X chip.
+So to make this clear, I'm not really proposing to fix up all the
+drivers in detail. There's a lot more bugs in all the other drivers,
+I'm pretty sure. The driver fixups really are just quick hacks to
+illustrate the problem, and at least in some cases, maybe illustrate a
+possible solution.
 
-I applied this series on the top of Kernel 5.7 (x86_64), and I'm 
-using it to access the Hikey970 console.
+For the real fixes I think this needs driver teams working on this,
+and make sure it's all solid. I can help a bit with review (especially
+for placing the annotations, e.g. the one I put in cs_submit()
+annotates a bit too much), but that's it.
 
-Seems to be working fine. So, feel free to add:
+Also I think the patch is from before tmz landed, and I just blindly
+rebased over it :-)
+-Daniel
 
-Tested-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+>
+>
+> Pierre-Eric
+>
+>
+> >
+> >               fill_dc_plane_info_and_addr(
+> >                       dm->adev, new_plane_state, tiling_flags,
+> >
 
-Thanks,
-Mauro
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
