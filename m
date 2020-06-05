@@ -2,112 +2,92 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C524C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0062CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74D06206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C92206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgFEH5X (ORCPT
+        id S1726151AbgFEH7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 03:57:23 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:33573 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726164AbgFEH5S (ORCPT
+        Fri, 5 Jun 2020 03:59:40 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41101 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEH7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 03:57:18 -0400
-Received: from [78.134.115.170] (port=39060 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1jh7E1-000D4t-Ql; Fri, 05 Jun 2020 09:57:13 +0200
-Subject: Re: [RFC 1/4] regulator: lp87565: enable voltage regardless of ENx
- pin
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Axel Lin <axel.lin@ingics.com>
-References: <20200603200319.16184-1-luca@lucaceresoli.net>
- <20200603200319.16184-2-luca@lucaceresoli.net>
- <20200604110759.GB6644@sirena.org.uk>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <247eef95-9f7a-c1cd-245c-05304b02e4da@lucaceresoli.net>
-Date:   Fri, 5 Jun 2020 09:57:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 03:59:39 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 9so10561206ljc.8;
+        Fri, 05 Jun 2020 00:59:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=76On/DuswXUwHpVdv2b9W5T6CYfTi3YXauiy+oGqoso=;
+        b=Y59MDwtkCib2cL96VDY0ByOXDqheBH1JDba8EfUM/1nQ+nlGr+FE0VpaWt3O8fXNxz
+         YtlKlDMS2kXca67cH9lQ6gztSmgOGUj8NIi4VXiElqaLG6MBulrN/HiPtdpdXBJyYAXE
+         FZ8e7+0OEa8hVwmOJe6fc2UDrqhQfiV3+psmtjRQfJlQlmyEgsFro5DIKRrP6lPDdcS2
+         yyCOXTulyrrdtdKJ1kQdSl9uTVnKfvf09FrAc2DICw8reH3ioKnMLAeDxJYWLehDN9hy
+         NnefwMEuRoNQLv42Y0BtvX+LSadiTdJRD+bRfuqbaeHjshn8sY5tuVTa6WcDO2oMB1ks
+         zF5g==
+X-Gm-Message-State: AOAM530adVKNFxsPC6AoVen4JDcZblsYd7Lm9TfxK/ptAShsfpGfavE7
+        zQKATxH3Nx3jEkOYpbriueU=
+X-Google-Smtp-Source: ABdhPJwxjtMPEmi+T8tjORT90RaXxDqZwyQKhkCEYCkc3UeboYOaiTVen5x2zFPzdNERz+tJDwYQMA==
+X-Received: by 2002:a2e:b5ca:: with SMTP id g10mr4357629ljn.370.1591343977025;
+        Fri, 05 Jun 2020 00:59:37 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id a9sm230697ljk.116.2020.06.05.00.59.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 00:59:36 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] scsi: storvsc: Remove memset before memory freeing in storvsc_suspend()
+Date:   Fri,  5 Jun 2020 10:59:34 +0300
+Message-Id: <20200605075934.8403-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <CAA42JLat6Ern5_mztmoBX9-ONtmz=gZE3YUphY+njTa+A=efVw@mail.gmail.com>
+References: <CAA42JLat6Ern5_mztmoBX9-ONtmz=gZE3YUphY+njTa+A=efVw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200604110759.GB6644@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Remove memset with 0 for stor_device->stor_chns in storvsc_suspend()
+before the call to kfree() as the memory contains no sensitive information.
 
-On 04/06/20 13:07, Mark Brown wrote:
-> On Wed, Jun 03, 2020 at 10:03:16PM +0200, Luca Ceresoli wrote:
-> 
->> I suspect the only solution that allows to configure the EN_PIN_CTRLn bits
->> correctly in all the possible hardware setups would be to tell in device
->> tree / board info whether each enable pin is connected or not (which is a
->> hardware _fact_) and which ENx pin should control which regulator output
->> (which is a policy). But it would make this simple driver considerably more
->> complex.
-> 
->> Any suggestion about the correct way to handle this situation would be
->> greatly appreciated.
-> 
-> We can tell if we've got a software controlled GPIO connected, if we
-> have then we should ensure that it continues to take effect.
+Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
+Suggested-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/scsi/storvsc_drv.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Ideally yes, but it would be made more complex by the chip flexibility:
-it's possible to choose which enable pin should drive each output.
-
-For example this configuration is supported by the chip:
-
-- BUCK0 is on if EN_BUCK0 high AND pin EN0 is active
-- BUCK1 is on if EN_BUCK1 high AND pin EN0 is active
-- BUCK2 is on if EN_BUCK2 high AND pin EN1 is active
-- BUCK3 is on if EN_BUCK3 high (no pin used)
-- pin EN2 is used as a GPIO (LP875xx acts as an I2C GPIO expander)
-
-So it would be absolutely OK to describe in DT that EN0 and EN1 connect
-the SoC to the LP875xx and that EN2 is connected to something else.
-
-But describing in DT the association between enable pins and buck
-outputs would be more a configuration than hardware description IMO.
-
-And I'm not even considering the case where the enable pins are be
-connected to something else, out of the SoC control, but still meant to
-be used to control the buck output.
-
-> That
-> should just be a single register write at startup from the sounds of it.
-
-Exactly, each buck output has a register containing the bits involved in
-this discussion.
-
-> Otherwise yeah, just ignoring that there's a possibility of a GPIO we
-> don't know about seems sensible.
-
-Thanks,
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 072ed8728657..2d90cddd8ac2 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -2035,9 +2035,6 @@ static int storvsc_suspend(struct hv_device *hv_dev)
+ 
+ 	vmbus_close(hv_dev->channel);
+ 
+-	memset(stor_device->stor_chns, 0,
+-	       num_possible_cpus() * sizeof(void *));
+-
+ 	kfree(stor_device->stor_chns);
+ 	stor_device->stor_chns = NULL;
+ 
 -- 
-Luca
+2.26.2
+
