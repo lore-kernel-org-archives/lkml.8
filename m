@@ -2,133 +2,264 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37609C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101502074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/wJ7NyA"
+	by mail.kernel.org (Postfix) with ESMTP id DBDC820663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgFEOF7 (ORCPT
+        id S1727881AbgFEOGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgFEOF6 (ORCPT
+        Fri, 5 Jun 2020 10:06:32 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:47318 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgFEOGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:05:58 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D807C08C5C2;
-        Fri,  5 Jun 2020 07:05:58 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a25so11901869ljp.3;
-        Fri, 05 Jun 2020 07:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E2imZowYcWsqMuYyPOGiSh8Vkqqat7rhLhXVyMR2k0w=;
-        b=D/wJ7NyAluy19hD4lOArO9SudJkVEhvukrBzFKZOOidCtGQr8L7Zz5q/SToiDFhpSb
-         p5UTbi5gebuWIbN8mFJ80H3cJ+qyXanlpYp6tAHrZnkCfsCkbTwF1pe0eHBrfooqhwlU
-         lpiMA4Yehiqnot+x/r0IkPCAWzTBw/N1Xos/ndEeL78XLizAf9w1AGm+gMTtpRc64OZH
-         mtHx+WeQepSOZP6of5WOZkXFBatcKPwQuk8aBMzg4/tBJcTerQNqSLHw6ddo540CyJgG
-         iM1hrslBg2I3UsbIqpUSRl2OdYaIQLPTJBXg6hK8wDEeQv8sPB2PZpXzEjhIeR0jUM0d
-         g8mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E2imZowYcWsqMuYyPOGiSh8Vkqqat7rhLhXVyMR2k0w=;
-        b=KG8jhXBpuPxdAspOVP+TA7DyLrL8yxAEP6D3sudjYr2SLPXMWMohYfyOIvLXJUW2Kw
-         zF+ya/b4fip+OCmEhuVzE7+YH2vdqyhSV6JDfXMD+bFZC6a7HJ1zlrfGHaHUGXRMfDAH
-         oQJz/N8mbtumpMmeiAc6hLhZntAX1WIv51l6R5zZQ7L7XjS0oneRJ7QL/d77P78wO6Hb
-         JljU8VqK6Pl4WthWkRzMgtLp+6RLeVXCNfo7+vL9/zu8TWIZyAxyYvVs29H6lLFjuOXm
-         gvfIXnAU6LJewePeEdMww+VTzFPilCeM64XuIuezOEPIS1B67ObOOE+Lhz/Lp1pdLdqF
-         nJBQ==
-X-Gm-Message-State: AOAM533FUVdAYhZASJC3IpV0Si/u5twza8QIwz8w7/M0/VLBbyEJrHKg
-        SUKQDIt42wEaclfRxcm5aIM=
-X-Google-Smtp-Source: ABdhPJyhDQJ3TrPRcEnQIaSKKUFiV1lqR92HYbBU8YHDoEyM3qNNPqHz0h+AjVhHM+ruxqLhmDTBYg==
-X-Received: by 2002:a2e:975a:: with SMTP id f26mr4974996ljj.302.1591365956611;
-        Fri, 05 Jun 2020 07:05:56 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
-        by smtp.googlemail.com with ESMTPSA id z133sm980669lfa.41.2020.06.05.07.05.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 07:05:47 -0700 (PDT)
-Subject: Re: [PATCH] media: staging: tegra-vde: add missing
- pm_runtime_put_autosuspend
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
-References: <20200602054841.15746-1-navid.emamdoost@gmail.com>
- <7061eb81-c00c-9978-5e4b-f9896c0ffd5e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b03670e5-2718-062e-0f53-d596434fe9a4@gmail.com>
-Date:   Fri, 5 Jun 2020 17:05:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 5 Jun 2020 10:06:32 -0400
+Received: from 89-64-83-87.dynamic.chello.pl (89.64.83.87) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id cde6d4786e60f564; Fri, 5 Jun 2020 16:06:29 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     rafael.j.wysocki@intel.com, stable@vger.kernel.org,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org
+Subject: [RFT][PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
+Date:   Fri, 05 Jun 2020 16:06:28 +0200
+Message-ID: <2643462.teTRrieJB7@kreacher>
+In-Reply-To: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <7061eb81-c00c-9978-5e4b-f9896c0ffd5e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-05.06.2020 09:00, Jon Hunter пишет:
-> 
-> On 02/06/2020 06:48, Navid Emamdoost wrote:
->> Call to pm_runtime_get_sync increments counter even in case of
->> failure leading to incorrect ref count.
->> Call pm_runtime_put_autosuspend if pm_runtime_get_sync fails.
->>
->> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->> ---
->>  drivers/staging/media/tegra-vde/vde.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
->> index d3e63512a765..52cdd4a91e93 100644
->> --- a/drivers/staging/media/tegra-vde/vde.c
->> +++ b/drivers/staging/media/tegra-vde/vde.c
->> @@ -776,8 +776,10 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
->>  		goto release_dpb_frames;
->>  
->>  	ret = pm_runtime_get_sync(dev);
->> -	if (ret < 0)
->> +	if (ret < 0) {
->> +		pm_runtime_put_autosuspend(dev);
->>  		goto unlock;
->> +	}
->>  
->>  	/*
->>  	 * We rely on the VDE registers reset value, otherwise VDE
-> 
-> Please use the put in the error path.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Subject: [PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
 
-This is a third version of the patch [1][2].
+The ACPI OS layer uses RCU to protect the list of ACPI memory
+mappings from being walked while it is updated.  Among other
+situations, that list can be walked in non-NMI interrupt context,
+so using a sleeping lock to protect it is not an option.
 
-[1]
-https://patchwork.ozlabs.org/project/linux-tegra/patch/20200514210847.9269-2-digetx@gmail.com/
-[2]
-https://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/
+However, performance issues related to the RCU usage in there
+appear, as described by Dan Williams:
 
-I'd prefer to stick with my variant of the patch [1] because in my
-opinion it's most straightforward variant and I actually tested that it
-works properly.
+"Recently a performance problem was reported for a process invoking
+a non-trival ASL program. The method call in this case ends up
+repetitively triggering a call path like:
 
-Navid, anyways thank you for the patch. Next time please check if
-somebody else already sent similar patches before you.
+    acpi_ex_store
+    acpi_ex_store_object_to_node
+    acpi_ex_write_data_to_field
+    acpi_ex_insert_into_field
+    acpi_ex_write_with_update_rule
+    acpi_ex_field_datum_io
+    acpi_ex_access_region
+    acpi_ev_address_space_dispatch
+    acpi_ex_system_memory_space_handler
+    acpi_os_map_cleanup.part.14
+    _synchronize_rcu_expedited.constprop.89
+    schedule
+
+The end result of frequent synchronize_rcu_expedited() invocation is
+tiny sub-millisecond spurts of execution where the scheduler freely
+migrates this apparently sleepy task. The overhead of frequent
+scheduler invocation multiplies the execution time by a factor
+of 2-3X."
+
+In order to avoid these issues, replace the RCU in the ACPI OS
+layer by an rwlock.
+
+That rwlock should not be frequently contended, so the performance
+impact of it is not expected to be significant.
+
+Reported-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+Hi Dan,
+
+This is a possible fix for the ACPI OSL RCU-related performance issues, but
+can you please arrange for the testing of it on the affected systems?
+
+Cheers!
+
+---
+ drivers/acpi/osl.c |   50 ++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 16 deletions(-)
+
+Index: linux-pm/drivers/acpi/osl.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/osl.c
++++ linux-pm/drivers/acpi/osl.c
+@@ -81,8 +81,8 @@ struct acpi_ioremap {
+ };
+ 
+ static LIST_HEAD(acpi_ioremaps);
++static DEFINE_RWLOCK(acpi_ioremaps_list_lock);
+ static DEFINE_MUTEX(acpi_ioremap_lock);
+-#define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
+ 
+ static void __init acpi_request_region (struct acpi_generic_address *gas,
+ 	unsigned int length, char *desc)
+@@ -214,13 +214,13 @@ acpi_physical_address __init acpi_os_get
+ 	return pa;
+ }
+ 
+-/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
++/* Must be called with 'acpi_ioremap_lock' or 'acpi_ioremaps_list_lock' held. */
+ static struct acpi_ioremap *
+ acpi_map_lookup(acpi_physical_address phys, acpi_size size)
+ {
+ 	struct acpi_ioremap *map;
+ 
+-	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
++	list_for_each_entry(map, &acpi_ioremaps, list)
+ 		if (map->phys <= phys &&
+ 		    phys + size <= map->phys + map->size)
+ 			return map;
+@@ -228,7 +228,7 @@ acpi_map_lookup(acpi_physical_address ph
+ 	return NULL;
+ }
+ 
+-/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
++/* Must be called with 'acpi_ioremap_lock' or 'acpi_ioremaps_list_lock' held. */
+ static void __iomem *
+ acpi_map_vaddr_lookup(acpi_physical_address phys, unsigned int size)
+ {
+@@ -257,13 +257,13 @@ void __iomem *acpi_os_get_iomem(acpi_phy
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_get_iomem);
+ 
+-/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
++/* Must be called with 'acpi_ioremap_lock' or 'acpi_ioremaps_list_lock' held. */
+ static struct acpi_ioremap *
+ acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
+ {
+ 	struct acpi_ioremap *map;
+ 
+-	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
++	list_for_each_entry(map, &acpi_ioremaps, list)
+ 		if (map->virt <= virt &&
+ 		    virt + size <= map->virt + map->size)
+ 			return map;
+@@ -360,7 +360,11 @@ void __iomem __ref
+ 	map->size = pg_sz;
+ 	map->refcount = 1;
+ 
+-	list_add_tail_rcu(&map->list, &acpi_ioremaps);
++	write_lock_irq(&acpi_ioremaps_list_lock);
++
++	list_add_tail(&map->list, &acpi_ioremaps);
++
++	write_unlock_irq(&acpi_ioremaps_list_lock);
+ 
+ out:
+ 	mutex_unlock(&acpi_ioremap_lock);
+@@ -379,14 +383,18 @@ static unsigned long acpi_os_drop_map_re
+ {
+ 	unsigned long refcount = --map->refcount;
+ 
+-	if (!refcount)
+-		list_del_rcu(&map->list);
++	if (!refcount) {
++		write_lock_irq(&acpi_ioremaps_list_lock);
++
++		list_del(&map->list);
++
++		write_unlock_irq(&acpi_ioremaps_list_lock);
++	}
+ 	return refcount;
+ }
+ 
+ static void acpi_os_map_cleanup(struct acpi_ioremap *map)
+ {
+-	synchronize_rcu_expedited();
+ 	acpi_unmap(map->phys, map->virt);
+ 	kfree(map);
+ }
+@@ -704,18 +712,23 @@ acpi_status
+ acpi_os_read_memory(acpi_physical_address phys_addr, u64 *value, u32 width)
+ {
+ 	void __iomem *virt_addr;
++	unsigned long flags;
+ 	unsigned int size = width / 8;
+ 	bool unmap = false;
+ 	u64 dummy;
+ 	int error;
+ 
+-	rcu_read_lock();
++	read_lock_irqsave(&acpi_ioremaps_list_lock, flags);
++
+ 	virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
+ 	if (!virt_addr) {
+-		rcu_read_unlock();
++
++		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
++
+ 		virt_addr = acpi_os_ioremap(phys_addr, size);
+ 		if (!virt_addr)
+ 			return AE_BAD_ADDRESS;
++
+ 		unmap = true;
+ 	}
+ 
+@@ -728,7 +741,7 @@ acpi_os_read_memory(acpi_physical_addres
+ 	if (unmap)
+ 		iounmap(virt_addr);
+ 	else
+-		rcu_read_unlock();
++		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
+ 
+ 	return AE_OK;
+ }
+@@ -737,16 +750,21 @@ acpi_status
+ acpi_os_write_memory(acpi_physical_address phys_addr, u64 value, u32 width)
+ {
+ 	void __iomem *virt_addr;
++	unsigned long flags;
+ 	unsigned int size = width / 8;
+ 	bool unmap = false;
+ 
+-	rcu_read_lock();
++	read_lock_irqsave(&acpi_ioremaps_list_lock, flags);
++
+ 	virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
+ 	if (!virt_addr) {
+-		rcu_read_unlock();
++
++		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
++
+ 		virt_addr = acpi_os_ioremap(phys_addr, size);
+ 		if (!virt_addr)
+ 			return AE_BAD_ADDRESS;
++
+ 		unmap = true;
+ 	}
+ 
+@@ -770,7 +788,7 @@ acpi_os_write_memory(acpi_physical_addre
+ 	if (unmap)
+ 		iounmap(virt_addr);
+ 	else
+-		rcu_read_unlock();
++		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
+ 
+ 	return AE_OK;
+ }
+
+
+
