@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B766C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E725DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBE92086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD119206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366980;
-	bh=iEDnrsz6xY98L2zR/1m+vsa68l86wv7afRh44H+XURc=;
+	s=default; t=1591366985;
+	bh=apuCjmo26NYIkrsmBlJnUuWxCVNtEFStOXDpG99cVcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e3Xk+tymGSIT1zqrysFsk1oqMpbizQ1zcLiuQcMKj53UPw1AQTjYzh9cBjQRcgd1j
-	 2Y4Symf57YtR7gdbxRcwQqj6GAT/F3OQw8p0OxBVmF1E2+Ap6SSe82m7UzDSTOTE3q
-	 qTP5PyR+xKYo5RxfbeakMo6TiL4BKx2Xcp1BpByI=
+	b=UPwIGjZNJRKtFqbADRbDgPP9m8hyG92wWAgBhoaKaFpteKDQ1W2Mf/0kIMTc4v7Ws
+	 zA6CXPtnB5vYCGS+CtYMV2duLfGUtCUynGSEFY4CmqQhKqFjj/zXJNw3eMIDERfLzP
+	 9jrtKUeQ0oYsM6h4+lM5Rzuwcwdq84SZCsoVfwuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgFEOW7 (ORCPT
+        id S1729091AbgFEOXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49288 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbgFEOSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:42 -0400
+        id S1728708AbgFEOSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:18:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31B832086A;
-        Fri,  5 Jun 2020 14:18:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F892086A;
+        Fri,  5 Jun 2020 14:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366721;
-        bh=iEDnrsz6xY98L2zR/1m+vsa68l86wv7afRh44H+XURc=;
+        s=default; t=1591366717;
+        bh=apuCjmo26NYIkrsmBlJnUuWxCVNtEFStOXDpG99cVcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUlH2LYbUyOVQhvMz42wZPujuKw0MHBVg40gXYDjgcaA32ImAAHk4NkhkUBHjyaxn
-         caTbnMF4b01T9R6JQokFOJs3l2xdYAkFOv+6p3U2qZvVf4colfjwOnBDpLUv5n+PPx
-         wkjpA9J4+h3kyVK0L1nTpeB6TOn+0pt1LTCYAhsk=
+        b=MbNbzIT9CRSPPZ2p3Cgr/kOGqBEVkNAGwIrqxKlscGwLXdBLZXt7Hj2o2PBZo0+jj
+         fNCjTtb2ck9PkFVWblYZkKQ1l/HPQA8gC9VqsiZVEcXh9EPXUkEoJ2HbHbObvsDpSj
+         W8tw4sIFl0i0paieLPIvDdgikAOfd1g3ImQHL94Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 27/38] scsi: pm: Balance pm_only counter of request queue during system resume
-Date:   Fri,  5 Jun 2020 16:15:10 +0200
-Message-Id: <20200605140254.189430907@linuxfoundation.org>
+Subject: [PATCH 5.4 25/38] ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT
+Date:   Fri,  5 Jun 2020 16:15:08 +0200
+Message-Id: <20200605140254.079836074@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -61,80 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit 05d18ae1cc8a0308b12f37b4ab94afce3535fac9 ]
+[ Upstream commit 799587d5731db9dcdafaac4002463aa7d9cd6cf7 ]
 
-During system resume, scsi_resume_device() decreases a request queue's
-pm_only counter if the scsi device was quiesced before. But after that, if
-the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is still
-held (non-zero). Current SCSI resume hook only sets the RPM status of the
-scsi_device and its request queue to RPM_ACTIVE, but leaves the pm_only
-counter unchanged. This may make the request queue's pm_only counter remain
-non-zero after resume hook returns, hence those who are waiting on the
-mq_freeze_wq would never be woken up. Fix this by calling
-blk_post_runtime_resume() if a sdev's RPM status was RPM_SUSPENDED.
+Elide invalid configuration EZNPS + ARCv2, triggered by a
+make allyesconfig build.
 
-(struct request_queue)0xFFFFFF815B69E938
-	pm_only = (counter = 2),
-	rpm_status = 0,
-	dev = 0xFFFFFF815B0511A0,
+Granted the root cause is in source code (asm/barrier.h) where we check
+for ARCv2 before PLAT_EZNPS, but it is better to avoid such combinations
+at onset rather then baking subtle nuances into code.
 
-((struct device)0xFFFFFF815B0511A0)).power
-	is_suspended = FALSE,
-	runtime_status = RPM_ACTIVE,
-
-(struct scsi_device)0xffffff815b051000
-	request_queue = 0xFFFFFF815B69E938,
-	sdev_state = SDEV_RUNNING,
-	quiesced_by = 0x0,
-
-B::v.f_/task_0xFFFFFF810C246940
--000|__switch_to(prev = 0xFFFFFF810C246940, next = 0xFFFFFF80A49357C0)
--001|context_switch(inline)
--001|__schedule(?)
--002|schedule()
--003|blk_queue_enter(q = 0xFFFFFF815B69E938, flags = 0)
--004|generic_make_request(?)
--005|submit_bio(bio = 0xFFFFFF80A8195B80)
-
-Link: https://lore.kernel.org/r/1588740936-28846-1-git-send-email-cang@codeaurora.org
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_pm.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arc/plat-eznps/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
-index 3717eea37ecb..5f0ad8b32e3a 100644
---- a/drivers/scsi/scsi_pm.c
-+++ b/drivers/scsi/scsi_pm.c
-@@ -80,6 +80,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 	dev_dbg(dev, "scsi resume: %d\n", err);
+diff --git a/arch/arc/plat-eznps/Kconfig b/arch/arc/plat-eznps/Kconfig
+index a931d0a256d0..a645bca5899a 100644
+--- a/arch/arc/plat-eznps/Kconfig
++++ b/arch/arc/plat-eznps/Kconfig
+@@ -6,6 +6,7 @@
  
- 	if (err == 0) {
-+		bool was_runtime_suspended;
-+
-+		was_runtime_suspended = pm_runtime_suspended(dev);
-+
- 		pm_runtime_disable(dev);
- 		err = pm_runtime_set_active(dev);
- 		pm_runtime_enable(dev);
-@@ -93,8 +97,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 		 */
- 		if (!err && scsi_is_sdev_device(dev)) {
- 			struct scsi_device *sdev = to_scsi_device(dev);
--
--			blk_set_runtime_active(sdev->request_queue);
-+			if (was_runtime_suspended)
-+				blk_post_runtime_resume(sdev->request_queue, 0);
-+			else
-+				blk_set_runtime_active(sdev->request_queue);
- 		}
- 	}
- 
+ menuconfig ARC_PLAT_EZNPS
+ 	bool "\"EZchip\" ARC dev platform"
++	depends on ISA_ARCOMPACT
+ 	select CPU_BIG_ENDIAN
+ 	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
+ 	select EZNPS_GIC
 -- 
 2.25.1
 
