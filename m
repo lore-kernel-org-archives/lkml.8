@@ -2,112 +2,105 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52456C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2922E207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591324899;
-	bh=EwlyzHvv2zKF/T1pbyEJqB0jj+0FbopjxC6UovjZnUI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s6lSf5apLUO0Q+fJJAKb1FkzYq0SywDJRkl5DNH6q4zYVAZGAAyzA38d0t3luclVD
-	 GoZzTeJkZGBHkaF5FSH2sOQ3ujWZ6E7pS2jsNHzs6vXsKzqdcLgcMcs9EkS2ZKXD4Z
-	 7Ofog+X7lG9csN6x5aRVir/yR8ta1qa2e+YpO+Jk=
+	by mail.kernel.org (Postfix) with ESMTP id 53F5F207F7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:44:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtCstYTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgFECli (ORCPT
+        id S1726062AbgFECo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:41:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
+        Thu, 4 Jun 2020 22:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFECli (ORCPT
+        with ESMTP id S1725883AbgFECo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:41:38 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB99C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 19:41:37 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z9so9811632ljh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 19:41:37 -0700 (PDT)
+        Thu, 4 Jun 2020 22:44:57 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E9BC08C5C0;
+        Thu,  4 Jun 2020 19:44:55 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id j8so8660107iog.13;
+        Thu, 04 Jun 2020 19:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zd+zdiSrHowHhh1b+J06lfUeaSm83BjFgaTjWHrczMU=;
-        b=J0K9miM4j9eF68SRGydo2qWV257tzFgn+zXZgNDlVsN8UI+P56NCvzd8J7lUUxCTVF
-         RN855Q453tWgwpcbwuzrZuZ03GApAlS3UX5S6Wkwpc0dTKDYGPS/rpTgc1HE8kW4OGhp
-         bPp8+wXoytif/zHrGcv7OHSPUioe7Y0P9NRMc=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=759ya9bQ8VIyberTjfnME4EptSzc7CbtQcpdhw2zHK0=;
+        b=DtCstYTt0Rbx5Q1hA1Sy30EkWrpJf+2WRxNUcm+X9GKceqCla3X7pW3CacF7EnVjNy
+         4urYPJzTEwqSRPCgJQk2VE6ETye3GFNHUKRe9oRtM50fQhnA9upL+N6JVOz+65GPqEnz
+         982QrMtVQ+CNLWdj6h7S23Mogg2/Bi+YQ8ReiWSzOEGxUrN+F1/8EYmxlP8S9cxAokuB
+         1MbVL031DNw5aq4pvMaP8FCBdnmlj6g7Gri8oyyTxnzXVhqWvBfokxF+socTOsQ/ftAY
+         EeUD0sq4xQU16y+fIAUoyYwlOA8wr8ceQulQV4vIlpmc3hv+5WsERhsp+sL2ajGjtMQ3
+         2KnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zd+zdiSrHowHhh1b+J06lfUeaSm83BjFgaTjWHrczMU=;
-        b=HThFX43E4QnaxdMMQC1TbGYmxbZIAKgFl2XexLoCQP0NHYiB3pGcZ+AwBIrc1lWNgY
-         ZLKXlQxV1XfNd3CVIhInVI2qs4QkNX05Im4i27e9GhK7btMbUmAqiBGG16KT/MkrGjeM
-         2Q0yFHN2CVxC/MLTgM/IWRoClYcvmzB97GpoUXFcM2lKFbp7oHz1ksydRTu3xQAwcELr
-         486euim9jhjg1XyXdk8lRt1TxyKSZezmC/ptDJ0kbSPWO1K5fEsMtbNoSDGfJ7A/y4K4
-         s0GZ8qo97SvZo4YoDjoHf2UTdZYhRJhDo6lB0J80mH3IfkzF+Hk76HM6Y+mlbF7iiGRB
-         W3eA==
-X-Gm-Message-State: AOAM530xMPNovE2RaGMDbNT3SdtsT1hvH28DPJCdQ6QsgC/XJ9c5nqfS
-        XCmpFj3wvDpPvdN4YaULRlyxsdCLggo=
-X-Google-Smtp-Source: ABdhPJxamV2I1bVkaQ7h1A79LW0WyLatXasNpLUR6ztHgyGeU0EedzfjX01D2OD7hXbirpW4pVEwIw==
-X-Received: by 2002:a05:651c:10c:: with SMTP id a12mr3327463ljb.356.1591324894967;
-        Thu, 04 Jun 2020 19:41:34 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id u4sm284545ljh.12.2020.06.04.19.41.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2020 19:41:33 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id r125so4824269lff.13
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 19:41:33 -0700 (PDT)
-X-Received: by 2002:a19:d52:: with SMTP id 79mr4118228lfn.125.1591324892777;
- Thu, 04 Jun 2020 19:41:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200601170102.GA1346815@gmail.com> <CAHk-=wgXf_wQ9zrJKv2Hy4EpEbLuqty-Cjbs2u00gm7XcYHBfw@mail.gmail.com>
- <20200602073350.GA481221@gmail.com> <b159ba4c53fcf04cc4eb747c45e1d4d2d83310a3.camel@kernel.crashing.org>
- <871rmxgw4d.fsf@nanos.tec.linutronix.de> <CAHk-=wgOFnMW-EgymmrTyqTPLrpGJrUJ_wBzehMpyT=SO4-JRQ@mail.gmail.com>
- <20200604172904.GA1751362@gmail.com>
-In-Reply-To: <20200604172904.GA1751362@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 4 Jun 2020 19:41:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whK846PwG_qNqyb-q-BSPALb=xZ9k6ThVjRm8u=vCpkqA@mail.gmail.com>
-Message-ID: <CAHk-=whK846PwG_qNqyb-q-BSPALb=xZ9k6ThVjRm8u=vCpkqA@mail.gmail.com>
-Subject: Re: [GIT PULL v2] x86/mm changes for v5.8
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Balbir Singh <sblbir@amazon.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=759ya9bQ8VIyberTjfnME4EptSzc7CbtQcpdhw2zHK0=;
+        b=LfWZUP12L3lrU6WQk51ZbvJ86/pnuKE71YnM1Qm7LEuaSwy0iLdNni96AeO0VShVSx
+         38HrduQFZy+BklZplLC1ufI5qyCjmtlrdt1ynu4GdOdeqW5tSZ8BUdP/wpbxuesoTWMn
+         i22qK+k19BtmydZ32ZEdPn8yfr2/IV2jSVhmL3fHrMevvPymnJM3oGZnn63R+nVL4ix+
+         iqUIQnH628oxwozMUoKxkQ8Sfm8LQf9bAvk1Hdn7SHgA+FlwCYERwfx7IhXN9cfG/Ao4
+         Ks8h7vDMjHc7wME6BJArrkMg4M2hkbhhRUghl+IvsP04owIsn0cvl2D9DL3mQgog76ZO
+         h7Qg==
+X-Gm-Message-State: AOAM531/yvTvgPvb4io29nPsVj9rLREnh6k3HhMhFPiITBzh4MTvq+LF
+        kMXYz2n3qAmQIDGwLBeo0sY=
+X-Google-Smtp-Source: ABdhPJywEoU+XdFGxW15L62B8JzbOte+/emG+kENhRuKZYogZ0liWBlPQP/n/6irwcqm+z4sB7chfQ==
+X-Received: by 2002:a5d:8516:: with SMTP id q22mr6610256ion.122.1591325095125;
+        Thu, 04 Jun 2020 19:44:55 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id 184sm739928iov.31.2020.06.04.19.44.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 19:44:54 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
+Subject: [PATCH] io: pressure: zpa2326: handle pm_runtime_get_sync failure
+Date:   Thu,  4 Jun 2020 21:44:44 -0500
+Message-Id: <20200605024445.35672-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 10:29 AM Ingo Molnar <mingo@kernel.org> wrote:
->
-> Yeah, sure - here's the updated pull request for the rest:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-2020-06-04
->
->    # HEAD: bd1de2a7aace4d1d312fb1be264b8fafdb706208 x86/tlb/uv: Add a forward declaration for struct flush_tlb_info
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-Nope, that still points to
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/iio/pressure/zpa2326.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- 0fcfdf55db9e1ecf85edd6aa8d0bc78a448cb96a Documentation: Add L1D
-flushing Documentation
+diff --git a/drivers/iio/pressure/zpa2326.c b/drivers/iio/pressure/zpa2326.c
+index 99dfe33ee402..245f2e2d412b 100644
+--- a/drivers/iio/pressure/zpa2326.c
++++ b/drivers/iio/pressure/zpa2326.c
+@@ -664,8 +664,10 @@ static int zpa2326_resume(const struct iio_dev *indio_dev)
+ 	int err;
+ 
+ 	err = pm_runtime_get_sync(indio_dev->dev.parent);
+-	if (err < 0)
++	if (err < 0) {
++		pm_runtime_put(indio_dev->dev.parent);
+ 		return err;
++	}
+ 
+ 	if (err > 0) {
+ 		/*
+-- 
+2.17.1
 
-although it looks like the 'x86/mm' _branch_ does point to that commit
-bd1de2a7aace.
-
-You did something odd where you created a new tag, but used the old branch. Hmm?
-
-                Linus
