@@ -2,163 +2,296 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3814CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33ED920772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SR+dJjrW"
+	by mail.kernel.org (Postfix) with ESMTP id 138A7207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgFEJ1K (ORCPT
+        id S1726326AbgFEJ1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:27:10 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49096 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726177AbgFEJ1K (ORCPT
+        Fri, 5 Jun 2020 05:27:20 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:20082 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726177AbgFEJ1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:27:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591349228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=WDei8S9Y+fDxIX/wQTpCEb31Qbwh2m1zyvXT6rABXcc=;
-        b=SR+dJjrWL7WAL6f9JrBlI852a8ApBiHnX5wU+MkekCGoIlJ5gs0YN6f1fCiD94cRuoYKcc
-        /ndzxUfDxvHUzLG7bYiX6sywLTFUQ3N4KGVli6FBIoZCZTFsRLXsoClVShocV3o14NZhal
-        ufdQF1iCORjkBaqyH5hrmenVMDDtVaA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-81-BJJKE-YNPiGHcoYfv28bZA-1; Fri, 05 Jun 2020 05:27:04 -0400
-X-MC-Unique: BJJKE-YNPiGHcoYfv28bZA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99AE21854C44;
-        Fri,  5 Jun 2020 09:27:02 +0000 (UTC)
-Received: from [10.36.114.72] (ovpn-114-72.ams2.redhat.com [10.36.114.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56ECE5C290;
-        Fri,  5 Jun 2020 09:27:01 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm/page_idle.c: Skip offline pages
-To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        SeongJae Park <sjpark@amazon.de>
-References: <20200605092502.18018-1-sjpark@amazon.com>
- <20200605092502.18018-2-sjpark@amazon.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <dabb8aad-d3c2-6667-44e0-7e07606bb820@redhat.com>
-Date:   Fri, 5 Jun 2020 11:27:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 05:27:19 -0400
+X-IronPort-AV: E=Sophos;i="5.73,475,1583164800"; 
+   d="scan'208";a="93901010"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 05 Jun 2020 17:27:12 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 15B324BCC8BD;
+        Fri,  5 Jun 2020 17:27:10 +0800 (CST)
+Received: from [10.167.220.84] (10.167.220.84) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 5 Jun 2020 17:27:10 +0800
+Subject: Re: [LTP] LTP: syscalls: regression on mainline - ioctl_loop01
+ mknod07 setns01
+To:     Martijn Coenen <maco@android.com>
+CC:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Richard Palethorpe <rpalethorpe@suse.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>, Christoph Hellwig <hch@lst.de>,
+        LTP List <ltp@lists.linux.it>
+References: <CA+G9fYuGwcE3zyMFQPpfA0CyW=4WOg9V=kCfKhS7b8930jQofA@mail.gmail.com>
+ <CA+G9fYuUvjDeLXVm2ax_5UF=OJeH7fog0U7GG2vEUXg-HXWRqg@mail.gmail.com>
+ <CAB0TPYGo5ePYrah3Wgv_M1fx91+niRe12YaBBXGfs5b87Fjtrg@mail.gmail.com>
+ <CAB0TPYEx4Z8do3qL1KVpnGGnorTLGqKtrwi1uQgxQ6Xw3JqiYw@mail.gmail.com>
+ <ca8a4087-8c8b-6105-3f2c-1e2deee5f987@cn.fujitsu.com>
+ <14be1119-50a7-3861-dfd4-42a239413ee7@cn.fujitsu.com>
+ <CAB0TPYE4yvunSmK=oK7goaCRa+B1BxAoVhEkK+yhtDNwnJS6VA@mail.gmail.com>
+From:   Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Message-ID: <5e992dc1-c60b-bfd0-a993-dfbd0572d499@cn.fujitsu.com>
+Date:   Fri, 5 Jun 2020 17:27:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-In-Reply-To: <20200605092502.18018-2-sjpark@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAB0TPYE4yvunSmK=oK7goaCRa+B1BxAoVhEkK+yhtDNwnJS6VA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Originating-IP: [10.167.220.84]
+X-ClientProxiedBy: G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) To
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
+X-yoursite-MailScanner-ID: 15B324BCC8BD.A56BD
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: xuyang2018.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.06.20 11:25, SeongJae Park wrote:
-> From: SeongJae Park <sjpark@amazon.de>
+Hi Martign
+
+Also for your kernel commit,
+lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_SETTABLE_FLAGS;
+lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_CLEARABLE_FLAGS;
+
+since  ~LOOP_SET_STATUS_SETTABLE_FLAGS has been included in 
+~LOOP_SET_STATUS_CLEARABLE_FLAGS, do we still need the previous step?
+What do you think about it?
+
+Best Regards
+Yang Xu
+
+> Hey Yang,
 > 
-> 'Idle page tracking' users can pass random pfn that might be mapped to
-> an offline page.  To avoid accessing such pages, this commit modifies
-> the 'page_idle_get_page()' to use 'pfn_to_online_page()' instead of
-> 'pfn_valid()' and 'pfn_to_page()' combination, so that the pfn mapped to
-> an offline page can be skipped.
+> On Fri, Jun 5, 2020 at 10:59 AM Yang Xu <xuyang2018.jy@cn.fujitsu.com> wrote:
+>>
+>> Hi Martijn
+>>
+>> Sorry for noise. I see your patch in here[1] . I will modify
+>> ioctl_loop01 to test that LO_FLAGS_PARTSCAN can not clear and
+>> LO_FLAGS_AUTOCLEAR can be clear.
 > 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> Reported-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/page_idle.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+> Thanks, that would indeed be useful.
 > 
-> diff --git a/mm/page_idle.c b/mm/page_idle.c
-> index 295512465065..057c61df12db 100644
-> --- a/mm/page_idle.c
-> +++ b/mm/page_idle.c
-> @@ -4,6 +4,7 @@
->  #include <linux/fs.h>
->  #include <linux/sysfs.h>
->  #include <linux/kobject.h>
-> +#include <linux/memory_hotplug.h>
->  #include <linux/mm.h>
->  #include <linux/mmzone.h>
->  #include <linux/pagemap.h>
-> @@ -30,13 +31,9 @@
->   */
->  static struct page *page_idle_get_page(unsigned long pfn)
->  {
-> -	struct page *page;
-> +	struct page *page = pfn_to_online_page(pfn);
->  	pg_data_t *pgdat;
->  
-> -	if (!pfn_valid(pfn))
-> -		return NULL;
-> -
-> -	page = pfn_to_page(pfn);
->  	if (!page || !PageLRU(page) ||
->  	    !get_page_unless_zero(page))
->  		return NULL;
+>>
+>> ps: Giving the url of patch is better so that other people doesn't need
+>> to investigate it again.
+>> [1]https://patchwork.kernel.org/patch/11588321/
+> 
+> Ok, will do next time!
+> 
+> Best,
+> Martijn
+>>
+>> Best Regards
+>> Yang Xu
+>>> Hi Martijn
+>>>
+>>>> Hi Naresh,
+>>>>
+>>>> I just sent a patch and cc'd you. I verified all the loop tests pass
+>>>> again with that patch.
+>>> I think you want to say "without".  I verified the ioctl_loop01 fails
+>>> with faf1d25440 ("loop: Clean up LOOP_SET_STATUS lo_flags handling").
+>>>
+>>> This kernel commit breaks old behaviour(if old flag all 0, new flag is
+>>> always 0 regradless your flag setting).
+>>>
+>>> I think we should modify code as below:
+>>> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+>>> index 13518ba191f5..c6ba8cf486ce 100644
+>>> --- a/drivers/block/loop.c
+>>> +++ b/drivers/block/loop.c
+>>> @@ -1364,11 +1364,9 @@ loop_set_status(struct loop_device *lo, const
+>>> struct loop_info64 *info)
+>>>           if (err)
+>>>                   goto out_unfreeze;
+>>>
+>>> -       /* Mask out flags that can't be set using LOOP_SET_STATUS. */
+>>> -       lo->lo_flags &= ~LOOP_SET_STATUS_SETTABLE_FLAGS;
+>>> -       /* For those flags, use the previous values instead */
+>>> -       lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_SETTABLE_FLAGS;
+>>> -       /* For flags that can't be cleared, use previous values too */
+>>> +       /* Mask out flags that can be set using LOOP_SET_STATUS. */
+>>> +       lo->lo_flags &= LOOP_SET_STATUS_SETTABLE_FLAGS;
+>>> +       /* For flags that can't be cleared, use previous values. */
+>>>           lo->lo_flags |= prev_lo_flags &~LOOP_SET_STATUS_CLEARABLE_FLAGS;
+>>>
+>>> Best Regards
+>>> Yang Xu
+>>>>
+>>>> Thanks,
+>>>> Martijn
+>>>>
+>>>>
+>>>> On Thu, Jun 4, 2020 at 9:10 PM Martijn Coenen <maco@android.com> wrote:
+>>>>>
+>>>>> Hi Naresh,
+>>>>>
+>>>>> I suspect the loop failures are due to
+>>>>> faf1d25440d6ad06d509dada4b6fe62fea844370 ("loop: Clean up
+>>>>> LOOP_SET_STATUS lo_flags handling"), I will investigate and get back
+>>>>> to you.
+>>>>>
+>>>>> Thanks,
+>>>>> Martijn
+>>>>>
+>>>>> On Thu, Jun 4, 2020 at 7:19 PM Naresh Kamboju
+>>>>> <naresh.kamboju@linaro.org> wrote:
+>>>>>>
+>>>>>> + linux-block@vger.kernel.org
+>>>>>>
+>>>>>> On Thu, 4 Jun 2020 at 22:47, Naresh Kamboju
+>>>>>> <naresh.kamboju@linaro.org> wrote:
+>>>>>>>
+>>>>>>> Following three test cases reported as regression on Linux mainline
+>>>>>>> kernel
+>>>>>>> on x86_64, arm64, arm and i386
+>>>>>>>
+>>>>>>>     ltp-syscalls-tests:
+>>>>>>>       * ioctl_loop01
+>>>>>>>       * mknod07
+>>>>>>>       * setns01
+>>>>>>>
+>>>>>>> git repo:
+>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>>>>>>> git branch: master
+>>>>>>> GOOD:
+>>>>>>>     git commit: b23c4771ff62de8ca9b5e4a2d64491b2fb6f8f69
+>>>>>>>     git describe: v5.7-1230-gb23c4771ff62
+>>>>>>> BAD:
+>>>>>>>     git commit: 1ee08de1e234d95b5b4f866878b72fceb5372904
+>>>>>>>     git describe: v5.7-3523-g1ee08de1e234
+>>>>>>>
+>>>>>>> kernel-config:
+>>>>>>> https://builds.tuxbuild.com/U3bU0dMA62OVHb4DvZIVuw/kernel.config
+>>>>>>>
+>>>>>>> We are investigating these failures.
+>>>>>>>
+>>>>>>> tst_test.c:906: CONF: btrfs driver not available
+>>>>>>> tst_test.c:1246: INFO: Timeout per run is 0h 15m 00s
+>>>>>>> tst_device.c:88: INFO: Found free device 1 '/dev/loop1'
+>>>>>>> ioctl_loop01.c:49: PASS: /sys/block/loop1/loop/partscan = 0
+>>>>>>> [ 1073.639677] loop_set_status: loop1 () has still dirty pages
+>>>>>>> (nrpages=1)
+>>>>>>> ioctl_loop01.c:50: PASS: /sys/block/loop1/loop/autoclear = 0
+>>>>>>> ioctl_loop01.c:51: PASS: /sys/block/loop1/loop/backing_file =
+>>>>>>> '/scratch/ltp-mnIdulzriQ/9cPtLQ/test.img'
+>>>>>>> ioctl_loop01.c:63: FAIL: expect 12 but got 17
+>>>>>>> ioctl_loop01.c:67: FAIL: /sys/block/loop1/loop/partscan != 1 got 0
+>>>>>>> ioctl_loop01.c:68: FAIL: /sys/block/loop1/loop/autoclear != 1 got 0
+>>>>>>> ioctl_loop01.c:79: FAIL: access /dev/loop1p1 fails
+>>>>>>> [ 1073.679678] loop_set_status: loop1 () has still dirty pages
+>>>>>>> (nrpages=1)
+>>>>>>> ioctl_loop01.c:85: FAIL: access /sys/block/loop1/loop1p1 fails
+>>>>>>>
+>>>>>>> HINT: You _MAY_ be missing kernel fixes, see:
+>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=10c70d95c0f2
+>>>>>>>
+>>>>>>>
+>>>>>>> mke2fs 1.43.8 (1-Jan-2018)
+>>>>>>> [ 1264.711379] EXT4-fs (loop0): mounting ext2 file system using the
+>>>>>>> ext4 subsystem
+>>>>>>> [ 1264.716642] EXT4-fs (loop0): mounted filesystem without journal.
+>>>>>>> Opts: (null)
+>>>>>>> mknod07     0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
+>>>>>>> mknod07     0  TINFO  :  Formatting /dev/loop0 with ext2 opts=''
+>>>>>>> extra opts=''
+>>>>>>> mknod07     1  TPASS  :  mknod failed as expected:
+>>>>>>> TEST_ERRNO=EACCES(13): Permission denied
+>>>>>>> mknod07     2  TPASS  :  mknod failed as expected:
+>>>>>>> TEST_ERRNO=EACCES(13): Permission denied
+>>>>>>> mknod07     3  TFAIL  :  mknod07.c:155: mknod succeeded unexpectedly
+>>>>>>> mknod07     4  TPASS  :  mknod failed as expected:
+>>>>>>> TEST_ERRNO=EPERM(1): Operation not permitted
+>>>>>>> mknod07     5  TPASS  :  mknod failed as expected:
+>>>>>>> TEST_ERRNO=EROFS(30): Read-only file system
+>>>>>>> mknod07     6  TPASS  :  mknod failed as expected:
+>>>>>>> TEST_ERRNO=ELOOP(40): Too many levels of symbolic links
+>>>>>>>
+>>>>>>>
+>>>>>>> setns01     0  TINFO  :  ns_name=ipc, ns_fds[0]=6,
+>>>>>>> ns_types[0]=0x8000000
+>>>>>>> setns01     0  TINFO  :  ns_name=mnt, ns_fds[1]=7, ns_types[1]=0x20000
+>>>>>>> setns01     0  TINFO  :  ns_name=net, ns_fds[2]=8,
+>>>>>>> ns_types[2]=0x40000000
+>>>>>>> setns01     0  TINFO  :  ns_name=pid, ns_fds[3]=9,
+>>>>>>> ns_types[3]=0x20000000
+>>>>>>> setns01     0  TINFO  :  ns_name=uts, ns_fds[4]=10,
+>>>>>>> ns_types[4]=0x4000000
+>>>>>>> setns01     0  TINFO  :  setns(-1, 0x8000000)
+>>>>>>> setns01     1  TPASS  :  invalid fd exp_errno=9
+>>>>>>> setns01     0  TINFO  :  setns(-1, 0x20000)
+>>>>>>> setns01     2  TPASS  :  invalid fd exp_errno=9
+>>>>>>> setns01     0  TINFO  :  setns(-1, 0x40000000)
+>>>>>>> setns01     3  TPASS  :  invalid fd exp_errno=9
+>>>>>>> setns01     0  TINFO  :  setns(-1, 0x20000000)
+>>>>>>> setns01     4  TPASS  :  invalid fd exp_errno=9
+>>>>>>> setns01     0  TINFO  :  setns(-1, 0x4000000)
+>>>>>>> setns01     5  TPASS  :  invalid fd exp_errno=9
+>>>>>>> setns01     0  TINFO  :  setns(11, 0x8000000)
+>>>>>>> setns01     6  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+>>>>>>> errno=EBADF(9): Bad file descriptor
+>>>>>>> setns01     0  TINFO  :  setns(11, 0x20000)
+>>>>>>> setns01     7  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+>>>>>>> errno=EBADF(9): Bad file descriptor
+>>>>>>> setns01     0  TINFO  :  setns(11, 0x40000000)
+>>>>>>> setns01     8  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+>>>>>>> errno=EBADF(9): Bad file descriptor
+>>>>>>> setns01     0  TINFO  :  setns(11, 0x20000000)
+>>>>>>> setns01     9  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+>>>>>>> errno=EBADF(9): Bad file descriptor
+>>>>>>> setns01     0  TINFO  :  setns(11, 0x4000000)
+>>>>>>> setns01    10  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+>>>>>>> errno=EBADF(9): Bad file descriptor
+>>>>>>>
+>>>>>>> Full test log link,
+>>>>>>> https://lkft.validation.linaro.org/scheduler/job/1467931#L8047
+>>>>>>>
+>>>>>>> test results comparison shows this test case started failing from
+>>>>>>> June-2-2020
+>>>>>>> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/ioctl_loop01/history/
+>>>>>>>
+>>>>>>>
+>>>>>>> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/setns01/history/
+>>>>>>>
+>>>>>>>
+>>>>>>> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/mknod07/history/
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> --
+>>>>>>> Linaro LKFT
+>>>>>>> https://lkft.linaro.org
+>>>>
+>>>>
+>>>
+>>>
+>>>
+>>
+>>
+> 
 > 
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
--- 
-Thanks,
-
-David / dhildenb
 
