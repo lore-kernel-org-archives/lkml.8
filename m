@@ -2,145 +2,107 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D217C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 344D0207ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="KFZS46GF"
+	by mail.kernel.org (Postfix) with ESMTP id 98A662074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgFESTl (ORCPT
+        id S1726999AbgFESXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgFESTl (ORCPT
+        Fri, 5 Jun 2020 14:23:21 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42892 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgFESXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:19:41 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8434FC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 11:19:40 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c35so8202856edf.5
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 11:19:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DqSUfhL+HpfxHMHLxeDxo+cffKJm8uC5qt8/bLSPpbQ=;
-        b=KFZS46GFTZ9Gy3Cg/ohafbBdin5UVGOHBKY0W2wI6384HxS9k1vLbbdkOtccGTBnfl
-         8XcGqVZeS/TWjJAU9xBTxX6LY+5e3X4A4jUvLcQ2fUqGlmj9zxKy89nhC7UsResG1jCn
-         qcYVtf6k/prKJ895tWtyIpNpncfHOSytxbTBzmcHYmUtmZ5VtKm5h7WitDT3/e4vO2wb
-         FeAk5ZwfXuLAHuSnbVvQTreK2q8TTD3kW2ol12V7p7CDK6LR5q9MgL+ZZM2BYHDuA3DN
-         SGWwD6HEw6x3yX57rz+veZOXIf31k/GhdrbzYfVn74/XVgE4Qnr1acJHTuaoW0SjZHH+
-         J/lw==
+        Fri, 5 Jun 2020 14:23:21 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s21so9006148oic.9;
+        Fri, 05 Jun 2020 11:23:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DqSUfhL+HpfxHMHLxeDxo+cffKJm8uC5qt8/bLSPpbQ=;
-        b=PC9/YBHK18wpvZzWIUnfGHvmoNPIB3AyL5Tx23f38jIloxpxjIBDlDk33AIGLkIYwE
-         2g+pbp+nfs5mNuftmWYMfaPC9to/dQQPpwdyuO3kdf8ty8zOeuOnHNFPolHNnNl7P/Xd
-         nHirwIGmfAGgbNrBi710JQXxkiApZ74iIH3+WMl+8L/zM7olp1863u2J2WyfsldMi3NY
-         aLAiLB+j9hQzHzPgzxwLcWe4GrI84HxHQjZiIBDTbzPLmjMkuKjRgwQ+Yy6XJ3yYpJOs
-         0Ohbt3A/z6CdEojFiSbdM6suHKVP0g+BDw+lM8GSDjlFCjDNiBtjYiXD7O/7nrW8MWMc
-         7D7A==
-X-Gm-Message-State: AOAM530ODn74KHsAHOd0Uhd58A5+PqpgfMpW80qsLTnLU+nMcSmQAk5p
-        gdkx+T129AVy5UA3sJMdVJ82GsAdieU2yT5CIKKiMA==
-X-Google-Smtp-Source: ABdhPJwYKATWO9a3ADTUxQBAa8Nwr2+GQoHSj84HHGLL7MmG5YsI5pBuAWt+4WD3LOSfh0YCGx6dzCQDPaOgqo80aV8=
-X-Received: by 2002:aa7:d6c1:: with SMTP id x1mr6359975edr.154.1591381179201;
- Fri, 05 Jun 2020 11:19:39 -0700 (PDT)
+        bh=gb254b1X6F7Ls1+G3k4/QLgVUlE6UJXZeb6kyJbHzoY=;
+        b=PW8tRNEi0xcde/5jaOcxHX2yhoRgHRcHzkFCSgAmmBRrfGb0V4sXsNTN/GYU1THY/x
+         gY8hxgXfQta8st4OAlC4MJIYdb8kg2OKtwgRzXXmqjSeGbNqOp1zzWA04ZOL50h+QslN
+         jhUEHhGxvegFVOSfQhg/kaplf73kkR8CHFZLVjCHdFsC7EBCINSDZ0Bo+hFUGz0cNyjA
+         o36D65JhmCxZbJ5+7OKU3K+OTIx5RFE10heDYUTXVGv2tH/FAOLi2/ukehCUCFkW20vR
+         XnuCvVWLz64NCYUNMh6lxhyghobukaNs8iXSqM7+8xLNB0EOXXpyniSxjxzKwMR4Om48
+         oBdw==
+X-Gm-Message-State: AOAM530T6FWE9F1dp+88VgMhbi9Vkijslp890xQz3IOLpvQL3v9KH/Uy
+        NOfZ3kdfSy5rcjczvnD/jmRt26ihu7LLt798XNo=
+X-Google-Smtp-Source: ABdhPJxDSNMwwLluNUB0ILKSAWVhxzo+nLE84x4RmO9GWGCGZVD7D+sRAie0oKyRL3I0ibHUrn5XX9hf4UfSXajHreA=
+X-Received: by 2002:aca:1a19:: with SMTP id a25mr2748673oia.54.1591381399173;
+ Fri, 05 Jun 2020 11:23:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200602101438.73929-1-vaibhav@linux.ibm.com> <20200602101438.73929-5-vaibhav@linux.ibm.com>
- <BN6PR11MB413223B333153721405DFD91C6890@BN6PR11MB4132.namprd11.prod.outlook.com>
- <87h7vrgpzx.fsf@linux.ibm.com> <BN6PR11MB4132FA66A84CBD798AADCEC1C6860@BN6PR11MB4132.namprd11.prod.outlook.com>
- <873679h72g.fsf@linux.ibm.com>
-In-Reply-To: <873679h72g.fsf@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Jun 2020 11:19:27 -0700
-Message-ID: <CAPcyv4jcWc6HOW5dK1hp0vATDxd_mo+eVK=xkYMPOQ7t1fCv-A@mail.gmail.com>
-Subject: Re: [RESEND PATCH v9 4/5] ndctl/papr_scm,uapi: Add support for PAPR
- nvdimm specific methods
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>
+References: <20200528054600.GA29717@infradead.org> <20200528161416.GY1079@brightrain.aerifal.cx>
+ <20200529143059.GA25475@infradead.org> <20200529175335.GK1079@brightrain.aerifal.cx>
+ <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
+ <20200601181259.GV1079@brightrain.aerifal.cx> <20200602013332.GY1079@brightrain.aerifal.cx>
+ <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
+ <20200605154343.GU1079@brightrain.aerifal.cx> <c4900bf6-99b3-c9b9-4fd0-7f491bd46de6@physik.fu-berlin.de>
+ <20200605155954.GV1079@brightrain.aerifal.cx> <25e0729d-8158-94a4-f081-ccdfa50ecb1d@physik.fu-berlin.de>
+In-Reply-To: <25e0729d-8158-94a4-f081-ccdfa50ecb1d@physik.fu-berlin.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 5 Jun 2020 20:23:07 +0200
+Message-ID: <CAMuHMdVTWz33sbn2PPvcNW8KnAcNFvv31yj-z5V3VJ87Xv=tjQ@mail.gmail.com>
+Subject: Re: [GIT PULL] sh: remove sh5 support
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Rich Felker <dalias@libc.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Rob Landley <rob@landley.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 8:22 AM Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
-[..]
-> > Oh, why not define a maximal health payload with all the attributes
-> > you know about today, leave some room for future expansion, and then
-> > report a validity flag for each attribute? This is how the "intel"
-> > smart-health payload works. If they ever needed to extend the payload
-> > they would increase the size and add more validity flags. Old
-> > userspace never groks the new fields, new userspace knows to ask for
-> > and parse the larger payload.
-> >
-> > See the flags field in 'struct nd_intel_smart' (in ndctl) and the
-> > translation of those flags to ndctl generic attribute flags
-> > intel_cmd_smart_get_flags().
-> >
-> > In general I'd like ndctl to understand the superset of all health
-> > attributes across all vendors. For the truly vendor specific ones it
-> > would mean that the health flags with a specific "papr_scm" back-end
-> > just would never be set on an "intel" device. I.e. look at the "hpe"
-> > and "msft" health backends. They only set a subset of the valid flags
-> > that could be reported.
->
-> Thanks, this sounds good. Infact papr_scm implementation in ndctl does
-> advertises support for only a subset of ND_SMART_* flags right now.
->
-> Using 'flags' instead of 'version' was indeed discussed during
-> v7..v9. However re-looking at the 'msft' and 'hpe' implementations the
-> approach of maximal health payload tagged with a flags field looks more
-> intuitive and I would prefer implementing this scheme in this patch-set.
->
-> The current set health data exchanged with between libndctl and
-> papr_scm via 'struct nd_papr_pdsm_health' (e.g various health status
-> bits , nvdimm arming status etc) are guaranteed to be always available
-> hence associating their availability with a flag wont be much useful as
-> the flag will be always set.
->
-> However as you suggested, extending the 'struct nd_papr_pdsm_health' in
-> future to accommodate new attributes like 'life-remaining' can be done
-> via adding them to the end of the struct and setting a flag field to
-> indicate its presence.
->
-> So I have the following proposal:
-> * Add a new '__u32 extension_flags' field at beginning of 'struct
->   nd_papr_pdsm_health'
-> * Set the size of the struct to 184-bytes which is the maximum possible
->   size for a pdsm payload.
-> * 'papr_scm' kernel driver will currently set 'extension_flag' to 0
->   indicating no extension fields.
->
-> * Future patch that adds support for 'life-remaining' add the new-field
->   at the end of known fields in 'struct nd_papr_pdsm_health'.
-> * When provided to  papr_scm kernel module, if 'life-remaining' data is
->   available its populated and corresponding flag set in
->   'extension_flags' field indicating its presence.
-> * When received by libndctl papr_scm implementation its tests if the
->   extension_flags have associated 'life-remaining' flag set and if yes
->   then return ND_SMART_USED_VALID flag back from
->   ndctl_cmd_smart_get_flags().
->
-> Implementing first 3 items above in the current patchset should be
-> fairly trivial.
->
-> Does that sounds reasonable ?
+Hi Adrian,
 
-This sounds good to me.
+On Fri, Jun 5, 2020 at 7:58 PM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+> On 6/5/20 5:59 PM, Rich Felker wrote:
+> >> Ah, sorry, I missed that. You're right, it should probably go through
+> >> someone else's tree then.
+> >
+> > Do you know if it's needed to un-break sh4? If so we should push to
+> > get whoever has jurisdiction over it to include it; otherwise I'm
+> > indifferent.
+
+I think the above is about the asm-generic/vmlinux.lds.h patch?
+https://marc.info/?l=linux-sh&m=158429470221261&w=2
+
+That one falls under Arnd's jurisdiction.
+And AFAIUC, it matters for recent binutils only? So Arnd should know.
+
+> No, the patch is only necessary when enabling Infiniband support with
+> CONFIG_INFINIBAND_USER_ACCESS enabled.
+>
+> However, according to Geert, every architecture is supposed to have
+> 64-bit get_user() these days, therefore my patch is required anyways,
+> but it's not an acute problem.
+
+This is about a different patch.  Still a build failure, but who cares about
+Infiniband? (I still care more about SH ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
