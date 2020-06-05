@@ -2,137 +2,190 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E2CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6317020897
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:10:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ax2Rzb74"
+	by mail.kernel.org (Postfix) with ESMTP id F23E620738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgFECKx (ORCPT
+        id S1726099AbgFECMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:10:53 -0400
-Received: from mail-eopbgr50086.outbound.protection.outlook.com ([40.107.5.86]:45569
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726148AbgFECKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:10:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=POXDS+Cg0PIg9P9yJ9SgCYudsqaxeOoxARRNGhPvAEXa6aNH4VAE7nx6tymls8TEMcrTOYXrdg4CMSaNxQw0P62N9SpWzZiHOqOH8EXtcsssuUh8Hj/edKkNah8EZBy2mRZzQhakZzPlWOs5LWkYXCnkwl3lDvsJLLJ6onhscRxuJyhhlVLACVfuD9kSLcpsTE+uEKKn79+w2QKiFLMA7KPemIXw2128//dFnDnY2p7L+5kjOG5a8m0yCX5avjbGgXxLnlQGHz76aY4SkNF7vEKrpJ/x0fBVyYm6NL2IDViHocccBtx6LRXG9NdvpKSO/m8WBOHTR3wUNhe2vCVVGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kTNMJKnmzYPf2aJxxbbqOyDbOxZ83LKwA9t9cMSoDrc=;
- b=AT+IzNx5vUUUgkFAMFJucgxLGyyJYpBOPU7SASXBekAsZ69QhrAePXko79miCJU0USLa/4Z4eDNzid0we8H7C+iO70Fs/Iq/euUyz0Jd5wqu4Tg+TTZmghclsmoSbijtgihoQwreHXPXvDYiLF3lZ5sUsPMJG0tkVqLytrHtCb3iJhGz9OztRuwtyIZm8ce3oOEe0toZPOFq86afAlHnyb61C7N+eBlx/zjNdWpICaZkvao3MIksZxdHPyrNEq4+UFvgHyo19tHFmaPq1y7qdzXn5Fyf6CfjbjbvP1HIn71awBDbxMQk3IQBzYZTZybFQcoOMO3MwXEcJveTGDfGcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kTNMJKnmzYPf2aJxxbbqOyDbOxZ83LKwA9t9cMSoDrc=;
- b=ax2Rzb74CRGG9d5pF0pFsSi4QvrUETB2o6CQKcTwNK0pz0lnqLYwyzDkhCjMcTkfaDXiPUlP/WaxT1t7X5r8ybDBAEBXb7vqW3J6W3t6ObqpWzfjvBE0IkRdrrEe9ON4ESuHYbqbtqBu2/0eymVk1+IYvu83+76elDJ24Kdt6nc=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2696.eurprd04.prod.outlook.com (2603:10a6:4:a1::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
- 2020 02:10:46 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3066.018; Fri, 5 Jun 2020
- 02:10:46 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, aisheng.dong@nxp.com
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux@rempel-privat.de,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        qiangqing.zhang@nxp.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        franck.lenormand@nxp.com, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V3 3/3] firmware: imx: scu-pd: add more cm4 resources
-Date:   Fri,  5 Jun 2020 09:59:32 +0800
-Message-Id: <1591322372-3793-4-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591322372-3793-1-git-send-email-peng.fan@nxp.com>
-References: <1591322372-3793-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SGAP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::26)
- To DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+        Thu, 4 Jun 2020 22:12:17 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:16941 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbgFECMQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:12:16 -0400
+X-IronPort-AV: E=Sophos;i="5.73,474,1583164800"; 
+   d="scan'208";a="93871124"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 05 Jun 2020 10:12:12 +0800
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
+        by cn.fujitsu.com (Postfix) with ESMTP id DF8CC4BCC8A8;
+        Fri,  5 Jun 2020 10:12:07 +0800 (CST)
+Received: from [10.167.225.141] (10.167.225.141) by
+ G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 5 Jun 2020 10:12:08 +0800
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTogUmU6IFtSRkMgUEFUQ0ggMC84XSBkYXg6IEFkZCBh?=
+ =?UTF-8?Q?_dax-rmap_tree_to_support_reflink?=
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+CC:     Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
+        "Qi, Fuli" <qi.fuli@fujitsu.com>,
+        "Gotou, Yasunori" <y-goto@fujitsu.com>
+References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
+ <20200427122836.GD29705@bombadil.infradead.org>
+ <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
+ <20200428064318.GG2040@dread.disaster.area>
+ <153e13e6-8685-fb0d-6bd3-bb553c06bf51@cn.fujitsu.com>
+ <20200604145107.GA1334206@magnolia>
+From:   Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
+Message-ID: <b9f3e089-476d-b31f-c2f2-0dfb8741b584@cn.fujitsu.com>
+Date:   Fri, 5 Jun 2020 10:11:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SGAP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 02:10:41 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f79eaed5-4b36-47da-c4ea-08d808f5a865
-X-MS-TrafficTypeDiagnostic: DB6PR0402MB2696:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0402MB2696DB0E2FBDB2C2D8B22F8388860@DB6PR0402MB2696.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:364;
-X-Forefront-PRVS: 0425A67DEF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NrGuVoncW1u9tnGuSHmL3wFuHKr8sM35Ej7M/azG8faU5QBEjL99R6g+5j1DEXO4givrCOiEz6VSkheyRPj41OA633qdwWWz5nRiFoXMBu/Nz679T2VCUtboeiCxC4dqVWhkiwP/1a+sFGWuN8cIYoIReVqvgsJ1z9bY0l0kvrx9z0fLFrct8x1ZiEN+jIq0wsHL2cuADAb7Bw/0GDb/n1h/Ck68c2U3HswAzmTKUlY1tpZGrBjcjdD8qnqBPV4lwl5pXT411KWLGqOlo4lO0qtIvynDM7hHqMDUdZFixoo3HINcUVRExpyLLFzExuUIk3TSRRw0p454AeX8HOv79jPkkn4XGWs6Ws1wClw+4jqPiysw13w1iYskcJFZU8kl
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(39860400002)(396003)(366004)(86362001)(83380400001)(6506007)(52116002)(478600001)(66556008)(66946007)(8676002)(9686003)(66476007)(6512007)(8936002)(2906002)(186003)(36756003)(2616005)(6486002)(956004)(4326008)(69590400007)(16526019)(6666004)(26005)(5660300002)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: CHKyqFLh6VGa8efsS7qiLWV9x3qY1ehlZtc9Sq9e1o2r+W7Nd/MP+7cRw3VnJGZWblSrf0jKM/t+gHQ9FRQqvZRHsjnz6vASz1GfUOa7yBgPK5X1LX0bpOGuQYWjgRMVHJ3Z3Fjj0Bfnjalvsq0BEkvtqKzOg8mOI8WGxTcv6PfzaC6bHERW18iKB5YuLltxOjVMsLXqoGE72qa1N2pUqy5Dtc4mF9/ZCooZtTuMHOva1WEZUD2WOxYZzYdc2e8yRsAHIqj7os4aHPsNbZCtEpzar4REM2SinP77e/DiF7sHRTpgA+pbYKidBTng5VQH1wB5RpmghusRuBju4UpK8nbpRZtOWkKsFcbMON/HyiLe9vf5ykHNlsxQIf40ToRmoVBPVnmTFZHQWdUwL0H9WgpX0pgVCYF3GKkMT/ibiYU1CDw03cknC5NwmpQhevZCfH+l1CrroRtEMY7S4rwODnw5grv8yyQhr/TeV9+aNT1EFMNqYYDuMhx7y63AmUJ0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f79eaed5-4b36-47da-c4ea-08d808f5a865
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 02:10:46.0555
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c63ZYavQYsfLWxToPVop6E+BBFA7erYoxdocm1nRcW2WJEWF8ihIFEJIax+H+tpPnHeIrx/UfrokDroGJHla8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2696
+In-Reply-To: <20200604145107.GA1334206@magnolia>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.225.141]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204)
+X-yoursite-MailScanner-ID: DF8CC4BCC8A8.AF5BC
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
 
-Add more cm4 resources, then linux could use cm4's i2c/lpuart and
-could kick cm4 core.
 
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/firmware/imx/scu-pd.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+On 2020/6/4 下午10:51, Darrick J. Wong wrote:
+> On Thu, Jun 04, 2020 at 03:37:42PM +0800, Ruan Shiyang wrote:
+>>
+>>
+>> On 2020/4/28 下午2:43, Dave Chinner wrote:
+>>> On Tue, Apr 28, 2020 at 06:09:47AM +0000, Ruan, Shiyang wrote:
+>>>>
+>>>> 在 2020/4/27 20:28:36, "Matthew Wilcox" <willy@infradead.org> 写道:
+>>>>
+>>>>> On Mon, Apr 27, 2020 at 04:47:42PM +0800, Shiyang Ruan wrote:
+>>>>>>    This patchset is a try to resolve the shared 'page cache' problem for
+>>>>>>    fsdax.
+>>>>>>
+>>>>>>    In order to track multiple mappings and indexes on one page, I
+>>>>>>    introduced a dax-rmap rb-tree to manage the relationship.  A dax entry
+>>>>>>    will be associated more than once if is shared.  At the second time we
+>>>>>>    associate this entry, we create this rb-tree and store its root in
+>>>>>>    page->private(not used in fsdax).  Insert (->mapping, ->index) when
+>>>>>>    dax_associate_entry() and delete it when dax_disassociate_entry().
+>>>>>
+>>>>> Do we really want to track all of this on a per-page basis?  I would
+>>>>> have thought a per-extent basis was more useful.  Essentially, create
+>>>>> a new address_space for each shared extent.  Per page just seems like
+>>>>> a huge overhead.
+>>>>>
+>>>> Per-extent tracking is a nice idea for me.  I haven't thought of it
+>>>> yet...
+>>>>
+>>>> But the extent info is maintained by filesystem.  I think we need a way
+>>>> to obtain this info from FS when associating a page.  May be a bit
+>>>> complicated.  Let me think about it...
+>>>
+>>> That's why I want the -user of this association- to do a filesystem
+>>> callout instead of keeping it's own naive tracking infrastructure.
+>>> The filesystem can do an efficient, on-demand reverse mapping lookup
+>>> from it's own extent tracking infrastructure, and there's zero
+>>> runtime overhead when there are no errors present.
+>>
+>> Hi Dave,
+>>
+>> I ran into some difficulties when trying to implement the per-extent rmap
+>> tracking.  So, I re-read your comments and found that I was misunderstanding
+>> what you described here.
+>>
+>> I think what you mean is: we don't need the in-memory dax-rmap tracking now.
+>> Just ask the FS for the owner's information that associate with one page
+>> when memory-failure.  So, the per-page (even per-extent) dax-rmap is
+>> needless in this case.  Is this right?
+> 
+> Right.  XFS already has its own rmap tree.
+> 
+>> Based on this, we only need to store the extent information of a fsdax page
+>> in its ->mapping (by searching from FS).  Then obtain the owners of this
+>> page (also by searching from FS) when memory-failure or other rmap case
+>> occurs.
+> 
+> I don't even think you need that much.  All you need is the "physical"
+> offset of that page within the pmem device (e.g. 'this is the 307th 4k
+> page == offset 1257472 since the start of /dev/pmem0') and xfs can look
+> up the owner of that range of physical storage and deal with it as
+> needed.
 
-diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-index d1b313fa7b96..af3d6d9ead28 100644
---- a/drivers/firmware/imx/scu-pd.c
-+++ b/drivers/firmware/imx/scu-pd.c
-@@ -167,8 +167,18 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
- 	{ "dc0-pll", IMX_SC_R_DC_0_PLL_0, 2, true, 0 },
- 
- 	/* CM40 SS */
--	{ "cm40_i2c", IMX_SC_R_M4_0_I2C, 1, false, 0 },
--	{ "cm40_intmux", IMX_SC_R_M4_0_INTMUX, 1, false, 0 },
-+	{ "cm40-i2c", IMX_SC_R_M4_0_I2C, 1, false, 0 },
-+	{ "cm40-intmux", IMX_SC_R_M4_0_INTMUX, 1, false, 0 },
-+	{ "cm40-pid", IMX_SC_R_M4_0_PID0, 5, true, 0},
-+	{ "cm40-mu-a1", IMX_SC_R_M4_0_MU_1A, 1, false, 0},
-+	{ "cm40-lpuart", IMX_SC_R_M4_0_UART, 1, false, 0},
-+
-+	/* CM41 SS */
-+	{ "cm41-i2c", IMX_SC_R_M4_1_I2C, 1, false, 0 },
-+	{ "cm41-intmux", IMX_SC_R_M4_1_INTMUX, 1, false, 0 },
-+	{ "cm41-pid", IMX_SC_R_M4_1_PID0, 5, true, 0},
-+	{ "cm41-mu-a1", IMX_SC_R_M4_1_MU_1A, 1, false, 0},
-+	{ "cm41-lpuart", IMX_SC_R_M4_1_UART, 1, false, 0},
- };
- 
- static const struct imx_sc_pd_soc imx8qxp_scu_pd = {
--- 
-2.16.4
+Yes, I think so.
+
+> 
+>> So, a fsdax page is no longer associated with a specific file, but with a
+>> FS(or the pmem device).  I think it's easier to understand and implement.
+> 
+> Yes.  I also suspect this will be necessary to support reflink...
+> 
+> --D
+
+OK, Thank you very much.
+
+
+--
+Thanks,
+Ruan Shiyang.
+
+> 
+>>
+>> --
+>> Thanks,
+>> Ruan Shiyang.
+>>>
+>>> At the moment, this "dax association" is used to "report" a storage
+>>> media error directly to userspace. I say "report" because what it
+>>> does is kill userspace processes dead. The storage media error
+>>> actually needs to be reported to the owner of the storage media,
+>>> which in the case of FS-DAX is the filesytem.
+>>>
+>>> That way the filesystem can then look up all the owners of that bad
+>>> media range (i.e. the filesystem block it corresponds to) and take
+>>> appropriate action. e.g.
+>>>
+>>> - if it falls in filesytem metadata, shutdown the filesystem
+>>> - if it falls in user data, call the "kill userspace dead" routines
+>>>     for each mapping/index tuple the filesystem finds for the given
+>>>     LBA address that the media error occurred.
+>>>
+>>> Right now if the media error is in filesystem metadata, the
+>>> filesystem isn't even told about it. The filesystem can't even shut
+>>> down - the error is just dropped on the floor and it won't be until
+>>> the filesystem next tries to reference that metadata that we notice
+>>> there is an issue.
+>>>
+>>> Cheers,
+>>>
+>>> Dave.
+>>>
+>>
+>>
+> 
+> 
+
 
