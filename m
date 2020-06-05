@@ -2,180 +2,123 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26391C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C39A207ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14944207ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgFECbV (ORCPT
+        id S1726090AbgFECc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:31:21 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:50835 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725944AbgFECbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:31:21 -0400
-X-IronPort-AV: E=Sophos;i="5.73,474,1583164800"; 
-   d="scan'208";a="93872612"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 05 Jun 2020 10:31:16 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id BB1894BCC8B9;
-        Fri,  5 Jun 2020 10:31:13 +0800 (CST)
-Received: from [10.167.225.141] (10.167.225.141) by
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 5 Jun 2020 10:31:13 +0800
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogUmU6IFtSRkMgUEFUQ0ggMC84XSBkYXg6IEFkZCBh?=
- =?UTF-8?Q?_dax-rmap_tree_to_support_reflink?=
-To:     Dave Chinner <david@fromorbit.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
-        "Qi, Fuli" <qi.fuli@fujitsu.com>,
-        "Gotou, Yasunori" <y-goto@fujitsu.com>
-References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
- <20200427122836.GD29705@bombadil.infradead.org>
- <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
- <20200428064318.GG2040@dread.disaster.area>
- <153e13e6-8685-fb0d-6bd3-bb553c06bf51@cn.fujitsu.com>
- <20200604145107.GA1334206@magnolia>
- <20200605013023.GZ2040@dread.disaster.area>
-From:   Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
-Message-ID: <841a9dbb-daa7-3827-6bf9-664187e45a94@cn.fujitsu.com>
-Date:   Fri, 5 Jun 2020 10:30:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 22:32:29 -0400
+Received: from mga03.intel.com ([134.134.136.65]:49832 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgFECc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:32:28 -0400
+IronPort-SDR: Zz5tm6WpH3scY/quHL0PfDsaB+xCA05FidCGxV6F9KXU9PxUPL7OkKb1pwLX6/+3xqk5igBhQw
+ sODVQzNf6tUg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 19:32:21 -0700
+IronPort-SDR: WobUmolIS7EeRo2skFMP8m8/Y/sJgss61yNsN0YN3mOJiaqoP7yByWQlnWM56W0XUNdVW4ZBB6
+ 58yNl/qI4A3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,474,1583222400"; 
+   d="scan'208";a="294542056"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.141]) ([10.238.4.141])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Jun 2020 19:32:18 -0700
+Reply-To: like.xu@intel.com
+Subject: Re: [PATCH][v6] KVM: X86: support APERF/MPERF registers
+To:     Li RongQing <lirongqing@baidu.com>
+References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org,
+        hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de,
+        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, pbonzini@redhat.com,
+        xiaoyao.li@intel.com, wei.huang2@amd.com
+From:   "Xu, Like" <like.xu@intel.com>
+Organization: Intel OTC
+Message-ID: <be39b88c-bfb7-0634-c53b-f00d8fde643c@intel.com>
+Date:   Fri, 5 Jun 2020 10:32:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200605013023.GZ2040@dread.disaster.area>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.225.141]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204)
-X-yoursite-MailScanner-ID: BB1894BCC8B9.AEB9F
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi RongQing,
 
+On 2020/6/5 9:44, Li RongQing wrote:
+> Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
+> this is confused to user when turbo is enable, and aperf/mperf
+> can be used to show current cpu frequency after 7d5905dc14a
+> "(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
+> so guest should support aperf/mperf capability
+>
+> This patch implements aperf/mperf by three mode: none, software
+> emulation, and pass-through
+>
+> None: default mode, guest does not support aperf/mperf
+s/None/Note
+>
+> Software emulation: the period of aperf/mperf in guest mode are
+> accumulated as emulated value
+>
+> Pass-though: it is only suitable for KVM_HINTS_REALTIME, Because
+> that hint guarantees we have a 1:1 vCPU:CPU binding and guaranteed
+> no over-commit.
+The flag "KVM_HINTS_REALTIME 0" (in the Documentation/virt/kvm/cpuid.rst)
+is claimed as "guest checks this feature bit to determine that vCPUs are never
+preempted for an unlimited time allowing optimizations".
 
-On 2020/6/5 上午9:30, Dave Chinner wrote:
-> On Thu, Jun 04, 2020 at 07:51:07AM -0700, Darrick J. Wong wrote:
->> On Thu, Jun 04, 2020 at 03:37:42PM +0800, Ruan Shiyang wrote:
->>>
->>>
->>> On 2020/4/28 下午2:43, Dave Chinner wrote:
->>>> On Tue, Apr 28, 2020 at 06:09:47AM +0000, Ruan, Shiyang wrote:
->>>>>
->>>>> 在 2020/4/27 20:28:36, "Matthew Wilcox" <willy@infradead.org> 写道:
->>>>>
->>>>>> On Mon, Apr 27, 2020 at 04:47:42PM +0800, Shiyang Ruan wrote:
->>>>>>>    This patchset is a try to resolve the shared 'page cache' problem for
->>>>>>>    fsdax.
->>>>>>>
->>>>>>>    In order to track multiple mappings and indexes on one page, I
->>>>>>>    introduced a dax-rmap rb-tree to manage the relationship.  A dax entry
->>>>>>>    will be associated more than once if is shared.  At the second time we
->>>>>>>    associate this entry, we create this rb-tree and store its root in
->>>>>>>    page->private(not used in fsdax).  Insert (->mapping, ->index) when
->>>>>>>    dax_associate_entry() and delete it when dax_disassociate_entry().
->>>>>>
->>>>>> Do we really want to track all of this on a per-page basis?  I would
->>>>>> have thought a per-extent basis was more useful.  Essentially, create
->>>>>> a new address_space for each shared extent.  Per page just seems like
->>>>>> a huge overhead.
->>>>>>
->>>>> Per-extent tracking is a nice idea for me.  I haven't thought of it
->>>>> yet...
->>>>>
->>>>> But the extent info is maintained by filesystem.  I think we need a way
->>>>> to obtain this info from FS when associating a page.  May be a bit
->>>>> complicated.  Let me think about it...
->>>>
->>>> That's why I want the -user of this association- to do a filesystem
->>>> callout instead of keeping it's own naive tracking infrastructure.
->>>> The filesystem can do an efficient, on-demand reverse mapping lookup
->>>> from it's own extent tracking infrastructure, and there's zero
->>>> runtime overhead when there are no errors present.
->>>
->>> Hi Dave,
->>>
->>> I ran into some difficulties when trying to implement the per-extent rmap
->>> tracking.  So, I re-read your comments and found that I was misunderstanding
->>> what you described here.
->>>
->>> I think what you mean is: we don't need the in-memory dax-rmap tracking now.
->>> Just ask the FS for the owner's information that associate with one page
->>> when memory-failure.  So, the per-page (even per-extent) dax-rmap is
->>> needless in this case.  Is this right?
->>
->> Right.  XFS already has its own rmap tree.
-> 
-> *nod*
-> 
->>> Based on this, we only need to store the extent information of a fsdax page
->>> in its ->mapping (by searching from FS).  Then obtain the owners of this
->>> page (also by searching from FS) when memory-failure or other rmap case
->>> occurs.
->>
->> I don't even think you need that much.  All you need is the "physical"
->> offset of that page within the pmem device (e.g. 'this is the 307th 4k
->> page == offset 1257472 since the start of /dev/pmem0') and xfs can look
->> up the owner of that range of physical storage and deal with it as
->> needed.
-> 
-> Right. If we have the dax device associated with the page that had
-> the failure, then we can determine the offset of the page into the
-> block device address space and that's all we need to find the owner
-> of the page in the filesystem.
-> 
-> Note that there may actually be no owner - the page that had the
-> fault might land in free space, in which case we can simply zero
-> the page and clear the error.
+I couldn't see its relationship with "1:1 vCPU: pCPU binding".
+The patch doesn't check this flag as well for your pass-through purpose.
 
-OK.  Thanks for pointing out.
-
-> 
->>> So, a fsdax page is no longer associated with a specific file, but with a
->>> FS(or the pmem device).  I think it's easier to understand and implement.
-> 
-> Effectively, yes. But we shouldn't need to actually associate the
-> page with anything at the filesystem level because it is already
-> associated with a DAX device at a lower level via a dev_pagemap.
-> The hardware page fault already runs thought this code
-> memory_failure_dev_pagemap() before it gets to the DAX code, so
-> really all we need to is have that function pass us the page, offset
-> into the device and, say, the struct dax_device associated with that
-> page so we can get to the filesystem superblock we can then use for
-> rmap lookups on...
-> 
-
-OK.  I was just thinking about how can I execute the FS rmap search from 
-the memory-failure.  Thanks again for pointing out. :)
-
-
---
 Thanks,
-Ruan Shiyang.
-
-> Cheers,
-> 
-> Dave.
-> 
-
+Like Xu
+>
+> And a per-VM capability is added to configure aperfmperf mode
+>
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> Signed-off-by: Chai Wen <chaiwen@baidu.com>
+> Signed-off-by: Jia Lina <jialina01@baidu.com>
+> ---
+> diff v5:
+> return error if guest is configured with mperf/aperf, but host cpu has not
+>
+> diff v4:
+> fix maybe-uninitialized warning
+>
+> diff v3:
+> fix interception of MSR_IA32_MPERF/APERF in svm
+>
+> diff v2:
+> support aperfmperf pass though
+> move common codes to kvm_get_msr_common
+>
+> diff v1:
+> 1. support AMD, but not test
+> 2. support per-vm capability to enable
+>
+>
+>   Documentation/virt/kvm/api.rst  | 10 ++++++++++
+>   arch/x86/include/asm/kvm_host.h | 11 +++++++++++
+>   arch/x86/kvm/cpuid.c            | 15 ++++++++++++++-
+>   arch/x86/kvm/svm/svm.c          |  8 ++++++++
+>   arch/x86/kvm/vmx/vmx.c          |  6 ++++++
+>   arch/x86/kvm/x86.c              | 42 +++++++++++++++++++++++++++++++++++++++++
+>   arch/x86/kvm/x86.h              | 15 +++++++++++++++
+>   include/uapi/linux/kvm.h        |  1 +
+>   8 files changed, 107 insertions(+), 1 deletion(-)
 
