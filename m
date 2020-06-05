@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F676C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2298C20820
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1B620878
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366552;
-	bh=Scdha6iQPtZn1Tntw8fZXJD+kymQVK8iBLPJRJSVIsI=;
+	s=default; t=1591366554;
+	bh=nZhiGEfILEKMt44G8xrubVFUgbwYyN4KAnoxAwiFdG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHjPvIwceEXxOBiaE9VEyuqsN2bx+HSfRGldmFfGzthD/R2a7BcdmVrq/4Q2+TdbE
-	 F7cdlGAtqeUrLOZx07+6kmmWkwyBLfMMW97duQQtjm0ImbC3bWQGcWAoKJqN/M4P5o
-	 XEB008P4FFK3HrmqCLf+uCNc+6C3ID3O65CfuITc=
+	b=o2VGKCsFrBT/r5ML4AN3mcg2me/lT8GfTlxdvPTPN5nX7y+uCotFb0+XlrsW2YJtd
+	 2VcGVijo7a6PyTR1g8Ws1Ak7iyotikvY4vxGXRn9QlYH+VJSfLg6U/GYDbbfbMniX8
+	 0OTHTa9fpExkgPNq1SxBp8iLs10fCu7lZCzzrgis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgFEOPv (ORCPT
+        id S1728076AbgFEOPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44538 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbgFEOPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:15:49 -0400
+        id S1726553AbgFEOPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:15:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 782A12063A;
-        Fri,  5 Jun 2020 14:15:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA302063A;
+        Fri,  5 Jun 2020 14:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366548;
-        bh=Scdha6iQPtZn1Tntw8fZXJD+kymQVK8iBLPJRJSVIsI=;
+        s=default; t=1591366551;
+        bh=nZhiGEfILEKMt44G8xrubVFUgbwYyN4KAnoxAwiFdG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=miPZep2DTNdM+nJ/hVYTsC2KHbFXbhBzuJlhMFaYMJl8j1WcJ+lYuhc+gs8yvwCkr
-         kJhwEZ/A+1V+iTHqavN/S8TTJAmliLcG4BuqMRSGj/9AQroQdVrcGvXZFz/6dZXh8C
-         D5f69YhAava2tLzV6f2jBvuVGO06d2jM3shinWFU=
+        b=KZC1ucohzrIvk7vnuOMq7wxk/KZt4vXQO7/XwDSFqrRP2HCMckOpqQNIafeKdlx0V
+         w/JpAORlqeYpK3Q2bw1lOMPRALEgvIh1pSYV1BzSPeo0G6sucnY/KDZi8VViij3asV
+         b9ZzOc1h7Eqsell2UeWposx/5k5tnUf8jnmwpQek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bingbu Cao <bingbu.cao@intel.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.7 11/14] media: Revert "staging: imgu: Address a compiler warning on alignment"
-Date:   Fri,  5 Jun 2020 16:15:01 +0200
-Message-Id: <20200605135951.686677573@linuxfoundation.org>
+Subject: [PATCH 5.7 12/14] media: staging: ipu3-imgu: Move alignment attribute to field
+Date:   Fri,  5 Jun 2020 16:15:02 +0200
+Message-Id: <20200605135951.740540761@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605135951.018731965@linuxfoundation.org>
 References: <20200605135951.018731965@linuxfoundation.org>
@@ -63,13 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-commit 81d1adeb52c97fbe097e8c94e36c3eb702cdb110 upstream.
+commit 8c038effd893920facedf18c2c0976cec4a33408 upstream.
 
-This reverts commit c9d52c114a9fcc61c30512c7f810247a9f2812af.
-
-The patch being reverted changed the memory layout of struct
-ipu3_uapi_acc_param. Revert it, and address the compiler warning issues in
-further patches.
+Move the alignment attribute of struct ipu3_uapi_awb_fr_config_s to the
+field in struct ipu3_uapi_4a_config, the other location where the struct
+is used.
 
 Fixes: commit c9d52c114a9f ("media: staging: imgu: Address a compiler warning on alignment")
 Reported-by: Tomasz Figa <tfiga@chromium.org>
@@ -80,19 +78,29 @@ Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/ipu3/include/intel-ipu3.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/ipu3/include/intel-ipu3.h |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 --- a/drivers/staging/media/ipu3/include/intel-ipu3.h
 +++ b/drivers/staging/media/ipu3/include/intel-ipu3.h
-@@ -2477,7 +2477,7 @@ struct ipu3_uapi_acc_param {
- 	struct ipu3_uapi_yuvp1_yds_config yds2 __attribute__((aligned(32)));
- 	struct ipu3_uapi_yuvp2_tcc_static_config tcc __attribute__((aligned(32)));
- 	struct ipu3_uapi_anr_config anr;
--	struct ipu3_uapi_awb_fr_config_s awb_fr __attribute__((aligned(32)));
-+	struct ipu3_uapi_awb_fr_config_s awb_fr;
- 	struct ipu3_uapi_ae_config ae;
- 	struct ipu3_uapi_af_config_s af;
- 	struct ipu3_uapi_awb_config awb;
+@@ -450,7 +450,7 @@ struct ipu3_uapi_awb_fr_config_s {
+ 	__u32 bayer_sign;
+ 	__u8 bayer_nf;
+ 	__u8 reserved2[7];
+-} __attribute__((aligned(32))) __packed;
++} __packed;
+ 
+ /**
+  * struct ipu3_uapi_4a_config - 4A config
+@@ -466,7 +466,8 @@ struct ipu3_uapi_4a_config {
+ 	struct ipu3_uapi_ae_grid_config ae_grd_config;
+ 	__u8 padding[20];
+ 	struct ipu3_uapi_af_config_s af_config;
+-	struct ipu3_uapi_awb_fr_config_s awb_fr_config;
++	struct ipu3_uapi_awb_fr_config_s awb_fr_config
++		__attribute__((aligned(32)));
+ } __packed;
+ 
+ /**
 
 
