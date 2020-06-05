@@ -2,69 +2,129 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8817D207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591327822;
-	bh=YoKaxoQrK7Osc6T4J4lNYKJvT4VflmusOih32WK85n8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=fLrL9EDb5G8zltWF8MJhbEMkwA6U7CebbedQNIeb50Hn4fRuPIDK1cxS0IoX74Pkl
-	 waD+PsrEAOcpioi6Z0JILk433WDvvj8WeTubGGs0K16mxrgffPc+y50zPIJRqsreZg
-	 wYtaGiwgSw68BEEEEalSokpLsV0WBlmgVVQH8/WI=
+	by mail.kernel.org (Postfix) with ESMTP id D10D0207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:32:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiErTzza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgFEDaV (ORCPT
+        id S1728010AbgFEDcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:30:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbgFEDaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:30:18 -0400
-Subject: Re: [GIT PULL] Devicetree updates for v5.8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591327817;
-        bh=YoKaxoQrK7Osc6T4J4lNYKJvT4VflmusOih32WK85n8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qZwSVoH6WB3Csesg5APOpvk/SNdIIfU92Jel1f+gaQdGlGK+W7IMxRs4//QBsAyVW
-         01arOnbzpY1VjeXx6jc3fkrxBlYbQxT1UErINKMe3wrxd21ZrRucJKD3qEURNva196
-         aJFcn87894mEBgreyV9C3B4hCrfzWZMDnfxI7/OE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200604220459.GA4123489@bogus>
-References: <20200604220459.GA4123489@bogus>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200604220459.GA4123489@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-for-5.8
-X-PR-Tracked-Commit-Id: 8211d1e83aded34631aa87fa37f97d7bb712e925
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 571d54ed91c0fae174d933683c0c2e11c84843d9
-Message-Id: <159132781765.11934.17450794719901004031.pr-tracker-bot@kernel.org>
-Date:   Fri, 05 Jun 2020 03:30:17 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Thu, 4 Jun 2020 23:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgFEDcr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 23:32:47 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52980C08C5C0;
+        Thu,  4 Jun 2020 20:32:46 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id d7so8792594ioq.5;
+        Thu, 04 Jun 2020 20:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IJPenuFpVQx0seln/2dhfFsuGNNRm+UZljRAm/AqGEU=;
+        b=MiErTzzaT/PL3m/OS3OyrwrC6z+MwypmJk0i8+CZtkeIpwIXb7dASWDz86qGp6MT3G
+         FJvG3eA5rF2AYahvF/mv6FgxBmKfg8+qVxthXvdCfEHFxx+PEvmgH6PG1LOUmNnsNDdO
+         K3R/oh7eckba8nnLxO1cRHHHxzX5U1T3lUJxurEp87Vs/UMKzL1VIFFIbUCgxHxaLgMG
+         iOzoi+A5aN8b69VblICG9RmWlASoQWhTFoK9BPj5zFfcKROqMe/EYFIdIeLZFMqN3ej7
+         krWP1MD9yZ3dT5ECXByCFKtdNm/m0W/pH0zCzRfbz5JS7Er8Dr1mygmBzN4dFGhMxxdo
+         E2lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IJPenuFpVQx0seln/2dhfFsuGNNRm+UZljRAm/AqGEU=;
+        b=pemwabohi3DmsBiPuqrJsICyos5WLcDERDAbxr9DsTsqAR7956ezWoqi8PkBxtyBU5
+         xhCW4GDueiUJM6Dn5wire6sHG+/bkSMu1RH4VUv4lfTyMEcgnLAK9y+pEl0QZ9QmzvMi
+         IzTDJR7pdn2tDBr8eswJ135JgiLDIOw18J13iuwdcUe4zteQyThAcP402uFRV5suGBB5
+         1QFZKPajh6mNx1iVUyHWno5KzZ3pFB+wiO5vo/2Rwxtrxw6WE19TSwSmv4sYxblso4kP
+         L07RwdS99scb++++X9o3UOFm+nCvgj0DvX+01eH5P6vI/iHjzDCtgEA5oYIHnaScm3z1
+         IN2A==
+X-Gm-Message-State: AOAM531grXGrk88lGCJ5B7XAXfC0QtzAnQZ9SY3ucB1tFCoqJtYWM/Db
+        RRoOM0/Sa0bbrAmaTma1AH8=
+X-Google-Smtp-Source: ABdhPJwRa2Z/m55HcVea1dDNvCKek/cSG6DIqGXdC4XhaAbVQRT83cYwoF0le9D7FEU0ikAN8oZ0TQ==
+X-Received: by 2002:a6b:39c3:: with SMTP id g186mr6519042ioa.91.1591327965688;
+        Thu, 04 Jun 2020 20:32:45 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id c72sm2464004ilg.3.2020.06.04.20.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 20:32:45 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
+        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] can: xilinx_can: handle failure cases of pm_runtime_get_sync
+Date:   Thu,  4 Jun 2020 22:32:39 -0500
+Message-Id: <20200605033239.60664-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 4 Jun 2020 16:04:59 -0600:
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-5.8
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/net/can/xilinx_can.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/571d54ed91c0fae174d933683c0c2e11c84843d9
-
-Thank you!
-
+diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+index c1dbab8c896d..748ff70f6a7b 100644
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -1391,7 +1391,7 @@ static int xcan_open(struct net_device *ndev)
+ 	if (ret < 0) {
+ 		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
+ 			   __func__, ret);
+-		return ret;
++		goto err;
+ 	}
+ 
+ 	ret = request_irq(ndev->irq, xcan_interrupt, priv->irq_flags,
+@@ -1475,6 +1475,7 @@ static int xcan_get_berr_counter(const struct net_device *ndev,
+ 	if (ret < 0) {
+ 		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
+ 			   __func__, ret);
++		pm_runtime_put(priv->dev);
+ 		return ret;
+ 	}
+ 
+@@ -1789,7 +1790,7 @@ static int xcan_probe(struct platform_device *pdev)
+ 	if (ret < 0) {
+ 		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
+ 			   __func__, ret);
+-		goto err_pmdisable;
++		goto err_disableclks;
+ 	}
+ 
+ 	if (priv->read_reg(priv, XCAN_SR_OFFSET) != XCAN_SR_CONFIG_MASK) {
+@@ -1824,7 +1825,6 @@ static int xcan_probe(struct platform_device *pdev)
+ 
+ err_disableclks:
+ 	pm_runtime_put(priv->dev);
+-err_pmdisable:
+ 	pm_runtime_disable(&pdev->dev);
+ err_free:
+ 	free_candev(ndev);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.17.1
+
