@@ -2,156 +2,73 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDACC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53521C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2EB0206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bjwg4Elw"
+	by mail.kernel.org (Postfix) with ESMTP id 3C708206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgFEMwo (ORCPT
+        id S1726762AbgFEMzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:52:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30713 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726553AbgFEMwn (ORCPT
+        Fri, 5 Jun 2020 08:55:50 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:58710 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726553AbgFEMzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:52:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591361562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=A8kNEVeRCF9+y3k5ZAIQfT6doRtq7dwlic2ox+e/gW4=;
-        b=bjwg4ElwLOSZSPESVf7kTNMvwIUY0LClarkhUfi00yo8YbpL3cG1nNvp8X7tTfTfppqO4b
-        ZNv1xl0gULbnTwGYkEOv+7KoKQemgZr1O9/wmfoE2ZBJL9klXS/irSZq7xsHPnzntWtB4a
-        /B0UYupD2qsYzDEmHt9VYXC1heiDzQk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-fR5KWv9UPeW1nysCpKfoew-1; Fri, 05 Jun 2020 08:52:38 -0400
-X-MC-Unique: fR5KWv9UPeW1nysCpKfoew-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3807C100AA2C;
-        Fri,  5 Jun 2020 12:52:36 +0000 (UTC)
-Received: from [10.36.114.72] (ovpn-114-72.ams2.redhat.com [10.36.114.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5830B891C1;
-        Fri,  5 Jun 2020 12:52:33 +0000 (UTC)
-Subject: Re: [PATCH] iommu/mediatek: Use totalram_pages to setup enable_4GB
-From:   David Hildenbrand <david@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Miles Chen <miles.chen@mediatek.com>, wsd_upstream@mediatek.com,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        Chao Hao <chao.hao@mediatek.com>,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org, Yong Wu <yong.wu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
-References: <20200604080120.2628-1-miles.chen@mediatek.com>
- <55820901-430b-14c4-9426-7a4991ca0eed@redhat.com>
- <1591264174.12661.17.camel@mtkswgap22>
- <f02c8c9d-ed75-6513-f8a9-a2fdbb11b750@redhat.com>
- <20200604150643.GA29193@infradead.org>
- <f62c9623-bf5c-6fdb-afa5-9ff04c8fde70@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <59531654-a1fd-09cf-bb33-ae3fe5363298@redhat.com>
-Date:   Fri, 5 Jun 2020 14:52:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 08:55:50 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1869643|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_social|0.00106272-0.000406173-0.998531;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.Hib7hso_1591361738;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.Hib7hso_1591361738)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Fri, 05 Jun 2020 20:55:47 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     chaotian.jing@mediatek.com, ulf.hansson@linaro.org,
+        matthias.bgg@gmail.com, mripard@kernel.org, wens@csie.org,
+        tiny.windzz@gmail.com, rmfrfs@gmail.com, frank@allwinnertech.com,
+        marex@denx.de, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] mmc: mediatek: do not hide address in msdc_request_timeout()
+Date:   Fri,  5 Jun 2020 20:55:45 +0800
+Message-Id: <20200605125545.31974-2-frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200605125545.31974-1-frank@allwinnertech.com>
+References: <20200605125545.31974-1-frank@allwinnertech.com>
 MIME-Version: 1.0
-In-Reply-To: <f62c9623-bf5c-6fdb-afa5-9ff04c8fde70@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.20 17:27, David Hildenbrand wrote:
-> On 04.06.20 17:06, Christoph Hellwig wrote:
->> On Thu, Jun 04, 2020 at 01:32:40PM +0200, David Hildenbrand wrote:
->>> Just a thought: If memory hotplug is applicable as well, you might
->>> either want to always assume data->enable_4GB, or handle memory hotplug
->>> events from the memory notifier, when new memory gets onlined (not sure
->>> how tricky that is).
->>
->> We probably want a highest_pfn_possible() or similar API instead of
->> having drivers poking into random VM internals.
-> 
-> Well, memory notifiers are a reasonable api used accross the kernel to
-> get notified when new memory is onlined to the buddy that could be used
-> for allocations.
-> 
-> highest_pfn_possible() would have to default to something linked to
-> MAX_PHYSMEM_BITS whenever memory hotplug is configured, I am not sure
-> how helpful that is (IOW, you can just default to enable_4GB=true in
-> that case instead in most cases).
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-Correction: At least on x86-64 we have max_possible_pfn, which will
-consult the ACPI SRAT table to figure out the maximum possible PFN.
-(Without SRAT, max_possible_pfn will point at the end of initial boot
-memory and not consider hotplug memory - something that e.g., newer QEMU
-versions work around by creating SRAT tables if memory hotplug might be
-possible, even if there is no actual NUMA configuration).
+Using %px to show the actual address in msdc_request_timeout()
+to help us to debug issue.
 
-pci-swiotlb.c similarly relies on that to figure out if there are any
-!DMA addresses to handle.
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Frank Lee <frank@allwinnertech.com>
+---
+ drivers/mmc/host/mtk-sd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 39e7fc54c438..28b4a136fc72 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -1411,7 +1411,7 @@ static void msdc_request_timeout(struct work_struct *work)
+ 	/* simulate HW timeout status */
+ 	dev_err(host->dev, "%s: aborting cmd/data/mrq\n", __func__);
+ 	if (host->mrq) {
+-		dev_err(host->dev, "%s: aborting mrq=%p cmd=%d\n", __func__,
++		dev_err(host->dev, "%s: aborting mrq=%px cmd=%d\n", __func__,
+ 				host->mrq, host->mrq->cmd->opcode);
+ 		if (host->cmd) {
+ 			dev_err(host->dev, "%s: aborting cmd=%d\n",
 -- 
-Thanks,
-
-David / dhildenb
+2.24.0
 
