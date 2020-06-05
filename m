@@ -2,190 +2,308 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23E620738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CABF20738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgFECMR (ORCPT
+        id S1726084AbgFECNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:12:17 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:16941 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725601AbgFECMQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:12:16 -0400
-X-IronPort-AV: E=Sophos;i="5.73,474,1583164800"; 
-   d="scan'208";a="93871124"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 05 Jun 2020 10:12:12 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id DF8CC4BCC8A8;
-        Fri,  5 Jun 2020 10:12:07 +0800 (CST)
-Received: from [10.167.225.141] (10.167.225.141) by
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 5 Jun 2020 10:12:08 +0800
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogUmU6IFtSRkMgUEFUQ0ggMC84XSBkYXg6IEFkZCBh?=
- =?UTF-8?Q?_dax-rmap_tree_to_support_reflink?=
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
-        "Qi, Fuli" <qi.fuli@fujitsu.com>,
-        "Gotou, Yasunori" <y-goto@fujitsu.com>
-References: <20200427084750.136031-1-ruansy.fnst@cn.fujitsu.com>
- <20200427122836.GD29705@bombadil.infradead.org>
- <em33c55fa5-15ca-4c46-8c27-6b0300fa4e51@g08fnstd180058>
- <20200428064318.GG2040@dread.disaster.area>
- <153e13e6-8685-fb0d-6bd3-bb553c06bf51@cn.fujitsu.com>
- <20200604145107.GA1334206@magnolia>
-From:   Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
-Message-ID: <b9f3e089-476d-b31f-c2f2-0dfb8741b584@cn.fujitsu.com>
-Date:   Fri, 5 Jun 2020 10:11:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 22:13:35 -0400
+Received: from mga12.intel.com ([192.55.52.136]:37038 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgFECNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:13:33 -0400
+IronPort-SDR: 01CEsNVrnqV8kkESzOoKJS2LJfmyUh90NK5ACBd8q5Qje8Ik1lGljaZPfyf3vtF+1cpaA+a+jS
+ w0RMJiadz02Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 19:12:31 -0700
+IronPort-SDR: uBZCnW47vhqASYTQw67hEfMf2OLrdUlZRX2RjdFTVDlO53dtx/Wg2n95mRNB5KuUs/dCfU0lhD
+ YMSXiuq90jVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,474,1583222400"; 
+   d="scan'208";a="258549649"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga007.jf.intel.com with ESMTP; 04 Jun 2020 19:12:28 -0700
+Date:   Thu, 4 Jun 2020 22:02:31 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com,
+        xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 07/10] vfio/pci: introduce a new irq type
+ VFIO_IRQ_TYPE_REMAP_BAR_REGION
+Message-ID: <20200605020231.GE12300@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200518025245.14425-1-yan.y.zhao@intel.com>
+ <20200529154547.19a6685f@x1.home>
+ <20200601065726.GA5906@joy-OptiPlex-7040>
+ <20200601104307.259b0fe1@x1.home>
+ <20200602082858.GA8915@joy-OptiPlex-7040>
+ <20200602133435.1ab650c5@x1.home>
+ <20200603014058.GA12300@joy-OptiPlex-7040>
+ <20200603170452.7f172baf@x1.home>
+ <20200604024228.GD12300@joy-OptiPlex-7040>
+ <20200603221058.1927a0fc@x1.home>
 MIME-Version: 1.0
-In-Reply-To: <20200604145107.GA1334206@magnolia>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.225.141]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204)
-X-yoursite-MailScanner-ID: DF8CC4BCC8A8.AF5BC
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200603221058.1927a0fc@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/6/4 下午10:51, Darrick J. Wong wrote:
-> On Thu, Jun 04, 2020 at 03:37:42PM +0800, Ruan Shiyang wrote:
->>
->>
->> On 2020/4/28 下午2:43, Dave Chinner wrote:
->>> On Tue, Apr 28, 2020 at 06:09:47AM +0000, Ruan, Shiyang wrote:
->>>>
->>>> 在 2020/4/27 20:28:36, "Matthew Wilcox" <willy@infradead.org> 写道:
->>>>
->>>>> On Mon, Apr 27, 2020 at 04:47:42PM +0800, Shiyang Ruan wrote:
->>>>>>    This patchset is a try to resolve the shared 'page cache' problem for
->>>>>>    fsdax.
->>>>>>
->>>>>>    In order to track multiple mappings and indexes on one page, I
->>>>>>    introduced a dax-rmap rb-tree to manage the relationship.  A dax entry
->>>>>>    will be associated more than once if is shared.  At the second time we
->>>>>>    associate this entry, we create this rb-tree and store its root in
->>>>>>    page->private(not used in fsdax).  Insert (->mapping, ->index) when
->>>>>>    dax_associate_entry() and delete it when dax_disassociate_entry().
->>>>>
->>>>> Do we really want to track all of this on a per-page basis?  I would
->>>>> have thought a per-extent basis was more useful.  Essentially, create
->>>>> a new address_space for each shared extent.  Per page just seems like
->>>>> a huge overhead.
->>>>>
->>>> Per-extent tracking is a nice idea for me.  I haven't thought of it
->>>> yet...
->>>>
->>>> But the extent info is maintained by filesystem.  I think we need a way
->>>> to obtain this info from FS when associating a page.  May be a bit
->>>> complicated.  Let me think about it...
->>>
->>> That's why I want the -user of this association- to do a filesystem
->>> callout instead of keeping it's own naive tracking infrastructure.
->>> The filesystem can do an efficient, on-demand reverse mapping lookup
->>> from it's own extent tracking infrastructure, and there's zero
->>> runtime overhead when there are no errors present.
->>
->> Hi Dave,
->>
->> I ran into some difficulties when trying to implement the per-extent rmap
->> tracking.  So, I re-read your comments and found that I was misunderstanding
->> what you described here.
->>
->> I think what you mean is: we don't need the in-memory dax-rmap tracking now.
->> Just ask the FS for the owner's information that associate with one page
->> when memory-failure.  So, the per-page (even per-extent) dax-rmap is
->> needless in this case.  Is this right?
+On Wed, Jun 03, 2020 at 10:10:58PM -0600, Alex Williamson wrote:
+> On Wed, 3 Jun 2020 22:42:28 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> Right.  XFS already has its own rmap tree.
+> > On Wed, Jun 03, 2020 at 05:04:52PM -0600, Alex Williamson wrote:
+> > > On Tue, 2 Jun 2020 21:40:58 -0400
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > On Tue, Jun 02, 2020 at 01:34:35PM -0600, Alex Williamson wrote:  
+> > > > > I'm not at all happy with this.  Why do we need to hide the migration
+> > > > > sparse mmap from the user until migration time?  What if instead we
+> > > > > introduced a new VFIO_REGION_INFO_CAP_SPARSE_MMAP_SAVING capability
+> > > > > where the existing capability is the normal runtime sparse setup and
+> > > > > the user is required to use this new one prior to enabled device_state
+> > > > > with _SAVING.  The vendor driver could then simply track mmap vmas to
+> > > > > the region and refuse to change device_state if there are outstanding
+> > > > > mmaps conflicting with the _SAVING sparse mmap layout.  No new IRQs
+> > > > > required, no new irqfds, an incremental change to the protocol,
+> > > > > backwards compatible to the extent that a vendor driver requiring this
+> > > > > will automatically fail migration.
+> > > > >     
+> > > > right. looks we need to use this approach to solve the problem.
+> > > > thanks for your guide.
+> > > > so I'll abandon the current remap irq way for dirty tracking during live
+> > > > migration.
+> > > > but anyway, it demos how to customize irq_types in vendor drivers.
+> > > > then, what do you think about patches 1-5?  
+> > > 
+> > > In broad strokes, I don't think we've found the right solution yet.  I
+> > > really question whether it's supportable to parcel out vfio-pci like
+> > > this and I don't know how I'd support unraveling whether we have a bug
+> > > in vfio-pci, the vendor driver, or how the vendor driver is making use
+> > > of vfio-pci.
+> > >
+> > > Let me also ask, why does any of this need to be in the kernel?  We
+> > > spend 5 patches slicing up vfio-pci so that we can register a vendor
+> > > driver and have that vendor driver call into vfio-pci as it sees fit.
+> > > We have two patches creating device specific interrupts and a BAR
+> > > remapping scheme that we've decided we don't need.  That brings us to
+> > > the actual i40e vendor driver, where the first patch is simply making
+> > > the vendor driver work like vfio-pci already does, the second patch is
+> > > handling the migration region, and the third patch is implementing the
+> > > BAR remapping IRQ that we decided we don't need.  It's difficult to
+> > > actually find the small bit of code that's required to support
+> > > migration outside of just dealing with the protocol we've defined to
+> > > expose this from the kernel.  So why are we trying to do this in the
+> > > kernel?  We have quirk support in QEMU, we can easily flip
+> > > MemoryRegions on and off, etc.  What access to the device outside of
+> > > what vfio-pci provides to the user, and therefore QEMU, is necessary to
+> > > implement this migration support for i40e VFs?  Is this just an
+> > > exercise in making use of the migration interface?  Thanks,
+> > >   
+> > hi Alex
+> > 
+> > There was a description of intention of this series in RFC v1
+> > (https://www.spinics.net/lists/kernel/msg3337337.html).
+> > sorry, I didn't include it in starting from RFC v2.
+> > 
+> > "
+> > The reason why we don't choose the way of writing mdev parent driver is
+> > that
 > 
->> Based on this, we only need to store the extent information of a fsdax page
->> in its ->mapping (by searching from FS).  Then obtain the owners of this
->> page (also by searching from FS) when memory-failure or other rmap case
->> occurs.
+> I didn't mention an mdev approach, I'm asking what are we accomplishing
+> by doing this in the kernel at all versus exposing the device as normal
+> through vfio-pci and providing the migration support in QEMU.  Are you
+> actually leveraging having some sort of access to the PF in supporting
+> migration of the VF?  Is vfio-pci masking the device in a way that
+> prevents migrating the state from QEMU?
+>
+yes, communication to PF is required. VF state is managed by PF and is
+queried from PF when VF is stopped.
+
+migration support in QEMU seems only suitable to devices with dirty
+pages and device state available by reading/writing device MMIOs, which
+is not the case for most devices.
+
+> > (1) VFs are almost all the time directly passthroughed. Directly binding
+> > to vfio-pci can make most of the code shared/reused. If we write a
+> > vendor specific mdev parent driver, most of the code (like passthrough
+> > style of rw/mmap) still needs to be copied from vfio-pci driver, which is
+> > actually a duplicated and tedious work.
+> > (2) For features like dynamically trap/untrap pci bars, if they are in
+> > vfio-pci, they can be available to most people without repeated code
+> > copying and re-testing.
+> > (3) with a 1:1 mdev driver which passes through VFs most of the time, people
+> > have to decide whether to bind VFs to vfio-pci or mdev parent driver before
+> > it runs into a real migration need. However, if vfio-pci is bound
+> > initially, they have no chance to do live migration when there's a need
+> > later.
+> > "
+> > particularly, there're some devices (like NVMe) they purely reply on
+> > vfio-pci to do device pass-through and they have no standalone parent driver
+> > to do mdev way.
+> > 
+> > I think live migration is a general requirement for most devices and to
+> > interact with the migration interface requires vendor drivers to do
+> > device specific tasks like geting/seting device state, starting/stopping
+> > devices, tracking dirty data, report migration capabilities... all those
+> > works need be in kernel.
 > 
-> I don't even think you need that much.  All you need is the "physical"
-> offset of that page within the pmem device (e.g. 'this is the 307th 4k
-> page == offset 1257472 since the start of /dev/pmem0') and xfs can look
-> up the owner of that range of physical storage and deal with it as
-> needed.
+> I think Alex Graf proved they don't necessarily need to be done in
+> kernel back in 2015: https://www.youtube.com/watch?v=4RFsSgzuFso
+> He was able to achieve i40e VF live migration by only hacking QEMU.  In
+I checked the qemu code. https://github.com/agraf/qemu/tree/vfio-i40vf.
+a new vfio-i40e device type is registered as a child type of vfio-pci, as well
+as its exclusive savevm handlers, which are not compatible to Kirti's
+general VFIO live migration framework.
 
-Yes, I think so.
-
+> this series you're allowing a vendor driver to interpose itself between
+> the user (QEMU) and vfio-pci such that we switch to the vendor code
+> during migration.  Why can't that interpose layer be in QEMU rather
+> than the kernel?  It seems that it only must be in the kernel if we
+> need to provide migration state via backdoor, perhaps like going
+> through the PF.  So what access to the i40e VF device is not provided to
+> the user through vfio-pci that is necessary to implement migration of
+> this device?  The tasks listed above are mostly standard device driver
+> activities and clearly vfio-pci allows userspace device drivers.
 > 
->> So, a fsdax page is no longer associated with a specific file, but with a
->> FS(or the pmem device).  I think it's easier to understand and implement.
+tasks like interacting with PF driver, preparing resources and tracking dirty
+pages in device internal memory, detecting of whether dirty page is able
+to be tracked by hardware and reporting migration capabilities, exposing
+hardware dirty bitmap buffer... all those are hard to be done in QEMU.
+
+maintaining migration code in kernel can also allow vendors to re-use common
+code for devices across generations. e.g. for i40e, in some generations,
+software dirty page track is used,  some generations hardware dirty
+track is enabled and some other generations leveraging IOMMU A/D bit is
+feasible. is QEMU quirks allowing such flexibility as in kernel?
+
+besides, migration version string as a sysfs attribute requires a vendor
+driver to generate.
+
+> > do you think it's better to create numerous vendor quirks in vfio-pci?
 > 
-> Yes.  I also suspect this will be necessary to support reflink...
+> In QEMU, perhaps.  Alternatively, let's look at exactly what access is
+> not provided through vfio-pci that's necessary for this and decide if
+> we want to enable that access or if cracking vfio-pci wide open for
+> vendor drivers to pick and choose when and how to use it is really the
+> right answer.
 > 
-> --D
+I think the position of vendor modules is just like vfio_pci_igd.c under
+vfio-pci. the difference is that the vendor modules are able to be
+dynamically loaded outside of vfio-pci.
 
-OK, Thank you very much.
-
-
---
-Thanks,
-Ruan Shiyang.
-
+> > as to this series, though patch 9/10 currently only demos reporting a
+> > migration region, it actually shows the capability iof vendor driver to
+> > customize device regions. e.g. in patch 10/10, it customizes the BAR0 to
+> > be read/write. and though we abandoned the REMAP BAR irq_type in patch
+> > 10/10 for migration purpose, I have to say this irq_type has its usage
+> > in other use cases, where synchronization is not a hard requirement and
+> > all it needs is a notification channel from kernel to use. this series
+> > just provides a possibility for vendors to customize device regions and
+> > irqs.
 > 
->>
->> --
->> Thanks,
->> Ruan Shiyang.
->>>
->>> At the moment, this "dax association" is used to "report" a storage
->>> media error directly to userspace. I say "report" because what it
->>> does is kill userspace processes dead. The storage media error
->>> actually needs to be reported to the owner of the storage media,
->>> which in the case of FS-DAX is the filesytem.
->>>
->>> That way the filesystem can then look up all the owners of that bad
->>> media range (i.e. the filesystem block it corresponds to) and take
->>> appropriate action. e.g.
->>>
->>> - if it falls in filesytem metadata, shutdown the filesystem
->>> - if it falls in user data, call the "kill userspace dead" routines
->>>     for each mapping/index tuple the filesystem finds for the given
->>>     LBA address that the media error occurred.
->>>
->>> Right now if the media error is in filesystem metadata, the
->>> filesystem isn't even told about it. The filesystem can't even shut
->>> down - the error is just dropped on the floor and it won't be until
->>> the filesystem next tries to reference that metadata that we notice
->>> there is an issue.
->>>
->>> Cheers,
->>>
->>> Dave.
->>>
->>
->>
-> 
-> 
+> I don't disagree that a device specific interrupt might be useful, but
+> I would object to implementing this one only as an artificial use case.
+> We can wait for a legitimate use case to implement that.
+>
+ok. sure.
 
+> > for interfaces exported in patch 3/10-5/10, they anyway need to be
+> > exported for writing mdev parent drivers that pass through devices at
+> > normal time to avoid duplication. and yes, your worry about
+> 
+> Where are those parent drivers?  What are their actual requirements?
+>
+if this way of registering vendor ops to vfio-pci is not permitted,
+vendors have to resort to writing its mdev parent drivers for VFs. Those
+parent drivers need to pass through VFs at normal time, doing exactly what
+vfio-pci does and only doing what vendor ops does during migration.
 
+if vfio-pci could export common code to those parent drivers, lots of
+duplicated code can be avoided.
+
+> > identification of bug sources is reasonable. but if a device is binding
+> > to vfio-pci with a vendor module loaded, and there's a bug, they can do at
+> > least two ways to identify if it's a bug in vfio-pci itself.
+> > (1) prevent vendor modules from loading and see if the problem exists
+> > with pure vfio-pci.
+> > (2) do what's demoed in patch 8/10, i.e. do nothing but simply pass all
+> > operations to vfio-pci.
+> 
+> The code split is still extremely ad-hoc, there's no API.  An mdev
+> driver isn't even a sub-driver of vfio-pci like you're trying to
+> accomplish here, there would need to be a much more defined API when
+> the base device isn't even a vfio_pci_device.  I don't see how this
+> series would directly enable an mdev use case.
+> 
+similar to Yi's series https://patchwork.kernel.org/patch/11320841/.
+we can parcel the vdev creation code in vfio_pci_probe() to allow calling from
+mdev parent probe routine. (of course, also need to parcel code to free vdev)
+e.g.
+
+void *vfio_pci_alloc_vdev(struct pci_dev *pdev, const struct pci_device_id *id)
+{
+	struct vfio_pci_device *vdev;
+        vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
+        if (!vdev) {
+                ret = -ENOMEM;
+                goto out_group_put;
+        }
+
+        vdev->pdev = pdev;
+        vdev->irq_type = VFIO_PCI_NUM_IRQS;
+        mutex_init(&vdev->igate);
+        spin_lock_init(&vdev->irqlock);
+        mutex_init(&vdev->ioeventfds_lock);
+        INIT_LIST_HEAD(&vdev->ioeventfds_list);
+	...
+	vfio_pci_probe_power_state(vdev);
+
+        if (!disable_idle_d3) {
+                vfio_pci_set_power_state(vdev, PCI_D0);
+                vfio_pci_set_power_state(vdev, PCI_D3hot);
+        }
+	return vdev;
+}
+
+static int vfio_mdev_pci_driver_probe(struct pci_dev *pdev, const struct pci_device_id *id))
+{
+
+       void *vdev = vfio_pci_alloc_vdev(pdev, id);
+
+       //save the vdev pointer 
+
+}
+then all the exported interfaces from this series can also benefit the
+mdev use case.
+
+> > so, do you think this series has its merit and we can continue improving
+> > it?
+> 
+> I think this series is trying to push an artificial use case that is
+> perhaps better done in userspace.  What is the actual interaction with
+> the VF device that can only be done in the host kernel for this
+> example?  Thanks,
+>
+yes, as with shaopeng's reply, looking forward to their early release of
+code.
+Besides, there're other real use cases as well, like NVMe, QAT.
+we can show the interactions for those devices as well.
+
+Thanks
+Yan
