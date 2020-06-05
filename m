@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE69C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08177C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8116A2074B
+	by mail.kernel.org (Postfix) with ESMTP id D6979207D8
 	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XXMpqOwr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mXXZdi6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgFEVGm (ORCPT
+        id S1728261AbgFEVHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
+        Fri, 5 Jun 2020 17:07:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgFEVGl (ORCPT
+        with ESMTP id S1727888AbgFEVHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:06:41 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11E2C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 14:06:40 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q16so4191479plr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 14:06:40 -0700 (PDT)
+        Fri, 5 Jun 2020 17:07:12 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D865BC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 14:07:12 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o8so5736124pgm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 14:07:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=jTFZ1Ntt0kQNuevlOB6AQQvurETxN1GO4XXrxqpEowE=;
-        b=XXMpqOwrg1ljeko+PJv6zkswcdEPWXabDr5dTWWlyRlic0+6DTvw5i0gF7mWBtLLvi
-         hPOrmw2bfjOlzUV/W33tnshN/uzU8OKT3q+so2ymM85dnPPNFjynBw+abclNukvfnc/N
-         dtkz4tRiS4qIo8O3v7NcDU93Xiw75XOh/xnIo=
+        bh=DIl1c/a1tJwzu9tj9OScxdWzLfr1jbFnh4gamMfxa4U=;
+        b=mXXZdi6vgof7yFFLz8NliqYNwbHFEsnjcD1553WxFYKTO+lNtkWjleP7CfaBTgtaLT
+         kIUVtn5rZ05qv7bMbRv7xg4VnziO3GIAvq3eObq5WOeJTUYqEK90uH8n4lq86F/4xRkd
+         o67qykTVOGIsy++F8bU8ZV7fdZi5diKQuY3rI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jTFZ1Ntt0kQNuevlOB6AQQvurETxN1GO4XXrxqpEowE=;
-        b=cDmpcg+G1PglMA0ATQYzZDlmXlWpUahI8lcAF1g2xFdt4iUOIAi9whjRnhte63xO+9
-         aotayD2GLZT7TuMyZtjwT1W7UG1TFM9kyJ4Av4UYjPg1p0AQ8YZLsqFMejnpSUDGIHGm
-         XBYHtmI4E7ollYExbe0sV7HtK3a63xszvZ3EljdI1tQcJX5eWrVPGwGmGLBb1dzSAOHF
-         t9L/5rohcKef2u8NnD4jKlZQdf2lETNdgT+I3x5z/mqivcFkOwXs1CTVQMJ6x2rdIjMB
-         H/n9+ZsKe5W5/b/IDw0S3MPQXQry/P0VUXJ/o9Oan8TxRYHHRI1Tme0qJQKi2baIAbGy
-         qzbQ==
-X-Gm-Message-State: AOAM530S28WOv/RLkfbswdEiu6XW6tTPkso+XpXRU6jYMPKzp7ceJ8ee
-        w3ju6BSpEcR/nVsrA0lceDh3Ag==
-X-Google-Smtp-Source: ABdhPJw9p3+Hn63u4279CMG0IiKsFJJeM4m/W9kT/nl2W8VMXr0TQpj7zoUQQHEP5v/V0lPhv9NCLQ==
-X-Received: by 2002:a17:90b:108b:: with SMTP id gj11mr5094045pjb.227.1591391200338;
-        Fri, 05 Jun 2020 14:06:40 -0700 (PDT)
+        bh=DIl1c/a1tJwzu9tj9OScxdWzLfr1jbFnh4gamMfxa4U=;
+        b=OisGn0ZRe5TsbI98JIq+xmxPDH0YQ2LAig26E4/HqHzl+WPaBTXek2Gtl9OwGaXOXs
+         dY7Iaf3FjXLk3BG1SeTtwnMq3iBhkLNJJ1MY21SsCPliuf0L1NOSqeRkmeoIzCil3U/H
+         Uvt4SPYX07RbAaBccpSO87DIClQVqFQ5fj7ZULunEIBbNDWCJPoOZaqw0OjKBCvbjiYB
+         ucP1LdgtdkiJtRJW1E7IdYQWOPj5TIpVfN4uWcCT2vy77N5AcHqL3CmbXLzh3iKfukVw
+         F9duXJkoIVnm5EZVyrwk1sWbZP9agFa1FoTrsW5jgCdmxxv7c/3zSxq9AnPKYcCLfPPS
+         0RHQ==
+X-Gm-Message-State: AOAM532Ey2La5Z0pe/IXMZ5SyNlGeE/Z9pb/T0Onyn7objqj1U4cuqlE
+        VxyymlSpBtbLY4vstTrOd6meTw==
+X-Google-Smtp-Source: ABdhPJw3UK7yUcQVNPpsOFwlgYtR9GiEv04lfxyiuj3QJg6BkE/hP4K05bbCQ0Ja4mdmIJqn069GoA==
+X-Received: by 2002:a65:6801:: with SMTP id l1mr11113171pgt.73.1591391232412;
+        Fri, 05 Jun 2020 14:07:12 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g29sm458387pfr.47.2020.06.05.14.06.39
+        by smtp.gmail.com with ESMTPSA id ca6sm8589394pjb.46.2020.06.05.14.07.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 14:06:39 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 14:06:38 -0700
+        Fri, 05 Jun 2020 14:07:11 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 14:07:10 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
 Cc:     Christoph Lameter <cl@linux.com>,
@@ -65,55 +65,36 @@ Cc:     Christoph Lameter <cl@linux.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, kernel-team@android.com,
         vinmenon@codeaurora.org, Matthew Garrett <mjg59@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>,
-        Jann Horn <jannh@google.com>
-Subject: Re: [RFC PATCH 2/5] mm, slub: make some slub_debug related
+        Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>
+Subject: Re: [RFC PATCH 4/5] mm, slub: make remaining slub_debug related
  attributes read-only
-Message-ID: <202006051406.CB3237B0@keescook>
+Message-ID: <202006051407.F7E66272DA@keescook>
 References: <20200602141519.7099-1-vbabka@suse.cz>
- <20200602141519.7099-3-vbabka@suse.cz>
+ <20200602141519.7099-5-vbabka@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602141519.7099-3-vbabka@suse.cz>
+In-Reply-To: <20200602141519.7099-5-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 04:15:16PM +0200, Vlastimil Babka wrote:
+On Tue, Jun 02, 2020 at 04:15:18PM +0200, Vlastimil Babka wrote:
 > SLUB_DEBUG creates several files under /sys/kernel/slab/<cache>/ that can be
 > read to check if the respective debugging options are enabled for given cache.
-> The options can be also toggled at runtime by writing into the files. Some of
-> those, namely red_zone, poison, and store_user can be toggled only when no
-> objects yet exist in the cache.
+> Some options, namely sanity_checks, trace, and failslab can be also enabled and
+> disabled at runtime by writing into the files.
 > 
-> Vijayanand reports [1] that there is a problem with freelist randomization if
-> changing the debugging option's state results in different number of objects
-> per page, and the random sequence cache needs thus needs to be recomputed.
+> The runtime toggling is racy. Some options disable __CMPXCHG_DOUBLE when
+> enabled, which means that in case of concurrent allocations, some can still use
+> __CMPXCHG_DOUBLE and some not, leading to potential corruption. The s->flags
+> field is also not updated or checked atomically. The simplest solution is to
+> remove the runtime toggling. The extended slub_debug boot parameter syntax
+> introduced by earlier patch should allow to fine-tune the debugging
+> configuration during boot with same granularity.
 > 
-> However, another problem is that the check for "no objects yet exist in the
-> cache" is racy, as noted by Jann [2] and fixing that would add overhead or
-> otherwise complicate the allocation/freeing paths. Thus it would be much
-> simpler just to remove the runtime toggling support. The documentation
-> describes it's "In case you forgot to enable debugging on the kernel command
-> line", but the neccessity of having no objects limits its usefulness anyway for
-> many caches.
-> 
-> Vijayanand describes an use case [3] where debugging is enabled for all but
-> zram caches for memory overhead reasons, and using the runtime toggles was the
-> only way to achieve such configuration. After the previous patch it's now
-> possible to do that directly from the kernel boot option, so we can remove the
-> dangerous runtime toggles by making the /sys attribute files read-only.
-> 
-> While updating it, also improve the documentation of the debugging /sys files.
-> 
-> [1] https://lkml.kernel.org/r/1580379523-32272-1-git-send-email-vjitta@codeaurora.org
-> [2] https://lore.kernel.org/r/CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com
-> [3] https://lore.kernel.org/r/1383cd32-1ddc-4dac-b5f8-9c42282fa81c@codeaurora.org
-> 
-> Reported-by: Vijayanand Jitta <vjitta@codeaurora.org>
-> Reported-by: Jann Horn <jannh@google.com>
 > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
