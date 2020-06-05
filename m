@@ -2,284 +2,83 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9454C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DF32086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E1320823
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qw82uH6l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="csFmKv47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgFEG5P (ORCPT
+        id S1726088AbgFEHAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgFEG5N (ORCPT
+        Fri, 5 Jun 2020 03:00:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51581 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725280AbgFEHAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:57:13 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EBBCC08C5C4
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 23:57:13 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r9so7375061wmh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 23:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=tz5BlR5JaV+ArYxa0HAqmVilkT6R8zR9JrCnLl9Yodo=;
-        b=qw82uH6liAGFuBEV6hkyJqcUYBtUY4dcgnzButO12xrC67ecuHOe03IPstZhhMxpkg
-         CoAUe7ix0w9VSDzB4R6LaZ9sUbPfjvRaxYMyMYeRp9nAIJfGM7wp5Ei9cVX6EnlUMfKI
-         0jGYMDy/f68iPGczAsb9xq6xZxgStH3X/LXTNGJDpAUm3b7a4TRbEj8wIACimBuRAv40
-         NlX6/ktlt84lJ+EqG2wFjKS81cdMxFeDDWNOG+TapLO6Fy6L8RDWwhDKNMmiDlhVKIUa
-         GqxtR0PuVKCLaJBVEZZ2EffArw0dmDoRecAGRNlRyHlzphGVag+UBe1i+7I/2/XB9dA1
-         qvEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=tz5BlR5JaV+ArYxa0HAqmVilkT6R8zR9JrCnLl9Yodo=;
-        b=pyP7YDYVJeJhymDH8cSnaycQdVUtBGKgiaXobmjidfmsQ5uSYYzMSr+R4GiQJNFNl8
-         Vt+fDqNkcKy5Bb/uweLPOveF/ZSoo8hxQ+/NVCLEqbjr3W157TOnujxZN8NqNuF1Cs8Y
-         A2qsAKmOmTXnEYJv5zLtUpr+EqGeJXP96ts8CBv153yJ2y+i8ykFJSLhEelmtvPGB4Aq
-         xSvHqFa76lGHUdEmdfavB3Z4FUVqMde+2EMYEZwYRgjsckeCOzC2lkn6oPo4jG5gUwaT
-         tIuEh5B6iHnn0olWzPirz5NE/Hhkrnqf40V4d0SHjT78JU+IbRBVfystjsFfRDAO44PI
-         AEPw==
-X-Gm-Message-State: AOAM532nKTC9EyibzoKwlnYmlHJcQQnSAQz9FcOAbmqQzDMdltSL+1h7
-        oZaffvYSPR6jbCriIaXn0pV4/w==
-X-Google-Smtp-Source: ABdhPJw+8D1o16iYVZ1h5gWKMqmnNIGt4AnryEE8VROc7MnMuuWA7+NmgtKq7OghGpEPR8xO5Fr4Zg==
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr1181014wmd.138.1591340231562;
-        Thu, 04 Jun 2020 23:57:11 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id t188sm5291530wmt.27.2020.06.04.23.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 23:57:10 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 07:57:09 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>, broonie@kernel.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200605065709.GD3714@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
+        Fri, 5 Jun 2020 03:00:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591340435;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Psy0gAVP3y5zMhy6rzif6kvuC7aa4BFrXqt5hsHPNmU=;
+        b=csFmKv47UtxgFKtlAv3PQNI5SVRrQCZ14FysUiczUL9HIKpz/sXJSw1j56Wme9gkh/mH1B
+        roDTCH/9MWHYvpFk0+BimV8UbDH5xOuwItjejhXCNlT2UzBd9i4ur3vL5c5+FWU5E/n8po
+        jw0T3BM3+UU1iuz33//cS9UmgbB+/kw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-y-8uuF_6NqacZfhkA2f4MA-1; Fri, 05 Jun 2020 03:00:33 -0400
+X-MC-Unique: y-8uuF_6NqacZfhkA2f4MA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE469107ACCA;
+        Fri,  5 Jun 2020 07:00:32 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-113-227.phx2.redhat.com [10.3.113.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6665D7CCE0;
+        Fri,  5 Jun 2020 07:00:32 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH] iommu: add include/uapi/linux/iommu.h to MAINTAINERS file
+Date:   Fri,  5 Jun 2020 00:00:25 -0700
+Message-Id: <20200605070025.216124-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200604211039.12689-3-michael@walle.cc>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark, what do you think?
+When include/uapi/linux/iommu.h was created it was never
+added to the file list in MAINTAINERS.
 
-On Thu, 04 Jun 2020, Michael Walle wrote:
+Cc: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Add the core support for the board management controller found on the
-> SMARC-sAL28 board. It consists of the following functions:
->  - watchdog
->  - GPIO controller
->  - PWM controller
->  - fan sensor
->  - interrupt controller
-> 
-> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
-> 
-> Please note that the MFD driver is defined as bool in the Kconfig
-> because the next patch will add interrupt support.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/mfd/Kconfig    | 19 ++++++++++
->  drivers/mfd/Makefile   |  2 ++
->  drivers/mfd/sl28cpld.c | 79 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 100 insertions(+)
->  create mode 100644 drivers/mfd/sl28cpld.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 4f8b73d92df3..5c0cd514d197 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2109,5 +2109,24 @@ config SGI_MFD_IOC3
->  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
->  	  then say Y. Otherwise say N.
->  
-> +config MFD_SL28CPLD
-> +	bool "Kontron sl28 core driver"
-
-"Kontron SL28 Core Driver"
-
-> +	depends on I2C=y
-> +	depends on OF
-> +	select REGMAP_I2C
-> +	select MFD_CORE
-> +	help
-> +	  This option enables support for the board management controller
-> +	  found on the Kontron sl28 CPLD. You have to select individual
-
-I can't find any reference to the "Kontron sl28 CPLD" online.
-
-Is there a datasheet?
-
-> +	  functions, such as watchdog, GPIO, etc, under the corresponding menus
-> +	  in order to enable them.
-> +
-> +	  Currently supported boards are:
-> +
-> +		Kontron SMARC-sAL28
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called sl28cpld.
-> +
->  endmenu
->  endif
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9367a92f795a..be59fb40aa28 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -264,3 +264,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
->  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
->  
->  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-> +
-> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
-> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
-> new file mode 100644
-> index 000000000000..a23194bb6efa
-> --- /dev/null
-> +++ b/drivers/mfd/sl28cpld.c
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * MFD core for the sl28cpld.
-
-Ideally this would match the Kconfig subject line.
-
-> + * Copyright 2019 Kontron Europe GmbH
-
-This is out of date.
-
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/regmap.h>
-> +
-> +#define SL28CPLD_VERSION	0x03
-> +#define SL28CPLD_MIN_REQ_VERSION 14
-> +
-> +struct sl28cpld {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +};
-
-Why do you need this structure?
-
-> +static const struct regmap_config sl28cpld_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.reg_stride = 1,
-> +};
-> +
-> +static int sl28cpld_probe(struct i2c_client *i2c)
-> +{
-> +	struct sl28cpld *sl28cpld;
-> +	struct device *dev = &i2c->dev;
-> +	unsigned int cpld_version;
-> +	int ret;
-> +
-> +	sl28cpld = devm_kzalloc(dev, sizeof(*sl28cpld), GFP_KERNEL);
-> +	if (!sl28cpld)
-> +		return -ENOMEM;
-> +
-> +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, &sl28cpld_regmap_config);
-> +	if (IS_ERR(sl28cpld->regmap))
-> +		return PTR_ERR(sl28cpld->regmap);
-
-This is now a shared memory allocator and not an MFD at all.
-
-I'm clamping down on these type of drivers!
-
-Please find a better way to accomplish this.
-
-Potentially using "simple-mfd" and "simple-regmap".
-
-The former already exists and does what you want.  The latter doesn't
-yet exist, but could solve your and lots of other contributor's
-issues.
-
-Heck maybe I'll implement it myself if this keeps happening.
-
-> +	ret = regmap_read(sl28cpld->regmap, SL28CPLD_VERSION, &cpld_version);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (cpld_version < SL28CPLD_MIN_REQ_VERSION) {
-> +		dev_err(dev, "unsupported CPLD version %d\n", cpld_version);
-> +		return -ENODEV;
-> +	}
-> +
-> +	sl28cpld->dev = dev;
-> +	i2c_set_clientdata(i2c, sl28cpld);
-
-If the struct definition is in here, how do you use it elsewhere?
-
-> +	dev_info(dev, "successfully probed. CPLD version %d\n", cpld_version);
-> +
-> +	return devm_of_platform_populate(&i2c->dev);
-> +}
-> +
-> +static const struct of_device_id sl28cpld_of_match[] = {
-> +	{ .compatible = "kontron,sl28cpld-r1", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, sl28cpld_of_match);
-> +
-> +static struct i2c_driver sl28cpld_driver = {
-> +	.probe_new = sl28cpld_probe,
-> +	.driver = {
-> +		.name = "sl28cpld",
-> +		.of_match_table = of_match_ptr(sl28cpld_of_match),
-> +	},
-> +};
-> +module_i2c_driver(sl28cpld_driver);
-> +
-> +MODULE_DESCRIPTION("sl28cpld MFD Core Driver");
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_LICENSE("GPL");
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e1897ed32930..061648b6e393 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8954,6 +8954,7 @@ F:	drivers/iommu/
+ F:	include/linux/iommu.h
+ F:	include/linux/iova.h
+ F:	include/linux/of_iommu.h
++F:	include/uapi/linux/iommu.h
+ 
+ IO_URING
+ M:	Jens Axboe <axboe@kernel.dk>
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.24.0
+
