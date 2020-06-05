@@ -2,152 +2,79 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97920C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 718C52074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591374115;
-	bh=yXlHNujYNL2zAYwsJV+R7NnqHW/0LBT1FPOxbjdwRJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qw5sm/RfqH8Ha315/g0Jyc0+ee0MLYrDEPiz/JuKMC+Y/2klveU50609V+YrCUsps
-	 dDOAWXKmIG7vH77kVU3qCuRsqkNSclYoJhtodYN/KTjAWgQRZDsGw7KuW4pZd1oYGq
-	 YBTOfNxpna9WY0S+WuHOI6Tl0A7RXIMruXL5qHCU=
+	by mail.kernel.org (Postfix) with ESMTP id D37E92074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgFEQVx (ORCPT
+        id S1726192AbgFEQYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:21:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 12:24:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58252 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726108AbgFEQVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:21:51 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D067A2074B;
-        Fri,  5 Jun 2020 16:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591374111;
-        bh=yXlHNujYNL2zAYwsJV+R7NnqHW/0LBT1FPOxbjdwRJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yJIvkNDYzI7j7qwWd7DibhmEZte6uMEeS/RI1cJoQQ546UDZY532LtucZHSOGZlEt
-         zHpD+dK/AyW3kmxG4Vc1jZdpBmj3CXP5kU62zXLreSpw2sCniKa1h4g6TPr9os6J8D
-         2ELPKq/pTH2Ms6+PHCGtb9MJ20CnP6brn+e89zXc=
-Date:   Fri, 5 Jun 2020 09:21:49 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Stephan Mueller <smueller@chronox.de>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com>
-Subject: Re: [PATCH v2] crypto: DRBG - always try to free Jitter RNG instance
-Message-ID: <20200605162149.GE1373@sol.localdomain>
-References: <0000000000002a280b05a725cd93@google.com>
- <5789529.snvNDI1NMy@tauon.chronox.de>
- <20200605061646.GA107328@sol.localdomain>
- <4575667.y41LbVH5lo@tauon.chronox.de>
+        id S1726039AbgFEQYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 12:24:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A90C5AC5F;
+        Fri,  5 Jun 2020 16:24:37 +0000 (UTC)
+Subject: Re: [PATCH v5 17/19] mm: memcg/slab: use a single set of kmem_caches
+ for all allocations
+To:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+References: <20200527223404.1008856-1-guro@fb.com>
+ <20200527223404.1008856-18-guro@fb.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <d7cdecbc-db24-8ced-1a86-6f4534613763@suse.cz>
+Date:   Fri, 5 Jun 2020 18:24:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4575667.y41LbVH5lo@tauon.chronox.de>
+In-Reply-To: <20200527223404.1008856-18-guro@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 08:52:57AM +0200, Stephan Mueller wrote:
-> Am Freitag, 5. Juni 2020, 08:16:46 CEST schrieb Eric Biggers:
-> 
-> Hi Eric,
-> 
-> > On Fri, Jun 05, 2020 at 07:58:15AM +0200, Stephan Mueller wrote:
-> > > Am Freitag, 5. Juni 2020, 02:43:36 CEST schrieb Eric Biggers:
-> > > 
-> > > Hi Eric,
-> > > 
-> > > > On Thu, Jun 04, 2020 at 08:41:00AM +0200, Stephan Müller wrote:
-> > > > > The Jitter RNG is unconditionally allocated as a seed source follwoing
-> > > > > the patch 97f2650e5040. Thus, the instance must always be deallocated.
-> > > > > 
-> > > > > Reported-by: syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com
-> > > > > Fixes: 97f2650e5040 ("crypto: drbg - always seeded with SP800-90B
-> > > > > ...")
-> > > > > Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> > > > > ---
-> > > > > 
-> > > > >  crypto/drbg.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > > 
-> > > > > diff --git a/crypto/drbg.c b/crypto/drbg.c
-> > > > > index 37526eb8c5d5..8a0f16950144 100644
-> > > > > --- a/crypto/drbg.c
-> > > > > +++ b/crypto/drbg.c
-> > > > > @@ -1631,6 +1631,9 @@ static int drbg_uninstantiate(struct drbg_state
-> > > > > *drbg)>
-> > > > > 
-> > > > >  	if (drbg->random_ready.func) {
-> > > > >  	
-> > > > >  		del_random_ready_callback(&drbg->random_ready);
-> > > > >  		cancel_work_sync(&drbg->seed_work);
-> > > > > 
-> > > > > +	}
-> > > > > +
-> > > > > +	if (!IS_ERR_OR_NULL(drbg->jent)) {
-> > > > > 
-> > > > >  		crypto_free_rng(drbg->jent);
-> > > > >  		drbg->jent = NULL;
-> > > > >  	
-> > > > >  	}
-> > > > 
-> > > > It it okay that ->jent can be left as an ERR_PTR() value?
-> > > > 
-> > > > Perhaps it should always be set to NULL?
-> > > 
-> > > The error value is used in the drbg_instantiate function. There it is
-> > > checked whether -ENOENT (i.e. the cipher is not available) or any other
-> > > error is present. I am not sure we should move that check.
-> > > 
-> > > Thanks for the review.
-> > 
-> > drbg_seed() and drbg_async_seed() check for drbg->jent being NULL.
-> > 
-> > Will that now break due it drbg->jent possibly being an ERR_PTR()?
-> > 
-> > Hence why I'm asking whether drbg_uninstantiate() should set it to NULL.
-> 
-> The allocation happens in drbg_prepare_hrng that is only invoked by 
-> drbg_instantiate.
-> 
-> drbg_instantiate checks for the ERR_PTR and sets it to NULL in case the error 
-> is deemed ok.
-> 
-> Thus, any subsequent functions would see either a valid pointer or NULL. The 
-> only exception is drbg_uninstantiate when invoked from the error case 
-> 
->                 ret = drbg_prepare_hrng(drbg);
->                 if (ret)
->                         goto free_everything;
-> 
-> Thus, I think that the two functions you mention will never see any values 
-> other than NULL or a valid pointer.
-> 
+On 5/28/20 12:34 AM, Roman Gushchin wrote:
+> diff --git a/mm/slab.h b/mm/slab.h
+> index c49a863adb63..57b425d623e5 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+...
+> @@ -526,8 +430,7 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+>  	 * When kmemcg is not being used, both assignments should return the
+>  	 * same value. but we don't want to pay the assignment price in that
+>  	 * case. If it is not compiled in, the compiler should be smart enough
+> -	 * to not do even the assignment. In that case, slab_equal_or_root
+> -	 * will also be a constant.
+> +	 * to not do even the assignment.
+>  	 */
+>  	if (!memcg_kmem_enabled() &&
 
-To be concrete, I'm suggesting:
+Just realized that this test can go away - we don't have to call virt_to_cache()
+due to kmemcg if there is just a single cache.
 
-	if (!IS_ERR_OR_NULL(drbg->jent))
-		crypto_free_rng(drbg->jent);
-	drbg->jent = NULL;
-
-This would be similar to how drbg_dealloc_state() sets lots of other fields of
-the drbg_state to NULL.
-
-It's your call though.  I haven't properly read this code; the above is just
-what makes sense to me at first glance...
-
-- Eric
+>  	    !IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+> @@ -535,7 +438,7 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+>  		return s;
+>  
+>  	cachep = virt_to_cache(x);
+> -	WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
+> +	WARN_ONCE(cachep && cachep != s,
+>  		  "%s: Wrong slab cache. %s but object is from %s\n",
+>  		  __func__, s->name, cachep->name);
+>  	return cachep;
