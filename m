@@ -2,107 +2,96 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F31C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EF1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62298207D0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fh3v6xc2"
+	by mail.kernel.org (Postfix) with ESMTP id D4C96207DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgFEJo1 (ORCPT
+        id S1726378AbgFEJom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:44:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34252 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbgFEJo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:44:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0559WPAR020418;
-        Fri, 5 Jun 2020 09:44:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=qqApPwaVsfD9KsWb9ZyJEdEVujKUGkYoa9MNEy7rOgw=;
- b=fh3v6xc2K8PcQ+zXUCdybeuP5xdRJxcdvjETG0pvaclDVmio2zsBTIhjDulrOz1XZFYQ
- iaak6lheEb0bDsEeuQ7ADjnNOjJghIwmPKzdkGPe10v+SWOWWPqj0w8au8drGUvyzpGp
- BLgNIidDGZxdbrT5PYpw594bqmF0hTxkegqXF2Nve/qe5bPDaCoY04/gAZUskchs+TMV
- 38FHKd53dX8M+3htO5XiRqOdwrsLQyGIQgfncrPVoEn0IBNhmTCc0Ip2FFWcrcdx4AB1
- cOMI564TFkm33GTZXtsr5mQTQoHwX2k1H0GwHbm8GmQNzffno9NpjpJHIWJLabqSteaF AA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31f926227d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 05 Jun 2020 09:44:09 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0559YLqa146838;
-        Fri, 5 Jun 2020 09:44:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31f926y236-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jun 2020 09:44:08 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0559i3Ee022645;
-        Fri, 5 Jun 2020 09:44:06 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jun 2020 02:44:02 -0700
-Date:   Fri, 5 Jun 2020 12:43:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jason Yan <yanaijie@huawei.com>, Jan Kara <jack@suse.cz>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        hulkci@huawei.com, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH v2] block: Fix use-after-free in blkdev_get()
-Message-ID: <20200605094353.GS30374@kadam>
-References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
- <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 bulkscore=0
- suspectscore=2 mlxscore=0 adultscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006050074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- suspectscore=2 cotscore=-2147483648 bulkscore=0 clxscore=1011
- impostorscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
- spamscore=0 lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006050074
+        Fri, 5 Jun 2020 05:44:42 -0400
+Received: from mx.socionext.com ([202.248.49.38]:45667 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbgFEJol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:44:41 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 05 Jun 2020 18:44:39 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 8EA4A18010B;
+        Fri,  5 Jun 2020 18:44:39 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 5 Jun 2020 18:44:39 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id EF85B1A12AD;
+        Fri,  5 Jun 2020 18:44:38 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v4 0/6] PCI: uniphier: Add features for UniPhier PCIe host controller
+Date:   Fri,  5 Jun 2020 18:44:30 +0900
+Message-Id: <1591350276-15816-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A lot of maintainers have blocked Markus and asked him to stop trying
-to help people write commit message.  Saying "bdev" instead of "block
-device" is more clear so your original message was better.
+This series adds some features for UniPhier PCIe host controller.
 
-The Fixes tag is a good idea though:
+- Add support for PME and AER invoked by MSI interrupt
+- Add iATU register view support for PCIe version >= 4.80
+- Add an error message when failing to get phy driver
 
-Fixes: 89e524c04fa9 ("loop: Fix mount(2) failure due to race with LOOP_SET_FD")
+This adds a new function called by MSI handler in DesignWare PCIe framework,
+that invokes PME and AER funcions to detect the factor from SoC-dependent
+registers.
 
-It broke last July.  Before that, we used to check if __blkdev_get()
-failed before dereferencing "bdev".
+Changes since v3:
+- Move msi_host_isr() call into dw_handle_msi_irq()
+- Move uniphier_pcie_misc_isr() call into the guard of chained_irq
+- Use a bool argument is_msi instead of pci_msi_enabled()
+- Consolidate handler calls for the same interrupt
+- Fix typos in commit messages
 
-I wonder if maybe the best fix is to re-add the "if (!res) " check back
-to blkdev_get().  The __blkdev_get() looks like it can also free "whole"
-though if it calls itself recursively and I don't really know this code
-so I can't say for sure...
+Changes since v2:
+- Avoid printing phy error message in case of EPROBE_DEFER
+- Fix iATU register mapping method
+- dt-bindings: Add Acked-by: line
+- Fix typos in commit messages
+- Use devm_platform_ioremap_resource_byname()
 
-regards,
-dan carpenter
+Changes since v1:
+- Add check if struct resource is NULL
+- Fix warning in the type of dev_err() argument
+
+Kunihiko Hayashi (6):
+  PCI: dwc: Add msi_host_isr() callback
+  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+  dt-bindings: PCI: uniphier: Add iATU register description
+  PCI: uniphier: Add iATU register support
+  PCI: uniphier: Add error message when failed to get phy
+  PCI: uniphier: Use devm_platform_ioremap_resource_byname()
+
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  3 +
+ drivers/pci/controller/dwc/pcie-designware.h       |  1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 73 +++++++++++++++++-----
+ 4 files changed, 63 insertions(+), 15 deletions(-)
+
+-- 
+2.7.4
 
