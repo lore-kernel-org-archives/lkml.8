@@ -2,159 +2,117 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46553C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7BC320772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2344220772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tncq0J7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgFEJeK (ORCPT
+        id S1726361AbgFEJeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:34:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47434 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgFEJeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:34:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 29C5EAD1A;
-        Fri,  5 Jun 2020 09:34:11 +0000 (UTC)
-Message-ID: <99eb84154ef837832d872e05f4c6323908cdf456.camel@suse.de>
-Subject: Re: [PATCH v3 12/25] clk: bcm: rpi: Use CCF boundaries instead of
- rolling our own
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Date:   Fri, 05 Jun 2020 11:34:05 +0200
-In-Reply-To: <20200605092802.xkoazjnin7xyqkoy@gilmour.lan>
-References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
-         <eb1b2838f1c3c006c24bcb9816f75e1351c63b05.1590594293.git-series.maxime@cerno.tech>
-         <e096d89ab881d69b2477b209838a308f9de114b1.camel@suse.de>
-         <20200605092802.xkoazjnin7xyqkoy@gilmour.lan>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-cb1rk5pgqkytLeD/HsnD"
-User-Agent: Evolution 3.36.2 
+        Fri, 5 Jun 2020 05:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgFEJeo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:34:44 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC6C1C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 02:34:43 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id n9so3428810plk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 02:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=mFjpcHRNvW7jr5yAUPBmHqqZtDxdLZ2YVWSiOFI3u8k=;
+        b=tncq0J7af5auIOZilp/gB2dX3myfDONuE4xiyxtAkUZfzWxzWE+sbyTZDC5D7d7q1s
+         TkuwIFyUml77QCNoYqfDaFlrLk4gm0MIkSzkxvKksshrFIGhPlZcK+uGgVjf3YNrNvBs
+         /IdlmAr/bS9iHgPDFNQlITywQ92gob/YoVUdOMQlJvcnyH11gGeAMOvNXa0qTEO/CaSx
+         OQtFtESL2j/vqrX/mjW//eGGEEP3N8chrtrzWPlI5nbjHRbkIdx0dsxMvFWpYiBdr1VF
+         zPkTDDMmdYCw+TV8jrKyb/phZbJP1e9hp00ouOrbi+pEhIj2oQHt22pf818Fbj+1nKPt
+         b+Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=mFjpcHRNvW7jr5yAUPBmHqqZtDxdLZ2YVWSiOFI3u8k=;
+        b=pKi7RHjkMjATaGLWVxtNiJkP5LIwcqWvrF+0Slz1P1k8GiA+gR05VgRQ44NeP/7s61
+         liyYnBYU537GekyFPndW0AfJRgZEsc5yE7bQw6bD1EyJ9DMMFfLTh5Mt+jqu63DoTFKM
+         5FAZlvz5ExsJfW6it0Semkl9d2S63cll25JU9jQNmJjA7QFya9DgKi3RQbQYPHaRkvWe
+         4l2oAa/akGhxgCjXnLB9iNfCFXAbJCNLwQmK8i/QcAuRBT1/uGqiivAdScqO0G/yl6iX
+         geDaZrdDqb/Db0MLIDSuaceOM/U0MAb+sLPrSXeYwp4Ghio05uYxt0U8OcR1ZmyMx43i
+         mMMQ==
+X-Gm-Message-State: AOAM533LJHYXaRZDU0Fbdok5hGg96uKW4CmFy0102FjwxQ7Je6aeMueN
+        CDDySoZZ/YWSruy5BiZaDTYIjQ==
+X-Google-Smtp-Source: ABdhPJz8GwlVCdFrI51lZNlGaMBY6pEeiVPhUYmfkc4rG2hWpbWaKWSGzMrmCUboCFdUXzYyYX6W0Q==
+X-Received: by 2002:a17:902:bd09:: with SMTP id p9mr9263783pls.214.1591349683331;
+        Fri, 05 Jun 2020 02:34:43 -0700 (PDT)
+Received: from [10.110.1.98] ([45.135.186.59])
+        by smtp.gmail.com with ESMTPSA id j8sm7453067pjw.11.2020.06.05.02.34.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 02:34:42 -0700 (PDT)
+Subject: Re: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        wangzhou1 <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        kbuild-all@lists.01.org
+References: <202006032110.BEbKqovX%lkp@intel.com>
+ <1591241524-6452-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200604033918.GA2286@gondor.apana.org.au>
+ <b6ad8af2-1cb7-faac-0446-5e09e97f3616@linaro.org>
+ <20200604061811.GA28759@gondor.apana.org.au>
+ <b23433f8-d95d-8142-c830-fb92e5ccd4a1@linaro.org>
+ <20200604065009.GA29822@gondor.apana.org.au>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <f8dceec5-6835-c064-bb43-fd12668c2dbb@linaro.org>
+Date:   Fri, 5 Jun 2020 17:34:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200604065009.GA29822@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-cb1rk5pgqkytLeD/HsnD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2020-06-05 at 11:28 +0200, Maxime Ripard wrote:
-> Hi Nicolas,
->=20
-> On Thu, Jun 04, 2020 at 08:02:22PM +0200, Nicolas Saenz Julienne wrote:
-> > On Wed, 2020-05-27 at 17:45 +0200, Maxime Ripard wrote:
-> > > The raspberrypi firmware clock driver has a min_rate / max_rate clamp=
-ing
-> > > by
-> > > storing the info it needs in a private structure.
-> > >=20
-> > > However, the CCF already provides such a facility, so we can switch t=
-o it
-> > > to remove the boilerplate.
-> > >=20
-> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > ---
-> > >  drivers/clk/bcm/clk-raspberrypi.c | 18 ++++++++----------
-> > >  1 file changed, 8 insertions(+), 10 deletions(-)
-> > >=20
-> > > diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
-> > > raspberrypi.c
-> > > index a20492fade6a..e135ad28d38d 100644
-> > > --- a/drivers/clk/bcm/clk-raspberrypi.c
-> > > +++ b/drivers/clk/bcm/clk-raspberrypi.c
-> > > @@ -36,9 +36,6 @@ struct raspberrypi_clk {
-> > >  	struct rpi_firmware *firmware;
-> > >  	struct platform_device *cpufreq;
-> > > =20
-> > > -	unsigned long min_rate;
-> > > -	unsigned long max_rate;
-> > > -
-> > >  	struct clk_hw pllb;
-> > >  };
-> > > =20
-> > > @@ -142,13 +139,11 @@ static int raspberrypi_fw_pll_set_rate(struct c=
-lk_hw
-> > > *hw, unsigned long rate,
-> > >  static int raspberrypi_pll_determine_rate(struct clk_hw *hw,
-> > >  					  struct clk_rate_request *req)
-> > >  {
-> > > -	struct raspberrypi_clk *rpi =3D container_of(hw, struct raspberrypi=
-_clk,
-> > > -						   pllb);
-> > >  	u64 div, final_rate;
-> > >  	u32 ndiv, fdiv;
-> > > =20
-> > >  	/* We can't use req->rate directly as it would overflow */
-> > > -	final_rate =3D clamp(req->rate, rpi->min_rate, rpi->max_rate);
-> > > +	final_rate =3D clamp(req->rate, req->min_rate, req->max_rate);
-> > > =20
-> > >  	div =3D (u64)final_rate << A2W_PLL_FRAC_BITS;
-> > >  	do_div(div, req->best_parent_rate);
-> > > @@ -215,12 +210,15 @@ static int raspberrypi_register_pllb(struct
-> > > raspberrypi_clk *rpi)
-> > >  	dev_info(rpi->dev, "CPU frequency range: min %u, max %u\n",
-> > >  		 min_rate, max_rate);
-> > > =20
-> > > -	rpi->min_rate =3D min_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
-> > > -	rpi->max_rate =3D max_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
-> > > -
-> > >  	rpi->pllb.init =3D &init;
-> > > =20
-> > > -	return devm_clk_hw_register(rpi->dev, &rpi->pllb);
-> > > +	ret =3D devm_clk_hw_register(rpi->dev, &rpi->pllb);
-> > > +	if (!ret)
-> > > +		clk_hw_set_rate_range(&rpi->pllb,
-> > > +				      min_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE,
-> > > +				      max_rate *
-> > > RPI_FIRMWARE_PLLB_ARM_DIV_RATE);
-> >=20
-> > Isn't there a potential race here? Albeit unlikely, cpufreq could show
-> > up and call clk_round_rate() in between the registration and you
-> > setting the ranges.
->=20
-> IIRC, driver's probe are not called in parallel but in sequence, so we
-> should be covered here.
+On 2020/6/4 下午2:50, Herbert Xu wrote:
+> On Thu, Jun 04, 2020 at 02:44:16PM +0800, Zhangfei Gao wrote:
+>> I think it is fine.
+>> 1. Currently the name size is 64, bigger enough.
+>> Simply grep in driver name, 64 should be enough.
+>> We can make it larger when there is a request.
+>> 2. it does not matter what the name is, since it is just an interface.
+>> cat /sys/class/uacce/hisi_zip-0/flags
+>> cat /sys/class/uacce/his-0/flags
+>> should be both fine to app only they can be distinguished.
+>> 3. It maybe a hard restriction to fail just because of a long name.
+> I think we should err on the side of caution.  IOW, unless you
+> know that you need it to succeed when it exceeds the limit, then
+> you should just make it fail.
+Thanks Herbert
+Will add a check after the copy.
 
-Right, of course.
+         strlcpy(interface.name, pdev->driver->name, 
+sizeof(interface.name));
+         if (strlen(pdev->driver->name) != strlen(interface.name))
+                 return -EINVAL;
 
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Will resend the fix after rc1 is open.
 
-Regards,
-Nicolas
-
-
---=-cb1rk5pgqkytLeD/HsnD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7aEY0ACgkQlfZmHno8
-x/4umQf/Uc3QL2xEaD4EW/hr8XDzlJ9lGMJ5F7R36Z4DMXaYoZQD5qNeZDiOiHuy
-rvo5pwHIJMC4Pxl14Rpc9R8CThc0PoNyEFmC8fQFSILD/iQq67YDh2HvURg0klGi
-1FPDbDkLboH757AN1ghsHDP38gYPehhyeCL//HcDuHYgFbFzhtC4T5+dF/4C9GBK
-pD3NaQlkfKFuPEjkMOhKOI0oWgYprzuDG9LUQgUOXpkexsJkMzTng8PqidhgGreM
-eQPpFeMBn/wd9TYtyGSBYIKzvCeTu73BrALg8hOtrioSRXMwnrm/eSygEwvc8ehQ
-Em1ViGFL7VnKAbT1tAMZckefzadfxA==
-=gAK7
------END PGP SIGNATURE-----
-
---=-cb1rk5pgqkytLeD/HsnD--
+Thanks
 
