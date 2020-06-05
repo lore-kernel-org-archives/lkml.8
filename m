@@ -4,199 +4,267 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B50206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913A2207D0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgFEVkF (ORCPT
+        id S1728929AbgFEVk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:40:05 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22540 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbgFEVjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:39:16 -0400
-IronPort-SDR: Pi0R58WJ/iEOK1cA8UDmGMHWql3+ltgl9tyGnEsZeQ6jwj7EypEYx5xJi/mWh47OAjW1ZlLLVq
- sYSmBAb8T/KQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:10 -0700
-IronPort-SDR: PWArTjc0SrJLSJ05VypN8vL975Wv8bdiyKJ53PVlmPdjQXrXRT1XPVBonpfvRNol5tassY2nle
- iHJoSum0887Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="287860931"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:09 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Feiner <pfeiner@google.com>,
-        Peter Shier <pshier@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Ben Gardon <bgardon@google.com>,
-        Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH 21/21] KVM: MIPS: Use common KVM implementation of MMU memory caches
-Date:   Fri,  5 Jun 2020 14:38:53 -0700
-Message-Id: <20200605213853.14959-22-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200605213853.14959-1-sean.j.christopherson@intel.com>
-References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
+        Fri, 5 Jun 2020 17:40:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6784 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728810AbgFEVkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:40:16 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055LWueN094854;
+        Fri, 5 Jun 2020 17:40:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31fsnk7b4n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 17:40:15 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055LXLBJ096787;
+        Fri, 5 Jun 2020 17:40:14 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31fsnk7b4c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 17:40:14 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055LYuva016975;
+        Fri, 5 Jun 2020 21:40:13 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03dal.us.ibm.com with ESMTP id 31bf4b2mc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 21:40:13 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055LeCDh43123058
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jun 2020 21:40:12 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1F08AC060;
+        Fri,  5 Jun 2020 21:40:11 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76022AC05E;
+        Fri,  5 Jun 2020 21:40:11 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.146.208])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Jun 2020 21:40:11 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v8 05/16] s390/vfio-ap: implement in-use callback for vfio_ap driver
+Date:   Fri,  5 Jun 2020 17:39:53 -0400
+Message-Id: <20200605214004.14270-6-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200605214004.14270-1-akrowiak@linux.ibm.com>
+References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-05_07:2020-06-04,2020-06-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ cotscore=-2147483648 phishscore=0 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1015 suspectscore=3
+ mlxlogscore=999 adultscore=0 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move to the common MMU memory cache implementation now that the common
-code and MIPS's existing code are semantically compatible.
+Let's implement the callback to indicate when an APQN
+is in use by the vfio_ap device driver. The callback is
+invoked whenever a change to the apmask or aqmask would
+result in one or more queue devices being removed from the driver. The
+vfio_ap device driver will indicate a resource is in use
+if the APQN of any of the queue devices to be removed are assigned to
+any of the matrix mdevs under the driver's control.
 
-No functional change intended.
-
-Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- arch/mips/include/asm/kvm_host.h  | 11 ---------
- arch/mips/include/asm/kvm_types.h |  2 ++
- arch/mips/kvm/mmu.c               | 40 ++++---------------------------
- 3 files changed, 7 insertions(+), 46 deletions(-)
+ drivers/s390/crypto/vfio_ap_drv.c     |  1 +
+ drivers/s390/crypto/vfio_ap_ops.c     | 68 ++++++++++++++++++++-------
+ drivers/s390/crypto/vfio_ap_private.h |  2 +
+ 3 files changed, 53 insertions(+), 18 deletions(-)
 
-diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
-index 363e7a89d173..f49617175f60 100644
---- a/arch/mips/include/asm/kvm_host.h
-+++ b/arch/mips/include/asm/kvm_host.h
-@@ -335,17 +335,6 @@ struct kvm_mips_tlb {
- 	long tlb_lo[2];
- };
+diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+index 59233cf7419d..86fc83701e05 100644
+--- a/drivers/s390/crypto/vfio_ap_drv.c
++++ b/drivers/s390/crypto/vfio_ap_drv.c
+@@ -173,6 +173,7 @@ static int __init vfio_ap_init(void)
+ 	memset(&vfio_ap_drv, 0, sizeof(vfio_ap_drv));
+ 	vfio_ap_drv.probe = vfio_ap_queue_dev_probe;
+ 	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
++	vfio_ap_drv.in_use = vfio_ap_mdev_resource_in_use;
+ 	vfio_ap_drv.ids = ap_queue_ids;
  
--#define KVM_NR_MEM_OBJS     4
--
--/*
-- * We don't want allocation failures within the mmu code, so we preallocate
-- * enough memory for a single page fault in a cache.
-- */
--struct kvm_mmu_memory_cache {
--	int nobjs;
--	void *objects[KVM_NR_MEM_OBJS];
--};
--
- #define KVM_MIPS_AUX_FPU	0x1
- #define KVM_MIPS_AUX_MSA	0x2
- 
-diff --git a/arch/mips/include/asm/kvm_types.h b/arch/mips/include/asm/kvm_types.h
-index 5efeb32a5926..213754d9ef6b 100644
---- a/arch/mips/include/asm/kvm_types.h
-+++ b/arch/mips/include/asm/kvm_types.h
-@@ -2,4 +2,6 @@
- #ifndef _ASM_MIPS_KVM_TYPES_H
- #define _ASM_MIPS_KVM_TYPES_H
- 
-+#define KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE     4
-+
- #endif /* _ASM_MIPS_KVM_TYPES_H */
-diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
-index 41a4a063a730..d6acd88c0c46 100644
---- a/arch/mips/kvm/mmu.c
-+++ b/arch/mips/kvm/mmu.c
-@@ -25,39 +25,9 @@
- #define KVM_MMU_CACHE_MIN_PAGES 2
- #endif
- 
--static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
--{
--	void *page;
--
--	if (cache->nobjs >= min)
--		return 0;
--	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
--		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
--		if (!page)
--			return -ENOMEM;
--		cache->objects[cache->nobjs++] = page;
--	}
--	return 0;
--}
--
--static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
--{
--	while (mc->nobjs)
--		free_page((unsigned long)mc->objects[--mc->nobjs]);
--}
--
--static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
--{
--	void *p;
--
--	BUG_ON(!mc || !mc->nobjs);
--	p = mc->objects[--mc->nobjs];
--	return p;
--}
--
- void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu)
- {
--	mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
-+	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
+ 	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 21b98a392f36..2eebb2b6d2d4 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -501,18 +501,36 @@ vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev *matrix_mdev,
+ 	return 0;
  }
  
++#define MDEV_SHARING_ERR "Userspace may not re-assign queue %02lx.%04lx " \
++			 "already assigned to %s"
++
++static void vfio_ap_mdev_log_sharing_err(const char *mdev_name,
++					 unsigned long *apm,
++					 unsigned long *aqm)
++{
++	unsigned long apid, apqi;
++
++	for_each_set_bit_inv(apid, apm, AP_DEVICES)
++		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS)
++			pr_err(MDEV_SHARING_ERR, apid, apqi, mdev_name);
++}
++
  /**
-@@ -151,7 +121,7 @@ static pte_t *kvm_mips_walk_pgd(pgd_t *pgd, struct kvm_mmu_memory_cache *cache,
+  * vfio_ap_mdev_verify_no_sharing
+  *
+  * Verifies that the APQNs derived from the cross product of the AP adapter IDs
+- * and AP queue indexes comprising the AP matrix are not configured for another
++ * and AP queue indexes comprising an AP matrix are not assigned to another
+  * mediated device. AP queue sharing is not allowed.
+  *
+  * @matrix_mdev: the mediated matrix device
++ * @mdev_apm: mask indicating the APIDs of the APQNs to be verified
++ * @mdev_aqm: mask indicating the APQIs of the APQNs to be verified
+  *
+  * Returns 0 if the APQNs are not shared, otherwise; returns -EADDRINUSE.
+  */
+-static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
++static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev,
++					  unsigned long *mdev_apm,
++					  unsigned long *mdev_aqm)
+ {
+ 	struct ap_matrix_mdev *lstdev;
+ 	DECLARE_BITMAP(apm, AP_DEVICES);
+@@ -529,14 +547,15 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+ 		 * We work on full longs, as we can only exclude the leftover
+ 		 * bits in non-inverse order. The leftover is all zeros.
+ 		 */
+-		if (!bitmap_and(apm, matrix_mdev->matrix.apm,
+-				lstdev->matrix.apm, AP_DEVICES))
++		if (!bitmap_and(apm, mdev_apm, lstdev->matrix.apm, AP_DEVICES))
+ 			continue;
  
- 		if (!cache)
- 			return NULL;
--		new_pmd = mmu_memory_cache_alloc(cache);
-+		new_pmd = kvm_mmu_memory_cache_alloc(cache);
- 		pmd_init((unsigned long)new_pmd,
- 			 (unsigned long)invalid_pte_table);
- 		pud_populate(NULL, pud, new_pmd);
-@@ -162,7 +132,7 @@ static pte_t *kvm_mips_walk_pgd(pgd_t *pgd, struct kvm_mmu_memory_cache *cache,
+-		if (!bitmap_and(aqm, matrix_mdev->matrix.aqm,
+-				lstdev->matrix.aqm, AP_DOMAINS))
++		if (!bitmap_and(aqm, mdev_aqm, lstdev->matrix.aqm, AP_DOMAINS))
+ 			continue;
  
- 		if (!cache)
- 			return NULL;
--		new_pte = mmu_memory_cache_alloc(cache);
-+		new_pte = kvm_mmu_memory_cache_alloc(cache);
- 		clear_page(new_pte);
- 		pmd_populate_kernel(NULL, pmd, new_pte);
++		vfio_ap_mdev_log_sharing_err(dev_name(mdev_dev(lstdev->mdev)),
++					     apm, aqm);
++
+ 		return -EADDRINUSE;
  	}
-@@ -709,7 +679,7 @@ static int kvm_mips_map_page(struct kvm_vcpu *vcpu, unsigned long gpa,
- 		goto out;
  
- 	/* We need a minimum of cached pages ready for page table creation */
--	err = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
-+	err = kvm_mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
- 	if (err)
- 		goto out;
- 
-@@ -793,7 +763,7 @@ static pte_t *kvm_trap_emul_pte_for_gva(struct kvm_vcpu *vcpu,
+@@ -642,6 +661,7 @@ static ssize_t assign_adapter_store(struct device *dev,
+ {
  	int ret;
+ 	unsigned long apid;
++	DECLARE_BITMAP(apm, AP_DEVICES);
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
  
- 	/* We need a minimum of cached pages ready for page table creation */
--	ret = mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
-+	ret = kvm_mmu_topup_memory_cache(memcache, KVM_MMU_CACHE_MIN_PAGES);
+@@ -667,18 +687,18 @@ static ssize_t assign_adapter_store(struct device *dev,
  	if (ret)
- 		return NULL;
+ 		goto done;
  
+-	set_bit_inv(apid, matrix_mdev->matrix.apm);
++	memset(apm, 0, sizeof(apm));
++	set_bit_inv(apid, apm);
+ 
+-	ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
++	ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev, apm,
++					     matrix_mdev->matrix.aqm);
+ 	if (ret)
+-		goto share_err;
++		goto done;
+ 
++	set_bit_inv(apid, matrix_mdev->matrix.apm);
+ 	vfio_ap_mdev_link_queues(matrix_mdev, LINK_APID, apid);
+ 	ret = count;
+-	goto done;
+ 
+-share_err:
+-	clear_bit_inv(apid, matrix_mdev->matrix.apm);
+ done:
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+@@ -790,6 +810,7 @@ static ssize_t assign_domain_store(struct device *dev,
+ {
+ 	int ret;
+ 	unsigned long apqi;
++	DECLARE_BITMAP(aqm, AP_DOMAINS);
+ 	struct mdev_device *mdev = mdev_from_dev(dev);
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
+@@ -810,18 +831,18 @@ static ssize_t assign_domain_store(struct device *dev,
+ 	if (ret)
+ 		goto done;
+ 
+-	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
++	memset(aqm, 0, sizeof(aqm));
++	set_bit_inv(apqi, aqm);
+ 
+-	ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
++	ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev,
++					     matrix_mdev->matrix.apm, aqm);
+ 	if (ret)
+-		goto share_err;
++		goto done;
+ 
++	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
+ 	vfio_ap_mdev_link_queues(matrix_mdev, LINK_APQI, apqi);
+ 	ret = count;
+-	goto done;
+ 
+-share_err:
+-	clear_bit_inv(apqi, matrix_mdev->matrix.aqm);
+ done:
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+@@ -1397,3 +1418,14 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
+ 	kfree(q);
+ 	mutex_unlock(&matrix_dev->lock);
+ }
++
++bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
++{
++	bool in_use;
++
++	mutex_lock(&matrix_dev->lock);
++	in_use = !!vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
++	mutex_unlock(&matrix_dev->lock);
++
++	return in_use;
++}
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index a2aa05bec718..ad2d5b6a2851 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -103,4 +103,6 @@ struct vfio_ap_queue {
+ int vfio_ap_mdev_probe_queue(struct ap_queue *queue);
+ void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
+ 
++bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm);
++
+ #endif /* _VFIO_AP_PRIVATE_H_ */
 -- 
-2.26.0
+2.21.1
 
