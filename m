@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41517C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4202CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A9020B80
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1278B208A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366613;
-	bh=7KCJ9RahVhpFyfg0qAqHj72ARODx0jCsdw3IRaggssE=;
+	s=default; t=1591366617;
+	bh=41bL/hsDOIfSdm4FHHJ0WFyAbLah6gLP1gFgetM7Daw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWvSLB8RIQ6L6nj62YzHsXHfTeA6oCjvTrw3Nzlu5DP3W02rZkjZKb4zXHL0WQ5mf
-	 wFdNm9l55z3YMbQ0Qid8kmO2scIaim6YXsASXM0XM3Xe5SuMerXmZK0YqjP/fnZRPn
-	 PdCQERrD//OnOLUQwyx+63ErxB7jETxBy4LhwT/g=
+	b=IDhAh//3XlzVsxcph2X2l+D+ejGCnGZCtZy0JTybxCbWIlhn3TXpojuVfY0PEyT55
+	 JRMK8UgM6AUdYvNPicktcDlC9l+f/2x+xf2Dy+ZI4J2cF6oYqzoxSI7wZFrkAHteFZ
+	 7jU32MUAAFYqJB0n4aLMeZisz8IPJUoCt0geXkEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgFEOQv (ORCPT
+        id S1728344AbgFEOQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgFEOQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:39 -0400
+        id S1728232AbgFEOQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E83D20878;
-        Fri,  5 Jun 2020 14:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB72920835;
+        Fri,  5 Jun 2020 14:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366598;
-        bh=7KCJ9RahVhpFyfg0qAqHj72ARODx0jCsdw3IRaggssE=;
+        s=default; t=1591366603;
+        bh=41bL/hsDOIfSdm4FHHJ0WFyAbLah6gLP1gFgetM7Daw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uuloDwI3WI141kbrwwBKAXEY0BxB82UoeImQYSqJ8gXG+QP6zrRrUgiTdmAFffJ9c
-         EB1qxBCrrgl4nyudEZCpG++ycZtMPZ5NNQ9H8G7RSxEJy1SMtyKEal0Ni/yYg+qsuC
-         Xg4fS0mWUPUdLMwWgD+mV0LnGhcawPJbo7BXhTGg=
+        b=EajJYiWoAYCrtKqqoRIQdjUZvh7zMUp85QlNfLVA7mXRpVw30efmLMI2CGqYfZJmy
+         J8g9ME0m97yIAmECQKMiGBn69/GVKOz+yvtomYhpsrsRSzOYt96C/oBktV3zM29fiX
+         Ln9gnEpyh2XVWaUETozkdTR7LxLuxIjzmlANaHeY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Schmidt <jan@centricular.com>,
-        Dave Airlie <airlied@redhat.com>,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 18/43] drm/edid: Add Oculus Rift S to non-desktop list
-Date:   Fri,  5 Jun 2020 16:14:48 +0200
-Message-Id: <20200605140153.477728026@linuxfoundation.org>
+Subject: [PATCH 5.6 02/43] Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race window"
+Date:   Fri,  5 Jun 2020 16:14:32 +0200
+Message-Id: <20200605140152.625667193@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,38 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Schmidt <jan@centricular.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 5a3f610877e9d08968ea7237551049581f02b163 ]
+[ Upstream commit d8ef4b38cb69d907f9b0e889c44d05fc0f890977 ]
 
-Add a quirk for the Oculus Rift S OVR0012 display so
-it shows up as a non-desktop display.
+This reverts commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
+cgroup_rstat_updated() race window").
 
-Signed-off-by: Jan Schmidt <jan@centricular.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200507180628.740936-1-jan@centricular.com
+The commit was added in anticipation of memcg rstat conversion which needed
+synchronous accounting for the event counters (e.g. oom kill count). However,
+the conversion didn't get merged due to percpu memory overhead concern which
+couldn't be addressed at the time.
+
+Unfortunately, the patch's addition of smp_mb() to cgroup_rstat_updated()
+meant that every scheduling event now had to go through an additional full
+barrier and Mel Gorman noticed it as 1% regression in netperf UDP_STREAM test.
+
+There's no need to have this barrier in tree now and even if we need
+synchronous accounting in the future, the right thing to do is separating that
+out to a separate function so that hot paths which don't care about
+synchronous behavior don't have to pay the overhead of the full barrier. Let's
+revert.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Mel Gorman <mgorman@techsingularity.net>
+Link: http://lkml.kernel.org/r/20200409154413.GK3818@techsingularity.net
+Cc: v4.18+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/cgroup/rstat.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 079800a07d6e..5c611baba2fc 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -191,10 +191,11 @@ static const struct edid_quirk {
- 	{ "HVR", 0xaa01, EDID_QUIRK_NON_DESKTOP },
- 	{ "HVR", 0xaa02, EDID_QUIRK_NON_DESKTOP },
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 6f87352f8219..41ca996568df 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -33,12 +33,9 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+ 		return;
  
--	/* Oculus Rift DK1, DK2, and CV1 VR Headsets */
-+	/* Oculus Rift DK1, DK2, CV1 and Rift S VR Headsets */
- 	{ "OVR", 0x0001, EDID_QUIRK_NON_DESKTOP },
- 	{ "OVR", 0x0003, EDID_QUIRK_NON_DESKTOP },
- 	{ "OVR", 0x0004, EDID_QUIRK_NON_DESKTOP },
-+	{ "OVR", 0x0012, EDID_QUIRK_NON_DESKTOP },
+ 	/*
+-	 * Paired with the one in cgroup_rstat_cpu_pop_updated().  Either we
+-	 * see NULL updated_next or they see our updated stat.
+-	 */
+-	smp_mb();
+-
+-	/*
++	 * Speculative already-on-list test. This may race leading to
++	 * temporary inaccuracies, which is fine.
++	 *
+ 	 * Because @parent's updated_children is terminated with @parent
+ 	 * instead of NULL, we can tell whether @cgrp is on the list by
+ 	 * testing the next pointer for NULL.
+@@ -134,13 +131,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
+ 		*nextp = rstatc->updated_next;
+ 		rstatc->updated_next = NULL;
  
- 	/* Windows Mixed Reality Headsets */
- 	{ "ACR", 0x7fce, EDID_QUIRK_NON_DESKTOP },
+-		/*
+-		 * Paired with the one in cgroup_rstat_cpu_updated().
+-		 * Either they see NULL updated_next or we see their
+-		 * updated stat.
+-		 */
+-		smp_mb();
+-
+ 		return pos;
+ 	}
+ 
 -- 
 2.25.1
 
