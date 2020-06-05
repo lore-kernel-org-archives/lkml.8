@@ -2,121 +2,163 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB707C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 830D4207D0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33ED920772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W/jujRNm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SR+dJjrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgFEJ06 (ORCPT
+        id S1726308AbgFEJ1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726177AbgFEJ05 (ORCPT
+        Fri, 5 Jun 2020 05:27:10 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49096 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726177AbgFEJ1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:26:57 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB5AC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 02:26:57 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id k22so7882019qtm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 02:26:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zqYhFxyDAtILiqRdQs/A/VOm/gA98AIgqjG6QWawGpQ=;
-        b=W/jujRNmhvoNrLVbefR5GyiMcKSZuBkvaj1S58j1CaQm4s76j3544+zIPQElpPkDjV
-         gIIOpD20sCFWanYxUYHq2NxXbxGNHsRN3EmCM2CtZJ7R7YWZdihzXxJRP4ZQIDVDCwJt
-         YKliH8cv5t3/FSJ5Y8dQR3o9izwhgJLP8g+34fUhIPn3R8Mu5ixpGw9hQ8ND7mu40JUa
-         kMfVO4UF7iI7wdC0M8Dle7P77Mk4lSAMWGkjXt6l8H7qceGvvo4crPqgY1OP7Oz9xPN9
-         KUKa0pvcDrliTl0ZqSB6XuxQxd1yKIi+m+YXbTS+RiWF9QJ6wwCLkBUh7y4EOsLTqh64
-         cM7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zqYhFxyDAtILiqRdQs/A/VOm/gA98AIgqjG6QWawGpQ=;
-        b=iCCmoGJ4EmdWQuXWS923mgUyN1fK+TNPE+G8776M37x8nRMMVEFz+/Fux326jBISWy
-         9Ud2tx8z3AJuPleisuiHcwoEVuD4y892Cok8g7kZpeXEi7kimP5JNhG3Q9rWqGe/3hCw
-         2PER5Qlpck1ZDPv7wiSO1SSmluyOPSNZJUoxPw8eJIf77V0JRE3f757Fi/wmLFbEbxLT
-         fusuRyh0G+WIVfeKZKQtgxMBBp0u7bO8RbbnwtDf4Q2RjEZUQYsOBCtLcrCzold9Awnt
-         1ltQZTC9qHyBD8nThHdt/PilTXQ3kaer/w8rC49W5zAra9Hki9znttrwpjIvWcfB3OIx
-         uuVA==
-X-Gm-Message-State: AOAM5313jgYQWLEWWxkYYwMGnGfwl3a9Mh/kHmFFmLtMbNcmZOeAe5dy
-        kLKwROsHdUaP4nPqmUgFawFTTwOMYyNs44caA49FGA==
-X-Google-Smtp-Source: ABdhPJxgv+zPrPnHQh5qFdqGMjVhfrtsQcWtJgQqLKtJggpDyQwHdIc+w3MGZ1bWTRC6dyZ+GUoP0t6NLmYtKIKWp0c=
-X-Received: by 2002:ac8:6bd3:: with SMTP id b19mr8644372qtt.27.1591349216356;
- Fri, 05 Jun 2020 02:26:56 -0700 (PDT)
+        Fri, 5 Jun 2020 05:27:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591349228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=WDei8S9Y+fDxIX/wQTpCEb31Qbwh2m1zyvXT6rABXcc=;
+        b=SR+dJjrWL7WAL6f9JrBlI852a8ApBiHnX5wU+MkekCGoIlJ5gs0YN6f1fCiD94cRuoYKcc
+        /ndzxUfDxvHUzLG7bYiX6sywLTFUQ3N4KGVli6FBIoZCZTFsRLXsoClVShocV3o14NZhal
+        ufdQF1iCORjkBaqyH5hrmenVMDDtVaA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-81-BJJKE-YNPiGHcoYfv28bZA-1; Fri, 05 Jun 2020 05:27:04 -0400
+X-MC-Unique: BJJKE-YNPiGHcoYfv28bZA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99AE21854C44;
+        Fri,  5 Jun 2020 09:27:02 +0000 (UTC)
+Received: from [10.36.114.72] (ovpn-114-72.ams2.redhat.com [10.36.114.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 56ECE5C290;
+        Fri,  5 Jun 2020 09:27:01 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm/page_idle.c: Skip offline pages
+To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        SeongJae Park <sjpark@amazon.de>
+References: <20200605092502.18018-1-sjpark@amazon.com>
+ <20200605092502.18018-2-sjpark@amazon.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <dabb8aad-d3c2-6667-44e0-7e07606bb820@redhat.com>
+Date:   Fri, 5 Jun 2020 11:27:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200602141048.1995-1-warthog618@gmail.com> <CAMpxmJUjYn5SHg3BpCeKbYc_OpCjd8d943yfYL_TF15wyTenfA@mail.gmail.com>
- <20200604141804.GA5050@sol> <CAMpxmJXyVO4unLQOzC0xf47CTmK6VurTk+Q=9RDWhcP0pu73pQ@mail.gmail.com>
- <20200604233043.GA8913@sol>
-In-Reply-To: <20200604233043.GA8913@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 5 Jun 2020 11:26:45 +0200
-Message-ID: <CAMpxmJXX+rDFNfBqrBg3hKMApLKDnbFL6S1ZNz_BBi=zO7+aPQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: split character device into gpiolib-cdev
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200605092502.18018-2-sjpark@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 5 cze 2020 o 01:30 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
->
-> On Thu, Jun 04, 2020 at 06:22:43PM +0200, Bartosz Golaszewski wrote:
-> > czw., 4 cze 2020 o 16:18 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
-> > >
-> > > >
-> > > > Is this comment relevant for the character device?
-> > > >
-> > >
-> > > True - that comment should stay in gpiolib, and gpiolib-cdev should g=
-et
-> > > one of it's own.
-> > >
-> > > Any suggestions on how to maintain line history?
-> > > I know you can trick git by moving the original file into two new one=
-s,
-> > > then moving one of those back to the old name, but not sure if that i=
-s
-> > > what you would want to see in a patch.
-> > >
-> >
-> > People don't seem to care much about this in the kernel. Files get
-> > moved and git blame results get lost all the time. Don't stress about
-> > it.
-> >
->
-> Oh, ok.  I guess that explains why I couldn't find any examples of how
-> to do it in a patch - I had thought I wasn't looking hard enough.
->
+On 05.06.20 11:25, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> 'Idle page tracking' users can pass random pfn that might be mapped to
+> an offline page.  To avoid accessing such pages, this commit modifies
+> the 'page_idle_get_page()' to use 'pfn_to_online_page()' instead of
+> 'pfn_valid()' and 'pfn_to_page()' combination, so that the pfn mapped to
+> an offline page can be skipped.
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> Reported-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/page_idle.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/page_idle.c b/mm/page_idle.c
+> index 295512465065..057c61df12db 100644
+> --- a/mm/page_idle.c
+> +++ b/mm/page_idle.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/kobject.h>
+> +#include <linux/memory_hotplug.h>
+>  #include <linux/mm.h>
+>  #include <linux/mmzone.h>
+>  #include <linux/pagemap.h>
+> @@ -30,13 +31,9 @@
+>   */
+>  static struct page *page_idle_get_page(unsigned long pfn)
+>  {
+> -	struct page *page;
+> +	struct page *page = pfn_to_online_page(pfn);
+>  	pg_data_t *pgdat;
+>  
+> -	if (!pfn_valid(pfn))
+> -		return NULL;
+> -
+> -	page = pfn_to_page(pfn);
+>  	if (!page || !PageLRU(page) ||
+>  	    !get_page_unless_zero(page))
+>  		return NULL;
+> 
 
-It's not like this information is lost: once you see (with git blame)
-that a file has been moved, you can check out the revision from before
-the move and see the file's history. Rinse and repeat if it was moved
-more than once.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-> There are still a couple of commits in gpio/fixes that will conflict -
-> are those getting merged into gpio/devel any time soon?
-> Or is there another branch I should rebase onto?
->
+-- 
+Thanks,
 
-Linus W already sent out his main PR to Linus T. Sometimes he does
-additional PRs near the end of the merge window so maybe we can get it
-in this way?
+David / dhildenb
 
-Bart
