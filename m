@@ -2,90 +2,92 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81516C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3457C20820
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC58207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="vTxrPVq7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dfoocfrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgFESSE (ORCPT
+        id S1728158AbgFESSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:18:04 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:35417 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgFESSD (ORCPT
+        Fri, 5 Jun 2020 14:18:11 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28554 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726171AbgFESSK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:18:03 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id CB0A122FEB;
-        Fri,  5 Jun 2020 20:17:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591381080;
+        Fri, 5 Jun 2020 14:18:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591381089;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZQrvFc+JfRqJrBZHhTycEUPJ1czO+KGCEWzplfdwq6c=;
-        b=vTxrPVq7pwVzE9K+7xVF8maUzd1Hx1QtGuBVG62RAkkKjnyiRqh+YnQ+r4CAiE/XqWFkXn
-        jHE8MEGzEv3DgzZGP8Tonrvze71RaVmch6aNEnZwsBRYAEylZ3cCVe+s7C2uVzXtps72J8
-        0KLiMnUZz6+snc/Vk6MWgY9lmuzGKCY=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=+Whulsqh2F7J7NlPFEUmiQ01SmA0ksSYcs3K0r2NWUw=;
+        b=DfoocfrpB/qlkWTsnRre9Z4vNeh0+f3Q2KkynqZwMUsw3Z6aiY/4COFDuxpgMni6cP9hH2
+        ZViEpwqb9tnXMLmBDgmPWRdcWCYVvrn2aDQ0oA+MNWLDvTsuIwNoFqLjPCk3P59KaLulbd
+        lMWG7dd9zXPzbLJuEcQIbsMbh2/Ps4w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-441-HXm56DacMJifWPCJWZ9tDg-1; Fri, 05 Jun 2020 14:18:06 -0400
+X-MC-Unique: HXm56DacMJifWPCJWZ9tDg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE35F801503;
+        Fri,  5 Jun 2020 18:18:05 +0000 (UTC)
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7071D7B61A;
+        Fri,  5 Jun 2020 18:18:05 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 13:18:03 -0500
+From:   David Teigland <teigland@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] dlm updates for 5.8
+Message-ID: <20200605181803.GA4820@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 20:17:59 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
-In-Reply-To: <20200605084915.GE3714@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-6-michael@walle.cc> <20200605084915.GE3714@dell>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <b3324f5c1c908edc89a9cd2676644dfe@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-06-05 10:49, schrieb Lee Jones:
-[..]
->> +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip 
->> *chip)
->> +{
->> +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
->> +}
-> 
-> Why not save yourself the trouble and just:
-> 
->   struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
+Hi Linus,
 
-Is there a reason why not a single pwm driver uses something like that?
+Please pull dlm updates from tag:
 
--michael
+git://git.kernel.org/pub/scm/linux/kernel/git/teigland/linux-dlm.git dlm-5.8
+
+This set includes a couple minor cleanups, and dropping the
+interruptible from a wait_event that waits for an event from
+the userspace cluster management.
+
+Thanks,
+Dave
+
+Arnd Bergmann (1):
+      dlm: remove BUG() before panic()
+
+Gustavo A. R. Silva (2):
+      dlm: dlm_internal: Replace zero-length array with flexible-array member
+      dlm: user: Replace zero-length array with flexible-array member
+
+Ross Lagerwall (1):
+      dlm: Switch to using wait_event()
+
+Wu Bo (1):
+      fs:dlm:remove unneeded semicolon in rcom.c
+
+ fs/dlm/dlm_internal.h |  7 +++----
+ fs/dlm/lockspace.c    | 18 ++++--------------
+ fs/dlm/rcom.c         |  2 +-
+ fs/dlm/user.c         |  2 +-
+ 4 files changed, 9 insertions(+), 20 deletions(-)
+
