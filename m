@@ -2,217 +2,116 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0462FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD30207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D3020738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SgPDRouY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtUTM0qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgFEC5b (ORCPT
+        id S1726044AbgFEDBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56078 "EHLO
+        Thu, 4 Jun 2020 23:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgFEC53 (ORCPT
+        with ESMTP id S1725954AbgFEDBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:57:29 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5196DC08C5C3
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 19:57:26 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id jz3so1986563pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 19:57:26 -0700 (PDT)
+        Thu, 4 Jun 2020 23:01:01 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86627C08C5C0;
+        Thu,  4 Jun 2020 20:01:00 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id i1so6952223ils.11;
+        Thu, 04 Jun 2020 20:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M6PVatvjkL7a6G4MGddno9KRoekuNJtQ7P4X7N6VgLs=;
-        b=SgPDRouYyABJao/ElZNxU2CQu52ywW3AcyEHdC73jFg9bXVwlnLIPc+qjQ1b8MEGSP
-         An0XvIZ7g+iBWiBEA+sC4IjT9kbhoSfvkEeGc1Ir+U+CIcyg4xku8rxRqB+mpB84FooX
-         ntEenJkjqE6o7O8gFeVY9SWf9Hxt82ScDjTjU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dMlRURD0AMV5m7nsP7Rq9ppWitDs8+6K6/cTTPcy4TM=;
+        b=VtUTM0qn7CTaNao5hjVsEXiwUgUnBhKH925UHNI+uAyzcwMhfsq36V6iHXDGgcJKoD
+         BmZMuTPjd9qeP5i4yspQEsrfNpGIHzHqBmPEbPaj8JDY1CHTrro1SnYbTKGwd3iwlb5v
+         nIiJs1yhqmW/KwPIgKTPkLP5NitRPEPr9fHQ6nf99Ey2lNGBUQIynVyjBbUpy4S2fHF2
+         JrnHQi+vt6cNU9JKRRsspY4VihzLZisqneNP1zJMXzRz8gdNX2MzF7mnYHOALiu++cE5
+         v8+CPyH6lYqYiPIKJKq7+40FZAK9eSC3z91rlxQzzQv62XJaNlWlZX1FXvxLQq8XdYn0
+         d1rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M6PVatvjkL7a6G4MGddno9KRoekuNJtQ7P4X7N6VgLs=;
-        b=NR7ugG1m1YUB7g7q26vG4OpI13ArIeI7MK998hjW8iZ1FsdXZQBcRmh/y3LWmGCKN8
-         5ApDFF37lO90VmpdXV+9S/MorAD7tib1H7cTZ4xUp7gzpPmwWTfSgBfFO6qEMdgLT2qn
-         fZzHSM0FivQVouYOg4WPHd4/dMYNSzLZw1M24hihNPf7ClHrFCP8cXT81g+Ula1fhGXF
-         0j+95/dKqwptF+qZcJKVT+aIITINpF0KOPnZlY0GIuhyajaeGLQOpz1sNEg83u+sVEDD
-         UT/vwCL4SwANQIl7f5JNnDbw2uqZwTqN+lAUQvYH0x/Vks4bISsp6Z1rKtajXO+74ee9
-         a2eQ==
-X-Gm-Message-State: AOAM530alMcQraAWSeGIQX6ElFtjtFeuEDexJpRzSLbSsIjtTAAOVIU1
-        J3tZ6iBBm7YBTcuDzpZL8L/laQ==
-X-Google-Smtp-Source: ABdhPJy0qMxESQBukihzzGPV2cie3mmiE0CISaHFY+TLH/IcWrnRnBDv5cy6nkyJxmFy0ptWApJV/w==
-X-Received: by 2002:a17:90a:c17:: with SMTP id 23mr520400pjs.160.1591325845626;
-        Thu, 04 Jun 2020 19:57:25 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g29sm5957851pfr.47.2020.06.04.19.57.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dMlRURD0AMV5m7nsP7Rq9ppWitDs8+6K6/cTTPcy4TM=;
+        b=qkVeMHC9wddjWOwLnsoSgHq0rrASVyX4N3z5+6wMDZ9GcfMdGoENm/6vbcxDafwAq1
+         NhdRWKCwiZe19ajmMd8PQvbnDe/C9DW2eOUaOXSFIwbp/9uEFGMPvEE13GFiMEdF1rzM
+         EY17mc2ap+a1ZtSW6RrUY/81SxEtr3S1e7iyGEqywWXVsZLbOo7x66MW5Xym85EPX6uM
+         5Fs7W4oQcHWbF1BlgL69jigt3m54WN8GuqP3B9H0yHAcyOcC+IYgaxRVlZ1wOVwHHY4j
+         ga/kn7rKy9LALO+1ELcFC9Wx6yTxvRKeWYkWojvtzC0iDRGc8yg0om0Bhdf82ohdqW8w
+         R8Yg==
+X-Gm-Message-State: AOAM532m83aOwvU5QGQvsnylnGHL//wCoPlFxOzPuXWBjfqYGACELfYX
+        SgqN4mwKCJgsE6Oe1bHgmAg=
+X-Google-Smtp-Source: ABdhPJw65TE6nd6bypfAwdXMpluubPfORSaChczPfQHt4+6ldcKas7EH4A/dfERJ++EUdv98ERCbiA==
+X-Received: by 2002:a92:b603:: with SMTP id s3mr6921538ili.175.1591326059820;
+        Thu, 04 Jun 2020 20:00:59 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id d11sm727854iod.11.2020.06.04.20.00.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 19:57:24 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 19:57:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org, ltp@lists.linux.it
-Subject: Re: [exec] 166d03c9ec: ltp.execveat02.fail
-Message-ID: <202006041910.9EF0C602@keescook>
-References: <20200518055457.12302-3-keescook@chromium.org>
- <20200525091420.GI12456@shao2-debian>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525091420.GI12456@shao2-debian>
+        Thu, 04 Jun 2020 20:00:59 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] gpio: arizona: put pm_runtime in case of failure
+Date:   Thu,  4 Jun 2020 22:00:52 -0500
+Message-Id: <20200605030052.78235-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 05:14:20PM +0800, kernel test robot wrote:
-> execveat02.c:64: PASS: execveat() fails as expected: EBADF (9)
-> execveat02.c:64: PASS: execveat() fails as expected: EINVAL (22)
-> execveat02.c:61: FAIL: execveat() fails unexpectedly, expected: ELOOP: EACCES (13)
-> execveat02.c:64: PASS: execveat() fails as expected: ENOTDIR (20)
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 
-tl;dr: I think this test is correct, and I think I see a way to improve
-the offending patch series to do the right thing.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/gpio/gpio-arizona.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-
-Okay, the LTP is checking for ELOOP on trying to exec a symlink:
-
-...
- *    3) execveat() fails and returns ELOOP if the file identified by dirfd and
- *       pathname is a symbolic link and flag includes AT_SYMLINK_NOFOLLOW.
-...
-#define TESTDIR "testdir"
-#define TEST_APP "execveat_errno"
-...
-#define TEST_SYMLINK "execveat_symlink"
-...
-#define TEST_ERL_SYMLINK TESTDIR"/"TEST_SYMLINK
-...
-        sprintf(app_sym_path, "%s/%s", cur_dir_path, TEST_ERL_SYMLINK);
-...
-        SAFE_SYMLINK(TEST_REL_APP, TEST_ERL_SYMLINK);
-
-        fd = SAFE_OPEN(TEST_REL_APP, O_PATH);
-...
-static struct tcase {
-        int *fd;
-        char *pathname;
-        int flag;
-        int exp_err;
-} tcases[] = {
-...
-        {&fd, app_sym_path, AT_SYMLINK_NOFOLLOW, ELOOP},
-...
-};
-...
-                TEST(execveat(*tc->fd, tc->pathname, argv, environ, tc->flag));
-
-This is testing the exec _of_ a symlink under AT_SYMLINK_NOFOLLOW.
-
-The execve(2) manpage says:
-
-       ELOOP  Too many symbolic links were encountered in resolving
-              pathname or  the  name  of  a script or ELF interpreter.
-
-       ELOOP  The maximum recursion limit was reached during recursive
-	      script interpretation (see "Interpreter scripts", above).
-	      Before Linux 3.8, the error produced for this case was ENOEXEC.
-
-Which actually doesn't mention this case. open(2) says:
-
-       ELOOP  Too many symbolic links were encountered in resolving pathname.
-
-       ELOOP  pathname was a symbolic link, and flags specified O_NOFOLLOW
-	      but not O_PATH.
-
-(but O_NOFOLLOW is limited to file creation. linkat(2) lists the AT_*
-flags, and applied to openat, this seems to track: attempting to
-execat where the final element is a symlink should fail with ELOOP,
-though the manpage does warn that this makes it indistinguishable from
-symlink loops -- the first item listed in the execve manpage for
-ELOOP...)
-
-Regardless, this does seem to be the "correct" result, as opening for
-exec or opening just normally should really get the same error code.
-
-The call path for execve looks like this:
-
-    do_open_execat()
-        struct open_flags open_exec_flags = {
-            .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-	    .acc_mode = MAY_READ | MAY_EXEC,
-	    ...
-        do_filp_open(dfd, filename, open_flags)
-            path_openat(nameidata, open_flags, flags)
-                file = alloc_empty_file(open_flags, current_cred());
-		open_last_lookups(nd, file, open_flags)
-		    step_into(nd, ...)
-		        /* stop on symlink without LOOKUP_FOLLOW */
-                do_open(nameidata, file, open_flags)
-                    /* new location of FMODE_EXEC vs S_ISREG() test */
-                    may_open(path, acc_mode, open_flag)
-			/* test for S_IFLNK */
-                        inode_permission(inode, MAY_OPEN | acc_mode)
-                            security_inode_permission(inode, acc_mode)
-                    vfs_open(path, file)
-                        do_dentry_open(file, path->dentry->d_inode, open)
-                            /* old location of FMODE_EXEC vs S_ISREG() test */
-                            security_file_open(f)
-                            open()
-
-The step_into() is what kicks back out without LOOKUP_FOLLOW, so we're
-left holding a symlink (S_IFMT inode). In do_open(), there is a set of
-checks via may_open() which checks for S_IFMT and rejects it:
-
-        switch (inode->i_mode & S_IFMT) {
-        case S_IFLNK:
-                return -ELOOP;
-
-So that's the case LTP was testing for.
-
-The patch in -next ("exec: relocate S_ISREG() check")[1], moves the regular
-file requirement up before may_open(), for all the reasons mentioned in
-the commit log (and the next patch[2]).
-
-When I was originally trying to determine the best place for where the
-checks should live, may_open() really did seem like the right place, but I
-recognized that it was examining path characteristics (which was good) but
-it didn't have the file, and that seemed to be an intentional separation.
-
-What is needed in may_open() would be the "how was this file opened?"
-piece of information: file->f_mode & FMODE_EXEC. However, in looking at
-this again now, I wonder if it might be possible to use the MAY_EXEC
-from the acc_mode? It seems the old check (in do_dentry_open() had no
-access to the acc_mode, so it was forced to use the FMODE_EXEC signal
-instead.
-
-(I actually think this remains a bit of a design problem: path-based LSMs,
-which see the opened file in security_file_open(), also don't have access
-to acc_mode and must depend on the FMODE_* flags...)
-
-I will respin the series to use acc_mode and move the tests into
-may_open().
-
--Kees
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=vfs/fmode_exec/v1&id=36aaecef88b472ad5e0a408ffdb5b2e46f1478f6
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=vfs/fmode_exec/v1&id=a2f303b9f24ae2ecdc57f3db93e49b2b869893aa
-
+diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+index 7520a13b4c7c..5bda38e0780f 100644
+--- a/drivers/gpio/gpio-arizona.c
++++ b/drivers/gpio/gpio-arizona.c
+@@ -64,6 +64,7 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 		ret = pm_runtime_get_sync(chip->parent);
+ 		if (ret < 0) {
+ 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
++			pm_runtime_put_autosuspend(chip->parent);
+ 			return ret;
+ 		}
+ 
+@@ -72,12 +73,15 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 		if (ret < 0) {
+ 			dev_err(chip->parent, "Failed to drop cache: %d\n",
+ 				ret);
++			pm_runtime_put_autosuspend(chip->parent);
+ 			return ret;
+ 		}
+ 
+ 		ret = regmap_read(arizona->regmap, reg, &val);
+-		if (ret < 0)
++		if (ret < 0) {
++			pm_runtime_put_autosuspend(chip->parent);
+ 			return ret;
++		}
+ 
+ 		pm_runtime_mark_last_busy(chip->parent);
+ 		pm_runtime_put_autosuspend(chip->parent);
 -- 
-Kees Cook
+2.17.1
+
