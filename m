@@ -2,216 +2,217 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7F9207DA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD30207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:57:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SgPDRouY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgFEC5U (ORCPT
+        id S1726115AbgFEC5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:57:20 -0400
-Received: from mail.windriver.com ([147.11.1.11]:49772 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgFEC5U (ORCPT
+        Thu, 4 Jun 2020 22:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgFEC53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:57:20 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0552uj75005311
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Thu, 4 Jun 2020 19:56:45 -0700 (PDT)
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 4 Jun 2020 19:56:44 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <balbi@kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] usb: gadget: function: printer: fix use-after-free in __lock_acquire
-Date:   Fri, 5 Jun 2020 11:05:33 +0800
-Message-ID: <20200605030533.10102-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 4 Jun 2020 22:57:29 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5196DC08C5C3
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 19:57:26 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id jz3so1986563pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 19:57:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M6PVatvjkL7a6G4MGddno9KRoekuNJtQ7P4X7N6VgLs=;
+        b=SgPDRouYyABJao/ElZNxU2CQu52ywW3AcyEHdC73jFg9bXVwlnLIPc+qjQ1b8MEGSP
+         An0XvIZ7g+iBWiBEA+sC4IjT9kbhoSfvkEeGc1Ir+U+CIcyg4xku8rxRqB+mpB84FooX
+         ntEenJkjqE6o7O8gFeVY9SWf9Hxt82ScDjTjU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M6PVatvjkL7a6G4MGddno9KRoekuNJtQ7P4X7N6VgLs=;
+        b=NR7ugG1m1YUB7g7q26vG4OpI13ArIeI7MK998hjW8iZ1FsdXZQBcRmh/y3LWmGCKN8
+         5ApDFF37lO90VmpdXV+9S/MorAD7tib1H7cTZ4xUp7gzpPmwWTfSgBfFO6qEMdgLT2qn
+         fZzHSM0FivQVouYOg4WPHd4/dMYNSzLZw1M24hihNPf7ClHrFCP8cXT81g+Ula1fhGXF
+         0j+95/dKqwptF+qZcJKVT+aIITINpF0KOPnZlY0GIuhyajaeGLQOpz1sNEg83u+sVEDD
+         UT/vwCL4SwANQIl7f5JNnDbw2uqZwTqN+lAUQvYH0x/Vks4bISsp6Z1rKtajXO+74ee9
+         a2eQ==
+X-Gm-Message-State: AOAM530alMcQraAWSeGIQX6ElFtjtFeuEDexJpRzSLbSsIjtTAAOVIU1
+        J3tZ6iBBm7YBTcuDzpZL8L/laQ==
+X-Google-Smtp-Source: ABdhPJy0qMxESQBukihzzGPV2cie3mmiE0CISaHFY+TLH/IcWrnRnBDv5cy6nkyJxmFy0ptWApJV/w==
+X-Received: by 2002:a17:90a:c17:: with SMTP id 23mr520400pjs.160.1591325845626;
+        Thu, 04 Jun 2020 19:57:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g29sm5957851pfr.47.2020.06.04.19.57.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 19:57:24 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 19:57:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org, ltp@lists.linux.it
+Subject: Re: [exec] 166d03c9ec: ltp.execveat02.fail
+Message-ID: <202006041910.9EF0C602@keescook>
+References: <20200518055457.12302-3-keescook@chromium.org>
+ <20200525091420.GI12456@shao2-debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525091420.GI12456@shao2-debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+On Mon, May 25, 2020 at 05:14:20PM +0800, kernel test robot wrote:
+> execveat02.c:64: PASS: execveat() fails as expected: EBADF (9)
+> execveat02.c:64: PASS: execveat() fails as expected: EINVAL (22)
+> execveat02.c:61: FAIL: execveat() fails unexpectedly, expected: ELOOP: EACCES (13)
+> execveat02.c:64: PASS: execveat() fails as expected: ENOTDIR (20)
 
-Fix this by increase object reference count.
+tl;dr: I think this test is correct, and I think I see a way to improve
+the offending patch series to do the right thing.
 
-BUG: KASAN: use-after-free in __lock_acquire+0x3fd4/0x4180
-kernel/locking/lockdep.c:3831
-Read of size 8 at addr ffff8880683b0018 by task syz-executor.0/3377
 
-CPU: 1 PID: 3377 Comm: syz-executor.0 Not tainted 5.6.11 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- __lock_acquire+0x3fd4/0x4180 kernel/locking/lockdep.c:3831
- lock_acquire+0x127/0x350 kernel/locking/lockdep.c:4488
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x35/0x50 kernel/locking/spinlock.c:159
- printer_ioctl+0x4a/0x110 drivers/usb/gadget/function/f_printer.c:723
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0xfb/0x130 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4531a9
-Code: ed 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48
-89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
-01 f0 ff ff 0f 83 bb 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd14ad72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 000000000073bfa8 RCX: 00000000004531a9
-RDX: fffffffffffffff9 RSI: 000000000000009e RDI: 0000000000000003
-RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004bbd61
-R13: 00000000004d0a98 R14: 00007fd14ad736d4 R15: 00000000ffffffff
+Okay, the LTP is checking for ELOOP on trying to exec a symlink:
 
-Allocated by task 2393:
- save_stack+0x21/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc.constprop.3+0xa7/0xd0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0xfa/0x2d0 mm/slub.c:2813
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- gprinter_alloc+0xa1/0x870 drivers/usb/gadget/function/f_printer.c:1416
- usb_get_function+0x58/0xc0 drivers/usb/gadget/functions.c:61
- config_usb_cfg_link+0x1ed/0x3e0 drivers/usb/gadget/configfs.c:444
- configfs_symlink+0x527/0x11d0 fs/configfs/symlink.c:202
- vfs_symlink+0x33d/0x5b0 fs/namei.c:4201
- do_symlinkat+0x11b/0x1d0 fs/namei.c:4228
- __do_sys_symlinkat fs/namei.c:4242 [inline]
- __se_sys_symlinkat fs/namei.c:4239 [inline]
- __x64_sys_symlinkat+0x73/0xb0 fs/namei.c:4239
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+...
+ *    3) execveat() fails and returns ELOOP if the file identified by dirfd and
+ *       pathname is a symbolic link and flag includes AT_SYMLINK_NOFOLLOW.
+...
+#define TESTDIR "testdir"
+#define TEST_APP "execveat_errno"
+...
+#define TEST_SYMLINK "execveat_symlink"
+...
+#define TEST_ERL_SYMLINK TESTDIR"/"TEST_SYMLINK
+...
+        sprintf(app_sym_path, "%s/%s", cur_dir_path, TEST_ERL_SYMLINK);
+...
+        SAFE_SYMLINK(TEST_REL_APP, TEST_ERL_SYMLINK);
 
-Freed by task 3368:
- save_stack+0x21/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x135/0x190 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- slab_free_hook mm/slub.c:1444 [inline]
- slab_free_freelist_hook mm/slub.c:1477 [inline]
- slab_free mm/slub.c:3034 [inline]
- kfree+0xf7/0x410 mm/slub.c:3995
- gprinter_free+0x49/0xd0 drivers/usb/gadget/function/f_printer.c:1353
- usb_put_function+0x38/0x50 drivers/usb/gadget/functions.c:87
- config_usb_cfg_unlink+0x2db/0x3b0 drivers/usb/gadget/configfs.c:485
- configfs_unlink+0x3b9/0x7f0 fs/configfs/symlink.c:250
- vfs_unlink+0x287/0x570 fs/namei.c:4073
- do_unlinkat+0x4f9/0x620 fs/namei.c:4137
- __do_sys_unlink fs/namei.c:4184 [inline]
- __se_sys_unlink fs/namei.c:4182 [inline]
- __x64_sys_unlink+0x42/0x50 fs/namei.c:4182
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+        fd = SAFE_OPEN(TEST_REL_APP, O_PATH);
+...
+static struct tcase {
+        int *fd;
+        char *pathname;
+        int flag;
+        int exp_err;
+} tcases[] = {
+...
+        {&fd, app_sym_path, AT_SYMLINK_NOFOLLOW, ELOOP},
+...
+};
+...
+                TEST(execveat(*tc->fd, tc->pathname, argv, environ, tc->flag));
 
-The buggy address belongs to the object at ffff8880683b0000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 24 bytes inside of
- 1024-byte region [ffff8880683b0000, ffff8880683b0400)
-The buggy address belongs to the page:
-page:ffffea0001a0ec00 refcount:1 mapcount:0 mapping:ffff88806c00e300
-index:0xffff8880683b1800 compound_mapcount: 0
-flags: 0x100000000010200(slab|head)
-raw: 0100000000010200 0000000000000000 0000000600000001 ffff88806c00e300
-raw: ffff8880683b1800 000000008010000a 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+This is testing the exec _of_ a symlink under AT_SYMLINK_NOFOLLOW.
 
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
----
- drivers/usb/gadget/function/f_printer.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+The execve(2) manpage says:
 
-diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
-index 9c7ed2539ff7..8ed1295d7e35 100644
---- a/drivers/usb/gadget/function/f_printer.c
-+++ b/drivers/usb/gadget/function/f_printer.c
-@@ -31,6 +31,7 @@
- #include <linux/types.h>
- #include <linux/ctype.h>
- #include <linux/cdev.h>
-+#include <linux/kref.h>
- 
- #include <asm/byteorder.h>
- #include <linux/io.h>
-@@ -64,7 +65,7 @@ struct printer_dev {
- 	struct usb_gadget	*gadget;
- 	s8			interface;
- 	struct usb_ep		*in_ep, *out_ep;
--
-+	struct kref             kref;
- 	struct list_head	rx_reqs;	/* List of free RX structs */
- 	struct list_head	rx_reqs_active;	/* List of Active RX xfers */
- 	struct list_head	rx_buffers;	/* List of completed xfers */
-@@ -218,6 +219,13 @@ static inline struct usb_endpoint_descriptor *ep_desc(struct usb_gadget *gadget,
- 
- /*-------------------------------------------------------------------------*/
- 
-+static void printer_dev_free(struct kref *kref)
-+{
-+	struct printer_dev *dev = container_of(kref, struct printer_dev, kref);
-+
-+	kfree(dev);
-+}
-+
- static struct usb_request *
- printer_req_alloc(struct usb_ep *ep, unsigned len, gfp_t gfp_flags)
- {
-@@ -348,6 +356,7 @@ printer_open(struct inode *inode, struct file *fd)
- 
- 	spin_unlock_irqrestore(&dev->lock, flags);
- 
-+	kref_get(&dev->kref);
- 	DBG(dev, "printer_open returned %x\n", ret);
- 	return ret;
- }
-@@ -365,6 +374,7 @@ printer_close(struct inode *inode, struct file *fd)
- 	dev->printer_status &= ~PRINTER_SELECTED;
- 	spin_unlock_irqrestore(&dev->lock, flags);
- 
-+	kref_put(&dev->kref, printer_dev_free);
- 	DBG(dev, "printer_close\n");
- 
- 	return 0;
-@@ -1350,7 +1360,8 @@ static void gprinter_free(struct usb_function *f)
- 	struct f_printer_opts *opts;
- 
- 	opts = container_of(f->fi, struct f_printer_opts, func_inst);
--	kfree(dev);
-+
-+	kref_put(&dev->kref, printer_dev_free);
- 	mutex_lock(&opts->lock);
- 	--opts->refcnt;
- 	mutex_unlock(&opts->lock);
-@@ -1419,6 +1430,7 @@ static struct usb_function *gprinter_alloc(struct usb_function_instance *fi)
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-+	kref_init(&dev->kref);
- 	++opts->refcnt;
- 	dev->minor = opts->minor;
- 	dev->pnp_string = opts->pnp_string;
+       ELOOP  Too many symbolic links were encountered in resolving
+              pathname or  the  name  of  a script or ELF interpreter.
+
+       ELOOP  The maximum recursion limit was reached during recursive
+	      script interpretation (see "Interpreter scripts", above).
+	      Before Linux 3.8, the error produced for this case was ENOEXEC.
+
+Which actually doesn't mention this case. open(2) says:
+
+       ELOOP  Too many symbolic links were encountered in resolving pathname.
+
+       ELOOP  pathname was a symbolic link, and flags specified O_NOFOLLOW
+	      but not O_PATH.
+
+(but O_NOFOLLOW is limited to file creation. linkat(2) lists the AT_*
+flags, and applied to openat, this seems to track: attempting to
+execat where the final element is a symlink should fail with ELOOP,
+though the manpage does warn that this makes it indistinguishable from
+symlink loops -- the first item listed in the execve manpage for
+ELOOP...)
+
+Regardless, this does seem to be the "correct" result, as opening for
+exec or opening just normally should really get the same error code.
+
+The call path for execve looks like this:
+
+    do_open_execat()
+        struct open_flags open_exec_flags = {
+            .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+	    .acc_mode = MAY_READ | MAY_EXEC,
+	    ...
+        do_filp_open(dfd, filename, open_flags)
+            path_openat(nameidata, open_flags, flags)
+                file = alloc_empty_file(open_flags, current_cred());
+		open_last_lookups(nd, file, open_flags)
+		    step_into(nd, ...)
+		        /* stop on symlink without LOOKUP_FOLLOW */
+                do_open(nameidata, file, open_flags)
+                    /* new location of FMODE_EXEC vs S_ISREG() test */
+                    may_open(path, acc_mode, open_flag)
+			/* test for S_IFLNK */
+                        inode_permission(inode, MAY_OPEN | acc_mode)
+                            security_inode_permission(inode, acc_mode)
+                    vfs_open(path, file)
+                        do_dentry_open(file, path->dentry->d_inode, open)
+                            /* old location of FMODE_EXEC vs S_ISREG() test */
+                            security_file_open(f)
+                            open()
+
+The step_into() is what kicks back out without LOOKUP_FOLLOW, so we're
+left holding a symlink (S_IFMT inode). In do_open(), there is a set of
+checks via may_open() which checks for S_IFMT and rejects it:
+
+        switch (inode->i_mode & S_IFMT) {
+        case S_IFLNK:
+                return -ELOOP;
+
+So that's the case LTP was testing for.
+
+The patch in -next ("exec: relocate S_ISREG() check")[1], moves the regular
+file requirement up before may_open(), for all the reasons mentioned in
+the commit log (and the next patch[2]).
+
+When I was originally trying to determine the best place for where the
+checks should live, may_open() really did seem like the right place, but I
+recognized that it was examining path characteristics (which was good) but
+it didn't have the file, and that seemed to be an intentional separation.
+
+What is needed in may_open() would be the "how was this file opened?"
+piece of information: file->f_mode & FMODE_EXEC. However, in looking at
+this again now, I wonder if it might be possible to use the MAY_EXEC
+from the acc_mode? It seems the old check (in do_dentry_open() had no
+access to the acc_mode, so it was forced to use the FMODE_EXEC signal
+instead.
+
+(I actually think this remains a bit of a design problem: path-based LSMs,
+which see the opened file in security_file_open(), also don't have access
+to acc_mode and must depend on the FMODE_* flags...)
+
+I will respin the series to use acc_mode and move the tests into
+may_open().
+
+-Kees
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=vfs/fmode_exec/v1&id=36aaecef88b472ad5e0a408ffdb5b2e46f1478f6
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=vfs/fmode_exec/v1&id=a2f303b9f24ae2ecdc57f3db93e49b2b869893aa
+
 -- 
-2.24.1
-
+Kees Cook
