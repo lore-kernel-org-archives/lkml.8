@@ -2,76 +2,118 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2519CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE960C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9B3420823
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:18:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V2CWKQwr"
+	by mail.kernel.org (Postfix) with ESMTP id BD80920738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgFECSe (ORCPT
+        id S1726088AbgFECTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:18:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38327 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725497AbgFECSe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:18:34 -0400
-X-UUID: 9d188a1cb38342b5905f6a4dbdc13962-20200605
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=lpy8EnZ6wUWyr0sPLWYCdBeo3+Sir5kSAhPwv1xe/Ls=;
-        b=V2CWKQwrCl90ERhCFVSY8Z3+QDkWvLIs8BfvyGx9L/B4BSJGrNH8j+FB7BZcu0Bk4atIrO02HqOgcdjYwUyi/ezlXKIw6aHfjj+bkkAOdAL82tpCSVG29lOpLYa3A+IXaOR66z33C9lZE1274gJa4DhQfTRHQlytX01cXzkwAzc=;
-X-UUID: 9d188a1cb38342b5905f6a4dbdc13962-20200605
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2091216620; Fri, 05 Jun 2020 10:18:31 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 5 Jun 2020 10:18:30 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 5 Jun 2020 10:18:28 +0800
-Message-ID: <1591323509.7223.2.camel@mtkswgap22>
-Subject: Re: linux-next: build failure after merge of the sound-current tree
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Takashi Iwai <tiwai@suse.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Fri, 5 Jun 2020 10:18:29 +0800
-In-Reply-To: <20200605084307.47d31882@canb.auug.org.au>
-References: <20200605084307.47d31882@canb.auug.org.au>
-Content-Type: text/plain; charset="ISO-8859-1"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 4 Jun 2020 22:19:23 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39604 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgFECTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:19:22 -0400
+IronPort-SDR: AYu4mVsExGS6+78qLo5+pWSGEo0QvuWY/NP0pgVAVIRmO0UmSkvWpsoELJRaDVINJl7+M8zz45
+ mrwB/8dcf8vw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 19:19:21 -0700
+IronPort-SDR: tS9Pt/32gDKEFuBphYH6Hk5fx1Jdk3Dop6C/9sin11LG51CG5PKy0OhS9Z6SRlMIrbxbwkqc0D
+ mWViCojoZfnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,474,1583222400"; 
+   d="scan'208";a="294539060"
+Received: from lkp-server02.sh.intel.com (HELO 85fa322b0eb2) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Jun 2020 19:19:19 -0700
+Received: from kbuild by 85fa322b0eb2 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jh1x0-00000h-Rn; Fri, 05 Jun 2020 02:19:18 +0000
+Date:   Fri, 5 Jun 2020 10:19:06 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     kbuild-all@lists.01.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] proc: fix boolreturn.cocci warnings
+Message-ID: <20200605021906.GA9371@affccafec3c9>
+References: <20200604200413.587896-2-gladkov.alexey@gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 6EEC0A4E971896C348324CFA9779EA8B98CCFDC9C9561AEEDC292991E6ED77A62000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604200413.587896-2-gladkov.alexey@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA2LTA1IGF0IDA4OjQzICsxMDAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
-Og0KPiBIaSBhbGwsDQo+IA0KPiBBZnRlciBtZXJnaW5nIHRoZSBzb3VuZC1jdXJyZW50IHRyZWUs
-IHRvZGF5J3MgbGludXgtbmV4dCBidWlsZCAoYXJtDQo+IG11bHRpX3Y3X2RlZmNvbmZpZykgZmFp
-bGVkIGxpa2UgdGhpczoNCj4gDQo+IC9ob21lL3Nmci9uZXh0L25leHQvc291bmQvdXNiL2NhcmQu
-YzogSW4gZnVuY3Rpb24gJ3NuZF91c2JfYXV0b3Jlc3VtZSc6DQo+IC9ob21lL3Nmci9uZXh0L25l
-eHQvc291bmQvdXNiL2NhcmQuYzo4NDE6Mjk6IGVycm9yOiBleHBlY3RlZCAnOycgYmVmb3JlICcp
-JyB0b2tlbg0KPiAgIDg0MSB8ICAgIGF0b21pY19kZWMoJmNoaXAtPmFjdGl2ZSkpDQo+ICAgICAg
-IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4NCj4gICAgICAgfCAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgOw0KPiANCj4gQ2F1c2VkIGJ5IGNvbW1pdA0KPiANCj4gICAzMzk4ZTVj
-N2IwMzggKCJBTFNBOiB1c2ItYXVkaW86IE1hbmFnZSBhdXRvLXBtIG9mIGFsbCBidW5kbGVkIGlu
-dGVyZmFjZXMiKQ0KPiANCj4gSSBoYXZlIHJldmVydGVkIHRoYXQgY29tbWl0IGZvciB0b2RheS4N
-Cj4gDQoNClNvcnJ5IEkndmUgdGVzdGVkIGl0cyBmdW5jdGlvbiBieSAicGF0Y2ggYmFjayIgdG8g
-b2xkZXIga2VybmVsIHZlcnNpb24NCjQuMTQuDQpBZnRlciBjaGVja2luZyB0aGUgbGF0ZXN0IHBh
-dGNoIGFnYWluLCB0aGVyZSBpcyBpbmRlZWQgYSB0eXBvIGhlcmUuDQoNClRoYW5rcw0KTWFjcGF1
-bCBMaW4NCg==
+From: kernel test robot <lkp@intel.com>
 
+fs/proc/generic.c:204:9-10: WARNING: return of 0/1 in function 'is_pde_visible' with return type bool
+
+ Return statements in functions returning bool should use
+ true/false instead of 1/0.
+Generated by: scripts/coccinelle/misc/boolreturn.cocci
+
+CC: Alexey Gladkov <gladkov.alexey@gmail.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+
+url:    https://github.com/0day-ci/linux/commits/Alexey-Gladkov/proc-use-subset-option-to-hide-some-top-level-procfs-entries/20200605-040818
+base:    d4899e5542c15062cc55cac0ca99025bb64edc61
+
+ generic.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/fs/proc/generic.c
++++ b/fs/proc/generic.c
+@@ -201,7 +201,7 @@ bool is_pde_visible(struct proc_fs_info
+ 	int i;
+ 
+ 	if (!fs_info->whitelist || pde == &proc_root)
+-		return 1;
++		return true;
+ 
+ 	read_lock(&proc_subdir_lock);
+ 
+@@ -218,7 +218,7 @@ bool is_pde_visible(struct proc_fs_info
+ 
+ 		if (ent == pde) {
+ 			read_unlock(&proc_subdir_lock);
+-			return 1;
++			return true;
+ 		}
+ 
+ 		if (!S_ISDIR(ent->mode))
+@@ -228,14 +228,14 @@ bool is_pde_visible(struct proc_fs_info
+ 		while (de != &proc_root) {
+ 			if (ent == de) {
+ 				read_unlock(&proc_subdir_lock);
+-				return 1;
++				return true;
+ 			}
+ 			de = de->parent;
+ 		}
+ 	}
+ 
+ 	read_unlock(&proc_subdir_lock);
+-	return 0;
++	return false;
+ }
+ 
+ static DEFINE_IDA(proc_inum_ida);
