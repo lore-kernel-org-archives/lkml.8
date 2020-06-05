@@ -2,144 +2,85 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD156C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC304C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 954C2206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A40E206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:52:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AugcbZzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgFEMwG (ORCPT
+        id S1726857AbgFEMwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:52:06 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37986 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgFEMwE (ORCPT
+        Fri, 5 Jun 2020 08:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgFEMwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:52:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c194so8108722oig.5;
-        Fri, 05 Jun 2020 05:52:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0l1qYzvXi/GO1NNvXjYET+2paPoc72Q4SdiakMSrAJE=;
-        b=NMiI0cxm3L5FK+XtkUqxfkfr16nI8LXlr6zv2XNGDXyMN5Rt1ttn0qhKXMEMtCpiIR
-         rvZZcqwQrQvaDVA2S1v2j1fvnG9+Qaxw40pcFFaFh/ERXgX5g9gOyw271xfoCNDQYy+l
-         CESBmJzj9C63rBx73CiXDS7QcW5TBOp4TFb274Byvj4DD01yLc6V3MVoGZa8Omgu4B86
-         Yv0lZ2KtbUceWzGjeq3vHYbw5kmV7pCNWrfPAw9UudKFtGSuqHarOOEC1EJMTTV+eJbf
-         GJefnoOypP8BsxzQWnWtC60fu9aVf4BXrD1EsfyPVjeosA2JNIYiqK1CzGf+bjeLVdPY
-         0Q0A==
-X-Gm-Message-State: AOAM530GlO5HQszfC6hPJUihsZSTy/zUCqltYggG3mFdx+k/oRH+8kEF
-        glM1aXIsqJrqs0swTMnhpGkt1Ab/sY9I3CoQZBgYok5Z
-X-Google-Smtp-Source: ABdhPJytYGDFbxN/XEq2VGE23sTUMKtd1U9+zTazCFQWHGPrv/2hO4eOc8uC8OCmgaeeBGlB90o3SnUqaReY8OrFTNk=
-X-Received: by 2002:aca:1a19:: with SMTP id a25mr1815274oia.54.1591361523495;
- Fri, 05 Jun 2020 05:52:03 -0700 (PDT)
+        Fri, 5 Jun 2020 08:52:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47250C08C5C3;
+        Fri,  5 Jun 2020 05:52:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=24/Ag3uRPr1ITptA3jwtdwHGaOLUrNVpE3X6iUn5kfE=; b=AugcbZzon+RFrMEeFO0RC1Yqez
+        uTq4ufZl332eqt4beOCHqtMeoA47j6DPIIivvaZGFtKJN6kpAqueQNdh6ucIzEHPsVDB2QDEnTp3d
+        xvH4kmFr5qjtVjcO4oiBe4zmQH8dTsTEq6siNP6dYs8DXc+GuB5Mo3MqdoRSYuKDHajXPPLb4eXIJ
+        eQkGGVmZKWBxUDBWd/cEcQx/HFALw5Da28p2Pd8DJFH6p07yjOaKL3EfSNYvA2q7WbNb8v6R2rT7h
+        hkRhyte/bcd2KmYbH8DmbzrrOt7iD1F5n5y1e46ChM/7jF1JjfA8InZvfJvJsF4fZdizMOojInbuk
+        vpPOFfdw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhBpR-0008Bp-SJ; Fri, 05 Jun 2020 12:52:09 +0000
+Date:   Fri, 5 Jun 2020 05:52:09 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Yan <yanaijie@huawei.com>, hulkci@huawei.com,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
+Subject: Re: block: Fix use-after-free in blkdev_get()
+Message-ID: <20200605125209.GG19604@bombadil.infradead.org>
+References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
+ <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
+ <20200605094353.GS30374@kadam>
+ <2ee6f2f7-eaec-e748-bead-0ad59f4c378b@web.de>
+ <20200605111039.GL22511@kadam>
+ <63e57552-ab95-7bb4-b4f1-70a307b6381d@web.de>
+ <20200605114208.GC19604@bombadil.infradead.org>
+ <a050788f-5875-0115-af31-692fd6bf3a88@web.de>
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 5 Jun 2020 14:51:52 +0200
-Message-ID: <CAMuHMdXgSWHd-w_vgv-2mrYwJ2trcdDNniKFGCDGbn3ts-CkjA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for
- iWave G21D-Q7 board based on RZ/G1H
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a050788f-5875-0115-af31-692fd6bf3a88@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Fri, Jun 05, 2020 at 02:47:00PM +0200, Markus Elfring wrote:
+> >> Some developers found parts of my reviews helpful, didn't they?
+> >
+> > Overall you are a net negative to kernel development.
+> 
+> Which concrete items do you like less here?
 
-On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Your feedback is unhelpful and you show no signs of changing it in
+response to the people who are telling you that it's unhelpful.
 
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> @@ -0,0 +1,37 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the iWave-RZ/G1H Qseven board
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +#include "r8a7742-iwg21m.dtsi"
-> +
-> +/ {
-> +       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
-> +       compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
-> +
-> +       aliases {
-> +               serial2 = &scifa2;
-> +       };
-> +
-> +       chosen {
-> +               bootargs = "ignore_loglevel root=/dev/mmcblk0p1 rw rootwait";
-> +               stdout-path = "serial2:115200n8";
-> +       };
-> +};
-> +
-> +&pfc {
-> +       scifa2_pins: scifa2 {
-> +               groups = "scifa2_data_c";
+> > Please change how you contribute.
+> 
+> I am curious to find the details out which might hinder progress
+> in desirable directions (according to your views)?
 
-Upon second look, I think this group is wrong.  While labeled SCIFA2 in
-the SOM schematics, these signals seem to be connected to a debugging
-interface.
-
-The real UART2 seems to be present on the camera daughter board.  Those
-signals are labeled "SCIFA2" in the camera board schematics, but "SCIF2"
-in the SOM schematics.  This is OK, as "scif2_data" and "scifa2_data"
-share the same pins, so you can choose either SCIF2 or SCIFA2 to drive
-them.
-
-If I'm right, please change the group, and move all serial2 descriptions
-to the camera board DTS.
-
-> +               function = "scifa2";
-> +       };
-> +};
-> +
-> +&scifa2 {
-> +       pinctrl-0 = <&scifa2_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       status = "okay";
-> +};
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Become an expert at something.  You seem to know about a millimetre deep
+across many hectares.  Learn something deeply, then your opinion about
+it will be meaningful.
