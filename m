@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A63DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 674962075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D318207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360129;
-	bh=x+RK2T1KYWRR6tas5jCc3xdvFytQfG2NGT0oj43jnCY=;
+	s=default; t=1591360138;
+	bh=At0/+C8mJmu58fFEoD3DVJfwfXlhXQeYSjcq2SXhuRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KZjw+n4/UMzlX6lLv2MVT4J8QLNHilmGG2fTPJLVUWDDq5eDIgCmZ+7qTrYl9S0c2
-	 3nEucpA2pm0IycdUuvHYfKOfrMCbCUEwOvzmSkejQYEozpVP2YLEp6PRFQQ+eMmenC
-	 w99fFJqWmAc9HVO9DDORw/clN7eGazA3/HIr1Wno=
+	b=R6RmOrf/cko8ZyC/yFTTrfEUOguWDVQfhnTxN+ziastkmRqL7rn1BX8qBopBImQhb
+	 FSlSu0uUVwEyk/6kxAUnr6yUXbfwuHmLOFQratBlZlgv2gSvjRMpCTdgfQkorLOSxV
+	 pFn+Ay34za+v8eUQJVNPmvZjONCoZkt4QJrbTGjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgFEM2n (ORCPT
+        id S1727108AbgFEM25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58020 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727036AbgFEM0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:26:03 -0400
+        id S1727018AbgFEM0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71A0A20897;
-        Fri,  5 Jun 2020 12:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE53208B6;
+        Fri,  5 Jun 2020 12:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359963;
-        bh=x+RK2T1KYWRR6tas5jCc3xdvFytQfG2NGT0oj43jnCY=;
+        s=default; t=1591359960;
+        bh=At0/+C8mJmu58fFEoD3DVJfwfXlhXQeYSjcq2SXhuRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d17yrxjlMkMTc8bPYGzwVwDX3Qup1P1Ru4GkBUDbUvKMnzVnmbTmnQ6Psq3OAE0hU
-         uvwDa05ulUGG22cY6AQsgv6eB/Lfh1r9kSGOV0wvYqWEmDkO5nYjg1eb5OSghER5H5
-         mS6T+L7hbzdzdxaJlK5o8S7KoDxaeiPFj2IHmWeQ=
+        b=ZdIrtGWbaYkjpaoUhRBK3OPTTpln9YFkRxjcLHxBp9osWt7W8ZbG90RkaBRef5ScQ
+         qLJpFcdCXP0ynTcA0saekR89sx0CPI3QXIJ1GwlsP8rvLEYND2+0x9KVmyJ1ujDq0S
+         yXCbUhnZpTpvj7MmSCDg3Sq5d/PRWjQjWEcr4a30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willem de Bruijn <willemb@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Fredrik Strupe <fredrik@strupe.net>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 4/9] net: check untrusted gso_size at kernel entry
-Date:   Fri,  5 Jun 2020 08:25:52 -0400
-Message-Id: <20200605122558.2882712-4-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 2/9] ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
+Date:   Fri,  5 Jun 2020 08:25:50 -0400
+Message-Id: <20200605122558.2882712-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122558.2882712-1-sashal@kernel.org>
 References: <20200605122558.2882712-1-sashal@kernel.org>
@@ -61,77 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Fredrik Strupe <fredrik@strupe.net>
 
-[ Upstream commit 6dd912f82680761d8fb6b1bb274a69d4c7010988 ]
+[ Upstream commit 3866f217aaa81bf7165c7f27362eee5d7919c496 ]
 
-Syzkaller again found a path to a kernel crash through bad gso input:
-a packet with gso size exceeding len.
+call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
+and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
+(0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
+instructions will be masked out. This makes the function match 32-bit
+thumb instructions where the second half-word is equal to instr_val,
+regardless of the first half-word.
 
-These packets are dropped in tcp_gso_segment and udp[46]_ufo_fragment.
-But they may affect gso size calculations earlier in the path.
+The result in this case is that all undefined 32-bit thumb instructions
+with the second half-word equal to 0xde01 (udf #1) work as breakpoints
+and will raise a SIGTRAP instead of a SIGILL, instead of just the one
+intended 16-bit instruction. An example of such an instruction is
+0xeaa0de01, which is unallocated according to Arm ARM and should raise a
+SIGILL, but instead raises a SIGTRAP.
 
-Now that we have thlen as of commit 9274124f023b ("net: stricter
-validation of untrusted gso packets"), check gso_size at entry too.
+This patch fixes the issue by setting all the bits in instr_mask, which
+will still match the intended 16-bit thumb instruction (where the
+upper half is always 0), but not any 32-bit thumb instructions.
 
-Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/virtio_net.h | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/arm/kernel/ptrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
-index f36727098df8..1c296f370e46 100644
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -31,6 +31,7 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
- {
- 	unsigned int gso_type = 0;
- 	unsigned int thlen = 0;
-+	unsigned int p_off = 0;
- 	unsigned int ip_proto;
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index 36718a424358..492ac74a63f4 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -229,8 +229,8 @@ static struct undef_hook arm_break_hook = {
+ };
  
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
-@@ -68,7 +69,8 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
- 
--		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
-+		p_off = skb_transport_offset(skb) + thlen;
-+		if (p_off > skb_headlen(skb))
- 			return -EINVAL;
- 	} else {
- 		/* gso packets without NEEDS_CSUM do not set transport_offset.
-@@ -92,17 +94,25 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
- 				return -EINVAL;
- 			}
- 
--			if (keys.control.thoff + thlen > skb_headlen(skb) ||
-+			p_off = keys.control.thoff + thlen;
-+			if (p_off > skb_headlen(skb) ||
- 			    keys.basic.ip_proto != ip_proto)
- 				return -EINVAL;
- 
- 			skb_set_transport_header(skb, keys.control.thoff);
-+		} else if (gso_type) {
-+			p_off = thlen;
-+			if (p_off > skb_headlen(skb))
-+				return -EINVAL;
- 		}
- 	}
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
- 		u16 gso_size = __virtio16_to_cpu(little_endian, hdr->gso_size);
- 
-+		if (skb->len - p_off <= gso_size)
-+			return -EINVAL;
-+
- 		skb_shinfo(skb)->gso_size = gso_size;
- 		skb_shinfo(skb)->gso_type = gso_type;
- 
+ static struct undef_hook thumb_break_hook = {
+-	.instr_mask	= 0xffff,
+-	.instr_val	= 0xde01,
++	.instr_mask	= 0xffffffff,
++	.instr_val	= 0x0000de01,
+ 	.cpsr_mask	= PSR_T_BIT,
+ 	.cpsr_val	= PSR_T_BIT,
+ 	.fn		= break_trap,
 -- 
 2.25.1
 
