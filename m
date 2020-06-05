@@ -2,116 +2,133 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C62C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA21820823
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583DE2053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIrhYQ/I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z5c9DQ8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgFEGbI (ORCPT
+        id S1726135AbgFEGfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60570 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgFEGbH (ORCPT
+        Fri, 5 Jun 2020 02:35:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56468 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725280AbgFEGfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:31:07 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0C0C08C5C2;
-        Thu,  4 Jun 2020 23:31:07 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id o5so9046758iow.8;
-        Thu, 04 Jun 2020 23:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AwDhq08cjD5JqZTeO0Y9UdSU2XkQsUbpJ8EXCL/HMHE=;
-        b=hIrhYQ/Ib+LMc/lM8TkkboBA43CJMvk8zLm4ZNrhrhhPe44AThnqI1MtOmXnBLUo6b
-         W91iiSy/AvYKOUOfr5GNwDxO1RwGoglhDLE+fWDlIP53CSNTE0YwTQxk+1wK2sTtzLR8
-         Krxss4eKSQo8FWkgEAaXX8heaJnqfCIJNY7rVT2Wt9GpTGcz5L5Q4yMgkHr84bdLs8gu
-         gNOz6oy6QOtm6JuIVM2hBvCf6+8hrK2mNd2SMrY74C24UAzF9z85HCwp4pb7r+/rmyUW
-         1XDRD+nIE8Ik1NuLKByDtAHKujMdUKMsNwylY39JqoW5nGa6gkn8lylg5AeirjcRmRAw
-         QjJA==
+        Fri, 5 Jun 2020 02:35:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591338938;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zOWlMMC6MaTqH8FdPka6VFHXT+XA0yiK+Y+lYw5AEhg=;
+        b=Z5c9DQ8q/DSBJz3KQgeUNSsZWRLN6VVMCzACQv3JzyMPmnvPwgmDAozZm9PNV+DArGeJDW
+        gCACiXqgakExCMm/P+MkkHyeRHLR0oA7Gd5MFjB+j9Cf3y/112hWnwfKgKC19Olgnp9flY
+        nk7+u1WkNm370jK8u0v7Mmg8SDYam1A=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-52DbFXSBPr2VyCkWp5hmpQ-1; Fri, 05 Jun 2020 02:35:36 -0400
+X-MC-Unique: 52DbFXSBPr2VyCkWp5hmpQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 11so2381533wmj.6
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 23:35:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AwDhq08cjD5JqZTeO0Y9UdSU2XkQsUbpJ8EXCL/HMHE=;
-        b=l6XpFN5oxMkld0/HjgriP9cc9Zo4io9SPkHITPWPTdh4PbBzh0qQEegnetmo+CWMS7
-         V4AJkHL6rktbaNUemDxlcF/LlPUhHmJI6fEE/FFoh/KK93Nm/HkrS3qcl7GOxk425zhH
-         kRxOkoLbMW2t1u+5BzLg+MfufpFT1u/6Jo5cVAVWklbwZRbtt+A58HdrRSLmST268eBy
-         Ud1K7qtnWy6CYHUT8L1uxAZ9fJuZ4v0t6g3zvq4mM0DJhyKzyZOkhSvX6fOLxGzLhDZM
-         tj198RvoH6hN9w0eHOPzhRQLJOD1iCSqHzVqLO5XXjAZoUIM3Lpunqh8ytxCUJs8eLuL
-         hP4w==
-X-Gm-Message-State: AOAM531zzADrY2wI5Xt3BPL+sVQPb2pMB9yzIvBEGqRdFPMxQGL6QdOt
-        LW0KCedQLgnoUrTlJKXH+Dg9jptkJIRH6pxxOg0=
-X-Google-Smtp-Source: ABdhPJwfxG2xuH353FOlKdoATjIRdV+1mkAMbDgGbPrRb2tsKonvfuPWxT4EOWzLvMycv3HDOoS7PqnFNKbNhrJLhKI=
-X-Received: by 2002:a5d:8958:: with SMTP id b24mr7266854iot.53.1591338665743;
- Thu, 04 Jun 2020 23:31:05 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zOWlMMC6MaTqH8FdPka6VFHXT+XA0yiK+Y+lYw5AEhg=;
+        b=DW3DRQRS6NQv2kOwYLtGfgvX56RAhluvwgvW/XVYlN0Ea7Sxd7AxIo8y6T5UQqAZLk
+         wfExwTozjjXKFp1lNUaB9ZfJ/WKl6oaXm8IzWS44bs+xlFjT9TAg8cD7zfNp1y6JbwsB
+         h2Qn8VPcSyJl9yYi0c7yGAqI3o8/B87GcbRCwtC5RzO2d0eVk9IwzDG5d3dHHAT+Mf/1
+         k93zfKUxvrq4CNGCJUZWBqXQ6GX+wZWfjCo0ApUQj8faoJcz7h3cXej1kQ/wXfOYXCwu
+         qXT7ndkc8tuUqw3bwZWgLX8BQRgcD0SKTcIlVpuiqw2tx2ysZHajYhXOCwoqaVkOSkpv
+         C04A==
+X-Gm-Message-State: AOAM531kbDeYUMCySN+YNJ2XYK0+L1LcLJ4ZFqGZXodipEly1M1ur5FL
+        pjrWu8+HgYttnLQ73dY8HomEylIZNyDmqbCQyExeSetr9/JsBmwtMxHwAKKpKslsm9k/9Qikpyt
+        NImHV6hE20otF6wliYOJlJ+rB
+X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr1109936wmi.30.1591338935466;
+        Thu, 04 Jun 2020 23:35:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzbaDfuoRzF8P8RlKKO6/4Xp0aXgpd0OWZjUf60bwyQlbamy2U8/MpobFZD+Uih4G9J/CLtGg==
+X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr1109908wmi.30.1591338935173;
+        Thu, 04 Jun 2020 23:35:35 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:a0c0:5d2e:1d35:17bb? ([2001:b07:6468:f312:a0c0:5d2e:1d35:17bb])
+        by smtp.gmail.com with ESMTPSA id k64sm10430479wmf.34.2020.06.04.23.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 23:35:34 -0700 (PDT)
+Subject: Re: [PATCH][v6] KVM: X86: support APERF/MPERF registers
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org,
+        hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de,
+        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, wei.huang2@amd.com
+References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+ <b70d03dd-947f-dee5-5499-3b381372497d@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <72a75924-c3cb-6b23-62bd-67b739dec166@redhat.com>
+Date:   Fri, 5 Jun 2020 08:35:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus> <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
- <20200603180435.GB23722@bogus> <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
- <20200604092052.GD8814@bogus> <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
- <20200605045645.GD12397@bogus>
-In-Reply-To: <20200605045645.GD12397@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Fri, 5 Jun 2020 01:30:54 -0500
-Message-ID: <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b70d03dd-947f-dee5-5499-3b381372497d@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 11:56 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+On 05/06/20 07:00, Xiaoyao Li wrote:
+> you could do
+> 
+>     bool guest_cpuid_aperfmperf = false;
+>     if (best)
+>         guest_cpuid_aperfmperf = !!(best->ecx & BIT(0));
+> 
+>     if (guest_cpuid_aperfmerf != guest_has_aperfmperf(vcpu->kvm))
+>         return -EINVAL;
+> 
+> 
+> In fact, I think we can do nothing here. Leave it as what usersapce
+> wants just like how KVM treats other CPUID bits.
 
->
-> > >>     bash-1526  [000]  1149.472553: scmi_xfer_begin:      transfer_id=1538 msg_id=6 protocol_id=21 seq=0 poll=0
-> > >>      <idle>-0     [001]  1149.472733: scmi_xfer_begin:      transfer_id=1539 msg_id=7 protocol_id=19 seq=1 poll=1
-> > >
-> > Here another request is started before the first is finished.
->
-> Ah, the prints are when the client requested. It is not when the mailbox
-> started it. So this just indicates the beginning of the transfer from the
-> client.
->
-There maybe condition on a sensor read to finish within 1ms, but there
-is no condition for the read to _start_ at this very moment (usually
-there are sleeps in the path to sensor requests).
+The reason to do it like Rongqing did is that it's suggested to take the
+output of KVM_GET_SUPPORTED_CPUID and pass it down to KVM_SET_CPUID2.
+Unfortunately we have KVM_GET_SUPPORTED_CPUID as a /dev/kvm (not VM)
+ioctl, otherwise you could have used guest_has_aperfmperf to affect the
+output of KVM_GET_SUPPORTED_CPUID.
 
-> > If you want this to work you have to serialise access to the single
-> > physical channel and/or run the remote firmware in asynchronous mode -
-> > that is, the firmware ack the bit as soon as it sees and starts
-> > working in the background, so that we return in ~3usec always, while
-> > the data returns whenever it is ready.
->
-> Yes it does that for few requests like DVFS while it uses synchronous
-> mode for few others. While ideally I agree everything in asynchronous
-> most is better, I don't know there may be reasons for such design.
->
-The reason is that, if the firmware works asynchronously, every call
-would return in ~3usec and you won't think you need virtual channels.
+I think it's okay however to keep it simple as you suggest.  In this
+case however __do_cpuid_func must not return the X86_FEATURE_APERFMPERF bit.
 
-You have shared only 'bad' log without serialising access. Please
-share log after serialising access to the channel and the 'good' log
-with virtual channels.  That should put the topic to rest.
+The guest can instead check for the availability of KVM_CAP_APERFMPERF,
+which is already done in Rongqing's patch.
 
-thanks.
+>> @@ -4930,6 +4939,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+>>           kvm->arch.exception_payload_enabled = cap->args[0];
+>>           r = 0;
+>>           break;
+>> +    case KVM_CAP_APERFMPERF:
+>> +        kvm->arch.aperfmperf_mode =
+>> +            boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
+> 
+> Shouldn't check whether cap->args[0] is a valid value?
+
+Yes, only valid values should be allowed.
+
+Also, it should fail with -EINVAL if the host does not have
+X86_FEATURE_APERFMPERF.
+
+Thanks,
+
+Paolo
+
