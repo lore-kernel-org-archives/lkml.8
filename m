@@ -2,149 +2,166 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE077C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5299206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B4C2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:35:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="L+7U5CYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgFEPdr (ORCPT
+        id S1728001AbgFEPfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:33:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12148 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726539AbgFEPdq (ORCPT
+        Fri, 5 Jun 2020 11:35:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgFEPfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:33:46 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055FWedb096598;
-        Fri, 5 Jun 2020 11:33:19 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31fhr9xbry-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 11:33:18 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055FXDlc100023;
-        Fri, 5 Jun 2020 11:33:16 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31fhr9xbqr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 11:33:15 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055FKqLA018391;
-        Fri, 5 Jun 2020 15:33:14 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 31bf4axv19-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 15:33:14 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055FXDOt55050728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jun 2020 15:33:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EE9AEB206C;
-        Fri,  5 Jun 2020 15:33:12 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6A27B206A;
-        Fri,  5 Jun 2020 15:33:12 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jun 2020 15:33:12 +0000 (GMT)
-Subject: Re: [PATCH] tpm: ibmvtpm: Wait for ready buffer before probing for
- TPM2 attributes
-To:     David Gibson <david@gibson.dropbear.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Nayna Jain <nayna@linux.ibm.com>
-Cc:     Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200605063719.456277-1-david@gibson.dropbear.id.au>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <fe79d427-359e-7c6a-6e39-8a6ea345cbd9@linux.ibm.com>
-Date:   Fri, 5 Jun 2020 11:33:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 5 Jun 2020 11:35:54 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBBDC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:35:53 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id n141so10102587qke.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=gtQA+LLer4oF1MYDGWubeGXcmaERWz1Qz3eCvPepdzE=;
+        b=L+7U5CYL52JcR/NyNlf4v97TCmdMYsKp0in6xqirZNCrodFwN25QtsN0W6eaS82qLw
+         qpImgelVS+V4lRCRz01Phj4serPzJA8LiuPZD6WzOFABjFVFQaIsA9ir2sPaI8yMCujy
+         wfmUoKmY2G+kASsmRZD2iFZhLOI0wHF+/UoLZNMC7mAQinREN+FexPKHul2SxDLyQYD1
+         /sybO9woUw3iQOb//RpCboHlM0E3gKhbUHtKNIQsaEKdynC2+kSO/lWoxF1GmXpK5T88
+         VIpj703sh4WuY75oRrz5zVS1CvySOOkptasu34D5/m0RAG9JwMUbLPu2KrpR2Bc6J0aX
+         02Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=gtQA+LLer4oF1MYDGWubeGXcmaERWz1Qz3eCvPepdzE=;
+        b=JcrkdmUv/qowdIP/OALwwRuLngxnSoV44/njZ3/jl4zFeh5v6MwbmV1HlVr1eMQcfm
+         tsIkPAOD7oZIDy52uUbeAmHeCeRXPhHFAB3U2Vcr90AzF8xkbiBkrMPYaizFqAcqcrPr
+         JXW8Sois3BaBc1sHiqVv1RqbMs3OdqmDyi9a+flAZ9mOG/lXyURUaEnwcSH1Y1WPxVzC
+         zInjrR9HXus9BaWgmbGBfSGcNVZg2T9YulZeEqb47b+I8U62hC9mrv87DPpN9f9xNsOK
+         SjAOMbmDqC/S40E2esPIL+GaYf+h/SDgjgvQchEgGO+342tCQTUTaXpQTANayBDvPuuk
+         8WTQ==
+X-Gm-Message-State: AOAM533OoQdE+o3HkHyUok01nAVBxdRQAk9lMFEQKCpGtJbbIq/3R47+
+        eo26y8YiYUGezK5YH/EuSs8HKw==
+X-Google-Smtp-Source: ABdhPJwg1O5VSMgn7zTkL97tBbW5ATQmTHf0hw3a4DzXkPzRPXx2Smt/9DJcKXp/vxm9P4LUEcqg+g==
+X-Received: by 2002:ae9:ebd2:: with SMTP id b201mr10185970qkg.409.1591371352936;
+        Fri, 05 Jun 2020 08:35:52 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id 79sm76810qkf.48.2020.06.05.08.35.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 08:35:51 -0700 (PDT)
+Message-ID: <02aa06fd8397b77c9a75d3a8399cb55d3b4d39c1.camel@ndufresne.ca>
+Subject: Re: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel
+ formats
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Neil Armstrong <narmstrong@baylibre.com>, hverkuil-cisco@xs4all.nl
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Maxime Jourdan <mjourdan@baylibre.com>
+Date:   Fri, 05 Jun 2020 11:35:50 -0400
+In-Reply-To: <20200604135317.9235-2-narmstrong@baylibre.com>
+References: <20200604135317.9235-1-narmstrong@baylibre.com>
+         <20200604135317.9235-2-narmstrong@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <20200605063719.456277-1-david@gibson.dropbear.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-05_04:2020-06-04,2020-06-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- priorityscore=1501 mlxlogscore=999 mlxscore=0 suspectscore=0
- lowpriorityscore=0 cotscore=-2147483648 impostorscore=0 spamscore=0
- clxscore=1011 phishscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006050113
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/20 2:37 AM, David Gibson wrote:
-> The tpm2_get_cc_attrs_tbl() call will result in TPM commands being issued,
-> which will need the use of the internal command/response buffer.  But,
-> we're issuing this *before* we've waited to make sure that buffer is
-> allocated.
->
-> This can result in intermittent failures to probe if the hypervisor / TPM
-> implementation doesn't respond quickly enough.  I find it fails almost
-> every time with an 8 vcpu guest under KVM with software emulated TPM.
-
-Uuuh. Thanks!
-
-
-> Fixes: 18b3670d79ae9 "tpm: ibmvtpm: Add support for TPM2"
-> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-
-
-
+Le jeudi 04 juin 2020 à 15:53 +0200, Neil Armstrong a écrit :
+> From: Maxime Jourdan <mjourdan@baylibre.com>
+> 
+> Add two generic Compressed Framebuffer pixel formats to be used
+> with a modifier when imported back in another subsystem like DRM/KMS.
+> 
+> These pixel formats represents generic 8bits and 10bits compressed buffers
+> with a vendor specific layout.
+> 
+> These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_YUV420_10BIT
+> used to describe the underlying compressed buffers used for ARM Framebuffer
+> Compression. In the Amlogic case, the compression is different but the
+> underlying buffer components is the same.
+> 
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->   drivers/char/tpm/tpm_ibmvtpm.c | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-> index 09fe45246b8c..994385bf37c0 100644
-> --- a/drivers/char/tpm/tpm_ibmvtpm.c
-> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
-> @@ -683,13 +683,6 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
->   	if (rc)
->   		goto init_irq_cleanup;
->   
-> -	if (!strcmp(id->compat, "IBM,vtpm20")) {
-> -		chip->flags |= TPM_CHIP_FLAG_TPM2;
-> -		rc = tpm2_get_cc_attrs_tbl(chip);
-> -		if (rc)
-> -			goto init_irq_cleanup;
-> -	}
-> -
->   	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
->   				ibmvtpm->rtce_buf != NULL,
->   				HZ)) {
-> @@ -697,6 +690,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
->   		goto init_irq_cleanup;
->   	}
->   
-> +	if (!strcmp(id->compat, "IBM,vtpm20")) {
-> +		chip->flags |= TPM_CHIP_FLAG_TPM2;
-> +		rc = tpm2_get_cc_attrs_tbl(chip);
-> +		if (rc)
-> +			goto init_irq_cleanup;
-> +	}
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+>  include/uapi/linux/videodev2.h       | 9 +++++++++
+>  2 files changed, 11 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index 2322f08a98be..8f14adfd5bc5 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>  		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
+>  		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
+>  		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
+> +		case V4L2_PIX_FMT_YUV420_8BIT:	descr = "Compressed YUV 4:2:0 8-bit Format"; break;
+> +		case V4L2_PIX_FMT_YUV420_10BIT:	descr = "Compressed YUV 4:2:0 10-bit Format"; break;
+
+When I read the DRM documentation [0], I'm reading that YUV420_8BIT
+definition matches V4L2_PIX_FMT_YVU420 and V4L2_PIX_FMT_YVU420M fully.
+In fact, on DRM side, to represent that format you want to expose here,
+they will strictly combine this generic format (documented un-
+compressed) with a modifier generated with the macro
+DRM_FORMAT_MOD_ARM_AFBC(*). And only the combination represent a unique
+and share-able format.
+
+In absence of modifier in V4L2 API, this compressed format should be
+named accordingly to the compressed algorithm used (something like
+FMT_YUV420_8BIT_AML_FBC). So I believe these format name cannot be
+copied as-is like this, as they can only introduce more ambiguity in
+the already quite hard to follow naming of pixel formats. In fact, it
+is very common to see multiple different vendor compressions on the
+same SoC, so I don't really believe a "generic" compressed format make
+sense. To site one, the IMX8M, which got Verrisillicon/Vivante DEC400
+on the GPU, and the Hantro G2 compression format. Both will apply to
+NV12 class of format so in DRM they would be NV12 + modifier, and the
+combination forms the unique format. Now, in term of sharing, they must
+be differiented by userspace, as support for compression/decompression
+is heterogeneous (in that case the GPU does not support Hantro G2
+decompression or compression, and the VPU does not support DEC400).
+
+I'll remind that the modifier implementation has great value and is
+much more scalable then the current V4L2 approach. There has been some
+early proposal for this, maybe it's time to prioritize because this
+list will starts growing with hundred or even thousands or format,
+which is clearly indicated by the increase of modifier generator macro
+on the DRM side.
+
+>  		default:
+>  			if (fmt->description[0])
+>  				return;
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index c3a1cf1c507f..90b9949acb8a 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -705,6 +705,15 @@ struct v4l2_pix_format {
+>  #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /* Fast Walsh Hadamard Transform (vicodec) */
+>  #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W', 'H') /* Stateless FWHT (vicodec) */
+>  
+> +/*
+> + * Compressed Luminance+Chrominance meta-formats
+> + * In these formats, the component ordering is specified (Y, followed by U
+> + * then V), but the exact Linear layout is undefined.
+> + * These formats can only be used with a non-Linear modifier.
+> + */
+> +#define V4L2_PIX_FMT_YUV420_8BIT	v4l2_fourcc('Y', 'U', '0', '8') /* 1-plane YUV 4:2:0 8-bit */
+> +#define V4L2_PIX_FMT_YUV420_10BIT	v4l2_fourcc('Y', 'U', '1', '0') /* 1-plane YUV 4:2:0 10-bit */
 > +
->   	return tpm_chip_register(chip);
->   init_irq_cleanup:
->   	do {
-
-
+>  /*  Vendor-specific formats   */
+>  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
+>  #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
 
