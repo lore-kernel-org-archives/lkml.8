@@ -2,146 +2,83 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5123BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1553C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1E22063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12B72063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WOTqL1q5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AmUizXlh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgFELvO (ORCPT
+        id S1726516AbgFELv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
+        Fri, 5 Jun 2020 07:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbgFELvL (ORCPT
+        with ESMTP id S1726324AbgFELv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:51:11 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E342C08C5C2;
-        Fri,  5 Jun 2020 04:51:11 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 726BF22FEC;
-        Fri,  5 Jun 2020 13:51:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591357869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/ER+pXew699aFz9lRU/UtY269UriM4m1gHDqBzilNF0=;
-        b=WOTqL1q5lVzt+KkEj2owI4A1lqxulU6qjVgnX7Fgolv/1VHdSWTe5qwcdYnZRfLQ2I7sHo
-        1EUptsptx9N4EuPomc09TB5DOJoQNPkRGpLSCB/Ur9LH8PQiLUnhh+iLM7hAcyB7Q9jxZH
-        VBka4JiutxAQHctV0rsFn+jcdze1zKQ=
+        Fri, 5 Jun 2020 07:51:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75B34C08C5C2;
+        Fri,  5 Jun 2020 04:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XMIUr7QQnBAMG/5n56k4P+c+DXhD2JhaWi3/bfA8kU0=; b=AmUizXlhfS4T140zZqpI0Yfzmp
+        JH+u5PKoAX0bZNDzeRNaDmdLeSyuWIqPb6JcttVdRebusPaSMCGXAO3ToV7RPVg/HZ8MP/kS67eqo
+        kYB3rPYKUEZGEIDuf8DiKRK1a5VccmhsJ8F/zzVr2cHJpIt7HBBhhJMzyd1dLNSWULfDA9bHUwuqt
+        8g6OVELcIR54uJXNNcBVbTGkB5bXn3EeBDAN2yJ/uNH5nnJ54pqYaKUycRvbPtgDjc/wEKzv7Z8it
+        xlTdbDJ0TpH+VIUp1fuZSWUSMhatsHuMk5QF2Q/ztmb8Az/2zu2rLnFN2AyMP+JelN/eCnY2hOc7N
+        l2/Njn6A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhAtC-0001E0-BT; Fri, 05 Jun 2020 11:51:58 +0000
+Date:   Fri, 5 Jun 2020 04:51:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Yan <yanaijie@huawei.com>, hulkci@huawei.com,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
+Subject: Re: block: Fix use-after-free in blkdev_get()
+Message-ID: <20200605115158.GD19604@bombadil.infradead.org>
+References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
+ <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
+ <20200605094353.GS30374@kadam>
+ <2ee6f2f7-eaec-e748-bead-0ad59f4c378b@web.de>
+ <20200605111049.GA19604@bombadil.infradead.org>
+ <b6c8ebd7-ccd3-2a94-05b2-7b92a30ec8a9@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 13:51:09 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <CAHp75Vf00w_UUvXULVd=OgSVM+p_pmNMJRPVnf8GNZW10c_j5w@mail.gmail.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
- <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
- <CAHp75Vf00w_UUvXULVd=OgSVM+p_pmNMJRPVnf8GNZW10c_j5w@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <dd0e4cedd004768d1090766d6eeff10a@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6c8ebd7-ccd3-2a94-05b2-7b92a30ec8a9@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-06-05 12:48, schrieb Andy Shevchenko:
-> On Fri, Jun 5, 2020 at 1:09 PM Michael Walle <michael@walle.cc> wrote:
->> Am 2020-06-05 10:01, schrieb Andy Shevchenko:
->> > On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
+On Fri, Jun 05, 2020 at 01:48:43PM +0200, Markus Elfring wrote:
+> >> I am trying to contribute a bit of patch review as usual.
+> >
+> > Please stop criticising people's commit messages.  Your suggestions
+> > are usually not improvements.
 > 
-> ...
-> 
->> >> +       bool "Kontron sl28 core driver"
->> >> +       depends on I2C=y
->> >
->> > Why not module?
->> 
->> There are users of the interupt lines provided by the interrupt
->> controller.
->> For example, the gpio-button driver. If this is compiled into the 
->> kernel
->> (which it is by default in the arm64 defconfig), probing will fail
->> because
->> the interrupt is not found. Is there a better way for that? I guess 
->> the
->> same
->> is true for the GPIO driver.
-> 
-> And GPIO nicely handles this via deferred probe mechanism. Why it
-> can't be used here?
-> So, we really need to have a strong argument to limit module nowadays
-> to be only builtin.
+> The details can vary also for my suggestions.
+> Would you point any more disagreemnents out on concrete items?
 
-Was that a question for me? TBH thats how other interrupt drivers doing
-it for now. And it would be the users who need to be fixed, right? Or
-even the platform code? Because it will complain with
+That's exactly the problem with many of your comments.  They're
+vague to the point of unintelligibility.
 
-[    2.962990] irq: no irq domain found for interrupt-controller@1c !
-[    2.975762] gpio-keys buttons0: Found button without gpio or irq
-[    2.981872] gpio-keys: probe of buttons0 failed with error -22
-
->> >> +       depends on OF
->> >
->> > I didn't find an evidence this is needed.
+> > But refcount -> reference count is not particularly interesting.
 > 
->> >> +#include <linux/of_platform.h>
->> >
->> > No evidence of user of this.
->> > I think you meant mod_devicetable.h.
->> 
->> devm_of_platform_populate(), so I need CONFIG_OF, too right?
-> 
-> Ah, this explains header, thanks!
-> But it doesn't explain depends OF.
-> 
-> So, perhaps,
-> 
-> depends OF || COMPILE_TEST will be more informative, i.e.
-> tells "okay, this driver can be compiled w/o OF, but won't be 
-> functional".
+> Can a wording clarification become helpful also for this issue?
 
-ok
-
-
--- 
--michael
+This is a great example.  I have no idea what this sentence means.
+I speak some German; how would you say this in German?
