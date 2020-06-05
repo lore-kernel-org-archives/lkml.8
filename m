@@ -2,129 +2,148 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED19DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C585B2065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:05:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="H/zb4+n6"
+	by mail.kernel.org (Postfix) with ESMTP id 6ABEF2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591384120;
+	bh=GKgLU0QJgVb/nit0HFyZ0nJAXwQ7rg3k/4fnMy5jDLk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ykuRP6G/B36PLcKReIEL+/VH+hHCesreLPLPhveMkcEoWHM2ZH/Hy7ilgXS031pgb
+	 kpchIIdt35Ey2jgfdOk0rlozKquTVHV7ZIBfW/H4mNH3vMp/oU5U859Nem7KBYquf+
+	 7eJAiGpK38GF1yPWc5ABir6g5qajsxYM0qFzG2t4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgFETF0 (ORCPT
+        id S1727843AbgFETIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 15:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37610 "EHLO
+        Fri, 5 Jun 2020 15:08:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbgFETFZ (ORCPT
+        with ESMTP id S1726959AbgFETIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 15:05:25 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB274C08C5C2;
-        Fri,  5 Jun 2020 12:05:24 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9205927C;
-        Fri,  5 Jun 2020 21:05:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591383921;
-        bh=Uzq4fcW39ABPFOQO4o+qhxBJ2pJzSG4B/pAr6FXFPkw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H/zb4+n67JnWlsgLjx5l8FnINkkWzFXGGEyXbiCbFjBK5MQH4Rk4doeYRREqfb4ad
-         Wwtx+vyPSDACXjDyIlPZD7gwk5w0zeVhTEaqVq9B2fOYOuGltJ1XmvMZ84oDrC9W0F
-         +TDMOTSHwW/S1rhZCrONlkTlx2daE+DJ30qn1uN0=
-Date:   Fri, 5 Jun 2020 22:05:00 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        michael.dege@renesas.com, gotthard.voellmeke@renesas.com,
-        efriedrich@de.adit-jv.com, mrodin@de.adit-jv.com,
-        ChaitanyaKumar.Borah@in.bosch.com,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Message-ID: <20200605190500.GG26752@pendragon.ideasonboard.com>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20200527071555.GA23912@lxhi-065.adit-jv.com>
- <20200605132900.on527xcggg6f6pil@uno.localdomain>
+        Fri, 5 Jun 2020 15:08:39 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97251C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 12:08:38 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id r125so6410968lff.13
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 12:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AcezGontWez8pNBdgQEac8VyYkNUk3H4r/f/qgUnO2g=;
+        b=bVtxxK21u8dFZ9y31drF87QSfC9BKTKsr0QMyL11UqoPm2rvFF7BO1to+YkhbH9K8w
+         FAPjZj+mG/ocCBLoRw2vDGFIpRTeL5h7SNors+NuUGyYuGvDUO6BWjXJVACFmpJqoK0t
+         HOXqsiJN6v4QGn38rZPSZWveRUy/PbCeGcbzo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AcezGontWez8pNBdgQEac8VyYkNUk3H4r/f/qgUnO2g=;
+        b=j7d2022jNjPP5qNCx+mfv2NKMmKYGo+rhWlzszK/ZXPiHWZ3RTC5IMRBV7eC9NplW3
+         3rAwolFpGTXOwo8I/m6JGu7cnpo3MCOoJ+dT9r1NZdg2GrD5BlYJfAf+39+Sog3qDya0
+         jK1P1iLiZOO+FdfVFdzOBk3y0c3/Qt7KgGsMc5H8CKHZT4WfBLQWZHj4fAE/bD0Tu1e+
+         tI1FDcePnZ4TgBnXZIJiKa15mBU/RThbpi2Cedz/S9rsnjRpYtrrEMnBmXPpiSZ9JOTX
+         +fs2ARBNup/tBOnwtZa1gMuV99sPmN1jzRhvYMauB7lDHxWBtrJL6rsrsC+8i3cpTCLb
+         b8xg==
+X-Gm-Message-State: AOAM531D0p9fuE7RxpG6r20rRL5MOFjOqyrOQ3H6ISkU3iFMRRKS9bkE
+        c3veWv1u6p6+Ay0viM5YYSmLec6f6qs=
+X-Google-Smtp-Source: ABdhPJyUnTzm359V12LBsSh8bVGmQyU8LnO+LtkMcsb1TngRcDZrSnkbTqx4L6IA53vTs2gehtZwMQ==
+X-Received: by 2002:ac2:48a3:: with SMTP id u3mr6155299lfg.115.1591384116608;
+        Fri, 05 Jun 2020 12:08:36 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id 205sm1297825lfe.73.2020.06.05.12.08.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 12:08:36 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id y11so11397498ljm.9
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 12:08:36 -0700 (PDT)
+X-Received: by 2002:a05:651c:2c6:: with SMTP id f6mr5235749ljo.371.1591383681430;
+ Fri, 05 Jun 2020 12:01:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200605132900.on527xcggg6f6pil@uno.localdomain>
+References: <87eeqth3hi.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87eeqth3hi.fsf@mpe.ellerman.id.au>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 5 Jun 2020 12:01:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh5vSwYqF=YiKOOGBHE=hCwnes_ndbP4QOyjPK_Xocz7w@mail.gmail.com>
+Message-ID: <CAHk-=wh5vSwYqF=YiKOOGBHE=hCwnes_ndbP4QOyjPK_Xocz7w@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-1 tag
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, ajd@linux.ibm.com,
+        alistair@popple.id.au,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
+        chenzhou10@huawei.com,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        christophe.leroy@csgroup.eu, clg@kaod.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        ego@linux.vnet.ibm.com,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        emmanuel.nicolet@gmail.com, fbarrat@linux.ibm.com,
+        geoff@infradead.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        haren@linux.ibm.com, hbathini@linux.ibm.com,
+        Herbert Xu <herbert@gondor.apana.org.au>, huhai@tj.kylinos.cn,
+        jniethe5@gmail.com, kernelfans@gmail.com, kjain@linux.ibm.com,
+        leobras.c@gmail.com, leonardo@linux.ibm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linuxram@us.ibm.com, mahesh@linux.ibm.com, michal.simek@xilinx.com,
+        mikey@neuling.org, Nathan Chancellor <natechancellor@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        rzinsly@linux.ibm.com, sbobroff@linux.ibm.com,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, st5pub@yandex.ru,
+        Takashi Iwai <tiwai@suse.de>, wangxiongfeng2@huawei.com,
+        wsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 03:29:00PM +0200, Jacopo Mondi wrote:
-> Hello Eugeniu,
->    sorry for the late reply
-> 
-> On Wed, May 27, 2020 at 09:15:55AM +0200, Eugeniu Rosca wrote:
-> > Hi Jacopo,
-> >
-> > On Tue, Oct 15, 2019 at 12:46:13PM +0200, Jacopo Mondi wrote:
-> >  ----8<---
-> >
-> > > * Testing
-> > > I have tested by injecting a color inversion LUT table and enabling/disabling it
-> > > every 50 displayed frames:
-> > > https://jmondi.org/cgit/kmsxx/log/?h=gamma_lut
-> >
-> > Could you kindly share the cross compilation steps for your kmsxx fork?
-> 
-> I usually build it on the target :)
+On Fri, Jun 5, 2020 at 9:38 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> I've pushed the result of my resolution of the conflicts to the powerpc/merge
+> branch, if you want to look at that, though I've also tried to describe it in
+> full below.
 
-Otherwise, cross-compilation instructions are available in README.md.
+I ended up doing the machine_check_exception() differently, because I
+felt the code itself was done wrong and I wanted to add a note about
+that.
 
-$ mkdir build
-$ cd build
-$ cmake -DCMAKE_TOOLCHAIN_FILE=<buildrootpath>/output/host/usr/share/buildroot/toolchainfile.cmake ..
-$ make -j4
+Having the same function have completely different semantics depending
+on a platform issue is just fundamentally wrong, and makes not just
+for fragile code, but also means that you can't do single image
+kernels.
 
-I assume you may use yocto instead of buildroot, you would have to
-locate the toolchainfile.cmake file accordingly.
+It should be two different functions, possibly just
 
-> > Just out of curiosity, have you ever tried to pull the display's HDMI
-> > cable while reading from CM2_LUT_TBL?
-> 
-> Ahem, not really :) Did I get you right, you mean disconnecting the
-> HDMI cable from the board ?
-> 
-> > At least with the out-of-tree CMM implementation [*], this sends the
-> > R-Car3 reference targets into an unrecoverable freeze, with no lockup
-> > reported by the kernel (i.e. looks like an serious HW issue).
-> >
-> > >
-> > > CMM functionalities are retained between suspend/resume cycles (tested with
-> > > suspend-to-idle) without requiring a re-programming of the LUT tables.
-> >
-> > Hmm. Is this backed up by any statement in the HW User's manual?
-> > This comes in contrast with the original Renesas CMM implementation [**]
-> > which does make use of suspend (where the freeze actually happens).
-> >
-> > Can we infer, based on your statement, that we could also get rid of
-> > the suspend callback in [**]?
-> 
-> As Geert (thanks) explained what I've tested with is suspend-to-idle,
-> which retains the state of the LUT tables (and I assume other
-> not-yet-implemented CMM features, like CLU). I recall the out-of-tree
-> driver has suspend/resume routines but I never really tested that.
-> 
-> > [*] https://github.com/renesas-rcar/du_cmm
-> > [**] https://github.com/renesas-rcar/du_cmm/blob/c393ed49834bdbc/meta-rcar-gen3/recipes-kernel/linux/linux-renesas/0001-drm-rcar-du-Add-DU-CMM-support.patch#L1912
+   non_nmi_fn() { ... }
 
--- 
-Regards,
+   nmi_fn() { nmi_enter(); non_nmi_fn(); nmi_exit(); }
 
-Laurent Pinchart
+and now you don't have odd rules for the same function that depends on
+how the platform happens to call it.
+
+I didn't do the above. I did something that looked like the old code,
+but had a comment. Oh well.
+
+But thanks for describing the merge, I'd have missed the place where
+there was a new use of pgd_oiffset().
+
+..and then when I actually compared whether I otherwise got the same
+result as you, I realized that this all depends on the module tree.
+
+I'll go merge that first, and then re-do this all. Oh well.
+
+               Linus
