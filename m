@@ -7,58 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8AE208A9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A55208C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366672;
-	bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
+	s=default; t=1591366676;
+	bh=kFwCRCraMBRyepMZo+yl/SXXPj0zsoJ7YQUxEPQ2XHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q6SshiaWzZL4bI5Z6dZnynNo282pusoqTOJpe03GSZuAzHCnm96OKdjv0lClGm9Ws
-	 YqMLTTnvU/cy5c5cozfTlhXxHM4wfQILeWqn9uhg26u/9Bfb6T9ixEV4X+D0/YIMZ/
-	 x21nRKIol7CiC2WYmR0FUOnHbhVfZV7vhMv6FF7o=
+	b=0rLO3Bfi/VwFCjmOusRqIHqTeRVVdp8wu8G94xCi1mh2eRYQ3vDTn5w70MmgbHRIf
+	 SLnJ6P+gQDTqLLXabJGe0qG+/cZyn12Z5foWE9/TIYINrpobf05mu1u4ctlSE+dI2r
+	 x3OmMakQYBa1ZE3JZqdceY6LqLbOQRr4h5hH8HsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgFEORw (ORCPT
+        id S1728560AbgFEORz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47758 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbgFEORn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:43 -0400
+        id S1728528AbgFEORp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B846B2086A;
-        Fri,  5 Jun 2020 14:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29F3B208A9;
+        Fri,  5 Jun 2020 14:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366662;
-        bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
+        s=default; t=1591366664;
+        bh=kFwCRCraMBRyepMZo+yl/SXXPj0zsoJ7YQUxEPQ2XHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkoVk70AKGbjenq+8g2ncN2K44hM5+zk+uRa3myzzBBNYsYd829laZj8oW+OEaQ59
-         DtsnbOdBrtGRz7filtRvS0b+AJ7FShosuAunzfdd7JdMshOlhSVWQMCcxGMFvWGAfr
-         0BxNsgniPvEN0l6W4uiFi549KIxe7exspiNBgDC0=
+        b=M3zhwa3uHosfLWDZTumKSC/+I6Sh1oLdzfua1Bd6jmJj14UokIFCHi8OhvTYwjFMD
+         kxAJoyHQcrVYKs079Hh2/R6f2667+UKTOP2kFvShyXNrxoEl+DtzEyihOpCXkniKr6
+         w/yGQX3SPHmxvICHlljwmUKxZnPwJu4qieliQCP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
-        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
-        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
-        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
-        Daniel Axtens <dja@axtens.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        David Rientjes <rientjes@google.com>,
-        Akash Goel <akash.goel@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 38/43] kernel/relay.c: handle alloc_percpu returning NULL in relay_open
-Date:   Fri,  5 Jun 2020 16:15:08 +0200
-Message-Id: <20200605140154.517269910@linuxfoundation.org>
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.6 39/43] mmc: fix compilation of user API
+Date:   Fri,  5 Jun 2020 16:15:09 +0200
+Message-Id: <20200605140154.569917110@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -71,71 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-commit 54e200ab40fc14c863bcc80a51e20b7906608fce upstream.
+commit 83fc5dd57f86c3ec7d6d22565a6ff6c948853b64 upstream.
 
-alloc_percpu() may return NULL, which means chan->buf may be set to NULL.
-In that case, when we do *per_cpu_ptr(chan->buf, ...), we dereference an
-invalid pointer:
+The definitions of MMC_IOC_CMD  and of MMC_IOC_MULTI_CMD rely on
+MMC_BLOCK_MAJOR:
 
-  BUG: Unable to handle kernel data access at 0x7dae0000
-  Faulting instruction address: 0xc0000000003f3fec
-  ...
-  NIP relay_open+0x29c/0x600
-  LR relay_open+0x270/0x600
-  Call Trace:
-     relay_open+0x264/0x600 (unreliable)
-     __blk_trace_setup+0x254/0x600
-     blk_trace_setup+0x68/0xa0
-     sg_ioctl+0x7bc/0x2e80
-     do_vfs_ioctl+0x13c/0x1300
-     ksys_ioctl+0x94/0x130
-     sys_ioctl+0x48/0xb0
-     system_call+0x5c/0x68
+    #define MMC_IOC_CMD       _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_cmd)
+    #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)
 
-Check if alloc_percpu returns NULL.
+However, MMC_BLOCK_MAJOR is defined in linux/major.h and
+linux/mmc/ioctl.h did not include it.
 
-This was found by syzkaller both on x86 and powerpc, and the reproducer
-it found on powerpc is capable of hitting the issue as an unprivileged
-user.
-
-Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
-Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
-Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
-Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Cc: Akash Goel <akash.goel@intel.com>
-Cc: Andrew Donnellan <ajd@linux.ibm.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Salvatore Bonaccorso <carnil@debian.org>
-Cc: <stable@vger.kernel.org>	[4.10+]
-Link: http://lkml.kernel.org/r/20191219121256.26480-1-dja@axtens.net
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200511161902.191405-1-Jerome.Pouiller@silabs.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/relay.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ include/uapi/linux/mmc/ioctl.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -581,6 +581,11 @@ struct rchan *relay_open(const char *bas
- 		return NULL;
+--- a/include/uapi/linux/mmc/ioctl.h
++++ b/include/uapi/linux/mmc/ioctl.h
+@@ -3,6 +3,7 @@
+ #define LINUX_MMC_IOCTL_H
  
- 	chan->buf = alloc_percpu(struct rchan_buf *);
-+	if (!chan->buf) {
-+		kfree(chan);
-+		return NULL;
-+	}
-+
- 	chan->version = RELAYFS_CHANNEL_VERSION;
- 	chan->n_subbufs = n_subbufs;
- 	chan->subbuf_size = subbuf_size;
+ #include <linux/types.h>
++#include <linux/major.h>
+ 
+ struct mmc_ioc_cmd {
+ 	/*
 
 
