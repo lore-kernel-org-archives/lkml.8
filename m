@@ -2,114 +2,149 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D87C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9EA02074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7BA2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5MQecjE"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="4FmlkDJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgFEI2s (ORCPT
+        id S1726200AbgFEIaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725986AbgFEI2r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:28:47 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18382C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:28:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id c17so10972759ybf.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 01:28:46 -0700 (PDT)
+        Fri, 5 Jun 2020 04:30:21 -0400
+Received: from mail-eopbgr750089.outbound.protection.outlook.com ([40.107.75.89]:4357
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725986AbgFEIaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:30:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n1fsN5TJ7nE3lJObOaeznCmPlHI1ujtQWpQuCYu0oDK7aHz1R6n4ovCAWxJaLCIMdfnqxotQdRyfjhQwLn1vxqpGDIt3nj/1af/luFx/8ITP1DynGokxToy6STXtuBkoXpJQbGFFGkHcPv9XLUpTwWJ+KFXBCx2ee0XT9WS489RvKXPsoVC4Vz3DqKaHuT15LZ/EWB4YTve3MOi8gMuZM1LmUUpBdlno5jjZvBhDYhqsoAGeuVBNdEhFyjQvE24s95JoYzfDX8c02SokuVtXcQe8oicPAwKhll+nsWJVt++P89iiWcaVOiEEhAPOyHHGtggIn6DQwH8vwyGwOgP5gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RlIY35sSAkhhyE5Yx/QV3T0MEr4hUbB/90b5vlWJ6eo=;
+ b=F8sv7mqNaVhsy/0jn0l7SDCSxJgYaLq4jK42glUH2E0Ri1YsdVv8RYKlkOMSHZ4YmDft0omsdW+6M4Ick+qkFNxrCsWCuLliuF4P+bYfLtjs0OEhzFF8OPOUNexjqw+pzQNnNVTJRVnZyAwQX71ghl98pmWLVkchO5oAWt6/XxJKvLKjzXrHI5zhpywXuZ14ZAD3JGZHI0ComQz4eyHdzfUYRhnjDA1w7MMklhTJZ8FErPqiMuJv1bgKayLPk7vfj/DBERMsx+9WTE6f4XQgsTE1uguDhrW0FXrygTxd7hH0AgfGadSyhMgV85RsX+mBxJR5ZRTbYol+ssIUvScbag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=3PKodQpvSJ7s5tO6EtbZDnjyyWXngJpHghjobV/Lh34=;
-        b=j5MQecjEELNb1Z0YJBkwXEKeLK13XLeSkFMdOzfhYu/5hs+eo5NpZDYYX6F0CMe6bc
-         hb81OABIchgkt06uTaLlJ5HtsHQ/qZrCNR00Xl/a2JMBE8i8jh9RzVewmYzhxxRgQoMk
-         twILOaL6TdfXANBXPHLle3EtE41NJsahuKA2Ii6i1RfrJkG0AG/fss61c/Hbq/kgNXmO
-         oIx+HTCUQ+7kjqKeW5DcK+xL8Gwyp66VTEAxdrI4uIKuiKRcgt9bH0sa6L14RG92/n/e
-         eJChBwTUFM0fQ13DylVmahM67wrIeBI6t24NHMDIKbNUwWuxQT/dloKwAp/hAwKIpqT9
-         OVaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=3PKodQpvSJ7s5tO6EtbZDnjyyWXngJpHghjobV/Lh34=;
-        b=Z/t8A6MZX+wqMsDcwHfZ/kDGvDlIBtfNKjQJ0g0wRJdbuhEZQHflwUGxQTvbRGi1O0
-         GVwEv+fBL9l5Dec7dkxNNVCuAoKeM+qCNJaOb3WZCaBOujk5kXmzpX808mooa03rD8Pg
-         Y6kEG0E2esr+TslnpnXIpLZygcK1pUlwf+pDsXgzasffK12wuIAuj3XgQwjqBigMoqM0
-         98doBXEsl6DWXTxZ15OyF6tnaRDRiNJM82WH5kSd3NhZH5vopb863/xrjtE3RvwRwlY2
-         gS4zTSNjXgmXHrmOstBGo1u8uTiSD2PJJ7qTjOypSXVPHxxT5J+RlAYjTjdqRDzsi0lO
-         35sw==
-X-Gm-Message-State: AOAM5331QD6Q0DiK1J4NdzUN0mFxfy5Xd22H/U3nJkcy8khXUac/L7nA
-        9BdPR7n9Bu0wm4HeFVGnzqqO91ljgA==
-X-Google-Smtp-Source: ABdhPJxm4vKPvhZ0SK5v18C4PFHw23r9ZNCcL5PLgLQ7vdEu8JVgEBzy/pVdsf++kEqcXwxxqK2dqUja0A==
-X-Received: by 2002:a25:9345:: with SMTP id g5mr13780734ybo.485.1591345725292;
- Fri, 05 Jun 2020 01:28:45 -0700 (PDT)
-Date:   Fri,  5 Jun 2020 10:28:39 +0200
-In-Reply-To: <20200605082839.226418-1-elver@google.com>
-Message-Id: <20200605082839.226418-2-elver@google.com>
-Mime-Version: 1.0
-References: <20200605082839.226418-1-elver@google.com>
-X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH -tip v3 2/2] kcov: Unconditionally add -fno-stack-protector to
- compiler options
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     peterz@infradead.org, bp@alien8.de, tglx@linutronix.de,
-        mingo@kernel.org, clang-built-linux@googlegroups.com,
-        paulmck@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        akpm@linux-foundation.org,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RlIY35sSAkhhyE5Yx/QV3T0MEr4hUbB/90b5vlWJ6eo=;
+ b=4FmlkDJ/jwg5GB0WyndDOEbSf8l2FHSzgqpg4RZ+AeHHpJxoa6151no7MdZfvoP8klcyhAGVdG8syHng2omzfKPOto9BgaB09JGAywGFA9yXPK1nVVy6pY+NM+6rez3jpOQl3Et+pLIVyCrjSq5IyPlqqSzuW8gid2+X2Nu8TGk=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MW2PR12MB2586.namprd12.prod.outlook.com (2603:10b6:907:11::21)
+ by MW2PR12MB2427.namprd12.prod.outlook.com (2603:10b6:907:a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
+ 2020 08:30:10 +0000
+Received: from MW2PR12MB2586.namprd12.prod.outlook.com
+ ([fe80::693d:7e71:3a0d:b6d4]) by MW2PR12MB2586.namprd12.prod.outlook.com
+ ([fe80::693d:7e71:3a0d:b6d4%7]) with mapi id 15.20.3066.018; Fri, 5 Jun 2020
+ 08:30:09 +0000
+Subject: Re: [PATCH 13/18] drm/amdgpu/dc: Stop dma_resv_lock inversion in
+ commit_tail
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     linux-rdma@vger.kernel.org,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        linaro-mm-sig@lists.linaro.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org
+References: <20200604081224.863494-1-daniel.vetter@ffwll.ch>
+ <20200604081224.863494-14-daniel.vetter@ffwll.ch>
+From:   Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Message-ID: <e0bfd872-5d38-6718-a23d-6b14b3c14f25@amd.com>
+Date:   Fri, 5 Jun 2020 10:30:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <20200604081224.863494-14-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: fr
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PR0P264CA0188.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::32) To MW2PR12MB2586.namprd12.prod.outlook.com
+ (2603:10b6:907:11::21)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.100.219] (109.190.135.109) by PR0P264CA0188.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1c::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 08:30:06 +0000
+X-Originating-IP: [109.190.135.109]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bb324d56-271f-4356-2754-08d8092aa87c
+X-MS-TrafficTypeDiagnostic: MW2PR12MB2427:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MW2PR12MB24275F7354CC06AAFE2C148C8D860@MW2PR12MB2427.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
+X-Forefront-PRVS: 0425A67DEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 810Kczd3PTLYFhIDGBMqwZu2HH3fiXBmzDv7Kedl9vnnXD/3JIiiGHD7cIAETelLJJW2wWoYFhmjevG5kHBvps3Y1Mvg/nVkrS9CPUH/L2RFEWH7ASZjlas5QSLsurU4zH66FXYYnm7XwUUFybCIZ0ri1r7X5dVhda9dijpbiNLKR2BsIz9sAyU5ghusvXvFIot7QNonP5Nq0qoOSm8ADKeekJk4e1n7v7agLN9trI2+kdTicKjKyx5M6KBwIP3baKzD7Lk4GCOitTLbW6zOjvNopS3QRgq2G1yMhY5fJXBitnKVXlyFFPVSboC0/vg20pRIsUsSzuLoLkD2sY0Y9C9BcuTl5I8bDvbXYw6+v+E3QOJkoU7F38BjM5NWbSmW
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2586.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(39860400002)(136003)(366004)(346002)(31696002)(8936002)(478600001)(86362001)(54906003)(5660300002)(6486002)(6666004)(110136005)(8676002)(55236004)(316002)(16576012)(53546011)(66946007)(26005)(31686004)(16526019)(186003)(2906002)(66556008)(66476007)(83380400001)(36756003)(956004)(2616005)(4326008)(7416002)(52116002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: KWj9D+1sTSyKCbiraKO70pvR6tuws1tf5LLVW9wBhc1OwJtYcGR3DnFPseTNwn17xZYejtmfR4JRI/dTjMfkXExTR7aA6b6IRPoyj0a/T0XSFX2V4V39DUioHkSYD8QiBkJ3IkcKQIVmSyLwmymtbYfYU+exTNRXMxe6EBW1ElSqeG7XQk3XzLo73BdaIUuNtsgqG96xK2PLEtMrzxfOkUmjze5sWOgM5oegmwpvg7QJ8q+H+9JlFMx7/dhXMqqJN6DP37+UDUY9ngNuiYU4kWUnW7OpSB/6IKfGT4Z2IDW6Jkc53XzrG4nLa5BKBOkA+tDqHVLxyEPmVMsH0r8LpPQZcsRwvqZ2FHB2rsK4iFqcDUTlubAwz9oSVEUDpZDkB5KLrzIAE0e1nnDlNiajfd2C5PXBewD7o0UdaM9zl5LIg20xSlM6rekELEhTYHp403k+fwD7MA74XaKpv3P3ladACQzbEgFg2axBf6t8gUXOWz0MhbZAt/+2KXFNYmpE
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb324d56-271f-4356-2754-08d8092aa87c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 08:30:09.7937
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +xfdZI8gCJOL2JBDjKfXizcMW9aTh6gxHH2+jZ6NrDK2hBEtDfB3TDHzj43+i884cxij4I2FeA/ZS24JIkmJdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR12MB2427
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unconditionally add -fno-stack-protector to KCOV's compiler options, as
-all supported compilers support the option. This saves a compiler
-invocation to determine if the option is supported.
+Hi Daniel,
 
-Because Clang does not support -fno-conserve-stack, and
--fno-stack-protector was wrapped in the same cc-option, we were missing
--fno-stack-protector with Clang. Unconditionally adding this option
-fixes this for Clang.
+On 04/06/2020 10:12, Daniel Vetter wrote:
+[...]
+> @@ -6910,7 +6910,11 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+>  		 * explicitly on fences instead
+>  		 * and in general should be called for
+>  		 * blocking commit to as per framework helpers
+> +		 *
+> +		 * Yes, this deadlocks, since you're calling dma_resv_lock in a
+> +		 * path that leads to a dma_fence_signal(). Don't do that.
+>  		 */
+> +#if 0
+>  		r = amdgpu_bo_reserve(abo, true);
+>  		if (unlikely(r != 0))
+>  			DRM_ERROR("failed to reserve buffer before flip\n");
+> @@ -6920,6 +6924,12 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+>  		tmz_surface = amdgpu_bo_encrypted(abo);
+>  
+>  		amdgpu_bo_unreserve(abo);
+> +#endif
+> +		/*
+> +		 * this races anyway, so READ_ONCE isn't any better or worse
+> +		 * than the stuff above. Except the stuff above can deadlock.
+> +		 */
+> +		tiling_flags = READ_ONCE(abo->tiling_flags);
 
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Marco Elver <elver@google.com>
----
-v3:
-* Do not wrap -fno-stack-protector in cc-option, since all KCOV-supported
-  compilers support the option as pointed out by Nick.
----
- kernel/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+With this change "tmz_surface" won't be initialized properly.
+Adding the following line should fix it:
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index ce8716a04d0e..71971eb39ee7 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -35,7 +35,7 @@ KCOV_INSTRUMENT_stacktrace.o := n
- KCOV_INSTRUMENT_kcov.o := n
- KASAN_SANITIZE_kcov.o := n
- KCSAN_SANITIZE_kcov.o := n
--CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-+CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack) -fno-stack-protector
- 
- # cond_syscall is currently not LTO compatible
- CFLAGS_sys_ni.o = $(DISABLE_LTO)
--- 
-2.27.0.278.ge193c7cf3a9-goog
+  tmz_surface = READ_ONCE(abo->flags) & AMDGPU_GEM_CREATE_ENCRYPTED;
 
+
+Pierre-Eric
+
+
+>  
+>  		fill_dc_plane_info_and_addr(
+>  			dm->adev, new_plane_state, tiling_flags,
+> 
