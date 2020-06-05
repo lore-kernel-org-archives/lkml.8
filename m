@@ -6,130 +6,137 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D99520663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8353E2065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgFEOzx (ORCPT
+        id S1728091AbgFEO5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:55:53 -0400
-Received: from port70.net ([81.7.13.123]:60410 "EHLO port70.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727114AbgFEOzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:55:53 -0400
-Received: by port70.net (Postfix, from userid 1002)
-        id 66D71ABEC0C2; Fri,  5 Jun 2020 16:55:50 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 16:55:49 +0200
-From:   Szabolcs Nagy <nsz@port70.net>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Kyle Evans <self@kyle-evans.net>,
-        Victor Stinner <victor.stinner@gmail.com>,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, fweimer@redhat.com, jannh@google.com,
-        oleg@redhat.com, arnd@arndb.de, shuah@kernel.org,
-        dhowells@redhat.com, ldv@altlinux.org
-Subject: Re: [PATCH v5 1/3] open: add close_range()
-Message-ID: <20200605145549.GC673948@port70.net>
-References: <20200602204219.186620-1-christian.brauner@ubuntu.com>
- <20200602204219.186620-2-christian.brauner@ubuntu.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602204219.186620-2-christian.brauner@ubuntu.com>
+        Fri, 5 Jun 2020 10:57:06 -0400
+Received: from relay.sw.ru ([185.231.240.75]:33218 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727114AbgFEO5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:57:06 -0400
+Received: from [192.168.15.111] (helo=alex-laptop)
+        by relay3.sw.ru with smtp (Exim 4.93)
+        (envelope-from <alexander.mikhalitsyn@virtuozzo.com>)
+        id 1jhDmB-0002Ls-6G; Fri, 05 Jun 2020 17:56:55 +0300
+Date:   Fri, 5 Jun 2020 17:56:58 +0300
+From:   Alexander Mikhalitsyn <alexander.mikhalitsyn@virtuozzo.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andrey Vagin <avagin@virtuozzo.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Vasiliy Averin <vvs@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] overlayfs: C/R enhancements
+Message-Id: <20200605175658.99b977a202d0ffb6c7cf5a04@virtuozzo.com>
+In-Reply-To: <CAOQ4uxhkaGJf=duHO-k7UxTKJmGjFpQnfnn8-tRdG2cQZaLq3A@mail.gmail.com>
+References: <20200604161133.20949-1-alexander.mikhalitsyn@virtuozzo.com>
+        <CAOQ4uxhGswjxZjc3mN7K99pPrDgMV9_194U46b2MgszZnq1SDw@mail.gmail.com>
+        <AM6PR08MB36394A00DC129791CC89296AE8890@AM6PR08MB3639.eurprd08.prod.outlook.com>
+        <CAOQ4uxisdLt-0eT1R=V1ihagMoNfjiTrUdcdF2yDgD4O94Zjcw@mail.gmail.com>
+        <fb79be2c-4fc8-5a9d-9b07-e0464fca9c3f@virtuozzo.com>
+        <CAOQ4uxhhNx0VxJB=eLoPX+wt15tH3-KLjGuQem4h_R=0nfkAiA@mail.gmail.com>
+        <20200605154438.408e5dc5522170c50463bbec@virtuozzo.com>
+        <CAOQ4uxhkaGJf=duHO-k7UxTKJmGjFpQnfnn8-tRdG2cQZaLq3A@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner <christian.brauner@ubuntu.com> [2020-06-02 22:42:17 +0200]:
-> This adds the close_range() syscall. It allows to efficiently close a range
-> of file descriptors up to all file descriptors of a calling task.
+On Fri, 5 Jun 2020 17:36:10 +0300
+Amir Goldstein <amir73il@gmail.com> wrote:
+
+> > > While at it, you copy pasted the text:
+> > >           For more information, see Documentation/filesystems/overlayfs.txt
+> > > but there is no more information to be found.
+> >
+> > As far as I know documentation patches must be send to another mailing list.
+> > Of course I have plan to add information to overlayfs documentation about new feature.
+> >
 > 
-> I've also coordinated with some FreeBSD developers who got in touch with
-> me (Cced below). FreeBSD intends to add the same syscall once we merged it.
-> Quite a bunch of projects in userspace are waiting on this syscall
-> including Python and systemd.
+> Please send documentation patch together with the series
+> to this list. its fine to wait with that until the concept is approved though.
 > 
-> The syscall came up in a recent discussion around the new mount API and
-> making new file descriptor types cloexec by default. During this
-> discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
-> syscall in this manner has been requested by various people over time.
+
+Yep, I will prepare patch and send.
+
 > 
-> First, it helps to close all file descriptors of an exec()ing task. This
-> can be done safely via (quoting Al's example from [1] verbatim):
+> > > > > And if this works for you, you don't have to export the layers ovl_fh in
+> > > > > /proc/mounts, you can export them in numerous other ways.
+> > > > > One way from the top of my head, getxattr on overlay root dir.
+> > > > > "trusted.overlay" xattr is anyway a reserved prefix, so "trusted.overlay.layers"
+> > > > > for example could work.
+> > > >
+> > > > Thanks xattr might be a good option, but still don't forget about (a)
+> > > > and (b), users like to know all information about mount from
+> > > > /proc/pid/mountinfo.
+> > > >
+> > >
+> > > Let's stick to your use cases requirements. If you have other use cases
+> > > for this functionality lay them out explicitly.
+> >
+> > Requirements is very simple, at "dump stage" we need to save all overlayfs mount options
+> > sufficient to fully reconstruct overlayfs mount state on "restore stage". We already
+> > have proof of concept implementation of Docker overlayfs mounts when docker is running in
+> > OpenVZ container. In this case we fully dump all tree of mounts and all mount namespaces.
+> > CRIU mounts restore procedure at first reconstruct mount tree in special separate subtrees
+> > called "yards", then when all mounts is reconstructed we do "pivot_root" syscall. And
+> > with overlayfs it was a problem, because we mounted overlayfs with lowerdir,workdir,upperdir
+> > paths with mount namespace "yard" path prefix, and after restore in mount options user may see
+> > that lowerdir,workdir,upperdir paths were changed... It's a problem. Also it makes second C/R
+> > procedure is impossible, because after first C/R lowerdir,workdir,upperdir paths is invalidated
+> > after pivot_root.
+> >
+> > Example for Docker (after first C/R procedure):
+> >
+> > options lowerdir=/tmp/.criu.mntns.owMo9C/9-0000000000//var/lib/docker/overlay2/l/4BLZ4WH6GZIVKJE5QF62QUUKVZ:/var/lib/docker/overlay2/l/7FYRGAXT35JMKTXCHDNCQO3HKT,upperdir=/tmp/.criu.mntns.owMo9C/9-0000000000//var/lib/docker/overlay2/30aa26fb5e5671fc0126f2fc0e84cc740ce6bf06ca6ad4ac877a3c60f5aceaf1/diff,workdir=/tmp/.criu.mntns.owMo9C/9-0000000000//var/lib/docker/overlay2/30aa26fb5e5671fc0126f2fc0e84cc740ce6bf06ca6ad4ac877a3c60f5aceaf1/work
+> >
 > 
->         /* that exec is sensitive */
->         unshare(CLONE_FILES);
->         /* we don't want anything past stderr here */
->         close_range(3, ~0U);
->         execve(....);
-
-this api needs a documentation patch if there isn't yet.
-
-currently there is no libc interface contract in place that
-says which calls may use libc internal fds e.g. i've seen
-
-  openlog(...) // opens libc internal syslog fd
-  ...
-  fork()
-  closefrom(...) // close syslog fd
-  open(...) // something that reuses the closed fd
-  syslog(...) // unsafe: uses the wrong fd
-  execve(...)
-
-syslog uses a libc internal fd that the user trampled on and
-this can go bad in many ways depending on what libc apis are
-used between closefrom (or equivalent) and exec.
-
-> The code snippet above is one way of working around the problem that file
-> descriptors are not cloexec by default. This is aggravated by the fact that
-> we can't just switch them over without massively regressing userspace. For
-
-why is a switch_to_cloexec_range worse than close_range?
-the former seems safer to me. (and allows libc calls
-to be made between such switch and exec: libc internal
-fds have to be cloexec anyway)
-
-> a whole class of programs having an in-kernel method of closing all file
-> descriptors is very helpful (e.g. demons, service managers, programming
-> language standard libraries, container managers etc.).
-> (Please note, unshare(CLONE_FILES) should only be needed if the calling
-> task is multi-threaded and shares the file descriptor table with another
-> thread in which case two threads could race with one thread allocating file
-> descriptors and the other one closing them via close_range(). For the
-> general case close_range() before the execve() is sufficient.)
+> That reminds me.
+> I've read somewhere that thoses symlinks l/4BLZ4WH6GZIVKJE5QF62QUUKVZ
+> are meant to shorten the mount option string, because the mount
+> options are limited by
+> page size and with many lower layers limitation can reach.
 > 
-> Second, it allows userspace to avoid implementing closing all file
-> descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
-> file descriptor. From looking at various large(ish) userspace code bases
-> this or similar patterns are very common in:
-> - service managers (cf. [4])
-> - libcs (cf. [6])
-> - container runtimes (cf. [5])
-> - programming language runtimes/standard libraries
->   - Python (cf. [2])
->   - Rust (cf. [7], [8])
-> As Dmitry pointed out there's even a long-standing glibc bug about missing
-> kernel support for this task (cf. [3]).
-> In addition, the syscall will also work for tasks that do not have procfs
-> mounted and on kernels that do not have procfs support compiled in. In such
-> situations the only way to make sure that all file descriptors are closed
-> is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
-> OPEN_MAX trickery (cf. comment [8] on Rust).
+> That is one of the reasons that new mount API was created for (i.e. fsconfig()).
+> I wonder if /proc/mounts also has a similar limitation on options size.
+> I also wonder why docker doesn't chdir into /var/lib/docker/overlay2/
+> before mounting overlay and use relative paths, though that would have
+> been worse for CRIU.
+> 
+> So at least for the docker use case CRIU knows very well where the
+> underlying filesytem is mounted (/var/lib/docker/overlay2/ or above).
+> So if you got any API from overlayfs something like:
+> getxattr("/var/lib/docker/overlay2/XYZ/merged",
+> "trusted.overlay.layers.0.fh",..)
+> which reads the ovl_fh encoding of layer 0 (upper) rootdir, CRIU
+> can verify that uuid matches the filesystem mounted at /var/vol/docker/overlay2/
+> and then call open_by_handle_at() to open fd and resolve it to a path
+> under /var/vol/docker/overlay2.
+> 
+> I don't know if that provides what CRIU needs, but it would be no more
+> than a few lines of code in overlayfs:
+> 
+> if (i < ofs->numlayer)
+>     fh = ovl_encode_real_fh(ofs->layers[i].mnt->mnt_root, ...
+> 
 
-close_range still seems like a bad operation to expose.
+I will try to experiment with that. Thank you!
 
-if users really want closing behaviour (instead of marking
-fds cloexec) then they likely need coordination with libc
-and other libraries.
+> Thanks,
+> Amir.
 
-e.g. this usage does not work:
-
-  maxfd = findmaxfd();
-  call_that_may_leak_fds();
-  close_range(maxfd,~0U);
-
-as far as i can tell only the close right before exec works.
+-- 
+Regards,
+Alex.
