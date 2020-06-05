@@ -2,94 +2,117 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E13CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49A1E20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD4720810
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366897;
-	bh=lQhl9VjPpQqPHD07ccAprin/eMBfjjoE6H6u38WkXG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qHMV58Zj0tKwRYkRCBLg45rNXyxBCU1TcXD5xDrNqFW9lvXNFKfdTFvjXqm27OwrB
-	 exhZh4FxpsNr6ozxdqSzGcAUzRBjzzlPtg1AoA1L39nby9QSVJ8cWMfCn6hVN5EH+B
-	 7NNRVAAjDDkVt+vBzyiqyRUdW8yXLn3kMRlKOpqA=
+	s=default; t=1591366907;
+	bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VBD/iOv37X7W2zC2/UsJd+zqyhvF/RJ8SV8PcDM/5+30bdsZRfARvU6JBelVAXX6c
+	 9OIT1t6CkNLdJvJE01t84Pk1/bQRPnYsv8Lzf23+qrbVH6SZSTGCXRjGJIOR4rC0Ba
+	 fO95Jp4ZlT4SEpWjwWq2uSCBEIwi0fZuOoeMb0lY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbgFEOV1 (ORCPT
+        id S1728912AbgFEOVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51462 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbgFEOUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:20:15 -0400
-Received: from linux-8ccs.fritz.box (p57a23121.dip0.t-ipconnect.de [87.162.49.33])
+        id S1728917AbgFEOUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:20:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F392A208A9;
-        Fri,  5 Jun 2020 14:20:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54B28208B6;
+        Fri,  5 Jun 2020 14:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366814;
-        bh=lQhl9VjPpQqPHD07ccAprin/eMBfjjoE6H6u38WkXG4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B1bANglDGNNAxIm0D9lBYOGI2a3GiqmxrciDb1YXY62MpCrwmyvnZ0UUHn99RQxRC
-         funpZ/+Xjg/7isnDOsQkO1gbdu7SXGgfi1ab41YnAwhfM8JG4vMPvUhHKmDIJfZCaw
-         MR5vvR3PNQleUjcEPg3nh34HLCQ+Y0eA0bL7IeMw=
-Date:   Fri, 5 Jun 2020 16:20:10 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v4 11/11] module: Make module_enable_ro() static again
-Message-ID: <20200605142009.GA5150@linux-8ccs.fritz.box>
-References: <cover.1588173720.git.jpoimboe@redhat.com>
- <d8b705c20aee017bf9a694c0462a353d6a9f9001.1588173720.git.jpoimboe@redhat.com>
- <20200605132450.GA257550@roeck-us.net>
+        s=default; t=1591366803;
+        bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hrn1HZs13g7Rkm9EG30fVAYmXeLIZtJE7iQc/Cvd9ki36QEvv+wq9TvUoe+ylFjjQ
+         fo+srkZRnqhs7feS/766pq8gWAHWwpYW1b+itwApWS+rYYANbiaD7xEFQtDCFJ9xk6
+         SyQ4fPATTA9M+P+g/BDxF72TbAR8TBXyrXwne86Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 24/28] s390/mm: fix set_huge_pte_at() for empty ptes
+Date:   Fri,  5 Jun 2020 16:15:26 +0200
+Message-Id: <20200605140253.810716415@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
+References: <20200605140252.338635395@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200605132450.GA257550@roeck-us.net>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Guenter Roeck [05/06/20 06:24 -0700]:
->On Wed, Apr 29, 2020 at 10:24:53AM -0500, Josh Poimboeuf wrote:
->> Now that module_enable_ro() has no more external users, make it static
->> again.
->>
->> Suggested-by: Jessica Yu <jeyu@kernel.org>
->> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
->> Acked-by: Miroslav Benes <mbenes@suse.cz>
->
->Apparently this patch made it into the upstream kernel on its own,
->not caring about its dependencies. Results are impressive.
->
->Build results:
->	total: 155 pass: 101 fail: 54
->Qemu test results:
->	total: 431 pass: 197 fail: 234
->
->That means bisects will be all but impossible until this is fixed.
->Was that really necessary ?
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-Sigh, I am really sorry about this. We made a mistake in handling
-inter-tree dependencies between livepatching and modules-next,
-unfortunately :-( Merging the modules-next pull request next should
-resolve the module_enable_ro() not defined for
-!ARCH_HAS_STRICT_MODULE_RWX build issue. The failure was hidden in
-linux-next since both trees were always merged together. Again, it
-doesn't excuse us from build testing our separate trees more
-rigorously.
+[ Upstream commit ac8372f3b4e41015549b331a4f350224661e7fc6 ]
+
+On s390, the layout of normal and large ptes (i.e. pmds/puds) differs.
+Therefore, set_huge_pte_at() does a conversion from a normal pte to
+the corresponding large pmd/pud. So, when converting an empty pte, this
+should result in an empty pmd/pud, which would return true for
+pmd/pud_none().
+
+However, after conversion we also mark the pmd/pud as large, and
+therefore present. For empty ptes, this will result in an empty pmd/pud
+that is also marked as large, and pmd/pud_none() would not return true.
+
+There is currently no issue with this behaviour, as set_huge_pte_at()
+does not seem to be called for empty ptes. It would be valid though, so
+let's fix this by not marking empty ptes as large in set_huge_pte_at().
+
+This was found by testing a patch from from Anshuman Khandual, which is
+currently discussed on LKML ("mm/debug: Add more arch page table helper
+tests").
+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/mm/hugetlbpage.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index 5674710a4841..7dfae86afa47 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -159,10 +159,13 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 		rste &= ~_SEGMENT_ENTRY_NOEXEC;
+ 
+ 	/* Set correct table type for 2G hugepages */
+-	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3)
+-		rste |= _REGION_ENTRY_TYPE_R3 | _REGION3_ENTRY_LARGE;
+-	else
++	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
++		if (likely(pte_present(pte)))
++			rste |= _REGION3_ENTRY_LARGE;
++		rste |= _REGION_ENTRY_TYPE_R3;
++	} else if (likely(pte_present(pte)))
+ 		rste |= _SEGMENT_ENTRY_LARGE;
++
+ 	clear_huge_pte_skeys(mm, rste);
+ 	pte_val(*ptep) = rste;
+ }
+-- 
+2.25.1
+
+
 
