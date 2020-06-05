@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18563C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6690E20823
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A99206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366991;
-	bh=H8TSug70zdms/pTRXhiGGPW0NgzFCnlO3fUnymnDzyc=;
+	s=default; t=1591366997;
+	bh=AkXn3F1QP5BSV0KUEGG2OW8Bi82lChNVpLv1xxfpwO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBwTTsXkKjdbS1xqi65dsM2OhYiZU7iCNJJB0aJ4vKmbdfGnnFL/JC78stR/knTlX
-	 uNWFfz5hNyYkSYDc/8x9dWddZGno21fzqekKrnGtGNizGKeeR1CluEabqfgg4nZBpv
-	 h+ee45Try2dIl52uXP18IJm7eN3fiRg1qjnuDfXA=
+	b=nG6bOdcGTjmjiAl9HiwFdZ2dIFx1Aa+Nvc53rKr1FYe+JNbOgwUYlb1y4nUdx34aU
+	 8IbHe1m8WrLffF/ZczrqE+jLB12z7rUZ/B2Yc8nToCguretLfKWJElA9o8joXR6xQQ
+	 YU6G59aLlTMxvY/M7nouERwQqFfcNVZDQ6HujUQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgFEOSW (ORCPT
+        id S1728846AbgFEOXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:18:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48706 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbgFEOSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:14 -0400
+        id S1728655AbgFEOSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:18:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C476B208C3;
-        Fri,  5 Jun 2020 14:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A249A208E4;
+        Fri,  5 Jun 2020 14:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366694;
-        bh=H8TSug70zdms/pTRXhiGGPW0NgzFCnlO3fUnymnDzyc=;
+        s=default; t=1591366701;
+        bh=AkXn3F1QP5BSV0KUEGG2OW8Bi82lChNVpLv1xxfpwO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TAcVjE0frETREHXvs29JGdDgNYReuofQWTeUvUEMdXT7jdO0TJFwxpzQabGfcRJII
-         4S0S5wfd2/9Qw8GXx42BaHaIMqiZNGWfSWuKdunN9MXFmIdiKelf3LZZkiPP8IYdil
-         pRPTcfA7cdlNTkaTD9ad1vg1ID25b77P3rcfpZpI=
+        b=w5PkN8fMXeIVGeh2f0whIaCXXi+tWri2TylU313EaIMfE7B9i15qzZ0a2eX37cEG7
+         O0KBHRPnW0e7OLS4QFtrEk7RhOSqneFymQ+gcLLT/sbUzEzpzKLaUIMgkJ4d2fzTXV
+         21tMVGYJb9kHKyuHOKwb6Jvup3q/M2IgCkyjXeFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, fengsheng <fengsheng5@huawei.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 16/38] scsi: hisi_sas: Check sas_port before using it
-Date:   Fri,  5 Jun 2020 16:14:59 +0200
-Message-Id: <20200605140253.543975590@linuxfoundation.org>
+Subject: [PATCH 5.4 19/38] spi: dw: use "smp_mb()" to avoid sending spi data error
+Date:   Fri,  5 Jun 2020 16:15:02 +0200
+Message-Id: <20200605140253.715066792@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -61,40 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
 
-[ Upstream commit 8c39673d5474b95374df2104dc1f65205c5278b8 ]
+[ Upstream commit bfda044533b213985bc62bd7ca96f2b984d21b80 ]
 
-Need to check the structure sas_port before using it.
+Because of out-of-order execution about some CPU architecture,
+In this debug stage we find Completing spi interrupt enable ->
+prodrucing TXEI interrupt -> running "interrupt_transfer" function
+will prior to set "dw->rx and dws->rx_end" data, so this patch add
+memory barrier to enable dw->rx and dw->rx_end to be visible and
+solve to send SPI data error.
+eg:
+it will fix to this following low possibility error in testing environment
+which using SPI control to connect TPM Modules
 
-Link: https://lore.kernel.org/r/1573551059-107873-2-git-send-email-john.garry@huawei.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+kernel: tpm tpm0: Operation Timed out
+kernel: tpm tpm0: tpm_relinquish_locality: : error -1
+
+Signed-off-by: fengsheng <fengsheng5@huawei.com>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Link: https://lore.kernel.org/r/1578019930-55858-1-git-send-email-kong.kongxinwei@hisilicon.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-dw.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 849335d76cf6..6f4692f0d714 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -974,12 +974,13 @@ static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy)
- 	struct hisi_hba *hisi_hba = sas_ha->lldd_ha;
- 	struct hisi_sas_phy *phy = sas_phy->lldd_phy;
- 	struct asd_sas_port *sas_port = sas_phy->port;
--	struct hisi_sas_port *port = to_hisi_sas_port(sas_port);
-+	struct hisi_sas_port *port;
- 	unsigned long flags;
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 11cac7e10663..d2ca3b357cfe 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -297,6 +297,9 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 	dws->len = transfer->len;
+ 	spin_unlock_irqrestore(&dws->buf_lock, flags);
  
- 	if (!sas_port)
- 		return;
++	/* Ensure dw->rx and dw->rx_end are visible */
++	smp_mb();
++
+ 	spi_enable_chip(dws, 0);
  
-+	port = to_hisi_sas_port(sas_port);
- 	spin_lock_irqsave(&hisi_hba->lock, flags);
- 	port->port_attached = 1;
- 	port->id = phy->port_id;
+ 	/* Handle per transfer options for bpw and speed */
 -- 
 2.25.1
 
