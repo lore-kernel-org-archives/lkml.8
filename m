@@ -2,216 +2,134 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C73C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE944C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 662AA206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898BB207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591329359;
+	bh=6t0M3zFZVF+jZAsXowaGuunNSqX7ly6WswrQPRMr1Bw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KzuvlVWwUqtnEJJ5Or+4clZ0DC4P/MeLsBJiXUHYHBa1sPjnjChCXxVNdSnZ2MzQX
+	 eSzRBshcnkvGeaXaytdR3boE17G4WUzRhxkBFXwkGaIdWKvvTLmkLbzeRVXJIzjVz0
+	 t0IHOnCmOOiEHzmQ800bQsO5MGZjWmAf9sMtYznE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgFEDsc (ORCPT
+        id S1726148AbgFEDz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:48:32 -0400
-Received: from mail.windriver.com ([147.11.1.11]:53459 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgFEDsc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:48:32 -0400
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0553mE9i010497
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Thu, 4 Jun 2020 20:48:14 -0700 (PDT)
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 4 Jun 2020 20:48:01 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>
-CC:     <stern@rowland.harvard.edu>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] usb: gadget: function: printer: fix use-after-free in __lock_acquire
-Date:   Fri, 5 Jun 2020 11:56:52 +0800
-Message-ID: <20200605035652.10387-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 4 Jun 2020 23:55:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgFEDz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 23:55:58 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E89D52074B;
+        Fri,  5 Jun 2020 03:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591329357;
+        bh=6t0M3zFZVF+jZAsXowaGuunNSqX7ly6WswrQPRMr1Bw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yneYV/PRIdEyxazGndKrJSWENlyqxOjFhyvutnMSdyLbNmqPQzScN/o1F5ArFJcyS
+         I42pKIMoQruGkhM2bkEcaGvr8BmLKhLEBRfxqTxyU4EvXaH/TOgxUWpWloWrFjjIwa
+         AUxixT0aEIw5HVPy8FK0guOa2jU7ZioTGJZDb9hw=
+Date:   Thu, 4 Jun 2020 20:55:55 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     syzbot <syzbot+3eec59e770685e3dc879@syzkaller.appspotmail.com>,
+        bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: using smp_processor_id() in preemptible code in
+ radix_tree_node_alloc
+Message-ID: <20200605035555.GA2667@sol.localdomain>
+References: <000000000000a363b205a74ca6a2@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000a363b205a74ca6a2@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+[+Cc Matthew Wilcox]
 
-Fix this by increase object reference count.
+Possibly a bug in lib/radix-tree.c?  this_cpu_ptr() in radix_tree_node_alloc()
+can be reached without a prior preempt_disable().  Or is the caller of
+idr_alloc() doing something wrong?
 
-BUG: KASAN: use-after-free in __lock_acquire+0x3fd4/0x4180
-kernel/locking/lockdep.c:3831
-Read of size 8 at addr ffff8880683b0018 by task syz-executor.0/3377
-
-CPU: 1 PID: 3377 Comm: syz-executor.0 Not tainted 5.6.11 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- __lock_acquire+0x3fd4/0x4180 kernel/locking/lockdep.c:3831
- lock_acquire+0x127/0x350 kernel/locking/lockdep.c:4488
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x35/0x50 kernel/locking/spinlock.c:159
- printer_ioctl+0x4a/0x110 drivers/usb/gadget/function/f_printer.c:723
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0xfb/0x130 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4531a9
-Code: ed 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48
-89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
-01 f0 ff ff 0f 83 bb 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fd14ad72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 000000000073bfa8 RCX: 00000000004531a9
-RDX: fffffffffffffff9 RSI: 000000000000009e RDI: 0000000000000003
-RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004bbd61
-R13: 00000000004d0a98 R14: 00007fd14ad736d4 R15: 00000000ffffffff
-
-Allocated by task 2393:
- save_stack+0x21/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc.constprop.3+0xa7/0xd0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0xfa/0x2d0 mm/slub.c:2813
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- gprinter_alloc+0xa1/0x870 drivers/usb/gadget/function/f_printer.c:1416
- usb_get_function+0x58/0xc0 drivers/usb/gadget/functions.c:61
- config_usb_cfg_link+0x1ed/0x3e0 drivers/usb/gadget/configfs.c:444
- configfs_symlink+0x527/0x11d0 fs/configfs/symlink.c:202
- vfs_symlink+0x33d/0x5b0 fs/namei.c:4201
- do_symlinkat+0x11b/0x1d0 fs/namei.c:4228
- __do_sys_symlinkat fs/namei.c:4242 [inline]
- __se_sys_symlinkat fs/namei.c:4239 [inline]
- __x64_sys_symlinkat+0x73/0xb0 fs/namei.c:4239
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 3368:
- save_stack+0x21/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x135/0x190 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- slab_free_hook mm/slub.c:1444 [inline]
- slab_free_freelist_hook mm/slub.c:1477 [inline]
- slab_free mm/slub.c:3034 [inline]
- kfree+0xf7/0x410 mm/slub.c:3995
- gprinter_free+0x49/0xd0 drivers/usb/gadget/function/f_printer.c:1353
- usb_put_function+0x38/0x50 drivers/usb/gadget/functions.c:87
- config_usb_cfg_unlink+0x2db/0x3b0 drivers/usb/gadget/configfs.c:485
- configfs_unlink+0x3b9/0x7f0 fs/configfs/symlink.c:250
- vfs_unlink+0x287/0x570 fs/namei.c:4073
- do_unlinkat+0x4f9/0x620 fs/namei.c:4137
- __do_sys_unlink fs/namei.c:4184 [inline]
- __se_sys_unlink fs/namei.c:4182 [inline]
- __x64_sys_unlink+0x42/0x50 fs/namei.c:4182
- do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880683b0000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 24 bytes inside of
- 1024-byte region [ffff8880683b0000, ffff8880683b0400)
-The buggy address belongs to the page:
-page:ffffea0001a0ec00 refcount:1 mapcount:0 mapping:ffff88806c00e300
-index:0xffff8880683b1800 compound_mapcount: 0
-flags: 0x100000000010200(slab|head)
-raw: 0100000000010200 0000000000000000 0000000600000001 ffff88806c00e300
-raw: ffff8880683b1800 000000008010000a 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
----
- drivers/usb/gadget/function/f_printer.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
-index 9c7ed2539ff7..8ed1295d7e35 100644
---- a/drivers/usb/gadget/function/f_printer.c
-+++ b/drivers/usb/gadget/function/f_printer.c
-@@ -31,6 +31,7 @@
- #include <linux/types.h>
- #include <linux/ctype.h>
- #include <linux/cdev.h>
-+#include <linux/kref.h>
- 
- #include <asm/byteorder.h>
- #include <linux/io.h>
-@@ -64,7 +65,7 @@ struct printer_dev {
- 	struct usb_gadget	*gadget;
- 	s8			interface;
- 	struct usb_ep		*in_ep, *out_ep;
--
-+	struct kref             kref;
- 	struct list_head	rx_reqs;	/* List of free RX structs */
- 	struct list_head	rx_reqs_active;	/* List of Active RX xfers */
- 	struct list_head	rx_buffers;	/* List of completed xfers */
-@@ -218,6 +219,13 @@ static inline struct usb_endpoint_descriptor *ep_desc(struct usb_gadget *gadget,
- 
- /*-------------------------------------------------------------------------*/
- 
-+static void printer_dev_free(struct kref *kref)
-+{
-+	struct printer_dev *dev = container_of(kref, struct printer_dev, kref);
-+
-+	kfree(dev);
-+}
-+
- static struct usb_request *
- printer_req_alloc(struct usb_ep *ep, unsigned len, gfp_t gfp_flags)
- {
-@@ -348,6 +356,7 @@ printer_open(struct inode *inode, struct file *fd)
- 
- 	spin_unlock_irqrestore(&dev->lock, flags);
- 
-+	kref_get(&dev->kref);
- 	DBG(dev, "printer_open returned %x\n", ret);
- 	return ret;
- }
-@@ -365,6 +374,7 @@ printer_close(struct inode *inode, struct file *fd)
- 	dev->printer_status &= ~PRINTER_SELECTED;
- 	spin_unlock_irqrestore(&dev->lock, flags);
- 
-+	kref_put(&dev->kref, printer_dev_free);
- 	DBG(dev, "printer_close\n");
- 
- 	return 0;
-@@ -1350,7 +1360,8 @@ static void gprinter_free(struct usb_function *f)
- 	struct f_printer_opts *opts;
- 
- 	opts = container_of(f->fi, struct f_printer_opts, func_inst);
--	kfree(dev);
-+
-+	kref_put(&dev->kref, printer_dev_free);
- 	mutex_lock(&opts->lock);
- 	--opts->refcnt;
- 	mutex_unlock(&opts->lock);
-@@ -1419,6 +1430,7 @@ static struct usb_function *gprinter_alloc(struct usb_function_instance *fi)
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-+	kref_init(&dev->kref);
- 	++opts->refcnt;
- 	dev->minor = opts->minor;
- 	dev->pnp_string = opts->pnp_string;
--- 
-2.24.1
-
+On Thu, Jun 04, 2020 at 07:02:18PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    acf25aa6 Merge tag 'Smack-for-5.8' of git://github.com/csc..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13d6307a100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5263d9b5bce03c67
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3eec59e770685e3dc879
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bd4c1e100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1520c9de100000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+3eec59e770685e3dc879@syzkaller.appspotmail.com
+> 
+> RAX: ffffffffffffffda RBX: 00007ffdf01d56d0 RCX: 00000000004406c9
+> RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
+> RBP: 0000000000000005 R08: 0000000000000001 R09: 0000000000000031
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401f50
+> R13: 0000000000401fe0 R14: 0000000000000000 R15: 0000000000000000
+> BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor036/6796
+> caller is radix_tree_node_alloc.constprop.0+0x200/0x330 lib/radix-tree.c:262
+> CPU: 0 PID: 6796 Comm: syz-executor036 Not tainted 5.7.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
+>  debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
+>  radix_tree_node_alloc.constprop.0+0x200/0x330 lib/radix-tree.c:262
+>  radix_tree_extend+0x256/0x4e0 lib/radix-tree.c:424
+>  idr_get_free+0x60c/0x8e0 lib/radix-tree.c:1492
+>  idr_alloc_u32+0x170/0x2d0 lib/idr.c:46
+>  idr_alloc+0xc2/0x130 lib/idr.c:87
+>  qrtr_port_assign net/qrtr/qrtr.c:703 [inline]
+>  __qrtr_bind.isra.0+0x12e/0x5c0 net/qrtr/qrtr.c:756
+>  qrtr_autobind net/qrtr/qrtr.c:787 [inline]
+>  qrtr_autobind+0xaf/0xf0 net/qrtr/qrtr.c:775
+>  qrtr_sendmsg+0x1d6/0x770 net/qrtr/qrtr.c:895
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg+0xcf/0x120 net/socket.c:672
+>  ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+>  ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+>  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x4406c9
+> Code: 25 02 00 85 c0 b8 00 00 00 00 48 0f 44 c3 5b c3 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffdf01d56c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00007ffdf01d56d0 RCX: 00000000004406c9
+> RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
+> RBP: 0000000000000005 R08: 0000000000000001 R09: 0000000000000031
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401f50
+> R13: 0000000000401fe0 R14: 0000000000000000 R15: 0000000000000000
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
