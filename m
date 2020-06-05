@@ -2,116 +2,97 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0462FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D79C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9D3020738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B480F207F7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtUTM0qn"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LqnMJUj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgFEDBC (ORCPT
+        id S1726069AbgFEDEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgFEDBB (ORCPT
+        Thu, 4 Jun 2020 23:04:07 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8071 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgFEDEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:01:01 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86627C08C5C0;
-        Thu,  4 Jun 2020 20:01:00 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id i1so6952223ils.11;
-        Thu, 04 Jun 2020 20:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dMlRURD0AMV5m7nsP7Rq9ppWitDs8+6K6/cTTPcy4TM=;
-        b=VtUTM0qn7CTaNao5hjVsEXiwUgUnBhKH925UHNI+uAyzcwMhfsq36V6iHXDGgcJKoD
-         BmZMuTPjd9qeP5i4yspQEsrfNpGIHzHqBmPEbPaj8JDY1CHTrro1SnYbTKGwd3iwlb5v
-         nIiJs1yhqmW/KwPIgKTPkLP5NitRPEPr9fHQ6nf99Ey2lNGBUQIynVyjBbUpy4S2fHF2
-         JrnHQi+vt6cNU9JKRRsspY4VihzLZisqneNP1zJMXzRz8gdNX2MzF7mnYHOALiu++cE5
-         v8+CPyH6lYqYiPIKJKq7+40FZAK9eSC3z91rlxQzzQv62XJaNlWlZX1FXvxLQq8XdYn0
-         d1rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dMlRURD0AMV5m7nsP7Rq9ppWitDs8+6K6/cTTPcy4TM=;
-        b=qkVeMHC9wddjWOwLnsoSgHq0rrASVyX4N3z5+6wMDZ9GcfMdGoENm/6vbcxDafwAq1
-         NhdRWKCwiZe19ajmMd8PQvbnDe/C9DW2eOUaOXSFIwbp/9uEFGMPvEE13GFiMEdF1rzM
-         EY17mc2ap+a1ZtSW6RrUY/81SxEtr3S1e7iyGEqywWXVsZLbOo7x66MW5Xym85EPX6uM
-         5Fs7W4oQcHWbF1BlgL69jigt3m54WN8GuqP3B9H0yHAcyOcC+IYgaxRVlZ1wOVwHHY4j
-         ga/kn7rKy9LALO+1ELcFC9Wx6yTxvRKeWYkWojvtzC0iDRGc8yg0om0Bhdf82ohdqW8w
-         R8Yg==
-X-Gm-Message-State: AOAM532m83aOwvU5QGQvsnylnGHL//wCoPlFxOzPuXWBjfqYGACELfYX
-        SgqN4mwKCJgsE6Oe1bHgmAg=
-X-Google-Smtp-Source: ABdhPJw65TE6nd6bypfAwdXMpluubPfORSaChczPfQHt4+6ldcKas7EH4A/dfERJ++EUdv98ERCbiA==
-X-Received: by 2002:a92:b603:: with SMTP id s3mr6921538ili.175.1591326059820;
-        Thu, 04 Jun 2020 20:00:59 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id d11sm727854iod.11.2020.06.04.20.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 20:00:59 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] gpio: arizona: put pm_runtime in case of failure
-Date:   Thu,  4 Jun 2020 22:00:52 -0500
-Message-Id: <20200605030052.78235-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 4 Jun 2020 23:04:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed9b5c30000>; Thu, 04 Jun 2020 20:02:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 04 Jun 2020 20:04:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 04 Jun 2020 20:04:06 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jun
+ 2020 03:04:05 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 5 Jun 2020 03:04:05 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.162.42]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ed9b624000a>; Thu, 04 Jun 2020 20:04:05 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+Subject: [PATCH] sdhci: tegra: Add comment for PADCALIB and PAD_CONTROL NVQUIRKS
+Date:   Thu, 4 Jun 2020 20:04:00 -0700
+Message-ID: <1591326240-28928-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591326148; bh=e6lsRUyXbBY2DH6vBJIzg+ZcZznqgTERIZGcofUkzto=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=LqnMJUj+jbBilQ7EU+mu5q8/upRIMByYnXuUOaNcnxFteeGYdqtuY97E6Gmf/tHOG
+         Ul/EbXJZ6TsNFg0rQh9Pa9nMrIz5Tdr78nWoUZXgiNJ8eN7GNK4p8MPmxyI8rOfaNh
+         9C+lz+3SHZEwpzx1NKNLB4MOSggjuL+LlrRxc60V6UQu+Q/r1zJLvL0Wxscyc4DB2L
+         9KDH7hzy7e0zmskbGr0JPf3AARxH5DqiFv+KlHMFAEM6GfrirMsKFMCNpMPk8qAS3X
+         dq9oROKqJjMCIhElRwBLxplePenwpRW755nOINgl9X70GOgn/IsMEIzDk2UWKfpSoB
+         0g0ssaK6lVFEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+This patch adds comments about NVQUIRKS HAS_PADCALIB and NEEDS_PAD_CONTROL.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/gpio/gpio-arizona.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-tegra.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 7520a13b4c7c..5bda38e0780f 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -64,6 +64,7 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		ret = pm_runtime_get_sync(chip->parent);
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
-@@ -72,12 +73,15 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to drop cache: %d\n",
- 				ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
- 		ret = regmap_read(arizona->regmap, reg, &val);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
-+		}
- 
- 		pm_runtime_mark_last_busy(chip->parent);
- 		pm_runtime_put_autosuspend(chip->parent);
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 3a372ab..0a3f9d0 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -96,7 +96,16 @@
+ #define NVQUIRK_ENABLE_SDR50				BIT(3)
+ #define NVQUIRK_ENABLE_SDR104				BIT(4)
+ #define NVQUIRK_ENABLE_DDR50				BIT(5)
++/*
++ * HAS_PADCALIB NVQUIRK is for SoC's supporting auto calibration of pads
++ * drive strength.
++ */
+ #define NVQUIRK_HAS_PADCALIB				BIT(6)
++/*
++ * NEEDS_PAD_CONTROL NVQUIRK is for SoC's having separate 3V3 and 1V8 pads.
++ * 3V3/1V8 pad selection happens through pinctrl state selection depending
++ * on the signaling mode.
++ */
+ #define NVQUIRK_NEEDS_PAD_CONTROL			BIT(7)
+ #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
+ #define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
 -- 
-2.17.1
+2.7.4
 
