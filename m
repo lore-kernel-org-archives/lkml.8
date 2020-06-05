@@ -2,148 +2,225 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A93C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD4D207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2402207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgFEE4w (ORCPT
+        id S1726099AbgFEFBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:56:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:50564 "EHLO foss.arm.com"
+        Fri, 5 Jun 2020 01:01:00 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51777 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725986AbgFEE4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:56:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00B832B;
-        Thu,  4 Jun 2020 21:56:51 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65DA43F6CF;
-        Thu,  4 Jun 2020 21:56:48 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 05:56:45 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200605045645.GD12397@bogus>
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus>
- <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
- <20200603180435.GB23722@bogus>
- <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
- <20200604092052.GD8814@bogus>
- <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
+        id S1725280AbgFEFA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 01:00:59 -0400
+IronPort-SDR: 6i/DvY34nhiow8PBjqidsyf4LC1He06SSXVlt6Vu6BwS32Tw2KBRn1oRwdhJfaMN/807d7Gm5g
+ lg5pF+/QWtYg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 22:00:58 -0700
+IronPort-SDR: KTmbzwYRqU1143COmUSMc9+OGMtwL3lsPG0+NcNGGyVs3xfGObUzjSMCKihL7MdI/OF0qBWxY8
+ ZaKijs/d9awA==
+X-IronPort-AV: E=Sophos;i="5.73,475,1583222400"; 
+   d="scan'208";a="471784741"
+Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 22:00:55 -0700
+Subject: Re: [PATCH][v6] KVM: X86: support APERF/MPERF registers
+To:     Li RongQing <lirongqing@baidu.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, x86@kernel.org, hpa@zytor.com, bp@alien8.de,
+        mingo@redhat.com, tglx@linutronix.de, jmattson@google.com,
+        wanpengli@tencent.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, pbonzini@redhat.com,
+        wei.huang2@amd.com
+References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <b70d03dd-947f-dee5-5499-3b381372497d@intel.com>
+Date:   Fri, 5 Jun 2020 13:00:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 10:15:55AM -0500, Jassi Brar wrote:
-> On Thu, Jun 4, 2020 at 4:20 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Wed, Jun 03, 2020 at 01:32:42PM -0500, Jassi Brar wrote:
-> > > On Wed, Jun 3, 2020 at 1:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > >
-> > > > On Fri, May 29, 2020 at 09:37:58AM +0530, Viresh Kumar wrote:
-> > > > > On 28-05-20, 13:20, Rob Herring wrote:
-> > > > > > Whether Linux
-> > > > > > requires serializing mailbox accesses is a separate issue. On that side,
-> > > > > > it seems silly to not allow driving the h/w in the most efficient way
-> > > > > > possible.
-> > > > >
-> > > > > That's exactly what we are trying to say. The hardware allows us to
-> > > > > write all 32 bits in parallel, without any hardware issues, why
-> > > > > shouldn't we do that ? The delay (which Sudeep will find out, he is
-> > > > > facing issues with hardware access because of lockdown right now)
-> > > >
-> > > > OK, I was able to access the setup today. I couldn't reach a point
-> > > > where I can do measurements as the system just became unusable with
-> > > > one physical channel instead of 2 virtual channels as in my patches.
-> > > >
-> > > > My test was simple. Switch to schedutil and read sensors periodically
-> > > > via sysfs.
-> > > >
-> > > >  arm-scmi firmware:scmi: message for 1 is not expected!
-> > > >
-> > > This sounds like you are not serialising requests on a shared channel.
-> > > Can you please also share the patch?
-> >
-> > OK, I did try with a small patch initially and then realised we must hit
-> > issue with mainline as is. Tried and the behaviour is exact same. All
-> > I did is removed my patches and use bit[0] as the signal. It doesn't
-> > matter as writes to the register are now serialised. Oh, the above
-> > message comes when OS times out in advance while firmware continues to
-> > process the old request and respond.
-> >
-> > The trace I sent gives much better view of what's going on.
-> >
-> BTW, you didn't even share 'good' vs 'bad' log for me to actually see
-> if the api lacks.
->
-> Let us look closely ...
->
->  >>    bash-1019  [005]  1149.452340: scmi_xfer_begin:
-> transfer_id=1537 msg_id=7 protocol_id=19 seq=0 poll=1
->  >>    bash-1019  [005]  1149.452407: scmi_xfer_end:
-> transfer_id=1537 msg_id=7 protocol_id=19 seq=0 status=0
-> >
-> This round trip took  67usecs.  (log shows some at even 3usecs)
-> That includes mailbox api overhead, memcpy and the time taken by
-> remote to respond.
+On 6/5/2020 9:44 AM, Li RongQing wrote:
+> Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
+> this is confused to user when turbo is enable, and aperf/mperf
+> can be used to show current cpu frequency after 7d5905dc14a
+> "(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
+> so guest should support aperf/mperf capability
+> 
+> This patch implements aperf/mperf by three mode: none, software
+> emulation, and pass-through
+> 
+> None: default mode, guest does not support aperf/mperf
+> 
+> Software emulation: the period of aperf/mperf in guest mode are
+> accumulated as emulated value
+> 
+> Pass-though: it is only suitable for KVM_HINTS_REALTIME, Because
+> that hint guarantees we have a 1:1 vCPU:CPU binding and guaranteed
+> no over-commit.
+> 
+> And a per-VM capability is added to configure aperfmperf mode
+> 
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> Signed-off-by: Chai Wen <chaiwen@baidu.com>
+> Signed-off-by: Jia Lina <jialina01@baidu.com>
+> ---
+> diff v5:
+> return error if guest is configured with mperf/aperf, but host cpu has not
+> 
+> diff v4:
+> fix maybe-uninitialized warning
+> 
+> diff v3:
+> fix interception of MSR_IA32_MPERF/APERF in svm
+> 
+> diff v2:
+> support aperfmperf pass though
+> move common codes to kvm_get_msr_common
+> 
+> diff v1:
+> 1. support AMD, but not test
+> 2. support per-vm capability to enable
+> 
+> 
+>   Documentation/virt/kvm/api.rst  | 10 ++++++++++
+>   arch/x86/include/asm/kvm_host.h | 11 +++++++++++
+>   arch/x86/kvm/cpuid.c            | 15 ++++++++++++++-
+>   arch/x86/kvm/svm/svm.c          |  8 ++++++++
+>   arch/x86/kvm/vmx/vmx.c          |  6 ++++++
+>   arch/x86/kvm/x86.c              | 42 +++++++++++++++++++++++++++++++++++++++++
+>   arch/x86/kvm/x86.h              | 15 +++++++++++++++
+>   include/uapi/linux/kvm.h        |  1 +
+>   8 files changed, 107 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index d871dacb984e..f854f4da6fd8 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -6126,3 +6126,13 @@ KVM can therefore start protected VMs.
+>   This capability governs the KVM_S390_PV_COMMAND ioctl and the
+>   KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+>   guests when the state change is invalid.
+> +
+> +8.23 KVM_CAP_APERFMPERF
+> +----------------------------
+> +
+> +:Architectures: x86
+> +:Parameters: args[0] is aperfmperf mode;
+> +             0 for not support, 1 for software emulation, 2 for pass-through
+> +:Returns: 0 on success; -1 on error
+> +
+> +This capability indicates that KVM supports APERF and MPERF MSR registers
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index fd78bd44b2d6..14643f8af9c4 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -824,6 +824,9 @@ struct kvm_vcpu_arch {
+>   
+>   	/* AMD MSRC001_0015 Hardware Configuration */
+>   	u64 msr_hwcr;
+> +
+> +	u64 v_mperf;
+> +	u64 v_aperf;
+>   };
+>   
+>   struct kvm_lpage_info {
+> @@ -889,6 +892,12 @@ enum kvm_irqchip_mode {
+>   	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
+>   };
+>   
+> +enum kvm_aperfmperf_mode {
+> +	KVM_APERFMPERF_NONE,
+> +	KVM_APERFMPERF_SOFT,      /* software emulate aperfmperf */
+> +	KVM_APERFMPERF_PT,        /* pass-through aperfmperf to guest */
+> +};
+> +
+>   #define APICV_INHIBIT_REASON_DISABLE    0
+>   #define APICV_INHIBIT_REASON_HYPERV     1
+>   #define APICV_INHIBIT_REASON_NESTED     2
+> @@ -986,6 +995,8 @@ struct kvm_arch {
+>   
+>   	struct kvm_pmu_event_filter *pmu_event_filter;
+>   	struct task_struct *nx_lpage_recovery_thread;
+> +
+> +	enum kvm_aperfmperf_mode aperfmperf_mode;
+>   };
+>   
+>   struct kvm_vm_stat {
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index cd708b0b460a..80f18b29a845 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -122,6 +122,16 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>   					   MSR_IA32_MISC_ENABLE_MWAIT);
+>   	}
+>   
+> +	best = kvm_find_cpuid_entry(vcpu, 6, 0);
+> +	if (best) {
+> +		if (guest_has_aperfmperf(vcpu->kvm)) {
+> +			if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
+> +				return -EINVAL;
 
-This is DVFS request which firmware acknowledges quickly and expected
-to at most 100us.
+kvm_vm_ioctl_enable_cap() ensures that guest_has_aperfmperf() always 
+aligns with boot_cpu_has(X86_FEATURE_APERFMPERF). So above is unnecessary.
 
-> So the api is definitely capable of much faster transfers than you require.
->
+> +			best->ecx |= 1;
+> +		} else {
+> +			best->ecx &= ~1;
+> +		}
+> +	}
 
-I am not complaining about that. The delay is mostly due to the load on
-the mailbox and parallelising helps is the focus here.
+you could do
 
-> >>     bash-1526  [000]  1149.472553: scmi_xfer_begin:      transfer_id=1538 msg_id=6 protocol_id=21 seq=0 poll=0
-> >>      <idle>-0     [001]  1149.472733: scmi_xfer_begin:      transfer_id=1539 msg_id=7 protocol_id=19 seq=1 poll=1
-> >
-> Here another request is started before the first is finished.
+	bool guest_cpuid_aperfmperf = false;
+	if (best)
+		guest_cpuid_aperfmperf = !!(best->ecx & BIT(0));
 
-Ah, the prints are when the client requested. It is not when the mailbox
-started it. So this just indicates the beginning of the transfer from the
-client. I must have mentioned that earlier. Some request timeout before
-being picked up by mailbox if the previous request is not acknowledge
-quickly. E.g. Say a sensor command started which may take upto 1ms,
-almost 5-6 DVFS request after that will timeout.
+	if (guest_cpuid_aperfmerf != guest_has_aperfmperf(vcpu->kvm))
+		return -EINVAL;
 
-> If you want this to work you have to serialise access to the single
-> physical channel and/or run the remote firmware in asynchronous mode -
-> that is, the firmware ack the bit as soon as it sees and starts
-> working in the background, so that we return in ~3usec always, while
-> the data returns whenever it is ready.
 
-Yes it does that for few requests like DVFS while it uses synchronous
-mode for few others. While ideally I agree everything in asynchronous
-most is better, I don't know there may be reasons for such design. Also
-the solution given is to use different bits as independent channels
-which hardware allows. Anyways it's open source SCP project[1].
+In fact, I think we can do nothing here. Leave it as what usersapce 
+wants just like how KVM treats other CPUID bits.
 
---
-Regards,
-Sudeep
+Paolo,
 
-[1] https://github.com/ARM-software/SCP-firmware
+What's your point?
+
+>   	/* Note, maxphyaddr must be updated before tdp_level. */
+>   	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+>   	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
+
+[...]
+
+> @@ -4930,6 +4939,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+>   		kvm->arch.exception_payload_enabled = cap->args[0];
+>   		r = 0;
+>   		break;
+> +	case KVM_CAP_APERFMPERF:
+> +		kvm->arch.aperfmperf_mode =
+> +			boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
+
+Shouldn't check whether cap->args[0] is a valid value?
+
+> +		r = 0;
+> +		break;
+>   	default:
+>   		r = -EINVAL;
+>   		break;
+
+
