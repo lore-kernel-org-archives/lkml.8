@@ -2,183 +2,69 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B76C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18C41207DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BE6206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:46:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgFEJpJ (ORCPT
+        id S1726542AbgFEJqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:45:09 -0400
-Received: from mx.socionext.com ([202.248.49.38]:45684 "EHLO mx.socionext.com"
+        Fri, 5 Jun 2020 05:46:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:52782 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbgFEJon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:44:43 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 05 Jun 2020 18:44:41 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id D84C660066;
-        Fri,  5 Jun 2020 18:44:41 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 5 Jun 2020 18:44:41 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id 75A8F1A12AD;
-        Fri,  5 Jun 2020 18:44:41 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v4 2/6] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
-Date:   Fri,  5 Jun 2020 18:44:32 +0900
-Message-Id: <1591350276-15816-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591350276-15816-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1591350276-15816-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1726287AbgFEJqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:46:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2729A2B;
+        Fri,  5 Jun 2020 02:46:14 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62EC23F52E;
+        Fri,  5 Jun 2020 02:46:13 -0700 (PDT)
+References: <20200603173150.GB1551@shell.armlinux.org.uk> <jhjh7vshvwl.mognet@arm.com> <20200603184500.GC1551@shell.armlinux.org.uk> <CAKfTPtBdN30ChMgFqqT1bzeU6HExXEQFrQjxbCK-hRT4HEiQkQ@mail.gmail.com> <20200603195853.GD1551@shell.armlinux.org.uk> <jhjftbbj3qi.mognet@arm.com> <a34fcb9a-ba4b-0c9e-328f-1244c2720ed2@linaro.org> <jhjeeqvi3m1.mognet@arm.com> <20200604092901.GE1551@shell.armlinux.org.uk> <jhjbllzhzg9.mognet@arm.com> <CALD-y_zQms4YQup2MgAfNhWSu=ewkhossHma2TKqfTcOFaG=uA@mail.gmail.com> <jhja71ij0xr.mognet@arm.com> <CAKfTPtCPSk8wAyVeFDeywbUF6qQcjKw2OsvweW3MLLLdOdK+oQ@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: v5.7: new core kernel option missing help text
+In-reply-to: <CAKfTPtCPSk8wAyVeFDeywbUF6qQcjKw2OsvweW3MLLLdOdK+oQ@mail.gmail.com>
+Date:   Fri, 05 Jun 2020 10:46:04 +0100
+Message-ID: <jhj8sh1j15v.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The misc interrupts consisting of PME, AER, and Link event, is handled
-by INTx handler, however, these interrupts should be also handled by
-MSI handler.
 
-This adds the function uniphier_pcie_misc_isr() that handles misc
-interrupts, which is called from both INTx and MSI handlers.
-This function detects PME and AER interrupts with the status register,
-and invoke PME and AER drivers related to MSI.
+On 05/06/20 08:03, Vincent Guittot wrote:
+> On Thu, 4 Jun 2020 at 17:38, Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+>> ---
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index 16fbf74030fe..1e92080dc275 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -46,6 +46,7 @@ config ARM
+>>         select EDAC_ATOMIC_SCRUB
+>>         select GENERIC_ALLOCATOR
+>>         select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
+>> +       select SCHED_THERMAL_PRESSURE if GENERIC_ARCH_TOPOLOGY
+>
+> I think that SCHED_THERMAL_PRESSURE depends on ARM_CPU_TOPOLOGY but
+> not on GENERIC_ARCH_TOPOLOGY.
+> ARM_CPU_TOPOLOGY is used to define arch_scale_thermal_pressure for arm
+> architecture
+> and we only use the header file of the generic arch_topology.h.
+> Function like arch_set_thermal_pressure() is in sched/core.c
+>
 
-And this sets the mask for misc interrupts from INTx if MSI is enabled
-and sets the mask for misc interrupts from MSI if MSI is disabled.
-
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
- 1 file changed, 46 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index a5401a0..5ce2479 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -44,7 +44,9 @@
- #define PCL_SYS_AUX_PWR_DET		BIT(8)
- 
- #define PCL_RCV_INT			0x8108
-+#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
- #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
-+#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
- #define PCL_CFG_BW_MGT_STATUS		BIT(4)
- #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
- #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
-@@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
- 
- static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
- {
--	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
-+	u32 val;
-+
-+	val = PCL_RCV_INT_ALL_ENABLE;
-+	if (pci_msi_enabled())
-+		val |= PCL_RCV_INT_ALL_INT_MASK;
-+	else
-+		val |= PCL_RCV_INT_ALL_MSI_MASK;
-+
-+	writel(val, priv->base + PCL_RCV_INT);
- 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
- }
- 
-@@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
- 	.map = uniphier_pcie_intx_map,
- };
- 
--static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
- {
--	struct pcie_port *pp = irq_desc_get_handler_data(desc);
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
--	unsigned long reg;
--	u32 val, bit, virq;
-+	u32 val, virq;
- 
--	/* INT for debug */
- 	val = readl(priv->base + PCL_RCV_INT);
- 
- 	if (val & PCL_CFG_BW_MGT_STATUS)
- 		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
-+
- 	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
- 		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
--	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
--		dev_dbg(pci->dev, "Root Error\n");
--	if (val & PCL_CFG_PME_MSI_STATUS)
--		dev_dbg(pci->dev, "PME Interrupt\n");
-+
-+	if (is_msi) {
-+		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
-+			dev_dbg(pci->dev, "Root Error Status\n");
-+
-+		if (val & PCL_CFG_PME_MSI_STATUS)
-+			dev_dbg(pci->dev, "PME Interrupt\n");
-+
-+		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
-+			   PCL_CFG_PME_MSI_STATUS)) {
-+			virq = irq_linear_revmap(pp->irq_domain, 0);
-+			generic_handle_irq(virq);
-+		}
-+	}
- 
- 	writel(val, priv->base + PCL_RCV_INT);
-+}
-+
-+static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
-+{
-+	uniphier_pcie_misc_isr(pp, true);
-+}
-+
-+static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+{
-+	struct pcie_port *pp = irq_desc_get_handler_data(desc);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long reg;
-+	u32 val, bit, virq;
- 
- 	/* INTx */
- 	chained_irq_enter(chip, desc);
- 
-+	uniphier_pcie_misc_isr(pp, false);
-+
- 	val = readl(priv->base + PCL_RCV_INTX);
- 	reg = FIELD_GET(PCL_RCV_INTX_ALL_STATUS, val);
- 
-@@ -330,6 +364,7 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
- 
- static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
- 	.host_init = uniphier_pcie_host_init,
-+	.msi_host_isr = uniphier_pcie_msi_host_isr,
- };
- 
- static int uniphier_add_pcie_port(struct uniphier_pcie_priv *priv,
--- 
-2.7.4
-
+You're right, oh well... Let me spend a bit more time on this and I'll
+send actual patches.
