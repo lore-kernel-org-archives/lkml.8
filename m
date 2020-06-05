@@ -2,64 +2,117 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4217BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B164520870
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AAC5206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:45:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eGAfBDDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgFEOmj (ORCPT
+        id S1728019AbgFEOpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:42:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58088 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728007AbgFEOmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:42:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 24986AAD0;
-        Fri,  5 Jun 2020 14:42:40 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 4B4D41E1281; Fri,  5 Jun 2020 16:42:36 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 16:42:36 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jason Yan <yanaijie@huawei.com>, Jan Kara <jack@suse.cz>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        hulkci@huawei.com, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>
-Subject: Re: [PATCH v2] block: Fix use-after-free in blkdev_get()
-Message-ID: <20200605144236.GB13248@quack2.suse.cz>
-References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
- <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
- <20200605094353.GS30374@kadam>
+        Fri, 5 Jun 2020 10:45:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgFEOpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:45:24 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B660AC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2KqS9GDLfei9p1sb6woUsx+zVR7cGlA+3c0QP7ohtJE=; b=eGAfBDDR7VUNIJzUpO+py0WWxs
+        BZuhWABbN4umtgrUOxi0KQDThDNapT2Y1yAdhk3iFtrsXKYHw/WUrd4VIEdLR+nl+sj/NMFPTHclo
+        Tzsf+CuoDXhf8R3h8hX01pjeC7EQEnF0xUk+YjSs641SLUg/TjCKTkkpg1NJYj7RMtvidKG048JC+
+        c7mb8z+X8AGcls8wVUy01BRpMh+uTth0oq9WQy/ammynLRuK7vkPMB3CtEm8bMU39GJz5gNyAqQeo
+        TruqEvcTdD8xVNDN7AMnFDMbf8aUFd4pcqOML6X7ulX/hZJQVRMRJ4h3QXrOunvTUGgO4l3PLtmPM
+        9Bcb+IMA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhDac-0004EE-OP; Fri, 05 Jun 2020 14:44:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3D3D8301ABC;
+        Fri,  5 Jun 2020 16:44:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 27DB921A74B41; Fri,  5 Jun 2020 16:44:57 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 16:44:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        sumit.garg@linaro.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, will@kernel.org,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        patches@linaro.org, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [RFC PATCH 0/4] kgdb: Honour the kprobe blacklist when setting
+ breakpoints
+Message-ID: <20200605144457.GD2948@hirez.programming.kicks-ass.net>
+References: <20200605132130.1411255-1-daniel.thompson@linaro.org>
+ <20200605142953.GP2750@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605094353.GS30374@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200605142953.GP2750@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 05-06-20 12:43:54, Dan Carpenter wrote:
-> I wonder if maybe the best fix is to re-add the "if (!res) " check back
-> to blkdev_get().
+On Fri, Jun 05, 2020 at 04:29:53PM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 05, 2020 at 02:21:26PM +0100, Daniel Thompson wrote:
+> > kgdb has traditionally adopted a no safety rails approach to breakpoint
+> > placement. If the debugger is commanded to place a breakpoint at an
+> > address then it will do so even if that breakpoint results in kgdb
+> > becoming inoperable.
+> > 
+> > A stop-the-world debugger with memory peek/poke does intrinsically
+> > provide its operator with the means to hose their system in all manner
+> > of exciting ways (not least because stopping-the-world is already a DoS
+> > attack ;-) ) but the current no safety rail approach is not easy to
+> > defend, especially given kprobes provides us with plenty of machinery to
+> > mark parts of the kernel where breakpointing is discouraged.
+> > 
+> > This patchset introduces some safety rails by using the existing
+> > kprobes infrastructure. It does not cover all locations where
+> > breakpoints can cause trouble but it will definitely block off several
+> > avenues, including the architecture specific parts that are handled by
+> > arch_within_kprobe_blacklist().
+> > 
+> > This patch is an RFC because:
+> > 
+> > 1. My workstation is still chugging through the compile testing.
+> > 
+> > 2. Patch 4 needs more runtime testing.
+> > 
+> > 3. The code to extract the kprobe blacklist code (patch 4 again) needs
+> >    more review especially for its impact on arch specific code.
+> > 
+> > To be clear I do plan to do the detailed review of the kprobe blacklist
+> > stuff but would like to check the direction of travel first since the
+> > change is already surprisingly big and maybe there's a better way to
+> > organise things.
+> 
+> Thanks for doing these patches, esp 1-3 look very good to me.
+> 
+> I've taken the liberty to bounce the entire set to Masami-San, who is
+> the kprobes maintainer for comments as well.
 
-Well, it won't be that simple since we need to call bd_abort_claiming()
-under bdev->bd_mutex. And the fact that __blkdev_get() frees the reference
-you pass to it is somewhat subtle and surprising so I think we are better
-off getting rid of that.
+OK, after having had a second look, one thing we can perhaps address
+with the last patch, or perhaps on top of that, is extending the
+kprobes_blacklist() with data regions.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Because these patches only exclude kgdb from setting breakpoints on
+code; data breakpoints do not match what we do with
+arch_build_bp_info().
+
+
