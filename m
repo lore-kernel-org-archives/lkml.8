@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5632207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2C0207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359999;
-	bh=fJO8fHnBcnDtUp6PCEnbtaSTCLAD7BEUJgnPM31buks=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Qczg32PxCqksVlxOitFYdURYLkrZ8FlCTqbD9iphhnctvCRudi9GKMfAjJfhvWQdZ
-	 I4Vb/UxrigGBwN0gjboy4jqo0UEpSCCRHnU/Fl+xXow8wkmh4fckGFXe0lanAXT5Xs
-	 aFxIRpqIRMVMde5/y+mk6j1gkj2CxhfEyLbUmc5A=
+	s=default; t=1591360001;
+	bh=bg6aCtD8ioDsZhST6nFlp180UjQ3I/GcDRoEOgtoPfU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FYc7jRqSrBRKyAmmZ8kIhMcNa/dicFCs+EocpOa8hRXlBpqyBslbck/8rEn6wdtwE
+	 npvDP/v2flbX3uSucGgWCDeWc816tVhJB2UMn3ieUEPhVfMSK6AJw/APzFhNLGcN5X
+	 ErY8xOd4ISGUzgR6gVn1Gdr6qhvKJQFCVuhWRzRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgFEM0i (ORCPT
+        id S1727889AbgFEM0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:26:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58636 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgFEM0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:26:22 -0400
+        id S1727816AbgFEM0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99C55207D3;
-        Fri,  5 Jun 2020 12:26:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D26A6208A9;
+        Fri,  5 Jun 2020 12:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359982;
-        bh=fJO8fHnBcnDtUp6PCEnbtaSTCLAD7BEUJgnPM31buks=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ENO4Ow9zbjA9Ybt36+vkd/nYbuvwbX4UnAE3bVWT4y1qzunFLDyaJ6A9tjVpAJXa6
-         jK1AnVBBlLN6ICiUZ12cGu2nmNN0FfG2+xBn60/L1m63AKuIl2pmznPObcqdIFwVHl
-         dFtZLzgERZeoaDDbXs9DEkPKU2kOzd7qUmmC9W7o=
+        s=default; t=1591359984;
+        bh=bg6aCtD8ioDsZhST6nFlp180UjQ3I/GcDRoEOgtoPfU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L7Vjw2RoxkRgsuLAJMWhDnCQyOKMAx5BmqCAryP4SsQxuTAi8KIKut5MPECl/PbiW
+         76OOdIfJ96c3CjOuuHsjrQPGkCMbpWfkjKY8AIwa/ydlaNlHKG+x/JNFtroSl0h7YE
+         b2Oc3ZS93Juf9R3M4f8NV2Qni2e7VYEjDEW4bEVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fredrik Strupe <fredrik@strupe.net>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 1/6] ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
-Date:   Fri,  5 Jun 2020 08:26:15 -0400
-Message-Id: <20200605122620.2882962-1-sashal@kernel.org>
+Cc:     Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 3/6] net: usb: qmi_wwan: add Telit LE910C1-EUX composition
+Date:   Fri,  5 Jun 2020 08:26:17 -0400
+Message-Id: <20200605122620.2882962-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200605122620.2882962-1-sashal@kernel.org>
+References: <20200605122620.2882962-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,51 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Strupe <fredrik@strupe.net>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit 3866f217aaa81bf7165c7f27362eee5d7919c496 ]
+[ Upstream commit 591612aa578cd7148b7b9d74869ef40118978389 ]
 
-call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
-and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
-(0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
-instructions will be masked out. This makes the function match 32-bit
-thumb instructions where the second half-word is equal to instr_val,
-regardless of the first half-word.
+Add support for Telit LE910C1-EUX composition
 
-The result in this case is that all undefined 32-bit thumb instructions
-with the second half-word equal to 0xde01 (udf #1) work as breakpoints
-and will raise a SIGTRAP instead of a SIGILL, instead of just the one
-intended 16-bit instruction. An example of such an instruction is
-0xeaa0de01, which is unallocated according to Arm ARM and should raise a
-SIGILL, but instead raises a SIGTRAP.
-
-This patch fixes the issue by setting all the bits in instr_mask, which
-will still match the intended 16-bit thumb instruction (where the
-upper half is always 0), but not any 32-bit thumb instructions.
-
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+0x1031: tty, tty, tty, rmnet
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ptrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index ae738a6319f6..364985c96a92 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -227,8 +227,8 @@ static struct undef_hook arm_break_hook = {
- };
- 
- static struct undef_hook thumb_break_hook = {
--	.instr_mask	= 0xffff,
--	.instr_val	= 0xde01,
-+	.instr_mask	= 0xffffffff,
-+	.instr_val	= 0x0000de01,
- 	.cpsr_mask	= PSR_T_BIT,
- 	.cpsr_val	= PSR_T_BIT,
- 	.fn		= break_trap,
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 5755eec00d7f..9a873616dd27 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -921,6 +921,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x1bbb, 0x0203, 2)},	/* Alcatel L800MA */
+ 	{QMI_FIXED_INTF(0x2357, 0x0201, 4)},	/* TP-LINK HSUPA Modem MA180 */
+ 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
 -- 
 2.25.1
 
