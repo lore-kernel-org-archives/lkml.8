@@ -2,168 +2,137 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D093BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90FE9207ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0iUWCiu"
+	by mail.kernel.org (Postfix) with ESMTP id AF61020823
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591340178;
+	bh=Fueqi0VOnS4+2D9oOQ/CGjLpvS+cOsGXs8w5iOdBcB0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=E1SssWtU9Et6T7qji+c6+vpL8XpD96ueuRDZ0zR0X+BsQ8F52dlvVyYgnGLz92/b9
+	 jiusyNp+Xvy8vG0Bz2EoYtfyYCOg/fs33NjI9uf7XSYr4gmupkOS2VahxJs/+sWQlf
+	 fkXLAGU4DvEVGcW3z8ZC0Q60fDnwI4/viJN0WrjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbgFEGyo (ORCPT
+        id S1726123AbgFEG4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgFEGyn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:54:43 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3542BC08C5C4
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 23:54:43 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a127so4465083pfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 23:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ol/mCu/wq3XWSqVbrU0PUqg7TLmHc45H/V2FtkyiQoI=;
-        b=s0iUWCiulnPEJ14VlJ3QPbOHJDtYlaxnZ91r3vHIWzkqTFRP2S2DaxZOjlbTO0nMc7
-         u/xcfCRQb+BxK+PCUZegWHub1d0/4yoybX0RRiksj5OCJGIgb7dnkFfJ8k8lMYWr6j1D
-         YMtNpiXm0WIy7uK38y5bje5Uiayn0xVbpbxXSNH+1YTZ6if9sCDclc1xzurVjALDH/8A
-         BntGvNMyb5B0DX5XNBT1JNBX+g8dW8K6cu4E47zTAUX2QTiS6Y+VlVJZluhruwf/7ZIW
-         oV8Gx/zXNG0ojt3gCdJn4R1lhr8jWtCCCrhCBrLmXdArZWYtJlfjN6Tf9Wub1gqlLrhr
-         3X/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ol/mCu/wq3XWSqVbrU0PUqg7TLmHc45H/V2FtkyiQoI=;
-        b=R2j8YHmYN5RKyzIzT6S0AfbkqLRVZ8qp3aRVaRlFWpnwIzbOm8I7WhbBMVsz0PYJkk
-         TLCQiBEweCivoj9JhEf1SzU2FnsbNJz8pSL9+9SvdldYjpP0h6mPhHO+wpDmYRh2CA2Q
-         kwuJgGsmQKYHOU8ePcon4O4ULFf1y22jXEidxgVFVZZYz/IcOdE+aVyK5CliGBTvWCj0
-         gTaLY0blUVKbvE41Xm5z0qnqOtezkV9mvCasXCi2nBUgznDGy1rPnknbAVgrKkufDjHM
-         GJ5S4jx3aTIIQyIj2d/xkBzDiXiEWnZxS5VTX49jPpilfPpRJ72y41cDbkf6+20lSCDp
-         Pdug==
-X-Gm-Message-State: AOAM531YY1ajv35FIILISkExCIzvRT9RXpi9XmkHnizeMOmIFYKFfp29
-        94OmyZHTWzCMSM7u03gTlenHOw==
-X-Google-Smtp-Source: ABdhPJwlvPwnbWM/1+mGNeZrFWzLnzQ6rlQX7iUtfK5/neAo8V7zz2RAV3kpMfwJv6QAGbR9NgXXAA==
-X-Received: by 2002:a63:b10b:: with SMTP id r11mr7798573pgf.27.1591340082464;
-        Thu, 04 Jun 2020 23:54:42 -0700 (PDT)
-Received: from localhost ([122.172.62.209])
-        by smtp.gmail.com with ESMTPSA id nl8sm8184779pjb.13.2020.06.04.23.54.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Jun 2020 23:54:41 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 12:24:39 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>, saravanak@google.com
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, peron.clem@gmail.com,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        linux-samsung-soc@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] regulator: do not balance 'boot-on' coupled regulators
- without constraints
-Message-ID: <20200605065439.tzvlny6upxigqx42@vireshk-i7>
-References: <CGME20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6@eucas1p2.samsung.com>
- <20200605063724.9030-1-m.szyprowski@samsung.com>
+        Fri, 5 Jun 2020 02:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbgFEG4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 02:56:17 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2063A207ED;
+        Fri,  5 Jun 2020 06:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591340176;
+        bh=Fueqi0VOnS4+2D9oOQ/CGjLpvS+cOsGXs8w5iOdBcB0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=2j6uEMWbPUNJk8U83wz+VEGBDqTNxoRXGj8jeev6zL+SaPUgKnAyCgTXrutW4Jzun
+         OxK9j6H8oCO3mCE1pe01pq8bipzT5aamc3pXaiZ7tSHl2t+j3YecG1rzi7Cv7baIhS
+         obWDnxD9KHlkrr3Ppfw1rSl5UT3xK7TENeIZOj0w=
+Date:   Fri, 5 Jun 2020 08:56:12 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: manual merge of the livepatching tree with the
+ modules tree
+In-Reply-To: <20200605144557.4f8e2a42@canb.auug.org.au>
+Message-ID: <nycvar.YFH.7.76.2006050855290.13242@cbobk.fhfr.pm>
+References: <20200508180524.6995b07e@canb.auug.org.au> <20200605144557.4f8e2a42@canb.auug.org.au>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605063724.9030-1-m.szyprowski@samsung.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Saravana,
+On Fri, 5 Jun 2020, Stephen Rothwell wrote:
 
-On 05-06-20, 08:37, Marek Szyprowski wrote:
-> Balancing of the 'boot-on' coupled regulators must wait until the clients
-> set their constraints, otherwise the balancing code might change the
-> voltage of the not-yet-constrained regulator to the value below the
-> bootloader-configured operation point, what might cause a system crash.
-> This is achieved by assuming that, the minimal voltage allowed for the
-> given 'boot-on' regulator is equal to it's current voltage until
-> consumers apply their constraints.
+> > Today's linux-next merge of the livepatching tree got a conflict in:
+> > 
+> >   kernel/module.c
+> > 
+> > between commits:
+> > 
+> >   db991af02f11 ("module: break nested ARCH_HAS_STRICT_MODULE_RWX and STRICT_MODULE_RWX #ifdefs")
+> >   5c3a7db0c7ec ("module: Harden STRICT_MODULE_RWX")
+> > 
+> > from the modules tree and commit:
+> > 
+> >   e6eff4376e28 ("module: Make module_enable_ro() static again")
+> > 
+> > from the livepatching tree.
+> > 
+> > diff --cc kernel/module.c
+> > index c69291362676,a26343ea4d50..000000000000
+> > --- a/kernel/module.c
+> > +++ b/kernel/module.c
+> > @@@ -2055,29 -2023,20 +2042,30 @@@ static void module_enable_nx(const stru
+> >   	frob_writable_data(&mod->init_layout, set_memory_nx);
+> >   }
+> >   
+> >  +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+> >  +				       char *secstrings, struct module *mod)
+> >  +{
+> >  +	const unsigned long shf_wx = SHF_WRITE|SHF_EXECINSTR;
+> >  +	int i;
+> >  +
+> >  +	for (i = 0; i < hdr->e_shnum; i++) {
+> >  +		if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
+> >  +			return -ENOEXEC;
+> >  +	}
+> >  +
+> >  +	return 0;
+> >  +}
+> >  +
+> >   #else /* !CONFIG_STRICT_MODULE_RWX */
+> >  +/* module_{enable,disable}_ro() stubs are in module.h */
+> >   static void module_enable_nx(const struct module *mod) { }
+> > + static void module_enable_ro(const struct module *mod, bool after_init) {}
+> >  -#endif /*  CONFIG_STRICT_MODULE_RWX */
+> >  -static void module_enable_x(const struct module *mod)
+> >  +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+> >  +				       char *secstrings, struct module *mod)
+> >   {
+> >  -	frob_text(&mod->core_layout, set_memory_x);
+> >  -	frob_text(&mod->init_layout, set_memory_x);
+> >  +	return 0;
+> >   }
+> >  -#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
+> >  -static void module_enable_nx(const struct module *mod) { }
+> >  -static void module_enable_x(const struct module *mod) { }
+> >  -#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
+> >  -
+> >  +#endif /*  CONFIG_STRICT_MODULE_RWX */
+> >   
+> >   #ifdef CONFIG_LIVEPATCH
+> >   /*
 > 
-> Suggested-by: Dmitry Osipenko <digetx@gmail.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> This is yet another approach to fix the regulator coupling on
-> Exynos5800/5422 SoCs in the regulator core. I agree with Dmitry that this
-> issue is generic and if possible it should be handled in the core.
-> 
-> This patchset is another attempt to fix the regulator coupling on
-> Exynos5800/5422 SoCs. Here are links to the previous attempts and
-> discussions:
-> 
-> https://lore.kernel.org/linux-samsung-soc/20191008101709.qVNy8eijBi0LynOteWFMnTg4GUwKG599n6OyYoX1Abs@z/
-> https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
-> https://lore.kernel.org/linux-pm/cover.1589528491.git.viresh.kumar@linaro.org/
-> https://lore.kernel.org/linux-pm/20200528131130.17984-1-m.szyprowski@samsung.com/
-> https://lore.kernel.org/linux-samsung-soc/57cf3a15-5d9b-7636-4c69-60742e8cfae6@samsung.com/
-> 
-> The problem is with "vdd_int" regulator coupled with "vdd_arm" on Odroid
-> XU3/XU4 boards family. "vdd_arm" is handled by CPUfreq. "vdd_int" is
-> handled by devfreq. CPUfreq initialized quite early during boot and it
-> starts changing OPPs and "vdd_arm" value. Sometimes CPU activity during
-> boot goes down and some low-frequency OPPs are selected, what in turn
-> causes lowering "vdd_arm". This happens before devfreq applies its
-> requirements on "vdd_int". Regulator balancing code reduces "vdd_arm"
-> voltage value, what in turn causes lowering "vdd_int" value to the lowest
-> possible value. This is much below the operation point of the wcore bus,
-> which still runs at the highest frequency.
-> 
-> The issue was hard to notice because in the most cases the board managed
-> to boot properly, even when the regulator was set to lowest value allowed
-> by the regulator constraints. However, it caused some random issues,
-> which can be observed as "Unhandled prefetch abort" or low USB stability.
-> 
-> Best regards
-> Marek Szyprowski
-> ---
->  drivers/regulator/core.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> index 03154f5b939f..7e9af7ea4bdf 100644
-> --- a/drivers/regulator/core.c
-> +++ b/drivers/regulator/core.c
-> @@ -3553,6 +3553,17 @@ static int regulator_get_optimal_voltage(struct regulator_dev *rdev,
->  		if (ret < 0)
->  			return ret;
->  
-> +		/*
-> +		 * If no constraints set yet and regulator has boot-on flag,
-> +		 * keep its voltage unchanged
-> +		 */
-> +		if (tmp_min == 0 && c_rdevs[i]->constraints->boot_on) {
-> +			ret = regulator_get_voltage_rdev(c_rdevs[i]);
-> +			if (ret < 0)
-> +				return ret;
-> +			tmp_min = ret;
-> +		}
-> +
->  		ret = regulator_check_voltage(c_rdevs[i], &tmp_min, &tmp_max);
->  		if (ret < 0)
->  			return ret;
+> This is now a conflict between the modules tree and Linus' tree.
 
-This is exactly what Saravana tried to solve earlier AFAIR, lets see what he has
-to say here.
+I've made Linus aware of this coming when sending livepatching tree, but 
+given the fact that the modules tree hasn't been merged yet, Jessica, I 
+believe it'd make sense to point it out again once sending your tree.
+
+Thanks,
 
 -- 
-viresh
+Jiri Kosina
+SUSE Labs
+
