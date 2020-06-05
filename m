@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51417C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAAF2075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2526C2075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360187;
-	bh=j9fuMJzFwntpV3mYqfu+qUswix+dSaLC/uawv7kL3uY=;
+	s=default; t=1591360194;
+	bh=pLoF6CctGEQJ++vNC1sEPzcqQMNSpnwUdvyBSVNNa/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqtI84/3i0noKCOUYkZVoMqERIOHkE/UdCdzUQGSemSbFkh9NEnkwmef+DBnw3lFm
-	 +Zcsu9+UlnL89sBAbThtkqpl66qZqfdOyaUeDZSszCKR35eekhasN/sQQVv60qx6Wb
-	 w99h/nnHXH7dipIDRvr1HqK9X/kAVjoWDpO1lNbg=
+	b=VGGivwf3IFwCVzWdBnyUwuu2LPCz7t/Do3Mo8NBmg/L2LbApcaNPUUiCPpKrnid+J
+	 7YxmDFgVqEwS8NrMBiL7VK9d2yXlHPeQyHm9BJyCx4u1nlYmGm3cFZDUD9G7QoOt7+
+	 ZrvE7jUU2O1hsCh0Ftqgpn5zeaRaFd4WKjAdYhFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgFEM3q (ORCPT
+        id S1728126AbgFEM3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:29:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57494 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgFEMZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:47 -0400
+        id S1726939AbgFEMZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30A2720835;
-        Fri,  5 Jun 2020 12:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F17072075B;
+        Fri,  5 Jun 2020 12:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359946;
-        bh=j9fuMJzFwntpV3mYqfu+qUswix+dSaLC/uawv7kL3uY=;
+        s=default; t=1591359945;
+        bh=pLoF6CctGEQJ++vNC1sEPzcqQMNSpnwUdvyBSVNNa/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/7cDnZ0P2pWgE151b6Rr4op8o57vFbpNz8wt8Ms6EgcHzzGBaINy9bw7lzxRAnEA
-         tvmCln3RKQqIEHSdg/FFwAbT1smJj8F7/2csD9hddIDb+eooG6QrTQsInEi02OUCK9
-         hQs5VHinJZGEJkbMybpr3pZSNVUjrHzDsoLtSg84=
+        b=viD7xH2llsmyz3vCEfzjxxucc9KKYU3dixjNeBDFKWKNPbaCZYRUVCjb1SEES2SVJ
+         cqwKfi6ckI8BRSM7MOxUeDhHpic765XX4gfsxGddDrTx8sROe/102bWh5KakRbxCiw
+         fsFUwOEfgedxEPQI+hoSpNEgSAH8dPkV5z40zISY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willem de Bruijn <willemb@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 05/14] net: check untrusted gso_size at kernel entry
-Date:   Fri,  5 Jun 2020 08:25:31 -0400
-Message-Id: <20200605122540.2882539-5-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 04/14] net: stmmac: enable timestamp snapshot for required PTP packets in dwmac v5.10a
+Date:   Fri,  5 Jun 2020 08:25:30 -0400
+Message-Id: <20200605122540.2882539-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122540.2882539-1-sashal@kernel.org>
 References: <20200605122540.2882539-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,77 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Fugang Duan <fugang.duan@nxp.com>
 
-[ Upstream commit 6dd912f82680761d8fb6b1bb274a69d4c7010988 ]
+[ Upstream commit f2fb6b6275eba9d312957ca44c487bd780da6169 ]
 
-Syzkaller again found a path to a kernel crash through bad gso input:
-a packet with gso size exceeding len.
+For rx filter 'HWTSTAMP_FILTER_PTP_V2_EVENT', it should be
+PTP v2/802.AS1, any layer, any kind of event packet, but HW only
+take timestamp snapshot for below PTP message: sync, Pdelay_req,
+Pdelay_resp.
 
-These packets are dropped in tcp_gso_segment and udp[46]_ufo_fragment.
-But they may affect gso size calculations earlier in the path.
+Then it causes below issue when test E2E case:
+ptp4l[2479.534]: port 1: received DELAY_REQ without timestamp
+ptp4l[2481.423]: port 1: received DELAY_REQ without timestamp
+ptp4l[2481.758]: port 1: received DELAY_REQ without timestamp
+ptp4l[2483.524]: port 1: received DELAY_REQ without timestamp
+ptp4l[2484.233]: port 1: received DELAY_REQ without timestamp
+ptp4l[2485.750]: port 1: received DELAY_REQ without timestamp
+ptp4l[2486.888]: port 1: received DELAY_REQ without timestamp
+ptp4l[2487.265]: port 1: received DELAY_REQ without timestamp
+ptp4l[2487.316]: port 1: received DELAY_REQ without timestamp
 
-Now that we have thlen as of commit 9274124f023b ("net: stricter
-validation of untrusted gso packets"), check gso_size at entry too.
+Timestamp snapshot dependency on register bits in received path:
+SNAPTYPSEL TSMSTRENA TSEVNTENA 	PTP_Messages
+01         x         0          SYNC, Follow_Up, Delay_Req,
+                                Delay_Resp, Pdelay_Req, Pdelay_Resp,
+                                Pdelay_Resp_Follow_Up
+01         0         1          SYNC, Pdelay_Req, Pdelay_Resp
 
-Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+For dwmac v5.10a, enabling all events by setting register
+DWC_EQOS_TIME_STAMPING[SNAPTYPSEL] to 2’b01, clearing bit [TSEVNTENA]
+to 0’b0, which can support all required events.
+
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/virtio_net.h | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
-index 6f6ade63b04c..88997022a4b5 100644
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -31,6 +31,7 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
- {
- 	unsigned int gso_type = 0;
- 	unsigned int thlen = 0;
-+	unsigned int p_off = 0;
- 	unsigned int ip_proto;
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
-@@ -68,7 +69,8 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
- 
--		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
-+		p_off = skb_transport_offset(skb) + thlen;
-+		if (p_off > skb_headlen(skb))
- 			return -EINVAL;
- 	} else {
- 		/* gso packets without NEEDS_CSUM do not set transport_offset.
-@@ -92,17 +94,25 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
- 				return -EINVAL;
- 			}
- 
--			if (keys.control.thoff + thlen > skb_headlen(skb) ||
-+			p_off = keys.control.thoff + thlen;
-+			if (p_off > skb_headlen(skb) ||
- 			    keys.basic.ip_proto != ip_proto)
- 				return -EINVAL;
- 
- 			skb_set_transport_header(skb, keys.control.thoff);
-+		} else if (gso_type) {
-+			p_off = thlen;
-+			if (p_off > skb_headlen(skb))
-+				return -EINVAL;
- 		}
- 	}
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
- 		u16 gso_size = __virtio16_to_cpu(little_endian, hdr->gso_size);
- 
-+		if (skb->len - p_off <= gso_size)
-+			return -EINVAL;
-+
- 		skb_shinfo(skb)->gso_size = gso_size;
- 		skb_shinfo(skb)->gso_type = gso_type;
- 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 1623516efb17..982be75fde83 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -630,7 +630,8 @@ static int stmmac_hwtstamp_set(struct net_device *dev, struct ifreq *ifr)
+ 			config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+ 			ptp_v2 = PTP_TCR_TSVER2ENA;
+ 			snap_type_sel = PTP_TCR_SNAPTYPSEL_1;
+-			ts_event_en = PTP_TCR_TSEVNTENA;
++			if (priv->synopsys_id != DWMAC_CORE_5_10)
++				ts_event_en = PTP_TCR_TSEVNTENA;
+ 			ptp_over_ipv4_udp = PTP_TCR_TSIPV4ENA;
+ 			ptp_over_ipv6_udp = PTP_TCR_TSIPV6ENA;
+ 			ptp_over_ethernet = PTP_TCR_TSIPENA;
 -- 
 2.25.1
 
