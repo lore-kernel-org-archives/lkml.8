@@ -2,301 +2,490 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3282C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CD820663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB26220772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VJHszaTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgFEN2I (ORCPT
+        id S1727013AbgFENaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:28:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39775 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbgFEN2H (ORCPT
+        Fri, 5 Jun 2020 09:30:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgFENaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:28:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g1so7458575edv.6;
-        Fri, 05 Jun 2020 06:28:03 -0700 (PDT)
+        Fri, 5 Jun 2020 09:30:03 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F20C08C5C4
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 06:30:02 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u13so8469560wml.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 06:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AAW0JxMOjimnxtn8mgtf2DnA/rdVogDvc5W7UlvXjmA=;
+        b=VJHszaTbskDniRewcmBR0T6myXCDbVw762sgB4Bgud1xoQxJeavwAjTu8LBn39VLuf
+         UHB39yhd4g0dW35J+F0fne7ZV4QQsvvtmwKgBGQHb6Xi83VZ0ksbLn9uyVARQ4SfekEf
+         6dTRpV2Ce4ncp0ACUHJCq3JaB6haMLzuYRK9U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:message-id:date:mime-version;
-        bh=fZMKNXMn7eOtu1zXlNbmSogdJetbjxreWCBo52VDs60=;
-        b=mPH20Fey0CAg1OAujcl5B7Q5BdVZumOOfo+WUz9XHtg+qYxlNm3b3ZwxYdOUoE30cu
-         0xJ7DAk+rny0BFgOvdXB+Fdtc4TZ3LgYJL30CvpWO72Xu31YdBd70DstnrfcUTCcZKHJ
-         yGheY6Es1QQcc6Zk1/m22qPD1qCVYjDQ63euO6NiRuSsM67VO1x7d7l+VWPlPzWBn3Xp
-         sHs2mphreRFBfSM6qV1O5UGkwE1MNRS09HrGl+v0fPFbUV6TCc6W1qqTwr0cQcuvTq3O
-         kA6RsF1KiBFfpvGRA1NOCf/K1BZ3HYX4jpgqBcxKvefhvmYKJTI6eSrmKc64XWiO9TBU
-         BV4g==
-X-Gm-Message-State: AOAM531FYup6y6zaUQXIXxLCfLqObHZ0WAnZHmECUuxeDvgVUAxDOGfG
-        wNSwuYCP5FKKJ8ihtlXvLYu22uDIJLA=
-X-Google-Smtp-Source: ABdhPJx1sGPU9QCW2RWcJs1ctSPiOiHE5crh0SLl2c0gQncQGJKsZAEkLRkPwMwoCeUb+r/vxiPRqA==
-X-Received: by 2002:a05:6402:943:: with SMTP id h3mr9572643edz.89.1591363681877;
-        Fri, 05 Jun 2020 06:28:01 -0700 (PDT)
-Received: from darkstar ([2a04:ee41:4:5025:6574:5ece:b8f6:310e])
-        by smtp.gmail.com with ESMTPSA id ox27sm4373617ejb.101.2020.06.05.06.27.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Jun 2020 06:28:00 -0700 (PDT)
-References: <20200528132327.GB706460@hirez.programming.kicks-ass.net> <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com> <20200528161112.GI2483@worktop.programming.kicks-ass.net> <20200529100806.GA3070@suse.de> <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com> <87v9k84knx.derkling@matbug.net> <20200603101022.GG3070@suse.de> <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com> <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com> <875zc60ww2.derkling@matbug.net> <20200605113204.srskjrunz2ezkcuj@e107158-lin.cambridge.arm.com>
-User-agent: mu4e 1.4.3; emacs 26.3
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default boost value
-In-reply-to: <20200605113204.srskjrunz2ezkcuj@e107158-lin.cambridge.arm.com>
-Message-ID: <871rmt1w2p.derkling@matbug.net>
-Date:   Fri, 05 Jun 2020 15:27:58 +0200
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AAW0JxMOjimnxtn8mgtf2DnA/rdVogDvc5W7UlvXjmA=;
+        b=N0E36V1Jp6+3ztA91RRMYMHYI8IW0FgypZgTCnyjaRi9hf3HOndOblSo6Cc043kzhO
+         YpxJIyd0p5ty+UGcYyHdXTIfhNcWfpRnUDLrY2zq1br2GlnMXLMkUaaOeEeijo+8bUbE
+         /vypm9F0YoUTz5UT7bPGcOkXMFi4SwT9SJa7tKomw0qJKIewPkdfqLC7mMTk4LiHxgOH
+         xMb8bSS+B9f7dPjTA+vkuYI5suoybeUvNKRUAm3qtzqmSkBY8cc1M3+6FcOALnxs/75I
+         XyJG4LCPFB0IK6BSgqfkgQdnOYu9yyF6O56Nml19mb3MEbO6gb8yD188XHdPFmUKjtAy
+         udNg==
+X-Gm-Message-State: AOAM532gf+/SR8G6Z+2Yj9OQMgNfAwo9/vfFbgPVLmoIaIvUqpsSl9+9
+        Al2z/He8fhpaaVfBi1WO7ChsNAVn31A=
+X-Google-Smtp-Source: ABdhPJzOuJ8Y/xZ3pbI/MRN/vFzTlvVjXwxCfrLqL9GIYh4qxyyEgVjfE504+KnSc/TRh0XYmGTQ4g==
+X-Received: by 2002:a1c:2c45:: with SMTP id s66mr2877077wms.40.1591363799778;
+        Fri, 05 Jun 2020 06:29:59 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id k21sm12606410wrd.24.2020.06.05.06.29.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 06:29:58 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mika Kuoppala <mika.kuoppala@intel.com>,
+        Thomas Hellstrom <thomas.hellstrom@intel.com>,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH] dma-fence: basic lockdep annotations
+Date:   Fri,  5 Jun 2020 15:29:53 +0200
+Message-Id: <20200605132953.899664-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200604081224.863494-4-daniel.vetter@ffwll.ch>
+References: <20200604081224.863494-4-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Design is similar to the lockdep annotations for workers, but with
+some twists:
 
-On Fri, Jun 05, 2020 at 13:32:04 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+- We use a read-lock for the execution/worker/completion side, so that
+  this explicit annotation can be more liberally sprinkled around.
+  With read locks lockdep isn't going to complain if the read-side
+  isn't nested the same way under all circumstances, so ABBA deadlocks
+  are ok. Which they are, since this is an annotation only.
 
-> On 06/05/20 09:55, Patrick Bellasi wrote:
->> On Wed, Jun 03, 2020 at 18:52:00 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+- We're using non-recursive lockdep read lock mode, since in recursive
+  read lock mode lockdep does not catch read side hazards. And we
+  _very_ much want read side hazards to be caught. For full details of
+  this limitation see
 
-[...]
+  commit e91498589746065e3ae95d9a00b068e525eec34f
+  Author: Peter Zijlstra <peterz@infradead.org>
+  Date:   Wed Aug 23 13:13:11 2017 +0200
 
->> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> > index 0464569f26a7..9f48090eb926 100644
->> > --- a/kernel/sched/core.c
->> > +++ b/kernel/sched/core.c
->> > @@ -1063,10 +1063,12 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
->> >          * e.g. due to future modification, warn and fixup the expected value.
->> >          */
->> >         SCHED_WARN_ON(bucket->value > rq_clamp);
->> > +#if 0
->> >         if (bucket->value >= rq_clamp) {
->> >                 bkt_clamp = uclamp_rq_max_value(rq, clamp_id, uc_se->value);
->> >                 WRITE_ONCE(uc_rq->value, bkt_clamp);
->> >         }
->> > +#endif
->> 
->> Yep, that's likely where we have most of the overhead at dequeue time,
->> sine _sometimes_ we need to update the cpu's clamp value.
->> 
->> However, while running perf sched pipe, I expect:
->>  - all tasks to have the same clamp value
->>  - all CPUs to have _always_ at least one RUNNABLE task
->> 
->> Given these two conditions above, if the CPU is never "CFS idle" (i.e.
->> without RUNNABLE CFS tasks), the code above should never be triggered.
->> More on that later...
->
-> So the cost is only incurred by idle cpus is what you're saying.
+      locking/lockdep/selftests: Add mixed read-write ABBA tests
 
-Not really, you pay the cost every time you need to reduce the CPU clamp
-value. This can happen also on a busy CPU but only when you dequeue the
-last task defining the current uclamp(cpu) value and the remaining
-RUNNABLE tasks have a lower value.
+- To allow nesting of the read-side explicit annotations we explicitly
+  keep track of the nesting. lock_is_held() allows us to do that.
 
->> >  }
->> >
->> >  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->> >
->> >
->> >
->> > uclamp_rq_max_value() could be expensive as it loops over all buckets.
->> 
->> It loops over UCLAMP_CNT values which are defined to fit into a single
->
-> I think you meant to say UCLAMP_BUCKETS which is defined 5 by default.
+- The wait-side annotation is a write lock, and entirely done within
+  dma_fence_wait() for everyone by default.
 
-Right, UCLAMP_BUCKETS.
+- To be able to freely annotate helper functions I want to make it ok
+  to call dma_fence_begin/end_signalling from soft/hardirq context.
+  First attempt was using the hardirq locking context for the write
+  side in lockdep, but this forces all normal spinlocks nested within
+  dma_fence_begin/end_signalling to be spinlocks. That bollocks.
 
->> $L. That was the optimal space/time complexity compromise we found to
->> get the MAX of a set of values.
->
-> It actually covers two cachelines, see below and my other email to
-> Mel.
+  The approach now is to simple check in_atomic(), and for these cases
+  entirely rely on the might_sleep() check in dma_fence_wait(). That
+  will catch any wrong nesting against spinlocks from soft/hardirq
+  contexts.
 
-The two cache lines are covered if you consider both min and max clamps.
-One single CLAMP_ID has a _size_ which fits into a single cache line.
+The idea here is that every code path that's critical for eventually
+signalling a dma_fence should be annotated with
+dma_fence_begin/end_signalling. The annotation ideally starts right
+after a dma_fence is published (added to a dma_resv, exposed as a
+sync_file fd, attached to a drm_syncobj fd, or anything else that
+makes the dma_fence visible to other kernel threads), up to and
+including the dma_fence_wait(). Examples are irq handlers, the
+scheduler rt threads, the tail of execbuf (after the corresponding
+fences are visible), any workers that end up signalling dma_fences and
+really anything else. Not annotated should be code paths that only
+complete fences opportunistically as the gpu progresses, like e.g.
+shrinker/eviction code.
 
-However, to be precise:
-- while uclamp_min spans a single cache line, uclamp_max is likely
-  across two
-- at enqueue/dequeue time we update both min/max, thus we can touch
-  both cache lines
+The main class of deadlocks this is supposed to catch are:
 
->> > Commenting this whole path out strangely doesn't just 'fix' it,
->> > but produces  better results to no-uclamp kernel :-/
->> >
->> > # ./perf bench -r 20 sched pipe -T -l 50000
->> > Without uclamp:		5039
->> > With uclamp:		4832
->> > With uclamp+patch:	5729
->> 
->> I explain it below: with that code removed you never decrease the CPU's
->> uclamp value. Thus, the first time you schedule an RT task you go to MAX
->> OPP and stay there forever.
->
-> Okay.
->
->> 
->> > It might be because schedutil gets biased differently by uclamp..? If I move to
->> > performance governor these numbers almost double.
->> >
->> > I don't know. But this promoted me to look closer and
->> 
->> Just to resume, when a task is dequeued we can have only these cases:
->> 
->> - uclamp(task) < uclamp(cpu):
->>   this happens when the task was co-scheduled with other tasks with
->>   higher clamp values which are still RUNNABLE.
->>   In this case there are no uclamp(cpu) updates.
->> 
->> - uclamp(task) == uclamp(cpu):
->>   this happens when the task was one of the tasks defining the current
->>   uclamp(cpu) value, which is defined to track the MAX of the RUNNABLE
->>   tasks clamp values.
->> 
->> In this last case we _not_ always need to do a uclamp(cpu) update.
->> Indeed the update is required _only_ when that task was _the last_ task
->> defining the current uclamp(cpu) value.
->> 
->> In this case we use uclamp_rq_max_value() to do a linear scan of
->> UCLAMP_CNT values which fits into a single cache line.
->
-> Again, I think you mean UCLAMP_BUCKETS here. Unless I missed something, they
-> span 2 cahcelines on 64bit machines and 64b cacheline size.
+Thread A:
 
-Correct:
-- s/UCLAMP_CNT/UCLAMP_BUCLKETS/
-- 1 cacheline per CLAMP_ID
-- the array scan works on 1 CLAMP_ID:
-  - spanning 1 cache line for uclamp_min
-  - spanning 2 cache lines for uclamp_max
+	mutex_lock(A);
+	mutex_unlock(A);
 
+	dma_fence_signal();
 
-> To be specific, I am referring to struct uclamp_rq, which defines an array of
-> size UCLAMP_BUCKETS of type struct uclamp_bucket.
->
-> uclamp_rq_max_value() scans the buckets for a given clamp_id (UCLAMP_MIN or
-> UCLAMP_MAX).
->
-> So sizeof(struct uclamp_rq) = 8 * 5 + 4 = 44; on 64bit machines.
->
-> And actually the compiler introduces a 4 bytes hole, so we end up with a total
-> of 48 bytes.
->
-> In struct rq, we define struct uclamp_rq as an array of UCLAMP_CNT which is 2.
->
-> So by default we have 2 * sizeof(struct uclamp_rq) = 96 bytes.
+Thread B:
 
-Right, here is the layout we get on x86 (with some context before/after):
+	mutex_lock(A);
+	dma_fence_wait();
+	mutex_unlock(A);
 
----8<---
-        /* XXX 4 bytes hole, try to pack */
+Thread B is blocked on A signalling the fence, but A never gets around
+to that because it cannot acquire the lock A.
 
-        long unsigned int          nr_load_updates;      /*    32     8 */
-        u64                        nr_switches;          /*    40     8 */
+Note that dma_fence_wait() is allowed to be nested within
+dma_fence_begin/end_signalling sections. To allow this to happen the
+read lock needs to be upgraded to a write lock, which means that any
+other lock is acquired between the dma_fence_begin_signalling() call and
+the call to dma_fence_wait(), and still held, this will result in an
+immediate lockdep complaint. The only other option would be to not
+annotate such calls, defeating the point. Therefore these annotations
+cannot be sprinkled over the code entirely mindless to avoid false
+positives.
 
-        /* XXX 16 bytes hole, try to pack */
+Originally I hope that the cross-release lockdep extensions would
+alleviate the need for explicit annotations:
 
-        /* --- cacheline 1 boundary (64 bytes) --- */
-        struct uclamp_rq           uclamp[2];            /*    64    96 */
-        /* --- cacheline 2 boundary (128 bytes) was 32 bytes ago --- */
-        unsigned int               uclamp_flags;         /*   160     4 */
+https://lwn.net/Articles/709849/
 
-        /* XXX 28 bytes hole, try to pack */
+But there's a few reasons why that's not an option:
 
-        /* --- cacheline 3 boundary (192 bytes) --- */
-        struct cfs_rq              cfs;                  /*   192   384 */
+- It's not happening in upstream, since it got reverted due to too
+  many false positives:
 
-        /* XXX last struct has 40 bytes of padding */
+	commit e966eaeeb623f09975ef362c2866fae6f86844f9
+	Author: Ingo Molnar <mingo@kernel.org>
+	Date:   Tue Dec 12 12:31:16 2017 +0100
 
-        /* --- cacheline 9 boundary (576 bytes) --- */
-        struct rt_rq               rt;                   /*   576  1704 */
-        /* --- cacheline 35 boundary (2240 bytes) was 40 bytes ago --- */
-        struct dl_rq               dl;                   /*  2280   104 */
----8<---
+	    locking/lockdep: Remove the cross-release locking checks
 
-Considering that:
+	    This code (CONFIG_LOCKDEP_CROSSRELEASE=y and CONFIG_LOCKDEP_COMPLETIONS=y),
+	    while it found a number of old bugs initially, was also causing too many
+	    false positives that caused people to disable lockdep - which is arguably
+	    a worse overall outcome.
 
-  struct uclamp_rq {                                                                                                                 
-      unsigned int value;
-      struct uclamp_bucket bucket[UCLAMP_BUCKETS];
-    };
+- cross-release uses the complete() call to annotate the end of
+  critical sections, for dma_fence that would be dma_fence_signal().
+  But we do not want all dma_fence_signal() calls to be treated as
+  critical, since many are opportunistic cleanup of gpu requests. If
+  these get stuck there's still the main completion interrupt and
+  workers who can unblock everyone. Automatically annotating all
+  dma_fence_signal() calls would hence cause false positives.
 
-perhaps we can experiment by adding some padding at the end of this
-struct to get also uclamp_max spanning only one cache line.
+- cross-release had some educated guesses for when a critical section
+  starts, like fresh syscall or fresh work callback. This would again
+  cause false positives without explicit annotations, since for
+  dma_fence the critical sections only starts when we publish a fence.
 
-But, considering that at enqueue/dequeue we update both min and max
-clamp task's counters, I don't think we get much.
+- Furthermore there can be cases where a thread never does a
+  dma_fence_signal, but is still critical for reaching completion of
+  fences. One example would be a scheduler kthread which picks up jobs
+  and pushes them into hardware, where the interrupt handler or
+  another completion thread calls dma_fence_signal(). But if the
+  scheduler thread hangs, then all the fences hang, hence we need to
+  manually annotate it. cross-release aimed to solve this by chaining
+  cross-release dependencies, but the dependency from scheduler thread
+  to the completion interrupt handler goes through hw where
+  cross-release code can't observe it.
 
+In short, without manual annotations and careful review of the start
+and end of critical sections, cross-relese dependency tracking doesn't
+work. We need explicit annotations.
 
->> > I think I spotted a bug where in the if condition we check for '>='
->> > instead of '>', causing us to take the supposedly impossible fail safe
->> > path.
->> 
->> The fail safe path is when the '>' condition matches, which is what the
->> SCHED_WARN_ON tell us. Indeed, we never expect uclamp(cpu) to be bigger
->> than one of its RUNNABLE tasks. If that should happen we WARN and fix
->> the cpu clamp value for the best.
->> 
->> The normal path is instead '=' and, according to by previous resume,
->> it's expected to be executed _only_ when we dequeue the last task of the
->> clamp group defining the current uclamp(cpu) value.
->
-> Okay. I was mislead by the comment then. Thanks for clarifying.
->
-> Can this function be broken down to deal with '=' separately from the '>' case?
+v2: handle soft/hardirq ctx better against write side and dont forget
+EXPORT_SYMBOL, drivers can't use this otherwise.
 
-The '=' case is there just for defensive programming. If something is
-wrong and is not catastrophic: fix it and report. The comment tells
-exactly this, perhaps we can extend it by saying that something like:
- "Normally we expect MAX to be updated only to a smaller value"
-?
+v3: Kerneldoc.
 
-> IIUC, for the common '=', we always want to return uclamp_idle_value() hence
-> skip the potentially expensive scan?
+v4: Some spelling fixes from Mika
 
-No, for the '=' case we want to return the new max.
+v5: Amend commit message to explain in detail why cross-release isn't
+the solution.
 
-In uclamp_rq_max_value() we check if there are other RUNNABLE tasks,
-which will have by definition a smaller uclamp value. If we find one we
-want to return their clamp value.
+Cc: Mika Kuoppala <mika.kuoppala@intel.com>
+Cc: Thomas Hellstrom <thomas.hellstrom@intel.com>
+Cc: linux-media@vger.kernel.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: linux-rdma@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Christian König <christian.koenig@amd.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ Documentation/driver-api/dma-buf.rst |  12 +-
+ drivers/dma-buf/dma-fence.c          | 161 +++++++++++++++++++++++++++
+ include/linux/dma-fence.h            |  12 ++
+ 3 files changed, 182 insertions(+), 3 deletions(-)
 
-If there are not, we could have avoided the scan, true.
-But, since uclamp tracks both RT and CFS tasks, we know that we will be
-going idle thus the scan overhead should not be a big deal.
-
-> Anyway, based on Vincent results, it doesn't seem this path is an issue for him
-> and the real problem is lurking somewhere else.
-
-Yes, likely.
-
-The only thing perhaps worth trying is the usage of unsigned instead of
-long unsigned you proposed before. With the aim to fit everything in a
-single cache line. But honestly, I'm still quite sceptical about that
-being the root cause. Worth a try tho.
-We would need to cache stats to proof it.
+diff --git a/Documentation/driver-api/dma-buf.rst b/Documentation/driver-api/dma-buf.rst
+index 63dec76d1d8d..05d856131140 100644
+--- a/Documentation/driver-api/dma-buf.rst
++++ b/Documentation/driver-api/dma-buf.rst
+@@ -100,11 +100,11 @@ CPU Access to DMA Buffer Objects
+ .. kernel-doc:: drivers/dma-buf/dma-buf.c
+    :doc: cpu access
+ 
+-Fence Poll Support
+-~~~~~~~~~~~~~~~~~~
++Implicit Fence Poll Support
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ .. kernel-doc:: drivers/dma-buf/dma-buf.c
+-   :doc: fence polling
++   :doc: implicit fence polling
+ 
+ Kernel Functions and Structures Reference
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@@ -133,6 +133,12 @@ DMA Fences
+ .. kernel-doc:: drivers/dma-buf/dma-fence.c
+    :doc: DMA fences overview
+ 
++DMA Fence Signalling Annotations
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++.. kernel-doc:: drivers/dma-buf/dma-fence.c
++   :doc: fence signalling annotation
++
+ DMA Fences Functions Reference
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
+index 656e9ac2d028..0005bc002529 100644
+--- a/drivers/dma-buf/dma-fence.c
++++ b/drivers/dma-buf/dma-fence.c
+@@ -110,6 +110,160 @@ u64 dma_fence_context_alloc(unsigned num)
+ }
+ EXPORT_SYMBOL(dma_fence_context_alloc);
+ 
++/**
++ * DOC: fence signalling annotation
++ *
++ * Proving correctness of all the kernel code around &dma_fence through code
++ * review and testing is tricky for a few reasons:
++ *
++ * * It is a cross-driver contract, and therefore all drivers must follow the
++ *   same rules for lock nesting order, calling contexts for various functions
++ *   and anything else significant for in-kernel interfaces. But it is also
++ *   impossible to test all drivers in a single machine, hence brute-force N vs.
++ *   N testing of all combinations is impossible. Even just limiting to the
++ *   possible combinations is infeasible.
++ *
++ * * There is an enormous amount of driver code involved. For render drivers
++ *   there's the tail of command submission, after fences are published,
++ *   scheduler code, interrupt and workers to process job completion,
++ *   and timeout, gpu reset and gpu hang recovery code. Plus for integration
++ *   with core mm with have &mmu_notifier, respectively &mmu_interval_notifier,
++ *   and &shrinker. For modesetting drivers there's the commit tail functions
++ *   between when fences for an atomic modeset are published, and when the
++ *   corresponding vblank completes, including any interrupt processing and
++ *   related workers. Auditing all that code, across all drivers, is not
++ *   feasible.
++ *
++ * * Due to how many other subsystems are involved and the locking hierarchies
++ *   this pulls in there is extremely thin wiggle-room for driver-specific
++ *   differences. &dma_fence interacts with almost all of the core memory
++ *   handling through page fault handlers via &dma_resv, dma_resv_lock() and
++ *   dma_resv_unlock(). On the other side it also interacts through all
++ *   allocation sites through &mmu_notifier and &shrinker.
++ *
++ * Furthermore lockdep does not handle cross-release dependencies, which means
++ * any deadlocks between dma_fence_wait() and dma_fence_signal() can't be caught
++ * at runtime with some quick testing. The simplest example is one thread
++ * waiting on a &dma_fence while holding a lock::
++ *
++ *     lock(A);
++ *     dma_fence_wait(B);
++ *     unlock(A);
++ *
++ * while the other thread is stuck trying to acquire the same lock, which
++ * prevents it from signalling the fence the previous thread is stuck waiting
++ * on::
++ *
++ *     lock(A);
++ *     unlock(A);
++ *     dma_fence_signal(B);
++ *
++ * By manually annotating all code relevant to signalling a &dma_fence we can
++ * teach lockdep about these dependencies, which also helps with the validation
++ * headache since now lockdep can check all the rules for us::
++ *
++ *    cookie = dma_fence_begin_signalling();
++ *    lock(A);
++ *    unlock(A);
++ *    dma_fence_signal(B);
++ *    dma_fence_end_signalling(cookie);
++ *
++ * For using dma_fence_begin_signalling() and dma_fence_end_signalling() to
++ * annotate critical sections the following rules need to be observed:
++ *
++ * * All code necessary to complete a &dma_fence must be annotated, from the
++ *   point where a fence is accessible to other threads, to the point where
++ *   dma_fence_signal() is called. Un-annotated code can contain deadlock issues,
++ *   and due to the very strict rules and many corner cases it is infeasible to
++ *   catch these just with review or normal stress testing.
++ *
++ * * &struct dma_resv deserves a special note, since the readers are only
++ *   protected by rcu. This means the signalling critical section starts as soon
++ *   as the new fences are installed, even before dma_resv_unlock() is called.
++ *
++ * * The only exception are fast paths and opportunistic signalling code, which
++ *   calls dma_fence_signal() purely as an optimization, but is not required to
++ *   guarantee completion of a &dma_fence. The usual example is a wait IOCTL
++ *   which calls dma_fence_signal(), while the mandatory completion path goes
++ *   through a hardware interrupt and possible job completion worker.
++ *
++ * * To aid composability of code, the annotations can be freely nested, as long
++ *   as the overall locking hierarchy is consistent. The annotations also work
++ *   both in interrupt and process context. Due to implementation details this
++ *   requires that callers pass an opaque cookie from
++ *   dma_fence_begin_signalling() to dma_fence_end_signalling().
++ *
++ * * Validation against the cross driver contract is implemented by priming
++ *   lockdep with the relevant hierarchy at boot-up. This means even just
++ *   testing with a single device is enough to validate a driver, at least as
++ *   far as deadlocks with dma_fence_wait() against dma_fence_signal() are
++ *   concerned.
++ */
++#ifdef CONFIG_LOCKDEP
++struct lockdep_map	dma_fence_lockdep_map = {
++	.name = "dma_fence_map"
++};
++
++/**
++ * dma_fence_begin_signalling - begin a critical DMA fence signalling section
++ *
++ * Drivers should use this to annotate the beginning of any code section
++ * required to eventually complete &dma_fence by calling dma_fence_signal().
++ *
++ * The end of these critical sections are annotated with
++ * dma_fence_end_signalling().
++ *
++ * Returns:
++ *
++ * Opaque cookie needed by the implementation, which needs to be passed to
++ * dma_fence_end_signalling().
++ */
++bool dma_fence_begin_signalling(void)
++{
++	/* explicitly nesting ... */
++	if (lock_is_held_type(&dma_fence_lockdep_map, 1))
++		return true;
++
++	/* rely on might_sleep check for soft/hardirq locks */
++	if (in_atomic())
++		return true;
++
++	/* ... and non-recursive readlock */
++	lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _RET_IP_);
++
++	return false;
++}
++EXPORT_SYMBOL(dma_fence_begin_signalling);
++
++/**
++ * dma_fence_end_signalling - end a critical DMA fence signalling section
++ *
++ * Closes a critical section annotation opened by dma_fence_begin_signalling().
++ */
++void dma_fence_end_signalling(bool cookie)
++{
++	if (cookie)
++		return;
++
++	lock_release(&dma_fence_lockdep_map, _RET_IP_);
++}
++EXPORT_SYMBOL(dma_fence_end_signalling);
++
++void __dma_fence_might_wait(void)
++{
++	bool tmp;
++
++	tmp = lock_is_held_type(&dma_fence_lockdep_map, 1);
++	if (tmp)
++		lock_release(&dma_fence_lockdep_map, _THIS_IP_);
++	lock_map_acquire(&dma_fence_lockdep_map);
++	lock_map_release(&dma_fence_lockdep_map);
++	if (tmp)
++		lock_acquire(&dma_fence_lockdep_map, 0, 0, 1, 1, NULL, _THIS_IP_);
++}
++#endif
++
++
+ /**
+  * dma_fence_signal_locked - signal completion of a fence
+  * @fence: the fence to signal
+@@ -170,14 +324,19 @@ int dma_fence_signal(struct dma_fence *fence)
+ {
+ 	unsigned long flags;
+ 	int ret;
++	bool tmp;
+ 
+ 	if (!fence)
+ 		return -EINVAL;
+ 
++	tmp = dma_fence_begin_signalling();
++
+ 	spin_lock_irqsave(fence->lock, flags);
+ 	ret = dma_fence_signal_locked(fence);
+ 	spin_unlock_irqrestore(fence->lock, flags);
+ 
++	dma_fence_end_signalling(tmp);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL(dma_fence_signal);
+@@ -210,6 +369,8 @@ dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
+ 
+ 	might_sleep();
+ 
++	__dma_fence_might_wait();
++
+ 	trace_dma_fence_wait_start(fence);
+ 	if (fence->ops->wait)
+ 		ret = fence->ops->wait(fence, intr, timeout);
+diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+index 3347c54f3a87..3f288f7db2ef 100644
+--- a/include/linux/dma-fence.h
++++ b/include/linux/dma-fence.h
+@@ -357,6 +357,18 @@ dma_fence_get_rcu_safe(struct dma_fence __rcu **fencep)
+ 	} while (1);
+ }
+ 
++#ifdef CONFIG_LOCKDEP
++bool dma_fence_begin_signalling(void);
++void dma_fence_end_signalling(bool cookie);
++#else
++static inline bool dma_fence_begin_signalling(void)
++{
++	return true;
++}
++static inline void dma_fence_end_signalling(bool cookie) {}
++static inline void __dma_fence_might_wait(void) {}
++#endif
++
+ int dma_fence_signal(struct dma_fence *fence);
+ int dma_fence_signal_locked(struct dma_fence *fence);
+ signed long dma_fence_default_wait(struct dma_fence *fence,
+-- 
+2.26.2
 
