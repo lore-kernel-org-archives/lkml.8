@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32691C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3972070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC280207D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360253;
-	bh=DiGuxViRlLGjO9gfWYS9oT1apYy3kT5tzqGXQnS425o=;
+	s=default; t=1591360262;
+	bh=h1LcBw55r4LP8d1ELU0w81ims4oDlKhJhKPLveqyyLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZyjKB5urQzKUaXEi+Ftm/IxFo4fryMSfGRLLyj5d6xxzXnhJIf5T+11zsJUKkWIZh
-	 nshH6JGLc1DbXIyqYFZyiwk9OQ3LIIpd8xCfCMNDR9vSbpWXV+ciFwF05kjR5rbJIg
-	 3O7S8uPrW4d7ZcIRDn8vjcpu1y33uuYNgpC2Yy/s=
+	b=nB/sCCrBFVoFmHMbyhmP6VEpQ8VeSJ/yc74s/TjIzVNBv9R5T1uds1nMuMXf6BCv2
+	 2keq7K4H6qCmq06xGJhMI5YaQOttTQoEdrOb7ky8IotF3MJ7MVt0d8q3bZNkN0cwZJ
+	 9iP1q8HL6qIqJQfDwctqUxdnbArk/FCdSWk1MmBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgFEMaw (ORCPT
+        id S1728146AbgFEMa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:30:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56972 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:30:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgFEMZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:33 -0400
+        id S1726727AbgFEMZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218B6207F5;
-        Fri,  5 Jun 2020 12:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 319D1206DC;
+        Fri,  5 Jun 2020 12:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359932;
-        bh=DiGuxViRlLGjO9gfWYS9oT1apYy3kT5tzqGXQnS425o=;
+        s=default; t=1591359929;
+        bh=h1LcBw55r4LP8d1ELU0w81ims4oDlKhJhKPLveqyyLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gj6panYjYFO1YPwoK8L6qmkGxUm7SrThAzX7H0NmXlFbw3PsOqcm9yt9zFIOQJryF
-         E8oAsy6oxwclW7miM7ClkSCP4YgYSJSc+FwyqO2LsnmekknqZ8LdqYKulbRyWrlrkS
-         dJaU/4p9yPAbmZ91qV8DUMGv0U75MKXjvlBTmKIU=
+        b=IYVti2W2nsO3hTHidSapypTsL6+b9Pbha09eZs4cyMsqdwwgrXai63DsHbRZofCF+
+         hF60cZH3jGVU2vJS6jEJbpU6+Ulo5H5MrnQpteTIWNaKrv9ENspmt4gLJJ4yH4Db1F
+         WN3Cy30slrV1aIthVGciRpgNzcwOghcqU5fUaDSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.6 12/17] gfs2: Even more gfs2_find_jhead fixes
-Date:   Fri,  5 Jun 2020 08:25:11 -0400
-Message-Id: <20200605122517.2882338-12-sashal@kernel.org>
+Cc:     Heinrich Kuhn <heinrich.kuhn@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 09/17] nfp: flower: fix used time of merge flow statistics
+Date:   Fri,  5 Jun 2020 08:25:08 -0400
+Message-Id: <20200605122517.2882338-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122517.2882338-1-sashal@kernel.org>
 References: <20200605122517.2882338-1-sashal@kernel.org>
@@ -59,89 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Heinrich Kuhn <heinrich.kuhn@netronome.com>
 
-[ Upstream commit 20be493b787cd581c9fffad7fcd6bfbe6af1050c ]
+[ Upstream commit 5b186cd60f033110960a3db424ffbd6de4cee528 ]
 
-Fix several issues in the previous gfs2_find_jhead fix:
-* When updating @blocks_submitted, @block refers to the first block block not
-  submitted yet, not the last block submitted, so fix an off-by-one error.
-* We want to ensure that @blocks_submitted is far enough ahead of @blocks_read
-  to guarantee that there is in-flight I/O.  Otherwise, we'll eventually end up
-  waiting for pages that haven't been submitted, yet.
-* It's much easier to compare the number of blocks added with the number of
-  blocks submitted to limit the maximum bio size.
-* Even with bio chaining, we can keep adding blocks until we reach the maximum
-  bio size, as long as we stop at a page boundary.  This simplifies the logic.
+Prior to this change the correct value for the used counter is calculated
+but not stored nor, therefore, propagated to user-space. In use-cases such
+as OVS use-case at least this results in active flows being removed from
+the hardware datapath. Which results in both unnecessary flow tear-down
+and setup, and packet processing on the host.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+This patch addresses the problem by saving the calculated used value
+which allows the value to propagate to user-space.
+
+Found by inspection.
+
+Fixes: aa6ce2ea0c93 ("nfp: flower: support stats update for merge flows")
+Signed-off-by: Heinrich Kuhn <heinrich.kuhn@netronome.com>
+Signed-off-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/lops.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/netronome/nfp/flower/offload.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index 3a020bdc358c..966ed37c9acd 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -505,12 +505,12 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
- 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
- 	unsigned int shift = PAGE_SHIFT - bsize_shift;
--	unsigned int max_bio_size = 2 * 1024 * 1024;
-+	unsigned int max_blocks = 2 * 1024 * 1024 >> bsize_shift;
- 	struct gfs2_journal_extent *je;
- 	int sz, ret = 0;
- 	struct bio *bio = NULL;
- 	struct page *page = NULL;
--	bool bio_chained = false, done = false;
-+	bool done = false;
- 	errseq_t since;
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/offload.c b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+index 7ca5c1becfcf..c5dcfdd69773 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+@@ -1440,7 +1440,8 @@ __nfp_flower_update_merge_stats(struct nfp_app *app,
+ 		ctx_id = be32_to_cpu(sub_flow->meta.host_ctx_id);
+ 		priv->stats[ctx_id].pkts += pkts;
+ 		priv->stats[ctx_id].bytes += bytes;
+-		max_t(u64, priv->stats[ctx_id].used, used);
++		priv->stats[ctx_id].used = max_t(u64, used,
++						 priv->stats[ctx_id].used);
+ 	}
+ }
  
- 	memset(head, 0, sizeof(*head));
-@@ -533,10 +533,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 				off = 0;
- 			}
- 
--			if (!bio || (bio_chained && !off) ||
--			    bio->bi_iter.bi_size >= max_bio_size) {
--				/* start new bio */
--			} else {
-+			if (bio && (off || block < blocks_submitted + max_blocks)) {
- 				sector_t sector = dblock << sdp->sd_fsb2bb_shift;
- 
- 				if (bio_end_sector(bio) == sector) {
-@@ -549,19 +546,17 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 						(PAGE_SIZE - off) >> bsize_shift;
- 
- 					bio = gfs2_chain_bio(bio, blocks);
--					bio_chained = true;
- 					goto add_block_to_new_bio;
- 				}
- 			}
- 
- 			if (bio) {
--				blocks_submitted = block + 1;
-+				blocks_submitted = block;
- 				submit_bio(bio);
- 			}
- 
- 			bio = gfs2_log_alloc_bio(sdp, dblock, gfs2_end_log_read);
- 			bio->bi_opf = REQ_OP_READ;
--			bio_chained = false;
- add_block_to_new_bio:
- 			sz = bio_add_page(bio, page, bsize, off);
- 			BUG_ON(sz != bsize);
-@@ -569,7 +564,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 			off += bsize;
- 			if (off == PAGE_SIZE)
- 				page = NULL;
--			if (blocks_submitted < 2 * max_bio_size >> bsize_shift) {
-+			if (blocks_submitted <= blocks_read + max_blocks) {
- 				/* Keep at least one bio in flight */
- 				continue;
- 			}
 -- 
 2.25.1
 
