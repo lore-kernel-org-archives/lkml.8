@@ -2,52 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D34C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC42AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7FAC206F0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BF520663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366951;
-	bh=AwfvXfjnTNJMGNoI9iVhy0FrSXDouyxhVUlCc0eNCaw=;
+	s=default; t=1591366952;
+	bh=kFwCRCraMBRyepMZo+yl/SXXPj0zsoJ7YQUxEPQ2XHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PbqCKMp5jsxP0zOQEaimgqIDdzt4gDxasJp43y0iHCojIPZ8C2+ujjCfZPfemPR17
-	 f9WVz6NFTEOWeHOxJ/x90WTJL8/aDSxdRKb9RHesm7CEJWQr2FMnGThX85kuCKJl7C
-	 EyrvgCCM6LkJyPlTGDldZA2npGwrRyGKPkECHxFU=
+	b=SF5a4J1vkDZdEXLedq4+bXw6tJ+UeRiSomqokDnGkaU+sT2SAGSXtu3l+1ETdZG2V
+	 NgXEvFT28M7QyBzYPHX9QuGT08WfEsfkccn71Yk6SdmLGWvjNLnpBHI/lo6LB8ZcuK
+	 TxB6Lc47Ty0i8VRnItB4xzDbJLAhfNN/I3gVF9Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgFEOW1 (ORCPT
+        id S1728794AbgFEOTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgFEOTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:14 -0400
+        id S1728782AbgFEOTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BB26208A7;
-        Fri,  5 Jun 2020 14:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7F14208E4;
+        Fri,  5 Jun 2020 14:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366753;
-        bh=AwfvXfjnTNJMGNoI9iVhy0FrSXDouyxhVUlCc0eNCaw=;
+        s=default; t=1591366744;
+        bh=kFwCRCraMBRyepMZo+yl/SXXPj0zsoJ7YQUxEPQ2XHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPlbZh4lifsTE9+4sph122Uqw6c6iWRwuVGbr6FuoF1JGKeNBMFE8s/QEbQmy9aYB
-         5XlGweA4gfU5SlYgBfu4ysmfTBJnIXJ6xMARRfUL4RveXFXVwuARHX+hk68riLxDC3
-         ySb/tmzNU6OEHzwBHiwtf+Puwk9JH31MlD62ruXk=
+        b=fWYomZb+mZ9XVVzHzNBXR+NOOxdeIsVJnvAZYFqDKwIJd9MLsr9TU4LuYykPPxxFq
+         IrznQWqh2V9SWUKxTX9XaUTKuUkAEbIRqL7JLJSWcibEZAyhELS3M4Rb8hfALgLy1/
+         UW8HZPNfTsqVU7HZFJ1hcxITWjNMj3Sq3n1t/PDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 34/38] null_blk: return error for invalid zone size
-Date:   Fri,  5 Jun 2020 16:15:17 +0200
-Message-Id: <20200605140254.877560188@linuxfoundation.org>
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 09/38] mmc: fix compilation of user API
+Date:   Fri,  5 Jun 2020 16:14:52 +0200
+Message-Id: <20200605140253.121452688@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -60,65 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-[ Upstream commit e274832590211c4b1b1e807ca66fad8b5bb8b328 ]
+commit 83fc5dd57f86c3ec7d6d22565a6ff6c948853b64 upstream.
 
-In null_init_zone_dev() check if the zone size is larger than device
-capacity, return error if needed.
+The definitions of MMC_IOC_CMD  and of MMC_IOC_MULTI_CMD rely on
+MMC_BLOCK_MAJOR:
 
-This also fixes the following oops :-
+    #define MMC_IOC_CMD       _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_cmd)
+    #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)
 
-null_blk: changed the number of conventional zones to 4294967295
-BUG: kernel NULL pointer dereference, address: 0000000000000010
-PGD 7d76c5067 P4D 7d76c5067 PUD 7d240c067 PMD 0
-Oops: 0002 [#1] SMP NOPTI
-CPU: 4 PID: 5508 Comm: nullbtests.sh Tainted: G OE 5.7.0-rc4lblk-fnext0
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e4
-RIP: 0010:null_init_zoned_dev+0x17a/0x27f [null_blk]
-RSP: 0018:ffffc90007007e00 EFLAGS: 00010246
-RAX: 0000000000000020 RBX: ffff8887fb3f3c00 RCX: 0000000000000007
-RDX: 0000000000000000 RSI: ffff8887ca09d688 RDI: ffff888810fea510
-RBP: 0000000000000010 R08: ffff8887ca09d688 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8887c26e8000
-R13: ffffffffa05e9390 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007fcb5256f740(0000) GS:ffff888810e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000010 CR3: 000000081e8fe000 CR4: 00000000003406e0
-Call Trace:
- null_add_dev+0x534/0x71b [null_blk]
- nullb_device_power_store.cold.41+0x8/0x2e [null_blk]
- configfs_write_file+0xe6/0x150
- vfs_write+0xba/0x1e0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x60/0x250
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7fcb51c71840
+However, MMC_BLOCK_MAJOR is defined in linux/major.h and
+linux/mmc/ioctl.h did not include it.
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200511161902.191405-1-Jerome.Pouiller@silabs.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/null_blk_zoned.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/uapi/linux/mmc/ioctl.h |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
-index 3d7fdea872f8..2553e05e0725 100644
---- a/drivers/block/null_blk_zoned.c
-+++ b/drivers/block/null_blk_zoned.c
-@@ -20,6 +20,10 @@ int null_zone_init(struct nullb_device *dev)
- 		pr_err("zone_size must be power-of-two\n");
- 		return -EINVAL;
- 	}
-+	if (dev->zone_size > dev->size) {
-+		pr_err("Zone size larger than device capacity\n");
-+		return -EINVAL;
-+	}
+--- a/include/uapi/linux/mmc/ioctl.h
++++ b/include/uapi/linux/mmc/ioctl.h
+@@ -3,6 +3,7 @@
+ #define LINUX_MMC_IOCTL_H
  
- 	dev->zone_size_sects = dev->zone_size << ZONE_SIZE_SHIFT;
- 	dev->nr_zones = dev_size >>
--- 
-2.25.1
-
+ #include <linux/types.h>
++#include <linux/major.h>
+ 
+ struct mmc_ioc_cmd {
+ 	/*
 
 
