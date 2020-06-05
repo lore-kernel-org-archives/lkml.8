@@ -2,100 +2,92 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A78C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A35207D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9182075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591360069;
+	bh=x7c/AxKWn05LnkjEH4TGTp18ZTJFYDtquGB/20661eo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OVr4tpSBqXnfD6dDlkD49u+Ngu7w7pjWf4O3T6SybnSyJjEi52NHdlHJVuMf9cVAD
+	 W9Uel+oS9b/e2JsCuPcf2DB9D3yeE88ouKz1yvMaoksI8IRt/ehgTauOw44CkN3eUI
+	 HlPGSQJKLZv5sUCTSJbizyDYyHId/xfxmloNhT68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgFEM1k (ORCPT
+        id S1727769AbgFEM0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:27:40 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44631 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgFEM1g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:27:36 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x202so8027412oix.11;
-        Fri, 05 Jun 2020 05:27:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HU1RM6XFyALR3u5LYsJyULZbc8RDM1S6If7s7JUVYl0=;
-        b=SbOMpO1ZY5oAqNIcsjVuHIhinDqiSVIvW+2sV41guKniuZBQ/yUrpZYwQEKwnIsOTc
-         TrA8qAuj2fmHI4gTDSXob9LIr8PNQfo4HBJF10vQ0kqemiLMEGf3Gm8ijM1qOSH1BiFr
-         tkBUN1f6jt2FZWYEatueZh92IVlkoJrrEWQ7QFisje5ex5lnzOja86FBEChgbsZ4lkYL
-         sk3h8dPahIQz+n4hDwFTaiKRbT22SH1BG4exbf0dranw0emHgunbBA2afSLMKJa+4Qxg
-         WQY05LAJ2cAhzeWy1fa8eLGzQ//BhdeswbpXHbGkTVkFzqsSy29N5yspC+ZchwpH7/p5
-         sgzA==
-X-Gm-Message-State: AOAM531luX9wQ60VycjZ1iP7w7ecWSMmpTvenuGyOAyzvmlzNOBEdDXx
-        CH9X2+avAIupCOwwEfaKTqFADbRWHu5sb9ZSaX0=
-X-Google-Smtp-Source: ABdhPJyv9eA2nqvV1xxk2+5oDIKvkNs/bzH9H56dHKfSDxeJvNkDGGqadnhS5cy9QvwnES0yc/uWfLn979ls+iXx53g=
-X-Received: by 2002:aca:1a19:: with SMTP id a25mr1759190oia.54.1591360055179;
- Fri, 05 Jun 2020 05:27:35 -0700 (PDT)
+        Fri, 5 Jun 2020 08:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727039AbgFEM0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCF6B208E4;
+        Fri,  5 Jun 2020 12:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591359965;
+        bh=x7c/AxKWn05LnkjEH4TGTp18ZTJFYDtquGB/20661eo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q2k1I3n25vevXS3G1353EXHNPlm+JzvE1zGqShj4O8xegJaZqmpLOdyTDzX5mwpV6
+         PJ1qar4IRQWOa8eW86VPHrZVvBoh/bwhy7NcIyWlwQCLlpn9xF05NR6lPhxc+A85RM
+         PkUGeNUWN7EJS61v67/Q/eHHmJAD7FuNVz+ywKoA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dennis Kadioglu <denk@eclipso.email>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 6/9] Input: synaptics - add a second working PNP_ID for Lenovo T470s
+Date:   Fri,  5 Jun 2020 08:25:54 -0400
+Message-Id: <20200605122558.2882712-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200605122558.2882712-1-sashal@kernel.org>
+References: <20200605122558.2882712-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1590586141-21006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590586141-21006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 5 Jun 2020 14:27:23 +0200
-Message-ID: <CAMuHMdX+M+k-JRy1Ps=hRZR=mSuexSQbJ0+Cw1337uO6nak_qQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: r8a7742-iwg21d-q7-dbcm-ca: Add device tree for
- camera DB
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+From: Dennis Kadioglu <denk@eclipso.email>
 
-On Wed, May 27, 2020 at 3:29 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for the camera daughter board which is connected to
-> iWave's RZ/G1H Qseven carrier board. Also enable ttySC[0135] and
-> ethernet1 interfaces.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
+instead of the already included PNP ID "LEN006c". However, my touchpad
+seems to work well without any problems using RMI. So this patch adds the
+other PNP ID.
 
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
+Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
+Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +&scifb1 {
-> +       pinctrl-0 = <&scifb1_pins>;
-> +       pinctrl-names = "default";
-> +       status = "okay";
-
-Before I queue this in renesas-devel for v5.9, I have on question:
-As this port carries RTS/CTS signals, perhaps you want to add
-
-    rts-gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
-    cts-gpios = <&gpio4 17 GPIO_ACTIVE_LOW>;
-
-?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index d9042d0566ab..671e018eb363 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -173,6 +173,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
+ 	"LEN006c", /* T470s */
++	"LEN007a", /* T470s */
+ 	"LEN0071", /* T480 */
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
