@@ -2,91 +2,160 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDABC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 133AB207F9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41145207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="YOz7DoaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbgFEKJE (ORCPT
+        id S1726460AbgFEKJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:09:04 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:45717 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725926AbgFEKJD (ORCPT
+        Fri, 5 Jun 2020 06:09:23 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:33177 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbgFEKJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:09:03 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0U-dqblm_1591351735;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U-dqblm_1591351735)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 05 Jun 2020 18:08:56 +0800
-Subject: Re: [PATCH RFC v4 00/13] virtio-mem: paravirtualized memory
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20191212171137.13872-1-david@redhat.com>
- <9acc5d04-c8e9-ef53-85e4-709030997ca6@redhat.com>
- <1cfa9edb-47ea-1495-4e28-4cf391eab44c@linux.alibaba.com>
- <d6cd1870-1012-cb3d-7d29-8e5ad2703717@redhat.com>
- <6b4724bf-84b5-9880-5464-1908425d106d@redhat.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <741e7d4b-4433-98fc-f849-cbb460d61a41@linux.alibaba.com>
-Date:   Fri, 5 Jun 2020 18:08:55 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Fri, 5 Jun 2020 06:09:19 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C88EF22EE4;
+        Fri,  5 Jun 2020 12:09:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591351756;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MsgwKzto2IoOJjvjTzGrigwCXuk4v4Z5kvEN1IzyNVY=;
+        b=YOz7DoaZopOBIiCVRhTaDmoHMSotqFUD1klTT5xzP/DYKwRApaTqVpxiFqUj62wQlkCeso
+        rmShm/jyM0iW0HJQFp/yx0Rrr4/4YkFrd+I1dZGiEUATTJIfds6yt2ig9EK80aeePTx5yV
+        JdQmMvjA6eyQ/Ls2P9eum9CkF6m0QN0=
 MIME-Version: 1.0
-In-Reply-To: <6b4724bf-84b5-9880-5464-1908425d106d@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 12:09:15 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc>
+ <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andy,
 
-
-在 2020/6/5 下午5:36, David Hildenbrand 写道:
-> I guess I know what's happening here. In case we only have DMA memory
-> when booting, we don't reserve swiotlb buffers. Once we hotplug memory
-> and online ZONE_NORMAL, we don't have any swiotlb DMA bounce buffers to
-> map such PFNs (total 0 (slots), used 0 (slots)).
+Am 2020-06-05 10:01, schrieb Andy Shevchenko:
+> On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
+>> 
+>> Add the core support for the board management controller found on the
+>> SMARC-sAL28 board. It consists of the following functions:
+>>  - watchdog
+>>  - GPIO controller
+>>  - PWM controller
+>>  - fan sensor
+>>  - interrupt controller
+>> 
+>> At the moment, this controller is used on the Kontron SMARC-sAL28 
+>> board.
+>> 
+>> Please note that the MFD driver is defined as bool in the Kconfig
+>> because the next patch will add interrupt support.
 > 
-> Can you try with "swiotlb=force" on the kernel cmdline?
+> ...
+> 
+>> +config MFD_SL28CPLD
+>> +       bool "Kontron sl28 core driver"
+>> +       depends on I2C=y
+> 
+> Why not module?
 
-Yes, it works fine with this cmdline. problems gone,
+There are users of the interupt lines provided by the interrupt 
+controller.
+For example, the gpio-button driver. If this is compiled into the kernel
+(which it is by default in the arm64 defconfig), probing will fail 
+because
+the interrupt is not found. Is there a better way for that? I guess the 
+same
+is true for the GPIO driver.
+
+> 
+>> +       depends on OF
+> 
+> I didn't find an evidence this is needed.
+
+see below.
+
+> 
+> No Compile Test?
+
+ok
+
+>> +       select REGMAP_I2C
+>> +       select MFD_CORE
+> 
+> ...
+> 
+>> +#include <linux/of_platform.h>
+> 
+> No evidence of user of this.
+> I think you meant mod_devicetable.h.
+
+devm_of_platform_populate(), so I need CONFIG_OF, too right?
+
+
+>> +static struct i2c_driver sl28cpld_driver = {
+>> +       .probe_new = sl28cpld_probe,
+>> +       .driver = {
+>> +               .name = "sl28cpld",
+>> +               .of_match_table = of_match_ptr(sl28cpld_of_match),
+> 
+> Drop of_match_ptr(). It has a little sense in this context (depends 
+> OF).
+> It will have a little sense even if you drop depends OF b/c you will
+> introduce a compiler warning.
+
+ok
+
+> 
+>> +       },
+>> +};
+
+-- 
+-michael
