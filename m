@@ -2,121 +2,102 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5014AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7DF207F7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F5C20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:12:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="minHNrYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgFEDIJ (ORCPT
+        id S1726044AbgFEDMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:08:09 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:46107 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbgFEDIJ (ORCPT
+        Thu, 4 Jun 2020 23:12:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbgFEDMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:08:09 -0400
-Received: from dread.disaster.area (pa49-180-124-177.pa.nsw.optusnet.com.au [49.180.124.177])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 0B30BD588CC;
-        Fri,  5 Jun 2020 13:08:04 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jh2i6-0002cj-5n; Fri, 05 Jun 2020 13:07:58 +1000
-Date:   Fri, 5 Jun 2020 13:07:58 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Thu, 4 Jun 2020 23:12:47 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D0EC08C5C0;
+        Thu,  4 Jun 2020 20:12:46 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b5so8183100iln.5;
+        Thu, 04 Jun 2020 20:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Bwy3kLbPJLykuSYZEsLy4fGgrjBMNY4QghQaNEXTtao=;
+        b=minHNrYKJRdYHWBYj4vN7Rb/TAGIa2odYSuDObBhK7QokvuNPQVPNbVaVi5uKij9JM
+         HzQsSfEMUepG6RwIwvXO3Z/Kz3a8Ene3LxdZvVs7eGjVyywQJ3teK8k8ZZv/tBnq8Enp
+         VX3KgHaVBkC/0QG+z6+hxrNZhB9Na00xSC+4wHVcmydicW8DgzzrcsmNlRUa/Sq783Se
+         KyyGvIewIje/bwRFDs5ZkbPpxhuT0SLEsvhTuPxMrci1betWf68FX7C6QA5kK5wMqY1k
+         qjQEesTBNeE0g8H0257ofiIw7KGD0OYRc3Yp7qGGg2oDvMsRcbBQPokXsQJRiwRASJ0J
+         hEfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Bwy3kLbPJLykuSYZEsLy4fGgrjBMNY4QghQaNEXTtao=;
+        b=V/YbDdtKVbBSRNeNWSKZb7TMspWoIMsmyp8glrYp+MRqWsiyUJR3Hdfn9/Z7/CZy35
+         KAUpDf4z01dY5z2ChJEj7fpIhbalRF0vtc1xcaq/nSnzaSJwZz4YFTY1U4x9ObDGbT2D
+         KQg/aNccBv3aD7uxDs271AuTmqvDx1opeaeqeNJek8huqydkx963rluKWDmoQeZ2qmrI
+         lBlnrDV1Qa8tsc391BKYEmmfiY1hkcDh8ei2dnJigSywFK8Y6Wl8YGxPsHoGtcLX7L1X
+         HcvYwkNfTlpMA6JV5ox+4djqsC/qoLZisCQc/X0EldJ2YnSK4Ls5iiTiBrITCgjcFh7w
+         bhZg==
+X-Gm-Message-State: AOAM531WGTQH8V5cYyyNu2ct0LKwv+By8UNE5kWa7ViMnNqrwP1RGNVD
+        OuTeROAOCqqQS+kKi3AIT/o=
+X-Google-Smtp-Source: ABdhPJymLCD7irIm72PYWJoFekESbRyoxTq1Bfb0WvWMHqV/VHJFkRKN3Wuo/+2aJY3jVun6wOy0HA==
+X-Received: by 2002:a92:cb91:: with SMTP id z17mr6552981ilo.305.1591326765968;
+        Thu, 04 Jun 2020 20:12:45 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id k126sm767149iof.50.2020.06.04.20.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 20:12:45 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
-Message-ID: <20200605030758.GB2040@dread.disaster.area>
-References: <20200604202340.29170-1-willy@infradead.org>
- <20200604225726.GU2040@dread.disaster.area>
- <20200604230519.GW19604@bombadil.infradead.org>
- <20200604233053.GW2040@dread.disaster.area>
- <20200604235050.GX19604@bombadil.infradead.org>
- <20200605003159.GX2040@dread.disaster.area>
- <20200605022451.GZ19604@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605022451.GZ19604@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=k3aV/LVJup6ZGWgigO6cSA==:117 a=k3aV/LVJup6ZGWgigO6cSA==:17
-        a=kj9zAlcOel0A:10 a=nTHF0DUjJn0A:10 a=7-415B0cAAAA:8
-        a=ruQhQeNdVRnZAG6APzsA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] PCI: tegra: handle failure case of pm_runtime_get_sync
+Date:   Thu,  4 Jun 2020 22:12:39 -0500
+Message-Id: <20200605031239.6638-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:24:51PM -0700, Matthew Wilcox wrote:
-> On Fri, Jun 05, 2020 at 10:31:59AM +1000, Dave Chinner wrote:
-> > On Thu, Jun 04, 2020 at 04:50:50PM -0700, Matthew Wilcox wrote:
-> > > > Sure, but that's not really what I was asking: why isn't this
-> > > > !uptodate state caught before the page fault code calls
-> > > > ->page_mkwrite? The page fault code has a reference to the page,
-> > > > after all, and in a couple of paths it even has the page locked.
-> > > 
-> > > If there's already a PTE present, then the page fault code doesn't
-> > > check the uptodate bit.  Here's the path I'm looking at:
-> > > 
-> > > do_wp_page()
-> > >  -> vm_normal_page()
-> > >  -> wp_page_shared()
-> > >      -> do_page_mkwrite()
-> > > 
-> > > I don't see anything in there that checked Uptodate.
-> > 
-> > Yup, exactly the code I was looking at when I asked this question.
-> > The kernel has invalidated the contents of a page, yet we still have
-> > it mapped into userspace as containing valid contents, and we don't
-> > check it at all when userspace generates a protection fault on the
-> > page?
-> 
-> Right.  The iomap error path only clears PageUptodate.  It doesn't go
-> to the effort of unmapping the page from userspace, so userspace has a
-> read-only view of a !Uptodate page.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-Hmmm - did you miss the ->discard_page() callout just before we call
-ClearPageUptodate() on error in iomap_writepage_map()? That results
-in XFS calling iomap_invalidatepage() on the page, which ....
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/pci/controller/pci-tegra.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-/me sighs as he realises that ->invalidatepage doesn't actually
-invalidate page mappings but only clears the page dirty state and
-releases filesystem references to the page.
-
-Yay. We leave -invalidated page cache pages- mapped into userspace,
-and page faults on those pages don't catch access to invalidated
-pages.
-
-Geez, we really suck at this whole software thing, don't we?
-
-It's not clear to me that we can actually unmap those pages safely
-in a race free manner from this code - can we actually do that from
-the page writeback path?
-
-> > > I think the iomap code is the only filesystem which clears PageUptodate
-> > > on errors. 
-> > 
-> > I don't think you looked very hard. A quick scan shows at least
-> > btrfs, f2fs, hostfs, jffs2, reiserfs, vboxfs and anything using the
-> > iomap path will call ClearPageUptodate() on a write IO error.
-> 
-> I'll give you btrfs and jffs2, but I don't think it's true for f2fs.
-> The only other filesystem using the iomap bufferd IO paths today
-> is zonefs, afaik.
-
-gfs2 as well.
-
--Dave.
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 3e64ba6a36a8..3d4b448fd8df 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2712,6 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err < 0) {
+ 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
++		pm_runtime_put_sync(pcie->dev);
+ 		goto teardown_msi;
+ 	}
+ 
 -- 
-Dave Chinner
-david@fromorbit.com
+2.17.1
+
