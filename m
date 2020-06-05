@@ -2,145 +2,167 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C84C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E78F2206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D454206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgFEOrX (ORCPT
+        id S1728134AbgFEOre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:47:23 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:53116 "EHLO raptor.unsafe.ru"
+        Fri, 5 Jun 2020 10:47:34 -0400
+Received: from mga02.intel.com ([134.134.136.20]:22528 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgFEOrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:47:23 -0400
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 29B20209AF;
-        Fri,  5 Jun 2020 14:47:19 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 16:47:14 +0200
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH 0/2] proc: use subset option to hide some top-level
- procfs entries
-Message-ID: <20200605144714.7voi2hgtg5r2oiql@comp-core-i7-2640m-0182e6>
-References: <20200604200413.587896-1-gladkov.alexey@gmail.com>
- <87ftbah8q2.fsf@x220.int.ebiederm.org>
- <20200605000838.huaeqvgpvqkyg3wh@comp-core-i7-2640m-0182e6>
- <87zh9idu3h.fsf@x220.int.ebiederm.org>
+        id S1727101AbgFEOrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:47:33 -0400
+IronPort-SDR: emjq8j6Uf7Hvui7rJhK1Yyy7mYqm0WP+TecBACIKER1Fb2oBl0T9IKx9U6FMX03Qc2DCDX0Omc
+ czZ/Doa7AHKw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 07:47:32 -0700
+IronPort-SDR: 1r8QDFTlHGj0Gbr3R32FmKCmc+dxYSVnMCZqyuSz8efxxc/l7322tU5jKcbejJTq9Zs9ajAOJC
+ DJXjOEGCGH9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
+   d="scan'208";a="294712837"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Jun 2020 07:47:31 -0700
+Received: from [10.249.226.228] (abudanko-mobl.ccr.corp.intel.com [10.249.226.228])
+        by linux.intel.com (Postfix) with ESMTP id 45C5F580569;
+        Fri,  5 Jun 2020 07:47:29 -0700 (PDT)
+Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+ <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
+ <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
+ <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
+ <20200601233732.GA691017@tassilo.jf.intel.com>
+ <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
+ <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
+ <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
+ <20200605105108.GB1404794@krava>
+ <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
+ <20200605135743.GD1404794@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
+Date:   Fri, 5 Jun 2020 17:47:28 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
+In-Reply-To: <20200605135743.GD1404794@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87zh9idu3h.fsf@x220.int.ebiederm.org>
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Fri, 05 Jun 2020 14:47:20 +0000 (UTC)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 11:17:38PM -0500, Eric W. Biederman wrote:
-> >> I am not going to seriously look at this for merging until after the
-> >> merge window closes. 
-> >
-> > OK. I'll wait.
+
+On 05.06.2020 16:57, Jiri Olsa wrote:
+> On Fri, Jun 05, 2020 at 04:15:52PM +0300, Alexey Budankov wrote:
+>>
+>> On 05.06.2020 13:51, Jiri Olsa wrote:
+>>> On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
+>>>> On 2/06/20 12:12 pm, Alexey Budankov wrote:
+>>>>>
+>>>>> On 02.06.2020 11:32, Alexey Budankov wrote:
+>>>>>>
+>>>>>> On 02.06.2020 2:37, Andi Kleen wrote:
+>>>>>>>>> or a pathname, or including also the event default of "disabled".
+>>>>>>>>
+>>>>>>>> For my cases conversion of pathnames into open fds belongs to external
+>>>>>>>> controlling process e.g. like in the examples provided in the patch set.
+>>>>>>>> Not sure about "event default of 'disabled'"
+>>>>>>>
+>>>>>>> It would be nicer for manual use cases if perf supported the path names
+>>>>>>> directly like in Adrian's example, not needing a complex wrapper script.
+>>>>>>
+>>>>>> fds interface is required for VTune integration since VTune wants control
+>>>>>> over files creation aside of Perf tool process. The script demonstrates
+>>>>>> just one possible use case.
+>>>>>>
+>>>>>> Control files could easily be implemented on top of fds making open operations
+>>>>>> for paths and then initializing fds. Interface below is vague and with explicit
+>>>>>> options like below it could be more explicit:
+>>>>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
+>>>>>
+>>>>> Or even clearer:
+>>>>>
+>>>>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
+>>>>
+>>>> If people are OK with having so many options, then that is fine by me.
+>>>
+>>> the single option Adrian suggested seems better to me:
+>>>
+>>>  --control
+>>>  --control 11
+>>>  --control 11,15
+>>
+>> What if a user specifies fifos named like this above, not fds?
+>>
+>>>  --control 11,15,disabled
+>>>  --control 11,,disabled
+>>>  --control /tmp/my-perf.fifo
+>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
+>>
+>> What if a user wants not fifos but other type of comm channels?
+>>
+>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
+>>>  --control /tmp/my-perf.fifo,,disabled
+>>>
+>>> we already support this kind of options arguments, like for --call-graph
+>>>
+>>> jirka
+>>>
+>>
+>> IMHO,
+>> this interface, of course, looks more compact (in amount of options) however
+>> the other side it is less user friendly. One simple option for one simple
+>> purpose is more convenient as for users as for developers. Also complex
+>> option syntax tends to have limitations and there are probably more
+>> non-obvious ones.
+>>
+>> Please speak up. I might have missed something meaningful.
 > 
-> That will mean your patches can be based on -rc1.
-
-OK.
-
-> > Do you suggest to allow a user to mount procfs with hidepid=2,subset=pid
-> > options? If so then this is an interesting idea.
+> how about specify the type like:
 > 
-> The key part would be subset=pid.  You would still need to be root in
-> your user namespace, and mount namespace.  You would not need to have a
-> separate copy of proc with nothing hidden already mounted.
+> --control fd:1,2,...
 
-Can you tell me more about your idea ? I thought I understood it, but it
-seems my understanding is different.
+What do these ... mean?
 
-I thought that you are suggesting that you move in the direction of
-allowing procfs to mount an unprivileged user.
-
-> > I can not agree with this because I do not touch on other options.
-> > The hidepid and subset=pid has no relation to the visibility of regular
-> > files. On the other hand, in procfs there is absolutely no way to restrict
-> > access other than selinux.
+> --control fifo:/tmp/fifo1,/tmp/fifo2
+> --control xxx:....
 > 
-> Untrue.  At a practical level the user namespace greatly restricts
-> access to proc because many of the non-process files are limited to
-> global root only.
+> this way we can extend the functionality in the future
+> and stay backward compatible, while keeping single option
 
-I am not worried about the files created in procfs by the kernel itself
-because the permissions are set correctly and are checked correctly.
+Well, it clarifies more. However it still implicitly assumes
+and requires proper ordering e.g. 1 is ctl-fd and 2 is ack-fd
+and if there are some more positions there will be gaps like
+--control fd:10,,something,,something ...
 
-I worry about kernel modules, especially about modules out of tree.
+Why is one single option with complex syntax more preferable
+than several simple options? Also it would still consume almost
+equal amount of command line space in shell.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/gadget/function/rndis.c#n904
+Thanks,
+Alexey
 
-I certainly understand that 0660 is not 0666, but still.
-
-> > I know that java uses meminfo for sure.
-> >
-> > The purpose of this patch is to isolate the container from unwanted files
-> > in procfs.
 > 
-> If what we want is the ability not to use the original but to have
-> a modified version of these files.  We probably want empty files that
-> serve as mount points.
+> jirka
 > 
-> Or possibly a version of these files that takes into account
-> restrictions.  In either even we need to do the research through real
-> programs and real kernel options to see what is our best option for
-> exporting the limitations that programs have and deciding on the long
-> term API for that.
-
-Yes, but that's a slightly different story. It would be great if all of
-these files provide modified information.
-
-My patch is about those files that we don’t know about and which we don’t
-want.
-
-> If we research things and we decide the best way to let java know of
-> it's limitations is to change /proc/meminfo.  That needs to be a change
-> that always applies to meminfo and is not controlled by options.
-> 
-> > For now I'm just trying ti create a better way to restrict access in
-> > the procfs than this since procfs is used in containers.
-> 
-> Docker historically has been crap about having a sensible policy.  The
-> problem is that Docker wanted to allow real root in a container and
-> somehow make it safe by blocking access to proc files and by dropping
-> capabilities.
-> 
-> Practically everything that Docker has done is much better and simpler by
-> restricting the processes to a user namespace, with a root user whose
-> uid is not the global root user.
-> 
-> Which is why I want us to make certain we are doing something that makes
-> sense, and is architecturally sound.
-
-Ok. Then ignore this patchset.
-
-> You have cleared the big hurdle and proc now has options that are
-> usable.   I really appreciate that.  I am not opposed to the general
-> direction you are going to find a way to make proc more usable.  I just
-> want our next step to be solid.
-
--- 
-Rgrds, legion
-
