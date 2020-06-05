@@ -2,175 +2,174 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A98FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C2CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1727620663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43CC32070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qOAYA6ae"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnbuqibM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgFENd6 (ORCPT
+        id S1728025AbgFENeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:33:58 -0400
-Received: from mail-vi1eur05on2043.outbound.protection.outlook.com ([40.107.21.43]:44833
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727980AbgFENdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:33:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nekYxzWirQdF9ghER9K6ZKorXR8QWK5z/TUI9nvBi8rTEvJawHwfW+yFG4HYrmU658MboKYz53bI2yKlfkAdzdsJCfF9BCVyLN7irIJ/zH8BIpQ1POfB/KpIjKsZn6GPfiq3oofCs1xNjlVu/8EvHSAXfJt7Txl10ExRYExY51iQ4a2t6FBTaU2BrcAWiTtJQwk2Di0D/ZeyzvSzeQTLR0nsvFSItXCInPnWAkpsys8paL4q0QCNdenGmAwKhebhj1FZYMZVBCkk5c4ussHripFU8HxMHOcauolXdvDowWvQf6r6pRyqXZ4KEcgtuTh8KPPD8KxqgZJpE5v9p2If2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PVa9IWELyHni7gn3nuBup0HmNm+xItFbTKwgykt4ySE=;
- b=dhZuvC0nIaukyVNOt6GQawY+J1NQ6FCSBsUxyC41hcKDjbIOQekcWeZcMULITgXWsVVpb/Cnekj3utq7FS/H4yr7khv/1RalTXI6YCAA9laBXH8gWS6fo8ueWLByX30Aq7bv6guigowbJpCLF42DIt4O+NGNGc80rDIlAzhN7b1dq8OmJjfzI+I3R9sh9oSbVsvAb3HNX+8btDMTOi5bxDL3r0bVsQ/Kw5W7WNwN28WIIO644Q7C3fQXc9iFXqanaMSELDcLH9R8xEkLkpFlJ/bOHPTRkYPRSdlJoGpliAzH9b7RMHErlYG6SpJPea4Bea7H3VS16VMp1k1Koc1XtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PVa9IWELyHni7gn3nuBup0HmNm+xItFbTKwgykt4ySE=;
- b=qOAYA6aebOTk15WeTFxs5DIds4XOvKuWIF6gFO6zVH/tUMIO0Z6ULXtlzZXSiPJNXguo2COHOk8D87RuxBYuXob/ynTuxz/hah0+QVsQ1GRI5GioE3h1x5lH66obglDSjvUEwUvg1vsTUal7fipOH26R0Pf79quMZDvkR30u24w=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6720.eurprd04.prod.outlook.com (2603:10a6:803:123::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
- 2020 13:33:49 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
- 13:33:49 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Subject: [PATCH v9 14/14] dmaengine: imx-sdma: add uart rom script
-Date:   Sat,  6 Jun 2020 05:32:35 +0800
-Message-Id: <1591392755-19136-15-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
-References: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0048.apcprd02.prod.outlook.com
- (2603:1096:3:18::36) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Fri, 5 Jun 2020 09:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727813AbgFENeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:34:01 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C64C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 06:34:01 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o6so5165432pgh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 06:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yEbUaiw8Kch03CncKtHMTXVy3L/nqFtMr+RdvLV65s4=;
+        b=RnbuqibMxwWY5YoolBLjZaVq4mySx6ePfyz7ztDca/v2/vHysyr4itaLXoru69ZFPY
+         B/O8AxKv7FCqMwyRUPKQMzPo8RwrXuCSWJLhS+fyTPGFQM/NfOSSw7OCudTvJFJ0EANP
+         8C8siPvigH06kr/Undk+t7UDJIOo4D8zHtjsFe8Dm3iyu1l40ZKTPR1T4lE15+y50OVA
+         WJhEv9Qaza26f4UAvVrn/WkUIrStLJatxYs8Hxjq7rSyDujjQ3od6l6IEjdSfjlD/4SG
+         72kBAP04kA+iYIOK+keKsvKnIj+64nOR5OE4pjTxczxyuWaXFEoWvS3txRSgtJanhNS3
+         LRvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yEbUaiw8Kch03CncKtHMTXVy3L/nqFtMr+RdvLV65s4=;
+        b=kRUcwoowdYVELoMmN/TmT0fFwG5LTCtUDgT1v1/EulHeCrOaeh6ygHGzsAfGVrLAeS
+         OvZMPnHgKth4XUgLVGh88PAGCvBdurjfV74/3PZgrvPiLmEzOPg2KxJ80oBhxFi1qgs6
+         31wmRyazANhUyEaZ4EQk/34kM79qLgm0V8s4Nv/n1El50UlBnO9PqKm41p7D8JXLDDQJ
+         nCe37erLfYB6+FTqTiNJoZb5xe2lYs++NwU7ugL6j8SyTXyHhgtB3x4r+unGB67EbqLF
+         IuhlAyq+kS+Qk4LKev3WsAev/oOvpOLXsLO04mpW0E8vtF4XiODauwiFM72mE1jTG7Il
+         F6ZA==
+X-Gm-Message-State: AOAM533lNQqkGX/pzFEELQn3rN8rN4VR3oGdIczphrgV0irWAI9EpZsB
+        wZw7izzvNtVfbunQeTnsmME=
+X-Google-Smtp-Source: ABdhPJxkM88UhEXcpZ2blay/ik+j1psU3Daxrv765EDw0RZByKCKYX+kOYwRnDdwnivJwXFz7JA4Gg==
+X-Received: by 2002:a65:41c8:: with SMTP id b8mr9162205pgq.265.1591364040731;
+        Fri, 05 Jun 2020 06:34:00 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m15sm6463237pgv.45.2020.06.05.06.33.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 06:33:40 -0700 (PDT)
+Subject: Re: [RFC][PATCH 7/7] sched: Replace rq::wake_list
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, frederic@kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org, cai@lca.pw,
+        mgorman@techsingularity.net
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.129371594@infradead.org>
+ <20200604141837.GA179816@roeck-us.net>
+ <20200605081028.GC2750@hirez.programming.kicks-ass.net>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <9784a2ec-b778-2492-76fc-c5aef83b66ad@roeck-us.net>
+Date:   Fri, 5 Jun 2020 06:33:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR02CA0048.apcprd02.prod.outlook.com (2603:1096:3:18::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.20 via Frontend Transport; Fri, 5 Jun 2020 13:33:43 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7d331578-3d07-42cc-e3a5-08d80955141f
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6720:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB672008A94BB0AF38A529AA0A89860@VE1PR04MB6720.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0425A67DEF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Eo7bVKCU/jXGjvw7V4qiOgN7U1vKgft3Xp++G3pVuzaQp6KyItQgQ+5+6eV1+lP0mYITaXi+EdNHmd3rdUCqup/gVG7ghzwMF4o7xAHlqdUIr17Bm0MSeE3Q2H3VsaJaKrIBsUY6bKD6eXLbK4rcucDWyUiQZ82fTSoCTwDqLqeLUtjlOtZI0ZqSzy91Fxu7R906Ir3UxOwfInLVF6mEhS7y8fV6pXjgSqIbrIC/jzGukIEgcCcSh2IQabtYzqkX3iD5F/eqU0r69iWsM66C/O21jhpiKAPlfQLlrCYVHjADMMMiWfCdziykio0/i+wPLoVThY4sL5dDMjaYGX/+zWaeCQNWmaMVDogU5h+F9YKGT6MwudYXGBcn2GQ/ZHkD7GPw0jQi6HgqTwPn3cu5csZkFJD0hyGdA1/xsOfiPVEmB7eVmsbY/jnveZfS6o4FdzLR1cKBsPBhn6r67LoATA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(83380400001)(6486002)(4326008)(16526019)(26005)(2906002)(2616005)(956004)(186003)(8936002)(6506007)(52116002)(8676002)(36756003)(66476007)(66946007)(5660300002)(66556008)(7416002)(6666004)(966005)(316002)(478600001)(6512007)(86362001)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: VYIb/gsymBHULJwBKBPSWJHt+IobXcjM3fvdi/vTXxQSMWEB1M9Q9nWuv3vsQdD9DaAV3faREOA0HOQKfkZ5Q6E2XwunIHdOLXGZcLirPKkjSN/KgRsYhiOicHlrxeUWKdknw9HVLwIi/bpFdu+RV8P5tv8neYlv1OQBtpIVTw7+419i3EJ8qemMsgylg300vxxinD/pagYN2b8egOkwYba3/w1q7XLxTogUrHbn6WC5ttdTLjxfTo8BLU9yBskEmhEFZewbDFjL2znmTQrgkLzi36c0cajLRcAsVAZxnzCb9omNwU52wM7Z2+AVYyZrQXeAXQo/tpkpBstbjNnQJek9mIQkwKS5Uqa7Xh6glG2B5OKAwuMWoFoxxtOiEGrWYnWUsq8H3xm5jHbqcMVRtzGkT6xLN2y22/tresWsIt2+nkwIfvWi9iqMjqHlATUwcNhkJ+XDO955neWmqtJn6RRMCXBhKGEAWC+sFqXZcxo=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d331578-3d07-42cc-e3a5-08d80955141f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 13:33:48.9768
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1UYa1VRpOR6kKVMl8aYn3/3UYgTJ8KI7ApaoOipXnoVP33dOUQKT5vXmCia+/bTnZNHBOfphA+wvFlUx7O9pDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6720
+In-Reply-To: <20200605081028.GC2750@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the compatibility of NXP internal legacy kernel before 4.19 which
-is based on uart ram script and upstreaming kernel based on uart rom
-script, add both uart ram/rom script in latest sdma firmware. By default
-uart rom script used.
-Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+On 6/5/20 1:10 AM, Peter Zijlstra wrote:
+> On Thu, Jun 04, 2020 at 07:18:37AM -0700, Guenter Roeck wrote:
+>> On Tue, May 26, 2020 at 06:11:04PM +0200, Peter Zijlstra wrote:
+> 
+>>> +	BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+>>> +		     offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist));
+>>> +
+>>
+>> There is no guarantee in C that
+>>
+>> 	type1 a;
+>> 	type2 b;
+>>
+>> in two different data structures means that offsetof(b) - offsetof(a)
+>> is the same in both data structures unless attributes such as
+>> __attribute__((__packed__)) are used.
+> 
+> Do tell more; the alignment requirements and size of the types remains
+> the same, this resulting in different layout is unlikely.
+> 
 
-rom script:
-        uart_2_mcu_addr
-	uartsh_2_mcu_addr /* through spba bus */
-am script:
-	uart_2_mcu_ram_addr
-	uartsh_2_mcu_ram_addr /* through spba bus */
+I have not made the C standard. You point out yourself a possible explicit
+culprit: struct randomization. That by itself shows that you can not rely
+on two elements of different structures having the same alignment,
+which is pretty much exactly what I said (and may explain why observing
+the problem seemed to at least somewhat depend on the weather).
 
-Please get latest sdma firmware from the below and put them into the path
-(/lib/firmware/imx/sdma/):
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-/tree/imx/sdma
+> I found this excellent quote on Hacker News this morning:
+> 
+>  "I think the attitude of compiler writers is a good reason to fix the
+>   spec so they can't keep ratfucking developers trying to get work done."
+> 
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/imx-sdma.c                     | 4 ++--
- include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
+Qed.
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 320104f..2ca7935 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1718,8 +1718,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
- 
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
- 
- static void sdma_add_scripts(struct sdma_engine *sdma,
- 		const struct sdma_script_start_addrs *addr)
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 30e676b..e12d2e8 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
- 	s32 per_2_firi_addr;
- 	s32 mcu_2_firi_addr;
- 	s32 uart_2_per_addr;
--	s32 uart_2_mcu_addr;
-+	s32 uart_2_mcu_ram_addr;
- 	s32 per_2_app_addr;
- 	s32 mcu_2_app_addr;
- 	s32 per_2_per_addr;
- 	s32 uartsh_2_per_addr;
--	s32 uartsh_2_mcu_addr;
-+	s32 uartsh_2_mcu_ram_addr;
- 	s32 per_2_shp_addr;
- 	s32 mcu_2_shp_addr;
- 	s32 ata_2_mcu_addr;
-@@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
- 	s32 mcu_2_ecspi_addr;
-+	s32 mcu_2_sai_addr;
-+	s32 sai_2_mcu_addr;
-+	s32 uart_2_mcu_addr;
-+	s32 uartsh_2_mcu_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
--- 
-2.7.4
+Guenter
+
+>> As result, this does and will cause a variety of build errors depending
+>> on the compiler version and compile flags.
+> 
+> The only thing I can think of that's actually a problem is that retarded
+> struct randomization stuff.
+> 
+> Anyway, I'll move cleaning it up a little higher on the todo list.
+> 
 
