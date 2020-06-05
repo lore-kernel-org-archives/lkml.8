@@ -2,196 +2,136 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E27C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4501C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 184282067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dI/nXDSp"
+	by mail.kernel.org (Postfix) with ESMTP id 8F57E2067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgFENPf (ORCPT
+        id S1726994AbgFENP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbgFENPb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:15:31 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5BDC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 06:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EHiSND5nLUtypK0tVLnzwgoG6lLcXNjxaMcDwTHkmro=; b=dI/nXDSpm6ffGMTdKggh9hW/hS
-        N4BiSMJ340o1kBcZqORdaSJZ/MQmvoYWppBgdaPmLS6e1ls5bQMz1qchssDbEA0TR50GLXqWPMT5k
-        io2x37DnePXxU5IuED3puM8GCLcZLbyX/W3HLmN5UO759zbiHTYGRPcEntpIXMngmqQbwrEJcGh9P
-        esB2hDwKWJCgm9Z+02XMob8KzH3HIB71cvvZdChv+VVj5+s7Oywllv1e23Z1Mi1Se2tDhVXKK7ns+
-        tU4q9LXJgDPgZoi+Y36w1RqKikhStUpqI3sC0GC/bwpHsA0ZHBi3nD5owpiCBES00HzPiBrIuokNm
-        vyqUwpvQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jhCBS-0001id-HC; Fri, 05 Jun 2020 13:14:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 692D3301A7A;
-        Fri,  5 Jun 2020 15:14:51 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2C3DA21A74B35; Fri,  5 Jun 2020 15:14:51 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 15:14:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
-Message-ID: <20200605131451.GE2750@hirez.programming.kicks-ass.net>
-References: <20200604225445.GA32319@paulmck-ThinkPad-P72>
+        Fri, 5 Jun 2020 09:15:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:23088 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726711AbgFENP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:15:58 -0400
+IronPort-SDR: RA/Zt9Z4epq1XqASG0oMt3MErscOc7SqOmK9eMK0X8PbCxFWYjgDaSF9yxc7T47LYsoKJfTJFL
+ KvuzbkoojYdg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 06:15:57 -0700
+IronPort-SDR: 2NIX+5TslgUUhMNf4heIl+3Gex1FeVhymCjuWOKA+HDwK6+/LMOY+GWPLprO0CrbuHHJowSEkc
+ 8YIAqhGLS1Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
+   d="scan'208";a="471789116"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Jun 2020 06:15:57 -0700
+Received: from [10.249.226.228] (abudanko-mobl.ccr.corp.intel.com [10.249.226.228])
+        by linux.intel.com (Postfix) with ESMTP id 034F8580569;
+        Fri,  5 Jun 2020 06:15:53 -0700 (PDT)
+Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+ <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
+ <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
+ <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
+ <20200601233732.GA691017@tassilo.jf.intel.com>
+ <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
+ <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
+ <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
+ <20200605105108.GB1404794@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
+Date:   Fri, 5 Jun 2020 16:15:52 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604225445.GA32319@paulmck-ThinkPad-P72>
+In-Reply-To: <20200605105108.GB1404794@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 03:54:45PM -0700, Paul E. McKenney wrote:
 
-> BUG: kernel NULL pointer dereference, address: 0000000000000150
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0 
-> Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 9 PID: 196 Comm: rcu_torture_rea Not tainted 5.7.0+ #3923
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.11.0-2.el7 04/01/2014
-> RIP: 0010:check_preempt_wakeup+0xb1/0x180
-> Code: 83 ea 01 48 8b 9b 48 01 00 00 39 d0 75 f2 48 39 bb 50 01 00 00 75 05 48 85 ff 75 29 48 8b ad 48 01 00 00 48 8b 9b 48 01 00 00 <48> 8b bd 50 01 00 00 48 39 bb 50 01 00 00 0f 95 c2 48 85 ff 0f 94
+On 05.06.2020 13:51, Jiri Olsa wrote:
+> On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
+>> On 2/06/20 12:12 pm, Alexey Budankov wrote:
+>>>
+>>> On 02.06.2020 11:32, Alexey Budankov wrote:
+>>>>
+>>>> On 02.06.2020 2:37, Andi Kleen wrote:
+>>>>>>> or a pathname, or including also the event default of "disabled".
+>>>>>>
+>>>>>> For my cases conversion of pathnames into open fds belongs to external
+>>>>>> controlling process e.g. like in the examples provided in the patch set.
+>>>>>> Not sure about "event default of 'disabled'"
+>>>>>
+>>>>> It would be nicer for manual use cases if perf supported the path names
+>>>>> directly like in Adrian's example, not needing a complex wrapper script.
+>>>>
+>>>> fds interface is required for VTune integration since VTune wants control
+>>>> over files creation aside of Perf tool process. The script demonstrates
+>>>> just one possible use case.
+>>>>
+>>>> Control files could easily be implemented on top of fds making open operations
+>>>> for paths and then initializing fds. Interface below is vague and with explicit
+>>>> options like below it could be more explicit:
+>>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
+>>>
+>>> Or even clearer:
+>>>
+>>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
+>>
+>> If people are OK with having so many options, then that is fine by me.
+> 
+> the single option Adrian suggested seems better to me:
+> 
+>  --control
+>  --control 11
+>  --control 11,15
 
-That is:
+What if a user specifies fifos named like this above, not fds?
 
-All code
-========
-   0:	83 ea 01             	sub    $0x1,%edx
-   3:	48 8b 9b 48 01 00 00 	mov    0x148(%rbx),%rbx
-   a:	39 d0                	cmp    %edx,%eax
-   c:	75 f2                	jne    0x0
-   e:	48 39 bb 50 01 00 00 	cmp    %rdi,0x150(%rbx)
-  15:	75 05                	jne    0x1c
-  17:	48 85 ff             	test   %rdi,%rdi
-  1a:	75 29                	jne    0x45
-  1c:	48 8b ad 48 01 00 00 	mov    0x148(%rbp),%rbp
-  23:	48 8b 9b 48 01 00 00 	mov    0x148(%rbx),%rbx
-  2a:*	48 8b bd 50 01 00 00 	mov    0x150(%rbp),%rdi		<-- trapping instruction
-  31:	48 39 bb 50 01 00 00 	cmp    %rdi,0x150(%rbx)
-  38:	0f 95 c2             	setne  %dl
-  3b:	48 85 ff             	test   %rdi,%rdi
-  3e:	0f                   	.byte 0xf
-  3f:	94                   	xchg   %eax,%esp
+>  --control 11,15,disabled
+>  --control 11,,disabled
+>  --control /tmp/my-perf.fifo
+>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
 
-> RSP: 0018:ffffaccdc02ecd38 EFLAGS: 00010006
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffffafa0bc20
-> RDX: 0000000000000000 RSI: ffff946b5df50000 RDI: ffff946b5f469340
-> RBP: 0000000000000000 R08: ffff946b5df80d00 R09: 0000000000000001
+What if a user wants not fifos but other type of comm channels?
 
-And you have RBP == NULL and RBX == NULL
+>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
+>  --control /tmp/my-perf.fifo,,disabled
+> 
+> we already support this kind of options arguments, like for --call-graph
+> 
+> jirka
+> 
 
-Now, my compiler generates very similar code for this function and tells
-me this is:
+IMHO,
+this interface, of course, looks more compact (in amount of options) however
+the other side it is less user friendly. One simple option for one simple
+purpose is more convenient as for users as for developers. Also complex
+option syntax tends to have limitations and there are probably more
+non-obvious ones.
 
-  check_preempt_wakeup()
-    find_matching_se()
-      is_same_group()
-        if (se->cfs_rq == pse->cfs_rq) <-- *BOOM*
+Please speak up. I might have missed something meaningful.
 
-and pahole gives us (for struct sched_entity):
-
-  struct sched_entity *      parent;                                               /* 0x148   0x8 */
-  struct cfs_rq *            cfs_rq;                                               /* 0x150   0x8 */
-
-apparently both your @se and @pse are NULL.
-
-Which shouldn't be possible..
-
-I also don't see a relation to my recent changes here:
-
-> Call Trace:
->  <IRQ>
->  check_preempt_curr+0x5d/0x90
->  ttwu_do_wakeup.isra.93+0xf/0x100
->  sched_ttwu_pending+0x66/0x90
->  smp_call_function_single_interrupt+0x2d/0xf0
->  call_function_single_interrupt+0xf/0x20
-
-Since I would expect that to blow up much earlier, like @p == NULL or
-something along those lines.
-
-Could you perhaps try something like the below ? It would splat when we
-run ouf of hierarchy to ascend, which is the only semi sane scenario for
-ending up where you are.
-
-Are you actively using cgroups or just whatever systemd decides to gift
-you? Can you perhaps dump /proc/sched_debug while your test is running?
-
----
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 35f4cc024dcfc..7aace0a5921e9 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -416,8 +416,6 @@ static inline struct sched_entity *parent_entity(struct sched_entity *se)
- static void
- find_matching_se(struct sched_entity **se, struct sched_entity **pse)
- {
--	int se_depth, pse_depth;
--
- 	/*
- 	 * preemption test can be made between sibling entities who are in the
- 	 * same cfs_rq i.e who have a common parent. Walk up the hierarchy of
-@@ -425,23 +423,22 @@ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
- 	 * parent.
- 	 */
- 
--	/* First walk up until both entities are at same depth */
--	se_depth = (*se)->depth;
--	pse_depth = (*pse)->depth;
--
--	while (se_depth > pse_depth) {
--		se_depth--;
--		*se = parent_entity(*se);
--	}
--
--	while (pse_depth > se_depth) {
--		pse_depth--;
--		*pse = parent_entity(*pse);
--	}
--
- 	while (!is_same_group(*se, *pse)) {
--		*se = parent_entity(*se);
--		*pse = parent_entity(*pse);
-+		int se_depth = (*se)->depth;
-+		int pse_depth = (*pse)->depth;
-+
-+		if (se_depth <= pse_depth) {
-+			struct sched_entity *parent = parent_entity(*pse);
-+			if (WARN_ON_ONCE(!parent))
-+				return;
-+			*pse = parent;
-+		}
-+		if (se_depth >= pse_depth) {
-+			struct sched_entity *parent = parent_entity(*se);
-+			if (WARN_ON_ONCE(!parent))
-+				return;
-+			*se = parent_entity(*se);
-+		}
- 	}
- }
- 
+~Alexey
