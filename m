@@ -2,194 +2,143 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED46C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47856C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A18B207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EED7206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mVEBu5qr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="z8y/Uewa";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="B5JBJHJG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgFEJhb (ORCPT
+        id S1726294AbgFEJjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:37:31 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:58176 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgFEJha (ORCPT
+        Fri, 5 Jun 2020 05:39:33 -0400
+Received: from relay5.mymailcheap.com ([159.100.248.207]:57797 "EHLO
+        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgFEJjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:37:30 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0559WPe4020478;
-        Fri, 5 Jun 2020 09:36:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=B2li6JE+2+Vyucl3OG9dx1eiyf5W8A5lM7qPWKwY84M=;
- b=mVEBu5qrk339LfMFIPTc6sRrEKxc6Si/vtYTBTfE+2AqtJcyqdE3ZaVfqdA0SfoPStkl
- A/EeGVAEoY12R/D+HfFmx0Zng/fE8Lc4N9k5aBFT06xqGXzMLMcvb2ciTvbyqNp9VMBO
- EIOPiQrEI8eP+MneM5kvN2Z6Lx5t/rqOLLm6YU5GPUAAMQ8dtm3m+FeBXjA6mOxswvEp
- G3+h9FGDeDrBlltoXVsF2xqJtVIi3VgiH5D+p5Kq1C9a0DMBlJ2iQ/Nv9djn3o7wtK1w
- NQLHNHi74RvSsQoWWDUdVPQviYtpp5esHp71n/TNY0BQ6PMrYliRPouXgqzKXOL/xISp qQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31f92621ew-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 05 Jun 2020 09:36:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0559Xp6D025708;
-        Fri, 5 Jun 2020 09:36:39 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 31f92571ne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 05 Jun 2020 09:36:39 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0559abin019098;
-        Fri, 5 Jun 2020 09:36:37 GMT
-Received: from [10.175.51.78] (/10.175.51.78)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 05 Jun 2020 02:36:36 -0700
-Subject: Re: slub freelist issue / BUG: unable to handle page fault for
- address: 000000003ffe0018
-To:     Vlastimil Babka <vbabka@suse.cz>, Kees Cook <keescook@chromium.org>
-Cc:     Christoph Lameter <cl@linux.com>,
+        Fri, 5 Jun 2020 05:39:33 -0400
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.155])
+        by relay5.mymailcheap.com (Postfix) with ESMTPS id 074932632F;
+        Fri,  5 Jun 2020 09:39:30 +0000 (UTC)
+Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
+        by relay3.mymailcheap.com (Postfix) with ESMTPS id 920AE3ECDF;
+        Fri,  5 Jun 2020 11:39:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by filter2.mymailcheap.com (Postfix) with ESMTP id 714562A8B2;
+        Fri,  5 Jun 2020 11:39:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
+        s=default; t=1591349967;
+        bh=Mc+KjRBNjHChZugfBRKNmW7QiUMUHq4bLRjFgN61C1k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=z8y/Uewab6ayLKQzwu/SmIq6I/LY0DlIitaA8ocevUcr8WvbeXSWqZL6D7TRws1t4
+         EEKOfQ1RLAK2HeV4SbGuRRrlY4/Jn8eyUTqMtagZfnU4XpED/mwv5N1lJAmZk7ce76
+         e7FU4X6b8svHI3WlBbGqetpBUuKygUFQJDnDK81E=
+X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
+Received: from filter2.mymailcheap.com ([127.0.0.1])
+        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nqLx46V5Ntsd; Fri,  5 Jun 2020 11:39:26 +0200 (CEST)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by filter2.mymailcheap.com (Postfix) with ESMTPS;
+        Fri,  5 Jun 2020 11:39:26 +0200 (CEST)
+Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 9A5CC40FC0;
+        Fri,  5 Jun 2020 09:39:23 +0000 (UTC)
+Authentication-Results: mail20.mymailcheap.com;
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="B5JBJHJG";
+        dkim-atps=neutral
+AI-Spam-Status: Not processed
+Received: from localhost (unknown [60.177.191.23])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 746EF40FC0;
+        Fri,  5 Jun 2020 09:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
+        s=default; t=1591349959;
+        bh=Mc+KjRBNjHChZugfBRKNmW7QiUMUHq4bLRjFgN61C1k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B5JBJHJGNTVBAPlWuCkYxb56+3QNYhdHNdSzlbJh4cA5HresEMMGXO+zn1lFR1vVp
+         vSB0tSMniQIhftXQgt0NpzRV7O44txfV7cda/ePLSLWn++CrZ1IJ52nICGUnwv6Dmb
+         4MNtOdZoO5T40dUwkN+Ed9YtX254a647/eiAl5Ec=
+Date:   Fri, 5 Jun 2020 17:39:09 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Waiman Long <longman@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, linux-acpi@vger.kernel.org,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
- <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
- <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
- <202006041054.874AA564@keescook>
- <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
- <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-Message-ID: <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
-Date:   Fri, 5 Jun 2020 11:36:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/2] MIPS: set page access bit with pgprot on some MIPS
+ platform
+Message-ID: <20200605173909.000018ff@flygoat.com>
+In-Reply-To: <1591348266-28392-1-git-send-email-maobibo@loongson.cn>
+References: <1591348266-28392-1-git-send-email-maobibo@loongson.cn>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006050074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- suspectscore=0 cotscore=-2147483648 bulkscore=0 clxscore=1011
- impostorscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
- spamscore=0 lowpriorityscore=0 mlxscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006050074
+X-Rspamd-Queue-Id: 9A5CC40FC0
+X-Spamd-Result: default: False [-0.10 / 10.00];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         ARC_NA(0.00)[];
+         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
+         RECEIVED_SPAMHAUS_PBL(0.00)[60.177.191.23:received];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_SPF_SOFTFAIL(0.00)[~all];
+         ML_SERVERS(-3.10)[148.251.23.173];
+         DKIM_TRACE(0.00)[flygoat.com:+];
+         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
+         RCPT_COUNT_SEVEN(0.00)[8];
+         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
+X-Rspamd-Server: mail20.mymailcheap.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri,  5 Jun 2020 17:11:05 +0800
+Bibo Mao <maobibo@loongson.cn> wrote:
 
-On 2020-06-05 11:11, Vlastimil Babka wrote:
-> On 6/4/20 8:46 PM, Vlastimil Babka wrote:
->> On 6/4/20 7:57 PM, Kees Cook wrote:
->>> On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
->>>> On 2020-06-04 19:18, Vlastimil Babka wrote:
->>>>> On 6/4/20 7:14 PM, Vegard Nossum wrote:
->>>>>>
->>>>>> Hi all,
->>>>>>
->>>>>> I ran into a boot problem with latest linus/master
->>>>>> (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests like this:
->>>>>
->>>>> Hi, what's the .config you use?
->>>>
->>>> Pretty much x86_64 defconfig minus a few options (PCI, USB, ...)
->>>
->>> Oh yes indeed. I immediately crash in the same way with this config. I'll
->>> start digging...
->>>
->>> (defconfig finishes boot)
->>
->> This is funny, booting with slub_debug=F results in:
->> I'm not sure if it's ACPI or ftrace wrong here, but looks like the changed
->> free pointer offset merely exposes a bug in something else.
+> On MIPS system which has rixi hardware bit, page access bit is not
+> set in pgrot. For memory reading, there will be one page fault to
+> allocate physical page; however valid bit is not set, there will
+> be the second fast tlb-miss fault handling to set valid/access bit.
 > 
-> So, with Kees' patch reverted, booting with slub_debug=F (or even more
-> specific slub_debug=F,ftrace_event_field) also hits this bug below. I
-> wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
-> further in history. So it's not new at all, and likely very specific to
-> your config+QEMU? (and related to the ACPI error messages that precede it?).
-
-I see it too, but not on v5.0. I can bisect it.
-
-Also, panic_on_warn is apparently a core parameter, it should probably 
-be __setup()...
-
-
-Vegard
-
+> This patch set page access/valid bit with pgrot if there is reading
+> access privilege. It will reduce one tlb-miss handling for memory
+> reading access.
 > 
->> This would mean acpi_os_release_object() calling kmem_cache_free(ftrace_event_field, x)
->> where x is actually from kmalloc-64? Both parts of that sounds wrong.
->>
->> Thread starts here: https://lore.kernel.org/linux-mm/4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com/
->>
->> [    0.144386] ACPI: Added _OSI(Module Device)
->> [    0.144496] ACPI: Added _OSI(Processor Device)
->> [    0.144956] ACPI: Added _OSI(3.0 _SCP Extensions)
->> [    0.145432] ACPI: Added _OSI(Processor Aggregator Device)
->> [    0.145501] ACPI: Added _OSI(Linux-Dell-Video)
->> [    0.145951] ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
->> [    0.146522] ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
->> [    0.147070] ACPI Error: AE_BAD_PARAMETER, During Region initialization (20200430/tbxfload-52)
->> [    0.147494] ACPI: Unable to load the System Description Tables
->> [    0.148104] ACPI Error: Could not remove SCI handler (20200430/evmisc-251)
->> [    0.148507] ------------[ cut here ]------------
->> [    0.148985] cache_from_obj: Wrong slab cache. ftrace_event_field but object is from kmalloc-64
->> [    0.149502] WARNING: CPU: 0 PID: 1 at mm/slab.h:523 kmem_cache_free+0x248/0x260
->> [    0.150254] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #43
->> [    0.150490] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
->> [    0.150490] RIP: 0010:kmem_cache_free+0x248/0x260
->> [    0.150490] Code: ff 0f 0b e9 9d fe ff ff 49 8b 4d 58 48 8b 55 58 48 c7 c6 10 47 c1 a4 48 c7 c7 f0 c1 d0 a4 c6 05 9f 05 b1 00 01 e8 bc cc eb ff <0f> 0b 48 8b 15 5f 36 9b 00 4c 89 ed e9 d6 fd ff ff 0f 1f 80 00 00
->> [    0.150490] RSP: 0018:ffffb4dac0013dc0 EFLAGS: 00010282
->> [    0.150490] RAX: 0000000000000000 RBX: ffffa38a07409e00 RCX: 0000000000000000
->> [    0.150490] RDX: 0000000000000001 RSI: 0000000000000092 RDI: ffffffffa51dd32c
->> [    0.150490] RBP: ffffa38a07403900 R08: ffffb4dac0013c7d R09: 00000000000000eb
->> [    0.150490] R10: ffffb4dac0013c78 R11: ffffb4dac0013c7d R12: ffffa38a87409e00
->> [    0.150490] R13: ffffa38a07401d00 R14: 0000000000000000 R15: 0000000000000000
->> [    0.150490] FS:  0000000000000000(0000) GS:ffffa38a07a00000(0000) knlGS:0000000000000000
->> [    0.150490] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [    0.150490] CR2: 0000000000000000 CR3: 000000000560a000 CR4: 00000000003406f0
->> [    0.150490] Call Trace:
->> [    0.150490]  acpi_os_release_object+0x5/0x10
->> [    0.150490]  acpi_ns_delete_children+0x46/0x59
->> [    0.150490]  acpi_ns_delete_namespace_subtree+0x5c/0x79
->> [    0.150490]  ? acpi_sleep_proc_init+0x1f/0x1f
->> [    0.150490]  acpi_ns_terminate+0xc/0x31
->> [    0.150490]  acpi_ut_subsystem_shutdown+0x45/0xa3
->> [    0.150490]  ? acpi_sleep_proc_init+0x1f/0x1f
->> [    0.150490]  acpi_terminate+0x5/0xf
->> [    0.150490]  acpi_init+0x27b/0x308
->> [    0.150490]  ? video_setup+0x79/0x79
->> [    0.150490]  do_one_initcall+0x7b/0x160
->> [    0.150490]  kernel_init_freeable+0x190/0x1f2
->> [    0.150490]  ? rest_init+0x9a/0x9a
->> [    0.150490]  kernel_init+0x5/0xf6
->> [    0.150490]  ret_from_fork+0x22/0x30
->> [    0.150490] ---[ end trace 967e9fbc065d7911 ]---
->>
->>
->>
+> The valid/access bit will be cleared in order to track memory
+> accessing activity. If the page is accessed, tlb-miss fast handling
+> will set valid/access bit, pte_sw_mkyoung is not necessary in slow
+> page fault path. This patch removes pte_sw_mkyoung function which
+> is defined as empty function except MIPS system.
 > 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
 
+Thanks for tracking it down.
+
+Could you please make the patch tittle more clear?
+"Some" looks confuse to me, "systems with RIXI" would be better.
+
+- Jiaxun
