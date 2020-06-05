@@ -2,92 +2,150 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0062CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A8CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8C92206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968F4206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqGNdaF0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgFEH7k (ORCPT
+        id S1726173AbgFEIBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 03:59:40 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41101 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFEH7j (ORCPT
+        Fri, 5 Jun 2020 04:01:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEIBp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 03:59:39 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 9so10561206ljc.8;
-        Fri, 05 Jun 2020 00:59:37 -0700 (PDT)
+        Fri, 5 Jun 2020 04:01:45 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3636C08C5C2;
+        Fri,  5 Jun 2020 01:01:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x207so4563290pfc.5;
+        Fri, 05 Jun 2020 01:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CA32MQ/+vRGTpFh4UZx8UcD1pDZn/aqTDePABuFsMhA=;
+        b=SqGNdaF0A6Kq1TcOl0i/w+Mz7gpK3TvBcCVsNXyvakLq/sI1vjH9Gydj55AfUfH9jJ
+         aYs3QqCXt5c3d1k0qq13+K2Uv7JyTxshU0RSzrKBrz5OjsFwkKdnw4sOp603IEyQPiDd
+         89zCC+yqpR029H2Ew2FnHd4D2aGfwn/ByuodHV7MbX0fUOLBcC+L+d0HKpwtalFHrOEB
+         W7zFBO+bNIGPoxHEJ/pt/cjKbfnFtArfKZN1q4p+7CwBZixuqzsXECf0yASthSfR1qP4
+         x6e0fswV/QzEtzr5wGL8Fg0je0o+1sIX9ltX0sGRUyXhtDgaDVshsZ/AE8O/vX1i2sQc
+         l3Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=76On/DuswXUwHpVdv2b9W5T6CYfTi3YXauiy+oGqoso=;
-        b=Y59MDwtkCib2cL96VDY0ByOXDqheBH1JDba8EfUM/1nQ+nlGr+FE0VpaWt3O8fXNxz
-         YtlKlDMS2kXca67cH9lQ6gztSmgOGUj8NIi4VXiElqaLG6MBulrN/HiPtdpdXBJyYAXE
-         FZ8e7+0OEa8hVwmOJe6fc2UDrqhQfiV3+psmtjRQfJlQlmyEgsFro5DIKRrP6lPDdcS2
-         yyCOXTulyrrdtdKJ1kQdSl9uTVnKfvf09FrAc2DICw8reH3ioKnMLAeDxJYWLehDN9hy
-         NnefwMEuRoNQLv42Y0BtvX+LSadiTdJRD+bRfuqbaeHjshn8sY5tuVTa6WcDO2oMB1ks
-         zF5g==
-X-Gm-Message-State: AOAM530adVKNFxsPC6AoVen4JDcZblsYd7Lm9TfxK/ptAShsfpGfavE7
-        zQKATxH3Nx3jEkOYpbriueU=
-X-Google-Smtp-Source: ABdhPJwxjtMPEmi+T8tjORT90RaXxDqZwyQKhkCEYCkc3UeboYOaiTVen5x2zFPzdNERz+tJDwYQMA==
-X-Received: by 2002:a2e:b5ca:: with SMTP id g10mr4357629ljn.370.1591343977025;
-        Fri, 05 Jun 2020 00:59:37 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id a9sm230697ljk.116.2020.06.05.00.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 00:59:36 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH] scsi: storvsc: Remove memset before memory freeing in storvsc_suspend()
-Date:   Fri,  5 Jun 2020 10:59:34 +0300
-Message-Id: <20200605075934.8403-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CAA42JLat6Ern5_mztmoBX9-ONtmz=gZE3YUphY+njTa+A=efVw@mail.gmail.com>
-References: <CAA42JLat6Ern5_mztmoBX9-ONtmz=gZE3YUphY+njTa+A=efVw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CA32MQ/+vRGTpFh4UZx8UcD1pDZn/aqTDePABuFsMhA=;
+        b=tQhZBL41IM3w8TpWbrNo0thO3xjQCM4/3bS4TtQRkQmPR7DCXghWYcx/tMs1Nw+Hlq
+         ClCkVI3+Xo7cO3ng4pY3g8epbAiKE5K1w/GbllySasXS4xihir76yR49fLC5DWSn2AbR
+         9bIIvg5JX+/WS0pN0xHaOB2fJ+/NUL5/fLOl3o/YvD9VU3D4MFYFIqNfWLAmgJg8b1kA
+         eTUothXbD7HyktMKwUNhMvFyzxeFuohorLl1G3k76owzWOBCtM5KGREJO7UIa8mOKgTu
+         oTqO/qi5ErEPala2uj7tBphNY3Pz0FQxbg8+LkfdfXqGMUL5kY4huJsfiX3/p6aIueox
+         pfBA==
+X-Gm-Message-State: AOAM530UkXph9iB3w0lE27/d0XFD3yd9QOFJw/PhYnexb02TgxXEwJAO
+        H3IKwZkaMAwiEKTWYRzI5p3/iOcxtPrZLyroYBg=
+X-Google-Smtp-Source: ABdhPJxS0gxAXwoiIs/HAxam4Ku1ew3smVf/6LQ9gSPZd/jo5uG/q2I+R8nedzrqQ5RR62x1rVChLyZKWcKjSc0zh2k=
+X-Received: by 2002:a62:1792:: with SMTP id 140mr8576341pfx.36.1591344103178;
+ Fri, 05 Jun 2020 01:01:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
+In-Reply-To: <20200604211039.12689-3-michael@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Jun 2020 11:01:26 +0300
+Message-ID: <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove memset with 0 for stor_device->stor_chns in storvsc_suspend()
-before the call to kfree() as the memory contains no sensitive information.
+On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
+>
+> Add the core support for the board management controller found on the
+> SMARC-sAL28 board. It consists of the following functions:
+>  - watchdog
+>  - GPIO controller
+>  - PWM controller
+>  - fan sensor
+>  - interrupt controller
+>
+> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
+>
+> Please note that the MFD driver is defined as bool in the Kconfig
+> because the next patch will add interrupt support.
 
-Fixes: 56fb10585934 ("scsi: storvsc: Add the support of hibernation")
-Suggested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/scsi/storvsc_drv.c | 3 ---
- 1 file changed, 3 deletions(-)
+...
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 072ed8728657..2d90cddd8ac2 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -2035,9 +2035,6 @@ static int storvsc_suspend(struct hv_device *hv_dev)
- 
- 	vmbus_close(hv_dev->channel);
- 
--	memset(stor_device->stor_chns, 0,
--	       num_possible_cpus() * sizeof(void *));
--
- 	kfree(stor_device->stor_chns);
- 	stor_device->stor_chns = NULL;
- 
+> +config MFD_SL28CPLD
+> +       bool "Kontron sl28 core driver"
+> +       depends on I2C=y
+
+Why not module?
+
+> +       depends on OF
+
+I didn't find an evidence this is needed.
+
+No Compile Test?
+
+> +       select REGMAP_I2C
+> +       select MFD_CORE
+
+...
+
+> +#include <linux/of_platform.h>
+
+No evidence of user of this.
+I think you meant mod_devicetable.h.
+
+...
+
+> +static struct i2c_driver sl28cpld_driver = {
+> +       .probe_new = sl28cpld_probe,
+> +       .driver = {
+> +               .name = "sl28cpld",
+> +               .of_match_table = of_match_ptr(sl28cpld_of_match),
+
+Drop of_match_ptr(). It has a little sense in this context (depends OF).
+It will have a little sense even if you drop depends OF b/c you will
+introduce a compiler warning.
+
+> +       },
+> +};
+
+
 -- 
-2.26.2
-
+With Best Regards,
+Andy Shevchenko
