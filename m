@@ -2,145 +2,67 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=BODY_SINGLE_WORD,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB49C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF278C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C0E2074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C4920820
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="HWlIvo8G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="En42fRWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbgFER5M (ORCPT
+        id S1728090AbgFER5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
+        Fri, 5 Jun 2020 13:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgFER5L (ORCPT
+        with ESMTP id S1726294AbgFER5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:57:11 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECEDC08C5C4
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:57:10 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i27so1865648ljb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YYnGgbB/yUYHLwRnIgeOB2yfvVDg5PB29KwRpcC2gN4=;
-        b=HWlIvo8Gx/GfSgNGX7LbvmwrB8R2/UprUCF6ZpGdTm5eFaUvsIhs/YyhRxIi6C0Bgu
-         eKvjCs9vk7Z007hp+pg8+29RTakK0BG4LfZ6KfTBUENIJULV/m/bqBnWIrwsUs1JUM8/
-         1/NGt2NwWfaMLuXqDXVe3Io4BwZBxhMbAeR1RevZ7FRe6WgNb1P0/6bzp39+eac5SSI0
-         IJ2t/onuc/NeLjFksiSRP+9/3pOoJpsXpFqF1xvY2lFz/Ngtj3zgOT8AEn6f/pRSyZwx
-         xSg9J8jx/18GSu+o8jK2uEzV4XTjjcqiZW53KhDmRBA/9Xatc7A9DzNlyF1ysAUOFHM0
-         xEvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YYnGgbB/yUYHLwRnIgeOB2yfvVDg5PB29KwRpcC2gN4=;
-        b=QU0TzaP9sIZX4SrndS23c3hDVEhVhBr2rHJMqO6vpBukfvnM07SUxrAlQQuUQMjYAw
-         fXsBOdY/IX0zSQ9CMeEz8qO6oYAnCyH+u+TzNJe59OIFGOr2Z7djeD0x2uZL39AZTJr+
-         X+2uZyaqtWBfASDX5sISNWrgK4KTFH9x+ZuoEL0m5LJQ1oWtOobDHLriULUOMoGUca41
-         JVTMWOm3MO4pX8XHXb/edWLz/uM7LoV4dCJyoQVGRpmc8h2hq81TKrBkezYDXIL5/cWo
-         5OB37rwMUPwvLqlOjq3Nj0jZYtMSzfRO3UwsfRc1m955ZooXKaGvB4B8ghpTejIVIiwr
-         5gVg==
-X-Gm-Message-State: AOAM532RF41euOQEc4C2Aht4nJCaccQBftins44ilzscoV94BfHAKRXh
-        ljn4W1RWZTk/2dCFv7XoLAfaotDywR6tJg746/ns6A==
-X-Google-Smtp-Source: ABdhPJz1QchXGicuq/e4UbyBXjj2+Lh2IaK3OLii9lagU/34toEvTJek1PSUAitdFBhMHfD0XxPR6jfp824v8PIIWqE=
-X-Received: by 2002:a2e:8705:: with SMTP id m5mr5176522lji.269.1591379829143;
- Fri, 05 Jun 2020 10:57:09 -0700 (PDT)
+        Fri, 5 Jun 2020 13:57:13 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F98C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cya1qLD0P42aWQWkjKaY3QBjbUjBXUzgtuTZm/iNADQ=; b=En42fRWl5UKCNeQMK05PeZcQLx
+        j53xRdO5uhWPa7XSB5c1osSy0lkBPGkg2Y33eyaBgp82Gdizv+FfpUQFlFVM5Ei3FZIBKCa6JimAK
+        OoJHw+wGMWtKkU/prBbAxEcIDHofa9S5E1IIEckGl9MlnYqZabpB9V3o47/fAKErnn+bZIak4ezXq
+        unFjrbJ6LBU7z+7FXHNJQpGFFBEA5PYa3bzm0W2Y797F8z6iCN/E9l5WCgs/YCL/UavxGkiK1MgzM
+        OagCjCR507RjgfBrSw5X8mxq6DseN26L73pTyYJi8Ov7PK19dVOZHsE9rnUihCQMC2TL7XXitfja5
+        MgMdhSOQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhGac-00046K-7m; Fri, 05 Jun 2020 17:57:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B58B3301DFC;
+        Fri,  5 Jun 2020 19:57:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9139A21A7522A; Fri,  5 Jun 2020 19:57:08 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 19:57:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        David.Laight@ACULAB.COM
+Subject: Re: [PATCH V3 1/3] perf/x86/intel/uncore: Fix oops when counting IMC
+ uncore events on some TGL
+Message-ID: <20200605175708.GR2750@hirez.programming.kicks-ass.net>
+References: <1590679169-61823-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-In-Reply-To: <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Fri, 5 Jun 2020 10:56:58 -0700
-Message-ID: <CADaigPUOJMwR0y6CjVpu5+nPAvejbCvEQNLEC+EKq9haBaQynw@mail.gmail.com>
-Subject: Re: [PATCH v3 004/105] clk: bcm: Add BCM2711 DVP driver
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590679169-61823-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 8:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The HDMI block has a block that controls clocks and reset signals to the
-> HDMI0 and HDMI1 controllers.
->
-> Let's expose that through a clock driver implementing a clock and reset
-> provider.
->
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/clk/bcm/Kconfig           |  11 +++-
->  drivers/clk/bcm/Makefile          |   1 +-
->  drivers/clk/bcm/clk-bcm2711-dvp.c | 127 +++++++++++++++++++++++++++++++-
->  3 files changed, 139 insertions(+)
->  create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
->
-> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-> index 8c83977a7dc4..784f12c72365 100644
-> --- a/drivers/clk/bcm/Kconfig
-> +++ b/drivers/clk/bcm/Kconfig
-> @@ -1,4 +1,15 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +
-> +config CLK_BCM2711_DVP
-> +       tristate "Broadcom BCM2711 DVP support"
-> +       depends on ARCH_BCM2835 ||COMPILE_TEST
-> +       depends on COMMON_CLK
-> +       default ARCH_BCM2835
-> +       select RESET_SIMPLE
-> +       help
-> +         Enable common clock framework support for the Broadcom BCM2711
-> +         DVP Controller.
-> +
->  config CLK_BCM2835
->         bool "Broadcom BCM2835 clock support"
->         depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
-> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-> index 0070ddf6cdd2..2c1349062147 100644
-> --- a/drivers/clk/bcm/Makefile
-> +++ b/drivers/clk/bcm/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)      += clk-kona-setup.o
->  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm281xx.o
->  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm21664.o
->  obj-$(CONFIG_COMMON_CLK_IPROC) += clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
-> +obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2711-dvp.o
->  obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2835.o
->  obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2835-aux.o
->  obj-$(CONFIG_CLK_RASPBERRYPI)  += clk-raspberrypi.o
 
-I do think that single driver is the right model here, but I noticed
-that you're not using your new CONFIG_ symbol.  With that fixed, r-b
-from me.
 
-(though I'd also recommend devm_platform_get_and_ioremap_resource and
-devm_reset_controller_register())
+Thanks!
