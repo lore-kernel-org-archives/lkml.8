@@ -2,112 +2,101 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D569C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC30206FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591387569;
-	bh=qX1xQBm7obW8JhePObpkrCMjRydtV8VmDdpD8vh2slM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=OAE0oXaJFNC/OTsEmLeq5agfuZeRDIbWBsucQTYfPPzPXrOqmCCRLYvxQiFm9KAbI
-	 Z0f4qmQxjUmXg892lukYbY7zjgHzjMCazxfUuipLuh9veGRVV6waoxdgGPfaTwGrca
-	 dt+5AhvdyckqvFcZrViNyB18sm89Ajb8MYEjGZEM=
+	by mail.kernel.org (Postfix) with ESMTP id 331F3207D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgFEUGI (ORCPT
+        id S1728201AbgFEUGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 16:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727863AbgFEUGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 16:06:05 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22177C08C5C2;
-        Fri,  5 Jun 2020 13:06:05 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id j32so9558012qte.10;
-        Fri, 05 Jun 2020 13:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=JTkFUvaRvYSG6ygtt1GZV9UfYQcME0QUIQgnCNhspzw=;
-        b=LujWpYSX9TMTA4Reh58wuCm3r1H0Yl5Mifzj7Q9qRPX8q4rB2cXcnuI7G9ELPvtpTF
-         dgro1uYoKRf1Gnvcc8GSjfxy2GlyibIg60ztwrMN5t0kJZoHlGF2e/zLLeiw/gMii0CL
-         f+duJNpaVmhE8t12pBVy/xvYlv0YzP6gNBEiYBum8vpszAqUs361QZdFZtg2MhXVFW6d
-         cfkH7Pp/5xbe25VKKgmMnWdy6cvSAlguFc3SpyfEHhGu8y/VAOox9N++Q6unj5HdxT14
-         zzy7S+7NUmLZOX0Y0vA6YVvwqTuNS2+cycw/30J2LR+P1xdfjPpDlIq/aHOkfXQqrjGx
-         amLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=JTkFUvaRvYSG6ygtt1GZV9UfYQcME0QUIQgnCNhspzw=;
-        b=qnLEAODtfW4vtW2SULA5OniZArHU+IZdhUaTULLIe2DOrWgv6r4doA7zPxlScNa4PC
-         VGxGK+hQUurFgxn0UkkyriGEfH5K577y9e6+zJ6v54IKQBjHbYsAoYgY4N7FNBrYWXEN
-         kRSlMFCxOfVYA0/2rATC+KIre7NfIIlo5CqY1P4KH9DgRMsFzUwIpxTEy1PiQDFVPkOD
-         RjTKbVmDPqjNPmgpUqOQO01a9DBwrVOfp6+5YoEwVfgDLgd4QsGsjVcHjj+9apGV818X
-         ion9GakG7qV+WESfPlmEhvU9BZma63yY9OlODnYplJFO0qkkoIj3cPgJ8c4B/jxingEq
-         nz5Q==
-X-Gm-Message-State: AOAM532kkQj4RRxWp1GS4iTGPGvnk6W/XZTWaa9NosyI9uaA2qqZf9rR
-        HsEqUVTubD9iTMPlQcgS3VoLcLcI
-X-Google-Smtp-Source: ABdhPJxA24UWMHhoPj3bxG2+IXRRn/DllUkA3pM3drpQ60gBUrA6zd03FpJ84dOWRShQMDV/5TQ3oA==
-X-Received: by 2002:aed:2d23:: with SMTP id h32mr10303700qtd.69.1591387563816;
-        Fri, 05 Jun 2020 13:06:03 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:86c8])
-        by smtp.gmail.com with ESMTPSA id a7sm654103qth.61.2020.06.05.13.06.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 13:06:02 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 16:06:01 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Subject: [GIT PULL] cgroup changes for v5.8-rc1
-Message-ID: <20200605200601.GJ31548@mtj.thefacebook.com>
+        Fri, 5 Jun 2020 16:06:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:55629 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727863AbgFEUGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 16:06:52 -0400
+IronPort-SDR: qLCGo+iyW5O1JSOnOSsv1dq/jtaV76EGpwu1yhLYo6KzJrHBQs6s73tcFkK7OSWlpGwHSIkg78
+ m/Mp3p4AXDUw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 13:06:52 -0700
+IronPort-SDR: vuidcrLsSHUvLnHM78ClpxSJeqGc1d3MaeNx3OBTZpmjtVUy5Y5t1NWeE+1lmsl8lGzaGx7iSI
+ EjIelMGv2OzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="378839299"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Jun 2020 13:06:52 -0700
+Date:   Fri, 5 Jun 2020 13:06:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] KVM: nVMX: Properly handle
+ kvm_read/write_guest_virt*() result
+Message-ID: <20200605200651.GC11449@linux.intel.com>
+References: <20200605115906.532682-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200605115906.532682-1-vkuznets@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Linus.
+On Fri, Jun 05, 2020 at 01:59:05PM +0200, Vitaly Kuznetsov wrote:
+> Introduce vmx_handle_memory_failure() as an interim solution.
 
-Just two patches. One to add system-level cpu.stat to the root cgroup for
-convenience and a trivial comment update.
+Heh, "interim".  I'll take the over on that :-D.
 
-Thanks.
+> Note, nested_vmx_get_vmptr() now has three possible outcomes: OK, PF,
+> KVM_EXIT_INTERNAL_ERROR and callers need to know if userspace exit is
+> needed (for KVM_EXIT_INTERNAL_ERROR) in case of failure. We don't seem
+> to have a good enum describing this tristate, just add "int *ret" to
+> nested_vmx_get_vmptr() interface to pass the information.
+> 
+> Reported-by: syzbot+2a7156e11dc199bdbd8a@syzkaller.appspotmail.com
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
 
-The following changes since commit eec8fd0277e37cf447b88c6be181e81df867bcf1:
+...
 
-  device_cgroup: Cleanup cgroup eBPF device filter code (2020-04-13 14:41:54 -0400)
+> +/*
+> + * Handles kvm_read/write_guest_virt*() result and either injects #PF or returns
+> + * KVM_EXIT_INTERNAL_ERROR for cases not currently handled by KVM. Return value
+> + * indicates whether exit to userspace is needed.
+> + */
+> +int vmx_handle_memory_failure(struct kvm_vcpu *vcpu, int r,
+> +			      struct x86_exception *e)
+> +{
+> +	if (r == X86EMUL_PROPAGATE_FAULT) {
+> +		kvm_inject_emulated_page_fault(vcpu, e);
+> +		return 1;
+> +	}
+> +
+> +	/*
+> +	 * In case kvm_read/write_guest_virt*() failed with X86EMUL_IO_NEEDED
+> +	 * while handling a VMX instruction KVM could've handled the request
 
-are available in the Git repository at:
+A nit similar to your observation on the shortlog, this isn't limited to VMX
+instructions.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.8
-
-for you to fetch changes up to 936f2a70f2077f64fab1dcb3eca71879e82ecd3f:
-
-  cgroup: add cpu.stat file to root cgroup (2020-05-28 10:06:35 -0400)
-
-----------------------------------------------------------------
-Boris Burkov (1):
-      cgroup: add cpu.stat file to root cgroup
-
-Zefan Li (1):
-      cgroup: Remove stale comments
-
- Documentation/admin-guide/cgroup-v2.rst |  6 ++--
- kernel/cgroup/cgroup.c                  | 10 +-----
- kernel/cgroup/rstat.c                   | 60 ++++++++++++++++++++++++++++-----
- 3 files changed, 55 insertions(+), 21 deletions(-)
-
--- 
-tejun
+> +	 * correctly by exiting to userspace and performing I/O but there
+> +	 * doesn't seem to be a real use-case behind such requests, just return
+> +	 * KVM_EXIT_INTERNAL_ERROR for now.
+> +	 */
+> +	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> +	vcpu->run->internal.suberror = KVM_INTERNAL_ERROR_EMULATION;
+> +	vcpu->run->internal.ndata = 0;
+> +
+> +	return 0;
+> +}
