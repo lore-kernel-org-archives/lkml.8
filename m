@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7062FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99D162063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBB120823
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367126;
-	bh=GnMgnxYhRI8NeT2MgBln2uWfNJFU6Be3XUbVAerzCfQ=;
+	s=default; t=1591367131;
+	bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PfuwlYZhScTT1LJywoafA2ZMcazdjmhYJ5Yh8k1HQBXAAmnWobwtkovufxGLDKuIV
-	 qRLhJGR3R2P1hiP/uttkVUbFNT8eMAV4ApOF8LSP2FT2IpLP1ljQSzHwFkGFMk68Wk
-	 IxQjvrt3ZvtEptGuzoHaT9Udi6X38NBZ6k2NpJBY=
+	b=brGGn0FFufMCDNBVJz9/jKXlTCbsGS7iiH9gxdNAvnlBYlcOw1s8saCmRfF2A3MyN
+	 2bRyOCLhnFGpPanPgNN3rzQVa0ywwEg9dEZp1KQd5nqCE8CEEn+ZmLZNiV2qg3pfPq
+	 z0nIENR5YvQFnVzxEcrlv3QMrhtwJyv8hDyCbJ/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgFEOQk (ORCPT
+        id S1728423AbgFEOZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45542 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:25:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728224AbgFEOQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:26 -0400
+        id S1728277AbgFEOQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3722086A;
-        Fri,  5 Jun 2020 14:16:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FAA420835;
+        Fri,  5 Jun 2020 14:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366585;
-        bh=GnMgnxYhRI8NeT2MgBln2uWfNJFU6Be3XUbVAerzCfQ=;
+        s=default; t=1591366601;
+        bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wg9Ed38ReQ+3dh+a6CFuDYvusAKEbsSAm3ZxtdaAvVnKKP6J9oTIuhqaWAOSD/kxK
-         ZKG8K5I0msD8WzLH62MM4542jEF2lCRxbd/6cildFG69/lU8qu8dmI+HhvcQ28I8x5
-         vDCcelcDSO2Wa7DuM0R6ziYBURTtTL5d37OB5oQU=
+        b=HScNZvqOLofpHsgUll1TSxziHJWonw8fxkZrI+5RCaru6XJlsNN5peyZEdW/rpKLv
+         iLnOSIsQlR2RppM4kmRDpYByTi+1GSKu7Wio3l37Qfsegrdq2QoOat/0N3wIGKqowT
+         JXbNl6Ntn/GahX/n+ryWhgqZJisrIPK0Ry7pUPyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 12/43] io_uring: initialize ctx->sqo_wait earlier
-Date:   Fri,  5 Jun 2020 16:14:42 +0200
-Message-Id: <20200605140153.167206701@linuxfoundation.org>
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 19/43] s390/mm: fix set_huge_pte_at() for empty ptes
+Date:   Fri,  5 Jun 2020 16:14:49 +0200
+Message-Id: <20200605140153.529180967@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,74 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-[ Upstream commit 583863ed918136412ddf14de2e12534f17cfdc6f ]
+[ Upstream commit ac8372f3b4e41015549b331a4f350224661e7fc6 ]
 
-Ensure that ctx->sqo_wait is initialized as soon as the ctx is allocated,
-instead of deferring it to the offload setup. This fixes a syzbot
-reported lockdep complaint, which is really due to trying to wake_up
-on an uninitialized wait queue:
+On s390, the layout of normal and large ptes (i.e. pmds/puds) differs.
+Therefore, set_huge_pte_at() does a conversion from a normal pte to
+the corresponding large pmd/pud. So, when converting an empty pte, this
+should result in an empty pmd/pud, which would return true for
+pmd/pud_none().
 
-RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
-RDX: 0000000000000001 RSI: 0000000020000140 RDI: 000000000000047b
-RBP: 0000000000010475 R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402260
-R13: 00000000004022f0 R14: 0000000000000000 R15: 0000000000000000
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 7090 Comm: syz-executor222 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:913 [inline]
- register_lock_class+0x1664/0x1760 kernel/locking/lockdep.c:1225
- __lock_acquire+0x104/0x4c50 kernel/locking/lockdep.c:4234
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
- __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
- io_cqring_ev_posted+0xa5/0x1e0 fs/io_uring.c:1160
- io_poll_remove_all fs/io_uring.c:4357 [inline]
- io_ring_ctx_wait_and_kill+0x2bc/0x5a0 fs/io_uring.c:7305
- io_uring_create fs/io_uring.c:7843 [inline]
- io_uring_setup+0x115e/0x22b0 fs/io_uring.c:7870
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x441319
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+However, after conversion we also mark the pmd/pud as large, and
+therefore present. For empty ptes, this will result in an empty pmd/pud
+that is also marked as large, and pmd/pud_none() would not return true.
 
-Reported-by: syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+There is currently no issue with this behaviour, as set_huge_pte_at()
+does not seem to be called for empty ptes. It would be valid though, so
+let's fix this by not marking empty ptes as large in set_huge_pte_at().
+
+This was found by testing a patch from from Anshuman Khandual, which is
+currently discussed on LKML ("mm/debug: Add more arch page table helper
+tests").
+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/mm/hugetlbpage.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 832e042531bc..8bdf2629f7fd 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -822,6 +822,7 @@ static struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
- 		goto err;
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index 5674710a4841..7dfae86afa47 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -159,10 +159,13 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 		rste &= ~_SEGMENT_ENTRY_NOEXEC;
  
- 	ctx->flags = p->flags;
-+	init_waitqueue_head(&ctx->sqo_wait);
- 	init_waitqueue_head(&ctx->cq_wait);
- 	INIT_LIST_HEAD(&ctx->cq_overflow_list);
- 	init_completion(&ctx->completions[0]);
-@@ -6004,7 +6005,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
- {
- 	int ret;
- 
--	init_waitqueue_head(&ctx->sqo_wait);
- 	mmgrab(current->mm);
- 	ctx->sqo_mm = current->mm;
- 
+ 	/* Set correct table type for 2G hugepages */
+-	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3)
+-		rste |= _REGION_ENTRY_TYPE_R3 | _REGION3_ENTRY_LARGE;
+-	else
++	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
++		if (likely(pte_present(pte)))
++			rste |= _REGION3_ENTRY_LARGE;
++		rste |= _REGION_ENTRY_TYPE_R3;
++	} else if (likely(pte_present(pte)))
+ 		rste |= _SEGMENT_ENTRY_LARGE;
++
+ 	clear_huge_pte_skeys(mm, rste);
+ 	pte_val(*ptep) = rste;
+ }
 -- 
 2.25.1
 
