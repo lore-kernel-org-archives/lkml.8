@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3606207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5632207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359996;
-	bh=afey/RecsirKQAD3ec+xHIOS+5OO1hTmH62iLsK7Xk4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rQbn89JMCaFvYG2MZ3ijjF6lL5qgUBIF07bVbmsAFSI0+j/gjNPLBfYGKuZvV7jzj
-	 vSN7Jl4liE8sxTUzcdaFb1iPQVqZCwbthMAWJjI69KPSjwKamAZjHOO31YzNs6pho2
-	 aJIRsLFUgzzj275akEUPHaW76xQmeC5WXEybS46M=
+	s=default; t=1591359999;
+	bh=fJO8fHnBcnDtUp6PCEnbtaSTCLAD7BEUJgnPM31buks=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Qczg32PxCqksVlxOitFYdURYLkrZ8FlCTqbD9iphhnctvCRudi9GKMfAjJfhvWQdZ
+	 I4Vb/UxrigGBwN0gjboy4jqo0UEpSCCRHnU/Fl+xXow8wkmh4fckGFXe0lanAXT5Xs
+	 aFxIRpqIRMVMde5/y+mk6j1gkj2CxhfEyLbUmc5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgFEM0f (ORCPT
+        id S1727881AbgFEM0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:26:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58530 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727777AbgFEM0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:26:18 -0400
+        id S1727799AbgFEM0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EFE6208B8;
-        Fri,  5 Jun 2020 12:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99C55207D3;
+        Fri,  5 Jun 2020 12:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359978;
-        bh=afey/RecsirKQAD3ec+xHIOS+5OO1hTmH62iLsK7Xk4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16V9sTOyabTzvy1/MddhE9IsEG5eNsi0nwAQHWU3BVAzdaJMrhhsMbFeuTBqjtaxm
-         W3dxyaqzLtvyyvML6GVogN/BL8sfcL17CZ6TrCfWKspycgmyHWUYdSwbJmN6AQvVE1
-         tctXUdaKs9c43YeHHh7Nc4/2q37DnCQWK3L7TSRM=
+        s=default; t=1591359982;
+        bh=fJO8fHnBcnDtUp6PCEnbtaSTCLAD7BEUJgnPM31buks=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ENO4Ow9zbjA9Ybt36+vkd/nYbuvwbX4UnAE3bVWT4y1qzunFLDyaJ6A9tjVpAJXa6
+         jK1AnVBBlLN6ICiUZ12cGu2nmNN0FfG2+xBn60/L1m63AKuIl2pmznPObcqdIFwVHl
+         dFtZLzgERZeoaDDbXs9DEkPKU2kOzd7qUmmC9W7o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 7/8] drivers/net/ibmvnic: Update VNIC protocol version reporting
-Date:   Fri,  5 Jun 2020 08:26:08 -0400
-Message-Id: <20200605122609.2882841-7-sashal@kernel.org>
+Cc:     Fredrik Strupe <fredrik@strupe.net>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 1/6] ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
+Date:   Fri,  5 Jun 2020 08:26:15 -0400
+Message-Id: <20200605122620.2882962-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200605122609.2882841-1-sashal@kernel.org>
-References: <20200605122609.2882841-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Fredrik Strupe <fredrik@strupe.net>
 
-[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
+[ Upstream commit 3866f217aaa81bf7165c7f27362eee5d7919c496 ]
 
-VNIC protocol version is reported in big-endian format, but it
-is not byteswapped before logging. Fix that, and remove version
-comparison as only one protocol version exists at this time.
+call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
+and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
+(0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
+instructions will be masked out. This makes the function match 32-bit
+thumb instructions where the second half-word is equal to instr_val,
+regardless of the first half-word.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The result in this case is that all undefined 32-bit thumb instructions
+with the second half-word equal to 0xde01 (udf #1) work as breakpoints
+and will raise a SIGTRAP instead of a SIGILL, instead of just the one
+intended 16-bit instruction. An example of such an instruction is
+0xeaa0de01, which is unallocated according to Arm ARM and should raise a
+SIGILL, but instead raises a SIGTRAP.
+
+This patch fixes the issue by setting all the bits in instr_mask, which
+will still match the intended 16-bit thumb instruction (where the
+upper half is always 0), but not any 32-bit thumb instructions.
+
+Cc: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/arm/kernel/ptrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 956fbb164e6f..85c11dafb4cd 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -3560,12 +3560,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
- 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
- 			break;
- 		}
--		dev_info(dev, "Partner protocol version is %d\n",
--			 crq->version_exchange_rsp.version);
--		if (be16_to_cpu(crq->version_exchange_rsp.version) <
--		    ibmvnic_version)
--			ibmvnic_version =
-+		ibmvnic_version =
- 			    be16_to_cpu(crq->version_exchange_rsp.version);
-+		dev_info(dev, "Partner protocol version is %d\n",
-+			 ibmvnic_version);
- 		send_cap_queries(adapter);
- 		break;
- 	case QUERY_CAPABILITY_RSP:
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index ae738a6319f6..364985c96a92 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -227,8 +227,8 @@ static struct undef_hook arm_break_hook = {
+ };
+ 
+ static struct undef_hook thumb_break_hook = {
+-	.instr_mask	= 0xffff,
+-	.instr_val	= 0xde01,
++	.instr_mask	= 0xffffffff,
++	.instr_val	= 0x0000de01,
+ 	.cpsr_mask	= PSR_T_BIT,
+ 	.cpsr_val	= PSR_T_BIT,
+ 	.fn		= break_trap,
 -- 
 2.25.1
 
