@@ -6,92 +6,81 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A730C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBFD206FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2D0206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="RLBZLCNn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="irfcWxjM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbgFELIg (ORCPT
+        id S1726668AbgFELK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:08:36 -0400
-Received: from www413.your-server.de ([88.198.28.140]:37706 "EHLO
-        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgFELIg (ORCPT
+        Fri, 5 Jun 2020 07:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726225AbgFELK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:08:36 -0400
+        Fri, 5 Jun 2020 07:10:58 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A5B0C08C5C2;
+        Fri,  5 Jun 2020 04:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
-        MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3NH0uxciW9wNmCNchpq6bM+XDejEEyxzy2dajdLeTWo=; b=RLBZLCNnSMgKapiRRH0snatQ9
-        7hWvpFAqDlDO/6hY0S3n1zww8LPaufZjRi69WpU2U9fD/aYUcP1xk7PJe3v9/kcZ0W1PTQddayhmW
-        L3B1rg7BEWjG38nnXKuA5UsVYwKI7DfJkkjkZWWRTSHvYMSMUJnSoxk4tGKj1uKugSaQbHmx8XLpR
-        dzCjXFVT/n3uG5vBmyIowx3tBTerdgF9VGapd8LQmu6oMmTAFo5j9kFC8p8IeBvLrzSQsR3mm5B66
-        nH5FwNMz8ulminYxmJM5+11f1wd81YnpUU0e4F8m7DDBmVu42FQfAwTb4ow24fKn6yGLGqGFro6+c
-        3/0FVlvuA==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1jhADB-0004sx-PN; Fri, 05 Jun 2020 13:08:33 +0200
-Received: from [2001:16b8:57f2:b00:9e42:55f5:e968:2436] (helo=linux.fritz.box)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1jhADB-0006U5-H8; Fri, 05 Jun 2020 13:08:33 +0200
-Message-ID: <15677f9958dfe4dfdbb3dda978c84a64427fa00f.camel@cyberus-technology.de>
-Subject: Re: [PATCH] drm/i915/gvt: print actionable error message when gm
- runs out
-From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
-To:     Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org,
-        Thomas Prescher <thomas.prescher@cyberus-technology.de>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Date:   Fri, 05 Jun 2020 13:08:32 +0200
-In-Reply-To: <20200605045430.GS5687@zhen-hp.sh.intel.com>
-References: <20200603123321.263895-1-julian.stecklina@cyberus-technology.de>
-         <20200605045430.GS5687@zhen-hp.sh.intel.com>
-Organization: Cyberus Technology GmbH
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fvrQ52cMxHI9s5VoXtdJj/ZiIAaO8ey4kraRK+T/OVs=; b=irfcWxjMeB2NB3X2YJxnQukkEh
+        4BAaXxQoLP0TDn+mSf8mWJ/9RLXBjAitU05x6Aeqno0J1Zesd2OQB4y4ZxrbrB2qFlONdkXPwRfPj
+        U2jcW9QcOx25pJst8FTxZQQS4CQ+Xav46/FDaMaRrdS0ZleGE5/Qf74Zd/X6D0oZnMrO1gqtrgQ2Z
+        4h7GEa6YDrt6wHqts3h8At3+OiQdxAWeRjVc5iFU0UWjXmhZNAUgRnMm2HkMlRcapAJ2T+9Xj/NRr
+        teCiHC6zcAozZqBEI+VOyGJrF/9FK1ieQ5VfiSl8f2HF/+jwPQkiE8iT5SszE12KHJF5VihnkRNXd
+        hYUOklYg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhAFN-0002XB-Pr; Fri, 05 Jun 2020 11:10:49 +0000
+Date:   Fri, 5 Jun 2020 04:10:49 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Yan <yanaijie@huawei.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, hulkci@huawei.com,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH v2] block: Fix use-after-free in blkdev_get()
+Message-ID: <20200605111049.GA19604@bombadil.infradead.org>
+References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
+ <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
+ <20200605094353.GS30374@kadam>
+ <2ee6f2f7-eaec-e748-bead-0ad59f4c378b@web.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25833/Thu Jun  4 14:45:29 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ee6f2f7-eaec-e748-bead-0ad59f4c378b@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-05 at 12:54 +0800, Zhenyu Wang wrote:
-> On 2020.06.03 14:33:21 +0200, Julian Stecklina wrote:
-> > +		gvt_err("vgpu%d: failed to allocate %s gm space from host\n",
-> > +			vgpu->id, high_gm ? "high" : "low");
-> > +		gvt_err("vgpu%d: destroying vGPUs, decreasing vGPU memory size
-> > or increasing GPU aperture size may resolve this\n",
-> > +			vgpu->id);
+On Fri, Jun 05, 2020 at 12:56:45PM +0200, Markus Elfring wrote:
+> > A lot of maintainers have blocked Markus and asked him to stop trying
+> > to help people write commit message.
 > 
-> Currently we can't decrease vGPU mem size as defined by mdev type,
-> so actually you may try different vGPU type.
+> I am trying to contribute a bit of patch review as usual.
 
-Yes, that's what I meant.
+Please stop criticising people's commit messages.  Your suggestions
+are usually not improvements.
 
->  And aperture size is
-> also handled for supported vGPU mdev types, so assume user should
-> already be awared of that too. I just don't want us to be too chatty. :)
+> > Saying "bdev" instead of "block device" is more clear
+> 
+> I find this view interesting.
 
-Our users typically hit this particular error message when they haven't
-configured the GPU aperture size in the system BIOS correctly. Many laptops we
-see have the aperture set to 256MB and this is simply not enough.
+Dan is right.
 
-I don't cling to the specific wording of the error message, but any hint in the
-error message that this is not an obscure, internal error or bug, but something
-that the user can actually fix, would be helpful.
+> > so your original message was better.
+> 
+> Does this feedback include reported spelling mistakes?
 
-Julian
+You can keep doing that.  But refcount -> reference count is not
+particularly interesting.
 
