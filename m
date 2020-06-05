@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DDCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A316C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0E32075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AA42075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360042;
-	bh=M5fd0eDw+8QWXAEFGd3bGemif6hc4uE35x4W0JpWdsM=;
+	s=default; t=1591360046;
+	bh=h7BgepuHnXaWIEWlZfzGLvyiFhjoq/sM4o/0P6qHDWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0vmKcnsT0f0+NeuS5W+iSbNZ2flYZUEdxRrXGMlHqDv2sm0s6yJUkppPI1mnHS9dn
-	 MxPnxWA3YHO4qB3E7nEdAgAapQEDwtE2h95/XWKNtZF4szviAG6f5J/SCLpWDTN+uO
-	 FVUvtFr7VrQNx71ZmSVJwDiIFytvIX88Smd1c+xQ=
+	b=gXWJj4v1ywRrmbseYgtrojT5CFpdN8SM8ieAdP/MCWKEcLkCyx8cRS86g9l1OP1/m
+	 CboMpXRPPtj0+Obu/apqNaBO1HEFshUM16wqOWIwKZoe4pPL47dxkX1LUdqFfwUViQ
+	 hFVBAXt8q5DmVfBzQi1mWlM5YIbHK9YJYgLLNItQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgFEM1V (ORCPT
+        id S1727988AbgFEM1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:27:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbgFEM0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:26:24 -0400
+        id S1727822AbgFEM01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3A8D207D8;
-        Fri,  5 Jun 2020 12:26:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2006020897;
+        Fri,  5 Jun 2020 12:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359983;
-        bh=M5fd0eDw+8QWXAEFGd3bGemif6hc4uE35x4W0JpWdsM=;
+        s=default; t=1591359986;
+        bh=h7BgepuHnXaWIEWlZfzGLvyiFhjoq/sM4o/0P6qHDWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bj+WpXlopu7J4bu4eDqlo8D51R+vbY33K8RujA/F0/tL6VLRO/BTCb8bw4qA6b0Ci
-         6CPhfCTtyI3pmwRlpLCaln5jj9luq5tA8ywa/42PUSktG5kQFT2chG9U55+Dv86Uw4
-         8HLf+4HvU25oHS0sRPQIViDPh8/N77cfcTSoyW9M=
+        b=nRTU7peaFN8lg6Pyy1vOSYUnhiHO1L8uMi9YIRCchPEAe97Z1Pj1FJcr8VYAJPfyH
+         WaYV3+79hYdtM1sV/AGftSfctAsIr5W30oGnuwD8V4ZvcIw/w+jTP9BztpEsXIDI09
+         +eyKuQYgc7NMzibk+bXYOBCt4k6P/F0namDuE86w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 2/6] sched/fair: Don't NUMA balance for kthreads
-Date:   Fri,  5 Jun 2020 08:26:16 -0400
-Message-Id: <20200605122620.2882962-2-sashal@kernel.org>
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 5/6] drivers/net/ibmvnic: Update VNIC protocol version reporting
+Date:   Fri,  5 Jun 2020 08:26:19 -0400
+Message-Id: <20200605122620.2882962-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122620.2882962-1-sashal@kernel.org>
 References: <20200605122620.2882962-1-sashal@kernel.org>
@@ -61,53 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
+[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
 
-Stefano reported a crash with using SQPOLL with io_uring:
+VNIC protocol version is reported in big-endian format, but it
+is not byteswapped before logging. Fix that, and remove version
+comparison as only one protocol version exists at this time.
 
-  BUG: kernel NULL pointer dereference, address: 00000000000003b0
-  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
-  RIP: 0010:task_numa_work+0x4f/0x2c0
-  Call Trace:
-   task_work_run+0x68/0xa0
-   io_sq_thread+0x252/0x3d0
-   kthread+0xf9/0x130
-   ret_from_fork+0x35/0x40
-
-which is task_numa_work() oopsing on current->mm being NULL.
-
-The task work is queued by task_tick_numa(), which checks if current->mm is
-NULL at the time of the call. But this state isn't necessarily persistent,
-if the kthread is using use_mm() to temporarily adopt the mm of a task.
-
-Change the task_tick_numa() check to exclude kernel threads in general,
-as it doesn't make sense to attempt ot balance for kthreads anyway.
-
-Reported-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5e65c7eea872..8233032a2f01 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2542,7 +2542,7 @@ void task_tick_numa(struct rq *rq, struct task_struct *curr)
- 	/*
- 	 * We don't care about NUMA placement if we don't have memory.
- 	 */
--	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
-+	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
- 		return;
- 
- 	/*
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 897a87ae8655..20f7ab4aa2f1 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -3362,12 +3362,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
+ 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
+ 			break;
+ 		}
+-		dev_info(dev, "Partner protocol version is %d\n",
+-			 crq->version_exchange_rsp.version);
+-		if (be16_to_cpu(crq->version_exchange_rsp.version) <
+-		    ibmvnic_version)
+-			ibmvnic_version =
++		ibmvnic_version =
+ 			    be16_to_cpu(crq->version_exchange_rsp.version);
++		dev_info(dev, "Partner protocol version is %d\n",
++			 ibmvnic_version);
+ 		send_cap_queries(adapter);
+ 		break;
+ 	case QUERY_CAPABILITY_RSP:
 -- 
 2.25.1
 
