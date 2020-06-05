@@ -2,54 +2,103 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14093C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B643C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5220206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD87206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgFEOlF convert rfc822-to-8bit (ORCPT
+        id S1728293AbgFEOll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:41:05 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:63184 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727113AbgFEOlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:41:04 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21408010-1500050 
-        for multiple; Fri, 05 Jun 2020 15:40:48 +0100
-Content-Type: text/plain; charset="utf-8"
+        Fri, 5 Jun 2020 10:41:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:56820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728223AbgFEOlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:41:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7949331B;
+        Fri,  5 Jun 2020 07:41:39 -0700 (PDT)
+Received: from [10.57.10.23] (unknown [10.57.10.23])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77DA73F305;
+        Fri,  5 Jun 2020 07:41:32 -0700 (PDT)
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+ <142d48ae-2725-1368-3e11-658449662371@arm.com>
+ <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+Message-ID: <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+Date:   Fri, 5 Jun 2020 15:41:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <202006050718.9D4FCFC2E@keescook>
-References: <202006050718.9D4FCFC2E@keescook>
-Cc:     intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Joe Perches <joe@perches.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [Intel-gfx] [PATCH] drm/i915: Fix comments mentioning typo in IS_ENABLED()
-Message-ID: <159136804617.22562.13050948656630993484@build.alporthouse.com>
-User-Agent: alot/0.8.1
-Date:   Fri, 05 Jun 2020 15:40:46 +0100
+In-Reply-To: <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Kees Cook (2020-06-05 15:19:53)
-> This has no code changes, but the typo is clearly getting copy/pasted,
-> so better to avoid this now and fix the typo. IS_ENABLED() takes full
-> names, and must have the "CONFIG_" prefix.
+On 2020-06-05 14:46, Robin Murphy wrote:
+> On 2020-06-05 14:20, Mark Brown wrote:
+>> On Fri, Jun 05, 2020 at 12:34:36PM +0100, Robin Murphy wrote:
+>>> On 2020-06-04 22:28, Florian Fainelli wrote:
+>>
+>>>> For the BCM2835 case which is deemed performance critical, we would 
+>>>> like
+>>>> to continue using an interrupt handler which does not have the extra
+>>>> comparison on BCM2835_SPI_CS_INTR.
+>>
+>>> FWIW, if I'm reading the patch correctly, then with sensible codegen 
+>>> that
+>>> "overhead" should amount to a bit test on a live register plus a 
+>>> not-taken
+>>> conditional branch - according to the 1176 TRM that should add up to a
+>>> whopping 2 cycles. If that's really significant then I'd have to wonder
+>>> whether you want to be at the mercy of the whole generic IRQ stack at 
+>>> all,
+>>> and should perhaps consider using FIQ instead.
+>>
+>> Yes, and indeed the compiler does seem to manage that.  It *is* non-zero
+>> overhead though.
 > 
-> Reported-by: Joe Perches <joe@perches.com>
-> Link: https://lore.kernel.org/lkml/b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
--Chris
+> True, but so's the existing level of pointer-chasing indirection that 
+> with some straightforward refactoring could be taken right out of the 
+> critical path and confined to just the conditional complete() call. 
+> That's the kind of thing leaving me unconvinced that this is code where 
+> every single cycle counts ;)
+
+Ha, and in fact having checked a build out of curiosity, this patch 
+as-is actually stands to make things considerably worse. At least with 
+GCC 8.3 and bcm2835_defconfig, bcm2835_spi_interrupt_common() doesn't 
+get inlined, which means bcm2835_spi_interrupt() pushes/pops a stack 
+frame and makes an out-of-line call to bcm2835_spi_interrupt_common(), 
+resulting in massively *more* work than the extra two instructions of 
+simply inlining the test.
+
+So yes, the overhead of inlining the test vs. the alternative is indeed 
+non-zero. It's just also negative :D
+
+Robin.
