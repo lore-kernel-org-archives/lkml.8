@@ -2,181 +2,94 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D92CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02299206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDEA206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgFEWmQ (ORCPT
+        id S1728407AbgFEWoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:42:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51110 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbgFEWmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:42:15 -0400
-IronPort-SDR: 5ZzKNYisRwCwv9n47htYf3j5QcYJrCAkjEFjd1z+x5/0BIujuP8TlCenqZK5qpaN556STjKTwy
- h4U4mmKMcVrA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 15:42:14 -0700
-IronPort-SDR: 1awNLVZn28bzCXE18oeaLM73kW8zuL4Uorek+FgidFZ+2iNhIEoAuk9JpLxxAtbXjoH546OvzD
- BXdtwhGP+m9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,478,1583222400"; 
-   d="scan'208";a="348580264"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2020 15:42:14 -0700
-Date:   Fri, 5 Jun 2020 15:42:31 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Brendan Shanks <bshanks@codeweavers.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andreas Rammhold <andi@notmuch.email>,
-        "Moger, Babu" <Babu.Moger@amd.com>
-Subject: Re: [PATCH] x86/umip: Add emulation/spoofing for SLDT and STR
- instructions
-Message-ID: <20200605224231.GA7466@ranerica-svr.sc.intel.com>
-References: <20200602184212.10813-1-bshanks@codeweavers.com>
- <20200604001243.GA24742@ranerica-svr.sc.intel.com>
- <CALCETrXrvNZQUqfjF+-=jh1TMBpdB0PT-8J5wWDO83+i3B5Q1w@mail.gmail.com>
- <E32838F8-665E-488F-96E4-040DD7BDA284@codeweavers.com>
+        Fri, 5 Jun 2020 18:44:10 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41676 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbgFEWoJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 18:44:09 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 49BB02A51AC
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 249E1480101; Sat,  6 Jun 2020 00:44:04 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv2 0/6] misc. gpio-charger patches
+Date:   Sat,  6 Jun 2020 00:43:57 +0200
+Message-Id: <20200605224403.181015-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <E32838F8-665E-488F-96E4-040DD7BDA284@codeweavers.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 11:58:13AM -0700, Brendan Shanks wrote:
-> 
-> > On Jun 3, 2020, at 9:39 PM, Andy Lutomirski <luto@amacapital.net> wrote:
-> > 
-> > On Wed, Jun 3, 2020 at 5:12 PM Ricardo Neri
-> > <ricardo.neri-calderon@linux.intel.com <mailto:ricardo.neri-calderon@linux.intel.com>> wrote:
-> >> 
-> >> On Tue, Jun 02, 2020 at 11:42:12AM -0700, Brendan Shanks wrote:
-> >>> Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
-> >>> processes.
-> >>> 
-> >>> Wine users have found a small number of Windows apps using SLDT that
-> >>> were crashing when run on UMIP-enabled systems.
-> >>> 
-> >>> Reported-by: Andreas Rammhold <andi@notmuch.email>
-> >>> Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> >>> Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
-> >>> ---
-> >>> arch/x86/kernel/umip.c | 23 ++++++++++++++---------
-> >>> 1 file changed, 14 insertions(+), 9 deletions(-)
-> >>> 
-> >>> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-> >>> index 8d5cbe1bbb3b..59dfceac5cc0 100644
-> >>> --- a/arch/x86/kernel/umip.c
-> >>> +++ b/arch/x86/kernel/umip.c
-> >>> @@ -64,6 +64,8 @@
-> >>> #define UMIP_DUMMY_GDT_BASE 0xfffffffffffe0000ULL
-> >>> #define UMIP_DUMMY_IDT_BASE 0xffffffffffff0000ULL
-> >>> 
-> >>> +#define UMIP_DUMMY_TASK_REGISTER_SELECTOR 0x40
-> >>> +
-> >>> /*
-> >>>  * The SGDT and SIDT instructions store the contents of the global descriptor
-> >>>  * table and interrupt table registers, respectively. The destination is a
-> >>> @@ -244,16 +246,24 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
-> >>>              *data_size += UMIP_GDT_IDT_LIMIT_SIZE;
-> >>>              memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
-> >>> 
-> >>> -     } else if (umip_inst == UMIP_INST_SMSW) {
-> >>> -             unsigned long dummy_value = CR0_STATE;
-> >>> +     } else if (umip_inst == UMIP_INST_SMSW || umip_inst == UMIP_INST_SLDT ||
-> >>> +                umip_inst == UMIP_INST_STR) {
-> >>> +             unsigned long dummy_value;
-> >>> +
-> >>> +             if (umip_inst == UMIP_INST_SMSW)
-> >>> +                     dummy_value = CR0_STATE;
-> >>> +             else if (umip_inst == UMIP_INST_STR)
-> >>> +                     dummy_value = UMIP_DUMMY_TASK_REGISTER_SELECTOR;
-> >>> +             else
-> >>> +                     dummy_value = 0;
-> >> 
-> >> Perhaps you can return a non-zero value for SLDT if it has an LDT, as
-> >> Andy had suggested. Maybe this can be implemented by looking at
-> >> current->mm->context.ldt
-> >> 
-> >> I guess the non-zero value can be (GDT_ENTRY_LDT*8).
-> > 
-> > You could probably even get away with always returning a nonzero
-> > value.  After all, an empty LDT is quite similar to no LDT.
-> 
-> 
-> Is something like this what you both had in mind?
+Hi,
 
-> I don’t have any software handy to test the LDT-present case though.
+This is v2 of a patchset for gpio-charger. The patches are
+mostly unrelated to each other, but have some dependencies.
 
-Perhaps you can insert a test in the kernel selftest. Something like
-this (based on Andreas' test program):
+Merge plan is:
 
---- a/tools/testing/selftests/x86/ldt_gdt.c
-+++ b/tools/testing/selftests/x86/ldt_gdt.c
-@@ -220,12 +220,23 @@ static void install_invalid(const struct user_desc *desc, bool oldmode)
- 	}
- }
+Assuming there are no huge blockers, the plan is to merge
+patches 1-3 through power-supply subsystem for 5.9. The
+ARM patches can go via ARM subsystem for 5.9 and the final
+patch can simply be postponed for 5.10.
 
-+unsigned long test(void)
-+{
-+	 unsigned char ldtr[5] = "\xef\xbe\xad\xde";
-+	 unsigned long ldt = 0;
-+	 asm("sldt %0\n" : "=m" (ldtr));
-+	 ldt = *((unsigned long *)&ldtr[0]);
-+	 printf ("LDT base: 0x%lx\n", ldt);
-+	 return (ldt);
-+}
-+
- static int safe_modify_ldt(int func, struct user_desc *ptr,
-                           unsigned long bytecount)
- {
- 	int ret = syscall(SYS_modify_ldt, 0x11, ptr, bytecount);
- 	if (ret < -1)
- 	errno = -ret;
-+	test();
- 	return ret;
- }
+Changelog since PATCHv1:
+ * Fixed the YAML binding as suggested by Rob
+ * Implemented the suggestions from Emil
+ * Split making "gpios" optional into separate patch, which
+   simplifies reviewing and follows "one change per patch"
+   style
+ * Add two new patches converting platform data users to
+   use GPIO descriptor tables
+ * Add final patch removing gpio from platform data
 
-Thanks and BR,
-Ricardo
-> 
-> 
->                 else if (umip_inst == UMIP_INST_STR)
->                         dummy_value = UMIP_DUMMY_TASK_REGISTER_SELECTOR;
->                 else if (umip_inst == UMIP_INST_SLDT)
->                 {
-> #ifdef CONFIG_MODIFY_LDT_SYSCALL
->                         down_read(&current->mm->context.ldt_usr_sem);
->                         if (current->mm->context.ldt)
->                                 dummy_value = GDT_ENTRY_LDT * 8;
->                         else
->                                 dummy_value = 0;
->                         up_read(&current->mm->context.ldt_usr_sem);
-> #else
->                         dummy_value = 0;
-> #endif
-> 
+-- Sebastian
 
-It looks fine to me. Perhaps Andy prefers a simpler, always-non-zero
-implementation?
+Sebastian Reichel (6):
+  dt-bindings: power: supply: gpio-charger: convert to yaml
+  power: supply: gpio-charger: Make gpios optional
+  power: supply: gpio-charger: add charge-current-limit feature
+  ARM: pxa: Use GPIO descriptor for gpio-charger
+  ARM: sa1100: Use GPIO descriptor for gpio-charger
+  power: supply: gpio-charger: drop legacy GPIO support
 
-Thanks and BR,
-Ricardo
+ .../bindings/power/supply/gpio-charger.txt    |  31 ---
+ .../bindings/power/supply/gpio-charger.yaml   |  94 ++++++++
+ arch/arm/mach-pxa/tosa.c                      |  24 +--
+ arch/arm/mach-sa1100/collie.c                 |  11 +-
+ drivers/power/supply/gpio-charger.c           | 200 ++++++++++++++----
+ include/linux/power/gpio-charger.h            |   5 -
+ 6 files changed, 275 insertions(+), 90 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+ create mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+
+-- 
+2.26.2
+
