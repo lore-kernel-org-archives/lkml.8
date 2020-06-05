@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D34C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A04320663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FAC206F0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366949;
-	bh=ihlDfgG3j3xz4bDy2bhDZn4pw55pV0TlDHOrGsmuZdM=;
+	s=default; t=1591366951;
+	bh=AwfvXfjnTNJMGNoI9iVhy0FrSXDouyxhVUlCc0eNCaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3wHVMyuQqpdgtRWQigyUTrte0U1nvlJwFBpBO2nXH3B7wkjnVO1sNK+Ez0slEn90
-	 pmfMSFOVmvXW7vnJzl5PGH4jNbPuNrgu/9emd10sgY/YMH4AxkgpGulyoZ7fUIjV4E
-	 WA+enbJ5jJKeU7XCsMBZ2WmRstKuMEsZL59pq1QE=
+	b=PbqCKMp5jsxP0zOQEaimgqIDdzt4gDxasJp43y0iHCojIPZ8C2+ujjCfZPfemPR17
+	 f9WVz6NFTEOWeHOxJ/x90WTJL8/aDSxdRKb9RHesm7CEJWQr2FMnGThX85kuCKJl7C
+	 EyrvgCCM6LkJyPlTGDldZA2npGwrRyGKPkECHxFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgFEOW2 (ORCPT
+        id S1728851AbgFEOW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:22:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49876 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728782AbgFEOTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:09 -0400
+        id S1728216AbgFEOTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69FF4208A7;
-        Fri,  5 Jun 2020 14:19:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BB26208A7;
+        Fri,  5 Jun 2020 14:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366748;
-        bh=ihlDfgG3j3xz4bDy2bhDZn4pw55pV0TlDHOrGsmuZdM=;
+        s=default; t=1591366753;
+        bh=AwfvXfjnTNJMGNoI9iVhy0FrSXDouyxhVUlCc0eNCaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YTNoBnk5/ST8fjK5bO9o3yz+WL7v2QL9mWQMsbAKR1dPJulYFRDAdNOHgPvaTf65l
-         6m7VzrZtjYaUsl/tCBZ4mwKETrItxN0PXz6VyFPdcAynbAMRqDCF7OZKYfkp975ba1
-         HSQNj6wKhBQmPQXG0pcj20yL/w8HUm5VfWY8oCYc=
+        b=HPlbZh4lifsTE9+4sph122Uqw6c6iWRwuVGbr6FuoF1JGKeNBMFE8s/QEbQmy9aYB
+         5XlGweA4gfU5SlYgBfu4ysmfTBJnIXJ6xMARRfUL4RveXFXVwuARHX+hk68riLxDC3
+         ySb/tmzNU6OEHzwBHiwtf+Puwk9JH31MlD62ruXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Schmidt <jan@centricular.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 32/38] drm/edid: Add Oculus Rift S to non-desktop list
-Date:   Fri,  5 Jun 2020 16:15:15 +0200
-Message-Id: <20200605140254.774264644@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 34/38] null_blk: return error for invalid zone size
+Date:   Fri,  5 Jun 2020 16:15:17 +0200
+Message-Id: <20200605140254.877560188@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -60,38 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Schmidt <jan@centricular.com>
+From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 
-[ Upstream commit 5a3f610877e9d08968ea7237551049581f02b163 ]
+[ Upstream commit e274832590211c4b1b1e807ca66fad8b5bb8b328 ]
 
-Add a quirk for the Oculus Rift S OVR0012 display so
-it shows up as a non-desktop display.
+In null_init_zone_dev() check if the zone size is larger than device
+capacity, return error if needed.
 
-Signed-off-by: Jan Schmidt <jan@centricular.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200507180628.740936-1-jan@centricular.com
+This also fixes the following oops :-
+
+null_blk: changed the number of conventional zones to 4294967295
+BUG: kernel NULL pointer dereference, address: 0000000000000010
+PGD 7d76c5067 P4D 7d76c5067 PUD 7d240c067 PMD 0
+Oops: 0002 [#1] SMP NOPTI
+CPU: 4 PID: 5508 Comm: nullbtests.sh Tainted: G OE 5.7.0-rc4lblk-fnext0
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e4
+RIP: 0010:null_init_zoned_dev+0x17a/0x27f [null_blk]
+RSP: 0018:ffffc90007007e00 EFLAGS: 00010246
+RAX: 0000000000000020 RBX: ffff8887fb3f3c00 RCX: 0000000000000007
+RDX: 0000000000000000 RSI: ffff8887ca09d688 RDI: ffff888810fea510
+RBP: 0000000000000010 R08: ffff8887ca09d688 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8887c26e8000
+R13: ffffffffa05e9390 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007fcb5256f740(0000) GS:ffff888810e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000010 CR3: 000000081e8fe000 CR4: 00000000003406e0
+Call Trace:
+ null_add_dev+0x534/0x71b [null_blk]
+ nullb_device_power_store.cold.41+0x8/0x2e [null_blk]
+ configfs_write_file+0xe6/0x150
+ vfs_write+0xba/0x1e0
+ ksys_write+0x5f/0xe0
+ do_syscall_64+0x60/0x250
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7fcb51c71840
+
+Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/null_blk_zoned.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index ea2849338d6c..9b69e55ad701 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -191,10 +191,11 @@ static const struct edid_quirk {
- 	{ "HVR", 0xaa01, EDID_QUIRK_NON_DESKTOP },
- 	{ "HVR", 0xaa02, EDID_QUIRK_NON_DESKTOP },
+diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
+index 3d7fdea872f8..2553e05e0725 100644
+--- a/drivers/block/null_blk_zoned.c
++++ b/drivers/block/null_blk_zoned.c
+@@ -20,6 +20,10 @@ int null_zone_init(struct nullb_device *dev)
+ 		pr_err("zone_size must be power-of-two\n");
+ 		return -EINVAL;
+ 	}
++	if (dev->zone_size > dev->size) {
++		pr_err("Zone size larger than device capacity\n");
++		return -EINVAL;
++	}
  
--	/* Oculus Rift DK1, DK2, and CV1 VR Headsets */
-+	/* Oculus Rift DK1, DK2, CV1 and Rift S VR Headsets */
- 	{ "OVR", 0x0001, EDID_QUIRK_NON_DESKTOP },
- 	{ "OVR", 0x0003, EDID_QUIRK_NON_DESKTOP },
- 	{ "OVR", 0x0004, EDID_QUIRK_NON_DESKTOP },
-+	{ "OVR", 0x0012, EDID_QUIRK_NON_DESKTOP },
- 
- 	/* Windows Mixed Reality Headsets */
- 	{ "ACR", 0x7fce, EDID_QUIRK_NON_DESKTOP },
+ 	dev->zone_size_sects = dev->zone_size << ZONE_SIZE_SHIFT;
+ 	dev->nr_zones = dev_size >>
 -- 
 2.25.1
 
