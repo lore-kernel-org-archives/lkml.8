@@ -2,217 +2,260 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E350EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E6E20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7EA207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:45:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="RyBWw6mX"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Orors8Un"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgFEIli (ORCPT
+        id S1726177AbgFEIpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:41:38 -0400
-Received: from mail-eopbgr130108.outbound.protection.outlook.com ([40.107.13.108]:53380
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726062AbgFEIlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:41:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FIJJxViQjgAP/hyq73JGIlFhctedy4YsmYRvcJ0h48yKpyU5aX7ZXVCR+FeXTM5guMncIOq0WiwSb4pmDnW9th148rUigqeWlLkzZ53NTLKpElTTAAR4m+kdHUCdEGL274bAQYJD3r7YlSvxzGC1AwYcGZ0KdRPTcT7uM/dua9YB2rphzcxAxt0/SvFBCQf+0wA5n8dfYUONePD8gwtq+XSou6OqFHknE9sqB1HK2tUYZ4NxRDXndq385bEQcXMCi3qw3oRjdYMuK9jBYPZuc8sR2nNtM5OwPACWhq1hmb/IY2zF5hGVgXbAzgGbKQxm0EIHEQoQI5pjNcJFF4mFbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d1eMp6xmFijeA7f+J9K1NHtO6WkvZ/KOFBsj7vmqQNc=;
- b=JT5h0Iqz8L+tgcdiEo8V/j4FpqEtNhv7aKhJXKlMhQ7PpCfNuO+AsjIb8UyddU22T5+CCqZ7DJxainhR2S7iXTs5YJj0z+627uLGhN1FHEcHueFrIbTHhhpCllE8bx39Tea3BS4RwqcR+BUT53B+GPYXFnqCFkBY07a/xhvyopwmB0FWaTNU8wAOMaaUPHnKpu89Zp0ga6qLFvTaeWaCAHL+OYfaMKfTiVtmlrk5CVncgVVpDWFi5VtSNgkTDFbNaQEmR0ZyR+Y2E/kKCco64H4LS99hT0e9bjaxJh+uPqJbRJWbNwUoi4IWflbde7PF+uLDOF9LBErGwjK2JStSgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d1eMp6xmFijeA7f+J9K1NHtO6WkvZ/KOFBsj7vmqQNc=;
- b=RyBWw6mXRF3GNXsW8pX+YXBx0I72yqgUTyOP8DgUYsl30u28RtPmtoTHOoIBVPCl/QKF4Qlg2VXOVcH1J5q8B1ahM1jZ7/P/0sut3R2N8ey5DJ9iyQB9ZYDt2Ot8Wo+T6ueHfKh9t4JeLUr4AgwBgFZj2ydBB0gqGCf5OtQWcgM=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=virtuozzo.com;
-Received: from AM6PR08MB4756.eurprd08.prod.outlook.com (2603:10a6:20b:cd::17)
- by AM6PR08MB5061.eurprd08.prod.outlook.com (2603:10a6:20b:d6::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Fri, 5 Jun
- 2020 08:41:32 +0000
-Received: from AM6PR08MB4756.eurprd08.prod.outlook.com
- ([fe80::1c7f:9e05:5b3a:96cc]) by AM6PR08MB4756.eurprd08.prod.outlook.com
- ([fe80::1c7f:9e05:5b3a:96cc%5]) with mapi id 15.20.3066.018; Fri, 5 Jun 2020
- 08:41:32 +0000
-Subject: Re: [PATCH 0/2] overlayfs: C/R enhancements
-To:     Amir Goldstein <amir73il@gmail.com>,
-        Alexander Mikhalitsyn <alexander.mikhalitsyn@virtuozzo.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Andrey Vagin <avagin@virtuozzo.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Vasiliy Averin <vvs@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200604161133.20949-1-alexander.mikhalitsyn@virtuozzo.com>
- <CAOQ4uxhGswjxZjc3mN7K99pPrDgMV9_194U46b2MgszZnq1SDw@mail.gmail.com>
- <AM6PR08MB36394A00DC129791CC89296AE8890@AM6PR08MB3639.eurprd08.prod.outlook.com>
- <CAOQ4uxisdLt-0eT1R=V1ihagMoNfjiTrUdcdF2yDgD4O94Zjcw@mail.gmail.com>
-From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Message-ID: <fb79be2c-4fc8-5a9d-9b07-e0464fca9c3f@virtuozzo.com>
-Date:   Fri, 5 Jun 2020 11:41:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <CAOQ4uxisdLt-0eT1R=V1ihagMoNfjiTrUdcdF2yDgD4O94Zjcw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR01CA0108.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:10e::49) To AM6PR08MB4756.eurprd08.prod.outlook.com
- (2603:10a6:20b:cd::17)
+        Fri, 5 Jun 2020 04:45:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbgFEIpv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:45:51 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C76C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:45:51 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id s192so2035395vkh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 01:45:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+jBFtxmml2UF+SqNxby8rCTJfROuy18HbtkfW0zgYb0=;
+        b=Orors8UnFs80EJIYP/KDavj+8S/RsPvJBh7SCISTksRVf7f4rAH/P560wXs2u/J6az
+         pLlDexOhDBMkt79w0+ofS3+f4xcnBuNUhq+c++wVjsKLE1jc5jzPMaU0ntxEv+VzpJOW
+         vf8JZ3z/GSdXQ73Dm2tMH7Uo3c+Gq7BR3tCL+JQ+cN4dWgw5MjGAhxYtxejR0Prd6iY+
+         6ZZkJcm1wr02Z6nmkyy0QuByc8wAJurm3MPsvINFpfalEBb4ZT0kmHOLA4rt4yqs3noY
+         8LqBEZLRANgp5WuxTDJkI3EjW/LX6Dr9+1sGkp9NrHS5iOhMpbnO8xzAXaW0orSU4N+3
+         p7ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+jBFtxmml2UF+SqNxby8rCTJfROuy18HbtkfW0zgYb0=;
+        b=RjFF93y41aeEUBOn5YTzbOA3yltEF+PVG+JSiVFC0S8InZ9FEBvEsR6cesQK0VXrFf
+         F6uLSrhr5Fc2fUkTyDPU/qzDzD5tz0k7JPqKoM8+K0/Bnsv3A3VdZn2u/fLJ1BDjXWji
+         BeL/gAswFgrIwHKK/rP6mMPtHedDY2lmpER5sNOFAGB1dXVyiZ8GK6waGlRGjFy5tsOt
+         CKMDKWMpxyQjJzar3gM25jaNc2n7f1nC0LcVtOhThQa2ZQmCtaCjlef24Rcjt/sxtxBu
+         +dUCxWjRZYfEx5pof5mMdeWiBgnVoJ/lBwlHOD3u5Y1mH26BL/e/wLFefrqSSnj6kqus
+         Fdxg==
+X-Gm-Message-State: AOAM5338JKrFEPJ2d65X6YyN4md6GRdms/zHa8T9zajJPvyzGqqsPICc
+        liB8GrnezAKuYGH+pe0SQnQjnVCyeMtydupMpK+LfA==
+X-Google-Smtp-Source: ABdhPJzmvRHbvh3nZTnE3simXC96ekcS+Ch2AtnIE3Svbty3w/cPWX4iVpb084QbaBYoV7z9md14B6vaSVk2SSa/NyY=
+X-Received: by 2002:a1f:cf03:: with SMTP id f3mr6271662vkg.72.1591346749358;
+ Fri, 05 Jun 2020 01:45:49 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.193] (81.200.16.181) by AM0PR01CA0108.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 08:41:31 +0000
-X-Originating-IP: [81.200.16.181]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f9606faf-79e5-4f69-b223-08d8092c3f4b
-X-MS-TrafficTypeDiagnostic: AM6PR08MB5061:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR08MB5061FB2294FC76F9F416D20FB7860@AM6PR08MB5061.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0425A67DEF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GtMCkbBLGs/jFsVEq9YBvNe0N3ACmIK0cMtp9hncfIh2OdWHcDA1FaVk4CbfyUhBi9NxR2WTIIIzXYE4exGr37PgUlbggv9h/gwnhnYlgETSVP7JbL7YeTYHK/TgGTLgcptQdDR5rzNwcz1twDJbMNy6ZGL7EfAQgwmINg4snBnQbtsmVGBU/0LUyvKL+kQ1AHN2dKhPl4eSXp4wiakO5x7rrxzdzxhJe177jq/GGSCyh6Sknaqr/ngaiVABjlYKxvMX8Jg5nHFe5xxATv1gkpkimuUzSfqjBCTNZI1zl0OpGeI/9nxOt97cctRvKERhHM/sibJaiCm1kkDkM0EwwY+Q93KhA4TGna9CWeMcJCA5s2EgoZv62aItVtrs9W2W
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4756.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(39840400004)(376002)(346002)(6636002)(478600001)(16526019)(66476007)(31686004)(186003)(83380400001)(52116002)(31696002)(26005)(66946007)(4326008)(66556008)(53546011)(86362001)(54906003)(6486002)(36756003)(5660300002)(110136005)(2616005)(8936002)(8676002)(16576012)(2906002)(956004)(316002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: Gzgcw0PYMIRbFQGL1NMmEfdUipp0Yfk7aa+vjXy1SCNSX+d7X23S0GJFOz95asGmoAKhpmkHqxPNBPdupF/xPCjcWRnJ5GbfLq3eASkVZhAIfq7HD8Xy8xJLmxX3V5PIE57fx+lRktdaMhN4exbVvXJmxo0UIPpVZUBoFH6lIJxQOLhakyPtmIIZWFmO2IgnBFtCxIun5jTsUein6tARf/KAj3xlzFMctfFbzmPnUEoojhnnFJeCWsrEBjeHLRd2ld+wCz4pta45gdP6s8ar3iurft2lMxNMQU4zUNb1o8Qq6foe0yeqBJ8Kc5VrWPk+F06WyadRhbrVAJ1ATFO9uGaHxvRTwMC06dCqdftBl6mgkfK+w/87HDCayia1RH64RiHS2IuIuIap1m4MzNfOcSA/6rZhNgUDO7pVKBU8AGd4XHGC+URXHDMsPC2kVdjDES8Cy6ePceBQQl2Q94ECfZdwHqju7L1SNiMX38U2geA=
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9606faf-79e5-4f69-b223-08d8092c3f4b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 08:41:32.0100
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e+GxaH3sJlRDJHMAaNff4sznwpxGz46H3/7rww4JsbLGQc/BAmQQIf/527U2v9JV9qP74BftZ2hQV5+Q8a6Hv3X7T1NHT+MZaopJVFGM+y8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB5061
+References: <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
+ <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
+ <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
+ <20200526102018.kznh6aglpkqlp6en@gilmour.lan> <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
+ <20200527091335.7wc3uy67lbz7j4di@gilmour.lan> <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
+ <20200528073055.znutrhkryzu3grrl@gilmour.lan> <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
+ <20200602110442.2ceuymhwuomvjj6i@gilmour>
+In-Reply-To: <20200602110442.2ceuymhwuomvjj6i@gilmour>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Fri, 5 Jun 2020 16:44:51 +0800
+Message-ID: <CAPpJ_eePgLxO5URB3V5aeNMvBHOp+vXrW=+6SnVt4mB9J8oR+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Daniel Drake <drake@endlessm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B46=E6=9C=882=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:04=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On Mon, Jun 01, 2020 at 03:58:26PM +0800, Jian-Hong Pan wrote:
+> > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=8828=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Hi Daniel,
+> > >
+> > > On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
+> > > > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> w=
+rote:
+> > > > > I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-=
+Hong) if you
+> > > > > want.
+> > > >
+> > > > That would be great, although given the potentially inconsistent
+> > > > results we've been seeing so far it would be great if you could
+> > > > additionally push a git branch somewhere.
+> > > > That way we can have higher confidence that we are applying exactly
+> > > > the same patches to the same base etc.
+> > >
+> > > So I sent a new iteration yesterday, and of course forgot to cc you..=
+. Sorry for
+> > > that.
+> > >
+> > > I've pushed my current branch here:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/log=
+/?h=3Drpi4-kms
+> >
+> > Thanks to Maxime!
+> >
+> > I have tried your repository on branch rpi4-kms.  The DRM VC4 is used!
+> > But got some issues:
+> > 1. Some weird error message in dmesg.  Not sure it is related, or not
+> > [    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
+> > HDMI state machine clock
+> > https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
+>
+> That's a deferred probing. The first time the HDMI driver is being
+> probed, the firmware clock driver has not been probed yet. It's making
+> another attempt later on, which succeeds.
+>
+> > 2. The screen flashes suddenly sometimes.
 
+I append drm.debug=3D0x3 to boot command.  Whenever, the screen flashes,
+I notice the logs like this:
 
-On 6/5/20 5:35 AM, Amir Goldstein wrote:
-> On Fri, Jun 5, 2020 at 12:34 AM Alexander Mikhalitsyn
-> <alexander.mikhalitsyn@virtuozzo.com> wrote:
->>
->> Hello,
->>
->>> But overlayfs won't accept these "output only" options as input args,
->> which is a problem.
->>
->> Will it be problematic if we simply ignore "lowerdir_mnt_id" and "upperdir_mnt_id" options in ovl_parse_opt()?
->>
-> 
-> That would solve this small problem.
+Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
+Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
+Jun 01 15:22:40 endless kernel: [drm:drm_vblank_enable] enabling
+vblank on crtc 3, ret: 0
+Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+9 (2)
+Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+4 (1)
+Jun 01 15:22:40 endless kernel: [drm:vblank_disable_fn] disabling
+vblank on crtc 3
+Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200,
+auth=3D1, DRM_IOCTL_MODE_CURSOR
+Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200,
+auth=3D1, DRM_IOCTL_MODE_CURSOR2
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 159 (1)
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 154 (1)
+Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
+Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
+crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
+Jun 01 15:22:42 endless kernel: [drm:drm_vblank_enable] enabling
+vblank on crtc 3, ret: 0
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+9 (2)
+Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
+4 (2)
 
-This is not a big problem actually as these options shown in mountinfo 
-for overlay had been "output only" forever, please see these two 
-examples below:
+Here is the full log
+https://gist.github.com/starnight/85d641819839eddc7a55ca7173990a56
 
-a) Imagine you've mounted overlay with relative paths and forgot (or you 
-never known as you are another user) where your cwd was at the moment of 
-mount syscall. - How would you use those options as "input" to create 
-the same overlay mount somethere else (bind-mounting not involved)?
+> > 3. The higher resolutions, like 1920x1080 ... are lost after hot
+> > re-plug HDMI cable (HDMI0)
 
-b) Imagine you've mounted overlay with absolute paths and someone (other 
-user) overmounted lower (upper/workdir) paths for you, all directory 
-structure would be the same on overmount but yet files are different. - 
-How would you use those options from mountinfo as "input" ones?
+I should explain this in more detail.  Here are the steps to reproduce
+this issue:
+1. Before unplug the HDMI cable from HDMI0 port.
+$ xrandr
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
+HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x
+axis y axis) 521mm x 293mm
+   1920x1080     60.00*+  50.00    59.94
+   1920x1080i    60.00    50.00    59.94
+   1680x1050     59.88
+   1280x1024     75.02    60.02
+   1440x900      59.90
+   1280x960      60.00
+   1152x864      75.00
+   1280x720      60.00    50.00    59.94
+   1440x576      50.00
+   1024x768      75.03    70.07    60.00
+   1440x480      60.00    59.94
+   832x624       74.55
+   800x600       72.19    75.00    60.32    56.25
+   720x576       50.00
+   720x480       60.00    59.94
+   640x480       75.00    72.81    66.67    60.00    59.94
+   720x400       70.08
+HDMI-2 disconnected (normal left inverted right x axis y axis)
 
-We try to make them much closer to "input" ones.
+2. Unplug the HDMI cable from HDMI0 port.
+3. Plug the HDMI cable to **HDMI1** port.
+$ xrandr
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
+HDMI-1 disconnected (normal left inverted right x axis y axis)
+HDMI-2 connected primary 1920x1080+0+0 (normal left inverted right x
+axis y axis) 521mm x 293mm
+   1920x1080     60.00*+  50.00    59.94
+   1920x1080i    60.00    50.00    59.94
+   1680x1050     59.88
+   1280x1024     75.02    60.02
+   1440x900      59.90
+   1280x960      60.00
+   1152x864      75.00
+   1280x720      60.00    50.00    59.94
+   1440x576      50.00
+   1024x768      75.03    70.07    60.00
+   1440x480      60.00    59.94
+   832x624       74.55
+   800x600       72.19    75.00    60.32    56.25
+   720x576       50.00
+   720x480       60.00    59.94
+   640x480       75.00    72.81    66.67    60.00    59.94
+   720x400       70.08
 
-Agreed, we should ignore *_mnt_id on mount because paths identify mounts 
-at the time of mount call.
+4. Unplug the HDMI cable from **HDMI1** port.
+5. Plug the HDMI cable back to HDMI0 port.
+$ xrandr
+Screen 0: minimum 320 x 200, current 1368 x 768, maximum 2048 x 2048
+HDMI-1 connected primary 1368x768+0+0 (normal left inverted right x
+axis y axis) 0mm x 0mm
+   1368x768      59.88*
+   1360x768      59.80
+   1280x800      59.81
+   1152x864      60.00
+   1280x720      59.86
+   1024x768      60.00
+   1024x576      59.90
+   960x540       59.63
+   800x600       60.32
+   800x450       59.82
+   700x450       59.88
+   640x480       59.94
+   684x384       59.88    59.85
+   680x384       59.80    59.96
+   640x400       59.88    59.98
+   576x432       60.06
+   640x360       59.86    59.83
+   512x384       60.00
+   512x288       60.00    59.92
+   480x270       59.63    59.82
+   400x300       60.32
+   320x240       60.05
+HDMI-2 disconnected (normal left inverted right x axis y axis)
 
-> 
->>> Wouldn't it be better for C/R to implement mount options
->> that overlayfs can parse and pass it mntid and fhandle instead
->> of paths? >>
->> Problem is that we need to know on C/R "dump stage" which mounts are used on lower layers and upper layer. Most likely I don't understand something but I can't catch how "mount-time" options will help us.
-> 
-> As you already know from inotify/fanotify C/R fhandle is timeless, so
-> there would be no distinction between mount time and dump time.
+Jian-Hong Pan
 
-Pair of fhandle+mnt_id looks an equivalent to path+mnt_id pair, CRIU 
-will just need to open fhandle+mnt_id with open_by_handle_at and 
-readlink to get path on dump and continue to use path+mnt_id as before. 
-(not too common with fhandles but it's my current understanding)
-
-But if you take a look on (a) and (b) again, the regular user does not 
-see full information about overlay mount in /proc/pid/mountinfo, they 
-can't just take a look on it and understand from there it comes from. 
-Resolving fhandle looks like a too hard task for a user.
-
-> About mnt_id, your patches will cause the original mount-time mounts to be busy.
-> That is a problem as well.
-
-Children mounts lock parent, open files lock parent. Another analogy is 
-a loop device which locks the backing file mount (AFAICS). Anyway one 
-can lazy umount, can't they? But I'm not too sure for this one, maybe 
-you can share more implications of this problem?
-
-> 
-> I think you should describe the use case is more details.
-> Is your goal to C/R any overlayfs mount that the process has open
-> files on? visible to process
-We wan't to dump a container, not a simple process, if the container 
-process has access to some resource CRIU needs to restore this resource.
-
-Imagine the process in container mounts it's own overlay inside 
-container, for instance to imulate write access to readonly mount or 
-just to implement some snapshots, don't know exact use case. And we want 
-to checkpoint/restore this container. (Currently CRIU only supports 
-overlay as external mount, e.g. for docker continers docker engine 
-pre-creates overlay for us and we just bind from it - it's a different 
-case.) If the in-container process creates the in-container mount we 
-need to recreate it on restore so that the in-container view of the 
-filesystem persists.
-
-> For NFS export, we use the persistent descriptor {uuid;fhandle}
-> (a.k.a. struct ovl_fh) to encode
-> an underlying layer object.
-> 
-> CRIU can look for an existing mount to a filesystem with uuid as restore stage
-> (or even mount this filesystem) and use open_by_handle_at() to open a
-> path to layer.
-
-On restore we can be on another physical node, so I doubt we have same 
-uuid's, sorry I don't fully understand here already.
-
-> After mounting overlay, that mount to underlying fs can even be discarded.
-> 
-> And if this works for you, you don't have to export the layers ovl_fh in
-> /proc/mounts, you can export them in numerous other ways.
-> One way from the top of my head, getxattr on overlay root dir.
-> "trusted.overlay" xattr is anyway a reserved prefix, so "trusted.overlay.layers"
-> for example could work.
-
-Thanks xattr might be a good option, but still don't forget about (a) 
-and (b), users like to know all information about mount from 
-/proc/pid/mountinfo.
-
-> 
-> Thanks,
-> Amir.
-> 
-
--- 
-Best regards, Tikhomirov Pavel
-Software Developer, Virtuozzo.
+> I'm not sure on how to exactly reproduce those issues (or what they are)
+> though, can you expand on this?
+>
+> Maxime
