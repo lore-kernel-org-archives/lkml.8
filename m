@@ -3,82 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF665C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9ED720772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35922086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591319303;
-	bh=J/UgPloqDehOpWWxRSezIJjhVQzLn6+WD/FsIH7lUys=;
+	s=default; t=1591319577;
+	bh=TIPus6gLZUqRCrDwXh04rz7C8bizFW3qdvMap51arRc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n1BjujLdwqBedyFPKrcYXklPgU0vdyqgdXiAzpZGTjFdmRL+/Axy+4zFd70uYNjQT
-	 cSEzlQF+o6yBc9ZBW+MzZPrV0LOA1P3UnFWAYnHoalpYW67r+0SQfsnN49HYkHI+jK
-	 VMSt8gAgsGE6DKzxxTgjiKyrARGjsOUqcmtXPDAQ=
+	b=ZAjn1gl3RMHXsSBEapfOKrtvt1NvsMGUOzQYtPUcNntejLjRIz6+lzWNGMu72uLGb
+	 QVHb18CeZVDkMTCB+p8VSTCBEfbRhdbeaZMAEcu7nHeFuGgTG09IpFavG4/fJCsUn7
+	 JNuhpMDK2St3xNLEgi2ZVm4RAiNYLfPjY8KDQl98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgFEBIX (ORCPT
+        id S1726154AbgFEBM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 21:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
+        Thu, 4 Jun 2020 21:12:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725863AbgFEBIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 21:08:22 -0400
-Received: from localhost (unknown [104.132.1.66])
+        id S1726036AbgFEBM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 21:12:56 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40FDC206A2;
-        Fri,  5 Jun 2020 01:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C098207ED;
+        Fri,  5 Jun 2020 01:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591319302;
-        bh=J/UgPloqDehOpWWxRSezIJjhVQzLn6+WD/FsIH7lUys=;
+        s=default; t=1591319575;
+        bh=TIPus6gLZUqRCrDwXh04rz7C8bizFW3qdvMap51arRc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kfW/oP5L+l9jNe2zJ8+cWu5rYbGWN7u6hgqNF+5bT1eCfr+yPaMETizKTwipuVHYO
-         uVT+7T3mIETXizvvhCCCtIIRRkyvHq3SQqiLuCvahiUvV0wu9KEbb7nPGqRD24B8Cc
-         /VhADm6odczU5uZBX8/51NPYkbJXDb5R3UVfaZvU=
-Date:   Thu, 4 Jun 2020 18:08:21 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the f2fs tree
-Message-ID: <20200605010821.GA100890@google.com>
-References: <20200605100430.0ed7de60@canb.auug.org.au>
+        b=H4ZfSJ4ijkcGAzuSUpydSU/l1U0WIm0FYmZJi5YLeRIIAhzEv23EJV4f2GpnCReZb
+         mkGDynfcqOD1AFrbfSvefkXY3qHxGjREI5xKDoSeoqAxn+uNOBjbgV48nRYL0rd5r6
+         nFNmYnT+iXg2kghSpVh8mlfkJcbYq1QFKYyzHw+I=
+Date:   Thu, 4 Jun 2020 21:12:54 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     David =?utf-8?Q?Bala=C5=BEic?= <xerces9@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 4.19 12/80] pppoe: only process PADT targeted at local
+ interfaces
+Message-ID: <20200605011254.GR1407771@sasha-vm>
+References: <20200518173450.097837707@linuxfoundation.org>
+ <20200518173452.813559136@linuxfoundation.org>
+ <CAPJ9Yc8YOeqeO4mo80iVMf3ay+CkdMvYzJY1BqXMNPcKzL6_zg@mail.gmail.com>
+ <20200604201712.GB1308830@kroah.com>
+ <CAPJ9Yc-0jocU2WJP_27hQa43XFwGWJJx0LBNXShoryZE1K54sQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200605100430.0ed7de60@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPJ9Yc-0jocU2WJP_27hQa43XFwGWJJx0LBNXShoryZE1K54sQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   35942e2134fa ("f2fs: attach IO flags to the missing cases")
-> 
-> Fixes tag
-> 
->   Fixes: d58f2f658159 ("f2fs: add node_io_flag for bio flags likewise data_io_flag")
-> 
-> has these problem(s):
-> 
->   - Target SHA1 does not exist
-> 
-> Maybe you meant
-> 
-> Fixes: 4a6183fb7db6 ("f2fs: add node_io_flag for bio flags likewise data_io_flag")
+On Fri, Jun 05, 2020 at 12:31:31AM +0200, David Balažic wrote:
+>On Thu, 4 Jun 2020 at 22:17, Greg Kroah-Hartman
+><gregkh@linuxfoundation.org> wrote:
+>>
+>> On Thu, Jun 04, 2020 at 08:39:00PM +0200, David Balažic wrote:
+>> > Hi!
+>> >
+>> > Is there a good reason this did not land in 4.14 branch?
+>> >
+>> > Openwrt is using that and so it missed this patch.
+>> >
+>> > Any chance it goes in in next round?
+>>
+>> Does it apply and build cleanly?
+>>
+>> I don't know why I didn't backport it further, something must have
+>> broke...
+>
+>The patch from the above applies to linux-4.14.183
+>
+>If I apply it manually (open pppoe.c in editor and add the two lines
+>from the patch) then it builds.
+>Until LD      vmlinux.o when I run out of disk space...
+>I applied it by editor because the first time something went wrong
+>when copying the patch from the email and it did not apply.
+>
+>So it looks OK, but someone else should try it too.
+>My build system is not exactly great.. (it is a VM I created for
+>openwrt builds and it is after midnight and I don't feel like
+>extending the virtual disk.. sorry, maybe tomorrow).
 
-Ah, both are in dev branch. Let me drop the Fixes tag.
+Hm, indeed it looks ok for 4.14 (and 4.9, 4.4) so I've queued it up,
+thank you.
 
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
-
+-- 
+Thanks,
+Sasha
