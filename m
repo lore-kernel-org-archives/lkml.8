@@ -2,303 +2,100 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4715A20820
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="fyfCGcab"
+	by mail.kernel.org (Postfix) with ESMTP id 2C628207D0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgFEJvb (ORCPT
+        id S1726393AbgFEJwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:51:31 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:39483 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbgFEJvb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:51:31 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 390392304C;
-        Fri,  5 Jun 2020 11:51:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591350685;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+rGovv/Tm21fPTQNNhJm5pWTIw+9W6X3Bz7Lc/tr8rQ=;
-        b=fyfCGcabpdPEHsy7K1DFEm+ItvckBg8BQ6ve307uqns5b76jbVY4udCeIehsF3XDTIj9af
-        U73XPujXSdYcfZka6IMsd9+SSJ8k6zRGw+wreg1JDIe330xDGXLmUo9f79fdHSMKw8Uofv
-        wVI2ui8pfJSRQ8s51pfnBoFUbiMJmwE=
+        Fri, 5 Jun 2020 05:52:00 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:58990 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726251AbgFEJv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:51:59 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP2mvFdpe_u89AA--.660S3;
+        Fri, 05 Jun 2020 17:51:43 +0800 (CST)
+Subject: Re: [PATCH 1/2] MIPS: set page access bit with pgprot on some MIPS
+ platform
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1591348266-28392-1-git-send-email-maobibo@loongson.cn>
+ <20200605173909.000018ff@flygoat.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <ce625c9d-a4bb-7138-c599-62b30b65c408@loongson.cn>
+Date:   Fri, 5 Jun 2020 17:51:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200605173909.000018ff@flygoat.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 11:51:24 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     broonie@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <20200605065709.GD3714@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc> <20200605065709.GD3714@dell>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <ccbafa481fda09146d36f1c220c5a44d@walle.cc>
-X-Sender: michael@walle.cc
+X-CM-TRANSID: AQAAf9DxP2mvFdpe_u89AA--.660S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruFWkJF4rGF15GrWUAFWDJwb_yoWkWFX_WF
+        4akr97Gw1DX34xCFsYqa1rArW8W3ykZr1Ut395Xr93t343J3ykGa1jgF9Fqw17GryIy3yv
+        g347Wr4ak3WavjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxAYjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkI
+        ecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+        j189NUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
 
-thanks for the review.
 
-Am 2020-06-05 08:57, schrieb Lee Jones:
-> Mark, what do you think?
+On 06/05/2020 05:39 PM, Jiaxun Yang wrote:
+> On Fri,  5 Jun 2020 17:11:05 +0800
+> Bibo Mao <maobibo@loongson.cn> wrote:
 > 
-> On Thu, 04 Jun 2020, Michael Walle wrote:
-> 
->> Add the core support for the board management controller found on the
->> SMARC-sAL28 board. It consists of the following functions:
->>  - watchdog
->>  - GPIO controller
->>  - PWM controller
->>  - fan sensor
->>  - interrupt controller
->> 
->> At the moment, this controller is used on the Kontron SMARC-sAL28 
->> board.
->> 
->> Please note that the MFD driver is defined as bool in the Kconfig
->> because the next patch will add interrupt support.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
+>> On MIPS system which has rixi hardware bit, page access bit is not
+>> set in pgrot. For memory reading, there will be one page fault to
+>> allocate physical page; however valid bit is not set, there will
+>> be the second fast tlb-miss fault handling to set valid/access bit.
+>>
+>> This patch set page access/valid bit with pgrot if there is reading
+>> access privilege. It will reduce one tlb-miss handling for memory
+>> reading access.
+>>
+>> The valid/access bit will be cleared in order to track memory
+>> accessing activity. If the page is accessed, tlb-miss fast handling
+>> will set valid/access bit, pte_sw_mkyoung is not necessary in slow
+>> page fault path. This patch removes pte_sw_mkyoung function which
+>> is defined as empty function except MIPS system.
+>>
+>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 >> ---
->>  drivers/mfd/Kconfig    | 19 ++++++++++
->>  drivers/mfd/Makefile   |  2 ++
->>  drivers/mfd/sl28cpld.c | 79 
->> ++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 100 insertions(+)
->>  create mode 100644 drivers/mfd/sl28cpld.c
->> 
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 4f8b73d92df3..5c0cd514d197 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -2109,5 +2109,24 @@ config SGI_MFD_IOC3
->>  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
->>  	  then say Y. Otherwise say N.
->> 
->> +config MFD_SL28CPLD
->> +	bool "Kontron sl28 core driver"
 > 
-> "Kontron SL28 Core Driver"
+> Thanks for tracking it down.
+> 
+> Could you please make the patch tittle more clear?
+> "Some" looks confuse to me, "systems with RIXI" would be better.
 
-ok
+Sure, will add it.
 
 > 
->> +	depends on I2C=y
->> +	depends on OF
->> +	select REGMAP_I2C
->> +	select MFD_CORE
->> +	help
->> +	  This option enables support for the board management controller
->> +	  found on the Kontron sl28 CPLD. You have to select individual
+> - Jiaxun
 > 
-> I can't find any reference to the "Kontron sl28 CPLD" online.
-> 
-> Is there a datasheet?
 
-Unfortunately not.
-
->> +	  functions, such as watchdog, GPIO, etc, under the corresponding 
->> menus
->> +	  in order to enable them.
->> +
->> +	  Currently supported boards are:
->> +
->> +		Kontron SMARC-sAL28
->> +
->> +	  To compile this driver as a module, choose M here: the module will 
->> be
->> +	  called sl28cpld.
->> +
->>  endmenu
->>  endif
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 9367a92f795a..be59fb40aa28 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -264,3 +264,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
->>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
->> 
->>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
->> +
->> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
->> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
->> new file mode 100644
->> index 000000000000..a23194bb6efa
->> --- /dev/null
->> +++ b/drivers/mfd/sl28cpld.c
->> @@ -0,0 +1,79 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * MFD core for the sl28cpld.
-> 
-> Ideally this would match the Kconfig subject line.
-
-ok
-
-> 
->> + * Copyright 2019 Kontron Europe GmbH
-> 
-> This is out of date.
-
-ok
-
->> + */
->> +
->> +#include <linux/i2c.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/regmap.h>
->> +
->> +#define SL28CPLD_VERSION	0x03
->> +#define SL28CPLD_MIN_REQ_VERSION 14
->> +
->> +struct sl28cpld {
->> +	struct device *dev;
->> +	struct regmap *regmap;
->> +};
-> 
-> Why do you need this structure?
-
-see below
-
->> +static const struct regmap_config sl28cpld_regmap_config = {
->> +	.reg_bits = 8,
->> +	.val_bits = 8,
->> +	.reg_stride = 1,
->> +};
->> +
->> +static int sl28cpld_probe(struct i2c_client *i2c)
->> +{
->> +	struct sl28cpld *sl28cpld;
->> +	struct device *dev = &i2c->dev;
->> +	unsigned int cpld_version;
->> +	int ret;
->> +
->> +	sl28cpld = devm_kzalloc(dev, sizeof(*sl28cpld), GFP_KERNEL);
->> +	if (!sl28cpld)
->> +		return -ENOMEM;
->> +
->> +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, 
->> &sl28cpld_regmap_config);
->> +	if (IS_ERR(sl28cpld->regmap))
->> +		return PTR_ERR(sl28cpld->regmap);
-> 
-> This is now a shared memory allocator and not an MFD at all.
-> 
-> I'm clamping down on these type of drivers!
-> 
-> Please find a better way to accomplish this.
-> 
-> Potentially using "simple-mfd" and "simple-regmap".
-> 
-> The former already exists and does what you want.  The latter doesn't
-> yet exist, but could solve your and lots of other contributor's
-> issues.
-
-Mh, the former doesn't provide a regmap, correct? Most MMIO drivers 
-won't
-need it, but this is an I2C device. So yes, I could come up with a
-"simple-regmap" proposal. I guess that should go into drivers/mfd/ 
-because
-it is more than just adding one line, i.e. you would have to configure 
-the
-regmap and its different interfaces.
-
-But how would you model that version check below for example? (Not that 
-I'm
-very keen of it.)
-
-> 
-> Heck maybe I'll implement it myself if this keeps happening.
-> 
->> +	ret = regmap_read(sl28cpld->regmap, SL28CPLD_VERSION, 
->> &cpld_version);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (cpld_version < SL28CPLD_MIN_REQ_VERSION) {
->> +		dev_err(dev, "unsupported CPLD version %d\n", cpld_version);
->> +		return -ENODEV;
->> +	}
->> +
->> +	sl28cpld->dev = dev;
->> +	i2c_set_clientdata(i2c, sl28cpld);
-> 
-> If the struct definition is in here, how do you use it elsewhere?
-
-I wanted to store the regmap somewhere, but because there are no users, 
-I'll
-drop that.
-
->> +	dev_info(dev, "successfully probed. CPLD version %d\n", 
->> cpld_version);
->> +
->> +	return devm_of_platform_populate(&i2c->dev);
->> +}
->> +
->> +static const struct of_device_id sl28cpld_of_match[] = {
->> +	{ .compatible = "kontron,sl28cpld-r1", },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, sl28cpld_of_match);
->> +
->> +static struct i2c_driver sl28cpld_driver = {
->> +	.probe_new = sl28cpld_probe,
->> +	.driver = {
->> +		.name = "sl28cpld",
->> +		.of_match_table = of_match_ptr(sl28cpld_of_match),
->> +	},
->> +};
->> +module_i2c_driver(sl28cpld_driver);
->> +
->> +MODULE_DESCRIPTION("sl28cpld MFD Core Driver");
->> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
->> +MODULE_LICENSE("GPL");
-
--- 
--michael
