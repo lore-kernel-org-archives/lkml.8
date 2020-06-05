@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 480B420835
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56B7208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366598;
-	bh=5EMxD/AfSpLyjuXNqb5ixny+nHiT+Kx9uhypSmTttzI=;
+	s=default; t=1591366605;
+	bh=fCZJ/XHdKHiSHStzGsvusFWRTMUu6YnQ/9xTD63G/qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WieKIwWWahs/rY0rW+VPfg51C9kqoGdYVswWZ0JN61Zqw01XbYX7zQtsZQJbecTRq
-	 Tr6e/eXK9JtwoKMR6rpQwCmLrVovUIFK9XiR4ltJyksZtz2s5P3E6UFUG0MxZ+dpVX
-	 D5GwBApUACg/h1gvCIkln2x3dAj+MkOoe+nMULWc=
+	b=qp0U1HAVBpI7zeOdutiO3prIGWzzaRxG8EbVwDrHSdoqrU8hQMkLk/TiRGiyzFRm8
+	 S6xBb0AZhNxibZPmvmh3LlKx+lXr9mLIdN7uQtgYjoR2Zifhd+Cp2OOfkNklx/Nafv
+	 966A0aqdqv69FlX1o+mv4BULLCS6incrd4LOkov0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgFEOQh (ORCPT
+        id S1728288AbgFEOQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45492 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727929AbgFEOQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:23 -0400
+        id S1728232AbgFEOQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 670CE208A9;
-        Fri,  5 Jun 2020 14:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA97B20897;
+        Fri,  5 Jun 2020 14:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366582;
-        bh=5EMxD/AfSpLyjuXNqb5ixny+nHiT+Kx9uhypSmTttzI=;
+        s=default; t=1591366587;
+        bh=fCZJ/XHdKHiSHStzGsvusFWRTMUu6YnQ/9xTD63G/qo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyCjfj975bHSnl0j4tUCw8yPlQ3vjs5Gr3rbljB4rtj29oZnvm9eAAO50Wv5r45x6
-         Dv5OEWQw0ozXIglokm/M9ZUT1a+9p+4Kq6EnNVNOV0o9k3isoZUTx/qyLGFdf2wDix
-         7LPDujXy2uj5qTVzQDCPe2O2aGgRDjjgZrUAo8HA=
+        b=z1X+6oRCd7Kn1j74iZ7kmRjhzofJnOe2V/Q3lnPLca3EyQbexxd7NQhiGHvzryfaz
+         THZM3TiG+2HhGWhCWZ8dh77scOw5nvWl3NzXhVjlO3+hRq1dKBhnimxvu3hV7LEtKC
+         gT5fAeNaPc5qTK1m1OMugLE2Tao31LQx8MM9qqj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 11/43] i2c: altera: Fix race between xfer_msg and isr thread
-Date:   Fri,  5 Jun 2020 16:14:41 +0200
-Message-Id: <20200605140153.115818428@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 13/43] io_uring: dont prepare DRAIN reqs twice
+Date:   Fri,  5 Jun 2020 16:14:43 +0200
+Message-Id: <20200605140153.218553972@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,91 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit 5d4c7977499a736f3f80826bdc9744344ad55589 ]
+[ Upstream commit 650b548129b60b0d23508351800108196f4aa89f ]
 
-Use a mutex to protect access to idev->msg_len, idev->buf, etc. which
-are modified by both altr_i2c_xfer_msg() and altr_i2c_isr().
+If req->io is not NULL, it's already prepared. Don't do it again,
+it's dangerous.
 
-This is the minimal fix for easy backporting. A cleanup to remove the
-spinlock will be added later.
-
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
-[wsa: updated commit message]
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-altera.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-index 92d2c706c2a7..a60042431370 100644
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -70,6 +70,7 @@
-  * @isr_mask: cached copy of local ISR enables.
-  * @isr_status: cached copy of local ISR status.
-  * @lock: spinlock for IRQ synchronization.
-+ * @isr_mutex: mutex for IRQ thread.
-  */
- struct altr_i2c_dev {
- 	void __iomem *base;
-@@ -86,6 +87,7 @@ struct altr_i2c_dev {
- 	u32 isr_mask;
- 	u32 isr_status;
- 	spinlock_t lock;	/* IRQ synchronization */
-+	struct mutex isr_mutex;
- };
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 8bdf2629f7fd..aa800f70c55e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4262,12 +4262,13 @@ static int io_req_defer(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	if (!req_need_defer(req) && list_empty_careful(&ctx->defer_list))
+ 		return 0;
  
- static void
-@@ -245,10 +247,11 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
- 	struct altr_i2c_dev *idev = _dev;
- 	u32 status = idev->isr_status;
+-	if (!req->io && io_alloc_async_ctx(req))
+-		return -EAGAIN;
+-
+-	ret = io_req_defer_prep(req, sqe);
+-	if (ret < 0)
+-		return ret;
++	if (!req->io) {
++		if (io_alloc_async_ctx(req))
++			return -EAGAIN;
++		ret = io_req_defer_prep(req, sqe);
++		if (ret < 0)
++			return ret;
++	}
  
-+	mutex_lock(&idev->isr_mutex);
- 	if (!idev->msg) {
- 		dev_warn(idev->dev, "unexpected interrupt\n");
- 		altr_i2c_int_clear(idev, ALTR_I2C_ALL_IRQ);
--		return IRQ_HANDLED;
-+		goto out;
- 	}
- 	read = (idev->msg->flags & I2C_M_RD) != 0;
- 
-@@ -301,6 +304,8 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
- 		complete(&idev->msg_complete);
- 		dev_dbg(idev->dev, "Message Complete\n");
- 	}
-+out:
-+	mutex_unlock(&idev->isr_mutex);
- 
- 	return IRQ_HANDLED;
- }
-@@ -312,6 +317,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
- 	u32 value;
- 	u8 addr = i2c_8bit_addr_from_msg(msg);
- 
-+	mutex_lock(&idev->isr_mutex);
- 	idev->msg = msg;
- 	idev->msg_len = msg->len;
- 	idev->buf = msg->buf;
-@@ -336,6 +342,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
- 		altr_i2c_int_enable(idev, imask, true);
- 		altr_i2c_fill_tx_fifo(idev);
- 	}
-+	mutex_unlock(&idev->isr_mutex);
- 
- 	time_left = wait_for_completion_timeout(&idev->msg_complete,
- 						ALTR_I2C_XFER_TIMEOUT);
-@@ -409,6 +416,7 @@ static int altr_i2c_probe(struct platform_device *pdev)
- 	idev->dev = &pdev->dev;
- 	init_completion(&idev->msg_complete);
- 	spin_lock_init(&idev->lock);
-+	mutex_init(&idev->isr_mutex);
- 
- 	ret = device_property_read_u32(idev->dev, "fifo-size",
- 				       &idev->fifo_size);
+ 	spin_lock_irq(&ctx->completion_lock);
+ 	if (!req_need_defer(req) && list_empty(&ctx->defer_list)) {
 -- 
 2.25.1
 
