@@ -2,178 +2,65 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B19C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 215162077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="iKWRTV0f"
+	by mail.kernel.org (Postfix) with ESMTP id 0B99C207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgFESxL (ORCPT
+        id S1727109AbgFETEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:53:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgFESxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:53:10 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C77C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 11:53:10 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id gl26so11193714ejb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 11:53:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/wXRpz2lO6/EOGfJ7wZsfK0zV1iD673YONFZjRSp4YU=;
-        b=iKWRTV0fZquwi8iYFrkllclkIkc7zyKFSFgwvw7q0Imsb4KMrLzP4VVUhGt1LuBa8T
-         Vw++I+nmdtz98fAE9YJdNN5t+SVzWVZ8qDJO5jU8NN3ZKmONh8Qx4Iu77rQLTQ5uejMZ
-         D0BFVTZYTCtAm3LEA2zTLSO9V57sDTGidb2VhiM2fRaH/37KPY7alcjVDyuS9G8qaPcU
-         vlN2VuZl/iwFq+Q+8fq/Q57B9zZLoWbF/pW2slR7RMoxbdOy3DWBdPx/sQrX5DDjPo6Y
-         phhV46CTXBvrevlVtRXv/trhbz9NqPDDyN4wspBdd6grTMSBSy4kOx1ngMJYHCFJAjJQ
-         66Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/wXRpz2lO6/EOGfJ7wZsfK0zV1iD673YONFZjRSp4YU=;
-        b=Frj0fmNwgBVMEdKe5FmmmL/JXeHqRX4QxvxxbqDPOR9fDjFFZ878OC3lID6GcaJwVg
-         Q4H2pCxqksUGcGD5TNsMm+vrf1k3QTzH0mw+7Tk6hrKJqe7PPflX2FrGiJ8YDUhERmFg
-         gi2ktJaci/NG8biEAaC5UAY03iCuwnKV8v3ZnPmZ3T+KixeYVfEjza0cdCv78EK6m7hC
-         i23VlhBEeiPopiRh+O35sYbkOFfs2qDEFIFmCgOC4aYraG9HbFZBlLG4yYis3lkKIBGG
-         9ZgBSZiPZXr5pEbnWbW7MVtGCnRzTg7uKNkik38CBf9ZxyAVSE9Vfkc5SylJbIqu11Y6
-         kmGA==
-X-Gm-Message-State: AOAM5311FVcpH5UM1DxzQ7iu8qbkRWx4jeXPKwjTz1aFhi03fih/cjSH
-        C1qFSlc+6T6ypf6LpvNthNnLkM88DPmD667lkVPTlQ==
-X-Google-Smtp-Source: ABdhPJxs7csibmk0TeBntMIz0H3+ay+u3BDdAOdGFjfKRP1Y9+NBaeTwCa5nIEk5ZkPdDkGUIIzHH5GRRsX6FrAoLps=
-X-Received: by 2002:a17:906:468e:: with SMTP id a14mr2823668ejr.124.1591383188826;
- Fri, 05 Jun 2020 11:53:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <159062136234.2192412.7285856919306307817.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159062136234.2192412.7285856919306307817.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Jun 2020 11:52:57 -0700
-Message-ID: <CAPcyv4j6QNheK-mmgZ9dTAY_yaX5hU8_wJCpmshJgCxbt8eyOg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] Renovate memcpy_mcsafe with copy_mc_to_{user, kernel}
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Borislav Petkov <bp@alien8.de>,
-        stable <stable@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 5 Jun 2020 15:04:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24698 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbgFETEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 15:04:30 -0400
+IronPort-SDR: 5gXGJKfbZ9le2ln8qvFYnEGCrMn1CsJl0kZDZjdGyDXNtl94WicWhxp3jWFL+Db5wnnGSMIhD1
+ PtLWzIpJRdeg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 12:04:29 -0700
+IronPort-SDR: hIs2PARmVA7t5j4Ut9QpsLkNVPribi9l3YwrsX8M1nZZsPkzIoFjVTkfTjrMTaAEf/4jSxrE1K
+ 35V3+JdKGwEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="273561287"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga006.jf.intel.com with ESMTP; 05 Jun 2020 12:04:26 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH 0/2][RFC] Add more trace point for runtime usage count
+Date:   Sat,  6 Jun 2020 03:05:09 +0800
+Message-Id: <cover.1591380524.git.yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 4:32 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Changes since v4 [1]:
-> - Fix up .gitignore for PowerPC test artifacts (Michael)
->
-> - Collect Michael's Ack.
->
-> [1]: http://lore.kernel.org/r/159010126119.975921.6614194205409771984.stgit@dwillia2-desk3.amr.corp.intel.com
->
-> ---
->
-> The primary motivation to go touch memcpy_mcsafe() is that the existing
-> benefit of doing slow "handle with care" copies is obviated on newer
-> CPUs. With that concern lifted it also obviates the need to continue to
-> update the MCA-recovery capability detection code currently gated by
-> "mcsafe_key". Now the old "mcsafe_key" opt-in to perform the copy with
-> concerns for recovery fragility can instead be made an opt-out from the
-> default fast copy implementation (enable_copy_mc_fragile()).
->
-> The discussion with Linus on the first iteration of this patch
-> identified that memcpy_mcsafe() was misnamed relative to its usage. The
-> new names copy_mc_to_user() and copy_mc_to_kernel() clearly indicate the
-> intended use case and lets the architecture organize the implementation
-> accordingly.
->
-> For both powerpc and x86 a copy_mc_generic() implementation is added as
-> the backend for these interfaces.
->
-> Patches are relative to tip/master.
-
-I have not heard any additional feedback, or seen tip-bot traffic. Is
-this still under consideration for v5.8? The kernel's behavior on new
-platforms regresses without this, recoverable #MC escalates to panic.
+Currentlt some code flow of runtime usage count changes is not covered by 
+the tracepoints. Add corresponding tracepoints to monitor all the usage_count
+changes.
 
 
->
-> ---
->
-> Dan Williams (2):
->       x86, powerpc: Rename memcpy_mcsafe() to copy_mc_to_{user,kernel}()
->       x86/copy_mc: Introduce copy_mc_generic()
->
->
->  arch/powerpc/Kconfig                               |    2
->  arch/powerpc/include/asm/string.h                  |    2
->  arch/powerpc/include/asm/uaccess.h                 |   40 +++--
->  arch/powerpc/lib/Makefile                          |    2
->  arch/powerpc/lib/copy_mc_64.S                      |    4
->  arch/x86/Kconfig                                   |    2
->  arch/x86/Kconfig.debug                             |    2
->  arch/x86/include/asm/copy_mc_test.h                |   75 +++++++++
->  arch/x86/include/asm/mcsafe_test.h                 |   75 ---------
->  arch/x86/include/asm/string_64.h                   |   32 ----
->  arch/x86/include/asm/uaccess.h                     |   21 +++
->  arch/x86/include/asm/uaccess_64.h                  |   20 --
->  arch/x86/kernel/cpu/mce/core.c                     |    8 -
->  arch/x86/kernel/quirks.c                           |    9 -
->  arch/x86/lib/Makefile                              |    1
->  arch/x86/lib/copy_mc.c                             |   64 ++++++++
->  arch/x86/lib/copy_mc_64.S                          |  165 ++++++++++++++++++++
->  arch/x86/lib/memcpy_64.S                           |  115 --------------
->  arch/x86/lib/usercopy_64.c                         |   21 ---
->  drivers/md/dm-writecache.c                         |   15 +-
->  drivers/nvdimm/claim.c                             |    2
->  drivers/nvdimm/pmem.c                              |    6 -
->  include/linux/string.h                             |    9 -
->  include/linux/uaccess.h                            |    9 +
->  include/linux/uio.h                                |   10 +
->  lib/Kconfig                                        |    7 +
->  lib/iov_iter.c                                     |   43 +++--
->  tools/arch/x86/include/asm/mcsafe_test.h           |   13 --
->  tools/arch/x86/lib/memcpy_64.S                     |  115 --------------
->  tools/objtool/check.c                              |    5 -
->  tools/perf/bench/Build                             |    1
->  tools/perf/bench/mem-memcpy-x86-64-lib.c           |   24 ---
->  tools/testing/nvdimm/test/nfit.c                   |   48 +++---
->  .../testing/selftests/powerpc/copyloops/.gitignore |    2
->  tools/testing/selftests/powerpc/copyloops/Makefile |    6 -
->  .../selftests/powerpc/copyloops/copy_mc_64.S       |    1
->  .../selftests/powerpc/copyloops/memcpy_mcsafe_64.S |    1
->  37 files changed, 451 insertions(+), 526 deletions(-)
->  rename arch/powerpc/lib/{memcpy_mcsafe_64.S => copy_mc_64.S} (98%)
->  create mode 100644 arch/x86/include/asm/copy_mc_test.h
->  delete mode 100644 arch/x86/include/asm/mcsafe_test.h
->  create mode 100644 arch/x86/lib/copy_mc.c
->  create mode 100644 arch/x86/lib/copy_mc_64.S
->  delete mode 100644 tools/arch/x86/include/asm/mcsafe_test.h
->  delete mode 100644 tools/perf/bench/mem-memcpy-x86-64-lib.c
->  create mode 120000 tools/testing/selftests/powerpc/copyloops/copy_mc_64.S
->  delete mode 120000 tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
->
-> base-commit: 229aaa8c059f2c908e0561453509f996f2b2d5c4
+Chen Yu (2):
+  PM-runtime: Move all runtime usage related function to runtime.c
+  PM-runtime: add more tracepoints for usage_count changes
+
+ drivers/base/power/runtime.c | 49 +++++++++++++++++++++++++-----------
+ include/linux/pm_runtime.h   | 14 +++--------
+ 2 files changed, 39 insertions(+), 24 deletions(-)
+
+-- 
+2.20.1
+
