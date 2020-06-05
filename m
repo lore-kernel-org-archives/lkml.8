@@ -2,224 +2,181 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D92CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA87206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591396913;
-	bh=+dqh54p7mpKjI0bGIC1Gd/+aKgUlzS+cFoN/jtX/PRc=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=m6xga9TbPk0yJIGV8CzEHWZVPQ/gAc5tccx70UlzoHdfqpeGJ2RugtW2490GZ8oJm
-	 60a0MHEoTptU9rXi5WfJXPGqb+BRKgK7UeLT5Fpy5CsX+lUt6fjOenoEvEN0IF0gIA
-	 agoxUOY0RqqvxxycB4Yv9uKnNA9bXazW153orLWg=
+	by mail.kernel.org (Postfix) with ESMTP id 02299206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgFEWlw (ORCPT
+        id S1728377AbgFEWmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:41:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgFEWlt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:41:49 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA393C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 15:41:47 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id j18so580522lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 15:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Mae4jOlihjfAZDZDhTPFsGOTgOiZjtEf9k7k3F8fM7I=;
-        b=E3W1dtzmFKFhCyu+O5OE4z2hPwO2tZ6sGQvElxznmj+8Ev3u49IP1hB5edjQq4eSlq
-         lsrphGci2bIunBYoxyg0OKawiQn91gGQ7TW12/BDWz/AmP8hoALE+iWwiR0RcmGkQNsd
-         vEDNqnVCDEBUdyc94cJ4cwBO4+YZDASsvOkzc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Mae4jOlihjfAZDZDhTPFsGOTgOiZjtEf9k7k3F8fM7I=;
-        b=I2SzgIX5qrmml9JoY3AyGcl5eLMwlNOtmZVNN2xwg351X6KVP9cihxO+R0BpfC6toV
-         dFIp1x/BxCWc7dIUq4//+bRrVcqsx3Bp8awSN3Xp8vRwCcs4aLtM+6ckugta0JklP9nG
-         1Z45dSDCPJaQpe1NpZMTkSQzXLkIzdBTSn+LF0WCrcyy1+eMMi9jrgrcIzQceDH6d1W0
-         BwLwhC5bPA/B+MeUkByr9a4St5vDAxy6BhWtwqgTSHBF929kDVGH9jCWC3oSIipJil78
-         oIr4OEc+7YNZNOMrf7t0/PZgKz+y0IG2Xwm21fpEBH7B/Ca0mpwnYIrsPCFfrE9r1iXm
-         UleQ==
-X-Gm-Message-State: AOAM530RU5r52WGP5XPNsAAvaK1KCOu9l3abWkTDmFj5BfneaZSLmvvZ
-        e53az9SfUesAQAKJasX+YZxceo9c3fU=
-X-Google-Smtp-Source: ABdhPJy6LQWxUMzaYemv84XfhKuTuF0sPTSazHNSHtGZuojkwnb0aCUVdOpKqyVmtDsVMZhNjlsDyg==
-X-Received: by 2002:a2e:9b4b:: with SMTP id o11mr5661472ljj.407.1591396905543;
-        Fri, 05 Jun 2020 15:41:45 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id c8sm1459415lfc.46.2020.06.05.15.41.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 15:41:44 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id z9so13604822ljh.13
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 15:41:44 -0700 (PDT)
-X-Received: by 2002:a2e:b5d9:: with SMTP id g25mr6109684ljn.285.1591396903743;
- Fri, 05 Jun 2020 15:41:43 -0700 (PDT)
+        Fri, 5 Jun 2020 18:42:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51110 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbgFEWmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 18:42:15 -0400
+IronPort-SDR: 5ZzKNYisRwCwv9n47htYf3j5QcYJrCAkjEFjd1z+x5/0BIujuP8TlCenqZK5qpaN556STjKTwy
+ h4U4mmKMcVrA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 15:42:14 -0700
+IronPort-SDR: 1awNLVZn28bzCXE18oeaLM73kW8zuL4Uorek+FgidFZ+2iNhIEoAuk9JpLxxAtbXjoH546OvzD
+ BXdtwhGP+m9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,478,1583222400"; 
+   d="scan'208";a="348580264"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2020 15:42:14 -0700
+Date:   Fri, 5 Jun 2020 15:42:31 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Brendan Shanks <bshanks@codeweavers.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andreas Rammhold <andi@notmuch.email>,
+        "Moger, Babu" <Babu.Moger@amd.com>
+Subject: Re: [PATCH] x86/umip: Add emulation/spoofing for SLDT and STR
+ instructions
+Message-ID: <20200605224231.GA7466@ranerica-svr.sc.intel.com>
+References: <20200602184212.10813-1-bshanks@codeweavers.com>
+ <20200604001243.GA24742@ranerica-svr.sc.intel.com>
+ <CALCETrXrvNZQUqfjF+-=jh1TMBpdB0PT-8J5wWDO83+i3B5Q1w@mail.gmail.com>
+ <E32838F8-665E-488F-96E4-040DD7BDA284@codeweavers.com>
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 5 Jun 2020 15:41:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj0QUaYcLHKG=_fw65NqhGbqvnU958SkHak9mg9qNwR+A@mail.gmail.com>
-Message-ID: <CAHk-=wj0QUaYcLHKG=_fw65NqhGbqvnU958SkHak9mg9qNwR+A@mail.gmail.com>
-Subject: Hang on wireless removal..
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E32838F8-665E-488F-96E4-040DD7BDA284@codeweavers.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So I think there's something wrong with wireless networking, and
-(likely) in particular turning off wireless. And I think the problem
-came in this merge window, because now my machine hangs on shutdown.
+On Fri, Jun 05, 2020 at 11:58:13AM -0700, Brendan Shanks wrote:
+> 
+> > On Jun 3, 2020, at 9:39 PM, Andy Lutomirski <luto@amacapital.net> wrote:
+> > 
+> > On Wed, Jun 3, 2020 at 5:12 PM Ricardo Neri
+> > <ricardo.neri-calderon@linux.intel.com <mailto:ricardo.neri-calderon@linux.intel.com>> wrote:
+> >> 
+> >> On Tue, Jun 02, 2020 at 11:42:12AM -0700, Brendan Shanks wrote:
+> >>> Add emulation/spoofing of SLDT and STR for both 32- and 64-bit
+> >>> processes.
+> >>> 
+> >>> Wine users have found a small number of Windows apps using SLDT that
+> >>> were crashing when run on UMIP-enabled systems.
+> >>> 
+> >>> Reported-by: Andreas Rammhold <andi@notmuch.email>
+> >>> Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> >>> Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
+> >>> ---
+> >>> arch/x86/kernel/umip.c | 23 ++++++++++++++---------
+> >>> 1 file changed, 14 insertions(+), 9 deletions(-)
+> >>> 
+> >>> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+> >>> index 8d5cbe1bbb3b..59dfceac5cc0 100644
+> >>> --- a/arch/x86/kernel/umip.c
+> >>> +++ b/arch/x86/kernel/umip.c
+> >>> @@ -64,6 +64,8 @@
+> >>> #define UMIP_DUMMY_GDT_BASE 0xfffffffffffe0000ULL
+> >>> #define UMIP_DUMMY_IDT_BASE 0xffffffffffff0000ULL
+> >>> 
+> >>> +#define UMIP_DUMMY_TASK_REGISTER_SELECTOR 0x40
+> >>> +
+> >>> /*
+> >>>  * The SGDT and SIDT instructions store the contents of the global descriptor
+> >>>  * table and interrupt table registers, respectively. The destination is a
+> >>> @@ -244,16 +246,24 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
+> >>>              *data_size += UMIP_GDT_IDT_LIMIT_SIZE;
+> >>>              memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
+> >>> 
+> >>> -     } else if (umip_inst == UMIP_INST_SMSW) {
+> >>> -             unsigned long dummy_value = CR0_STATE;
+> >>> +     } else if (umip_inst == UMIP_INST_SMSW || umip_inst == UMIP_INST_SLDT ||
+> >>> +                umip_inst == UMIP_INST_STR) {
+> >>> +             unsigned long dummy_value;
+> >>> +
+> >>> +             if (umip_inst == UMIP_INST_SMSW)
+> >>> +                     dummy_value = CR0_STATE;
+> >>> +             else if (umip_inst == UMIP_INST_STR)
+> >>> +                     dummy_value = UMIP_DUMMY_TASK_REGISTER_SELECTOR;
+> >>> +             else
+> >>> +                     dummy_value = 0;
+> >> 
+> >> Perhaps you can return a non-zero value for SLDT if it has an LDT, as
+> >> Andy had suggested. Maybe this can be implemented by looking at
+> >> current->mm->context.ldt
+> >> 
+> >> I guess the non-zero value can be (GDT_ENTRY_LDT*8).
+> > 
+> > You could probably even get away with always returning a nonzero
+> > value.  After all, an empty LDT is quite similar to no LDT.
+> 
+> 
+> Is something like this what you both had in mind?
 
-My new desktop is otherwise working fine, but it has some unnecessary
-wireless capability on the motherboard, in the form of a Intel Wi-Fi 6
-AX200 module that I don't use (since I end up using wired gig ethernet
-instead).
+> I don’t have any software handy to test the LDT-present case though.
 
-And while debugging the shutdown hang (symptom: systemd waits forever
-for NetworkManager and WPA supplicant), I turned off the WiFi.
+Perhaps you can insert a test in the kernel selftest. Something like
+this (based on Andreas' test program):
 
-And what do you know, things went all sideways.
+--- a/tools/testing/selftests/x86/ldt_gdt.c
++++ b/tools/testing/selftests/x86/ldt_gdt.c
+@@ -220,12 +220,23 @@ static void install_invalid(const struct user_desc *desc, bool oldmode)
+ 	}
+ }
 
-They went sideways because everything that wants the rtnl lock seems
-to just hang.
++unsigned long test(void)
++{
++	 unsigned char ldtr[5] = "\xef\xbe\xad\xde";
++	 unsigned long ldt = 0;
++	 asm("sldt %0\n" : "=m" (ldtr));
++	 ldt = *((unsigned long *)&ldtr[0]);
++	 printf ("LDT base: 0x%lx\n", ldt);
++	 return (ldt);
++}
++
+ static int safe_modify_ldt(int func, struct user_desc *ptr,
+                           unsigned long bytecount)
+ {
+ 	int ret = syscall(SYS_modify_ldt, 0x11, ptr, bytecount);
+ 	if (ret < -1)
+ 	errno = -ret;
++	test();
+ 	return ret;
+ }
 
-Example:
+Thanks and BR,
+Ricardo
+> 
+> 
+>                 else if (umip_inst == UMIP_INST_STR)
+>                         dummy_value = UMIP_DUMMY_TASK_REGISTER_SELECTOR;
+>                 else if (umip_inst == UMIP_INST_SLDT)
+>                 {
+> #ifdef CONFIG_MODIFY_LDT_SYSCALL
+>                         down_read(&current->mm->context.ldt_usr_sem);
+>                         if (current->mm->context.ldt)
+>                                 dummy_value = GDT_ENTRY_LDT * 8;
+>                         else
+>                                 dummy_value = 0;
+>                         up_read(&current->mm->context.ldt_usr_sem);
+> #else
+>                         dummy_value = 0;
+> #endif
+> 
 
-  kworker/57:2    D    0  1592      2 0x80004080
-  Workqueue: events_power_efficient reg_check_chans_work [cfg80211]
-  Call Trace:
-   __schedule+0x30b/0x4b0
-   ? schedule+0x77/0xa0
-   ? schedule_preempt_disabled+0xa/0x10
-   ? __mutex_lock+0x264/0x410
-   ? psi_group_change+0x44/0x260
-   ? reg_check_chans_work+0x1d/0x300 [cfg80211]
-   ? __switch_to_asm+0x42/0x70
-   ? process_one_work+0x1fa/0x3f0
-   ? worker_thread+0x25d/0x480
-   ? kthread+0x121/0x130
-   ? process_one_work+0x3f0/0x3f0
-   ? kthread_blkcg+0x30/0x30
-   ? ret_from_fork+0x22/0x30
-  kworker/60:2    D    0  1926      2 0x80004000
-  Workqueue: ipv6_addrconf addrconf_verify_work
-  Call Trace:
-   __schedule+0x30b/0x4b0
-   ? schedule+0x77/0xa0
-   ? schedule_preempt_disabled+0xa/0x10
-   ? __mutex_lock+0x264/0x410
-   ? addrconf_verify_work+0xa/0x20
-   ? process_one_work+0x1fa/0x3f0
-   ? worker_thread+0x25d/0x480
-   ? kthread+0x121/0x130
-   ? process_one_work+0x3f0/0x3f0
-   ? kthread_blkcg+0x30/0x30
-   ? ret_from_fork+0x22/0x30
-  NetworkManager  D    0  4329      1 0x00004000
-  Call Trace:
-   __schedule+0x30b/0x4b0
-   ? schedule+0x77/0xa0
-   ? schedule_preempt_disabled+0xa/0x10
-   ? __mutex_lock+0x264/0x410
-   ? __netlink_dump_start+0xa7/0x300
-   ? rtnl_dellink+0x3c0/0x3c0
-   ? rtnetlink_rcv_msg+0x375/0x3d0
-   ? poll_freewait+0x35/0xa0
-   ? do_sys_poll+0x58f/0x5f0
-   ? rtnl_dellink+0x3c0/0x3c0
-   ? __ia32_compat_sys_ppoll_time64+0x120/0x120
-   ? ip_output+0x6a/0xd0
-   ? ip_mc_finish_output+0x120/0x120
-   ? avc_has_perm+0x34/0xa0
-   ? rtnetlink_bind+0x30/0x30
-   ? netlink_rcv_skb+0xfb/0x130
-   ? netlink_unicast+0x1bf/0x2e0
-   ? netlink_sendmsg+0x385/0x410
-   ? __sys_sendto+0x21f/0x230
-   ? move_addr_to_user+0x97/0xc0
-   ? alloc_file_pseudo+0x9b/0xd0
-   ? sock_alloc_file+0xc4/0x100
-   ? __x64_sys_sendto+0x22/0x30
-   ? do_syscall_64+0x5e/0xd0
-   ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+It looks fine to me. Perhaps Andy prefers a simpler, always-non-zero
+implementation?
 
-and perhaps most interestingly, wpa_supplicant is waiting for some of
-those workqueues that are waiting for the lock:
-
-  wpa_supplicant  D    0  2162      1 0x00004000
-  Call Trace:
-   __schedule+0x30b/0x4b0
-   ? schedule+0x77/0xa0
-   ? schedule_timeout+0x22/0x150
-   ? ttwu_queue+0xf4/0x120
-   ? wait_for_common+0xac/0x110
-   ? __flush_work+0x200/0x230
-   ? put_pwq+0x70/0x70
-   ? __cfg80211_unregister_wdev+0x95/0x130 [cfg80211]
-   ? ieee80211_if_remove+0xa3/0xe0 [mac80211]
-   ? ieee80211_del_iface+0xe/0x20 [mac80211]
-   ? rdev_del_virtual_intf+0x2b/0xc0 [cfg80211]
-   ? genl_rcv_msg+0x451/0x570
-   ? genl_unbind+0xb0/0xb0
-   ? netlink_rcv_skb+0xfb/0x130
-   ? genl_rcv+0x24/0x40
-   ? netlink_unicast+0x1bf/0x2e0
-   ? netlink_sendmsg+0x385/0x410
-   ? ____sys_sendmsg+0x26b/0x290
-   ? __sys_sendmsg+0x128/0x180
-   ? selinux_socket_setsockopt+0xc3/0xd0
-   ? __cgroup_bpf_run_filter_setsockopt+0x99/0x290
-   ? netlink_setsockopt+0x38/0x4d0
-   ? __sys_setsockopt+0x11b/0x1b0
-   ? do_syscall_64+0x5e/0xd0
-   ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-which explains why systemd waits for that one too.
-
-So something seems to have never released the rtnl lock.
-
-In fact, I suspect it's exactly that wpa_supplicant itself that
-deadlocks on it and holds the rntl lock while it does that
-"flush_work()". Which in turn waits for things to go away, but they'll
-never go away because they need the rtnl lock. That wpa_supplicant is
-holding.
-
-If I were a betting man, I'd suspect it's due to commit 6cd536fe62ef
-("cfg80211: change internal management frame registration API"), which
-seems to move that
-
-        flush_work(&wdev->mgmt_registrations_update_wk);
-
-into __cfg80211_unregister_wdev(). But honestly, that's just a guess.
-
-I'd bisect this and verify things, but I'm really hoping I don't have to.
-
-I still have a number of pull requests for the merge window, so
-instead I'm sending this email out with my current guesses, and I hope
-someody will say "Yeah, you're right, the fix is already pending", or
-"No Linus, you're barking up completely the wrong tree, but I think I
-know what the problem is".
-
-Btw, I'm not a networking person, but I have to say, I've seen rtnl
-lock problems enough over time even as an outsider to have grown to
-really hate that thing. Am I wrong? It really seems to get involved
-much too much, and held in really awkward places.
-
-Am I wrong?
-
-             Linus
+Thanks and BR,
+Ricardo
