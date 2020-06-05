@@ -2,150 +2,237 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A8CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED75C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968F4206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqGNdaF0"
+	by mail.kernel.org (Postfix) with ESMTP id A81BA20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591344155;
+	bh=CoHBeLSQsOKCK9e3iScbJC0JUQmuPB+yRgWT4d8b4gs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LUN71w522ViY5jfAz73zoJzMuj9vFdYT50HCw+pXpL58DmgNcVITc6U4sMDYUZC/v
+	 QuheyMcecMnoN468ymIsK2CErR9QRGZpzl9I9ZTGO/qk0owF5RYI5rjI6Ebb6QjW4/
+	 ZdfPL4h2nRm2PVKDr+QwD41gLqZYDAyJ2kXflSoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgFEIBr (ORCPT
+        id S1726180AbgFEICe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFEIBp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:01:45 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3636C08C5C2;
-        Fri,  5 Jun 2020 01:01:43 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x207so4563290pfc.5;
-        Fri, 05 Jun 2020 01:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CA32MQ/+vRGTpFh4UZx8UcD1pDZn/aqTDePABuFsMhA=;
-        b=SqGNdaF0A6Kq1TcOl0i/w+Mz7gpK3TvBcCVsNXyvakLq/sI1vjH9Gydj55AfUfH9jJ
-         aYs3QqCXt5c3d1k0qq13+K2Uv7JyTxshU0RSzrKBrz5OjsFwkKdnw4sOp603IEyQPiDd
-         89zCC+yqpR029H2Ew2FnHd4D2aGfwn/ByuodHV7MbX0fUOLBcC+L+d0HKpwtalFHrOEB
-         W7zFBO+bNIGPoxHEJ/pt/cjKbfnFtArfKZN1q4p+7CwBZixuqzsXECf0yASthSfR1qP4
-         x6e0fswV/QzEtzr5wGL8Fg0je0o+1sIX9ltX0sGRUyXhtDgaDVshsZ/AE8O/vX1i2sQc
-         l3Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CA32MQ/+vRGTpFh4UZx8UcD1pDZn/aqTDePABuFsMhA=;
-        b=tQhZBL41IM3w8TpWbrNo0thO3xjQCM4/3bS4TtQRkQmPR7DCXghWYcx/tMs1Nw+Hlq
-         ClCkVI3+Xo7cO3ng4pY3g8epbAiKE5K1w/GbllySasXS4xihir76yR49fLC5DWSn2AbR
-         9bIIvg5JX+/WS0pN0xHaOB2fJ+/NUL5/fLOl3o/YvD9VU3D4MFYFIqNfWLAmgJg8b1kA
-         eTUothXbD7HyktMKwUNhMvFyzxeFuohorLl1G3k76owzWOBCtM5KGREJO7UIa8mOKgTu
-         oTqO/qi5ErEPala2uj7tBphNY3Pz0FQxbg8+LkfdfXqGMUL5kY4huJsfiX3/p6aIueox
-         pfBA==
-X-Gm-Message-State: AOAM530UkXph9iB3w0lE27/d0XFD3yd9QOFJw/PhYnexb02TgxXEwJAO
-        H3IKwZkaMAwiEKTWYRzI5p3/iOcxtPrZLyroYBg=
-X-Google-Smtp-Source: ABdhPJxS0gxAXwoiIs/HAxam4Ku1ew3smVf/6LQ9gSPZd/jo5uG/q2I+R8nedzrqQ5RR62x1rVChLyZKWcKjSc0zh2k=
-X-Received: by 2002:a62:1792:: with SMTP id 140mr8576341pfx.36.1591344103178;
- Fri, 05 Jun 2020 01:01:43 -0700 (PDT)
+        Fri, 5 Jun 2020 04:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgFEICd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:02:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5698F206E6;
+        Fri,  5 Jun 2020 08:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591344151;
+        bh=CoHBeLSQsOKCK9e3iScbJC0JUQmuPB+yRgWT4d8b4gs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=stGKkPV722UeONEGXfEv2y787Ta/WZWF2yhccvfSP7ncJJr/f7lSI9+/KjwqeeCcP
+         VSpMi4eQ1r7LYHitD0hIo7+ML6XptTjgZV/zOhD8SkqokxSO9tbJ9O60UJZQu96oT+
+         c6i5GWQMsO4ervgj3MrYCu8uUjTaM4Vdwczx1VrU=
+Date:   Fri, 5 Jun 2020 10:02:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200605080229.GC2209311@kroah.com>
+References: <CACK8Z6F3jE-aE+N7hArV3iye+9c-COwbi3qPkRPxfrCnccnqrw@mail.gmail.com>
+ <20200601232542.GA473883@bjorn-Precision-5520>
+ <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com>
+ <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
-In-Reply-To: <20200604211039.12689-3-michael@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 11:01:26 +0300
-Message-ID: <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
->
-> Add the core support for the board management controller found on the
-> SMARC-sAL28 board. It consists of the following functions:
->  - watchdog
->  - GPIO controller
->  - PWM controller
->  - fan sensor
->  - interrupt controller
->
-> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
->
-> Please note that the MFD driver is defined as bool in the Kconfig
-> because the next patch will add interrupt support.
+On Thu, Jun 04, 2020 at 12:38:18PM -0700, Rajat Jain wrote:
+> Hello,
+> 
+> I spent some more thoughts into this...
+> 
+> On Wed, Jun 3, 2020 at 5:16 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Jun 03, 2020 at 04:51:18AM -0700, Rajat Jain wrote:
+> > > Hello,
+> > >
+> > > >
+> > > > > Thanks for the pointer! I'm still looking at the details yet, but a
+> > > > > quick look (usb_dev_authorized()) seems to suggest that this API is
+> > > > > "device based". The multiple levels of "authorized" seem to take shape
+> > > > > from either how it is wired or from userspace choice. Once authorized,
+> > > > > USB device or interface is authorized to be used by *anyone* (can be
+> > > > > attached to any drivers). Do I understand it right that it does not
+> > > > > differentiate between drivers?
+> > > >
+> > > > Yes, and that is what you should do, don't fixate on drivers.  Users
+> > > > know how to control and manage devices.  Us kernel developers are
+> > > > responsible for writing solid drivers and getting them merged into the
+> > > > kernel tree and maintaining them over time.  Drivers in the kernel
+> > > > should always be trusted, ...
+> > >
+> > > 1) Yes, I agree that this would be ideal, and this should be our
+> > > mission. I should clarify that I may have used the wrong term
+> > > "Trusted/Certified drivers". I didn't really mean that the drivers may
+> > > be malicious by intent. What I really meant is that a driver may have
+> > > an attack surface, which is a vulnerability that may be exploited.
+> >
+> > Any code has such a thing, proving otherwise is a tough problem :)
+> >
+> > > Realistically speaking, finding vulnerabilities in drivers, creating
+> > > attacks to exploit them, and fixing them is a never ending cat and
+> > > mouse game. At Least "identifying the vulnerabilities" part is better
+> > > performed by security folks rather than driver writers.
+> >
+> > Are you sure about that?  It's hard to prove a negative :)
+> >
+> > > Earlier in the
+> > > thread I had mentioned certain studies/projects that identified and
+> > > exploited such vulnerabilities in the drivers. I should have used the
+> > > term "Vetted Drivers" maybe to convey the intent better - drivers that
+> > > have been vetted by a security focussed team (admin). What I'm
+> > > advocating here is an administrator's right to control the drivers
+> > > that he wants to allow for external ports on his systems.
+> >
+> > That's an odd thing, but sure, if you want to write up such a policy for
+> > your systems, great.  But that policy does not belong in the kernel, it
+> > belongs in userspace.
+> >
+> > > 2) In addition to the problem of driver negligences / vulnerabilities
+> > > to be exploited, we ran into another problem with the "whitelist
+> > > devices only" approach. We did start with the "device based" approach
+> > > only initially - but quickly realized that anything we use to
+> > > whitelist an external device can only be based on the info provided by
+> > > *that device* itself. So until we have devices that exchange
+> > > certificates with kernel [1], it is easy for a malicious device to
+> > > spoof a whitelisted device (by presenting the same VID:DID or any
+> > > other data that is used by us to whitelist it).
+> > >
+> > > [1] https://www.intel.com/content/www/us/en/io/pci-express/pcie-device-security-enhancements-spec.html
+> > >
+> > > I hope that helps somewhat clarify how / why we reached here?
+> >
+> > Kind of, I still think all you need to do is worry about controling the
+> > devices and if a driver should bind to it or not.  Again, much like USB
+> > has been doing for a very long time now.  The idea of "spoofing" ids
+> > also is not new, and has been around for a very long time as well, and
+> > again, the controls that the USB core gives you allows you to make any
+> > type of policy decision you want to, in userspace.
+> 
+> Er, *currently* it doesn't allow the userspace to make the particular
+> policy I want to, right? Specifically, today an administrator can not
+> control which USB *drivers* he wants to allow on an *external* USB
+> port.
 
-...
+Not true, you can do that today with the explicit binding/unbinding of
+devices to drivers in userspace.  Been there for many decades :)
 
-> +config MFD_SL28CPLD
-> +       bool "Kontron sl28 core driver"
-> +       depends on I2C=y
+But, think this through, since when do you have _multiple_ drivers that
+have support to control the same type of device?  We almost never allow
+that in the kernel today as that way lies madness (no heiarchy of
+drivers to bind to what devices and so on.)
 
-Why not module?
+We always strive to keep a one-to-one mapping of "this device is only
+allowed to be controlled by this one driver" today, why would you want
+to change that basic premise now?
 
-> +       depends on OF
+> He can only control which USB devices he wants to authorize, but
+> once authorized, they are free to bind to any of the USB drivers.
 
-I didn't find an evidence this is needed.
+Since when do different drivers control the same type of USB device?  :)
 
-No Compile Test?
+> So if I want to allow the administrator to implement a policy that
+> allows him to control the drivers for external ports, we'll need to
+> enhance the current code (whether we want to do it specific to a bus,
+> or more generically in the driver core). Are we on the same page?
+> 
+> To implement the policy that I want to in the driver core, what is
+> missing today in driver core is a distinction between "internal" and
+> "external" devices. Some buses have this knowledge locally today (PCI
+> has "untrusted" flag which can be used, USB uses hcd->wireless and
+> hub->port->connect_type) but it is not shared with the core.
 
-> +       select REGMAP_I2C
-> +       select MFD_CORE
+Note the wireless USB code should now be gone from the tree.  If you see
+any remants of it floating around, let me know and I will remove them, I
+think there might be a few bits left that I missed.
 
-...
+> So just to make sure if I'm thinking in the right direction, this is
+> what I'm thinking:
+> 
+> 1) The device core needs a notion of internal vs external devices (a
+> flag) - a knowledge that needs to be filled in by the bus as it
+> discovers the device.
 
-> +#include <linux/of_platform.h>
+Nope, don't go down this path.  We tried to do this for USB where the
+BIOS tells us that a device is "internal" vs. "external" but in reality,
+BIOSes get this wrong and it's not always all that useful.
 
-No evidence of user of this.
-I think you meant mod_devicetable.h.
+And why would you somehow "trust" a device that is in your system more
+than one is not?  The same driver binds to it no matter what (as I state
+above), so you should be able to trust it the same.
 
-...
+> 2) The driver core needs to allow an admin to provide a whitelist of
+> drivers for external devices. (Via Command line or a driver flag.
+> Default = everything is whitelisted).
 
-> +static struct i2c_driver sl28cpld_driver = {
-> +       .probe_new = sl28cpld_probe,
-> +       .driver = {
-> +               .name = "sl28cpld",
-> +               .of_match_table = of_match_ptr(sl28cpld_of_match),
+Again, nope, no difference, see above.
 
-Drop of_match_ptr(). It has a little sense in this context (depends OF).
-It will have a little sense even if you drop depends OF b/c you will
-introduce a compiler warning.
+> 3) While matching a driver to a device, the driver core needs to
+> impose the whitelist if the device is external, and if the
+> administrator has provided a whitelist.
 
-> +       },
-> +};
+Ick, no, again, work on a per-device authorized setting.  That way it
+works the same all across the system.  Don't get stuck in a "external
+vs. internal" discussion as this will get messy really quickly (think
+about "internal" devices with "external" links to them like PCI
+"drawers" of devices that we currently support on large systems.  Or
+things like thunderbolt hubs with "internal" devices like I have on my
+desktop right now.
 
+In summary, if a driver is "trusted enough" to control an internal
+device, it should be "trusted enough" to control an external device.  If
+not, then fix that driver so that you do "trust" it.
 
--- 
-With Best Regards,
-Andy Shevchenko
+thanks,
+
+greg k-h
