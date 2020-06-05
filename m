@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C869C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C8CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC8F207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1B6207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360003;
-	bh=sXl+Ns5JOxqJylekxpc8ie6/U3eKfS139lWdkI5jD24=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xKwpB7U/QU163zZw3ovJwtWUh5NeaEEG2/AzoawsX9x1MCJUGjbPXu8mu03qEBTS+
-	 8vqpk8IBluGeSHBv75Z48NYd7eXN3c4yMEVPfXLc3sRiWg7Hdx4Vouyd+PudBtwR5C
-	 Zo0GlOKjvLTjidK9sztjDeKwC5vj/KVDxAMX8SnQ=
+	s=default; t=1591360011;
+	bh=j8orNAunIxSQ9ASqeWQkBMcYcmKFIItuzSrFfN+nvrk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Hn+kpISAQUHHj2czhWgZoELSYDBlyoGwflWPKhUO+o3RC1BWOJSys7rKtOCY6wKF/
+	 yOaggVW3Q0mpf8XTie8lNZjA4nISti3ezHWV7uVCuCDD9FljKQfI8ZHG0UEYQckDOi
+	 AC8aCS3RVZxhqGXNYamKfZ44hYJVfKcuk5WvOdwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgFEM0m (ORCPT
+        id S1727923AbgFEM0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58856 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727855AbgFEM0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:26:31 -0400
+        id S1727860AbgFEM0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178E1207D5;
-        Fri,  5 Jun 2020 12:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 516BE207F9;
+        Fri,  5 Jun 2020 12:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359990;
-        bh=sXl+Ns5JOxqJylekxpc8ie6/U3eKfS139lWdkI5jD24=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iA7U3/rt2hwBaF2UX9iu1aSOCOcGXWzguDdaKakle2C2UdcyleRInJNl9IHnOp73t
-         RDsEZqrZwEetQQkEbw6goPaCLse5D6qnnDGv96gMGnuiJ02ot70utwuHy9hrNfJqvg
-         L+tXTC9/VQ/NTBcr/VYTqzSsUvKf3mDXQy9bBYoQ=
+        s=default; t=1591359993;
+        bh=j8orNAunIxSQ9ASqeWQkBMcYcmKFIItuzSrFfN+nvrk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xWE1A0AFwSc8BvI+35RJYlnPEm6X9+wHTVsTVjtip0ES+wj+/mac/pf+BFMFLTspm
+         iIyfDE+EBtFO4d3jQkZiAAd3uz8CrCu1HNrRq04vEyiVEzY0/aIRW4gRRnsaAew8mS
+         aKTxPZov91Ss4ZC2OlHp64gJE0S9uFY+G3mkc8hs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fredrik Strupe <fredrik@strupe.net>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 1/3] ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
-Date:   Fri,  5 Jun 2020 08:26:26 -0400
-Message-Id: <20200605122629.2883065-1-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 3/3] NFC: st21nfca: add missed kfree_skb() in an error path
+Date:   Fri,  5 Jun 2020 08:26:28 -0400
+Message-Id: <20200605122629.2883065-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200605122629.2883065-1-sashal@kernel.org>
+References: <20200605122629.2883065-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,51 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Strupe <fredrik@strupe.net>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 3866f217aaa81bf7165c7f27362eee5d7919c496 ]
+[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
 
-call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
-and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
-(0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
-instructions will be masked out. This makes the function match 32-bit
-thumb instructions where the second half-word is equal to instr_val,
-regardless of the first half-word.
+st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
+Add the missed function call to fix it.
 
-The result in this case is that all undefined 32-bit thumb instructions
-with the second half-word equal to 0xde01 (udf #1) work as breakpoints
-and will raise a SIGTRAP instead of a SIGILL, instead of just the one
-intended 16-bit instruction. An example of such an instruction is
-0xeaa0de01, which is unallocated according to Arm ARM and should raise a
-SIGILL, but instead raises a SIGTRAP.
-
-This patch fixes the issue by setting all the bits in instr_mask, which
-will still match the intended 16-bit thumb instruction (where the
-upper half is always 0), but not any 32-bit thumb instructions.
-
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ptrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nfc/st21nfca/dep.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index d54c53b7ab63..711d854ea13a 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -227,8 +227,8 @@ static struct undef_hook arm_break_hook = {
- };
+diff --git a/drivers/nfc/st21nfca/dep.c b/drivers/nfc/st21nfca/dep.c
+index 798a32bbac5d..e023a679bdea 100644
+--- a/drivers/nfc/st21nfca/dep.c
++++ b/drivers/nfc/st21nfca/dep.c
+@@ -184,8 +184,10 @@ static int st21nfca_tm_send_atr_res(struct nfc_hci_dev *hdev,
+ 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
+ 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
+ 						  gb_len);
+-		if (r < 0)
++		if (r < 0) {
++			kfree_skb(skb);
+ 			return r;
++		}
+ 	}
  
- static struct undef_hook thumb_break_hook = {
--	.instr_mask	= 0xffff,
--	.instr_val	= 0xde01,
-+	.instr_mask	= 0xffffffff,
-+	.instr_val	= 0x0000de01,
- 	.cpsr_mask	= PSR_T_BIT,
- 	.cpsr_val	= PSR_T_BIT,
- 	.fn		= break_trap,
+ 	info->dep_info.curr_nfc_dep_pni = 0;
 -- 
 2.25.1
 
