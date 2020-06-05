@@ -2,142 +2,216 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00048C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB9FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3E8E2065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E912065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U+K1MK30"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ppjkq+9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgFEMmw (ORCPT
+        id S1726856AbgFEMm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:42:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33110 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgFEMmv (ORCPT
+        Fri, 5 Jun 2020 08:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbgFEMm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:42:51 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 055Cgjed040494;
-        Fri, 5 Jun 2020 07:42:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591360965;
-        bh=oT1gIBxDDUEHLfBPD+U2tTYn+54H+gzmNsjUa42oJTI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=U+K1MK30/03I0t/wRyi73OF265yw11zdP54ULxAbvMhKNLkLMsnNAlWiYA0H7vLqi
-         MMzFsMl4Qd41UpXPE/e7DKIWGrS0Wh35/tRJXe7OVNRGxxSc6bNJMdiKEg/ABI7Gvk
-         6rx1gjhrlvHjXJm+bNvaHMBF6MXSy8C3GJX3whOg=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 055CgjWU068954
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 Jun 2020 07:42:45 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 5 Jun
- 2020 07:42:45 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 5 Jun 2020 07:42:45 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 055Cgi4D020074;
-        Fri, 5 Jun 2020 07:42:45 -0500
-Subject: Re: [PATCH v26 01/15] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Rob Herring <robh@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200604120504.32425-2-dmurphy@ti.com> <20200604224026.GA4153787@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <8b32231a-90d8-258e-d828-362af8cbfbb5@ti.com>
-Date:   Fri, 5 Jun 2020 07:42:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 08:42:58 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2623C08C5C2;
+        Fri,  5 Jun 2020 05:42:57 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3389822FEC;
+        Fri,  5 Jun 2020 14:42:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591360973;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V/2TzxsPSlfyINNO8TTfnGs1HicX0u51iSKBI+ftYOE=;
+        b=ppjkq+9sTLA7e0BVJjM/uHM60R+cDCBYYMmhqDwQNcUvU9b7+pKRcr03C7m5x0zjrB3ziF
+        YWsz9DFPvrHEqnF8RKJ1y+mHfSEf3iFURJD8DMeRu/20zVMLDC7Y4IGTLAjYc4Il/lkiaE
+        DPx5ggCjNo0+Q9tyOM36Ky+mQkjuEFI=
 MIME-Version: 1.0
-In-Reply-To: <20200604224026.GA4153787@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Fri, 05 Jun 2020 14:42:53 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO
+ controller
+In-Reply-To: <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-7-michael@walle.cc>
+ <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <216db3154b46bd80202873df055bb3f3@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+Am 2020-06-05 14:00, schrieb Andy Shevchenko:
+> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+> 
+>> Add support for the GPIO controller of the sl28 board management
+>> controller. This driver is part of a multi-function device.
+>> 
+>> A controller has 8 lines. There are three different flavors:
+>> full-featured GPIO with interrupt support, input-only and output-only.
+> 
+> ...
+> 
+>> +#include <linux/of_device.h>
+> 
+> I think also not needed.
+> But wait...
+> 
+>> +       return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev), 
+>> regmap,
+> 
+> It seems regmap needs to be converted to use fwnode.
 
-On 6/4/20 5:40 PM, Rob Herring wrote:
-> On Thu, Jun 04, 2020 at 07:04:50AM -0500, Dan Murphy wrote:
->> Add DT bindings for the LEDs multicolor class framework.
->> Add multicolor ID to the color ID list for device tree bindings.
->>
->> CC: Rob Herring <robh@kernel.org>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/leds/leds-class-multicolor.yaml  | 39 +++++++++++++++++++
->>   include/dt-bindings/leds/common.h             |  3 +-
->>   2 files changed, 41 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
->> new file mode 100644
->> index 000000000000..6cab2a1405e1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
->> @@ -0,0 +1,39 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+Mhh, this _np functions was actually part of this series in the
+beginning.
+
+>> +                                          irq, IRQF_SHARED | 
+>> IRQF_ONESHOT, 0,
+>> +                                          irq_chip, &gpio->irq_data);
+> 
+> ...
+> 
+>> +       if (!pdev->dev.parent)
+>> +               return -ENODEV;
+> 
+> Are we expecting to get shot into foot? I mean why we need this check?
+
+Can we be sure, that we always have a parent node? You are the first
+which complains about this ;) There were some other comments to move
+this to the beginning of the function.
+
+> 
+>> +       dev_id = platform_get_device_id(pdev);
+>> +       if (dev_id)
+>> +               type = dev_id->driver_data;
+> 
+> Oh, no. In new code we don't need this. We have facilities to provide
+> platform data in a form of fwnode.
+
+Ok I'll look into that.
+
+But I already have a question, so there are of_property_read_xx(), which
+seems to be the old functions, then there is device_property_read_xx() 
+and
+fwnode_property_read_xx(). What is the difference between the latter 
+two?
+
+> 
+>> +       else
+>> +               type = 
+>> (uintptr_t)of_device_get_match_data(&pdev->dev);
+> 
+> So does this. device_get_match_data().
+ok
+
+> 
+>> +       if (!type)
+>> +               return -ENODEV;
+> 
+> ...
+> 
+>> +       if (irq_support &&
+> 
+> Why do you need this flag? Can't simple IRQ number be sufficient?
+
+I want to make sure, the is no misconfiguration. Eg. only GPIO
+flavors which has irq_support set, have the additional interrupt
+registers.
+
+> 
+>> +           device_property_read_bool(&pdev->dev, 
+>> "interrupt-controller")) {
+>> +               irq = platform_get_irq(pdev, 0);
+>> +               if (irq < 0)
+>> +                       return irq;
 >> +
->> +title: Common properties for the multicolor LED class.
+>> +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
+>> +                                            base, irq);
+>> +               if (ret)
+>> +                       return ret;
 >> +
->> +maintainers:
->> +  - Dan Murphy <dmurphy@ti.com>
->> +
->> +description: |
->> +  Bindings for multi color LEDs show how to describe current outputs of
->> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
->> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
->> +  modules. This is achieved by adding multi-led nodes layer to the
->> +  monochrome LED bindings.
->> +  The nodes and properties defined in this document are unique to the multicolor
->> +  LED class.  Common LED nodes and properties are inherited from the common.txt
->> +  within this documentation directory.
->> +
->> +patternProperties:
->> +  "^multi-led@([0-9a-f])$":
->> +    type: object
->> +    description: Represents the LEDs that are to be grouped.
->> +    properties:
->> +      #allOf:
->> +        #- $ref: "common.yaml#"
-> Why is this commented out? Other than it is wrong. Uncommented, this
-> would be defining a DT property called 'allOf'.
->
-> You can drop 'allOf' now. '$ref' should be at the level of 'properties'.
+>> +               config.irq_domain = 
+>> regmap_irq_get_domain(gpio->irq_data);
+>> +       }
+> 
+> ...
+> 
+>> +static const struct of_device_id sl28cpld_gpio_of_match[] = {
+> 
+>> +       { .compatible = "kontron,sl28cpld-gpio",
+>> +         .data = (void *)SL28CPLD_GPIO },
+>> +       { .compatible = "kontron,sl28cpld-gpi",
+>> +         .data = (void *)SL28CPLD_GPI },
+>> +       { .compatible = "kontron,sl28cpld-gpo",
+>> +         .data = (void *)SL28CPLD_GPO },
+> 
+> All above can be twice less LOCs.
 
-I used the example from the rohm,bd71828-leds.yaml where these lines appear.
+They are longer than 80 chars. Or do I miss something?
 
-So that binding is wrong as well.
+> 
+>> +       {},
+> 
+> No comma.
 
->> +
->> +      color:
->> +        $ref: /schemas/types.yaml#definitions/uint32
-> common.yaml already defines the type, so drop this.
+ok
 
-OK
+>> +};
+> 
+> 
+> ...
+> 
+>> +               .name = KBUILD_MODNAME,
+> 
+> This actually not good idea in long term. File name can change and 
+> break an ABI.
 
-Dan
+Ahh an explanation, why this is bad. Ok makes sense, although to be 
+fair,
+.id_table should be used for the driver name matching. I'm not sure if
+this is used somewhere else, though.
 
+
+-- 
+-michael
