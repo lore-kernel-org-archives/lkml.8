@@ -2,159 +2,141 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8226AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 678692074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A38206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:40:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bMinaiap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgFEDgF (ORCPT
+        id S1728407AbgFEDk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:36:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:50340 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgFEDgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:36:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 419201FB;
-        Thu,  4 Jun 2020 20:36:04 -0700 (PDT)
-Received: from [10.163.77.89] (unknown [10.163.77.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 291A13F52E;
-        Thu,  4 Jun 2020 20:36:00 -0700 (PDT)
-Subject: Re: [PATCH V2] mm/vmstat: Add events for THP migration without split
-To:     Zi Yan <ziy@nvidia.com>, Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, hughd@google.com, daniel.m.jordan@oracle.com,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-References: <1591243245-23052-1-git-send-email-anshuman.khandual@arm.com>
- <20200604113421.GU19604@bombadil.infradead.org>
- <CBF71911-6BB7-4AA7-AC0F-95AADBB45569@nvidia.com>
- <20200604163657.GV19604@bombadil.infradead.org>
- <2735DD7E-0DBF-428B-AAD8-FC6DAAA9CB1E@nvidia.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <9e4acb98-c9fd-a998-03b3-38947cf61bd9@arm.com>
-Date:   Fri, 5 Jun 2020 09:05:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 4 Jun 2020 23:40:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28087 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726076AbgFEDk2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 23:40:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591328426;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W+XRm7Fs7zNlH2EKv4SYh8NMSzGAObCRW7/zCrf8kTM=;
+        b=bMinaiappCB0rQc0Seywa3/cVkuzqVzgZOHZhSWQYCSkZ81iRslS8kNSRBSGKgQPcCx3Eu
+        gHHK9CiCuq2raB5URMZCpac6lqycim7AIT742YFDBVZhE+poHPc5vekg0QfB/DIc6sNCgl
+        vs8r/qfW+iKVf6IEabXSwJEbgFg5uds=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-WjnfLQgyPAadytx9KbfT2Q-1; Thu, 04 Jun 2020 23:40:24 -0400
+X-MC-Unique: WjnfLQgyPAadytx9KbfT2Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD756100960F;
+        Fri,  5 Jun 2020 03:40:23 +0000 (UTC)
+Received: from [10.72.12.233] (ovpn-12-233.pek2.redhat.com [10.72.12.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D3AE45C290;
+        Fri,  5 Jun 2020 03:40:18 +0000 (UTC)
+Subject: Re: [PATCH RFC 03/13] vhost: batching fetches
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-4-mst@redhat.com>
+ <3323daa2-19ed-02de-0ff7-ab150f949fff@redhat.com>
+ <20200604045830-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6c2e6cc7-27c5-445b-f252-0356ff8a83f3@redhat.com>
+Date:   Fri, 5 Jun 2020 11:40:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <2735DD7E-0DBF-428B-AAD8-FC6DAAA9CB1E@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200604045830-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2020/6/4 下午4:59, Michael S. Tsirkin wrote:
+> On Wed, Jun 03, 2020 at 03:27:39PM +0800, Jason Wang wrote:
+>> On 2020/6/2 下午9:06, Michael S. Tsirkin wrote:
+>>> With this patch applied, new and old code perform identically.
+>>>
+>>> Lots of extra optimizations are now possible, e.g.
+>>> we can fetch multiple heads with copy_from/to_user now.
+>>> We can get rid of maintaining the log array.  Etc etc.
+>>>
+>>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+>>> Signed-off-by: Eugenio Pérez<eperezma@redhat.com>
+>>> Link:https://lore.kernel.org/r/20200401183118.8334-4-eperezma@redhat.com
+>>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+>>> ---
+>>>    drivers/vhost/test.c  |  2 +-
+>>>    drivers/vhost/vhost.c | 47 ++++++++++++++++++++++++++++++++++++++-----
+>>>    drivers/vhost/vhost.h |  5 ++++-
+>>>    3 files changed, 47 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+>>> index 9a3a09005e03..02806d6f84ef 100644
+>>> --- a/drivers/vhost/test.c
+>>> +++ b/drivers/vhost/test.c
+>>> @@ -119,7 +119,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
+>>>    	dev = &n->dev;
+>>>    	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+>>>    	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+>>> -	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
+>>> +	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
+>>>    		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
+>>>    	f->private_data = n;
+>>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+>>> index 8f9a07282625..aca2a5b0d078 100644
+>>> --- a/drivers/vhost/vhost.c
+>>> +++ b/drivers/vhost/vhost.c
+>>> @@ -299,6 +299,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+>>>    {
+>>>    	vq->num = 1;
+>>>    	vq->ndescs = 0;
+>>> +	vq->first_desc = 0;
+>>>    	vq->desc = NULL;
+>>>    	vq->avail = NULL;
+>>>    	vq->used = NULL;
+>>> @@ -367,6 +368,11 @@ static int vhost_worker(void *data)
+>>>    	return 0;
+>>>    }
+>>> +static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
+>>> +{
+>>> +	return vq->max_descs - UIO_MAXIOV;
+>>> +}
+>> 1 descriptor does not mean 1 iov, e.g userspace may pass several 1 byte
+>> length memory regions for us to translate.
+>>
+> Yes but I don't see the relevance. This tells us how many descriptors to
+> batch, not how many IOVs.
 
-On 06/04/2020 10:19 PM, Zi Yan wrote:
-> On 4 Jun 2020, at 12:36, Matthew Wilcox wrote:
-> 
->> On Thu, Jun 04, 2020 at 09:51:10AM -0400, Zi Yan wrote:
->>> On 4 Jun 2020, at 7:34, Matthew Wilcox wrote:
->>>> On Thu, Jun 04, 2020 at 09:30:45AM +0530, Anshuman Khandual wrote:
->>>>> +Quantifying Migration
->>>>> +=====================
->>>>> +Following events can be used to quantify page migration.
->>>>> +
->>>>> +- PGMIGRATE_SUCCESS
->>>>> +- PGMIGRATE_FAIL
->>>>> +- THP_MIGRATION_SUCCESS
->>>>> +- THP_MIGRATION_FAILURE
->>>>> +
->>>>> +THP_MIGRATION_FAILURE in particular represents an event when a THP could not be
->>>>> +migrated as a single entity following an allocation failure and ended up getting
->>>>> +split into constituent normal pages before being retried. This event, along with
->>>>> +PGMIGRATE_SUCCESS and PGMIGRATE_FAIL will help in quantifying and analyzing THP
->>>>> +migration events including both success and failure cases.
->>>>
->>>> First, I'd suggest running this paragraph through 'fmt'.  That way you
->>>> don't have to care about line lengths.
->>>>
->>>> Second, this paragraph doesn't really explain what I need to know to
->>>> understand the meaning of these numbers.  When Linux attempts to migrate
->>>> a THP, one of three things can happen:
->>>>
->>>>  - It is migrated as a single THP
->>>>  - It is migrated, but had to be split
->>>>  - Migration fails
->>>>
->>>> How do I turn these four numbers into an understanding of how often each
->>>> of those three situations happen?  And why do we need four numbers to
->>>> report three situations?
->>>>
->>>> Or is there something else that can happen?  If so, I'd like that explained
->>>> here too ;-)
->>>
->>> PGMIGRATE_SUCCESS and PGMIGRATE_FAIL record a combination of different events,
->>> so it is not easy to interpret them. Let me try to explain them.
->>
->> Thanks!  Very helpful explanation.
->>
->>> 1. migrating only base pages: PGMIGRATE_SUCCESS and PGMIGRATE_FAIL just mean
->>> these base pages are migrated and fail to migrate respectively.
->>> THP_MIGRATION_SUCCESS and THP_MIGRATION_FAILURE should be 0 in this case.
->>> Simple.
->>>
->>> 2. migrating only THPs:
->>> 	- PGMIGRATE_SUCCESS means THPs that are migrated and base pages
->>> 	(from the split of THPs) that are migrated,
->>>
->>> 	- PGMIGRATE_FAIL means THPs that fail to migrate and base pages that fail to migrated.
->>>
->>> 	- THP_MIGRATION_SUCCESS means THPs that are migrated.
->>>
->>> 	- THP_MIGRATION_FAILURE means THPs that are split.
->>>
->>> So PGMIGRATE_SUCCESS - THP_MIGRATION_SUCCESS means the number of migrated base pages,
->>> which are from the split of THPs.
->>
->> Are you sure about that?  If I split a THP and each of those subpages
->> migrates, won't I then see PGMIGRATE_SUCCESS increase by 512?
-> 
-> That is what I mean. I guess my words did not work. I should have used subpages.
-> 
->>
->>> When it comes to analyze failed migration, PGMIGRATE_FAIL - THP_MIGRATION_FAILURE
->>> means the number of pages that are failed to migrate, but we cannot tell how many
->>> are base pages and how many are THPs.
->>>
->>> 3. migrating base pages and THP:
->>>
->>> The math should be very similar to the second case, except that
->>> a) from PGMIGRATE_SUCCESS - THP_MIGRATION_SUCCESS, we cannot tell how many are pages begin
->>> as base pages and how many are pages begin as THPs but become base pages after split;
->>> b) from PGMIGRATE_FAIL - THP_MIGRATION_FAILURE, an additional case,
->>> base pages that begin as base pages fail to migrate, is mixed into the number and we
->>> cannot tell three cases apart.
->>
->> So why don't we just expose PGMIGRATE_SPLIT?  That would be defined as
->> the number of times we succeeded in migrating a THP but had to split it
->> to succeed.
-> 
-> It might need extra code to get that number. Currently, the subpages from split
-> THPs are appended to the end of the original page list, so we might need a separate
-> page list for these subpages to count PGMIGRATE_SPLIT. Also what if some of the
-> subpages fail to migrate? Do we increase PGMIGRATE_SPLIT or not?
 
-Thanks Zi, for such a detailed explanation. Ideally, we should separate THP
-migration from base page migration in terms of statistics. PGMIGRATE_SUCCESS
-and PGMIGRATE_FAIL should continue to track statistics when migration starts
-with base pages. But for THP, we should track the following events.
+Yes, but questions are:
 
-1. THP_MIGRATION_SUCCESS 	- THP migration is successful, without split
-2. THP_MIGRATION_FAILURE 	- THP could neither be migrated, nor be split
-3. THP_MIGRATION_SPLIT_SUCCESS  - THP got split and all sub pages migrated
-4. THP_MIGRATION_SPLIT_FAILURE  - THP got split but all sub pages could not be migrated
+- this introduce another obstacle to support more than 1K queue size
+- if we support 1K queue size, does it mean we need to cache 1K 
+descriptors, which seems a large stress on the cache
 
-THP_MIGRATION_SPLIT_FAILURE could either increment once for a single THP or
-number of subpages that did not get migrated after split. As you mentioned,
-this will need some extra code in the core migration. Nonetheless, if these
-new events look good, will be happy to make required changes.
+Thanks
+
+
+>
+
