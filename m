@@ -2,185 +2,78 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 982C02074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:28:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="PpUpZRWC"
+	by mail.kernel.org (Postfix) with ESMTP id 91B77206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgFES2I (ORCPT
+        id S1726999AbgFESgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:28:08 -0400
-Received: from lists.nic.cz ([217.31.204.67]:56854 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbgFES2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:28:07 -0400
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id 875FE140767;
-        Fri,  5 Jun 2020 20:28:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1591381685; bh=dlzAjrHSLTJlrBksWH6lA6rKTtqWqJwSo5Eax8JDLXM=;
-        h=Date:From:To;
-        b=PpUpZRWC6T+8lG72B+k3PRqRCioHq4vOsnTRii+nnw3jDnFsc3IbD737nBNyibUoK
-         S2xRotPhlwmMObrt8zzhPde91wmAAfhQ7fYHdXevrWL6GGDkSqSKBD8MQktC6Wko5l
-         6ku9krnYLDSbhLbZPvw8yOUTT90Ds/E9u0i1k4Yk=
-Date:   Fri, 5 Jun 2020 20:28:04 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: dsa: qca8k: introduce SGMII configuration
- options
-Message-ID: <20200605202804.1dd78ee8@nic.cz>
-In-Reply-To: <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
-References: <cover.1591380105.git.noodles@earth.li>
-        <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 5 Jun 2020 14:36:03 -0400
+Received: from winnie.ispras.ru ([83.149.199.91]:22679 "EHLO smtp.ispras.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726448AbgFESgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 14:36:02 -0400
+Received: from monopod.intra.ispras.ru (monopod.intra.ispras.ru [10.10.3.121])
+        by smtp.ispras.ru (Postfix) with ESMTP id D0453203BF;
+        Fri,  5 Jun 2020 21:35:56 +0300 (MSK)
+Date:   Fri, 5 Jun 2020 21:35:56 +0300 (MSK)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+cc:     linux-kernel@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>, qperret@google.com,
+        juri.lelli@redhat.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: Re: schedutil issue with serial workloads
+In-Reply-To: <c3145e26-56c8-4979-513c-cfac191e989b@intel.com>
+Message-ID: <alpine.LNX.2.20.13.2006052058560.3984@monopod.intra.ispras.ru>
+References: <alpine.LNX.2.20.13.2006042341160.3984@monopod.intra.ispras.ru> <c3145e26-56c8-4979-513c-cfac191e989b@intel.com>
+User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jun 2020 19:10:58 +0100
-Jonathan McDowell <noodles@earth.li> wrote:
+On Fri, 5 Jun 2020, Rafael J. Wysocki wrote:
 
-> The QCA8337(N) has an SGMII port which can operate in MAC, PHY or BASE-X
-> mode depending on what it's connected to (e.g. CPU vs external PHY or
-> SFP). At present the driver does no configuration of this port even if
-> it is selected.
+> > This sounds like it should be a known problem, but I couldn't find any
+> > mention of it in the documentation.
 > 
-> Add support for making sure the SGMII is enabled if it's in use, and
-> device tree support for configuring the connection details.
-> 
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> ---
->  drivers/net/dsa/qca8k.c | 44 ++++++++++++++++++++++++++++++++++++++++-
->  drivers/net/dsa/qca8k.h | 12 +++++++++++
->  2 files changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-> index 9f4205b4439b..5b7979aca9b9 100644
-> --- a/drivers/net/dsa/qca8k.c
-> +++ b/drivers/net/dsa/qca8k.c
-> @@ -418,6 +418,40 @@ qca8k_mib_init(struct qca8k_priv *priv)
->  	mutex_unlock(&priv->reg_mutex);
->  }
->  
-> +static int
-> +qca8k_setup_sgmii(struct qca8k_priv *priv)
-> +{
-> +	const char *mode;
-> +	u32 val;
-> +
-> +	val = qca8k_read(priv, QCA8K_REG_SGMII_CTRL);
-> +
-> +	val |= QCA8K_SGMII_EN_PLL | QCA8K_SGMII_EN_RX |
-> +		QCA8K_SGMII_EN_TX | QCA8K_SGMII_EN_SD;
-> +
-> +	if (of_property_read_bool(priv->dev->of_node, "sgmii-delay"))
-> +		val |= QCA8K_SGMII_CLK125M_DELAY;
-> +
-> +	if (of_property_read_string(priv->dev->of_node, "sgmii-mode", &mode)) {
-> +		val &= ~QCA8K_SGMII_MODE_CTRL_MASK;
-> +
-> +		if (!strcasecmp(mode, "basex")) {
-> +			val |= QCA8K_SGMII_MODE_CTRL_BASEX;
-> +		} else if (!strcasecmp(mode, "mac")) {
-> +			val |= QCA8K_SGMII_MODE_CTRL_MAC;
-> +		} else if (!strcasecmp(mode, "phy")) {
-> +			val |= QCA8K_SGMII_MODE_CTRL_PHY;
-> +		} else {
-> +			pr_err("Unrecognised SGMII mode %s\n", mode);
-> +			return -EINVAL;
-> +		}
-> +	}
+> Well, what would you expect to happen instead of what you see?
 
-There is no sgmii-mode device tree property documented. You should
-infere this settings from the existing device tree bindings, ie look at
-phy-mode. You can use of_get_phy_mode function, or something from
-of_mdio.c, or better yet change the api in this driver to use the new
-phylink API.
+Not sure why you ask. Named workloads are pretty common for example on
+"build-bot" machines. If you don't work exclusively on the kernel you
+probably recognize that on, let's say, more "traditionally engineered"
+packages ./configure can take 10x more wall-clock time than subsequent
+'make -j $(nproc)', and if schedutil makes the problem worse by
+consistently choosing the lowest possible frequency for the configure
+phase, that's a huge pitfall that's worth fixing or documenting.
 
-Marek
+To answer your question, assuming schedutil is intended to become a good
+choice for a wide range of use-cases, I'd expect it to choose a high
+frequency, ideally the highest, and definitely not the lowest. I think I
+was pretty transparent about that in my initial mail. I understand there
+is no obvious fix and inventing one may prove difficult.
 
+Short term, better Kconfig help text to help people make a suitable choice
+for their workloads would be nice.
 
-> +
-> +	qca8k_write(priv, QCA8K_REG_SGMII_CTRL, val);
-> +
-> +	return 0;
-> +}
-> +
->  static int
->  qca8k_set_pad_ctrl(struct qca8k_priv *priv, int port, int mode)
->  {
-> @@ -458,7 +492,8 @@ qca8k_set_pad_ctrl(struct qca8k_priv *priv, int port, int mode)
->  		break;
->  	case PHY_INTERFACE_MODE_SGMII:
->  		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
-> -		break;
-> +
-> +		return qca8k_setup_sgmii(priv);
->  	default:
->  		pr_err("xMII mode %d not supported\n", mode);
->  		return -EINVAL;
-> @@ -661,6 +696,13 @@ qca8k_setup(struct dsa_switch *ds)
->  	if (ret)
->  		return ret;
->  
-> +	if (of_property_read_bool(priv->dev->of_node,
-> +				  "disable-serdes-autoneg")) {
-> +		mask = qca8k_read(priv, QCA8K_REG_PWS) |
-> +		       QCA8K_PWS_SERDES_AEN_DIS;
-> +		qca8k_write(priv, QCA8K_REG_PWS, mask);
-> +	}
-> +
->  	/* Initialize CPU port pad mode (xMII type, delays...) */
->  	ret = of_get_phy_mode(dsa_to_port(ds, QCA8K_CPU_PORT)->dn, &phy_mode);
->  	if (ret) {
-> diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
-> index 42d6ea24eb14..cd97c212f3f8 100644
-> --- a/drivers/net/dsa/qca8k.h
-> +++ b/drivers/net/dsa/qca8k.h
-> @@ -36,6 +36,8 @@
->  #define   QCA8K_MAX_DELAY				3
->  #define   QCA8K_PORT_PAD_RGMII_RX_DELAY_EN		BIT(24)
->  #define   QCA8K_PORT_PAD_SGMII_EN			BIT(7)
-> +#define QCA8K_REG_PWS					0x010
-> +#define   QCA8K_PWS_SERDES_AEN_DIS			BIT(7)
->  #define QCA8K_REG_MODULE_EN				0x030
->  #define   QCA8K_MODULE_EN_MIB				BIT(0)
->  #define QCA8K_REG_MIB					0x034
-> @@ -77,6 +79,16 @@
->  #define   QCA8K_PORT_HDR_CTRL_ALL			2
->  #define   QCA8K_PORT_HDR_CTRL_MGMT			1
->  #define   QCA8K_PORT_HDR_CTRL_NONE			0
-> +#define QCA8K_REG_SGMII_CTRL				0x0e0
-> +#define   QCA8K_SGMII_EN_PLL				BIT(1)
-> +#define   QCA8K_SGMII_EN_RX				BIT(2)
-> +#define   QCA8K_SGMII_EN_TX				BIT(3)
-> +#define   QCA8K_SGMII_EN_SD				BIT(4)
-> +#define   QCA8K_SGMII_CLK125M_DELAY			BIT(7)
-> +#define   QCA8K_SGMII_MODE_CTRL_MASK			(BIT(22) | BIT(23))
-> +#define   QCA8K_SGMII_MODE_CTRL_BASEX			0
-> +#define   QCA8K_SGMII_MODE_CTRL_PHY			BIT(22)
-> +#define   QCA8K_SGMII_MODE_CTRL_MAC			BIT(23)
->  
->  /* EEE control registers */
->  #define QCA8K_REG_EEE_CTRL				0x100
+I'd also like to point out that current Kconfig is confusingly worded
+where it says "If the utilization is frequency-invariant, ...". It can
+be interpreted as "the workload is producing the same utilization
+irrespective of frequency", but what it actually refers to is the
+implementation detail of how the "utilization" metric is interpreted.
+Does that sentence need to be in Kconfig help at all?
 
+Thanks.
+Alexander
