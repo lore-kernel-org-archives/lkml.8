@@ -2,260 +2,247 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD7EA207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Orors8Un"
+	by mail.kernel.org (Postfix) with ESMTP id A7BDC207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgFEIpw (ORCPT
+        id S1726192AbgFEIrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:45:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgFEIpv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:45:51 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C76C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:45:51 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id s192so2035395vkh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 01:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+jBFtxmml2UF+SqNxby8rCTJfROuy18HbtkfW0zgYb0=;
-        b=Orors8UnFs80EJIYP/KDavj+8S/RsPvJBh7SCISTksRVf7f4rAH/P560wXs2u/J6az
-         pLlDexOhDBMkt79w0+ofS3+f4xcnBuNUhq+c++wVjsKLE1jc5jzPMaU0ntxEv+VzpJOW
-         vf8JZ3z/GSdXQ73Dm2tMH7Uo3c+Gq7BR3tCL+JQ+cN4dWgw5MjGAhxYtxejR0Prd6iY+
-         6ZZkJcm1wr02Z6nmkyy0QuByc8wAJurm3MPsvINFpfalEBb4ZT0kmHOLA4rt4yqs3noY
-         8LqBEZLRANgp5WuxTDJkI3EjW/LX6Dr9+1sGkp9NrHS5iOhMpbnO8xzAXaW0orSU4N+3
-         p7ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+jBFtxmml2UF+SqNxby8rCTJfROuy18HbtkfW0zgYb0=;
-        b=RjFF93y41aeEUBOn5YTzbOA3yltEF+PVG+JSiVFC0S8InZ9FEBvEsR6cesQK0VXrFf
-         F6uLSrhr5Fc2fUkTyDPU/qzDzD5tz0k7JPqKoM8+K0/Bnsv3A3VdZn2u/fLJ1BDjXWji
-         BeL/gAswFgrIwHKK/rP6mMPtHedDY2lmpER5sNOFAGB1dXVyiZ8GK6waGlRGjFy5tsOt
-         CKMDKWMpxyQjJzar3gM25jaNc2n7f1nC0LcVtOhThQa2ZQmCtaCjlef24Rcjt/sxtxBu
-         +dUCxWjRZYfEx5pof5mMdeWiBgnVoJ/lBwlHOD3u5Y1mH26BL/e/wLFefrqSSnj6kqus
-         Fdxg==
-X-Gm-Message-State: AOAM5338JKrFEPJ2d65X6YyN4md6GRdms/zHa8T9zajJPvyzGqqsPICc
-        liB8GrnezAKuYGH+pe0SQnQjnVCyeMtydupMpK+LfA==
-X-Google-Smtp-Source: ABdhPJzmvRHbvh3nZTnE3simXC96ekcS+Ch2AtnIE3Svbty3w/cPWX4iVpb084QbaBYoV7z9md14B6vaSVk2SSa/NyY=
-X-Received: by 2002:a1f:cf03:: with SMTP id f3mr6271662vkg.72.1591346749358;
- Fri, 05 Jun 2020 01:45:49 -0700 (PDT)
+        Fri, 5 Jun 2020 04:47:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42012 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbgFEIrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:47:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 796BAACD0;
+        Fri,  5 Jun 2020 08:47:05 +0000 (UTC)
+Message-ID: <f728f55fe6266718b5041b6f3b1864a673991129.camel@suse.de>
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Date:   Fri, 05 Jun 2020 10:46:57 +0200
+In-Reply-To: <20200604212819.715-1-f.fainelli@gmail.com>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-mEv3c87MBb44GSiC5RXV"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-References: <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
- <20200526102018.kznh6aglpkqlp6en@gilmour.lan> <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
- <20200527091335.7wc3uy67lbz7j4di@gilmour.lan> <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
- <20200528073055.znutrhkryzu3grrl@gilmour.lan> <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
- <20200602110442.2ceuymhwuomvjj6i@gilmour>
-In-Reply-To: <20200602110442.2ceuymhwuomvjj6i@gilmour>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Fri, 5 Jun 2020 16:44:51 +0800
-Message-ID: <CAPpJ_eePgLxO5URB3V5aeNMvBHOp+vXrW=+6SnVt4mB9J8oR+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B46=E6=9C=882=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:04=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> On Mon, Jun 01, 2020 at 03:58:26PM +0800, Jian-Hong Pan wrote:
-> > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=8828=
-=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > >
-> > > Hi Daniel,
-> > >
-> > > On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
-> > > > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> w=
-rote:
-> > > > > I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-=
-Hong) if you
-> > > > > want.
-> > > >
-> > > > That would be great, although given the potentially inconsistent
-> > > > results we've been seeing so far it would be great if you could
-> > > > additionally push a git branch somewhere.
-> > > > That way we can have higher confidence that we are applying exactly
-> > > > the same patches to the same base etc.
-> > >
-> > > So I sent a new iteration yesterday, and of course forgot to cc you..=
-. Sorry for
-> > > that.
-> > >
-> > > I've pushed my current branch here:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/log=
-/?h=3Drpi4-kms
-> >
-> > Thanks to Maxime!
-> >
-> > I have tried your repository on branch rpi4-kms.  The DRM VC4 is used!
-> > But got some issues:
-> > 1. Some weird error message in dmesg.  Not sure it is related, or not
-> > [    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
-> > HDMI state machine clock
-> > https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
->
-> That's a deferred probing. The first time the HDMI driver is being
-> probed, the firmware clock driver has not been probed yet. It's making
-> another attempt later on, which succeeds.
->
-> > 2. The screen flashes suddenly sometimes.
 
-I append drm.debug=3D0x3 to boot command.  Whenever, the screen flashes,
-I notice the logs like this:
+--=-mEv3c87MBb44GSiC5RXV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
-crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
-Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
-crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
-Jun 01 15:22:40 endless kernel: [drm:drm_vblank_enable] enabling
-vblank on crtc 3, ret: 0
-Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
-9 (2)
-Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
-4 (1)
-Jun 01 15:22:40 endless kernel: [drm:vblank_disable_fn] disabling
-vblank on crtc 3
-Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200,
-auth=3D1, DRM_IOCTL_MODE_CURSOR
-Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200,
-auth=3D1, DRM_IOCTL_MODE_CURSOR2
-Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 159 (1)
-Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 154 (1)
-Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
-crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
-Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
-crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
-Jun 01 15:22:42 endless kernel: [drm:drm_vblank_enable] enabling
-vblank on crtc 3, ret: 0
-Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
-9 (2)
-Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID: 15=
-4 (2)
+Hi Florian,
+Thanks for taking over this!
 
-Here is the full log
-https://gist.github.com/starnight/85d641819839eddc7a55ca7173990a56
+On Thu, 2020-06-04 at 14:28 -0700, Florian Fainelli wrote:
+> The 4 SPI controller instances added in BCM2711 and BCM7211 SoCs (SPI3,
+> SPI4, SPI5 and SPI6) share the same interrupt line with SPI0.
 
-> > 3. The higher resolutions, like 1920x1080 ... are lost after hot
-> > re-plug HDMI cable (HDMI0)
+I think this isn't 100% correct. SPI0 has its own interrupt, but SPI[3-6] s=
+hare
+the same interrupt.
 
-I should explain this in more detail.  Here are the steps to reproduce
-this issue:
-1. Before unplug the HDMI cable from HDMI0 port.
-$ xrandr
-Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
-HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x
-axis y axis) 521mm x 293mm
-   1920x1080     60.00*+  50.00    59.94
-   1920x1080i    60.00    50.00    59.94
-   1680x1050     59.88
-   1280x1024     75.02    60.02
-   1440x900      59.90
-   1280x960      60.00
-   1152x864      75.00
-   1280x720      60.00    50.00    59.94
-   1440x576      50.00
-   1024x768      75.03    70.07    60.00
-   1440x480      60.00    59.94
-   832x624       74.55
-   800x600       72.19    75.00    60.32    56.25
-   720x576       50.00
-   720x480       60.00    59.94
-   640x480       75.00    72.81    66.67    60.00    59.94
-   720x400       70.08
-HDMI-2 disconnected (normal left inverted right x axis y axis)
+> For the BCM2835 case which is deemed performance critical, we would like
+> to continue using an interrupt handler which does not have the extra
+> comparison on BCM2835_SPI_CS_INTR.
+>=20
+> To support that requirement the common interrupt handling code between
+> the shared and non-shared interrupt paths is split into a
+> bcm2835_spi_interrupt_common() and both bcm2835_spi_interrupt() as well
+> as bcm2835_spi_shared_interrupt() make use of it.
+>=20
+> During probe, we determine if there is at least another instance of this
+> SPI controller, and if there is, then we install a shared interrupt
+> handler.
 
-2. Unplug the HDMI cable from HDMI0 port.
-3. Plug the HDMI cable to **HDMI1** port.
-$ xrandr
-Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
-HDMI-1 disconnected (normal left inverted right x axis y axis)
-HDMI-2 connected primary 1920x1080+0+0 (normal left inverted right x
-axis y axis) 521mm x 293mm
-   1920x1080     60.00*+  50.00    59.94
-   1920x1080i    60.00    50.00    59.94
-   1680x1050     59.88
-   1280x1024     75.02    60.02
-   1440x900      59.90
-   1280x960      60.00
-   1152x864      75.00
-   1280x720      60.00    50.00    59.94
-   1440x576      50.00
-   1024x768      75.03    70.07    60.00
-   1440x480      60.00    59.94
-   832x624       74.55
-   800x600       72.19    75.00    60.32    56.25
-   720x576       50.00
-   720x480       60.00    59.94
-   640x480       75.00    72.81    66.67    60.00    59.94
-   720x400       70.08
+As there was pushback to use a different compatible string for an otherwise
+identical IP, I think it's a good compromise.
 
-4. Unplug the HDMI cable from **HDMI1** port.
-5. Plug the HDMI cable back to HDMI0 port.
-$ xrandr
-Screen 0: minimum 320 x 200, current 1368 x 768, maximum 2048 x 2048
-HDMI-1 connected primary 1368x768+0+0 (normal left inverted right x
-axis y axis) 0mm x 0mm
-   1368x768      59.88*
-   1360x768      59.80
-   1280x800      59.81
-   1152x864      60.00
-   1280x720      59.86
-   1024x768      60.00
-   1024x576      59.90
-   960x540       59.63
-   800x600       60.32
-   800x450       59.82
-   700x450       59.88
-   640x480       59.94
-   684x384       59.88    59.85
-   680x384       59.80    59.96
-   640x400       59.88    59.98
-   576x432       60.06
-   640x360       59.86    59.83
-   512x384       60.00
-   512x288       60.00    59.92
-   480x270       59.63    59.82
-   400x300       60.32
-   320x240       60.05
-HDMI-2 disconnected (normal left inverted right x axis y axis)
+>=20
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Changes in v2:
+>=20
+> - identify other available SPI nodes to determine if we need to set-up
+>   interrupt sharing. This needs to happen for the very first instance
+>   since we cannot know for the first instance whether interrupt sharing
+>   is needed or not.
+>=20
+>  drivers/spi/spi-bcm2835.c | 61 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 50 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+> index 237bd306c268..0288b5b3de1e 100644
+> --- a/drivers/spi/spi-bcm2835.c
+> +++ b/drivers/spi/spi-bcm2835.c
+> @@ -361,11 +361,10 @@ static void bcm2835_spi_reset_hw(struct spi_control=
+ler
+> *ctlr)
+>  	bcm2835_wr(bs, BCM2835_SPI_DLEN, 0);
+>  }
+> =20
+> -static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
+> +static inline irqreturn_t bcm2835_spi_interrupt_common(struct spi_contro=
+ller
+> *ctlr,
+> +						       u32 cs)
 
-Jian-Hong Pan
+Keep in mind the new 100 character limit.
 
-> I'm not sure on how to exactly reproduce those issues (or what they are)
-> though, can you expand on this?
->
-> Maxime
+>  {
+> -	struct spi_controller *ctlr =3D dev_id;
+>  	struct bcm2835_spi *bs =3D spi_controller_get_devdata(ctlr);
+> -	u32 cs =3D bcm2835_rd(bs, BCM2835_SPI_CS);
+> =20
+>  	/*
+>  	 * An interrupt is signaled either if DONE is set (TX FIFO empty)
+> @@ -394,6 +393,27 @@ static irqreturn_t bcm2835_spi_interrupt(int irq, vo=
+id
+> *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+> =20
+> +static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
+> +{
+> +	struct spi_controller *ctlr =3D dev_id;
+> +	struct bcm2835_spi *bs =3D spi_controller_get_devdata(ctlr);
+> +	u32 cs =3D bcm2835_rd(bs, BCM2835_SPI_CS);
+> +
+> +	return bcm2835_spi_interrupt_common(ctlr, cs);
+> +}
+> +
+> +static irqreturn_t bcm2835_spi_shared_interrupt(int irq, void *dev_id)
+> +{
+> +	struct spi_controller *ctlr =3D dev_id;
+> +	struct bcm2835_spi *bs =3D spi_controller_get_devdata(ctlr);
+> +	u32 cs =3D bcm2835_rd(bs, BCM2835_SPI_CS);
+> +
+> +	if (!(cs & BCM2835_SPI_CS_INTR))
+> +		return IRQ_NONE;
+> +
+> +	return bcm2835_spi_interrupt_common(ctlr, cs);
+> +}
+> +
+>  static int bcm2835_spi_transfer_one_irq(struct spi_controller *ctlr,
+>  					struct spi_device *spi,
+>  					struct spi_transfer *tfr,
+> @@ -1287,12 +1307,37 @@ static int bcm2835_spi_setup(struct spi_device *s=
+pi)
+>  	return 0;
+>  }
+> =20
+> +static const struct of_device_id bcm2835_spi_match[] =3D {
+> +	{ .compatible =3D "brcm,bcm2835-spi", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
+> +
+>  static int bcm2835_spi_probe(struct platform_device *pdev)
+>  {
+> +	irq_handler_t bcm2835_spi_isr_func =3D bcm2835_spi_interrupt;
+>  	struct spi_controller *ctlr;
+> +	unsigned long flags =3D 0;
+> +	struct device_node *dn;
+>  	struct bcm2835_spi *bs;
+>  	int err;
+> =20
+> +	/* On BCM2711 there can be multiple SPI controllers enabled sharing the
+> +	 * same interrupt line, but we also want to minimize the overhead if
+> +	 * there is no need to support interrupt sharing. If we find at least
+> +	 * another available instane (not counting the one we are probed from),
+
+"instance"
+
+> +	 * then we assume that interrupt sharing is necessary.
+> +	 */
+> +	for_each_compatible_node(dn, NULL, bcm2835_spi_match[0].compatible) {
+> +		err =3D of_device_is_available(dn) && dn !=3D pdev->dev.of_node;
+
+nit: maybe err is not the ideal variable name here.
+
+> +		of_node_put(dn);
+> +		if (err) {
+> +			flags =3D IRQF_SHARED;
+> +			bcm2835_spi_isr_func =3D bcm2835_spi_shared_interrupt;
+> +			break;
+> +		}
+> +	}
+> +
+>  	ctlr =3D spi_alloc_master(&pdev->dev, ALIGN(sizeof(*bs),
+>  						  dma_get_cache_alignment()));
+>  	if (!ctlr)
+> @@ -1344,8 +1389,8 @@ static int bcm2835_spi_probe(struct platform_device
+> *pdev)
+>  	bcm2835_wr(bs, BCM2835_SPI_CS,
+>  		   BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX);
+> =20
+> -	err =3D devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_interrupt, 0,
+> -			       dev_name(&pdev->dev), ctlr);
+> +	err =3D devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_isr_func,
+> +			       flags, dev_name(&pdev->dev), ctlr);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
+>  		goto out_dma_release;
+> @@ -1400,12 +1445,6 @@ static void bcm2835_spi_shutdown(struct platform_d=
+evice
+> *pdev)
+>  		dev_err(&pdev->dev, "failed to shutdown\n");
+>  }
+> =20
+> -static const struct of_device_id bcm2835_spi_match[] =3D {
+> -	{ .compatible =3D "brcm,bcm2835-spi", },
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
+> -
+>  static struct platform_driver bcm2835_spi_driver =3D {
+>  	.driver		=3D {
+>  		.name		=3D DRV_NAME,
+
+
+--=-mEv3c87MBb44GSiC5RXV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7aBoIACgkQlfZmHno8
+x/76iQf/YhcuGS7sdr9nlK7KZasWwzVQMm4sUpwC4aTP2ok0f8XY2omANTcOMXPi
+boV38p9L8EZnRCGxPJH5gcd+P+mzq7E36L0CmhXh0llna9Y0PCDNRiAun7xax26+
+AdZ5CP5pxseRYL/hvDKGiErbDAaygtPFdxvo9u034SYQyQTnP5J8YxjTX0V0TTVz
+NWPslb+n33JCLVrkFhoIsxr2sgW/dFJTaZ3V1/Bzj5Lktz4dw16ro4tCX86I4ltO
+NlvwGVykL6qjn+j0dOvnx6JvHoI5ScPqzkCDXDwQJekTzitTIdiaD2e70AZZ1B+q
+S0WCbZgciVz5xKBJn1sx5kPtsVZwng==
+=mzr5
+-----END PGP SIGNATURE-----
+
+--=-mEv3c87MBb44GSiC5RXV--
+
