@@ -2,141 +2,107 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE58C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5CF20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BC8207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AUp8k3jC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgFEK6q (ORCPT
+        id S1726919AbgFELAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:58:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:53714 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbgFEK6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:58:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1C5F2B;
-        Fri,  5 Jun 2020 03:58:44 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 037BA3F52E;
-        Fri,  5 Jun 2020 03:58:41 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 11:58:39 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200605105839.ghxzcz62kz43dzxr@e107158-lin.cambridge.arm.com>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
- <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200529100806.GA3070@suse.de>
- <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
- <20200603094036.GF3070@suse.de>
- <20200603124112.w5stb7v2z3kzcze3@e107158-lin.cambridge.arm.com>
- <20200604134042.GJ3070@suse.de>
+        Fri, 5 Jun 2020 07:00:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42970 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgFELAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 07:00:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055AuhAU009940;
+        Fri, 5 Jun 2020 11:00:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=V0ubaUIN8W9lc6XMfm+T9kuHl5SLdA5xza5SBaAtBI0=;
+ b=AUp8k3jC/5PRtTKKyrZReG6odvTBwW5ig9t0XdLrUL5hAnVeJgcw3Qbox02bVruKtZWK
+ lV9kbAXkCBdUT9tIhJzJC4bLlverzAc9d9Ozo8MfD7WKAkSkd0zgn7se0s/WWJlMHWU7
+ bGhkxYaKS7f0nAVKywCIzdul/RVaP8o52XlzNMcn8QemvV5HmRbvfXW58z0l8toJIRQb
+ 7vdpcvOmK7bEcWE2SUwlvNnxDFV95T8gdQgLRBbaq8Ib7w+dJF9y1i+wOK1ucL80/9F7
+ LCyZxAdS5iGNU7lPRstrBKuXjOEU5sh02kNVE2iF/BiixueJHnCllLnl+XoqDCe3yohc rg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31f91dtac0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 05 Jun 2020 11:00:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055AxR9V016558;
+        Fri, 5 Jun 2020 11:00:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 31f92sksmy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Jun 2020 11:00:29 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 055B0SBY004168;
+        Fri, 5 Jun 2020 11:00:28 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 05 Jun 2020 04:00:27 -0700
+Date:   Fri, 5 Jun 2020 14:00:20 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Michal Simek <michal.simek@xilinx.com>,
+        Tejas Patel <tejas.patel@xilinx.com>
+Cc:     Rajan Vaja <rajan.vaja@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] soc: xilinx: Fix error code in zynqmp_pm_probe()
+Message-ID: <20200605110020.GA978434@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200604134042.GJ3070@suse.de>
-User-Agent: NeoMutt/20171215
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 mlxlogscore=879 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1011 cotscore=-2147483648 malwarescore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=913 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006050084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/20 14:40, Mel Gorman wrote:
-> > > > The diffs are smaller than on openSUSE Leap 15.1 and some of the
-> > > > uclamp taskgroup results are better?
-> > > > 
-> > > 
-> > > I don't see the stddev and coeff but these look close to borderline.
-> > > Sure, they are marked with a * so it passed a significant test but it's
-> > > still a very marginal difference for netperf. It's possible that the
-> > > systemd configurations differ in some way that is significant for uclamp
-> > > but I don't know what that is.
-> > 
-> > Hmm so what you're saying is that Dietmar didn't reproduce the same problem
-> > you're observing? I was hoping to use that to dig more into it.
-> > 
-> 
-> Not as such, I'm saying that for whatever reason the problem is not as
-> visible with Dietmar's setup. It may be machine-specific or distribution
-> specific. There are alternative suggestions for testing just the fast
-> paths with a pipe test that may be clearer.
+This should be returning PTR_ERR() but it returns IS_ERR() instead.
 
-Unfortunately lost access to that machine, but will resume testing on it as
-soon as it's back online.
+Fixes: ffdbae28d9d1 ("drivers: soc: xilinx: Use mailbox IPI callback")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/soc/xilinx/zynqmp_power.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Vincent shared more info about his setup. If I can see the same thing without
-having to use a big machine that'd make it easier to debug.
+diff --git a/drivers/soc/xilinx/zynqmp_power.c b/drivers/soc/xilinx/zynqmp_power.c
+index 31ff49fcd078b..c556623dae024 100644
+--- a/drivers/soc/xilinx/zynqmp_power.c
++++ b/drivers/soc/xilinx/zynqmp_power.c
+@@ -205,7 +205,7 @@ static int zynqmp_pm_probe(struct platform_device *pdev)
+ 		rx_chan = mbox_request_channel_byname(client, "rx");
+ 		if (IS_ERR(rx_chan)) {
+ 			dev_err(&pdev->dev, "Failed to request rx channel\n");
+-			return IS_ERR(rx_chan);
++			return PTR_ERR(rx_chan);
+ 		}
+ 	} else if (of_find_property(pdev->dev.of_node, "interrupts", NULL)) {
+ 		irq = platform_get_irq(pdev, 0);
+-- 
+2.26.2
 
-> > > 
-> > > > With this test setup we now can play with the uclamp code in
-> > > > enqueue_task() and dequeue_task().
-> > > > 
-> > > 
-> > > That is still true. An annotated perf profile should tell you if the
-> > > uclamp code is being heavily used or if it's bailing early but it's also
-> > > possible that uclamp overhead is not a big deal on your particular
-> > > machine.
-> > > 
-> > > The possibility that either the distribution, the machine or both are
-> > > critical for detecting a problem with uclamp may explain why any overhead
-> > > was missed. Even if it is marginal, it still makes sense to minimise the
-> > > amount of uclamp code that is executed if no limit is specified for tasks.
-> > 
-> > So one speculation I have that might be causing the problem is that the
-> > accesses of struct uclamp_rq are causing bad cache behavior in your case. Your
-> > mmtest description of the netperf says that it is sensitive to cacheline
-> > bouncing.
-> > 
-> > Looking at struct rq, the uclamp_rq is spanning 2 cachelines
-> > 
-> >  29954         /* --- cacheline 1 boundary (64 bytes) --- */
-> >  29955         struct uclamp_rq           uclamp[2];            /*    64    96 */
-> >  29956         /* --- cacheline 2 boundary (128 bytes) was 32 bytes ago --- */
-> >  29957         unsigned int               uclamp_flags;         /*   160     4 */
-> >  29958
-> >  29959         /* XXX 28 bytes hole, try to pack */
-> >  29960
-> > 
-> > Reducing sturct uclamp_bucket to use unsigned int instead of unsigned long
-> > helps putting it all in a single cacheline
-> > 
-> 
-> I tried this and while it did not make much of a difference to the
-> headline metric, the workload was less variable so if it's proven that
-> cache line bouncing is reduced (I didn't measure it), it may have merit
-> on its own even if it does not fully address the problem.
-
-Yeah maybe if we can prove it's worth it. I'll keep it on my list to look at
-after we fix the main issue first.
-
-Thanks
-
---
-Qais Yousef
