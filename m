@@ -2,408 +2,176 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE042C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FE2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8273E2074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F06D207D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fqVmIVKe"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="S3kWp7/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgFERlo (ORCPT
+        id S1728025AbgFERnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:41:44 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58617 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727833AbgFERlm (ORCPT
+        Fri, 5 Jun 2020 13:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgFERnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:41:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591378899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g2r/gCyDa969XA2rQ4NauoYjHnCdKt3EVlEOeUbN5vw=;
-        b=fqVmIVKeGiVzlrNobgfeJ/q0sqg+hoHiiM5dTKYyBCqMJaCaBGiN2/mdZs6rUZa4JYzbz2
-        z0JbodqA1Tt/jgz8l5FQBiAO4KmpSC/B2YPLDDdMsG4uFHA7hyEvuiPXebQ+LpsGzsQhbv
-        4h01SzEdvkAdam7dFhRrg3sAVWJpPpo=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-gNPU4J-fNYKSjONBsQ2XjA-1; Fri, 05 Jun 2020 13:41:37 -0400
-X-MC-Unique: gNPU4J-fNYKSjONBsQ2XjA-1
-Received: by mail-ed1-f71.google.com with SMTP id dn27so4227864edb.15
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:41:37 -0700 (PDT)
+        Fri, 5 Jun 2020 13:43:15 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E84C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:43:15 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n141so10562639qke.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=rZzlH3lgJQJ1GMva4U3PZGzXYmKRlX309wcrnr5n+uY=;
+        b=S3kWp7/LuNSWrfUi5frZnfE9rEvEaHJeB8X7ZzkN0AUH7ZRcyj1NK0Xxc3N9O8Nn19
+         51smv5NiVOuB/qrQg8Wrcj3NPeKGiY3mh2zGZNwKRWbQmxIph4oOBW1H7ACKRQQHWnDd
+         fT5JcOe2wkSRH4uXJ/SrTOwC+7+rkshaFAsWQ13d0A6hNEk/JO5VUcAgYEY46gxMy1PA
+         fVer0A34vt37OVh6U4TBBwvqiUyt5KU9rEDMOOj9lKInKC2MH4X6kZIFGIYfgZlAkBTp
+         sHadbRfDtGf4tfanol1uU48dxQtGIf9VhZX83rcnfHYQQ82+WbcipGKl6CVmy2LFfR2R
+         u9hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g2r/gCyDa969XA2rQ4NauoYjHnCdKt3EVlEOeUbN5vw=;
-        b=CYm34aQh9L11m1WN/QBSQuBcGt8jeAJtwwg2BBj9ucRskd+zw+WtuMzicJb0NKBsas
-         p3t7cOLV8lBDdMIPp9xY0Tj1C5wQEk+3LQRcwxxHDdDeCtVisNRBn6XXACuZUSShlhJI
-         qx+5BcKVR/P8zuUb55v4jrb2ncpDYTgCsT2DYEpGGT+ByhDKSYuXk7h1rzzA9tSgumK5
-         I0vNNdfwlfAaoRwmm4W+VIxf1o6uSGD/5tfCq2J5SQS23mbfOEmuEtq5oB38/2RBapcg
-         /IbJQSqpL9LMbM9tbx2LPTAsLfizRcMBSI1nySTcdiQ5eQQl+HZIOyRUxTQo9o23a+Ol
-         EpZg==
-X-Gm-Message-State: AOAM531PfnFnOkkYl76YSoy4Pejilq6qqEeU8tKg7xuJX5Vx8FXsfaRZ
-        vFq5xCFG0ev5gLc5kDYIbPHHmeRU7euFsf4j1aL8WPt3obUZPs4zudPr/0eeyc64bCugH6ISLaa
-        +juTkWDv4fBrvTG/LNB+sc6eh
-X-Received: by 2002:a50:cccc:: with SMTP id b12mr10207808edj.68.1591378896030;
-        Fri, 05 Jun 2020 10:41:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyTp4S5gd3mVeK3aXMHwojyH5aSj9UJyV50ODAKr6Ed/qOUjsv3Y2z1hcNyqcTTAYaVlOcAvA==
-X-Received: by 2002:a50:cccc:: with SMTP id b12mr10207764edj.68.1591378895672;
-        Fri, 05 Jun 2020 10:41:35 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id j11sm4845450ejk.67.2020.06.05.10.41.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 10:41:34 -0700 (PDT)
-Subject: Re: [PATCH v3 7/7] Input: Add "inhibited" property
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com, Patrik Fimml <patrikf@chromium.org>
-References: <20200604072853.GP89269@dtor-ws>
- <20200605173335.13753-1-andrzej.p@collabora.com>
- <20200605173335.13753-8-andrzej.p@collabora.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
-Date:   Fri, 5 Jun 2020 19:41:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=rZzlH3lgJQJ1GMva4U3PZGzXYmKRlX309wcrnr5n+uY=;
+        b=VlkYkzZEd+MVH5DF1zFjI0KSw3FbGaXOmWK5mMGpG9OMxGHhsvUnfGd2rdEau3E4Q9
+         /M9nA2p1hbovRCrwmnGf7Gn5wx95pqyRHDZ1UGwLG1qvz/66RND2gZMpHYt9rUKAWwfH
+         iO+YpuPscwbUutO5xPQeDJaKszZLWT2dMW5d7i/vFAEY1oox7LTR1Y0W5dM0hjCDCWWp
+         1kmKat4in3S9ZY5rIq4bZ1chqPFrJWR82VYSfX4D8XyUDEr+NzaULs2sFdlMqhHKiF41
+         V12Au3e2dml+RVzJr2SDUxLnA821s4slUNeszm4M/nXpLwonJPvVekhVYiKszNvToxvG
+         KAzw==
+X-Gm-Message-State: AOAM530h0RZ3mQ4l8bdjInOQChREy3h2icwouGpi1Yaaqidss7DbE2rg
+        pWCQIWeW3hgpsqqHCgSg8MyEbg==
+X-Google-Smtp-Source: ABdhPJx5VdfTacBdommIKg1RhtvX4MaRuPEPiDdNpolMZqjrE6XJwiukyJJzDa1sR2c1lYGpiAO93g==
+X-Received: by 2002:a37:b847:: with SMTP id i68mr10785437qkf.431.1591378994692;
+        Fri, 05 Jun 2020 10:43:14 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id a1sm332298qkn.87.2020.06.05.10.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 10:43:14 -0700 (PDT)
+Message-ID: <edbae7a96fb6cc2d017d947fbeedc86a7540302a.camel@ndufresne.ca>
+Subject: Re: [RFC] METADATA design using V4l2 Request API
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     dikshita@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, majja@codeaurora.org, jdas@codeaurora.org,
+        linux-media-owner@vger.kernel.org
+Date:   Fri, 05 Jun 2020 13:43:12 -0400
+In-Reply-To: <5356c146a340d951b8d492373f349199@codeaurora.org>
+References: <1588918890-673-1-git-send-email-dikshita@codeaurora.org>
+         <d1179bc1-662b-615f-0f9b-67693fe8c906@xs4all.nl>
+         <fb96e2c09346e7831a0af99c0fe9f94c@codeaurora.org>
+         <7be1070ee7aad1f48fc6de63523da8e1bc952dc8.camel@ndufresne.ca>
+         <ad61378b-e279-d161-adaa-17349adf183e@xs4all.nl>
+         <5356c146a340d951b8d492373f349199@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <20200605173335.13753-8-andrzej.p@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Le vendredi 05 juin 2020 à 12:32 +0530, dikshita@codeaurora.org a écrit :
+> Hi Hans, Nicolas,
+> 
+> On 2020-05-29 13:01, Hans Verkuil wrote:
+> > On 29/05/2020 04:18, Nicolas Dufresne wrote:
+> > > Le jeudi 28 mai 2020 à 16:18 +0530, dikshita@codeaurora.org a écrit :
+> > > > > not allowed. So I need to know more about this.
+> > > > > Regards,
+> > > > >        Hans
+> > > > 
+> > > > we need this for use cases like HDR10+ where metadata info is part of
+> > > > the bitstream.
+> > > > 
+> > > > To handle such frame specific data, support for request api on 
+> > > > capture
+> > > > plane would be needed.
+> > > 
+> > > I have a bit of a mixed impression here. Considering how large the 
+> > > ioctl
+> > > interface overhead is, relying on HW parser to extract this medata 
+> > > woud be the
+> > > last thing I would consider.
+> > > 
+> > > Instead, I'm quite convince we can achieve greater and likely 
+> > > zero-copy
+> > > perfromance by locating this header in userspace. So everytime I see 
+> > > this kind
+> > > of API, were the HW is *needed* to parse a trivial bit of bistream, I 
+> > > ended
+> > > thinking that we simply craft this API to expose this because the HW 
+> > > can do it,
+> > > but no further logical thinking or higher level design seems to have 
+> > > been
+> > > applied.
+> > > 
+> > > I'm sorry for this open critic, but are we designing this because the 
+> > > HW
+> > > designer exposed that feature? This is so low complexity to extract in
+> > > userspace, with the bonus that we are not forced into expanding the
+> > > representation to another form immediatly, as maybe the display will 
+> > > be able to
+> > > handle that form directly (where converting to a C structure and then 
+> > > back to
+> > > some binary format to satisfy DRM property seems very sub-optimal).
+> > > 
+> > > Nicolas
+> > > 
+> > 
+> > Nicolas raises good questions: it would help if you can give more
+> > detailed information
+> > about the hardware. We had similar discussions with Xilinx about
+> > HDR10+ (see this
+> > thread: https://www.spinics.net/lists/linux-media/msg163297.html).
+> > 
+> > There is no clear answer at the moment on how to handle dynamic HDR 
+> > metadata.
+> > It will help if we have some more information how different SoCs handle 
+> > this
+> > in hardware.
+> > 
+> > Regards,
+> > 
+> > 	Hans
+> 
+> As per Widevine Level 1 requirement, it needs “Hardware Protected Video 
+> Path”.
+> Hence, in case of secure bitstream decoding, we need decoder metadata 
+> delivered from HW.
+> CPU cannot parse secure bitstream and extract them.
+> Apart from this, there are other metadata like "histogram" which is not 
+> part of the bitstream
+> and generated by hardware
 
-On 6/5/20 7:33 PM, Andrzej Pietrasiewicz wrote:
-> From: Patrik Fimml <patrikf@chromium.org>
-> 
-> Userspace might want to implement a policy to temporarily disregard input
-> from certain devices, including not treating them as wakeup sources.
-> 
-> An example use case is a laptop, whose keyboard can be folded under the
-> screen to create tablet-like experience. The user then must hold the laptop
-> in such a way that it is difficult to avoid pressing the keyboard keys. It
-> is therefore desirable to temporarily disregard input from the keyboard,
-> until it is folded back. This obviously is a policy which should be kept
-> out of the kernel, but the kernel must provide suitable means to implement
-> such a policy.
-> 
-> This patch adds a sysfs interface for exactly this purpose.
-> 
-> To implement the said interface it adds an "inhibited" property to struct
-> input_dev, and effectively creates four states a device can be in: closed
-> uninhibited, closed inhibited, open uninhibited, open inhibited. It also
-> defers calling driver's ->open() and ->close() to until they are actually
-> needed, e.g. it makes no sense to prepare the underlying device for
-> generating events (->open()) if the device is inhibited.
-> 
->                uninhibit
-> closed      <------------ closed
-> uninhibited ------------> inhibited
->        | ^     inhibit        | ^
->   1st  | |               1st  | |
->   open | |               open | |
->        | |                    | |
->        | | last               | | last
->        | | close              | | close
->        v |     uninhibit      v |
-> open        <------------ open
-> uninhibited ------------> inhibited
-> 
-> The top inhibit/uninhibit transition happens when users == 0.
-> The bottom inhibit/uninhibit transition happens when users > 0.
-> The left open/close transition happens when !inhibited.
-> The right open/close transition happens when inhibited.
-> Due to all transitions being serialized with dev->mutex, it is impossible
-> to have "diagonal" transitions between closed uninhibited and open
-> inhibited or between open uninhibited and closed inhibited.
-> 
-> No new callbacks are added to drivers, because their open() and close()
-> serve exactly the purpose to tell the driver to start/stop providing
-> events to the input core. Consequently, open() and close() - if provided
-> - are called in both inhibit and uninhibit paths.
-> 
-> Signed-off-by: Patrik Fimml <patrikf@chromium.org>
-> Co-developed-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
->   drivers/input/input.c | 115 +++++++++++++++++++++++++++++++++++++++---
->   include/linux/input.h |  12 ++++-
->   2 files changed, 118 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/input/input.c b/drivers/input/input.c
-> index 41377bfa142d..4110b5797219 100644
-> --- a/drivers/input/input.c
-> +++ b/drivers/input/input.c
-> @@ -284,8 +284,11 @@ static int input_get_disposition(struct input_dev *dev,
->   	case EV_KEY:
->   		if (is_event_supported(code, dev->keybit, KEY_MAX)) {
->   
-> -			/* auto-repeat bypasses state updates */
-> -			if (value == 2) {
-> +			/*
-> +			 * auto-repeat bypasses state updates but repeat
-> +			 * events are ignored if the key is not pressed
-> +			 */
-> +			if (value == 2 && test_bit(code, dev->key)) {
->   				disposition = INPUT_PASS_TO_HANDLERS;
->   				break;
->   			}
-> @@ -367,8 +370,13 @@ static int input_get_disposition(struct input_dev *dev,
->   static void input_handle_event(struct input_dev *dev,
->   			       unsigned int type, unsigned int code, int value)
->   {
-> -	int disposition = input_get_disposition(dev, type, code, &value);
-> +	int disposition;
-> +
-> +	/* filter-out events from inhibited devices */
-> +	if (dev->inhibited)
-> +		return;
->   
-> +	disposition = input_get_disposition(dev, type, code, &value);
->   	if (disposition != INPUT_IGNORE_EVENT && type != EV_SYN)
->   		add_input_randomness(type, code, value);
->   
-> @@ -612,7 +620,7 @@ int input_open_device(struct input_handle *handle)
->   
->   	handle->open++;
->   
-> -	if (dev->users++) {
-> +	if (dev->users++ || dev->inhibited) {
->   		/*
->   		 * Device is already opened, so we can exit immediately and
->   		 * report success.
+(I'm ignoring the bit about camera data + histogram, this was about
+CODEC, and it also does not make much sense to me)
 
-It seems the comment which is part of the context here may need some
-updating because of the inhibit changes ?
+We extract this data from the bitstream, before the decoder. The
+bitstream is not subject to secure buffer, because it's encrypted. Be
+aware that the implementation does not encrypt all NALs, PPS/SPS SEIs,
+are in clear, and NAL headers are most of the time in clear.
 
-Otherwise this patch and the rest of the series looks good to me
-now. Thank you very much for your work on this.
+Going with full bitstream encryption would have required rewriting a
+lot more HW, since you would not be able to handle the
+depayload/demuxing in userspace or you'd need all this multimedia stuff
+to be placed on in your secure firmware. Multimedia software these
+days, ffmpeg, gstreamer, chromium internal stack etc. needs a lot of
+information from the bitstream that would be very hard to pass
+properly.
 
-Regards,
-
-Hans
-
-
-
-
-> @@ -675,10 +683,9 @@ void input_close_device(struct input_handle *handle)
->   
->   	__input_release_device(handle);
->   
-> -	if (!--dev->users) {
-> +	if (!dev->inhibited && !--dev->users) {
->   		if (dev->poller)
->   			input_dev_poller_stop(dev->poller);
-> -
->   		if (dev->close)
->   			dev->close(dev);
->   	}
-> @@ -1416,12 +1423,49 @@ static ssize_t input_dev_show_properties(struct device *dev,
->   }
->   static DEVICE_ATTR(properties, S_IRUGO, input_dev_show_properties, NULL);
->   
-> +static int input_inhibit_device(struct input_dev *dev);
-> +static int input_uninhibit_device(struct input_dev *dev);
-> +
-> +static ssize_t inhibited_show(struct device *dev,
-> +			      struct device_attribute *attr,
-> +			      char *buf)
-> +{
-> +	struct input_dev *input_dev = to_input_dev(dev);
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%d\n", input_dev->inhibited);
-> +}
-> +
-> +static ssize_t inhibited_store(struct device *dev,
-> +			       struct device_attribute *attr, const char *buf,
-> +			       size_t len)
-> +{
-> +	struct input_dev *input_dev = to_input_dev(dev);
-> +	ssize_t rv;
-> +	bool inhibited;
-> +
-> +	if (strtobool(buf, &inhibited))
-> +		return -EINVAL;
-> +
-> +	if (inhibited)
-> +		rv = input_inhibit_device(input_dev);
-> +	else
-> +		rv = input_uninhibit_device(input_dev);
-> +
-> +	if (rv != 0)
-> +		return rv;
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR_RW(inhibited);
-> +
->   static struct attribute *input_dev_attrs[] = {
->   	&dev_attr_name.attr,
->   	&dev_attr_phys.attr,
->   	&dev_attr_uniq.attr,
->   	&dev_attr_modalias.attr,
->   	&dev_attr_properties.attr,
-> +	&dev_attr_inhibited.attr,
->   	NULL
->   };
->   
-> @@ -1703,6 +1747,63 @@ void input_reset_device(struct input_dev *dev)
->   }
->   EXPORT_SYMBOL(input_reset_device);
->   
-> +static int input_inhibit_device(struct input_dev *dev)
-> +{
-> +	int ret = 0;
-> +
-> +	mutex_lock(&dev->mutex);
-> +
-> +	if (dev->inhibited)
-> +		goto out;
-> +
-> +	if (dev->users) {
-> +		if (dev->close)
-> +			dev->close(dev);
-> +		if (dev->poller)
-> +			input_dev_poller_stop(dev->poller);
-> +	}
-> +
-> +	spin_lock_irq(&dev->event_lock);
-> +	input_dev_release_keys(dev);
-> +	input_dev_toggle(dev, false);
-> +	spin_unlock_irq(&dev->event_lock);
-> +
-> +	dev->inhibited = true;
-> +
-> +out:
-> +	mutex_unlock(&dev->mutex);
-> +	return ret;
-> +}
-> +
-> +static int input_uninhibit_device(struct input_dev *dev)
-> +{
-> +	int ret = 0;
-> +
-> +	mutex_lock(&dev->mutex);
-> +
-> +	if (!dev->inhibited)
-> +		goto out;
-> +
-> +	if (dev->users) {
-> +		if (dev->open) {
-> +			ret = dev->open(dev);
-> +			if (ret)
-> +				goto out;
-> +		}
-> +		if (dev->poller)
-> +			input_dev_poller_start(dev->poller);
-> +	}
-> +
-> +	dev->inhibited = false;
-> +	spin_lock_irq(&dev->event_lock);
-> +	input_dev_toggle(dev, true);
-> +	spin_unlock_irq(&dev->event_lock);
-> +
-> +out:
-> +	mutex_unlock(&dev->mutex);
-> +	return ret;
-> +}
-> +
->   #ifdef CONFIG_PM_SLEEP
->   static int input_dev_suspend(struct device *dev)
->   {
-> @@ -2131,7 +2232,7 @@ bool input_device_enabled(struct input_dev *dev)
->   {
->   	lockdep_assert_held(&dev->mutex);
->   
-> -	return dev->users > 0;
-> +	return !dev->inhibited && dev->users > 0;
->   }
->   EXPORT_SYMBOL_GPL(input_device_enabled);
->   
-> diff --git a/include/linux/input.h b/include/linux/input.h
-> index eda4587dba67..0354b298d874 100644
-> --- a/include/linux/input.h
-> +++ b/include/linux/input.h
-> @@ -90,9 +90,11 @@ enum input_clock_type {
->    * @open: this method is called when the very first user calls
->    *	input_open_device(). The driver must prepare the device
->    *	to start generating events (start polling thread,
-> - *	request an IRQ, submit URB, etc.)
-> + *	request an IRQ, submit URB, etc.). The meaning of open() is
-> + *	to start providing events to the input core.
->    * @close: this method is called when the very last user calls
-> - *	input_close_device().
-> + *	input_close_device(). The meaning of close() is to stop
-> + *	providing events to the input core.
->    * @flush: purges the device. Most commonly used to get rid of force
->    *	feedback effects loaded into the device when disconnecting
->    *	from it
-> @@ -127,6 +129,10 @@ enum input_clock_type {
->    *	and needs not be explicitly unregistered or freed.
->    * @timestamp: storage for a timestamp set by input_set_timestamp called
->    *  by a driver
-> + * @inhibited: indicates that the input device is inhibited. If that is
-> + * the case then input core ignores any events generated by the device.
-> + * Device's close() is called when it is being inhibited and its open()
-> + * is called when it is being uninhibited.
->    */
->   struct input_dev {
->   	const char *name;
-> @@ -201,6 +207,8 @@ struct input_dev {
->   	bool devres_managed;
->   
->   	ktime_t timestamp[INPUT_CLK_MAX];
-> +
-> +	bool inhibited;
->   };
->   #define to_input_dev(d) container_of(d, struct input_dev, dev)
->   
-> 
+regards,
+Nicolas
 
