@@ -2,247 +2,145 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB49C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44D692074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C0E2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:57:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="HWlIvo8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgFERzs (ORCPT
+        id S1728050AbgFER5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54972 "EHLO
+        Fri, 5 Jun 2020 13:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgFERzs (ORCPT
+        with ESMTP id S1726294AbgFER5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:55:48 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF7BC08C5C2;
-        Fri,  5 Jun 2020 10:55:47 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 301462A45BD
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     axboe@kernel.dk, corbet@lwn.net, linux-block@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, rdunlap@infradead.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v2] docs: block: Create blk-mq documentation
-Date:   Fri,  5 Jun 2020 14:55:36 -0300
-Message-Id: <20200605175536.19681-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 5 Jun 2020 13:57:11 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECEDC08C5C4
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:57:10 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id i27so1865648ljb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YYnGgbB/yUYHLwRnIgeOB2yfvVDg5PB29KwRpcC2gN4=;
+        b=HWlIvo8Gx/GfSgNGX7LbvmwrB8R2/UprUCF6ZpGdTm5eFaUvsIhs/YyhRxIi6C0Bgu
+         eKvjCs9vk7Z007hp+pg8+29RTakK0BG4LfZ6KfTBUENIJULV/m/bqBnWIrwsUs1JUM8/
+         1/NGt2NwWfaMLuXqDXVe3Io4BwZBxhMbAeR1RevZ7FRe6WgNb1P0/6bzp39+eac5SSI0
+         IJ2t/onuc/NeLjFksiSRP+9/3pOoJpsXpFqF1xvY2lFz/Ngtj3zgOT8AEn6f/pRSyZwx
+         xSg9J8jx/18GSu+o8jK2uEzV4XTjjcqiZW53KhDmRBA/9Xatc7A9DzNlyF1ysAUOFHM0
+         xEvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YYnGgbB/yUYHLwRnIgeOB2yfvVDg5PB29KwRpcC2gN4=;
+        b=QU0TzaP9sIZX4SrndS23c3hDVEhVhBr2rHJMqO6vpBukfvnM07SUxrAlQQuUQMjYAw
+         fXsBOdY/IX0zSQ9CMeEz8qO6oYAnCyH+u+TzNJe59OIFGOr2Z7djeD0x2uZL39AZTJr+
+         X+2uZyaqtWBfASDX5sISNWrgK4KTFH9x+ZuoEL0m5LJQ1oWtOobDHLriULUOMoGUca41
+         JVTMWOm3MO4pX8XHXb/edWLz/uM7LoV4dCJyoQVGRpmc8h2hq81TKrBkezYDXIL5/cWo
+         5OB37rwMUPwvLqlOjq3Nj0jZYtMSzfRO3UwsfRc1m955ZooXKaGvB4B8ghpTejIVIiwr
+         5gVg==
+X-Gm-Message-State: AOAM532RF41euOQEc4C2Aht4nJCaccQBftins44ilzscoV94BfHAKRXh
+        ljn4W1RWZTk/2dCFv7XoLAfaotDywR6tJg746/ns6A==
+X-Google-Smtp-Source: ABdhPJz1QchXGicuq/e4UbyBXjj2+Lh2IaK3OLii9lagU/34toEvTJek1PSUAitdFBhMHfD0XxPR6jfp824v8PIIWqE=
+X-Received: by 2002:a2e:8705:: with SMTP id m5mr5176522lji.269.1591379829143;
+ Fri, 05 Jun 2020 10:57:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+ <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
+In-Reply-To: <6615a61b8af240e3d10f8890e4b2462ccdaac9b9.1590594512.git-series.maxime@cerno.tech>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Fri, 5 Jun 2020 10:56:58 -0700
+Message-ID: <CADaigPUOJMwR0y6CjVpu5+nPAvejbCvEQNLEC+EKq9haBaQynw@mail.gmail.com>
+Subject: Re: [PATCH v3 004/105] clk: bcm: Add BCM2711 DVP driver
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a documentation providing a background and explanation around the
-operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
+On Wed, May 27, 2020 at 8:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> The HDMI block has a block that controls clocks and reset signals to the
+> HDMI0 and HDMI1 controllers.
+>
+> Let's expose that through a clock driver implementing a clock and reset
+> provider.
+>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  drivers/clk/bcm/Kconfig           |  11 +++-
+>  drivers/clk/bcm/Makefile          |   1 +-
+>  drivers/clk/bcm/clk-bcm2711-dvp.c | 127 +++++++++++++++++++++++++++++++-
+>  3 files changed, 139 insertions(+)
+>  create mode 100644 drivers/clk/bcm/clk-bcm2711-dvp.c
+>
+> diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+> index 8c83977a7dc4..784f12c72365 100644
+> --- a/drivers/clk/bcm/Kconfig
+> +++ b/drivers/clk/bcm/Kconfig
+> @@ -1,4 +1,15 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> +
+> +config CLK_BCM2711_DVP
+> +       tristate "Broadcom BCM2711 DVP support"
+> +       depends on ARCH_BCM2835 ||COMPILE_TEST
+> +       depends on COMMON_CLK
+> +       default ARCH_BCM2835
+> +       select RESET_SIMPLE
+> +       help
+> +         Enable common clock framework support for the Broadcom BCM2711
+> +         DVP Controller.
+> +
+>  config CLK_BCM2835
+>         bool "Broadcom BCM2835 clock support"
+>         depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
+> diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+> index 0070ddf6cdd2..2c1349062147 100644
+> --- a/drivers/clk/bcm/Makefile
+> +++ b/drivers/clk/bcm/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_CLK_BCM_KONA)      += clk-kona-setup.o
+>  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm281xx.o
+>  obj-$(CONFIG_CLK_BCM_KONA)     += clk-bcm21664.o
+>  obj-$(CONFIG_COMMON_CLK_IPROC) += clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
+> +obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2711-dvp.o
+>  obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2835.o
+>  obj-$(CONFIG_CLK_BCM2835)      += clk-bcm2835-aux.o
+>  obj-$(CONFIG_CLK_RASPBERRYPI)  += clk-raspberrypi.o
 
-The reference for writing this documentation was the source code and
-"Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
-Systems", by Axboe et al.
+I do think that single driver is the right model here, but I noticed
+that you're not using your new CONFIG_ symbol.  With that fixed, r-b
+from me.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
-Changes from v1:
-- Fixed typos
-- Reworked blk_mq_hw_ctx
-
-Hello,
-
-This commit was tested using "make htmldocs" and the HTML output has
-been verified.
-
-Thanks,
-	André
----
- Documentation/block/blk-mq.rst | 154 +++++++++++++++++++++++++++++++++
- Documentation/block/index.rst  |   1 +
- 2 files changed, 155 insertions(+)
- create mode 100644 Documentation/block/blk-mq.rst
-
-diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
-new file mode 100644
-index 000000000000..1f702adbc577
---- /dev/null
-+++ b/Documentation/block/blk-mq.rst
-@@ -0,0 +1,154 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+================================================
-+Multi-Queue Block IO Queueing Mechanism (blk-mq)
-+================================================
-+
-+The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
-+devices to achieve a huge number of input/output operations per second (IOPS)
-+through queueing and submitting IO requests to block devices simultaneously,
-+benefiting from the parallelism offered by modern storage devices.
-+
-+Introduction
-+============
-+
-+Background
-+----------
-+
-+Magnetic hard disks have been the de facto standard from the beginning of the
-+development of the kernel. The Block IO subsystem aimed to achieve the best
-+performance possible for those devices with a high penalty when doing random
-+access, and the bottleneck was the mechanical moving parts, a lot more slower
-+than any layer on the storage stack. One example of such optimization technique
-+involves ordering read/write requests accordingly to the current position of
-+the hard disk head.
-+
-+However, with the development of Solid State Drives and Non-Volatile Memories
-+without mechanical parts nor random access penalty and capable of performing
-+high parallel access, the bottleneck of the stack had moved from the storage
-+device to the operating system. In order to  take advantage of the parallelism
-+in those devices design, the multi-queue mechanism was introduced.
-+
-+The former design had a single queue to store block IO requests with a single
-+lock. That did not scale well in SMP systems due to dirty data in cache and the
-+bottleneck of having a single lock for multiple processors. This setup also
-+suffered with congestion when different processes (or the same process, moving
-+to different CPUs) wanted to perform block IO. Instead of this, the blk-mq API
-+spawns multiple queues with individual entry points local to the CPU, removing
-+the need for a lock. A deeper explanation on how this works is covered in the
-+following section (`Operation`_).
-+
-+Operation
-+---------
-+
-+When the userspace performs IO to a block device (reading or writing a file,
-+for instance), blk-mq takes action: it will store and manage IO requests to
-+the block device, acting as middleware between the userspace (and a file
-+system, if present) and the block device driver.
-+
-+blk-mq has two group of queues: software staging queues and hardware dispatch
-+queues. When the request arrives at the block layer, it will try the shortest
-+path possible: send it directly to the hardware queue. However, there are two
-+cases that it might not do that: if there's an IO scheduler attached at the
-+layer or if we want to try to merge requests. In both cases, requests will be
-+sent to the software queue.
-+
-+Then, after the requests are processed by software queues, they will be placed
-+at the hardware queue, a second stage queue were the hardware has direct access
-+to process those requests. However, if the hardware does not have enough
-+resources to accept more requests, blk-mq will places requests on a temporary
-+queue, to be sent in the future, when the hardware is able.
-+
-+Software staging queues
-+~~~~~~~~~~~~~~~~~~~~~~~
-+
-+The block IO subsystem adds requests (represented by struct
-+:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
-+sent directly to the driver. A request is a collection of BIOs. They arrived at
-+the block layer through the data structure struct :c:type:`bio`. The block
-+layer will then build a new structure from it, the struct :c:type:`request`
-+that will be used to communicate with the device driver. Each queue has its
-+own lock and the number of queues is defined by a per-CPU or per-node basis.
-+
-+The staging queue can be used to merge requests for adjacent sectors. For
-+instance, requests for sector 3-6, 6-7, 7-9 can become one request for 3-9.
-+Even if random access to SSDs and NVMs have the same time of response compared
-+to sequential access, grouped requests for sequential access decreases the
-+number of individual requests. This technique of merging requests is called
-+plugging.
-+
-+Along with that, the requests can be reordered to ensure fairness of system
-+resources (e.g. to ensure that no application suffers from starvation) and/or to
-+improve IO performance, by an IO scheduler.
-+
-+IO Schedulers
-+^^^^^^^^^^^^^
-+
-+There are several schedulers implemented by the block layer, each one following
-+a heuristic to improve the IO performance. They are "pluggable" (as in plug
-+and play), in the sense of they can be selected at run time using sysfs. You
-+can read more about Linux's IO schedulers `here
-+<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
-+happens only between requests in the same queue, so it is not possible to merge
-+requests from different queues, otherwise there would be cache trashing and a
-+need to have a lock for each queue. After the scheduling, the requests are
-+eligible to be sent to the hardware. One of the possible schedulers to be
-+selected is the NOOP scheduler, the most straightforward one, that implements a
-+simple FIFO, without performing any reordering. This is useful in the following
-+scenarios: when scheduling will be performed in a next step somewhere in the
-+stack, like block device controllers; the actual sector position of blocks are
-+transparent for the host, meaning it hasn't enough information to take a proper
-+decision; or the overhead of reordering is higher than the handicap of
-+non-sequential accesses.
-+
-+Hardware dispatch queues
-+~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+The hardware queues (represented by struct :c:type:`blk_mq_hw_ctx`) have a 1:1
-+correspondence to the device driver's submission queues, and are the last step
-+of the block layer submission code before the low level device driver taking
-+ownership of the request. To run this queue, the block layer removes requests
-+from the associated software queues and tries to dispatch to the hardware.
-+
-+If it's not possible to send the requests directly to hardware, they will be
-+added to a linked list (:c:type:`hctx->dispatch`) of requests. Then,
-+next time the block layer runs a queue, it will send the requests laying at the
-+:c:type:`dispatch` list first, to ensure a fairness dispatch with those
-+requests that were ready to be sent first. The number of hardware queues
-+depends on the number of hardware contexts supported by the hardware and its
-+device driver, but it will not be more than the number of cores of the system.
-+There is no reordering at this stage, and each software queue has a set of
-+hardware queues to send requests for.
-+
-+.. note::
-+
-+        Neither the block layer nor the device protocols guarantee
-+        the order of completion of requests. This must be handled by
-+        higher layers, like the filesystem.
-+
-+Tag-based completion
-+~~~~~~~~~~~~~~~~~~~~
-+
-+In order to indicate which request has been completed, every request is
-+identified by an integer, ranging from 0 to the dispatch queue size. This tag
-+is generated by the block layer and later reused by the device driver, removing
-+the need to create a redundant identifier. When a request is completed in the
-+drive, the tag is sent back to the block layer to notify it of the finalization.
-+This removes the need to do a linear search to find out which IO has been
-+completed.
-+
-+Further reading
-+---------------
-+
-+- `Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems <http://kernel.dk/blk-mq.pdf>`_
-+
-+- `NOOP scheduler <https://en.wikipedia.org/wiki/Noop_scheduler>`_
-+
-+- `Null block device driver <https://www.kernel.org/doc/html/latest/block/null_blk.html>`_
-+
-+Source code documentation
-+=========================
-+
-+.. kernel-doc:: include/linux/blk-mq.h
-+
-+.. kernel-doc:: block/blk-mq.c
-diff --git a/Documentation/block/index.rst b/Documentation/block/index.rst
-index 3fa7a52fafa4..3a3f38322185 100644
---- a/Documentation/block/index.rst
-+++ b/Documentation/block/index.rst
-@@ -10,6 +10,7 @@ Block
-    bfq-iosched
-    biodoc
-    biovecs
-+   blk-mq
-    capability
-    cmdline-partition
-    data-integrity
--- 
-2.27.0
-
+(though I'd also recommend devm_platform_get_and_ioremap_resource and
+devm_reset_controller_register())
