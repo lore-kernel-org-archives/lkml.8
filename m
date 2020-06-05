@@ -4,62 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CADCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E4FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269CD207ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A882D207ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgFEGxl (ORCPT
+        id S1726166AbgFEGyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:53:41 -0400
-Received: from v6.sk ([167.172.42.174]:46452 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgFEGxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:53:41 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 7DCAA610D5;
-        Fri,  5 Jun 2020 06:53:09 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] dt-bindings: clock: Add a missing include to MMP Audio Clock binding
-Date:   Fri,  5 Jun 2020 08:52:58 +0200
-Message-Id: <20200605065258.567858-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
+        Fri, 5 Jun 2020 02:54:02 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2282 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725280AbgFEGyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 02:54:01 -0400
+Received: from lhreml741-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id F35C8D45AE4DD2AEB67E;
+        Fri,  5 Jun 2020 07:53:59 +0100 (IST)
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ lhreml741-chm.china.huawei.com (10.201.108.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 5 Jun 2020 07:53:59 +0100
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 5 Jun 2020 08:53:58 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <syzkaller-bugs@googlegroups.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH] ima: Directly free *entry in ima_alloc_init_template() if digests is NULL
+Date:   Fri, 5 Jun 2020 08:50:28 +0200
+Message-ID: <20200605065028.12464-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
+ fraeml714-chm.china.huawei.com (10.206.15.33)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The include file for input clock in the example was missing, breaking the
-validation.
+To support multiple template digests, the static array entry->digest has
+been replaced with a dynamically allocated array in commit aa724fe18a8a
+("ima: Switch to dynamically allocated buffer for template digests"). The
+array is allocated in ima_alloc_init_template() and if the returned pointer
+is NULL, ima_free_template_entry() is called.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Reported-by: Rob Herring <robh+dt@kernel.org>
+However, (*entry)->template_desc is not yet initialized while it is used by
+ima_free_template_entry(). This patch fixes the issue by directly freeing
+*entry without calling ima_free_template_entry().
+
+Fixes: aa724fe18a8a ("ima: Switch to dynamically allocated buffer for template digests")
+Reported-by: syzbot+223310b454ba6b75974e@syzkaller.appspotmail.com
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 ---
- .../devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml      | 1 +
- 1 file changed, 1 insertion(+)
+ security/integrity/ima/ima_api.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-index ab6e82d1d3a9e..dffa73402da93 100644
---- a/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-+++ b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.yaml
-@@ -59,6 +59,7 @@ additionalProperties: false
- examples:
-   - |
-     #include <dt-bindings/clock/marvell,mmp2-audio.h>
-+    #include <dt-bindings/clock/marvell,mmp2.h>
-     #include <dt-bindings/power/marvell,mmp2.h>
+diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+index 78e0b0a7723e..bf22de8b7ce0 100644
+--- a/security/integrity/ima/ima_api.c
++++ b/security/integrity/ima/ima_api.c
+@@ -55,8 +55,9 @@ int ima_alloc_init_template(struct ima_event_data *event_data,
+ 	digests = kcalloc(NR_BANKS(ima_tpm_chip) + ima_extra_slots,
+ 			  sizeof(*digests), GFP_NOFS);
+ 	if (!digests) {
+-		result = -ENOMEM;
+-		goto out;
++		kfree(*entry);
++		*entry = NULL;
++		return -ENOMEM;
+ 	}
  
-     clock-controller@d42a0c30 {
+ 	(*entry)->digests = digests;
 -- 
-2.26.2
+2.17.1
 
