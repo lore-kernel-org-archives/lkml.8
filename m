@@ -2,85 +2,215 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0715C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B473C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFBA9207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591330874;
-	bh=HPBz3bEE1JJprSdQmAaivjDc+V/hPAnqgVqPd5/obIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dSW+GmV4gOcgf4SuWlYJdA50fgfvsTTKMufDVRXhux9JgEupWHTrVjxIaewjqrLXj
-	 tUiAAaLP6e1OHS83/47LnJ8kGw6sD80/ESji5SaZwqAQN2YVuuOVEBc5IqVy0sHhiB
-	 KjTcBlpsouzqRHK1ZMb6TWAj8WXy949M5I3kp1ls=
+	by mail.kernel.org (Postfix) with ESMTP id 4B3D9206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgFEEVO (ORCPT
+        id S1726234AbgFEEVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgFEEVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:21:13 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 260B8206E6;
-        Fri,  5 Jun 2020 04:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591330873;
-        bh=HPBz3bEE1JJprSdQmAaivjDc+V/hPAnqgVqPd5/obIw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bkhq0XGSCLnXIpq4nIRYxNClZQvfffiRaSb12Dtoe/sRGAwQ+Bv05ax2wuPmEK/pd
-         gkGURJ93CPxS0jgxWt0lDY2qo80L4TxQMnXDR9OK94GVRERWppy7Wf5bZKRdwXUZqg
-         TfH71+6nTMgEr16DkIBo4qHQlT8crSIpbHYqdlzY=
-Date:   Thu, 4 Jun 2020 21:21:11 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+29b33f3f410e564731f1@syzkaller.appspotmail.com>
-Cc:     brendanhiggins@google.com, dmitry.torokhov@gmail.com,
-        gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rafael.j.wysocki@intel.com, rdunlap@infradead.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in mousedev_cleanup
-Message-ID: <20200605042111.GN2667@sol.localdomain>
-References: <00000000000041728005a653bcd7@google.com>
+        Fri, 5 Jun 2020 00:21:43 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:51542 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbgFEEVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 00:21:42 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jh3rQ-0008Og-16; Thu, 04 Jun 2020 22:21:40 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jh3rO-0000N9-Em; Thu, 04 Jun 2020 22:21:39 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Containers <containers@lists.linux-foundation.org>
+References: <20200604200413.587896-1-gladkov.alexey@gmail.com>
+        <87ftbah8q2.fsf@x220.int.ebiederm.org>
+        <20200605000838.huaeqvgpvqkyg3wh@comp-core-i7-2640m-0182e6>
+Date:   Thu, 04 Jun 2020 23:17:38 -0500
+In-Reply-To: <20200605000838.huaeqvgpvqkyg3wh@comp-core-i7-2640m-0182e6>
+        (Alexey Gladkov's message of "Fri, 5 Jun 2020 02:08:38 +0200")
+Message-ID: <87zh9idu3h.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000041728005a653bcd7@google.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1jh3rO-0000N9-Em;;;mid=<87zh9idu3h.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+7Jf9GLHKnziYGhzfXd2JkxjWEWXRDCRc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 0/2] proc: use subset option to hide some top-level procfs entries
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 10:04:14AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    c11d28ab Add linux-next specific files for 20200522
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=119c3f06100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
-> dashboard link: https://syzkaller.appspot.com/bug?extid=29b33f3f410e564731f1
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135ffa9a100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1076acba100000
-> 
-> The bug was bisected to:
-> 
-> commit 4ef12f7198023c09ad6d25b652bd8748c965c7fa
-> Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Date:   Wed May 13 15:18:40 2020 +0000
-> 
->     kobject: Make sure the parent does not get released before its children
-> 
+Alexey Gladkov <gladkov.alexey@gmail.com> writes:
 
-Commit was reverted.
+> On Thu, Jun 04, 2020 at 03:33:25PM -0500, Eric W. Biederman wrote:
+>> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
+>> 
+>> > Greetings!
+>> >
+>> > Preface
+>> > -------
+>> > This patch set can be applied over:
+>> >
+>> > git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git d35bec8a5788
+>> 
+>> I am not going to seriously look at this for merging until after the
+>> merge window closes. 
+>
+> OK. I'll wait.
 
-#syz invalid
+That will mean your patches can be based on -rc1.
+
+>> Have you thought about the possibility of relaxing the permission checks
+>> to mount proc such that we don't need to verify there is an existing
+>> mount of proc?  With just the subset pids I think this is feasible.  It
+>> might not be worth it at this point, but it is definitely worth asking
+>> the question.  As one of the benefits early propopents of the idea of a
+>> subset of proc touted was that they would not be as restricted as they
+>> are with today's proc.
+>
+> I'm not sure I follow.
+>
+> What do you mean by the possibility of relaxing the permission checks to
+> mount proc?
+>
+> Do you suggest to allow a user to mount procfs with hidepid=2,subset=pid
+> options? If so then this is an interesting idea.
+
+The key part would be subset=pid.  You would still need to be root in
+your user namespace, and mount namespace.  You would not need to have a
+separate copy of proc with nothing hidden already mounted.
+
+>> I ask because this has a bearing on the other options you are playing
+>> with.
+>
+> I can not agree with this because I do not touch on other options.
+> The hidepid and subset=pid has no relation to the visibility of regular
+> files. On the other hand, in procfs there is absolutely no way to restrict
+> access other than selinux.
+
+Untrue.  At a practical level the user namespace greatly restricts
+access to proc because many of the non-process files are limited to
+global root only.
+
+>> Do we want to find a way to have the benefit of relaxed permission
+>> checks while still including a few more files.
+>
+> In fact, I see no problem allowing the user to mount procfs with the
+> hidepid=2,subset=pid options.
+>
+> We can make subset=self, which would allow not only pids subset but also
+> other symlinks that lead to self (/proc/net, /proc/mounts) and if we ever
+> add virtualization to meminfo, cpuinfo etc.
+>
+>> > Overview
+>> > --------
+>> > Directories and files can be created and deleted by dynamically loaded modules.
+>> > Not all of these files are virtualized and safe inside the container.
+>> >
+>> > However, subset=pid is not enough because many containers wants to have
+>> > /proc/meminfo, /proc/cpuinfo, etc. We need a way to limit the visibility of
+>> > files per procfs mountpoint.
+>> 
+>> Is it desirable to have meminfo and cpuinfo as they are today or do
+>> people want them to reflect the ``container'' context.   So that
+>> applications like the JVM don't allocation too many cpus or don't try
+>> and consume too much memory, or run on nodes that cgroups current make
+>> unavailable.
+>
+> Of course, it would be better if these files took into account the
+> limitations of cgroups or some kind of ``containerized'' context.
+>
+>> Are there any users or planned users of this functionality yet?
+>
+> I know that java uses meminfo for sure.
+>
+> The purpose of this patch is to isolate the container from unwanted files
+> in procfs.
+
+If what we want is the ability not to use the original but to have
+a modified version of these files.  We probably want empty files that
+serve as mount points.
+
+Or possibly a version of these files that takes into account
+restrictions.  In either even we need to do the research through real
+programs and real kernel options to see what is our best option for
+exporting the limitations that programs have and deciding on the long
+term API for that.
+
+If we research things and we decide the best way to let java know of
+it's limitations is to change /proc/meminfo.  That needs to be a change
+that always applies to meminfo and is not controlled by options.
+
+>> I am concerned that you might be adding functionality that no one will
+>> ever use that will just add code to the kernel that no one cares about,
+>> that will then accumulate bugs.  Having had to work through a few of
+>> those cases to make each mount of proc have it's own super block I am
+>> not a great fan of adding another one.
+>>
+>> If the runc, lxc and other container runtime folks can productively use
+>> such and option to do useful things and they are sensible things to do I
+>> don't have any fundamental objection.  But I do want to be certain this
+>> is a feature that is going to be used.
+>
+> Ok, just an example how docker or runc (actually almost all golang-based
+> container systems) is trying to block access to something in procfs:
+>
+> $ docker run -it --rm busybox
+> # mount |grep /proc
+> proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+> proc on /proc/bus type proc (ro,relatime)
+> proc on /proc/fs type proc (ro,relatime)
+> proc on /proc/irq type proc (ro,relatime)
+> proc on /proc/sys type proc (ro,relatime)
+> proc on /proc/sysrq-trigger type proc (ro,relatime)
+> tmpfs on /proc/asound type tmpfs (ro,seclabel,relatime)
+> tmpfs on /proc/acpi type tmpfs (ro,seclabel,relatime)
+> tmpfs on /proc/kcore type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
+> tmpfs on /proc/keys type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
+> tmpfs on /proc/latency_stats type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
+> tmpfs on /proc/timer_list type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
+> tmpfs on /proc/sched_debug type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
+> tmpfs on /proc/scsi type tmpfs (ro,seclabel,relatime)
+>
+> For now I'm just trying ti create a better way to restrict access in
+> the procfs than this since procfs is used in containers.
+
+Docker historically has been crap about having a sensible policy.  The
+problem is that Docker wanted to allow real root in a container and
+somehow make it safe by blocking access to proc files and by dropping
+capabilities.
+
+Practically everything that Docker has done is much better and simpler by
+restricting the processes to a user namespace, with a root user whose
+uid is not the global root user.
+
+Which is why I want us to make certain we are doing something that makes
+sense, and is architecturally sound.
+
+You have cleared the big hurdle and proc now has options that are
+usable.   I really appreciate that.  I am not opposed to the general
+direction you are going to find a way to make proc more usable.  I just
+want our next step to be solid.
+
+Eric
