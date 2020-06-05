@@ -5,71 +5,78 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3495C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C26DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 807A0207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C59207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BsECjqK/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpm0Bkg5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgFEDX1 (ORCPT
+        id S1726404AbgFED1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60060 "EHLO
+        Thu, 4 Jun 2020 23:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgFEDX0 (ORCPT
+        with ESMTP id S1726072AbgFED1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:23:26 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 124DBC08C5C0;
-        Thu,  4 Jun 2020 20:23:23 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id j8so8727413iog.13;
-        Thu, 04 Jun 2020 20:23:23 -0700 (PDT)
+        Thu, 4 Jun 2020 23:27:40 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADADEC08C5C0;
+        Thu,  4 Jun 2020 20:27:40 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p5so8202218ile.6;
+        Thu, 04 Jun 2020 20:27:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=liGwaubP6mRdOHGTrmXeXAs4GL+KhvggzrIcxZzyx0s=;
-        b=BsECjqK/peoemX1wSKgJWtYnYAwXEFm3muWD8NLgko+6QYL8xjksliOJm54JMZ2qq9
-         iuJDTR4sFH2cIsTu/toCDJpvHQ1JRzzbloU7G3Ne8r1uRgTQ5TcwDMKPwjp9M0nfBiv7
-         mJu75OQe0m1Epn/xL78C/zwsVAHPMVGDDqy+UcJzyahDNgbiWiMWrMbNvGMiaGC8Rl1y
-         Xrqy98jXFQVy/d3Rk4Kk9qzcJjQ26Y3fSqAiqFjGUj5oln6jgWiS1J7zHSHrSMKNcjUd
-         DBxjZ6GhvEIMT1w/t95w3j4K2AfZY6SbXPmGsVYpRz3o+RO6KnsXmSda17GAqdW9U0TQ
-         y7Zw==
+        bh=Wso3Uq4ZK5HIlYrGw+m1OLsKrcnMVzQIdIiN1bfsOnU=;
+        b=jpm0Bkg5ZInuslfAoRflVOENbBUZ5F2G1M+QXSVgKRgP7zXhR2ZLd3rjA+I+ZF8Bfa
+         XFS6r9BwWoY1xOACIwhP47GjjjZ5M+06YSxHTh7gZ8MX38MwhZKyHpZxius1xBPEUKGa
+         OueeNzSZTmrtmQ3s6+kvZ5+pQvjKMjgciWNb5KpFW73lYc+ATx+cvIywu2tJpcG5DN8i
+         5oxFTFQHXnDYNUpvbVQo5r5o1YVOiP7VjTu4zL7fhorJI15WCULvw1abhktLc4u/eFM9
+         6Fmk3wEwsN5V97/PHFgnrC3Ieut5TmJxIPLCi2ggyM785/pvnYTBNYgpPeM7G2G/nUHZ
+         I9Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=liGwaubP6mRdOHGTrmXeXAs4GL+KhvggzrIcxZzyx0s=;
-        b=TRDpcQgE4CZagH/SD+oZ/67FsJRbiPBWFkqK0OXAmXfGg/z0c+rPm9Wr2zwAhANDNQ
-         UvxAXV22WRBQoTJKAJLVYUlpAsAwyp9DxKT+k8Vy2DSIc9d5iaRXHQLPoCRH0l+fk0Fv
-         GxXgJ+3kGG+mI/TkIzRRfLDDTIma35EHieNoLFzrW8rjGY2aYJQ6GkmY9VaVfNnj/VLL
-         ETTxhAyNVA5z/ue+133IZBRTHiOhXEcFbHCvAF5e+1U7L7zWpwd/iAT/Hli3VOI4FttZ
-         YrvzKotigM3NYpIPl5Um6gzsjZ/jm8TNZV4lDaKn2OKceSd9lyYBSNBz1jB865Wml80R
-         IovQ==
-X-Gm-Message-State: AOAM532upp7g+NIkdw7kzzqngwKZ4IL+KVcLTb89KnyV3ot56I8Vyy/x
-        2Eif4HSgyV5QVKuWn4z7WlY=
-X-Google-Smtp-Source: ABdhPJyOP4IZmR82ZM345ctXo67aV+7jNU5IS3XlCDu55+aWNLOqM3cD5hOm3ggE4dnuAOCV+l3B/g==
-X-Received: by 2002:a02:2581:: with SMTP id g123mr6733130jag.35.1591327402381;
-        Thu, 04 Jun 2020 20:23:22 -0700 (PDT)
+        bh=Wso3Uq4ZK5HIlYrGw+m1OLsKrcnMVzQIdIiN1bfsOnU=;
+        b=R0+Hd1l0i4JL2PrD4SHr3Gd457czURZUuBLL5wFy+E83bPU2mdSMLidJMx6FusU5wc
+         9UxyBzYBBa9jw90U8y5QcnC+asK5LQmK573wRJtrOktEpZ1TvT8agF2q62yCdWgo6BLl
+         pB/o8hENl4XgShIIE6dy+mfp8Jdp6enqXuu0PQ2bYJUw6jP7fCn9qDfM5DlB2nWcPlLZ
+         V3iaKv44Xj55ojvQNAqQOS3b4U/MyzkHCcBp18+fap9QkVf2GUHFrAA4v14DpKp7Svr/
+         oS3GuOh0k8grgngYsv8sYqdaTHArndR2lMG7TgqrBjnjF/bFHWPiUpXFyhidf144/jKZ
+         eSSA==
+X-Gm-Message-State: AOAM531lmN0iQ61eAa/DZph1nUXeXNHB6FvTW03MKGmUtC+oITXlZQaQ
+        CINhUB7LwIowvKSR8PLpSSU=
+X-Google-Smtp-Source: ABdhPJxPEuoMTJOGdljOCBOOB+kz2nQkQ48+9ttzR6Xu/dk6kci6f3Gcj1qVZsnYWKcGGir28gz9wg==
+X-Received: by 2002:a92:a112:: with SMTP id v18mr6320491ili.278.1591327659958;
+        Thu, 04 Jun 2020 20:27:39 -0700 (PDT)
 Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id 13sm2315880ilg.24.2020.06.04.20.23.21
+        by smtp.googlemail.com with ESMTPSA id v3sm2287930ilh.53.2020.06.04.20.27.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 20:23:21 -0700 (PDT)
+        Thu, 04 Jun 2020 20:27:39 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] PCI: rcar: handle the failure case of pm_runtime_get_sync
-Date:   Thu,  4 Jun 2020 22:23:15 -0500
-Message-Id: <20200605032315.39071-1-navid.emamdoost@gmail.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hari Nagalla <hnagalla@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Maital Hahn <maitalm@ti.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
+Subject: [PATCH] wlcore: mesh: handle failure case of pm_runtime_get_sync
+Date:   Thu,  4 Jun 2020 22:27:31 -0500
+Message-Id: <20200605032733.49846-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -82,31 +89,25 @@ pm_runtime_get_sync fails.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/pci/controller/pcie-rcar.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/wireless/ti/wlcore/main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-index 759c6542c5c8..6b4181c0710e 100644
---- a/drivers/pci/controller/pcie-rcar.c
-+++ b/drivers/pci/controller/pcie-rcar.c
-@@ -1137,7 +1137,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err < 0) {
- 		dev_err(pcie->dev, "pm_runtime_get_sync failed\n");
--		goto err_pm_disable;
-+		goto err_pm_put;
- 	}
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index f140f7d7f553..c7e4f5a80b9e 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -3662,8 +3662,10 @@ void wlcore_regdomain_config(struct wl1271 *wl)
+ 		goto out;
  
- 	err = rcar_pcie_get_resources(pcie);
-@@ -1208,8 +1208,6 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(wl->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(wl->dev);
+ 		goto out;
++	}
  
- err_pm_put:
- 	pm_runtime_put(dev);
--
--err_pm_disable:
- 	pm_runtime_disable(dev);
- 	pci_free_resource_list(&pcie->resources);
- 
+ 	ret = wlcore_cmd_regdomain_config_locked(wl);
+ 	if (ret < 0) {
 -- 
 2.17.1
 
