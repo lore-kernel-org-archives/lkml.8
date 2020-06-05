@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B20DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D85BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377F52075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF8420820
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359953;
-	bh=+TEMy27BblOXnMlqgiWZu2b8YQF3RwzOnroYFUg/yFw=;
+	s=default; t=1591359958;
+	bh=dC7qEY8RWldK5Tu4/BHmKfll+FauoIDgIQY9R1Du2LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cj06yR20uL1qkahYkHfppSATcNBppXP6g2+B4r885ArEwHubUQpwo3JwjWvZi4h6N
-	 TaEn/BN4+/x6lw1r7ksd3lTFwEI+HKA8lbrYILciiwbtYFrSDAd+MOIwQesjSpdcjX
-	 /px1hKAWLzr0iqms4PHh5TQ44b3bxldtJehBc/9o=
+	b=LvveAEj3XYXXArpOyzaUAfLhduqS35xmvfoNMxX1jkLnp5eOpbuu9T3i6HoS8/lEb
+	 tzWmIputF2DKHhpUEGSqdLpU1R14Q1cJM5p5QlIu3/2VhO8ZO/WaapukuYZSw7hC4t
+	 Szk/RqRkNqABpg+EUuauS2eTgaUZWj1DXG6L+Q7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgFEMZw (ORCPT
+        id S1727008AbgFEMZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgFEMZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:44 -0400
+        id S1726969AbgFEMZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98C820810;
-        Fri,  5 Jun 2020 12:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9F7B206DC;
+        Fri,  5 Jun 2020 12:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359943;
-        bh=+TEMy27BblOXnMlqgiWZu2b8YQF3RwzOnroYFUg/yFw=;
+        s=default; t=1591359951;
+        bh=dC7qEY8RWldK5Tu4/BHmKfll+FauoIDgIQY9R1Du2LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LwOWXgNgsupkDtOTntRLYsB+F/VoqVRMB+y6jJYYUSF0E7q6LPbOo5XYC1CIQyvkh
-         aeUk2hH996vffFn3oW37HN3KpXJY2hfoag2lNCPWVgfPku/5wae/opShPXBUUwNgDz
-         uIz9vWjXGHCHssObJ6EGdchzqReAfI6CIQsmr6ro=
+        b=nNCrv1bliNGQ//YC3zJZQFcAXFvhXoSZIq//HLg0lL/iPcXK3NyHy0d/P6G0/wIec
+         NCOMzv0mlF14I01BQxvVYXH0Deiv/Ngtq5ZFDVaQ5cE94e4ty4MS/cd/VQPiU024Ni
+         xWyEEoW47col6UXdgEupGEK6qMx6HRhbHy2MRL6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fredrik Strupe <fredrik@strupe.net>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 02/14] ARM: 8977/1: ptrace: Fix mask for thumb breakpoint hook
-Date:   Fri,  5 Jun 2020 08:25:28 -0400
-Message-Id: <20200605122540.2882539-2-sashal@kernel.org>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/14] csky: Fixup abiv2 syscall_trace break a4 & a5
+Date:   Fri,  5 Jun 2020 08:25:35 -0400
+Message-Id: <20200605122540.2882539-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122540.2882539-1-sashal@kernel.org>
 References: <20200605122540.2882539-1-sashal@kernel.org>
@@ -61,51 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Strupe <fredrik@strupe.net>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 3866f217aaa81bf7165c7f27362eee5d7919c496 ]
+[ Upstream commit e0bbb53843b5fdfe464b099217e3b9d97e8a75d7 ]
 
-call_undef_hook() in traps.c applies the same instr_mask for both 16-bit
-and 32-bit thumb instructions. If instr_mask then is only 16 bits wide
-(0xffff as opposed to 0xffffffff), the first half-word of 32-bit thumb
-instructions will be masked out. This makes the function match 32-bit
-thumb instructions where the second half-word is equal to instr_val,
-regardless of the first half-word.
+Current implementation could destory a4 & a5 when strace, so we need to get them
+from pt_regs by SAVE_ALL.
 
-The result in this case is that all undefined 32-bit thumb instructions
-with the second half-word equal to 0xde01 (udf #1) work as breakpoints
-and will raise a SIGTRAP instead of a SIGILL, instead of just the one
-intended 16-bit instruction. An example of such an instruction is
-0xeaa0de01, which is unallocated according to Arm ARM and should raise a
-SIGILL, but instead raises a SIGTRAP.
-
-This patch fixes the issue by setting all the bits in instr_mask, which
-will still match the intended 16-bit thumb instruction (where the
-upper half is always 0), but not any 32-bit thumb instructions.
-
-Cc: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ptrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/csky/abiv2/inc/abi/entry.h | 2 ++
+ arch/csky/kernel/entry.S        | 6 ++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index 324352787aea..db9401581cd2 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -219,8 +219,8 @@ static struct undef_hook arm_break_hook = {
- };
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 9023828ede97..ac8f65a3e75a 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -13,6 +13,8 @@
+ #define LSAVE_A1	28
+ #define LSAVE_A2	32
+ #define LSAVE_A3	36
++#define LSAVE_A4	40
++#define LSAVE_A5	44
  
- static struct undef_hook thumb_break_hook = {
--	.instr_mask	= 0xffff,
--	.instr_val	= 0xde01,
-+	.instr_mask	= 0xffffffff,
-+	.instr_val	= 0x0000de01,
- 	.cpsr_mask	= PSR_T_BIT,
- 	.cpsr_val	= PSR_T_BIT,
- 	.fn		= break_trap,
+ #define KSPTOUSP
+ #define USPTOKSP
+diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
+index 65c55f22532a..4349528fbf38 100644
+--- a/arch/csky/kernel/entry.S
++++ b/arch/csky/kernel/entry.S
+@@ -170,8 +170,10 @@ csky_syscall_trace:
+ 	ldw	a3, (sp, LSAVE_A3)
+ #if defined(__CSKYABIV2__)
+ 	subi	sp, 8
+-	stw	r5, (sp, 0x4)
+-	stw	r4, (sp, 0x0)
++	ldw	r9, (sp, LSAVE_A4)
++	stw	r9, (sp, 0x0)
++	ldw	r9, (sp, LSAVE_A5)
++	stw	r9, (sp, 0x4)
+ #else
+ 	ldw	r6, (sp, LSAVE_A4)
+ 	ldw	r7, (sp, LSAVE_A5)
 -- 
 2.25.1
 
