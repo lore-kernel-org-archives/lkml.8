@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15686C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD4BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED5D720872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8ACE206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgFEVjJ (ORCPT
+        id S1728670AbgFEVjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:39:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:49307 "EHLO mga17.intel.com"
+        Fri, 5 Jun 2020 17:39:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55947 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728227AbgFEVjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:39:08 -0400
-IronPort-SDR: QJudosyraLoQ2pgoGD3dtsMijyFPia44foxIrkje7YWrIsaCB1QDfK44F0TVo0lLJCX7xqORB2
- mB4vtKXFJCng==
+        id S1728406AbgFEVjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:39:09 -0400
+IronPort-SDR: siOTqAqkBZhYWPTxFVOp41r96cKgQAPsVwrFd/YQBqUcs8WT/h03hbZpOM8WHfo9PakWP44bjg
+ IcxeInor7JrQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:07 -0700
-IronPort-SDR: kUB4EaD9pBY+TwwSYxybFG3rI29fqgwbISoJ3DAUxWFW4zz+0j67lNNk6bsc8yImoZHZt5pcsT
- yNUu2OllTXSw==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:08 -0700
+IronPort-SDR: cEudBF59LK3CTMPSDdTBbkcm2oAb/IvJgot/66IKxKiXC9zDyuWMBiauqZf470L4+E7qPhWsaa
+ pirhGky+lfRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="287860868"
+   d="scan'208";a="287860892"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:07 -0700
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:08 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -56,9 +56,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Junaid Shahid <junaids@google.com>,
         Ben Gardon <bgardon@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH 01/21] KVM: x86/mmu: Track the associated kmem_cache in the MMU caches
-Date:   Fri,  5 Jun 2020 14:38:33 -0700
-Message-Id: <20200605213853.14959-2-sean.j.christopherson@intel.com>
+Subject: [PATCH 09/21] KVM: x86/mmu: Separate the memory caches for shadow pages and gfn arrays
+Date:   Fri,  5 Jun 2020 14:38:41 -0700
+Message-Id: <20200605213853.14959-10-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200605213853.14959-1-sean.j.christopherson@intel.com>
 References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
@@ -69,106 +69,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Track the kmem_cache used for non-page KVM MMU memory caches instead of
-passing in the associated kmem_cache when filling the cache.  This will
-allow consolidating code and other cleanups.
+Use separate caches for allocating shadow pages versus gfn arrays.  This
+sets the stage for specifying __GFP_ZERO when allocating shadow pages
+without incurring extra cost for gfn arrays.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/mmu/mmu.c          | 24 +++++++++++-------------
- 2 files changed, 12 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  3 ++-
+ arch/x86/kvm/mmu/mmu.c          | 15 ++++++++++-----
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 1da5858501ca..16347b050754 100644
+index 16347b050754..e7a427547557 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
-  */
- struct kvm_mmu_memory_cache {
- 	int nobjs;
-+	struct kmem_cache *kmem_cache;
- 	void *objects[KVM_NR_MEM_OBJS];
- };
+@@ -636,7 +636,8 @@ struct kvm_vcpu_arch {
+ 	struct kvm_mmu *walk_mmu;
  
+ 	struct kvm_mmu_memory_cache mmu_pte_list_desc_cache;
+-	struct kvm_mmu_memory_cache mmu_page_cache;
++	struct kvm_mmu_memory_cache mmu_shadow_page_cache;
++	struct kvm_mmu_memory_cache mmu_gfn_array_cache;
+ 	struct kvm_mmu_memory_cache mmu_page_header_cache;
+ 
+ 	/*
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index fdd05c233308..0830c195c9ed 100644
+index 451e0365e5dd..d245acece3cd 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1060,15 +1060,14 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
- 	local_irq_enable();
- }
- 
--static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
--				  struct kmem_cache *base_cache, int min)
-+static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
- {
- 	void *obj;
- 
- 	if (cache->nobjs >= min)
- 		return 0;
- 	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
--		obj = kmem_cache_zalloc(base_cache, GFP_KERNEL_ACCOUNT);
-+		obj = kmem_cache_zalloc(cache->kmem_cache, GFP_KERNEL_ACCOUNT);
- 		if (!obj)
- 			return cache->nobjs >= min ? 0 : -ENOMEM;
- 		cache->objects[cache->nobjs++] = obj;
-@@ -1081,11 +1080,10 @@ static int mmu_memory_cache_free_objects(struct kvm_mmu_memory_cache *cache)
- 	return cache->nobjs;
- }
- 
--static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc,
--				  struct kmem_cache *cache)
-+static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
- {
- 	while (mc->nobjs)
--		kmem_cache_free(cache, mc->objects[--mc->nobjs]);
-+		kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
- }
- 
- static int mmu_topup_memory_cache_page(struct kvm_mmu_memory_cache *cache,
-@@ -1115,25 +1113,22 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
- 	int r;
- 
- 	r = mmu_topup_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
--				   pte_list_desc_cache, 8 + PTE_PREFETCH_NUM);
-+				   8 + PTE_PREFETCH_NUM);
+@@ -1108,8 +1108,12 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+ 				   1 + PT64_ROOT_MAX_LEVEL + PTE_PREFETCH_NUM);
  	if (r)
- 		goto out;
- 	r = mmu_topup_memory_cache_page(&vcpu->arch.mmu_page_cache, 8);
+ 		return r;
+-	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
+-				   2 * PT64_ROOT_MAX_LEVEL);
++	r = mmu_topup_memory_cache(&vcpu->arch.mmu_shadow_page_cache,
++				   PT64_ROOT_MAX_LEVEL);
++	if (r)
++		return r;
++	r = mmu_topup_memory_cache(&vcpu->arch.mmu_gfn_array_cache,
++				   PT64_ROOT_MAX_LEVEL);
  	if (r)
- 		goto out;
--	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
--				   mmu_page_header_cache, 4);
-+	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
- out:
- 	return r;
- }
- 
+ 		return r;
+ 	return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
+@@ -1119,7 +1123,8 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
  static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
  {
--	mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
--				pte_list_desc_cache);
-+	mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache);
- 	mmu_free_memory_cache_page(&vcpu->arch.mmu_page_cache);
--	mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache,
--				mmu_page_header_cache);
-+	mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
+ 	mmu_free_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache);
+-	mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
++	mmu_free_memory_cache(&vcpu->arch.mmu_shadow_page_cache);
++	mmu_free_memory_cache(&vcpu->arch.mmu_gfn_array_cache);
+ 	mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
  }
  
- static void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
-@@ -5684,6 +5679,9 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
- 	uint i;
- 	int ret;
+@@ -2096,9 +2101,9 @@ static struct kvm_mmu_page *kvm_mmu_alloc_page(struct kvm_vcpu *vcpu, int direct
+ 	struct kvm_mmu_page *sp;
  
-+	vcpu->arch.mmu_pte_list_desc_cache.kmem_cache = pte_list_desc_cache;
-+	vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
-+
- 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
- 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+ 	sp = mmu_memory_cache_alloc(&vcpu->arch.mmu_page_header_cache);
+-	sp->spt = mmu_memory_cache_alloc(&vcpu->arch.mmu_page_cache);
++	sp->spt = mmu_memory_cache_alloc(&vcpu->arch.mmu_shadow_page_cache);
+ 	if (!direct)
+-		sp->gfns = mmu_memory_cache_alloc(&vcpu->arch.mmu_page_cache);
++		sp->gfns = mmu_memory_cache_alloc(&vcpu->arch.mmu_gfn_array_cache);
+ 	set_page_private(virt_to_page(sp->spt), (unsigned long)sp);
  
+ 	/*
 -- 
 2.26.0
 
