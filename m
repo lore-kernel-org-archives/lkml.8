@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B122C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49437C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23835208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F9D208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366608;
-	bh=muJTA8gw92hC3PZu1PneM6mFIFDrGyL77weaKHDumjM=;
+	s=default; t=1591366612;
+	bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XsmMFu2WesT+xwBYktleQpAkaj6tt400V+kFe8oa1JC4va+DN0MxUoLiUKlolnC6N
-	 jBoOLQc00PF03nnmLvIjrWeJIqYgU8aRvz+vTdVk5w2nYDThyaZi8+Cupp6Qgayuzx
-	 HISctxUOxOwOM9IgiiVzx7zYozzvHOEiWujCvKYg=
+	b=cA+27garIO20v9nZjZZxNmfEGB0Wi/m9ow6r9NL8fionjYPczU+BXbmm9Ps+wd5TN
+	 px0Ua7GP+y3crrOmfIxZcle8tIIeRLZLlwAqZLo/LeQHP98X/A3qBhBsDIUCKjKxzg
+	 Wwlyi06uQRUyYROCqqvqZ4xNhAfjdlyS/PeIB5F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgFEOQq (ORCPT
+        id S1728311AbgFEOQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45616 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgFEOQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:30 -0400
+        id S1728265AbgFEOQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 347DE2086A;
-        Fri,  5 Jun 2020 14:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022F92075B;
+        Fri,  5 Jun 2020 14:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366589;
-        bh=muJTA8gw92hC3PZu1PneM6mFIFDrGyL77weaKHDumjM=;
+        s=default; t=1591366596;
+        bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JH+KM/Smhzp0bxO8BYuzWt/fCiAnyNvV/nOBw53XJ5t0xDR1Qfoyp4IG7EfkxSGOY
-         eHfZHi3EVDL+k4qhM09nHkhzMKqni4HbItMb6TGFNHQAlys+qdDBxf77uChRpR4WVw
-         uKEGmQ7hMcV+fcXMu2ia4U7VsR5meSYTj23KU5pM=
+        b=uxLo47VElmz5tWHF8u+DZ9z3KUPRzltPHIIHjyw2ipxADoSsg9KicGForNf82n4m1
+         4HXsWcAnZnTx/Byherr4TZSq5kLEvgHxfTWDKbIlUD+CF3LTyT1P7ek+CUs+ISpJAu
+         H8q81FPhpG/E/WfiA5p6T7VJqxn4r1dpDgTq7qQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 14/43] io_uring: fix FORCE_ASYNC req preparation
-Date:   Fri,  5 Jun 2020 16:14:44 +0200
-Message-Id: <20200605140153.269887611@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>,
+        Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 17/43] net: bmac: Fix read of MAC address from ROM
+Date:   Fri,  5 Jun 2020 16:14:47 +0200
+Message-Id: <20200605140153.425683489@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -59,43 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit bd2ab18a1d6267446eae1b47dd839050452bdf7f ]
+[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
 
-As for other not inlined requests, alloc req->io for FORCE_ASYNC reqs,
-so they can be prepared properly.
+In bmac_get_station_address, We're reading two bytes at a time from ROM,
+but we do that six times, resulting in 12 bytes of read & writes. This
+means we will write off the end of the six-byte destination buffer.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This change fixes the for-loop to only read/write six bytes.
+
+Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reported-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Reported-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/apple/bmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index aa800f70c55e..504484dc33e4 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4823,9 +4823,15 @@ fail_req:
- 			io_double_put_req(req);
- 		}
- 	} else if (req->flags & REQ_F_FORCE_ASYNC) {
--		ret = io_req_defer_prep(req, sqe);
--		if (unlikely(ret < 0))
--			goto fail_req;
-+		if (!req->io) {
-+			ret = -EAGAIN;
-+			if (io_alloc_async_ctx(req))
-+				goto fail_req;
-+			ret = io_req_defer_prep(req, sqe);
-+			if (unlikely(ret < 0))
-+				goto fail_req;
-+		}
-+
- 		/*
- 		 * Never try inline submit of IOSQE_ASYNC is set, go straight
- 		 * to async execution.
+diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
+index a58185b1d8bf..3e3711b60d01 100644
+--- a/drivers/net/ethernet/apple/bmac.c
++++ b/drivers/net/ethernet/apple/bmac.c
+@@ -1182,7 +1182,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
+ 	int i;
+ 	unsigned short data;
+ 
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < 3; i++)
+ 		{
+ 			reset_and_select_srom(dev);
+ 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
 -- 
 2.25.1
 
