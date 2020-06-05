@@ -2,52 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853B3204EA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401E72074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367114;
-	bh=usTWkI/BDbEZqG7b7JXwId/H5vjLUwle1vR+sF0fBd8=;
+	s=default; t=1591367117;
+	bh=D0nourJT4cPZYNOqGjUCpq3oY9EB+0oI1CxFUfFKk4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CfdEFn0i8KZ7h/gOoi07MTx04spyEZEVnVU9cgByqb0+MuTcWECOgkFruTMFXRe6c
-	 DJcNUONpTiNwDN1TVaHsOSil6sJOKBooSTcI/2j+NG/ywOBMAo2I0vlvPh/HX6fRJK
-	 Mt5gygtMonRUqggac5SeRLvkOhqlQIL5LnFvBsVw=
+	b=thUjUv6J3kBHuUWEBKoV/5DfJtepdoF13DGRHoo74A1Zepd3DfZKtJRgtpo/wXMdY
+	 Sn4Ed1X66Ve7pIjNZ2uYZfpmx49BJeaGnDNYl8HlhMOGokhCEGUKpG+5F7r6qWgKtf
+	 n2GZrphseQ8FWio4jcETXC9WyrFcTGjlHctiPKf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgFEOZM (ORCPT
+        id S1728843AbgFEOZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46150 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:25:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728315AbgFEOQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:55 -0400
+        id S1728335AbgFEOQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 394C5208B8;
-        Fri,  5 Jun 2020 14:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC45208A9;
+        Fri,  5 Jun 2020 14:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366614;
-        bh=usTWkI/BDbEZqG7b7JXwId/H5vjLUwle1vR+sF0fBd8=;
+        s=default; t=1591366612;
+        bh=D0nourJT4cPZYNOqGjUCpq3oY9EB+0oI1CxFUfFKk4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ee7Bha+c7EXb8Z1HsdEW/jGYcJ6STecPjSZz7vpzMYThXtZFL+WBHCXa4yxXu/HlF
-         otOGT0MNKPj+Cj/P2mpINPAVoEln5whQJEWOKulKAJAbImN/sboGldroG0NHODeVGv
-         aOW7sQ1rCjVeJAEVpm6BSAHd1Oze8dY8+I5yIE7Y=
+        b=uJF2WVcfiTmKtDPViHs3880U5VW3SeV2JOcobI6aQcnNyRgv8u+ybuhbV7DnJyQD0
+         kU4RbAVtfMkkUNbNN/HvoQd0xGSKXLwa5T3997bXa8YA+6Rf6C8CHJMoXQ7YPZ/Sx6
+         5addNElEnsOrFqhup4vct242T4EtAp9UpMKDC5mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 24/43] null_blk: return error for invalid zone size
-Date:   Fri,  5 Jun 2020 16:14:54 +0200
-Message-Id: <20200605140153.790067538@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 23/43] wireguard: selftests: use newer iproute2 for gcc-10
+Date:   Fri,  5 Jun 2020 16:14:53 +0200
+Message-Id: <20200605140153.738574711@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,63 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Jason A. Donenfeld <Jason@zx2c4.com>
 
-[ Upstream commit e274832590211c4b1b1e807ca66fad8b5bb8b328 ]
+[ Upstream commit ee3c1aa3f34b7842c1557cfe5d8c3f7b8c692de8 ]
 
-In null_init_zone_dev() check if the zone size is larger than device
-capacity, return error if needed.
+gcc-10 switched to defaulting to -fno-common, which broke iproute2-5.4.
+This was fixed in iproute-5.6, so switch to that. Because we're after a
+stable testing surface, we generally don't like to bump these
+unnecessarily, but in this case, being able to actually build is a basic
+necessity.
 
-This also fixes the following oops :-
-
-null_blk: changed the number of conventional zones to 4294967295
-BUG: kernel NULL pointer dereference, address: 0000000000000010
-PGD 7d76c5067 P4D 7d76c5067 PUD 7d240c067 PMD 0
-Oops: 0002 [#1] SMP NOPTI
-CPU: 4 PID: 5508 Comm: nullbtests.sh Tainted: G OE 5.7.0-rc4lblk-fnext0
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e4
-RIP: 0010:null_init_zoned_dev+0x17a/0x27f [null_blk]
-RSP: 0018:ffffc90007007e00 EFLAGS: 00010246
-RAX: 0000000000000020 RBX: ffff8887fb3f3c00 RCX: 0000000000000007
-RDX: 0000000000000000 RSI: ffff8887ca09d688 RDI: ffff888810fea510
-RBP: 0000000000000010 R08: ffff8887ca09d688 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8887c26e8000
-R13: ffffffffa05e9390 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007fcb5256f740(0000) GS:ffff888810e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000010 CR3: 000000081e8fe000 CR4: 00000000003406e0
-Call Trace:
- null_add_dev+0x534/0x71b [null_blk]
- nullb_device_power_store.cold.41+0x8/0x2e [null_blk]
- configfs_write_file+0xe6/0x150
- vfs_write+0xba/0x1e0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x60/0x250
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7fcb51c71840
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_zoned.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/testing/selftests/wireguard/qemu/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
-index ed34785dd64b..5dc955f5ea0a 100644
---- a/drivers/block/null_blk_zoned.c
-+++ b/drivers/block/null_blk_zoned.c
-@@ -20,6 +20,10 @@ int null_zone_init(struct nullb_device *dev)
- 		pr_err("zone_size must be power-of-two\n");
- 		return -EINVAL;
- 	}
-+	if (dev->zone_size > dev->size) {
-+		pr_err("Zone size larger than device capacity\n");
-+		return -EINVAL;
-+	}
- 
- 	dev->zone_size_sects = dev->zone_size << ZONE_SIZE_SHIFT;
- 	dev->nr_zones = dev_size >>
+diff --git a/tools/testing/selftests/wireguard/qemu/Makefile b/tools/testing/selftests/wireguard/qemu/Makefile
+index 90598a425c18..4bdd6c1a19d3 100644
+--- a/tools/testing/selftests/wireguard/qemu/Makefile
++++ b/tools/testing/selftests/wireguard/qemu/Makefile
+@@ -44,7 +44,7 @@ endef
+ $(eval $(call tar_download,MUSL,musl,1.2.0,.tar.gz,https://musl.libc.org/releases/,c6de7b191139142d3f9a7b5b702c9cae1b5ee6e7f57e582da9328629408fd4e8))
+ $(eval $(call tar_download,IPERF,iperf,3.7,.tar.gz,https://downloads.es.net/pub/iperf/,d846040224317caf2f75c843d309a950a7db23f9b44b94688ccbe557d6d1710c))
+ $(eval $(call tar_download,BASH,bash,5.0,.tar.gz,https://ftp.gnu.org/gnu/bash/,b4a80f2ac66170b2913efbfb9f2594f1f76c7b1afd11f799e22035d63077fb4d))
+-$(eval $(call tar_download,IPROUTE2,iproute2,5.4.0,.tar.xz,https://www.kernel.org/pub/linux/utils/net/iproute2/,fe97aa60a0d4c5ac830be18937e18dc3400ca713a33a89ad896ff1e3d46086ae))
++$(eval $(call tar_download,IPROUTE2,iproute2,5.6.0,.tar.xz,https://www.kernel.org/pub/linux/utils/net/iproute2/,1b5b0e25ce6e23da7526ea1da044e814ad85ba761b10dd29c2b027c056b04692))
+ $(eval $(call tar_download,IPTABLES,iptables,1.8.4,.tar.bz2,https://www.netfilter.org/projects/iptables/files/,993a3a5490a544c2cbf2ef15cf7e7ed21af1845baf228318d5c36ef8827e157c))
+ $(eval $(call tar_download,NMAP,nmap,7.80,.tar.bz2,https://nmap.org/dist/,fcfa5a0e42099e12e4bf7a68ebe6fde05553383a682e816a7ec9256ab4773faa))
+ $(eval $(call tar_download,IPUTILS,iputils,s20190709,.tar.gz,https://github.com/iputils/iputils/archive/s20190709.tar.gz/#,a15720dd741d7538dd2645f9f516d193636ae4300ff7dbc8bfca757bf166490a))
 -- 
 2.25.1
 
