@@ -2,187 +2,189 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 570092074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FD4206F0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jEHhHx9B";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OphJkDRA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCNF/gBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgFEPNO (ORCPT
+        id S1728181AbgFEPP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:13:14 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:60067 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726601AbgFEPNN (ORCPT
+        Fri, 5 Jun 2020 11:15:28 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20708 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726742AbgFEPP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:13:13 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DBB138E7;
-        Fri,  5 Jun 2020 11:13:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 05 Jun 2020 11:13:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=VbpvAVCUnsPFSpK3oSSzAp0uVqp
-        GePbm13cRTcImBvI=; b=jEHhHx9BX/kWeienCimDjVFn8kxZA9a0xz4mCXIMQkT
-        kimz89OdtBb22YkYSKmFbhCOtylqDGUWQk5zA7gBV8No/y0NrajZow4An1pJ/3/x
-        oIwAC9ic6oZSAyE9q+jui4mbMkzfk6IqrQwvlTTEQ5bR5yTPtJECFGZkCweacrNy
-        UHCexwhmK3GtqVGWwk1ek308TNz3TyOekpL0z7c8dTXJAXN++w1X07J6ir3dasPS
-        3PtKk9lX2j7nV/R1fES1niXKbau5DO42I9NJpDpRHwcV3Z7IBV8FtnccxQbkb61s
-        1MmvYx1Mx1zzCE2QZlgjdMpkuigH39M3Pk9LyFfiR1Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=VbpvAV
-        CUnsPFSpK3oSSzAp0uVqpGePbm13cRTcImBvI=; b=OphJkDRAM94t6mGOS3+LGx
-        1ZF+30KNo0Gv1pI8V1cVuY/Dy+bAt+/JZxfk1QeprT9uIp4DdEY2zEqQlw0OU9Mf
-        g7H1x24ackvUhNn3T7IFcKeessqgYK/BnvFenPSB2QJtg4HCifV5zzKWxyHg8xki
-        LXQOq/T0QaUetcjYuMoo2Zqpjk9SoVOCo3T8StZvFLWj0a1RDRUBxo5nRya4MB0P
-        iFNVs2vgFq/awLTkCiAhFKM80mxRvPVz1YWCrqLtQVNAanHTv+qXqYwfyXb4k+h7
-        3QaBGVWe55x09tdRg4QjqNugMolAKVHWHyB17mPY0Z9D0PdYVW4m1FqG9ie5B2Iw
-        ==
-X-ME-Sender: <xms:BGHaXszE6jCQt3UqXhv_rpK-h5ydbx5e0K9fIODa1lbA1h2fcZDzBQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudegfedgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesghdtre
-    ertddtjeenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigihhmvgestggv
-    rhhnohdrthgvtghhqeenucggtffrrghtthgvrhhnpeeutdfgjeeuudehvefgvedvtedtud
-    elfffgffekledtffekgedukeejueevieegudenucfkphepledtrdekledrieekrdejieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigih
-    hmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:BGHaXgQvy1wn6p2e7o7S_OSWeDCmx6eR30VwmPn-7YK9mu6AjtMw7g>
-    <xmx:BGHaXuX00NXX5LGAMEHvRqjEQRNG5vXJM8YYYT4N2NXYV0QwhG7O-A>
-    <xmx:BGHaXqhv_WNqjpCMLG7pt29jUj990Xa3yBofV98mw_NMD960Q-jUlQ>
-    <xmx:B2HaXi5JEQDk4McYhDkEso2_BbUpevJz_UdJNorqTGnvu3K4X4urb4p-_N0>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F2F973280059;
-        Fri,  5 Jun 2020 11:13:07 -0400 (EDT)
-Date:   Fri, 5 Jun 2020 17:13:06 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     wens <wens@csie.org>,
-        =?utf-8?B?5p2O5oms6Z+s?= <frank@allwinnertech.com>,
-        "linus.walleij" <linus.walleij@linaro.org>
-Cc:     robh+dt <robh+dt@kernel.org>, mturquette <mturquette@baylibre.com>,
-        sboyd <sboyd@kernel.org>, "p.zabel" <p.zabel@pengutronix.de>,
-        =?utf-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        "tiny.windzz" <tiny.windzz@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSN77yaW1BBVENIIDIvNF0gcGluY3RybA==?=
- =?utf-8?Q?=3A?= sunxi: add support for the Allwinner A100 pin controller
-Message-ID: <20200605151306.kqmyj673kux4sbaa@gilmour.lan>
-References: <20200522030743.10204-1-frank@allwinnertech.com>
- <20200522030743.10204-3-frank@allwinnertech.com>
- <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
- <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
+        Fri, 5 Jun 2020 11:15:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591370125;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fn51+xgx98oZsB/D59Na1SLBQWdWeTshRNoFGM9XJVg=;
+        b=NCNF/gBa0hTVuD4M9eZhbBAnsqZjNTW39qpArPoC25sQPn3H9ly87Y39rT9rqqCWaeSEwH
+        5iZ/ZoVfIqtYBeYy/PhNpCyVTDbvg6NCnMqP5O7nY/FsRi4W2wCibggfaFnuvsaUcpzeaL
+        fHYyuOCy0e221FT6qGjiaKDP9tPtFXo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-xdjEkaHJNYuWM2jaGqNynA-1; Fri, 05 Jun 2020 11:15:22 -0400
+X-MC-Unique: xdjEkaHJNYuWM2jaGqNynA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65E658C7C82;
+        Fri,  5 Jun 2020 15:15:07 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF1DA9CA0;
+        Fri,  5 Jun 2020 15:15:06 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com,
+        syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com
+Subject: [PATCH] KVM: let kvm_destroy_vm_debugfs clean up vCPU debugfs directories
+Date:   Fri,  5 Jun 2020 11:15:06 -0400
+Message-Id: <20200605151506.18064-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zkd5ahwpreyajhe3"
-Content-Disposition: inline
-In-Reply-To: <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+After commit 63d0434 ("KVM: x86: move kvm_create_vcpu_debugfs after
+last failure point") we are creating the pre-vCPU debugfs files
+after the creation of the vCPU file descriptor.  This makes it
+possible for userspace to reach kvm_vcpu_release before
+kvm_create_vcpu_debugfs has finished.  The vcpu->debugfs_dentry
+then does not have any associated inode anymore, and this causes
+a NULL-pointer dereference in debugfs_create_file.
 
---zkd5ahwpreyajhe3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The solution is simply to avoid removing the files; they are
+cleaned up when the VM file descriptor is closed (and that must be
+after KVM_CREATE_VCPU returns).  We can stop storing the dentry
+in struct kvm_vcpu too, because it is not needed anywhere after
+kvm_create_vcpu_debugfs returns.
 
-Hi Frank,
+Reported-by: syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com
+Fixes: 63d04348371b ("KVM: x86: move kvm_create_vcpu_debugfs after last failure point")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/arm64/kvm/arm.c     |  5 -----
+ arch/x86/kvm/debugfs.c   | 10 +++++-----
+ include/linux/kvm_host.h |  3 +--
+ virt/kvm/kvm_main.c      |  8 ++++----
+ 4 files changed, 10 insertions(+), 16 deletions(-)
 
-On Wed, Jun 03, 2020 at 05:44:36PM +0800, =E6=9D=8E=E6=89=AC=E9=9F=AC wrote:
-> >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 0),
-> >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
-> >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
-> >> +  SUNXI_FUNCTION(0x2, "mmc0"),  /* D1 */
-> >> +  SUNXI_FUNCTION(0x3, "jtag"),  /* MS1 */
-> >> +  SUNXI_FUNCTION(0x4, "jtag"),  /* MS_GPU */
-> >
-> >We should use another name here, since the code will just pick the first=
- one and
-> >ignore the second. What about jtag-gpu?
->=20
-> The underscores are used in front, so changing it to jtag_gpu may be more=
- consistent.
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 7a57381c05e8..45276ed50dd6 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -144,11 +144,6 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	return ret;
+ }
+ 
+-int kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+-{
+-	return 0;
+-}
+-
+ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
+ {
+ 	return VM_FAULT_SIGBUS;
+diff --git a/arch/x86/kvm/debugfs.c b/arch/x86/kvm/debugfs.c
+index 018aebce33ff..7e818d64bb4d 100644
+--- a/arch/x86/kvm/debugfs.c
++++ b/arch/x86/kvm/debugfs.c
+@@ -43,22 +43,22 @@ static int vcpu_get_tsc_scaling_frac_bits(void *data, u64 *val)
+ 
+ DEFINE_SIMPLE_ATTRIBUTE(vcpu_tsc_scaling_frac_fops, vcpu_get_tsc_scaling_frac_bits, NULL, "%llu\n");
+ 
+-void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
++void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_dentry)
+ {
+-	debugfs_create_file("tsc-offset", 0444, vcpu->debugfs_dentry, vcpu,
++	debugfs_create_file("tsc-offset", 0444, debugfs_dentry, vcpu,
+ 			    &vcpu_tsc_offset_fops);
+ 
+ 	if (lapic_in_kernel(vcpu))
+ 		debugfs_create_file("lapic_timer_advance_ns", 0444,
+-				    vcpu->debugfs_dentry, vcpu,
++				    debugfs_dentry, vcpu,
+ 				    &vcpu_timer_advance_ns_fops);
+ 
+ 	if (kvm_has_tsc_control) {
+ 		debugfs_create_file("tsc-scaling-ratio", 0444,
+-				    vcpu->debugfs_dentry, vcpu,
++				    debugfs_dentry, vcpu,
+ 				    &vcpu_tsc_scaling_fops);
+ 		debugfs_create_file("tsc-scaling-ratio-frac-bits", 0444,
+-				    vcpu->debugfs_dentry, vcpu,
++				    debugfs_dentry, vcpu,
+ 				    &vcpu_tsc_scaling_frac_fops);
+ 	}
+ }
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index f43b59b1294c..d38d6b9c24be 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -318,7 +318,6 @@ struct kvm_vcpu {
+ 	bool preempted;
+ 	bool ready;
+ 	struct kvm_vcpu_arch arch;
+-	struct dentry *debugfs_dentry;
+ };
+ 
+ static inline int kvm_vcpu_exiting_guest_mode(struct kvm_vcpu *vcpu)
+@@ -888,7 +887,7 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu);
+ 
+ #ifdef __KVM_HAVE_ARCH_VCPU_DEBUGFS
+-void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu);
++void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_dentry);
+ #endif
+ 
+ int kvm_arch_hardware_enable(void);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 7fa1e38e1659..3577eb84eac0 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2973,7 +2973,6 @@ static int kvm_vcpu_release(struct inode *inode, struct file *filp)
+ {
+ 	struct kvm_vcpu *vcpu = filp->private_data;
+ 
+-	debugfs_remove_recursive(vcpu->debugfs_dentry);
+ 	kvm_put_kvm(vcpu->kvm);
+ 	return 0;
+ }
+@@ -3000,16 +2999,17 @@ static int create_vcpu_fd(struct kvm_vcpu *vcpu)
+ static void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+ {
+ #ifdef __KVM_HAVE_ARCH_VCPU_DEBUGFS
++	struct dentry *debugfs_dentry;
+ 	char dir_name[ITOA_MAX_LEN * 2];
+ 
+ 	if (!debugfs_initialized())
+ 		return;
+ 
+ 	snprintf(dir_name, sizeof(dir_name), "vcpu%d", vcpu->vcpu_id);
+-	vcpu->debugfs_dentry = debugfs_create_dir(dir_name,
+-						  vcpu->kvm->debugfs_dentry);
++	debugfs_dentry = debugfs_create_dir(dir_name,
++					    vcpu->kvm->debugfs_dentry);
+ 
+-	kvm_arch_create_vcpu_debugfs(vcpu);
++	kvm_arch_create_vcpu_debugfs(vcpu, debugfs_dentry);
+ #endif
+ }
+ 
+-- 
+2.26.2
 
-Yep, that makes sense
-
-> >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 7),
-> >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
-> >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
-> >> +  SUNXI_FUNCTION(0x2, "spdif"),  /* DIN */
-> >> +  SUNXI_FUNCTION(0x3, "i2s0"),  /* DOUT0 */
-> >> +  SUNXI_FUNCTION(0x4, "i2s0"),  /* DIN1 */
-> >
-> >I guess the second one would be i2s1?
->=20
-> No, each i2s may have many inputs and outputs.=20
->=20
->  SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
->      SUNXI_FUNCTION(0x0, "gpio_in"),
->               SUNXI_FUNCTION(0x1, "gpio_out"),
->               SUNXI_FUNCTION(0x2, "cir0"),          /* IN */
->               SUNXI_FUNCTION(0x3, "i2s3_dout3"),       /* DOUT3 */
->               SUNXI_FUNCTION(0x4, "i2s3_din3"),       /* DIN3 */
->               SUNXI_FUNCTION(0x5, "ledc"),
->               SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 19)),
->=20
-> Considering that the same pin has multiple same functions,=20
-> so add a suffix, like i2s3_dout3 and i2s3_din3?  =20
->=20
-> Or specify muxsel in the device tree may be another solution.
-
-Having muxsel is not really an option. We have two sets of bindings to
-maintain already, adding a third one would make it fairly hard to
-maintain. And the second binding we support is the generic pinctrl
-binding, so I'm not really sure why we would want to move away from
-that.
-
-And I'm not really fond of having a suffix either. It kind of breaks the
-consistency we had so far, and ideally I'd like to keep that.
-
-Chen-Yu, Linus? Any input on that one?
-
-> >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
-> >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
-> >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
-> >> +  SUNXI_FUNCTION(0x2, "i2c1"),  /* SCK */
-> >> +  SUNXI_FUNCTION(0x3, "cpu"),  /* CUR_W */
-> >
-> >What is "cpu" supposed to be?
->=20
-> As far as I know, this is a function that has never been used.
-> The hardware guy said that it can be used to control the CPU to reduce th=
-e current.
-
-Ok. Do we really need to add it right now if we don't really know what
-it's going to be used for?
-
-Thanks!
-Maxime
-
---zkd5ahwpreyajhe3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXtphAgAKCRDj7w1vZxhR
-xcOpAP9hPMQZE8RjquYSY0OYJtT3YHX6GtIBD2qqFYRYTe/y5AEA/ArnzVS22UCR
-AAiE1kWBxSfADLmvwqJuQ7ofyhPp/AE=
-=FjvJ
------END PGP SIGNATURE-----
-
---zkd5ahwpreyajhe3--
