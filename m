@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87416C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2607F20835
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5000A208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366638;
-	bh=3Vm5TjOSQhMNc3SNvzYPdmBcWA0iDVpz8xDLk1V4c00=;
+	s=default; t=1591366643;
+	bh=i1PfMsBvUSIG0yNBlmGABRb1fF2BKTZp1A1FBnuK4zM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZEg+QlS3+zDVUNbHikOCLjzneAnA+hY/qPap88H1fOH92pVtAFbX4x+yiwde79YAA
-	 wUpz20P4U3AQheM2gDLhqIUT2mgIeOVNjrMp4zPg+fM/HG7qwrREEOsuEgtZUGSwBS
-	 v91rdWXxvzhawW8eQNuKtyvR+chOm0KN/jxDffgk=
+	b=kQ4VbkbzaHqcHVZFenvlEPJEviXstKhdTkRnEwrxhb1oKo9W+uxl1MNCotUVoe1pm
+	 D4CHaQ85R4nEFkmvjGDbQFIJGMrjovQ6TBxMTU03i0cPgt8sUKLGvkqVcALN4YV/Dx
+	 yGO9n2NzOcXBJ97cPpa0TKBdL5tfTqLle/2MSFq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbgFEORR (ORCPT
+        id S1728448AbgFEORV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgFEORN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:13 -0400
+        id S1728414AbgFEORU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A3A206A2;
-        Fri,  5 Jun 2020 14:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B5E208B8;
+        Fri,  5 Jun 2020 14:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366632;
-        bh=3Vm5TjOSQhMNc3SNvzYPdmBcWA0iDVpz8xDLk1V4c00=;
+        s=default; t=1591366639;
+        bh=i1PfMsBvUSIG0yNBlmGABRb1fF2BKTZp1A1FBnuK4zM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMnVBKcqJXPHuJmy984J+Da/V0ZHO9N98UI6xPtop2DZvyoBAxyOXAMF1KEt92P8G
-         puEun4euMBXqsNHg9ibUu6bA1RtnaeB3vRjlkkC3+7rfCjjI/tEXx7JnjQ8xnpWCBY
-         bPqeSUMWjs42AA24t7bghgTWsUk/Ge38Q+ZOuWO4=
+        b=niX2zfWvcmGfTtXaobrOrPpMEeBTdeP2URIv0MuvIsBnNWQywmd+i//FvvmVfJXiD
+         q1Gj/nnn/zU0/eM9vkuu3P3t/4Q5ifWs+S2urze1SVeOwioxCEMKAr1ksZdVREO0yh
+         2N3869iBadqwaQzdfzOhKowXeONB06ydlfI6uIp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 31/43] mm: Fix mremap not considering huge pmd devmap
-Date:   Fri,  5 Jun 2020 16:15:01 +0200
-Message-Id: <20200605140154.154168800@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.6 34/43] HID: i2c-hid: add Schneider SCL142ALM to descriptor override
+Date:   Fri,  5 Jun 2020 16:15:04 +0200
+Message-Id: <20200605140154.309733128@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -61,56 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fan Yang <Fan_Yang@sjtu.edu.cn>
+From: Julian Sax <jsbc@gmx.de>
 
-commit 5bfea2d9b17f1034a68147a8b03b9789af5700f9 upstream.
+commit 6507ef10660efdfee93f0f3b9fac24b5e4d83e56 upstream.
 
-The original code in mm/mremap.c checks huge pmd by:
+This device uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
-		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
-
-However, a DAX mapped nvdimm is mapped as huge page (by default) but it
-is not transparent huge page (_PAGE_PSE | PAGE_DEVMAP).  This commit
-changes the condition to include the case.
-
-This addresses CVE-2020-10757.
-
-Fixes: 5c7fb56e5e3f ("mm, dax: dax-pmd vs thp-pmd vs hugetlbfs-pmd")
-Cc: <stable@vger.kernel.org>
-Reported-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Signed-off-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Tested-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Tested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/pgtable.h |    1 +
- mm/mremap.c                    |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -256,6 +256,7 @@ static inline int pmd_large(pmd_t pte)
- }
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -389,6 +389,14 @@ static const struct dmi_system_id i2c_hi
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Schneider SCL142ALM",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "SCHNEIDER"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SCL142ALM"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
  
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
- static inline int pmd_trans_huge(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -266,7 +266,7 @@ unsigned long move_page_tables(struct vm
- 		new_pmd = alloc_new_pmd(vma->vm_mm, vma, new_addr);
- 		if (!new_pmd)
- 			break;
--		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
-+		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd) || pmd_devmap(*old_pmd)) {
- 			if (extent == HPAGE_PMD_SIZE) {
- 				bool moved;
- 				/* See comment in move_ptes() */
 
 
