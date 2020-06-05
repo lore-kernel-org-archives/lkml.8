@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC13C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A23C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A243620810
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305D32074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:26:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OILMBMu3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1JlK4tQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgFEQ01 (ORCPT
+        id S1728041AbgFEQ0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40766 "EHLO
+        Fri, 5 Jun 2020 12:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbgFEQ0P (ORCPT
+        with ESMTP id S1727809AbgFEQ0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:26:15 -0400
+        Fri, 5 Jun 2020 12:26:24 -0400
 Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC13C08C5C4;
-        Fri,  5 Jun 2020 09:26:14 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ne5so322202pjb.5;
-        Fri, 05 Jun 2020 09:26:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD5CC08C5C5;
+        Fri,  5 Jun 2020 09:26:23 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d6so2952395pjs.3;
+        Fri, 05 Jun 2020 09:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yl2c3lr1cROZ0PCJowYf2rTBlLEbdPel5A+cfI8kcRw=;
-        b=OILMBMu3f4uUqmw7nraOQ+HIRXbapVevszh8tlqmfiI+uK/PqtzYe9i85L+n4VuTyY
-         i8cNjmnoatRFwHVAH/OK++jMmG+J4CTJlk6fpW+PMwRz1if1C9OjWBh8G/H0Mps33wIM
-         8VMsbNb4SvAUNrQ8hwh8eiea3Wi3Vfz0j/rzI5Okgu3g8JmmP+SumcV67tMecck8YUV4
-         mHKkAsime/KB2o+3xxr7goDFmp+qUl0NLIMgfMRdBhvE6PZmCQridRRK5Rfe6ZAb/uEQ
-         ZixzouBisij0CqukR4JA5cMW1J3qkiQtSx7HTlDHSUl3AF10Bcok8BuHR0XnKyoAE2/u
-         g1xw==
+        bh=v5IOrrmsw2Ix66TCmCMcm2Pl0TMPhGeFMZv/aXa4SS0=;
+        b=M1JlK4tQHFdZH704MwVEdnAoKoFqWdJssJoX1Ame5iJ48b3/qvi/bmJIOjvW6WRAvg
+         gLQhoUOVpNPne3tZod93kIU6Htcx2jatghV91n6J+P21CgSVpzzRFloTeRi/BxFdX+hX
+         bXLfA5Nfe+031V2WkcsmHlY6p6qONfocyrBp7x4Fh7PRycz1M1pdL7LyJoMZCUuVlOID
+         XZ2D8wWNFY+Lc95iLMrsGJ6sRWgfsowE2TR088ONxAMvhSHo6Su8SMBtBVoxO+IXFBLN
+         drAwBTWSzlMKQLuqFhOXZpEi8mLY1Mr7F8IKQa2dcth5rgT4CNY6qP0goi80W95t9joB
+         UrbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yl2c3lr1cROZ0PCJowYf2rTBlLEbdPel5A+cfI8kcRw=;
-        b=NtYivj93/JAxIRAVmXxa7HbqQoyvr2cd9J3qQGNPHJFXo165A89m8vtP15VsjTyM+G
-         w+ijlFJP4X/ZxvdOQa6+01pN75weFd2vCDPxIahbADmj0UIxtNVv82khz9Hssbk3zUHl
-         xUVP8iuFtshj1Geiufo6Wfn6BB/kQ7vqSgAxqgrFE6SOQFmB63PEbW4R5Q9bv+mzJI/W
-         Y/n67jmv0ubTeLwtHvASkcJGjYXQkGfSmn/Zq51tvfkBXvHjRf9dkaYwLIbhKAxT3EJZ
-         CVzoMpmQ7eKHDtLpFuQ8l5OTq6yLQ/hSJZNoqV+ORLeSEPcCbiLgIt9YnlSvvADYejCU
-         DLZQ==
-X-Gm-Message-State: AOAM532AtDgar4H5GskV+fIye0wu9MO6A9bY1ODUncqjvJe5nuus4tnY
-        fslQtj2orVrSUSvZyX0s1mqaoNf6
-X-Google-Smtp-Source: ABdhPJzjGSSaf8Gl1ZdNII6917kbMvgnzC/3jYmA+FNfnh4K1xXdh6ldPtySdckZrVMw2T//+N5EwQ==
-X-Received: by 2002:a17:90a:17ed:: with SMTP id q100mr3638937pja.80.1591374373641;
-        Fri, 05 Jun 2020 09:26:13 -0700 (PDT)
+        bh=v5IOrrmsw2Ix66TCmCMcm2Pl0TMPhGeFMZv/aXa4SS0=;
+        b=fZrT+ANU5bczDt9araJ7NJ7Pc5/6B0nl+C0lKUkHyqYBklUo6k+UxY49T4SjiQCnwp
+         TKUWDJYsKdD22sYysTx0KYA4LiHYFfvUYcr7LWsR/FmRIqFyx6o4R76eN1RoOJ2nBEIr
+         bVETUB/LB+ND0josFOe4A63wtInDkNgE8jXbB3mTmMBCvlgDrX75F6C4ZP16bwBLE6kx
+         /kSBmF8tR7dnX/qrIKYwcRyumKE/z/tuSGXutn6afnOnYNVwOnti6nyIKh4d1VEEIs/c
+         LnZFQgdihQPq43nWZQ4azwIU9voIlEzX4Y7DsnA10nJeVjVbBjmP+QZQ84IBgNPNcsdA
+         St7g==
+X-Gm-Message-State: AOAM531ZgBFPhk7n8GJQ/VHrXfXUJHVeAEpLufLMxSmH+XR10K10V54Y
+        yTZ8As55RAKd5aMAW9mk4ZokQ1cq
+X-Google-Smtp-Source: ABdhPJyAj9y16c4QVaURhoARZXRcdAJJtG87fOtiOrpNgLjPKM36ZQoWAenVdogTmkYv/GWNXhfjcg==
+X-Received: by 2002:a17:90a:fe83:: with SMTP id co3mr3871871pjb.204.1591374382469;
+        Fri, 05 Jun 2020 09:26:22 -0700 (PDT)
 Received: from localhost.localdomain ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.11
+        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 09:26:12 -0700 (PDT)
+        Fri, 05 Jun 2020 09:26:21 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 X-Google-Original-From: Florian Fainelli <florian.fainelli@broadcom.com>
 To:     linux-kernel@vger.kernel.org
@@ -77,9 +77,9 @@ Cc:     stable@vger.kernel.org,
         (V4L/DVB)),
         linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
         infrastructure))
-Subject: [PATCH stable 4.9 08/21] media: friio-fe: get rid of set_property()
-Date:   Fri,  5 Jun 2020 09:25:05 -0700
-Message-Id: <20200605162518.28099-9-florian.fainelli@broadcom.com>
+Subject: [PATCH stable 4.9 12/21] media: dvb_frontend: get rid of property cache's state
+Date:   Fri,  5 Jun 2020 09:25:09 -0700
+Message-Id: <20200605162518.28099-13-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
 References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
@@ -90,63 +90,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-commit b2c41ca9632e686e79f6c9db9c5f75666d37926e upstream
+commit ef2cc27cf860b79874e9fde1419dd67c3372e41c upstream
 
-This callback is not actually doing anything but making it to
-return an error depending on the DTV frontend command. Well,
-that could break userspace for no good reason, and, if needed,
-should be implemented, instead, at set_frontend() callback.
+In the past, I guess the idea was to use state in order to
+allow an autofush logic. However, in the current code, it is
+used only for debug messages, on a poor man's solution, as
+there's already a debug message to indicate when the properties
+got flushed.
 
-So, get rid of it.
+So, just get rid of it for good.
 
+Reviewed-by: Shuah Khan <shuahkg@osg.samsung.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/media/usb/dvb-usb/friio-fe.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
+ drivers/media/dvb-core/dvb_frontend.c | 20 ++++++--------------
+ drivers/media/dvb-core/dvb_frontend.h |  5 -----
+ 2 files changed, 6 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb/friio-fe.c b/drivers/media/usb/dvb-usb/friio-fe.c
-index 979f05b4b87c..237f12f9a7f2 100644
---- a/drivers/media/usb/dvb-usb/friio-fe.c
-+++ b/drivers/media/usb/dvb-usb/friio-fe.c
-@@ -261,28 +261,6 @@ static int jdvbt90502_read_signal_strength(struct dvb_frontend *fe,
- 	return 0;
- }
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 5b06ac91420f..a7ba8e200b67 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -932,8 +932,6 @@ static int dvb_frontend_clear_cache(struct dvb_frontend *fe)
+ 	memset(c, 0, offsetof(struct dtv_frontend_properties, strength));
+ 	c->delivery_system = delsys;
  
+-	c->state = DTV_CLEAR;
 -
--/* filter out un-supported properties to notify users */
--static int jdvbt90502_set_property(struct dvb_frontend *fe,
--				   struct dtv_property *tvp)
--{
--	int r = 0;
--
--	switch (tvp->cmd) {
--	case DTV_DELIVERY_SYSTEM:
--		if (tvp->u.data != SYS_ISDBT)
--			r = -EINVAL;
--		break;
--	case DTV_CLEAR:
--	case DTV_TUNE:
--	case DTV_FREQUENCY:
--		break;
--	default:
--		r = -EINVAL;
--	}
--	return r;
--}
--
- static int jdvbt90502_set_frontend(struct dvb_frontend *fe)
+ 	dev_dbg(fe->dvb->device, "%s: Clearing cache for delivery system %d\n",
+ 			__func__, c->delivery_system);
+ 
+@@ -1760,13 +1758,13 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
+ 		dvb_frontend_clear_cache(fe);
+ 		break;
+ 	case DTV_TUNE:
+-		/* interpret the cache of data, build either a traditional frontend
+-		 * tunerequest so we can pass validation in the FE_SET_FRONTEND
+-		 * ioctl.
++		/*
++		 * Use the cached Digital TV properties to tune the
++		 * frontend
+ 		 */
+-		c->state = tvp->cmd;
+-		dev_dbg(fe->dvb->device, "%s: Finalised property cache\n",
+-				__func__);
++		dev_dbg(fe->dvb->device,
++			"%s: Setting the frontend from property cache\n",
++			__func__);
+ 
+ 		r = dtv_set_frontend(fe);
+ 		break;
+@@ -1915,7 +1913,6 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
  {
- 	struct dtv_frontend_properties *p = &fe->dtv_property_cache;
-@@ -457,8 +435,6 @@ static struct dvb_frontend_ops jdvbt90502_ops = {
- 	.init = jdvbt90502_init,
- 	.write = _jdvbt90502_write,
+ 	struct dvb_device *dvbdev = file->private_data;
+ 	struct dvb_frontend *fe = dvbdev->priv;
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+ 	int err;
  
--	.set_property = jdvbt90502_set_property,
+@@ -1935,7 +1932,6 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
+ 		return -EPERM;
+ 	}
+ 
+-	c->state = DTV_UNDEFINED;
+ 	err = dvb_frontend_handle_ioctl(file, cmd, parg);
+ 
+ 	up(&fepriv->sem);
+@@ -2119,10 +2115,6 @@ static int dvb_frontend_handle_ioctl(struct file *file,
+ 			}
+ 			(tvp + i)->result = err;
+ 		}
 -
- 	.set_frontend = jdvbt90502_set_frontend,
+-		if (c->state == DTV_TUNE)
+-			dev_dbg(fe->dvb->device, "%s: Property cache is full, tuning\n", __func__);
+-
+ 		kfree(tvp);
+ 		break;
+ 	}
+diff --git a/drivers/media/dvb-core/dvb_frontend.h b/drivers/media/dvb-core/dvb_frontend.h
+index f852f0a49f42..8a6267ad56d6 100644
+--- a/drivers/media/dvb-core/dvb_frontend.h
++++ b/drivers/media/dvb-core/dvb_frontend.h
+@@ -615,11 +615,6 @@ struct dtv_frontend_properties {
+ 	struct dtv_fe_stats	post_bit_count;
+ 	struct dtv_fe_stats	block_error;
+ 	struct dtv_fe_stats	block_count;
+-
+-	/* private: */
+-	/* Cache State */
+-	u32			state;
+-
+ };
  
- 	.read_status = jdvbt90502_read_status,
+ #define DVB_FE_NO_EXIT  0
 -- 
 2.17.1
 
