@@ -2,178 +2,350 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B30C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43E6D2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B2F206F0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NR2p23lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgFEPXW (ORCPT
+        id S1727956AbgFEPZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:23:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:62408 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbgFEPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:23:22 -0400
-IronPort-SDR: 0i5P4oPuPZB2tYCgAstv9XkjFZaB0TI2oGynqEsQ9a0YqZguGHuDwckQxAXhDtKTl27NhR8Rvh
- eUcQ7YPnuwTg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 08:23:21 -0700
-IronPort-SDR: rbkcUFCN/LKfSajGEV9tyrwnhOSeFz4gn5T56Qb4I/tQebDM3sQGk5fnh1A0ydxr+Pt664nmhb
- g6ZQP5ik293Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
-   d="scan'208";a="305260844"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 05 Jun 2020 08:23:21 -0700
-Received: from [10.249.226.228] (abudanko-mobl.ccr.corp.intel.com [10.249.226.228])
-        by linux.intel.com (Postfix) with ESMTP id B8D2A580569;
-        Fri,  5 Jun 2020 08:23:18 -0700 (PDT)
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
- <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
- <20200601233732.GA691017@tassilo.jf.intel.com>
- <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
- <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
- <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
- <20200605105108.GB1404794@krava>
- <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
- <20200605135743.GD1404794@krava>
- <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <0d1d9c45-a880-9a5d-e35d-c80fb3b71eab@linux.intel.com>
-Date:   Fri, 5 Jun 2020 18:23:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 5 Jun 2020 11:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgFEPZC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 11:25:02 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245E7C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:25:01 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f3so5032832pfd.11
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:25:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TICGsSDFeAQRfi9mfXDkz3sCl/QfHpv30Btf6TeiWPU=;
+        b=NR2p23lfHjw0UHC+u+60srGErtkhWXjJQMO5fDD06aQvVDLQ8F9wcbCaYuqyphpMC4
+         pbbnXRP8jndwyoNe2SQGL9LKFsNR9rmZmxksKHwsHKg3pfZXl5wQ4lr0HfHh32E+8BUI
+         6qyoYtSJmBrFsU1ttmOKV5Q/CXDtbWQx1rTcY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TICGsSDFeAQRfi9mfXDkz3sCl/QfHpv30Btf6TeiWPU=;
+        b=SPKXS+OMKrbLNgoV8ia9CmM0XaSDdCuAUykfk2JkB7OsLZ5SxuRpzPuP8CFUZuZHbw
+         iJGqKwryK0BxQwwRt6Z/dVYBtrLjoa4wqu4FvOHXYtXpRhTc4fNykb7zW/bnGc1sWE98
+         g4jhDQqmrmV6e36GwoTdz/+RAaDzqmOntEDnTghx15ni5wcFPJWNutAZK1CZA/D3aCl0
+         xxhL1Kqy0n+Xn2A9+7L6TUxtDlxt8hnKpqfj/Pz/Thq3mlTjuzypomE8HHtPZQUJmkr8
+         FOdGR5x31p3enDBG4i6aFt4906jRcDyGVvdWKCApdJQNDj1DFTxn8rfRZeg61nVieGO9
+         //QQ==
+X-Gm-Message-State: AOAM5334va0D0Rmmp+UsPPtikVZvk6UEk1SFJSzrqpU+HYyVPLahQurE
+        /7am++qZBPC/LBiAGdKFJYF+uyCq0Gbi9w==
+X-Google-Smtp-Source: ABdhPJwar7kOb+c7X2Rqo5yx6uR3PqMYn2dMvWi+tkIg3gcFpVMk1mSlqt5sPNUWokMAYSqVpfyuxg==
+X-Received: by 2002:a63:1615:: with SMTP id w21mr9613848pgl.217.1591370700604;
+        Fri, 05 Jun 2020 08:25:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g18sm6905186pgn.47.2020.06.05.08.24.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 08:24:59 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 08:24:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, cai@lca.pw,
+        mgorman@techsingularity.net, sfr@canb.auug.org.au,
+        linux@roeck-us.net
+Subject: Re: [RFC][PATCH 5/7] irq_work, smp: Allow irq_work on
+ call_single_queue
+Message-ID: <202006050813.6734DACD@keescook>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.011635912@infradead.org>
+ <20200528234031.GB551@lenoir>
+ <20200529133641.GM706495@hirez.programming.kicks-ass.net>
+ <20200605093704.GB2948@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605093704.GB2948@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 05, 2020 at 11:37:04AM +0200, Peter Zijlstra wrote:
+> On Fri, May 29, 2020 at 03:36:41PM +0200, Peter Zijlstra wrote:
+> > Maybe I can anonymous-union my way around it, dunno. I'll think about
+> > it. I'm certainly not proud of this. But at least the BUILD_BUG_ON()s
+> > should catch the more blatant breakage here.
+> 
+> How's this then? Differently ugly, but at least it compiles with that
+> horrible struct randomization junk enabled.
+> 
+> ---
+>  include/linux/irq_work.h  |   28 ++++++-------------
+>  include/linux/sched.h     |    4 +-
+>  include/linux/smp.h       |   25 ++++++-----------
+>  include/linux/smp_types.h |   66 ++++++++++++++++++++++++++++++++++++++++++++++
+>  kernel/sched/core.c       |    6 ++--
+>  kernel/smp.c              |   18 ------------
+>  6 files changed, 89 insertions(+), 58 deletions(-)
+> 
+> --- a/include/linux/irq_work.h
+> +++ b/include/linux/irq_work.h
+> @@ -2,7 +2,7 @@
+>  #ifndef _LINUX_IRQ_WORK_H
+>  #define _LINUX_IRQ_WORK_H
+>  
+> -#include <linux/llist.h>
+> +#include <linux/smp_types.h>
+>  
+>  /*
+>   * An entry can be in one of four states:
+> @@ -13,26 +13,16 @@
+>   * busy      NULL, 2 -> {free, claimed} : callback in progress, can be claimed
+>   */
+>  
+> -/* flags share CSD_FLAG_ space */
+> -
+> -#define IRQ_WORK_PENDING	BIT(0)
+> -#define IRQ_WORK_BUSY		BIT(1)
+> -
+> -/* Doesn't want IPI, wait for tick: */
+> -#define IRQ_WORK_LAZY		BIT(2)
+> -/* Run hard IRQ context, even on RT */
+> -#define IRQ_WORK_HARD_IRQ	BIT(3)
+> -
+> -#define IRQ_WORK_CLAIMED	(IRQ_WORK_PENDING | IRQ_WORK_BUSY)
+> -
+> -/*
+> - * structure shares layout with single_call_data_t.
+> - */
+>  struct irq_work {
+> -	struct llist_node llnode;
+> -	atomic_t flags;
+> +	union {
+> +		struct __call_single_node node;
+> +		struct {
+> +			struct llist_node llnode;
+> +			atomic_t flags;
+> +		};
+> +	};
+>  	void (*func)(struct irq_work *);
+> -};
+> +} __no_randomize_layout;
 
-On 05.06.2020 17:47, Alexey Budankov wrote:
-> 
-> On 05.06.2020 16:57, Jiri Olsa wrote:
->> On Fri, Jun 05, 2020 at 04:15:52PM +0300, Alexey Budankov wrote:
->>>
->>> On 05.06.2020 13:51, Jiri Olsa wrote:
->>>> On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
->>>>> On 2/06/20 12:12 pm, Alexey Budankov wrote:
->>>>>>
->>>>>> On 02.06.2020 11:32, Alexey Budankov wrote:
->>>>>>>
->>>>>>> On 02.06.2020 2:37, Andi Kleen wrote:
->>>>>>>>>> or a pathname, or including also the event default of "disabled".
->>>>>>>>>
->>>>>>>>> For my cases conversion of pathnames into open fds belongs to external
->>>>>>>>> controlling process e.g. like in the examples provided in the patch set.
->>>>>>>>> Not sure about "event default of 'disabled'"
->>>>>>>>
->>>>>>>> It would be nicer for manual use cases if perf supported the path names
->>>>>>>> directly like in Adrian's example, not needing a complex wrapper script.
->>>>>>>
->>>>>>> fds interface is required for VTune integration since VTune wants control
->>>>>>> over files creation aside of Perf tool process. The script demonstrates
->>>>>>> just one possible use case.
->>>>>>>
->>>>>>> Control files could easily be implemented on top of fds making open operations
->>>>>>> for paths and then initializing fds. Interface below is vague and with explicit
->>>>>>> options like below it could be more explicit:
->>>>>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
->>>>>>
->>>>>> Or even clearer:
->>>>>>
->>>>>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
->>>>>
->>>>> If people are OK with having so many options, then that is fine by me.
->>>>
->>>> the single option Adrian suggested seems better to me:
->>>>
->>>>  --control
->>>>  --control 11
->>>>  --control 11,15
->>>
->>> What if a user specifies fifos named like this above, not fds?
->>>
->>>>  --control 11,15,disabled
->>>>  --control 11,,disabled
->>>>  --control /tmp/my-perf.fifo
->>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
->>>
->>> What if a user wants not fifos but other type of comm channels?
->>>
->>>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
->>>>  --control /tmp/my-perf.fifo,,disabled
->>>>
->>>> we already support this kind of options arguments, like for --call-graph
->>>>
->>>> jirka
->>>>
->>>
->>> IMHO,
->>> this interface, of course, looks more compact (in amount of options) however
->>> the other side it is less user friendly. One simple option for one simple
->>> purpose is more convenient as for users as for developers. Also complex
->>> option syntax tends to have limitations and there are probably more
->>> non-obvious ones.
->>>
->>> Please speak up. I might have missed something meaningful.
->>
->> how about specify the type like:
->>
->> --control fd:1,2,...
-> 
-> What do these ... mean?
+The "__no_randomize_layout" isn't needed here. The only automatically
+randomized structs are those entirely consisting of function pointers.
 
-After all,
-if you want it this way and it now also fits my needs I could convert
---ctl-fd[-ack] to --control fd:<ctl-fd>,<ack-fd> with use cases like
---control fd:<ctl-fd> and --control fd:<ctl-fd>,<ack-fd>. Accepted?
+>  static inline
+>  void init_irq_work(struct irq_work *work, void (*func)(struct irq_work *))
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -32,6 +32,7 @@
+>  #include <linux/posix-timers.h>
+>  #include <linux/rseq.h>
+>  #include <linux/kcsan.h>
+> +#include <linux/smp_types.h>
+>  
+>  /* task_struct member predeclarations (sorted alphabetically): */
+>  struct audit_context;
+> @@ -654,9 +655,8 @@ struct task_struct {
+>  	unsigned int			ptrace;
+>  
+>  #ifdef CONFIG_SMP
+> -	struct llist_node		wake_entry;
+> -	unsigned int			wake_entry_type;
+>  	int				on_cpu;
+> +	struct __call_single_node	wake_entry;
+>  #ifdef CONFIG_THREAD_INFO_IN_TASK
+>  	/* Current CPU: */
+>  	unsigned int			cpu;
+> --- a/include/linux/smp.h
+> +++ b/include/linux/smp.h
+> @@ -12,32 +12,25 @@
+>  #include <linux/list.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/init.h>
+> -#include <linux/llist.h>
+> +#include <linux/smp_types.h>
+>  
+>  typedef void (*smp_call_func_t)(void *info);
+>  typedef bool (*smp_cond_func_t)(int cpu, void *info);
+>  
+> -enum {
+> -	CSD_FLAG_LOCK		= 0x01,
+> -
+> -	/* IRQ_WORK_flags */
+> -
+> -	CSD_TYPE_ASYNC		= 0x00,
+> -	CSD_TYPE_SYNC		= 0x10,
+> -	CSD_TYPE_IRQ_WORK	= 0x20,
+> -	CSD_TYPE_TTWU		= 0x30,
+> -	CSD_FLAG_TYPE_MASK	= 0xF0,
+> -};
+> -
+>  /*
+>   * structure shares (partial) layout with struct irq_work
+>   */
+>  struct __call_single_data {
+> -	struct llist_node llist;
+> -	unsigned int flags;
+> +	union {
+> +		struct __call_single_node node;
+> +		struct {
+> +			struct llist_node llist;
+> +			unsigned int flags;
+> +		};
+> +	};
+>  	smp_call_func_t func;
+>  	void *info;
+> -};
+> +} __no_randomize_layout;
 
-~Alexey
+Same here.
 
-> 
->> --control fifo:/tmp/fifo1,/tmp/fifo2
->> --control xxx:....
->>
->> this way we can extend the functionality in the future
->> and stay backward compatible, while keeping single option
-> 
-> Well, it clarifies more. However it still implicitly assumes
-> and requires proper ordering e.g. 1 is ctl-fd and 2 is ack-fd
-> and if there are some more positions there will be gaps like
-> --control fd:10,,something,,something ...
-> 
-> Why is one single option with complex syntax more preferable
-> than several simple options? Also it would still consume almost
-> equal amount of command line space in shell.
-> 
-> Thanks,
-> Alexey
-> 
->>
->> jirka
->>
+>  
+>  /* Use __aligned() to avoid to use 2 cache lines for 1 csd */
+>  typedef struct __call_single_data call_single_data_t
+> --- /dev/null
+> +++ b/include/linux/smp_types.h
+> @@ -0,0 +1,66 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __LINUX_SMP_TYPES_H
+> +#define __LINUX_SMP_TYPES_H
+> +
+> +#include <linux/llist.h>
+> +
+> +enum {
+> +	CSD_FLAG_LOCK		= 0x01,
+> +
+> +	IRQ_WORK_PENDING	= 0x01,
+> +	IRQ_WORK_BUSY		= 0x02,
+> +	IRQ_WORK_LAZY		= 0x04, /* No IPI, wait for tick */
+> +	IRQ_WORK_HARD_IRQ	= 0x08, /* IRQ context on PREEMPT_RT */
+> +
+> +	IRQ_WORK_CLAIMED	= (IRQ_WORK_PENDING | IRQ_WORK_BUSY),
+> +
+> +	CSD_TYPE_ASYNC		= 0x00,
+> +	CSD_TYPE_SYNC		= 0x10,
+> +	CSD_TYPE_IRQ_WORK	= 0x20,
+> +	CSD_TYPE_TTWU		= 0x30,
+> +
+> +	CSD_FLAG_TYPE_MASK	= 0xF0,
+> +};
+> +
+> +/*
+> + * struct __call_single_node is the primary type on
+> + * smp.c:call_single_queue.
+> + *
+> + * flush_smp_call_function_queue() only reads the type from
+> + * __call_single_node::u_flags as a regular load, the above
+> + * (anonymous) enum defines all the bits of this word.
+> + *
+> + * Other bits are not modified until the type is known.
+> + *
+> + * CSD_TYPE_SYNC/ASYNC:
+> + *	struct {
+> + *		struct llist_node node;
+> + *		unsigned int flags;
+> + *		smp_call_func_t func;
+> + *		void *info;
+> + *	};
+> + *
+> + * CSD_TYPE_IRQ_WORK:
+> + *	struct {
+> + *		struct llist_node node;
+> + *		atomic_t flags;
+> + *		void (*func)(struct irq_work *);
+> + *	};
+> + *
+> + * CSD_TYPE_TTWU:
+> + *	struct {
+> + *		struct llist_node node;
+> + *		unsigned int flags;
+> + *	};
+> + *
+> + */
+> +
+> +struct __call_single_node {
+> +	struct llist_node	llist;
+> +	union {
+> +		unsigned int	u_flags;
+> +		atomic_t	a_flags;
+> +	};
+> +} __no_randomize_layout;
+
+Same.
+
+> +
+> +#endif /* __LINUX_SMP_TYPES_H */
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2293,7 +2293,7 @@ void sched_ttwu_pending(void *arg)
+>  	rq_lock_irqsave(rq, &rf);
+>  	update_rq_clock(rq);
+>  
+> -	llist_for_each_entry_safe(p, t, llist, wake_entry)
+> +	llist_for_each_entry_safe(p, t, llist, wake_entry.llist)
+>  		ttwu_do_activate(rq, p, p->sched_remote_wakeup ? WF_MIGRATED : 0, &rf);
+>  
+>  	rq_unlock_irqrestore(rq, &rf);
+> @@ -2322,7 +2322,7 @@ static void __ttwu_queue_wakelist(struct
+>  	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
+>  
+>  	WRITE_ONCE(rq->ttwu_pending, 1);
+> -	__smp_call_single_queue(cpu, &p->wake_entry);
+> +	__smp_call_single_queue(cpu, &p->wake_entry.llist);
+>  }
+>  
+>  void wake_up_if_idle(int cpu)
+> @@ -2763,7 +2763,7 @@ static void __sched_fork(unsigned long c
+>  #endif
+>  	init_numa_balancing(clone_flags, p);
+>  #ifdef CONFIG_SMP
+> -	p->wake_entry_type = CSD_TYPE_TTWU;
+> +	p->wake_entry.u_flags = CSD_TYPE_TTWU;
+>  #endif
+>  }
+>  
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -669,24 +669,6 @@ void __init smp_init(void)
+>  {
+>  	int num_nodes, num_cpus;
+>  
+> -	/*
+> -	 * Ensure struct irq_work layout matches so that
+> -	 * flush_smp_call_function_queue() can do horrible things.
+> -	 */
+> -	BUILD_BUG_ON(offsetof(struct irq_work, llnode) !=
+> -		     offsetof(struct __call_single_data, llist));
+> -	BUILD_BUG_ON(offsetof(struct irq_work, func) !=
+> -		     offsetof(struct __call_single_data, func));
+> -	BUILD_BUG_ON(offsetof(struct irq_work, flags) !=
+> -		     offsetof(struct __call_single_data, flags));
+> -
+> -	/*
+> -	 * Assert the CSD_TYPE_TTWU layout is similar enough
+> -	 * for task_struct to be on the @call_single_queue.
+> -	 */
+> -	BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+> -		     offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist));
+> -
+
+Do you want to validate that the individual members of the union struct
+still have their fields lining up with __call_single_node's members?
+Or better yet, I have the same question as Frederic about the need for
+the union. Why not just switch callers from "flags" to "node.u_flags"
+and "node.a_flags"? (Or could that be cleaned up in a later patch to
+avoid putting too much churn in one patch?)
+
+-- 
+Kees Cook
