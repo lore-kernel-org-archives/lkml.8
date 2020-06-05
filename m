@@ -8,73 +8,73 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1202BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8AA32074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D483B2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvperE5/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fE+VrZ0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgFEQai (ORCPT
+        id S1728422AbgFEQaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
+        Fri, 5 Jun 2020 12:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgFEQah (ORCPT
+        with ESMTP id S1727843AbgFEQau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:30:37 -0400
+        Fri, 5 Jun 2020 12:30:50 -0400
 Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66FBDC08C5C2;
-        Fri,  5 Jun 2020 09:30:37 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id h95so2962331pje.4;
-        Fri, 05 Jun 2020 09:30:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0BE3C08C5C2;
+        Fri,  5 Jun 2020 09:30:50 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b7so3404908pju.0;
+        Fri, 05 Jun 2020 09:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TEtap2IudhjHNV1R44cbxJPCSzuQYPIaYyarMsL3gsY=;
-        b=YvperE5/32+idN/P44Fgr92aBDG15eDLFkcXHmVCkM0qF2C81IrIJG433jg2Nm34ZP
-         udRTXKwZH6x6eGUrdFOVRtMQ7jlY4yoQDeeesMKy7PJjAAzNbgd40RHdqKWbvW/Gv2BL
-         V6N/A3gkf92gPsznR0sDmGCPcy0o2J8fXka1cZ6wSUJijs/3sWWHnwBoPKfBE4ReFugd
-         dYVD7kWGiwuqm88ZdkwvG13dH5NdiVZwD8d4aFTSUb0bK1R6mbkx7U0DG+Jcly7RU/kM
-         DTN9910iwmwAALh9gcaEpb3dFSJaHlLKbGpwErqlSgg5n0PEZc1Vq//yKFLHchvGqYuN
-         w5Cw==
+        bh=H+RZlOMA4Lnzf9WIg1S0cHVq67OXV25inr43LZ3CCSk=;
+        b=fE+VrZ0H9U5U3njDtdC/AeoPwpj9imTedPoPeqRAjIHO7lbyaifYke5kauBsTU0hY1
+         rNCENnP4iV+06cRxfxjf+SDV5dj/bU1MjddALrVhkWBwukRrLIVMzK1QKjuPCdw79YP7
+         oW9tETjkNCPfoTLe3NnZvyMOKfchyGVDzCL1jCCExMNcgN9hEDZnRRkdz9lElQUxgT7O
+         SLRErn9aex7xHx9sDe1FA8KEEbaItFdnUDgfZXTqoB1o9wDQ0jm09ZJ03e4iXqTrGNF7
+         BwTDdQ4WeejAJdzjNnSVHh4nugyAP4MfRHdcWD2cwlol0vRA5p1MgIqagej9MKro3f1l
+         MGyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=TEtap2IudhjHNV1R44cbxJPCSzuQYPIaYyarMsL3gsY=;
-        b=jZ0cHPUYj5EuIlvr+TAlLk0/yMvIuy2/YzFxUtuaM5hASYKQ0VyRjqdOI8F+qtGT9p
-         OyMAfJ7o+RJ/XmssdIHDp5ijqa+K61UcGWUHurUwHVSeAJFDz4+zLKg05KybP7FhTJud
-         QOsSlCpOt1eUcDDKT2jWaYC63LC8LEZkZ8lPvenzTekAayL6/vceHImmOCqPHojS9J7r
-         7cqA+LyLPPhe+fvxVxLipgB5uk5rq6pqX246ntuVE3+0h3aZjDM7XgyU1DtN0SAIEStU
-         qyAyEsjgMl4LOf2U9PANrDHHL6HtCx7hpybHLcuoxRqwfBH08pn9qX6Vp9D5t38XJOTa
-         k+7Q==
-X-Gm-Message-State: AOAM533FptJo59xrAgqkUkmF5BKQkMMJLv3xuH9eCrWiIeqvuld0QP8T
-        23mfghuUcJy2ymmaWVjne7PtyIAX
-X-Google-Smtp-Source: ABdhPJz4gAW9/u7XyPT5jIJbNzMzYMaynXPP7tqHwaRi/wdJhcFdrQ5ahmEovRCpLbY2l4ObRZDgQQ==
-X-Received: by 2002:a17:90a:dd42:: with SMTP id u2mr3974672pjv.65.1591374636887;
-        Fri, 05 Jun 2020 09:30:36 -0700 (PDT)
+        bh=H+RZlOMA4Lnzf9WIg1S0cHVq67OXV25inr43LZ3CCSk=;
+        b=kZNPxujc+q8coLzbO+Ztx+dWpBzUiS/UYpbe8eNbh8ZrBW8I3tczDpIdAGZX4OTLfy
+         IeMCIcA5MNla6StbecWBiLdWWHVCC0PlYJem85OGzK7steE67GSnvYJboDwuG15ZZGSN
+         +Xj2+rx0FTrNnWdeW4/OsAjhF1rrJoeoTWxD95SrU7fv6hbl7XbaZflMSqQv9KO/lFTA
+         6AXMNah9Jc3nGUJyHDJMRy0hU0XrmX8EzeTpB5I2FqubPfuATO8EQFZqDMfruKiEBZGv
+         Fz7oBOGfgKqUjZTwU7sp7un8yp4vxJc9lvhDKRFelQf/TsLnhW3BTj5spdrqLC+38oPT
+         nTpg==
+X-Gm-Message-State: AOAM530mhQwTk28ddUmwss0D2eXkrGDEVAgnApNeXMonBAIdLpXqWKYJ
+        1cbVk/SFvz9nYFauxe3aTAg=
+X-Google-Smtp-Source: ABdhPJw35bDtFt3OFfM91CvE2E7EKQr25t1KCPdxIVDd6nCKfQS7uaTHicZCj7CNCOCKcyG81i4LmA==
+X-Received: by 2002:a17:902:7088:: with SMTP id z8mr10216677plk.71.1591374650243;
+        Fri, 05 Jun 2020 09:30:50 -0700 (PDT)
 Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m22sm8454678pjv.30.2020.06.05.09.30.34
+        by smtp.gmail.com with ESMTPSA id q10sm119252pfk.86.2020.06.05.09.30.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 09:30:36 -0700 (PDT)
-Subject: Re: [PATCH net 3/4] net: marvell: Fix OF_MDIO config check
+        Fri, 05 Jun 2020 09:30:49 -0700 (PDT)
+Subject: Re: [PATCH net 4/4] net: mscc: Fix OF_MDIO config check
 To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
         davem@davemloft.net, kuba@kernel.org
 Cc:     linux@armlinux.org.uk, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, michael@walle.cc
 References: <20200605140107.31275-1-dmurphy@ti.com>
- <20200605140107.31275-4-dmurphy@ti.com>
+ <20200605140107.31275-5-dmurphy@ti.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <931e6169-580f-b58d-664e-23f79e0a3242@gmail.com>
-Date:   Fri, 5 Jun 2020 09:30:32 -0700
+Message-ID: <6b8939c0-4858-07a1-acaf-b80846a466d8@gmail.com>
+Date:   Fri, 5 Jun 2020 09:30:47 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200605140107.31275-4-dmurphy@ti.com>
+In-Reply-To: <20200605140107.31275-5-dmurphy@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,7 +90,7 @@ On 6/5/2020 7:01 AM, Dan Murphy wrote:
 > compiled. Use the IS_ENABLED macro that checks for both built in as
 > well as module.
 > 
-> Fixes: cf41a51db8985 ("of/phylib: Use device tree properties to initialize Marvell PHYs.")
+> Fixes: 4f58e6dceb0e4 ("net: phy: Cleanup the Edge-Rate feature in Microsemi PHYs.")
 > Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
