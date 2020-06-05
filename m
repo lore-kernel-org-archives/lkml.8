@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795F6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03DF2075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495982075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360142;
-	bh=bVWqzc1t003eJ3Fs4IEliM/ORxg+PNNfCRBsy1ItLNQ=;
+	s=default; t=1591360155;
+	bh=pjo0c5vMkfJpXdHLBcrQ+TcIYnFUhNg/gR8QjobW3WY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s23jyKx7Eez7be9qn7C4N13LglIDNk+SXSrwwi/2uac7LpRIsRqyeRcZIbw24taTn
-	 zb7byLQkHHurxi1MpPTF6H/ldY2P0Q28PgcvZ+xLmRTxXsrBeZAPFoYNNq7EP9iX7a
-	 ZWas43bzcPwtT5DWrhXgqe9A7v4RoJMAVhJY0jfo=
+	b=HN66NiBpqy1NlD+SVK/wJmO1riE980gColGShPEgN3mK4zE/N+OnncmTe7XyfB5z4
+	 1I0JlEvQYg/5MKxWakgW9XJyDfR3Kbw15G4RIoRYtjz+4nR1q9o7f+uv3izDuQKJeT
+	 rZXbVykUhofdfz8X7fyinRuAT9RRiGXUQr6nvr3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgFEM3B (ORCPT
+        id S1726592AbgFEM3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgFEMZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:56 -0400
+        id S1726986AbgFEMZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3036C207D3;
-        Fri,  5 Jun 2020 12:25:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDD5020820;
+        Fri,  5 Jun 2020 12:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359955;
-        bh=bVWqzc1t003eJ3Fs4IEliM/ORxg+PNNfCRBsy1ItLNQ=;
+        s=default; t=1591359953;
+        bh=pjo0c5vMkfJpXdHLBcrQ+TcIYnFUhNg/gR8QjobW3WY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SjVkMrxgQlosqlpHkMYLwLnTGmwZ+O8HRoMWmrWdA4BtFJXLjBoAOQ7fKPzl1QLVc
-         DxzfsAZj6UtSx9gcYRwjsiwNnMgZi06EJNqIvXUaChhRgvE3+B9n47A9JkkN3PHy8t
-         Vq652ET3KOFOTZZabf9xPxNxP68yusFLsI7FBn30=
+        b=t6pXtG0Nk8BmER2YZCLtaFxzhNbrWsGpxRDS+eHnO1fi8/jF2oBUQXKRkE6S8UXns
+         jGidTaLI1aYJ1BTfJAhMZqCKnJ6hO3tdEUQtYdrO5KYiTC4lGoI647fgOzYWsCS6G/
+         NyDxeX4l4V8GNsrbahOhTLnuEtzOLNXTCR2vOLIk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Mark Bloch <markb@mellanox.com>, Dexuan Cui <decui@microsoft.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 13/14] drivers/net/ibmvnic: Update VNIC protocol version reporting
-Date:   Fri,  5 Jun 2020 08:25:39 -0400
-Message-Id: <20200605122540.2882539-13-sashal@kernel.org>
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 11/14] net/mlx5: Fix crash upon suspend/resume
+Date:   Fri,  5 Jun 2020 08:25:37 -0400
+Message-Id: <20200605122540.2882539-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122540.2882539-1-sashal@kernel.org>
 References: <20200605122540.2882539-1-sashal@kernel.org>
@@ -60,41 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Mark Bloch <markb@mellanox.com>
 
-[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
+[ Upstream commit 8fc3e29be9248048f449793502c15af329f35c6e ]
 
-VNIC protocol version is reported in big-endian format, but it
-is not byteswapped before logging. Fix that, and remove version
-comparison as only one protocol version exists at this time.
+Currently a Linux system with the mlx5 NIC always crashes upon
+hibernation - suspend/resume.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Add basic callbacks so the NIC could be suspended and resumed.
+
+Fixes: 9603b61de1ee ("mlx5: Move pci device handling from mlx5_ib to mlx5_core")
+Tested-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Mark Bloch <markb@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/main.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index aaa03ce5796f..5a42ddeecfe5 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -4536,12 +4536,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
- 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
- 			break;
- 		}
--		dev_info(dev, "Partner protocol version is %d\n",
--			 crq->version_exchange_rsp.version);
--		if (be16_to_cpu(crq->version_exchange_rsp.version) <
--		    ibmvnic_version)
--			ibmvnic_version =
-+		ibmvnic_version =
- 			    be16_to_cpu(crq->version_exchange_rsp.version);
-+		dev_info(dev, "Partner protocol version is %d\n",
-+			 ibmvnic_version);
- 		send_cap_queries(adapter);
- 		break;
- 	case QUERY_CAPABILITY_RSP:
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index 7dcdda9ca351..e4a690128b3a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -1554,6 +1554,22 @@ static void shutdown(struct pci_dev *pdev)
+ 	mlx5_pci_disable_device(dev);
+ }
+ 
++static int mlx5_suspend(struct pci_dev *pdev, pm_message_t state)
++{
++	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
++
++	mlx5_unload_one(dev, false);
++
++	return 0;
++}
++
++static int mlx5_resume(struct pci_dev *pdev)
++{
++	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
++
++	return mlx5_load_one(dev, false);
++}
++
+ static const struct pci_device_id mlx5_core_pci_table[] = {
+ 	{ PCI_VDEVICE(MELLANOX, PCI_DEVICE_ID_MELLANOX_CONNECTIB) },
+ 	{ PCI_VDEVICE(MELLANOX, 0x1012), MLX5_PCI_DEV_IS_VF},	/* Connect-IB VF */
+@@ -1597,6 +1613,8 @@ static struct pci_driver mlx5_core_driver = {
+ 	.id_table       = mlx5_core_pci_table,
+ 	.probe          = init_one,
+ 	.remove         = remove_one,
++	.suspend        = mlx5_suspend,
++	.resume         = mlx5_resume,
+ 	.shutdown	= shutdown,
+ 	.err_handler	= &mlx5_err_handler,
+ 	.sriov_configure   = mlx5_core_sriov_configure,
 -- 
 2.25.1
 
