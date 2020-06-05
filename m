@@ -2,109 +2,156 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F38C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5700AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B7D207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D56220885
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oCFcBZY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbgFEEjq (ORCPT
+        id S1726099AbgFEEqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:39:46 -0400
-Received: from mx24.baidu.com ([111.206.215.185]:60194 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725968AbgFEEjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:39:44 -0400
-X-Greylist: delayed 954 seconds by postgrey-1.27 at vger.kernel.org; Fri, 05 Jun 2020 00:39:42 EDT
-Received: from BJHW-Mail-Ex14.internal.baidu.com (unknown [10.127.64.37])
-        by Forcepoint Email with ESMTPS id 5A5E9675E2089BB4C91E;
-        Fri,  5 Jun 2020 12:23:42 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- BJHW-Mail-Ex14.internal.baidu.com (10.127.64.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 5 Jun 2020 12:23:41 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Fri, 5 Jun 2020 12:23:36 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     "like.xu@intel.com" <like.xu@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
-        "wei.huang2@amd.com" <wei.huang2@amd.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3Y2XSBLVk06IFg4Njogc3VwcG9ydCBBUEVSRi9N?=
- =?utf-8?Q?PERF_registers?=
-Thread-Topic: [PATCH][v6] KVM: X86: support APERF/MPERF registers
-Thread-Index: AQHWOtrZ4X/t3pkmBEG7o3WCZUgoeKjIxz2AgAChEWA=
-Date:   Fri, 5 Jun 2020 04:23:36 +0000
-Message-ID: <c21c6ffa19b6483ea57feab3f98f279c@baidu.com>
-References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
- <be39b88c-bfb7-0634-c53b-f00d8fde643c@intel.com>
-In-Reply-To: <be39b88c-bfb7-0634-c53b-f00d8fde643c@intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.198.27]
-x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex14_2020-06-05 12:23:42:248
-x-baidu-bdmsfe-viruscheck: BJHW-Mail-Ex14_GRAY_Inside_WithoutAtta_2020-06-05
- 12:23:42:216
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 5 Jun 2020 00:46:02 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37955 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgFEEqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 00:46:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49dVTL4BySz9sRW;
+        Fri,  5 Jun 2020 14:45:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591332359;
+        bh=ZcM7AWpNFJA6wNBV0a6RdISgWbNaFlam6gFvQJ4z4cA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oCFcBZY2JWLAKbvoqOO3eRFZjJAyje5yMs/pPJswvyGOGmfHm1OLU5QKD+M6ZP6pE
+         NV6DArGNEZGbjosl7Xq0+iTzDjwjOtNK8c8zsPADTnFGLdzR+9Y3NZqPjE684WWjP0
+         sKcsH19WqIq2jKfGhhAHNdQ7sL3yqBRmru0gjkSz6yVtsZsWI/JAZMLJLK2GOWWA0c
+         fHdsBxTrZqRSFyJtw7JfaynOXf2CEAcoMWQNvantjrQ/NFEVqc20JemCT9CdvZi/Jg
+         mpyDzFpixUcWKpxc4ULKgXDV++RX6VB2XG86MO+6c3uJbaWqpSqH3yVVsvkBtSitlm
+         uPfOUNp2+oljw==
+Date:   Fri, 5 Jun 2020 14:45:57 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: manual merge of the livepatching tree with the
+ modules tree
+Message-ID: <20200605144557.4f8e2a42@canb.auug.org.au>
+In-Reply-To: <20200508180524.6995b07e@canb.auug.org.au>
+References: <20200508180524.6995b07e@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Ki+HJigfDf3FQu7CJlPQYR_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFh1LCBMaWtlIFttYWls
-dG86bGlrZS54dUBpbnRlbC5jb21dDQo+IOWPkemAgeaXtumXtDogMjAyMOW5tDbmnIg15pelIDEw
-OjMyDQo+IOaUtuS7tuS6ujogTGksUm9uZ3FpbmcgPGxpcm9uZ3FpbmdAYmFpZHUuY29tPg0KPiDm
-ioTpgIE6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGt2bUB2Z2VyLmtlcm5lbC5vcmc7
-IHg4NkBrZXJuZWwub3JnOw0KPiBocGFAenl0b3IuY29tOyBicEBhbGllbjguZGU7IG1pbmdvQHJl
-ZGhhdC5jb207IHRnbHhAbGludXRyb25peC5kZTsNCj4gam1hdHRzb25AZ29vZ2xlLmNvbTsgd2Fu
-cGVuZ2xpQHRlbmNlbnQuY29tOyB2a3V6bmV0c0ByZWRoYXQuY29tOw0KPiBzZWFuLmouY2hyaXN0
-b3BoZXJzb25AaW50ZWwuY29tOyBwYm9uemluaUByZWRoYXQuY29tOyB4aWFveWFvLmxpQGludGVs
-LmNvbTsNCj4gd2VpLmh1YW5nMkBhbWQuY29tDQo+IOS4u+mimDogUmU6IFtQQVRDSF1bdjZdIEtW
-TTogWDg2OiBzdXBwb3J0IEFQRVJGL01QRVJGIHJlZ2lzdGVycw0KPiANCj4gSGkgUm9uZ1Fpbmcs
-DQo+IA0KPiBPbiAyMDIwLzYvNSA5OjQ0LCBMaSBSb25nUWluZyB3cm90ZToNCj4gPiBHdWVzdCBr
-ZXJuZWwgcmVwb3J0cyBhIGZpeGVkIGNwdSBmcmVxdWVuY3kgaW4gL3Byb2MvY3B1aW5mbywgdGhp
-cyBpcw0KPiA+IGNvbmZ1c2VkIHRvIHVzZXIgd2hlbiB0dXJibyBpcyBlbmFibGUsIGFuZCBhcGVy
-Zi9tcGVyZiBjYW4gYmUgdXNlZCB0bw0KPiA+IHNob3cgY3VycmVudCBjcHUgZnJlcXVlbmN5IGFm
-dGVyIDdkNTkwNWRjMTRhDQo+ID4gIih4ODYgLyBDUFU6IEFsd2F5cyBzaG93IGN1cnJlbnQgQ1BV
-IGZyZXF1ZW5jeSBpbiAvcHJvYy9jcHVpbmZvKSINCj4gPiBzbyBndWVzdCBzaG91bGQgc3VwcG9y
-dCBhcGVyZi9tcGVyZiBjYXBhYmlsaXR5DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGltcGxlbWVudHMg
-YXBlcmYvbXBlcmYgYnkgdGhyZWUgbW9kZTogbm9uZSwgc29mdHdhcmUNCj4gPiBlbXVsYXRpb24s
-IGFuZCBwYXNzLXRocm91Z2gNCj4gPg0KPiA+IE5vbmU6IGRlZmF1bHQgbW9kZSwgZ3Vlc3QgZG9l
-cyBub3Qgc3VwcG9ydCBhcGVyZi9tcGVyZg0KPiBzL05vbmUvTm90ZQ0KPiA+DQo+ID4gU29mdHdh
-cmUgZW11bGF0aW9uOiB0aGUgcGVyaW9kIG9mIGFwZXJmL21wZXJmIGluIGd1ZXN0IG1vZGUgYXJl
-DQo+ID4gYWNjdW11bGF0ZWQgYXMgZW11bGF0ZWQgdmFsdWUNCj4gPg0KPiA+IFBhc3MtdGhvdWdo
-OiBpdCBpcyBvbmx5IHN1aXRhYmxlIGZvciBLVk1fSElOVFNfUkVBTFRJTUUsIEJlY2F1c2UgdGhh
-dA0KPiA+IGhpbnQgZ3VhcmFudGVlcyB3ZSBoYXZlIGEgMToxIHZDUFU6Q1BVIGJpbmRpbmcgYW5k
-IGd1YXJhbnRlZWQgbm8NCj4gPiBvdmVyLWNvbW1pdC4NCj4gVGhlIGZsYWcgIktWTV9ISU5UU19S
-RUFMVElNRSAwIiAoaW4gdGhlIERvY3VtZW50YXRpb24vdmlydC9rdm0vY3B1aWQucnN0KQ0KPiBp
-cyBjbGFpbWVkIGFzICJndWVzdCBjaGVja3MgdGhpcyBmZWF0dXJlIGJpdCB0byBkZXRlcm1pbmUg
-dGhhdCB2Q1BVcyBhcmUgbmV2ZXINCj4gcHJlZW1wdGVkIGZvciBhbiB1bmxpbWl0ZWQgdGltZSBh
-bGxvd2luZyBvcHRpbWl6YXRpb25zIi4NCj4gDQo+IEkgY291bGRuJ3Qgc2VlIGl0cyByZWxhdGlv
-bnNoaXAgd2l0aCAiMToxIHZDUFU6IHBDUFUgYmluZGluZyIuDQo+IFRoZSBwYXRjaCBkb2Vzbid0
-IGNoZWNrIHRoaXMgZmxhZyBhcyB3ZWxsIGZvciB5b3VyIHBhc3MtdGhyb3VnaCBwdXJwb3NlLg0K
-PiANCj4gVGhhbmtzLA0KPiBMaWtlIFh1DQoNCg0KSSB0aGluayB0aGlzIGlzIHVzZXIgc3BhY2Ug
-am9icyB0byBiaW5kIEhJTlRfUkVBTFRJTUUgYW5kIG1wZXJmIHBhc3N0aHJvdWdoLCBLVk0ganVz
-dCBkbyB3aGF0IHVzZXJzcGFjZSB3YW50cy4NCg0KYW5kIHRoaXMgZ2l2ZXMgdXNlciBzcGFjZSBh
-IHBvc3NpYmlsaXR5LCBndWVzdCBoYXMgcGFzc3Rocm91Z2ggbXBlcmZhcGVyZiB3aXRob3V0IEhJ
-TlRfUkVBTFRJTUUsIGd1ZXN0IGNhbiBnZXQgY29hcnNlIGNwdSBmcmVxdWVuY3kgd2l0aG91dCBw
-ZXJmb3JtYW5jZSBlZmZlY3QgaWYgZ3Vlc3QgY2FuIGVuZHVyZSBlcnJvciBmcmVxdWVuY3kgb2Nj
-YXNpb25hbGx5DQoNCg0KLUxpIA0KDQo=
+--Sig_/Ki+HJigfDf3FQu7CJlPQYR_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Fri, 8 May 2020 18:05:24 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> Today's linux-next merge of the livepatching tree got a conflict in:
+>=20
+>   kernel/module.c
+>=20
+> between commits:
+>=20
+>   db991af02f11 ("module: break nested ARCH_HAS_STRICT_MODULE_RWX and STRI=
+CT_MODULE_RWX #ifdefs")
+>   5c3a7db0c7ec ("module: Harden STRICT_MODULE_RWX")
+>=20
+> from the modules tree and commit:
+>=20
+>   e6eff4376e28 ("module: Make module_enable_ro() static again")
+>=20
+> from the livepatching tree.
+>=20
+> diff --cc kernel/module.c
+> index c69291362676,a26343ea4d50..000000000000
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@@ -2055,29 -2023,20 +2042,30 @@@ static void module_enable_nx(const stru
+>   	frob_writable_data(&mod->init_layout, set_memory_nx);
+>   }
+>  =20
+>  +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+>  +				       char *secstrings, struct module *mod)
+>  +{
+>  +	const unsigned long shf_wx =3D SHF_WRITE|SHF_EXECINSTR;
+>  +	int i;
+>  +
+>  +	for (i =3D 0; i < hdr->e_shnum; i++) {
+>  +		if ((sechdrs[i].sh_flags & shf_wx) =3D=3D shf_wx)
+>  +			return -ENOEXEC;
+>  +	}
+>  +
+>  +	return 0;
+>  +}
+>  +
+>   #else /* !CONFIG_STRICT_MODULE_RWX */
+>  +/* module_{enable,disable}_ro() stubs are in module.h */
+>   static void module_enable_nx(const struct module *mod) { }
+> + static void module_enable_ro(const struct module *mod, bool after_init)=
+ {}
+>  -#endif /*  CONFIG_STRICT_MODULE_RWX */
+>  -static void module_enable_x(const struct module *mod)
+>  +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+>  +				       char *secstrings, struct module *mod)
+>   {
+>  -	frob_text(&mod->core_layout, set_memory_x);
+>  -	frob_text(&mod->init_layout, set_memory_x);
+>  +	return 0;
+>   }
+>  -#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
+>  -static void module_enable_nx(const struct module *mod) { }
+>  -static void module_enable_x(const struct module *mod) { }
+>  -#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
+>  -
+>  +#endif /*  CONFIG_STRICT_MODULE_RWX */
+>  =20
+>   #ifdef CONFIG_LIVEPATCH
+>   /*
+
+This is now a conflict between the modules tree and Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Ki+HJigfDf3FQu7CJlPQYR_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7ZzgUACgkQAVBC80lX
+0GwcqAf/QIlttDKRob8ZnDsXQS280EQk0rIsvqevrOASTJD6kxlyNTUDXpH4hFx0
+ahupmyHP5OmAhz15X6qBGyi5zzQQpwk1on2aACpfz5XkR4Hyi2K++D+NDkcWQsdA
+sMuYgi55tq6+/RV/oGq0zdAR2J2SJ2XQRhYnIKzJtwJ6dIiUt55Bj5QwT/GFGfF4
+kabUXo7Pkys5S1kEI1PtopwGiCoeYH4h6ffV7honwbANhsFdZiagmezPP/+itce9
+uAjDEuHWL/zsDWlGBujkMgoySKAq7jFnFrtj1Fb9quQubKKGmtcebte79VkdwihN
+6DR+spBIi+HZh2iGV+b0m/Y+cd1xgA==
+=Mlxo
+-----END PGP SIGNATURE-----
+
+--Sig_/Ki+HJigfDf3FQu7CJlPQYR_--
