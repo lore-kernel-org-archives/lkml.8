@@ -2,93 +2,76 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDFCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B98C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7942077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="LxfpePMG"
+	by mail.kernel.org (Postfix) with ESMTP id CCDFE2077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 18:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgFESKL (ORCPT
+        id S1728048AbgFESKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 14:10:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgFESKK (ORCPT
+        Fri, 5 Jun 2020 14:10:23 -0400
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:34080 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbgFESKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 14:10:10 -0400
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E10A4C08C5C2;
-        Fri,  5 Jun 2020 11:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
-        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=uX7WkPPY5DHynO/kH95BbeRu3QRcHZ3RT6LKeg6R+k0=; b=LxfpePMGvwk9Hyci3o22CrWB8f
-        e7a+sb2Wmh8g0jqcKTPAywOHbaxyy0yxzEQwFJ5tS50zNMRIrz8wn6tID27Nwr23Hs8cZrFUBCpiK
-        2qv2iFaR1gTfIHmdg4YOY/RojDX8uvWUsCuoobdK/oZ0yXNspTJMvKM/qM0QQ0N8UBLpZoZTZKBVT
-        3eN3/rBYXEPvkepqKXVEnTvKTn2ztfISyMilYPUK/ZOj7EBzOXaWzRNOcsjjcfHkOX7JYVBAdY0Vc
-        fPGdcFgmdjAcHsD59cxaqZt8fGpalQdiJpJMFaVWvOik+JC2qZbIgpSDq4tXxpK8tjM3DusiBHZyo
-        3SsKK73g==;
-Received: from [2001:4d48:ad59:1409:4::2] (helo=youmian.o362.us)
-        by the.earth.li with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jhGn8-0003Cr-ST; Fri, 05 Jun 2020 19:10:06 +0100
-Date:   Fri, 5 Jun 2020 19:10:02 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: net: dsa: qca8k: document SGMII properties
-Message-ID: <ca767d2dd00280f7c0826c133d1ff6f262b6736d.1591380105.git.noodles@earth.li>
-References: <cover.1591380105.git.noodles@earth.li>
+        Fri, 5 Jun 2020 14:10:22 -0400
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: /D7uevOGb7NUS3jLhu56Icbr/nUD7Qi81n2S5LiPeFIrT8ReeW9XNSW42OEZ0WFDiBKGdrKCfj
+ uv8eVAIzuVxu4PI66k7fgrV13TriETEJNqX+6x2DtP6nVsDNEg85NlOCrAnDIfRbkobyP1HM3t
+ 6+XYZ8lfZTxgKh8idzSCtkPzVXNYBvTzGjMJO8aQWPzbeRQeNVkg1o+MjrMCdCuq2/nd1ecgGl
+ IPiY58EJ5yOUn8NM0FPYRK+gsojASP025eDRmGjiDWLeKDzo/r+hETjg4zsiEMAAyzN9jnp5P9
+ 1Jg=
+X-SBRS: 2.7
+X-MesageID: 19701429
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.73,477,1583211600"; 
+   d="scan'208";a="19701429"
+Subject: Re: 5.7.0 / BUG: kernel NULL pointer dereference / setup_cpu_watcher
+To:     Christian Kujau <lists@nerdbynature.de>,
+        <linux-kernel@vger.kernel.org>
+CC:     <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>
+References: <alpine.DEB.2.22.395.2006050059530.13291@trent.utfs.org>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <a467c2db-e72d-9a27-9fbd-9bcf8770de20@citrix.com>
+Date:   Fri, 5 Jun 2020 19:10:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1591380105.git.noodles@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.22.395.2006050059530.13291@trent.utfs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents the qca8k's SGMII related properties that allow
-configuration of the SGMII port.
+On 05/06/2020 09:36, Christian Kujau wrote:
+> Hi,
+>
+> I'm running a small Xen PVH domain and upgrading from vanilla 5.6.0 to 
+> <snip>
+>
+> Note: that "Xen Platform PCI: unrecognised magic value" on the top appears 
+> in 5.6 kernels as well, but no ill effects so far.
+>
+> ---------------------------------------------------------------
+> Xen Platform PCI: unrecognised magic value
 
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
----
- Documentation/devicetree/bindings/net/dsa/qca8k.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+PVH domains don't have the emulated platform device, so Linux will be
+finding ~0 when it goes looking in config space.
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-index ccbc6d89325d..9e7d74a248ad 100644
---- a/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-@@ -11,7 +11,11 @@ Required properties:
- 
- Optional properties:
- 
-+- disable-serdes-autoneg: Boolean, disables auto-negotiation on the SerDes
- - reset-gpios: GPIO to be used to reset the whole device
-+- sgmii-delay: Boolean, presence delays SGMII clock by 2ns
-+- sgmii-mode: String, operation mode of the SGMII interface.
-+  Supported values are: "basex", "mac", "phy".
- 
- Subnodes:
- 
--- 
-2.20.1
+The diagnostic should be skipped in that case, to avoid giving the false
+impression that something is wrong.
 
+~Andrew
