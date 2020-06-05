@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32691C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2291C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC280207D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2FBC2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360262;
-	bh=h1LcBw55r4LP8d1ELU0w81ims4oDlKhJhKPLveqyyLk=;
+	s=default; t=1591360269;
+	bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nB/sCCrBFVoFmHMbyhmP6VEpQ8VeSJ/yc74s/TjIzVNBv9R5T1uds1nMuMXf6BCv2
-	 2keq7K4H6qCmq06xGJhMI5YaQOttTQoEdrOb7ky8IotF3MJ7MVt0d8q3bZNkN0cwZJ
-	 9iP1q8HL6qIqJQfDwctqUxdnbArk/FCdSWk1MmBk=
+	b=X6G+j/C2vp6FSd4AmvLgSR/ds+EQqY4aE6YT+nMfAr91P91Wukuaj5RzFeVbmotKr
+	 ZIu4JBpQFuvvBbp5OWkZdwEO8Wif5YXNyxdXMfInwXQ0xyRbsp8tV5XIY/rV2/xmIW
+	 sqXNYmUySi7gLqbIEs148ADcoq63C3iuRo26BGow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgFEMa7 (ORCPT
+        id S1728164AbgFEMbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbgFEMZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:29 -0400
+        id S1726716AbgFEMZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 319D1206DC;
-        Fri,  5 Jun 2020 12:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08B532075B;
+        Fri,  5 Jun 2020 12:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359929;
-        bh=h1LcBw55r4LP8d1ELU0w81ims4oDlKhJhKPLveqyyLk=;
+        s=default; t=1591359927;
+        bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IYVti2W2nsO3hTHidSapypTsL6+b9Pbha09eZs4cyMsqdwwgrXai63DsHbRZofCF+
-         hF60cZH3jGVU2vJS6jEJbpU6+Ulo5H5MrnQpteTIWNaKrv9ENspmt4gLJJ4yH4Db1F
-         WN3Cy30slrV1aIthVGciRpgNzcwOghcqU5fUaDSo=
+        b=B70yODDd7wQl2vWN2smv+NosjoHSNkrI+P4EXnF7bIuUVwPGhG7c9GZns4LqPo0Wr
+         rGzM93O1GQsP6m93NN6ns7ErEod6I1YG4/h1LQcPO/Kd1hf6rJqjuL2vmIoaVgihgd
+         0LN4w7Ic6yRR/XNsghXR1xLAYd4c2+2LQWtGERVo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heinrich Kuhn <heinrich.kuhn@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 09/17] nfp: flower: fix used time of merge flow statistics
-Date:   Fri,  5 Jun 2020 08:25:08 -0400
-Message-Id: <20200605122517.2882338-9-sashal@kernel.org>
+Cc:     Dennis Kadioglu <denk@eclipso.email>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 08/17] Input: synaptics - add a second working PNP_ID for Lenovo T470s
+Date:   Fri,  5 Jun 2020 08:25:07 -0400
+Message-Id: <20200605122517.2882338-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122517.2882338-1-sashal@kernel.org>
 References: <20200605122517.2882338-1-sashal@kernel.org>
@@ -61,44 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heinrich Kuhn <heinrich.kuhn@netronome.com>
+From: Dennis Kadioglu <denk@eclipso.email>
 
-[ Upstream commit 5b186cd60f033110960a3db424ffbd6de4cee528 ]
+[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
 
-Prior to this change the correct value for the used counter is calculated
-but not stored nor, therefore, propagated to user-space. In use-cases such
-as OVS use-case at least this results in active flows being removed from
-the hardware datapath. Which results in both unnecessary flow tear-down
-and setup, and packet processing on the host.
+The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
+instead of the already included PNP ID "LEN006c". However, my touchpad
+seems to work well without any problems using RMI. So this patch adds the
+other PNP ID.
 
-This patch addresses the problem by saving the calculated used value
-which allows the value to propagate to user-space.
-
-Found by inspection.
-
-Fixes: aa6ce2ea0c93 ("nfp: flower: support stats update for merge flows")
-Signed-off-by: Heinrich Kuhn <heinrich.kuhn@netronome.com>
-Signed-off-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
+Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/offload.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/offload.c b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-index 7ca5c1becfcf..c5dcfdd69773 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-@@ -1440,7 +1440,8 @@ __nfp_flower_update_merge_stats(struct nfp_app *app,
- 		ctx_id = be32_to_cpu(sub_flow->meta.host_ctx_id);
- 		priv->stats[ctx_id].pkts += pkts;
- 		priv->stats[ctx_id].bytes += bytes;
--		max_t(u64, priv->stats[ctx_id].used, used);
-+		priv->stats[ctx_id].used = max_t(u64, used,
-+						 priv->stats[ctx_id].used);
- 	}
- }
- 
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 4d2036209b45..758dae8d6500 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -170,6 +170,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
+ 	"LEN006c", /* T470s */
++	"LEN007a", /* T470s */
+ 	"LEN0071", /* T480 */
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
 -- 
 2.25.1
 
