@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A12C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9325C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7AD20E65
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE7B20E65
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366801;
-	bh=kZ653TAVsKhYxuyba0Eo5i8jBSmHN67hKWJU7TSjppE=;
+	s=default; t=1591366804;
+	bh=FChClqYkiuV4A8OekspLUFM4lEYxDi5MB0nw7pVIs/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zb7kB1ufDwY0GmF5FV3fV2jYQRxUSYX7jcjzQK1v3Dbsyu7bYdd6NlzSQP4wgTpQL
-	 Ho9Knmn0AY2K38WBQ7oor2Cxv0re/j0iYDzIqqfM9wKXy+DHlOG/Hj5tkvFiVHacpp
-	 04ANpp9e6I2RXftKRSbyYNHB8clQTfTqxgCUXkFA=
+	b=VPXNdoimvEG5oRlWs+47puDwFYGZfdSvn6gsVgxZb1NAD50pipORbBgOTUr1rdYCz
+	 akCKxUotGJMXfrLhOkgM1dJ8H1KiuBYWFsMD28vfW5QsD8UrfH2NeZ9e1d6fDcf147
+	 JN8uf5CTyJVz3Mp9bpXTyO7JwLobVvdM6abM0DF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgFEOUA (ORCPT
+        id S1728916AbgFEOUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50652 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:20:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbgFEOTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:44 -0400
+        id S1728434AbgFEOTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0338208A9;
-        Fri,  5 Jun 2020 14:19:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A813214D8;
+        Fri,  5 Jun 2020 14:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366783;
-        bh=kZ653TAVsKhYxuyba0Eo5i8jBSmHN67hKWJU7TSjppE=;
+        s=default; t=1591366785;
+        bh=FChClqYkiuV4A8OekspLUFM4lEYxDi5MB0nw7pVIs/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=st077g+7Frz3iERAOjIENimXXGTxDEccNrGcg3BLRXRNRnIAdDKOYNhjo2DJJ0b3M
-         UAxdJAgR/Fqnro+/cJ4CXu/POG884mN2B3wdFObl5X1lYwYxXvbaSvKMnkhxgjmJkO
-         1/bRIqg6Dun+6PtFBHMSCatE0ujrj8tbrENhDrqQ=
+        b=po06N7xOQo0uTgtxs7GfqU33sGfYyYD3oyx1V2sqOWshux+SrbiuyMylexl6184lu
+         sCEh8vNMc5H44Ya5F+O+mkgEm5WIlHSU4vbRa+2gXiod8+sYnm74TweoO9RkOjlSFy
+         e90DCva2Ii+Al+AuYVJQYdvgPqCTbeU8kAfwHPx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Paul Greco <pmgreco@us.ibm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/28] s390/ftrace: save traced function caller
-Date:   Fri,  5 Jun 2020 16:15:18 +0200
-Message-Id: <20200605140253.342375848@linuxfoundation.org>
+Subject: [PATCH 4.19 17/28] ARC: Fix ICCM & DCCM runtime size checks
+Date:   Fri,  5 Jun 2020 16:15:19 +0200
+Message-Id: <20200605140253.396152825@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -60,53 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit b4adfe55915d8363e244e42386d69567db1719b9 ]
+[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
 
-A typical backtrace acquired from ftraced function currently looks like
-the following (e.g. for "path_openat"):
+As of today the ICCM and DCCM size checks are incorrectly using
+mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
+and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
+runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
 
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15a/0x3b8
-ftrace_graph_caller+0x0/0x1c
-0x3e0007e3c98 <- ftraced function caller (should be do_filp_open+0x7c/0xe8)
-do_open_execat+0x70/0x1b8
-__do_execve_file.isra.0+0x7d8/0x860
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
+Fix that.
 
-Note random "0x3e0007e3c98" stack value as ftraced function caller. This
-value causes either imprecise unwinder result or unwinding failure.
-That "0x3e0007e3c98" comes from r14 of ftraced function stack frame, which
-it haven't had a chance to initialize since the very first instruction
-calls ftrace code ("ftrace_caller"). (ftraced function might never
-save r14 as well). Nevertheless according to s390 ABI any function
-is called with stack frame allocated for it and r14 contains return
-address. "ftrace_caller" itself is called with "brasl %r0,ftrace_caller".
-So, to fix this issue simply always save traced function caller onto
-ftraced function stack frame.
-
-Reported-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: Paul Greco <pmgreco@us.ibm.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/mcount.S | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arc/kernel/setup.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-index 83afd5b78e16..020f9aac7dc0 100644
---- a/arch/s390/kernel/mcount.S
-+++ b/arch/s390/kernel/mcount.S
-@@ -40,6 +40,7 @@ EXPORT_SYMBOL(_mcount)
- ENTRY(ftrace_caller)
- 	.globl	ftrace_regs_caller
- 	.set	ftrace_regs_caller,ftrace_caller
-+	stg	%r14,(__SF_GPRS+8*8)(%r15)	# save traced function caller
- 	lgr	%r1,%r15
- #if !(defined(CC_USING_HOTPATCH) || defined(CC_USING_NOP_MCOUNT))
- 	aghi	%r0,MCOUNT_RETURN_FIXUP
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 89c97dcfa360..c10994daee39 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -15,6 +15,7 @@
+ #include <linux/clocksource.h>
+ #include <linux/console.h>
+ #include <linux/module.h>
++#include <linux/sizes.h>
+ #include <linux/cpu.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of.h>
+@@ -406,12 +407,12 @@ static void arc_chk_core_config(void)
+ 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
+ 		panic("Linux built with incorrect DCCM Base address\n");
+ 
+-	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
++	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
+ 		panic("Linux built with incorrect DCCM Size\n");
+ #endif
+ 
+ #ifdef CONFIG_ARC_HAS_ICCM
+-	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
++	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
+ 		panic("Linux built with incorrect ICCM Size\n");
+ #endif
+ 
 -- 
 2.25.1
 
