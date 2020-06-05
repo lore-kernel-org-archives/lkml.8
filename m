@@ -2,134 +2,212 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ADFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 224FC207F7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494AA2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="t5puf6jy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6p4AbOC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgFERJH (ORCPT
+        id S1727798AbgFERJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47626 "EHLO
+        Fri, 5 Jun 2020 13:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgFERJG (ORCPT
+        with ESMTP id S1726324AbgFERJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:09:06 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAABC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:09:06 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id k8so8031691edq.4
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:09:06 -0700 (PDT)
+        Fri, 5 Jun 2020 13:09:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA755C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:09:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t18so10511000wru.6
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nXYAuD6cJqilYclvO4FvsMZJybvzN9VYDs0VzjdhPnY=;
-        b=t5puf6jywvyNN+70hb28Pvg47DXUPXRfy9clfajsTCTEsz1DVvuvmucmrFXPN4Yera
-         iX5tmSkGaAyNZayciyT3GMyFrOCN4SMWL8M84IxZWnMlNodshGHe66dJPL3M3KK6I7au
-         +Gg13yxDpSJdJwDAO/u+oQ8sXaQeYhxw/MvP+CTILg91x4xdp1wBvSxfUYgpmnTt/Mh1
-         ptUOCyR+L/3/QbN0ianVVqfl1yyY1EzbmpTorznVSk6wXtS5PLZ7NKDsgw4KvfvqTugO
-         4eHoGho3ymydRboxbZbhxWUgmRgJ6CgGhcQB5t8qPVtxxju5siJRkecD5se6dBe/h2N6
-         0LAA==
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=s8YWD9RCnqEF4TZaQVMC5oFYjtu6s69kpDgaIZvDX7A=;
+        b=B6p4AbOC2tchrb7j1nE5PmzEUdbj76lAx/xfAF4yGBUfLE5tJrSly2BRWptm1E8/2e
+         egyq91a3tGiPIhv3bLzh17tyFqDfPRJXnaSRQIw886dqHnpXmD+kNCQkecvXAwwcbpwu
+         VD72x5nvy1QHn3SrsMOthLTgaLs8jGhrrsh84WG/xufnoIDfoAPT3ya6E+Q6/evmF2I/
+         hGU91OzsdNzXwZMxOaS1JXEqFEA6L7MO4K5n9tTHInlAywOWpMBFKwqU/CuS8cC8/d+R
+         jqtu9u375hKyB8K7jmIarfK5S9tiyi5PTTfytMlAZOAz02gJNDauKRtgjOZ9Wvciclmk
+         /Uxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nXYAuD6cJqilYclvO4FvsMZJybvzN9VYDs0VzjdhPnY=;
-        b=Qi5lzr8QHSue+gu+Dr5KEV/d4El4F8PnSqMebmeS13YGl2LbdyDzQpTjpYZpe7CL+p
-         /xxTTrHvk2DP7xVPT5B/j3FV71t/wVhzU/kJKMmBRoXCPzmUr3p5jdVbOvDBIfBIt/Le
-         JG6bN/XmAtHEJOySYgek6B50KLincoBFTKOubVaiHsynuAUuVs4xRqeCFmxWlxwnC/eE
-         /rrZ70an5d/f6mfM40aErHE8KDpKI4IJ+RHz0Sg4y2FMkD0fIztzKNcXFMyAD8sfWlOI
-         0Ai6Oqh0YHD8CAH3Wc9EOKWHznDKfDSctaWJmHWLKG/6/E/zBV4MbkKinnVlhJ/KC6Tj
-         Hrag==
-X-Gm-Message-State: AOAM532Le5HehWA7zz9IbNTOQPyK0/noan4x8GP+tJBY20gFCnpmzvGj
-        9d8HZ9iGOkjkcFAQR2MSjBFR30d3El5rJov8IjIPNA==
-X-Google-Smtp-Source: ABdhPJxATfr/IFgw85Nm/0I0I4vMJ3s9Mbj4YTfektxdqlqB/pT+k/tztb3pG7J2zznxMo8KQcFTv2Q6AnRteS+UOLs=
-X-Received: by 2002:aa7:c944:: with SMTP id h4mr10040096edt.383.1591376944978;
- Fri, 05 Jun 2020 10:09:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2643462.teTRrieJB7@kreacher>
-In-Reply-To: <2643462.teTRrieJB7@kreacher>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 5 Jun 2020 10:08:53 -0700
-Message-ID: <CAPcyv4hWLKP7fdLhWLn8vxf5rJKvKyU0yLfDs0XMjW-9U9tM-g@mail.gmail.com>
-Subject: Re: [RFT][PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        stable <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=s8YWD9RCnqEF4TZaQVMC5oFYjtu6s69kpDgaIZvDX7A=;
+        b=KwytZBkbr3JRGYVJpjLaEAB+E1RNEqV2dCbLA10Zn9gTCL0tSCBlw54Cl+2z3yn2xd
+         M7JEK48cgNvkAXN2rcMnHuzZuaI+1PCSgkafxKB7KSIT6vu+ZgVFKZB6l1YkifwJ7rc9
+         1ehP22SC49xlorbGpH39rSA+2uYjtnxGt5OHFBHO3Q5EzjwPYdpIbAIJEIqptpYqvqt4
+         0hDAukcmNdXjDMmNidWP7rlzbnSHUpEnwHVymxJ2ogvsa0okL91R9+ETm4F/87U+wT+8
+         hJXNxD14iOTrRb1Q8gzau0249ciIOecbZ1KVsG9omdvfkTDEms+xBJtDXhc0MLZg/RrX
+         SIuA==
+X-Gm-Message-State: AOAM5328dJG/kc6FkvWb8i4XmVGKtPygHJyT17En5oDT83KbAtiBpi3d
+        2FjdgcyySqP/WIvP104LOJw=
+X-Google-Smtp-Source: ABdhPJxDgfq1TXJSVZJQPfGWvL3363/0SYV4tVsvkpykIJ7ziNxGgI9QtuyfL4fmvH5ZcERaULj++Q==
+X-Received: by 2002:a5d:5112:: with SMTP id s18mr10297675wrt.160.1591376961391;
+        Fri, 05 Jun 2020 10:09:21 -0700 (PDT)
+Received: from macbook-pro-alvaro-eth.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id o10sm11812792wrq.40.2020.06.05.10.09.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Jun 2020 10:09:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] nand: raw: use write_oob_raw for MTD_OPS_AUTO_OOB mode
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <20200512105409.785febfe@collabora.com>
+Date:   Fri, 5 Jun 2020 19:09:19 +0200
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>, richard@nod.at,
+        vigneshr@ti.com, s.hauer@pengutronix.de, masonccyang@mxic.com.tw,
+        christophe.kerello@st.com, stefan@agner.ch, piotrs@cadence.com,
+        devik@eaxlabs.cz, tglx@linutronix.de,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <56DB91B3-ACCC-4E78-B489-2B4B71B8C1C2@gmail.com>
+References: <20200504094253.2741109-1-noltari@gmail.com>
+ <20200504123237.5c128668@collabora.com> <20200511182923.6a4961ab@xps13>
+ <6F41AA9B-71D6-47FA-BC12-24941F84DA71@gmail.com>
+ <20200512104422.4c31f7e0@xps13> <20200512105409.785febfe@collabora.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 7:06 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Subject: [PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
->
-> The ACPI OS layer uses RCU to protect the list of ACPI memory
-> mappings from being walked while it is updated.  Among other
-> situations, that list can be walked in non-NMI interrupt context,
-> so using a sleeping lock to protect it is not an option.
->
-> However, performance issues related to the RCU usage in there
-> appear, as described by Dan Williams:
->
-> "Recently a performance problem was reported for a process invoking
-> a non-trival ASL program. The method call in this case ends up
-> repetitively triggering a call path like:
->
->     acpi_ex_store
->     acpi_ex_store_object_to_node
->     acpi_ex_write_data_to_field
->     acpi_ex_insert_into_field
->     acpi_ex_write_with_update_rule
->     acpi_ex_field_datum_io
->     acpi_ex_access_region
->     acpi_ev_address_space_dispatch
->     acpi_ex_system_memory_space_handler
->     acpi_os_map_cleanup.part.14
->     _synchronize_rcu_expedited.constprop.89
->     schedule
->
-> The end result of frequent synchronize_rcu_expedited() invocation is
-> tiny sub-millisecond spurts of execution where the scheduler freely
-> migrates this apparently sleepy task. The overhead of frequent
-> scheduler invocation multiplies the execution time by a factor
-> of 2-3X."
->
-> In order to avoid these issues, replace the RCU in the ACPI OS
-> layer by an rwlock.
->
-> That rwlock should not be frequently contended, so the performance
-> impact of it is not expected to be significant.
->
-> Reported-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->
-> Hi Dan,
->
-> This is a possible fix for the ACPI OSL RCU-related performance issues, but
-> can you please arrange for the testing of it on the affected systems?
+I=E2=80=99ve now sent another patch =E2=80=9Cmtd: rawnand: brcmnand: =
+force raw OOB writes=E2=80=9D as an alternative solution to this issue.
 
-Ugh, is it really this simple? I did not realize the read-side is NMI
-safe. I'll take a look.
+Best regards,
+=C3=81lvaro.
+
+> El 12 may 2020, a las 10:54, Boris Brezillon =
+<boris.brezillon@collabora.com> escribi=C3=B3:
+>=20
+> On Tue, 12 May 2020 10:44:22 +0200
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>=20
+>> Hello,
+>>=20
+>> Richard, maybe you'll have an idea to fix the situation here?
+>>=20
+>> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Tue, 12 =
+May 2020
+>> 10:36:25 +0200:
+>>=20
+>>> Hi,
+>>>=20
+>>>> El 11 may 2020, a las 18:29, Miquel Raynal =
+<miquel.raynal@bootlin.com> escribi=C3=B3:
+>>>>=20
+>>>> Hello,
+>>>>=20
+>>>> Boris Brezillon <boris.brezillon@collabora.com> wrote on Mon, 4 May
+>>>> 2020 12:32:37 +0200:
+>>>>=20
+>>>>> On Mon,  4 May 2020 11:42:53 +0200
+>>>>> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote:
+>>>>>=20
+>>>>>> Some NAND controllers change the ECC bytes when OOB is written =
+with ECC
+>>>>>> enabled.
+>>>>>> This is a problem in brcmnand, since adding JFFS2 cleanmarkers =
+after the page
+>>>>>> has been erased will change the ECC bytes to 0 and the controller =
+will think
+>>>>>> the block is bad.
+>>>>>> It can be fixed by using write_oob_raw, which ensures ECC is =
+disabled.
+>>>>>>=20
+>>>>>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas =
+<noltari@gmail.com>
+>>>>>> ---
+>>>>>> drivers/mtd/nand/raw/nand_base.c | 2 +-
+>>>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>=20
+>>>>>> diff --git a/drivers/mtd/nand/raw/nand_base.c =
+b/drivers/mtd/nand/raw/nand_base.c
+>>>>>> index c24e5e2ba130..755d25200520 100644
+>>>>>> --- a/drivers/mtd/nand/raw/nand_base.c
+>>>>>> +++ b/drivers/mtd/nand/raw/nand_base.c
+>>>>>> @@ -488,7 +488,7 @@ static int nand_do_write_oob(struct nand_chip =
+*chip, loff_t to,
+>>>>>>=20
+>>>>>> 	nand_fill_oob(chip, ops->oobbuf, ops->ooblen, ops);
+>>>>>>=20
+>>>>>> -	if (ops->mode =3D=3D MTD_OPS_RAW)
+>>>>>> +	if (ops->mode =3D=3D MTD_OPS_AUTO_OOB || ops->mode =3D=3D =
+MTD_OPS_RAW)
+>>>>>> 		status =3D chip->ecc.write_oob_raw(chip, page & =
+chip->pagemask);     =20
+>>>>>=20
+>>>>> The doc says:
+>>>>>=20
+>>>>> @MTD_OPS_PLACE_OOB:  OOB data are placed at the given offset =
+(default)
+>>>>> @MTD_OPS_AUTO_OOB:   OOB data are automatically placed at the free =
+areas
+>>>>>                    which are defined by the internal ecclayout
+>>>>> @MTD_OPS_RAW:        data are transferred as-is, with no error
+>>>>> 		     correction; this mode implies %MTD_OPS_PLACE_OOB
+>>>>>=20
+>>>>> To me, that means MTD_OPS_PLACE_OOB and MTD_OPS_AUTO_OOB do not =
+imply
+>>>>> MTD_OPS_RAW. Anyway those modes are just too vague. We really =
+should
+>>>>> separate the ECC-disabled/ECC-enabled concept (AKA raw vs non-raw =
+mode)
+>>>>> from the OOB placement scheme. IIRC, Miquel had a patchset doing =
+that.
+>>>>>=20
+>>>>> We also should have the concept of protected OOB-region vs
+>>>>> unprotected-OOB-region if we want JFFS2 to work with controllers =
+that
+>>>>> protect part of the OOB region. Once we have that we can patch =
+JFFS2
+>>>>> to write things with =
+"ECC-disabled"+"auto-OOB-placement-on-unprotected
+>>>>> area".   =20
+>>>>=20
+>>>> I see the problem but as Boris said the fix is not valid as-is.
+>>>> Problem is: I don't have a better proposal yet.
+>>>>=20
+>>>> Is forcing JFFS2 to write cleanmarkers in raw mode only an option?  =
+ =20
+>>>=20
+>>> The doc says that for MTD_OPS_AUTO_OOB "the data is automatically =
+placed at the free areas which are defined by the internal ecclayout=E2=80=
+=9D.
+>>> So, if we=E2=80=99re placing this data in the free OOB area left by =
+the ECC bytes it means that this automatically placed data won=E2=80=99t =
+be error correctable, since it=E2=80=99s in the OOB, and the OOB data =
+isn=E2=80=99t error corrected, right? =20
+>>=20
+>> No, free bytes sometimes are and sometimes are not covered by the ECC
+>> engine. It depends on the controller.
+>>=20
+>>> The problem is that "flash_erase -j=E2=80=9D uses MTD_OPS_AUTO_OOB =
+to write the OOB JFFS2 clean markers and if this is written with ECC =
+enabled the NAND controller will change the ECC bytes to an invalid =
+value (or at least brcmnand controller).
+>>>=20
+>>> Another option could be adding another mode, something like =
+MTD_OPS_AUTO_OOB_RAW and using it in mtd-utils and JFFS2. =20
+>>=20
+>> No, these modes already are completely wrong, I must resend my series
+>> fixing them.
+>>=20
+>=20
+> Totally agree with Miquel on that one: let's fix the
+> write/read/ecc-layout semantics instead of adding more obscure modes.
+
