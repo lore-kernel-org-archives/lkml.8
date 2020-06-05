@@ -2,132 +2,85 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52481C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2222074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkFNdaGS"
+	by mail.kernel.org (Postfix) with ESMTP id 2E0A12074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgFEPnH (ORCPT
+        id S1728392AbgFEPnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:43:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgFEPnH (ORCPT
+        Fri, 5 Jun 2020 11:43:45 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:41448 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgFEPno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:43:07 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05314C08C5C2;
-        Fri,  5 Jun 2020 08:43:07 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id l6so10061134ilo.2;
-        Fri, 05 Jun 2020 08:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G2GB2U7+brpU97z7quDVcgXAtK4rM5dz6gG/Wy3Olog=;
-        b=HkFNdaGSceLzbEKT8WldzvKrDeIBzoGGsKRPbyGQrKzhnWdYN2yeXulRIa/JJ8HUEr
-         CFoSm/iRg7jQHZ2V/ngd+jE8nj9KOUxe5CNBw9JUkE1fHNfxD069FCGB4RfVCjEvNsWh
-         PjSOLaP/dRj/yR6/NBAERl/1/3eo/0/lJw0A0OWZtSbdUB70ZfDMpbuT6zn7FIpi/B5Y
-         lg1IaEvHJJ8TIW2pLpfA1H2ACK2cPLfo2Qg1f6e02cs88tId5vsuQ48t3JoACPMTtfVt
-         64GxYPEisVuelP9nLvlZm2OafdGRadzYJ0Ndr+YJ/8WFcKHvGkXOMCW8tELOnijN5WhA
-         dY5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G2GB2U7+brpU97z7quDVcgXAtK4rM5dz6gG/Wy3Olog=;
-        b=U/30kHikC1glc75jrxj6htBiPEMcGNjoQ78Y17oQ42X0zwCuQw+REE5mZQNgjag4Wu
-         NkgPJFQW6fhYP1cjAaGYtvfuI54slhy95I3NS72rXjwnmONZ2I9a00ilezP4lB8tcU4B
-         MU1FlumbxYMpFsmxXo81gw0mLQPdNtV6nV2zPBbepvcHaaF2GB+LpxweD6qhhFiW3uTt
-         ar1QNJ522faPaEXvhZKSV1LDq5rtNn00tCXax7yL9Ox+4J8V4oEe1gltU4CRhCeSM09g
-         5oC1hjHvIV/w/pqv+v+8HADw/n/5Mkv4pkLzNfmvp4BddLMCqPCGU8et7fpr4wZSHiA5
-         /o4g==
-X-Gm-Message-State: AOAM5312vKoha9tk5tY01osRgLD4PaT+CUCEKv8rOuHTjbV/63JoxULt
-        qvk3QrxwVkLrk9voY84xojjuVU7gmbvvenKtOqI=
-X-Google-Smtp-Source: ABdhPJzJW5O3DzxX9JUEp0Fq7vO1ZexlwSsEZ5rkVUXSutg5q4mvTIgBUytu0r9dtgLLVLmvp7RCv3/Wi3VyOKOvz8I=
-X-Received: by 2002:a92:5e52:: with SMTP id s79mr8217845ilb.33.1591371785844;
- Fri, 05 Jun 2020 08:43:05 -0700 (PDT)
+        Fri, 5 Jun 2020 11:43:44 -0400
+Date:   Fri, 5 Jun 2020 11:43:44 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
+        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] sh: remove sh5 support
+Message-ID: <20200605154343.GU1079@brightrain.aerifal.cx>
+References: <20200424221948.1120587-1-arnd@arndb.de>
+ <20200507143552.GA28683@infradead.org>
+ <20200528054600.GA29717@infradead.org>
+ <20200528161416.GY1079@brightrain.aerifal.cx>
+ <20200529143059.GA25475@infradead.org>
+ <20200529175335.GK1079@brightrain.aerifal.cx>
+ <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
+ <20200601181259.GV1079@brightrain.aerifal.cx>
+ <20200602013332.GY1079@brightrain.aerifal.cx>
+ <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
 MIME-Version: 1.0
-References: <0a50f0cf5593baeb628dc8606c523665e5e2ae6c.1589519600.git.viresh.kumar@linaro.org>
- <20200528192005.GA494874@bogus> <20200529040758.kneg2j4n3gxh2rfv@vireshk-i7>
- <20200603180435.GB23722@bogus> <CABb+yY0cW1GZHVmwEr19JRdJTmsAxw9uq83QV_aq-tdPJO5_Fg@mail.gmail.com>
- <20200604092052.GD8814@bogus> <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
- <20200605045645.GD12397@bogus> <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
- <20200605085830.GA32372@bogus>
-In-Reply-To: <20200605085830.GA32372@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Fri, 5 Jun 2020 10:42:54 -0500
-Message-ID: <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 3:58 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> > > > >>     bash-1526  [000]  1149.472553: scmi_xfer_begin:      transfer_id=1538 msg_id=6 protocol_id=21 seq=0 poll=0
-> > > > >>      <idle>-0     [001]  1149.472733: scmi_xfer_begin:      transfer_id=1539 msg_id=7 protocol_id=19 seq=1 poll=1
-> > > > >
-> > > > Here another request is started before the first is finished.
-> > >
-> > > Ah, the prints are when the client requested. It is not when the mailbox
-> > > started it. So this just indicates the beginning of the transfer from the
-> > > client.
-> > >
-> > There maybe condition on a sensor read to finish within 1ms, but there
-> > is no condition for the read to _start_ at this very moment (usually
-> > there are sleeps in the path to sensor requests).
-> >
->
-> Again I wasn't clear. The trace logs are at the point just before calling
-> mbox_send_messages. So any delay in sensor drivers won't get include. It
-> is after the point sensor driver request to read the value and before we
-> send the request via mailbox.
->
-No, you were clear, I wasn't. Let me try again.
+On Fri, Jun 05, 2020 at 05:38:18PM +0200, John Paul Adrian Glaubitz wrote:
+> Hi Rich!
+> 
+> On 6/2/20 3:33 AM, Rich Felker wrote:
+> >>>> [PATCH 1/2] arch/sh: vmlinux.scr
+> >>>> https://marc.info/?l=linux-sh&m=158429470120959&w=2
+> >>
+> >> OK.
+> > 
+> > Included in -mm.
+> 
+> I just had a look at your tree and it looks you forgot to merge the second
+> patch of the series, see:
+> 
+> > https://marc.info/?l=linux-sh&m=158429470221261&w=2
+> 
+> Can you include the patch as well?
 
-Since origin upto scmi_xfer, there can be many forms of sleep like
-schedule/mutexlock etc.... think of some userspace triggering sensor
-or dvfs operation. Linux does not provide real-time guarantees. Even
-if remote (scmi) firmware guarantee RT response, it makes sense to
-timeout a response only after the _request is on the bus_  and not
-when you submit a request to the api (unless you serialise it).
-IOW, start the timeout from  mbox_client.tx_prepare()  when the
-message actually gets on the bus.
+This one is outside arch/sh and I'm not sure it's permissible to go up
+through my tree. I was also under the impression that only part 1 was
+needed to fix the immediate problem on sh and tha part 2 was for
+completeness and to make sure the same doesn't happen on other archs
+in the future, but maybe my understanding here is incorrect.
 
+> And would it be okay to send a PR to Linus
+> after that?
 
-> > You have shared only 'bad' log without serialising access. Please
-> > share log after serialising access to the channel and the 'good' log
-> > with virtual channels.  That should put the topic to rest.
-> >
->
-> I didn't realise that, sorry for missing that earlier. Attached both
-> now, thanks for asking.
->
-Interesting logs !  The time taken to complete _successful_ requests
-are arguably better in bad_trace ... there are many <10usec responses
-in bad_trace, while the fastest response in good_trace is  53usec.
-And the requests that 'fail/timeout' are purely the result of not
-serialising them or checkout for timeout at wrong place as explained
-above.
+Sure, will do right away once we resolve what to do with the above,
+and provided you don't have anything else you want me to evaluate for
+inclusion.
 
-thanks.
+Rich
