@@ -2,131 +2,117 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1606C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 869EA206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:14:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o/GhGmZW"
+	by mail.kernel.org (Postfix) with ESMTP id B96482075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591373735;
+	bh=UwdpKRdlqrxAPQ+pD6xjKA3W+jwOlZ4r03LkFTrY1LA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r+nvDXUv/vOE+XwgUF2Lqszjws1avgVnl5nOiIZzoQXjvn3hFwLmwONLYN96qnPMn
+	 bs4yykQiZVogntepV4ewVOpiAvztxrU+Rarb3FeuYjqwVGduNj+fOKfFhgOdlyuD1i
+	 TskmIg9a0V8VdmXZV3mHk/3UxqCKFo23i+JW/vv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgFEQOn (ORCPT
+        id S1726265AbgFEQPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgFEQOm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:14:42 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA165C08C5C2;
-        Fri,  5 Jun 2020 09:14:41 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 64so5096993pfg.8;
-        Fri, 05 Jun 2020 09:14:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eOl8Flzh5QfUAmLnA9UWhjEFQAgb6tPF02nTEzrngmE=;
-        b=o/GhGmZWIxJqhVDJKsQKGbPLqyjuawNYlFwCMSB1dmIOnfTQOWz+gyD8F4W9+foEip
-         sGduLULJG3sp/+AjRqE7W7sqIbpzF2ncOlDLUlwBVeO7u63L6GeeAJoLYaYkLFetqG3E
-         cz1WbWSYBHkNRKVGkVnDkY4ZkLUKwviwZlOaDS2pzxWLrpS/5HQ7hthbe7Su8fHi+iim
-         I2io55Tb7ZkkiWMfLsORboU0m+a4utgq3W2V8f7U83kFohzNiF3NHOyEZy+TTW4bxcht
-         O7tpsqxzHlkh8w48zv4OFSjGN8q5TA5nkf3R5zWuI5LGR/xmCGyGJRCgk4jIUrsDggjR
-         wqYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eOl8Flzh5QfUAmLnA9UWhjEFQAgb6tPF02nTEzrngmE=;
-        b=e7Dp2bKlOXURHR5+3S6wEVQffRDJYxhLdaDHtKDy1nf1g3nDAb1MaykksqInqz4VfY
-         yrS05sgRe8gcRNmXJ/Q7K3Rl3d0wMcKC1CgUg0K089T2OSSIZNx+E0RfZ+gj1nNTQj9K
-         ctmSuQDRwVSM+5Ys0eDLCobck3VtSKI7eWQs2xobXrHVn00JA+nJQ0pDkGw3ezbSQJk9
-         wIPH6Y6CR6XItCi/6L+O+Y7PoxVjBD1P7uReGDmtYnZ2uP2LEOD5Klhb554MQcwbhruC
-         ihXDPSZ1QH0XegZVJ2nsWzmyqpmqdYmSonvuhvoFZ74rlCJc2oJ2Qx7bAl63oRb4Y3wT
-         C0vQ==
-X-Gm-Message-State: AOAM531og9G4j88KoKNAgs7HlyiLC20ONFm7o/ZjhQbOIffLzu69+X9C
-        tfYuLHkIQMrrFru4Bu6qo2M=
-X-Google-Smtp-Source: ABdhPJx+oYs7CN1MRuADp7QymAO8VtA4DAeydYgA4KPRUXclZZTlBFTS70qpwF1A3FJ1zbMweHcCNQ==
-X-Received: by 2002:a63:6447:: with SMTP id y68mr9800595pgb.395.1591373681240;
-        Fri, 05 Jun 2020 09:14:41 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id g19sm63576pfo.209.2020.06.05.09.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 09:14:40 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Akshu Agrawal <Akshu.Agrawal@amd.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Daniel Kurtz <djkurtz@chromium.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] clk: clk-st: Add missed return value checks in st_clk_probe()
-Date:   Sat,  6 Jun 2020 00:14:30 +0800
-Message-Id: <20200605161430.2513121-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 5 Jun 2020 12:15:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgFEQPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 12:15:34 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15D77206DB;
+        Fri,  5 Jun 2020 16:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591373734;
+        bh=UwdpKRdlqrxAPQ+pD6xjKA3W+jwOlZ4r03LkFTrY1LA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zLKsDwLmu6PneMG+VwHwZGHKoOyzHO9TL8dnMZwSDzM56f4c2gTVNNn9RdcetnCyC
+         vYZVmspRNN7G+itrwzjpyfg3EA09W5ypfcsrmNcpmucq3faJwn/+LmwwkTKW4f/NHG
+         5MGycP4gFgaj6ueu/XoxPOxE9/G0S+ATeGVhNFsE=
+Date:   Fri, 5 Jun 2020 09:15:32 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, tglx@linutronix.de,
+        frederic@kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net
+Subject: Re: [RFC][PATCH 7/7] sched: Replace rq::wake_list
+Message-ID: <20200605161532.GD1373@sol.localdomain>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.129371594@infradead.org>
+ <20200604141837.GA179816@roeck-us.net>
+ <20200605002433.GA148196@sol.localdomain>
+ <20200605074154.GB2750@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605074154.GB2750@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return values were not checked after calls of the following functions.
-  - clk_hw_register_mux
-  - clk_hw_register_gate
-  - devm_clk_hw_register_clkdev
+On Fri, Jun 05, 2020 at 09:41:54AM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 04, 2020 at 05:24:33PM -0700, Eric Biggers wrote:
+> > On Thu, Jun 04, 2020 at 07:18:37AM -0700, Guenter Roeck wrote:
+> > > On Tue, May 26, 2020 at 06:11:04PM +0200, Peter Zijlstra wrote:
+> > > > The recent commit: 90b5363acd47 ("sched: Clean up scheduler_ipi()")
+> > > > got smp_call_function_single_async() subtly wrong. Even though it will
+> > > > return -EBUSY when trying to re-use a csd, that condition is not
+> > > > atomic and still requires external serialization.
+> > > > 
+> > > > The change in ttwu_queue_remote() got this wrong.
+> > > > 
+> > > > While on first reading ttwu_queue_remote() has an atomic test-and-set
+> > > > that appears to serialize the use, the matching 'release' is not in
+> > > > the right place to actually guarantee this serialization.
+> > > > 
+> > > > The actual race is vs the sched_ttwu_pending() call in the idle loop;
+> > > > that can run the wakeup-list without consuming the CSD.
+> > > > 
+> > > > Instead of trying to chain the lists, merge them.
+> > > > 
+> > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > ---
+> > > ...
+> > > > +	/*
+> > > > +	 * Assert the CSD_TYPE_TTWU layout is similar enough
+> > > > +	 * for task_struct to be on the @call_single_queue.
+> > > > +	 */
+> > > > +	BUILD_BUG_ON(offsetof(struct task_struct, wake_entry_type) - offsetof(struct task_struct, wake_entry) !=
+> > > > +		     offsetof(struct __call_single_data, flags) - offsetof(struct __call_single_data, llist));
+> > > > +
+> > > 
+> > > There is no guarantee in C that
+> > > 
+> > > 	type1 a;
+> > > 	type2 b;
+> > > 
+> > > in two different data structures means that offsetof(b) - offsetof(a)
+> > > is the same in both data structures unless attributes such as
+> > > __attribute__((__packed__)) are used.
+> > > 
+> > > As result, this does and will cause a variety of build errors depending
+> > > on the compiler version and compile flags.
+> > > 
+> > > Guenter
+> > 
+> > Yep, this breaks the build for me.
+> 
+> -ENOCONFIG
 
-Thus add error detection and the corresponding exception handling.
+For me, the problem seems to be randstruct.  To reproduce, you can use
+(on x86_64):
 
-Return the value from the function call "devm_clk_hw_register_clkdev"
-at the end of this function implementation.
-
-Fixes: 421bf6a1f061 ("clk: x86: Add ST oscout platform clock")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Modify description.
-
- drivers/clk/x86/clk-st.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/clk/x86/clk-st.c b/drivers/clk/x86/clk-st.c
-index 25d4b97aff9b..e6ee6ea2568b 100644
---- a/drivers/clk/x86/clk-st.c
-+++ b/drivers/clk/x86/clk-st.c
-@@ -46,16 +46,20 @@ static int st_clk_probe(struct platform_device *pdev)
- 		clk_oscout1_parents, ARRAY_SIZE(clk_oscout1_parents),
- 		0, st_data->base + CLKDRVSTR2, OSCOUT1CLK25MHZ, 3, 0, NULL);
- 
-+	if (IS_ERR(hws[ST_CLK_MUX]))
-+		return PTR_ERR(hws[ST_CLK_MUX]);
-+
- 	clk_set_parent(hws[ST_CLK_MUX]->clk, hws[ST_CLK_48M]->clk);
- 
- 	hws[ST_CLK_GATE] = clk_hw_register_gate(NULL, "oscout1", "oscout1_mux",
- 		0, st_data->base + MISCCLKCNTL1, OSCCLKENB,
- 		CLK_GATE_SET_TO_DISABLE, NULL);
- 
--	devm_clk_hw_register_clkdev(&pdev->dev, hws[ST_CLK_GATE], "oscout1",
--				    NULL);
-+	if (IS_ERR(hws[ST_CLK_GATE]))
-+		return PTR_ERR(hws[ST_CLK_GATE]);
- 
--	return 0;
-+	return devm_clk_hw_register_clkdev(&pdev->dev, hws[ST_CLK_GATE],
-+					   "oscout1", NULL);
- }
- 
- static int st_clk_remove(struct platform_device *pdev)
--- 
-2.26.2
-
+	make defconfig
+	echo CONFIG_GCC_PLUGIN_RANDSTRUCT=y >> .config
+	make olddefconfig
+	make kernel/smp.o
