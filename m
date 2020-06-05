@@ -2,137 +2,83 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADABC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5E5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A21D42067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:50:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7KhDXCA"
+	by mail.kernel.org (Postfix) with ESMTP id E838F2067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:51:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgFEKu5 (ORCPT
+        id S1726894AbgFEKvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44246 "EHLO
+        Fri, 5 Jun 2020 06:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgFEKu4 (ORCPT
+        with ESMTP id S1726637AbgFEKvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:50:56 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC1EC08C5C2;
-        Fri,  5 Jun 2020 03:50:55 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id jz3so2444893pjb.0;
-        Fri, 05 Jun 2020 03:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jm0v4NSQR1eScm4hhrK2IVUXqo9gKL1/dYB+J6Im5x0=;
-        b=K7KhDXCAN4clMZH/9uQj6/jxUV9WXBwbtZ3UN/nOr0eCOZx7zi8KmoNF1OOCbLvD/Q
-         yCeXrjx95GEfn9SFJy/kuOFU0e5hZ7TxwAzd2yJ6KatQ9UAiQtKXcqZjeRrOxs6gUvvy
-         /iD0SENH6qBwJH0O61kFDFhPIGIGy8OSbaVutwR5NpdNYCz0wbhqcsy2mVCoCe4WzyHL
-         RiHAo/+E/znba4TKYpbeiFhAWsha+Fx0H0Le9HVZxYeLgyxR+cTOvGVHZhmGGYvDE0co
-         oqFHhCL+74ImcrYmdoqftf3xhzH1oJLn1tecMG8FD2gp2mkeO2/RUFI/W5hSliYsW+VN
-         vUog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jm0v4NSQR1eScm4hhrK2IVUXqo9gKL1/dYB+J6Im5x0=;
-        b=GQ5iqnQHB8idRGvkJqsPfkiaO35K9hJfbjIwFUSCBl84mhwqoz/mPDpwW/KFZGSGTM
-         gJojmLwfMLRI8vtu7NZNDk7l6ELFKlwsVURJevZ0gVrZO/6A/Tc7Ne+vl79mGNfshWxq
-         l4EO4pH2yQyH5gaSeAbfaY8O+8+uroyJx3Sc23yeb4HzCnMic8vGivwiQE0dEdyEXJRd
-         MnZDUoBAzJnpP6mtVDNWrHP7a3/J7xqRP/hUtE2OipFVAkX3dut7TAGdafDSpni6v+Ml
-         Y0Q+nVFhMpcJSjhHIoqWmeLvYaVO9scLqYWIuh6Snx6ykh1c+qZv0+7OpzQvKA8CUkJa
-         rKRQ==
-X-Gm-Message-State: AOAM532fgdzubpb8foLOLkInfngmJHRyDjQ4LKBY7r5dziPlHdFKEDYs
-        nkB7OJxN2+sst1mMIrdU4tc9B0ooBGf+blB8xNfJBBmscnw=
-X-Google-Smtp-Source: ABdhPJy8g7xgtcfoQmROz1emJfu6kg9Wd3RE5AUde8dS472m5XXCXD1Sghv319T4YYpsCAKy9z10aBn1woa6UmZUj/k=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr2414679pjq.228.1591354255458;
- Fri, 05 Jun 2020 03:50:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-5-michael@walle.cc>
- <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com> <8f042c2442852c29519c381833f3d289@walle.cc>
-In-Reply-To: <8f042c2442852c29519c381833f3d289@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 13:50:43 +0300
-Message-ID: <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Fri, 5 Jun 2020 06:51:04 -0400
+X-Greylist: delayed 109823 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 05 Jun 2020 03:51:03 PDT
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D81C08C5C2;
+        Fri,  5 Jun 2020 03:51:03 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 04986300020AA;
+        Fri,  5 Jun 2020 12:51:01 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id C284822B009; Fri,  5 Jun 2020 12:51:00 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 12:51:00 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+Message-ID: <20200605105100.kxe6wgh5itmhrgl2@wunner.de>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604212819.715-1-f.fainelli@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
-> > On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+On Thu, Jun 04, 2020 at 02:28:19PM -0700, Florian Fainelli wrote:
+> The 4 SPI controller instances added in BCM2711 and BCM7211 SoCs (SPI3,
+> SPI4, SPI5 and SPI6) share the same interrupt line with SPI0.
+> 
+> For the BCM2835 case which is deemed performance critical, we would like
+> to continue using an interrupt handler which does not have the extra
+> comparison on BCM2835_SPI_CS_INTR.
+> 
+> To support that requirement the common interrupt handling code between
+> the shared and non-shared interrupt paths is split into a
+> bcm2835_spi_interrupt_common() and both bcm2835_spi_interrupt() as well
+> as bcm2835_spi_shared_interrupt() make use of it.
+> 
+> During probe, we determine if there is at least another instance of this
+> SPI controller, and if there is, then we install a shared interrupt
+> handler.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-...
-
-> >> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> >> +module_param(nowayout, bool, 0);
-> >> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
-> >> (default="
-> >> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
-> >> ")");
-> >> +
-> >> +static int timeout;
-> >> +module_param(timeout, int, 0);
-> >> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> >
-> > Guenter ACKed this, but I'm wondering why we still need module
-> > parameters...
->
-> How would a user change the nowayout or the timeout? For the latter
-> there is
-> a device tree entry, but thats not easy changable by the user.
-
-Yes, it's more question to VIm and Guenter than to you.
-
-...
-
-> >> +       if (status & WDT_CTRL_EN) {
-> >> +               sl28cpld_wdt_start(wdd);
-> >
-> >> +               set_bit(WDOG_HW_RUNNING, &wdd->status);
-> >
-> > Do you need atomic op here? Why?
->
-> I'd say consistency, all watchdog drivers do it like that. I just
-> had a look at where this is used, but it looks like access from
-> userspace is protected by a lock.
-
-Okay then.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
