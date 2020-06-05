@@ -2,163 +2,116 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79438C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD19CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5182065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7312206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgFEAIr (ORCPT
+        id S1726068AbgFEAPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 20:08:47 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:59580 "EHLO raptor.unsafe.ru"
+        Thu, 4 Jun 2020 20:15:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:64305 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725986AbgFEAIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 20:08:47 -0400
-Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 55607209AF;
-        Fri,  5 Jun 2020 00:08:42 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 02:08:38 +0200
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH 0/2] proc: use subset option to hide some top-level
- procfs entries
-Message-ID: <20200605000838.huaeqvgpvqkyg3wh@comp-core-i7-2640m-0182e6>
-References: <20200604200413.587896-1-gladkov.alexey@gmail.com>
- <87ftbah8q2.fsf@x220.int.ebiederm.org>
+        id S1725986AbgFEAPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 20:15:47 -0400
+IronPort-SDR: ezMOngJyfryD0Q40WG7mRJKECQlrFvad0iJcpN8xBZTVpGoGx/V+oWLwYXmyvincXwlkGQohK2
+ q2+BdRbfQUiA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 17:15:46 -0700
+IronPort-SDR: 5N6C2ToGgttdbw3hpTCJTivhdhcLus3ANU9los7TrjJlJLkEZt5HIQ72fBdijiCbHUnHuVKT2u
+ CVLic+ig+kFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,474,1583222400"; 
+   d="scan'208";a="269588272"
+Received: from zyu4-mobl2.ccr.corp.intel.com (HELO [10.255.30.96]) ([10.255.30.96])
+  by orsmga003.jf.intel.com with ESMTP; 04 Jun 2020 17:15:44 -0700
+Subject: Re: [LKP] Re: [netfilter] e32a4dc651:
+ BUG:using_smp_processor_id()in_preemptible
+To:     Stefano Brivio <sbrivio@redhat.com>,
+        kernel test robot <lkp@intel.com>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200603084934.GF12456@shao2-debian>
+ <20200605002323.501b1cc6@redhat.com>
+From:   Liu Yiding <yidingx.liu@intel.com>
+Message-ID: <7dd4f0d2-34a7-8086-99cb-424ff2e039ca@intel.com>
+Date:   Fri, 5 Jun 2020 08:15:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftbah8q2.fsf@x220.int.ebiederm.org>
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Fri, 05 Jun 2020 00:08:43 +0000 (UTC)
+In-Reply-To: <20200605002323.501b1cc6@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 03:33:25PM -0500, Eric W. Biederman wrote:
-> Alexey Gladkov <gladkov.alexey@gmail.com> writes:
-> 
-> > Greetings!
-> >
-> > Preface
-> > -------
-> > This patch set can be applied over:
-> >
-> > git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git d35bec8a5788
-> 
-> I am not going to seriously look at this for merging until after the
-> merge window closes. 
+Hi,
 
-OK. I'll wait.
-
-> Have you thought about the possibility of relaxing the permission checks
-> to mount proc such that we don't need to verify there is an existing
-> mount of proc?  With just the subset pids I think this is feasible.  It
-> might not be worth it at this point, but it is definitely worth asking
-> the question.  As one of the benefits early propopents of the idea of a
-> subset of proc touted was that they would not be as restricted as they
-> are with today's proc.
-
-I'm not sure I follow.
-
-What do you mean by the possibility of relaxing the permission checks to
-mount proc?
-
-Do you suggest to allow a user to mount procfs with hidepid=2,subset=pid
-options? If so then this is an interesting idea.
-
-> I ask because this has a bearing on the other options you are playing
-> with.
-
-I can not agree with this because I do not touch on other options.
-The hidepid and subset=pid has no relation to the visibility of regular
-files. On the other hand, in procfs there is absolutely no way to restrict
-access other than selinux.
-
-> Do we want to find a way to have the benefit of relaxed permission
-> checks while still including a few more files.
-
-In fact, I see no problem allowing the user to mount procfs with the
-hidepid=2,subset=pid options.
-
-We can make subset=self, which would allow not only pids subset but also
-other symlinks that lead to self (/proc/net, /proc/mounts) and if we ever
-add virtualization to meminfo, cpuinfo etc.
-
-> > Overview
-> > --------
-> > Directories and files can be created and deleted by dynamically loaded modules.
-> > Not all of these files are virtualized and safe inside the container.
-> >
-> > However, subset=pid is not enough because many containers wants to have
-> > /proc/meminfo, /proc/cpuinfo, etc. We need a way to limit the visibility of
-> > files per procfs mountpoint.
-> 
-> Is it desirable to have meminfo and cpuinfo as they are today or do
-> people want them to reflect the ``container'' context.   So that
-> applications like the JVM don't allocation too many cpus or don't try
-> and consume too much memory, or run on nodes that cgroups current make
-> unavailable.
-
-Of course, it would be better if these files took into account the
-limitations of cgroups or some kind of ``containerized'' context.
-
-> Are there any users or planned users of this functionality yet?
-
-I know that java uses meminfo for sure.
-
-The purpose of this patch is to isolate the container from unwanted files
-in procfs.
-
-> I am concerned that you might be adding functionality that no one will
-> ever use that will just add code to the kernel that no one cares about,
-> that will then accumulate bugs.  Having had to work through a few of
-> those cases to make each mount of proc have it's own super block I am
-> not a great fan of adding another one.
+On 6/5/20 6:23 AM, Stefano Brivio wrote:
+> Hi,
 >
-> If the runc, lxc and other container runtime folks can productively use
-> such and option to do useful things and they are sensible things to do I
-> don't have any fundamental objection.  But I do want to be certain this
-> is a feature that is going to be used.
+> On Wed, 3 Jun 2020 16:49:34 +0800
+> kernel test robot <lkp@intel.com> wrote:
+>
+>> Greeting,
+>>
+>> FYI, we noticed the following commit (built with gcc-7):
+>>
+>> commit: e32a4dc6512ce3c1a1920531246e7037896e510a ("netfilter: nf_tables: make sets built-in")
+>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>
+>> in testcase: kernel-selftests
+>> with following parameters:
+>>
+>> 	group: kselftests-netfilter
+> I couldn't find this information in the report. Would it be possible to
+> have here an indication of what kselftest specifically is failing?
+> There are a number of tests in that group. I have an obvious suspicion
+> here (nft_concat_range.sh), but it would be nice to know, in general.
 
-Ok, just an example how docker or runc (actually almost all golang-based
-container systems) is trying to block access to something in procfs:
 
-$ docker run -it --rm busybox
-# mount |grep /proc
-proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
-proc on /proc/bus type proc (ro,relatime)
-proc on /proc/fs type proc (ro,relatime)
-proc on /proc/irq type proc (ro,relatime)
-proc on /proc/sys type proc (ro,relatime)
-proc on /proc/sysrq-trigger type proc (ro,relatime)
-tmpfs on /proc/asound type tmpfs (ro,seclabel,relatime)
-tmpfs on /proc/acpi type tmpfs (ro,seclabel,relatime)
-tmpfs on /proc/kcore type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
-tmpfs on /proc/keys type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
-tmpfs on /proc/latency_stats type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
-tmpfs on /proc/timer_list type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
-tmpfs on /proc/sched_debug type tmpfs (rw,seclabel,nosuid,size=65536k,mode=755)
-tmpfs on /proc/scsi type tmpfs (ro,seclabel,relatime)
+Yes, it's nft_concat_range.sh caused this error.
 
-For now I'm just trying ti create a better way to restrict access in
-the procfs than this since procfs is used in containers.
+```
 
+[  165.249447] # selftests: netfilter: nft_concat_range.sh
+[  165.249453]
+[  165.295336] # TEST: reported issues
+[  165.295342]
+[  165.316525] BUG: using smp_processor_id() in preemptible [00000000] 
+code: nft/6247
+[  165.319547] caller is nft_pipapo_insert+0x464/0x610 [nf_tables]
+[  165.321846] CPU: 1 PID: 6247 Comm: nft Not tainted 
+5.6.0-rc5-01595-ge32a4dc6512ce3 #1
+
+```
+
+
+And i think this error is caused by some kconfigs.
+
+This test was passed until we enabled all kconfigs defined in 
+netfilter/config. :-(
+
+
+>
+>> [...]
+>>
+>> [  165.316525] BUG: using smp_processor_id() in preemptible [00000000] code: nft/6247
+>> [  165.319547] caller is nft_pipapo_insert+0x464/0x610 [nf_tables]
+> I'll take care of this, thanks Florian for forwarding.
+>
 -- 
-Rgrds, legion
+Best regards.
+Liu Yiding
 
