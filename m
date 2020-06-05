@@ -2,118 +2,120 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114B1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB3D207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:19:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591399154;
-	bh=pxsClvnIPBaS8ODkk62CMx4DJx6gcP1jIo9ANMgure4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=tNnJIjV6bRO6SN7x4OluhlFr3SPjprwngs5M+meDr1NV4bLSoSz1o/jUtbDnJhTfB
-	 iHnR0z22IOxP5vLlheF2fpCiPKpshVWXdiZQqD5El8Xaz64w2L/1jPjL670XK0V9Nz
-	 phkZHxrv+X256B1H1Z0C8cf3UR4ZHUbxjx/h5o/k=
+	by mail.kernel.org (Postfix) with ESMTP id EBA61207ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgFEXTN (ORCPT
+        id S1728492AbgFEXTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 19:19:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728290AbgFEXTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 19:19:13 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1CC7207D0;
-        Fri,  5 Jun 2020 23:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591399152;
-        bh=pxsClvnIPBaS8ODkk62CMx4DJx6gcP1jIo9ANMgure4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cWVCuuhZEXopJ/fy8/HaCu7gj+qdiUHK7yyWdnF7I+g00606Q27D/lHhs2F+KUUbI
-         qPalWOJ7gwNYAzD0Zb2lhQotEE4HBkdYrzhA669gi2oRrAkyKg2JRbaRxC86n+xjd9
-         CZzarVVqj34lwCRUNnhR0Wkc6VA4FmF+zD+p5VbA=
-Date:   Fri, 5 Jun 2020 18:19:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
+        Fri, 5 Jun 2020 19:19:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23836 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728290AbgFEXTv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 19:19:51 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055N3J5A157074;
+        Fri, 5 Jun 2020 19:19:35 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31fgkmkmgs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 19:19:34 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055NBBuw014932;
+        Fri, 5 Jun 2020 23:19:32 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31bf4852fc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 23:19:32 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055NJUeN51970228
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jun 2020 23:19:30 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E6E44C046;
+        Fri,  5 Jun 2020 23:19:30 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52A8A4C050;
+        Fri,  5 Jun 2020 23:19:27 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.234.64])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Jun 2020 23:19:27 +0000 (GMT)
+Message-ID: <1591399166.4615.37.camel@linux.ibm.com>
+Subject: Re: [PATCH v6 8/8] ima: add FIRMWARE_PARTIAL_READ support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-Message-ID: <20200605231909.GA1155454@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Date:   Fri, 05 Jun 2020 19:19:26 -0400
+In-Reply-To: <20200605225959.12424-9-scott.branden@broadcom.com>
+References: <20200605225959.12424-1-scott.branden@broadcom.com>
+         <20200605225959.12424-9-scott.branden@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <779f4044-cf6a-b0d3-916f-0274450c07d3@linaro.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-05_07:2020-06-04,2020-06-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 cotscore=-2147483648
+ malwarescore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006050170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 09:33:07PM +0800, Zhangfei Gao wrote:
-> On 2020/6/2 上午1:41, Bjorn Helgaas wrote:
-> > On Thu, May 28, 2020 at 09:33:44AM +0200, Joerg Roedel wrote:
-> > > On Wed, May 27, 2020 at 01:18:42PM -0500, Bjorn Helgaas wrote:
-> > > > Is this slowdown significant?  We already iterate over every device
-> > > > when applying PCI_FIXUP_FINAL quirks, so if we used the existing
-> > > > PCI_FIXUP_FINAL, we wouldn't be adding a new loop.  We would only be
-> > > > adding two more iterations to the loop in pci_do_fixups() that tries
-> > > > to match quirks against the current device.  I doubt that would be a
-> > > > measurable slowdown.
-> > > I don't know how significant it is, but I remember people complaining
-> > > about adding new PCI quirks because it takes too long for them to run
-> > > them all. That was in the discussion about the quirk disabling ATS on
-> > > AMD Stoney systems.
-> > > 
-> > > So it probably depends on how many PCI devices are in the system whether
-> > > it causes any measureable slowdown.
-> > I found this [1] from Paul Menzel, which was a slowdown caused by
-> > quirk_usb_early_handoff().  I think the real problem is individual
-> > quirks that take a long time.
-> > 
-> > The PCI_FIXUP_IOMMU things we're talking about should be fast, and of
-> > course, they're only run for matching devices anyway.  So I'd rather
-> > keep them as PCI_FIXUP_FINAL than add a whole new phase.
-> > 
-> Thanks Bjorn for taking time for this.
-> If so, it would be much simpler.
-> 
-> +++ b/drivers/iommu/iommu.c
-> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct
-> fwnode_handle *iommu_fwnode,
->         fwspec->iommu_fwnode = iommu_fwnode;
->         fwspec->ops = ops;
->         dev_iommu_fwspec_set(dev, fwspec);
-> +
-> +       if (dev_is_pci(dev))
-> +               pci_fixup_device(pci_fixup_final, to_pci_dev(dev));
-> +
-> 
-> Then pci_fixup_final will be called twice, the first in pci_bus_add_device.
-> Here in iommu_fwspec_init is the second time, specifically for iommu_fwspec.
-> Will send this when 5.8-rc1 is open.
+Hi Scott,
 
-Wait, this whole fixup approach seems wrong to me.  No matter how you
-do the fixup, it's still a fixup, which means it requires ongoing
-maintenance.  Surely we don't want to have to add the Vendor/Device ID
-for every new AMBA device that comes along, do we?
+On Fri, 2020-06-05 at 15:59 -0700, Scott Branden wrote:
+> 
+> @@ -648,6 +667,9 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  	enum ima_hooks func;
+>  	u32 secid;
+>  
+> +	if (!file && read_id == READING_FIRMWARE_PARTIAL_READ)
+> +		return 0;
 
-Bjorn
+The file should be measured on the pre security hook, not here on the
+post security hook.  Here, whether "file" is defined or not, is
+irrelevant.  The test should just check "read_id".
+
+Have you tested measuring the firmware by booting a system with
+"ima_policy=tcb" specified on the boot command line and compared the
+measurement entry in the IMA measurement list with the file hash (eg.
+sha1sum, sha256sum)?
+
+Mimi
+
+> +
+>  	if (!file && read_id == READING_FIRMWARE) {
+>  		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+>  		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+
