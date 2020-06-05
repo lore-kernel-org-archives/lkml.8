@@ -2,264 +2,93 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDC820663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029FA2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="24/s0S78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgFEOGc (ORCPT
+        id S1727915AbgFEOGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:06:32 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47318 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgFEOGc (ORCPT
+        Fri, 5 Jun 2020 10:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgFEOGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:06:32 -0400
-Received: from 89-64-83-87.dynamic.chello.pl (89.64.83.87) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id cde6d4786e60f564; Fri, 5 Jun 2020 16:06:29 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     rafael.j.wysocki@intel.com, stable@vger.kernel.org,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org
-Subject: [RFT][PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
-Date:   Fri, 05 Jun 2020 16:06:28 +0200
-Message-ID: <2643462.teTRrieJB7@kreacher>
-In-Reply-To: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Fri, 5 Jun 2020 10:06:33 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6F8C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3646+nLfQNB1TESO4RVGCLY9LYs5rMvIB3rw1pnYSU8=; b=24/s0S7879gySR/FmN/u7FND91
+        f1N7ToulvAIFplRet12L9lK1cliyd4euZm6tTDUazi8qkZrpHzjtya4OvCdBkYOY+K+I/IDb/WcLZ
+        MY5l7iaVCUbtctX2cg59+ZfrRlI3xBYajFLmhMwG4m1y/iyMl/yL5Q4WrzcTjqOU69i/IMqex0b4A
+        +icQc/XM37OL/4GshMXhxYflgQLSXEceptaBxryvYbmF98Pk70pWycXYAcbS43usFWbJkcXbTJJ+Q
+        p6YfrhxfgMSPpCy4TC/Cp+pHIAzD6fqdcBeutmyfgDm2YYHk2IyN+1JQsH1r+sGgzKQcc1l3kk8jZ
+        takv0BLQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhCyN-0002yk-5a; Fri, 05 Jun 2020 14:05:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F2F6D301ABC;
+        Fri,  5 Jun 2020 16:05:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CCAA821A74B45; Fri,  5 Jun 2020 16:05:21 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 16:05:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Yuqi Jin <jinyuqi@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Jiong Wang <jiongwang@huawei.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [net] a6211caa63:
+ dmesg.UBSAN:signed-integer-overflow_in_arch/x86/include/asm/atomic.h
+Message-ID: <20200605140521.GD4117@hirez.programming.kicks-ass.net>
+References: <20200605080929.GK12456@shao2-debian>
+ <CANn89iK1EfAqw-SkXyQR=88fKnBpXCcR_FaiFkVDUNazNgAX1g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iK1EfAqw-SkXyQR=88fKnBpXCcR_FaiFkVDUNazNgAX1g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: [PATCH] ACPI: OSL: Use rwlock instead of RCU for memory management
+On Fri, Jun 05, 2020 at 06:17:51AM -0700, Eric Dumazet wrote:
+> On Fri, Jun 5, 2020 at 1:10 AM kernel test robot <rong.a.chen@intel.com> wrote:
 
-The ACPI OS layer uses RCU to protect the list of ACPI memory
-mappings from being walked while it is updated.  Among other
-situations, that list can be walked in non-NMI interrupt context,
-so using a sleeping lock to protect it is not an option.
+> There you go.
+> 
+> We decided this was a bogus report, and that UBSAN requires sane compilers.
+> 
+> Please read the fine comment that was added in this commit and update
+> your compiler or do not mess with compiler flags.
+> 
+> +       /* If UBSAN reports an error there, please make sure your compiler
+> +        * supports -fno-strict-overflow before reporting it that was a bug
+> +        * in UBSAN, and it has been fixed in GCC-8.
+> +        */
+> +       return atomic_add_return(segs + delta, p_id) - segs;
 
-However, performance issues related to the RCU usage in there
-appear, as described by Dan Williams:
+> >         make HOSTCC=gcc-4.9 CC=gcc-4.9 ARCH=i386 olddefconfig prepare modules_prepare bzImage
 
-"Recently a performance problem was reported for a process invoking
-a non-trival ASL program. The method call in this case ends up
-repetitively triggering a call path like:
-
-    acpi_ex_store
-    acpi_ex_store_object_to_node
-    acpi_ex_write_data_to_field
-    acpi_ex_insert_into_field
-    acpi_ex_write_with_update_rule
-    acpi_ex_field_datum_io
-    acpi_ex_access_region
-    acpi_ev_address_space_dispatch
-    acpi_ex_system_memory_space_handler
-    acpi_os_map_cleanup.part.14
-    _synchronize_rcu_expedited.constprop.89
-    schedule
-
-The end result of frequent synchronize_rcu_expedited() invocation is
-tiny sub-millisecond spurts of execution where the scheduler freely
-migrates this apparently sleepy task. The overhead of frequent
-scheduler invocation multiplies the execution time by a factor
-of 2-3X."
-
-In order to avoid these issues, replace the RCU in the ACPI OS
-layer by an rwlock.
-
-That rwlock should not be frequently contended, so the performance
-impact of it is not expected to be significant.
-
-Reported-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Hi Dan,
-
-This is a possible fix for the ACPI OSL RCU-related performance issues, but
-can you please arrange for the testing of it on the affected systems?
-
-Cheers!
-
----
- drivers/acpi/osl.c |   50 ++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 16 deletions(-)
-
-Index: linux-pm/drivers/acpi/osl.c
-===================================================================
---- linux-pm.orig/drivers/acpi/osl.c
-+++ linux-pm/drivers/acpi/osl.c
-@@ -81,8 +81,8 @@ struct acpi_ioremap {
- };
- 
- static LIST_HEAD(acpi_ioremaps);
-+static DEFINE_RWLOCK(acpi_ioremaps_list_lock);
- static DEFINE_MUTEX(acpi_ioremap_lock);
--#define acpi_ioremap_lock_held() lock_is_held(&acpi_ioremap_lock.dep_map)
- 
- static void __init acpi_request_region (struct acpi_generic_address *gas,
- 	unsigned int length, char *desc)
-@@ -214,13 +214,13 @@ acpi_physical_address __init acpi_os_get
- 	return pa;
- }
- 
--/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
-+/* Must be called with 'acpi_ioremap_lock' or 'acpi_ioremaps_list_lock' held. */
- static struct acpi_ioremap *
- acpi_map_lookup(acpi_physical_address phys, acpi_size size)
- {
- 	struct acpi_ioremap *map;
- 
--	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
-+	list_for_each_entry(map, &acpi_ioremaps, list)
- 		if (map->phys <= phys &&
- 		    phys + size <= map->phys + map->size)
- 			return map;
-@@ -228,7 +228,7 @@ acpi_map_lookup(acpi_physical_address ph
- 	return NULL;
- }
- 
--/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
-+/* Must be called with 'acpi_ioremap_lock' or 'acpi_ioremaps_list_lock' held. */
- static void __iomem *
- acpi_map_vaddr_lookup(acpi_physical_address phys, unsigned int size)
- {
-@@ -257,13 +257,13 @@ void __iomem *acpi_os_get_iomem(acpi_phy
- }
- EXPORT_SYMBOL_GPL(acpi_os_get_iomem);
- 
--/* Must be called with 'acpi_ioremap_lock' or RCU read lock held. */
-+/* Must be called with 'acpi_ioremap_lock' or 'acpi_ioremaps_list_lock' held. */
- static struct acpi_ioremap *
- acpi_map_lookup_virt(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
- 
--	list_for_each_entry_rcu(map, &acpi_ioremaps, list, acpi_ioremap_lock_held())
-+	list_for_each_entry(map, &acpi_ioremaps, list)
- 		if (map->virt <= virt &&
- 		    virt + size <= map->virt + map->size)
- 			return map;
-@@ -360,7 +360,11 @@ void __iomem __ref
- 	map->size = pg_sz;
- 	map->refcount = 1;
- 
--	list_add_tail_rcu(&map->list, &acpi_ioremaps);
-+	write_lock_irq(&acpi_ioremaps_list_lock);
-+
-+	list_add_tail(&map->list, &acpi_ioremaps);
-+
-+	write_unlock_irq(&acpi_ioremaps_list_lock);
- 
- out:
- 	mutex_unlock(&acpi_ioremap_lock);
-@@ -379,14 +383,18 @@ static unsigned long acpi_os_drop_map_re
- {
- 	unsigned long refcount = --map->refcount;
- 
--	if (!refcount)
--		list_del_rcu(&map->list);
-+	if (!refcount) {
-+		write_lock_irq(&acpi_ioremaps_list_lock);
-+
-+		list_del(&map->list);
-+
-+		write_unlock_irq(&acpi_ioremaps_list_lock);
-+	}
- 	return refcount;
- }
- 
- static void acpi_os_map_cleanup(struct acpi_ioremap *map)
- {
--	synchronize_rcu_expedited();
- 	acpi_unmap(map->phys, map->virt);
- 	kfree(map);
- }
-@@ -704,18 +712,23 @@ acpi_status
- acpi_os_read_memory(acpi_physical_address phys_addr, u64 *value, u32 width)
- {
- 	void __iomem *virt_addr;
-+	unsigned long flags;
- 	unsigned int size = width / 8;
- 	bool unmap = false;
- 	u64 dummy;
- 	int error;
- 
--	rcu_read_lock();
-+	read_lock_irqsave(&acpi_ioremaps_list_lock, flags);
-+
- 	virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
- 	if (!virt_addr) {
--		rcu_read_unlock();
-+
-+		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
-+
- 		virt_addr = acpi_os_ioremap(phys_addr, size);
- 		if (!virt_addr)
- 			return AE_BAD_ADDRESS;
-+
- 		unmap = true;
- 	}
- 
-@@ -728,7 +741,7 @@ acpi_os_read_memory(acpi_physical_addres
- 	if (unmap)
- 		iounmap(virt_addr);
- 	else
--		rcu_read_unlock();
-+		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
- 
- 	return AE_OK;
- }
-@@ -737,16 +750,21 @@ acpi_status
- acpi_os_write_memory(acpi_physical_address phys_addr, u64 value, u32 width)
- {
- 	void __iomem *virt_addr;
-+	unsigned long flags;
- 	unsigned int size = width / 8;
- 	bool unmap = false;
- 
--	rcu_read_lock();
-+	read_lock_irqsave(&acpi_ioremaps_list_lock, flags);
-+
- 	virt_addr = acpi_map_vaddr_lookup(phys_addr, size);
- 	if (!virt_addr) {
--		rcu_read_unlock();
-+
-+		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
-+
- 		virt_addr = acpi_os_ioremap(phys_addr, size);
- 		if (!virt_addr)
- 			return AE_BAD_ADDRESS;
-+
- 		unmap = true;
- 	}
- 
-@@ -770,7 +788,7 @@ acpi_os_write_memory(acpi_physical_addre
- 	if (unmap)
- 		iounmap(virt_addr);
- 	else
--		rcu_read_unlock();
-+		read_unlock_irqrestore(&acpi_ioremaps_list_lock, flags);
- 
- 	return AE_OK;
- }
-
-
-
+Rong, can you make sure to exclude gcc<8 for UBSAN reports ?
