@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B112C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E82FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65027208A9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6EA20E65
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366776;
-	bh=eBo08nm/PDjGdcH7DqDvvbaUmTpnzTyrigqj4+vtVHQ=;
+	s=default; t=1591366781;
+	bh=hdTdm917EtRampf7Yvwgw4mSbIBi5+48PdnjaXNUQTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dovKfZTYrJjPX2y9N40f2xRGz3uNsOKpr72SM+9H/gDC0uEyk0E+pBhDOzWKXap/k
-	 kW6xBR8+liA+7x8KqwbVIdkFzjW6ufvuD9Ll87gbS/JI6ZMEVEV/c/EOMVoC9DODxJ
-	 YaQcN1Uhq/SQLT0D1hQNgnM3gazGlrhLFWWfm7Aw=
+	b=Qw59waIW3SNqBG6g/zdXXGRk6hTytZiEd0FfUWX37gueCp6xWU7mGhFVqpRNRPH9M
+	 o9tsVVQYgCdlts8Ikm6mkQoyJ5RXMrXDec9yvzZtrALDBGzvHsWqmwF03+/8I90q8S
+	 n0TRtLStSQKDvc+nFya64sTSIaTPUBeDXHXf666k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgFEOTf (ORCPT
+        id S1728248AbgFEOTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:19:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50024 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728383AbgFEOTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:16 -0400
+        id S1727973AbgFEOT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5003A208B8;
-        Fri,  5 Jun 2020 14:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7188208A9;
+        Fri,  5 Jun 2020 14:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366755;
-        bh=eBo08nm/PDjGdcH7DqDvvbaUmTpnzTyrigqj4+vtVHQ=;
+        s=default; t=1591366767;
+        bh=hdTdm917EtRampf7Yvwgw4mSbIBi5+48PdnjaXNUQTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=my36Q+0mdCrVKCLrz93QFSCdH4/7sK9IzzAtGq9p18w5OhOgFlg4LUO2clBXPWA4W
-         RM9Gh21VRu/EtEcf3TIsLsGjYISckujvInFm8BeXvnsUzZvlmN6WXr0AwX/h1Vff9l
-         /hCCcoGF9zWzgZbN4/BQ6uJkY1BPua1X7pELv5+A=
+        b=T46Z5o/Gz7tqUk2Y0qVLYw83nL20O+JsCIQlB3M6l/8V/MAaGMcUEnlVoj7w3CYBt
+         ySOnrgAkJgLhoB/rTv8N9mRypmtSKhYaD8qPm7UJ2KZ2GjcLKU5FDtJbm0Fwk62DEH
+         Tj5H6fGqyCBdGFtTByWk8335T1ZvscNBzOsRgV/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valentin Longchamp <valentin@longchamp.me>,
-        Matteo Ghidoni <matteo.ghidoni@ch.abb.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 35/38] net/ethernet/freescale: rework quiesce/activate for ucc_geth
-Date:   Fri,  5 Jun 2020 16:15:18 +0200
-Message-Id: <20200605140254.929189032@linuxfoundation.org>
+Subject: [PATCH 4.19 01/28] Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race window"
+Date:   Fri,  5 Jun 2020 16:15:03 +0200
+Message-Id: <20200605140252.421219691@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
-References: <20200605140252.542768750@linuxfoundation.org>
+In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
+References: <20200605140252.338635395@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,76 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Longchamp <valentin@longchamp.me>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 79dde73cf9bcf1dd317a2667f78b758e9fe139ed ]
+[ Upstream commit d8ef4b38cb69d907f9b0e889c44d05fc0f890977 ]
 
-ugeth_quiesce/activate are used to halt the controller when there is a
-link change that requires to reconfigure the mac.
+This reverts commit 9a9e97b2f1f2 ("cgroup: Add memory barriers to plug
+cgroup_rstat_updated() race window").
 
-The previous implementation called netif_device_detach(). This however
-causes the initial activation of the netdevice to fail precisely because
-it's detached. For details, see [1].
+The commit was added in anticipation of memcg rstat conversion which needed
+synchronous accounting for the event counters (e.g. oom kill count). However,
+the conversion didn't get merged due to percpu memory overhead concern which
+couldn't be addressed at the time.
 
-A possible workaround was the revert of commit
-net: linkwatch: add check for netdevice being present to linkwatch_do_dev
-However, the check introduced in the above commit is correct and shall be
-kept.
+Unfortunately, the patch's addition of smp_mb() to cgroup_rstat_updated()
+meant that every scheduling event now had to go through an additional full
+barrier and Mel Gorman noticed it as 1% regression in netperf UDP_STREAM test.
 
-The netif_device_detach() is thus replaced with
-netif_tx_stop_all_queues() that prevents any tranmission. This allows to
-perform mac config change required by the link change, without detaching
-the corresponding netdevice and thus not preventing its initial
-activation.
+There's no need to have this barrier in tree now and even if we need
+synchronous accounting in the future, the right thing to do is separating that
+out to a separate function so that hot paths which don't care about
+synchronous behavior don't have to pay the overhead of the full barrier. Let's
+revert.
 
-[1] https://lists.openwall.net/netdev/2020/01/08/201
-
-Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
-Acked-by: Matteo Ghidoni <matteo.ghidoni@ch.abb.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Mel Gorman <mgorman@techsingularity.net>
+Link: http://lkml.kernel.org/r/20200409154413.GK3818@techsingularity.net
+Cc: v4.18+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/ucc_geth.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/cgroup/rstat.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
-index f839fa94ebdd..d3b8ce734c1b 100644
---- a/drivers/net/ethernet/freescale/ucc_geth.c
-+++ b/drivers/net/ethernet/freescale/ucc_geth.c
-@@ -42,6 +42,7 @@
- #include <soc/fsl/qe/ucc.h>
- #include <soc/fsl/qe/ucc_fast.h>
- #include <asm/machdep.h>
-+#include <net/sch_generic.h>
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index bb95a35e8c2d..d0ed410b4127 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -32,12 +32,9 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+ 		return;
  
- #include "ucc_geth.h"
- 
-@@ -1548,11 +1549,8 @@ static int ugeth_disable(struct ucc_geth_private *ugeth, enum comm_dir mode)
- 
- static void ugeth_quiesce(struct ucc_geth_private *ugeth)
- {
--	/* Prevent any further xmits, plus detach the device. */
--	netif_device_detach(ugeth->ndev);
+ 	/*
+-	 * Paired with the one in cgroup_rstat_cpu_pop_upated().  Either we
+-	 * see NULL updated_next or they see our updated stat.
+-	 */
+-	smp_mb();
 -
--	/* Wait for any current xmits to finish. */
--	netif_tx_disable(ugeth->ndev);
-+	/* Prevent any further xmits */
-+	netif_tx_stop_all_queues(ugeth->ndev);
+-	/*
++	 * Speculative already-on-list test. This may race leading to
++	 * temporary inaccuracies, which is fine.
++	 *
+ 	 * Because @parent's updated_children is terminated with @parent
+ 	 * instead of NULL, we can tell whether @cgrp is on the list by
+ 	 * testing the next pointer for NULL.
+@@ -133,13 +130,6 @@ static struct cgroup *cgroup_rstat_cpu_pop_updated(struct cgroup *pos,
+ 		*nextp = rstatc->updated_next;
+ 		rstatc->updated_next = NULL;
  
- 	/* Disable the interrupt to avoid NAPI rescheduling. */
- 	disable_irq(ugeth->ug_info->uf_info.irq);
-@@ -1565,7 +1563,10 @@ static void ugeth_activate(struct ucc_geth_private *ugeth)
- {
- 	napi_enable(&ugeth->napi);
- 	enable_irq(ugeth->ug_info->uf_info.irq);
--	netif_device_attach(ugeth->ndev);
-+
-+	/* allow to xmit again  */
-+	netif_tx_wake_all_queues(ugeth->ndev);
-+	__netdev_watchdog_up(ugeth->ndev);
- }
+-		/*
+-		 * Paired with the one in cgroup_rstat_cpu_updated().
+-		 * Either they see NULL updated_next or we see their
+-		 * updated stat.
+-		 */
+-		smp_mb();
+-
+ 		return pos;
+ 	}
  
- /* Called every time the controller might need to be made
 -- 
 2.25.1
 
