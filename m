@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88AD2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3972070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360247;
-	bh=jHd1X1zusmajFRLzbO/kks6/nt/Ek1Ar51xZCouIZN0=;
+	s=default; t=1591360253;
+	bh=DiGuxViRlLGjO9gfWYS9oT1apYy3kT5tzqGXQnS425o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etUoAGAafR5GdreYPxxGfYFVwaauwlCo8cw2n/mGHNTvDjqbmxbbFNDe8Ou8lGS/p
-	 hP1cGKfIJLqKEyYkX819j0Q2PkjKQwVfOmwp47yIdxVs/XAVMPpNC4oF3AcC2+GxKz
-	 50QXW6movuHa5kscC9XGJRKzNni9ox7EYfDKhleg=
+	b=ZyjKB5urQzKUaXEi+Ftm/IxFo4fryMSfGRLLyj5d6xxzXnhJIf5T+11zsJUKkWIZh
+	 nshH6JGLc1DbXIyqYFZyiwk9OQ3LIIpd8xCfCMNDR9vSbpWXV+ciFwF05kjR5rbJIg
+	 3O7S8uPrW4d7ZcIRDn8vjcpu1y33uuYNgpC2Yy/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgFEMZf (ORCPT
+        id S1726908AbgFEMaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbgFEMZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:23 -0400
+        id S1726771AbgFEMZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEF262075B;
-        Fri,  5 Jun 2020 12:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 218B6207F5;
+        Fri,  5 Jun 2020 12:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359922;
-        bh=jHd1X1zusmajFRLzbO/kks6/nt/Ek1Ar51xZCouIZN0=;
+        s=default; t=1591359932;
+        bh=DiGuxViRlLGjO9gfWYS9oT1apYy3kT5tzqGXQnS425o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eFnIrvpF9zrOGlz/uzEgdA3BISZYtqh3mhEqaLeYoxOXR61ytOOoDt96VWaDsmE/p
-         2jd58XAVagftYeZY7kShgZhKuw8pAEoi6iGnK32FydcrKQIGwZJNNw1eIrIlB56OE1
-         pKZUr+K9H9rDLvlFhSuLhcpajfTpBmPdqkaDtThU=
+        b=gj6panYjYFO1YPwoK8L6qmkGxUm7SrThAzX7H0NmXlFbw3PsOqcm9yt9zFIOQJryF
+         E8oAsy6oxwclW7miM7ClkSCP4YgYSJSc+FwyqO2LsnmekknqZ8LdqYKulbRyWrlrkS
+         dJaU/4p9yPAbmZ91qV8DUMGv0U75MKXjvlBTmKIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 04/17] sched/fair: Don't NUMA balance for kthreads
-Date:   Fri,  5 Jun 2020 08:25:03 -0400
-Message-Id: <20200605122517.2882338-4-sashal@kernel.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.6 12/17] gfs2: Even more gfs2_find_jhead fixes
+Date:   Fri,  5 Jun 2020 08:25:11 -0400
+Message-Id: <20200605122517.2882338-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122517.2882338-1-sashal@kernel.org>
 References: <20200605122517.2882338-1-sashal@kernel.org>
@@ -61,53 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
+[ Upstream commit 20be493b787cd581c9fffad7fcd6bfbe6af1050c ]
 
-Stefano reported a crash with using SQPOLL with io_uring:
+Fix several issues in the previous gfs2_find_jhead fix:
+* When updating @blocks_submitted, @block refers to the first block block not
+  submitted yet, not the last block submitted, so fix an off-by-one error.
+* We want to ensure that @blocks_submitted is far enough ahead of @blocks_read
+  to guarantee that there is in-flight I/O.  Otherwise, we'll eventually end up
+  waiting for pages that haven't been submitted, yet.
+* It's much easier to compare the number of blocks added with the number of
+  blocks submitted to limit the maximum bio size.
+* Even with bio chaining, we can keep adding blocks until we reach the maximum
+  bio size, as long as we stop at a page boundary.  This simplifies the logic.
 
-  BUG: kernel NULL pointer dereference, address: 00000000000003b0
-  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
-  RIP: 0010:task_numa_work+0x4f/0x2c0
-  Call Trace:
-   task_work_run+0x68/0xa0
-   io_sq_thread+0x252/0x3d0
-   kthread+0xf9/0x130
-   ret_from_fork+0x35/0x40
-
-which is task_numa_work() oopsing on current->mm being NULL.
-
-The task work is queued by task_tick_numa(), which checks if current->mm is
-NULL at the time of the call. But this state isn't necessarily persistent,
-if the kthread is using use_mm() to temporarily adopt the mm of a task.
-
-Change the task_tick_numa() check to exclude kernel threads in general,
-as it doesn't make sense to attempt ot balance for kthreads anyway.
-
-Reported-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Reviewed-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/gfs2/lops.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 603d3d3cbf77..efb15f0f464b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2682,7 +2682,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
- 	/*
- 	 * We don't care about NUMA placement if we don't have memory.
- 	 */
--	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
-+	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
- 		return;
+diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
+index 3a020bdc358c..966ed37c9acd 100644
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -505,12 +505,12 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
+ 	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
+ 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
+ 	unsigned int shift = PAGE_SHIFT - bsize_shift;
+-	unsigned int max_bio_size = 2 * 1024 * 1024;
++	unsigned int max_blocks = 2 * 1024 * 1024 >> bsize_shift;
+ 	struct gfs2_journal_extent *je;
+ 	int sz, ret = 0;
+ 	struct bio *bio = NULL;
+ 	struct page *page = NULL;
+-	bool bio_chained = false, done = false;
++	bool done = false;
+ 	errseq_t since;
  
- 	/*
+ 	memset(head, 0, sizeof(*head));
+@@ -533,10 +533,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
+ 				off = 0;
+ 			}
+ 
+-			if (!bio || (bio_chained && !off) ||
+-			    bio->bi_iter.bi_size >= max_bio_size) {
+-				/* start new bio */
+-			} else {
++			if (bio && (off || block < blocks_submitted + max_blocks)) {
+ 				sector_t sector = dblock << sdp->sd_fsb2bb_shift;
+ 
+ 				if (bio_end_sector(bio) == sector) {
+@@ -549,19 +546,17 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
+ 						(PAGE_SIZE - off) >> bsize_shift;
+ 
+ 					bio = gfs2_chain_bio(bio, blocks);
+-					bio_chained = true;
+ 					goto add_block_to_new_bio;
+ 				}
+ 			}
+ 
+ 			if (bio) {
+-				blocks_submitted = block + 1;
++				blocks_submitted = block;
+ 				submit_bio(bio);
+ 			}
+ 
+ 			bio = gfs2_log_alloc_bio(sdp, dblock, gfs2_end_log_read);
+ 			bio->bi_opf = REQ_OP_READ;
+-			bio_chained = false;
+ add_block_to_new_bio:
+ 			sz = bio_add_page(bio, page, bsize, off);
+ 			BUG_ON(sz != bsize);
+@@ -569,7 +564,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
+ 			off += bsize;
+ 			if (off == PAGE_SIZE)
+ 				page = NULL;
+-			if (blocks_submitted < 2 * max_bio_size >> bsize_shift) {
++			if (blocks_submitted <= blocks_read + max_blocks) {
+ 				/* Keep at least one bio in flight */
+ 				continue;
+ 			}
 -- 
 2.25.1
 
