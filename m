@@ -2,245 +2,134 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D47C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88B3206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1018F206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0Tl0XWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgFEMGH (ORCPT
+        id S1726589AbgFEMGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:06:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:54228 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbgFEMGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:06:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB6C12B;
-        Fri,  5 Jun 2020 05:06:06 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 235B53F305;
-        Fri,  5 Jun 2020 05:06:05 -0700 (PDT)
-References: <20200604123932.20512-1-benjamin.gaignard@st.com> <20200604123932.20512-3-benjamin.gaignard@st.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     hugues.fruchet@st.com, mchehab@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        vincent.guittot@linaro.org, rjw@rjwysocki.net
-Subject: Re: [PATCH v3 2/3] media: stm32-dcmi: Set minimum cpufreq requirement
-In-reply-to: <20200604123932.20512-3-benjamin.gaignard@st.com>
-Date:   Fri, 05 Jun 2020 13:05:59 +0100
-Message-ID: <jhj5zc5iuoo.mognet@arm.com>
+        Fri, 5 Jun 2020 08:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgFEMGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:06:47 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30175C08C5C2;
+        Fri,  5 Jun 2020 05:06:47 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m1so5087439pgk.1;
+        Fri, 05 Jun 2020 05:06:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tg2EERYeGqRpBqYybMZ9XMQjf0DjL2pwtOCU5se6BJ8=;
+        b=n0Tl0XWLTlt+ec1Ce3+UyjsRVYhekGd2rIJCCsUGrX0inZZIrW8Og57IIHkVPMIdSS
+         u2/jhU1iS1KrEVZPT4pBgmgs/JkArzGh3Q48Mf3w/Ujrz260alNvIp543RyaaFSV4qBD
+         dJmJwkwootDjm8pJ5RlB41X92cs19NbKJd+H7LRJZ6h6iYUo9o37qwc6mQzgqLzwrDMI
+         FdlPjBFRXcK98KZCzWyAOcuuRfoe6SN00oED5RqU1I4Jh4rHt3Nt/FAy/e+EEpzvYPqa
+         DRgb3VM8DmAfSwGBO0+sXRNxpQjywc8NcMHQpNlIQAQlaP3xgzra2NXDxUSDLu9PyQD4
+         oEMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tg2EERYeGqRpBqYybMZ9XMQjf0DjL2pwtOCU5se6BJ8=;
+        b=YXPooyLHB0Cm8pD001k6Ik8NIXb1x8AahmyJ62LBDUnxWhpRwIjwQ5furPqmgB1frr
+         d/qwFYzyPBO9FzIyuh1pPbm0PoqPMXLXklsbPF4j1CTiZ0pNEmr/BIT678nQQDm2oZue
+         r2qHdZg8aw2tPgBb4l9W6O/JW/Mkdj28oGZZnPt0HLiX0qh/Xmxn7N+7YoSSRtXDExXs
+         2ebBZTQw4ugWygH8DOatE+r7e4fqwsu5wHphPcOTADdQwE5QRWaHSBK2jy+VS7zlno6H
+         JzpDoYshFZB8iK4vaskVyveDSPUMV5vbuIpaacaJ/HAmXAGKIIxJuR8eQvArwciysIxL
+         60dw==
+X-Gm-Message-State: AOAM533m0CFq8N3ptniMOJ6JDB6nqoWxvdrvjSBRTvW5kK7zquCMjpdk
+        qPct5rB54VEnaCsP/qCbh8TpQbxpUhkjSN+giMw=
+X-Google-Smtp-Source: ABdhPJxvhp+S0ILJ9P3oJuQGbD3SgEjJ+VvYOPiQ2EEF2EeVita727gg2YseqMdm5hdUfsulh7j3lVjYD8g1pnc9qAg=
+X-Received: by 2002:a63:545a:: with SMTP id e26mr9043326pgm.4.1591358806690;
+ Fri, 05 Jun 2020 05:06:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-8-michael@walle.cc>
+In-Reply-To: <20200604211039.12689-8-michael@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Jun 2020 15:06:35 +0300
+Message-ID: <CAHp75Vd00VeL94S=U77NCm9-WNF6ZLAn4U9oUSov1R1QU4DjDg@mail.gmail.com>
+Subject: Re: [PATCH v4 07/11] hwmon: add support for the sl28cpld hardware
+ monitoring controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 04/06/20 13:39, Benjamin Gaignard wrote:
-> Before start streaming set cpufreq minimum frequency requirement.
-> The cpufreq governor will adapt the frequencies and we will have
-> no latency for handling interrupts.
-> The frequency requirement is retrieved from the device-tree node.
+On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
 >
-> While streaming be notified if the IRQ affinity change thanks to
-> irq_affinity_notify callback.
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 3:
-> - add a cpumask field to track boosted CPUs
-> - add irq_affinity_notify callback
-> - protect cpumask field with a mutex
->
->  drivers/media/platform/stm32/stm32-dcmi.c | 187 ++++++++++++++++++++++++++++--
->  1 file changed, 179 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-> index b8931490b83b..fb6ab09eaff0 100644
-> --- a/drivers/media/platform/stm32/stm32-dcmi.c
-> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
-> +static void dcmi_irq_notifier_notify(struct irq_affinity_notify *notify,
-> +				     const cpumask_t *mask)
-> +{
-> +	struct stm32_dcmi *dcmi = container_of(notify,
-> +					       struct stm32_dcmi,
-> +					       notify);
-> +	struct cpufreq_policy *p;
-> +	int cpu;
-> +
-> +	mutex_lock(&dcmi->freq_lock);
-> +	/*
-> +	 * For all boosted CPUs check if it is still the case
-> +	 * if not remove the request
-> +	 */
-> +	for_each_cpu(cpu, dcmi->boosted) {
-> +		if (cpumask_test_cpu(cpu, mask))
-> +			continue;
-> +
-> +		p = cpufreq_cpu_get(cpu);
-> +		if (!p)
-> +			continue;
-> +
-> +		freq_qos_remove_request(&per_cpu(qos_req, cpu));
-> +		cpumask_andnot(dcmi->boosted, dcmi->boosted, p->cpus);
-> +
-> +		cpufreq_cpu_put(p);
-> +	}
-> +
-> +	/*
-> +	 * For CPUs in the mask check if they are boosted if not add
-> +	 * a request
-> +	 */
-> +	for_each_cpu(cpu, mask) {
-> +		if (cpumask_test_cpu(cpu, dcmi->boosted))
-> +			continue;
-> +
-> +		p = cpufreq_cpu_get(cpu);
-> +		if (!p)
-> +			continue;
-> +
-> +		freq_qos_add_request(&p->constraints, &per_cpu(qos_req, cpu),
-> +				     FREQ_QOS_MIN, dcmi->min_frequency);
-> +		cpumask_or(dcmi->boosted, dcmi->boosted, p->cpus);
-> +		cpufreq_cpu_put(p);
-> +	}
-> +
-> +	mutex_unlock(&dcmi->freq_lock);
+> Add support for the hardware monitoring controller of the sl28cpld board
+> management controller. This driver is part of a multi-function device.
 
-That looks about right.
+...
 
-> +}
-> +
-> +static void dcmi_irq_notifier_release(struct kref *ref)
-> +{
-> +	/*
-> +	 * This is required by affinity notifier. We don't have anything to
-> +	 * free here.
-> +	 */
-> +}
-> +
-> +static void dcmi_get_cpu_policy(struct stm32_dcmi *dcmi)
-> +{
-> +	struct cpufreq_policy *p;
-> +	int cpu;
-> +
-> +	if (!alloc_cpumask_var(&dcmi->boosted, GFP_KERNEL))
-> +		return;
+> +#include <linux/of_device.h>
 
-I think you want to actually return i.e. -ENOMEM and do cleanups in the
-probe; otherwise you'll silently continue.
+mod_devicetable.h ?
 
-> +
-> +	mutex_lock(&dcmi->freq_lock);
-> +
-> +	for_each_cpu(cpu, irq_get_affinity_mask(dcmi->irq)) {
+...
 
-When I suggested serialization, I was thinking we may want to use the irq's
-desc lock to prevent the affinity from moving under our feet. Something
-like:
 
-  CPU A                                          CPU B
+> +       hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+> +                               "sl28cpld_hwmon", hwmon,
+> +                               &sl28cpld_hwmon_chip_info, NULL);
+> +       if (IS_ERR(hwmon_dev)) {
+> +               dev_err(&pdev->dev, "failed to register as hwmon device");
 
-  for_each_cpu(cpu, mask)
-    cpu = cpumask_next(cpu, mask)
+> +               return PTR_ERR(hwmon_dev);
+> +       }
+> +
+> +       return 0;
 
-    // ...                                       cpumask_copy(desc->irq_common_data.affinity, mask)
+PTR_ERR_OR_ZERO() ?
 
-    cpu = cpumask_next(cpu, mask)
+...
 
-Now, should that happen, we would still queue the notifier and run it
-shortly after - and since you track which CPUs are boosted, I don't think
-we have any loss of information here.
+> +static const struct of_device_id sl28cpld_hwmon_of_match[] = {
+> +       { .compatible = "kontron,sl28cpld-fan" },
 
-We may have yet another affinity change while the notifier is still queued;
-but the notifier boilerplate does grab the desc lock, so I think it's all
-good - it wasn't all super obvious so I figured I'd still point it out.
+> +       {},
 
-> +		if (cpumask_test_cpu(cpu, dcmi->boosted))
-> +			continue;
-> +
-> +		p = cpufreq_cpu_get(cpu);
-> +		if (!p)
-> +			continue;
-> +
-> +		freq_qos_add_request(&p->constraints, &per_cpu(qos_req, cpu),
-> +				     FREQ_QOS_MIN, FREQ_QOS_MIN_DEFAULT_VALUE);
-> +
-> +		cpumask_or(dcmi->boosted, dcmi->boosted, p->cpus);
-> +
-> +		cpufreq_cpu_put(p);
-> +	}
-> +
-> +	mutex_unlock(&dcmi->freq_lock);
-> +}
-> +
-> +static void dcmi_put_cpu_policy(struct stm32_dcmi *dcmi)
-> +{
-> +	struct cpufreq_policy *p;
-> +	int cpu;
-> +
-> +	mutex_lock(&dcmi->freq_lock);
-> +
-> +	for_each_cpu(cpu, irq_get_affinity_mask(dcmi->irq)) {
-> +		if (!cpumask_test_cpu(cpu, dcmi->boosted))
-> +			continue;
-> +
-> +		p = cpufreq_cpu_get(cpu);
-> +		if (!p)
-> +			continue;
-> +
-> +		freq_qos_remove_request(&per_cpu(qos_req, cpu));
-> +		cpumask_andnot(dcmi->boosted, dcmi->boosted, p->cpus);
-> +
-> +		cpufreq_cpu_put(p);
-> +	}
-> +
-> +	free_cpumask_var(dcmi->boosted);
-> +
-> +	mutex_unlock(&dcmi->freq_lock);
-> +}
-> +
-> +static void dcmi_set_min_frequency(struct stm32_dcmi *dcmi, s32 freq)
-> +{
-> +	struct irq_affinity_notify *notify = &dcmi->notify;
-> +	int cpu;
-> +
-> +	mutex_lock(&dcmi->freq_lock);
-> +
-> +	for_each_cpu(cpu, irq_get_affinity_mask(dcmi->irq)) {
-> +		if (!cpumask_test_cpu(cpu, dcmi->boosted))
-> +			continue;
-> +
+No comma.
 
-If the affinity changed between say .probe() and .start_streaming(), IIUC
-you may skip CPUs here - and even if you initialize the notifier earlier in
-the function (see below), that won't help you.
+> +};
 
-I think dcmi_irq_notifier_notify() does almost all you want, if it also did
-the QoS update for CPUs that weren't affected by the affinity change, you
-may be able to just do:
-
-   dcmi_irq_notifier_notify(irq_get_affinity_mask(dcmi->irq));
-
-Or something along those lines.
-
-> +		if (!freq_qos_request_active(&per_cpu(qos_req, cpu)))
-> +			continue;
-> +
-> +		freq_qos_update_request(&per_cpu(qos_req, cpu), freq);
-> +	}
-> +
-> +	mutex_unlock(&dcmi->freq_lock);
-> +
-> +	if (freq != FREQ_QOS_MIN_DEFAULT_VALUE) {
+-- 
+With Best Regards,
+Andy Shevchenko
