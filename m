@@ -2,58 +2,58 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21406C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0012D206FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C8C206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729073AbgFEVmb (ORCPT
+        id S1728753AbgFEVmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:42:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50428 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729071AbgFEVm0 (ORCPT
+        Fri, 5 Jun 2020 17:42:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13200 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728786AbgFEVkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:42:26 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055LZpZc117290;
-        Fri, 5 Jun 2020 17:42:26 -0400
+        Fri, 5 Jun 2020 17:40:19 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055LYjJw169334;
+        Fri, 5 Jun 2020 17:40:12 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31f90jtunu-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31fnwgqeaq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 17:42:25 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055LgPFV142732;
-        Fri, 5 Jun 2020 17:42:25 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31f90jtuja-1
+        Fri, 05 Jun 2020 17:40:12 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055LYjnP169429;
+        Fri, 5 Jun 2020 17:40:12 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31fnwgqeaj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 17:42:24 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055La6xB019638;
-        Fri, 5 Jun 2020 21:41:19 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 31bf4bje2j-1
+        Fri, 05 Jun 2020 17:40:12 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055LYdRM020860;
+        Fri, 5 Jun 2020 21:40:11 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 31bwg41kyn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 21:41:19 +0000
+        Fri, 05 Jun 2020 21:40:11 +0000
 Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055LeHVN8979232
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055Le9Li39453072
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jun 2020 21:40:17 GMT
+        Fri, 5 Jun 2020 21:40:09 GMT
 Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FE06AC059;
-        Fri,  5 Jun 2020 21:40:17 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 41C8AAC05B;
+        Fri,  5 Jun 2020 21:40:09 +0000 (GMT)
 Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33EE4AC065;
-        Fri,  5 Jun 2020 21:40:17 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id BD250AC05F;
+        Fri,  5 Jun 2020 21:40:08 +0000 (GMT)
 Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.146.208])
         by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jun 2020 21:40:17 +0000 (GMT)
+        Fri,  5 Jun 2020 21:40:08 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -61,159 +61,255 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         mjrosato@linux.ibm.com, pasic@linux.ibm.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         fiuczy@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v8 16/16] s390/vfio-ap: handle probe/remove not due to host AP config changes
-Date:   Fri,  5 Jun 2020 17:40:04 -0400
-Message-Id: <20200605214004.14270-17-akrowiak@linux.ibm.com>
+Subject: [PATCH v8 00/16] s390/vfio-ap: dynamic configuration support
+Date:   Fri,  5 Jun 2020 17:39:48 -0400
+Message-Id: <20200605214004.14270-1-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200605214004.14270-1-akrowiak@linux.ibm.com>
-References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-05_07:2020-06-04,2020-06-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- cotscore=-2147483648 priorityscore=1501 mlxscore=0 impostorscore=0
- adultscore=0 suspectscore=3 malwarescore=0 spamscore=0 bulkscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050157
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
+ adultscore=0 clxscore=1015 spamscore=0 cotscore=-2147483648
+ impostorscore=0 suspectscore=3 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AP queue devices are probed or removed for reasons other than changes
-to the host AP configuration:
+Note: Patch 1 - s390/ap: introduce new ap function ap_get_qdev() - is not
+      a part of this series. It is a forthcoming patch that is a
+      prerequisite to this series and is being provided so this series
+      will compile.
 
-* Each queue device associated with a card device will get created and
-  probed when the state of the AP adapter represented by the card device
-  dynamically changes from standby to online.
+The current design for AP pass-through does not support making dynamic
+changes to the AP matrix of a running guest resulting in a few 
+deficiencies this patch series is intended to mitigate:
 
-* Each queue device associated with a card device will get removed
-  when the state of the AP adapter to which the queue represented by the
-  queue device dynamically changes from online to standby.
+1. Adapters, domains and control domains can not be added to or removed
+   from a running guest. In order to modify a guest's AP configuration,
+   the guest must be terminated; only then can AP resources be assigned
+   to or unassigned from the guest's matrix mdev. The new AP 
+   configuration becomes available to the guest when it is subsequently
+   restarted.
 
-* Each queue device associated with a card device will get removed
-  when the type of the AP adapter to which the queue represented by the
-  queue device dynamically changes.
+2. The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask interfaces can
+   be modified by a root user without any restrictions. A change to
+   either mask can result in AP queue devices being unbound from the
+   vfio_ap device driver and bound to a zcrypt device driver even if a
+   guest is using the queues, thus giving the host access to the guest's
+   private crypto data and vice versa.
 
-* Each queue device associated with a card device will get removed
-  when the status of the queue represented by the queue device changes
-  from operating to check stop.
+3. The APQNs derived from the Cartesian product of the APIDs of the
+   adapters and APQIs of the domains assigned to a matrix mdev must
+   reference an AP queue device bound to the vfio_ap device driver. The
+   AP architecture allows assignment of AP resources that are not
+   available to the system, so this artificial restriction is not 
+   compliant with the architecture.
 
-* AP queue devices can be manually bound to or unbound from the vfio_ap
-  device driver by a root user via the sysfs bind/unbind attributes of the
-  driver.
+4. The AP configuration profile can be dynamically changed for the linux
+   host after a KVM guest is started. For example, a new domain can be
+   dynamically added to the configuration profile via the SE or an HMC
+   connected to a DPM enabled lpar. Likewise, AP adapters can be 
+   dynamically configured (online state) and deconfigured (standby state)
+   using the SE, an SCLP command or an HMC connected to a DPM enabled
+   lpar. This can result in inadvertent sharing of AP queues between the
+   guest and host.
 
-In response to a queue device probe or remove that is not the result of a
-change to the host's AP configuration, if a KVM guest is using the matrix
-mdev to which the APQN of the queue device is assigned, the vfio_ap device
-driver must respond accordingly. In an ideal world, the queue corresponding
-to the queue device being probed would be hot plugged into the guest.
-Likewise, the queue corresponding to the queue device being removed would
-be hot unplugged from the guest. Unfortunately, the AP architecture
-precludes plugging or unplugging individual queues, so let's handle
-the probe or remove of an AP queue device as follows:
+5. A root user can manually unbind an AP queue device representing a 
+   queue in use by a KVM guest via the vfio_ap device driver's sysfs 
+   unbind attribute. In this case, the guest will be using a queue that
+   is not bound to the driver which violates the device model.
 
-Handling Probe
---------------
-There are two requirements that must be met in order to give a
-guest access to the queue corresponding to the queue device being probed:
+This patch series introduces the following changes to the current design
+to alleviate the shortcomings described above as well as to implement
+more of the AP architecture:
 
-* Each APQN derived from the APID of the queue device and the APQIs of the
-  domains already assigned to the guest's AP configuration must reference
-  a queue device bound to the vfio_ap device driver.
+1. A root user will be prevented from making changes to the AP bus's
+   /sys/bus/ap/apmask or /sys/bus/ap/aqmask if the ownership of an APQN
+   changes from the vfio_ap device driver to a zcrypt driver when the
+   APQN is assigned to a matrix mdev.
 
-* Each APQN derived from the APQI of the queue device and the APIDs of the
-  adapters assigned to the guest's AP configuration must reference a queue
-  device bound to the vfio_ap device driver.
+2. Allow a root user to hot plug/unplug AP adapters, domains and control
+   domains using the matrix mdev's assign/unassign attributes.
 
-If the above conditions are met, the APQN will be assigned to the guest's
-AP configuration and the guest will be given access to the queue.
+4. Allow assignment of an AP adapter or domain to a matrix mdev even if
+   it results in assignment of an APQN that does not reference an AP
+   queue device bound to the vfio_ap device driver, as long as the APQN
+   is not reserved for use by the default zcrypt drivers (also known as
+   over-provisioning of AP resources). Allowing over-provisioning of AP
+   resources better models the architecture which does not preclude
+   assigning AP resources that are not yet available in the system. Such
+   APQNs, however, will not be assigned to the guest using the matrix
+   mdev; only APQNs referencing AP queue devices bound to the vfio_ap
+   device driver will actually get assigned to the guest.
 
-Handling Remove
----------------
-Since the AP architecture precludes us from taking access to an individual
-queue from a guest, we are left with the choice of taking access away from
-either the adapter or the domain to which the queue is connected. Access to
-the adapter will be taken away because it is likely that most of the time,
-the remove callback will be invoked because the adapter state has
-transitioned from online to standby. In such a case, no queue connected
-to the adapter will be available to access.
+5. Handle dynamic changes to the AP device model. 
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 38 +++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+1. Rationale for changes to AP bus's apmask/aqmask interfaces:
+----------------------------------------------------------
+Due to the extremely sensitive nature of cryptographic data, it is
+imperative that great care be taken to ensure that such data is secured.
+Allowing a root user, either inadvertently or maliciously, to configure
+these masks such that a queue is shared between the host and a guest is
+not only avoidable, it is advisable. It was suggested that this scenario
+is better handled in user space with management software, but that does
+not preclude a malicious administrator from using the sysfs interfaces
+to gain access to a guest's crypto data. It was also suggested that this
+scenario could be avoided by taking access to the adapter away from the
+guest and zeroing out the queues prior to the vfio_ap driver releasing the
+device; however, stealing an adapter in use from a guest as a by-product
+of an operation is bad and will likely cause problems for the guest
+unnecessarily. It was decided that the most effective solution with the
+least number of negative side effects is to prevent the situation at the
+source.
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index cfe93ff9cc8c..5ee60dac7ad1 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1681,6 +1681,15 @@ static void vfio_ap_queue_link_mdev(struct vfio_ap_queue *q)
- 	}
- }
- 
-+void vfio_ap_mdev_hot_plug_queue(struct vfio_ap_queue *q)
-+{
-+	if ((q->matrix_mdev == NULL) || !vfio_ap_mdev_has_crycb(q->matrix_mdev))
-+		return;
-+
-+	if (vfio_ap_mdev_config_shadow_apcb(q->matrix_mdev))
-+		vfio_ap_mdev_commit_shadow_apcb(q->matrix_mdev);
-+}
-+
- int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
-@@ -1694,11 +1703,35 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- 	q->apqn = queue->qid;
- 	q->saved_isc = VFIO_AP_ISC_INVALID;
- 	vfio_ap_queue_link_mdev(q);
-+	/* Make sure we're not in the middle of an AP configuration change. */
-+	if (!(matrix_dev->flags & AP_MATRIX_CFG_CHG))
-+		vfio_ap_mdev_hot_plug_queue(q);
- 	mutex_unlock(&matrix_dev->lock);
- 
- 	return 0;
- }
- 
-+void vfio_ap_mdev_hot_unplug_queue(struct vfio_ap_queue *q)
-+{
-+	unsigned long apid = AP_QID_CARD(q->apqn);
-+	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-+
-+	if ((q->matrix_mdev == NULL) || !vfio_ap_mdev_has_crycb(q->matrix_mdev))
-+		return;
-+
-+	/*
-+	 * If the APQN is assigned to the guest, then let's
-+	 * go ahead and unplug the adapter since the
-+	 * architecture does not provide a means to unplug
-+	 * an individual queue.
-+	 */
-+	if (test_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm) &&
-+	    test_bit_inv(apqi, q->matrix_mdev->shadow_apcb.aqm)) {
-+		if (vfio_ap_mdev_unassign_guest_apid(q->matrix_mdev, apid))
-+			vfio_ap_mdev_commit_shadow_apcb(q->matrix_mdev);
-+	}
-+}
-+
- void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
-@@ -1706,6 +1739,11 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
- 
- 	mutex_lock(&matrix_dev->lock);
- 	q = dev_get_drvdata(&queue->ap_dev.device);
-+
-+	/* Make sure we're not in the middle of an AP configuration change. */
-+	if (!(matrix_dev->flags & AP_MATRIX_CFG_CHG))
-+		vfio_ap_mdev_hot_unplug_queue(q);
-+
- 	dev_set_drvdata(&queue->ap_dev.device, NULL);
- 	apid = AP_QID_CARD(q->apqn);
- 	apqi = AP_QID_QUEUE(q->apqn);
+2. Rationale for hot plug/unplug using matrix mdev sysfs interfaces:
+----------------------------------------------------------------
+Allowing a user to hot plug/unplug AP resources using the matrix mdev
+sysfs interfaces circumvents the need to terminate the guest in order to
+modify its AP configuration. Allowing dynamic configuration makes 
+reconfiguring a guest's AP matrix much less disruptive.
+
+3. Rationale for allowing over-provisioning of AP resources:
+----------------------------------------------------------- 
+Allowing assignment of AP resources to a matrix mdev and ultimately to a
+guest better models the AP architecture. The architecture does not
+preclude assignment of unavailable AP resources. If a queue subsequently
+becomes available while a guest using the matrix mdev to which its APQN
+is assigned, the guest will be given access to it. If an APQN
+is dynamically unassigned from the underlying host system, it will 
+automatically become unavailable to the guest.
+
+Change log v6-v7:
+----------------
+* Added callbacks to AP bus:
+  - on_config_changed: Notifies implementing drivers that
+    the AP configuration has changed since last AP device scan.
+  - on_scan_complete: Notifies implementing drivers that the device scan
+    has completed.
+  - implemented on_config_changed and on_scan_complete callbacks for
+    vfio_ap device driver.
+  - updated vfio_ap device driver's probe and remove callbacks to handle
+    dynamic changes to the AP device model. 
+* Added code to filter APQNs when assigning AP resources to a KVM guest's
+  CRYCB
+
+Change log v7-v8:
+----------------
+* Now logging a message when an attempt to reserve APQNs for the zcrypt
+  drivers will result in taking a queue away from a KVM guest to provide
+  the sysadmin a way to ascertain why the sysfs operation failed.
+
+* Created locked and unlocked versions of the ap_parse_mask_str() function.
+
+* Now using new interface provided by an AP bus patch -
+  s390/ap: introduce new ap function ap_get_qdev() - to retrieve
+  struct ap_queue representing an AP queue device. This patch is not a
+  part of this series but is a prerequisite for this series. 
+
+Change log v6-v7:
+----------------
+
+Change log v5-v6:
+----------------
+* Fixed a bug in ap_bus.c introduced with patch 2/7 of the v5 
+  series. Harald Freudenberer pointed out that the mutex lock
+  for ap_perms_mutex in the apmask_store and aqmask_store functions
+  was not being freed. 
+
+* Removed patch 6/7 which added logging to the vfio_ap driver
+  to expedite acceptance of this series. The logging will be introduced
+  with a separate patch series to allow more time to explore options
+  such as DBF logging vs. tracepoints.
+
+* Added 3 patches related to ensuring that APQNs that do not reference
+  AP queue devices bound to the vfio_ap device driver are not assigned
+  to the guest CRYCB:
+
+  Patch 4: Filter CRYCB bits for unavailable queue devices
+  Patch 5: sysfs attribute to display the guest CRYCB
+  Patch 6: update guest CRYCB in vfio_ap probe and remove callbacks
+
+* Added a patch (Patch 9) to version the vfio_ap module.
+
+* Reshuffled patches to allow the in_use callback implementation to
+  invoke the vfio_ap_mdev_verify_no_sharing() function introduced in
+  patch 2. 
+
+Change log v4-v5:
+----------------
+* Added a patch to provide kernel s390dbf debug logs for VFIO AP
+
+Change log v3->v4:
+-----------------
+* Restored patches preventing root user from changing ownership of
+  APQNs from zcrypt drivers to the vfio_ap driver if the APQN is
+  assigned to an mdev.
+
+* No longer enforcing requirement restricting guest access to
+  queues represented by a queue device bound to the vfio_ap
+  device driver.
+
+* Removed shadow CRYCB and now directly updating the guest CRYCB
+  from the matrix mdev's matrix.
+
+* Rebased the patch series on top of 'vfio: ap: AP Queue Interrupt
+  Control' patches.
+
+* Disabled bind/unbind sysfs interfaces for vfio_ap driver
+
+Change log v2->v3:
+-----------------
+* Allow guest access to an AP queue only if the queue is bound to
+  the vfio_ap device driver.
+
+* Removed the patch to test CRYCB masks before taking the vCPUs
+  out of SIE. Now checking the shadow CRYCB in the vfio_ap driver.
+
+Change log v1->v2:
+-----------------
+* Removed patches preventing root user from unbinding AP queues from 
+  the vfio_ap device driver
+* Introduced a shadow CRYCB in the vfio_ap driver to manage dynamic 
+  changes to the AP guest configuration due to root user interventions
+  or hardware anomalies.
+
+Harald Freudenberger (2):
+  s390/ap: introduce new ap function ap_get_qdev()
+  s390/zcrypt: Notify driver on config changed and scan complete
+    callbacks
+
+Tony Krowiak (14):
+  s390/vfio-ap: use new AP bus interface to search for queue devices
+  s390/vfio-ap: manage link between queue struct and matrix mdev
+  s390/zcrypt: driver callback to indicate resource in use
+  s390/vfio-ap: implement in-use callback for vfio_ap driver
+  s390/vfio-ap: introduce shadow APCB
+  s390/vfio-ap: sysfs attribute to display the guest's matrix
+  s390/vfio-ap: filter matrix for unavailable queue devices
+  s390/vfio_ap: add qlink from ap_matrix_mdev struct to vfio_ap_queue
+    struct
+  s390/vfio-ap: allow assignment of unavailable AP queues to mdev device
+  s390/vfio-ap: allow configuration of matrix mdev in use by a KVM guest
+  s390/vfio-ap: allow hot plug/unplug of AP resources using mdev device
+  s390/vfio-ap: handle host AP config change notification
+  s390/vfio-ap: handle AP bus scan completed notification
+  s390/vfio-ap: handle probe/remove not due to host AP config changes
+
+ drivers/s390/crypto/ap_bus.c          |  417 +++++++--
+ drivers/s390/crypto/ap_bus.h          |   41 +-
+ drivers/s390/crypto/ap_card.c         |   47 +-
+ drivers/s390/crypto/ap_queue.c        |   10 +-
+ drivers/s390/crypto/vfio_ap_drv.c     |   34 +-
+ drivers/s390/crypto/vfio_ap_ops.c     | 1165 ++++++++++++++++++++-----
+ drivers/s390/crypto/vfio_ap_private.h |   23 +-
+ 7 files changed, 1339 insertions(+), 398 deletions(-)
+
 -- 
 2.21.1
 
