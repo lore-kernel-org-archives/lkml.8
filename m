@@ -2,104 +2,92 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D67CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF557C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339A22053B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE55F2053B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:12:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNbyLPCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgFEKMK (ORCPT
+        id S1726496AbgFEKMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38188 "EHLO
+        Fri, 5 Jun 2020 06:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFEKMJ (ORCPT
+        with ESMTP id S1726374AbgFEKMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:12:09 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 849E2C08C5C2;
-        Fri,  5 Jun 2020 03:12:09 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jh9KT-00021g-M4; Fri, 05 Jun 2020 12:12:01 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2D2B9101090; Fri,  5 Jun 2020 12:11:59 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     kvm@vger.kernel.org, Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: system time goes weird in kvm guest after host suspend/resume
-In-Reply-To: <1a1c32fe-d124-0e47-c9e4-695be7ea7567@redhat.com>
-Date:   Fri, 05 Jun 2020 12:11:59 +0200
-Message-ID: <87k10l7rf4.fsf@nanos.tec.linutronix.de>
+        Fri, 5 Jun 2020 06:12:42 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5122C08C5C2;
+        Fri,  5 Jun 2020 03:12:40 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id y13so9490399eju.2;
+        Fri, 05 Jun 2020 03:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gmla3jz6Kkr9uVaBKzvCnpBi+8IppeZfJDcPG5ZX28U=;
+        b=WNbyLPCRsJmf1YlpyWo1p7SVjWu10iT+AetIv5DsyVOLJfZ4Nk5sopUPSo3dKsGrU1
+         0jSDv1crDK7hxBLc5oGC5m30fmptu5zJLK+9lUC7dgv8w2pxN25Vjbr5TJK3EorEIsi1
+         VgoIWkA2W9M6DcN0M27tm8/1/aMgGtBFSul5+ZXl0zDsBGBYvJnAigWMWaxJgI+s3V5f
+         6ZDmPRzAw6nEMJ/xIoFMVqm9TrZqK0eN+ZpkYecJmyZuOb5kU/Nw7yTQCivwfzF8cR9M
+         QkOyfu7omWazlrN49f6Q5cpf34OMvyuxMtsubcIBCKWoNGDevE2QuiWYjtE6vFKdhVo2
+         B1Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gmla3jz6Kkr9uVaBKzvCnpBi+8IppeZfJDcPG5ZX28U=;
+        b=E/7M08P6HhExOXytnFWMu9lycMTZoUrgerdOeYDN3F3p3sqX3zA/oXMR9NgCYRb4BA
+         dSnAg556lGArARYfZtMUbN1sWfrjbYF+pm5deTJcvAzEmHMshQa1G5UtuknFtBN/cibH
+         u/qpAjwnkhyOFbjYwQq6f3AmiyhJeMKoj1w8TgAFKdQlemLVqZ2ODa35WZwaaTknyeWZ
+         YxoQ7aIjhz7bUEsrdON2iNbRopH+XZuIl9wgJONJTDEAjxxQQBdZJNgcgoXPHwz5yFAQ
+         JaMt7sLHJgZwI7ecgQws+V9knbQ5zBJkZOmzSDEsTfgAeXXV7UOCWOMgZvN+CM7irrmc
+         3OCg==
+X-Gm-Message-State: AOAM533/M4JCIVVn6SK0H3rUo9Cmxj5gbIkQiI5Acivy2YVaGOXGS0z2
+        Fl+o7FQ2i915SDBPlu0nsxfkHguPPKM66cAzT0o=
+X-Google-Smtp-Source: ABdhPJxtUUhL5yN4OVcYr8Ri88ijWHipQ1pLLHkzK1pCS6nlAamgs/eIS5Qs17Y0fonXqMGA7PRFrzF29Mb4sYrdqv4=
+X-Received: by 2002:a17:906:198d:: with SMTP id g13mr7814691ejd.281.1591351959507;
+ Fri, 05 Jun 2020 03:12:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <4781d250-9a29-cef3-268d-7d83c98bf16a@gmail.com> <20200605032014.GA4455@paulmck-ThinkPad-P72>
+In-Reply-To: <20200605032014.GA4455@paulmck-ThinkPad-P72>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 5 Jun 2020 13:12:28 +0300
+Message-ID: <CA+h21hrR8OER0E7tve04w4WJur03YmMMQ=Tk_kDfAkpysBPjFw@mail.gmail.com>
+Subject: Re: stress-ng --hrtimers hangs system
+To:     paulmck@kernel.org
+Cc:     linux-rt-users@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, rcu@vger.kernel.org,
+        Colin King <colin.king@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-> On 04/06/20 21:28, Miklos Szeredi wrote:
->> time(2) returns good time, while clock_gettime(2) returns bad time.
->> Here's an example:
->> 
->> time=1591298725 RT=1591300383 MONO=39582 MONO_RAW=39582 BOOT=39582
->> time=1591298726 RT=1591300383 MONO=39582 MONO_RAW=39582 BOOT=39582
->> time=1591298727 RT=1591300383 MONO=39582 MONO_RAW=39582 BOOT=39582
->> time=1591298728 RT=1591300383 MONO=39582 MONO_RAW=39582 BOOT=39582
->> time=1591298729 RT=1591300383 MONO=39582 MONO_RAW=39582 BOOT=39582
->> 
->> As you can see, only time(2) is updated, the others remain the same.
->> date(1) uses clock_gettime(CLOCK_REALTIME) so that shows the bad date.
->> 
->> When the correct time reaches the value returned by CLOCK_REALTIME,
->> the value jumps exactly 2199 seconds.
+Hi Paul,
 
-Which value jumps?
-
-> clockid_to_kclock(CLOCK_REALTIME) is &clock_realtime, so clock_gettime
-> calls ktime_get_real_ts64, which is:
+On Fri, 5 Jun 2020 at 06:20, Paul E. McKenney <paulmck@kernel.org> wrote:
 >
+
 >
->         do {
->                 seq = read_seqcount_begin(&tk_core.seq);
+> That agrees with my interpretation of the stall warning message.
 >
->                 ts->tv_sec = tk->xtime_sec;
->                 nsecs = timekeeping_get_ns(&tk->tkr_mono);
+> On the rest, I must defer to others.
 >
->         } while (read_seqcount_retry(&tk_core.seq, seq));
+>                                                         Thanx, Paul
 >
->         ts->tv_nsec = 0;
->         timespec64_add_ns(ts, nsecs);
->
-> time(2) instead should actually be gettimeofday(2), which just returns
-> tk->xtime_sec.
 
-time(2) is either handled in the VDSO or it is handled via syscall and
-yes, it's only looking at the xtime_sec value.
+Thanks, always good to have a confirmation from you!
+FWIW, the system has survived an overnight run with
+sched_rt_runtime_us set to 80%, I don't know if there's more to it.
 
-gettimeofday(2) returns seconds and microseconds. It's using the same
-mechanism as clock_gettime(2) and divides the nanoseconds part by 1000.
-
-> So the problem is the nanosecond part which is off by
-> 2199*10^9 nanoseconds, and that is suspiciously close to 2^31...
-
-Not really. It's 2^41.
-
-I can actually now reproduce, but I won't be able to investigate that
-before monday.
-
-Thanks,
-
-        tglx
+Regards,
+-Vladimir
