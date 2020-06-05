@@ -2,94 +2,71 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93722074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wctvwvbp"
+	by mail.kernel.org (Postfix) with ESMTP id E9A072074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgFEWBd (ORCPT
+        id S1728306AbgFEWCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgFEWBc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:01:32 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAFDC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 15:01:31 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id i74so9531360oib.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 15:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F1cuZ3dzo56RdjEfW6iqD1ChG7OM1Jr7mC+hansXCwI=;
-        b=wctvwvbpWO1A1HCjf/NHUA3VKLb5qBQsLSG6vVcEV3AWM99wCt/t8bgr2xsa6Hk7Pw
-         FoUbstWwodSnAdG3c+eMacQJQvEmMP2TY2QIiwIVwBj+0OQsu24EpdyuKKSmzX6b9i/o
-         loX3DhQ/9MJ7SYog2deugw3Ml2q7CcwOz8YQ9lCObg7BJt+Tpn+wPMEqHbE/Wb9tIHWV
-         CygJCr4VBKseGwmlIAftZcoidaNeP7NUK6HkBoA76D0NjGAnICxM+rueoHJcEsVxx07T
-         TTh/6DhSDCJv/tT3Hc2nhaal8XJTYm0Mu9AmOeRjJXT0VQ8jnm0Cb1WMvkuDiRg6anOA
-         FdaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F1cuZ3dzo56RdjEfW6iqD1ChG7OM1Jr7mC+hansXCwI=;
-        b=tjgb+e490H+TRyDskQ4uYK2wFc8ADVqpD9DvbtCK7yzm3zmzFPQEcL5mIE6m1yf/WA
-         VNpt4L84+4aWxPjKy7GgnxX8P2BYZjP0dyjjh4r9c++eRm008EQ15ICq+Wel7kbCOD0i
-         LPGq1bJdpUQiYTj/VeFYCfs8kpZhKUI0r06JkCKxUF2v7ok5fvuV7O2qngLvuWw1gjSo
-         99MsLSpMqAscZVL/RHuwf5SK3acWMWhQ1QK0/NFO/JxDGTburONuFm6ZJzdKKrIvHr8c
-         IjrvjkCShJtNUUVEG113v6u1XE/tiRk80nFPIw2Hwom2Caty9+YBZO8ri3MbXwEIbtB+
-         zEow==
-X-Gm-Message-State: AOAM533gQtUE+32QJZPWfants8WP6IP8gNPcBgW8VSD6IsCYH4EHS07d
-        y+T72sIL1FGbquJHbWQB3AazyQHYA6cNJtdrFg4/YieM
-X-Google-Smtp-Source: ABdhPJwi5IpaSvy3MP1LOrYYG2rZ0azcMzKLT8zxF9+F5mK4G2RYc0gGq16RDrvuQQ1nT4XJ8KX9okz2nfXdGIYijBc=
-X-Received: by 2002:aca:48d7:: with SMTP id v206mr3279211oia.97.1591394491145;
- Fri, 05 Jun 2020 15:01:31 -0700 (PDT)
+        Fri, 5 Jun 2020 18:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbgFEWCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 18:02:24 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A91206FA;
+        Fri,  5 Jun 2020 22:02:23 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 18:02:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [RFC] perf/core: allow ftrace for functions in
+ kernel/event/core.c
+Message-ID: <20200605180222.6cc3b34c@oasis.local.home>
+In-Reply-To: <595AB855-8E84-4367-AEEC-C140F035C9B4@fb.com>
+References: <20200526212826.4097888-1-songliubraving@fb.com>
+        <20200526213913.GG2483@worktop.programming.kicks-ass.net>
+        <A9B20D93-748B-4789-801E-91720E2D4F28@fb.com>
+        <20200526215415.GH2483@worktop.programming.kicks-ass.net>
+        <20200526180437.45aed950@gandalf.local.home>
+        <595AB855-8E84-4367-AEEC-C140F035C9B4@fb.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200605211925.87873-1-john.stultz@linaro.org> <CAGETcx_-ZknGcGJQMesLFWAwUyidK00-6bqF6ZZPbyyYtSPcew@mail.gmail.com>
-In-Reply-To: <CAGETcx_-ZknGcGJQMesLFWAwUyidK00-6bqF6ZZPbyyYtSPcew@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 5 Jun 2020 15:01:20 -0700
-Message-ID: <CALAqxLWRXNVTYU4m58mOjb1F2gFHLDbabpqT-BvuHK4Hw1FcdQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] slimbus: core: Set fwnode for a device when setting of_node
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:44 PM Saravana Kannan <saravanak@google.com> wrote:
-> On Fri, Jun 5, 2020 at 2:19 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > From: Saravana Kannan <saravanak@google.com>
-> >
-> > When setting the of_node for a newly created device, also set the
-> > fwnode. This allows fw_devlink to work for slimbus devices.
-> >
-> > Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > Cc: alsa-devel@alsa-project.org
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
->
-> I thought Srinivas already picked this up and sent it to Greg.
-> https://lore.kernel.org/lkml/20200511151334.362-1-srinivas.kandagatla@linaro.org/
->
+On Fri, 5 Jun 2020 21:58:48 +0000
+Song Liu <songliubraving@fb.com> wrote:
 
-Oh! I'm sorry, I missed that! That's great to hear!
+> 
+> How does this work in your tests? 
 
-thanks
--john
+I started it, but got distracted by other work. It did not crash with
+the little testing I did do. I wanted to also look at my patch that
+adds tracing to the ftrace directory too.
+
+I'll try to remember to address this some more next week. Feel free to
+ping me again then.
+
+-- Steve
+
