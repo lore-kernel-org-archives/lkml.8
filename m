@@ -2,103 +2,120 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B643C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD87206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D9520835
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:42:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FsGe7wFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbgFEOll (ORCPT
+        id S1728296AbgFEOmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:41:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:56820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbgFEOlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:41:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7949331B;
-        Fri,  5 Jun 2020 07:41:39 -0700 (PDT)
-Received: from [10.57.10.23] (unknown [10.57.10.23])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77DA73F305;
-        Fri,  5 Jun 2020 07:41:32 -0700 (PDT)
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-From:   Robin Murphy <robin.murphy@arm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
-Message-ID: <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
-Date:   Fri, 5 Jun 2020 15:41:27 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        Fri, 5 Jun 2020 10:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728007AbgFEOmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:42:32 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D293C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:42:32 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id d8so531955plo.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kWmWY107rL+xsIIhFUjNTUmeVB4+7Mb6mUCJ2bTAek8=;
+        b=FsGe7wFGGdfMO+60vFghW/jiJzjC8SSJ0pZqzQMAvVGM9/qniaAF8MHtnRHnEEhwwF
+         Su8K2GDWr9oGUbLOg5DXBFZ5oFEvb0od59O261yqszT8OIP9HJE34svYuegmLhXPu/Zo
+         976f8IDLVPQM/cZLNmCqKN8yfCBrtyF68tIrF54Xq8meZ84YOcEJwuHZk0Ut1NYuVTru
+         4DqS0Xvb8tP50yNzdLQrOvIdvU+MrBQUPA+XuEBjcFCkUjXt6/IoOGK9/l3cO+cKxmaN
+         XIDG4+iWyGw9+9Or1VhfVJIJ/WXYVBYMM2SGsYNIlCoP8AqbT9kJKlZBxECX9nh+NH7J
+         NK7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kWmWY107rL+xsIIhFUjNTUmeVB4+7Mb6mUCJ2bTAek8=;
+        b=uTG8hfbR1yqtRV47R9hNaLWZdoLZi3BMyvCpkev7zjaxroBqTza6+L3uq8Pm+A7T4k
+         RQmC/1WigJs/HG0zrrN8jLhlS8GXiUa5ysu7MJ+qTxx1ZauA09xdalyP5EU8z0uosBdu
+         rAeCt/IiLsTajrCEsHxj65rI/IEidqiR5jUzDPoa45zFC3LjB5T5oh+qKxowk3DRUsxH
+         Q+Z8YQ1xnqyKXn0UEyBIeNz2iNWr9mez0bbHB2XQI6O/WL0E3dnmp6vqWOe8ANHH1+u6
+         6OEZvGpJGZ2q42HPTlh6AORTtdNAC5ne4QLoZyBRywxuOSrmf/VSDDN0yc/ptJ5F4sNA
+         hMnA==
+X-Gm-Message-State: AOAM532zFAcZh3LRErFJGdC6dAQpbqzSccwUl/VCEQRWu6zS+Xtf4Mbb
+        eBTZx5/zGuhgtIyK/YhdO4a5aQ==
+X-Google-Smtp-Source: ABdhPJwLtUnSV/ZHIAhiWei0T4bnq1OqRswoMTSv82AFOm5LbY8oHymBtDpRahXmzi58KiaRpGTUtg==
+X-Received: by 2002:a17:90a:df0c:: with SMTP id gp12mr3503128pjb.148.1591368151295;
+        Fri, 05 Jun 2020 07:42:31 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id k126sm7788338pfd.129.2020.06.05.07.42.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 07:42:30 -0700 (PDT)
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Andres Freund <andres@anarazel.de>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+References: <20200526195123.29053-1-axboe@kernel.dk>
+ <20200604005916.niy2mejjcsx4sv6t@alap3.anarazel.de>
+ <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
+Message-ID: <6eeff14f-befc-a5cc-08da-cb77f811fbdf@kernel.dk>
+Date:   Fri, 5 Jun 2020 08:42:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-05 14:46, Robin Murphy wrote:
-> On 2020-06-05 14:20, Mark Brown wrote:
->> On Fri, Jun 05, 2020 at 12:34:36PM +0100, Robin Murphy wrote:
->>> On 2020-06-04 22:28, Florian Fainelli wrote:
+On 6/3/20 7:04 PM, Jens Axboe wrote:
+> On 6/3/20 6:59 PM, Andres Freund wrote:
+>> Hi,
 >>
->>>> For the BCM2835 case which is deemed performance critical, we would 
->>>> like
->>>> to continue using an interrupt handler which does not have the extra
->>>> comparison on BCM2835_SPI_CS_INTR.
+>> I was trying to benchmark the benefits of this for the io_uring using
+>> postgres I am working on. The initial results where quite promising
+>> (reducing cpu usage significantly, to lower than non-uring sync io). But
+>> unfortunately trying another workload triggered both panics and before
+>> that seemingly returned wrong data.
 >>
->>> FWIW, if I'm reading the patch correctly, then with sensible codegen 
->>> that
->>> "overhead" should amount to a bit test on a live register plus a 
->>> not-taken
->>> conditional branch - according to the 1176 TRM that should add up to a
->>> whopping 2 cycles. If that's really significant then I'd have to wonder
->>> whether you want to be at the mercy of the whole generic IRQ stack at 
->>> all,
->>> and should perhaps consider using FIQ instead.
+>> I first saw that problem with b360d424ce02, which was
+>> linux-block/async-buffered.6 at the time. After hitting the issue, I
+>> updated to the current linux-block/async-buffered.6, but the problem
+>> persists.
 >>
->> Yes, and indeed the compiler does seem to manage that.  It *is* non-zero
->> overhead though.
+>> The workload that triggers the bug within a few seconds is postgres
+>> doing a parallel sequential scan of a large table (and aggregating the
+>> data, but that shouldn't matter). In the triggering case that boils down
+>> to 9 processes sequentially reading a number of 1GB files (we chunk
+>> tables internally into smaller files). Each process will read a 512kB
+>> chunk of the file on its own, and then claim the next 512kB from a
+>> shared memory location. Most of the IO will be READV requests, reading
+>> 16 * 8kB into postgres' buffer pool (which may or may not be neighboring
+>> 8kB pages).
 > 
-> True, but so's the existing level of pointer-chasing indirection that 
-> with some straightforward refactoring could be taken right out of the 
-> critical path and confined to just the conditional complete() call. 
-> That's the kind of thing leaving me unconvinced that this is code where 
-> every single cycle counts ;)
+> I'll try and reproduce this, any chance you have a test case that can
+> be run so I don't have to write one from scratch? The more detailed
+> instructions the better.
 
-Ha, and in fact having checked a build out of curiosity, this patch 
-as-is actually stands to make things considerably worse. At least with 
-GCC 8.3 and bcm2835_defconfig, bcm2835_spi_interrupt_common() doesn't 
-get inlined, which means bcm2835_spi_interrupt() pushes/pops a stack 
-frame and makes an out-of-line call to bcm2835_spi_interrupt_common(), 
-resulting in massively *more* work than the extra two instructions of 
-simply inlining the test.
+Can you try with async-buffered.7? I've rebased it on a new mechanism,
+and doing something like what you describe above I haven't been able
+to trigger anything bad. I'd try your test case specifically, so do let
+know if it's something I can run.
 
-So yes, the overhead of inlining the test vs. the alternative is indeed 
-non-zero. It's just also negative :D
+-- 
+Jens Axboe
 
-Robin.
