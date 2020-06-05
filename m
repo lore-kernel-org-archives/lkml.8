@@ -2,231 +2,128 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF07DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E87C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54AF207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2A42075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="sutPteYa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Okspnzrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgFERN1 (ORCPT
+        id S1727013AbgFERQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48304 "EHLO
+        Fri, 5 Jun 2020 13:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbgFERN1 (ORCPT
+        with ESMTP id S1726026AbgFERQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:13:27 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF821C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:13:26 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id z1so9111824qtn.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:13:26 -0700 (PDT)
+        Fri, 5 Jun 2020 13:16:21 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAC0C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 10:16:21 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id y5so11154458iob.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:16:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=rHr7itMwj0PiPq9H+uXZajLfSOPoVtswSHCJ/uAQsm4=;
-        b=sutPteYahxMet7Xu1/aGxvidF5fpONwql8J9iaHQeTBhuSlG6v0mzZ38XXiXamKUoM
-         Q9bjjpMV6iFJF9aLhwAP1sQftb9ptsoD6ZFjHfMAc7Xhz6URLpNoU+aaKYk4Cx1QGn5W
-         j5Y8rBcBDZvHhS1yGy1wXscJ5DawiiDp8glqEZph6kV145YTe2IzWnhm8sn1rbOiKhTJ
-         ZiqMiNwkH4ivokp+lmARtcPH3HKz4yTg7J6FpDU0ZZ+vQ855hoT4gDcC4GGI4RlbGnAk
-         piGBT5IG1Rt14Y1jV+wovSEk4uf1hnTfg34ZfceQu8ZDGMkECSQVk36/X2F5A8+5ccep
-         SEWw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M2DoiL3N8PLmn9uLhfvBWbNohAxFlys4Mkq27kcN6Kc=;
+        b=Okspnzrd1e2cu+pXAl0800c5udnBzbjtNe3gaWz6jgdC3P6ABXTtAXRJ+z8JGtxjsp
+         iIGXRhiCX8dD3vHfUM75NzOZ6+MputDzUwvEJJjE48pKNB9ZQsHDEvjtJkay2dKP7+Us
+         hvYoHtlgjrPzvwL9iHfyVlIVNa6KSHYmcbc+zgQ0MUuW7pn40iwJJlbfRFJDwJSQCYb3
+         d3EqhkEk4k0J45+06NODSdXREPElGKLVjlo57ocvnzl5cYe1aCI5q2b12t2MGO8vidnv
+         qaf06RTq5zu66oYB10nc4LkspNGeS+FJxuW5ek0tD+LdZOx1UTbtpKi8EHj2l1OGErAQ
+         LDeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=rHr7itMwj0PiPq9H+uXZajLfSOPoVtswSHCJ/uAQsm4=;
-        b=hI+6n5LdP5sboNFcIbhbPJptRUudPV91yKYxTmbaIVLeFy0O+v95bbYIFVuywwmGeb
-         +aC2LzBy6fz2Mm+ljKQB9bGLbxjhP317ypLd2nkLHNTgup073YZMwrcTn5Qr9sj0R8Vf
-         7XvIMsL/phv/1eYthFM74/iVTUdYx5hLV2xQP1+HEnGesN+iNXUDramdf/7PWC2qi/iQ
-         Kp1WVQy3vQ5QQ8uOD/h3fRv6OGp5gZbYiqZPolXqypQlvsKdd/1P7K0VZp1DcJwgGrST
-         Tg72gkaj3div7hoJQEE7AmhYZd71ZfPazYH10iT/nKP7fWFtd/zhvTzgOuxFdeaUGQnk
-         BOfw==
-X-Gm-Message-State: AOAM531YZhpmKxcdlXlnwBtj9ENkqE5fxWElsCpNtp889/2zPnn0jf0c
-        oxawpfpPM8fhbbdYmQYBM0YrlQ==
-X-Google-Smtp-Source: ABdhPJzAo611o2M6HhEIIa1EkNwa7ONj9dewqWnD6aH1w0/QGIFAoQ8zEpfQ6p9WGA14HQA4Cqr5bQ==
-X-Received: by 2002:ac8:4542:: with SMTP id z2mr10524331qtn.90.1591377205955;
-        Fri, 05 Jun 2020 10:13:25 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id o6sm289276qtd.59.2020.06.05.10.13.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 10:13:25 -0700 (PDT)
-Message-ID: <981458bfa639bbb9dbc7577256fde0a4c6259d53.camel@ndufresne.ca>
-Subject: Re: [PATCH 1/3] media: uapi: h264: update reference lists
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        paul.kocialkowski@bootlin.com, mripard@kernel.org
-Cc:     mchehab@kernel.org, wens@csie.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, jonas@kwiboo.se,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Date:   Fri, 05 Jun 2020 13:13:24 -0400
-In-Reply-To: <21efb826506f23d348fa58ca8b29eaca8c9dae55.camel@ndufresne.ca>
-References: <20200604185745.23568-1-jernej.skrabec@siol.net>
-         <20200604185745.23568-2-jernej.skrabec@siol.net>
-         <21efb826506f23d348fa58ca8b29eaca8c9dae55.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M2DoiL3N8PLmn9uLhfvBWbNohAxFlys4Mkq27kcN6Kc=;
+        b=sIgYkwzyUCV1TfLyjhvCT5uBLhzfRX9BK+cYuwpG7NFwpVaiCekXJVrIbhjBPv0slK
+         IoU3kbEIAmvyBxScFeU6EQYeDuzDvVw6BX+TqTf78Z7boo3H2vCUL4KwcbhxqMMEQSD4
+         Pd2MWMoh+Ya8mWUh7bmQ2AKY9MabI913MXoHAb7bwWdHvu0IB3mEmPQUBbiLg3qOb7W9
+         iY+Hvw34Ybn+TqML9kzo5bDgDELXStJ4j37NKlH1KIo4cTEGY2vzwO0fCeEeX/V51LNw
+         5+nA8uycQhx0Lpyqy91PYCLGV69zTq/bE8qqsjszFGmG+NbE0211k1mEzSokp+ntnfxk
+         oibA==
+X-Gm-Message-State: AOAM532a1WsgEI+HJ5TWJSi7F8K3FGZT2Qo4R0WPPzJJ6FG15J734539
+        itNDdPZHHDZdZSc5V28u4A3lkrTlxaWPdkvgWbnPuw==
+X-Google-Smtp-Source: ABdhPJyPyx3ITaNlsvuOJzHLVoc4dXrECgaXnMvH9jvGqeXJ4EVIMEfv5i3GsEJQFNA4qqowvDyQVt0C/qGdoJ2IAP8=
+X-Received: by 2002:a05:6602:1647:: with SMTP id y7mr9288644iow.75.1591377379827;
+ Fri, 05 Jun 2020 10:16:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+ <b70d03dd-947f-dee5-5499-3b381372497d@intel.com> <72a75924-c3cb-6b23-62bd-67b739dec166@redhat.com>
+In-Reply-To: <72a75924-c3cb-6b23-62bd-67b739dec166@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 5 Jun 2020 10:16:08 -0700
+Message-ID: <CALMp9eSrDehftA5o6tU2sE_098F2ucztYtzhvgguYDnWqwHJaw@mail.gmail.com>
+Subject: Re: [PATCH][v6] KVM: X86: support APERF/MPERF registers
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        wei.huang2@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, missed one thing.
+On Thu, Jun 4, 2020 at 11:35 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 05/06/20 07:00, Xiaoyao Li wrote:
+> > you could do
+> >
+> >     bool guest_cpuid_aperfmperf = false;
+> >     if (best)
+> >         guest_cpuid_aperfmperf = !!(best->ecx & BIT(0));
+> >
+> >     if (guest_cpuid_aperfmerf != guest_has_aperfmperf(vcpu->kvm))
+> >         return -EINVAL;
+> >
+> >
+> > In fact, I think we can do nothing here. Leave it as what usersapce
+> > wants just like how KVM treats other CPUID bits.
+>
+> The reason to do it like Rongqing did is that it's suggested to take the
+> output of KVM_GET_SUPPORTED_CPUID and pass it down to KVM_SET_CPUID2.
+> Unfortunately we have KVM_GET_SUPPORTED_CPUID as a /dev/kvm (not VM)
+> ioctl, otherwise you could have used guest_has_aperfmperf to affect the
+> output of KVM_GET_SUPPORTED_CPUID.
+>
+> I think it's okay however to keep it simple as you suggest.  In this
+> case however __do_cpuid_func must not return the X86_FEATURE_APERFMPERF bit.
+>
+> The guest can instead check for the availability of KVM_CAP_APERFMPERF,
+> which is already done in Rongqing's patch.
+>
+> >> @@ -4930,6 +4939,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+> >>           kvm->arch.exception_payload_enabled = cap->args[0];
+> >>           r = 0;
+> >>           break;
+> >> +    case KVM_CAP_APERFMPERF:
+> >> +        kvm->arch.aperfmperf_mode =
+> >> +            boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
+> >
+> > Shouldn't check whether cap->args[0] is a valid value?
+>
+> Yes, only valid values should be allowed.
+>
+> Also, it should fail with -EINVAL if the host does not have
+> X86_FEATURE_APERFMPERF.
 
-Le vendredi 05 juin 2020 à 13:08 -0400, Nicolas Dufresne a écrit :
-> Le jeudi 04 juin 2020 à 20:57 +0200, Jernej Skrabec a écrit :
-> > When dealing with with interlaced frames, reference lists must tell if
-> > each particular reference is meant for top or bottom field. This info
-> > is currently not provided at all in the H264 related controls.
-> > 
-> > Make reference lists hold a structure which will also hold flags along
-> > index into DPB array. Flags will tell if reference is meant for top or
-> > bottom field.
-> > 
-> > Currently the only user of these lists is Cedrus which is just compile
-> > fixed here. Actual usage of newly introduced flags will come in
-> > following commit.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> This looks like the right approach to me and is extensible if anything
-> else is needed for MVC and SVC special referencing (at least will be
-> enough for what H.264 actually supports in this regard).
-> 
-> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> 
-> > ---
-> >  .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
-> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
-> >  include/media/h264-ctrls.h                    | 12 +++++-
-> >  3 files changed, 51 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > index d0d506a444b1..6c36d298db20 100644
-> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >      * - __u32
-> >        - ``slice_group_change_cycle``
-> >        -
-> > -    * - __u8
-> > +    * - struct :c:type:`v4l2_h264_reference`
-> >        - ``ref_pic_list0[32]``
-> >        - Reference picture list after applying the per-slice modifications
-> > -    * - __u8
-> > +    * - struct :c:type:`v4l2_h264_reference`
-> >        - ``ref_pic_list1[32]``
-> >        - Reference picture list after applying the per-slice modifications
-> >      * - __u32
-> > @@ -1926,6 +1926,42 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> >        - ``chroma_offset[32][2]``
-> >        -
-> >  
-> > +``Picture Reference``
-> > +
-> > +.. c:type:: v4l2_h264_reference
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. flat-table:: struct v4l2_h264_reference
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - __u16
-> > +      - ``flags``
-> > +      - See :ref:`Picture Reference Flags <h264_reference_flags>`
-> > +    * - __u8
-> > +      - ``index``
-> > +      -
-> > +
-> > +.. _h264_reference_flags:
-> > +
-> > +``Picture Reference Flags``
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. flat-table::
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - ``V4L2_H264_REFERENCE_FLAG_TOP_FIELD``
-> > +      - 0x00000001
-> > +      -
-> > +    * - ``V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD``
-> > +      - 0x00000002
-> > +      -
-> > +
-> >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
-> >      Specifies the decode parameters (as extracted from the bitstream)
-> >      for the associated H264 slice data. This includes the necessary
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > index 54ee2aa423e2..cce527bbdf86 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
-> >  
-> >  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
-> >  				   struct cedrus_run *run,
-> > -				   const u8 *ref_list, u8 num_ref,
-> > -				   enum cedrus_h264_sram_off sram)
-> > +				   const struct v4l2_h264_reference *ref_list,
-> > +				   u8 num_ref, enum cedrus_h264_sram_off sram)
-> >  {
-> >  	const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
-> >  	struct vb2_queue *cap_q;
-> > @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
-> >  		int buf_idx;
-> >  		u8 dpb_idx;
-> >  
-> > -		dpb_idx = ref_list[i];
-> > +		dpb_idx = ref_list[i].index;
-> >  		dpb = &decode->dpb[dpb_idx];
-> >  
-> >  		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-> > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> > index 080fd1293c42..9b1cbc9bc38e 100644
-> > --- a/include/media/h264-ctrls.h
-> > +++ b/include/media/h264-ctrls.h
-> > @@ -140,6 +140,14 @@ struct v4l2_h264_pred_weight_table {
-> >  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x04
-> >  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x08
-> >  
-> > +#define V4L2_H264_REFERENCE_FLAG_TOP_FIELD		0x01
-> > +#define V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD		0x02
-> > +
-> > +struct v4l2_h264_reference {
-> > +	__u8 flags;
-> > +	__u8 index;
-> > +};
-> > +
-> >  struct v4l2_ctrl_h264_slice_params {
-> >  	/* Size in bytes, including header */
-> >  	__u32 size;
-> > @@ -182,8 +190,8 @@ struct v4l2_ctrl_h264_slice_params {
-> >  	 * Entries on each list are indices into
-> >  	 * v4l2_ctrl_h264_decode_params.dpb[].
-> >  	 */
-
-This comment needs to be updated or moved inside the structure.
-
-> > -	__u8 ref_pic_list0[32];
-> > -	__u8 ref_pic_list1[32];
-> > +	struct v4l2_h264_reference ref_pic_list0[32];
-> > +	struct v4l2_h264_reference ref_pic_list1[32];
-> >  
-> >  	__u32 flags;
-> >  };
-
+Should enabling/disabling this capability be disallowed once vCPUs
+have been created?
