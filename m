@@ -2,63 +2,53 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00581C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD47208B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EA02086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366753;
-	bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
+	s=default; t=1591366759;
+	bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qDQH7tB0oL5dQY1XDECmB3hdFn/WjZ7wUuBPQKeMlTjUZEZolYPtWSV4sw7rfCq7x
-	 soT1aiS29kxJCFyDSKYh+cwtY9ZELc0+j5HLekJhk6zFRl719jRz1q2uWUGZaoEcTG
-	 FlltjyUFl4w9Zt7zgpDPmlNcx+IC7eRXtwI0et9M=
+	b=emJtYRNpWkAcyLGBLXQYxTjsaBo+rtdlw3fvF65D0pCVai/E2ShGC2/o0w2SPS3gp
+	 inHk2otoUtjzuEc5Hx1xzr0/5FyabU89Xe6SSccDFb8/Tx8c3quJIrdvwA3QbLCdr/
+	 twpW69Oz1CsNmkqKh4YBvv+vUEEnORhBMq/Fu0bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgFEOTM (ORCPT
+        id S1728817AbgFEOTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:19:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbgFEOTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:02 -0400
+        id S1728800AbgFEOTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C446208A9;
-        Fri,  5 Jun 2020 14:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE828208B8;
+        Fri,  5 Jun 2020 14:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366742;
-        bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
+        s=default; t=1591366751;
+        bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7O0fFJ7ZXIO6dj0OTyCG8mg3AJXdTYeVzmwl08P71AIHZEIw8t8WpixZm4qiruOw
-         bWFZC64Jpf/dOHti+zu5X3DAqzu2/bAIrTsIRfhfZ6r47JnaI5DufvmP8QtLfrm3oU
-         h9xbrMiHMcaA13cwaUbq7UORUBOOPnPzrPb4aXw8=
+        b=gdkDmpwhJ1dkLFqvAgoXmFLnE0OvRqGWG1xV2GUXsOSz2BdxQfzMTjmCOjcgoBcUN
+         Ihos2ZwBmdCZzHmuSCIPp2H+ozXmey3fockagSVxIO9mQ8yw9l+e08qfENYIpLotNL
+         SHDlDNUb5wB3QHoknkWnEnVm/qrIsTfzoQWjWkJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
-        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
-        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
-        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
-        Daniel Axtens <dja@axtens.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        David Rientjes <rientjes@google.com>,
-        Akash Goel <akash.goel@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 08/38] kernel/relay.c: handle alloc_percpu returning NULL in relay_open
-Date:   Fri,  5 Jun 2020 16:14:51 +0200
-Message-Id: <20200605140253.051743118@linuxfoundation.org>
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 33/38] s390/mm: fix set_huge_pte_at() for empty ptes
+Date:   Fri,  5 Jun 2020 16:15:16 +0200
+Message-Id: <20200605140254.825987686@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -71,71 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Axtens <dja@axtens.net>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit 54e200ab40fc14c863bcc80a51e20b7906608fce upstream.
+[ Upstream commit ac8372f3b4e41015549b331a4f350224661e7fc6 ]
 
-alloc_percpu() may return NULL, which means chan->buf may be set to NULL.
-In that case, when we do *per_cpu_ptr(chan->buf, ...), we dereference an
-invalid pointer:
+On s390, the layout of normal and large ptes (i.e. pmds/puds) differs.
+Therefore, set_huge_pte_at() does a conversion from a normal pte to
+the corresponding large pmd/pud. So, when converting an empty pte, this
+should result in an empty pmd/pud, which would return true for
+pmd/pud_none().
 
-  BUG: Unable to handle kernel data access at 0x7dae0000
-  Faulting instruction address: 0xc0000000003f3fec
-  ...
-  NIP relay_open+0x29c/0x600
-  LR relay_open+0x270/0x600
-  Call Trace:
-     relay_open+0x264/0x600 (unreliable)
-     __blk_trace_setup+0x254/0x600
-     blk_trace_setup+0x68/0xa0
-     sg_ioctl+0x7bc/0x2e80
-     do_vfs_ioctl+0x13c/0x1300
-     ksys_ioctl+0x94/0x130
-     sys_ioctl+0x48/0xb0
-     system_call+0x5c/0x68
+However, after conversion we also mark the pmd/pud as large, and
+therefore present. For empty ptes, this will result in an empty pmd/pud
+that is also marked as large, and pmd/pud_none() would not return true.
 
-Check if alloc_percpu returns NULL.
+There is currently no issue with this behaviour, as set_huge_pte_at()
+does not seem to be called for empty ptes. It would be valid though, so
+let's fix this by not marking empty ptes as large in set_huge_pte_at().
 
-This was found by syzkaller both on x86 and powerpc, and the reproducer
-it found on powerpc is capable of hitting the issue as an unprivileged
-user.
+This was found by testing a patch from from Anshuman Khandual, which is
+currently discussed on LKML ("mm/debug: Add more arch page table helper
+tests").
 
-Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
-Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
-Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
-Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
-Signed-off-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Cc: Akash Goel <akash.goel@intel.com>
-Cc: Andrew Donnellan <ajd@linux.ibm.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Salvatore Bonaccorso <carnil@debian.org>
-Cc: <stable@vger.kernel.org>	[4.10+]
-Link: http://lkml.kernel.org/r/20191219121256.26480-1-dja@axtens.net
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/relay.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ arch/s390/mm/hugetlbpage.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -581,6 +581,11 @@ struct rchan *relay_open(const char *bas
- 		return NULL;
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index 5674710a4841..7dfae86afa47 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -159,10 +159,13 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 		rste &= ~_SEGMENT_ENTRY_NOEXEC;
  
- 	chan->buf = alloc_percpu(struct rchan_buf *);
-+	if (!chan->buf) {
-+		kfree(chan);
-+		return NULL;
-+	}
+ 	/* Set correct table type for 2G hugepages */
+-	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3)
+-		rste |= _REGION_ENTRY_TYPE_R3 | _REGION3_ENTRY_LARGE;
+-	else
++	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
++		if (likely(pte_present(pte)))
++			rste |= _REGION3_ENTRY_LARGE;
++		rste |= _REGION_ENTRY_TYPE_R3;
++	} else if (likely(pte_present(pte)))
+ 		rste |= _SEGMENT_ENTRY_LARGE;
 +
- 	chan->version = RELAYFS_CHANNEL_VERSION;
- 	chan->n_subbufs = n_subbufs;
- 	chan->subbuf_size = subbuf_size;
+ 	clear_huge_pte_skeys(mm, rste);
+ 	pte_val(*ptep) = rste;
+ }
+-- 
+2.25.1
+
 
 
