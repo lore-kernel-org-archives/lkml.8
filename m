@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C60C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233E7206FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0F1206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgFEVjd (ORCPT
+        id S1728331AbgFEVjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:39:33 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22543 "EHLO mga04.intel.com"
+        Fri, 5 Jun 2020 17:39:36 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55947 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728592AbgFEVjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:39:15 -0400
-IronPort-SDR: 6nSMcI79TTVElwKf78frN+MblbtgjbRqBQ0wVkwp3NJCYAB10OODQEQYTvthybUCG5/ZF1axpp
- hMQetoM3w2YQ==
+        id S1728589AbgFEVjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:39:16 -0400
+IronPort-SDR: dwQxs+qbzUVC75L80NAvSCuDI5kWiYeYlxYxzdXY/pUJZRtHOZqfTt7nmrmZvDI2drEBmdHOHq
+ /I0pklyLXdyA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:10 -0700
-IronPort-SDR: 8+chlxCv2Iiw0FRzpi/racOfGh0tTL72IXLBgkdDtWhh1E5XaZPXbggd1oE4Xq4iC2Vzisvs/o
- zv6IEJ9/Di8g==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:08 -0700
+IronPort-SDR: j7Wc2uJYO1nS60vi1HPczs7gXFA7HoPA+i9Y3yXEGgSIHvuwj1L1as4jdw7VkhXY0JW6DL68E1
+ GDo+WnXbv7cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="287860928"
+   d="scan'208";a="287860901"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:09 -0700
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:08 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -57,9 +57,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Junaid Shahid <junaids@google.com>,
         Ben Gardon <bgardon@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH 20/21] KVM: MIPS: Account pages used for GPA page tables
-Date:   Fri,  5 Jun 2020 14:38:52 -0700
-Message-Id: <20200605213853.14959-21-sean.j.christopherson@intel.com>
+Subject: [PATCH 12/21] KVM: x86/mmu: Skip filling the gfn cache for guaranteed direct MMU topups
+Date:   Fri,  5 Jun 2020 14:38:44 -0700
+Message-Id: <20200605213853.14959-13-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200605213853.14959-1-sean.j.christopherson@intel.com>
 References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
@@ -70,30 +70,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use GFP_KERNEL_ACCOUNT instead of GFP_KERNEL when allocating pages for
-the the GPA page tables.  The primary motivation for accounting the
-allocations is to align with the common KVM memory cache helpers in
-preparation for moving to the common implementation in a future patch.
-The actual accounting is a bonus side effect.
+Don't bother filling the gfn array cache when the caller is a fully
+direct MMU, i.e. won't need a gfn array for shadow pages.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/mips/kvm/mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c         | 18 ++++++++++--------
+ arch/x86/kvm/mmu/paging_tmpl.h |  4 ++--
+ 2 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
-index 94562c54b930..41a4a063a730 100644
---- a/arch/mips/kvm/mmu.c
-+++ b/arch/mips/kvm/mmu.c
-@@ -32,7 +32,7 @@ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
- 	if (cache->nobjs >= min)
- 		return 0;
- 	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
--		page = (void *)__get_free_page(GFP_KERNEL);
-+		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT);
- 		if (!page)
- 			return -ENOMEM;
- 		cache->objects[cache->nobjs++] = page;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index a8f8eebf67df..8d66cf558f1b 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1101,7 +1101,7 @@ static void mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+ 	}
+ }
+ 
+-static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
++static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu, bool maybe_indirect)
+ {
+ 	int r;
+ 
+@@ -1114,10 +1114,12 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+ 				   PT64_ROOT_MAX_LEVEL);
+ 	if (r)
+ 		return r;
+-	r = mmu_topup_memory_cache(&vcpu->arch.mmu_gfn_array_cache,
+-				   PT64_ROOT_MAX_LEVEL);
+-	if (r)
+-		return r;
++	if (maybe_indirect) {
++		r = mmu_topup_memory_cache(&vcpu->arch.mmu_gfn_array_cache,
++					   PT64_ROOT_MAX_LEVEL);
++		if (r)
++			return r;
++	}
+ 	return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
+ 				      PT64_ROOT_MAX_LEVEL);
+ }
+@@ -4107,7 +4109,7 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 	if (fast_page_fault(vcpu, gpa, error_code))
+ 		return RET_PF_RETRY;
+ 
+-	r = mmu_topup_memory_caches(vcpu);
++	r = mmu_topup_memory_caches(vcpu, false);
+ 	if (r)
+ 		return r;
+ 
+@@ -5147,7 +5149,7 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
+ 
+-	r = mmu_topup_memory_caches(vcpu);
++	r = mmu_topup_memory_caches(vcpu, !vcpu->arch.mmu->direct_map);
+ 	if (r)
+ 		goto out;
+ 	r = mmu_alloc_roots(vcpu);
+@@ -5341,7 +5343,7 @@ static void kvm_mmu_pte_write(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 	 * or not since pte prefetch is skiped if it does not have
+ 	 * enough objects in the cache.
+ 	 */
+-	mmu_topup_memory_caches(vcpu);
++	mmu_topup_memory_caches(vcpu, true);
+ 
+ 	spin_lock(&vcpu->kvm->mmu_lock);
+ 
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 3de32122f601..ac39710d0594 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -818,7 +818,7 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+ 		return RET_PF_EMULATE;
+ 	}
+ 
+-	r = mmu_topup_memory_caches(vcpu);
++	r = mmu_topup_memory_caches(vcpu, true);
+ 	if (r)
+ 		return r;
+ 
+@@ -905,7 +905,7 @@ static void FNAME(invlpg)(struct kvm_vcpu *vcpu, gva_t gva, hpa_t root_hpa)
+ 	 * No need to check return value here, rmap_can_add() can
+ 	 * help us to skip pte prefetch later.
+ 	 */
+-	mmu_topup_memory_caches(vcpu);
++	mmu_topup_memory_caches(vcpu, true);
+ 
+ 	if (!VALID_PAGE(root_hpa)) {
+ 		WARN_ON(1);
 -- 
 2.26.0
 
