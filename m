@@ -2,135 +2,76 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F192C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2519CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 307772081A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B3420823
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:18:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V2CWKQwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgFECPn (ORCPT
+        id S1726027AbgFECSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:15:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:40348 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbgFECPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:15:43 -0400
-IronPort-SDR: 4cZvkpiO5iy+TjrzPkBPFkERG+G1jTgZr6YhfH6TlYH2IfkYVkF7mIVLTYLiEmwMFRjrmkvFS/
- tC4pxQw39ALQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 19:15:42 -0700
-IronPort-SDR: c0ydNC01UE0ed8Wck3XmLlgqeosrsEOvl11BGLEIUWO2YGQ4jc4RaVFDt5iTwsgncgaR5V5Q/T
- hYt4fEvYJZ5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,474,1583222400"; 
-   d="scan'208";a="313068854"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Jun 2020 19:15:39 -0700
-Date:   Thu, 4 Jun 2020 22:05:43 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, kevin.tian@intel.com, shaopeng.he@intel.com,
-        yi.l.liu@intel.com, xin.zeng@intel.com, hang.yuan@intel.com
-Subject: Re: [RFC PATCH v4 02/10] vfio/pci: macros to generate module_init
- and module_exit for vendor modules
-Message-ID: <20200605020543.GF12300@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20200518024202.13996-1-yan.y.zhao@intel.com>
- <20200518024510.14115-1-yan.y.zhao@intel.com>
- <20200604170106.561db9ad.cohuck@redhat.com>
+        Thu, 4 Jun 2020 22:18:34 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:38327 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725497AbgFECSe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:18:34 -0400
+X-UUID: 9d188a1cb38342b5905f6a4dbdc13962-20200605
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=lpy8EnZ6wUWyr0sPLWYCdBeo3+Sir5kSAhPwv1xe/Ls=;
+        b=V2CWKQwrCl90ERhCFVSY8Z3+QDkWvLIs8BfvyGx9L/B4BSJGrNH8j+FB7BZcu0Bk4atIrO02HqOgcdjYwUyi/ezlXKIw6aHfjj+bkkAOdAL82tpCSVG29lOpLYa3A+IXaOR66z33C9lZE1274gJa4DhQfTRHQlytX01cXzkwAzc=;
+X-UUID: 9d188a1cb38342b5905f6a4dbdc13962-20200605
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2091216620; Fri, 05 Jun 2020 10:18:31 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 5 Jun 2020 10:18:30 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 5 Jun 2020 10:18:28 +0800
+Message-ID: <1591323509.7223.2.camel@mtkswgap22>
+Subject: Re: linux-next: build failure after merge of the sound-current tree
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Takashi Iwai <tiwai@suse.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 5 Jun 2020 10:18:29 +0800
+In-Reply-To: <20200605084307.47d31882@canb.auug.org.au>
+References: <20200605084307.47d31882@canb.auug.org.au>
+Content-Type: text/plain; charset="ISO-8859-1"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604170106.561db9ad.cohuck@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-SNTS-SMTP: 6EEC0A4E971896C348324CFA9779EA8B98CCFDC9C9561AEEDC292991E6ED77A62000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 05:01:06PM +0200, Cornelia Huck wrote:
-> On Sun, 17 May 2020 22:45:10 -0400
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
-> 
-> > vendor modules call macro module_vfio_pci_register_vendor_handler to
-> > generate module_init and module_exit.
-> > It is necessary to ensure that vendor modules always call
-> > vfio_pci_register_vendor_driver() on driver loading and
-> > vfio_pci_unregister_vendor_driver on driver unloading,
-> > because
-> > (1) at compiling time, there's only a dependency of vendor modules on
-> > vfio_pci.
-> > (2) at runtime,
-> > - vendor modules add refs of vfio_pci on a successful calling of
-> >   vfio_pci_register_vendor_driver() and deref of vfio_pci on a
-> >   successful calling of vfio_pci_unregister_vendor_driver().
-> > - vfio_pci only adds refs of vendor module on a successful probe of vendor
-> >   driver.
-> >   vfio_pci derefs vendor module when unbinding from a device.
-> > 
-> > So, after vfio_pci is unbound from a device, the vendor module to that
-> > device is free to get unloaded. However, if that vendor module does not
-> > call vfio_pci_unregister_vendor_driver() in its module_exit, vfio_pci may
-> > hold a stale pointer to vendor module.
-> > 
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > ---
-> >  include/linux/vfio.h | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> > 
-> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> > index 3e53deb012b6..f3746608c2d9 100644
-> > --- a/include/linux/vfio.h
-> > +++ b/include/linux/vfio.h
-> > @@ -223,4 +223,31 @@ struct vfio_pci_vendor_driver_ops {
-> >  };
-> >  int __vfio_pci_register_vendor_driver(struct vfio_pci_vendor_driver_ops *ops);
-> >  void vfio_pci_unregister_vendor_driver(struct vfio_device_ops *device_ops);
-> > +
-> > +#define vfio_pci_register_vendor_driver(__name, __probe, __remove,	\
-> > +					__device_ops)			\
-> > +static struct vfio_pci_vendor_driver_ops  __ops ## _node = {		\
-> > +	.owner		= THIS_MODULE,					\
-> > +	.name		= __name,					\
-> > +	.probe		= __probe,					\
-> > +	.remove		= __remove,					\
-> > +	.device_ops	= __device_ops,					\
-> > +};									\
-> > +__vfio_pci_register_vendor_driver(&__ops ## _node)
-> > +
-> > +#define module_vfio_pci_register_vendor_handler(name, probe, remove,	\
-> > +						device_ops)		\
-> > +static int __init device_ops ## _module_init(void)			\
-> > +{									\
-> > +	vfio_pci_register_vendor_driver(name, probe, remove,		\
-> > +					device_ops);			\
-> 
-> What if this function fails (e.g. with -ENOMEM)?
->
-right. I need to return error in that case.
+T24gRnJpLCAyMDIwLTA2LTA1IGF0IDA4OjQzICsxMDAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
+Og0KPiBIaSBhbGwsDQo+IA0KPiBBZnRlciBtZXJnaW5nIHRoZSBzb3VuZC1jdXJyZW50IHRyZWUs
+IHRvZGF5J3MgbGludXgtbmV4dCBidWlsZCAoYXJtDQo+IG11bHRpX3Y3X2RlZmNvbmZpZykgZmFp
+bGVkIGxpa2UgdGhpczoNCj4gDQo+IC9ob21lL3Nmci9uZXh0L25leHQvc291bmQvdXNiL2NhcmQu
+YzogSW4gZnVuY3Rpb24gJ3NuZF91c2JfYXV0b3Jlc3VtZSc6DQo+IC9ob21lL3Nmci9uZXh0L25l
+eHQvc291bmQvdXNiL2NhcmQuYzo4NDE6Mjk6IGVycm9yOiBleHBlY3RlZCAnOycgYmVmb3JlICcp
+JyB0b2tlbg0KPiAgIDg0MSB8ICAgIGF0b21pY19kZWMoJmNoaXAtPmFjdGl2ZSkpDQo+ICAgICAg
+IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF4NCj4gICAgICAgfCAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgOw0KPiANCj4gQ2F1c2VkIGJ5IGNvbW1pdA0KPiANCj4gICAzMzk4ZTVj
+N2IwMzggKCJBTFNBOiB1c2ItYXVkaW86IE1hbmFnZSBhdXRvLXBtIG9mIGFsbCBidW5kbGVkIGlu
+dGVyZmFjZXMiKQ0KPiANCj4gSSBoYXZlIHJldmVydGVkIHRoYXQgY29tbWl0IGZvciB0b2RheS4N
+Cj4gDQoNClNvcnJ5IEkndmUgdGVzdGVkIGl0cyBmdW5jdGlvbiBieSAicGF0Y2ggYmFjayIgdG8g
+b2xkZXIga2VybmVsIHZlcnNpb24NCjQuMTQuDQpBZnRlciBjaGVja2luZyB0aGUgbGF0ZXN0IHBh
+dGNoIGFnYWluLCB0aGVyZSBpcyBpbmRlZWQgYSB0eXBvIGhlcmUuDQoNClRoYW5rcw0KTWFjcGF1
+bCBMaW4NCg==
 
-Thanks for pointing it out!
-
-Yan
-
-> > +	return 0;							\
-> > +};									\
-> > +static void __exit device_ops ## _module_exit(void)			\
-> > +{									\
-> > +	vfio_pci_unregister_vendor_driver(device_ops);			\
-> > +};									\
-> > +module_init(device_ops ## _module_init);				\
-> > +module_exit(device_ops ## _module_exit)
-> > +
-> >  #endif /* VFIO_H */
-> 
