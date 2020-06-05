@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F055EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCEFF2075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BE02075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360169;
-	bh=apDgnAQBd/K2/3jrja5jP8BCQtPiv1jeDJYxqBqjj+E=;
+	s=default; t=1591360176;
+	bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Trd71ykTUsY5+MRSFcjDVvib+lKZ2JhkHGsqJn77AiI5NBGlctjNqC7UFOVF8mb2T
-	 bVs9UUiuzQ9w8/CVs9dgpMB5JLLubKQcf32t0lScsiI6tbgpMYvBkCjUeNc2khE7gd
-	 P1dWXtLDgN5gx9tRu/sl/aMFwULUuHU9aZqe9aa0=
+	b=fozze75LVtTZvqJnbexyGKeCtp8fYVVj/1PyVDsAQju4i+d8Hf5xYVGMPwAMI7Aar
+	 GzoFJFPzWVzSPegjoRUu66BtH+XOAU/hxpgCxi8iwqiMfJCjsCdCviNg99SDdx+Sxy
+	 lH5zJy1yn3znowhwtlBNj4sUGNMLQu6mGH1NhLM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgFEM30 (ORCPT
+        id S1728132AbgFEM3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:29:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbgFEMZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:53 -0400
+        id S1726960AbgFEMZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B273B20835;
-        Fri,  5 Jun 2020 12:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B93B208B6;
+        Fri,  5 Jun 2020 12:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359952;
-        bh=apDgnAQBd/K2/3jrja5jP8BCQtPiv1jeDJYxqBqjj+E=;
+        s=default; t=1591359949;
+        bh=FD53rO+fysM1m9xUdrgMsKK/8LhBRRYiQHHK8cczxf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jisyzQSvJtRQz6WCoTv9TPKO1gBRFDEN04BjIHwqI4fmXFMN8ruWajVNzTKEp6aS2
-         9aq09h/Sg2Dmtj24Xw4CnDnVZgQEBfRDUlkA8JWMBS9Eln7qBZCHluOrkNSVWjBAp9
-         /nnA7X07FcAKMsg4QZ63Kq8pGiT02gP6Xz8DcCis=
+        b=iYbDtDjW8LzTZykMHA1soBmbw1YKEdPwYj3xPQ7yD7RseKHLAZ/nfBZFCpLzX7D1b
+         l9n6WS7ej01U9IIGPuU0NtMMnD1zMAMw9EIWcjzOm8jtXAi2YuWpUS2hHpYZ38gHeh
+         5NoxjOanjrb2fjlGSJQskjkITEi/ZqqDUgrn2ryo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.4 10/14] gfs2: Even more gfs2_find_jhead fixes
-Date:   Fri,  5 Jun 2020 08:25:36 -0400
-Message-Id: <20200605122540.2882539-10-sashal@kernel.org>
+Cc:     Dennis Kadioglu <denk@eclipso.email>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/14] Input: synaptics - add a second working PNP_ID for Lenovo T470s
+Date:   Fri,  5 Jun 2020 08:25:33 -0400
+Message-Id: <20200605122540.2882539-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122540.2882539-1-sashal@kernel.org>
 References: <20200605122540.2882539-1-sashal@kernel.org>
@@ -59,89 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Dennis Kadioglu <denk@eclipso.email>
 
-[ Upstream commit 20be493b787cd581c9fffad7fcd6bfbe6af1050c ]
+[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
 
-Fix several issues in the previous gfs2_find_jhead fix:
-* When updating @blocks_submitted, @block refers to the first block block not
-  submitted yet, not the last block submitted, so fix an off-by-one error.
-* We want to ensure that @blocks_submitted is far enough ahead of @blocks_read
-  to guarantee that there is in-flight I/O.  Otherwise, we'll eventually end up
-  waiting for pages that haven't been submitted, yet.
-* It's much easier to compare the number of blocks added with the number of
-  blocks submitted to limit the maximum bio size.
-* Even with bio chaining, we can keep adding blocks until we reach the maximum
-  bio size, as long as we stop at a page boundary.  This simplifies the logic.
+The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
+instead of the already included PNP ID "LEN006c". However, my touchpad
+seems to work well without any problems using RMI. So this patch adds the
+other PNP ID.
 
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
+Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/lops.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index 8303b44a5068..d2ed4dc4434c 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -504,12 +504,12 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 	unsigned int bsize = sdp->sd_sb.sb_bsize, off;
- 	unsigned int bsize_shift = sdp->sd_sb.sb_bsize_shift;
- 	unsigned int shift = PAGE_SHIFT - bsize_shift;
--	unsigned int max_bio_size = 2 * 1024 * 1024;
-+	unsigned int max_blocks = 2 * 1024 * 1024 >> bsize_shift;
- 	struct gfs2_journal_extent *je;
- 	int sz, ret = 0;
- 	struct bio *bio = NULL;
- 	struct page *page = NULL;
--	bool bio_chained = false, done = false;
-+	bool done = false;
- 	errseq_t since;
- 
- 	memset(head, 0, sizeof(*head));
-@@ -532,10 +532,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 				off = 0;
- 			}
- 
--			if (!bio || (bio_chained && !off) ||
--			    bio->bi_iter.bi_size >= max_bio_size) {
--				/* start new bio */
--			} else {
-+			if (bio && (off || block < blocks_submitted + max_blocks)) {
- 				sector_t sector = dblock << sdp->sd_fsb2bb_shift;
- 
- 				if (bio_end_sector(bio) == sector) {
-@@ -548,19 +545,17 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 						(PAGE_SIZE - off) >> bsize_shift;
- 
- 					bio = gfs2_chain_bio(bio, blocks);
--					bio_chained = true;
- 					goto add_block_to_new_bio;
- 				}
- 			}
- 
- 			if (bio) {
--				blocks_submitted = block + 1;
-+				blocks_submitted = block;
- 				submit_bio(bio);
- 			}
- 
- 			bio = gfs2_log_alloc_bio(sdp, dblock, gfs2_end_log_read);
- 			bio->bi_opf = REQ_OP_READ;
--			bio_chained = false;
- add_block_to_new_bio:
- 			sz = bio_add_page(bio, page, bsize, off);
- 			BUG_ON(sz != bsize);
-@@ -568,7 +563,7 @@ int gfs2_find_jhead(struct gfs2_jdesc *jd, struct gfs2_log_header_host *head,
- 			off += bsize;
- 			if (off == PAGE_SIZE)
- 				page = NULL;
--			if (blocks_submitted < 2 * max_bio_size >> bsize_shift) {
-+			if (blocks_submitted <= blocks_read + max_blocks) {
- 				/* Keep at least one bio in flight */
- 				continue;
- 			}
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 4d2036209b45..758dae8d6500 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -170,6 +170,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
+ 	"LEN006c", /* T470s */
++	"LEN007a", /* T470s */
+ 	"LEN0071", /* T480 */
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
 -- 
 2.25.1
 
