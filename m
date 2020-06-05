@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C871C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE18C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202B42063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7FE2075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366559;
-	bh=KX0wPoZfWnP4R5JzHVE4rOgaZ7FssBpsYKHdzxcphs4=;
+	s=default; t=1591366562;
+	bh=UQfNMTHAc2f9gnIpSWOEPRseL9YyyO0D2SIx74i2LB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q6bMJV7fa9Q9MrHmHJrnhsobIAeAWgzUMAFc4MKORUFoBLd8xFDqdjC854YR6+HZG
-	 OoEv0igi7PZtYtHYs84cgpgjITsAjcjc4fxe0w7D4ysWEjVmZDr74JYjBIfkCp8VAV
-	 C8PbnJf/79tAU6AdKp6WE6rpAh6FrwCPYT0Rv9jQ=
+	b=foRMlAohJf3+ofrD6iDVAyq47lFW9OVkcytCMRpKJ1IPy6aDIKQvzM+R2zqrGZts8
+	 AulfOydIQm1BjUCD4qAzQ5H6Sk5H+K34N3qPBVv7qT4NpOHw/rxTCb4TGSo1cxqenA
+	 81RUOavkWFEhisgKlslRvZDufEh/Z4JdWb0m8chQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgFEOP6 (ORCPT
+        id S1728123AbgFEOQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44714 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgFEOP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:15:56 -0400
+        id S1728103AbgFEOP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:15:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D2A62063A;
-        Fri,  5 Jun 2020 14:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90619206A2;
+        Fri,  5 Jun 2020 14:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366555;
-        bh=KX0wPoZfWnP4R5JzHVE4rOgaZ7FssBpsYKHdzxcphs4=;
+        s=default; t=1591366558;
+        bh=UQfNMTHAc2f9gnIpSWOEPRseL9YyyO0D2SIx74i2LB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ll9UnDK2m6y0e5xmEfBq7R+5Y7dNuaPC770T+XJu8652IOcxLn8GCYhpfdLW8v81K
-         FadxOdNxDdvqMycIKMn1yKlm7kXloluu51Ak0Kvac8Gyh3d9TZqIoRGZRJn6uZWd1b
-         B7Q4Q1vycNA6ChXYWBHD5wHv3NAWIZgJUD6ZyZYI=
+        b=w7G4AkdIdwvzueEBxJsTWBwAsGKukLl49iSVe0NFtEtG+fbBTybOrHHW4V34YG6uy
+         xqGyAznXxfsD8gaef5oYQnZmtDJx8tDsTDlLDq/RTYMDaQqjbuSwLRlwCQf4fkUmNI
+         1NhH9rB5m3AYRj53oSjyOgTx/5wv7U4A1fFzTc2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hu Jiahui <kirin.say@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.7 14/14] airo: Fix read overflows sending packets
-Date:   Fri,  5 Jun 2020 16:15:04 +0200
-Message-Id: <20200605135951.863796958@linuxfoundation.org>
+        stable@vger.kernel.org, Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 02/14] mm: Fix mremap not considering huge pmd devmap
+Date:   Fri,  5 Jun 2020 16:14:52 +0200
+Message-Id: <20200605135951.176220041@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605135951.018731965@linuxfoundation.org>
 References: <20200605135951.018731965@linuxfoundation.org>
@@ -61,62 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Fan Yang <Fan_Yang@sjtu.edu.cn>
 
-commit 11e7a91994c29da96d847f676be023da6a2c1359 upstream.
+commit 5bfea2d9b17f1034a68147a8b03b9789af5700f9 upstream.
 
-The problem is that we always copy a minimum of ETH_ZLEN (60) bytes from
-skb->data even when skb->len is less than ETH_ZLEN so it leads to a read
-overflow.
+The original code in mm/mremap.c checks huge pmd by:
 
-The fix is to pad skb->data to at least ETH_ZLEN bytes.
+		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
 
+However, a DAX mapped nvdimm is mapped as huge page (by default) but it
+is not transparent huge page (_PAGE_PSE | PAGE_DEVMAP).  This commit
+changes the condition to include the case.
+
+This addresses CVE-2020-10757.
+
+Fixes: 5c7fb56e5e3f ("mm, dax: dax-pmd vs thp-pmd vs hugetlbfs-pmd")
 Cc: <stable@vger.kernel.org>
-Reported-by: Hu Jiahui <kirin.say@gmail.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200527184830.GA1164846@mwanda
+Reported-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
+Signed-off-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
+Tested-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
+Tested-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/cisco/airo.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/include/asm/pgtable.h |    1 +
+ mm/mremap.c                    |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -1925,6 +1925,10 @@ static netdev_tx_t mpi_start_xmit(struct
- 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 	npacks = skb_queue_len (&ai->txq);
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -257,6 +257,7 @@ static inline int pmd_large(pmd_t pte)
+ }
  
- 	if (npacks >= MAXTXQ - 1) {
-@@ -2127,6 +2131,10 @@ static netdev_tx_t airo_start_xmit(struc
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
-@@ -2201,6 +2209,10 @@ static netdev_tx_t airo_start_xmit11(str
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
++/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
+ static inline int pmd_trans_huge(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -266,7 +266,7 @@ unsigned long move_page_tables(struct vm
+ 		new_pmd = alloc_new_pmd(vma->vm_mm, vma, new_addr);
+ 		if (!new_pmd)
+ 			break;
+-		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
++		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd) || pmd_devmap(*old_pmd)) {
+ 			if (extent == HPAGE_PMD_SIZE) {
+ 				bool moved;
+ 				/* See comment in move_ptes() */
 
 
