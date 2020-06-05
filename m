@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B68C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFF32070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8CE2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360222;
-	bh=vq0pm2QmcOAOo0d5WTjEy1c/6Vkas/xBIPZLnJEYLJ4=;
+	s=default; t=1591360231;
+	bh=YlJD6YMMhL+i0hLnJJh5R5tyM7+o3K7d6jXSpkPPa7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=phyxc3s3jlz2//+zzpPF40Bx8RDARpiC3rLgYKQ0ZI4q2IJcikhBfVt2z1BI56u9f
-	 ixUxry5rzeWTb4cF+MtRzJOeu5lHwciDmeaMM3sTKVMpPVrNIsZ14SX/MQZZ/8TnzH
-	 R7XSerxYbJ6yc8dlv+nElpxdH1gn54R9JdEdTox4=
+	b=CLpWQJqLAlL/8JcJ66Oxh3Gor92OM3w/3chWfvZTeGFgaXiOeXL5FFbBvDUxPkiwg
+	 L936cFLOv5KNInDLMo2t3E75sehiQVDCuKVz8GeOFYXuA1JeLkL4g60m1Gc7ccsNR/
+	 7bwj6UF5I1/T2M0IoPEU1PDkfB+xDejfS/tTdlHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgFEMaU (ORCPT
+        id S1728072AbgFEMaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57116 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgFEMZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:38 -0400
+        id S1726825AbgFEMZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C8A2075B;
-        Fri,  5 Jun 2020 12:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFC0C206DC;
+        Fri,  5 Jun 2020 12:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359938;
-        bh=vq0pm2QmcOAOo0d5WTjEy1c/6Vkas/xBIPZLnJEYLJ4=;
+        s=default; t=1591359935;
+        bh=YlJD6YMMhL+i0hLnJJh5R5tyM7+o3K7d6jXSpkPPa7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1lzU/l1sM2TLY8/zCLJ6WsiztjVWB1fEJ3Z1jIwBPYIhoQiu7jyuaMHvlJ9IDAfqX
-         8lkATfEBzNOv319tHyzjwi0nhGfT8oNvqeW+WsFBJoaAPMJa1bOWeoUoBKjF9o51vb
-         odDcKKzUp7vvbZC7nKespeUAjkBBpO67tY5iBvpk=
+        b=FrOC/K5UVGtKmdbU1t6USEevian+kaDJCceGQk5O4voOq4hcvKUzRWMXgKyS1wq3T
+         iJZrKJxU7yDcn3OlDSz+Wo/ZElhowdCDJlaD1kD/Jba4KthTJwIqx20IRRB0YIRsLL
+         EtcdnvowPt1liZZA57veMV6pDo1TW4YWXOoA0mqE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 16/17] drivers/net/ibmvnic: Update VNIC protocol version reporting
-Date:   Fri,  5 Jun 2020 08:25:15 -0400
-Message-Id: <20200605122517.2882338-16-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 14/17] net/mlx5e: replace EINVAL in mlx5e_flower_parse_meta()
+Date:   Fri,  5 Jun 2020 08:25:13 -0400
+Message-Id: <20200605122517.2882338-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122517.2882338-1-sashal@kernel.org>
 References: <20200605122517.2882338-1-sashal@kernel.org>
@@ -60,41 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 784688993ebac34dffe44a9f2fabbe126ebfd4db ]
+[ Upstream commit a683012a8e77675a1947cc8f11f97cdc1d5bb769 ]
 
-VNIC protocol version is reported in big-endian format, but it
-is not byteswapped before logging. Fix that, and remove version
-comparison as only one protocol version exists at this time.
+The drivers reports EINVAL to userspace through netlink on invalid meta
+match. This is confusing since EINVAL is usually reserved for malformed
+netlink messages. Replace it by more meaningful codes.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6d65bc64e232 ("net/mlx5e: Add mlx5e_flower_parse_meta support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 3de549c6c693..197dc5b2c090 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -4678,12 +4678,10 @@ static void ibmvnic_handle_crq(union ibmvnic_crq *crq,
- 			dev_err(dev, "Error %ld in VERSION_EXCHG_RSP\n", rc);
- 			break;
- 		}
--		dev_info(dev, "Partner protocol version is %d\n",
--			 crq->version_exchange_rsp.version);
--		if (be16_to_cpu(crq->version_exchange_rsp.version) <
--		    ibmvnic_version)
--			ibmvnic_version =
-+		ibmvnic_version =
- 			    be16_to_cpu(crq->version_exchange_rsp.version);
-+		dev_info(dev, "Partner protocol version is %d\n",
-+			 ibmvnic_version);
- 		send_cap_queries(adapter);
- 		break;
- 	case QUERY_CAPABILITY_RSP:
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+index 4659c205cc01..46ff83408d05 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -1824,7 +1824,7 @@ static int mlx5e_flower_parse_meta(struct net_device *filter_dev,
+ 	flow_rule_match_meta(rule, &match);
+ 	if (match.mask->ingress_ifindex != 0xFFFFFFFF) {
+ 		NL_SET_ERR_MSG_MOD(extack, "Unsupported ingress ifindex mask");
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	ingress_dev = __dev_get_by_index(dev_net(filter_dev),
+@@ -1832,13 +1832,13 @@ static int mlx5e_flower_parse_meta(struct net_device *filter_dev,
+ 	if (!ingress_dev) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+ 				   "Can't find the ingress port to match on");
+-		return -EINVAL;
++		return -ENOENT;
+ 	}
+ 
+ 	if (ingress_dev != filter_dev) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+ 				   "Can't match on the ingress filter port");
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
