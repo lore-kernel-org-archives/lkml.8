@@ -2,59 +2,60 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D206C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA188C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE8C206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A3F206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Dmrrbc+r"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="X9Xd39sM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgFEXAr (ORCPT
+        id S1728636AbgFEXAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 19:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
+        Fri, 5 Jun 2020 19:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728605AbgFEXAi (ORCPT
+        with ESMTP id S1728572AbgFEXAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 19:00:38 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5314FC08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 16:00:38 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id v24so4266396plo.6
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 16:00:38 -0700 (PDT)
+        Fri, 5 Jun 2020 19:00:34 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23756C08C5CA
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 16:00:34 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b7so3661792pju.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 16:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6IOQhnINeRXTMEp588L7TpuSlWAtthgo8pJPrT+dHag=;
-        b=Dmrrbc+recgD8e5AMN/BCTLy5ccUlTK2MC7rwQlOlF86Koa9ZP0RCaEl8gKBI8HCyJ
-         BqY0N+IPu2tx5GuZIXcP5iK50+rIfHhm8cbNSD39W9y1j6PkGWIV6L83L5pkIkZC3tb7
-         RL8cv3Tavf00q4remPzb72/VeCD1MyOHlmXgE=
+        bh=5lbYp8Ah5PsaIVi4QJJDeodrUyhJmdB2XhNayDLcqg4=;
+        b=X9Xd39sMlyaFaDsKVcJ8nmOkzZyJ3sF0+ia3NlMgbiPN/DjckV6mw691tNQX5Eh/fX
+         iFU9jT5lWR8S6FCQkBWpOKGw3n3aIiukA2UCdHfPC1IPwPji8KyaIlFMbkFNEJG0ek+/
+         r2rW2WvDkIaQFixit5DMC0B8gT0N/0roYnqzY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=6IOQhnINeRXTMEp588L7TpuSlWAtthgo8pJPrT+dHag=;
-        b=FEzn58lGIHS/vkXDQme405PfiI4zqvkLIjSX0YgtQ4JE9Mh9iv9lqn2rF+qH6jsjTz
-         DH1wUg83VnHspP5WYGpE1yiIwvx+KxzuRJj2M4NGz6SReV0cnmsK2SQBbRV2hsz8XDXE
-         zy7+oBnD4RGD0GO9sZfCYezw93rQIycnFGSby7ghpeu6hSBpzUSZEzyD/DH5YwroSTbE
-         yETBEETLStocqyjOBeP3ulDU6+htEWaMYjPt/JCbVbP77oaSzNjBSVVXZ/KThy5FSvsx
-         LVDD0x3iByHX+CFcNxh+MsHxvvwII9m+BKU6+bY04rGVJmWzqnjaKZERW02lmEG0GtWL
-         vfZQ==
-X-Gm-Message-State: AOAM533DqGfwjoRLmGAh+AJ2oTlZsn+8k9DQ1QDbl2dv/YC/ikRFIyx7
-        03U/uA1+9nyorlBu/zbnTbvm+A==
-X-Google-Smtp-Source: ABdhPJygqG+jk7Ot91mrwH3N/Bq6YN5N7hRpLKAhEc5LQzFkljxQcq6rvccd49GdwHGxUxMHVl3f9A==
-X-Received: by 2002:a17:90a:8c12:: with SMTP id a18mr3957336pjo.198.1591398036980;
-        Fri, 05 Jun 2020 16:00:36 -0700 (PDT)
+        bh=5lbYp8Ah5PsaIVi4QJJDeodrUyhJmdB2XhNayDLcqg4=;
+        b=nv6Qd3obKjksSz1gcpwfw+XXvGgPIznzJiU4NhoO5Da3h0ISFHQTtHXblv5WyvWnVQ
+         DLS3K/0SrZSaWhbPiMN2c+bousIMuemx9O51iG73QM7A2Fhe1ToZffrVHtF1XzIG/fJr
+         S3Bi0SwdIbmoT55IDzKeMrI4NbaUckCoWWjuYT08Mw1d18qGBkYq7IyBJPpqGa5ksCL6
+         paHkWspyA3AN8hmMlXzVWXNKvaKsD8tlj5HNzh9e2OrotFGIn0wLChtgcNzDSmOvZIOw
+         qC43JCoj+JdDrTog0Lh0qeVTe6E1O7vHYPju4ffAgnlURbeGRd1f3Xftp2Qt0Az/kbkw
+         Avfg==
+X-Gm-Message-State: AOAM533Wzg6m3Lt0n4EuUXwTqxC7UWHtqzwIkBtI7usinMnRevXMztYr
+        dgkXo0KgiZMxc7Tx3hDE1jm/sA==
+X-Google-Smtp-Source: ABdhPJzgVYLQyOZxOcb7SX3uvv2pqjz1hQwvUTTdKJpGNev9cMW+7bhSDkMdJrOjyWI0ETUi+YJusA==
+X-Received: by 2002:a17:90a:d3d7:: with SMTP id d23mr5266002pjw.233.1591398033613;
+        Fri, 05 Jun 2020 16:00:33 -0700 (PDT)
 Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id b140sm568974pfb.119.2020.06.05.16.00.33
+        by smtp.gmail.com with ESMTPSA id b140sm568974pfb.119.2020.06.05.16.00.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 16:00:36 -0700 (PDT)
+        Fri, 05 Jun 2020 16:00:32 -0700 (PDT)
 From:   Scott Branden <scott.branden@broadcom.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -78,9 +79,9 @@ Cc:     Mimi Zohar <zohar@linux.ibm.com>,
         linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org,
         Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v6 8/8] ima: add FIRMWARE_PARTIAL_READ support
-Date:   Fri,  5 Jun 2020 15:59:59 -0700
-Message-Id: <20200605225959.12424-9-scott.branden@broadcom.com>
+Subject: [PATCH v6 7/8] MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
+Date:   Fri,  5 Jun 2020 15:59:58 -0700
+Message-Id: <20200605225959.12424-8-scott.branden@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200605225959.12424-1-scott.branden@broadcom.com>
 References: <20200605225959.12424-1-scott.branden@broadcom.com>
@@ -89,123 +90,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add FIRMWARE_PARTIAL_READ support for integrity
-measurement on partial reads of firmware files.
+Add maintainer entry for new Broadcom VK Driver
 
 Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 ---
- drivers/base/firmware_loader/main.c |  6 +++++-
- fs/exec.c                           |  6 ++++--
- include/linux/fs.h                  |  1 +
- security/integrity/ima/ima_main.c   | 24 +++++++++++++++++++++++-
- 4 files changed, 33 insertions(+), 4 deletions(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 93e7fee42cd4..d0c42194af17 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -483,7 +483,11 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 	/* Already populated data member means we're loading into a buffer */
- 	if (!decompress && fw_priv->data) {
- 		buffer = fw_priv->data;
--		id = READING_FIRMWARE_PREALLOC_BUFFER;
-+		if (fw_priv->opt == KERNEL_PREAD_PART)
-+			id = READING_FIRMWARE_PARTIAL_READ;
-+		else
-+			id = READING_FIRMWARE_PREALLOC_BUFFER;
-+
- 		msize = fw_priv->allocated_size;
- 	}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b045b70e54df..9fbf255fe093 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3656,6 +3656,13 @@ L:	netdev@vger.kernel.org
+ S:	Supported
+ F:	drivers/net/ethernet/broadcom/tg3.*
  
-diff --git a/fs/exec.c b/fs/exec.c
-index e5c241c07b75..3fbc2fee909f 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -968,7 +968,8 @@ int kernel_pread_file(struct file *file, void **buf, loff_t *size,
- 		goto out;
- 	}
- 
--	if (id != READING_FIRMWARE_PREALLOC_BUFFER)
-+	if ((id != READING_FIRMWARE_PARTIAL_READ) &&
-+	    (id != READING_FIRMWARE_PREALLOC_BUFFER))
- 		*buf = vmalloc(alloc_size);
- 	if (!*buf) {
- 		ret = -ENOMEM;
-@@ -1000,7 +1001,8 @@ int kernel_pread_file(struct file *file, void **buf, loff_t *size,
- 
- out_free:
- 	if (ret < 0) {
--		if (id != READING_FIRMWARE_PREALLOC_BUFFER) {
-+		if ((id != READING_FIRMWARE_PARTIAL_READ) &&
-+		    (id != READING_FIRMWARE_PREALLOC_BUFFER)) {
- 			vfree(*buf);
- 			*buf = NULL;
- 		}
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 76d463e4a628..3affcaa7c7b2 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3020,6 +3020,7 @@ extern int do_pipe_flags(int *, int);
- #define __kernel_read_file_id(id) \
- 	id(UNKNOWN, unknown)		\
- 	id(FIRMWARE, firmware)		\
-+	id(FIRMWARE_PARTIAL_READ, firmware)	\
- 	id(FIRMWARE_PREALLOC_BUFFER, firmware)	\
- 	id(FIRMWARE_EFI_EMBEDDED, firmware)	\
- 	id(MODULE, kernel-module)		\
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 800fb3bba418..982debd59cc4 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -609,6 +609,9 @@ void ima_post_path_mknod(struct dentry *dentry)
-  */
- int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- {
-+	enum ima_hooks func;
-+	u32 secid;
++BROADCOM VK DRIVER
++M:	Scott Branden <scott.branden@broadcom.com>
++L:	bcm-kernel-feedback-list@broadcom.com
++S:	Supported
++F:	drivers/misc/bcm-vk/
++F:	include/uapi/linux/misc/bcm_vk.h
 +
- 	/*
- 	 * READING_FIRMWARE_PREALLOC_BUFFER
- 	 *
-@@ -617,11 +620,27 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- 	 * of IMA's signature verification any more than when using two
- 	 * buffers?
- 	 */
--	return 0;
-+	if (read_id != READING_FIRMWARE_PARTIAL_READ)
-+		return 0;
-+
-+	if (!file) {
-+		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
-+		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
-+			pr_err("Prevent firmware loading_store.\n");
-+			return -EACCES;	/* INTEGRITY_UNKNOWN */
-+		}
-+		return 0;
-+	}
-+
-+	func = read_idmap[read_id] ?: FILE_CHECK;
-+	security_task_getsecid(current, &secid);
-+	return process_measurement(file, current_cred(), secid, NULL,
-+				   0, MAY_READ, func);
- }
- 
- const int read_idmap[READING_MAX_ID] = {
- 	[READING_FIRMWARE] = FIRMWARE_CHECK,
-+	[READING_FIRMWARE_PARTIAL_READ] = FIRMWARE_CHECK,
- 	[READING_FIRMWARE_PREALLOC_BUFFER] = FIRMWARE_CHECK,
- 	[READING_MODULE] = MODULE_CHECK,
- 	[READING_KEXEC_IMAGE] = KEXEC_KERNEL_CHECK,
-@@ -648,6 +667,9 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 	enum ima_hooks func;
- 	u32 secid;
- 
-+	if (!file && read_id == READING_FIRMWARE_PARTIAL_READ)
-+		return 0;
-+
- 	if (!file && read_id == READING_FIRMWARE) {
- 		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
- 		    (ima_appraise & IMA_APPRAISE_ENFORCE)) {
+ BROCADE BFA FC SCSI DRIVER
+ M:	Anil Gurumurthy <anil.gurumurthy@qlogic.com>
+ M:	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
 -- 
 2.17.1
 
