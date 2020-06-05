@@ -2,87 +2,205 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D171C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F88C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E74D4206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C6F207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="etJv22Ui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgFEP75 (ORCPT
+        id S1727041AbgFEQAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:59:57 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:41472 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgFEP74 (ORCPT
+        Fri, 5 Jun 2020 12:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbgFEQAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:59:56 -0400
-Date:   Fri, 5 Jun 2020 11:59:54 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
-        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] sh: remove sh5 support
-Message-ID: <20200605155954.GV1079@brightrain.aerifal.cx>
-References: <20200528054600.GA29717@infradead.org>
- <20200528161416.GY1079@brightrain.aerifal.cx>
- <20200529143059.GA25475@infradead.org>
- <20200529175335.GK1079@brightrain.aerifal.cx>
- <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
- <20200601181259.GV1079@brightrain.aerifal.cx>
- <20200602013332.GY1079@brightrain.aerifal.cx>
- <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
- <20200605154343.GU1079@brightrain.aerifal.cx>
- <c4900bf6-99b3-c9b9-4fd0-7f491bd46de6@physik.fu-berlin.de>
+        Fri, 5 Jun 2020 12:00:19 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89248C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 09:00:19 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bg4so3796748plb.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 09:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/0tj7ZRQcqs9EAMR7yZ0YohYSJEyPMdy0UQUKUwvaMk=;
+        b=etJv22UiizXcOPPR3QeA8jUp00pOEYSdiCq8cCt5HTmL1jQ4/toR6XXIwLOa79kL3X
+         ICYfwWpUBHiMGKWBUKSWBezDpOO4mZgjtt+2LNCWQVvfWZzVGgRi7Rqn16a04nTuBkAI
+         o/xXMJAQurA2tye7S7Hf4piSybDvjCjQxO2l4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/0tj7ZRQcqs9EAMR7yZ0YohYSJEyPMdy0UQUKUwvaMk=;
+        b=jrVVmb20kTAtwMwB82lXVjZwBzAvqEpAvLptFxwgpxvrWfBRlB+XY6LclBJz4Em/Rj
+         kxN9JEfUalSFzt8RkxeZOX3PXJNN+zsHdnPcJFqWClb26pCz3TLCj2OfDkHDeohVzVxh
+         b2zHbgfzTTB5Jse9G/N2hFFRKEYAxiZDAIy4fH00rEJ7iNSpXjnMwdexoxgSoyRGU1jO
+         n7NfEFD9KNDVuk4EYHiQhbM+q+Feb//3ORK+Lw8RFacsHCRBYa58srGBsJive1pXaLf6
+         C2dkknfR5OvqkueQdmRhCTw17Uhmm/ZlldlvEnS9sbtyadwLtkJ4AsV5VlBXLsQ/ohZb
+         TuyQ==
+X-Gm-Message-State: AOAM533nsWAWTZR6mSIuNnjJRktE17ztUtCG1bmXzER47QkqbUnY7W5O
+        3ZJIg63s0XuhKujU6aFMhXeR0A==
+X-Google-Smtp-Source: ABdhPJw47pfX2wU4KqgnZEv6dlZXrppX08ucCGrHpYKRci0esfbebI7oZ/Y+rv79S512gq1xF0XpNg==
+X-Received: by 2002:a17:90a:a405:: with SMTP id y5mr3778701pjp.15.1591372818957;
+        Fri, 05 Jun 2020 09:00:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h15sm56993pgl.12.2020.06.05.09.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 09:00:18 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] exec: Move S_ISREG() check earlier
+Date:   Fri,  5 Jun 2020 09:00:12 -0700
+Message-Id: <20200605160013.3954297-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200605160013.3954297-1-keescook@chromium.org>
+References: <20200605160013.3954297-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4900bf6-99b3-c9b9-4fd0-7f491bd46de6@physik.fu-berlin.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 05:47:34PM +0200, John Paul Adrian Glaubitz wrote:
-> On 6/5/20 5:43 PM, Rich Felker wrote:
-> >> Can you include the patch as well?
-> > 
-> > This one is outside arch/sh and I'm not sure it's permissible to go up
-> > through my tree. I was also under the impression that only part 1 was
-> > needed to fix the immediate problem on sh and tha part 2 was for
-> > completeness and to make sure the same doesn't happen on other archs
-> > in the future, but maybe my understanding here is incorrect.
-> 
-> Ah, sorry, I missed that. You're right, it should probably go through
-> someone else's tree then.
+The execve(2)/uselib(2) syscalls have always rejected non-regular
+files. Recently, it was noticed that a deadlock was introduced when trying
+to execute pipes, as the S_ISREG() test was happening too late. This was
+fixed in commit 73601ea5b7b1 ("fs/open.c: allow opening only regular files
+during execve()"), but it was added after inode_permission() had already
+run, which meant LSMs could see bogus attempts to execute non-regular
+files.
 
-Do you know if it's needed to un-break sh4? If so we should push to
-get whoever has jurisdiction over it to include it; otherwise I'm
-indifferent.
+Move the test into the other inode type checks (which already look
+for other pathological conditions[1]). Since there is no need to use
+FMODE_EXEC while we still have access to "acc_mode", also switch the
+test to MAY_EXEC.
 
-> >> And would it be okay to send a PR to Linus
-> >> after that?
-> > 
-> > Sure, will do right away once we resolve what to do with the above,
-> > and provided you don't have anything else you want me to evaluate for
-> > inclusion.
-> 
-> Since we haven't agreed on the __get_user_64() patch yet, I would be
-> in favor of getting the changes pulled in that have already been
-> reviewed and acknowledged. I rather don't want the other contributors
-> to wait any longer. Arnd in particular has done a tremendous job to
-> untangle all the SH-5 code and I think we should finally get this
-> in :).
+Also include a comment with the redundant S_ISREG() checks at the end of
+execve(2)/uselib(2) to note that they are present to avoid any mistakes.
 
-Absolutely agreed.
+My notes on the call path, and related arguments, checks, etc:
 
-Rich
+do_open_execat()
+    struct open_flags open_exec_flags = {
+        .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+        .acc_mode = MAY_EXEC,
+        ...
+    do_filp_open(dfd, filename, open_flags)
+        path_openat(nameidata, open_flags, flags)
+            file = alloc_empty_file(open_flags, current_cred());
+            do_open(nameidata, file, open_flags)
+                may_open(path, acc_mode, open_flag)
+		    /* new location of MAY_EXEC vs S_ISREG() test */
+                    inode_permission(inode, MAY_OPEN | acc_mode)
+                        security_inode_permission(inode, acc_mode)
+                vfs_open(path, file)
+                    do_dentry_open(file, path->dentry->d_inode, open)
+                        /* old location of FMODE_EXEC vs S_ISREG() test */
+                        security_file_open(f)
+                        open()
+
+[1] https://lore.kernel.org/lkml/202006041910.9EF0C602@keescook/
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/exec.c  | 14 ++++++++++++--
+ fs/namei.c |  6 ++++--
+ fs/open.c  |  6 ------
+ 3 files changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 30735ce1dc0e..2b708629dcd6 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -139,8 +139,13 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
+ 	if (IS_ERR(file))
+ 		goto out;
+ 
++	/*
++	 * may_open() has already checked for this, so it should be
++	 * impossible to trip now. But we need to be extra cautious
++	 * and check again at the very end too.
++	 */
+ 	error = -EACCES;
+-	if (!S_ISREG(file_inode(file)->i_mode))
++	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+ 		goto exit;
+ 
+ 	if (path_noexec(&file->f_path))
+@@ -860,8 +865,13 @@ static struct file *do_open_execat(int fd, struct filename *name, int flags)
+ 	if (IS_ERR(file))
+ 		goto out;
+ 
++	/*
++	 * may_open() has already checked for this, so it should be
++	 * impossible to trip now. But we need to be extra cautious
++	 * and check again at the very end too.
++	 */
+ 	err = -EACCES;
+-	if (!S_ISREG(file_inode(file)->i_mode))
++	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)))
+ 		goto exit;
+ 
+ 	if (path_noexec(&file->f_path))
+diff --git a/fs/namei.c b/fs/namei.c
+index a320371899cf..0a759b68d66e 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2835,16 +2835,18 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+ 	case S_IFLNK:
+ 		return -ELOOP;
+ 	case S_IFDIR:
+-		if (acc_mode & MAY_WRITE)
++		if (acc_mode & (MAY_WRITE | MAY_EXEC))
+ 			return -EISDIR;
+ 		break;
+ 	case S_IFBLK:
+ 	case S_IFCHR:
+ 		if (!may_open_dev(path))
+ 			return -EACCES;
+-		/*FALLTHRU*/
++		fallthrough;
+ 	case S_IFIFO:
+ 	case S_IFSOCK:
++		if (acc_mode & MAY_EXEC)
++			return -EACCES;
+ 		flag &= ~O_TRUNC;
+ 		break;
+ 	}
+diff --git a/fs/open.c b/fs/open.c
+index 719b320ede52..bb16e4e3cd57 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -753,12 +753,6 @@ static int do_dentry_open(struct file *f,
+ 		return 0;
+ 	}
+ 
+-	/* Any file opened for execve()/uselib() has to be a regular file. */
+-	if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) {
+-		error = -EACCES;
+-		goto cleanup_file;
+-	}
+-
+ 	if (f->f_mode & FMODE_WRITE && !special_file(inode->i_mode)) {
+ 		error = get_write_access(inode);
+ 		if (unlikely(error))
+-- 
+2.25.1
+
