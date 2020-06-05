@@ -2,52 +2,53 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7134EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0D020835
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2607F20835
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366635;
-	bh=mJ93CnXc9YSI6aOXXURM2kusgG8AVDTiDJs40asWSXg=;
+	s=default; t=1591366638;
+	bh=3Vm5TjOSQhMNc3SNvzYPdmBcWA0iDVpz8xDLk1V4c00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0StrvOn7tzBkt9nnQKpdqU7Qe21r1PwCisQyEO0tU+AdF+71vSxM8VeC9tWmIRZLl
-	 shKQqpXMhZAQmiK5iuNavQJM9N+VndUX9kT4JCCg0uiRvYLp6ePn32+21dhEb9fpQx
-	 zj+akc500ppYx/AT98D/V0LlK1CxtbTF43S9sI5A=
+	b=ZEg+QlS3+zDVUNbHikOCLjzneAnA+hY/qPap88H1fOH92pVtAFbX4x+yiwde79YAA
+	 wUpz20P4U3AQheM2gDLhqIUT2mgIeOVNjrMp4zPg+fM/HG7qwrREEOsuEgtZUGSwBS
+	 v91rdWXxvzhawW8eQNuKtyvR+chOm0KN/jxDffgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgFEORN (ORCPT
+        id S1728433AbgFEORR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46432 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:17:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgFEORG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:06 -0400
+        id S1728414AbgFEORN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C34B20835;
-        Fri,  5 Jun 2020 14:17:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A3A206A2;
+        Fri,  5 Jun 2020 14:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366626;
-        bh=mJ93CnXc9YSI6aOXXURM2kusgG8AVDTiDJs40asWSXg=;
+        s=default; t=1591366632;
+        bh=3Vm5TjOSQhMNc3SNvzYPdmBcWA0iDVpz8xDLk1V4c00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AaJQDVw66AbIWC9/dDUQRdBCkrn5Oc8I99pDHxBDhoxRgx1uDDgHFC0C+bzz0zOIU
-         +joXAF1G1D8+Bf5Df76qF2NU1R8CcAwLc4+jL0s/YY7wVqtLQ7tldJS/PbgA/TPGRj
-         xuVEvMH6PJSI5wA6TJitfG8ZEG4HVEbyTB5mARUI=
+        b=iMnVBKcqJXPHuJmy984J+Da/V0ZHO9N98UI6xPtop2DZvyoBAxyOXAMF1KEt92P8G
+         puEun4euMBXqsNHg9ibUu6bA1RtnaeB3vRjlkkC3+7rfCjjI/tEXx7JnjQ8xnpWCBY
+         bPqeSUMWjs42AA24t7bghgTWsUk/Ge38Q+ZOuWO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 29/43] net: Fix return value about devm_platform_ioremap_resource()
-Date:   Fri,  5 Jun 2020 16:14:59 +0200
-Message-Id: <20200605140154.050212353@linuxfoundation.org>
+        stable@vger.kernel.org, Fan Yang <Fan_Yang@sjtu.edu.cn>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 31/43] mm: Fix mremap not considering huge pmd devmap
+Date:   Fri,  5 Jun 2020 16:15:01 +0200
+Message-Id: <20200605140154.154168800@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,81 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Fan Yang <Fan_Yang@sjtu.edu.cn>
 
-[ Upstream commit ef24d6c3d6965158dfe23ae961d87e9a343e18a2 ]
+commit 5bfea2d9b17f1034a68147a8b03b9789af5700f9 upstream.
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+The original code in mm/mremap.c checks huge pmd by:
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
+
+However, a DAX mapped nvdimm is mapped as huge page (by default) but it
+is not transparent huge page (_PAGE_PSE | PAGE_DEVMAP).  This commit
+changes the condition to include the case.
+
+This addresses CVE-2020-10757.
+
+Fixes: 5c7fb56e5e3f ("mm, dax: dax-pmd vs thp-pmd vs hugetlbfs-pmd")
+Cc: <stable@vger.kernel.org>
+Reported-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
+Signed-off-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
+Tested-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
+Tested-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/can/ifi_canfd/ifi_canfd.c     | 5 ++++-
- drivers/net/can/sun4i_can.c               | 2 +-
- drivers/net/dsa/b53/b53_srab.c            | 2 +-
- drivers/net/ethernet/marvell/pxa168_eth.c | 2 +-
- 4 files changed, 7 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/pgtable.h |    1 +
+ mm/mremap.c                    |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/ifi_canfd/ifi_canfd.c b/drivers/net/can/ifi_canfd/ifi_canfd.c
-index 04d59bede5ea..74503cacf594 100644
---- a/drivers/net/can/ifi_canfd/ifi_canfd.c
-+++ b/drivers/net/can/ifi_canfd/ifi_canfd.c
-@@ -947,8 +947,11 @@ static int ifi_canfd_plat_probe(struct platform_device *pdev)
- 	u32 id, rev;
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -256,6 +256,7 @@ static inline int pmd_large(pmd_t pte)
+ }
  
- 	addr = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+
- 	irq = platform_get_irq(pdev, 0);
--	if (IS_ERR(addr) || irq < 0)
-+	if (irq < 0)
- 		return -EINVAL;
- 
- 	id = readl(addr + IFI_CANFD_IP_ID);
-diff --git a/drivers/net/can/sun4i_can.c b/drivers/net/can/sun4i_can.c
-index e3ba8ab0cbf4..e2c6cf4b2228 100644
---- a/drivers/net/can/sun4i_can.c
-+++ b/drivers/net/can/sun4i_can.c
-@@ -792,7 +792,7 @@ static int sun4ican_probe(struct platform_device *pdev)
- 
- 	addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(addr)) {
--		err = -EBUSY;
-+		err = PTR_ERR(addr);
- 		goto exit;
- 	}
- 
-diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
-index 0a1be5259be0..38cd8285ac67 100644
---- a/drivers/net/dsa/b53/b53_srab.c
-+++ b/drivers/net/dsa/b53/b53_srab.c
-@@ -609,7 +609,7 @@ static int b53_srab_probe(struct platform_device *pdev)
- 
- 	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
--		return -ENOMEM;
-+		return PTR_ERR(priv->regs);
- 
- 	dev = b53_switch_alloc(&pdev->dev, &b53_srab_ops, priv);
- 	if (!dev)
-diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
-index 7a0d785b826c..17243bb5ba91 100644
---- a/drivers/net/ethernet/marvell/pxa168_eth.c
-+++ b/drivers/net/ethernet/marvell/pxa168_eth.c
-@@ -1418,7 +1418,7 @@ static int pxa168_eth_probe(struct platform_device *pdev)
- 
- 	pep->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pep->base)) {
--		err = -ENOMEM;
-+		err = PTR_ERR(pep->base);
- 		goto err_netdev;
- 	}
- 
--- 
-2.25.1
-
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
++/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
+ static inline int pmd_trans_huge(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -266,7 +266,7 @@ unsigned long move_page_tables(struct vm
+ 		new_pmd = alloc_new_pmd(vma->vm_mm, vma, new_addr);
+ 		if (!new_pmd)
+ 			break;
+-		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
++		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd) || pmd_devmap(*old_pmd)) {
+ 			if (extent == HPAGE_PMD_SIZE) {
+ 				bool moved;
+ 				/* See comment in move_ptes() */
 
 
