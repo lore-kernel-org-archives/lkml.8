@@ -2,53 +2,55 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54043C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD4720810
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E5D120663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366907;
-	bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
+	s=default; t=1591366911;
+	bh=rSTR42un/69C4CBDXP85bWdAk5NOIeQGZfjTBC2L2NQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBD/iOv37X7W2zC2/UsJd+zqyhvF/RJ8SV8PcDM/5+30bdsZRfARvU6JBelVAXX6c
-	 9OIT1t6CkNLdJvJE01t84Pk1/bQRPnYsv8Lzf23+qrbVH6SZSTGCXRjGJIOR4rC0Ba
-	 fO95Jp4ZlT4SEpWjwWq2uSCBEIwi0fZuOoeMb0lY=
+	b=kaFoxyTBphgbCBXTsEWce9CJa9DDUWl16LPZESsNw1q7EFyir4rKnWwdUn4dQrljJ
+	 A4+EcQDW3fUd+MRRXsEt97+jr0g1dxS9n0uonzhRCQ/3TJLk3KIawJSCMxkQGn0wx8
+	 uGyU6abLLti+BAiGZ0Ft9NuaqVNkH6KQ21jrNG7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgFEOVp (ORCPT
+        id S1729064AbgFEOVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51190 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:21:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbgFEOUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:20:04 -0400
+        id S1728893AbgFEOT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54B28208B6;
-        Fri,  5 Jun 2020 14:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85703208A9;
+        Fri,  5 Jun 2020 14:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366803;
-        bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
+        s=default; t=1591366797;
+        bh=rSTR42un/69C4CBDXP85bWdAk5NOIeQGZfjTBC2L2NQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hrn1HZs13g7Rkm9EG30fVAYmXeLIZtJE7iQc/Cvd9ki36QEvv+wq9TvUoe+ylFjjQ
-         fo+srkZRnqhs7feS/766pq8gWAHWwpYW1b+itwApWS+rYYANbiaD7xEFQtDCFJ9xk6
-         SyQ4fPATTA9M+P+g/BDxF72TbAR8TBXyrXwne86Y=
+        b=Nss/vroI7AX8EU612uYWbK59ugHn/Yq8MRHiNRaswkgRG5c+0v0AjhDcuWTjjng+Y
+         ZWE1dQ/i8mrziXB3HQsm91plLTaUM1ChKTqRGrUW0xP/MXnif40mYiCYQeRqVzEhgP
+         u8IcR9vCB4bevtkPp4l6VY5o74kFsu5OEYCqpsys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/28] s390/mm: fix set_huge_pte_at() for empty ptes
-Date:   Fri,  5 Jun 2020 16:15:26 +0200
-Message-Id: <20200605140253.810716415@linuxfoundation.org>
+Subject: [PATCH 4.19 21/28] x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
+Date:   Fri,  5 Jun 2020 16:15:23 +0200
+Message-Id: <20200605140253.634271247@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -61,56 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit ac8372f3b4e41015549b331a4f350224661e7fc6 ]
+[ Upstream commit d7110a26e5905ec2fe3fc88bc6a538901accb72b ]
 
-On s390, the layout of normal and large ptes (i.e. pmds/puds) differs.
-Therefore, set_huge_pte_at() does a conversion from a normal pte to
-the corresponding large pmd/pud. So, when converting an empty pte, this
-should result in an empty pmd/pud, which would return true for
-pmd/pud_none().
+When building with Clang + -Wtautological-compare and
+CONFIG_CPUMASK_OFFSTACK unset:
 
-However, after conversion we also mark the pmd/pud as large, and
-therefore present. For empty ptes, this will result in an empty pmd/pud
-that is also marked as large, and pmd/pud_none() would not return true.
+  arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
+  equal to a null pointer is always false [-Wtautological-pointer-compare]
+          if (downed_cpus == NULL &&
+              ^~~~~~~~~~~    ~~~~
+  arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
+  equal to a null pointer is always false [-Wtautological-pointer-compare]
+          if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
+              ^~~~~~~~~~~    ~~~~
+  2 warnings generated.
 
-There is currently no issue with this behaviour, as set_huge_pte_at()
-does not seem to be called for empty ptes. It would be valid though, so
-let's fix this by not marking empty ptes as large in set_huge_pte_at().
+Commit
 
-This was found by testing a patch from from Anshuman Khandual, which is
-currently discussed on LKML ("mm/debug: Add more arch page table helper
-tests").
+  f7e30f01a9e2 ("cpumask: Add helper cpumask_available()")
 
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+added cpumask_available() to fix warnings of this nature. Use that here
+so that clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's
+value.
+
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/982
+Link: https://lkml.kernel.org/r/20200408205323.44490-1-natechancellor@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/mm/hugetlbpage.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/mm/mmio-mod.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index 5674710a4841..7dfae86afa47 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -159,10 +159,13 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
- 		rste &= ~_SEGMENT_ENTRY_NOEXEC;
+diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
+index 2c1ecf4763c4..e32b003e064a 100644
+--- a/arch/x86/mm/mmio-mod.c
++++ b/arch/x86/mm/mmio-mod.c
+@@ -384,7 +384,7 @@ static void enter_uniprocessor(void)
+ 	int cpu;
+ 	int err;
  
- 	/* Set correct table type for 2G hugepages */
--	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3)
--		rste |= _REGION_ENTRY_TYPE_R3 | _REGION3_ENTRY_LARGE;
--	else
-+	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
-+		if (likely(pte_present(pte)))
-+			rste |= _REGION3_ENTRY_LARGE;
-+		rste |= _REGION_ENTRY_TYPE_R3;
-+	} else if (likely(pte_present(pte)))
- 		rste |= _SEGMENT_ENTRY_LARGE;
-+
- 	clear_huge_pte_skeys(mm, rste);
- 	pte_val(*ptep) = rste;
- }
+-	if (downed_cpus == NULL &&
++	if (!cpumask_available(downed_cpus) &&
+ 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
+ 		pr_notice("Failed to allocate mask\n");
+ 		goto out;
+@@ -414,7 +414,7 @@ static void leave_uniprocessor(void)
+ 	int cpu;
+ 	int err;
+ 
+-	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
++	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
+ 		return;
+ 	pr_notice("Re-enabling CPUs...\n");
+ 	for_each_cpu(cpu, downed_cpus) {
 -- 
 2.25.1
 
