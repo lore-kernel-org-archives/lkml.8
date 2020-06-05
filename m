@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC49C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9C1206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2B320663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366845;
-	bh=yoGrA38esDLQ8SgY4VYMWUjj6qYv8c6hWJsXS2aZk1c=;
+	s=default; t=1591366848;
+	bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMX53WrMOtZZr3sZP3c0/eM/bNySCekpC4M7hpbSKtdV8sJyTcXj1Ko60QBoIjBf7
-	 wl5jtjiabBb1hsCbAe5x9RtHBxT3c14xgNVMqQezu+b62fLz6McnoZKZOVJpfNKrmj
-	 rGZ2zRztnhYtVH7CpeD2W1r+7L3TzNYBKv3OGi38=
+	b=TfV1ajo7S4UXB1b77WNHudXy6NHyntNNvIrIotxbIRWwKbIgypqD6fkjjXO8WG/Yi
+	 wIc3Pef2sKn7m8MXi0cu12XyABJTfHIt1GqeYQ+RBfYEbOjo8xYXAnlCHFvhBs5L/Z
+	 8YZPl4NogBRrpuE6UV7Id57YsGnfUZ4/fgXMccyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgFEOUo (ORCPT
+        id S1728993AbgFEOUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51594 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728945AbgFEOUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:20:20 -0400
+        id S1728485AbgFEOUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:20:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 450BC2074B;
-        Fri,  5 Jun 2020 14:20:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0D76206DC;
+        Fri,  5 Jun 2020 14:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366819;
-        bh=yoGrA38esDLQ8SgY4VYMWUjj6qYv8c6hWJsXS2aZk1c=;
+        s=default; t=1591366824;
+        bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vvo/t3x941KC91a9Awe2KDRfWYx2fyIzERTY/UeItSzRbD4KAd3/ku9ZGOUHGSCgI
-         qfmo/iHQZ4DqUpxJWSinqxbV4NO3KFedCUWL5JEzYCBfk+Z47k97gDHfjVa81Pfjmu
-         DaiglefbfDX6Z5VmvKo8Ot1KGHVrWcrZIT/0VKh0=
+        b=q16biRXaDee45UnkZEJkT7dHeg449l9dji/lH5mYywMrR56HsGsu7af8ldJYEaoZw
+         /ADfG+qLodWFRMguP5wli6naqw2e1i9nJLSCv3Hg5MEQGgXbbRSq1ayIH8KfYQfyBn
+         jj7D7ZN36/l9BHLCH2JJ0H3C+I0omFRElD+vEJfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.19 05/28] HID: i2c-hid: add Schneider SCL142ALM to descriptor override
-Date:   Fri,  5 Jun 2020 16:15:07 +0200
-Message-Id: <20200605140252.639944692@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
+        Daniel Axtens <dja@axtens.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Akash Goel <akash.goel@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 07/28] kernel/relay.c: handle alloc_percpu returning NULL in relay_open
+Date:   Fri,  5 Jun 2020 16:15:09 +0200
+Message-Id: <20200605140252.766450436@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -59,38 +71,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Sax <jsbc@gmx.de>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 6507ef10660efdfee93f0f3b9fac24b5e4d83e56 upstream.
+commit 54e200ab40fc14c863bcc80a51e20b7906608fce upstream.
 
-This device uses the SIPODEV SP1064 touchpad, which does not
-supply descriptors, so it has to be added to the override list.
+alloc_percpu() may return NULL, which means chan->buf may be set to NULL.
+In that case, when we do *per_cpu_ptr(chan->buf, ...), we dereference an
+invalid pointer:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Julian Sax <jsbc@gmx.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+  BUG: Unable to handle kernel data access at 0x7dae0000
+  Faulting instruction address: 0xc0000000003f3fec
+  ...
+  NIP relay_open+0x29c/0x600
+  LR relay_open+0x270/0x600
+  Call Trace:
+     relay_open+0x264/0x600 (unreliable)
+     __blk_trace_setup+0x254/0x600
+     blk_trace_setup+0x68/0xa0
+     sg_ioctl+0x7bc/0x2e80
+     do_vfs_ioctl+0x13c/0x1300
+     ksys_ioctl+0x94/0x130
+     sys_ioctl+0x48/0xb0
+     system_call+0x5c/0x68
+
+Check if alloc_percpu returns NULL.
+
+This was found by syzkaller both on x86 and powerpc, and the reproducer
+it found on powerpc is capable of hitting the issue as an unprivileged
+user.
+
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: Akash Goel <akash.goel@intel.com>
+Cc: Andrew Donnellan <ajd@linux.ibm.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Salvatore Bonaccorso <carnil@debian.org>
+Cc: <stable@vger.kernel.org>	[4.10+]
+Link: http://lkml.kernel.org/r/20191219121256.26480-1-dja@axtens.net
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/relay.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -381,6 +381,14 @@ static const struct dmi_system_id i2c_hi
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Schneider SCL142ALM",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "SCHNEIDER"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SCL142ALM"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{ }	/* Terminate list */
- };
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -581,6 +581,11 @@ struct rchan *relay_open(const char *bas
+ 		return NULL;
  
+ 	chan->buf = alloc_percpu(struct rchan_buf *);
++	if (!chan->buf) {
++		kfree(chan);
++		return NULL;
++	}
++
+ 	chan->version = RELAYFS_CHANNEL_VERSION;
+ 	chan->n_subbufs = n_subbufs;
+ 	chan->subbuf_size = subbuf_size;
 
 
