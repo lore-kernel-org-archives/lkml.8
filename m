@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5390BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA298C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3478320663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B46C0206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367103;
-	bh=0S8H3cUhAiZf8diHXmSrml5+cVPZLK2++DqPF6FkBPw=;
+	s=default; t=1591367106;
+	bh=2+TLxM3G8QfbMlQcupi4uaoiUaXyEpZ8gudy8Moj2iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Sm9+pftmPXHy4KNZCRuhnNPh33WzVQ5/UoyeX1shtwMGrCr3iYV9eOaMGxOQ5h39
-	 cZbRAB8yhoyqpBpvCXEHO8HVJvh/ju7qn+flYixZsDGTWYfRhK3sK3XDJt8L0HagcG
-	 wJon1G9NNyZiSANB9RVqV1vQKUi0mGzOK86a/4uU=
+	b=o7M34Bdt/VhryGLZOxtUPYBi/8GJMLvyofMxtXzzEci8HMRQwfiy6UgMaV7g1aFoL
+	 Re9mMFc7tOqcTR/sRwMlXQH2gpNvX1nDqW/drg522otnXG1saOC4Q1mb2sh0P9J/Eo
+	 ZnC+8k3xy9EuGDUOlQ6aH13XzfhnrHnQaxJSYUy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgFEOQ6 (ORCPT
+        id S1729019AbgFEOZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:16:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45950 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgFEOQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:46 -0400
+        id S1728347AbgFEOQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5EF208A7;
-        Fri,  5 Jun 2020 14:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8415B20835;
+        Fri,  5 Jun 2020 14:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366605;
-        bh=0S8H3cUhAiZf8diHXmSrml5+cVPZLK2++DqPF6FkBPw=;
+        s=default; t=1591366617;
+        bh=2+TLxM3G8QfbMlQcupi4uaoiUaXyEpZ8gudy8Moj2iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KM+E6zI7JSL9C7NtKkJimAcNOb7zcpkJCqKe7y2huEs5FrX5KQp2QLtgW444yUtA8
-         t7jVQNOQep+ht2SSahPfpTH6gIg3UQYjNMiUzxfzmglcpbiD4Ak4w8KD31G9tWqaiX
-         0WZpXvXVGubMy2cgV5LbSXky5NSAdbM12Iz+xQUI=
+        b=yascjMMdbbacvJBj5T8hgyukCA4FLzwSe6Yj+ediCA/ezyEDSzZBZcGEdfeUn+5KI
+         CbhHlL5qP9ZtG43h9cLkjhjATDJTOdI96flxRw98Qka+j5zRf7hTbQc3JQDemW3yAK
+         lew0uykjBAWHeG4nJTjr4Kahb0gs6oiLMzBhToG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 20/43] io_uring: reset -EBUSY error when io sq thread is waken up
-Date:   Fri,  5 Jun 2020 16:14:50 +0200
-Message-Id: <20200605140153.581180425@linuxfoundation.org>
+Subject: [PATCH 5.6 25/43] net: ethernet: ti: fix some return value check of cpsw_ale_create()
+Date:   Fri,  5 Jun 2020 16:14:55 +0200
+Message-Id: <20200605140153.842363853@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,109 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit d4ae271dfaae2a5f41c015f2f20d62a1deeec734 ]
+[ Upstream commit 3469660d1b15ccfdf7b33295c306b6298ca730aa ]
 
-In io_sq_thread(), currently if we get an -EBUSY error and go to sleep,
-we will won't clear it again, which will result in io_sq_thread() will
-never have a chance to submit sqes again. Below test program test.c
-can reveal this bug:
+cpsw_ale_create() can return both NULL and PTR_ERR(), but all of
+the caller only check NULL for error handling. This patch convert
+it to only return PTR_ERR() in all error cases, and the caller using
+IS_ERR() instead of NULL test.
 
-int main(int argc, char *argv[])
-{
-        struct io_uring ring;
-        int i, fd, ret;
-        struct io_uring_sqe *sqe;
-        struct io_uring_cqe *cqe;
-        struct iovec *iovecs;
-        void *buf;
-        struct io_uring_params p;
-
-        if (argc < 2) {
-                printf("%s: file\n", argv[0]);
-                return 1;
-        }
-
-        memset(&p, 0, sizeof(p));
-        p.flags = IORING_SETUP_SQPOLL;
-        ret = io_uring_queue_init_params(4, &ring, &p);
-        if (ret < 0) {
-                fprintf(stderr, "queue_init: %s\n", strerror(-ret));
-                return 1;
-        }
-
-        fd = open(argv[1], O_RDONLY | O_DIRECT);
-        if (fd < 0) {
-                perror("open");
-                return 1;
-        }
-
-        iovecs = calloc(10, sizeof(struct iovec));
-        for (i = 0; i < 10; i++) {
-                if (posix_memalign(&buf, 4096, 4096))
-                        return 1;
-                iovecs[i].iov_base = buf;
-                iovecs[i].iov_len = 4096;
-        }
-
-        ret = io_uring_register_files(&ring, &fd, 1);
-        if (ret < 0) {
-                fprintf(stderr, "%s: register %d\n", __FUNCTION__, ret);
-                return ret;
-        }
-
-        for (i = 0; i < 10; i++) {
-                sqe = io_uring_get_sqe(&ring);
-                if (!sqe)
-                        break;
-
-                io_uring_prep_readv(sqe, 0, &iovecs[i], 1, 0);
-                sqe->flags |= IOSQE_FIXED_FILE;
-
-                ret = io_uring_submit(&ring);
-                sleep(1);
-                printf("submit %d\n", i);
-        }
-
-        for (i = 0; i < 10; i++) {
-                io_uring_wait_cqe(&ring, &cqe);
-                printf("receive: %d\n", i);
-                if (cqe->res != 4096) {
-                        fprintf(stderr, "ret=%d, wanted 4096\n", cqe->res);
-                        ret = 1;
-                }
-                io_uring_cqe_seen(&ring, cqe);
-        }
-
-        close(fd);
-        io_uring_queue_exit(&ring);
-        return 0;
-}
-sudo ./test testfile
-above command will hang on the tenth request, to fix this bug, when io
-sq_thread is waken up, we reset the variable 'ret' to be zero.
-
-Suggested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 4b41d3436796 ("net: ethernet: ti: cpsw: allow untagged traffic on host port")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/ti/cpsw_ale.c    | 2 +-
+ drivers/net/ethernet/ti/cpsw_priv.c   | 4 ++--
+ drivers/net/ethernet/ti/netcp_ethss.c | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 504484dc33e4..c6e1f76a6ee0 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -5224,6 +5224,7 @@ static int io_sq_thread(void *data)
- 				finish_wait(&ctx->sqo_wait, &wait);
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index ecdbde539eb7..4eb14b174c1a 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -917,7 +917,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
  
- 				ctx->rings->sq_flags &= ~IORING_SQ_NEED_WAKEUP;
-+				ret = 0;
- 				continue;
- 			}
- 			finish_wait(&ctx->sqo_wait, &wait);
+ 	ale = devm_kzalloc(params->dev, sizeof(*ale), GFP_KERNEL);
+ 	if (!ale)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ale->p0_untag_vid_mask =
+ 		devm_kmalloc_array(params->dev, BITS_TO_LONGS(VLAN_N_VID),
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+index 97a058ca60ac..d0b6c418a870 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.c
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -490,9 +490,9 @@ int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
+ 	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
+ 
+ 	cpsw->ale = cpsw_ale_create(&ale_params);
+-	if (!cpsw->ale) {
++	if (IS_ERR(cpsw->ale)) {
+ 		dev_err(dev, "error initializing ale engine\n");
+-		return -ENODEV;
++		return PTR_ERR(cpsw->ale);
+ 	}
+ 
+ 	dma_params.dev		= dev;
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index fb36115e9c51..fdbae734acce 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -3704,9 +3704,9 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+ 		ale_params.nu_switch_ale = true;
+ 	}
+ 	gbe_dev->ale = cpsw_ale_create(&ale_params);
+-	if (!gbe_dev->ale) {
++	if (IS_ERR(gbe_dev->ale)) {
+ 		dev_err(gbe_dev->dev, "error initializing ale engine\n");
+-		ret = -ENODEV;
++		ret = PTR_ERR(gbe_dev->ale);
+ 		goto free_sec_ports;
+ 	} else {
+ 		dev_dbg(gbe_dev->dev, "Created a gbe ale engine\n");
 -- 
 2.25.1
 
