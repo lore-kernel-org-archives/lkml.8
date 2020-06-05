@@ -2,121 +2,109 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0613EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD62A20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367017;
-	bh=KX0wPoZfWnP4R5JzHVE4rOgaZ7FssBpsYKHdzxcphs4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUCWfbugaRZeh7ZAKw/1KxmQjYXbA65A5PoMR6itZEjx9ddh5RXH7v50LKb1TRSLq
-	 fE8QuCG14VuGbUdtN5YPQ/bVZNDxwcPmMlud8iiMnFt4R+fJvwCOS5ciJSG81OJ5rg
-	 BvibQyd1w7IbgYFKhUCBPIJwo4ea3vOdW8iBf7EA=
+	by mail.kernel.org (Postfix) with ESMTP id 3500B20663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ra7efnOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgFEOXg (ORCPT
+        id S1728511AbgFEOXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgFEOSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F4A62086A;
-        Fri,  5 Jun 2020 14:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366689;
-        bh=KX0wPoZfWnP4R5JzHVE4rOgaZ7FssBpsYKHdzxcphs4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbuYbC6PE8w8M7RA2FSx+0fOD2+Lb1Jb0DOIyvu4wAWF2q7Wbdl+cWgyjkvH8zbvQ
-         fYaGMlE9Sc7nXWF1ydhpoTK7VHMaS6NrcNcbmM2j/nwHvtANesR4zaJrINefCTQwFU
-         SimZSzxWkAw9vnZGRGK144A72rBlDexZf3ZADE2Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hu Jiahui <kirin.say@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 14/38] airo: Fix read overflows sending packets
-Date:   Fri,  5 Jun 2020 16:14:57 +0200
-Message-Id: <20200605140253.426961596@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
-References: <20200605140252.542768750@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 5 Jun 2020 10:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728613AbgFEOSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:18:09 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7054EC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:18:09 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o8so5184158pgm.7
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=USN5B+36EcRDvKeTHs/GkNSI7LnmTqCKEsfrMETXyQE=;
+        b=Ra7efnOLfD0+wUXmYY7DVNDt/rW9NMuVsI1UU+XztgDo+6gMX4GEbUE9hx8dDLpDXy
+         8FNlNVgPK/hVwbNyMs969KelxavrGUQAWwp2rsdgzRGrXDxKgUUFRZBuxDp08B2uXDCM
+         ZdFejcna1GLfF1h8KoK+qNFR8Uu5Wiwbjlwms=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=USN5B+36EcRDvKeTHs/GkNSI7LnmTqCKEsfrMETXyQE=;
+        b=mwdnpdFJ6xsG7NSQwTNSvh0cPKYvZk6RlEwhysD65os5/7AUxc2TW2fpAcHfNs5OLI
+         4Cu9YL0d4AsPAR55ES0KOfFXCBxZBsYBWG+ik5CMCY8Wje/PCPRgSgCdoTws/8pmgjvB
+         vLgruU2hRp6z8ET6D3+mWAwRsOzEuHjV8Qt53Q6P/tNoJmoW3Nz+ZLo+A40wueH0Idgj
+         RaW2cXd2i9DElBPs8lae1deJ46s4nz536vMH3ZMmCW2s+aZ49+TuFvddKGP2i2nUKupZ
+         wdQ4rFUO5nX67vlmazdk5SpRjjbBzg7MjAGiDjMc5i0gqK9uw8CaekpCiIeL3LxpkRVJ
+         qGxw==
+X-Gm-Message-State: AOAM533IO0B/4hhgqO4VEqT+Q8zp6HzFEtMuNmS5l3TzkSOYlu9zgELH
+        u6nbKM99haPVRSX/mHmTwD8eIb8Mr9gLXw==
+X-Google-Smtp-Source: ABdhPJw+cA2osm5Y+j4AMSvnB/mesuJpia/pW9F2HIgjysQk3y1ignos3bJQFnCz+S/rIB2VMgBX9g==
+X-Received: by 2002:a63:1f42:: with SMTP id q2mr9422739pgm.357.1591366688871;
+        Fri, 05 Jun 2020 07:18:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l25sm6707192pgn.19.2020.06.05.07.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 07:18:07 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 07:18:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Joe Perches <joe@perches.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc/mm: Fix typo in IS_ENABLED()
+Message-ID: <202006050717.A2F9809E@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Joe Perches <joe@perches.com>
 
-commit 11e7a91994c29da96d847f676be023da6a2c1359 upstream.
+IS_ENABLED() matches names exactly, so the missing "CONFIG_" prefix
+means this code would never be built.
 
-The problem is that we always copy a minimum of ETH_ZLEN (60) bytes from
-skb->data even when skb->len is less than ETH_ZLEN so it leads to a read
-overflow.
+Also fixes a missing newline in pr_warn().
 
-The fix is to pad skb->data to at least ETH_ZLEN bytes.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Hu Jiahui <kirin.say@gmail.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200527184830.GA1164846@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Joe Perches <joe@perches.com>
+Link: https://lore.kernel.org/lkml/b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/cisco/airo.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -1925,6 +1925,10 @@ static netdev_tx_t mpi_start_xmit(struct
- 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 	npacks = skb_queue_len (&ai->txq);
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 8ed2411c3f39..cf2e1b06e5d4 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -660,11 +660,10 @@ static void __init htab_init_page_sizes(void)
+ 		 * Pick a size for the linear mapping. Currently, we only
+ 		 * support 16M, 1M and 4K which is the default
+ 		 */
+-		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
++		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
+ 		    (unsigned long)_stext % 0x1000000) {
+ 			if (mmu_psize_defs[MMU_PAGE_16M].shift)
+-				pr_warn("Kernel not 16M aligned, "
+-					"disabling 16M linear map alignment");
++				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
+ 			aligned = false;
+ 		}
  
- 	if (npacks >= MAXTXQ - 1) {
-@@ -2127,6 +2131,10 @@ static netdev_tx_t airo_start_xmit(struc
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
-@@ -2201,6 +2209,10 @@ static netdev_tx_t airo_start_xmit11(str
- 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
- 		return NETDEV_TX_OK;
- 	}
-+	if (skb_padto(skb, ETH_ZLEN)) {
-+		dev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 
- 	/* Find a vacant FID */
- 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
+-- 
+2.25.1
 
 
+-- 
+Kees Cook
