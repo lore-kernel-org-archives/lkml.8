@@ -2,104 +2,106 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B507EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8996820872
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 109EF20885
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ut/yKQ82"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hveDJFAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgFEF5x (ORCPT
+        id S1726159AbgFEF6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 01:57:53 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47673 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgFEF5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 01:57:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49dX4H29xpz9sT6;
-        Fri,  5 Jun 2020 15:57:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591336671;
-        bh=JgC7ao72YUYUs9MwlarCOBb9HzV7cUc2p+0sPD/Gpis=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ut/yKQ82OsfY+QpA1giDnDt80l+zq0aSeG4COfo/LpEKdMcZXPRco18agq9jFlRuf
-         /Qzj6SXIdAfM5NC2KpPlvZp7S1X1dSoQ4vgAfA6gorgs78JjUrkF/uFl5QsrIqEZbF
-         swOxtVEBUGf0LlRL42TEC17HUgjQYyvfP9mEArxppVRHqpvdjLp52fpcnT9ORvKAGN
-         du8w6y1epwcagSY+SUCRHmlfhl45/KHJ098RU6FxrcnPcwZc23045qaoVm+TQUPL6L
-         Y+AsmUJ1WCT6g/u3eOYiCmjSG5SJyAfx1kLirau3aYIP27evkxCkEE3MQdwYKQ+3CL
-         nNIFbVS0A24BA==
-Date:   Fri, 5 Jun 2020 15:57:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Rich Felker <dalias@libc.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: linux-next: manual merge of the akpm tree with the sh tree
-Message-ID: <20200605155750.3241776c@canb.auug.org.au>
+        Fri, 5 Jun 2020 01:58:13 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12200 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEF6M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 01:58:12 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ed9dee80000>; Thu, 04 Jun 2020 22:58:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 04 Jun 2020 22:58:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 04 Jun 2020 22:58:12 -0700
+Received: from [10.26.75.201] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jun
+ 2020 05:58:06 +0000
+Subject: Re: [PATCH] PCI: tegra: handle failure case of pm_runtime_get_sync
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <emamd001@umn.edu>, <wu000273@umn.edu>, <kjlu@umn.edu>,
+        <smccaman@umn.edu>
+References: <20200605031239.6638-1-navid.emamdoost@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e595b755-ea15-48d6-1f2a-c485f0f365e2@nvidia.com>
+Date:   Fri, 5 Jun 2020 06:58:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wX7ZcsSm_Cx5E=acndPcYnm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200605031239.6638-1-navid.emamdoost@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1591336680; bh=Zxo+XIWDWIDysHCmFEE3tbCGmetg7DRYJxfLrViJhUQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hveDJFAKrA7r8IOeIGe4ehhOK2mbZtfQY641B3zD5t7OouvmjkCq9exxG+v2xrrT7
+         pTP+SBvzrj5vVuPX00upHU8RzekW+rviB/rYJaO/bI/P1q0wjMe0Vtoyv+iag0bsxc
+         HtKVbmkZ8ioQqAvlffEDhNbODfHGxZuzA0c610hcbnMvQpD1FICsohSok5n9kxuxLg
+         VYOBrrSqSbJ4aAlr8Qwwrg8+6CMv42XU+xO8vvEpC7b6iJXLDhCelobFJXb+7EhvBa
+         tEcTa3i6ve4/trfzakTWaI+uh+39KZvXJihLNMNWjil057nhJOWg0IJemosVAh0LSM
+         iFZhI2b9LKNtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wX7ZcsSm_Cx5E=acndPcYnm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 05/06/2020 04:12, Navid Emamdoost wrote:
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count. Call pm_runtime_put if
+> pm_runtime_get_sync fails.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 3e64ba6a36a8..3d4b448fd8df 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2712,6 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  	err = pm_runtime_get_sync(pcie->dev);
+>  	if (err < 0) {
+>  		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+> +		pm_runtime_put_sync(pcie->dev);
+>  		goto teardown_msi;
+>  	}
 
-Today's linux-next merge of the akpm tree got a conflict in:
+Same thing for this patch, there is already a put in the error path and
+so it is not necessary to add the put call here. Just update the goto
+label.
 
-  arch/sh/include/asm/pgtable_64.h
+Jon
 
-between commit:
-
-  37744feebc08 ("sh: remove sh5 support")
-
-from the sh tree and patch:
-
-  "mm: consolidate pte_index() and pte_offset_*() definitions"
-
-from the akpm tree.
-
-I fixed it up (the former deleted the file, so I did that) and can
-carry the fix as necessary. This is now fixed as far as linux-next is
-concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wX7ZcsSm_Cx5E=acndPcYnm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Z3t4ACgkQAVBC80lX
-0GxV1wgAkfC/NEkW4Jabhx4L05N+1s3wthHMEaKK/sZn1mH/co20psdpu8MMho7k
-Q1OYaWto8GNDEDVFWaBL0VQ6/k0xtDMEFQDOfeteY6Hi3FHUzDgkkI4ZH2y+nHUO
-QgIjQHdgKJbhrAA8NfkFMpBYmlm4CE0jFX7G5V/atTIkZRYST1dLi8T/qTm7pAXE
-IugE6VXFoMlHAE7tfrIEpeiTKPn+stbKlJHEQmw/lvYyRf6ilR0JVWNEN9ysydH5
-dq9h5WV9KS/zV9/rLF3LZQOe966izaj26vNmKaJKTVnKR4jfZEB4bMlRfRPXwJsY
-6ZK2ivcx5oo1zIGl5gY54nJISe0IVg==
-=+nxp
------END PGP SIGNATURE-----
-
---Sig_/wX7ZcsSm_Cx5E=acndPcYnm--
+-- 
+nvpublic
