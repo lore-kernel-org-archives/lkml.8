@@ -2,89 +2,168 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A882D207ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FE9207ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:54:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0iUWCiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgFEGyC (ORCPT
+        id S1726183AbgFEGyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:54:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2282 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbgFEGyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:54:01 -0400
-Received: from lhreml741-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id F35C8D45AE4DD2AEB67E;
-        Fri,  5 Jun 2020 07:53:59 +0100 (IST)
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- lhreml741-chm.china.huawei.com (10.201.108.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Fri, 5 Jun 2020 07:53:59 +0100
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
- by fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Fri, 5 Jun 2020 08:53:58 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>, <syzkaller-bugs@googlegroups.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH] ima: Directly free *entry in ima_alloc_init_template() if digests is NULL
-Date:   Fri, 5 Jun 2020 08:50:28 +0200
-Message-ID: <20200605065028.12464-1-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 5 Jun 2020 02:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgFEGyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 02:54:43 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3542BC08C5C4
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 23:54:43 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a127so4465083pfa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 23:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ol/mCu/wq3XWSqVbrU0PUqg7TLmHc45H/V2FtkyiQoI=;
+        b=s0iUWCiulnPEJ14VlJ3QPbOHJDtYlaxnZ91r3vHIWzkqTFRP2S2DaxZOjlbTO0nMc7
+         u/xcfCRQb+BxK+PCUZegWHub1d0/4yoybX0RRiksj5OCJGIgb7dnkFfJ8k8lMYWr6j1D
+         YMtNpiXm0WIy7uK38y5bje5Uiayn0xVbpbxXSNH+1YTZ6if9sCDclc1xzurVjALDH/8A
+         BntGvNMyb5B0DX5XNBT1JNBX+g8dW8K6cu4E47zTAUX2QTiS6Y+VlVJZluhruwf/7ZIW
+         oV8Gx/zXNG0ojt3gCdJn4R1lhr8jWtCCCrhCBrLmXdArZWYtJlfjN6Tf9Wub1gqlLrhr
+         3X/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ol/mCu/wq3XWSqVbrU0PUqg7TLmHc45H/V2FtkyiQoI=;
+        b=R2j8YHmYN5RKyzIzT6S0AfbkqLRVZ8qp3aRVaRlFWpnwIzbOm8I7WhbBMVsz0PYJkk
+         TLCQiBEweCivoj9JhEf1SzU2FnsbNJz8pSL9+9SvdldYjpP0h6mPhHO+wpDmYRh2CA2Q
+         kwuJgGsmQKYHOU8ePcon4O4ULFf1y22jXEidxgVFVZZYz/IcOdE+aVyK5CliGBTvWCj0
+         gTaLY0blUVKbvE41Xm5z0qnqOtezkV9mvCasXCi2nBUgznDGy1rPnknbAVgrKkufDjHM
+         GJ5S4jx3aTIIQyIj2d/xkBzDiXiEWnZxS5VTX49jPpilfPpRJ72y41cDbkf6+20lSCDp
+         Pdug==
+X-Gm-Message-State: AOAM531YY1ajv35FIILISkExCIzvRT9RXpi9XmkHnizeMOmIFYKFfp29
+        94OmyZHTWzCMSM7u03gTlenHOw==
+X-Google-Smtp-Source: ABdhPJwlvPwnbWM/1+mGNeZrFWzLnzQ6rlQX7iUtfK5/neAo8V7zz2RAV3kpMfwJv6QAGbR9NgXXAA==
+X-Received: by 2002:a63:b10b:: with SMTP id r11mr7798573pgf.27.1591340082464;
+        Thu, 04 Jun 2020 23:54:42 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id nl8sm8184779pjb.13.2020.06.04.23.54.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Jun 2020 23:54:41 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 12:24:39 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>, saravanak@google.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] regulator: do not balance 'boot-on' coupled regulators
+ without constraints
+Message-ID: <20200605065439.tzvlny6upxigqx42@vireshk-i7>
+References: <CGME20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6@eucas1p2.samsung.com>
+ <20200605063724.9030-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.160]
-X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
- fraeml714-chm.china.huawei.com (10.206.15.33)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605063724.9030-1-m.szyprowski@samsung.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To support multiple template digests, the static array entry->digest has
-been replaced with a dynamically allocated array in commit aa724fe18a8a
-("ima: Switch to dynamically allocated buffer for template digests"). The
-array is allocated in ima_alloc_init_template() and if the returned pointer
-is NULL, ima_free_template_entry() is called.
++Saravana,
 
-However, (*entry)->template_desc is not yet initialized while it is used by
-ima_free_template_entry(). This patch fixes the issue by directly freeing
-*entry without calling ima_free_template_entry().
+On 05-06-20, 08:37, Marek Szyprowski wrote:
+> Balancing of the 'boot-on' coupled regulators must wait until the clients
+> set their constraints, otherwise the balancing code might change the
+> voltage of the not-yet-constrained regulator to the value below the
+> bootloader-configured operation point, what might cause a system crash.
+> This is achieved by assuming that, the minimal voltage allowed for the
+> given 'boot-on' regulator is equal to it's current voltage until
+> consumers apply their constraints.
+> 
+> Suggested-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> This is yet another approach to fix the regulator coupling on
+> Exynos5800/5422 SoCs in the regulator core. I agree with Dmitry that this
+> issue is generic and if possible it should be handled in the core.
+> 
+> This patchset is another attempt to fix the regulator coupling on
+> Exynos5800/5422 SoCs. Here are links to the previous attempts and
+> discussions:
+> 
+> https://lore.kernel.org/linux-samsung-soc/20191008101709.qVNy8eijBi0LynOteWFMnTg4GUwKG599n6OyYoX1Abs@z/
+> https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
+> https://lore.kernel.org/linux-pm/cover.1589528491.git.viresh.kumar@linaro.org/
+> https://lore.kernel.org/linux-pm/20200528131130.17984-1-m.szyprowski@samsung.com/
+> https://lore.kernel.org/linux-samsung-soc/57cf3a15-5d9b-7636-4c69-60742e8cfae6@samsung.com/
+> 
+> The problem is with "vdd_int" regulator coupled with "vdd_arm" on Odroid
+> XU3/XU4 boards family. "vdd_arm" is handled by CPUfreq. "vdd_int" is
+> handled by devfreq. CPUfreq initialized quite early during boot and it
+> starts changing OPPs and "vdd_arm" value. Sometimes CPU activity during
+> boot goes down and some low-frequency OPPs are selected, what in turn
+> causes lowering "vdd_arm". This happens before devfreq applies its
+> requirements on "vdd_int". Regulator balancing code reduces "vdd_arm"
+> voltage value, what in turn causes lowering "vdd_int" value to the lowest
+> possible value. This is much below the operation point of the wcore bus,
+> which still runs at the highest frequency.
+> 
+> The issue was hard to notice because in the most cases the board managed
+> to boot properly, even when the regulator was set to lowest value allowed
+> by the regulator constraints. However, it caused some random issues,
+> which can be observed as "Unhandled prefetch abort" or low USB stability.
+> 
+> Best regards
+> Marek Szyprowski
+> ---
+>  drivers/regulator/core.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> index 03154f5b939f..7e9af7ea4bdf 100644
+> --- a/drivers/regulator/core.c
+> +++ b/drivers/regulator/core.c
+> @@ -3553,6 +3553,17 @@ static int regulator_get_optimal_voltage(struct regulator_dev *rdev,
+>  		if (ret < 0)
+>  			return ret;
+>  
+> +		/*
+> +		 * If no constraints set yet and regulator has boot-on flag,
+> +		 * keep its voltage unchanged
+> +		 */
+> +		if (tmp_min == 0 && c_rdevs[i]->constraints->boot_on) {
+> +			ret = regulator_get_voltage_rdev(c_rdevs[i]);
+> +			if (ret < 0)
+> +				return ret;
+> +			tmp_min = ret;
+> +		}
+> +
+>  		ret = regulator_check_voltage(c_rdevs[i], &tmp_min, &tmp_max);
+>  		if (ret < 0)
+>  			return ret;
 
-Fixes: aa724fe18a8a ("ima: Switch to dynamically allocated buffer for template digests")
-Reported-by: syzbot+223310b454ba6b75974e@syzkaller.appspotmail.com
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- security/integrity/ima/ima_api.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This is exactly what Saravana tried to solve earlier AFAIR, lets see what he has
+to say here.
 
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index 78e0b0a7723e..bf22de8b7ce0 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -55,8 +55,9 @@ int ima_alloc_init_template(struct ima_event_data *event_data,
- 	digests = kcalloc(NR_BANKS(ima_tpm_chip) + ima_extra_slots,
- 			  sizeof(*digests), GFP_NOFS);
- 	if (!digests) {
--		result = -ENOMEM;
--		goto out;
-+		kfree(*entry);
-+		*entry = NULL;
-+		return -ENOMEM;
- 	}
- 
- 	(*entry)->digests = digests;
 -- 
-2.17.1
-
+viresh
