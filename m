@@ -4,50 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C610208B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8AE208A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366669;
-	bh=soooZv++TuidiX10DgFCAXqHp7cSQXQK3XNQuUOTahw=;
+	s=default; t=1591366672;
+	bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zCL8SQvFFjFww8ARgj+Xg0kusK1aniMiOytuXQa8FU9Bb4gxkw+VIJCZsE5Ke4LVN
-	 UTnBjhyQ+V71dIn5IEpC7Fja7p1G8okhKAZmpxLMahZql/VZCId9DGn82omuS2puj1
-	 w8PSD3XCrvsN4PQ1GPi2QKaKiQjsM3uk/CLr29Y4=
+	b=Q6SshiaWzZL4bI5Z6dZnynNo282pusoqTOJpe03GSZuAzHCnm96OKdjv0lClGm9Ws
+	 YqMLTTnvU/cy5c5cozfTlhXxHM4wfQILeWqn9uhg26u/9Bfb6T9ixEV4X+D0/YIMZ/
+	 x21nRKIol7CiC2WYmR0FUOnHbhVfZV7vhMv6FF7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgFEORs (ORCPT
+        id S1728551AbgFEORw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47504 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728513AbgFEORk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:40 -0400
+        id S1728521AbgFEORn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ED39208A9;
-        Fri,  5 Jun 2020 14:17:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B846B2086A;
+        Fri,  5 Jun 2020 14:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366660;
-        bh=soooZv++TuidiX10DgFCAXqHp7cSQXQK3XNQuUOTahw=;
+        s=default; t=1591366662;
+        bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/REGVQQ4+oomSmAUwvshye6LNTou26LW9Xk3lUvIFbPDuT+dJ9YeJhBDvfrjZnEq
-         5PxSUEHzW7yalMn3Ss8NNJsu70gC2fDL61r7huxoow+7j1Bf9xpD0ICOOANCEreiB2
-         agBjv6MJanK9VC9e4vDQrL7CZ5LWV3/b8RPnH8iM=
+        b=lkoVk70AKGbjenq+8g2ncN2K44hM5+zk+uRa3myzzBBNYsYd829laZj8oW+OEaQ59
+         DtsnbOdBrtGRz7filtRvS0b+AJ7FShosuAunzfdd7JdMshOlhSVWQMCcxGMFvWGAfr
+         0BxNsgniPvEN0l6W4uiFi549KIxe7exspiNBgDC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.6 37/43] crypto: api - Fix use-after-free and race in crypto_spawn_alg
-Date:   Fri,  5 Jun 2020 16:15:07 +0200
-Message-Id: <20200605140154.465450526@linuxfoundation.org>
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
+        Daniel Axtens <dja@axtens.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Akash Goel <akash.goel@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 38/43] kernel/relay.c: handle alloc_percpu returning NULL in relay_open
+Date:   Fri,  5 Jun 2020 16:15:08 +0200
+Message-Id: <20200605140154.517269910@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -60,96 +71,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Daniel Axtens <dja@axtens.net>
 
-commit 6603523bf5e432c7c8490fb500793bb15d4e5f61 upstream.
+commit 54e200ab40fc14c863bcc80a51e20b7906608fce upstream.
 
-There are two problems in crypto_spawn_alg.  First of all it may
-return spawn->alg even if spawn->dead is set.  This results in a
-double-free as detected by syzbot.
+alloc_percpu() may return NULL, which means chan->buf may be set to NULL.
+In that case, when we do *per_cpu_ptr(chan->buf, ...), we dereference an
+invalid pointer:
 
-Secondly the setting of the DYING flag is racy because we hold
-the read-lock instead of the write-lock.  We should instead call
-crypto_shoot_alg in a safe manner by gaining a refcount, dropping
-the lock, and then releasing the refcount.
+  BUG: Unable to handle kernel data access at 0x7dae0000
+  Faulting instruction address: 0xc0000000003f3fec
+  ...
+  NIP relay_open+0x29c/0x600
+  LR relay_open+0x270/0x600
+  Call Trace:
+     relay_open+0x264/0x600 (unreliable)
+     __blk_trace_setup+0x254/0x600
+     blk_trace_setup+0x68/0xa0
+     sg_ioctl+0x7bc/0x2e80
+     do_vfs_ioctl+0x13c/0x1300
+     ksys_ioctl+0x94/0x130
+     sys_ioctl+0x48/0xb0
+     system_call+0x5c/0x68
 
-This patch fixes both problems.
+Check if alloc_percpu returns NULL.
 
-Reported-by: syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com
-Fixes: 4f87ee118d16 ("crypto: api - Do not zap spawn->alg")
-Fixes: 73669cc55646 ("crypto: api - Fix race condition in...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This was found by syzkaller both on x86 and powerpc, and the reproducer
+it found on powerpc is capable of hitting the issue as an unprivileged
+user.
+
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: Akash Goel <akash.goel@intel.com>
+Cc: Andrew Donnellan <ajd@linux.ibm.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Salvatore Bonaccorso <carnil@debian.org>
+Cc: <stable@vger.kernel.org>	[4.10+]
+Link: http://lkml.kernel.org/r/20191219121256.26480-1-dja@axtens.net
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c   |   22 ++++++++++++++++------
- crypto/api.c      |    3 ++-
- crypto/internal.h |    1 +
- 3 files changed, 19 insertions(+), 7 deletions(-)
+ kernel/relay.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -716,17 +716,27 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -581,6 +581,11 @@ struct rchan *relay_open(const char *bas
+ 		return NULL;
  
- static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
- {
--	struct crypto_alg *alg;
-+	struct crypto_alg *alg = ERR_PTR(-EAGAIN);
-+	struct crypto_alg *target;
-+	bool shoot = false;
- 
- 	down_read(&crypto_alg_sem);
--	alg = spawn->alg;
--	if (!spawn->dead && !crypto_mod_get(alg)) {
--		alg->cra_flags |= CRYPTO_ALG_DYING;
--		alg = NULL;
-+	if (!spawn->dead) {
-+		alg = spawn->alg;
-+		if (!crypto_mod_get(alg)) {
-+			target = crypto_alg_get(alg);
-+			shoot = true;
-+			alg = ERR_PTR(-EAGAIN);
-+		}
- 	}
- 	up_read(&crypto_alg_sem);
- 
--	return alg ?: ERR_PTR(-EAGAIN);
-+	if (shoot) {
-+		crypto_shoot_alg(target);
-+		crypto_alg_put(target);
+ 	chan->buf = alloc_percpu(struct rchan_buf *);
++	if (!chan->buf) {
++		kfree(chan);
++		return NULL;
 +	}
 +
-+	return alg;
- }
- 
- struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
---- a/crypto/api.c
-+++ b/crypto/api.c
-@@ -333,12 +333,13 @@ static unsigned int crypto_ctxsize(struc
- 	return len;
- }
- 
--static void crypto_shoot_alg(struct crypto_alg *alg)
-+void crypto_shoot_alg(struct crypto_alg *alg)
- {
- 	down_write(&crypto_alg_sem);
- 	alg->cra_flags |= CRYPTO_ALG_DYING;
- 	up_write(&crypto_alg_sem);
- }
-+EXPORT_SYMBOL_GPL(crypto_shoot_alg);
- 
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask)
---- a/crypto/internal.h
-+++ b/crypto/internal.h
-@@ -65,6 +65,7 @@ void crypto_alg_tested(const char *name,
- void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
- 			  struct crypto_alg *nalg);
- void crypto_remove_final(struct list_head *list);
-+void crypto_shoot_alg(struct crypto_alg *alg);
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask);
- void *crypto_create_tfm(struct crypto_alg *alg,
+ 	chan->version = RELAYFS_CHANNEL_VERSION;
+ 	chan->n_subbufs = n_subbufs;
+ 	chan->subbuf_size = subbuf_size;
 
 
