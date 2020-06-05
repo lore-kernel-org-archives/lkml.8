@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9325C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC95C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE7B20E65
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482B9208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366804;
-	bh=FChClqYkiuV4A8OekspLUFM4lEYxDi5MB0nw7pVIs/E=;
+	s=default; t=1591366809;
+	bh=5J7NALb6RK7TOv0ylJHhaJY8+SNpxeudsxz5OEu+xro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPXNdoimvEG5oRlWs+47puDwFYGZfdSvn6gsVgxZb1NAD50pipORbBgOTUr1rdYCz
-	 akCKxUotGJMXfrLhOkgM1dJ8H1KiuBYWFsMD28vfW5QsD8UrfH2NeZ9e1d6fDcf147
-	 JN8uf5CTyJVz3Mp9bpXTyO7JwLobVvdM6abM0DF0=
+	b=iK0kFms0LGNtFIZUKGDOtSAzQjQZyRuGzR0+m83DLWTTyDulfBMCXewZdGDmryq4l
+	 fECcYqggFxspTqm+FubmZhx5VR9VNaL130zGqzeIkUMtDr+DgTJIdpytdg0E2NAfe1
+	 JcFnuZfqZh+ttgkE78YEjQgH1cr6RnFBx12/PLZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgFEOUD (ORCPT
+        id S1728918AbgFEOUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50708 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728434AbgFEOTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:46 -0400
+        id S1728333AbgFEOTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A813214D8;
-        Fri,  5 Jun 2020 14:19:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CEA4208A9;
+        Fri,  5 Jun 2020 14:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366785;
-        bh=FChClqYkiuV4A8OekspLUFM4lEYxDi5MB0nw7pVIs/E=;
+        s=default; t=1591366790;
+        bh=5J7NALb6RK7TOv0ylJHhaJY8+SNpxeudsxz5OEu+xro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=po06N7xOQo0uTgtxs7GfqU33sGfYyYD3oyx1V2sqOWshux+SrbiuyMylexl6184lu
-         sCEh8vNMc5H44Ya5F+O+mkgEm5WIlHSU4vbRa+2gXiod8+sYnm74TweoO9RkOjlSFy
-         e90DCva2Ii+Al+AuYVJQYdvgPqCTbeU8kAfwHPx4=
+        b=QQA10iVF0m8112JJZDFtOv95/c1OPTNZQH8KeUZMUW0ng3Oo1gnzuRdW2QTBR9W1m
+         neM17fV1wlHQh1DoeDnGr+q0ML1YikywUGsKc4Hpip9MZ3wQD5fxEowxyBebykreri
+         p8t1ebBI20QdFrOe3js2cVgivH2xIHTHQXXBrRxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Greco <pmgreco@us.ibm.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/28] ARC: Fix ICCM & DCCM runtime size checks
-Date:   Fri,  5 Jun 2020 16:15:19 +0200
-Message-Id: <20200605140253.396152825@linuxfoundation.org>
+Subject: [PATCH 4.19 19/28] evm: Fix RCU list related warnings
+Date:   Fri,  5 Jun 2020 16:15:21 +0200
+Message-Id: <20200605140253.523085576@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -61,52 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
+[ Upstream commit 770f60586d2af0590be263f55fd079226313922c ]
 
-As of today the ICCM and DCCM size checks are incorrectly using
-mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
-and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
-runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
+This patch fixes the following warning and few other instances of
+traversal of evm_config_xattrnames list:
 
-Fix that.
+[   32.848432] =============================
+[   32.848707] WARNING: suspicious RCU usage
+[   32.848966] 5.7.0-rc1-00006-ga8d5875ce5f0b #1 Not tainted
+[   32.849308] -----------------------------
+[   32.849567] security/integrity/evm/evm_main.c:231 RCU-list traversed in non-reader section!!
 
-Reported-by: Paul Greco <pmgreco@us.ibm.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Since entries are only added to the list and never deleted, use
+list_for_each_entry_lockless() instead of list_for_each_entry_rcu for
+traversing the list.  Also, add a relevant comment in evm_secfs.c to
+indicate this fact.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Acked-by: Paul E. McKenney <paulmck@kernel.org> (RCU viewpoint)
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/setup.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ security/integrity/evm/evm_crypto.c | 2 +-
+ security/integrity/evm/evm_main.c   | 4 ++--
+ security/integrity/evm/evm_secfs.c  | 9 ++++++++-
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 89c97dcfa360..c10994daee39 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -15,6 +15,7 @@
- #include <linux/clocksource.h>
- #include <linux/console.h>
- #include <linux/module.h>
-+#include <linux/sizes.h>
- #include <linux/cpu.h>
- #include <linux/of_fdt.h>
- #include <linux/of.h>
-@@ -406,12 +407,12 @@ static void arc_chk_core_config(void)
- 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
- 		panic("Linux built with incorrect DCCM Base address\n");
+diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
+index f0878d81dcef..d20f5792761c 100644
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -215,7 +215,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
+ 	data->hdr.length = crypto_shash_digestsize(desc->tfm);
  
--	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
-+	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
- 		panic("Linux built with incorrect DCCM Size\n");
- #endif
+ 	error = -ENODATA;
+-	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
++	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
+ 		bool is_ima = false;
  
- #ifdef CONFIG_ARC_HAS_ICCM
--	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
-+	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
- 		panic("Linux built with incorrect ICCM Size\n");
- #endif
+ 		if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
+diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+index 7f3f54d89a6e..e11d860fdce4 100644
+--- a/security/integrity/evm/evm_main.c
++++ b/security/integrity/evm/evm_main.c
+@@ -102,7 +102,7 @@ static int evm_find_protected_xattrs(struct dentry *dentry)
+ 	if (!(inode->i_opflags & IOP_XATTR))
+ 		return -EOPNOTSUPP;
  
+-	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
++	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
+ 		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0);
+ 		if (error < 0) {
+ 			if (error == -ENODATA)
+@@ -233,7 +233,7 @@ static int evm_protected_xattr(const char *req_xattr_name)
+ 	struct xattr_list *xattr;
+ 
+ 	namelen = strlen(req_xattr_name);
+-	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
++	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
+ 		if ((strlen(xattr->name) == namelen)
+ 		    && (strncmp(req_xattr_name, xattr->name, namelen) == 0)) {
+ 			found = 1;
+diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
+index 77de71b7794c..f112ca593adc 100644
+--- a/security/integrity/evm/evm_secfs.c
++++ b/security/integrity/evm/evm_secfs.c
+@@ -237,7 +237,14 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
+ 		goto out;
+ 	}
+ 
+-	/* Guard against races in evm_read_xattrs */
++	/*
++	 * xattr_list_mutex guards against races in evm_read_xattrs().
++	 * Entries are only added to the evm_config_xattrnames list
++	 * and never deleted. Therefore, the list is traversed
++	 * using list_for_each_entry_lockless() without holding
++	 * the mutex in evm_calc_hmac_or_hash(), evm_find_protected_xattrs()
++	 * and evm_protected_xattr().
++	 */
+ 	mutex_lock(&xattr_list_mutex);
+ 	list_for_each_entry(tmp, &evm_config_xattrnames, list) {
+ 		if (strcmp(xattr->name, tmp->name) == 0) {
 -- 
 2.25.1
 
