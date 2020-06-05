@@ -2,151 +2,153 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AABC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17DF82074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D072067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="evTGViaC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TVeNlcTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgFENwx (ORCPT
+        id S1727085AbgFEN5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:52:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53456 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726981AbgFENww (ORCPT
+        Fri, 5 Jun 2020 09:57:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26209 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726553AbgFEN5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:52:52 -0400
+        Fri, 5 Jun 2020 09:57:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591365171;
+        s=mimecast20190719; t=1591365470;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TNgajwZ6pH4Vjw9MsZrw1JgI9fWf69wAvgH4rX7cjS0=;
-        b=evTGViaC9Pe5mrF1C5I14UCTghlNpjFnwD8+zpp6xuHHcsI41ojMDOMcRE4IBJA3oTXV0U
-        uOX3ocOJO9qsevOxe6Im8NMjU2pgrx67iNzgHgR9nKa+0Z/Qiq7eV2wcJXL6z8F/x3WT6S
-        HbRYnOf4sG7cPeKUghfq7e3VArMA9yg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-RajbheOqNtOJu99B6y2vpQ-1; Fri, 05 Jun 2020 09:52:49 -0400
-X-MC-Unique: RajbheOqNtOJu99B6y2vpQ-1
-Received: by mail-wm1-f69.google.com with SMTP id h25so3860400wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 06:52:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TNgajwZ6pH4Vjw9MsZrw1JgI9fWf69wAvgH4rX7cjS0=;
-        b=o7K86t35xX91RiwV8BPrfeGz8QaHyIZSaXbnpmBkC28KZSvABxJzXX9IEbH2aEV4b7
-         rkot5OxzAnVD9gCDb7zCQf0HYmX7yu5IFA4FqHLct/JOyNUZ9La0UQjyo5elNB9y2mFC
-         0lU4unFZEiJVaOhSpPz/lAvqq4bOxlAhS8s6VxLGotyiCYS1knKQEWOAwPwh4AdYrCOO
-         6bN30hQpech+PtvHo8DIjDNuNWUf2uqyMxkmuMVk52I5xV/7hBatrR8nDNPEfnwAZNXT
-         LHn59fd+rY/fKDJhcmNRCepAsGkCUe9+dLglATBorkTuWe8sZ6toqcYMD3CASSlt136G
-         daRw==
-X-Gm-Message-State: AOAM531oooMImmqlDGngeaC1X0KyTkSR/6xYqvQoYPgDs545Za2kD1Yt
-        9CFcSNL0uhQFv2QwYR1WEz6xouPn/7SpR8dh7pfJ4rID8XlSw+gGRQLIuts8D5SB1EYJbdMvYK2
-        OOil5BVbSBIYOCjm50DylHC1M
-X-Received: by 2002:a1c:a905:: with SMTP id s5mr2773051wme.120.1591365168148;
-        Fri, 05 Jun 2020 06:52:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwk7/zHhGVAlFBCQPg3AKusCOUWCvTDN9/pe8dGGBwZaJAzD1b80eaSdZ277m9s2j74Afeafg==
-X-Received: by 2002:a1c:a905:: with SMTP id s5mr2773027wme.120.1591365167901;
-        Fri, 05 Jun 2020 06:52:47 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.243.176])
-        by smtp.gmail.com with ESMTPSA id u12sm12495225wrq.90.2020.06.05.06.52.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 06:52:47 -0700 (PDT)
-Subject: Re: general protection fault in start_creating
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     syzbot <syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com>,
-        eesposit@redhat.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000001803d305a7414b66@google.com>
- <87sgf9d45b.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <312a6a94-8325-a04f-2409-ec9ae0c0503a@redhat.com>
-Date:   Fri, 5 Jun 2020 15:52:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        bh=w5eDVJxgD5cVe/ws6zJ1B0whChx/Y0OHUlhKYF/6ehA=;
+        b=TVeNlcTlviNs9ZGsdhSjvJQzohpNeYjwt4wYonAw5pfJIk/p8+z2nTWPA/vcjNet8wRaup
+        YJY45Lj5x4d1DJy1xiJMI6Ou/XLUJCfy++becZhmNhCO4voPtrfk3kzaPAA0pVFl9mW7Vm
+        fcDhPRkRY4S1ruPJuk8r1XhSSeUUid4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-_brcHTJjPUqrm0JjIo8EUw-1; Fri, 05 Jun 2020 09:57:48 -0400
+X-MC-Unique: _brcHTJjPUqrm0JjIo8EUw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 369C58018AD;
+        Fri,  5 Jun 2020 13:57:47 +0000 (UTC)
+Received: from krava (unknown [10.40.193.237])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D4D2D8FF60;
+        Fri,  5 Jun 2020 13:57:44 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 15:57:43 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
+Message-ID: <20200605135743.GD1404794@krava>
+References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
+ <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
+ <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
+ <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
+ <20200601233732.GA691017@tassilo.jf.intel.com>
+ <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
+ <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
+ <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
+ <20200605105108.GB1404794@krava>
+ <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <87sgf9d45b.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/20 15:38, Vitaly Kuznetsov wrote:
+On Fri, Jun 05, 2020 at 04:15:52PM +0300, Alexey Budankov wrote:
 > 
-> I think what happens here is one thread does kvm_vm_ioctl_create_vcpu()
-> and another tries to delete the VM. The problem was probably present
-> even before the commit as both kvm_create_vcpu_debugfs() and
-> kvm_destroy_vm_debugfs() happen outside of kvm_lock but maybe it was
-> harder to trigger.
-
-I think it wasn't, because:
-
-- you cannot reach kvm_vcpu_release before you have created the file
-descriptor, and the patch moved debugfs creation after creation of
-the file descriptor
-
-- on the other hand you cannot reach kvm_vm_release during KVM_CREATE_VCPU,
-so you cannot reach kvm_destroy_vm either (because the VM file descriptor
-holds a reference).  So the bug can only occur for things that are touched
-by kvm_vcpu_release, and that is only the debugfs dentry.
-
-I have a patch for this already, which is simply removing the 
-debugfs_remove_recursive call in kvm_vcpu_release, but I have forgotten to
-send it.  What you have below could work but i don't see a good reason to
-put things under kvm->lock.
-
-Paolo
-
-> I think what happens here is one thread does kvm_vm_ioctl_create_vcpu()
-> and another tries to delete the VM. The problem was probably present
-> even before the commit as both kvm_create_vcpu_debugfs() and
-> kvm_destroy_vm_debugfs() happen outside of kvm_lock but maybe it was
-> harder to trigger. Is there a reason to not put all this under kvm_lock?
-> I.e. the following:
+> On 05.06.2020 13:51, Jiri Olsa wrote:
+> > On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
+> >> On 2/06/20 12:12 pm, Alexey Budankov wrote:
+> >>>
+> >>> On 02.06.2020 11:32, Alexey Budankov wrote:
+> >>>>
+> >>>> On 02.06.2020 2:37, Andi Kleen wrote:
+> >>>>>>> or a pathname, or including also the event default of "disabled".
+> >>>>>>
+> >>>>>> For my cases conversion of pathnames into open fds belongs to external
+> >>>>>> controlling process e.g. like in the examples provided in the patch set.
+> >>>>>> Not sure about "event default of 'disabled'"
+> >>>>>
+> >>>>> It would be nicer for manual use cases if perf supported the path names
+> >>>>> directly like in Adrian's example, not needing a complex wrapper script.
+> >>>>
+> >>>> fds interface is required for VTune integration since VTune wants control
+> >>>> over files creation aside of Perf tool process. The script demonstrates
+> >>>> just one possible use case.
+> >>>>
+> >>>> Control files could easily be implemented on top of fds making open operations
+> >>>> for paths and then initializing fds. Interface below is vague and with explicit
+> >>>> options like below it could be more explicit:
+> >>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
+> >>>
+> >>> Or even clearer:
+> >>>
+> >>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
+> >>
+> >> If people are OK with having so many options, then that is fine by me.
+> > 
+> > the single option Adrian suggested seems better to me:
+> > 
+> >  --control
+> >  --control 11
+> >  --control 11,15
 > 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 7fa1e38e1659..d53784cb920f 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -793,9 +793,9 @@ static void kvm_destroy_vm(struct kvm *kvm)
->         struct mm_struct *mm = kvm->mm;
->  
->         kvm_uevent_notify_change(KVM_EVENT_DESTROY_VM, kvm);
-> -       kvm_destroy_vm_debugfs(kvm);
->         kvm_arch_sync_events(kvm);
->         mutex_lock(&kvm_lock);
-> +       kvm_destroy_vm_debugfs(kvm);
->         list_del(&kvm->vm_list);
->         mutex_unlock(&kvm_lock);
->         kvm_arch_pre_destroy_vm(kvm);
-> @@ -3084,9 +3084,9 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
->         smp_wmb();
->         atomic_inc(&kvm->online_vcpus);
->  
-> +       kvm_create_vcpu_debugfs(vcpu);
->         mutex_unlock(&kvm->lock);
->         kvm_arch_vcpu_postcreate(vcpu);
-> -       kvm_create_vcpu_debugfs(vcpu);
->         return r;
->  
->  unlock_vcpu_destroy:
+> What if a user specifies fifos named like this above, not fds?
 > 
-> should probably do. The reproducer doesn't work for me (or just takes
-> too long so I gave up), unfortunately. Or I may have misunderstood
-> everything 
+> >  --control 11,15,disabled
+> >  --control 11,,disabled
+> >  --control /tmp/my-perf.fifo
+> >  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
+> 
+> What if a user wants not fifos but other type of comm channels?
+> 
+> >  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
+> >  --control /tmp/my-perf.fifo,,disabled
+> > 
+> > we already support this kind of options arguments, like for --call-graph
+> > 
+> > jirka
+> > 
+> 
+> IMHO,
+> this interface, of course, looks more compact (in amount of options) however
+> the other side it is less user friendly. One simple option for one simple
+> purpose is more convenient as for users as for developers. Also complex
+> option syntax tends to have limitations and there are probably more
+> non-obvious ones.
+> 
+> Please speak up. I might have missed something meaningful.
+
+how about specify the type like:
+
+--control fd:1,2,...
+--control fifo:/tmp/fifo1,/tmp/fifo2
+--control xxx:....
+
+this way we can extend the functionality in the future
+and stay backward compatible, while keeping single option
+
+jirka
 
