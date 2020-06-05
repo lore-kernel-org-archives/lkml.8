@@ -2,156 +2,135 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5700AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D56220885
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oCFcBZY2"
+	by mail.kernel.org (Postfix) with ESMTP id 7399B20814
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgFEEqC (ORCPT
+        id S1726156AbgFEErh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:46:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37955 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgFEEqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:46:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49dVTL4BySz9sRW;
-        Fri,  5 Jun 2020 14:45:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1591332359;
-        bh=ZcM7AWpNFJA6wNBV0a6RdISgWbNaFlam6gFvQJ4z4cA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oCFcBZY2JWLAKbvoqOO3eRFZjJAyje5yMs/pPJswvyGOGmfHm1OLU5QKD+M6ZP6pE
-         NV6DArGNEZGbjosl7Xq0+iTzDjwjOtNK8c8zsPADTnFGLdzR+9Y3NZqPjE684WWjP0
-         sKcsH19WqIq2jKfGhhAHNdQ7sL3yqBRmru0gjkSz6yVtsZsWI/JAZMLJLK2GOWWA0c
-         fHdsBxTrZqRSFyJtw7JfaynOXf2CEAcoMWQNvantjrQ/NFEVqc20JemCT9CdvZi/Jg
-         mpyDzFpixUcWKpxc4ULKgXDV++RX6VB2XG86MO+6c3uJbaWqpSqH3yVVsvkBtSitlm
-         uPfOUNp2+oljw==
-Date:   Fri, 5 Jun 2020 14:45:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: manual merge of the livepatching tree with the
- modules tree
-Message-ID: <20200605144557.4f8e2a42@canb.auug.org.au>
-In-Reply-To: <20200508180524.6995b07e@canb.auug.org.au>
-References: <20200508180524.6995b07e@canb.auug.org.au>
+        Fri, 5 Jun 2020 00:47:37 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59018 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEErh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 00:47:37 -0400
+Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1jh4GM-0005KP-Mp; Fri, 05 Jun 2020 04:47:27 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id DF8785FEE7; Thu,  4 Jun 2020 21:47:24 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id D88F59FB38;
+        Thu,  4 Jun 2020 21:47:24 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v2 1/2] PCI/ERR: Fix fatal error recovery for non-hotplug capable devices
+In-reply-to: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Comments: In-reply-to sathyanarayanan.kuppuswamy@linux.intel.com
+   message dated "Thu, 04 Jun 2020 14:50:01 -0700."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ki+HJigfDf3FQu7CJlPQYR_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <25282.1591332444.1@famine>
+Content-Transfer-Encoding: 8BIT
+Date:   Thu, 04 Jun 2020 21:47:24 -0700
+Message-ID: <25283.1591332444@famine>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ki+HJigfDf3FQu7CJlPQYR_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+sathyanarayanan.kuppuswamy@linux.intel.com wrote:
 
-Hi all,
-
-On Fri, 8 May 2020 18:05:24 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+>From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 >
-> Today's linux-next merge of the livepatching tree got a conflict in:
->=20
->   kernel/module.c
->=20
-> between commits:
->=20
->   db991af02f11 ("module: break nested ARCH_HAS_STRICT_MODULE_RWX and STRI=
-CT_MODULE_RWX #ifdefs")
->   5c3a7db0c7ec ("module: Harden STRICT_MODULE_RWX")
->=20
-> from the modules tree and commit:
->=20
->   e6eff4376e28 ("module: Make module_enable_ro() static again")
->=20
-> from the livepatching tree.
->=20
-> diff --cc kernel/module.c
-> index c69291362676,a26343ea4d50..000000000000
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@@ -2055,29 -2023,20 +2042,30 @@@ static void module_enable_nx(const stru
->   	frob_writable_data(&mod->init_layout, set_memory_nx);
->   }
->  =20
->  +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
->  +				       char *secstrings, struct module *mod)
->  +{
->  +	const unsigned long shf_wx =3D SHF_WRITE|SHF_EXECINSTR;
->  +	int i;
->  +
->  +	for (i =3D 0; i < hdr->e_shnum; i++) {
->  +		if ((sechdrs[i].sh_flags & shf_wx) =3D=3D shf_wx)
->  +			return -ENOEXEC;
->  +	}
->  +
->  +	return 0;
->  +}
->  +
->   #else /* !CONFIG_STRICT_MODULE_RWX */
->  +/* module_{enable,disable}_ro() stubs are in module.h */
->   static void module_enable_nx(const struct module *mod) { }
-> + static void module_enable_ro(const struct module *mod, bool after_init)=
- {}
->  -#endif /*  CONFIG_STRICT_MODULE_RWX */
->  -static void module_enable_x(const struct module *mod)
->  +static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
->  +				       char *secstrings, struct module *mod)
->   {
->  -	frob_text(&mod->core_layout, set_memory_x);
->  -	frob_text(&mod->init_layout, set_memory_x);
->  +	return 0;
->   }
->  -#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
->  -static void module_enable_nx(const struct module *mod) { }
->  -static void module_enable_x(const struct module *mod) { }
->  -#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
->  -
->  +#endif /*  CONFIG_STRICT_MODULE_RWX */
->  =20
->   #ifdef CONFIG_LIVEPATCH
->   /*
+>Fatal (DPC) error recovery is currently broken for non-hotplug
+>capable devices. With current implementation, after successful
+>fatal error recovery, non-hotplug capable device state won't be
+>restored properly. You can find related issues in following links.
+>
+>https://lkml.org/lkml/2020/5/27/290
+>https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+>https://lkml.org/lkml/2020/3/28/328
+>
+>Current fatal error recovery implementation relies on hotplug handler
+>for detaching/re-enumerating the affected devices/drivers on DLLSC
+>state changes. So when dealing with non-hotplug capable devices,
+>recovery code does not restore the state of the affected devices
+>correctly. Correct implementation should call report_slot_reset()
+>function after resetting the link to restore the state of the
+>device/driver.
+>
+>So use PCI_ERS_RESULT_NEED_RESET as error status for successful
+>reset_link() operation and use PCI_ERS_RESULT_DISCONNECT for failure
+>case. PCI_ERS_RESULT_NEED_RESET error state will ensure slot_reset()
+>is called after reset link operation which will also fix the above
+>mentioned issue.
+>
+>[original patch is from jay.vosburgh@canonical.com]
+>[original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
+>Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-This is now a conflict between the modules tree and Linus' tree.
+	I've tested this patch set on one of our test machines, and it
+resolves the issue.  I plan to test with other systems tomorrow.
 
---=20
-Cheers,
-Stephen Rothwell
+	-J
 
---Sig_/Ki+HJigfDf3FQu7CJlPQYR_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>---
+> drivers/pci/pcie/err.c | 24 ++++++++++++++++++++++--
+> 1 file changed, 22 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>index 14bb8f54723e..5fe8561c7185 100644
+>--- a/drivers/pci/pcie/err.c
+>+++ b/drivers/pci/pcie/err.c
+>@@ -165,8 +165,28 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> 	pci_dbg(dev, "broadcast error_detected message\n");
+> 	if (state == pci_channel_io_frozen) {
+> 		pci_walk_bus(bus, report_frozen_detected, &status);
+>-		status = reset_link(dev);
+>-		if (status != PCI_ERS_RESULT_RECOVERED) {
+>+		/*
+>+		 * After resetting the link using reset_link() call, the
+>+		 * possible value of error status is either
+>+		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
+>+		 * PCI_ERS_RESULT_NEED_RESET (success case).
+>+		 * So ignore the return value of report_error_detected()
+>+		 * call for fatal errors. Instead use
+>+		 * PCI_ERS_RESULT_NEED_RESET as initial status value.
+>+		 *
+>+		 * Ignoring the status return value of report_error_detected()
+>+		 * call will also help in case of EDR mode based error
+>+		 * recovery. In EDR mode AER and DPC Capabilities are owned by
+>+		 * firmware and hence report_error_detected() call will possibly
+>+		 * return PCI_ERS_RESULT_NO_AER_DRIVER. So if we don't ignore
+>+		 * the return value of report_error_detected() then
+>+		 * pcie_do_recovery() would report incorrect status after
+>+		 * successful recovery. Ignoring PCI_ERS_RESULT_NO_AER_DRIVER
+>+		 * in non EDR case should not have any functional impact.
+>+		 */
+>+		status = PCI_ERS_RESULT_NEED_RESET;
+>+		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+>+			status = PCI_ERS_RESULT_DISCONNECT;
+> 			pci_warn(dev, "link reset failed\n");
+> 			goto failed;
+> 		}
+>-- 
+>2.17.1
+>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7ZzgUACgkQAVBC80lX
-0GwcqAf/QIlttDKRob8ZnDsXQS280EQk0rIsvqevrOASTJD6kxlyNTUDXpH4hFx0
-ahupmyHP5OmAhz15X6qBGyi5zzQQpwk1on2aACpfz5XkR4Hyi2K++D+NDkcWQsdA
-sMuYgi55tq6+/RV/oGq0zdAR2J2SJ2XQRhYnIKzJtwJ6dIiUt55Bj5QwT/GFGfF4
-kabUXo7Pkys5S1kEI1PtopwGiCoeYH4h6ffV7honwbANhsFdZiagmezPP/+itce9
-uAjDEuHWL/zsDWlGBujkMgoySKAq7jFnFrtj1Fb9quQubKKGmtcebte79VkdwihN
-6DR+spBIi+HZh2iGV+b0m/Y+cd1xgA==
-=Mlxo
------END PGP SIGNATURE-----
-
---Sig_/Ki+HJigfDf3FQu7CJlPQYR_--
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
