@@ -2,174 +2,176 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C53C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5558FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08F762074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270C32074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:45:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NikDzLOK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nxkKKMyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgFEPoM (ORCPT
+        id S1727798AbgFEPpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
+        Fri, 5 Jun 2020 11:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgFEPoL (ORCPT
+        with ESMTP id S1726727AbgFEPpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:44:11 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3630C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:44:11 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q24so2884945pjd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:44:11 -0700 (PDT)
+        Fri, 5 Jun 2020 11:45:50 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B716BC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:45:49 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c3so10218493wru.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:45:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1mULMROuThJEJ5mn2BpH3TCtjO6X9vn9NXYKq1SVXCQ=;
-        b=NikDzLOKEbkdHl/a+qsn72HQQdgG4lUWew7gJeKOem2r+jk/zX/zfvHnv0NNmhzFm7
-         zYt45PiWRzHSua6gEBvhxICbkJ5xlf/RiDfUJZz+Pg7FKaHqMzUC7gOAd2VZzDeTZ/8/
-         QO+Gu1UWhZuFTFXNwtbOJqb0F1nglhXU1rzYA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BetZ+wYF1iiWHnIZJ0zwu4SRy9AotvXrrNHCrobpfBA=;
+        b=nxkKKMyy4FDVn9Z3erPWnQd1uF1jyI+aXihMySRJa/m+2RuKvsQvhfAAG3LedtWZVX
+         zmKf5ZBq1h8scS8tPtPSMSCzRZCkzbZ1NI4OMoKqxfZStA0r8HLzG4L984rw69PlxJyy
+         XHw5mo+y88km16pcp7XrSzz5iCK+Vg6KTWvP4ixKUEEmwNp6RadK5yOFFj/8QX9i4Bju
+         dJOHgCQ/n9JFHU3wXN7htzh6j9C9giprGL8jYngznpG95TTvatkT/VOrTeuYQkiDdS6L
+         0WSJ/jsoz8u/6r5oNInz2ttFYLfKjupcw754znqBvBd1rYk/foE0LFMtfyO3baM38/Fj
+         MHJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1mULMROuThJEJ5mn2BpH3TCtjO6X9vn9NXYKq1SVXCQ=;
-        b=PFzYHAA74S7fXKFnzbKoUNNHaypAHLB40eu9cc68eIeEtTFTbA/Le9zqmecJkk8Lyr
-         yqYYOztvOhs0MF8L/HXivnM1cV+0LGVwbC163/aLwwiir8hQ07HUHsn/dDwZntxfrFHA
-         aocZVyo+z1qXxaJSQpFEbXpKZQ7jvZ1Rq8xCk5fxMtRRWxoRYesqEu3aSeq2SJ+dXsrd
-         kI5sgmFlJJ69M1eWl2VQaZAV9iTC1AVXhNdZSG0F5KkLI/QfhHVwmHoYCu5c+2wNBnL+
-         Q+PV3koJ01IDCUFl/PnqxFlPOwjplmoPWKyUjnNAiiLQegCbmHWFnCpFWYdJbkdvig7Z
-         X8VA==
-X-Gm-Message-State: AOAM533bKv7GZnNN+vi+rUVIJIB7AcdAYrv86Q+Qb08YTAdrBbs8Lhvb
-        Jqjqg7bp7w8LBd+Xzj7P91FlWQ==
-X-Google-Smtp-Source: ABdhPJxCJZj6genPtMB0lpkEc5DOWzQaxfWZ3R8Dw3uF3dgSiNjDe0nqGoGObx9Tl6gZci9hQn2mJg==
-X-Received: by 2002:a17:90a:f694:: with SMTP id cl20mr3815256pjb.141.1591371851304;
-        Fri, 05 Jun 2020 08:44:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w190sm39003pfw.35.2020.06.05.08.44.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BetZ+wYF1iiWHnIZJ0zwu4SRy9AotvXrrNHCrobpfBA=;
+        b=Ta0ooc1Dcxd/Et7/5FPLxP2qP2x9km0MkZzREEODLQikIXNo5FJR2I9DYs9qoxRtZ9
+         bOSutjGt4mmVwwndHUl8nSUZiiwq8rYqIT0LeyOLZmaHfcrmte5lEZ6xoM7ViBpOLYB4
+         QM8/OhbwVNqGw6ioJQz+jPSzn2mSdYt8tAO8Hk37VKQrjPmNSQWz9mhE3ExrtW9UVFHN
+         E2eL9WDFMJuMLZ6EK6H6A+i7MqcxnXji891ktDBPOcSAyqUHPM3mI13o9HvMGyBPIpsQ
+         H5SseEzD9DIzSmbomxBqAMSaaFSW4thiyj0nC9pjNMJC9jIoi31Yl+AoGbpnCAI/djnb
+         hmiw==
+X-Gm-Message-State: AOAM532ypkWxvRP4bUMCUK4XuRWlMCUgJXEJQsFlLWf8GweMB04Grm7C
+        N8dlPFU6TSp7q021XIOUAnc=
+X-Google-Smtp-Source: ABdhPJz+hGZHyw8F9K+Ai8h6JZcQYwxxpSrKCcd8SjXCdA8ddUeBWbLp+YZvvNZ0hGpb1CJSCXsElg==
+X-Received: by 2002:adf:8b47:: with SMTP id v7mr9739687wra.238.1591371948442;
+        Fri, 05 Jun 2020 08:45:48 -0700 (PDT)
+Received: from localhost.localdomain (go-46.stud.uni-potsdam.de. [141.89.103.46])
+        by smtp.googlemail.com with ESMTPSA id g187sm12105848wma.17.2020.06.05.08.45.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 08:44:09 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 08:44:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Christoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Waiman Long <longman@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: slub freelist issue / BUG: unable to handle page fault for
- address: 000000003ffe0018
-Message-ID: <202006050828.F85A75D13@keescook>
-References: <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
- <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
- <202006041054.874AA564@keescook>
- <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
- <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
- <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
- <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
- <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
- <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
- <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+        Fri, 05 Jun 2020 08:45:47 -0700 (PDT)
+From:   Joan Bruguera <joanbrugueram@gmail.com>
+Cc:     Joan Bruguera <joanbrugueram@gmail.com>,
+        Haren Myneni <haren@us.ibm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] Add missing bound checks for software 842 decompressor
+Date:   Fri,  5 Jun 2020 17:44:15 +0200
+Message-Id: <20200605154416.5022-1-joanbrugueram@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 04:44:51PM +0200, Vegard Nossum wrote:
-> On 2020-06-05 16:08, Vlastimil Babka wrote:
-> > On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
-> > > On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
-> > > > 
-> > > > On 2020-06-05 11:36, Vegard Nossum wrote:
-> > > > > 
-> > > > > On 2020-06-05 11:11, Vlastimil Babka wrote:
-> > > > > > So, with Kees' patch reverted, booting with slub_debug=F (or even more
-> > > > > > specific slub_debug=F,ftrace_event_field) also hits this bug below. I
-> > > > > > wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
-> > > > > > further in history. So it's not new at all, and likely very specific to
-> > > > > > your config+QEMU? (and related to the ACPI error messages that precede
-> > > > > > it?).
-> > [...]
-> > [    0.140408] ------------[ cut here ]------------
-> > [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
-> > [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+The software 842 decompressor receives, through the initial value of the
+'olen' parameter, the capacity of the buffer pointed to by 'out'. If this
+capacity is insufficient to decode the compressed bitstream, -ENOSPC
+should be returned.
 
-Ah yes! Good. I had improved this check recently too, and I was worried
-the freelist pointer patch was somehow blocking it, but I see now that
-the failing config didn't have CONFIG_SLAB_FREELIST_HARDENED=y. Once
-SLAB_CONSISTENCY_CHECKS was enabled ("slub_debug=F"), it started
-tripping. Whew.
+However, the bounds checks are missing for index references (for those
+ops. where decomp_ops includes a I2, I4 or I8 subop.), and also for
+OP_SHORT_DATA. Due to this, sw842_decompress can write past the capacity
+of the 'out' buffer.
 
-I wonder if that entire test block should just be removed from
-cache_from_obj():
+The case for index references can be triggered by compressing data that
+follows a 16-byte periodic pattern (excluding special cases which are
+better encoded by OP_ZEROS) and passing a 'olen' somewhat smaller than the
+original length.
+The case for OP_SHORT_DATA can be triggered by compressing an amount of
+data that is not a multiple of 8, and then a slightly smaller 'olen' that
+can't fit those last <8 bytes.
 
-        if (!memcg_kmem_enabled() &&
-            !IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
-            !unlikely(s->flags & SLAB_CONSISTENCY_CHECKS))
-                return s;
+Following is a small test module to demonstrate the issue.
 
-and make this test unconditional? It's mostly only called during free(),
-and shouldn't be too expensive to be made unconditional. Hmm.
+-
 
-> > And it seems ACPI is allocating an object via kmalloc() and then freeing it
-> > via kmem_cache_free(<"Acpi-Namespace" kmem_cache>) which is wrong.
-> > 
-> > > ./scripts/faddr2line vmlinux 'acpi_ns_root_initialize+0xb6'
-> > acpi_ns_root_initialize+0xb6/0x2d1:
-> > kmalloc at include/linux/slab.h:555
-> > (inlined by) kzalloc at include/linux/slab.h:669
-> > (inlined by) acpi_os_allocate_zeroed at include/acpi/platform/aclinuxex.h:57
-> > (inlined by) acpi_ns_root_initialize at drivers/acpi/acpica/nsaccess.c:102
-> > 
-> 
-> That's it :-) This fixes it for me:
-> 
-> diff --git a/drivers/acpi/acpica/nsaccess.c b/drivers/acpi/acpica/nsaccess.c
-> index 2566e2d4c7803..b76bbab917941 100644
-> --- a/drivers/acpi/acpica/nsaccess.c
-> +++ b/drivers/acpi/acpica/nsaccess.c
-> @@ -98,14 +98,12 @@ acpi_status acpi_ns_root_initialize(void)
->                  * predefined names are at the root level. It is much easier
-> to
->                  * just create and link the new node(s) here.
->                  */
-> -               new_node =
-> -                   ACPI_ALLOCATE_ZEROED(sizeof(struct
-> acpi_namespace_node));
-> +               new_node = acpi_ns_create_node(*ACPI_CAST_PTR (u32,
-> init_val->name));
->                 if (!new_node) {
->                         status = AE_NO_MEMORY;
->                         goto unlock_and_exit;
->                 }
-> 
-> -               ACPI_COPY_NAMESEG(new_node->name.ascii, init_val->name);
->                 new_node->descriptor_type = ACPI_DESC_TYPE_NAMED;
->                 new_node->type = init_val->type;
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/sw842.h>
 
-I'm a bit confused by the internals of acpi_ns_create_note(). It can still
-end up calling ACPI_ALLOCATE_ZEROED() via acpi_os_acquire_object(). Is
-this fix correct?
+static unsigned char workspace[1000000] = { 0 }; // Hacky
 
+static void test_bound(const char *name, unsigned ibound, unsigned dbound)
+{
+	uint8_t in[ibound], out[ibound * 4], decomp[ibound /* Overallocated */];
+	unsigned clen = ibound * 4, dlen = dbound, i;
+	int ret;
+
+	for (i = 0; i < ibound; i ++)
+		in[i] = i % 16; // 0, 1, 2, ..., 14, 15, 0, 1, 2, ...
+	for (i = dbound; i < ibound; i++)
+		decomp[i] = 0xFF; // Place guard bytes
+
+	ret = sw842_compress(in, ibound, out, &clen, workspace);
+	BUG_ON(ret != 0);
+
+	ret = sw842_decompress(out, clen, decomp, &dlen);
+	if (ret != -ENOSPC) {
+		printk(KERN_ERR "%s: Expected ENOSPC to be returned\n", name);
+	}
+	for (i = dbound; i < ibound; i++) {
+		if (decomp[i] != 0xFF) {
+			printk(KERN_ERR "%s: Guard overwritten\n", name);
+			break;
+		}
+	}
+}
+
+int init_module(void)
+{
+	test_bound("Index reference test", 256, 64);
+	test_bound("Short data test", 12, 8);
+	return -ECANCELED; // Do not leave this test module hanging around
+}
+
+void cleanup_module(void)
+{
+}
+
+MODULE_LICENSE("GPL");
+MODULE_SOFTDEP("pre: 842");
+
+Signed-off-by: Joan Bruguera <joanbrugueram@gmail.com>
+---
+ lib/842/842_decompress.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/842/842_decompress.c b/lib/842/842_decompress.c
+index 582085ef8b4..c29fbfc9d08 100644
+--- a/lib/842/842_decompress.c
++++ b/lib/842/842_decompress.c
+@@ -202,6 +202,9 @@ static int __do_index(struct sw842_param *p, u8 size, u8 bits, u64 fsize)
+ 			 (unsigned long)total,
+ 			 (unsigned long)beN_to_cpu(&p->ostart[offset], size));
+ 
++	if (size > p->olen)
++		return -ENOSPC;
++
+ 	memcpy(p->out, &p->ostart[offset], size);
+ 	p->out += size;
+ 	p->olen -= size;
+@@ -345,6 +348,9 @@ int sw842_decompress(const u8 *in, unsigned int ilen,
+ 			if (!bytes || bytes > SHORT_DATA_BITS_MAX)
+ 				return -EINVAL;
+ 
++			if (bytes > p.olen)
++				return -ENOSPC;
++
+ 			while (bytes-- > 0) {
+ 				ret = next_bits(&p, &tmp, 8);
+ 				if (ret)
 -- 
-Kees Cook
+2.27.0
+
