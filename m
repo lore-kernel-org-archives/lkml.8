@@ -2,100 +2,119 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE1B220823
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dlsw39Lq"
+	by mail.kernel.org (Postfix) with ESMTP id 50F0620772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgFECY4 (ORCPT
+        id S1726117AbgFECZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:24:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFECYz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:24:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2210C08C5C0;
-        Thu,  4 Jun 2020 19:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=stJtg0wxxcvkO2KnmFzvC8cjE/GKPMguH7eI3OkCIjE=; b=dlsw39Lq+8x+7Fsa+OMvugjnLW
-        5PhSYwe7QfPCTwih92cnLlHdsGCAevjOpC+oH+MQFVSMzNosQ060m5FkUY7/wvsYACpZgsADgpzXA
-        ZqeoPyDk33Ckc++5paPfznuVMa3exc7J+D+KjPIhejJmuV9wYPtTNADysH2NQBKRKOFhoTIwj+mtP
-        wNe7UtGqQ41NJdOW7hNvDQLCkEBHyWNJqSSy/EwkoJdvIbiUw9Tq80orwM5nTMVKO3GoO5McrGrZG
-        83ppFGuAx/Do7vdAip99r4CDNxrEhmoxHyjRmQCiCJLYl9j4APZGMv6RDZadFRr41kKNH8Cuv0Uad
-        EfSmYszA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jh22N-0001gw-4v; Fri, 05 Jun 2020 02:24:51 +0000
-Date:   Thu, 4 Jun 2020 19:24:51 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
-Message-ID: <20200605022451.GZ19604@bombadil.infradead.org>
-References: <20200604202340.29170-1-willy@infradead.org>
- <20200604225726.GU2040@dread.disaster.area>
- <20200604230519.GW19604@bombadil.infradead.org>
- <20200604233053.GW2040@dread.disaster.area>
- <20200604235050.GX19604@bombadil.infradead.org>
- <20200605003159.GX2040@dread.disaster.area>
+        Thu, 4 Jun 2020 22:25:42 -0400
+Received: from mga01.intel.com ([192.55.52.88]:40097 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgFECZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:25:42 -0400
+IronPort-SDR: P28gXnUD9VtcaUuaaeAPmrHXOr4uK424NV3pqrDa8cPNUKvITy0n3GIBCia4xSX899pOUZKJum
+ XHHxzAtM6bEw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 19:25:41 -0700
+IronPort-SDR: mxrNqdaQqXQ2gqe6aEfcouUu7qOgm5ZEOjRThWqrlDi6crK3gAbnwHRXVZgkN/dqQzt+JyL14q
+ mtXqo5zNvWkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,474,1583222400"; 
+   d="scan'208";a="313070957"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Jun 2020 19:25:39 -0700
+Date:   Thu, 4 Jun 2020 22:15:42 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, kevin.tian@intel.com, shaopeng.he@intel.com,
+        yi.l.liu@intel.com, xin.zeng@intel.com, hang.yuan@intel.com
+Subject: Re: [RFC PATCH v4 04/10] vfio/pci: let vfio_pci know number of
+ vendor regions and vendor irqs
+Message-ID: <20200605021542.GG12300@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200518024202.13996-1-yan.y.zhao@intel.com>
+ <20200518024944.14263-1-yan.y.zhao@intel.com>
+ <20200604172515.614e9864.cohuck@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605003159.GX2040@dread.disaster.area>
+In-Reply-To: <20200604172515.614e9864.cohuck@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 10:31:59AM +1000, Dave Chinner wrote:
-> On Thu, Jun 04, 2020 at 04:50:50PM -0700, Matthew Wilcox wrote:
-> > > Sure, but that's not really what I was asking: why isn't this
-> > > !uptodate state caught before the page fault code calls
-> > > ->page_mkwrite? The page fault code has a reference to the page,
-> > > after all, and in a couple of paths it even has the page locked.
-> > 
-> > If there's already a PTE present, then the page fault code doesn't
-> > check the uptodate bit.  Here's the path I'm looking at:
-> > 
-> > do_wp_page()
-> >  -> vm_normal_page()
-> >  -> wp_page_shared()
-> >      -> do_page_mkwrite()
-> > 
-> > I don't see anything in there that checked Uptodate.
+On Thu, Jun 04, 2020 at 05:25:15PM +0200, Cornelia Huck wrote:
+> On Sun, 17 May 2020 22:49:44 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> Yup, exactly the code I was looking at when I asked this question.
-> The kernel has invalidated the contents of a page, yet we still have
-> it mapped into userspace as containing valid contents, and we don't
-> check it at all when userspace generates a protection fault on the
-> page?
-
-Right.  The iomap error path only clears PageUptodate.  It doesn't go
-to the effort of unmapping the page from userspace, so userspace has a
-read-only view of a !Uptodate page.
-
-> > I think the iomap code is the only filesystem which clears PageUptodate
-> > on errors. 
+> > This allows a simpler VFIO_DEVICE_GET_INFO ioctl in vendor driver
+> > 
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci.c         | 23 +++++++++++++++++++++--
+> >  drivers/vfio/pci/vfio_pci_private.h |  2 ++
+> >  include/linux/vfio.h                |  3 +++
+> >  3 files changed, 26 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> > index 290b7ab55ecf..30137c1c5308 100644
+> > --- a/drivers/vfio/pci/vfio_pci.c
+> > +++ b/drivers/vfio/pci/vfio_pci.c
+> > @@ -105,6 +105,24 @@ void *vfio_pci_vendor_data(void *device_data)
+> >  }
+> >  EXPORT_SYMBOL_GPL(vfio_pci_vendor_data);
+> >  
+> > +int vfio_pci_set_vendor_regions(void *device_data, int num_vendor_regions)
+> > +{
+> > +	struct vfio_pci_device *vdev = device_data;
+> > +
+> > +	vdev->num_vendor_regions = num_vendor_regions;
 > 
-> I don't think you looked very hard. A quick scan shows at least
-> btrfs, f2fs, hostfs, jffs2, reiserfs, vboxfs and anything using the
-> iomap path will call ClearPageUptodate() on a write IO error.
+> Do we need any kind of sanity check here, in case this is called with a
+> bogus value?
+>
+you are right. it at least needs to be >=0.
+maybe type of "unsigned int" is more appropriate for num_vendor_regions.
+we don't need to check its max value as QEMU would check it.
 
-I'll give you btrfs and jffs2, but I don't think it's true for f2fs.
-The only other filesystem using the iomap bufferd IO paths today
-is zonefs, afaik.
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(vfio_pci_set_vendor_regions);
+> > +
+> > +
+> > +int vfio_pci_set_vendor_irqs(void *device_data, int num_vendor_irqs)
+> > +{
+> > +	struct vfio_pci_device *vdev = device_data;
+> > +
+> > +	vdev->num_vendor_irqs = num_vendor_irqs;
+> 
+> Here as well.
+yes. will change the type to "unsigned int". 
+Thank you for kindly reviewing:)
 
+Yan
+
+> 
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(vfio_pci_set_vendor_irqs);
+> >  /*
+> >   * Our VGA arbiter participation is limited since we don't know anything
+> >   * about the device itself.  However, if the device is the only VGA device
+> 
+> (...)
+> 
