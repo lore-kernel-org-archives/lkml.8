@@ -2,109 +2,113 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D78C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 338F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE58120772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2D720772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e67AZEdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgFEIga (ORCPT
+        id S1726259AbgFEIg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51614 "EHLO
+        Fri, 5 Jun 2020 04:36:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgFEIg1 (ORCPT
+        with ESMTP id S1726134AbgFEIg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:36:27 -0400
-Received: from trent.utfs.org (trent.utfs.org [IPv6:2a03:3680:0:3::67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C916C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:36:27 -0700 (PDT)
-Received: from localhost (localhost [IPv6:::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by trent.utfs.org (Postfix) with ESMTPS id 76A4760125;
-        Fri,  5 Jun 2020 10:36:21 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 01:36:21 -0700 (PDT)
-From:   Christian Kujau <lists@nerdbynature.de>
-To:     linux-kernel@vger.kernel.org
-cc:     xen-devel@lists.xenproject.org
-Subject: 5.7.0 / BUG: kernel NULL pointer dereference / setup_cpu_watcher
-Message-ID: <alpine.DEB.2.22.395.2006050059530.13291@trent.utfs.org>
-User-Agent: Alpine 2.22 (DEB 395 2020-01-19)
+        Fri, 5 Jun 2020 04:36:56 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED0AC08C5C2;
+        Fri,  5 Jun 2020 01:36:56 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v19so7641779wmj.0;
+        Fri, 05 Jun 2020 01:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3nTFlmbzjc8v0pH7sZvwI+DHbaQtTE22skIrB/BBsac=;
+        b=e67AZEdW7AQDvDVQqSMO75BKdN9sXsQ31mldbeM81dO6BOICEsD2O5FUbT6AtHWRGJ
+         plZ42JBpABtAE0qkoYP0pTcrEnHaBdxBXb2TqXVeprtt7h0rkxNMPlsWlshIHPQvFC3f
+         LIk3kKcIyHE4kbOCKEy+Oitwg1ku4027jK0wI2jYWVAMCSMdaqleuPGztuOKDBJFgF3y
+         PERlNqsNtwYYDncipouKU3kMoPoxwbgfTlz5gslrVzJ43mHdWSUQM8/bTNCx6Z2/ENou
+         BkMUs1ZqDNy3mRk9R2QVvQDdZt3IRrKyrNetY1lggLmAixWg09XWFx9nwpriBfYcF4b/
+         gh5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3nTFlmbzjc8v0pH7sZvwI+DHbaQtTE22skIrB/BBsac=;
+        b=F6GBB2NeGXwtAwnRmBTaISpXi/032Rj2XA8Af0vVBSecZpeO3wXcu+x7R8oj9C8TFi
+         fxE/nXwAGe7rzJPBkaxlPz5F8+5FemfjuzrcR5l5Gwi98ZP1Cyv09wRGKnIreWRXqUI8
+         11oz5yPy6kjcKkBFf0CEssYcot9SBBlRNBMMhuFQ3yPw1wNM3nb97toFeKxVWkzpAt0M
+         x/wj+SCGuvLu/a5kk+vlu6hwN9E0quZZIqO9M1J89VSKb7AGZ/f2U+HQgsDnODUFS8HN
+         N1ezu5kXHqkXy8RV8rHM0ZbPNudJdjFBhfb4gEq+15JuRoErRmdDaIuwlSy/uA+n7W3w
+         tVNg==
+X-Gm-Message-State: AOAM5311e5x3EER1+oYc8AElRi0Fq0AKuT4xlyJ/X/R8WOhJB/wyYydN
+        Ctj01UaVpGx5g69X20w/jX9KPGVh3N0=
+X-Google-Smtp-Source: ABdhPJzD5hm7+HVTbJ0qq5buzfUjWSLLl36UEL8lKEkif51XgpXz2Frm5/M2WeUz/+7QwQtLTt0pgQ==
+X-Received: by 2002:a1c:de82:: with SMTP id v124mr1554125wmg.89.1591346214788;
+        Fri, 05 Jun 2020 01:36:54 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id r11sm11692035wre.25.2020.06.05.01.36.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 01:36:53 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 09:36:52 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: Re: [PATCH RFC 12/13] vhost/vsock: switch to the buf API
+Message-ID: <20200605083652.GC59410@stefanha-x1.localdomain>
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-13-mst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="O3RTKUHj+75w1tg5"
+Content-Disposition: inline
+In-Reply-To: <20200602130543.578420-13-mst@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-I'm running a small Xen PVH domain and upgrading from vanilla 5.6.0 to 
-5.7.0 caused the splat below, really early during boot. The configuration 
-has not changed, all new "make oldconfig" prompts have been answered with 
-"N". Old and new config, dmesg are here:
+--O3RTKUHj+75w1tg5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  http://nerdbynature.de/bits/5.7.0/
+On Tue, Jun 02, 2020 at 09:06:22AM -0400, Michael S. Tsirkin wrote:
+> A straight-forward conversion.
+>=20
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  drivers/vhost/vsock.c | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
 
-Searching the interwebs for similar reports didn't return much:
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
- * drm_sched_get_cleanup_job: BUG: kernel NULL pointer dereference
-   https://bugzilla.redhat.com/show_bug.cgi?id=1822984  -- but this 
-   appears to be really DRM related. - https://lkml.org/lkml/2020/4/10/545
+--O3RTKUHj+75w1tg5
+Content-Type: application/pgp-signature; name="signature.asc"
 
- * A recent mm/vmstat patch, mentioning "device_offline" in its output
-   https://patchwork.kernel.org/patch/11563009/
+-----BEGIN PGP SIGNATURE-----
 
-But other than a few overlapping strings, I guess all of that is totally 
-unrelated :(
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7aBCQACgkQnKSrs4Gr
+c8iqrgf/W5qzuVqOztDa26raKxGSK1HW1tigkHdgjm6LUcghCLUBNVTqklvPgnVt
+8n0X/em12Ztmj43uNCuw0U+4ZpTZjibzwlvp4QnFw8nVsLtdMZIR9nAORPM/9Lbq
+cihrvmGGikfHp5Rlj76nOnVODooOuQEI+S0ii+m5uKGEE3Y2z5n0LIh8j1p5Ms0k
+Xr5j9JKZ5mHH9ZYA6c79KVPPn7k18+4H5aSr5GPr3gsrUR8jSJhUhub1H6tAwKoB
+Tg+68nP4BA7Gcowm+QE22SwmmT1YEmjLKydYLH0bP2NewcRqh10Dw3DsV2fMU8BN
+3LEoQfYetWn383ZxfvbNLNO8JCQ4wQ==
+=D/8f
+-----END PGP SIGNATURE-----
 
-Thanks,
-Christian.
-
-
-Note: that "Xen Platform PCI: unrecognised magic value" on the top appears 
-in 5.6 kernels as well, but no ill effects so far.
-
----------------------------------------------------------------
-Xen Platform PCI: unrecognised magic value
-ACPI: No IOAPIC entries present
-BUG: kernel NULL pointer dereference, address: 00000000000002d0
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 0 P4D 0 
-Oops: 0000 [#1] SMP PTI
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0 #2
-RIP: 0010:device_offline+0x8/0xf0
-Code: 48 89 e7 e8 3a ee f3 ff 4c 89 e0 48 83 c4 10 5b 41 5c c3 45 31 e4 48 83 c4 10 4c 89 e0 5b 41 5c c3 90 41 54 55 53 48 83 ec 10 <f6> 87 d0 02 00 00 01 0f 85 ca 00 00 00 48 89 fb 48 8b 7f 48 48 85
-RSP: 0000:ffffbd9100013e78 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000820001fa
-RDX: ffff9c9c3dd00000 RSI: 00000000820001fa RDI: 0000000000000000
-RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000000000000
-R10: ffff9c9c3d5072a8 R11: 0000000000000000 R12: ffff9c9c3d594720
-R13: ffffffff8a57e5a8 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff9c9c3dc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000000002d0 CR3: 000000006b00a001 CR4: 00000000001606b0
-Call Trace:
- setup_cpu_watcher+0x44/0x60
- ? plt_clk_driver_init+0xe/0xe
- setup_vcpu_hotplug_event+0x23/0x26
- do_one_initcall+0x47/0x180
- kernel_init_freeable+0x13b/0x19d
- ? rest_init+0x95/0x95
- kernel_init+0x5/0xeb
- ret_from_fork+0x35/0x40
-Modules linked in:
-CR2: 00000000000002d0
----[ end trace b0cc587db609787f ]---
-
--- 
-BOFH excuse #440:
-
-Cache miss - please take better aim next time
+--O3RTKUHj+75w1tg5--
