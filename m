@@ -2,129 +2,145 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E230FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF68420663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CAF20663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:10:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="RXROPFih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgFEOJP (ORCPT
+        id S1727921AbgFEOKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:09:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45252 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgFEOJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:09:14 -0400
-IronPort-SDR: 3GpFEgJh1E1/pkYsMX2LrazmJIRlAesPx29CBXWo3aDZQfDWDvly76YlZBbxYTbQt+cz9zChzU
- AG1/Ks9NdSeA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 07:09:14 -0700
-IronPort-SDR: STm5cJBEx3cZwh5EDl1WI2zIniez547qsBBHLm0a+PZkJql6UaV6R0I9F6DqWusAPQO2MUnztk
- j822dzBvILJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
-   d="scan'208";a="471924635"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2020 07:09:09 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jhD1z-00B2nb-Cy; Fri, 05 Jun 2020 17:09:11 +0300
-Date:   Fri, 5 Jun 2020 17:09:11 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Michael Walle <michael@walle.cc>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Fri, 5 Jun 2020 10:10:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgFEOKI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:10:08 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252A3C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:10:08 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n11so9759878qkn.8
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=I0/WSfj2SyN/DyoKU5g8TSVdYEPxsYEHqAcc64RrQhU=;
+        b=RXROPFih1qODR8nENLKP9JMQxe/2o43hmY/yGapZPyol/NnvoY62UsOWy+S7zmCZW0
+         TMOVUkZHubrGkwKq1Xw9mhAPG9LcV5oRK0niv6Aiow7e7ZgmEYvDn/plIEuY1nCT1aOa
+         aGXPv5b/huLViIIhT8WMuTT5K0qOSo+ykUx/MH9VtwURHW83KH4GCJXtVs0GdlR7YBSL
+         8FmjDVPbACcF1Biph0ZodVdEtB622+nM9K1ELqUlZ4z9ixo4f3uEJGzKXl/eb3lzO3x2
+         2Rkqm+/hVpRa8Nt5CSAg9Tv+ghkkI2Ewi3aBmWYvvBCGBfS5gvJNrwgbyHuigBY2b+5+
+         WydA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I0/WSfj2SyN/DyoKU5g8TSVdYEPxsYEHqAcc64RrQhU=;
+        b=dJGKv4LkHXQ5nhxpfoF+jGtz0jMmEIsp4IPx54pImT3v+xirIVpbvDQAhqX+y2gnDw
+         +1mkbzsc15q4zfxG0A1wMDePPHGGbFfN6aczSH2yfNE4qlzONjv57n3/LnsVaKN0WAJI
+         e4T3dKyYX5NUxwdVUTILPYhnYzYxWcL7cCd75b2sYYwpJD1LUv2/zZtjNapF+O/lIuGk
+         ST7kp3GQTmMrYUSBRgaxsNvb/JHt8E7qUtWVePUdsZRxvqlOFJf+eaI0SIPIeWv86Cvi
+         tU/3HZCaBQZSg6Cfq/X1rzQ2L9Q1s3zIUDl1z+vB8glKows57EOKcKmOj/Ze0R2iMk+o
+         /6sg==
+X-Gm-Message-State: AOAM532DKo+9N4phCuiaRlPX0T8935mmVmvM0lEXCt6O4R+iZ3TtrgJl
+        Jt9N38QAHHk9ArEzg8Ge5aJcRw==
+X-Google-Smtp-Source: ABdhPJwVy4BwZQ6cvWCnxoX8YJIsDQhVvQPsH1HgtDJtg+RGPnkkV5AL921wK/IkdVN4k1dMoBjVDA==
+X-Received: by 2002:a37:c20c:: with SMTP id i12mr10527895qkm.167.1591366207162;
+        Fri, 05 Jun 2020 07:10:07 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id b4sm6449846qka.133.2020.06.05.07.10.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 07:10:06 -0700 (PDT)
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
-Message-ID: <20200605140911.GO2428291@smile.fi.intel.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-5-michael@walle.cc>
- <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
- <8f042c2442852c29519c381833f3d289@walle.cc>
- <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
- <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree-owner@vger.kernel.org
+References: <20200524023815.21789-1-jonathan@marek.ca>
+ <20200524023815.21789-2-jonathan@marek.ca>
+ <20200529025246.GV279327@builder.lan>
+ <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
+ <20200529031520.GA1799770@builder.lan>
+ <91eb7ee0e549b10724c724aebfd91996@codeaurora.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <8cf134f0-381f-7765-2496-e5abd77f3087@marek.ca>
+Date:   Fri, 5 Jun 2020 10:10:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <91eb7ee0e549b10724c724aebfd91996@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 06:52:00AM -0700, Guenter Roeck wrote:
-> On 6/5/20 3:50 AM, Andy Shevchenko wrote:
-> > On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
-> >> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
-> >>> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
-
-...
-
-> >>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> >>>> +module_param(nowayout, bool, 0);
-> >>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
-> >>>> (default="
-> >>>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
-> >>>> ")");
-> >>>> +
-> >>>> +static int timeout;
-> >>>> +module_param(timeout, int, 0);
-> >>>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> >>>
-> >>> Guenter ACKed this, but I'm wondering why we still need module
-> >>> parameters...
-> >>
-> >> How would a user change the nowayout or the timeout? For the latter
-> >> there is
-> >> a device tree entry, but thats not easy changable by the user.
-> > 
-> > Yes, it's more question to VIm and Guenter than to you.
-> > 
+On 6/5/20 10:03 AM, Sai Prakash Ranjan wrote:
+> On 2020-05-29 08:45, Bjorn Andersson wrote:
+>> On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
+>>
+>>>
+>>>
+>>> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
+>>> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
+>>> >
+>>> > > Add the apps_smmu node for sm8150. Note that adding the iommus 
+>>> field for
+>>> > > UFS is required because initializing the iommu removes the bypass 
+>>> mapping
+>>> > > that created by the bootloader.
+>>> > >
+>>> >
+>>> > Unrelated to the patch itself; how do you disable the splash screen on
+>>> > 8150? "fastboot oem select-display-panel none" doesn't seem to work 
+>>> for
+>>> > me on the MTP - and hence this would prevent my device from booting.
+>>> >
+>>> > Thanks,
+>>> > Bjorn
+>>> >
+>>>
+>>> I don't have a MTP, but on HDK855, "fastboot oem select-display-panel 
+>>> none"
+>>> combined with setting the physical switch to HDMI mode (which 
+>>> switches off
+>>> the 1440x2560 panel) gets it to not setup the display at all (just the
+>>> fastboot command isn't enough).
+>>>
+>>
+>> Okay, I don't think we have anything equivalent on the MTP, but good to
+>> know.
+>>
 > 
-> Has support for providing module parameters with the kernel command line
-> been discontinued/deprecated, or did it run out of favor ? Sorry if I
-> missed that.
+> Actually I tried out this in SM8150 MTP and it works fine for me,
+> 
+> "fastboot set_active a; fastboot set_active b; fastboot set_active a; 
+> fastboot oem select-display-panel none; fastboot reboot bootloader; 
+> fastboot boot boot-sm8150.img"
+> 
+> Also I need to switch slots everytime like above, otherwise I always see 
+> some error
+> while loading the boot image.
+> 
 
-Latter according to Greg KH. One of the (plenty) examples [1].
+What is the error? If it is "FAILED (remote: Failed to load/authenticate 
+boot image: Load Error)" then flashing/erasing boot_a will make it go 
+away ("fastboot erase boot_a") for the next 6 or so "failed" boots.
 
-[1]: https://www.mail-archive.com/driverdev-devel@linuxdriverproject.org/msg96495.html
-
-> nowayout has a configuration default. A module parameter is sometimes
-> provided by drivers to be able to override it. The timeout provided
-> via devicetree or on the command line is only the initial/default
-> timeout, and the watchdog daemon can change it after opening the
-> watchdog device as it sees fit.
-
-Thanks for explanation.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Thanks,
+> Sai
+> 
