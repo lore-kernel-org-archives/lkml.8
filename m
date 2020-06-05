@@ -2,111 +2,94 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A550FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3558FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81F6D2065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591395196;
-	bh=5QuyW6zi8y0JzH17dgq9yKJtxvQZa38YuG8nZaakSus=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=gnMtfz02IZbBXGsC24pcCtOsPTBE7i8xtzesBvTWVEYB6aBv3fkg/YC4qUNetj8yG
-	 xLXaYyqQ9Z/5451Nf4R1sckBRhshqllicujBh2SihcXgjwk6fteyTThYqLY7w05qIL
-	 TAWPHxp9n49pMaG5jaot/hdII3eShRSO7kNgvwyA=
+	by mail.kernel.org (Postfix) with ESMTP id 05ED4206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:13:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yiwIMii5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgFEWNQ (ORCPT
+        id S1728353AbgFEWNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728013AbgFEWNP (ORCPT
+        Fri, 5 Jun 2020 18:13:55 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56534 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbgFEWNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:13:15 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB42C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 15:13:14 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id o7so8832987oti.9
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 15:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4KUZ4vRpKIe3qa77IAxpCMFQKithPWzH7hezTb7q7nk=;
-        b=ZdOrQY7G3ajRdNewu9pCCMymN5/xTvu8X1N/jdjsU4beSpSLUHtWP70EnMyM7sbQLk
-         VrpISQ0cIQoNcVXSSJGDMidlz5Fo9h4+wDqc8d6mFZMzrrnhbQY011QMNb/CTQsHQYsj
-         KKkAp6bY/Dm3TZV/zpUv82C/5k3lpYGPD85og=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4KUZ4vRpKIe3qa77IAxpCMFQKithPWzH7hezTb7q7nk=;
-        b=ijymUfV4sjyinPTnHq/n1yl++RmCcQGPT40EMxdlGRV1XMaxokf8TW6T8x6wwV56FM
-         74j4Z8db7EBhy0MEx2DfbUWENcg+oDRQzSzLMXWjmABQhBY/8QN5i/z9amjQMaLYw8/9
-         x9cJN+oSsYDxMJKOL1Y2+eHUraHggtUI77uCmHoflXaUXYOYBI/1xaz9/hwAjEbiz3bJ
-         JWU1x7VlOYlukkq9VyoZlsjdb4k7gVVlcEi338iNwTdJngFOIOI0ddHtaFKsx9sAcBMN
-         ofNE2JxAM1//IOggQCn+woRSDeA2HQgHD5kq3VJJjymz3vrid/P+QLB0R8W/xRPZyqzC
-         RtOQ==
-X-Gm-Message-State: AOAM531tKsqhC0aqv1xga0GMY8KBGSVRY+1h++VrhMg+3Ub2grRM+v6D
-        Q4HCVWltgpHGG97ZjmXrX5YXDA==
-X-Google-Smtp-Source: ABdhPJwLYIQM+XujncUEcDbtC5NuhnZCRaliaqneZj6TT8D5NezIxrWSFGtEXfep3uy+OGZV7MV0TQ==
-X-Received: by 2002:a9d:5d0b:: with SMTP id b11mr8677745oti.97.1591395193352;
-        Fri, 05 Jun 2020 15:13:13 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id q186sm948995oib.12.2020.06.05.15.13.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 15:13:12 -0700 (PDT)
-Subject: Re: [PATCH 5.6 00/43] 5.6.17-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200605140152.493743366@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <54d45ae5-0354-a401-af46-d80f01cf450f@linuxfoundation.org>
-Date:   Fri, 5 Jun 2020 16:13:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 5 Jun 2020 18:13:54 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 055MDq9F083614;
+        Fri, 5 Jun 2020 17:13:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591395232;
+        bh=bfbj0ZmfHj4Nq5JyfXLL6/Je6X3wkUQXXHeCX4U1k54=;
+        h=From:To:CC:Subject:Date;
+        b=yiwIMii5VPM+zgba3v4wuTz0d0b+yVixNyk4bxJJP/vch6mOp7kHGBLjs11IPPW49
+         Mjqb1DJi8CRLVfeMKYJvDH8o6XY9jZ4SgVeA5vdTM5B9Xf+ftFBBpOa2BgvptDMTcC
+         /U6lCNUd9x3QeuJ0DXTLFX2AMjeGeJg4OOWl0YLc=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 055MDqkM019134;
+        Fri, 5 Jun 2020 17:13:52 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 5 Jun
+ 2020 17:13:52 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 5 Jun 2020 17:13:52 -0500
+Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 055MDq8q120069;
+        Fri, 5 Jun 2020 17:13:52 -0500
+Received: from localhost ([10.250.70.56])
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 055MDqZ3005494;
+        Fri, 5 Jun 2020 17:13:52 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/2] DRA7 timer/mailbox dts fixes
+Date:   Fri, 5 Jun 2020 17:13:45 -0500
+Message-ID: <20200605221347.15735-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/20 8:14 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.17 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi Tony,
 
-Compiled and booted on my test system. No dmesg regressions.
+The following 2 patches are couple of minor fixes that clean up
+couple of commits from the "ARM: dts: dra7/am57xx: remoteproc
+support" series [1]. Please pick these for the 5.8-rc fixes.
 
-thanks,
--- Shuah
+The issues look to be result of incorrect rebase-conflict resolution
+of the downstream TI patches based on 5.4 kernel.
+
+regards
+Suman
+
+[1] https://patchwork.kernel.org/cover/11508091/
+
+Suman Anna (2):
+  ARM: dts: dra7: Fix timer nodes properly for timer_sys_ck clocks
+  ARM: dts: dra7-evm-common: Fix duplicate mailbox nodes
+
+ arch/arm/boot/dts/dra7-evm-common.dtsi | 20 ---------------
+ arch/arm/boot/dts/dra7-l4.dtsi         | 34 ++++++++++++--------------
+ 2 files changed, 16 insertions(+), 38 deletions(-)
+
+-- 
+2.26.0
 
