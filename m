@@ -2,219 +2,112 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82287C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35CCD20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366861;
-	bh=umiSH6ioX2bIsjS5nGw2vO3OqCRPvDFXaBKXrrMWYEg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=lwWpX+dVtGcBu0n6/zq/DxYFG6ryt6ppamlazW6Te76bD6HSyy25VP2552Odl7qEm
-	 fSTfe/Wu6ctIho6Gt+F3QwsFqyU7APVJrNDAqo4Dr2S72FmtbxvmLTVcxhQAvIBzXu
-	 X1hj8ivzZzj81ZcFTxluhgc12KZMDvlWyXZZyrZk=
+	by mail.kernel.org (Postfix) with ESMTP id 5F8E920663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZcD+SvbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbgFEOVA (ORCPT
+        id S1728598AbgFEOVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbgFEOUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:20:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 5 Jun 2020 10:21:09 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27313 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728971AbgFEOUk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:20:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591366838;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tYrH+EqixLCGC0o9Vgv8h3T7kXXMELTRVth7woAonUk=;
+        b=ZcD+SvbYI+xwFHK8R/lo6oC7BSQikOCWkpYy/QFUOWXxYHTg8+/nauHUVwaBBNv05/3RTz
+        jqN98n6Nfa9shlAVK0l/ICC5otmSqnuceWVUyOaS5df9LG8J0QdnSEMaHoKtAJ12IK2VDz
+        sth0q32TpNIE15OAoZxFx4+FCuxrOFM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-Dy9Io7yKN9-dp3U52YM0uA-1; Fri, 05 Jun 2020 10:20:37 -0400
+X-MC-Unique: Dy9Io7yKN9-dp3U52YM0uA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59732074B;
-        Fri,  5 Jun 2020 14:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366831;
-        bh=umiSH6ioX2bIsjS5nGw2vO3OqCRPvDFXaBKXrrMWYEg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nlLs3qrxqWVa6Sljx78Qopo7F8/pGpBEfNop2Gmh1EpwimK+k/zqHqTSdmBgsKEI3
-         KklpEP4CpB7D89+Hth8DrpvKbBBhjunozQjho+B8dleUgGL7+H7jUDPNjIKbmLEKL5
-         9ZLtZ2oQYZEUpBx2rTWqwS6/md/bKQG41y0VxmII=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.19 00/28] 4.19.127-rc1 review
-Date:   Fri,  5 Jun 2020 16:15:02 +0200
-Message-Id: <20200605140252.338635395@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91AEB1005510;
+        Fri,  5 Jun 2020 14:20:35 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.93])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E6B2E6292E;
+        Fri,  5 Jun 2020 14:20:29 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Marcelo Bandeira Condotta <mcondotta@redhat.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: selftests: Fix "make ARCH=x86_64" build with
+Date:   Fri,  5 Jun 2020 16:20:28 +0200
+Message-Id: <20200605142028.550068-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.127-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.127-rc1
-X-KernelTest-Deadline: 2020-06-07T14:02+00:00
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.19.127 release.
-There are 28 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+Marcelo reports that kvm selftests fail to build with
+"make ARCH=x86_64":
 
-Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
-Anything received after that time might be too late.
+gcc -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99
+ -fno-stack-protector -fno-PIE -I../../../../tools/include
+ -I../../../../tools/arch/x86_64/include  -I../../../../usr/include/
+ -Iinclude -Ilib -Iinclude/x86_64 -I.. -c lib/kvm_util.c
+ -o /var/tmp/20200604202744-bin/lib/kvm_util.o
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.127-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-and the diffstat can be found below.
+In file included from lib/kvm_util.c:11:
+include/x86_64/processor.h:14:10: fatal error: asm/msr-index.h: No such
+ file or directory
 
-thanks,
+ #include <asm/msr-index.h>
+          ^~~~~~~~~~~~~~~~~
+compilation terminated.
 
-greg k-h
+"make ARCH=x86", however, works. The problem is that arch specific headers
+for x86_64 live in 'tools/arch/x86/include', not in
+'tools/arch/x86_64/include'.
 
--------------
-Pseudo-Shortlog of commits:
+Fixes: 66d69e081b52 ("selftests: fix kvm relocatable native/cross builds and installs")
+Reported-by: Marcelo Bandeira Condotta <mcondotta@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ tools/testing/selftests/kvm/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.19.127-rc1
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    net: smsc911x: Fix runtime PM imbalance on error
-
-Jonathan McDowell <noodles@earth.li>
-    net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
-
-Valentin Longchamp <valentin@longchamp.me>
-    net/ethernet/freescale: rework quiesce/activate for ucc_geth
-
-Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-    null_blk: return error for invalid zone size
-
-Gerald Schaefer <gerald.schaefer@de.ibm.com>
-    s390/mm: fix set_huge_pte_at() for empty ptes
-
-Jan Schmidt <jan@centricular.com>
-    drm/edid: Add Oculus Rift S to non-desktop list
-
-Jeremy Kerr <jk@ozlabs.org>
-    net: bmac: Fix read of MAC address from ROM
-
-Nathan Chancellor <natechancellor@gmail.com>
-    x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
-
-Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-    i2c: altera: Fix race between xfer_msg and isr thread
-
-Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-    evm: Fix RCU list related warnings
-
-Vineet Gupta <vgupta@synopsys.com>
-    ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT
-
-Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-    ARC: Fix ICCM & DCCM runtime size checks
-
-Vasily Gorbik <gor@linux.ibm.com>
-    s390/ftrace: save traced function caller
-
-Xinwei Kong <kong.kongxinwei@hisilicon.com>
-    spi: dw: use "smp_mb()" to avoid sending spi data error
-
-Anju T Sudhakar <anju@linux.vnet.ibm.com>
-    powerpc/powernv: Avoid re-registration of imc debugfs directory
-
-Xiang Chen <chenxiang66@hisilicon.com>
-    scsi: hisi_sas: Check sas_port before using it
-
-Lucas De Marchi <lucas.demarchi@intel.com>
-    drm/i915: fix port checks for MST support on gen >= 11
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    airo: Fix read overflows sending packets
-
-DENG Qingfang <dqfext@gmail.com>
-    net: dsa: mt7530: set CPU port to fallback mode
-
-Can Guo <cang@codeaurora.org>
-    scsi: ufs: Release clock if DMA map fails
-
-Jérôme Pouiller <jerome.pouiller@silabs.com>
-    mmc: fix compilation of user API
-
-Daniel Axtens <dja@axtens.net>
-    kernel/relay.c: handle alloc_percpu returning NULL in relay_open
-
-Giuseppe Marco Randazzo <gmrandazzo@gmail.com>
-    p54usb: add AirVasT USB stick device-id
-
-Julian Sax <jsbc@gmx.de>
-    HID: i2c-hid: add Schneider SCL142ALM to descriptor override
-
-Scott Shumate <scott.shumate@gmail.com>
-    HID: sony: Fix for broken buttons on DS3 USB dongles
-
-Fan Yang <Fan_Yang@sjtu.edu.cn>
-    mm: Fix mremap not considering huge pmd devmap
-
-Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-    libnvdimm: Fix endian conversion issues 
-
-Tejun Heo <tj@kernel.org>
-    Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race window"
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +--
- arch/arc/kernel/setup.c                            |  5 +--
- arch/arc/plat-eznps/Kconfig                        |  1 +
- arch/powerpc/platforms/powernv/opal-imc.c          | 39 +++++++++-------------
- arch/s390/kernel/mcount.S                          |  1 +
- arch/s390/mm/hugetlbpage.c                         |  9 +++--
- arch/x86/include/asm/pgtable.h                     |  1 +
- arch/x86/mm/mmio-mod.c                             |  4 +--
- drivers/block/null_blk_zoned.c                     |  4 +++
- drivers/gpu/drm/drm_edid.c                         |  3 +-
- drivers/gpu/drm/i915/intel_dp.c                    |  7 ++--
- drivers/gpu/drm/i915/intel_dp_mst.c                | 22 ++++++++----
- drivers/hid/hid-sony.c                             | 17 ++++++++++
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c           |  8 +++++
- drivers/i2c/busses/i2c-altera.c                    | 10 +++++-
- drivers/net/dsa/mt7530.c                           | 11 ++++--
- drivers/net/dsa/mt7530.h                           |  6 ++++
- drivers/net/ethernet/apple/bmac.c                  |  2 +-
- drivers/net/ethernet/freescale/ucc_geth.c          | 13 ++++----
- drivers/net/ethernet/smsc/smsc911x.c               |  9 ++---
- .../net/ethernet/stmicro/stmmac/dwmac-ipq806x.c    | 13 ++++++++
- drivers/net/wireless/cisco/airo.c                  | 12 +++++++
- drivers/net/wireless/intersil/p54/p54usb.c         |  1 +
- drivers/nvdimm/btt.c                               |  8 ++---
- drivers/nvdimm/namespace_devs.c                    |  7 ++--
- drivers/scsi/hisi_sas/hisi_sas_main.c              |  3 +-
- drivers/scsi/ufs/ufshcd.c                          |  1 +
- drivers/spi/spi-dw.c                               |  3 ++
- include/uapi/linux/mmc/ioctl.h                     |  1 +
- kernel/cgroup/rstat.c                              | 16 ++-------
- kernel/relay.c                                     |  5 +++
- mm/mremap.c                                        |  2 +-
- security/integrity/evm/evm_crypto.c                |  2 +-
- security/integrity/evm/evm_main.c                  |  4 +--
- security/integrity/evm/evm_secfs.c                 |  9 ++++-
- 35 files changed, 178 insertions(+), 85 deletions(-)
-
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index b4ff112e5c7e..4a166588d99f 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -83,7 +83,11 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
++ifeq ($(ARCH),x86_64)
++LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
++else
+ LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
++endif
+ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+ 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+ 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
+-- 
+2.25.4
 
