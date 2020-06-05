@@ -2,348 +2,504 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10525C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949DE206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36FA206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXRj6nyW"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="YqNXpf3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgFELir (ORCPT
+        id S1726482AbgFELjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:38:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28273 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726264AbgFELiq (ORCPT
+        Fri, 5 Jun 2020 07:39:17 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:35571 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgFELjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:38:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591357123;
+        Fri, 5 Jun 2020 07:39:16 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8E63422FEC;
+        Fri,  5 Jun 2020 13:39:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591357150;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RPLjknwiyhPl/s/r7c/4ZdmJ2YUuDqdRA7TA/XOryP8=;
-        b=SXRj6nyWAqrransvtDowxm3rha2s0RT4D1WYCZkjOw3DC/mUMXri1R9Uij3woFeGjRW5KB
-        5DhJVR/FBVtDHiObDE4vkdxE2PG3+AkORDWcnAh6hVygURq/f4tcuS7yJ8U3fwD/WCWrfJ
-        QawhmGOdyW5oC4NJG48gnn+lm32NWZE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-KGBmWjNyMKS2-bl6r5FrZg-1; Fri, 05 Jun 2020 07:38:40 -0400
-X-MC-Unique: KGBmWjNyMKS2-bl6r5FrZg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8539C19200C1;
-        Fri,  5 Jun 2020 11:38:38 +0000 (UTC)
-Received: from krava (unknown [10.40.193.237])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E3E0475294;
-        Fri,  5 Jun 2020 11:38:35 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 13:38:34 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static
- polled file descriptors
-Message-ID: <20200605113834.GC1404794@krava>
-References: <5de4b954-24f0-1e8d-5a0d-7b12783b8218@linux.intel.com>
- <3c92a0ad-d7d3-4e78-f0b8-1d3a7122c69e@linux.intel.com>
- <20200605105051.GA1404794@krava>
+        bh=82fCU3j2UFl91wX9eMDPOe26ZaWLsjPW25Pdt7Qzeqw=;
+        b=YqNXpf3MZvxSAINYteCPGwmZC+Bn5rwA7bDeQdwcEcjLALel/t7uq4t0EjmqtV/Rtj+hJK
+        zCso13VslSjtALjMRk8yWkwy9CmtTvSvPp5v9u1CBRENViZ+psv/LCtwLQJiH22Y+O63Sk
+        Tpq2i+mKVRY7oXST+pqHs/gGX54dWkc=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605105051.GA1404794@krava>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 13:39:09 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
+In-Reply-To: <20200605084915.GE3714@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-6-michael@walle.cc> <20200605084915.GE3714@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <9b539d32c70da72bea0abac0f7cd8e1c@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 12:50:54PM +0200, Jiri Olsa wrote:
-> On Wed, Jun 03, 2020 at 06:52:59PM +0300, Alexey Budankov wrote:
-> > 
-> > Implement adding of file descriptors by fdarray__add_stat() to
-> > fix-sized (currently 1) stat_entries array located at struct fdarray.
-> > Append added file descriptors to the array used by poll() syscall
-> > during fdarray__poll() call. Copy poll() result of the added
-> > descriptors from the array back to the storage for analysis.
-> > 
-> > Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> > ---
-> >  tools/lib/api/fd/array.c                 | 42 +++++++++++++++++++++++-
-> >  tools/lib/api/fd/array.h                 |  7 ++++
-> >  tools/lib/perf/evlist.c                  | 11 +++++++
-> >  tools/lib/perf/include/internal/evlist.h |  2 ++
-> >  4 files changed, 61 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> > index 58d44d5eee31..b0027f2169c7 100644
-> > --- a/tools/lib/api/fd/array.c
-> > +++ b/tools/lib/api/fd/array.c
-> > @@ -11,10 +11,16 @@
-> >  
-> >  void fdarray__init(struct fdarray *fda, int nr_autogrow)
-> >  {
-> > +	int i;
-> > +
-> >  	fda->entries	 = NULL;
-> >  	fda->priv	 = NULL;
-> >  	fda->nr		 = fda->nr_alloc = 0;
-> >  	fda->nr_autogrow = nr_autogrow;
-> > +
-> > +	fda->nr_stat = 0;
-> > +	for (i = 0; i < FDARRAY__STAT_ENTRIES_MAX; i++)
-> > +		fda->stat_entries[i].fd = -1;
-> >  }
-> >  
-> >  int fdarray__grow(struct fdarray *fda, int nr)
-> > @@ -83,6 +89,20 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
-> >  	return pos;
-> >  }
-> >  
-> > +int fdarray__add_stat(struct fdarray *fda, int fd, short revents)
-> > +{
-> > +	int pos = fda->nr_stat;
-> > +
-> > +	if (pos >= FDARRAY__STAT_ENTRIES_MAX)
-> > +		return -1;
-> > +
-> > +	fda->stat_entries[pos].fd = fd;
-> > +	fda->stat_entries[pos].events = revents;
-> > +	fda->nr_stat++;
-> > +
-> > +	return pos;
-> > +}
-> > +
-> >  int fdarray__filter(struct fdarray *fda, short revents,
-> >  		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
-> >  		    void *arg)
-> > @@ -113,7 +133,27 @@ int fdarray__filter(struct fdarray *fda, short revents,
-> >  
-> >  int fdarray__poll(struct fdarray *fda, int timeout)
-> >  {
-> > -	return poll(fda->entries, fda->nr, timeout);
-> > +	int nr, i, pos, res;
-> > +
-> > +	nr = fda->nr;
-> > +
-> > +	for (i = 0; i < fda->nr_stat; i++) {
-> > +		if (fda->stat_entries[i].fd != -1) {
-> > +			pos = fdarray__add(fda, fda->stat_entries[i].fd,
-> > +					   fda->stat_entries[i].events);
+Am 2020-06-05 10:49, schrieb Lee Jones:
+> On Thu, 04 Jun 2020, Michael Walle wrote:
 > 
-> so every call to fdarray__poll will add whatever is
-> in stat_entries to entries? how is it removed?
+>> Add support for the PWM controller of the sl28cpld board management
+>> controller. This is part of a multi-function device driver.
+>> 
+>> The controller has one PWM channel and can just generate four distinct
+>> frequencies.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>>  drivers/pwm/Kconfig        |  10 ++
+>>  drivers/pwm/Makefile       |   1 +
+>>  drivers/pwm/pwm-sl28cpld.c | 201 
+>> +++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 212 insertions(+)
+>>  create mode 100644 drivers/pwm/pwm-sl28cpld.c
+>> 
+>> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> index cb8d739067d2..a39371c11ff6 100644
+>> --- a/drivers/pwm/Kconfig
+>> +++ b/drivers/pwm/Kconfig
+>> @@ -437,6 +437,16 @@ config PWM_SIFIVE
+>>  	  To compile this driver as a module, choose M here: the module
+>>  	  will be called pwm-sifive.
+>> 
+>> +config PWM_SL28CPLD
+>> +	tristate "Kontron sl28 PWM support"
+>> +	depends on MFD_SL28CPLD
+>> +	help
+>> +	  Generic PWM framework driver for board management controller
+>> +	  found on the Kontron sl28 CPLD.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called pwm-sl28cpld.
+>> +
+>>  config PWM_SPEAR
+>>  	tristate "STMicroelectronics SPEAr PWM support"
+>>  	depends on PLAT_SPEAR || COMPILE_TEST
+>> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+>> index a59c710e98c7..c479623724e8 100644
+>> --- a/drivers/pwm/Makefile
+>> +++ b/drivers/pwm/Makefile
+>> @@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+>>  obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+>>  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+>>  obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+>> +obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
+>>  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+>>  obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
+>>  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+>> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+>> new file mode 100644
+>> index 000000000000..d82303f509f5
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-sl28cpld.c
+>> @@ -0,0 +1,201 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * sl28cpld PWM driver.
+>> + *
+>> + * Copyright 2019 Kontron Europe GmbH
 > 
-> I think you should either follow what Adrian said
-> and put 'static' descriptors early and check for
-> filter number to match it as an 'quick fix'
-> 
-> or we should fix it for real and make it generic
-> 
-> so currently the interface is like this:
-> 
->   pos1 = fdarray__add(a, fd1 ... );
->   pos2 = fdarray__add(a, fd2 ... );
->   pos3 = fdarray__add(a, fd2 ... );
-> 
->   fdarray__poll(a);
-> 
->   num = fdarray__filter(a, revents, destructor, arg);
-> 
-> when fdarray__filter removes some of the fds the 'pos1,pos2,pos3'
-> indexes are not relevant anymore
-> 
-> how about we make the 'pos indexes' being stable by allocating
-> separate object for each added descriptor and each poll call
-> would create pollfd array from current objects, and entries
-> would keep pointer to its pollfd entry
-> 
->   struct fdentry *entry {
->        int              fd;
->        int              events;
->        struct pollfd   *pollfd;
->   }
-> 
->   entry1 = fdarray__add(a, fd1 ...);
->   entry2 = fdarray__add(a, fd2 ...);
->   entry3 = fdarray__add(a, fd3 ...);
-> 
->   fdarray__poll(a);
-> 
->   struct pollfd *fdarray__entry_pollfd(a, entry1);
-> 
-> or smoething like that ;-)
+> This is out of date.
 
-maybe something like below (only compile tested)
+ok
 
-jirka
+> 
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pwm.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +/*
+>> + * PWM timer block registers.
+>> + */
+>> +#define PWM_CTRL		0x00
+>> +#define   PWM_ENABLE		BIT(7)
+>> +#define   PWM_MODE_250HZ	0
+>> +#define   PWM_MODE_500HZ	1
+>> +#define   PWM_MODE_1KHZ		2
+>> +#define   PWM_MODE_2KHZ		3
+>> +#define   PWM_MODE_MASK		GENMASK(1, 0)
+>> +#define PWM_CYCLE		0x01
+>> +#define   PWM_CYCLE_MAX		0x7f
+>> +
+>> +struct sl28cpld_pwm {
+>> +	struct pwm_chip pwm_chip;
+>> +	struct regmap *regmap;
+>> +	u32 offset;
+>> +};
+>> +
+>> +struct sl28cpld_pwm_periods {
+>> +	u8 ctrl;
+>> +	unsigned long duty_cycle;
+>> +};
+>> +
+>> +struct sl28cpld_pwm_config {
+>> +	unsigned long period_ns;
+>> +	u8 max_duty_cycle;
+>> +};
+> 
+> Also, instead of hand rolling your own structure here, I think it
+> would be prudent to re-use something that already exists.  Seeing as
+> this will be used to describe possible state, perhaps 'struct
+> pwm_state' would be suitable - leaving polarity and enabled
+> unpopulated of course.
+> 
+> Ah wait (sorry, thinking allowed and on-the-fly here), what is
+> max_duty_cycle here?  I assume this does not have the same
+> meaning/value-type as the one in 'struct pwm_state'.  What does
+> max_duty_cycle represent in your use-case?
 
+Its the max value of the PWM_CYCLE register, with one exception
+of the 250Hz mode. There it would be 0x7f; but it is used as a scaling
+factor too. Thus I added the "fixup" below.
 
----
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index 58d44d5eee31..f1effed3dde1 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -22,8 +22,8 @@ int fdarray__grow(struct fdarray *fda, int nr)
- 	void *priv;
- 	int nr_alloc = fda->nr_alloc + nr;
- 	size_t psize = sizeof(fda->priv[0]) * nr_alloc;
--	size_t size  = sizeof(struct pollfd) * nr_alloc;
--	struct pollfd *entries = realloc(fda->entries, size);
-+	size_t size  = sizeof(struct fdentry *) * nr_alloc;
-+	struct fdentry **entries = realloc(fda->entries, size);
- 
- 	if (entries == NULL)
- 		return -ENOMEM;
-@@ -58,7 +58,12 @@ struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow)
- 
- void fdarray__exit(struct fdarray *fda)
- {
-+	int i;
-+
-+	for (i = 0; i < fda->nr; i++)
-+		free(fda->entries[i]);
- 	free(fda->entries);
-+	free(fda->pollfd);
- 	free(fda->priv);
- 	fdarray__init(fda, 0);
- }
-@@ -69,18 +74,25 @@ void fdarray__delete(struct fdarray *fda)
- 	free(fda);
- }
- 
--int fdarray__add(struct fdarray *fda, int fd, short revents)
-+struct fdentry *fdarray__add(struct fdarray *fda, int fd, short revents)
- {
--	int pos = fda->nr;
-+	struct fdentry *entry;
- 
- 	if (fda->nr == fda->nr_alloc &&
- 	    fdarray__grow(fda, fda->nr_autogrow) < 0)
--		return -ENOMEM;
-+		return NULL;
-+
-+	entry = malloc(sizeof(*entry));
-+	if (!entry)
-+		return NULL;
-+
-+	entry->fd = fd;
-+	entry->revents = revents;
-+	entry->pollfd = NULL;
- 
--	fda->entries[fda->nr].fd     = fd;
--	fda->entries[fda->nr].events = revents;
-+	fda->entries[fda->nr] = entry;
- 	fda->nr++;
--	return pos;
-+	return entry;
- }
- 
- int fdarray__filter(struct fdarray *fda, short revents,
-@@ -93,7 +105,7 @@ int fdarray__filter(struct fdarray *fda, short revents,
- 		return 0;
- 
- 	for (fd = 0; fd < fda->nr; ++fd) {
--		if (fda->entries[fd].revents & revents) {
-+		if (fda->entries[fd]->revents & revents) {
- 			if (entry_destructor)
- 				entry_destructor(fda, fd, arg);
- 
-@@ -113,7 +125,22 @@ int fdarray__filter(struct fdarray *fda, short revents,
- 
- int fdarray__poll(struct fdarray *fda, int timeout)
- {
--	return poll(fda->entries, fda->nr, timeout);
-+	struct pollfd *pollfd = fda->pollfd;
-+	int i;
-+
-+	pollfd = realloc(pollfd, sizeof(*pollfd) * fda->nr);
-+	if (!pollfd)
-+		return -ENOMEM;
-+
-+	fda->pollfd = pollfd;
-+
-+	for (i = 0; i < fda->nr; i++) {
-+		pollfd[i].fd = fda->entries[i]->fd;
-+		pollfd[i].revents = fda->entries[i]->revents;
-+		fda->entries[i]->pollfd = &pollfd[i];
-+	}
-+
-+	return poll(pollfd, fda->nr, timeout);
- }
- 
- int fdarray__fprintf(struct fdarray *fda, FILE *fp)
-@@ -121,7 +148,12 @@ int fdarray__fprintf(struct fdarray *fda, FILE *fp)
- 	int fd, printed = fprintf(fp, "%d [ ", fda->nr);
- 
- 	for (fd = 0; fd < fda->nr; ++fd)
--		printed += fprintf(fp, "%s%d", fd ? ", " : "", fda->entries[fd].fd);
-+		printed += fprintf(fp, "%s%d", fd ? ", " : "", fda->entries[fd]->fd);
- 
- 	return printed + fprintf(fp, " ]");
- }
-+
-+int fdentry__events(struct fdentry *entry)
-+{
-+	return entry->pollfd->revents;
-+}
-diff --git a/tools/lib/api/fd/array.h b/tools/lib/api/fd/array.h
-index b39557d1a88f..5231ce047f2e 100644
---- a/tools/lib/api/fd/array.h
-+++ b/tools/lib/api/fd/array.h
-@@ -6,6 +6,12 @@
- 
- struct pollfd;
- 
-+struct fdentry {
-+	int		 fd;
-+	int		 revents;
-+	struct pollfd	*pollfd;
-+};
-+
- /**
-  * struct fdarray: Array of file descriptors
-  *
-@@ -20,7 +26,10 @@ struct fdarray {
- 	int	       nr;
- 	int	       nr_alloc;
- 	int	       nr_autogrow;
--	struct pollfd *entries;
-+
-+	struct fdentry	**entries;
-+	struct pollfd	 *pollfd;
-+
- 	union {
- 		int    idx;
- 		void   *ptr;
-@@ -33,7 +42,7 @@ void fdarray__exit(struct fdarray *fda);
- struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow);
- void fdarray__delete(struct fdarray *fda);
- 
--int fdarray__add(struct fdarray *fda, int fd, short revents);
-+struct fdentry *fdarray__add(struct fdarray *fda, int fd, short revents);
- int fdarray__poll(struct fdarray *fda, int timeout);
- int fdarray__filter(struct fdarray *fda, short revents,
- 		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
-@@ -41,6 +50,8 @@ int fdarray__filter(struct fdarray *fda, short revents,
- int fdarray__grow(struct fdarray *fda, int extra);
- int fdarray__fprintf(struct fdarray *fda, FILE *fp);
- 
-+int fdentry__events(struct fdentry *entry);
-+
- static inline int fdarray__available_entries(struct fdarray *fda)
- {
- 	return fda->nr_alloc - fda->nr;
+>> +static struct sl28cpld_pwm_config sl28cpld_pwm_config[] = {
+>> +	[PWM_MODE_250HZ] = { .period_ns = 4000000, .max_duty_cycle = 0x80 },
+>> +	[PWM_MODE_500HZ] = { .period_ns = 2000000, .max_duty_cycle = 0x40 },
+>> +	[PWM_MODE_1KHZ] = { .period_ns = 1000000, .max_duty_cycle = 0x20 },
+>> +	[PWM_MODE_2KHZ] = { .period_ns =  500000, .max_duty_cycle = 0x10 },
+>> +};
+> 
+> Tiny nit: If you lined these up from the '{'s it would be easier to
+> see/compare the period_ns values at first glance, rather than having
+> to count the ' 's and '0's.
 
+yep.
+
+> 
+>> +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip 
+>> *chip)
+>> +{
+>> +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
+>> +}
+> 
+> Why not save yourself the trouble and just:
+> 
+>   struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
+
+looks better, yes.
+
+> 
+>> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+>> +				   struct pwm_device *pwm,
+>> +				   struct pwm_state *state)
+>> +{
+>> +	struct sl28cpld_pwm *spc = to_sl28cpld_pwm(chip);
+>> +	static struct sl28cpld_pwm_config *config;
+>> +	unsigned int reg;
+>> +	unsigned long cycle;
+> 
+> Why is this 'long' here and 'long long' in *_apply()?
+
+cycle has a max value of "u8_max * <defined ulong from config above>",
+where below it might be "ulong * ulong". But for consinstency, I could
+make it unsigned long long here, too.
+
+>> +	unsigned int mode;
+>> +
+>> +	regmap_read(spc->regmap, spc->offset + PWM_CTRL, &reg);
+>> +
+>> +	state->enabled = reg & PWM_ENABLE;
+>> +
+>> +	mode = FIELD_GET(PWM_MODE_MASK, reg);
+>> +	config = &sl28cpld_pwm_config[mode];
+>> +	state->period = config->period_ns;
+>> +
+>> +	regmap_read(spc->regmap, spc->offset + PWM_CYCLE, &reg);
+>> +	cycle = reg * config->period_ns;
+>> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(cycle,
+>> +						  config->max_duty_cycle);
+>> +}
+>> +
+>> +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct 
+>> pwm_device *pwm,
+>> +			      const struct pwm_state *state)
+>> +{
+>> +	struct sl28cpld_pwm *spc = to_sl28cpld_pwm(chip);
+>> +	struct sl28cpld_pwm_config *config;
+>> +	unsigned long long cycle;
+>> +	int ret;
+>> +	int mode;
+>> +	u8 ctrl;
+>> +
+>> +	/* update config, first search best matching period */
+> 
+> Please use correct grammar (less full stops) in comments.
+
+ok
+
+> 
+>> +	for (mode = 0; mode < ARRAY_SIZE(sl28cpld_pwm_config); mode++) {
+>> +		config = &sl28cpld_pwm_config[mode];
+>> +		if (state->period == config->period_ns)
+>> +			break;
+>> +	}
+>> +
+>> +	if (mode == ARRAY_SIZE(sl28cpld_pwm_config))
+>> +		return -EINVAL;
+>> +
+>> +	ctrl = FIELD_PREP(PWM_MODE_MASK, mode);
+>> +	if (state->enabled)
+>> +		ctrl |= PWM_ENABLE;
+>> +
+>> +	cycle = state->duty_cycle * config->max_duty_cycle;
+>> +	do_div(cycle, state->period);
+> 
+> Forgive my ignorance (I'm new here!), but what are these 2 lines
+> doing?  Here we are multiplying the current duty_cycle with the
+> maximum value, then dividing by the period.
+> 
+> So in the case of PWM_MODE_1KHZ with a 50% duty cycle, you'd have:
+> 
+>    (500000 * 0x20[16]) / 1000000 = [0x10]16
+> 
+> Thus, the above gives as a proportional representation of the maximum
+> valid value for placement into the cycle control register(s), right?
+
+correct.
+
+> Either way (whether I'm correct or not), I think it would be nice to
+> mention this in a comment.  Maybe even clarify with a simple example.
+
+yes, I'll also look into the helper Andy mentioned. Thus it might be
+even self explanatory.
+
+>> +	/*
+>> +	 * The hardware doesn't allow to set max_duty_cycle if the
+>> +	 * 250Hz mode is enabled. But since this is "all-high" output
+>> +	 * just use the 500Hz mode with the duty cycle to max value.
+>> +	 */
+>> +	if (cycle == config->max_duty_cycle) {
+>> +		ctrl &= ~PWM_MODE_MASK;
+>> +		ctrl |= FIELD_PREP(PWM_MODE_MASK, PWM_MODE_500HZ);
+>> +		cycle = PWM_CYCLE_MAX;
+>> +	}
+> 
+> This is being executed even when 250Hz mode is not enabled.
+> 
+> Is that by design?
+
+Yes because the mode doesn't matter if you have a duty cycle of 100%.
+You'd be free to choose any mode except 250Hz.
+
+> If so, it doesn't match the comment.
+
+Mh? Ok its a bit confusing and it might imply that this is only done
+for the 250Hz case. But it doensn't mention it is _only_ used for this
+mode.
+
+/*
+  * The hardware doesn't allow to set max_duty_cycle if the
+  * 250Hz mode is enabled, thus we have to trap that here.
+  * But because a 100% duty cycle is equal on all modes, i.e.
+  * it is just a "all-high" output, we trap any case with a
+  * 100% duty cycle and use the 500Hz mode.
+  */
+
+>> +	ret = regmap_write(spc->regmap, spc->offset + PWM_CTRL, ctrl);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return regmap_write(spc->regmap, spc->offset + PWM_CYCLE, 
+>> (u8)cycle);
+>> +}
+>> +
+>> +static const struct pwm_ops sl28cpld_pwm_ops = {
+>> +	.apply = sl28cpld_pwm_apply,
+>> +	.get_state = sl28cpld_pwm_get_state,
+>> +	.owner = THIS_MODULE,
+>> +};
+>> +
+>> +static int sl28cpld_pwm_probe(struct platform_device *pdev)
+>> +{
+>> +	struct sl28cpld_pwm *pwm;
+> 
+> This is super confusing.  Here you call it 'pwm', but when you bring
+> the data to the fore for consumption, you call it something different
+> ('spc') for some reason.
+
+yeah it is :(
+
+> Is there logic behind this?
+
+And no it is not. sorry for that.
+
+>> +	struct pwm_chip *chip;
+>> +	int ret;
+>> +
+>> +	if (!pdev->dev.parent)
+>> +		return -ENODEV;
+>> +
+>> +	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+>> +	if (!pwm)
+>> +		return -ENOMEM;
+>> +
+>> +	pwm->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+>> +	if (!pwm->regmap)
+>> +		return -ENODEV;
+>> +
+>> +	ret = device_property_read_u32(&pdev->dev, "reg", &pwm->offset);
+> 
+> Really?  Can you use the 'reg' property in this way?
+
+Well formerly it was IORESOURCE_REG, which gives you a register offset,
+see commit 72dcb1197228b ("resources: Add register address resource 
+type").
+There is also the of_get_address(), but I doubt that would be correct 
+here,
+because it does bus mapping etc.
+So I looked at how other MFD drivers does it, most of the MFD have the
+advantage of having fixed register offsets and then just use hardcoded
+offsets. But there are some drivers which pull their offset out of the
+reg property from the device tree itself.
+
+$ grep -r "read_u32.*\"reg\"" drivers/
+$ grep -r "read_u32.*\"reg\".*base" drivers/
+
+Does anyone have a better idea?
+
+> Side question:
+>   Do any of your child address spaces actually overlap/intersect?
+
+nope. they are distinct.
+
+> 
+>> +	if (ret)
+>> +		return -EINVAL;
+>> +
+>> +	/* initialize struct pwm_chip */
+> 
+> Proper grammar please.
+ok
+
+> 
+>> +	chip = &pwm->pwm_chip;
+>> +	chip->dev = &pdev->dev;
+>> +	chip->ops = &sl28cpld_pwm_ops;
+>> +	chip->base = -1;
+>> +	chip->npwm = 1;
+>> +
+>> +	ret = pwmchip_add(&pwm->pwm_chip);
+>> +	if (ret < 0)
+> 
+> Is '> 0' even valid?
+> 
+> Suggest "!ret" here, as you have done above.
+
+Yes, same comment as Andy had on the other patches.
+
+>> +		return ret;
+>> +
+>> +	platform_set_drvdata(pdev, pwm);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int sl28cpld_pwm_remove(struct platform_device *pdev)
+>> +{
+>> +	struct sl28cpld_pwm *pwm = platform_get_drvdata(pdev);
+>> +
+>> +	return pwmchip_remove(&pwm->pwm_chip);
+>> +}
+>> +
+>> +static const struct of_device_id sl28cpld_pwm_of_match[] = {
+>> +	{ .compatible = "kontron,sl28cpld-pwm" },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
+>> +
+>> +static const struct platform_device_id sl28cpld_pwm_id_table[] = {
+>> +	{"sl28cpld-pwm"},
+> 
+> Spaces either side of the "'s please.
+
+ok
+
+> 
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(platform, sl28cpld_pwm_id_table);
+> 
+> What are you using this for?
+
+They are from the time when these drivers were mfd_cells. But I wanted
+to keep them here, if in the future there is another mfd driver which
+uses these drivers.
+
+>> +static struct platform_driver sl28cpld_pwm_driver = {
+>> +	.probe = sl28cpld_pwm_probe,
+>> +	.remove	= sl28cpld_pwm_remove,
+>> +	.id_table = sl28cpld_pwm_id_table,
+>> +	.driver = {
+>> +		.name = KBUILD_MODNAME,
+> 
+> Please just use the quoted name in full.
+
+Mhh, is there any rule for this? Sometimes KBUILD_MODNAME is used
+and sometimes an hardcoded name. I thought KBUILD_MODNAME is nice
+because it is filled automatically. And the platform probe use
+the .id_table anyway.
+
+>> +		.of_match_table = sl28cpld_pwm_of_match,
+>> +	},
+>> +};
+>> +module_platform_driver(sl28cpld_pwm_driver);
+>> +
+>> +MODULE_DESCRIPTION("sl28cpld PWM Driver");
+> 
+> "SL28CPLD" ?
+
+Actually no, I want to call that "sl28cpld". The first part
+is "sl28" (not SL28) and sl28CPLD looks pretty weird. I tried
+to be consistent on Kconfig/dt-bindings/drivers about this
+naming.
+
+>> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+>> +MODULE_LICENSE("GPL");
+
+-- 
+-michael
