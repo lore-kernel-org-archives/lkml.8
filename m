@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B103EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27309C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0C7206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127DE206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgFEVnS (ORCPT
+        id S1729075AbgFEVnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:43:18 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22540 "EHLO mga04.intel.com"
+        Fri, 5 Jun 2020 17:43:20 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55951 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728459AbgFEVjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728474AbgFEVjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jun 2020 17:39:11 -0400
-IronPort-SDR: Ck/l428LOmIEh13uTrknyTPNf3Ve8qHZnoBRkL0XmdvdF2/MN8ckVmMeAeBpL8iZAwZQF1pxVu
- Kwi3Tp84ONTg==
+IronPort-SDR: MIhXie+luem6AQuWYsAfnMf4XCzAq5WZKQdmf9vl7I0BQ7MKpSQd3oUn4wZHxW9h9vIhSoei1C
+ y16XtmQduBHA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:09 -0700
-IronPort-SDR: 2vA53k0HZWN/Kp6E7FCHy91RyFYDIfdanKPA3Czr7zQJAekmkw3WCHD9S0GeHJgFXT4E6Z6a3i
- SDsscy6zyNZg==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:08 -0700
+IronPort-SDR: K5xNZ3oXYp+oVBI7V1zZKjiJSJR0lMy065Lb/QLuNuIN9eZhnavo+VVKzrYDCA/IblpQWSVCl4
+ 30GwmqIJk2qg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="287860918"
+   d="scan'208";a="287860889"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:08 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -57,9 +57,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Junaid Shahid <junaids@google.com>,
         Ben Gardon <bgardon@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH 17/21] KVM: arm64: Use common code's approach for __GFP_ZERO with memory caches
-Date:   Fri,  5 Jun 2020 14:38:49 -0700
-Message-Id: <20200605213853.14959-18-sean.j.christopherson@intel.com>
+Subject: [PATCH 08/21] KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
+Date:   Fri,  5 Jun 2020 14:38:40 -0700
+Message-Id: <20200605213853.14959-9-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200605213853.14959-1-sean.j.christopherson@intel.com>
 References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
@@ -70,69 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a "gfp_zero" member to arm64's 'struct kvm_mmu_memory_cache' to make
-the struct and its usage compatible with the common 'struct
-kvm_mmu_memory_cache' in linux/kvm_host.h.  This will minimize code
-churn when arm64 moves to the common implementation in a future patch, at
-the cost of temporarily having somewhat silly code.
+Clean up the minimums in mmu_topup_memory_caches() to document the
+driving mechanisms behind the minimums.  Now that encountering an empty
+cache is unlikely to trigger BUG_ON(), it is less dangerous to be more
+precise when defining the minimums.
 
-No functional change intended.
+For rmaps, the logic is 1 parent PTE per level, plus a single rmap, and
+prefetched rmaps.  The extra objects in the current '8 + PREFETCH'
+minimum came about due to an abundance of paranoia in commit
+c41ef344de212 ("KVM: MMU: increase per-vcpu rmap cache alloc size"),
+i.e. it could have increased the minimum to 2 rmaps.  Furthermore, the
+unexpected extra rmap case was killed off entirely by commits
+f759e2b4c728c ("KVM: MMU: avoid pte_list_desc running out in
+kvm_mmu_pte_write") and f5a1e9f89504f ("KVM: MMU: remove call to
+kvm_mmu_pte_write from walk_addr").
+
+For the so called page cache, replace '8' with 2*PT64_ROOT_MAX_LEVEL.
+The 2x multiplier is needed because the cache is used for both shadow
+pages and gfn arrays for indirect MMUs.
+
+And finally, for page headers, replace '4' with PT64_ROOT_MAX_LEVEL.
+
+Note, KVM now supports 5-level paging, i.e. the old minimums that used a
+baseline derived from 4-level paging were technically wrong.  But, KVM
+always allocates roots in a separate flow, e.g. it's impossible in the
+current implementation to actually need 5 new shadow pages in a single
+flow.  Use PT64_ROOT_MAX_LEVEL unmodified instead of subtracting 1, as
+the direct usage is likely more intuitive to uninformed readers, and the
+inflated minimum is unlikely to affect functionality in practice.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/arm64/include/asm/kvm_host.h | 1 +
- arch/arm64/kvm/arm.c              | 2 ++
- arch/arm64/kvm/mmu.c              | 5 +++--
- 3 files changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index abbdf9703e20..2385dede96e0 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -105,6 +105,7 @@ struct kvm_arch {
-  */
- struct kvm_mmu_memory_cache {
- 	int nobjs;
-+	gfp_t gfp_zero;
- 	void *objects[KVM_NR_MEM_OBJS];
- };
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 4b4c3234d623..451e0365e5dd 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1103,14 +1103,17 @@ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
  
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 45276ed50dd6..4c98c6b4d850 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -270,6 +270,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	vcpu->arch.target = -1;
- 	bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
++	/* 1 rmap, 1 parent PTE per level, and the prefetched rmaps. */
+ 	r = mmu_topup_memory_cache(&vcpu->arch.mmu_pte_list_desc_cache,
+-				   8 + PTE_PREFETCH_NUM);
++				   1 + PT64_ROOT_MAX_LEVEL + PTE_PREFETCH_NUM);
+ 	if (r)
+ 		return r;
+-	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache, 8);
++	r = mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
++				   2 * PT64_ROOT_MAX_LEVEL);
+ 	if (r)
+ 		return r;
+-	return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache, 4);
++	return mmu_topup_memory_cache(&vcpu->arch.mmu_page_header_cache,
++				      PT64_ROOT_MAX_LEVEL);
+ }
  
-+	vcpu->arch.mmu_page_cache.gfp_zero = __GFP_ZERO;
-+
- 	/* Set up the timer */
- 	kvm_timer_vcpu_init(vcpu);
- 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 9398b66f8a87..688213ef34f0 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -131,7 +131,8 @@ static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache, int min)
- 	if (cache->nobjs >= min)
- 		return 0;
- 	while (cache->nobjs < ARRAY_SIZE(cache->objects)) {
--		page = (void *)__get_free_page(GFP_PGTABLE_USER);
-+		page = (void *)__get_free_page(GFP_KERNEL_ACCOUNT |
-+					       cache->gfp_zero);
- 		if (!page)
- 			return -ENOMEM;
- 		cache->objects[cache->nobjs++] = page;
-@@ -1342,7 +1343,7 @@ int kvm_phys_addr_ioremap(struct kvm *kvm, phys_addr_t guest_ipa,
- 	phys_addr_t addr, end;
- 	int ret = 0;
- 	unsigned long pfn;
--	struct kvm_mmu_memory_cache cache = { 0, };
-+	struct kvm_mmu_memory_cache cache = { 0, __GFP_ZERO, };
- 
- 	end = (guest_ipa + size + PAGE_SIZE - 1) & PAGE_MASK;
- 	pfn = __phys_to_pfn(pa);
+ static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
 -- 
 2.26.0
 
