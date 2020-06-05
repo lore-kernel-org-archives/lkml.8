@@ -2,121 +2,191 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F511C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0AE207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FC22067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Djwuxcxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgFEB05 (ORCPT
+        id S1726151AbgFEB2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 21:26:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5854 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725863AbgFEB05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 21:26:57 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E8A6B1303D2CBD83AA15;
-        Fri,  5 Jun 2020 09:26:54 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.10) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 5 Jun 2020
- 09:26:44 +0800
-Subject: Re: Question: livepatch failed for new fork() task stack unreliable
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
-        <cj.chengjian@huawei.com>, <mingo@redhat.com>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>,
-        <mbenes@suse.cz>, <devel@etsukata.com>, <viro@zeniv.linux.org.uk>,
-        <esyr@redhat.com>
-References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
- <20200529174433.wpkknhypx2bmjika@treble>
- <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
- <20200601180538.o5agg5trbdssqken@treble>
- <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
- <20200602131450.oydrydelpdaval4h@treble>
- <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
- <20200603153358.2ezz2pgxxxld7mj7@treble>
- <2225bc83-95f2-bf3d-7651-fdd10a3ddd00@huawei.com>
- <20200604024051.6ovbr6tbrowwg6jr@treble>
-From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Message-ID: <c3a81224-bea1-116b-7528-f03f90be5264@huawei.com>
-Date:   Fri, 5 Jun 2020 09:26:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 4 Jun 2020 21:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbgFEB2z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 21:28:55 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AF0C08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 18:28:53 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c12so8157024qkk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 18:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y/nqmn16Yw0SQZqn88EIVGM4HFQd8IWQBv7BdFGkZBA=;
+        b=Djwuxcxs7hMaNuqV5sa0Qt4loVXVD289IkhwAUeoo9toxuTynSobzLXQofFQ/mxxmA
+         chX1YXEbRvziHsS2t9CF+sRs3hitooR08WRDXrroJv4P7KQvweF5vSAapRuCRXxcin75
+         AMdZf0yCjV6zh6r2M2eGqgwJQzS57I0WUDha8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y/nqmn16Yw0SQZqn88EIVGM4HFQd8IWQBv7BdFGkZBA=;
+        b=sVGtbyZKxrLcNFQWxk8V1AVDtmIB5Ee0qARd4JNi7PAneZ82J28kOLEeXDMBHtjkYW
+         cDfjR4tzuP0B84PmnaQMdG30ZwNlOu09DZ5YQl/qsT/iBLlkIqkTIppSGKT2IoFrSMNk
+         287q7yoo9yva8P61CeDOucN+A07aA3vNfrzCKgYjSKZdhBSYH8At69sYP6qRXgmnOrq0
+         TaH4QMBD3PizUCpJIghcPqdwJP/lOfkXWzvbBfyC0XIa4eu4kp6Ij2FnIKVTGKwKgEiA
+         QQOhtxPZ6ODj/wXuSBcIIthHmINxmlb7E7wqz0CNXAMgVaMQhZuGTvM01988rGHQfHah
+         LbdA==
+X-Gm-Message-State: AOAM531cutiFHJENnBugIQ2yEgJ0cfem8Pi/yAFIOVxR4VczXZ5TZLYC
+        06KBI3HI9ibgWRdpBjpe2QWri3XcaYIPS3yI4LHvBw==
+X-Google-Smtp-Source: ABdhPJzI3XPBWQSo123FOo+T+xLNNe5zY7aIfXdAy9YU7XblVgMgV74iVNrnVs1mdh7B4N8NJ72GXVJk+yl0MoIt45U=
+X-Received: by 2002:a05:620a:21cc:: with SMTP id h12mr7527247qka.194.1591320533032;
+ Thu, 04 Jun 2020 18:28:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200604024051.6ovbr6tbrowwg6jr@treble>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.10]
-X-CFilter-Loop: Reflected
+References: <20200526105811.30784-1-stevensd@chromium.org> <20200526105811.30784-2-stevensd@chromium.org>
+ <20200604145620-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200604145620-mutt-send-email-mst@kernel.org>
+From:   David Stevens <stevensd@chromium.org>
+Date:   Fri, 5 Jun 2020 10:28:42 +0900
+Message-ID: <CAD=HUj74mKs5AfcViD3CBva86E0Hvg_pmYChAJe3ny8jtnZ8Tw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-在 2020/6/4 10:40, Josh Poimboeuf 写道:
-> On Thu, Jun 04, 2020 at 09:24:55AM +0800, Wangshaobo (bobo) wrote:
->> 在 2020/6/3 23:33, Josh Poimboeuf 写道:
->>> On Wed, Jun 03, 2020 at 10:06:07PM +0800, Wangshaobo (bobo) wrote:
->>> To be honest, I don't remember what I meant by sibling calls.  They
->>> don't even leave anything on the stack.
->>>
->>> For noreturns, the code might be laid out like this:
->>>
->>> func1:
->>> 	...
->>> 	call noreturn_foo
->>> func2:
->>>
->>> func2 is immediately after the call to noreturn_foo.  So the return
->>> address on the stack will actually be 'func2'.  We want to retrieve the
->>> ORC data for the call instruction (inside func1), instead of the
->>> instruction at the beginning of func2.
->>>
->>> I should probably update that comment.
->> So, I want to ask is there any side effects if i modify like this ? this
->> modification is based on
->>
->> your fix. It looks like ok with proper test.
->>
->> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
->> index e9cc182aa97e..ecce5051e8fd 100644
->> --- a/arch/x86/kernel/unwind_orc.c
->> +++ b/arch/x86/kernel/unwind_orc.c
->> @@ -620,6 +620,7 @@ void __unwind_start(struct unwind_state *state, struct
->> task_struct *task,
->>                  state->sp = task->thread.sp;
->>                  state->bp = READ_ONCE_NOCHECK(frame->bp);
->>                  state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
->> +              state->signal = ((void *)state->ip == ret_from_fork);
->>          }
->>
->> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
->> index 7f969b2d240f..d7396431261a 100644
->> --- a/arch/x86/kernel/unwind_orc.c
->> +++ b/arch/x86/kernel/unwind_orc.c
->> @@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
->>           state->sp = sp;
->>           state->regs = NULL;
->>           state->prev_regs = NULL;
->> -        state->signal = ((void *)state->ip == ret_from_fork);
->> +        state->signal = false;
->>           break;
-> Yes that's correct.
-
-Hi, josh
-
-Could i ask when are you free to send the patch, all the tests are 
-passed by.
-
-thanks for your help.
-
-Wang ShaoBo
-
+On Fri, Jun 5, 2020 at 4:05 AM Michael S. Tsirkin <mst@redhat.com> wrote:
 >
+> On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
+> > This change adds a new flavor of dma-bufs that can be used by virtio
+> > drivers to share exported objects. A virtio dma-buf can be queried by
+> > virtio drivers to obtain the UUID which identifies the underlying
+> > exported object.
+> >
+> > Signed-off-by: David Stevens <stevensd@chromium.org>
+>
+> Is this just for graphics? If yes I'd rather we put it in the graphics
+> driver. We can always move it later ...
 
+As stated in the cover letter, this will be used by virtio-video.
+
+The proposed virtio-video patches: https://markmail.org/thread/p5d3k566srtdtute
+The patch which imports these dma-bufs (slightly out of data, uses v3
+of this patch set): https://markmail.org/thread/j4xlqaaim266qpks
+
+> > ---
+> >  drivers/virtio/Makefile         |  2 +-
+> >  drivers/virtio/virtio.c         |  6 +++
+> >  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
+> >  include/linux/virtio.h          |  1 +
+> >  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
+> >  5 files changed, 155 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/virtio/virtio_dma_buf.c
+> >  create mode 100644 include/linux/virtio_dma_buf.h
+> >
+> > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> > index 29a1386ecc03..ecdae5b596de 100644
+> > --- a/drivers/virtio/Makefile
+> > +++ b/drivers/virtio/Makefile
+> > @@ -1,5 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> > -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
+> > +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
+> >  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
+> >  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
+> >  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+> > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> > index a977e32a88f2..5d46f0ded92d 100644
+> > --- a/drivers/virtio/virtio.c
+> > +++ b/drivers/virtio/virtio.c
+> > @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(register_virtio_device);
+> >
+> > +bool is_virtio_device(struct device *dev)
+> > +{
+> > +     return dev->bus == &virtio_bus;
+> > +}
+> > +EXPORT_SYMBOL_GPL(is_virtio_device);
+> > +
+> >  void unregister_virtio_device(struct virtio_device *dev)
+> >  {
+> >       int index = dev->index; /* save for after device release */
+> > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
+> > new file mode 100644
+> > index 000000000000..23e3399b11ed
+> > --- /dev/null
+> > +++ b/drivers/virtio/virtio_dma_buf.c
+> > @@ -0,0 +1,89 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * dma-bufs for virtio exported objects
+> > + *
+> > + * Copyright (C) 2020 Google, Inc.
+> > + */
+> > +
+> > +#include <linux/virtio_dma_buf.h>
+> > +
+> > +/**
+> > + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
+> > + *
+> > + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
+> > + * for an virtio exported object that can be queried by other virtio drivers
+> > + * for the object's UUID.
+> > + */
+> > +struct dma_buf *virtio_dma_buf_export(
+> > +             const struct virtio_dma_buf_export_info *virtio_exp_info)
+> > +{
+> > +     struct dma_buf_export_info exp_info;
+> > +
+> > +     if (!virtio_exp_info->ops
+> > +             || virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
+> > +             || !virtio_exp_info->ops->get_uuid) {
+> > +             return ERR_PTR(-EINVAL);
+> > +     }
+> > +
+> > +     exp_info.exp_name = virtio_exp_info->exp_name;
+> > +     exp_info.owner = virtio_exp_info->owner;
+> > +     exp_info.ops = &virtio_exp_info->ops->ops;
+> > +     exp_info.size = virtio_exp_info->size;
+> > +     exp_info.flags = virtio_exp_info->flags;
+> > +     exp_info.resv = virtio_exp_info->resv;
+> > +     exp_info.priv = virtio_exp_info->priv;
+> > +     BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
+> > +                  != sizeof(struct dma_buf_export_info));
+>
+> This is the only part that gives me pause. Why do we need this hack?
+> What's wrong with just using dma_buf_export_info directly,
+> and if you want the virtio ops, just using container_off?
+
+This approach provides a more explicit type signature and a little
+more type safety, I think. If others don't think it's a worthwhile
+tradeoff, I can remove it.
+
+-David
