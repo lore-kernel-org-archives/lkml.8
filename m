@@ -2,145 +2,273 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2640BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1222070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE442070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367065;
-	bh=6zwGUGo6IJLz1UzgMnCPHNAuZNi38tSvN2PQ+FnbxdA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZvsPn4ygfB9bMfvYTw9Y/JhYm38nhL7rOizuZoFpy3x5XD20BxGD6O/a89oIN5aA
-	 CQoCxiB/iDmZLHtPqxuIP1LHdsaDuho+xX9tAPCfeaH0XK2gWe5KD8wdAZ4iB8aVvY
-	 a0XvEvp7ktDQ2bVGLRCpQIzWCZRyvIdnsufT2rvM=
+	s=default; t=1591367074;
+	bh=CSMlLBYgl5Nmk7+v5wUhOureDDmhx5eQUc3OZLF1P9o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=b9UvMnovTrZ/q2UR5y0cVNjtfs4bcdqQRNnJqaZufYDHQ1kdXJEFgGtmWpsnIPt9W
+	 QRsPTJ70HtyGXmq48uU0GYlIWY8AMNvQubofd9ydgylCvMVDrO2z30tT/xcI6/epRP
+	 BlTSMkJ72iETtHgWJUzqR8bZfQZHRlqSv5INfkU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgFEOYX (ORCPT
+        id S1727773AbgFEOYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728496AbgFEORg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E64208B6;
-        Fri,  5 Jun 2020 14:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366655;
-        bh=6zwGUGo6IJLz1UzgMnCPHNAuZNi38tSvN2PQ+FnbxdA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y58PH5Uy6N7d7r56oZcYtUWWx13jyHJbPNQQtgLrJ1nUXWP48ztkeMPcr/2ZaPw8h
-         4PLXzTYg+/XMxZS1Wm4aL0rOF1HUJybTtt/Nws+lA+Xf2mzCeymEqfVNbCrK9Yz9ra
-         2J/Q9n7PKTQ1mbeROcM2JnkYRw2wvHmCmwk/Di8Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 09/43] x86/hyperv: Properly suspend/resume reenlightenment notifications
-Date:   Fri,  5 Jun 2020 16:14:39 +0200
-Message-Id: <20200605140153.012469521@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
-References: <20200605140152.493743366@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 5 Jun 2020 10:24:33 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34054 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbgFEOY3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:24:29 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b18so7744600oti.1;
+        Fri, 05 Jun 2020 07:24:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tBXueIgAhTGePYxt4EA55wVZofFmvGwvt4Ki1Dv4GFA=;
+        b=aEV7FqksQd0gIYU7bYycgaO8nuoE5dbEeYMNQJzG5oiNlJ+61YF1BcFyqCx7n4+pc9
+         bxFl3ItSo+VUsec7EqF3898PN1U9RYxEXZTaEnmPKf+ujROiwpUbApj4CNQhDsDW6MeY
+         HKA2PHbQoKXnv+GjoaOyRElxEzizRqFPHnwuWTDZUKKEQIWZSp8XvNKO6Ydf+0H8Hnw5
+         JOWbyRZdvx+ljUJtb2fVX4dET58lEgT/TBZhrzKH5SDhXS1p1SOh3NCbmfFpYrVmKTKy
+         APfnRj8a2gf6CDHejTMA0M9ScXq/yX79ISwLmt+s/EqqVgBMNW3d51+okoucIhGZgKR3
+         atow==
+X-Gm-Message-State: AOAM531gauS4Ik36SnXHLcX1m9ya2Bn52+lm15rxCG1Y0sVuko9ld7Df
+        bt0b4pwQNHbEefu5fxi/PMPoVSwXPmfv/C2xlB0=
+X-Google-Smtp-Source: ABdhPJwy4jpEuDjrt8q3LXzO0rVxqzf6M+4Nesej+p2sIPTXtf3ctDMxValFlrEDgGEaAVQUrxJRQcB6qzJ38s8xigk=
+X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr7496168otq.167.1591367067427;
+ Fri, 05 Jun 2020 07:24:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
+ <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz> <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+ <202006041054.874AA564@keescook> <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz> <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com> <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+In-Reply-To: <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 5 Jun 2020 16:24:16 +0200
+Message-ID: <CAJZ5v0iYDSTWWR-JO4YkMCE3ohBWm=L0Uyfhz83kHzOdONhojA@mail.gmail.com>
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+acpi_os_allocate_zeroed(On Fri, Jun 5, 2020 at 4:08 PM Vlastimil Babka
+<vbabka@suse.cz> wrote:
+>
+> On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
+> > On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+> >>
+> >> On 2020-06-05 11:36, Vegard Nossum wrote:
+> >> >
+> >> > On 2020-06-05 11:11, Vlastimil Babka wrote:
+> >> >> On 6/4/20 8:46 PM, Vlastimil Babka wrote:
+> >> >>> On 6/4/20 7:57 PM, Kees Cook wrote:
+> >> >>>> On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
+> >> >>>>> On 2020-06-04 19:18, Vlastimil Babka wrote:
+> >> >>>>>> On 6/4/20 7:14 PM, Vegard Nossum wrote:
+> >> >>>>>>>
+> >> >>>>>>> Hi all,
+> >> >>>>>>>
+> >> >>>>>>> I ran into a boot problem with latest linus/master
+> >> >>>>>>> (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests like this:
+> >> >>>>>>
+> >> >>>>>> Hi, what's the .config you use?
+> >> >>>>>
+> >> >>>>> Pretty much x86_64 defconfig minus a few options (PCI, USB, ...)
+> >> >>>>
+> >> >>>> Oh yes indeed. I immediately crash in the same way with this config.
+> >> >>>> I'll
+> >> >>>> start digging...
+> >> >>>>
+> >> >>>> (defconfig finishes boot)
+> >> >>>
+> >> >>> This is funny, booting with slub_debug=F results in:
+> >> >>> I'm not sure if it's ACPI or ftrace wrong here, but looks like the
+> >> >>> changed
+> >> >>> free pointer offset merely exposes a bug in something else.
+> >> >>
+> >> >> So, with Kees' patch reverted, booting with slub_debug=F (or even more
+> >> >> specific slub_debug=F,ftrace_event_field) also hits this bug below. I
+> >> >> wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
+> >> >> further in history. So it's not new at all, and likely very specific to
+> >> >> your config+QEMU? (and related to the ACPI error messages that precede
+> >> >> it?).
+> >> >
+> >> > I see it too, but not on v5.0. I can bisect it.
+> >>
+> >> commit 67a72420a326b45514deb3f212085fb2cd1595b5
+> >> Author: Bob Moore <robert.moore@intel.com>
+> >> Date:   Fri Aug 16 14:43:21 2019 -0700
+> >>
+> >>      ACPICA: Increase total number of possible Owner IDs
+> >>
+> >>      ACPICA commit 1f1652dad88b9d767767bc1f7eb4f7d99e6b5324
+> >>
+> >>      From 255 to 4095 possible IDs.
+> >>
+> >>      Link: https://github.com/acpica/acpica/commit/1f1652da
+> >>      Reported-by: Hedi Berriche <hedi.berriche @hpe.com>
+> >>      Signed-off-by: Bob Moore <robert.moore@intel.com>
+> >>      Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+> >>      Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Bob, Erik, did we miss something in that patch?
+>
+> Maybe the patch just changes layout in a way that exposes the bug.
+>
+> Anyway the "ftrace_event_field" cache is not really involved, this is just
+> because of slab merging. After adding "slub_nomerge" to "slub_debug=F", it
+> starts making more sense, as the cache becomes Acpi-Namespace
+>
+> [    0.140408] ------------[ cut here ]------------
+> [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+> [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+> [    0.142105] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #45
+> [    0.142393] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+> [    0.142393] RIP: 0010:kmem_cache_free+0x1d3/0x250
+> [    0.142393] Code: 18 4d 85 ed 0f 84 10 ff ff ff 4c 39 ed 74 2f 49 8b 4d 58 48 8b 55 58 48 c7 c6 10 47 a1 ac 48 c7 c7 00 c2 b0 ac e8 b1 cc eb ff <0f> 0b 48 89 de 4c 89 ef e8 10 d7 ff ff 48 8b 15 59 36 9b 00 4c 89
+> [    0.142393] RSP: 0018:ffffb39cc0013dc0 EFLAGS: 00010282
+> [    0.142393] RAX: 0000000000000000 RBX: ffff937287409e00 RCX: 0000000000000000
+> [    0.142393] RDX: 0000000000000001 RSI: 0000000000000092 RDI: ffffffffacfdd32c
+> [    0.142393] RBP: ffff93728742ef00 R08: ffffb39cc0013c7d R09: 00000000000000fc
+> [    0.142393] R10: ffffb39cc0013c78 R11: ffffb39cc0013c7d R12: ffff937307409e00
+> [    0.142393] R13: ffff937287401d00 R14: 0000000000000000 R15: 0000000000000000
+> [    0.142393] FS:  0000000000000000(0000) GS:ffff937287a00000(0000) knlGS:0000000000000000
+> [    0.142393] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.142393] CR2: 0000000000000000 CR3: 0000000003a0a000 CR4: 00000000003406f0
+> [    0.142393] Call Trace:
+> [    0.142393]  acpi_os_release_object+0x5/0x10
+> [    0.142393]  acpi_ns_delete_children+0x46/0x59
+> [    0.142393]  acpi_ns_delete_namespace_subtree+0x5c/0x79
+> [    0.142393]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.142393]  acpi_ns_terminate+0xc/0x31
+> [    0.142393]  acpi_ut_subsystem_shutdown+0x45/0xa3
+> [    0.142393]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.142393]  acpi_terminate+0x5/0xf
+> [    0.142393]  acpi_init+0x27b/0x308
+> [    0.142393]  ? video_setup+0x79/0x79
+> [    0.142393]  do_one_initcall+0x7b/0x160
+> [    0.142393]  kernel_init_freeable+0x190/0x1f2
+> [    0.142393]  ? rest_init+0x9a/0x9a
+> [    0.142393]  kernel_init+0x5/0xf6
+> [    0.142393]  ret_from_fork+0x22/0x30
+> [    0.142393] ---[ end trace 3539f236ef812ba1 ]---
+> [    0.142396] ------------[ cut here ]------------
+>
+> I've also changed the warning so it's not printed just once, and also prints tracking info
+> (see the hunk at the end of my mail, I'll turn this to a proper patch later).
+>
+> With "slub_debug=FU slub_nomerge" there are now multiple warnings, but they all look the same:
+>
+> [    0.143815] ------------[ cut here ]------------
+> [    0.144131] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+> [    0.144929] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+> [    0.145129] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #45
+> [    0.145129] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+> [    0.145129] RIP: 0010:kmem_cache_free+0x1d3/0x250
+> [    0.145129] Code: 18 4d 85 ed 0f 84 10 ff ff ff 4c 39 ed 74 2f 49 8b 4d 58 48 8b 55 58 48 c7 c6 10 47 c1 8d 48 c7 c7 00 c2 d0 8d e8 b1 cc eb ff <0f> 0b 48 89 de 4c 89 ef e8 10 d7 ff ff 48 8b 15 59 36 9b 00 4c 89
+> [    0.145129] RSP: 0018:ffff990b80013dc0 EFLAGS: 00010282
+> [    0.145129] RAX: 0000000000000000 RBX: ffff972d474ada80 RCX: 0000000000000000
+> [    0.145129] RDX: 0000000000000001 RSI: 0000000000000092 RDI: ffffffff8e1dd32c
+> [    0.145129] RBP: ffff972d47425680 R08: ffff990b80013c7d R09: 00000000000000fc
+> [    0.145129] R10: ffff990b80013c78 R11: ffff990b80013c7d R12: ffff972dc74ada80
+> [    0.145129] R13: ffff972d474038c0 R14: 0000000000000000 R15: 0000000000000000
+> [    0.145129] FS:  0000000000000000(0000) GS:ffff972d47a00000(0000) knlGS:0000000000000000
+> [    0.145129] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.145129] CR2: 0000000000000000 CR3: 000000000660a000 CR4: 00000000003406f0
+> [    0.145129] Call Trace:
+> [    0.145129]  acpi_os_release_object+0x5/0x10
+> [    0.145129]  acpi_ns_delete_children+0x46/0x59
+> [    0.145129]  acpi_ns_delete_namespace_subtree+0x5c/0x79
+> [    0.145129]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.145129]  acpi_ns_terminate+0xc/0x31
+> [    0.145129]  acpi_ut_subsystem_shutdown+0x45/0xa3
+> [    0.145129]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.145129]  acpi_terminate+0x5/0xf
+> [    0.145129]  acpi_init+0x27b/0x308
+> [    0.145129]  ? video_setup+0x79/0x79
+> [    0.145129]  do_one_initcall+0x7b/0x160
+> [    0.145129]  kernel_init_freeable+0x190/0x1f2
+> [    0.145129]  ? rest_init+0x9a/0x9a
+> [    0.145129]  kernel_init+0x5/0xf6
+> [    0.145129]  ret_from_fork+0x22/0x30
+> [    0.145129] ---[ end trace 574554fca7bd06bb ]---
+> [    0.145133] INFO: Allocated in acpi_ns_root_initialize+0xb6/0x2d1 age=58 cpu=0 pid=0
+> [    0.145881]  kmem_cache_alloc_trace+0x1a9/0x1c0
+> [    0.146132]  acpi_ns_root_initialize+0xb6/0x2d1
+> [    0.146578]  acpi_initialize_subsystem+0x65/0xa8
+> [    0.147024]  acpi_early_init+0x5d/0xd1
+> [    0.147132]  start_kernel+0x45b/0x518
+> [    0.147491]  secondary_startup_64+0xb6/0xc0
+> [    0.147897] ------------[ cut here ]------------
+>
+> And it seems ACPI is allocating an object via kmalloc() and then freeing it
+> via kmem_cache_free(<"Acpi-Namespace" kmem_cache>) which is wrong.
+>
+> > ./scripts/faddr2line vmlinux 'acpi_ns_root_initialize+0xb6'
+> acpi_ns_root_initialize+0xb6/0x2d1:
+> kmalloc at include/linux/slab.h:555
+> (inlined by) kzalloc at include/linux/slab.h:669
+> (inlined by) acpi_os_allocate_zeroed at include/acpi/platform/aclinuxex.h:57
+> (inlined by) acpi_ns_root_initialize at drivers/acpi/acpica/nsaccess.c:102
+>
+>
+> ----8<----
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 207c83ef6e06..282e78964018 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -503,6 +503,7 @@ static __always_inline void uncharge_slab_page(struct page *page, int order,
+>         memcg_uncharge_slab(page, order, s);
+>  }
+>
+> +extern void print_tracking(struct kmem_cache *s, void *object);
+>  static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+>  {
+>         struct kmem_cache *cachep;
+> @@ -520,9 +521,11 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+>                 return s;
+>
+>         cachep = virt_to_cache(x);
+> -       WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
+> +       if (WARN(cachep && !slab_equal_or_root(cachep, s),
+>                   "%s: Wrong slab cache. %s but object is from %s\n",
+> -                 __func__, s->name, cachep->name);
+> +                 __func__, s->name, cachep->name)) {
+> +               print_tracking(cachep, x);
+> +       }
+>         return cachep;
+>  }
 
-[ Upstream commit 38dce4195f0daefb566279fd9fd51e1fbd62ae1b ]
-
-Errors during hibernation with reenlightenment notifications enabled were
-reported:
-
- [   51.730435] PM: hibernation entry
- [   51.737435] PM: Syncing filesystems ...
- ...
- [   54.102216] Disabling non-boot CPUs ...
- [   54.106633] smpboot: CPU 1 is now offline
- [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
-     write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
-     native_write_msr+0x4/0x20)
- [   54.110006] Call Trace:
- [   54.110006]  hv_cpu_die+0xd9/0xf0
- ...
-
-Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
-other CPU when the CPU receiving them goes offline. Upon hibernation, there
-is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
-returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
-Disable the feature when cpumask_any_but() fails.
-
-Also, as we now disable reenlightenment notifications upon hibernation we
-need to restore them on resume. Check if hv_reenlightenment_cb was
-previously set and restore from hv_resume().
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lore.kernel.org/r/20200512160153.134467-1-vkuznets@redhat.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index fd51bac11b46..acf76b466db6 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -226,10 +226,18 @@ static int hv_cpu_die(unsigned int cpu)
- 
- 	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
- 	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
--		/* Reassign to some other online CPU */
-+		/*
-+		 * Reassign reenlightenment notifications to some other online
-+		 * CPU or just disable the feature if there are no online CPUs
-+		 * left (happens on hibernation).
-+		 */
- 		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
- 
--		re_ctrl.target_vp = hv_vp_index[new_cpu];
-+		if (new_cpu < nr_cpu_ids)
-+			re_ctrl.target_vp = hv_vp_index[new_cpu];
-+		else
-+			re_ctrl.enabled = 0;
-+
- 		wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
- 	}
- 
-@@ -293,6 +301,13 @@ static void hv_resume(void)
- 
- 	hv_hypercall_pg = hv_hypercall_pg_saved;
- 	hv_hypercall_pg_saved = NULL;
-+
-+	/*
-+	 * Reenlightenment notifications are disabled by hv_cpu_die(0),
-+	 * reenable them here if hv_reenlightenment_cb was previously set.
-+	 */
-+	if (hv_reenlightenment_cb)
-+		set_hv_tscchange_cb(hv_reenlightenment_cb);
- }
- 
- /* Note: when the ops are called, only CPU0 is online and IRQs are disabled. */
--- 
-2.25.1
-
-
-
+Well, the bug seems to be that the object in question is allocated via
+acpi_os_allocate_zeroed() while it should be allocated with
+acpi_os_acquire_object().
