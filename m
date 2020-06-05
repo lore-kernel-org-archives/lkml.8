@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF40C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C6C206F0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F7F20663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367086;
-	bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
+	s=default; t=1591367090;
+	bh=9mlew+T5MYTclm4qpeBkC48ikEN7pUijM+H1WgFcwLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QkuH16niDc/W633/XAaGR1Op+Ak42AKfs2aYAx+ejRyDbdcBoU0TTLiOMAQxS/FFI
-	 qm6+FLN/5l8l70TPJbSZlbwQY9vEz3cHTOCHcRmdpOih26yGnVNrhQtYvSS8JDBOWK
-	 xQ675BEVS0QxhNhE0LuIoGjq1mLJzuhWca2IcifE=
+	b=Pwe9hyQC/vXZID0Qh4zCo/YdVYvmtm8au+CGBNd1dgNmzzRZJKl8oroq5IyRl6OJA
+	 dDHB4EqvakJQTZwKQH24X5U7lSRcOdLa3nZC9e6+5tU9fasC1WxKo3oLdI4d0HVGde
+	 DfgV6H528e6LwQBlWTSLxgejsNMQg5PUvzqaQAjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgFEORL (ORCPT
+        id S1728803AbgFEOYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46358 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728380AbgFEORE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:04 -0400
+        id S1728406AbgFEORL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CCA206A2;
-        Fri,  5 Jun 2020 14:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C85B208B8;
+        Fri,  5 Jun 2020 14:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366623;
-        bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
+        s=default; t=1591366630;
+        bh=9mlew+T5MYTclm4qpeBkC48ikEN7pUijM+H1WgFcwLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hhO2/9IrU7IspBJ58prpwMhelImop+aW5d8BDpvpaKZIgok4/Yr8gHyBOrQoCMpu/
-         +R7jhHrhU1z75sk2Zd4H8nTyB8nt4qbjQKUaVGsmLQbXq6hkAiiUij6PgVJYSWcesS
-         pwWK47DkXKQkpHKEt2gkUEy7f8fKTPwbPJQQU7KY=
+        b=ANVgxI0dNvZJiliBvcU/T52sppjU8QwW++74FvQAToIef09NIigSYOggqoLb0T9B0
+         tKlYG69S+HbegTWYuwszUOqXaRevTUEyZpPL1+mWkeQWTOdXFTBSgNeA4zR5j1QOvt
+         Rk+GVtOg3wUbou3ZBAhcNjdIiOk6YxxOOT3TBWN0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 28/43] selftests: mlxsw: qos_mc_aware: Specify arping timeout as an integer
-Date:   Fri,  5 Jun 2020 16:14:58 +0200
-Message-Id: <20200605140153.998720440@linuxfoundation.org>
+Subject: [PATCH 5.6 30/43] net: smsc911x: Fix runtime PM imbalance on error
+Date:   Fri,  5 Jun 2020 16:15:00 +0200
+Message-Id: <20200605140154.101716876@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -62,43 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Cohen <amitc@mellanox.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 46ca11177ed593f39d534f8d2c74ec5344e90c11 ]
+[ Upstream commit 539d39ad0c61b35f69565a037d7586deaf6d6166 ]
 
-Starting from iputils s20190709 (used in Fedora 31), arping does not
-support timeout being specified as a decimal:
+Remove runtime PM usage counter decrement when the
+increment function has not been called to keep the
+counter balanced.
 
-$ arping -c 1 -I swp1 -b 192.0.2.66 -q -w 0.1
-arping: invalid argument: '0.1'
-
-Previously, such timeouts were rounded to an integer.
-
-Fix this by specifying the timeout as an integer.
-
-Fixes: a5ee171d087e ("selftests: mlxsw: qos_mc_aware: Add a test for UC awareness")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Reviewed-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-index 24dd8ed48580..b025daea062d 100755
---- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-+++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-@@ -300,7 +300,7 @@ test_uc_aware()
- 	local i
+diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
+index 49a6a9167af4..fc168f85e7af 100644
+--- a/drivers/net/ethernet/smsc/smsc911x.c
++++ b/drivers/net/ethernet/smsc/smsc911x.c
+@@ -2493,20 +2493,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
  
- 	for ((i = 0; i < attempts; ++i)); do
--		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 0.1; then
-+		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 1; then
- 			((passes++))
- 		fi
+ 	retval = smsc911x_init(dev);
+ 	if (retval < 0)
+-		goto out_disable_resources;
++		goto out_init_fail;
  
+ 	netif_carrier_off(dev);
+ 
+ 	retval = smsc911x_mii_init(pdev, dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	}
+ 
+ 	retval = register_netdev(dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	} else {
+ 		SMSC_TRACE(pdata, probe,
+ 			   "Network interface: \"%s\"", dev->name);
+@@ -2547,9 +2547,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-out_disable_resources:
++out_init_fail:
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++out_disable_resources:
+ 	(void)smsc911x_disable_resources(pdev);
+ out_enable_resources_fail:
+ 	smsc911x_free_resources(pdev);
 -- 
 2.25.1
 
