@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ABEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E213C208A9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC4A21527
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366658;
-	bh=prOMc/RStpaK3YUH4KzHyr5ESVXotKLWP1/xmvu8a7w=;
+	s=default; t=1591366662;
+	bh=wa6gO+L0hyvh69MnAos/uWPgEGhyjuAYeC+eZMTDkvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XmF0oLUxhn+UgjMHXp4gjPDQGHzQqFQYEGw3MXJgehkFvfR5+uF4vP6P1CXjRabzF
-	 IyfwX5WS0iuoaENCvlSkbfRb/l0Sgq6t9p0RuODRmExtSH88fJW/UteJuUQoW7baV3
-	 TAv5UIt9SMqurHGf3YIrPF79UI6JI1ddgx5BJQFI=
+	b=I6pVtER0OUUzCiBPmvnn8dL2Bc+RLaQR91It0yrQONu3yPtWefG2Xg75i1N4u5bWJ
+	 voj02AZV6CzIQ1K18CmmzMr6BSJiT2NWrACFbmEIUZwBcSlgOhlY8MY9cvaUASTnCV
+	 47saYnutuNP6XpJMhHWLQuj+/VV4MuOdJ+S53S6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgFEORi (ORCPT
+        id S1728518AbgFEORl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46910 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728484AbgFEORa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:30 -0400
+        id S1728474AbgFEOR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44CE920835;
-        Fri,  5 Jun 2020 14:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD33206A2;
+        Fri,  5 Jun 2020 14:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366648;
-        bh=prOMc/RStpaK3YUH4KzHyr5ESVXotKLWP1/xmvu8a7w=;
+        s=default; t=1591366646;
+        bh=wa6gO+L0hyvh69MnAos/uWPgEGhyjuAYeC+eZMTDkvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D19uAaLJ/olPgY/Zh3RmLy5N+Wn22ejIZstY8E/Ns1UU7k+daetjv7sUmu95LNYP7
-         J/TmyCI1+6pVdR71pSjH6ycWnRBZ8OBWhxo0m8uxtQN/UVDz4UGlAnIaHuMOCNNeN0
-         +7C3zri5PZKcE3GuPQSx8imtf0P9UTXumtGhIRpA=
+        b=JNP9EC7aIcA1M51u0eWB0VfTtd6/s4lKcJ82NcIbk41r24oCok2ZYb6dBLqGm0qvH
+         jONNLCWUNkFrua+9tkK4gx9orUfIpNLVnaE0pQMoYSFzpZ4WXa0x1oK2hegI4Mst7z
+         GwA91QzxyC+KJk0PB0e43r344cVzyB/OVJDYvLEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 06/43] evm: Fix RCU list related warnings
-Date:   Fri,  5 Jun 2020 16:14:36 +0200
-Message-Id: <20200605140152.855884236@linuxfoundation.org>
+Subject: [PATCH 5.6 05/43] efi/libstub: Avoid returning uninitialized data from setup_graphics()
+Date:   Fri,  5 Jun 2020 16:14:35 +0200
+Message-Id: <20200605140152.804286341@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -62,91 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-[ Upstream commit 770f60586d2af0590be263f55fd079226313922c ]
+[ Upstream commit 081d5150845ba3fa49151a2f55d3cc03b0987509 ]
 
-This patch fixes the following warning and few other instances of
-traversal of evm_config_xattrnames list:
+Currently, setup_graphics() ignores the return value of efi_setup_gop(). As
+AllocatePool() does not zero out memory, the screen information table will
+contain uninitialized data in this case.
 
-[   32.848432] =============================
-[   32.848707] WARNING: suspicious RCU usage
-[   32.848966] 5.7.0-rc1-00006-ga8d5875ce5f0b #1 Not tainted
-[   32.849308] -----------------------------
-[   32.849567] security/integrity/evm/evm_main.c:231 RCU-list traversed in non-reader section!!
+We should free the screen information table if efi_setup_gop() returns an
+error code.
 
-Since entries are only added to the list and never deleted, use
-list_for_each_entry_lockless() instead of list_for_each_entry_rcu for
-traversing the list.  Also, add a relevant comment in evm_secfs.c to
-indicate this fact.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org> (RCU viewpoint)
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Link: https://lore.kernel.org/r/20200426194946.112768-1-xypron.glpk@gmx.de
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/evm/evm_crypto.c | 2 +-
- security/integrity/evm/evm_main.c   | 4 ++--
- security/integrity/evm/evm_secfs.c  | 9 ++++++++-
- 3 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/firmware/efi/libstub/arm-stub.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index cc826c2767a3..fbc2ee6d46fc 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -209,7 +209,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
- 	data->hdr.length = crypto_shash_digestsize(desc->tfm);
- 
- 	error = -ENODATA;
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		bool is_ima = false;
- 
- 		if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
-diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index f9a81b187fae..a2c393385db0 100644
---- a/security/integrity/evm/evm_main.c
-+++ b/security/integrity/evm/evm_main.c
-@@ -99,7 +99,7 @@ static int evm_find_protected_xattrs(struct dentry *dentry)
- 	if (!(inode->i_opflags & IOP_XATTR))
- 		return -EOPNOTSUPP;
- 
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0);
- 		if (error < 0) {
- 			if (error == -ENODATA)
-@@ -230,7 +230,7 @@ static int evm_protected_xattr(const char *req_xattr_name)
- 	struct xattr_list *xattr;
- 
- 	namelen = strlen(req_xattr_name);
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		if ((strlen(xattr->name) == namelen)
- 		    && (strncmp(req_xattr_name, xattr->name, namelen) == 0)) {
- 			found = 1;
-diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-index c11c1f7b3ddd..0f37ef27268d 100644
---- a/security/integrity/evm/evm_secfs.c
-+++ b/security/integrity/evm/evm_secfs.c
-@@ -234,7 +234,14 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
- 		goto out;
+diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+index 7bbef4a67350..30e77a9e62b2 100644
+--- a/drivers/firmware/efi/libstub/arm-stub.c
++++ b/drivers/firmware/efi/libstub/arm-stub.c
+@@ -59,7 +59,11 @@ static struct screen_info *setup_graphics(void)
+ 		si = alloc_screen_info();
+ 		if (!si)
+ 			return NULL;
+-		efi_setup_gop(si, &gop_proto, size);
++		status = efi_setup_gop(si, &gop_proto, size);
++		if (status != EFI_SUCCESS) {
++			free_screen_info(si);
++			return NULL;
++		}
  	}
- 
--	/* Guard against races in evm_read_xattrs */
-+	/*
-+	 * xattr_list_mutex guards against races in evm_read_xattrs().
-+	 * Entries are only added to the evm_config_xattrnames list
-+	 * and never deleted. Therefore, the list is traversed
-+	 * using list_for_each_entry_lockless() without holding
-+	 * the mutex in evm_calc_hmac_or_hash(), evm_find_protected_xattrs()
-+	 * and evm_protected_xattr().
-+	 */
- 	mutex_lock(&xattr_list_mutex);
- 	list_for_each_entry(tmp, &evm_config_xattrnames, list) {
- 		if (strcmp(xattr->name, tmp->name) == 0) {
+ 	return si;
+ }
 -- 
 2.25.1
 
