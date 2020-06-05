@@ -2,99 +2,144 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D95C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F286DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB14220738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OtREKoQi"
+	by mail.kernel.org (Postfix) with ESMTP id DC0B6207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgFECwQ (ORCPT
+        id S1726068AbgFECy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:52:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFECwP (ORCPT
+        Thu, 4 Jun 2020 22:54:59 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:17489 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgFECy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:52:15 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473C9C08C5C0;
-        Thu,  4 Jun 2020 19:52:14 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c8so8697059iob.6;
-        Thu, 04 Jun 2020 19:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=a9/BhDYNHe+rJFbOUG8VhW/tYR8LSfIiYbqfLja5GMo=;
-        b=OtREKoQiRzE3FsJBBPwfIZQwQnIDLTp1UToGEPSYpO/94D+3/LsNX6r8RsrlvZf7pc
-         EWP3mmFpAei4+SD/MfkcNXL+1xV1VZkSHvXH0EGq+Gip2v00QI+NniTYNLkzgAwN3PG8
-         L0fYd8SLnOmaNU/+5naOGaNb+KoogzkOuvnCidLze61OiBxyi/kv9sD6CY5pflzzg0UI
-         x1guuQY1wIy0PEG46dkcOnw2QihWXCa1lXS9QH2AsTXzdGZHB1I56b8d1kvQZPJCjjl9
-         gcX/KuWmgaY8klqICXx2lAmwdBQNlayH0R2+FOpuNu0IATNfmkspwGKBn/7Dw2OO38Vf
-         uwYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=a9/BhDYNHe+rJFbOUG8VhW/tYR8LSfIiYbqfLja5GMo=;
-        b=QNAmYpIWZPssCISnsaN0xRKYCE/M+yhq/uVgCx3m7pCe+1l5al3bWwtojT5BLV0hB0
-         PZLvbmXZ1HH0VGBhn41OpCGkWMimPPijBsSPgacAezF2Dij6YD/NDxzVqxbORfJva6IO
-         2nLMU8Ui0AGngvV/dDE8iXy0DJVxobFVhUWIYvlO/QXts9QJGYXIAVeHa6oPwJQx8y5i
-         W1kRJSWkUNCACAbHXfnBGmLyKWhQzOcWghvBxzmwlYVh45xA/bMtR5fJBMpY4p02XQIf
-         MNqP5Ib5BNkuUAMjWx6d9ZQcO+mOTWgLJ/PrMavRWcCVbqqooFSWyjnECfVo2bRXlHdq
-         F4nA==
-X-Gm-Message-State: AOAM533fEFogIqQYb6t+pcRQALW7Qi3c4H8HFwmli482JcsnAIXrjOgL
-        RwK7Q7uO/62tZ72JhVn75XM=
-X-Google-Smtp-Source: ABdhPJx/TrPQqYnd7PBwGQiPNNhc8iu4CnLHribpvWJ/qWXwLT0rRs2RzHLfrbnswv3QXIX7xB42dQ==
-X-Received: by 2002:a02:b704:: with SMTP id g4mr3855393jam.138.1591325533547;
-        Thu, 04 Jun 2020 19:52:13 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id p11sm738898ioo.26.2020.06.04.19.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 19:52:13 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] gpio: arizona: handle pm_runtime_get_sync failure case
-Date:   Thu,  4 Jun 2020 21:52:07 -0500
-Message-Id: <20200605025207.65719-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 4 Jun 2020 22:54:59 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 0552rtPd075823;
+        Fri, 5 Jun 2020 10:53:55 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 25B3BC43AAFD1364824D;
+        Fri,  5 Jun 2020 10:53:55 +0800 (CST)
+In-Reply-To: <20200603055359.y35dwznglc7tlewq@yadavpratyush.com>
+References: <1590737775-4798-1-git-send-email-masonccyang@mxic.com.tw> <1590737775-4798-8-git-send-email-masonccyang@mxic.com.tw> <20200529094202.7vjs7clhykncivux@yadavpratyush.com> <OF577383DB.7BF12AA3-ON4825857B.002468AB-4825857B.00250F16@mxic.com.tw> <20200603055359.y35dwznglc7tlewq@yadavpratyush.com>
+To:     "Pratyush Yadav" <me@yadavpratyush.com>
+Cc:     boris.brezillon@collabora.com, broonie@kernel.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        matthias.bgg@gmail.com, miquel.raynal@bootlin.com, p.yadav@ti.com,
+        richard@nod.at, tudor.ambarus@microchip.com, vigneshr@ti.com
+Subject: Re: [PATCH v4 7/7] mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for
+ Macronix mx25uw51245g
+MIME-Version: 1.0
+X-KeepSent: 72696CF7:123ABE04-4825857E:000F9054;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF72696CF7.123ABE04-ON4825857E.000F9054-4825857E.000FEC12@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 5 Jun 2020 10:53:55 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/06/05 AM 10:53:55,
+        Serialize complete at 2020/06/05 AM 10:53:55
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 0552rtPd075823
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/gpio/gpio-arizona.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > > 
+> > > > +#define MXIC_CR2_DUMMY_SET_ADDR 0x300
+> > > > +
+> > > > +/* Fixup the dummy cycles to device and setup octa_dtr_enable() 
+*/
+> > > > +static void mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
+> > > > +{
+> > > > +   struct spi_nor_flash_parameter *params = nor->params;
+> > > > +   int ret;
+> > > > +   u8 rdc, wdc;
+> > > > +
+> > > > +   ret = spi_nor_read_cr2(nor, MXIC_CR2_DUMMY_SET_ADDR, &rdc);
+> > > > +   if (ret)
+> > > > +      return;
+> > > > +
+> > > > +   /* Refer to dummy cycle and frequency table(MHz) */
+> > > > +   switch (params->dummy_cycles) {
+> > > > +   case 10:   /* 10 dummy cycles for 104 MHz */
+> > > > +      wdc = 5;
+> > > > +      break;
+> > > > +   case 12:   /* 12 dummy cycles for 133 MHz */
+> > > > +      wdc = 4;
+> > > > +      break;
+> > > > +   case 16:   /* 16 dummy cycles for 166 MHz */
+> > > > +      wdc = 2;
+> > > > +      break;
+> > > > +   case 18:   /* 18 dummy cycles for 173 MHz */
+> > > > +      wdc = 1;
+> > > > +      break;
+> > > > +   case 20:   /* 20 dummy cycles for 200 MHz */
+> > > > +   default:
+> > > > +      wdc = 0;
+> > > > +   }
+> > > 
+> > > I don't get the point of this. You already know the fastest the 
+> > > mx25uw51245g flash can run at. Why not just use the maximum dummy 
+> > > cycles? SPI NOR doesn't know the speed the controller is running at 
+so 
+> > > the best it can do is use the maximum dummy cycles possible so it 
+never 
+> > > falls short. Sure, it will be _slightly_ less performance, but we 
+will 
+> > > be sure to read the correct data, which is much much more important.
+> > 
+> > In general, 200MHz needs 20 dummy cycles but some powerful device may 
+only 
+> > 
+> > needs 18 dummy cycles or less.
+> 
+> Yes, but do different mx25uw51245g chips have different dummy cycle 
+> requirements? Shouldn't all the chips with the same ID have same 
+> performance?
+> 
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 5640efe5e750..7520a13b4c7c 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -106,6 +106,7 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
- 		ret = pm_runtime_get_sync(chip->parent);
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-+			pm_runtime_put(chip->parent);
- 			return ret;
- 		}
- 	}
--- 
-2.17.1
+Same chip ID but different grade,
+i.e., commercial or industrial grade. 
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
