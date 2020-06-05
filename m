@@ -2,116 +2,109 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22153C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9FA2075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC76B2067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:50:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wJA8AXXE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgFEKtK (ORCPT
+        id S1726774AbgFEKu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:49:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:53574 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbgFEKtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:49:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 617481FB;
-        Fri,  5 Jun 2020 03:49:09 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.11.98])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E9553F52E;
-        Fri,  5 Jun 2020 03:49:07 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 11:49:04 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH RESEND v3 0/6] arm64: add the time namespace support
-Message-ID: <20200605104904.GE85498@C02TD0UTHF1T.local>
-References: <20200602180259.76361-1-avagin@gmail.com>
+        Fri, 5 Jun 2020 06:50:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgFEKuZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 06:50:25 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617BEC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 03:50:24 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 202so5525849lfe.5
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 03:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A6PBqcu4dVcPaFrw4BGh+fD0tEbF0DBVHcXKAqEgRwQ=;
+        b=wJA8AXXEALmx6h3BWpbD9/vkieuXWksBsDZWq9Pl2uDeXenuSDoa0dznCTcn+aMeH1
+         FDIoPzENIOa7kle1EeAj9gaWffiLBBFmuAngkJioqKpQekFVlm6P0k9pkF5h2JIR5qAg
+         1sndcEZykPljB5wOYiMZa+ML8HJ98KRc/fLqhiZketrr8WCL5b5gk0CKHY8OgGK0JirH
+         SrOXZPgxeIIZZEuIxfWlJIeUu9CUFvtJLJQaSXgkyiNvFiZil1NumLc9kpGLuzKLh/dq
+         J6IaWNL2ex89PXCoVGoLet+kf9ulu9/9GpwsVhF0mQYfKxQVU9ZnK6wCSQlm89kVsN4s
+         gSyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A6PBqcu4dVcPaFrw4BGh+fD0tEbF0DBVHcXKAqEgRwQ=;
+        b=mRo4NKbY+v86T0hn+5i44gqvMv92reSxGDWKiW1rFzDH4zLTBA0n4dJm1rXfb53jQC
+         GCxLm6liceWM/dt9AasQVIoqzlo56/dtHXKXgolfO27vp5JwqHMGRfa6936SIuLGd4e1
+         EXtkeQHbuypRU3Sv3GhQ2TLJ6IKVVa3zZg1KM0UyPRHVrzKzzQOY1oPgtlvay5X4O+LQ
+         gZz9d0MFqH7u7957XMQXeYJenMuWjkp02qoeYBd6l6yRi8+3DCY8nFd6QNgOtrwtwlZV
+         qiAWwGXYE75n1tDtqUQ4W4Alzgzb1ZfJkZeeFAW+yxh+Va2fK+axtSVXM3ppRSoyrj/T
+         PZjw==
+X-Gm-Message-State: AOAM533Wm2hyGblPfagFX6jbUhVs5cA3L58TPVoFHyMeGnKFBSNR6vd2
+        D+LZptJXV+RqHyfsNTLsZBizaGR7E3pPRwhEPfYduA==
+X-Google-Smtp-Source: ABdhPJzOJiojtwmNr5SOMrlaeXW50qJdj5r2rISr3n1YjgPpD4saq3YvUGnbwmqz/JJwarjnkhdVjFMdX/8wIL2olCA=
+X-Received: by 2002:ac2:55b2:: with SMTP id y18mr5064475lfg.55.1591354222649;
+ Fri, 05 Jun 2020 03:50:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602180259.76361-1-avagin@gmail.com>
+References: <CA+G9fYuGwcE3zyMFQPpfA0CyW=4WOg9V=kCfKhS7b8930jQofA@mail.gmail.com>
+ <203212099.14886500.1591345676708.JavaMail.zimbra@redhat.com>
+In-Reply-To: <203212099.14886500.1591345676708.JavaMail.zimbra@redhat.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 5 Jun 2020 16:20:10 +0530
+Message-ID: <CA+G9fYv=2xqP0ue69jk-xMa7VRwg0dOm14TqkNUazsqvxbU0_A@mail.gmail.com>
+Subject: Re: LTP: syscalls: regression on mainline - ioctl_loop01 mknod07 setns01
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     LTP List <ltp@lists.linux.it>,
+        open list <linux-kernel@vger.kernel.org>,
+        chrubis <chrubis@suse.cz>, Arnd Bergmann <arnd@arndb.de>,
+        Martijn Coenen <maco@android.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        Richard Palethorpe <rpalethorpe@suse.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrei,
+On Fri, 5 Jun 2020 at 13:58, Jan Stancek <jstancek@redhat.com> wrote:
+>
+>
+>
+> ----- Original Message -----
+> > Following three test cases reported as regression on Linux mainline kernel
+> > on x86_64, arm64, arm and i386
+> >
+> >   ltp-syscalls-tests:
+> >     * ioctl_loop01
+> >     * mknod07
+>
+> Test updated:
+>   https://github.com/linux-test-project/ltp/commit/13fcfa2d6bdd1fb71c4528b47170e8e8fb3a8a32
 
-As a heads up, in mainline the arm64 vdso code has been refactored since
-v5.7, and this series will need to be rebased atop. Given we're in the
-middle of the merge window, I would suggest waiting until rc1 before
-posting a rebased series.
+ack.
 
-In the meantime, the relevant patches can be found in arm64's for-next/core
-branch:
+>
+> >     * setns01
+>
+> commit 303cc571d107 ("nsproxy: attach to namespaces via pidfds")
+> changed errno that is returned for regular file from EINVAL to EBADF.
+> This appears to fit more current man page, so I think we need to fix
+> test to accept both. (I'm looking into that)
 
-git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+Thanks for investigating these failures.
 
-... which was merged into mainline in commit:
-
-  533b220f7be4e461 ("Merge tag 'arm64-upstream' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux")
-
-Thanks,
-Mark.
-
-On Tue, Jun 02, 2020 at 11:02:53AM -0700, Andrei Vagin wrote:
-> Allocate the time namespace page among VVAR pages and add the logic
-> to handle faults on VVAR properly.
-> 
-> If a task belongs to a time namespace then the VVAR page which contains
-> the system wide VDSO data is replaced with a namespace specific page
-> which has the same layout as the VVAR page. That page has vdso_data->seq
-> set to 1 to enforce the slow path and vdso_data->clock_mode set to
-> VCLOCK_TIMENS to enforce the time namespace handling path.
-> 
-> The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-> update of the VDSO data is in progress, is not really affecting regular
-> tasks which are not part of a time namespace as the task is spin waiting
-> for the update to finish and vdso_data->seq to become even again.
-> 
-> If a time namespace task hits that code path, it invokes the corresponding
-> time getter function which retrieves the real VVAR page, reads host time
-> and then adds the offset for the requested clock which is stored in the
-> special VVAR page.
-> 
-> v2: Code cleanups suggested by Vincenzo.
-> v3: add a comment in __arch_get_timens_vdso_data.
-> 
-> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Dmitry Safonov <dima@arista.com>
-> 
-> v3 on github (if someone prefers `git pull` to `git am`):
-> https://github.com/avagin/linux-task-diag/tree/arm64/timens-v3
-> 
-> Andrei Vagin (6):
->   arm64/vdso: use the fault callback to map vvar pages
->   arm64/vdso: Zap vvar pages when switching to a time namespace
->   arm64/vdso: Add time napespace page
->   arm64/vdso: Handle faults on timens page
->   arm64/vdso: Restrict splitting VVAR VMA
->   arm64: enable time namespace support
-> 
->  arch/arm64/Kconfig                            |   1 +
->  .../include/asm/vdso/compat_gettimeofday.h    |  11 ++
->  arch/arm64/include/asm/vdso/gettimeofday.h    |   8 ++
->  arch/arm64/kernel/vdso.c                      | 134 ++++++++++++++++--
->  arch/arm64/kernel/vdso/vdso.lds.S             |   3 +-
->  arch/arm64/kernel/vdso32/vdso.lds.S           |   3 +-
->  include/vdso/datapage.h                       |   1 +
->  7 files changed, 147 insertions(+), 14 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
+ - Naresh
