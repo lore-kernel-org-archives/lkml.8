@@ -2,53 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8035BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8371208FE
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4B9208A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366710;
-	bh=9bgOnoqQ3+XkHBwKqZjrpgx+J9Wfv4rHG89fs41V1TM=;
+	s=default; t=1591366713;
+	bh=YIcdnnyOKEuV0vIUAYtbmWYzxLxPDM2ybURBJcpbMzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XmeD78+KQnRqTFGNG2TqMShUEEvT9HCf2pON7/bd9ybiEsV1a0tio+F7nmMc8aQiZ
-	 5dk671HmG40kbtMPgW1lW20xmMGbo5ghR8aXcGm9QZcWF/hszHizhY1lcW5dEhmKwJ
-	 ykFCSLeTftU9wsMgMKe1h++Xjw4pw9MSBKU6i9ew=
+	b=kV02WfVV7+0rAV5TU39mdjPxg2iB4Z40Ct4iAxNushZCk0GfM6gLv5HVCO61seRI7
+	 ysqxPTgtCOKDJjVpaJP7xmNgli9gwyqd+noKxM5hyybtgCPuaMG8mLWEddXk0JT1do
+	 pqTpWDNt/9Nqyw6FxL7MZesCPR/yPM90o/XasBiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgFEOS2 (ORCPT
+        id S1727928AbgFEOSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48910 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728661AbgFEOSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:18:23 -0400
+        id S1728115AbgFEOS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:18:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D84D5208B8;
-        Fri,  5 Jun 2020 14:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78623208C3;
+        Fri,  5 Jun 2020 14:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366703;
-        bh=9bgOnoqQ3+XkHBwKqZjrpgx+J9Wfv4rHG89fs41V1TM=;
+        s=default; t=1591366707;
+        bh=YIcdnnyOKEuV0vIUAYtbmWYzxLxPDM2ybURBJcpbMzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCbKh1rVRdcruYOjlT37m4Byq/recCkv5f1fdGBrj4eTqiiiTkZF8KuAiLt88RJ0Q
-         SqdKcM8h85CmDxeq+60nPPPnSdl/Cx5okjgSz63NzU9GjJ1mzrhIL42akifRzd+OiQ
-         KCrtYtwi3//jdWjuEUjcU7YlIDxBAVerv3KGDmwU=
+        b=PQMrlsBCYNBgnPUuR+z0JUNzTnJKINvwdP1sW47rIPLvhcgyjc415XLLtiPUS5l5G
+         6W9/cGyNrzIy0m1dYbysXPPPn4wHNZQYxpu68+H6qOyEkM3caMPMWXQtTvUZ9jvv+q
+         svRxaLpb7fyJ8xR8GwMZNrDHlAmkkLqcwz9x/BxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fan Yang <Fan_Yang@sjtu.edu.cn>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 02/38] mm: Fix mremap not considering huge pmd devmap
-Date:   Fri,  5 Jun 2020 16:14:45 +0200
-Message-Id: <20200605140252.678256519@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 21/38] s390/ftrace: save traced function caller
+Date:   Fri,  5 Jun 2020 16:15:04 +0200
+Message-Id: <20200605140253.841296290@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -61,56 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fan Yang <Fan_Yang@sjtu.edu.cn>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-commit 5bfea2d9b17f1034a68147a8b03b9789af5700f9 upstream.
+[ Upstream commit b4adfe55915d8363e244e42386d69567db1719b9 ]
 
-The original code in mm/mremap.c checks huge pmd by:
+A typical backtrace acquired from ftraced function currently looks like
+the following (e.g. for "path_openat"):
 
-		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
+arch_stack_walk+0x15c/0x2d8
+stack_trace_save+0x50/0x68
+stack_trace_call+0x15a/0x3b8
+ftrace_graph_caller+0x0/0x1c
+0x3e0007e3c98 <- ftraced function caller (should be do_filp_open+0x7c/0xe8)
+do_open_execat+0x70/0x1b8
+__do_execve_file.isra.0+0x7d8/0x860
+__s390x_sys_execve+0x56/0x68
+system_call+0xdc/0x2d8
 
-However, a DAX mapped nvdimm is mapped as huge page (by default) but it
-is not transparent huge page (_PAGE_PSE | PAGE_DEVMAP).  This commit
-changes the condition to include the case.
+Note random "0x3e0007e3c98" stack value as ftraced function caller. This
+value causes either imprecise unwinder result or unwinding failure.
+That "0x3e0007e3c98" comes from r14 of ftraced function stack frame, which
+it haven't had a chance to initialize since the very first instruction
+calls ftrace code ("ftrace_caller"). (ftraced function might never
+save r14 as well). Nevertheless according to s390 ABI any function
+is called with stack frame allocated for it and r14 contains return
+address. "ftrace_caller" itself is called with "brasl %r0,ftrace_caller".
+So, to fix this issue simply always save traced function caller onto
+ftraced function stack frame.
 
-This addresses CVE-2020-10757.
-
-Fixes: 5c7fb56e5e3f ("mm, dax: dax-pmd vs thp-pmd vs hugetlbfs-pmd")
-Cc: <stable@vger.kernel.org>
-Reported-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Signed-off-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Tested-by: Fan Yang <Fan_Yang@sjtu.edu.cn>
-Tested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/pgtable.h |    1 +
- mm/mremap.c                    |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/kernel/mcount.S | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -253,6 +253,7 @@ static inline int pmd_large(pmd_t pte)
- }
- 
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+/* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
- static inline int pmd_trans_huge(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -266,7 +266,7 @@ unsigned long move_page_tables(struct vm
- 		new_pmd = alloc_new_pmd(vma->vm_mm, vma, new_addr);
- 		if (!new_pmd)
- 			break;
--		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd)) {
-+		if (is_swap_pmd(*old_pmd) || pmd_trans_huge(*old_pmd) || pmd_devmap(*old_pmd)) {
- 			if (extent == HPAGE_PMD_SIZE) {
- 				bool moved;
- 				/* See comment in move_ptes() */
+diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
+index 3431b2d5e334..f942341429b1 100644
+--- a/arch/s390/kernel/mcount.S
++++ b/arch/s390/kernel/mcount.S
+@@ -41,6 +41,7 @@ EXPORT_SYMBOL(_mcount)
+ ENTRY(ftrace_caller)
+ 	.globl	ftrace_regs_caller
+ 	.set	ftrace_regs_caller,ftrace_caller
++	stg	%r14,(__SF_GPRS+8*8)(%r15)	# save traced function caller
+ 	lgr	%r1,%r15
+ #if !(defined(CC_USING_HOTPATCH) || defined(CC_USING_NOP_MCOUNT))
+ 	aghi	%r0,MCOUNT_RETURN_FIXUP
+-- 
+2.25.1
+
 
 
