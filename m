@@ -2,92 +2,187 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 684852070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570092074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bFMi8QjL"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jEHhHx9B";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OphJkDRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgFEPND (ORCPT
+        id S1728177AbgFEPNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:13:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38480 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726601AbgFEPND (ORCPT
+        Fri, 5 Jun 2020 11:13:14 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:60067 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726601AbgFEPNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:13:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591369981;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=CBCbgdlUb3ZI6Os4sqF1Nk3yry15HNXsqzRa5MBaYn8=;
-        b=bFMi8QjLWVwh/8MMqNl/sW3Mcckq5NNMhWlXapZTAbRTqk0a6uyU9BhprTbQS/rdT2LHVt
-        dg4fF3ePIs94gm+I5a8LKVMJsJvXzNcuhIZYqflzd4pXt/xqEvHbllNYunsY5adCL04DvP
-        lhj70Mccvey0cD1pIitK11ttg0Id9Eo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-zf-xYbqNPg-NokeOSQVPZQ-1; Fri, 05 Jun 2020 11:12:59 -0400
-X-MC-Unique: zf-xYbqNPg-NokeOSQVPZQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FD1A102C8A0;
-        Fri,  5 Jun 2020 15:12:44 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-114-69.ams2.redhat.com [10.36.114.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 02D2D10016DA;
-        Fri,  5 Jun 2020 15:12:42 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     davem@davemloft.net
-Cc:     linux-kernel@vger.kernel.org,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        netdev@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH net] vsock/vmci: make vmci_vsock_transport_cb() static
-Date:   Fri,  5 Jun 2020 17:12:41 +0200
-Message-Id: <20200605151241.468292-1-sgarzare@redhat.com>
+        Fri, 5 Jun 2020 11:13:13 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id DBB138E7;
+        Fri,  5 Jun 2020 11:13:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 05 Jun 2020 11:13:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=VbpvAVCUnsPFSpK3oSSzAp0uVqp
+        GePbm13cRTcImBvI=; b=jEHhHx9BX/kWeienCimDjVFn8kxZA9a0xz4mCXIMQkT
+        kimz89OdtBb22YkYSKmFbhCOtylqDGUWQk5zA7gBV8No/y0NrajZow4An1pJ/3/x
+        oIwAC9ic6oZSAyE9q+jui4mbMkzfk6IqrQwvlTTEQ5bR5yTPtJECFGZkCweacrNy
+        UHCexwhmK3GtqVGWwk1ek308TNz3TyOekpL0z7c8dTXJAXN++w1X07J6ir3dasPS
+        3PtKk9lX2j7nV/R1fES1niXKbau5DO42I9NJpDpRHwcV3Z7IBV8FtnccxQbkb61s
+        1MmvYx1Mx1zzCE2QZlgjdMpkuigH39M3Pk9LyFfiR1Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=VbpvAV
+        CUnsPFSpK3oSSzAp0uVqpGePbm13cRTcImBvI=; b=OphJkDRAM94t6mGOS3+LGx
+        1ZF+30KNo0Gv1pI8V1cVuY/Dy+bAt+/JZxfk1QeprT9uIp4DdEY2zEqQlw0OU9Mf
+        g7H1x24ackvUhNn3T7IFcKeessqgYK/BnvFenPSB2QJtg4HCifV5zzKWxyHg8xki
+        LXQOq/T0QaUetcjYuMoo2Zqpjk9SoVOCo3T8StZvFLWj0a1RDRUBxo5nRya4MB0P
+        iFNVs2vgFq/awLTkCiAhFKM80mxRvPVz1YWCrqLtQVNAanHTv+qXqYwfyXb4k+h7
+        3QaBGVWe55x09tdRg4QjqNugMolAKVHWHyB17mPY0Z9D0PdYVW4m1FqG9ie5B2Iw
+        ==
+X-ME-Sender: <xms:BGHaXszE6jCQt3UqXhv_rpK-h5ydbx5e0K9fIODa1lbA1h2fcZDzBQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudegfedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesghdtre
+    ertddtjeenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrgigihhmvgestggv
+    rhhnohdrthgvtghhqeenucggtffrrghtthgvrhhnpeeutdfgjeeuudehvefgvedvtedtud
+    elfffgffekledtffekgedukeejueevieegudenucfkphepledtrdekledrieekrdejieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigih
+    hmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:BGHaXgQvy1wn6p2e7o7S_OSWeDCmx6eR30VwmPn-7YK9mu6AjtMw7g>
+    <xmx:BGHaXuX00NXX5LGAMEHvRqjEQRNG5vXJM8YYYT4N2NXYV0QwhG7O-A>
+    <xmx:BGHaXqhv_WNqjpCMLG7pt29jUj990Xa3yBofV98mw_NMD960Q-jUlQ>
+    <xmx:B2HaXi5JEQDk4McYhDkEso2_BbUpevJz_UdJNorqTGnvu3K4X4urb4p-_N0>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F2F973280059;
+        Fri,  5 Jun 2020 11:13:07 -0400 (EDT)
+Date:   Fri, 5 Jun 2020 17:13:06 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     wens <wens@csie.org>,
+        =?utf-8?B?5p2O5oms6Z+s?= <frank@allwinnertech.com>,
+        "linus.walleij" <linus.walleij@linaro.org>
+Cc:     robh+dt <robh+dt@kernel.org>, mturquette <mturquette@baylibre.com>,
+        sboyd <sboyd@kernel.org>, "p.zabel" <p.zabel@pengutronix.de>,
+        =?utf-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
+        "tiny.windzz" <tiny.windzz@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSN77yaW1BBVENIIDIvNF0gcGluY3RybA==?=
+ =?utf-8?Q?=3A?= sunxi: add support for the Allwinner A100 pin controller
+Message-ID: <20200605151306.kqmyj673kux4sbaa@gilmour.lan>
+References: <20200522030743.10204-1-frank@allwinnertech.com>
+ <20200522030743.10204-3-frank@allwinnertech.com>
+ <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
+ <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zkd5ahwpreyajhe3"
+Content-Disposition: inline
+In-Reply-To: <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following gcc-9.3 warning when building with 'make W=1':
-    net/vmw_vsock/vmci_transport.c:2058:6: warning: no previous prototype
-        for ‘vmci_vsock_transport_cb’ [-Wmissing-prototypes]
-     2058 | void vmci_vsock_transport_cb(bool is_host)
-          |      ^~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: b1bba80a4376 ("vsock/vmci: register vmci_transport only when VMCI guest/host are active")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- net/vmw_vsock/vmci_transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--zkd5ahwpreyajhe3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
-index 4b8b1150a738..8b65323207db 100644
---- a/net/vmw_vsock/vmci_transport.c
-+++ b/net/vmw_vsock/vmci_transport.c
-@@ -2055,7 +2055,7 @@ static bool vmci_check_transport(struct vsock_sock *vsk)
- 	return vsk->transport == &vmci_transport;
- }
- 
--void vmci_vsock_transport_cb(bool is_host)
-+static void vmci_vsock_transport_cb(bool is_host)
- {
- 	int features;
- 
--- 
-2.25.4
+Hi Frank,
 
+On Wed, Jun 03, 2020 at 05:44:36PM +0800, =E6=9D=8E=E6=89=AC=E9=9F=AC wrote:
+> >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(F, 0),
+> >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
+> >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
+> >> +  SUNXI_FUNCTION(0x2, "mmc0"),  /* D1 */
+> >> +  SUNXI_FUNCTION(0x3, "jtag"),  /* MS1 */
+> >> +  SUNXI_FUNCTION(0x4, "jtag"),  /* MS_GPU */
+> >
+> >We should use another name here, since the code will just pick the first=
+ one and
+> >ignore the second. What about jtag-gpu?
+>=20
+> The underscores are used in front, so changing it to jtag_gpu may be more=
+ consistent.
+
+Yep, that makes sense
+
+> >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 7),
+> >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
+> >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
+> >> +  SUNXI_FUNCTION(0x2, "spdif"),  /* DIN */
+> >> +  SUNXI_FUNCTION(0x3, "i2s0"),  /* DOUT0 */
+> >> +  SUNXI_FUNCTION(0x4, "i2s0"),  /* DIN1 */
+> >
+> >I guess the second one would be i2s1?
+>=20
+> No, each i2s may have many inputs and outputs.=20
+>=20
+>  SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 19),
+>      SUNXI_FUNCTION(0x0, "gpio_in"),
+>               SUNXI_FUNCTION(0x1, "gpio_out"),
+>               SUNXI_FUNCTION(0x2, "cir0"),          /* IN */
+>               SUNXI_FUNCTION(0x3, "i2s3_dout3"),       /* DOUT3 */
+>               SUNXI_FUNCTION(0x4, "i2s3_din3"),       /* DIN3 */
+>               SUNXI_FUNCTION(0x5, "ledc"),
+>               SUNXI_FUNCTION_IRQ_BANK(0x6, 6, 19)),
+>=20
+> Considering that the same pin has multiple same functions,=20
+> so add a suffix, like i2s3_dout3 and i2s3_din3?  =20
+>=20
+> Or specify muxsel in the device tree may be another solution.
+
+Having muxsel is not really an option. We have two sets of bindings to
+maintain already, adding a third one would make it fairly hard to
+maintain. And the second binding we support is the generic pinctrl
+binding, so I'm not really sure why we would want to move away from
+that.
+
+And I'm not really fond of having a suffix either. It kind of breaks the
+consistency we had so far, and ideally I'd like to keep that.
+
+Chen-Yu, Linus? Any input on that one?
+
+> >> + SUNXI_PIN(SUNXI_PINCTRL_PIN(H, 2),
+> >> +  SUNXI_FUNCTION(0x0, "gpio_in"),
+> >> +  SUNXI_FUNCTION(0x1, "gpio_out"),
+> >> +  SUNXI_FUNCTION(0x2, "i2c1"),  /* SCK */
+> >> +  SUNXI_FUNCTION(0x3, "cpu"),  /* CUR_W */
+> >
+> >What is "cpu" supposed to be?
+>=20
+> As far as I know, this is a function that has never been used.
+> The hardware guy said that it can be used to control the CPU to reduce th=
+e current.
+
+Ok. Do we really need to add it right now if we don't really know what
+it's going to be used for?
+
+Thanks!
+Maxime
+
+--zkd5ahwpreyajhe3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXtphAgAKCRDj7w1vZxhR
+xcOpAP9hPMQZE8RjquYSY0OYJtT3YHX6GtIBD2qqFYRYTe/y5AEA/ArnzVS22UCR
+AAiE1kWBxSfADLmvwqJuQ7ofyhPp/AE=
+=FjvJ
+-----END PGP SIGNATURE-----
+
+--zkd5ahwpreyajhe3--
