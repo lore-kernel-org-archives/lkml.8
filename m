@@ -2,118 +2,144 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE63C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6E04207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485FD207D5
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:06:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="r84M9kbM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ja1P8eya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgFEIGX (ORCPT
+        id S1726179AbgFEIGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:06:23 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:42126 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726024AbgFEIGW (ORCPT
+        Fri, 5 Jun 2020 04:06:35 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:42693 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726148AbgFEIGf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:06:22 -0400
-X-UUID: 756c1bb4f294495cad12b19f607124e6-20200605
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=JPwMS253KWO9wyEuaU8F+mAJwhd2XFkcAArD4gWyjuw=;
-        b=r84M9kbMkAHdhmQ99Ju87LXZPXvyM8eeiUPZyAXXuEDyW7usHpd04ANJ8O4kncROlA0GKAptwjnmCO4nHMXd+qzvcrqLRVtetOswOslkLSyk85r6WJBEmRIWICLVLJndCJcAQt7/zs/5Mfa8diQseoE5IldVP02D+KZfR1PvUsk=;
-X-UUID: 756c1bb4f294495cad12b19f607124e6-20200605
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1811965991; Fri, 05 Jun 2020 16:06:11 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 5 Jun
- 2020 16:06:09 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 5 Jun 2020 16:06:09 +0800
-Message-ID: <1591344245.32607.10.camel@mhfsdcap03>
-Subject: Re: [PATCH v8 08/14] media: platform: Change case for improving
- code quality
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-CC:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>
-Date:   Fri, 5 Jun 2020 16:04:05 +0800
-In-Reply-To: <4b8cc41e-5171-0d48-f588-96e4212ab22c@xs4all.nl>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
-         <20200403094033.8288-9-xia.jiang@mediatek.com>
-         <4b8cc41e-5171-0d48-f588-96e4212ab22c@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 5 Jun 2020 04:06:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591344394; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=049ityVEOxtL3FukO3eAXaJK1CB8e5f03uXhxkkdNhc=;
+ b=ja1P8eya8l4GrXCQFzB8gGixnb88oWnSUFRyTguFraK4v6mp+Ubr1F6XkCTjoPS8WmnE5QHc
+ WYfxOTOmqBjPJ/mcVz6zzf1mANbfLiy8NZJtsgOmlNm0s4QCyaf67E1gGN2HJ1o8AXPhRJRs
+ jjkLWKx6i5QRvJgXvJNwpshWhNc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ed9fd0044a25e0052009122 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 08:06:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A1B09C43391; Fri,  5 Jun 2020 08:06:22 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ppvk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27E7CC433CB;
+        Fri,  5 Jun 2020 08:06:21 +0000 (UTC)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BC553A6124CC156816443CD8FFFB780032B7C78833E4223FA7C71AEB92EE0B6A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 13:36:21 +0530
+From:   ppvk@codeaurora.org
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, bjorn.andersson@linaro.org,
+        adrian.hunter@intel.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc-owner@vger.kernel.org,
+        rnayak@codeaurora.org, matthias@chromium.org
+Subject: Re: [PATCH V2 1/2] mmc: sdhci-msm: Add interconnect bandwidth scaling
+ support
+In-Reply-To: <23d6da79d604ce5113d90a2adab17483@codeaurora.org>
+References: <1591269283-24084-1-git-send-email-ppvk@codeaurora.org>
+ <1591269283-24084-2-git-send-email-ppvk@codeaurora.org>
+ <20200604170906.GP4525@google.com>
+ <23d6da79d604ce5113d90a2adab17483@codeaurora.org>
+Message-ID: <dad8aba58bc3828a05da122555a54db8@codeaurora.org>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA1LTExIGF0IDEwOjM3ICswMjAwLCBIYW5zIFZlcmt1aWwgd3JvdGU6DQo+
-IE9uIDAzLzA0LzIwMjAgMTE6NDAsIFhpYSBKaWFuZyB3cm90ZToNCj4gPiBDaGFuZ2UgcmVnaXN0
-ZXIgb2Zmc2V0IGhleCBudW1iZXJhbHMgZnJvbSB1cGVyY2FzZSB0byBsb3dlcmNhc2UuDQo+IA0K
-PiBUeXBvczoNCj4gDQo+IG51bWJlcmFscyAtPiBudW1lcmFscw0KPiANCj4gdXBlcmNhc2UgLT4g
-dXBwZXJjYXNlDQpEb25lLg0KPiANCj4gUmVnYXJkcywNCj4gDQo+IAlIYW5zDQo+IA0KPiA+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IFhpYSBKaWFuZyA8eGlhLmppYW5nQG1lZGlhdGVrLmNvbT4NCj4g
-PiAtLS0NCj4gPiB2ODogbm8gY2hhbmdlcw0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21lZGlhL3Bs
-YXRmb3JtL210ay1qcGVnL210a19qcGVnX3JlZy5oIHwgMTggKysrKysrKysrLS0tLS0tLS0tDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQo+ID4g
-DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pw
-ZWdfcmVnLmggYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX3JlZy5o
-DQo+ID4gaW5kZXggOTRkYjA0ZTljZGI2Li4yOTQ1ZGE4NDJkZmEgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19yZWcuaA0KPiA+ICsrKyBi
-L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfcmVnLmgNCj4gPiBAQCAt
-MjAsMjkgKzIwLDI5IEBADQo+ID4gICNkZWZpbmUgQklUX0lOUVNUX01BU0tfQUxMSVJRCQkweDM3
-DQo+ID4gIA0KPiA+ICAjZGVmaW5lIEpQR0RFQ19SRUdfUkVTRVQJCTB4MDA5MA0KPiA+IC0jZGVm
-aW5lIEpQR0RFQ19SRUdfQlJaX0ZBQ1RPUgkJMHgwMEY4DQo+ID4gLSNkZWZpbmUgSlBHREVDX1JF
-R19EVV9OVU0JCTB4MDBGQw0KPiA+ICsjZGVmaW5lIEpQR0RFQ19SRUdfQlJaX0ZBQ1RPUgkJMHgw
-MGY4DQo+ID4gKyNkZWZpbmUgSlBHREVDX1JFR19EVV9OVU0JCTB4MDBmYw0KPiA+ICAjZGVmaW5l
-IEpQR0RFQ19SRUdfREVTVF9BRERSMF9ZCQkweDAxNDANCj4gPiAgI2RlZmluZSBKUEdERUNfUkVH
-X0RFU1RfQUREUjBfVQkJMHgwMTQ0DQo+ID4gICNkZWZpbmUgSlBHREVDX1JFR19ERVNUX0FERFIw
-X1YJCTB4MDE0OA0KPiA+IC0jZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMV9ZCQkweDAxNEMN
-Cj4gPiArI2RlZmluZSBKUEdERUNfUkVHX0RFU1RfQUREUjFfWQkJMHgwMTRjDQo+ID4gICNkZWZp
-bmUgSlBHREVDX1JFR19ERVNUX0FERFIxX1UJCTB4MDE1MA0KPiA+ICAjZGVmaW5lIEpQR0RFQ19S
-RUdfREVTVF9BRERSMV9WCQkweDAxNTQNCj4gPiAgI2RlZmluZSBKUEdERUNfUkVHX1NUUklERV9Z
-CQkweDAxNTgNCj4gPiAtI2RlZmluZSBKUEdERUNfUkVHX1NUUklERV9VVgkJMHgwMTVDDQo+ID4g
-KyNkZWZpbmUgSlBHREVDX1JFR19TVFJJREVfVVYJCTB4MDE1Yw0KPiA+ICAjZGVmaW5lIEpQR0RF
-Q19SRUdfSU1HX1NUUklERV9ZCQkweDAxNjANCj4gPiAgI2RlZmluZSBKUEdERUNfUkVHX0lNR19T
-VFJJREVfVVYJMHgwMTY0DQo+ID4gLSNkZWZpbmUgSlBHREVDX1JFR19XRE1BX0NUUkwJCTB4MDE2
-Qw0KPiA+ICsjZGVmaW5lIEpQR0RFQ19SRUdfV0RNQV9DVFJMCQkweDAxNmMNCj4gPiAgI2RlZmlu
-ZSBKUEdERUNfUkVHX1BBVVNFX01DVV9OVU0JMHgwMTcwDQo+ID4gLSNkZWZpbmUgSlBHREVDX1JF
-R19PUEVSQVRJT05fTU9ERQkweDAxN0MNCj4gPiArI2RlZmluZSBKUEdERUNfUkVHX09QRVJBVElP
-Tl9NT0RFCTB4MDE3Yw0KPiA+ICAjZGVmaW5lIEpQR0RFQ19SRUdfRklMRV9BRERSCQkweDAyMDAN
-Cj4gPiAtI2RlZmluZSBKUEdERUNfUkVHX0NPTVBfSUQJCTB4MDIwQw0KPiA+ICsjZGVmaW5lIEpQ
-R0RFQ19SRUdfQ09NUF9JRAkJMHgwMjBjDQo+ID4gICNkZWZpbmUgSlBHREVDX1JFR19UT1RBTF9N
-Q1VfTlVNCTB4MDIxMA0KPiA+ICAjZGVmaW5lIEpQR0RFQ19SRUdfQ09NUDBfREFUQV9VTklUX05V
-TQkweDAyMjQNCj4gPiAtI2RlZmluZSBKUEdERUNfUkVHX0RVX0NUUkwJCTB4MDIzQw0KPiA+ICsj
-ZGVmaW5lIEpQR0RFQ19SRUdfRFVfQ1RSTAkJMHgwMjNjDQo+ID4gICNkZWZpbmUgSlBHREVDX1JF
-R19UUklHCQkJMHgwMjQwDQo+ID4gICNkZWZpbmUgSlBHREVDX1JFR19GSUxFX0JSUAkJMHgwMjQ4
-DQo+ID4gLSNkZWZpbmUgSlBHREVDX1JFR19GSUxFX1RPVEFMX1NJWkUJMHgwMjRDDQo+ID4gKyNk
-ZWZpbmUgSlBHREVDX1JFR19GSUxFX1RPVEFMX1NJWkUJMHgwMjRjDQo+ID4gICNkZWZpbmUgSlBH
-REVDX1JFR19RVF9JRAkJMHgwMjcwDQo+ID4gICNkZWZpbmUgSlBHREVDX1JFR19JTlRFUlJVUFRf
-U1RBVFVTCTB4MDI3NA0KPiA+ICAjZGVmaW5lIEpQR0RFQ19SRUdfU1RBVFVTCQkweDAyNzgNCj4g
-PiANCj4gDQoNCg==
+On 2020-06-05 00:04, Sibi Sankar wrote:
+> On 2020-06-04 22:39, Matthias Kaehlcke wrote:
+>> On Thu, Jun 04, 2020 at 04:44:42PM +0530, Pradeep P V K wrote:
+>>> Interconnect bandwidth scaling support is now added as a
+>>> part of OPP [1]. So, make sure interconnect driver is ready
+>>> before handling interconnect scaling.
+>>> 
+>>> This change is based on
+>>> [1] [Patch v8] Introduce OPP bandwidth bindings
+>>> (https://lkml.org/lkml/2020/5/12/493)
+>>> 
+>>> [2] [Patch v3] mmc: sdhci-msm: Fix error handling
+>>> for dev_pm_opp_of_add_table()
+>>> (https://lkml.org/lkml/2020/5/5/491)
+>>> 
+>>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>>> ---
+>>>  drivers/mmc/host/sdhci-msm.c | 13 +++++++++++++
+>>>  1 file changed, 13 insertions(+)
+>>> 
+>>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>>> b/drivers/mmc/host/sdhci-msm.c
+>>> index b277dd7..a13ff1b 100644
+>>> --- a/drivers/mmc/host/sdhci-msm.c
+>>> +++ b/drivers/mmc/host/sdhci-msm.c
+>>> @@ -14,6 +14,7 @@
+>>>  #include <linux/slab.h>
+>>>  #include <linux/iopoll.h>
+>>>  #include <linux/regulator/consumer.h>
+>>> +#include <linux/interconnect.h>
+>>> 
+>>>  #include "sdhci-pltfm.h"
+>>>  #include "cqhci.h"
+>>> @@ -2070,6 +2071,18 @@ static int sdhci_msm_probe(struct 
+>>> platform_device *pdev)
+>>>  	}
+>>>  	msm_host->bulk_clks[0].clk = clk;
+>>> 
+>>> +	/* Make sure that ICC driver is ready for interconnect bandwdith
+>>> +	 * scaling before registering the device for OPP.
+>>> +	 */
+>>> +	ret = dev_pm_opp_of_find_icc_paths(&pdev->dev, NULL);
+>>> +	if (ret) {
+>>> +		if (ret == -EPROBE_DEFER)
+>>> +			dev_info(&pdev->dev, "defer icc path: %d\n", ret);
+>> 
+>> I already commented on this on v1:
+>> 
+>>   This log seems to add little more than noise, or are there 
+>> particular reasons
+>>   why it is useful in this driver? Most drivers just return silently 
+>> in case of
+>>   deferred probing.
+>> 
+>> If you think the log is really needed please explain why.
+> 
+Sorry. i forget to remove this print on V2. i will address this in my 
+next patch set.
+
+> Both the err logs seem redundant.
+> EPROBE_DEFERS are rather readily
+> noticeable through the return val.
+> dev_.._find_icc_paths already prints
+> err messages when we fail to get icc
+> paths.
+
+True. i will remove this too in my next patch set.
 
