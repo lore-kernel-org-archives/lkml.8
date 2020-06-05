@@ -2,142 +2,116 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B2FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208A72075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUKniJAY"
+	by mail.kernel.org (Postfix) with ESMTP id BC9FA2075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgFEKsk (ORCPT
+        id S1726825AbgFEKtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgFEKsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:48:39 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55140C08C5C2;
-        Fri,  5 Jun 2020 03:48:39 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id nm22so2436911pjb.4;
-        Fri, 05 Jun 2020 03:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hT5EtYTIJL/7KK1ErJ4XuTZSMU98O4NGYES7BTZShfU=;
-        b=gUKniJAYthQYiCeLiJbQxp6vsgIMrYFTG3Tn0ztGQdAgJJ5SIzW9Qq+1WYjhN7yVaR
-         dqPLJ6u8EPjvcsgOjNTxo0b6um16kDUcqfOuHSlYC0SJku2U0ceSI9Em09ln4GUbFpph
-         kvSRDrMrLoPz0APi14wENlVfArV0pT3I/24PCyUfjYagBh1sTwgvy1kuLA9mVFd7eZ8u
-         UCNaiWg/sKwjqaA+PU4vDlTyu64d24et0BTHPfF25369Vb/euo3Q0WtQ4cbeWcZ6S9Uj
-         d6X7vp1YGXR6zxgqI4DmlTY86u6lNf5+TOFVpXVzPF2q/ePDeJZABOF3KAJD9Fg23qY/
-         +I5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hT5EtYTIJL/7KK1ErJ4XuTZSMU98O4NGYES7BTZShfU=;
-        b=FRA8QDzfdJnC4uIS2DVn6L1IWOjf36Sq12DKVn9dJykZjX3wzo6tKKvC9UapxDOYOD
-         4OrKPUM6M1pUdOADUU7+1jD4RBZi0RlCKrBvq5j5A0yYy4TOL++2rSr38krSlYStsC41
-         0XL2dgutsAOaBIxwueCaP26BetJ23QJUhThJT7kmw0IRAFe/8CatG8WZxmIwZVd+DZ9d
-         a/Y7R3I0rqdjMEMkCzo6b5vbA9UP5+NcFAjkfDRaOfWroD5JSbojx6j0TiBoFfkJDrCZ
-         fskRGrQKyB4qFdnD8US9KcrMcHZLG3CIQN6FL5DpGxnD89aON/Z08iBJ8FC0d7yabKXe
-         Pncg==
-X-Gm-Message-State: AOAM5303MifNn6hhyEJHg5Deobmzy7CEPHJRHS56wYy2FP3edaoZggUW
-        QWBfV3uGNEmINh9I5S7dTz8ePwPRIJfBM78M8dY=
-X-Google-Smtp-Source: ABdhPJxJO5Y4Qm5YMH+m2+d6tv9L1OTX95vElklp0iU6q2z5TlX53tziLrdZX6T1mwhQ2rSUj09xKWtdLeKZgYN0Lsw=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr2258157pjd.181.1591354118825;
- Fri, 05 Jun 2020 03:48:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
- <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com> <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
-In-Reply-To: <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 13:48:27 +0300
-Message-ID: <CAHp75Vf00w_UUvXULVd=OgSVM+p_pmNMJRPVnf8GNZW10c_j5w@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Fri, 5 Jun 2020 06:49:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:53574 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbgFEKtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 06:49:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 617481FB;
+        Fri,  5 Jun 2020 03:49:09 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.11.98])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E9553F52E;
+        Fri,  5 Jun 2020 03:49:07 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 11:49:04 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dmitry Safonov <dima@arista.com>
+Subject: Re: [PATCH RESEND v3 0/6] arm64: add the time namespace support
+Message-ID: <20200605104904.GE85498@C02TD0UTHF1T.local>
+References: <20200602180259.76361-1-avagin@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602180259.76361-1-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 1:09 PM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-06-05 10:01, schrieb Andy Shevchenko:
-> > On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
+Hi Andrei,
 
-...
+As a heads up, in mainline the arm64 vdso code has been refactored since
+v5.7, and this series will need to be rebased atop. Given we're in the
+middle of the merge window, I would suggest waiting until rc1 before
+posting a rebased series.
 
-> >> +       bool "Kontron sl28 core driver"
-> >> +       depends on I2C=y
-> >
-> > Why not module?
->
-> There are users of the interupt lines provided by the interrupt
-> controller.
-> For example, the gpio-button driver. If this is compiled into the kernel
-> (which it is by default in the arm64 defconfig), probing will fail
-> because
-> the interrupt is not found. Is there a better way for that? I guess the
-> same
-> is true for the GPIO driver.
+In the meantime, the relevant patches can be found in arm64's for-next/core
+branch:
 
-And GPIO nicely handles this via deferred probe mechanism. Why it
-can't be used here?
-So, we really need to have a strong argument to limit module nowadays
-to be only builtin.
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
 
-...
+... which was merged into mainline in commit:
 
-> >> +       depends on OF
-> >
-> > I didn't find an evidence this is needed.
+  533b220f7be4e461 ("Merge tag 'arm64-upstream' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux")
 
-> >> +#include <linux/of_platform.h>
-> >
-> > No evidence of user of this.
-> > I think you meant mod_devicetable.h.
->
-> devm_of_platform_populate(), so I need CONFIG_OF, too right?
+Thanks,
+Mark.
 
-Ah, this explains header, thanks!
-But it doesn't explain depends OF.
-
-So, perhaps,
-
-depends OF || COMPILE_TEST will be more informative, i.e.
-tells "okay, this driver can be compiled w/o OF, but won't be functional".
-
--- 
-With Best Regards,
-Andy Shevchenko
+On Tue, Jun 02, 2020 at 11:02:53AM -0700, Andrei Vagin wrote:
+> Allocate the time namespace page among VVAR pages and add the logic
+> to handle faults on VVAR properly.
+> 
+> If a task belongs to a time namespace then the VVAR page which contains
+> the system wide VDSO data is replaced with a namespace specific page
+> which has the same layout as the VVAR page. That page has vdso_data->seq
+> set to 1 to enforce the slow path and vdso_data->clock_mode set to
+> VCLOCK_TIMENS to enforce the time namespace handling path.
+> 
+> The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+> update of the VDSO data is in progress, is not really affecting regular
+> tasks which are not part of a time namespace as the task is spin waiting
+> for the update to finish and vdso_data->seq to become even again.
+> 
+> If a time namespace task hits that code path, it invokes the corresponding
+> time getter function which retrieves the real VVAR page, reads host time
+> and then adds the offset for the requested clock which is stored in the
+> special VVAR page.
+> 
+> v2: Code cleanups suggested by Vincenzo.
+> v3: add a comment in __arch_get_timens_vdso_data.
+> 
+> Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Dmitry Safonov <dima@arista.com>
+> 
+> v3 on github (if someone prefers `git pull` to `git am`):
+> https://github.com/avagin/linux-task-diag/tree/arm64/timens-v3
+> 
+> Andrei Vagin (6):
+>   arm64/vdso: use the fault callback to map vvar pages
+>   arm64/vdso: Zap vvar pages when switching to a time namespace
+>   arm64/vdso: Add time napespace page
+>   arm64/vdso: Handle faults on timens page
+>   arm64/vdso: Restrict splitting VVAR VMA
+>   arm64: enable time namespace support
+> 
+>  arch/arm64/Kconfig                            |   1 +
+>  .../include/asm/vdso/compat_gettimeofday.h    |  11 ++
+>  arch/arm64/include/asm/vdso/gettimeofday.h    |   8 ++
+>  arch/arm64/kernel/vdso.c                      | 134 ++++++++++++++++--
+>  arch/arm64/kernel/vdso/vdso.lds.S             |   3 +-
+>  arch/arm64/kernel/vdso32/vdso.lds.S           |   3 +-
+>  include/vdso/datapage.h                       |   1 +
+>  7 files changed, 147 insertions(+), 14 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
