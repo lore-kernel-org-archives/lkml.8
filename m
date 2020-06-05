@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82B1F2075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F06D2075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591360072;
-	bh=/51UB73oQJP/xzjynBeIGd3a0RtH/qRTV5Ds9Nniz8c=;
+	s=default; t=1591360077;
+	bh=rJ6qWfDyRHcxsYASqxaiCs+SO1NYI3B32WFsKYDkMbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YX5iEv+5gf9OOU3WBZaZLClK0DwHKnKQ1ifk2YB3JQHzaGEEZ2g0PjJN9sRBMYCPQ
-	 MrqzwHhBreVWUdBieQJkEDNbPwQ1fzM1lapzDw25LGMjrdwD+WdC1FO5CGHXLRlR8m
-	 EoXLDmm95SOb1RqQHe8bOtTfV/ydNND+IEZZKtI8=
+	b=ciGs+NPFRCRlSSLfax/aEEmVakExDmzR1MRv85orKAaG3sLeqlqEDh0hBba9G0zKG
+	 x6XLCHHIBIb19+QXB0stNTY9rsKU3CYP8Cpu8GFFvmbhEflMjAtqqz2qfBLb/uNaS9
+	 eCS8SeMbT0zaSJKnIhlAyMnYD1FpluW8bll51XsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgFEM1u (ORCPT
+        id S1726770AbgFEM1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:27:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgFEM0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:26:17 -0400
+        id S1727768AbgFEM0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842E620E65;
-        Fri,  5 Jun 2020 12:26:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76921207D3;
+        Fri,  5 Jun 2020 12:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359977;
-        bh=/51UB73oQJP/xzjynBeIGd3a0RtH/qRTV5Ds9Nniz8c=;
+        s=default; t=1591359976;
+        bh=rJ6qWfDyRHcxsYASqxaiCs+SO1NYI3B32WFsKYDkMbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmAMkUO4Heq3681IH1ITS8//CAERibsA/7GAQP0UGjU+K2poWcDpDfcEMUOqb0dva
-         7C2+2umW9yqEFrGJ4suXqPIXe3YDgFK8/kymRNPdnjCFy4DHznh/6vPOU6oO8Icmy2
-         OSmawbikURJnkTwJpbIL+yk3b0ypv9VPHvVtDxzQ=
+        b=p3MLaYPbDAbLExuvfaF268eZuwgMIgRUtfN7d0/y5itpqf0wVB0NOs9ewtg0XbYFq
+         eChgE+H+HrMT1MxY4P2BP5qT72WOtIU249Psp3K8G90nQYdobtjp665H/w8oKboqwf
+         F5MvQ3BaSZKAy4ZZ73oGFVkwag4mmWxEM+tqmLPc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 6/8] NFC: st21nfca: add missed kfree_skb() in an error path
-Date:   Fri,  5 Jun 2020 08:26:07 -0400
-Message-Id: <20200605122609.2882841-6-sashal@kernel.org>
+Cc:     Dennis Kadioglu <denk@eclipso.email>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 5/8] Input: synaptics - add a second working PNP_ID for Lenovo T470s
+Date:   Fri,  5 Jun 2020 08:26:06 -0400
+Message-Id: <20200605122609.2882841-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122609.2882841-1-sashal@kernel.org>
 References: <20200605122609.2882841-1-sashal@kernel.org>
@@ -59,37 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Dennis Kadioglu <denk@eclipso.email>
 
-[ Upstream commit 3decabdc714ca56c944f4669b4cdec5c2c1cea23 ]
+[ Upstream commit 642aa86eaf8f1e6fe894f20fd7f12f0db52ee03c ]
 
-st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
-Add the missed function call to fix it.
+The Lenovo Thinkpad T470s I own has a different touchpad with "LEN007a"
+instead of the already included PNP ID "LEN006c". However, my touchpad
+seems to work well without any problems using RMI. So this patch adds the
+other PNP ID.
 
-Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dennis Kadioglu <denk@eclipso.email>
+Link: https://lore.kernel.org/r/ff770543cd53ae818363c0fe86477965@mail.eclipso.de
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/dep.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nfc/st21nfca/dep.c b/drivers/nfc/st21nfca/dep.c
-index fd08be2917e6..7399eb2c5e1d 100644
---- a/drivers/nfc/st21nfca/dep.c
-+++ b/drivers/nfc/st21nfca/dep.c
-@@ -184,8 +184,10 @@ static int st21nfca_tm_send_atr_res(struct nfc_hci_dev *hdev,
- 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
- 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
- 						  gb_len);
--		if (r < 0)
-+		if (r < 0) {
-+			kfree_skb(skb);
- 			return r;
-+		}
- 	}
- 
- 	info->dep_info.curr_nfc_dep_pni = 0;
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 2bca84f4c2b2..85db184321f7 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -173,6 +173,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN005b", /* P50 */
+ 	"LEN005e", /* T560 */
+ 	"LEN006c", /* T470s */
++	"LEN007a", /* T470s */
+ 	"LEN0071", /* T480 */
+ 	"LEN0072", /* X1 Carbon Gen 5 (2017) - Elan/ALPS trackpoint */
+ 	"LEN0073", /* X1 Carbon G5 (Elantech) */
 -- 
 2.25.1
 
