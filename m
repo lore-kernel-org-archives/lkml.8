@@ -2,93 +2,240 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB50BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4D9206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g2Pa/sks"
+	by mail.kernel.org (Postfix) with ESMTP id 8DE34206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgFEVoE (ORCPT
+        id S1728983AbgFEVoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728341AbgFEVoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:44:02 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CD3EC08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 14:44:02 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 69so8803857otv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 14:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u7vrFLbpJQAV1cQ0kbQVK9ZLFY1aWi9nsqpax6+qOtQ=;
-        b=g2Pa/sksz/aYmEqxoJrzi8zsTy59HbDtq07j/fkreeSaJe3dQOsO526DKGeQaw0yPm
-         9AnGaueO42FfatnAKl4P9xpq+EvS/6yZKuVn9jTUA1yzzqBSoag7Qnti6NiJXTrEu38E
-         U9gEoKN7o0Oq9W2lOJNNppm6wgniFrffmaebApav2KRi5cSExINsz1PN+ZEqp05XzSpK
-         FwkPU3yyVUV7fucokyE3BLb1vo+pxXGN7b3n4sJfGa4sIM3nyqeZ5DIhr0HIEC8LG4Ce
-         uJqsElJiNcSkRj6JO05c7uQ1hHZkQCmXuyvvyPaFLCcN94CtOXKDvp6IhikkDR8afowM
-         nzXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u7vrFLbpJQAV1cQ0kbQVK9ZLFY1aWi9nsqpax6+qOtQ=;
-        b=BcCJo1T6nomvdltoQMB4aIJBN4NVYBQ0ER5Iei+Dt4S5UpVsrHG9yr5Fwvg5lBC0Vm
-         azjOXQzlNMI9Netb0A2upDTdlgikh1z4sO4g4DK/YduAzRo82vEjs9SQFnOrfiD+Oo7V
-         1SMqqD+gaY+rkdnxZrqgK5Uh/gjJnLblBrcUwea3Qu5DLh8SZypzCc/8S8xNGuX5SiJn
-         OYwgoRiND9vmmv+vMogfBYfScxVJTt+GYkfCpqZ59SNe10AUG8hNjPMiPpCr9jkLTd52
-         hY2DHuGFYVOPVAKpxNOct4ujC/mjgPdS/1KsluUukJVKv4XxInVAfsL7TBHh29cdHByY
-         c7pA==
-X-Gm-Message-State: AOAM5323zJMAa1ERNEZtrfUD5T2RPYAyiyQMCNdsLS4XXIATRQLQOtDq
-        dT4sPAfIt7O0HGyYu5b1RCUorQlqCzoBa+SVEUAQf5QIlLA=
-X-Google-Smtp-Source: ABdhPJwGmnxfoPiUbeKtyigW8TXtBuxy9Ingfhpbpr0TlDgmdeKUKLB60VrpSFlnEVS0oTCt4mU9IQZtiti2l2eVbxE=
-X-Received: by 2002:a9d:4c0b:: with SMTP id l11mr9559158otf.139.1591393441466;
- Fri, 05 Jun 2020 14:44:01 -0700 (PDT)
+        Fri, 5 Jun 2020 17:44:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:22537 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728418AbgFEVjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:39:10 -0400
+IronPort-SDR: uIc5YCn6PR90XQU4J8UYqd9wwHW38E2GscHOZfTegIYLYgGyx8o7lfjOqsMUMfSm0wPLa+vkxD
+ jgI62UOGwVPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:09 -0700
+IronPort-SDR: H8FtkyTkq+kfR3GM/MSnkl6Fv5ZNCYmvyGw5Iw2YQz/49QgCjYUqVBtIE3U1lDEulgImpTXOAe
+ egrvLr8RD3rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="287860911"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:08 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Marc Zyngier <maz@kernel.org>, Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Feiner <pfeiner@google.com>,
+        Peter Shier <pshier@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Ben Gardon <bgardon@google.com>,
+        Christoffer Dall <christoffer.dall@arm.com>
+Subject: [PATCH 15/21] KVM: Move x86's MMU memory cache helpers to common KVM code
+Date:   Fri,  5 Jun 2020 14:38:47 -0700
+Message-Id: <20200605213853.14959-16-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200605213853.14959-1-sean.j.christopherson@intel.com>
+References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20200605211925.87873-1-john.stultz@linaro.org>
-In-Reply-To: <20200605211925.87873-1-john.stultz@linaro.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 5 Jun 2020 14:43:25 -0700
-Message-ID: <CAGETcx_-ZknGcGJQMesLFWAwUyidK00-6bqF6ZZPbyyYtSPcew@mail.gmail.com>
-Subject: Re: [RFC][PATCH] slimbus: core: Set fwnode for a device when setting of_node
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        alsa-devel@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+Move x86's memory cache helpers to common KVM code so that they can be
+reused by arm64 and MIPS in future patches.
 
-On Fri, Jun 5, 2020 at 2:19 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> From: Saravana Kannan <saravanak@google.com>
->
-> When setting the of_node for a newly created device, also set the
-> fwnode. This allows fw_devlink to work for slimbus devices.
->
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+Suggested-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/mmu/mmu.c   | 53 --------------------------------------
+ include/linux/kvm_host.h |  7 +++++
+ virt/kvm/kvm_main.c      | 55 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 62 insertions(+), 53 deletions(-)
 
-I thought Srinivas already picked this up and sent it to Greg.
-https://lore.kernel.org/lkml/20200511151334.362-1-srinivas.kandagatla@linaro.org/
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index b85d3e8e8403..a627437f73fd 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1060,47 +1060,6 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
+ 	local_irq_enable();
+ }
+ 
+-static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+-					       gfp_t gfp_flags)
+-{
+-	gfp_flags |= mc->gfp_zero;
+-
+-	if (mc->kmem_cache)
+-		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+-	else
+-		return (void *)__get_free_page(gfp_flags);
+-}
+-
+-static int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
+-{
+-	void *obj;
+-
+-	if (mc->nobjs >= min)
+-		return 0;
+-	while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
+-		obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
+-		if (!obj)
+-			return mc->nobjs >= min ? 0 : -ENOMEM;
+-		mc->objects[mc->nobjs++] = obj;
+-	}
+-	return 0;
+-}
+-
+-static int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc)
+-{
+-	return mc->nobjs;
+-}
+-
+-static void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
+-{
+-	while (mc->nobjs) {
+-		if (mc->kmem_cache)
+-			kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
+-		else
+-			free_page((unsigned long)mc->objects[--mc->nobjs]);
+-	}
+-}
+-
+ static int mmu_topup_memory_caches(struct kvm_vcpu *vcpu, bool maybe_indirect)
+ {
+ 	int r;
+@@ -1132,18 +1091,6 @@ static void mmu_free_memory_caches(struct kvm_vcpu *vcpu)
+ 	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_header_cache);
+ }
+ 
+-static void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
+-{
+-	void *p;
+-
+-	if (WARN_ON(!mc->nobjs))
+-		p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
+-	else
+-		p = mc->objects[--mc->nobjs];
+-	BUG_ON(!p);
+-	return p;
+-}
+-
+ static struct pte_list_desc *mmu_alloc_pte_list_desc(struct kvm_vcpu *vcpu)
+ {
+ 	return kvm_mmu_memory_cache_alloc(&vcpu->arch.mmu_pte_list_desc_cache);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index d38d6b9c24be..802b9e2306f0 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -815,6 +815,13 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *vcpu, bool usermode_vcpu_not_eligible);
+ void kvm_flush_remote_tlbs(struct kvm *kvm);
+ void kvm_reload_remote_mmus(struct kvm *kvm);
+ 
++#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
++int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min);
++int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc);
++void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc);
++void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc);
++#endif
++
+ bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsigned int req,
+ 				 struct kvm_vcpu *except,
+ 				 unsigned long *vcpu_bitmap, cpumask_var_t tmp);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 4db151f6101e..fead5f1d5594 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -342,6 +342,61 @@ void kvm_reload_remote_mmus(struct kvm *kvm)
+ 	kvm_make_all_cpus_request(kvm, KVM_REQ_MMU_RELOAD);
+ }
+ 
++#ifdef KVM_ARCH_NR_OBJS_PER_MEMORY_CACHE
++static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
++					       gfp_t gfp_flags)
++{
++	gfp_flags |= mc->gfp_zero;
++
++	if (mc->kmem_cache)
++		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
++	else
++		return (void *)__get_free_page(gfp_flags);
++}
++
++int kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int min)
++{
++	void *obj;
++
++	if (mc->nobjs >= min)
++		return 0;
++	while (mc->nobjs < ARRAY_SIZE(mc->objects)) {
++		obj = mmu_memory_cache_alloc_obj(mc, GFP_KERNEL_ACCOUNT);
++		if (!obj)
++			return mc->nobjs >= min ? 0 : -ENOMEM;
++		mc->objects[mc->nobjs++] = obj;
++	}
++	return 0;
++}
++
++int kvm_mmu_memory_cache_nr_free_objects(struct kvm_mmu_memory_cache *mc)
++{
++	return mc->nobjs;
++}
++
++void kvm_mmu_free_memory_cache(struct kvm_mmu_memory_cache *mc)
++{
++	while (mc->nobjs) {
++		if (mc->kmem_cache)
++			kmem_cache_free(mc->kmem_cache, mc->objects[--mc->nobjs]);
++		else
++			free_page((unsigned long)mc->objects[--mc->nobjs]);
++	}
++}
++
++void *kvm_mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc)
++{
++	void *p;
++
++	if (WARN_ON(!mc->nobjs))
++		p = mmu_memory_cache_alloc_obj(mc, GFP_ATOMIC | __GFP_ACCOUNT);
++	else
++		p = mc->objects[--mc->nobjs];
++	BUG_ON(!p);
++	return p;
++}
++#endif
++
+ static void kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ {
+ 	mutex_init(&vcpu->mutex);
+-- 
+2.26.0
 
-Am I missing something?
-
--Saravana
