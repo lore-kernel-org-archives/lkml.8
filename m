@@ -2,201 +2,292 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4442075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D42E207D0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:11:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="R6M9V5ml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgFEJLN (ORCPT
+        id S1726260AbgFEJLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:11:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60258 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgFEJLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:11:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9785CAE5C;
-        Fri,  5 Jun 2020 09:11:11 +0000 (UTC)
-Subject: Re: slub freelist issue / BUG: unable to handle page fault for
- address: 000000003ffe0018
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Kees Cook <keescook@chromium.org>,
-        Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marco Elver <elver@google.com>,
-        Waiman Long <longman@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, linux-acpi@vger.kernel.org,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
- <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
- <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
- <202006041054.874AA564@keescook>
- <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
-Date:   Fri, 5 Jun 2020 11:11:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 5 Jun 2020 05:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgFEJLT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:11:19 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1054C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 02:11:18 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id n23so10822511ljh.7
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 02:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j9bEvclg9ansMyy940YpHwicyUB1uZprPk6CAynsvQQ=;
+        b=R6M9V5mleeAxaTJYvvbRV3ETK3mcVK15TvRQpr+kGEVYK2gS8s4ybXJ0W+rtvTayzZ
+         9LW3UUKxsF3OasGL7DnZuiCziygXhxOFxJ9G7ONVS4kOfzs4D1rvepzQMOJG1VrOIABi
+         YrsgpOCb7kDwKvMvBA8kZKr/lFC+W7QfjlKdPlbdcj4iX56ZDn2tCIbLqTPrGjbtHrA0
+         xvSZwUOo6khL96m1dW2+NqOD/Tq5J4x2HCFytvqisp6YOK1z1m1aZnR6jHFNUqxpnAvz
+         IoO76HEtcNzrAAhiyfszZqUOMXqWRcNIVRLi4wQ/+zHW0jSJ3pWSKV4mY6R9zj5NilyQ
+         EYrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j9bEvclg9ansMyy940YpHwicyUB1uZprPk6CAynsvQQ=;
+        b=YG3HkKZP/ItOtA37J8PVrse/MwNReMq+c1mpKP81RIkuV+s7lr1Ixe+g63g95ovvxw
+         uP+zC0A8kzim9wg5RqFyGC9tReq7Frz03jSgQx59PmX6Gkrj6knpF0fo9Vl2A9rvNenP
+         e3GgR0g8vQREOKtOBb4gcGYWyRADibkGT1cOiecN8TrvF1V26fjscQ+iXhJu5OkJsi5Y
+         U7BJP+OYizvnPVTguCopDG0v02ZewIOsmP4mRFIg2p05NQxbed/n6k401HTKGm2BGqXd
+         mTbO2blXGr0FZf2Jfc0moBBHJGS2febDVoOUaePuiEszDKGETs5dYTlJss+aoSwrnCkm
+         uorA==
+X-Gm-Message-State: AOAM532raDEz+VOT2DiNDEF/yKiJQOAADziwH8GxTOmkvOx5S7uM7c5b
+        Xhzr6bq1b/GDwe2GE1tizX8zgihipqqgQgJGG1QOiQ==
+X-Google-Smtp-Source: ABdhPJzkmeicRYu9VDjVeTJxBbWwEiTajl+nyfNwxd9SirjyAQd6FiGe3MMsiQ3ZNPpW2gulJhXsaPRWmqTU7B4yODU=
+X-Received: by 2002:a2e:96c2:: with SMTP id d2mr4172314ljj.439.1591348277100;
+ Fri, 05 Jun 2020 02:11:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYuGwcE3zyMFQPpfA0CyW=4WOg9V=kCfKhS7b8930jQofA@mail.gmail.com>
+ <CA+G9fYuUvjDeLXVm2ax_5UF=OJeH7fog0U7GG2vEUXg-HXWRqg@mail.gmail.com>
+ <CAB0TPYGo5ePYrah3Wgv_M1fx91+niRe12YaBBXGfs5b87Fjtrg@mail.gmail.com>
+ <CAB0TPYEx4Z8do3qL1KVpnGGnorTLGqKtrwi1uQgxQ6Xw3JqiYw@mail.gmail.com>
+ <ca8a4087-8c8b-6105-3f2c-1e2deee5f987@cn.fujitsu.com> <14be1119-50a7-3861-dfd4-42a239413ee7@cn.fujitsu.com>
+In-Reply-To: <14be1119-50a7-3861-dfd4-42a239413ee7@cn.fujitsu.com>
+From:   Martijn Coenen <maco@android.com>
+Date:   Fri, 5 Jun 2020 11:11:06 +0200
+Message-ID: <CAB0TPYE4yvunSmK=oK7goaCRa+B1BxAoVhEkK+yhtDNwnJS6VA@mail.gmail.com>
+Subject: Re: [LTP] LTP: syscalls: regression on mainline - ioctl_loop01
+ mknod07 setns01
+To:     Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Richard Palethorpe <rpalethorpe@suse.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Christoph Hellwig <hch@lst.de>,
+        LTP List <ltp@lists.linux.it>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/20 8:46 PM, Vlastimil Babka wrote:
-> On 6/4/20 7:57 PM, Kees Cook wrote:
->> On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
->>> On 2020-06-04 19:18, Vlastimil Babka wrote:
->>>> On 6/4/20 7:14 PM, Vegard Nossum wrote:
->>>>>
->>>>> Hi all,
->>>>>
->>>>> I ran into a boot problem with latest linus/master
->>>>> (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests like this:
->>>>
->>>> Hi, what's the .config you use?
->>>
->>> Pretty much x86_64 defconfig minus a few options (PCI, USB, ...)
->>
->> Oh yes indeed. I immediately crash in the same way with this config. I'll
->> start digging...
->>
->> (defconfig finishes boot)
-> 
-> This is funny, booting with slub_debug=F results in:
-> I'm not sure if it's ACPI or ftrace wrong here, but looks like the changed
-> free pointer offset merely exposes a bug in something else.
+Hey Yang,
 
-So, with Kees' patch reverted, booting with slub_debug=F (or even more
-specific slub_debug=F,ftrace_event_field) also hits this bug below. I
-wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
-further in history. So it's not new at all, and likely very specific to
-your config+QEMU? (and related to the ACPI error messages that precede it?).
+On Fri, Jun 5, 2020 at 10:59 AM Yang Xu <xuyang2018.jy@cn.fujitsu.com> wrote:
+>
+> Hi Martijn
+>
+> Sorry for noise. I see your patch in here[1] . I will modify
+> ioctl_loop01 to test that LO_FLAGS_PARTSCAN can not clear and
+> LO_FLAGS_AUTOCLEAR can be clear.
 
-> This would mean acpi_os_release_object() calling kmem_cache_free(ftrace_event_field, x)
-> where x is actually from kmalloc-64? Both parts of that sounds wrong.
-> 
-> Thread starts here: https://lore.kernel.org/linux-mm/4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com/
-> 
-> [    0.144386] ACPI: Added _OSI(Module Device)
-> [    0.144496] ACPI: Added _OSI(Processor Device)
-> [    0.144956] ACPI: Added _OSI(3.0 _SCP Extensions)
-> [    0.145432] ACPI: Added _OSI(Processor Aggregator Device)
-> [    0.145501] ACPI: Added _OSI(Linux-Dell-Video)
-> [    0.145951] ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
-> [    0.146522] ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
-> [    0.147070] ACPI Error: AE_BAD_PARAMETER, During Region initialization (20200430/tbxfload-52)
-> [    0.147494] ACPI: Unable to load the System Description Tables
-> [    0.148104] ACPI Error: Could not remove SCI handler (20200430/evmisc-251)
-> [    0.148507] ------------[ cut here ]------------
-> [    0.148985] cache_from_obj: Wrong slab cache. ftrace_event_field but object is from kmalloc-64
-> [    0.149502] WARNING: CPU: 0 PID: 1 at mm/slab.h:523 kmem_cache_free+0x248/0x260
-> [    0.150254] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #43
-> [    0.150490] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
-> [    0.150490] RIP: 0010:kmem_cache_free+0x248/0x260
-> [    0.150490] Code: ff 0f 0b e9 9d fe ff ff 49 8b 4d 58 48 8b 55 58 48 c7 c6 10 47 c1 a4 48 c7 c7 f0 c1 d0 a4 c6 05 9f 05 b1 00 01 e8 bc cc eb ff <0f> 0b 48 8b 15 5f 36 9b 00 4c 89 ed e9 d6 fd ff ff 0f 1f 80 00 00
-> [    0.150490] RSP: 0018:ffffb4dac0013dc0 EFLAGS: 00010282
-> [    0.150490] RAX: 0000000000000000 RBX: ffffa38a07409e00 RCX: 0000000000000000
-> [    0.150490] RDX: 0000000000000001 RSI: 0000000000000092 RDI: ffffffffa51dd32c
-> [    0.150490] RBP: ffffa38a07403900 R08: ffffb4dac0013c7d R09: 00000000000000eb
-> [    0.150490] R10: ffffb4dac0013c78 R11: ffffb4dac0013c7d R12: ffffa38a87409e00
-> [    0.150490] R13: ffffa38a07401d00 R14: 0000000000000000 R15: 0000000000000000
-> [    0.150490] FS:  0000000000000000(0000) GS:ffffa38a07a00000(0000) knlGS:0000000000000000
-> [    0.150490] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.150490] CR2: 0000000000000000 CR3: 000000000560a000 CR4: 00000000003406f0
-> [    0.150490] Call Trace:
-> [    0.150490]  acpi_os_release_object+0x5/0x10
-> [    0.150490]  acpi_ns_delete_children+0x46/0x59
-> [    0.150490]  acpi_ns_delete_namespace_subtree+0x5c/0x79
-> [    0.150490]  ? acpi_sleep_proc_init+0x1f/0x1f
-> [    0.150490]  acpi_ns_terminate+0xc/0x31
-> [    0.150490]  acpi_ut_subsystem_shutdown+0x45/0xa3
-> [    0.150490]  ? acpi_sleep_proc_init+0x1f/0x1f
-> [    0.150490]  acpi_terminate+0x5/0xf
-> [    0.150490]  acpi_init+0x27b/0x308
-> [    0.150490]  ? video_setup+0x79/0x79
-> [    0.150490]  do_one_initcall+0x7b/0x160
-> [    0.150490]  kernel_init_freeable+0x190/0x1f2
-> [    0.150490]  ? rest_init+0x9a/0x9a
-> [    0.150490]  kernel_init+0x5/0xf6
-> [    0.150490]  ret_from_fork+0x22/0x30
-> [    0.150490] ---[ end trace 967e9fbc065d7911 ]---
-> 
-> 
-> 
+Thanks, that would indeed be useful.
 
+>
+> ps: Giving the url of patch is better so that other people doesn't need
+> to investigate it again.
+> [1]https://patchwork.kernel.org/patch/11588321/
+
+Ok, will do next time!
+
+Best,
+Martijn
+>
+> Best Regards
+> Yang Xu
+> > Hi Martijn
+> >
+> >> Hi Naresh,
+> >>
+> >> I just sent a patch and cc'd you. I verified all the loop tests pass
+> >> again with that patch.
+> > I think you want to say "without".  I verified the ioctl_loop01 fails
+> > with faf1d25440 ("loop: Clean up LOOP_SET_STATUS lo_flags handling").
+> >
+> > This kernel commit breaks old behaviour(if old flag all 0, new flag is
+> > always 0 regradless your flag setting).
+> >
+> > I think we should modify code as below:
+> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> > index 13518ba191f5..c6ba8cf486ce 100644
+> > --- a/drivers/block/loop.c
+> > +++ b/drivers/block/loop.c
+> > @@ -1364,11 +1364,9 @@ loop_set_status(struct loop_device *lo, const
+> > struct loop_info64 *info)
+> >          if (err)
+> >                  goto out_unfreeze;
+> >
+> > -       /* Mask out flags that can't be set using LOOP_SET_STATUS. */
+> > -       lo->lo_flags &= ~LOOP_SET_STATUS_SETTABLE_FLAGS;
+> > -       /* For those flags, use the previous values instead */
+> > -       lo->lo_flags |= prev_lo_flags & ~LOOP_SET_STATUS_SETTABLE_FLAGS;
+> > -       /* For flags that can't be cleared, use previous values too */
+> > +       /* Mask out flags that can be set using LOOP_SET_STATUS. */
+> > +       lo->lo_flags &= LOOP_SET_STATUS_SETTABLE_FLAGS;
+> > +       /* For flags that can't be cleared, use previous values. */
+> >          lo->lo_flags |= prev_lo_flags &~LOOP_SET_STATUS_CLEARABLE_FLAGS;
+> >
+> > Best Regards
+> > Yang Xu
+> >>
+> >> Thanks,
+> >> Martijn
+> >>
+> >>
+> >> On Thu, Jun 4, 2020 at 9:10 PM Martijn Coenen <maco@android.com> wrote:
+> >>>
+> >>> Hi Naresh,
+> >>>
+> >>> I suspect the loop failures are due to
+> >>> faf1d25440d6ad06d509dada4b6fe62fea844370 ("loop: Clean up
+> >>> LOOP_SET_STATUS lo_flags handling"), I will investigate and get back
+> >>> to you.
+> >>>
+> >>> Thanks,
+> >>> Martijn
+> >>>
+> >>> On Thu, Jun 4, 2020 at 7:19 PM Naresh Kamboju
+> >>> <naresh.kamboju@linaro.org> wrote:
+> >>>>
+> >>>> + linux-block@vger.kernel.org
+> >>>>
+> >>>> On Thu, 4 Jun 2020 at 22:47, Naresh Kamboju
+> >>>> <naresh.kamboju@linaro.org> wrote:
+> >>>>>
+> >>>>> Following three test cases reported as regression on Linux mainline
+> >>>>> kernel
+> >>>>> on x86_64, arm64, arm and i386
+> >>>>>
+> >>>>>    ltp-syscalls-tests:
+> >>>>>      * ioctl_loop01
+> >>>>>      * mknod07
+> >>>>>      * setns01
+> >>>>>
+> >>>>> git repo:
+> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> >>>>> git branch: master
+> >>>>> GOOD:
+> >>>>>    git commit: b23c4771ff62de8ca9b5e4a2d64491b2fb6f8f69
+> >>>>>    git describe: v5.7-1230-gb23c4771ff62
+> >>>>> BAD:
+> >>>>>    git commit: 1ee08de1e234d95b5b4f866878b72fceb5372904
+> >>>>>    git describe: v5.7-3523-g1ee08de1e234
+> >>>>>
+> >>>>> kernel-config:
+> >>>>> https://builds.tuxbuild.com/U3bU0dMA62OVHb4DvZIVuw/kernel.config
+> >>>>>
+> >>>>> We are investigating these failures.
+> >>>>>
+> >>>>> tst_test.c:906: CONF: btrfs driver not available
+> >>>>> tst_test.c:1246: INFO: Timeout per run is 0h 15m 00s
+> >>>>> tst_device.c:88: INFO: Found free device 1 '/dev/loop1'
+> >>>>> ioctl_loop01.c:49: PASS: /sys/block/loop1/loop/partscan = 0
+> >>>>> [ 1073.639677] loop_set_status: loop1 () has still dirty pages
+> >>>>> (nrpages=1)
+> >>>>> ioctl_loop01.c:50: PASS: /sys/block/loop1/loop/autoclear = 0
+> >>>>> ioctl_loop01.c:51: PASS: /sys/block/loop1/loop/backing_file =
+> >>>>> '/scratch/ltp-mnIdulzriQ/9cPtLQ/test.img'
+> >>>>> ioctl_loop01.c:63: FAIL: expect 12 but got 17
+> >>>>> ioctl_loop01.c:67: FAIL: /sys/block/loop1/loop/partscan != 1 got 0
+> >>>>> ioctl_loop01.c:68: FAIL: /sys/block/loop1/loop/autoclear != 1 got 0
+> >>>>> ioctl_loop01.c:79: FAIL: access /dev/loop1p1 fails
+> >>>>> [ 1073.679678] loop_set_status: loop1 () has still dirty pages
+> >>>>> (nrpages=1)
+> >>>>> ioctl_loop01.c:85: FAIL: access /sys/block/loop1/loop1p1 fails
+> >>>>>
+> >>>>> HINT: You _MAY_ be missing kernel fixes, see:
+> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=10c70d95c0f2
+> >>>>>
+> >>>>>
+> >>>>> mke2fs 1.43.8 (1-Jan-2018)
+> >>>>> [ 1264.711379] EXT4-fs (loop0): mounting ext2 file system using the
+> >>>>> ext4 subsystem
+> >>>>> [ 1264.716642] EXT4-fs (loop0): mounted filesystem without journal.
+> >>>>> Opts: (null)
+> >>>>> mknod07     0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
+> >>>>> mknod07     0  TINFO  :  Formatting /dev/loop0 with ext2 opts=''
+> >>>>> extra opts=''
+> >>>>> mknod07     1  TPASS  :  mknod failed as expected:
+> >>>>> TEST_ERRNO=EACCES(13): Permission denied
+> >>>>> mknod07     2  TPASS  :  mknod failed as expected:
+> >>>>> TEST_ERRNO=EACCES(13): Permission denied
+> >>>>> mknod07     3  TFAIL  :  mknod07.c:155: mknod succeeded unexpectedly
+> >>>>> mknod07     4  TPASS  :  mknod failed as expected:
+> >>>>> TEST_ERRNO=EPERM(1): Operation not permitted
+> >>>>> mknod07     5  TPASS  :  mknod failed as expected:
+> >>>>> TEST_ERRNO=EROFS(30): Read-only file system
+> >>>>> mknod07     6  TPASS  :  mknod failed as expected:
+> >>>>> TEST_ERRNO=ELOOP(40): Too many levels of symbolic links
+> >>>>>
+> >>>>>
+> >>>>> setns01     0  TINFO  :  ns_name=ipc, ns_fds[0]=6,
+> >>>>> ns_types[0]=0x8000000
+> >>>>> setns01     0  TINFO  :  ns_name=mnt, ns_fds[1]=7, ns_types[1]=0x20000
+> >>>>> setns01     0  TINFO  :  ns_name=net, ns_fds[2]=8,
+> >>>>> ns_types[2]=0x40000000
+> >>>>> setns01     0  TINFO  :  ns_name=pid, ns_fds[3]=9,
+> >>>>> ns_types[3]=0x20000000
+> >>>>> setns01     0  TINFO  :  ns_name=uts, ns_fds[4]=10,
+> >>>>> ns_types[4]=0x4000000
+> >>>>> setns01     0  TINFO  :  setns(-1, 0x8000000)
+> >>>>> setns01     1  TPASS  :  invalid fd exp_errno=9
+> >>>>> setns01     0  TINFO  :  setns(-1, 0x20000)
+> >>>>> setns01     2  TPASS  :  invalid fd exp_errno=9
+> >>>>> setns01     0  TINFO  :  setns(-1, 0x40000000)
+> >>>>> setns01     3  TPASS  :  invalid fd exp_errno=9
+> >>>>> setns01     0  TINFO  :  setns(-1, 0x20000000)
+> >>>>> setns01     4  TPASS  :  invalid fd exp_errno=9
+> >>>>> setns01     0  TINFO  :  setns(-1, 0x4000000)
+> >>>>> setns01     5  TPASS  :  invalid fd exp_errno=9
+> >>>>> setns01     0  TINFO  :  setns(11, 0x8000000)
+> >>>>> setns01     6  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> >>>>> errno=EBADF(9): Bad file descriptor
+> >>>>> setns01     0  TINFO  :  setns(11, 0x20000)
+> >>>>> setns01     7  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> >>>>> errno=EBADF(9): Bad file descriptor
+> >>>>> setns01     0  TINFO  :  setns(11, 0x40000000)
+> >>>>> setns01     8  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> >>>>> errno=EBADF(9): Bad file descriptor
+> >>>>> setns01     0  TINFO  :  setns(11, 0x20000000)
+> >>>>> setns01     9  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> >>>>> errno=EBADF(9): Bad file descriptor
+> >>>>> setns01     0  TINFO  :  setns(11, 0x4000000)
+> >>>>> setns01    10  TFAIL  :  setns01.c:176: regular file fd exp_errno=22:
+> >>>>> errno=EBADF(9): Bad file descriptor
+> >>>>>
+> >>>>> Full test log link,
+> >>>>> https://lkft.validation.linaro.org/scheduler/job/1467931#L8047
+> >>>>>
+> >>>>> test results comparison shows this test case started failing from
+> >>>>> June-2-2020
+> >>>>> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/ioctl_loop01/history/
+> >>>>>
+> >>>>>
+> >>>>> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/setns01/history/
+> >>>>>
+> >>>>>
+> >>>>> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.7-4092-g38696e33e2bd/testrun/2779586/suite/ltp-syscalls-tests/test/mknod07/history/
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>> --
+> >>>>> Linaro LKFT
+> >>>>> https://lkft.linaro.org
+> >>
+> >>
+> >
+> >
+> >
+>
+>
