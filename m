@@ -2,106 +2,100 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65045C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450C32075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58AE20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbgFEKpZ (ORCPT
+        id S1726769AbgFEKqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:45:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:53494 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbgFEKpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:45:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBB442B;
-        Fri,  5 Jun 2020 03:45:22 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C1303F52E;
-        Fri,  5 Jun 2020 03:45:20 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 11:45:17 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200605104517.r65dqhzavnnrnfb2@e107158-lin.cambridge.arm.com>
-References: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200529100806.GA3070@suse.de>
- <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
- <87v9k84knx.derkling@matbug.net>
- <20200603101022.GG3070@suse.de>
- <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
- <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com>
- <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
+        Fri, 5 Jun 2020 06:46:35 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:38402 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726465AbgFEKqe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 06:46:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0U-e32eJ_1591353986;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U-e32eJ_1591353986)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 05 Jun 2020 18:46:27 +0800
+Subject: Re: [PATCH RFC v4 00/13] virtio-mem: paravirtualized memory
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20191212171137.13872-1-david@redhat.com>
+ <9acc5d04-c8e9-ef53-85e4-709030997ca6@redhat.com>
+ <1cfa9edb-47ea-1495-4e28-4cf391eab44c@linux.alibaba.com>
+ <d6cd1870-1012-cb3d-7d29-8e5ad2703717@redhat.com>
+ <6b4724bf-84b5-9880-5464-1908425d106d@redhat.com>
+ <e1643897-ebd7-75f8-d271-44f62318aa66@redhat.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <95c6ef21-23e0-c768-999d-3af7f69d02d3@linux.alibaba.com>
+Date:   Fri, 5 Jun 2020 18:46:26 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <e1643897-ebd7-75f8-d271-44f62318aa66@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/20 14:14, Vincent Guittot wrote:
-> I have tried your patch and I don't see any difference compared to
-> previous tests. Let me give you more details of my setup:
-> I create 3 levels of cgroups and usually run the tests in the 4 levels
-> (which includes root). The result above are for the root level
+
+
+在 2020/6/5 下午6:05, David Hildenbrand 写道:
+>> I guess I know what's happening here. In case we only have DMA memory
+>> when booting, we don't reserve swiotlb buffers. Once we hotplug memory
+>> and online ZONE_NORMAL, we don't have any swiotlb DMA bounce buffers to
+>> map such PFNs (total 0 (slots), used 0 (slots)).
+>>
+>> Can you try with "swiotlb=force" on the kernel cmdline?
+> Alternative, looks like you can specify "-m 2G,maxmem=16G,slots=1", to
+> create proper ACPI tables that indicate hotpluggable memory. (I'll have
+> to look into QEMU to figure out to always indicate hotpluggable memory
+> that way).
 > 
-> But I see a difference at other levels:
-> 
->                            root           level 1       level 2       level 3
-> 
-> /w patch uclamp disable     50097         46615         43806         41078
-> tip uclamp enable           48706(-2.78%) 45583(-2.21%) 42851(-2.18%)
-> 40313(-1.86%)
-> /w patch uclamp enable      48882(-2.43%) 45774(-1.80%) 43108(-1.59%)
-> 40667(-1.00%)
-> 
-> Whereas tip with uclamp stays around 2% behind tip without uclamp, the
-> diff of uclamp with your patch tends to decrease when we increase the
-> number of level
 
-Thanks for the extra info. Let me try this.
 
-If you can run perf and verify that you see activate/deactivate_task showing up
-as overhead I'd appreciate it. Just to confirm that indeed what we're seeing
-here are symptoms of the same problem Mel is seeing.
+That works too. Yes, better resolved in qemu, maybe. :)
 
-> Beside this, that's also interesting to notice the ~6% of perf impact
-> between each level for the same image
-
-Interesting indeed.
-
-Thanks
-
---
-Qais Yousef
+Thanks!
