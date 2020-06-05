@@ -2,98 +2,88 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C197C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278F62067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F6C2065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:08:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BJVCws8D"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ACbAsT+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgFEAEs (ORCPT
+        id S1726076AbgFEAIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 20:04:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42554 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725986AbgFEAEr (ORCPT
+        Thu, 4 Jun 2020 20:08:13 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47892 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725986AbgFEAIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 20:04:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591315486;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3ZEfFGX2brEg7XaCjWenhhqt8CmqT/i/JEA+8whSp1o=;
-        b=BJVCws8DxJ2k+BsLffYr5d8i8zd+LXGJqmk1If5EUZ1DxeOsBXMiN0RGsy1XYheuEdIrVs
-        vj8MPbItI0F2ag0+u7lCCl6OTUHKTNArz6Y9TGyYpwTytsqDGYXgXgJx9PyduFDe1Ygrjl
-        lUOl2wLxSdA4JSWHKRvX4Sufx5DnJBw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-dSxWr-iQP_6xAZ4bXyonYg-1; Thu, 04 Jun 2020 20:04:44 -0400
-X-MC-Unique: dSxWr-iQP_6xAZ4bXyonYg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20B8E1009600;
-        Fri,  5 Jun 2020 00:04:43 +0000 (UTC)
-Received: from treble (ovpn-116-170.rdu2.redhat.com [10.10.116.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D34A2707B1;
-        Fri,  5 Jun 2020 00:04:41 +0000 (UTC)
-Date:   Thu, 4 Jun 2020 19:04:39 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: build failure after merge of the origin tree
-Message-ID: <20200605000439.v75kbagqcxvctqam@treble>
-References: <20200605083715.1a6c29ce@canb.auug.org.au>
+        Thu, 4 Jun 2020 20:08:12 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 055087U2054849;
+        Thu, 4 Jun 2020 19:08:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591315687;
+        bh=++12NsWfNAE1WdHSBzqK4FR7Dn3ydGwcqrGJYz2e2pI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ACbAsT+1VauWyX7TcES5XowHiveifLsXSMcDqCckGEUYvxmW2pjsrqvGLz0ePXL5s
+         Kc3qm4r7syRvoWJ+98LRzfQIK26v7ukfAZp184uSMYt5zULQWJfxyigPN9qxXfImcX
+         LOgN3N9ClRBl8f/BvNBMdQYtTCDfUMFsukqyehy0=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 055087F3015042
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 19:08:07 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Jun
+ 2020 19:08:07 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 4 Jun 2020 19:08:07 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 055086gQ023905;
+        Thu, 4 Jun 2020 19:08:07 -0500
+Subject: Re: [PATCH v26 06/15] dt-bindings: leds: Convert leds-lp55xx to yaml
+To:     Rob Herring <robh@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-7-dmurphy@ti.com> <20200604230456.GA6520@bogus>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f8d648cc-9ff6-33a7-6da9-300a6b5b7d1c@ti.com>
+Date:   Thu, 4 Jun 2020 19:08:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200605083715.1a6c29ce@canb.auug.org.au>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200604230456.GA6520@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 08:37:15AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the origin tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
-> 
-> kernel/module.c: In function 'do_init_module':
-> kernel/module.c:3593:2: error: implicit declaration of function 'module_enable_ro'; did you mean 'module_enable_x'? [-Werror=implicit-function-declaration]
->  3593 |  module_enable_ro(mod, true);
->       |  ^~~~~~~~~~~~~~~~
->       |  module_enable_x
-> 
-> Caused by commit
-> 
->   e6eff4376e28 ("module: Make module_enable_ro() static again")
-> 
-> This config has neither CONFIG_ARCH_HAS_STRICT_MODULE_RWX or
-> CONFIG_ARCH_HAS_STRICT_MODULE_RWX set.  This failure was hidden in
-> linux-next due to commit
-> 
->   db991af02f11 ("module: break nested ARCH_HAS_STRICT_MODULE_RWX and STRICT_MODULE_RWX #ifdefs")
-> 
-> from the modules tree. I have cherry-picked that commit for today.
+Rob
 
-Sorry, I guessed we missed that dependency between the live-patching and
-module trees.
+On 6/4/20 6:04 PM, Rob Herring wrote:
+> On Thu, Jun 04, 2020 at 07:04:55AM -0500, Dan Murphy wrote:
+>> Convert the leds-lp55xx.txt to yaml binding.
 
-Jessica, are you planning on sending a pull request?
+I will fix all your comments.
 
--- 
-Josh
+But why does your BOT have checkpatch warnings?
+
+https://gitlab.com/robherring/linux-dt-review/-/jobs/581282098/artifacts/file/checkpatch-1303471.log
+
+Is this because checkpatch thinks the .txt file is invalid?
+
+Dan
 
