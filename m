@@ -2,293 +2,342 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D57C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E90206FA
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC7B206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 20:53:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kRVFww8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgFEUvq (ORCPT
+        id S1728277AbgFEUx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 16:51:46 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:60942 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726154AbgFEUvq (ORCPT
+        Fri, 5 Jun 2020 16:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgFEUxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 16:51:46 -0400
-X-IronPort-AV: E=Sophos;i="5.73,477,1583190000"; 
-   d="scan'208";a="453258010"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 22:51:42 +0200
-Date:   Fri, 5 Jun 2020 22:51:42 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH] coccinelle: api: add kvfree script
-In-Reply-To: <20200605204237.85055-1-efremov@linux.com>
-Message-ID: <alpine.DEB.2.21.2006052249160.28300@hadrien>
-References: <20200605204237.85055-1-efremov@linux.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Jun 2020 16:53:55 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1532C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 13:53:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a127so5499041pfa.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 13:53:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zAx51LemyoOFOlfsDojFZzlJt8urO6R/Paxwv1vL1lA=;
+        b=kRVFww8rmHBumgGtaLWraSNLNgMxHu0PLqqx98dgUUuU5+HOceLZh5emcuXgv14ynh
+         Sm+B++CDaItRVDw51yhFj7vo9ixaoIpNzU0+oPqhDwjkp7yEh7VFXpK2eawdP8hR1hH9
+         X44dGV1cgNeuvapNd0nnJYxChgJr/olh1dK/LoVJkQwYfklXR6ikTg2LGkBD0OIvrlwg
+         k1PgICp/jO49/XHgdUXNaEbQkrBn38NR5L8ATExjw0PBztQQ0mEO22dp3XjAR1Thm+oJ
+         NrFeayjGf2RrdsQDwtvY+PmhX7DJTAEzTW22fAMu4qHCZZu1WDRUTduhHGBUUsAvxzV4
+         VQzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zAx51LemyoOFOlfsDojFZzlJt8urO6R/Paxwv1vL1lA=;
+        b=uctai5QAOPzRrWbaLCJlGLCfAN0GTQCEyLz1FyALJmvBYCCKImW3CgDDy2lJHTGc/A
+         Qyzx9UauYEcKgDwmHjBRgjtklmk9oLnkmQmJIi9hU/B2HARnlDwgXRndYDgjzSVH6UOc
+         NH2p2jVVOMGx1yRZueNpOp+Zd38UX4wjg12tjiGI1wUsIbJOidNqbzz85Ldhoc2LgLkx
+         i9NWxdV/Op3oVlwyfskIJG/P0t01HAM9LPTMncofjv7qXtowHRMKvLIqZ7wCiDxPWU3Q
+         /vC6GumykLVyU9gmLtLJ56uEPNvjD7yZi8w+n2B4cZkzyOlNuc0hfPOOyesiKZ9QtiSl
+         IA/A==
+X-Gm-Message-State: AOAM53046/FwL9V/VRnLeOlDL7FqK+2AisIWTGpD/TmIqwj/k9PPDjcH
+        aq2LxmfzqeJJMbBlfn/9d483tg==
+X-Google-Smtp-Source: ABdhPJxuibsM891hjocEnpiZKgKe/VyCLNQ5oE5x7RUcwjwLfgqNp1wjiNsAs+XEkTzKgaVawaKv2g==
+X-Received: by 2002:a62:b402:: with SMTP id h2mr11806730pfn.221.1591390433716;
+        Fri, 05 Jun 2020 13:53:53 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id ha16sm1604364pjb.40.2020.06.05.13.53.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 13:53:53 -0700 (PDT)
+Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
+To:     Andres Freund <andres@anarazel.de>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+References: <20200526195123.29053-1-axboe@kernel.dk>
+ <20200604005916.niy2mejjcsx4sv6t@alap3.anarazel.de>
+ <e3072371-1d6b-8ae5-d946-d83e60427cb0@kernel.dk>
+ <6eeff14f-befc-a5cc-08da-cb77f811fbdf@kernel.dk>
+ <20200605202028.d57nklzpeolukni7@alap3.anarazel.de>
+ <20200605203613.ogfilu2edcsfpme4@alap3.anarazel.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <75bfe993-008d-71ce-7637-369f130bd984@kernel.dk>
+Date:   Fri, 5 Jun 2020 14:53:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200605203613.ogfilu2edcsfpme4@alap3.anarazel.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/5/20 2:36 PM, Andres Freund wrote:
+> Hi,
+> 
+> On 2020-06-05 13:20:28 -0700, Andres Freund wrote:
+>> I'll go and try to figure out why I don't see an oops...
+> 
+> Err, that probably was a typo on my end in the serial console
+> config. After fixing that, I did get the below.
+> 
+> If helpful I can try with debugging enabled or such.
+> 
+> [   67.910265] tee (2577): drop_caches: 3
+> [   68.059674] BUG: unable to handle page fault for address: 00007f0b16a3c03c
+> [   68.062021] #PF: supervisor read access in kernel mode
+> [   68.063742] #PF: error_code(0x0000) - not-present page
+> [   68.065517] PGD 102e044067 P4D 102e044067 PUD 102bf7a067 PMD 0 
+> [   68.067519] Oops: 0000 [#1] SMP NOPTI
+> [   68.068800] CPU: 2 PID: 2554 Comm: postgres Not tainted 5.7.0-andres-10123-g87823242260e #44
+> [   68.071505] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1 04/01/2014
+> [   68.074139] RIP: 0010:__mutex_lock.isra.0+0x76/0x4e0
+> [   68.075389] Code: b7 01 00 00 48 39 c6 0f 84 a4 03 00 00 65 48 8b 04 25 80 7d 01 00 48 8b 00 a8 08 75 18 49 8b 06 48 83 e0 f8 0f 84 2f 02 00 00 <8b> 50 3c 85 d2 0f 85 12 02 00 00 65 48 8b 04 25 80 7d 01 00 48 8b
+> [   68.079125] RSP: 0018:ffffc90000befd50 EFLAGS: 00010206
+> [   68.080260] RAX: 00007f0b16a3c000 RBX: ffff889037617910 RCX: 0000000000000000
+> [   68.084115] RDX: 00007f0b16a3c000 RSI: ffff88902a4aca80 RDI: ffff8890376178c0
+> [   68.085374] RBP: ffffc90000befdf0 R08: 0000000000000001 R09: 0000000000000000
+> [   68.086409] R10: ffff889037617920 R11: ffff88903f8abaf0 R12: ffffc90000befe08
+> [   68.087447] R13: 0000000000000000 R14: ffff8890376178c0 R15: 0000000000000000
+> [   68.088697] FS:  00007f0b97743740(0000) GS:ffff88903f880000(0000) knlGS:0000000000000000
+> [   68.089903] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   68.090776] CR2: 00007f0b16a3c03c CR3: 000000102cf7c004 CR4: 0000000000760ee0
+> [   68.091834] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   68.092902] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   68.093967] PKRU: 55555554
+> [   68.094427] Call Trace:
+> [   68.094845]  ? __schedule+0x2ac/0x720
+> [   68.095350]  ? schedule+0x55/0xc0
+> [   68.095797]  ? ep_read_events_proc+0xd0/0xd0
+> [   68.096354]  ep_scan_ready_list.constprop.0+0x16c/0x190
+> [   68.097016]  ep_poll+0x2a3/0x440
+> [   68.097449]  ? wait_woken+0x70/0x70
+> [   68.097904]  do_epoll_wait+0xb0/0xd0
+> [   68.098375]  __x64_sys_epoll_wait+0x1a/0x20
+> [   68.098913]  do_syscall_64+0x48/0x130
+> [   68.099393]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   68.100030] RIP: 0033:0x7f0b97845606
+> [   68.100498] Code: 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 41 89 ca 64 8b 04 25 18 00 00 00 85 c0 75 11 b8 e8 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 5a c3 90 48 83 ec 28 89 54 24 18 48 89 74 24
+> [   68.102718] RSP: 002b:00007ffe80ffdba8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e8
+> [   68.103644] RAX: ffffffffffffffda RBX: 000055fb76a9a998 RCX: 00007f0b97845606
+> [   68.104533] RDX: 0000000000000001 RSI: 000055fb76a9aa10 RDI: 0000000000000005
+> [   68.105418] RBP: 0000000005000007 R08: 0000000005000007 R09: 0000000000000003
+> [   68.106296] R10: 00000000ffffffff R11: 0000000000000246 R12: 000055fb76a9a998
+> [   68.107187] R13: 0000000000000001 R14: 0000000000000009 R15: 000055fb76a9a998
+> [   68.108104] Modules linked in: 9pnet_virtio isst_if_common xhci_pci 9pnet iTCO_wdt intel_pmc_bxt xhci_hcd iTCO_vendor_support
+> [   68.109505] CR2: 00007f0b16a3c03c
+> [   68.109962] ---[ end trace 0ca39a5ed99162ce ]---
+> [   68.110547] RIP: 0010:__mutex_lock.isra.0+0x76/0x4e0
+> [   68.111214] Code: b7 01 00 00 48 39 c6 0f 84 a4 03 00 00 65 48 8b 04 25 80 7d 01 00 48 8b 00 a8 08 75 18 49 8b 06 48 83 e0 f8 0f 84 2f 02 00 00 <8b> 50 3c 85 d2 0f 85 12 02 00 00 65 48 8b 04 25 80 7d 01 00 48 8b
+> [   68.113435] RSP: 0018:ffffc90000befd50 EFLAGS: 00010206
+> [   68.114111] RAX: 00007f0b16a3c000 RBX: ffff889037617910 RCX: 0000000000000000
+> [   68.115016] RDX: 00007f0b16a3c000 RSI: ffff88902a4aca80 RDI: ffff8890376178c0
+> [   68.115902] RBP: ffffc90000befdf0 R08: 0000000000000001 R09: 0000000000000000
+> [   68.116810] R10: ffff889037617920 R11: ffff88903f8abaf0 R12: ffffc90000befe08
+> [   68.117663] R13: 0000000000000000 R14: ffff8890376178c0 R15: 0000000000000000
+> [   68.118520] FS:  00007f0b97743740(0000) GS:ffff88903f880000(0000) knlGS:0000000000000000
+> [   68.119482] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   68.120181] CR2: 00007f0b16a3c03c CR3: 000000102cf7c004 CR4: 0000000000760ee0
+> [   68.121043] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   68.121904] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   68.122790] PKRU: 55555554
+> [   68.123401] general protection fault, probably for non-canonical address 0xfeeda989fef06266: 0000 [#2] SMP NOPTI
+> [   68.125052] CPU: 2 PID: 2554 Comm: postgres Tainted: G      D           5.7.0-andres-10123-g87823242260e #44
+> [   68.126260] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1 04/01/2014
+> [   68.127274] RIP: 0010:__pv_queued_spin_lock_slowpath+0x1a1/0x2b0
+> [   68.128032] Code: c4 c1 ea 12 41 be 01 00 00 00 8d 42 ff 41 83 e4 03 4c 8d 6b 14 49 c1 e4 05 48 98 49 81 c4 00 c7 02 00 4c 03 24 c5 e0 e6 fd 82 <49> 89 1c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
+> [   68.130221] RSP: 0018:ffffc90000befce8 EFLAGS: 00010086
+> [   68.130867] RAX: 0000000000003ffe RBX: ffff88903f8ac700 RCX: 0000000000000001
+> [   68.131752] RDX: 0000000000003fff RSI: 0000000000000000 RDI: 0000000000000000
+> [   68.132637] RBP: ffff889037617924 R08: 0000000000000000 R09: ffffc90000befdf8
+> [   68.133513] R10: ffff8890334d2bf0 R11: 0000000000000018 R12: feeda989fef06266
+> [   68.134399] R13: ffff88903f8ac714 R14: 0000000000000001 R15: 00000000000c0000
+> [   68.135323] FS:  00007f0b97743740(0000) GS:ffff88903f880000(0000) knlGS:0000000000000000
+> [   68.136307] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   68.137004] CR2: 00007f0b16a3c03c CR3: 000000000360a005 CR4: 0000000000760ee0
+> [   68.137866] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   68.138748] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   68.139606] PKRU: 55555554
+> [   68.139973] Call Trace:
+> [   68.140313]  queued_read_lock_slowpath+0x6c/0x70
+> [   68.140915]  _raw_read_lock_irqsave+0x26/0x30
+> [   68.141485]  ep_poll_callback+0x3e/0x2b0
+> [   68.142007]  ? set_next_entity+0xab/0x1f0
+> [   68.142541]  __wake_up_common+0x7a/0x140
+> [   68.143077]  __wake_up_common_lock+0x7c/0xc0
+> [   68.143651]  pipe_release+0x5b/0xd0
+> [   68.144150]  __fput+0xda/0x240
+> [   68.144574]  task_work_run+0x62/0x90
+> [   68.145046]  do_exit+0x35c/0xa70
+> [   68.145505]  ? do_epoll_wait+0xb0/0xd0
+> [   68.146000]  rewind_stack_do_exit+0x17/0x20
+> [   68.146538] RIP: 0033:0x7f0b97845606
+> [   68.146988] Code: Bad RIP value.
+> [   68.147405] RSP: 002b:00007ffe80ffdba8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e8
+> [   68.148314] RAX: ffffffffffffffda RBX: 000055fb76a9a998 RCX: 00007f0b97845606
+> [   68.149157] RDX: 0000000000000001 RSI: 000055fb76a9aa10 RDI: 0000000000000005
+> [   68.150021] RBP: 0000000005000007 R08: 0000000005000007 R09: 0000000000000003
+> [   68.150831] R10: 00000000ffffffff R11: 0000000000000246 R12: 000055fb76a9a998
+> [   68.151640] R13: 0000000000000001 R14: 0000000000000009 R15: 000055fb76a9a998
+> [   68.152459] Modules linked in: 9pnet_virtio isst_if_common xhci_pci 9pnet iTCO_wdt intel_pmc_bxt xhci_hcd iTCO_vendor_support
+> [   68.153707] ---[ end trace 0ca39a5ed99162cf ]---
+> [   68.154282] RIP: 0010:__mutex_lock.isra.0+0x76/0x4e0
+> [   68.154884] Code: b7 01 00 00 48 39 c6 0f 84 a4 03 00 00 65 48 8b 04 25 80 7d 01 00 48 8b 00 a8 08 75 18 49 8b 06 48 83 e0 f8 0f 84 2f 02 00 00 <8b> 50 3c 85 d2 0f 85 12 02 00 00 65 48 8b 04 25 80 7d 01 00 48 8b
+> [   68.156976] RSP: 0018:ffffc90000befd50 EFLAGS: 00010206
+> [   68.157614] RAX: 00007f0b16a3c000 RBX: ffff889037617910 RCX: 0000000000000000
+> [   68.158436] RDX: 00007f0b16a3c000 RSI: ffff88902a4aca80 RDI: ffff8890376178c0
+> [   68.159269] RBP: ffffc90000befdf0 R08: 0000000000000001 R09: 0000000000000000
+> [   68.160092] R10: ffff889037617920 R11: ffff88903f8abaf0 R12: ffffc90000befe08
+> [   68.160920] R13: 0000000000000000 R14: ffff8890376178c0 R15: 0000000000000000
+> [   68.161746] FS:  00007f0b97743740(0000) GS:ffff88903f880000(0000) knlGS:0000000000000000
+> [   68.162701] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   68.163386] CR2: 00007f0b978455dc CR3: 000000000360a005 CR4: 0000000000760ee0
+> [   68.164226] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   68.165079] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   68.165931] PKRU: 55555554
+> [   68.166298] Fixing recursive fault but reboot is needed!
+> [  128.173729] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> [  128.179267] rcu: 	11-...0: (1 GPs behind) idle=c56/1/0x4000000000000000 softirq=6897/6898 fqs=5976 
+> [  128.182232] rcu: 	19-...0: (1 GPs behind) idle=492/1/0x4000000000000000 softirq=1023/1023 fqs=5976 
+> [  128.185217] 	(detected by 10, t=18003 jiffies, g=15789, q=631)
+> [  128.186863] Sending NMI from CPU 10 to CPUs 11:
+> [  128.188902] NMI backtrace for cpu 11
+> [  128.188903] CPU: 11 PID: 2546 Comm: postgres Tainted: G      D           5.7.0-andres-10123-g87823242260e #44
+> [  128.188904] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1 04/01/2014
+> [  128.188904] RIP: 0010:queued_read_lock_slowpath+0x5b/0x70
+> [  128.188906] Code: 03 00 02 00 00 8b 03 84 c0 74 08 f3 90 8b 13 84 d2 75 f8 48 89 ef e8 74 e6 ff ff 66 90 5b 5d c3 8b 07 84 c0 74 08 f3 90 8b 03 <84> c0 75 f8 5b 5d c3 89 c6 48 89 ef e8 e4 e8 ff ff 66 90 eb bf 0f
+> [  128.188907] RSP: 0018:ffffc90000348c08 EFLAGS: 00000086
+> [  128.188908] RAX: 0000000037617cc0 RBX: ffff889037617920 RCX: 00000000000000c3
+> [  128.188909] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff889037617920
+> [  128.188910] RBP: ffff889037bb1a80 R08: 00000000000000c3 R09: ffffc90000348cd8
+> [  128.188910] R10: 0100000000000000 R11: 00000000de2ee17e R12: 0000000000000046
+> [  128.188911] R13: ffff889037617920 R14: 0000000000000001 R15: 00000000000000c3
+> [  128.188912] FS:  00007f0b97743740(0000) GS:ffff88903fac0000(0000) knlGS:0000000000000000
+> [  128.188912] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  128.188913] CR2: 00007f0b16afc00e CR3: 000000102e5c6002 CR4: 0000000000760ee0
+> [  128.188914] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  128.188914] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  128.188915] PKRU: 55555554
+> [  128.188915] Call Trace:
+> [  128.188916]  <IRQ>
+> [  128.188916]  _raw_read_lock_irqsave+0x26/0x30
+> [  128.188917]  ep_poll_callback+0x3e/0x2b0
+> [  128.188917]  ? cpumask_next_and+0x19/0x20
+> [  128.188918]  ? update_sd_lb_stats.constprop.0+0xfe/0x810
+> [  128.188918]  __wake_up_common+0x7a/0x140
+> [  128.188919]  __wake_up_common_lock+0x7c/0xc0
+> [  128.188919]  sock_def_readable+0x37/0x60
+> [  128.188920]  __udp_enqueue_schedule_skb+0x168/0x260
+> [  128.188920]  udpv6_queue_rcv_one_skb+0x284/0x3c0
+> [  128.188921]  udp6_unicast_rcv_skb.isra.0+0x44/0xa0
+> [  128.188921]  ip6_protocol_deliver_rcu+0x235/0x4b0
+> [  128.188922]  ip6_input_finish+0x11/0x20
+> [  128.188922]  ip6_input+0xa2/0xb0
+> [  128.188923]  ? ip6_protocol_deliver_rcu+0x4b0/0x4b0
+> [  128.188923]  ipv6_rcv+0xc0/0xd0
+> [  128.188924]  ? ip6_rcv_finish_core.isra.0+0xd0/0xd0
+> [  128.188924]  __netif_receive_skb_one_core+0x63/0xa0
+> [  128.188925]  process_backlog+0x98/0x140
+> [  128.188925]  net_rx_action+0x13a/0x370
+> [  128.188926]  __do_softirq+0xe0/0x2ca
+> [  128.188926]  do_softirq_own_stack+0x2a/0x40
+> [  128.188926]  </IRQ>
+> [  128.188927]  do_softirq.part.0+0x2b/0x30
+> [  128.188927]  __local_bh_enable_ip+0x4b/0x50
+> [  128.188928]  ip6_finish_output2+0x264/0x5b0
+> [  128.188928]  ip6_output+0x73/0x120
+> [  128.188929]  ? __ip6_finish_output+0x110/0x110
+> [  128.188929]  ip6_send_skb+0x1e/0x60
+> [  128.188930]  udp_v6_send_skb.isra.0+0x197/0x460
+> [  128.188930]  udpv6_sendmsg+0xb4f/0xdb0
+> [  128.188931]  ? ip_reply_glue_bits+0x40/0x40
+> [  128.188931]  ? update_load_avg+0x78/0x630
+> [  128.188932]  ? update_curr+0x73/0x1d0
+> [  128.188932]  ? __sys_sendto+0x108/0x190
+> [  128.188933]  __sys_sendto+0x108/0x190
+> [  128.188933]  ? __fput+0x1a5/0x240
+> [  128.188934]  ? _cond_resched+0x19/0x30
+> [  128.188934]  ? task_work_run+0x67/0x90
+> [  128.188935]  __x64_sys_sendto+0x25/0x30
+> [  128.188935]  do_syscall_64+0x48/0x130
+> [  128.188936]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  128.188936] RIP: 0033:0x7f0b97a7826c
+> [  128.188945] Code: c0 ff ff ff ff eb b9 0f 1f 80 00 00 00 00 41 89 ca 64 8b 04 25 18 00 00 00 85 c0 75 19 45 31 c9 45 31 c0 b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 64 c3 0f 1f 00 55 48 83 ec 20 48 89 54 24 10
+> [  128.188946] RSP: 002b:00007ffe80ffcea8 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+> [  128.188947] RAX: ffffffffffffffda RBX: 0000000000000058 RCX: 00007f0b97a7826c
+> [  128.188948] RDX: 0000000000000058 RSI: 000055fb765264c0 RDI: 0000000000000009
+> [  128.188949] RBP: 000055fb765264c0 R08: 0000000000000000 R09: 0000000000000000
+> [  128.188949] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe80ffcfc0
+> [  128.188950] R13: 000000000002c600 R14: 0000000000000000 R15: 000055fb7629b751
+> [  128.188957] Sending NMI from CPU 10 to CPUs 19:
+> [  128.239939] NMI backtrace for cpu 19
+> [  128.239940] CPU: 19 PID: 2587 Comm: postgres Tainted: G      D           5.7.0-andres-10123-g87823242260e #44
+> [  128.239940] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-1 04/01/2014
+> [  128.239940] RIP: 0010:kvm_wait+0x30/0x50
+> [  128.239941] Code: 8b 05 ac cb f4 7e a9 00 00 f0 00 75 1f 9c 58 fa 0f b6 17 40 38 d6 75 12 f6 c4 02 75 10 e9 07 00 00 00 0f 00 2d 6f ce 54 01 f4 <50> 9d c3 e9 07 00 00 00 0f 00 2d 5f ce 54 01 fb f4 eb ed 66 66 2e
+> [  128.239942] RSP: 0018:ffffc90000cc78e8 EFLAGS: 00000046
+> [  128.239942] RAX: 0000000000000046 RBX: ffff88903fcec700 RCX: 0000000000000008
+> [  128.239943] RDX: 0000000000000003 RSI: 0000000000000003 RDI: ffff889039049d80
+> [  128.239943] RBP: ffff889039049d80 R08: ffff88907ffe9f80 R09: 00000000000000f8
+> [  128.239944] R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
+> [  128.239944] R13: 0000000000000001 R14: 0000000000000100 R15: 0000000000500000
+> [  128.239944] FS:  00007f0b97743740(0000) GS:ffff88903fcc0000(0000) knlGS:0000000000000000
+> [  128.239945] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  128.239945] CR2: 000055fb76a96030 CR3: 0000001035882004 CR4: 0000000000760ee0
+> [  128.239945] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  128.239946] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  128.239946] PKRU: 55555554
+> [  128.239946] Call Trace:
+> [  128.239946]  __pv_queued_spin_lock_slowpath+0x26e/0x2b0
+> [  128.239947]  _raw_spin_lock_irqsave+0x25/0x30
+> [  128.239947]  __wake_up_common_lock+0x62/0xc0
+> [  128.239947]  sock_def_write_space+0x49/0x90
+> [  128.239948]  sock_wfree+0x68/0xb0
+> [  128.239948]  loopback_xmit+0x49/0xe0
+> [  128.239948]  dev_hard_start_xmit+0x8d/0x1e0
+> [  128.239948]  __dev_queue_xmit+0x721/0x8e0
+> [  128.239949]  ip6_finish_output2+0x250/0x5b0
+> [  128.239949]  ip6_output+0x73/0x120
+> [  128.239949]  ? __ip6_finish_output+0x110/0x110
+> [  128.239950]  ip6_send_skb+0x1e/0x60
+> [  128.239950]  udp_v6_send_skb.isra.0+0x197/0x460
+> [  128.239950]  udpv6_sendmsg+0xb4f/0xdb0
+> [  128.239950]  ? release_pages+0x28f/0x2f0
+> [  128.239950]  ? ip_reply_glue_bits+0x40/0x40
+> [  128.239951]  ? _cond_resched+0x19/0x30
+> [  128.239951]  ? unmap_page_range+0x678/0xa60
+> [  128.239951]  ? __sys_sendto+0x108/0x190
+> [  128.239951]  __sys_sendto+0x108/0x190
+> [  128.239952]  ? __fput+0x1a5/0x240
+> [  128.239952]  ? _cond_resched+0x19/0x30
+> [  128.239952]  ? task_work_run+0x67/0x90
+> [  128.239952]  __x64_sys_sendto+0x25/0x30
+> [  128.239953]  do_syscall_64+0x48/0x130
+> [  128.239953]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [  128.239953] RIP: 0033:0x7f0b97a7826c
+> [  128.239954] Code: c0 ff ff ff ff eb b9 0f 1f 80 00 00 00 00 41 89 ca 64 8b 04 25 18 00 00 00 85 c0 75 19 45 31 c9 45 31 c0 b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 64 c3 0f 1f 00 55 48 83 ec 20 48 89 54 24 10
+> [  128.239954] RSP: 002b:00007ffe80ffd7b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+> [  128.239955] RAX: ffffffffffffffda RBX: 00000000000003a8 RCX: 00007f0b97a7826c
+> [  128.239955] RDX: 00000000000003a8 RSI: 00007ffe80ffd800 RDI: 0000000000000009
+> [  128.239955] RBP: 00007ffe80ffd800 R08: 0000000000000000 R09: 0000000000000000
+> [  128.239956] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe80ffd800
+> [  128.239956] R13: 00007ffe80ffd800 R14: 000000000000000e R15: 000055fb76b37e58
 
+I can reproduce this, and I see what it is. I'll send out a patch soonish.
 
-On Fri, 5 Jun 2020, Denis Efremov wrote:
+-- 
+Jens Axboe
 
-> Check that alloc and free types of functions match each other.
-
-Is there a strong reason for putting the choice rule first?  It may make
-things somewhat slower than necessary, if it matches in many places,
-because the opportunity rule will have to detect that it doesn't care
-about all of those places.
-
-Also, there is no need to exceed 80 characters here.  You can put a
-newline in the middle of a \( ... \)
-
-julia
-
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
-> List of patches to stable:
-> - https://lkml.org/lkml/2020/6/1/713
-> - https://lkml.org/lkml/2020/6/5/200
-> - https://lkml.org/lkml/2020/6/5/838
-> - https://lkml.org/lkml/2020/6/5/887
->
-> Other patches:
-> - https://lkml.org/lkml/2020/6/1/701
-> - https://lkml.org/lkml/2020/6/5/839
-> - https://lkml.org/lkml/2020/6/5/864
-> - https://lkml.org/lkml/2020/6/5/865
-> - https://lkml.org/lkml/2020/6/5/895
-> - https://lkml.org/lkml/2020/6/5/901
->
-> There is a false positive that I can't beat:
-> fs/btrfs/send.c:1119:11-12: WARNING: kmalloc is used to allocate
-> this memory at line 1036
->
->  scripts/coccinelle/api/kvfree.cocci | 196 ++++++++++++++++++++++++++++
->  1 file changed, 196 insertions(+)
->  create mode 100644 scripts/coccinelle/api/kvfree.cocci
->
-> diff --git a/scripts/coccinelle/api/kvfree.cocci b/scripts/coccinelle/api/kvfree.cocci
-> new file mode 100644
-> index 000000000000..e3fa3d0fd2fd
-> --- /dev/null
-> +++ b/scripts/coccinelle/api/kvfree.cocci
-> @@ -0,0 +1,196 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// Check that kvmalloc'ed memory is freed by kfree functions,
-> +/// vmalloc'ed by vfree functions and kvmalloc'ed by kvfree
-> +/// functions.
-> +///
-> +// Confidence: High
-> +// Copyright: (C) 2020 Denis Efremov ISPRAS
-> +// Options: --no-includes --include-headers
-> +//
-> +
-> +virtual patch
-> +virtual report
-> +virtual org
-> +virtual context
-> +
-> +
-> +@choice@
-> +expression E, E1;
-> +position kok, vok;
-> +@@
-> +
-> +(
-> +  if (...) {
-> +    ...
-> +    E = \(kmalloc@kok\|kzalloc@kok\|krealloc@kok\|kcalloc@kok\|kmalloc_node@kok\|kzalloc_node@kok\|kmalloc_array@kok\|kmalloc_array_node@kok\|kcalloc_node@kok\)(...)
-> +    ...
-> +  } else {
-> +    ...
-> +    E = \(vmalloc@vok\|vzalloc@vok\|vmalloc_user@vok\|vmalloc_node@vok\|vzalloc_node@vok\|vmalloc_exec@vok\|vmalloc_32@vok\|vmalloc_32_user@vok\|__vmalloc@vok\|__vmalloc_node_range@vok\|__vmalloc_node@vok\)(...)
-> +    ...
-> +  }
-> +|
-> +  E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|kzalloc_node\|kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(...)
-> +  ... when != E = E1
-> +      when any
-> +  if (\(!E\|E == NULL\)) {
-> +    ...
-> +    E = \(vmalloc@vok\|vzalloc@vok\|vmalloc_user@vok\|vmalloc_node@vok\|vzalloc_node@vok\|vmalloc_exec@vok\|vmalloc_32@vok\|vmalloc_32_user@vok\|__vmalloc@vok\|__vmalloc_node_range@vok\|__vmalloc_node@vok\)(...)
-> +    ...
-> +  }
-> +)
-> +
-> +// exclude mm/vmalloc.c because of kvmalloc* definitions
-> +@opportunity depends on !patch && !(file in "mm/vmalloc.c")@
-> +expression E, E1, size;
-> +position p;
-> +@@
-> +
-> +(
-> +* if (\(size <= E1\|size < E1\|size = E1\|size > E1\) || ...)@p {
-> +    ...
-> +    E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|kzalloc_node\|kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
-> +    ...
-> +  } else {
-> +    ...
-> +    E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\)(..., size, ...)
-> +    ...
-> +  }
-> +|
-> +  E = \(kmalloc\|kzalloc\|krealloc\|kcalloc\|kmalloc_node\|kzalloc_node\|kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
-> +  ... when != E = E1
-> +      when != size = E1
-> +      when any
-> +* if (\(!E\|E == NULL\))@p {
-> +    ...
-> +    E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\)(..., size, ...)
-> +    ...
-> +  }
-> +)
-> +
-> +@vfree depends on !patch@
-> +expression E;
-> +position k != choice.kok;
-> +position p;
-> +@@
-> +
-> +* E = \(kmalloc@k\|kzalloc@k\|krealloc@k\|kcalloc@k\|kmalloc_node@k\|kzalloc_node@k\|kmalloc_array@k\|kmalloc_array_node@k\|kcalloc_node@k\)(...)
-> +  ... when != if (...) { ... E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\|kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|kvmalloc_array\)(...); ... }
-> +      when != is_vmalloc_addr(E)
-> +      when any
-> +* \(vfree\|vfree_atomic\|kvfree\)(E)@p
-> +
-> +@pvfree depends on patch exists@
-> +expression E;
-> +position k != choice.kok;
-> +@@
-> +
-> +  E = \(kmalloc@k\|kzalloc@k\|krealloc@k\|kcalloc@k\|kmalloc_node@k\|kzalloc_node@k\|kmalloc_array@k\|kmalloc_array_node@k\|kcalloc_node@k\)(...)
-> +  ... when != if (...) { ... E = \(vmalloc\|vzalloc\|vmalloc_user\|vmalloc_node\|vzalloc_node\|vmalloc_exec\|vmalloc_32\|vmalloc_32_user\|__vmalloc\|__vmalloc_node_range\|__vmalloc_node\|kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|kvmalloc_array\)(...); ... }
-> +      when != is_vmalloc_addr(E)
-> +      when any
-> +- \(vfree\|vfree_atomic\|kvfree\)(E)
-> ++ kfree(E)
-> +
-> +@kfree depends on !patch@
-> +expression E;
-> +position v != choice.vok;
-> +position p;
-> +@@
-> +
-> +* E = \(vmalloc@v\|vzalloc@v\|vmalloc_user@v\|vmalloc_node@v\|vzalloc_node@v\|vmalloc_exec@v\|vmalloc_32@v\|vmalloc_32_user@v\|__vmalloc@v\|__vmalloc_node_range@v\|__vmalloc_node@v\)(...)
-> +  ... when != !is_vmalloc_addr(E)
-> +      when any
-> +* \(kfree\|kzfree\|kvfree\)(E)
-> +
-> +@pkfree depends on patch exists@
-> +expression E;
-> +position v != choice.vok;
-> +@@
-> +
-> +  E = \(vmalloc@v\|vzalloc@v\|vmalloc_user@v\|vmalloc_node@v\|vzalloc_node@v\|vmalloc_exec@v\|vmalloc_32@v\|vmalloc_32_user@v\|__vmalloc@v\|__vmalloc_node_range@v\|__vmalloc_node@v\)(...)
-> +  ... when != !is_vmalloc_addr(E)
-> +      when any
-> +- \(kfree\|kvfree\)(E)
-> ++ vfree(E)
-> +
-> +@kvfree depends on !patch@
-> +expression E;
-> +position p, k;
-> +@@
-> +
-> +* E = \(kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|kvmalloc_array\)(...)@k
-> +  ... when != is_vmalloc_addr(E)
-> +      when any
-> +* \(kfree\|kzfree\|vfree\|vfree_atomic\)(E)@p
-> +
-> +@pkvfree depends on patch exists@
-> +expression E;
-> +@@
-> +
-> +  E = \(kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|kvmalloc_array\)(...)
-> +  ... when != is_vmalloc_addr(E)
-> +      when any
-> +- \(kfree\|vfree\)(E)
-> ++ kvfree(E)
-> +
-> +@script: python depends on report@
-> +k << vfree.k;
-> +p << vfree.p;
-> +@@
-> +
-> +msg = "WARNING: kmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.report.print_report(p[0], msg)
-> +
-> +@script: python depends on org@
-> +k << vfree.k;
-> +p << vfree.p;
-> +@@
-> +
-> +msg = "WARNING: kmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.org.print_todo(p[0], msg)
-> +
-> +@script: python depends on report@
-> +v << kfree.v;
-> +p << kfree.p;
-> +@@
-> +
-> +msg = "WARNING: vmalloc is used to allocate this memory at line %s" % (v[0].line)
-> +coccilib.report.print_report(p[0], msg)
-> +
-> +@script: python depends on org@
-> +v << kfree.v;
-> +p << kfree.p;
-> +@@
-> +
-> +msg = "WARNING: vmalloc is used to allocate this memory at line %s" % (v[0].line)
-> +coccilib.org.print_todo(p[0], msg)
-> +
-> +@script: python depends on report@
-> +k << kvfree.k;
-> +p << kvfree.p;
-> +@@
-> +
-> +msg = "WARNING: kvmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.report.print_report(p[0], msg)
-> +
-> +@script: python depends on org@
-> +k << kvfree.k;
-> +p << kvfree.p;
-> +@@
-> +
-> +msg = "WARNING: kvmalloc is used to allocate this memory at line %s" % (k[0].line)
-> +coccilib.org.print_todo(p[0], msg)
-> +
-> +@script: python depends on report@
-> +p << opportunity.p;
-> +@@
-> +
-> +coccilib.report.print_report(p[0], "WARNING: opportunity for kvmalloc")
-> +
-> +@script: python depends on org@
-> +p << opportunity.p;
-> +@@
-> +
-> +coccilib.org.print_todo(p[0], "WARNING: opportunity for kvmalloc")
-> --
-> 2.26.2
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
