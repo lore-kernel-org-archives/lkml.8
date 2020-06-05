@@ -2,184 +2,134 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE91AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CC0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE16206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:51:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UT0pXXm6"
+	by mail.kernel.org (Postfix) with ESMTP id 1D99520663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgFEOv7 (ORCPT
+        id S1728057AbgFEOzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbgFEOv6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:51:58 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFFAC08C5C4
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:51:58 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id a80so4938639ybg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 07:51:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gIdG6UEiHEb5RjVC13mngSWyhrH+zQoFoNg2xv+5i6E=;
-        b=UT0pXXm62kWCAETgUQiiH7SuR9KrWgIUH7xO+XOxKabMOeXEO12SG7QaazeRz6Br8D
-         z3BPm87kFauLqS3D0xvAtd2zzJ9zTG9JFO0Sxf5/1N2KxsMC7egH+e/mdFP6KUW419ft
-         xj5dZbauTAdbE8zrymV1plXyNlQtKy/GivJm41qLbOcWvy5l5Gq4wMBhZb/50wmI7W/w
-         RVG7hty/w46U8WFREfq12rK509On5eGVLpzLXcSEYNB2mNx9UResQ08CIIUeZUNf1sbl
-         yVH1X5odJ9G/oZbt7oKWpomC6v4eE12zM3tnxpn0yakECSD1rGRYQb3+67tkFwkBIsUl
-         Wc9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gIdG6UEiHEb5RjVC13mngSWyhrH+zQoFoNg2xv+5i6E=;
-        b=AD4kyWXIEaOFmkhOWGjPcR3VK6AriAuKXnMf3uFbql0TRDwOf2L1/Rrdygsghpf9mO
-         2VnspzFPbbkjTNl/xSaBpls483eVenRE3ebMz/fJ0kScJW4zESwooktWhG/oIKxAybKO
-         wnf5bVJKJLAzJjO5cDuYpFJYSdpm28d9OUAi9aUlISTmte5b+h0ZwlsMg9cSGveU2rA6
-         OO4TlxDVKs5/AvzvE55F7Bw25FBTznzMBh9fUuT3ltU+tEAkUumPXAFsVKcErGCRElrl
-         Xo5nj/WEZLSqKyQj4/iGXk4biKaDLO6rcyI3JfxmICGRBQ8hDO5nwpLSfbtEhjYPegbw
-         QPkQ==
-X-Gm-Message-State: AOAM530SXN0lx4Me1iCSKRW9HVaBRDA/7mo5W67IMiucB6VCxcB5WrpB
-        yAjZpCDFz0tvqx2TGmLZ0RIUu8/2NsH1bPLxeoFE9w==
-X-Google-Smtp-Source: ABdhPJyuTGP1hAakt+L74reWI5CvDw60cyJJlrXPwu7+Qgb3VpYZNx4PYFeBCNPAXb/UaoUqkRzhlCB+z7OD6q6xaqo=
-X-Received: by 2002:a25:8b0c:: with SMTP id i12mr18084529ybl.371.1591368717101;
- Fri, 05 Jun 2020 07:51:57 -0700 (PDT)
+        Fri, 5 Jun 2020 10:55:53 -0400
+Received: from port70.net ([81.7.13.123]:60410 "EHLO port70.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbgFEOzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:55:53 -0400
+Received: by port70.net (Postfix, from userid 1002)
+        id 66D71ABEC0C2; Fri,  5 Jun 2020 16:55:50 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 16:55:49 +0200
+From:   Szabolcs Nagy <nsz@port70.net>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Kyle Evans <self@kyle-evans.net>,
+        Victor Stinner <victor.stinner@gmail.com>,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, fweimer@redhat.com, jannh@google.com,
+        oleg@redhat.com, arnd@arndb.de, shuah@kernel.org,
+        dhowells@redhat.com, ldv@altlinux.org
+Subject: Re: [PATCH v5 1/3] open: add close_range()
+Message-ID: <20200605145549.GC673948@port70.net>
+References: <20200602204219.186620-1-christian.brauner@ubuntu.com>
+ <20200602204219.186620-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20200524023815.21789-1-jonathan@marek.ca> <20200524023815.21789-2-jonathan@marek.ca>
- <20200529025246.GV279327@builder.lan> <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
- <20200529031520.GA1799770@builder.lan> <91eb7ee0e549b10724c724aebfd91996@codeaurora.org>
- <8cf134f0-381f-7765-2496-e5abd77f3087@marek.ca> <e9800dbb6531c9b57a855f41f68753bd@codeaurora.org>
- <CAP71WjwjZgD=msK_2W8eBBk6axZ_uMNurEm9F76u6aHscXPf9Q@mail.gmail.com> <81a9d07c0c8d76abf0ef734963788884@codeaurora.org>
-In-Reply-To: <81a9d07c0c8d76abf0ef734963788884@codeaurora.org>
-From:   Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Date:   Fri, 5 Jun 2020 16:51:46 +0200
-Message-ID: <CAP71WjzMgYb921dV1eJ0zHDAAc33HFsegAw7U_0NcKAn96fJvw@mail.gmail.com>
-Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602204219.186620-2-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 4:39 PM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi Nico,
->
-> On 2020-06-05 20:01, Nicolas Dechesne wrote:
-> > On Fri, Jun 5, 2020 at 4:14 PM Sai Prakash Ranjan
-> > <saiprakash.ranjan@codeaurora.org> wrote:
-> >>
-> >> On 2020-06-05 19:40, Jonathan Marek wrote:
-> >> > On 6/5/20 10:03 AM, Sai Prakash Ranjan wrote:
-> >> >> On 2020-05-29 08:45, Bjorn Andersson wrote:
-> >> >>> On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
-> >> >>>
-> >> >>>>
-> >> >>>>
-> >> >>>> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
-> >> >>>> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
-> >> >>>> >
-> >> >>>> > > Add the apps_smmu node for sm8150. Note that adding the iommus field for
-> >> >>>> > > UFS is required because initializing the iommu removes the bypass mapping
-> >> >>>> > > that created by the bootloader.
-> >> >>>> > >
-> >> >>>> >
-> >> >>>> > Unrelated to the patch itself; how do you disable the splash screen on
-> >> >>>> > 8150? "fastboot oem select-display-panel none" doesn't seem to work for
-> >> >>>> > me on the MTP - and hence this would prevent my device from booting.
-> >> >>>> >
-> >> >>>> > Thanks,
-> >> >>>> > Bjorn
-> >> >>>> >
-> >> >>>>
-> >> >>>> I don't have a MTP, but on HDK855, "fastboot oem
-> >> >>>> select-display-panel none"
-> >> >>>> combined with setting the physical switch to HDMI mode (which
-> >> >>>> switches off
-> >> >>>> the 1440x2560 panel) gets it to not setup the display at all (just
-> >> >>>> the
-> >> >>>> fastboot command isn't enough).
-> >> >>>>
-> >> >>>
-> >> >>> Okay, I don't think we have anything equivalent on the MTP, but good
-> >> >>> to
-> >> >>> know.
-> >> >>>
-> >> >>
-> >> >> Actually I tried out this in SM8150 MTP and it works fine for me,
-> >> >>
-> >> >> "fastboot set_active a; fastboot set_active b; fastboot set_active a;
-> >> >> fastboot oem select-display-panel none; fastboot reboot bootloader;
-> >> >> fastboot boot boot-sm8150.img"
-> >> >>
-> >> >> Also I need to switch slots everytime like above, otherwise I always
-> >> >> see some error
-> >> >> while loading the boot image.
-> >> >>
-> >> >
-> >> > What is the error? If it is "FAILED (remote: Failed to
-> >> > load/authenticate boot image: Load Error)" then flashing/erasing
-> >> > boot_a will make it go away ("fastboot erase boot_a") for the next 6
-> >> > or so "failed" boots.
-> >> >
-> >>
-> >> Yes this exact error.
-> >
-> > The bootloader maintains a 'boot status' in one of the partition
-> > attributes. After a certain amount of 'failed' boot , it will switch
-> > to the other boot partition. It's the same thing on RB3/DB845c. In our
-> > release for DB845c, we are patching the bootloader so that this
-> > behavior is bypassed. On typical 'product' there is a user space
-> > application that will come and set the partition attribute to indicate
-> > the boot was successful.
-> >
-> > For the record, this is the patch we use on 845c:
-> > https://git.linaro.org/landing-teams/working/qualcomm/abl.git/commit/?h=release/LE.UM.2.3.7-09200-sda845.0&id=e3dc60213234ed626161a568ba587ddac63c5158
-> >
-> > rebuilding EDK2/ABL requires access to signing tools.. so it might not
-> > be possible for everyone. but in case you can, it should be
-> > straightforward to reuse this patch.
-> >
->
-> Thank you for these details and the patch, it's very useful.
-> I do have access to ABL code and the signing tools and can build one.
+* Christian Brauner <christian.brauner@ubuntu.com> [2020-06-02 22:42:17 +0200]:
+> This adds the close_range() syscall. It allows to efficiently close a range
+> of file descriptors up to all file descriptors of a calling task.
+> 
+> I've also coordinated with some FreeBSD developers who got in touch with
+> me (Cced below). FreeBSD intends to add the same syscall once we merged it.
+> Quite a bunch of projects in userspace are waiting on this syscall
+> including Python and systemd.
+> 
+> The syscall came up in a recent discussion around the new mount API and
+> making new file descriptor types cloexec by default. During this
+> discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
+> syscall in this manner has been requested by various people over time.
+> 
+> First, it helps to close all file descriptors of an exec()ing task. This
+> can be done safely via (quoting Al's example from [1] verbatim):
+> 
+>         /* that exec is sensitive */
+>         unshare(CLONE_FILES);
+>         /* we don't want anything past stderr here */
+>         close_range(3, ~0U);
+>         execve(....);
 
-Good. Then the next problem you will likely face is that building QCOM
-ABL is far from being straightforward. Why would it be? ;)
-That's the script we use to build it ourselves:
-https://git.linaro.org/ci/job/configs.git/tree/lt-qcom-bootloader/dragonboard845c/builders.sh#n61
+this api needs a documentation patch if there isn't yet.
 
-It has a reference to sectools which we have (internally) access to,
-but you have it too, and you should be able to leverage most of the
-script.
+currently there is no libc interface contract in place that
+says which calls may use libc internal fds e.g. i've seen
 
->
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
+  openlog(...) // opens libc internal syslog fd
+  ...
+  fork()
+  closefrom(...) // close syslog fd
+  open(...) // something that reuses the closed fd
+  syslog(...) // unsafe: uses the wrong fd
+  execve(...)
+
+syslog uses a libc internal fd that the user trampled on and
+this can go bad in many ways depending on what libc apis are
+used between closefrom (or equivalent) and exec.
+
+> The code snippet above is one way of working around the problem that file
+> descriptors are not cloexec by default. This is aggravated by the fact that
+> we can't just switch them over without massively regressing userspace. For
+
+why is a switch_to_cloexec_range worse than close_range?
+the former seems safer to me. (and allows libc calls
+to be made between such switch and exec: libc internal
+fds have to be cloexec anyway)
+
+> a whole class of programs having an in-kernel method of closing all file
+> descriptors is very helpful (e.g. demons, service managers, programming
+> language standard libraries, container managers etc.).
+> (Please note, unshare(CLONE_FILES) should only be needed if the calling
+> task is multi-threaded and shares the file descriptor table with another
+> thread in which case two threads could race with one thread allocating file
+> descriptors and the other one closing them via close_range(). For the
+> general case close_range() before the execve() is sufficient.)
+> 
+> Second, it allows userspace to avoid implementing closing all file
+> descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
+> file descriptor. From looking at various large(ish) userspace code bases
+> this or similar patterns are very common in:
+> - service managers (cf. [4])
+> - libcs (cf. [6])
+> - container runtimes (cf. [5])
+> - programming language runtimes/standard libraries
+>   - Python (cf. [2])
+>   - Rust (cf. [7], [8])
+> As Dmitry pointed out there's even a long-standing glibc bug about missing
+> kernel support for this task (cf. [3]).
+> In addition, the syscall will also work for tasks that do not have procfs
+> mounted and on kernels that do not have procfs support compiled in. In such
+> situations the only way to make sure that all file descriptors are closed
+> is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
+> OPEN_MAX trickery (cf. comment [8] on Rust).
+
+close_range still seems like a bad operation to expose.
+
+if users really want closing behaviour (instead of marking
+fds cloexec) then they likely need coordination with libc
+and other libraries.
+
+e.g. this usage does not work:
+
+  maxfd = findmaxfd();
+  call_that_may_leak_fds();
+  close_range(maxfd,~0U);
+
+as far as i can tell only the close right before exec works.
