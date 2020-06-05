@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D85BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF8420820
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078B3208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359958;
-	bh=dC7qEY8RWldK5Tu4/BHmKfll+FauoIDgIQY9R1Du2LQ=;
+	s=default; t=1591359961;
+	bh=tCBSlHI63YTEIG2JR4d62oOhc6aMNrY2obvYr7pkk18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LvveAEj3XYXXArpOyzaUAfLhduqS35xmvfoNMxX1jkLnp5eOpbuu9T3i6HoS8/lEb
-	 tzWmIputF2DKHhpUEGSqdLpU1R14Q1cJM5p5QlIu3/2VhO8ZO/WaapukuYZSw7hC4t
-	 Szk/RqRkNqABpg+EUuauS2eTgaUZWj1DXG6L+Q7o=
+	b=VXyq1u0yktdnQ1J7iXahzOS4ipQeQ3Uz963PRX1hM5IRDsoCMWSAfLjcuL+R2kZNM
+	 04642NBfMUkmLxhvbn2JcoeGik/9MVAug0qF+YyqjfVS4YrXo4eGsQmPwbChJjOCaD
+	 e71wGruehSiimh1LFgWNegtnzmTFJIG7O2LrP3hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgFEMZ5 (ORCPT
+        id S1727016AbgFEMZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57666 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbgFEMZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726965AbgFEMZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jun 2020 08:25:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9F7B206DC;
-        Fri,  5 Jun 2020 12:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C0920820;
+        Fri,  5 Jun 2020 12:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359951;
-        bh=dC7qEY8RWldK5Tu4/BHmKfll+FauoIDgIQY9R1Du2LQ=;
+        s=default; t=1591359950;
+        bh=tCBSlHI63YTEIG2JR4d62oOhc6aMNrY2obvYr7pkk18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNCrv1bliNGQ//YC3zJZQFcAXFvhXoSZIq//HLg0lL/iPcXK3NyHy0d/P6G0/wIec
-         NCOMzv0mlF14I01BQxvVYXH0Deiv/Ngtq5ZFDVaQ5cE94e4ty4MS/cd/VQPiU024Ni
-         xWyEEoW47col6UXdgEupGEK6qMx6HRhbHy2MRL6M=
+        b=eI9yBqYJQSMS4L7AI5dOJX8KQwGNnCuOe30Mf5phjn93ebWjn1rdvrqlOtOKM1Njn
+         FVaZoKDaTGHph2UtthcdJMpD90FC+a4r9odFDQfCR7gAf4tprt1DBv552rLC6drriw
+         jrNlYUcCEEPFrd7qAqqvtZ42qNZmYN9nrehBKlkc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/14] csky: Fixup abiv2 syscall_trace break a4 & a5
-Date:   Fri,  5 Jun 2020 08:25:35 -0400
-Message-Id: <20200605122540.2882539-9-sashal@kernel.org>
+Cc:     Heinrich Kuhn <heinrich.kuhn@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/14] nfp: flower: fix used time of merge flow statistics
+Date:   Fri,  5 Jun 2020 08:25:34 -0400
+Message-Id: <20200605122540.2882539-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200605122540.2882539-1-sashal@kernel.org>
 References: <20200605122540.2882539-1-sashal@kernel.org>
@@ -58,50 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Heinrich Kuhn <heinrich.kuhn@netronome.com>
 
-[ Upstream commit e0bbb53843b5fdfe464b099217e3b9d97e8a75d7 ]
+[ Upstream commit 5b186cd60f033110960a3db424ffbd6de4cee528 ]
 
-Current implementation could destory a4 & a5 when strace, so we need to get them
-from pt_regs by SAVE_ALL.
+Prior to this change the correct value for the used counter is calculated
+but not stored nor, therefore, propagated to user-space. In use-cases such
+as OVS use-case at least this results in active flows being removed from
+the hardware datapath. Which results in both unnecessary flow tear-down
+and setup, and packet processing on the host.
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+This patch addresses the problem by saving the calculated used value
+which allows the value to propagate to user-space.
+
+Found by inspection.
+
+Fixes: aa6ce2ea0c93 ("nfp: flower: support stats update for merge flows")
+Signed-off-by: Heinrich Kuhn <heinrich.kuhn@netronome.com>
+Signed-off-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/abiv2/inc/abi/entry.h | 2 ++
- arch/csky/kernel/entry.S        | 6 ++++--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/netronome/nfp/flower/offload.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
-index 9023828ede97..ac8f65a3e75a 100644
---- a/arch/csky/abiv2/inc/abi/entry.h
-+++ b/arch/csky/abiv2/inc/abi/entry.h
-@@ -13,6 +13,8 @@
- #define LSAVE_A1	28
- #define LSAVE_A2	32
- #define LSAVE_A3	36
-+#define LSAVE_A4	40
-+#define LSAVE_A5	44
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/offload.c b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+index 987ae221f6be..4dd3f8a5a9b8 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+@@ -1368,7 +1368,8 @@ __nfp_flower_update_merge_stats(struct nfp_app *app,
+ 		ctx_id = be32_to_cpu(sub_flow->meta.host_ctx_id);
+ 		priv->stats[ctx_id].pkts += pkts;
+ 		priv->stats[ctx_id].bytes += bytes;
+-		max_t(u64, priv->stats[ctx_id].used, used);
++		priv->stats[ctx_id].used = max_t(u64, used,
++						 priv->stats[ctx_id].used);
+ 	}
+ }
  
- #define KSPTOUSP
- #define USPTOKSP
-diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-index 65c55f22532a..4349528fbf38 100644
---- a/arch/csky/kernel/entry.S
-+++ b/arch/csky/kernel/entry.S
-@@ -170,8 +170,10 @@ csky_syscall_trace:
- 	ldw	a3, (sp, LSAVE_A3)
- #if defined(__CSKYABIV2__)
- 	subi	sp, 8
--	stw	r5, (sp, 0x4)
--	stw	r4, (sp, 0x0)
-+	ldw	r9, (sp, LSAVE_A4)
-+	stw	r9, (sp, 0x0)
-+	ldw	r9, (sp, LSAVE_A5)
-+	stw	r9, (sp, 0x4)
- #else
- 	ldw	r6, (sp, LSAVE_A4)
- 	ldw	r7, (sp, LSAVE_A5)
 -- 
 2.25.1
 
