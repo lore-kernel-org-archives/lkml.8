@@ -2,158 +2,379 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C42C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A42206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193D9206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pkSJ4qjn"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iRXQMjFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgFEHTN (ORCPT
+        id S1726090AbgFEHcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 03:19:13 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:52162 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725280AbgFEHTM (ORCPT
+        Fri, 5 Jun 2020 03:32:25 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:56199 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEHcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 03:19:12 -0400
-X-UUID: ba4e6b62c5944400a14738fa76b5e78b-20200605
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=19vrRMWmwFaMyOZYFFMoP+8hHxPd3vzl6HzvP+kgneA=;
-        b=pkSJ4qjn5Aj54DqVDsthFFeFeI6lpzQTgLZdOWyyIhouzbwjR2Pj2zlKMEiSXFIYfoiUdqr6YoMSq8x/atjwjuSVIPnwMXGm6NqokpUEs8rqIbRBmmqU2l96uVKnTRd2PWqYGoK7z+oZg1QK1RExZjgZOHniN/rfvB3pIWpUcBQ=;
-X-UUID: ba4e6b62c5944400a14738fa76b5e78b-20200605
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1814770406; Fri, 05 Jun 2020 15:19:05 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 5 Jun 2020 15:19:03 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 5 Jun 2020 15:19:02 +0800
-Message-ID: <1591341543.19510.4.camel@mtkswgap22>
-Subject: Re: Security Random Number Generator support
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Marc Zyngier <maz@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Julius Werner <jwerner@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Arnd Bergmann" <arnd@arndb.de>,
+        Fri, 5 Jun 2020 03:32:24 -0400
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200605073219epoutp0193c678cb620a3491fc8d802c2cc39d6a~VlW0zKn4q3000830008epoutp01Z
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 07:32:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200605073219epoutp0193c678cb620a3491fc8d802c2cc39d6a~VlW0zKn4q3000830008epoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591342339;
+        bh=0XoeIKGVkNXoLpEeZIc3BTZ840LlWIG3F50xHsYdDsc=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=iRXQMjFkjfcF9mcSowCNEUUpTj3p067GjptQiRtTPbVEimLJjsEZbzoYiduJq2BZZ
+         V8wxvLf3vGQ2eA4LAkpFgTMddwPydKdnwHvNF4vEQuICtaMwWptSReEUiWxUV9BY4b
+         lujCybSGW5MAdxhdhVamxpcFLQ2w6O5R9XEMSqWc=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200605073217epcas2p38f19da5060a0c14b7d3f43d1b70795a7~VlWzNpUEr2888228882epcas2p3X;
+        Fri,  5 Jun 2020 07:32:17 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.40.184]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 49dZ9C29JhzMqYlv; Fri,  5 Jun
+        2020 07:32:15 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        22.E5.18874.FF4F9DE5; Fri,  5 Jun 2020 16:32:15 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d~VlWvnWTwF0885808858epcas2p1h;
+        Fri,  5 Jun 2020 07:32:14 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200605073213epsmtrp2716dd238cbadc8586f1f49b7303af06d~VlWvlyjFf0726507265epsmtrp2g;
+        Fri,  5 Jun 2020 07:32:13 +0000 (GMT)
+X-AuditID: b6c32a46-519ff700000049ba-5a-5ed9f4ffb23a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        39.1E.08303.DF4F9DE5; Fri,  5 Jun 2020 16:32:13 +0900 (KST)
+Received: from rack216.dsn.sec.samsung.com (unknown [12.36.155.216]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200605073213epsmtip2e30780d45026586a6f4310b3810bb762~VlWvOQO4F3130031300epsmtip2r;
+        Fri,  5 Jun 2020 07:32:13 +0000 (GMT)
+From:   Wooyeon Kim <wooy88.kim@samsung.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     jihun.kim@samsung.com, yhwan.joo@samsung.com, yb.song@samsung.com,
+        junik.lee@samsung.com, yj.yim@samsung.com, sgun.bae@samsung.com,
+        hk92.kim@samsung.com, dongww.kim@samsung.com,
+        jinsoo37.kim@samsung.com, hyeyeon5.shim@samsung.com,
+        hyewon.ryu@samsung.com, dh.han@samsung.com, kgene.kim@samsung.com,
+        Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
-        <Crystal.Guo@mediatek.com>, "Rob Herring" <robh+dt@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 5 Jun 2020 15:19:03 +0800
-In-Reply-To: <20200603093416.GY1551@shell.armlinux.org.uk>
-References: <1591085678-22764-1-git-send-email-neal.liu@mediatek.com>
-         <CAMj1kXHjAdk5=-uSh_=S9j5cz42zr3h6t+YYGy+obevuQDp0fg@mail.gmail.com>
-         <85dfc0142d3879d50c0ba18bcc71e199@misterjones.org>
-         <1591169342.4878.9.camel@mtkswgap22>
-         <fcbe37f6f9cbcde24f9c28bc504f1f0e@kernel.org>
-         <20200603093416.GY1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Anisse Astier <aastier@freebox.fr>,
+        Julien Grall <julien.grall@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Wooki Min <wooki.min@samsung.com>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Sanghoon Lee <shoon114.lee@samsung.com>,
+        Wooyeon Kim <wooy88.kim@samsung.com>
+Subject: [PATCH] arm64: fpsimd: Added API to manage fpsimd state inside
+ kernel
+Date:   Fri,  5 Jun 2020 16:30:52 +0900
+Message-Id: <20200605073052.23044-1-wooy88.kim@samsung.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 57A0643566E8C5377AB748C11626465C1385BB50C574232E8C6EF02F5FB61C3F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TaVBbVRT2vpe8hFKcR6D1TrqAoTjCGJqkBG9baOuIGKUgNTqdwRF8Q14D
+        EkJMQGv9QZSKUFYRrGwFy75U2rAIWKACHRaBylaHpSxTEMvakipdBEx4ZeTf951zvvPdc+4c
+        Ls77icPnhqgjaK2aUgmIHazaViepcOPhcICoLdMSFfZn46i0Y52FflzoYqPlogSAvsq5DtBi
+        zEUcXav8F0PR+ZUEyn80gqOM6NtsNFhPoYmmYgzNFk4RqHI5l0BtV4YwFJPni7pu6DHUHR+G
+        EvOGCDTRHsNGhrsmzUBDNoEK/+jDUH12Jxt118+z0dS9URylLtRiqLirjoUyRkcBqjKk46hx
+        /TELnR+TotzRcgzd6L9DoKfXV9koqyOfjYyX4/ETjrKKSxVAlqXvY8kqkydYMkNZHCFb6u3l
+        yJpzKjiyqoIo2YOFaY5suWmIkCVVlwGZ0bDfz9Jf5R5MUwpaa0+rg8IVIWqlh8BbHvh6oNRN
+        JBaKD6NXBfZqKoz2EHie9BN6hahMWxPYf0qpIk0hP0qnExw85q4Nj4yg7YPDdREeAlqjUGnE
+        Yo2LjgrTRaqVLkHhYUfEIpFEaqr8SBXc9OVZzV101rg6henBsssFYMGFpCs0zjaAC2AHl0fW
+        ATg50EwwZAXAxPhHbIYYAWxObWdvSZIn154lGgAsGFvhMOQxgE/0MxxzFUE6w8zMNdyMbcmT
+        sGZtdNMEJ9Ms4MCDDcKcsCH94FD75c0iFukI438tAGZsRR6FLVNPcMbOASbcyyCYuDXszJhm
+        mTFO2sHomizc3BSS/RZw8JfzpjdxTcQTLq6fYrQ2cK69msNgPjQuNRIM/gLm5SdyGG0sgD/E
+        tWJM4hCszunCzH1w0glWNhxkWjrAtpFnts/D2NY1DhO2grExPEZ4AK4afiO2nCbn+nGmRAbn
+        21XmMI/8EH5dOgdSgF3mtlkyt82S+b9tHsDLwG5aowtT0jqJRrL9Tw1g83CcvepA2uJ9lxaA
+        cUELgFxcYGs16zMcwLNSUJ+fo7XhgdpIFa1rAVLTdr/F+buCwk2Xp44IFEslbm6iw1IkdZMg
+        wQtWUS/+HsAjlVQEHUrTGlq7pcO4Fnw9pu8us3RxdVB28iW+I31vpqAA3c7b2bnOyYa9G+eM
+        988oqrnHHN/Z+Cz90nRyWo1PkRt1J08+Jo8Lfa667X2f2qjG9JdjzrxV5DWZUDWuWbp6y195
+        a23YW7wy5y6QjyuTaqNKXhI0VdzkJhYN/Hw10NXOigpO+rPnk45/BlrnrTf4D/2FQkXK6WvG
+        5W98v3uv+eg++chcek552Z6Lo9Kq3sCeN1ItZ52v5B9fUXxv7T2+9kpo0gnRPvJdQni6f8/H
+        /OXdp2aKw5pKSyTavqz95X+HyhOOW3xAvS0qRatCoGv8a+TIjM2BRY3TrJ3t3psSKNf2pJZ4
+        2tWj13Y6SXdlPT002CZg6YIpsTOu1VH/AQp/PkXBBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsWy7bCSvO7fLzfjDGY0GFksvTSH2WLliX8s
+        FgvfnGK1eL+sh9Giae4eRou3bdOZLTau/8Nk0bx4PZvF4h+3mC1mNl9jtbiyM9Hi/r7lTBbP
+        lz5ks1j/fj6bxZG1V5ks2hb4WZw60MBkcaY716J3wVU2i/vH21gtNj0G6rm8aw6bxdLrF5ks
+        ds45yWpxZudrVouHL28zW0x6s43JYvmpHSwWM2/fZrTYvGkqs8Xefz9ZLFrumFrMv72ayeLA
+        pbtsFr/3fGe1mH1iMavF50XdzA6qHmvmrWH0mN1wkcVjff99Fo9NqzrZPN6dO8fusX/uGnaP
+        zUvqPT6+ecLu8X7fVTaPvi2rGD0+b5IL4I7isklJzcksSy3St0vgytjXWFHw2KLi8/eHTA2M
+        7/W6GDk5JARMJPof/GXtYuTiEBLYwSjx6N9SRoiElMShhoXsELawxP2WI1BF3xklZm//AlbE
+        JqAlMWvWX+YuRg4OEQE/iWfP6kBqmAV2cUq8O7SCCaRGGCi+tWcRG4jNIqAq0X1wCVgvr4C1
+        xKGHv5ghFihL9LycyQYRF5Q4OfMJC4jNLCAv0bx1NvMERr5ZSFKzkKQWMDKtYpRMLSjOTc8t
+        Niwwykst1ytOzC0uzUvXS87P3cQITgFaWjsY96z6oHeIkYmD8RCjBAezkgjvc9+bcUK8KYmV
+        ValF+fFFpTmpxYcYpTlYlMR5v85aGCckkJ5YkpqdmlqQWgSTZeLglGpgCpgY80U4ddt8qb+a
+        6Y3GdfXVKlzC3ApHN843mWISnq0gJnPwo/5PW+dbpi2xbO1qe36EFVzexWUYdUhuvbjBiuLb
+        et+7FpUe7Q9J2901ryPqDYfxzebEkMbdf9mf/j5490Vl9Uu2OQ++L5aZZrpaW3S/aJTMzapX
+        B7OD7uTHGptJiHHvY/8YobawKfb0bJGcNe8P1Tpflr+8sP3wtYv9R1qVVZ6qb3H5unaPdcDh
+        lptNW6btrS5Z9CfXd9K3lZ0TW8yuT12R8yJ8bfRJz37zdpFPr6I3z355VdTpdfSvrasZZqus
+        TvoW15E6sd8sLcf9k+XR6Tab35jO/G+h5OO3Y+u95kWZh8PP/KiZIqUqqMRSnJFoqMVcVJwI
+        AOel60NwAwAA
+X-CMS-MailID: 20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d
+References: <CGME20200605073214epcas2p1576f3f90dbcefaad6180f2559ca5980d@epcas2p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA2LTAzIGF0IDE3OjM0ICswODAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggYWRtaW4gd3JvdGU6DQo+IE9uIFdlZCwgSnVuIDAzLCAyMDIwIGF0IDA4OjQwOjU4QU0gKzAx
-MDAsIE1hcmMgWnluZ2llciB3cm90ZToNCj4gPiBPbiAyMDIwLTA2LTAzIDA4OjI5LCBOZWFsIExp
-dSB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgMjAyMC0wNi0wMiBhdCAyMTowMiArMDgwMCwgTWFyYyBa
-eW5naWVyIHdyb3RlOg0KPiA+ID4gPiBPbiAyMDIwLTA2LTAyIDEzOjE0LCBBcmQgQmllc2hldXZl
-bCB3cm90ZToNCj4gPiA+ID4gPiBPbiBUdWUsIDIgSnVuIDIwMjAgYXQgMTA6MTUsIE5lYWwgTGl1
-IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+ID4gPiA+Pg0KPiA+ID4gPiA+PiBU
-aGVzZSBwYXRjaCBzZXJpZXMgaW50cm9kdWNlIGEgc2VjdXJpdHkgcmFuZG9tIG51bWJlciBnZW5l
-cmF0b3INCj4gPiA+ID4gPj4gd2hpY2ggcHJvdmlkZXMgYSBnZW5lcmljIGludGVyZmFjZSB0byBn
-ZXQgaGFyZHdhcmUgcm5kIGZyb20gU2VjdXJlDQo+ID4gPiA+ID4+IHN0YXRlLiBUaGUgU2VjdXJl
-IHN0YXRlIGNhbiBiZSBBcm0gVHJ1c3RlZCBGaXJtd2FyZShBVEYpLCBUcnVzdGVkDQo+ID4gPiA+
-ID4+IEV4ZWN1dGlvbiBFbnZpcm9ubWVudChURUUpLCBvciBldmVuIEVMMiBoeXBlcnZpc29yLg0K
-PiA+ID4gPiA+Pg0KPiA+ID4gPiA+PiBQYXRjaCAjMS4uMiBhZGRzIHNlYy1ybmcga2VybmVsIGRy
-aXZlciBmb3IgVHJ1c3R6b25lIGJhc2VkIFNvQ3MuDQo+ID4gPiA+ID4+IEZvciBzZWN1cml0eSBh
-d2FyZW5lc3MgU29DcyBvbiBBUk12OCB3aXRoIFRydXN0Wm9uZSBlbmFibGVkLA0KPiA+ID4gPiA+
-PiBwZXJpcGhlcmFscyBsaWtlIGVudHJvcHkgc291cmNlcyBpcyBub3QgYWNjZXNzaWJsZSBmcm9t
-IG5vcm1hbCB3b3JsZA0KPiA+ID4gPiA+PiAobGludXgpIGFuZCByYXRoZXIgYWNjZXNzaWJsZSBm
-cm9tIHNlY3VyZSB3b3JsZCAoSFlQL0FURi9URUUpIG9ubHkuDQo+ID4gPiA+ID4+IFRoaXMgZHJp
-dmVyIGFpbXMgdG8gcHJvdmlkZSBhIGdlbmVyaWMgaW50ZXJmYWNlIHRvIEFybSBUcnVzdGVkDQo+
-ID4gPiA+ID4+IEZpcm13YXJlIG9yIEh5cGVydmlzb3Igcm5nIHNlcnZpY2UuDQo+ID4gPiA+ID4+
-DQo+ID4gPiA+ID4+DQo+ID4gPiA+ID4+IGNoYW5nZXMgc2luY2UgdjE6DQo+ID4gPiA+ID4+IC0g
-cmVuYW1lIG10Njd4eC1ybmcgdG8gbXRrLXNlYy1ybmcgc2luY2UgYWxsIE1lZGlhVGVrIEFSTXY4
-IFNvQ3MgY2FuDQo+ID4gPiA+ID4+IHJldXNlDQo+ID4gPiA+ID4+ICAgdGhpcyBkcml2ZXIuDQo+
-ID4gPiA+ID4+ICAgLSByZWZpbmUgY29kaW5nIHN0eWxlIGFuZCB1bm5lY2Vzc2FyeSBjaGVjay4N
-Cj4gPiA+ID4gPj4NCj4gPiA+ID4gPj4gICBjaGFuZ2VzIHNpbmNlIHYyOg0KPiA+ID4gPiA+PiAg
-IC0gcmVtb3ZlIHVudXNlZCBjb21tZW50cy4NCj4gPiA+ID4gPj4gICAtIHJlbW92ZSByZWR1bmRh
-bnQgdmFyaWFibGUuDQo+ID4gPiA+ID4+DQo+ID4gPiA+ID4+ICAgY2hhbmdlcyBzaW5jZSB2MzoN
-Cj4gPiA+ID4gPj4gICAtIGFkZCBkdC1iaW5kaW5ncyBmb3IgTWVkaWFUZWsgcm5nIHdpdGggVHJ1
-c3Rab25lIGVuYWJsZWQuDQo+ID4gPiA+ID4+ICAgLSByZXZpc2UgSFdSTkcgU01DIGNhbGwgZmlk
-Lg0KPiA+ID4gPiA+Pg0KPiA+ID4gPiA+PiAgIGNoYW5nZXMgc2luY2UgdjQ6DQo+ID4gPiA+ID4+
-ICAgLSBtb3ZlIGJpbmRpbmdzIHRvIHRoZSBhcm0vZmlybXdhcmUgZGlyZWN0b3J5Lg0KPiA+ID4g
-PiA+PiAgIC0gcmV2aXNlIGRyaXZlciBpbml0IGZsb3cgdG8gY2hlY2sgbW9yZSBwcm9wZXJ0eS4N
-Cj4gPiA+ID4gPj4NCj4gPiA+ID4gPj4gICBjaGFuZ2VzIHNpbmNlIHY1Og0KPiA+ID4gPiA+PiAg
-IC0gcmVmYWN0b3IgdG8gbW9yZSBnZW5lcmljIHNlY3VyaXR5IHJuZyBkcml2ZXIgd2hpY2gNCj4g
-PiA+ID4gPj4gICAgIGlzIG5vdCBwbGF0Zm9ybSBzcGVjaWZpYy4NCj4gPiA+ID4gPj4NCj4gPiA+
-ID4gPj4gKioqIEJMVVJCIEhFUkUgKioqDQo+ID4gPiA+ID4+DQo+ID4gPiA+ID4+IE5lYWwgTGl1
-ICgyKToNCj4gPiA+ID4gPj4gICBkdC1iaW5kaW5nczogcm5nOiBhZGQgYmluZGluZ3MgZm9yIHNl
-Yy1ybmcNCj4gPiA+ID4gPj4gICBod3JuZzogYWRkIHNlYy1ybmcgZHJpdmVyDQo+ID4gPiA+ID4+
-DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUaGVyZSBpcyBubyByZWFzb24gdG8gbW9kZWwgYSBTTUMg
-Y2FsbCBhcyBhIGRyaXZlciwgYW5kIHJlcHJlc2VudCBpdA0KPiA+ID4gPiA+IHZpYSBhIERUIG5v
-ZGUgbGlrZSB0aGlzLg0KPiA+ID4gPiANCj4gPiA+ID4gKzEuDQo+ID4gPiA+IA0KPiA+ID4gPiA+
-IEl0IHdvdWxkIGJlIG11Y2ggYmV0dGVyIGlmIHRoaXMgU01DIGludGVyZmFjZSBpcyBtYWRlIHRy
-dWx5IGdlbmVyaWMsDQo+ID4gPiA+ID4gYW5kIHdpcmVkIGludG8gdGhlIGFyY2hfZ2V0X3JhbmRv
-bSgpIGludGVyZmFjZSwgd2hpY2ggY2FuIGJlIHVzZWQgbXVjaA0KPiA+ID4gPiA+IGVhcmxpZXIu
-DQo+ID4gPiA+IA0KPiA+ID4gPiBXYXNuJ3QgdGhlcmUgYSBwbGFuIHRvIHN0YW5kYXJkaXplIGEg
-U01DIGNhbGwgdG8gcnVsZSB0aGVtIGFsbD8NCj4gPiA+ID4gDQo+ID4gPiA+ICAgICAgICAgIE0u
-DQo+ID4gPiANCj4gPiA+IENvdWxkIHlvdSBnaXZlIHVzIGEgaGludCBob3cgdG8gbWFrZSB0aGlz
-IFNNQyBpbnRlcmZhY2UgbW9yZSBnZW5lcmljIGluDQo+ID4gPiBhZGRpdGlvbiB0byBteSBhcHBy
-b2FjaD8NCj4gPiA+IFRoZXJlIGlzIG5vIChlYXN5KSB3YXkgdG8gZ2V0IHBsYXRmb3JtLWluZGVw
-ZW5kZW50IFNNQyBmdW5jdGlvbiBJRCwNCj4gPiA+IHdoaWNoIGlzIHdoeSB3ZSBlbmNvZGUgaXQg
-aW50byBkZXZpY2UgdHJlZSwgYW5kIHByb3ZpZGUgYSBnZW5lcmljDQo+ID4gPiBkcml2ZXIuIElu
-IHRoaXMgd2F5LCBkaWZmZXJlbnQgZGV2aWNlcyBjYW4gYmUgbWFwcGVkIGFuZCB0aGVuIGdldA0K
-PiA+ID4gZGlmZmVyZW50IGZ1bmN0aW9uIElEIGludGVybmFsbHkuDQo+ID4gDQo+ID4gVGhlIGlk
-ZWEgaXMgc2ltcGx5IHRvIGhhdmUgKm9uZSogc2luZ2xlIElEIHRoYXQgY2F0ZXJzIGZvciBhbGwN
-Cj4gPiBpbXBsZW1lbnRhdGlvbnMsIGp1c3QgbGlrZSB3ZSBkaWQgZm9yIFBTQ0kgYXQgdGhlIHRp
-bWUuIFRoaXMNCj4gPiByZXF1aXJlcyBBUk0gdG8gZWRpY3QgYSBzdGFuZGFyZCwgd2hpY2ggaXMg
-d2hhdCBJIHdhcyByZWZlcnJpbmcNCj4gPiB0byBhYm92ZS4NCj4gDQo+IFRoaXMgc291bmRzIGFs
-bCB0b28gZmFtaWxpYXIuDQo+IA0KPiBUaGlzIGtpbmQgb2YgdGhpbmcgaXMgc29tZXRoaW5nIHRo
-YXQgQVJNIGhhdmUgc2VlbXMgdG8gc2h5IGF3YXkgZnJvbQ0KPiBkb2luZyAtIGl0J3MgYSBwb2lu
-dCBJIGJyb3VnaHQgdXAgbWFueSB5ZWFycyBhZ28gd2hlbiB0aGUgd2hvbGUNCj4gdHJ1c3R6b25l
-IHRoaW5nIGZpcnN0IGFwcGVhcmVkIHdpdGggaXRzIFNNQyBjYWxsLiAgVGhvc2UgYXJvdW5kIHRo
-ZQ0KPiBjb25mZXJlbmNlIHRhYmxlIHdlcmUgbm90IGludGVyZXN0ZWQgLSBBUk0gc2VlbWVkIHRv
-IHByZWZlciBldmVyeQ0KPiB2ZW5kb3IgdG8gZG8gb2ZmIGFuZCBkbyB0aGVpciBvd24gdGhpbmcg
-d2l0aCB0aGUgU01DIGludGVyZmFjZS4NCg0KRG9lcyB0aGF0IG1lYW4gaXQgbWFrZSBzZW5zZSB0
-byBtb2RlbCBhIHNlYy1ybmcgZHJpdmVyLCBhbmQgZ2V0IGVhY2gNCnZlbmRvcidzIFNNQyBmdW5j
-dGlvbiBpZCBieSBEVCBub2RlPw0KDQo+IA0KPiBUaGVuIE9NQVAgY2FtZSBhbG9uZyB3aXRoIGl0
-cyBTTUMgaW50ZXJmYWNlcywgYW5kIHNvIGRpZCB0aGUgcGFpbiBvZg0KPiBub3QgaGF2aW5nIGEg
-c3RhbmRhcmRpc2VkIHdheSB0byBjb25maWd1cmUgdGhlIEwyQyB3aGVuIExpbnV4IHdhcw0KPiBy
-dW5uaW5nIGluIHRoZSBub24tc2VjdXJlIHdvcmxkLCByZXN1bHRpbmcgaW4gc3R1ZmYgbGlrZSBs
-MmNfY29uZmlndXJlDQo+IGV0Yywgd2hlcmUgZWFjaCBhbmQgZXZlcnkgaW1wbGVtZW50YXRpb24g
-aGFzIHRvIHN1cHBseSBhIGZ1bmN0aW9uIHRvDQo+IGNhbGwgaXRzIHBsYXRmb3JtIHNwZWNpZmlj
-IFNNQyBpbnRlcmZhY2VzIHRvIGNvbmZpZ3VyZSBhIHBpZWNlIG9mDQo+IGhhcmR3YXJlIGNvbW1v
-biBhY3Jvc3MgbWFueSBkaWZmZXJlbnQgcGxhdGZvcm1zLg0KPiANCj4gQVJNIGhhdmUgc2VlbWVk
-IHJlbHVjdGFudCB0byBzdGFuZGFyZGlzZSBvbiBzdHVmZiBsaWtlIHRoaXMsIHNvDQo+IHVubGVz
-cyBzb21lb25lIHB1c2hlcyBoYXJkIGZvciBpdCBmcm9tIGluc2lkZSBBUk0sIEkgZG91YnQgaXQg
-d2lsbA0KPiBldmVyIGhhcHBlbi4NCj4gDQoNCg0K
+From: Wooki Min <wooki.min@samsung.com>
+
+     This is an patch to use FPSIMD register in Kernel space.
+     It need to manage to use FPSIMD register without damaging it
+     of the user task.
+     Following items have been implemented and added.
+
+     1. Using FPSIMD in ISR (in_interrupt)
+	It can used __efi_fpsimd_begin/__efi_fpsimd_end
+	which is already implemented.
+	Save fpsimd state before entering ISR,
+	and restore fpsimd state after ISR ends.
+	For use in external kernel module,
+	it is declared as EXPORT_SYMBOL.
+
+     2. User task -> Function in kernel
+        Add fpsimd_get/fpsimd_put API to save/restore
+	FPSIMD in use by the user.
+	In this case, depth variable is used to set fpsimd usage
+	depth between User and Kernel space.
+	 * fpsimd_get: Save the FPSIMD of the user task.
+	 * fpsimd_put: Restore the FPSIMD of the user task.
+
+	 EX> fpsimd_get();
+	     API in kernel space();
+	     fpsimd_put();
+
+     3. Add kernel task FPSIMD save/restore in "fpsimd_thread_switch"
+        It checks the depth value in current task structure and
+	does save/restore action for FP/SIMD register used by kernel
+	context.
+
+Signed-off-by: Wooki Min <wooki.min@samsung.com>
+Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
+Signed-off-by: Sanghoon Lee <shoon114.lee@samsung.com>
+Signed-off-by: Wooyeon Kim <wooy88.kim@samsung.com>
+---
+ arch/arm64/include/asm/fpsimd.h      |  6 +++
+ arch/arm64/include/asm/processor.h   | 13 +++++
+ arch/arm64/include/uapi/asm/ptrace.h |  8 ++++
+ arch/arm64/kernel/fpsimd.c           | 71 +++++++++++++++++++++++++---
+ 4 files changed, 92 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+index 59f10dd13f12..462c434fc57c 100644
+--- a/arch/arm64/include/asm/fpsimd.h
++++ b/arch/arm64/include/asm/fpsimd.h
+@@ -167,6 +167,12 @@ static inline void sve_setup(void) { }
+ extern void __efi_fpsimd_begin(void);
+ extern void __efi_fpsimd_end(void);
+ 
++void fpsimd_set_task_using(struct task_struct *t);
++void fpsimd_clr_task_using(struct task_struct *t);
++
++void fpsimd_get(void);
++void fpsimd_put(void);
++
+ #endif
+ 
+ #endif
+diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+index 240fe5e5b720..265669456bcb 100644
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -139,6 +139,19 @@ struct thread_struct {
+ 		unsigned long	tp2_value;
+ 		struct user_fpsimd_state fpsimd_state;
+ 	} uw;
++	struct fpsimd_kernel_state fpsimd_kernel_state;
++
++	/*
++	 * indicate the depth of using FP/SIMD registers in kernel mode.
++	 * above kernel state should be preserved at first time
++	 * before FP/SIMD registers be used by other tasks
++	 * and the state should be restored before they be used by own.
++	 *
++	 * a kernel thread which uses FP/SIMD registers have to
++	 * set this depth and it could utilize for a tasks executes
++	 * some NEON instructions without preemption disable.
++	 */
++	atomic_t fpsimd_kernel_depth;
+ 
+ 	unsigned int		fpsimd_cpu;
+ 	void			*sve_state;	/* SVE registers, if any */
+diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+index 42cbe34d95ce..0327e719721e 100644
+--- a/arch/arm64/include/uapi/asm/ptrace.h
++++ b/arch/arm64/include/uapi/asm/ptrace.h
+@@ -105,6 +105,14 @@ struct user_hwdebug_state {
+ 	}		dbg_regs[16];
+ };
+ 
++/* Kernel structure for floating point */
++struct fpsimd_kernel_state {
++	__uint128_t	vregs[32];
++	__u32		fpsr;
++	__u32		fpcr;
++	unsigned int	cpu;
++};
++
+ /* SVE/FP/SIMD state (NT_ARM_SVE) */
+ 
+ struct user_sve_header {
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 35cb5e66c504..07597423fcfc 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -269,9 +269,6 @@ static void sve_free(struct task_struct *task)
+  */
+ static void task_fpsimd_load(void)
+ {
+-	WARN_ON(!system_supports_fpsimd());
+-	WARN_ON(!have_cpu_fpsimd_context());
+-
+ 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
+ 		sve_load_state(sve_pffr(&current->thread),
+ 			       &current->thread.uw.fpsimd_state.fpsr,
+@@ -290,9 +287,6 @@ static void fpsimd_save(void)
+ 		this_cpu_ptr(&fpsimd_last_state);
+ 	/* set by fpsimd_bind_task_to_cpu() or fpsimd_bind_state_to_cpu() */
+ 
+-	WARN_ON(!system_supports_fpsimd());
+-	WARN_ON(!have_cpu_fpsimd_context());
+-
+ 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE)) {
+ 		if (system_supports_sve() && test_thread_flag(TIF_SVE)) {
+ 			if (WARN_ON(sve_get_vl() != last->sve_vl)) {
+@@ -982,6 +976,10 @@ void do_fpsimd_exc(unsigned int esr, struct pt_regs *regs)
+ void fpsimd_thread_switch(struct task_struct *next)
+ {
+ 	bool wrong_task, wrong_cpu;
++	struct fpsimd_kernel_state *cur_kst
++			= &current->thread.fpsimd_kernel_state;
++	struct fpsimd_kernel_state *nxt_kst
++			= &next->thread.fpsimd_kernel_state;
+ 
+ 	if (!system_supports_fpsimd())
+ 		return;
+@@ -991,6 +989,16 @@ void fpsimd_thread_switch(struct task_struct *next)
+ 	/* Save unsaved fpsimd state, if any: */
+ 	fpsimd_save();
+ 
++	if (atomic_read(&current->thread.fpsimd_kernel_depth))
++		fpsimd_save_state((struct user_fpsimd_state *)cur_kst);
++
++	if (atomic_read(&next->thread.fpsimd_kernel_depth)) {
++		fpsimd_load_state((struct user_fpsimd_state *)nxt_kst);
++		this_cpu_write(fpsimd_last_state.st,
++				(struct user_fpsimd_state *)nxt_kst);
++		nxt_kst->cpu = smp_processor_id();
++	}
++
+ 	/*
+ 	 * Fix up TIF_FOREIGN_FPSTATE to correctly describe next's
+ 	 * state.  For kernel threads, FPSIMD registers are never loaded
+@@ -1233,6 +1241,55 @@ void fpsimd_save_and_flush_cpu_state(void)
+ 	__put_cpu_fpsimd_context();
+ }
+ 
++void fpsimd_set_task_using(struct task_struct *t)
++{
++	atomic_set(&t->thread.fpsimd_kernel_depth, 1);
++}
++EXPORT_SYMBOL(fpsimd_set_task_using);
++
++void fpsimd_clr_task_using(struct task_struct *t)
++{
++	atomic_set(&t->thread.fpsimd_kernel_depth, 0);
++}
++EXPORT_SYMBOL(fpsimd_clr_task_using);
++
++void fpsimd_get(void)
++{
++	if (in_interrupt())
++		return;
++
++	if (atomic_inc_return(&current->thread.fpsimd_kernel_depth) == 1) {
++		preempt_disable();
++		if (current->mm) {
++			fpsimd_save();
++			fpsimd_flush_task_state(current);
++		}
++		fpsimd_flush_cpu_state();
++		preempt_enable();
++	}
++}
++EXPORT_SYMBOL(fpsimd_get);
++
++void fpsimd_put(void)
++{
++	if (in_interrupt())
++		return;
++
++	WARN_ON(atomic_dec_return(
++		&current->thread.fpsimd_kernel_depth) < 0);
++
++	if (atomic_read(&current->thread.fpsimd_kernel_depth) == 0) {
++		preempt_disable();
++		if (current->mm && test_thread_flag(TIF_FOREIGN_FPSTATE)) {
++			task_fpsimd_load();
++			fpsimd_bind_task_to_cpu();
++			clear_thread_flag(TIF_FOREIGN_FPSTATE);
++		}
++		preempt_enable();
++	}
++}
++EXPORT_SYMBOL(fpsimd_put);
++
+ #ifdef CONFIG_KERNEL_MODE_NEON
+ 
+ /*
+@@ -1338,6 +1395,7 @@ void __efi_fpsimd_begin(void)
+ 		__this_cpu_write(efi_fpsimd_state_used, true);
+ 	}
+ }
++EXPORT_SYMBOL(__efi_fpsimd_begin);
+ 
+ /*
+  * __efi_fpsimd_end(): clean up FPSIMD after an EFI runtime services call
+@@ -1364,6 +1422,7 @@ void __efi_fpsimd_end(void)
+ 		}
+ 	}
+ }
++EXPORT_SYMBOL(__efi_fpsimd_end);
+ 
+ #endif /* CONFIG_EFI */
+ 
+-- 
+2.27.0.rc0
 
