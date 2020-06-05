@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3365CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A99C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 155B12074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB55E206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729105AbgFEVnu (ORCPT
+        id S1729106AbgFEVnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:43:50 -0400
-Received: from mga02.intel.com ([134.134.136.20]:55947 "EHLO mga02.intel.com"
+        Fri, 5 Jun 2020 17:43:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:49307 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgFEVjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728491AbgFEVjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jun 2020 17:39:10 -0400
-IronPort-SDR: qZg3y4jJP/eRlzWNa1br6UGH1MVtKp2UBLDRtA4ihbTSjpVOxymrSihm2wh4zocysZxlTMGxQd
- raCPKElrgyVQ==
+IronPort-SDR: qXIFE9m/t4XB8u9xTeN+7KQUmdZz1KbjoeV3NJuHQ73pXqJrekjqQ92xHzQSjzUjv22FRBJ8a+
+ dAyHAxEbcetg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:08 -0700
-IronPort-SDR: I7BwiRnb6qWgFO7BpcC5Xe5lAqmxnRsI1qmZGEZxMZw6goAYfu74oYxKINf/llsyqxunF210uj
- a9IwlvttJxJQ==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 14:39:08 -0700
+IronPort-SDR: XqKHcuabHK74BbG2b4w8feUvlGlhypfvZy/rS1JT1ziK1xvV2rFgi0aW811keyz+zG+1ymHY4P
+ o06uuWAI8aXg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="287860895"
+   d="scan'208";a="287860886"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 14:39:08 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -57,9 +56,9 @@ Cc:     James Morse <james.morse@arm.com>,
         Junaid Shahid <junaids@google.com>,
         Ben Gardon <bgardon@google.com>,
         Christoffer Dall <christoffer.dall@arm.com>
-Subject: [PATCH 10/21] KVM: x86/mmu: Make __GFP_ZERO a property of the memory cache
-Date:   Fri,  5 Jun 2020 14:38:42 -0700
-Message-Id: <20200605213853.14959-11-sean.j.christopherson@intel.com>
+Subject: [PATCH 07/21] KVM: x86/mmu: Topup memory caches after walking GVA->GPA
+Date:   Fri,  5 Jun 2020 14:38:39 -0700
+Message-Id: <20200605213853.14959-8-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200605213853.14959-1-sean.j.christopherson@intel.com>
 References: <20200605213853.14959-1-sean.j.christopherson@intel.com>
@@ -70,60 +69,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a gfp_zero flag to 'struct kvm_mmu_memory_cache' and use it to
-control __GFP_ZERO instead of hardcoding a call to kmem_cache_zalloc().
-A future patch needs such a flag for the __get_free_page() path, as
-gfn arrays do not need/want the allocator to zero the memory.  Convert
-the kmem_cache paths to __GFP_ZERO now so as to avoid a weird and
-inconsistent API in the future.
+Topup memory caches after walking the GVA->GPA translation during a
+shadow page fault, there is no need to ensure the caches are full when
+walking the GVA.  As of commit f5a1e9f89504f ("KVM: MMU: remove call
+to kvm_mmu_pte_write from walk_addr"), the FNAME(walk_addr) flow no
+longer add rmaps via kvm_mmu_pte_write().
 
-No functional change intended.
+This avoids allocating memory in the case that the GVA is unmapped in
+the guest, and also provides a paper trail of why/when the memory caches
+need to be filled.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/mmu/mmu.c          | 7 ++++++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/paging_tmpl.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index e7a427547557..fb99e6776e27 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -251,6 +251,7 @@ struct kvm_kernel_irq_routing_entry;
-  */
- struct kvm_mmu_memory_cache {
- 	int nobjs;
-+	gfp_t gfp_zero;
- 	struct kmem_cache *kmem_cache;
- 	void *objects[KVM_NR_MEM_OBJS];
- };
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index d245acece3cd..6b0ec9060786 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1063,8 +1063,10 @@ static void walk_shadow_page_lockless_end(struct kvm_vcpu *vcpu)
- static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
- 					       gfp_t gfp_flags)
- {
-+	gfp_flags |= mc->gfp_zero;
-+
- 	if (mc->kmem_cache)
--		return kmem_cache_zalloc(mc->kmem_cache, gfp_flags);
-+		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
- 	else
- 		return (void *)__get_free_page(gfp_flags);
- }
-@@ -5680,7 +5682,10 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
- 	int ret;
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 38c576495048..3de32122f601 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -791,10 +791,6 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
  
- 	vcpu->arch.mmu_pte_list_desc_cache.kmem_cache = pte_list_desc_cache;
-+	vcpu->arch.mmu_pte_list_desc_cache.gfp_zero = __GFP_ZERO;
-+
- 	vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
-+	vcpu->arch.mmu_page_header_cache.gfp_zero = __GFP_ZERO;
+ 	pgprintk("%s: addr %lx err %x\n", __func__, addr, error_code);
  
- 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
- 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+-	r = mmu_topup_memory_caches(vcpu);
+-	if (r)
+-		return r;
+-
+ 	/*
+ 	 * If PFEC.RSVD is set, this is a shadow page fault.
+ 	 * The bit needs to be cleared before walking guest page tables.
+@@ -822,6 +818,10 @@ static int FNAME(page_fault)(struct kvm_vcpu *vcpu, gpa_t addr, u32 error_code,
+ 		return RET_PF_EMULATE;
+ 	}
+ 
++	r = mmu_topup_memory_caches(vcpu);
++	if (r)
++		return r;
++
+ 	vcpu->arch.write_fault_to_shadow_pgtable = false;
+ 
+ 	is_self_change_mapping = FNAME(is_self_change_mapping)(vcpu,
 -- 
 2.26.0
 
