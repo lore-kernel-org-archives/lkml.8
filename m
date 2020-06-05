@@ -2,162 +2,175 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65305C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C179206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF0A2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YbxUUygc"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PPOKqK1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFELpL (ORCPT
+        id S1726496AbgFELq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:45:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59758 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726324AbgFELpL (ORCPT
+        Fri, 5 Jun 2020 07:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgFELqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:45:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591357509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=JFv6v8Td+T3HmglLfbCJPchJWggyzjDyAdEDpA6f+Dk=;
-        b=YbxUUygcxISSuG4ulQGtuUnmI+Pq2M0KoIG9PBRhduwN1qvzeOQBEzjDF6jPdPamA8Mbzb
-        /pxcbJ+4Y1vDLIxLZkofGb3JX6WlqVFL5BAEajJ5Gfu3zZFSHwODkNOj//5azqUCFOZV/K
-        Dlcl6jYpxk8pryTsiibO6fu3UHhip2I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-l7ZAIX_qNjuuNhigNCb2LQ-1; Fri, 05 Jun 2020 07:45:05 -0400
-X-MC-Unique: l7ZAIX_qNjuuNhigNCb2LQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E948800685;
-        Fri,  5 Jun 2020 11:45:03 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F59F10013C0;
-        Fri,  5 Jun 2020 11:45:02 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prarit Bhargava <prarit@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH] x86/split_lock: Sanitize userspace and guest error output
-Date:   Fri,  5 Jun 2020 07:44:59 -0400
-Message-Id: <20200605114459.22200-1-prarit@redhat.com>
+        Fri, 5 Jun 2020 07:46:25 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52543C08C5C4
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 04:46:25 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id c12so9260609qkk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 04:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iyGf3V6jAp5ZNIZ09j882B9dYRBoDmMZI6f6MZVzSqU=;
+        b=PPOKqK1Mpp1wrmMjN+yqaRbT6z7r3EbGxtrRFajNTMt9PHMghgqNzgL9pGdQcpHIAE
+         0DVMbOU2kxL1hC3qy0dUltajv7QTaaRhIaIDwAd0xvf5qwhubpZC0LZf/blrdwznW5vV
+         I5XYwvA1jJFNaC4w6Ns/6D7fIbAKpHOfbNx5BptFa0gROoRg83qrhwRMkocv2Xiyl0kI
+         lbzVrYFpT/kspqvvPQ1fRWpEe3ujBlMvcxQpLda++SrxtrN201HXdNM8ky1CMcKaTCyT
+         7YzqzI7JgDDeQfY5pZZf3tpuVoboTpFNbtiVmQWftEylQBkFZ8HwfqUz6yJZx6Hqbu68
+         9qEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iyGf3V6jAp5ZNIZ09j882B9dYRBoDmMZI6f6MZVzSqU=;
+        b=owb69PbICpkUZGJAXoOojLLZkjiuZSILaP8RJ9vVDYK+/WJPWUE2+36eJmqQykOuuk
+         TbmnjIdI8sBAKP8c/ptfHnc91zy0jP8JAnqPGaNBZpGsxzMmTAl/HVNsVESQUpWPseWd
+         vxOxZnc0H+Q5HCaG+oskphrW56GEixz6AAytVoxwg4D3LloVPcydlx/UBqaAvoZt7FUs
+         TOd0quqeE/BbE3XDXLgOiBuiCKaBQa4zNaBvshweK7p1iwP9jerbT9tJ+PSqxxaDKvp+
+         IgmOb/UhxDlgXqSMqdIZtaj3GO8+leEj2iYVWNzfh0ZJuN0BJoFks+z2Lf7JUxEuzOrX
+         7H3g==
+X-Gm-Message-State: AOAM531dtQBOPH51scQDGsRaqMrCGqvnY4iBnYAkvK0Jy+vm25yMvwe6
+        yv1cecMJcpWdx5T7Ye/gFGH+5A==
+X-Google-Smtp-Source: ABdhPJzIzM5xjqCh9INfMzgN+usRKZ0PzGsWKSBI2t8KUOcihpgbikJjYflnI1YUSO8zpQZgiZW9hA==
+X-Received: by 2002:a05:620a:1525:: with SMTP id n5mr9426712qkk.328.1591357584373;
+        Fri, 05 Jun 2020 04:46:24 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 195sm6645125qkg.74.2020.06.05.04.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 04:46:23 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.93)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jhAnm-0025SU-D8; Fri, 05 Jun 2020 08:46:22 -0300
+Date:   Fri, 5 Jun 2020 08:46:22 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        syzbot <syzbot+407fd358a932bbf639c6@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com,
+        Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: general protection fault in kobject_get (2)
+Message-ID: <20200605114622.GR6578@ziepe.ca>
+References: <0000000000009a6d4305a60d2c6b@google.com>
+ <20200520055641.GA2242221@kroah.com>
+ <20200605042648.GP2667@sol.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605042648.GP2667@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two problems with kernel messages in fatal mode that
-were found during testing of guests and userspace programs.
+On Thu, Jun 04, 2020 at 09:26:48PM -0700, Eric Biggers wrote:
+> On Wed, May 20, 2020 at 07:56:41AM +0200, Greg KH wrote:
+> > On Tue, May 19, 2020 at 09:53:16PM -0700, syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following crash on:
+> > > 
+> > > HEAD commit:    d00f26b6 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> > > git tree:       net-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1316343c100000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=26d0bd769afe1a2c
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=407fd358a932bbf639c6
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > 
+> > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+407fd358a932bbf639c6@syzkaller.appspotmail.com
+> > > 
+> > > general protection fault, probably for non-canonical address 0xdffffc0000000013: 0000 [#1] PREEMPT SMP KASAN
+> > > KASAN: null-ptr-deref in range [0x0000000000000098-0x000000000000009f]
+> > > CPU: 1 PID: 16682 Comm: syz-executor.3 Not tainted 5.7.0-rc4-syzkaller #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > RIP: 0010:kobject_get+0x30/0x150 lib/kobject.c:640
+> > > Code: 53 e8 d4 7e c6 fd 4d 85 e4 0f 84 a2 00 00 00 e8 c6 7e c6 fd 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 e7 00 00 00
+> > > RSP: 0018:ffffc9000772f240 EFLAGS: 00010203
+> > > RAX: dffffc0000000000 RBX: ffffffff85acfca0 RCX: ffffc9000fc67000
+> > > RDX: 0000000000000013 RSI: ffffffff83acadfa RDI: 000000000000009c
+> > > RBP: 0000000000000060 R08: ffff8880a8dfa4c0 R09: ffffed100a03f403
+> > > R10: ffff8880501fa017 R11: ffffed100a03f402 R12: 0000000000000060
+> > > R13: ffffc9000772f3c0 R14: ffff88805d1ec4e8 R15: ffff88805d1ec580
+> > > FS:  00007f1ebed26700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 00000000004d88f0 CR3: 00000000a86c4000 CR4: 00000000001406e0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > Call Trace:
+> > >  get_device+0x20/0x30 drivers/base/core.c:2620
+> > >  __ib_get_client_nl_info+0x1d4/0x2a0 drivers/infiniband/core/device.c:1863
+> > >  ib_get_client_nl_info+0x30/0x180 drivers/infiniband/core/device.c:1883
+> > >  nldev_get_chardev+0x52b/0xa40 drivers/infiniband/core/nldev.c:1625
+> > >  rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+> > >  rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+> > >  rdma_nl_rcv+0x586/0x900 drivers/infiniband/core/netlink.c:259
+> > >  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+> > >  netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+> > >  netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+> > >  sock_sendmsg_nosec net/socket.c:652 [inline]
+> > >  sock_sendmsg+0xcf/0x120 net/socket.c:672
+> > >  ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+> > >  ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+> > >  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+> > >  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> > >  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> > > RIP: 0033:0x45c829
+> > > Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> > > RSP: 002b:00007f1ebed25c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> > > RAX: ffffffffffffffda RBX: 00000000004ff720 RCX: 000000000045c829
+> > > RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
+> > > RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+> > > R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+> > > R13: 00000000000009ad R14: 00000000004d5f10 R15: 00007f1ebed266d4
+> > > Modules linked in:
+> > > RIP: 0010:kobject_get+0x30/0x150 lib/kobject.c:640
+> > > Code: 53 e8 d4 7e c6 fd 4d 85 e4 0f 84 a2 00 00 00 e8 c6 7e c6 fd 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 e7 00 00 00
+> > > RSP: 0018:ffffc9000772f240 EFLAGS: 00010203
+> > > RAX: dffffc0000000000 RBX: ffffffff85acfca0 RCX: ffffc9000fc67000
+> > > RDX: 0000000000000013 RSI: ffffffff83acadfa RDI: 000000000000009c
+> > > RBP: 0000000000000060 R08: ffff8880a8dfa4c0 R09: ffffed100a03f403
+> > > R10: ffff8880501fa017 R11: ffffed100a03f402 R12: 0000000000000060
+> > > R13: ffffc9000772f3c0 R14: ffff88805d1ec4e8 R15: ffff88805d1ec580
+> > > FS:  00007f1ebed26700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 000000000073fad4 CR3: 00000000a86c4000 CR4: 00000000001406e0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > 
+> > Looks like an IB/rdma issue, poke those developers please :)
+> > 
+> 
+> If you want people to receive your email, you need to send it to them.
+> 
+> +Cc linux-rdma and maintainers of drivers/infiniband/.
 
-The first is that no kernel message is output when the split lock detector
-is triggered with a userspace program.  As a result the userspace process
-dies from receiving SIGBUS with no indication to the user of what caused
-the process to die.
+I think this is probably fixed by commit 11a0ae4c4bff ("RDMA: Allow
+ib_client's to fail when add() is called")
 
-The second problem is that only the first triggering guest causes a kernel
-message to be output because the message is output with pr_warn_once().
-This also results in a loss of information to the user.
+#syz fix: RDMA: Allow ib_client's to fail when add() is called
 
-While fixing these I noticed that the same message was being output
-three times so I'm cleaning that up too.
-
-Fix fatal mode output, and use consistent messages for fatal and
-warn modes for both userspace and guests.
-
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
----
- arch/x86/kernel/cpu/intel.c | 24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 166d7c355896..463022aa9b7a 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1074,10 +1074,14 @@ static void split_lock_init(void)
- 	split_lock_verify_msr(sld_state != sld_off);
- }
- 
--static void split_lock_warn(unsigned long ip)
-+static bool split_lock_warn(unsigned long ip, int fatal)
- {
--	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
--			    current->comm, current->pid, ip);
-+	pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
-+			    current->comm, current->pid,
-+			    sld_state == sld_fatal ? "fatal " : "", ip);
-+
-+	if (sld_state == sld_fatal || fatal)
-+		return false;
- 
- 	/*
- 	 * Disable the split lock detection for this task so it can make
-@@ -1086,18 +1090,13 @@ static void split_lock_warn(unsigned long ip)
- 	 */
- 	sld_update_msr(false);
- 	set_tsk_thread_flag(current, TIF_SLD);
-+	return true;
- }
- 
- bool handle_guest_split_lock(unsigned long ip)
- {
--	if (sld_state == sld_warn) {
--		split_lock_warn(ip);
-+	if (split_lock_warn(ip, 0))
- 		return true;
--	}
--
--	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
--		     current->comm, current->pid,
--		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
- 
- 	current->thread.error_code = 0;
- 	current->thread.trap_nr = X86_TRAP_AC;
-@@ -1108,10 +1107,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
- 
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- {
--	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
--		return false;
--	split_lock_warn(regs->ip);
--	return true;
-+	return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
- }
- 
- /*
--- 
-2.21.3
-
+Jason
