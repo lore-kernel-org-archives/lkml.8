@@ -2,176 +2,180 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A10EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58354207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PDrkFN97"
+	by mail.kernel.org (Postfix) with ESMTP id 4F13D207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726228AbgFEE3s (ORCPT
+        id S1726114AbgFEEjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgFEE3q (ORCPT
+        Fri, 5 Jun 2020 00:39:36 -0400
+Received: from m9a0013g.houston.softwaregrp.com ([15.124.64.91]:44574 "EHLO
+        m9a0013g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725280AbgFEEjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:29:46 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12378C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 21:29:45 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id r9so2854082ual.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 21:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yh4QPGB6BpMImnDSPQmPa4HQGaoN/XctUaVKXi5QYwY=;
-        b=PDrkFN970k1ALTuEhfgcTlUwB71dPxvhGxU0C4VZu6nTHpZ+sXfAM6AMHZbir+bQX3
-         7z5G2kw9yGZ+5zsqkvnXyaXOISL9lrVRVLvMfkr2sxLbV2+X63lVdLn9xYSDDlAj7Wgj
-         FaiW9XEJ4Ha98qEQZAHR40fvGQ1NwOWOVeP6c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yh4QPGB6BpMImnDSPQmPa4HQGaoN/XctUaVKXi5QYwY=;
-        b=WHNKCqjsU7F3MCFzE4aayQDPCgTBv8t63c8IGpH41ueoT5FPVeEIcjA4axCVLjymNr
-         cMpAAtcrBoXcxW1A/MhVGZEbsdXBSKG2DMKVZLty2pBmgf9YkdWM9pW5MvSDl7h/UdLx
-         pfM041jP/n42TmIW5G4CnRJLwK2CBHpkTfKIk8ADPfa1KACl3CCCC6HTRbRXab/pZP3Q
-         Cm1ajqBjGxXnVa63rVL2rOLiN3ngu0fsRcPMiUmp/3vz1rKkGyMrFTyKLuGbGb77UF8M
-         HGV6n0bYxsIF5KzpcOjHnlsFgGSngnmXeMQn3Hgjc/MdXJTHgocGKL5/WUxvIKbL1FRl
-         kl0Q==
-X-Gm-Message-State: AOAM533b9W98XiXz4wW+QT+gN5mtzcKcm1qCLW4XkgJnv0022bju/KpS
-        15bB/K88VT8OvdCvqpnQrN0FihhG/4aHnXiCpcq8Tg==
-X-Google-Smtp-Source: ABdhPJxhlP+sLLzHaVKCIe6JgoxP8u6LPLZcqp5spma74BIukNjafi2Z1Xz/y+YXGyeAOVQ0H5gOM4Gf+h35CPbav1Q=
-X-Received: by 2002:ab0:2bd4:: with SMTP id s20mr5781588uar.136.1591331384169;
- Thu, 04 Jun 2020 21:29:44 -0700 (PDT)
+        Fri, 5 Jun 2020 00:39:35 -0400
+Received: FROM m9a0013g.houston.softwaregrp.com (15.121.0.190) BY m9a0013g.houston.softwaregrp.com WITH ESMTP;
+ Fri,  5 Jun 2020 04:38:35 +0000
+Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
+ M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 5 Jun 2020 04:38:57 +0000
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (15.124.72.14) by
+ M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 5 Jun 2020 04:38:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UvNfgNYIGyDdskRWmJnze/q+G58DMMR4sZVWuUi+ncPUT3WLeUNoBuYDJPKdlaAnDinlPZ8SD9evW0c0x5fO2CmQsqaTLg8GzEmybftPUni9groS2Zkrs70rgwmiLq5QsqGNCJAE/vYmyAN1xs67+L7ALrVboVGuVQim7pa7b0iT/ab3tuaQxUW335VfvcvP9L7Qdjsh4zMxY92EMOHM3I9BitqBu52UkakypnvhybmtHOEHv27p+Q2mNN6i9QbaEJ3qqRpL/dqViyb2Yn/yK9IVk9kahFNdQgwUNMywbWpkn42cX8zMU/YbTozJet6aObYimecr5iBVSRa6whaN+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7z/YJ2jHJg7BMc4knEiVmUpMCeW/zb5eYaljU6VgHCc=;
+ b=gy2YVzfIWRowMzHDlTlH6tC5iDSmu2tebGFfB4aWyRFI79QIHkp9kRu1iNTjTpvyMUdzFsQwJRF7oFHjQ3i7KqhtdjCmgjUQqkolOBrqiRFXUj43ZVOj/29kMWwi/sJedWN9Tt5ypA56bINw7Ri8E5+O5xuIFoliTI3s/1ajQtxnfHQi5RFspVlOJYJRfDeNtMjMMaBKY//SHZjRfDXwOHM9IsPIFAZHbb2p4asjWpWlQW0YJmmiiKaR/3cWb8fHk6H/r3WG2DlC0rLtdmkjYWIo4H226+dYgk/KeHMH9+C2Y7Sc9iecayfsdnMDbcvbYgjOhtXlT+DdzmSWpltNYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: broadcom.com; dkim=none (message not signed)
+ header.d=none;broadcom.com; dmarc=none action=none header.from=suse.com;
+Received: from MW3PR18MB3658.namprd18.prod.outlook.com (2603:10b6:303:54::24)
+ by MW3PR18MB3466.namprd18.prod.outlook.com (2603:10b6:303:58::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Fri, 5 Jun
+ 2020 04:38:56 +0000
+Received: from MW3PR18MB3658.namprd18.prod.outlook.com
+ ([fe80::2da0:153f:7d56:210d]) by MW3PR18MB3658.namprd18.prod.outlook.com
+ ([fe80::2da0:153f:7d56:210d%5]) with mapi id 15.20.3066.018; Fri, 5 Jun 2020
+ 04:38:56 +0000
+Date:   Fri, 5 Jun 2020 12:38:46 +0800
+From:   Kai Liu <kai.liu@suse.com>
+To:     Chandrakanth Patil <chandrakanth.patil@broadcom.com>
+CC:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Xiaoming Gao <newtongao@tencent.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        <xiakaixu1987@gmail.com>, <jejb@linux.ibm.com>,
+        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by
+ JBOD
+Message-ID: <20200605043846.f3ciid3xpvdgumh6@suse.com>
+References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
+ <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com>
+ <4779a72c878774e4e3525aae8932feda@mail.gmail.com>
+ <20200604155009.63mhbsoaoq6yra77@suse.com>
+ <4285a7ff366d7f5cfb5cae582dadf878@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <4285a7ff366d7f5cfb5cae582dadf878@mail.gmail.com>
+User-Agent: NeoMutt/20200501
+X-ClientProxiedBy: SG2PR06CA0091.apcprd06.prod.outlook.com
+ (2603:1096:3:14::17) To MW3PR18MB3658.namprd18.prod.outlook.com
+ (2603:10b6:303:54::24)
 MIME-Version: 1.0
-References: <20200603132148.1.I0ec31d716619532fc007eac081e827a204ba03de@changeid>
- <CAJZ5v0i5VPk+HUb6P43Apb=MwanTkeWqjBMEemDo+fiBTM+eOg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i5VPk+HUb6P43Apb=MwanTkeWqjBMEemDo+fiBTM+eOg@mail.gmail.com>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Thu, 4 Jun 2020 21:29:30 -0700
-Message-ID: <CANFp7mWHX15oJAe_RgYbN+sHbPXmUYkYtvT9V0oszOc0Y=7TKg@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: Allow suspend even when preparation has failed
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Len Brown <len.brown@intel.com>,
-        Todd Brandt <todd.e.brandt@linux.intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (45.122.156.254) by SG2PR06CA0091.apcprd06.prod.outlook.com (2603:1096:3:14::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 04:38:55 +0000
+X-Originating-IP: [45.122.156.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 89e8389d-f187-4c6b-4dd9-08d8090a5b50
+X-MS-TrafficTypeDiagnostic: MW3PR18MB3466:
+X-Microsoft-Antispam-PRVS: <MW3PR18MB3466497194527454BAC65B6D98860@MW3PR18MB3466.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0425A67DEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Oiup2pHYY1+POwK9RHz93ZUa0F2o+VMBvqfrB6/W7f0nIreqK7cWEFpfkae4WYRSQQ0bCxbiRgM2GKwN2OyeXy8u+NGa2rgBRlKo6z1lA4N8MFyrE1arsO2bWQ9tuQPr9gVCijb22vvPVh549FdYzmgCzAkLBgXLNHKN42+FelhZN6Jqh3qkn0cqSIMn+8e4I61SiVrrvY1zqRpMPTXEvQqZFLJMSA7ByjGtWiIbKMqrvWVz5gqm5hU6FzongikuLNkaEk2o0bgro8kabViI1sR9S8p0BnQxninkwOxW9/G/wlx3auWG5BGV3WDxJUsx3v3tSHMFzTKqhBiVASgBwQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR18MB3658.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(346002)(396003)(136003)(39860400002)(36756003)(66946007)(4326008)(6486002)(478600001)(2906002)(66556008)(8936002)(8676002)(5660300002)(66476007)(6916009)(7416002)(1076003)(54906003)(6496006)(83380400001)(26005)(6666004)(86362001)(186003)(316002)(16526019)(956004)(44832011)(2616005)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: cwpIVRTbJwtpRIVDYqhU+fN99D/wwZukpocuYjRUtoSLUn2GR8oK9es78VXf8ta1VcbxKotTLlnzBstStzQ++i5LVISagISluedd2DUM1MVbBYT+Ph9SWh8cqxxL5dPrBTCOX5vpxcNJIS/OLEiEUULrxi1YefGj0v6azNgoabTAPotzb3QgBg6LVoQ3W+XsHIb8MA7saDXXTeFN9QUU2XwNd04CpF8U+/mM8xhM6VfNP6P+2j8CIU4GcsHuKsFBpNXavrFYvL5hwcE52CjmN1/fmRCS5TBUvHZtBvAEmZuTjU3V4kKqGNmE0etausjr4+I/QQFQH2iqglEeest2qA2QqbVilG0CJx1QTaWOBydEsL235WgePdCU5v4FX1eRWiZ0zEplknyaBAeL/7pB60O9WqTFYQ6qdKdhzEkehvIgXh4jaq/sw4XtqwDz2EyfGgW14S40/NAw/I8mb7CAD7F04smgjpufF4WFjLORzXVjYr8qgpxUy0m3VhsAhCm7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89e8389d-f187-4c6b-4dd9-08d8090a5b50
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 04:38:56.3429
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hcvt2Mpmt4SbXLYNFLBjJt5xZEywwD85USz0/1rmdfNe2BeXXOF7bSCpjymTHO6MA2WCR+Pu7/VBhM0fTMNsCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR18MB3466
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sent a v2 with proper fixes and reported-by tags.
+On 2020/06/05 Fri 01:05, Chandrakanth Patil wrote:
+>
+>Hi Kai Liu,
+>
+>Gen3 (Invader) and Gen3.5 (Ventura/Aero) generations of controllers are
+>affected.
 
-Thanks
-Abhishek
+Hi Chandrakanth,
 
-On Thu, Jun 4, 2020 at 3:46 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Jun 3, 2020 at 10:22 PM Abhishek Pandit-Subedi
-> <abhishekpandit@chromium.org> wrote:
-> >
-> > It is preferable to allow suspend even when Bluetooth has problems
-> > preparing for sleep. When Bluetooth fails to finish preparing for
-> > suspend, log the error and allow the suspend notifier to continue
-> > instead.
-> >
-> > To also make it clearer why suspend failed, change bt_dev_dbg to
-> > bt_dev_err when handling the suspend timeout.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
->
-> Thanks for the patch, it looks reasonable to me.
->
-> It would be good to add a Fixes tag to it to indicate that it works
-> around an issue introduced by an earlier commit.
->
-> Len, Todd, would it be possible to test this one on the affected machines?
->
-> > ---
-> > To verify this is properly working, I added an additional change to
-> > hci_suspend_wait_event to always return -16. This validates that suspend
-> > continues even when an error has occurred during the suspend
-> > preparation.
-> >
-> > Example on Chromebook:
-> > [   55.834524] PM: Syncing filesystems ... done.
-> > [   55.841930] PM: Preparing system for sleep (s2idle)
-> > [   55.940492] Bluetooth: hci_core.c:hci_suspend_notifier() hci0: Suspend notifier action (3) failed: -16
-> > [   55.940497] Freezing user space processes ... (elapsed 0.001 seconds) done.
-> > [   55.941692] OOM killer disabled.
-> > [   55.941693] Freezing remaining freezable tasks ... (elapsed 0.000 seconds) done.
-> > [   55.942632] PM: Suspending system (s2idle)
-> >
-> > I ran this through a suspend_stress_test in the following scenarios:
-> > * Peer classic device connected: 50+ suspends
-> > * No devices connected: 100 suspends
-> > * With the above test case returning -EBUSY: 50 suspends
-> >
-> > I also ran this through our automated testing for suspend and wake on
-> > BT from suspend continues to work.
-> >
-> >
-> >  net/bluetooth/hci_core.c | 17 ++++++++++-------
-> >  1 file changed, 10 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> > index dbe2d79f233fba..54da48441423e0 100644
-> > --- a/net/bluetooth/hci_core.c
-> > +++ b/net/bluetooth/hci_core.c
-> > @@ -3289,10 +3289,10 @@ static int hci_suspend_wait_event(struct hci_dev *hdev)
-> >                                      WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
-> >
-> >         if (ret == 0) {
-> > -               bt_dev_dbg(hdev, "Timed out waiting for suspend");
-> > +               bt_dev_err(hdev, "Timed out waiting for suspend events");
-> >                 for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
-> >                         if (test_bit(i, hdev->suspend_tasks))
-> > -                               bt_dev_dbg(hdev, "Bit %d is set", i);
-> > +                               bt_dev_err(hdev, "Suspend timeout bit: %d", i);
-> >                         clear_bit(i, hdev->suspend_tasks);
-> >                 }
-> >
-> > @@ -3360,12 +3360,15 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
-> >                 ret = hci_change_suspend_state(hdev, BT_RUNNING);
-> >         }
-> >
-> > -       /* If suspend failed, restore it to running */
-> > -       if (ret && action == PM_SUSPEND_PREPARE)
-> > -               hci_change_suspend_state(hdev, BT_RUNNING);
-> > -
-> >  done:
-> > -       return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
-> > +       /* We always allow suspend even if suspend preparation failed and
-> > +        * attempt to recover in resume.
-> > +        */
-> > +       if (ret)
-> > +               bt_dev_err(hdev, "Suspend notifier action (%x) failed: %d",
-> > +                          action, ret);
-> > +
-> > +       return NOTIFY_STOP;
-> >  }
-> >
-> >  /* Alloc HCI device */
-> > --
-> > 2.27.0.rc2.251.g90737beb825-goog
-> >
+My card is not one of these but it's also problematic:
+
+# lspci -nn|grep 3408
+02:00.0 RAID bus controller [0104]: Broadcom / LSI MegaRAID Tri-Mode SAS3408 [1000:0017] (rev 01)
+
+According to megaraid_sas.h it's Tomcat:
+
+#define PCI_DEVICE_ID_LSI_TOMCAT                    0x0017
+
+According to product information on broadcom.com the card model is 
+9440-8i. So I tried to upgrade to the latest firmware version 
+51.13.0-3223 but I got these error:
+
+# ./storcli64 /c0 download file=9440-8i_nopad.rom
+Download Completed.
+Flashing image to adapter...
+CLI Version = 007.1316.0000.0000 Mar 12, 2020
+Operating system = Linux 5.3.18-0.g6748ac9-default
+Controller = 0
+Status = Failure
+Description = image corrupted
+
+I tried few more versions from broadcom website, they all failed with 
+the same "image corrupted" error.
+
+Here is the controller information:
+
+# ./storcli64 /c0 show
+Generating detailed summary of the adapter, it may take a while to complete.
+
+CLI Version = 007.1316.0000.0000 Mar 12, 2020
+Operating system = Linux 5.3.18-0.g6748ac9-default
+Controller = 0
+Status = Success
+Description = None
+
+Product Name = SAS3408
+Serial Number = 033FAT10K8000236
+SAS Address =  57c1cf15516f4000
+PCI Address = 00:02:00:00
+System Time = 06/05/2020 12:36:59
+Mfg. Date = 00/00/00
+Controller Time = 06/05/2020 04:36:58
+FW Package Build = 50.6.3-0109
+BIOS Version = 7.06.02.2_0x07060502
+FW Version = 5.060.01-2262
+Driver Name = megaraid_sas
+Driver Version = 07.713.01.00-rc1
+Vendor Id = 0x1000
+Device Id = 0x17
+SubVendor Id = 0x19E5
+SubDevice Id = 0xD213
+Host Interface = PCI-E
+Device Interface = SAS-12G
+Bus Number = 2
+Device Number = 0
+Function Number = 0
+Domain ID = 0
+Drive Groups = 3
+
+
+Thanks,
+Kai Liu
