@@ -2,195 +2,143 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A72C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9848E2065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1461A20659
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qWEVvUrE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhMZXa0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgFEPE2 (ORCPT
+        id S1728177AbgFEPFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:04:28 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:46331 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728048AbgFEPE2 (ORCPT
+        Fri, 5 Jun 2020 11:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgFEPFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:04:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591369466; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=/0RmIoKOk/tLUvgTTyB+mzPhSVolwNYfMaAMc7plVF0=;
- b=qWEVvUrEubtoBmV2nsuT25+pLSTd+Kk/qXebGHphQxT4cgacNrmf1+F5GHAxS75tVfHdv/uF
- Ysf27b/kdrgbKXjExWlfnSQZv8EYFCBDhY9sD8B5RJuBLrdmwfFO5peDkKgLafVEO8NO7NLn
- IL1tJ9xY3NLtCPMBVkbxHcxGA88=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5eda5eede276c808dedad914 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 15:04:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0D460C433C6; Fri,  5 Jun 2020 15:04:13 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85120C433CA;
-        Fri,  5 Jun 2020 15:04:12 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 20:34:12 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Cc:     Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
+        Fri, 5 Jun 2020 11:05:49 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FB72C08C5C2;
+        Fri,  5 Jun 2020 08:05:49 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t16so3732862plo.7;
+        Fri, 05 Jun 2020 08:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zl3uXlckh/ILLSJmP4ICOMWaZeDZ9A0z1FTiwzLjSyw=;
+        b=FhMZXa0pqbczzolzAxUWZ6l/cPlMoh4ca88ZnP72F5OYEn3zDPmaVkLsEhS4wZ+pb0
+         OpUlPrw60Tua/44wX2E7hmR3oq/UIlBkX6MCzdidGL3xYk4Tk8eeCL6xZHOKj9vNCrAg
+         guhsG/zT5eSHPtpXuIhpIMM6uloPsYE3bXwLAHewQdvx6qHVnWyuxAWjQ1fz3ckzVPDS
+         5pUVso6Z2RoHxEz39lci25KPw6abx1Zkuq+KXgPKXiTANRvNBOou8K8pTFA0bYezdf9z
+         TzKSMnbwvC/WXnzd6T9MMZ40cgzcmMVsVtAsAsviiHakm4fgNulNY9awZsOEFrTAdlAl
+         USFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zl3uXlckh/ILLSJmP4ICOMWaZeDZ9A0z1FTiwzLjSyw=;
+        b=GYqrFKMRkcEr+7RxNGLOOaliePFgZZ290Cdps9ZB2RwODWNybrQSVi6FsyZGg+mZmY
+         K06mCvHU0pKZnAJ/FBQWZdfL94q5u7WYqT0UrfDSdzWRU5oybw2wqJBhjM3aB4CzxExa
+         TJ8xt4mXWqIliUTd4dHLsVpgmZoSPh/ZlExuAcminVi853uBiTkGBCZ3ByLcWQDGLuu8
+         FSc5FD3Fjg4ML1My/jyybmxgopnI1F5Lj7u8+c0z8rgGifUTULUd9uVEopNAbQiSAIEK
+         7KqEQhUMVvYq60+7XAalmVMO1AXGd1QsiujKI6haXaLhFCw585oH/nJwaLPbQO7vwTuk
+         dwxQ==
+X-Gm-Message-State: AOAM530mhzap1oNr+mugY+h/BrK5zjli+L9Gz4OQUdLKrrI/yG/6P6gH
+        z1uKFszoU3VZneBVENeveBw=
+X-Google-Smtp-Source: ABdhPJyEI1zMv/msQyU+Ei4KhuaGEwq9i+HpH2+fhygN3bHJuK30LAKFw+2tG0snVq8JEO8lyyXIig==
+X-Received: by 2002:a17:90a:20c2:: with SMTP id f60mr3704149pjg.29.1591369548704;
+        Fri, 05 Jun 2020 08:05:48 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 5sm3155367pfc.143.2020.06.05.08.05.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 05 Jun 2020 08:05:44 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 08:05:42 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
-In-Reply-To: <CAP71WjzMgYb921dV1eJ0zHDAAc33HFsegAw7U_0NcKAn96fJvw@mail.gmail.com>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-2-jonathan@marek.ca>
- <20200529025246.GV279327@builder.lan>
- <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
- <20200529031520.GA1799770@builder.lan>
- <91eb7ee0e549b10724c724aebfd91996@codeaurora.org>
- <8cf134f0-381f-7765-2496-e5abd77f3087@marek.ca>
- <e9800dbb6531c9b57a855f41f68753bd@codeaurora.org>
- <CAP71WjwjZgD=msK_2W8eBBk6axZ_uMNurEm9F76u6aHscXPf9Q@mail.gmail.com>
- <81a9d07c0c8d76abf0ef734963788884@codeaurora.org>
- <CAP71WjzMgYb921dV1eJ0zHDAAc33HFsegAw7U_0NcKAn96fJvw@mail.gmail.com>
-Message-ID: <6d0aa709dbd00ceda4e27d5d49ecc9ff@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
+Message-ID: <20200605150542.GA254229@roeck-us.net>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-5-michael@walle.cc>
+ <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
+ <8f042c2442852c29519c381833f3d289@walle.cc>
+ <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
+ <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net>
+ <20200605140911.GO2428291@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605140911.GO2428291@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-05 20:21, Nicolas Dechesne wrote:
-> On Fri, Jun 5, 2020 at 4:39 PM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi Nico,
->> 
->> On 2020-06-05 20:01, Nicolas Dechesne wrote:
->> > On Fri, Jun 5, 2020 at 4:14 PM Sai Prakash Ranjan
->> > <saiprakash.ranjan@codeaurora.org> wrote:
->> >>
->> >> On 2020-06-05 19:40, Jonathan Marek wrote:
->> >> > On 6/5/20 10:03 AM, Sai Prakash Ranjan wrote:
->> >> >> On 2020-05-29 08:45, Bjorn Andersson wrote:
->> >> >>> On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
->> >> >>>
->> >> >>>>
->> >> >>>>
->> >> >>>> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
->> >> >>>> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
->> >> >>>> >
->> >> >>>> > > Add the apps_smmu node for sm8150. Note that adding the iommus field for
->> >> >>>> > > UFS is required because initializing the iommu removes the bypass mapping
->> >> >>>> > > that created by the bootloader.
->> >> >>>> > >
->> >> >>>> >
->> >> >>>> > Unrelated to the patch itself; how do you disable the splash screen on
->> >> >>>> > 8150? "fastboot oem select-display-panel none" doesn't seem to work for
->> >> >>>> > me on the MTP - and hence this would prevent my device from booting.
->> >> >>>> >
->> >> >>>> > Thanks,
->> >> >>>> > Bjorn
->> >> >>>> >
->> >> >>>>
->> >> >>>> I don't have a MTP, but on HDK855, "fastboot oem
->> >> >>>> select-display-panel none"
->> >> >>>> combined with setting the physical switch to HDMI mode (which
->> >> >>>> switches off
->> >> >>>> the 1440x2560 panel) gets it to not setup the display at all (just
->> >> >>>> the
->> >> >>>> fastboot command isn't enough).
->> >> >>>>
->> >> >>>
->> >> >>> Okay, I don't think we have anything equivalent on the MTP, but good
->> >> >>> to
->> >> >>> know.
->> >> >>>
->> >> >>
->> >> >> Actually I tried out this in SM8150 MTP and it works fine for me,
->> >> >>
->> >> >> "fastboot set_active a; fastboot set_active b; fastboot set_active a;
->> >> >> fastboot oem select-display-panel none; fastboot reboot bootloader;
->> >> >> fastboot boot boot-sm8150.img"
->> >> >>
->> >> >> Also I need to switch slots everytime like above, otherwise I always
->> >> >> see some error
->> >> >> while loading the boot image.
->> >> >>
->> >> >
->> >> > What is the error? If it is "FAILED (remote: Failed to
->> >> > load/authenticate boot image: Load Error)" then flashing/erasing
->> >> > boot_a will make it go away ("fastboot erase boot_a") for the next 6
->> >> > or so "failed" boots.
->> >> >
->> >>
->> >> Yes this exact error.
->> >
->> > The bootloader maintains a 'boot status' in one of the partition
->> > attributes. After a certain amount of 'failed' boot , it will switch
->> > to the other boot partition. It's the same thing on RB3/DB845c. In our
->> > release for DB845c, we are patching the bootloader so that this
->> > behavior is bypassed. On typical 'product' there is a user space
->> > application that will come and set the partition attribute to indicate
->> > the boot was successful.
->> >
->> > For the record, this is the patch we use on 845c:
->> > https://git.linaro.org/landing-teams/working/qualcomm/abl.git/commit/?h=release/LE.UM.2.3.7-09200-sda845.0&id=e3dc60213234ed626161a568ba587ddac63c5158
->> >
->> > rebuilding EDK2/ABL requires access to signing tools.. so it might not
->> > be possible for everyone. but in case you can, it should be
->> > straightforward to reuse this patch.
->> >
->> 
->> Thank you for these details and the patch, it's very useful.
->> I do have access to ABL code and the signing tools and can build one.
+On Fri, Jun 05, 2020 at 05:09:11PM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 05, 2020 at 06:52:00AM -0700, Guenter Roeck wrote:
+> > On 6/5/20 3:50 AM, Andy Shevchenko wrote:
+> > > On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
+> > >> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
+> > >>> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
 > 
-> Good. Then the next problem you will likely face is that building QCOM
-> ABL is far from being straightforward. Why would it be? ;)
-> That's the script we use to build it ourselves:
-> https://git.linaro.org/ci/job/configs.git/tree/lt-qcom-bootloader/dragonboard845c/builders.sh#n61
+> ...
 > 
-> It has a reference to sectools which we have (internally) access to,
-> but you have it too, and you should be able to leverage most of the
-> script.
+> > >>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> > >>>> +module_param(nowayout, bool, 0);
+> > >>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
+> > >>>> (default="
+> > >>>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
+> > >>>> ")");
+> > >>>> +
+> > >>>> +static int timeout;
+> > >>>> +module_param(timeout, int, 0);
+> > >>>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
+> > >>>
+> > >>> Guenter ACKed this, but I'm wondering why we still need module
+> > >>> parameters...
+> > >>
+> > >> How would a user change the nowayout or the timeout? For the latter
+> > >> there is
+> > >> a device tree entry, but thats not easy changable by the user.
+> > > 
+> > > Yes, it's more question to VIm and Guenter than to you.
+> > > 
+> > 
+> > Has support for providing module parameters with the kernel command line
+> > been discontinued/deprecated, or did it run out of favor ? Sorry if I
+> > missed that.
+> 
+> Latter according to Greg KH. One of the (plenty) examples [1].
+> 
+> [1]: https://www.mail-archive.com/driverdev-devel@linuxdriverproject.org/msg96495.html
+> 
+What is the suggested replacement ?
 
-Looks like a cool tool, will definitely try it out :) Also internally we 
-have another
-tool to build ABL(if you are aware of kdev then you will know what this 
-is called, guess ;))
-which takes care of cloning and building and signing all the things 
-required
-(although very weirdly it clones sectools everytime which should be 
-fixed, I just comment
-that part out when I build) and all it takes is one command "make" :)
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Guenter
