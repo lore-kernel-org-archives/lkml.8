@@ -2,193 +2,109 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1471C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF28207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7D020663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xVXah9xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgFELD6 (ORCPT
+        id S1727007AbgFELFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:03:58 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60254 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726787AbgFELD5 (ORCPT
+        Fri, 5 Jun 2020 07:05:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60462 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgFELFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:03:57 -0400
-Received: from 89-64-83-87.dynamic.chello.pl (89.64.83.87) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id af71f79f98609352; Fri, 5 Jun 2020 13:03:53 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Len Brown <lenb@kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-Date:   Fri, 05 Jun 2020 13:03:51 +0200
-Message-ID: <2607373.kaDJAmNJUW@kreacher>
-In-Reply-To: <20200413141259.GA3458877@kroah.com>
-References: <20200413134611.478441-1-enric.balletbo@collabora.com> <20200413141259.GA3458877@kroah.com>
+        Fri, 5 Jun 2020 07:05:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055B27Jx151335;
+        Fri, 5 Jun 2020 11:05:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=3sHH2Wse00aR/Y1ZohIfUUEnncmFL+Yyv7Uy0bES180=;
+ b=xVXah9xmG7Y/f4McyECSJZDlXT8lP5WV3LENffT5ugSyK2gdp2e/xalOw+P4xqwv+bZF
+ 6nAOJ4YtZn28NDXC02tL3BYRlZFITThhaD+RNn6SiCsASLkbaBo8CwdBKZsd0D6nPQs/
+ 45aqG2XY+hiG8mgxGHmliJcbKsl5nNRq02xUE+5bECgouALn6p1hCMHxj4Qg79WPrVbL
+ O1w5bALxGvg8UpSHfiMWzWvqRNIPPmamRCRC8N65Egl0m7Tt6wq0B99RJJVv6Pgi+Rx4
+ LYUA6OP8sEUj4J0Bs7/9WlRay4mZikjFfrT61Kj+bvnEI4EpxIG89cHTmEtWe1Ey47em yA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 31f9242amh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 05 Jun 2020 11:05:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055Aw8Tx119582;
+        Fri, 5 Jun 2020 11:03:07 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 31f9272tj4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Jun 2020 11:03:07 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 055B35uo007659;
+        Fri, 5 Jun 2020 11:03:06 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 05 Jun 2020 04:03:05 -0700
+Date:   Fri, 5 Jun 2020 14:02:58 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Manoj N. Kumar" <manoj@linux.ibm.com>,
+        "Matthew R. Ochs" <mrochs@linux.vnet.ibm.com>
+Cc:     Uma Krishnan <ukrishn@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] cxlflash: remove an unnecessary NULL check
+Message-ID: <20200605110258.GD978434@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006050084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 impostorscore=0
+ adultscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 cotscore=-2147483648 phishscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006050085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, April 13, 2020 4:12:59 PM CEST Greg Kroah-Hartman wrote:
-> Meta-comment to the ACPI developers, shouldn't all of this happen
-> "automatically" with the existing ACPI entries in sysfs?
+The "cmd" pointer was already dereferenced a couple lines earlier so
+this NULL check is too late.  Fortunately, the pointer can never be NULL
+and the check can be removed.
 
-I'm not quite sure what you mean by "all of this" here.
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/scsi/cxlflash/main.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Can you please explain?
-
-> If not, is this driver the proper way to do this?
-> 
-> Minor review comments below:
-> 
-> 
-> On Mon, Apr 13, 2020 at 03:46:11PM +0200, Enric Balletbo i Serra wrote:
-> > +What:		/sys/bus/acpi/devices/GGL0001:00/BINF.{0,1,4}
-> > +Date:		April 2020
-> > +KernelVersion:	5.8
-> > +Description:
-> > +		This file is reserved and doesn't shows useful information
-> > +		for now.
-> 
-> Then do not even have it present.  sysfs should never export files that
-> nothing can be done with them, userspace "knows" that if a file is not
-> present, it can not use it.  Bring it back when it is useful.
-> 
-> > +What:		/sys/bus/acpi/devices/GGL0001:00/MECK
-> > +Date:		April 2020
-> > +KernelVersion:	5.8
-> > +Description:
-> > +		This binary file returns the SHA-1 or SHA-256 hash that is
-> > +		read out of the Management Engine extend registers during
-> > +		boot. The hash is exported vi ACPI so the OS can verify that
-> > +		the Management Engine firmware has not changed. If Management
-> > +		Engine is not present, or if the firmware was unable to read the
-> > +		extend registers, this buffer can be zero.
-> 
-> The size is zero, or the contents are 0?
-> 
-> > +static char *chromeos_acpi_alloc_name(char *name, int count, int index)
-> > +{
-> > +	char *str;
-> > +
-> > +	if (count == 1)
-> > +		str = kstrdup(name, GFP_KERNEL);
-> > +	else
-> > +		str = kasprintf(GFP_KERNEL, "%s.%d", name, index);
-> 
-> That's crazy, make this more obvious that "count" affects the name so
-> much.  As it is, no one would know this unless they read the function
-> code, and not just the name.
-> 
-> 
-> > +/**
-> > + * chromeos_acpi_add_group() - Create a sysfs group including attributes
-> > + *			       representing a nested ACPI package.
-> > + *
-> > + * @adev: ACPI device.
-> > + * @obj: Package contents as returned by ACPI.
-> > + * @name: Name of the group.
-> > + * @num_attrs: Number of attributes of this package.
-> > + * @index: Index number of this particular group.
-> > + *
-> > + * The created group is called @name in case there is a single instance, or
-> > + * @name.@index otherwise.
-> > + *
-> > + * All group and attribute storage allocations are included in the lists for
-> > + * tracking of allocated memory.
-> > + *
-> > + * Return: 0 on success, negative errno on failure.
-> > + */
-> 
-> Meta-comment, no need for kerneldoc on static functions.  It's nice to
-> see, but nothing is going to notice them...
-> 
-> > +static int chromeos_acpi_add_method(struct acpi_device *adev, char *name)
-> > +{
-> > +	struct device *dev = &adev->dev;
-> > +	struct acpi_buffer output;
-> > +	union acpi_object *obj;
-> > +	acpi_status status;
-> > +	int ret = 0;
-> > +
-> > +	output.length = ACPI_ALLOCATE_BUFFER;
-> > +
-> > +	status = acpi_evaluate_object(adev->handle, name, NULL, &output);
-> > +	if (ACPI_FAILURE(status)) {
-> > +		dev_err(dev, "failed to retrieve %s (%d)\n", name, status);
-> > +		return status;
-> > +	}
-> > +
-> > +	obj = output.pointer;
-> > +	if (obj->type == ACPI_TYPE_PACKAGE)
-> > +		ret = chromeos_acpi_handle_package(adev, obj, name);
-> > +
-> > +	kfree(output.pointer);
-> 
-> Why the need for 'obj' at all in this function?  Minor nit.
-> 
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int chromeos_acpi_device_add(struct acpi_device *adev)
-> > +{
-> > +	struct chromeos_acpi_attribute_group *aag = chromeos_acpi.root;
-> > +	struct device *dev = &adev->dev;
-> > +	int i, ret;
-> > +
-> > +	aag = kzalloc(sizeof(*aag), GFP_KERNEL);
-> > +	if (!aag)
-> > +		return -ENOMEM;
-> > +
-> > +	INIT_LIST_HEAD(&aag->attribs);
-> > +	INIT_LIST_HEAD(&aag->list);
-> > +	INIT_LIST_HEAD(&chromeos_acpi.groups);
-> > +
-> > +	chromeos_acpi.root = aag;
-> > +
-> > +	/*
-> > +	 * Attempt to add methods by querying the device's MLST method
-> > +	 * for the list of methods.
-> > +	 */
-> > +	if (!chromeos_acpi_process_mlst(adev))
-> > +		return 0;
-> > +
-> > +	dev_info(dev, "falling back to default list of methods\n");
-> 
-> Is this debugging code left over?  If not, make it an error, and what
-> would a user be able to do with it?
-
-Or use dev_dbg() to print it, possibly?
-
-Cheers!
-
-
+diff --git a/drivers/scsi/cxlflash/main.c b/drivers/scsi/cxlflash/main.c
+index fcc5aa9f60147..94250ebe9e803 100644
+--- a/drivers/scsi/cxlflash/main.c
++++ b/drivers/scsi/cxlflash/main.c
+@@ -47,9 +47,6 @@ static void process_cmd_err(struct afu_cmd *cmd, struct scsi_cmnd *scp)
+ 	struct sisl_ioasa *ioasa;
+ 	u32 resid;
+ 
+-	if (unlikely(!cmd))
+-		return;
+-
+ 	ioasa = &(cmd->sa);
+ 
+ 	if (ioasa->rc.flags & SISL_RC_FLAGS_UNDERRUN) {
+-- 
+2.26.2
 
