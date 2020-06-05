@@ -2,123 +2,202 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D79C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A48FA207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BED2067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgFEQvS (ORCPT
+        id S1726531AbgFEQze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:51:18 -0400
-Received: from mga02.intel.com ([134.134.136.20]:33158 "EHLO mga02.intel.com"
+        Fri, 5 Jun 2020 12:55:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44642 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgFEQvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:51:17 -0400
-IronPort-SDR: VYTyUCeDZWDyKYS185id1RtOV0Ef1Z5wMyZiRzMtdUJKOOuSk0W11rjPOK2HexK6mX2CvI6RTI
- l9bJZLW5ZCHQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 09:51:16 -0700
-IronPort-SDR: 7Arn7IAbvIVYlIlpzd7oXzQ9tQZ2H13N8ezxBepmWVr3of8JU7PwRIaupEp7p+9SDDyua7+/dC
- 4PXxKndlm/kA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="313248012"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.143.24]) ([10.249.143.24])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Jun 2020 09:51:14 -0700
-Subject: Re: schedutil issue with serial workloads
-To:     Alexander Monakov <amonakov@ispras.ru>
-References: <alpine.LNX.2.20.13.2006042341160.3984@monopod.intra.ispras.ru>
-Cc:     linux-kernel@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>, qperret@google.com,
-        juri.lelli@redhat.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Doug Smythies <dsmythies@telus.net>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <c3145e26-56c8-4979-513c-cfac191e989b@intel.com>
-Date:   Fri, 5 Jun 2020 18:51:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        id S1726026AbgFEQzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 12:55:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AE17DACE3;
+        Fri,  5 Jun 2020 16:55:32 +0000 (UTC)
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+To:     Kees Cook <keescook@chromium.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Roman Gushchin <guro@fb.com>
+References: <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
+ <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+ <202006041054.874AA564@keescook>
+ <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
+ <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
+ <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+ <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+ <202006050828.F85A75D13@keescook>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <92d994be-e4f5-b186-4ad7-21828de44967@suse.cz>
+Date:   Fri, 5 Jun 2020 18:55:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.20.13.2006042341160.3984@monopod.intra.ispras.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <202006050828.F85A75D13@keescook>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/4/2020 11:29 PM, Alexander Monakov wrote:
-> Hello,
 
-Hi,
+On 6/5/20 5:44 PM, Kees Cook wrote:
+> On Fri, Jun 05, 2020 at 04:44:51PM +0200, Vegard Nossum wrote:
+>> On 2020-06-05 16:08, Vlastimil Babka wrote:
+>> > On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
+>> > > On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+>> > > > 
+>> > > > On 2020-06-05 11:36, Vegard Nossum wrote:
+>> > > > > 
+>> > > > > On 2020-06-05 11:11, Vlastimil Babka wrote:
+>> > > > > > So, with Kees' patch reverted, booting with slub_debug=F (or even more
+>> > > > > > specific slub_debug=F,ftrace_event_field) also hits this bug below. I
+>> > > > > > wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
+>> > > > > > further in history. So it's not new at all, and likely very specific to
+>> > > > > > your config+QEMU? (and related to the ACPI error messages that precede
+>> > > > > > it?).
+>> > [...]
+>> > [    0.140408] ------------[ cut here ]------------
+>> > [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+>> > [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+> 
+> Ah yes! Good. I had improved this check recently too, and I was worried
+> the freelist pointer patch was somehow blocking it, but I see now that
+> the failing config didn't have CONFIG_SLAB_FREELIST_HARDENED=y. Once
+> SLAB_CONSISTENCY_CHECKS was enabled ("slub_debug=F"), it started
+> tripping. Whew.
+> 
+> I wonder if that entire test block should just be removed from
+> cache_from_obj():
+> 
+>         if (!memcg_kmem_enabled() &&
+>             !IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+>             !unlikely(s->flags & SLAB_CONSISTENCY_CHECKS))
+>                 return s;
+> 
+> and make this test unconditional? It's mostly only called during free(),
+> and shouldn't be too expensive to be made unconditional. Hmm.
 
-Let's make more people see your report.
+Hmm I have a different idea. The whole cache_from_obj() was added because of
+kmemcg (commit b9ce5ef49f00d) where per-memcg cache can be different from the
+root one. And I just realized this usecase can go away with Roman's series [1].
+But cache_from_obj() also kept the original SLUB consistency check case, and you
+added the freelist hardening case. If kmemcg use case went away it would be nice
+to avoid the virt_to_cache() and check completely again, unless in debugging or
+hardened kernel.
 
-+Peter, Giovanni, Quentin, Juri, Valentin, Vincent, Doug, and linux-pm.
+Furthermore, the original SLUB debugging case was an unconditional pr_err() plus
+WARN_ON_ONCE(1), which was kept by commit b9ce5ef49f00d.  With freelist
+hardening this all changed to WARN_ONCE. So the second and later cases are not
+reported at all for hardening and also not for explicitly enabled debugging like
+in this case, which is IMHO not ideal.
 
-> this is a question/bugreport about behavior of schedutil on serial workloads
-> such as rsync, or './configure', or 'make install'. These workloads are
-> such that there's no single task that takes a substantial portion of CPU
-> time, but at any moment there's at least one runnable task, and overall
-> the workload is compute-bound. To run the workload efficiently, cpufreq
-> governor should select a high frequency.
->
-> Assume the system is idle except for the workload in question.
->
-> Sadly, schedutil will select the lowest frequency, unless the workload is
-> confined to one core with taskset (in which case it will select the
-> highest frequency, correctly though somewhat paradoxically).
+So I propose the following - the freelist hardening case keeps the WARN_ONCE,
+but also a one-line pr_err() for each case so they are not silent. The SLUB
+debugging case is always a full warning, and printing the tracking info if
+enabled and available. Pure kmemcg case does virt_to_cache() for now (until
+hopefully removed by Roman's series) but no checking at all. Would that work for
+everyone?
 
-That's because the CPU utilization generated by the workload on all CPUs 
-is small.
+[1] https://lore.kernel.org/linux-mm/d7cdecbc-db24-8ced-1a86-6f4534613763@suse.cz/
 
-Confining it to one CPU causes the utilization of this one to grow and 
-so schedutil selects a higher frequency for it.
-
-> This sounds like it should be a known problem, but I couldn't find any
-> mention of it in the documentation.
-
-Well, what would you expect to happen instead of what you see?
-
-
-> I was able to replicate the effect with a pair of 'ping-pong' programs
-> that get a token, burn some cycles to simulate work, and pass the token.
-> Thus, each program has 50% CPU utilization. To repeat my test:
->
-> gcc -O2 pingpong.c -o pingpong
-> mkfifo ping
-> mkfifo pong
-> taskset -c 0 ./pingpong 1000000 < ping > pong &
-> taskset -c 1 ./pingpong 1000000 < pong > ping &
-> echo > ping
->
-> #include <stdio.h>
-> #include <unistd.h>
-> int main(int argc, char *argv[])
-> {
-> 	unsigned i, n;
-> 	sscanf(argv[1], "%u", &n);
-> 	for (;;) {
-> 		char c;
-> 		read(0, &c, 1);
-> 		for (i = n; i; i--)
-> 			asm("" :: "r"(i));
-> 		write(1, &c, 1);
-> 	}
-> }
->
-> Alexander
-
-
+----8<----
+diff --git a/mm/slab.h b/mm/slab.h
+index 815e4e9a94cd..1182ca2cb11a 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -275,6 +275,14 @@ static inline int cache_vmstat_idx(struct kmem_cache *s)
+ 		NR_SLAB_RECLAIMABLE : NR_SLAB_UNRECLAIMABLE;
+ }
+ 
++#ifdef CONFIG_SLUB_DEBUG
++void slab_print_tracking(struct kmem_cache *s, void *object);
++#else
++static inline void slab_print_tracking(struct kmem_cache *s, void *object)
++{
++}
++#endif
++
+ #ifdef CONFIG_MEMCG_KMEM
+ 
+ /* List of all root caches. */
+@@ -520,9 +528,18 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+ 		return s;
+ 
+ 	cachep = virt_to_cache(x);
+-	WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
+-		  "%s: Wrong slab cache. %s but object is from %s\n",
+-		  __func__, s->name, cachep->name);
++	if (unlikely(s->flags & SLAB_CONSISTENCY_CHECKS)) {
++		if (WARN(cachep && !slab_equal_or_root(cachep, s),
++			  "%s: Wrong slab cache. %s but object is from %s\n",
++			  __func__, s->name, cachep->name))
++			slab_print_tracking(cachep, x);
++	} else if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED)) {
++		if (unlikely(cachep && !slab_equal_or_root(cachep, s))) {
++			pr_err("%s: Wrong slab cache. %s but object is from %s\n",
++				  __func__, s->name, cachep->name);
++			WARN_ON_ONCE(1);
++		}
++	}
+ 	return cachep;
+ }
+ 
+diff --git a/mm/slub.c b/mm/slub.c
+index d4a9a097da50..ff2d817c5a94 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -634,7 +634,7 @@ static void print_track(const char *s, struct track *t, unsigned long pr_time)
+ #endif
+ }
+ 
+-static void print_tracking(struct kmem_cache *s, void *object)
++void slab_print_tracking(struct kmem_cache *s, void *object)
+ {
+ 	unsigned long pr_time = jiffies;
+ 	if (!(s->flags & SLAB_STORE_USER))
+@@ -698,7 +698,7 @@ static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
+ 	unsigned int off;	/* Offset of last byte */
+ 	u8 *addr = page_address(page);
+ 
+-	print_tracking(s, p);
++	slab_print_tracking(s, p);
+ 
+ 	print_page_info(page);
+ 
+@@ -3858,7 +3858,7 @@ static void list_slab_objects(struct kmem_cache *s, struct page *page,
+ 
+ 		if (!test_bit(slab_index(p, s, addr), map)) {
+ 			pr_err("INFO: Object 0x%p @offset=%tu\n", p, p - addr);
+-			print_tracking(s, p);
++			slab_print_tracking(s, p);
+ 		}
+ 	}
+ 	slab_unlock(page);
