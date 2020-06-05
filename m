@@ -2,125 +2,133 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E920C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37609C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9972067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101502074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Soo0Yocp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/wJ7NyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgFEODu (ORCPT
+        id S1727854AbgFEOF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:03:50 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:63614 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728023AbgFEODu (ORCPT
+        Fri, 5 Jun 2020 10:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgFEOF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:03:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591365830; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ZPrxxS+20A8R406jZPIf8TWcYL+cMfqMteAA8b140DQ=;
- b=Soo0YocpPdpeQoX+22O+X75dFi87sSBg+mPf+YJig2VvvNO0lktN+MY5guiDkdgDMaDRTlwU
- UQih2jhofZxGcGgAGo7p9bS9MXM9GPUwWNww0hx5gXTlE3Vuyuym8xqbcELL8k8eaSUQAApH
- TrJlQOy53EFABZLTgOQ2OpndTUU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5eda50a344a25e0052a8d7f9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 14:03:15
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1E0D0C433CB; Fri,  5 Jun 2020 14:03:14 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4031C433C6;
-        Fri,  5 Jun 2020 14:03:13 +0000 (UTC)
+        Fri, 5 Jun 2020 10:05:58 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D807C08C5C2;
+        Fri,  5 Jun 2020 07:05:58 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a25so11901869ljp.3;
+        Fri, 05 Jun 2020 07:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E2imZowYcWsqMuYyPOGiSh8Vkqqat7rhLhXVyMR2k0w=;
+        b=D/wJ7NyAluy19hD4lOArO9SudJkVEhvukrBzFKZOOidCtGQr8L7Zz5q/SToiDFhpSb
+         p5UTbi5gebuWIbN8mFJ80H3cJ+qyXanlpYp6tAHrZnkCfsCkbTwF1pe0eHBrfooqhwlU
+         lpiMA4Yehiqnot+x/r0IkPCAWzTBw/N1Xos/ndEeL78XLizAf9w1AGm+gMTtpRc64OZH
+         mtHx+WeQepSOZP6of5WOZkXFBatcKPwQuk8aBMzg4/tBJcTerQNqSLHw6ddo540CyJgG
+         iM1hrslBg2I3UsbIqpUSRl2OdYaIQLPTJBXg6hK8wDEeQv8sPB2PZpXzEjhIeR0jUM0d
+         g8mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E2imZowYcWsqMuYyPOGiSh8Vkqqat7rhLhXVyMR2k0w=;
+        b=KG8jhXBpuPxdAspOVP+TA7DyLrL8yxAEP6D3sudjYr2SLPXMWMohYfyOIvLXJUW2Kw
+         zF+ya/b4fip+OCmEhuVzE7+YH2vdqyhSV6JDfXMD+bFZC6a7HJ1zlrfGHaHUGXRMfDAH
+         oQJz/N8mbtumpMmeiAc6hLhZntAX1WIv51l6R5zZQ7L7XjS0oneRJ7QL/d77P78wO6Hb
+         JljU8VqK6Pl4WthWkRzMgtLp+6RLeVXCNfo7+vL9/zu8TWIZyAxyYvVs29H6lLFjuOXm
+         gvfIXnAU6LJewePeEdMww+VTzFPilCeM64XuIuezOEPIS1B67ObOOE+Lhz/Lp1pdLdqF
+         nJBQ==
+X-Gm-Message-State: AOAM533FUVdAYhZASJC3IpV0Si/u5twza8QIwz8w7/M0/VLBbyEJrHKg
+        SUKQDIt42wEaclfRxcm5aIM=
+X-Google-Smtp-Source: ABdhPJyhDQJ3TrPRcEnQIaSKKUFiV1lqR92HYbBU8YHDoEyM3qNNPqHz0h+AjVhHM+ruxqLhmDTBYg==
+X-Received: by 2002:a2e:975a:: with SMTP id f26mr4974996ljj.302.1591365956611;
+        Fri, 05 Jun 2020 07:05:56 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
+        by smtp.googlemail.com with ESMTPSA id z133sm980669lfa.41.2020.06.05.07.05.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 07:05:47 -0700 (PDT)
+Subject: Re: [PATCH] media: staging: tegra-vde: add missing
+ pm_runtime_put_autosuspend
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
+References: <20200602054841.15746-1-navid.emamdoost@gmail.com>
+ <7061eb81-c00c-9978-5e4b-f9896c0ffd5e@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b03670e5-2718-062e-0f53-d596434fe9a4@gmail.com>
+Date:   Fri, 5 Jun 2020 17:05:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 19:33:13 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH 1/6] arm64: dts: qcom: sm8150: add apps_smmu node
-In-Reply-To: <20200529031520.GA1799770@builder.lan>
-References: <20200524023815.21789-1-jonathan@marek.ca>
- <20200524023815.21789-2-jonathan@marek.ca>
- <20200529025246.GV279327@builder.lan>
- <d0908f34-a698-3449-35b9-7a98e9641295@marek.ca>
- <20200529031520.GA1799770@builder.lan>
-Message-ID: <91eb7ee0e549b10724c724aebfd91996@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <7061eb81-c00c-9978-5e4b-f9896c0ffd5e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-29 08:45, Bjorn Andersson wrote:
-> On Thu 28 May 20:02 PDT 2020, Jonathan Marek wrote:
+05.06.2020 09:00, Jon Hunter пишет:
 > 
->> 
->> 
->> On 5/28/20 10:52 PM, Bjorn Andersson wrote:
->> > On Sat 23 May 19:38 PDT 2020, Jonathan Marek wrote:
->> >
->> > > Add the apps_smmu node for sm8150. Note that adding the iommus field for
->> > > UFS is required because initializing the iommu removes the bypass mapping
->> > > that created by the bootloader.
->> > >
->> >
->> > Unrelated to the patch itself; how do you disable the splash screen on
->> > 8150? "fastboot oem select-display-panel none" doesn't seem to work for
->> > me on the MTP - and hence this would prevent my device from booting.
->> >
->> > Thanks,
->> > Bjorn
->> >
->> 
->> I don't have a MTP, but on HDK855, "fastboot oem select-display-panel 
->> none"
->> combined with setting the physical switch to HDMI mode (which switches 
->> off
->> the 1440x2560 panel) gets it to not setup the display at all (just the
->> fastboot command isn't enough).
->> 
+> On 02/06/2020 06:48, Navid Emamdoost wrote:
+>> Call to pm_runtime_get_sync increments counter even in case of
+>> failure leading to incorrect ref count.
+>> Call pm_runtime_put_autosuspend if pm_runtime_get_sync fails.
+>>
+>> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+>> ---
+>>  drivers/staging/media/tegra-vde/vde.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
+>> index d3e63512a765..52cdd4a91e93 100644
+>> --- a/drivers/staging/media/tegra-vde/vde.c
+>> +++ b/drivers/staging/media/tegra-vde/vde.c
+>> @@ -776,8 +776,10 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+>>  		goto release_dpb_frames;
+>>  
+>>  	ret = pm_runtime_get_sync(dev);
+>> -	if (ret < 0)
+>> +	if (ret < 0) {
+>> +		pm_runtime_put_autosuspend(dev);
+>>  		goto unlock;
+>> +	}
+>>  
+>>  	/*
+>>  	 * We rely on the VDE registers reset value, otherwise VDE
 > 
-> Okay, I don't think we have anything equivalent on the MTP, but good to
-> know.
-> 
+> Please use the put in the error path.
 
-Actually I tried out this in SM8150 MTP and it works fine for me,
+This is a third version of the patch [1][2].
 
-"fastboot set_active a; fastboot set_active b; fastboot set_active a; 
-fastboot oem select-display-panel none; fastboot reboot bootloader; 
-fastboot boot boot-sm8150.img"
+[1]
+https://patchwork.ozlabs.org/project/linux-tegra/patch/20200514210847.9269-2-digetx@gmail.com/
+[2]
+https://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/
 
-Also I need to switch slots everytime like above, otherwise I always see 
-some error
-while loading the boot image.
+I'd prefer to stick with my variant of the patch [1] because in my
+opinion it's most straightforward variant and I actually tested that it
+works properly.
 
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Navid, anyways thank you for the patch. Next time please check if
+somebody else already sent similar patches before you.
