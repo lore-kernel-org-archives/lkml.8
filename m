@@ -2,90 +2,56 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1444DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4F2206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CB3206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWLmtTIs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SRH3WRx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgFEJgl (ORCPT
+        id S1726361AbgFEJgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:36:41 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50163 "EHLO
+        Fri, 5 Jun 2020 05:36:54 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56547 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726227AbgFEJgk (ORCPT
+        by vger.kernel.org with ESMTP id S1726291AbgFEJgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:36:40 -0400
+        Fri, 5 Jun 2020 05:36:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591349798;
+        s=mimecast20190719; t=1591349811;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=I0JPXvvyjHwlHo/P8tXwkt6RpqVHbKYFh4dsIvGoaAw=;
-        b=YWLmtTIsT0gWQP4HKPD2gC7MxQOIM1rzSGgrtKLSZWeobDdWM4FIy1Ay+RB2g6OJwHUjR3
-        SsJ0zZGeipuVIrmVwxUUDEhT/6IPPWlDAP5LTXB+fzKYQTimEeOI6wEN/b4z+GS6YMS3qZ
-        YCeJD3Ir5T/D6Na6kNTevx01JcghkVg=
+        bh=1rlOZyMPwx6i+zE1nR5fGGCMec/zDQQDIPW7PFTof6o=;
+        b=SRH3WRx6h630Cxdb8r2loc7KpPxNoFWOuZk6fJwrPy6lGgeYbiuxDihGlygrQSWFlRaikV
+        0/d13Y70ouAXpnHl3/ckO3iasU5THo+Ew+A8Q8FH6er21hAbTm/XeWtRpTXGqZz48VX0V6
+        mooIfPg9naAjuylD9vBNxclTSAhxCPc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-iOftGIqLMJq5BEuk-iTKYw-1; Fri, 05 Jun 2020 05:36:34 -0400
-X-MC-Unique: iOftGIqLMJq5BEuk-iTKYw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-288-K-pnhr5JMqiI6rt9YliBkg-1; Fri, 05 Jun 2020 05:36:49 -0400
+X-MC-Unique: K-pnhr5JMqiI6rt9YliBkg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5BAD800685;
-        Fri,  5 Jun 2020 09:36:30 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4FD084B8A0;
+        Fri,  5 Jun 2020 09:36:47 +0000 (UTC)
 Received: from [10.36.114.72] (ovpn-114-72.ams2.redhat.com [10.36.114.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7187F5C541;
-        Fri,  5 Jun 2020 09:36:10 +0000 (UTC)
-Subject: Re: [PATCH RFC v4 00/13] virtio-mem: paravirtualized memory
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E8015D9DA;
+        Fri,  5 Jun 2020 09:36:46 +0000 (UTC)
+Subject: Re: [PATCH 2/2] scripts/spelling: Add a few more typos
+To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        SeongJae Park <sjpark@amazon.de>
+References: <20200605092502.18018-1-sjpark@amazon.com>
+ <20200605092502.18018-3-sjpark@amazon.com>
 From:   David Hildenbrand <david@redhat.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20191212171137.13872-1-david@redhat.com>
- <9acc5d04-c8e9-ef53-85e4-709030997ca6@redhat.com>
- <1cfa9edb-47ea-1495-4e28-4cf391eab44c@linux.alibaba.com>
- <d6cd1870-1012-cb3d-7d29-8e5ad2703717@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
  dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
@@ -130,68 +96,110 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <6b4724bf-84b5-9880-5464-1908425d106d@redhat.com>
-Date:   Fri, 5 Jun 2020 11:36:09 +0200
+Message-ID: <3e56face-4502-59bb-cda9-2701d00a462a@redhat.com>
+Date:   Fri, 5 Jun 2020 11:36:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <d6cd1870-1012-cb3d-7d29-8e5ad2703717@redhat.com>
+In-Reply-To: <20200605092502.18018-3-sjpark@amazon.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.06.20 11:08, David Hildenbrand wrote:
-> On 05.06.20 10:55, Alex Shi wrote:
->>
->>
->> 在 2020/1/9 下午9:48, David Hildenbrand 写道:
->>> Ping,
->>>
->>> I'd love to get some feedback on
->>>
->>> a) The remaining MM bits from MM folks (especially, patch #6 and #8).
->>> b) The general virtio infrastructure (esp. uapi in patch #2) from virtio
->>> folks.
->>>
->>> I'm planning to send a proper v1 (!RFC) once I have all necessary MM
->>> acks. In the meanwhile, I will do more testing and minor reworks (e.g.,
->>> fix !CONFIG_NUMA compilation).
->>
->>
->> Hi David,
->>
->> Thanks for your work!
->>
->> I am trying your https://github.com/davidhildenbrand/linux.git virtio-mem-v5
->> which works fine for me, but just a 'DMA error' happens when a vm start with
->> less than 2GB memory, Do I missed sth?
+On 05.06.20 11:25, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
 > 
-> Please use the virtio-mem-v4 branch for now, v5 is still under
-> construction (and might be scrapped completely if v4 goes upstream as is).
+> This commit adds typos I found from another works.
 > 
-> Looks like a DMA issue. Your're hotplugging 1GB, which should not really
-> eat too much memory. There was a similar issue reported by Hui in [1],
-> which boiled down to wrong usage of the swiotlb parameter.
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> ---
+>  scripts/spelling.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> In such cases you should always try to reproduce with hotplug of a
-> sam-sized DIMM. E.g., hotplugging a 1GB DIMM should result in the same
-> issue.
+> diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+> index d9cd24cf0d40..c45e9afaab2d 100644
+> --- a/scripts/spelling.txt
+> +++ b/scripts/spelling.txt
+> @@ -59,6 +59,7 @@ actualy||actually
+>  acumulating||accumulating
+>  acumulative||accumulative
+>  acumulator||accumulator
+> +acutally||actually
+>  adapater||adapter
+>  addional||additional
+>  additionaly||additionally
+> @@ -249,6 +250,7 @@ calescing||coalescing
+>  calle||called
+>  callibration||calibration
+>  callled||called
+> +callser||caller
+>  calucate||calculate
+>  calulate||calculate
+>  cancelation||cancellation
+> @@ -671,6 +673,7 @@ hanlde||handle
+>  hanled||handled
+>  happend||happened
+>  harware||hardware
+> +havind||having
+>  heirarchically||hierarchically
+>  helpfull||helpful
+>  hexdecimal||hexadecimal
+> @@ -845,6 +848,7 @@ logile||logfile
+>  loobpack||loopback
+>  loosing||losing
+>  losted||lost
+> +maangement||management
+>  machinary||machinery
+>  maibox||mailbox
+>  maintainance||maintenance
+> @@ -905,6 +909,7 @@ modfiy||modify
+>  modulues||modules
+>  momery||memory
+>  memomry||memory
+> +monitring||monitoring
+>  monochorome||monochrome
+>  monochromo||monochrome
+>  monocrome||monochrome
+> @@ -1010,6 +1015,7 @@ partiton||partition
+>  pased||passed
+>  passin||passing
+>  pathes||paths
+> +pattrns||patterns
+>  pecularities||peculiarities
+>  peformance||performance
+>  peforming||performing
+> @@ -1256,6 +1262,7 @@ shoule||should
+>  shrinked||shrunk
+>  siginificantly||significantly
+>  signabl||signal
+> +significanly||significantly
+>  similary||similarly
+>  similiar||similar
+>  simlar||similar
+> @@ -1371,6 +1378,7 @@ thead||thread
+>  therfore||therefore
+>  thier||their
+>  threds||threads
+> +threee||three
+>  threshhold||threshold
+>  thresold||threshold
+>  throught||through
+> @@ -1410,6 +1418,7 @@ tyep||type
+>  udpate||update
+>  uesd||used
+>  uknown||unknown
+> +usccess||success
+>  usupported||unsupported
+>  uncommited||uncommitted
+>  unconditionaly||unconditionally
 > 
-> What does your .config specify for CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE?
-> 
-> I'll try to reproduce with v4 briefly.
 
-I guess I know what's happening here. In case we only have DMA memory
-when booting, we don't reserve swiotlb buffers. Once we hotplug memory
-and online ZONE_NORMAL, we don't have any swiotlb DMA bounce buffers to
-map such PFNs (total 0 (slots), used 0 (slots)).
-
-Can you try with "swiotlb=force" on the kernel cmdline?
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
