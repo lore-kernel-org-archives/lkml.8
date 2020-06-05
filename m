@@ -2,100 +2,98 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E214CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 245772074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94C42074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nezISLCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgFETLs (ORCPT
+        id S1727932AbgFETOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 15:11:48 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37773 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgFETLs (ORCPT
+        Fri, 5 Jun 2020 15:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgFETOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 15:11:48 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e4so13104353ljn.4;
-        Fri, 05 Jun 2020 12:11:46 -0700 (PDT)
+        Fri, 5 Jun 2020 15:14:52 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68C3C08C5C2;
+        Fri,  5 Jun 2020 12:14:50 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a25so11284402ejg.5;
+        Fri, 05 Jun 2020 12:14:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q8+7spbokzVe6hSGhArvhH2DUs4dawK0jPKpMA3EIRw=;
+        b=nezISLCo1uQculSQVrIIM0g26zADuq2ly3qWTrcXSxvEFhvWADjwyAi5ar9PmZAAVQ
+         fvUw0liy7Wg4kzjuS/C/RwUE2uW0J5tHJRIGkI0COg6MeyNjq1XDvFBPbpkSv7XMAsVe
+         FTYWPs4r/Fq6MKcw21pZReqtKJfwubRlk2sj/GJvzNhCe7SE2f/VA+2c36rrvnrtix+L
+         y10aVKitXJ3LARmA+t5qi8ObFEtDGR/EmHXOPxsYs0ta2feao3YvP/2DxFaJnPNTnjPu
+         duFc4v6THfsgDvHG8cw0s0I2ATMUFibq1kkYX/e+LFZMttwPTMMibNh/Kl7+soipRd45
+         P+YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=itfl8twhNK2a01fSikoJ1WeP6OOUKm4LjLdSnPiLkNY=;
-        b=iPGdLlR9Z6FpdFTWicTyOsa9xj0CEmNhN0o77X4rFfSmNcUWW4kQ8lhRRqYyhbAOTn
-         ll1sPPHcYhaiXYgUOYFMiJQyH4k65nwiSEPVkXlfMajbB0N6y1zYFv/Evd93HLOsJMON
-         6ZKzJ5bCnyQq2YuUDdLZstL/y4P21JUYPRPfWHh8RvPXhhtjysxZaI6nbbndQqGBt9hM
-         GYY0EaMrqddRXu7ofuCOhANYlNqJcutYs27eF951sjNupCBbWEGojpq00BZgA9povy8B
-         CMxUBKcoXDfMDwzd5mtIA5SfToQCV8NZnd69bvRZkhtMo9QsBCiwAePSyVn3n5mlCinT
-         AY5w==
-X-Gm-Message-State: AOAM533b2fMI2a1fhSCpLPfBv6CH6jttO81vmiRW/X/6nBxduGgAzgo1
-        uRBxQyKPj9xsIyiBH4g/XCQ=
-X-Google-Smtp-Source: ABdhPJyt999fMsfqRpqBx+qUDcuiZY/tELpIV88AIrheu8EY5jh0/Pq0DSrZkPA2rm6c+jthAplkNA==
-X-Received: by 2002:a2e:b5bc:: with SMTP id f28mr4926246ljn.451.1591384305399;
-        Fri, 05 Jun 2020 12:11:45 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id 1sm1288171lft.95.2020.06.05.12.11.44
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q8+7spbokzVe6hSGhArvhH2DUs4dawK0jPKpMA3EIRw=;
+        b=MG5HMU1q5XgXzZk9Gn0GlpdTHRB1TP/5BDOXMwQqlTw9h/XE671lJeB+WivW04cAGN
+         jzDQTBYqjbvKU3TvOUlBl2IBpkC+6lSh2/M8ZU/zYm6hnUSYllrwvXS0gd390XhVfPe7
+         PwwxtlS2b0a0WBasa69XdDnR3HvZoNI/GfKGNKTFXe1mnk2t5NtSGeduuJuylr64ZWR/
+         WQX0prvK21euST4pxn7V5EnRm2PFt8vYniKgg0xldDAsXWeXxaKx2iwVmiIbMCCuUyV+
+         SW99tCivLi640Fc4mwc8ONMIOg8YTb9JDl53HNly0t6sp02PV4lWpjXZxHjbr/cygAjv
+         om7A==
+X-Gm-Message-State: AOAM531y/bC0pddh6Xu6egywfOcIDgheeIhoa+nmYp8PlK4socGhvbjc
+        /VFnJSfKMmGV74ZykSVX29s=
+X-Google-Smtp-Source: ABdhPJxmtiX4IgBA7i3W5z4AeLrtYeTjOpx/paBoRrzKyGKX20q08jsKI3aYB7uyCfVSfDqCXzPzVw==
+X-Received: by 2002:a17:906:2c08:: with SMTP id e8mr9979623ejh.385.1591384489595;
+        Fri, 05 Jun 2020 12:14:49 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5bfcfd.dynamic.kabel-deutschland.de. [95.91.252.253])
+        by smtp.gmail.com with ESMTPSA id ck11sm5123614ejb.41.2020.06.05.12.14.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 12:11:44 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Vishal Kulkarni <vishal@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Denis Efremov <efremov@linux.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cxgb4: Use kfree() instead kvfree() where appropriate
-Date:   Fri,  5 Jun 2020 22:11:44 +0300
-Message-Id: <20200605191144.78083-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 05 Jun 2020 12:14:49 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] scsi: ufs: cleanup UFS driver
+Date:   Fri,  5 Jun 2020 21:14:37 +0200
+Message-Id: <20200605191439.19313-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kfree(buf) in blocked_fl_read() because the memory is allocated with
-kzalloc(). Use kfree(t) in blocked_fl_write() because the memory is
-allocated with kcalloc().
+From: Bean Huo <beanhuo@micron.com>
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Cleanup, no functional change
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-index 41315712deb8..828499256004 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-@@ -3357,7 +3357,7 @@ static ssize_t blocked_fl_read(struct file *filp, char __user *ubuf,
- 		       adap->sge.egr_sz, adap->sge.blocked_fl);
- 	len += sprintf(buf + len, "\n");
- 	size = simple_read_from_buffer(ubuf, count, ppos, buf, len);
--	kvfree(buf);
-+	kfree(buf);
- 	return size;
- }
- 
-@@ -3374,12 +3374,12 @@ static ssize_t blocked_fl_write(struct file *filp, const char __user *ubuf,
- 
- 	err = bitmap_parse_user(ubuf, count, t, adap->sge.egr_sz);
- 	if (err) {
--		kvfree(t);
-+		kfree(t);
- 		return err;
- 	}
- 
- 	bitmap_copy(adap->sge.blocked_fl, t, adap->sge.egr_sz);
--	kvfree(t);
-+	kfree(t);
- 	return count;
- }
- 
+Changelog:
+
+v1 - 2:
+    1. split patch (tomas.winkler@intel.com)
+
+Bean Huo (2):
+  scsi: ufs: Add SPDX GPL-2.0 to replace GPL v2 boilerplate
+  scsi: ufs: remove wrapper function ufshcd_setup_clocks()
+
+ drivers/scsi/ufs/ufs.h           | 27 +-------------
+ drivers/scsi/ufs/ufshcd-pci.c    | 25 +------------
+ drivers/scsi/ufs/ufshcd-pltfrm.c | 27 +-------------
+ drivers/scsi/ufs/ufshcd.c        | 62 +++++++-------------------------
+ drivers/scsi/ufs/ufshcd.h        | 27 +-------------
+ drivers/scsi/ufs/ufshci.h        | 27 +-------------
+ 6 files changed, 18 insertions(+), 177 deletions(-)
+
 -- 
-2.26.2
+2.17.1
 
