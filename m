@@ -2,424 +2,112 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F086C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 603AE2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88AD2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591360247;
+	bh=jHd1X1zusmajFRLzbO/kks6/nt/Ek1Ar51xZCouIZN0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=etUoAGAafR5GdreYPxxGfYFVwaauwlCo8cw2n/mGHNTvDjqbmxbbFNDe8Ou8lGS/p
+	 hP1cGKfIJLqKEyYkX819j0Q2PkjKQwVfOmwp47yIdxVs/XAVMPpNC4oF3AcC2+GxKz
+	 50QXW6movuHa5kscC9XGJRKzNni9ox7EYfDKhleg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgFEMag (ORCPT
+        id S1726802AbgFEMZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:30:36 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:64269 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgFEMac (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:30:32 -0400
-X-Originating-IP: 90.112.45.105
-Received: from [192.168.1.11] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 99A19240005;
-        Fri,  5 Jun 2020 12:30:18 +0000 (UTC)
-Subject: Re: [PATCH v4 1/4] riscv: Move kernel mapping to vmalloc zone
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-riscv <linux-riscv@lists.infradead.org>
-References: <20200603080010.13366-1-alex@ghiti.fr>
- <20200603080010.13366-2-alex@ghiti.fr>
- <CANXhq0qjWKCqbY4BmCa1wZKYY_Dax8fGj1s4Q_ZipaFPo9dz8g@mail.gmail.com>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <5dc1b95b-607f-177e-fd00-ee8c1a93e66f@ghiti.fr>
-Date:   Fri, 5 Jun 2020 08:30:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 5 Jun 2020 08:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbgFEMZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:25:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEF262075B;
+        Fri,  5 Jun 2020 12:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591359922;
+        bh=jHd1X1zusmajFRLzbO/kks6/nt/Ek1Ar51xZCouIZN0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eFnIrvpF9zrOGlz/uzEgdA3BISZYtqh3mhEqaLeYoxOXR61ytOOoDt96VWaDsmE/p
+         2jd58XAVagftYeZY7kShgZhKuw8pAEoi6iGnK32FydcrKQIGwZJNNw1eIrIlB56OE1
+         pKZUr+K9H9rDLvlFhSuLhcpajfTpBmPdqkaDtThU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 04/17] sched/fair: Don't NUMA balance for kthreads
+Date:   Fri,  5 Jun 2020 08:25:03 -0400
+Message-Id: <20200605122517.2882338-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200605122517.2882338-1-sashal@kernel.org>
+References: <20200605122517.2882338-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CANXhq0qjWKCqbY4BmCa1wZKYY_Dax8fGj1s4Q_ZipaFPo9dz8g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zong,
+From: Jens Axboe <axboe@kernel.dk>
 
-Le 6/3/20 à 10:52 PM, Zong Li a écrit :
-> On Wed, Jun 3, 2020 at 4:01 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
->> This is a preparatory patch for relocatable kernel.
->>
->> The kernel used to be linked at PAGE_OFFSET address and used to be loaded
->> physically at the beginning of the main memory. Therefore, we could use
->> the linear mapping for the kernel mapping.
->>
->> But the relocated kernel base address will be different from PAGE_OFFSET
->> and since in the linear mapping, two different virtual addresses cannot
->> point to the same physical address, the kernel mapping needs to lie outside
->> the linear mapping.
->>
->> In addition, because modules and BPF must be close to the kernel (inside
->> +-2GB window), the kernel is placed at the end of the vmalloc zone minus
->> 2GB, which leaves room for modules and BPF. The kernel could not be
->> placed at the beginning of the vmalloc zone since other vmalloc
->> allocations from the kernel could get all the +-2GB window around the
->> kernel which would prevent new modules and BPF programs to be loaded.
->>
->> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
->> ---
->>   arch/riscv/boot/loader.lds.S     |  3 +-
->>   arch/riscv/include/asm/page.h    | 10 +++++-
->>   arch/riscv/include/asm/pgtable.h | 38 ++++++++++++++-------
->>   arch/riscv/kernel/head.S         |  3 +-
->>   arch/riscv/kernel/module.c       |  4 +--
->>   arch/riscv/kernel/vmlinux.lds.S  |  3 +-
->>   arch/riscv/mm/init.c             | 58 +++++++++++++++++++++++++-------
->>   arch/riscv/mm/physaddr.c         |  2 +-
->>   8 files changed, 88 insertions(+), 33 deletions(-)
->>
->> diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
->> index 47a5003c2e28..62d94696a19c 100644
->> --- a/arch/riscv/boot/loader.lds.S
->> +++ b/arch/riscv/boot/loader.lds.S
->> @@ -1,13 +1,14 @@
->>   /* SPDX-License-Identifier: GPL-2.0 */
->>
->>   #include <asm/page.h>
->> +#include <asm/pgtable.h>
->>
->>   OUTPUT_ARCH(riscv)
->>   ENTRY(_start)
->>
->>   SECTIONS
->>   {
->> -       . = PAGE_OFFSET;
->> +       . = KERNEL_LINK_ADDR;
->>
->>          .payload : {
->>                  *(.payload)
->> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
->> index 2d50f76efe48..48bb09b6a9b7 100644
->> --- a/arch/riscv/include/asm/page.h
->> +++ b/arch/riscv/include/asm/page.h
->> @@ -90,18 +90,26 @@ typedef struct page *pgtable_t;
->>
->>   #ifdef CONFIG_MMU
->>   extern unsigned long va_pa_offset;
->> +extern unsigned long va_kernel_pa_offset;
->>   extern unsigned long pfn_base;
->>   #define ARCH_PFN_OFFSET                (pfn_base)
->>   #else
->>   #define va_pa_offset           0
->> +#define va_kernel_pa_offset    0
->>   #define ARCH_PFN_OFFSET                (PAGE_OFFSET >> PAGE_SHIFT)
->>   #endif /* CONFIG_MMU */
->>
->>   extern unsigned long max_low_pfn;
->>   extern unsigned long min_low_pfn;
->> +extern unsigned long kernel_virt_addr;
->>
->>   #define __pa_to_va_nodebug(x)  ((void *)((unsigned long) (x) + va_pa_offset))
->> -#define __va_to_pa_nodebug(x)  ((unsigned long)(x) - va_pa_offset)
->> +#define linear_mapping_va_to_pa(x)     ((unsigned long)(x) - va_pa_offset)
->> +#define kernel_mapping_va_to_pa(x)     \
->> +       ((unsigned long)(x) - va_kernel_pa_offset)
->> +#define __va_to_pa_nodebug(x)          \
->> +       (((x) >= PAGE_OFFSET) ?         \
->> +               linear_mapping_va_to_pa(x) : kernel_mapping_va_to_pa(x))
->>
->>   #ifdef CONFIG_DEBUG_VIRTUAL
->>   extern phys_addr_t __virt_to_phys(unsigned long x);
->> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
->> index 35b60035b6b0..94ef3b49dfb6 100644
->> --- a/arch/riscv/include/asm/pgtable.h
->> +++ b/arch/riscv/include/asm/pgtable.h
->> @@ -11,23 +11,29 @@
->>
->>   #include <asm/pgtable-bits.h>
->>
->> -#ifndef __ASSEMBLY__
->> -
->> -/* Page Upper Directory not used in RISC-V */
->> -#include <asm-generic/pgtable-nopud.h>
->> -#include <asm/page.h>
->> -#include <asm/tlbflush.h>
->> -#include <linux/mm_types.h>
->> -
->> -#ifdef CONFIG_MMU
->> +#ifndef CONFIG_MMU
->> +#define KERNEL_VIRT_ADDR       PAGE_OFFSET
->> +#define KERNEL_LINK_ADDR       PAGE_OFFSET
->> +#else
->> +/*
->> + * Leave 2GB for modules and BPF that must lie within a 2GB range around
->> + * the kernel.
->> + */
->> +#define KERNEL_VIRT_ADDR       (VMALLOC_END - SZ_2G + 1)
->> +#define KERNEL_LINK_ADDR       KERNEL_VIRT_ADDR
->>
->>   #define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
->>   #define VMALLOC_END      (PAGE_OFFSET - 1)
->>   #define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
->>
->>   #define BPF_JIT_REGION_SIZE    (SZ_128M)
->> -#define BPF_JIT_REGION_START   (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
->> -#define BPF_JIT_REGION_END     (VMALLOC_END)
->> +#define BPF_JIT_REGION_START   PFN_ALIGN((unsigned long)&_end)
->> +#define BPF_JIT_REGION_END     (BPF_JIT_REGION_START + BPF_JIT_REGION_SIZE)
->> +
->> +#ifdef CONFIG_64BIT
->> +#define VMALLOC_MODULE_START   BPF_JIT_REGION_END
->> +#define VMALLOC_MODULE_END     (((unsigned long)&_start & PAGE_MASK) + SZ_2G)
->> +#endif
->>
->>   /*
->>    * Roughly size the vmemmap space to be large enough to fit enough
->> @@ -57,9 +63,16 @@
->>   #define FIXADDR_SIZE     PGDIR_SIZE
->>   #endif
->>   #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
->> -
->>   #endif
->>
->> +#ifndef __ASSEMBLY__
->> +
->> +/* Page Upper Directory not used in RISC-V */
->> +#include <asm-generic/pgtable-nopud.h>
->> +#include <asm/page.h>
->> +#include <asm/tlbflush.h>
->> +#include <linux/mm_types.h>
->> +
->>   #ifdef CONFIG_64BIT
->>   #include <asm/pgtable-64.h>
->>   #else
->> @@ -483,6 +496,7 @@ static inline void __kernel_map_pages(struct page *page, int numpages, int enabl
->>
->>   #define kern_addr_valid(addr)   (1) /* FIXME */
->>
->> +extern char _start[];
->>   extern void *dtb_early_va;
->>   void setup_bootmem(void);
->>   void paging_init(void);
->> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
->> index 98a406474e7d..8f5bb7731327 100644
->> --- a/arch/riscv/kernel/head.S
->> +++ b/arch/riscv/kernel/head.S
->> @@ -49,7 +49,8 @@ ENTRY(_start)
->>   #ifdef CONFIG_MMU
->>   relocate:
->>          /* Relocate return address */
->> -       li a1, PAGE_OFFSET
->> +       la a1, kernel_virt_addr
->> +       REG_L a1, 0(a1)
->>          la a2, _start
->>          sub a1, a1, a2
->>          add ra, ra, a1
->> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
->> index 8bbe5dbe1341..1a8fbe05accf 100644
->> --- a/arch/riscv/kernel/module.c
->> +++ b/arch/riscv/kernel/module.c
->> @@ -392,12 +392,10 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
->>   }
->>
->>   #if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
->> -#define VMALLOC_MODULE_START \
->> -        max(PFN_ALIGN((unsigned long)&_end - SZ_2G), VMALLOC_START)
->>   void *module_alloc(unsigned long size)
->>   {
->>          return __vmalloc_node_range(size, 1, VMALLOC_MODULE_START,
->> -                                   VMALLOC_END, GFP_KERNEL,
->> +                                   VMALLOC_MODULE_END, GFP_KERNEL,
->>                                      PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
->>                                      __builtin_return_address(0));
->>   }
->> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
->> index 0339b6bbe11a..a9abde62909f 100644
->> --- a/arch/riscv/kernel/vmlinux.lds.S
->> +++ b/arch/riscv/kernel/vmlinux.lds.S
->> @@ -4,7 +4,8 @@
->>    * Copyright (C) 2017 SiFive
->>    */
->>
->> -#define LOAD_OFFSET PAGE_OFFSET
->> +#include <asm/pgtable.h>
->> +#define LOAD_OFFSET KERNEL_LINK_ADDR
->>   #include <asm/vmlinux.lds.h>
->>   #include <asm/page.h>
->>   #include <asm/cache.h>
->> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
->> index 736de6c8739f..37be2eb45e58 100644
->> --- a/arch/riscv/mm/init.c
->> +++ b/arch/riscv/mm/init.c
->> @@ -22,6 +22,9 @@
->>
->>   #include "../kernel/head.h"
->>
->> +unsigned long kernel_virt_addr = KERNEL_VIRT_ADDR;
->> +EXPORT_SYMBOL(kernel_virt_addr);
->> +
->>   unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
->>                                                          __page_aligned_bss;
->>   EXPORT_SYMBOL(empty_zero_page);
->> @@ -178,8 +181,12 @@ void __init setup_bootmem(void)
->>   }
->>
->>   #ifdef CONFIG_MMU
->> +/* Offset between linear mapping virtual address and kernel load address */
->>   unsigned long va_pa_offset;
->>   EXPORT_SYMBOL(va_pa_offset);
->> +/* Offset between kernel mapping virtual address and kernel load address */
->> +unsigned long va_kernel_pa_offset;
->> +EXPORT_SYMBOL(va_kernel_pa_offset);
->>   unsigned long pfn_base;
->>   EXPORT_SYMBOL(pfn_base);
->>
->> @@ -271,7 +278,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
->>          if (mmu_enabled)
->>                  return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
->>
->> -       pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
->> +       pmd_num = (va - kernel_virt_addr) >> PGDIR_SHIFT;
->>          BUG_ON(pmd_num >= NUM_EARLY_PMDS);
->>          return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
->>   }
->> @@ -372,14 +379,30 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
->>   #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
->>   #endif
->>
->> +static uintptr_t load_pa, load_sz;
->> +
->> +void create_kernel_page_table(pgd_t *pgdir, uintptr_t map_size)
-> It could be static if this function is only used in this file, as
-> kbuild test reported.
-> Apart from this, it looks good to me.
-> Reviewed-by: Zong Li <zong.li@sifive.com>
+[ Upstream commit 18f855e574d9799a0e7489f8ae6fd8447d0dd74a ]
 
+Stefano reported a crash with using SQPOLL with io_uring:
 
-Thanks, that was the missing Reviewed-by of this series :) I send a v5 
-right now.
+  BUG: kernel NULL pointer dereference, address: 00000000000003b0
+  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
+  RIP: 0010:task_numa_work+0x4f/0x2c0
+  Call Trace:
+   task_work_run+0x68/0xa0
+   io_sq_thread+0x252/0x3d0
+   kthread+0xf9/0x130
+   ret_from_fork+0x35/0x40
 
-Looking forward to seeing your KASLR patchset on top of that.
+which is task_numa_work() oopsing on current->mm being NULL.
 
-Alex
+The task work is queued by task_tick_numa(), which checks if current->mm is
+NULL at the time of the call. But this state isn't necessarily persistent,
+if the kthread is using use_mm() to temporarily adopt the mm of a task.
 
+Change the task_tick_numa() check to exclude kernel threads in general,
+as it doesn't make sense to attempt ot balance for kthreads anyway.
 
->
->> +{
->> +       uintptr_t va, end_va;
->> +
->> +       end_va = kernel_virt_addr + load_sz;
->> +       for (va = kernel_virt_addr; va < end_va; va += map_size)
->> +               create_pgd_mapping(pgdir, va,
->> +                                  load_pa + (va - kernel_virt_addr),
->> +                                  map_size, PAGE_KERNEL_EXEC);
->> +}
->> +
->>   asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->>   {
->>          uintptr_t va, end_va;
->> -       uintptr_t load_pa = (uintptr_t)(&_start);
->> -       uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
->>          uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
->>
->> +       load_pa = (uintptr_t)(&_start);
->> +       load_sz = (uintptr_t)(&_end) - load_pa;
->> +
->>          va_pa_offset = PAGE_OFFSET - load_pa;
->> +       va_kernel_pa_offset = kernel_virt_addr - load_pa;
->> +
->>          pfn_base = PFN_DOWN(load_pa);
->>
->>          /*
->> @@ -402,26 +425,22 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
->>          create_pmd_mapping(fixmap_pmd, FIXADDR_START,
->>                             (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
->>          /* Setup trampoline PGD and PMD */
->> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
->> +       create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
->>                             (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
->> -       create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
->> +       create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
->>                             load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
->>   #else
->>          /* Setup trampoline PGD */
->> -       create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
->> +       create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
->>                             load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
->>   #endif
->>
->>          /*
->> -        * Setup early PGD covering entire kernel which will allows
->> +        * Setup early PGD covering entire kernel which will allow
->>           * us to reach paging_init(). We map all memory banks later
->>           * in setup_vm_final() below.
->>           */
->> -       end_va = PAGE_OFFSET + load_sz;
->> -       for (va = PAGE_OFFSET; va < end_va; va += map_size)
->> -               create_pgd_mapping(early_pg_dir, va,
->> -                                  load_pa + (va - PAGE_OFFSET),
->> -                                  map_size, PAGE_KERNEL_EXEC);
->> +       create_kernel_page_table(early_pg_dir, map_size);
->>
->>          /* Create fixed mapping for early FDT parsing */
->>          end_va = __fix_to_virt(FIX_FDT) + FIX_FDT_SIZE;
->> @@ -441,6 +460,7 @@ static void __init setup_vm_final(void)
->>          uintptr_t va, map_size;
->>          phys_addr_t pa, start, end;
->>          struct memblock_region *reg;
->> +       static struct vm_struct vm_kernel = { 0 };
->>
->>          /* Set mmu_enabled flag */
->>          mmu_enabled = true;
->> @@ -467,10 +487,22 @@ static void __init setup_vm_final(void)
->>                  for (pa = start; pa < end; pa += map_size) {
->>                          va = (uintptr_t)__va(pa);
->>                          create_pgd_mapping(swapper_pg_dir, va, pa,
->> -                                          map_size, PAGE_KERNEL_EXEC);
->> +                                          map_size, PAGE_KERNEL);
->>                  }
->>          }
->>
->> +       /* Map the kernel */
->> +       create_kernel_page_table(swapper_pg_dir, PMD_SIZE);
->> +
->> +       /* Reserve the vmalloc area occupied by the kernel */
->> +       vm_kernel.addr = (void *)kernel_virt_addr;
->> +       vm_kernel.phys_addr = load_pa;
->> +       vm_kernel.size = (load_sz + PMD_SIZE - 1) & ~(PMD_SIZE - 1);
->> +       vm_kernel.flags = VM_MAP | VM_NO_GUARD;
->> +       vm_kernel.caller = __builtin_return_address(0);
->> +
->> +       vm_area_add_early(&vm_kernel);
->> +
->>          /* Clear fixmap PTE and PMD mappings */
->>          clear_fixmap(FIX_PTE);
->>          clear_fixmap(FIX_PMD);
->> diff --git a/arch/riscv/mm/physaddr.c b/arch/riscv/mm/physaddr.c
->> index e8e4dcd39fed..35703d5ef5fd 100644
->> --- a/arch/riscv/mm/physaddr.c
->> +++ b/arch/riscv/mm/physaddr.c
->> @@ -23,7 +23,7 @@ EXPORT_SYMBOL(__virt_to_phys);
->>
->>   phys_addr_t __phys_addr_symbol(unsigned long x)
->>   {
->> -       unsigned long kernel_start = (unsigned long)PAGE_OFFSET;
->> +       unsigned long kernel_start = (unsigned long)kernel_virt_addr;
->>          unsigned long kernel_end = (unsigned long)_end;
->>
->>          /*
->> --
->> 2.20.1
->>
+Reported-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 603d3d3cbf77..efb15f0f464b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2682,7 +2682,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 	/*
+ 	 * We don't care about NUMA placement if we don't have memory.
+ 	 */
+-	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
++	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+ 		return;
+ 
+ 	/*
+-- 
+2.25.1
+
