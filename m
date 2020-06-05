@@ -2,51 +2,52 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF64BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8789E208B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4282D208A7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366648;
-	bh=D4r6OX5ozF6eB8oFMSsc6D1ClCAeu0v3Pg3qY5inDxI=;
+	s=default; t=1591366653;
+	bh=apuCjmo26NYIkrsmBlJnUuWxCVNtEFStOXDpG99cVcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CV7uJySv/3v1C0nf64D7d4P6UpbsgSyZseHA4cSTj8LopbyA3NawcNXOjqrb7EBjH
-	 HS5/rNtW32+oP0UyIqIkFdi/ea3iAX8kF8+O245XteHwMd5+7jupqZl58sdq5zaNWg
-	 QRvkKhzadWG1OXTBmMKPdnzPm3Y4zaSzR61aWjxE=
+	b=BnvUwOfuBkafL6QkqQTABb0gyIb99UJzN71jQiN176hAe4xt3rm2dUjWytNfBkwuC
+	 RZXE+t1ZvrOZwp4wWc6tXAUhkAabud7IMrzJEWN9kxPBX3cpZQudc1i1nIsXWzI7qW
+	 NMNOYCe8vQFpaU4QbwHlnIHCckQU2IAWzxMjPnqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgFEOR1 (ORCPT
+        id S1728490AbgFEORb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbgFEORQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:16 -0400
+        id S1728454AbgFEORY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:17:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4171208FE;
-        Fri,  5 Jun 2020 14:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9F4620835;
+        Fri,  5 Jun 2020 14:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366635;
-        bh=D4r6OX5ozF6eB8oFMSsc6D1ClCAeu0v3Pg3qY5inDxI=;
+        s=default; t=1591366644;
+        bh=apuCjmo26NYIkrsmBlJnUuWxCVNtEFStOXDpG99cVcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAbK+27rAXlvb9Qs2QVCHydzrwP26N9Vd23lEcZcOgraL3mZfB5YoyQkL33ofGyXC
-         qfTxv9+rYKKzM/s9d6vxnZZcl6X6RF++qg/HouvSsURmTmJygXfxvSfTZHrxYWbKSQ
-         ii9KjH59Wfjz6oIXLtAKz3pyiF0ylv3MHULBI2wk=
+        b=0lFU3I7iqACAD6E7uxSCTK7EgfFzqeINtr4IRtQMMxVk+LjsZQ20f4V0fFm0kyXAF
+         vO+zG2ud79c2nZpudrnqUht5vpFy1TeGa/T4aic43Avj2XRobgzcF66AY2N4wZOdhq
+         mb1Y5QNBzV75pcx9NjfzvTaPGw+/TUBEAa1/G+tM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Shumate <scott.shumate@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.6 32/43] HID: sony: Fix for broken buttons on DS3 USB dongles
-Date:   Fri,  5 Jun 2020 16:15:02 +0200
-Message-Id: <20200605140154.206385189@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 04/43] ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT
+Date:   Fri,  5 Jun 2020 16:14:34 +0200
+Message-Id: <20200605140152.737938994@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
 References: <20200605140152.493743366@linuxfoundation.org>
@@ -59,60 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Shumate <scott.shumate@gmail.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-commit e72455b898ac678667c5674668186b4670d87d11 upstream.
+[ Upstream commit 799587d5731db9dcdafaac4002463aa7d9cd6cf7 ]
 
-Fix for non-working buttons on knock-off USB dongles for Sony
-controllers. These USB dongles are used to connect older Sony DA/DS1/DS2
-controllers via USB and are common on Amazon, AliExpress, etc.  Without
-the patch, the square, X, and circle buttons do not function.  These
-dongles used to work prior to kernel 4.10 but removing the global DS3
-report fixup in commit e19a267b9987 ("HID: sony: DS3 comply to Linux gamepad
-spec") exposed the problem.
+Elide invalid configuration EZNPS + ARCv2, triggered by a
+make allyesconfig build.
 
-Many people reported the problem on the Ubuntu forums and are working
-around the problem by falling back to the 4.9 hid-sony driver.
+Granted the root cause is in source code (asm/barrier.h) where we check
+for ARCv2 before PLAT_EZNPS, but it is better to avoid such combinations
+at onset rather then baking subtle nuances into code.
 
-The problem stems from these dongles incorrectly reporting their button
-count as 13 instead of 16.  This patch fixes up the report descriptor by
-changing the button report count to 16 and removing 3 padding bits.
-
-Cc: stable@vger.kernel.org
-Fixes: e19a267b9987 ("HID: sony: DS3 comply to Linux gamepad spec")
-Signed-off-by: Scott Shumate <scott.shumate@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-sony.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arc/plat-eznps/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/hid/hid-sony.c
-+++ b/drivers/hid/hid-sony.c
-@@ -867,6 +867,23 @@ static u8 *sony_report_fixup(struct hid_
- 	if (sc->quirks & PS3REMOTE)
- 		return ps3remote_fixup(hdev, rdesc, rsize);
+diff --git a/arch/arc/plat-eznps/Kconfig b/arch/arc/plat-eznps/Kconfig
+index a931d0a256d0..a645bca5899a 100644
+--- a/arch/arc/plat-eznps/Kconfig
++++ b/arch/arc/plat-eznps/Kconfig
+@@ -6,6 +6,7 @@
  
-+	/*
-+	 * Some knock-off USB dongles incorrectly report their button count
-+	 * as 13 instead of 16 causing three non-functional buttons.
-+	 */
-+	if ((sc->quirks & SIXAXIS_CONTROLLER_USB) && *rsize >= 45 &&
-+		/* Report Count (13) */
-+		rdesc[23] == 0x95 && rdesc[24] == 0x0D &&
-+		/* Usage Maximum (13) */
-+		rdesc[37] == 0x29 && rdesc[38] == 0x0D &&
-+		/* Report Count (3) */
-+		rdesc[43] == 0x95 && rdesc[44] == 0x03) {
-+		hid_info(hdev, "Fixing up USB dongle report descriptor\n");
-+		rdesc[24] = 0x10;
-+		rdesc[38] = 0x10;
-+		rdesc[44] = 0x00;
-+	}
-+
- 	return rdesc;
- }
- 
+ menuconfig ARC_PLAT_EZNPS
+ 	bool "\"EZchip\" ARC dev platform"
++	depends on ISA_ARCOMPACT
+ 	select CPU_BIG_ENDIAN
+ 	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
+ 	select EZNPS_GIC
+-- 
+2.25.1
+
 
 
