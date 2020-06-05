@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D86C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00581C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2539E208C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD47208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366745;
-	bh=/+psG/TnWWOYGagcAsbidUdz7CsKvovDDASWLY2rwGo=;
+	s=default; t=1591366753;
+	bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M6/YMkZtifJ2cuA4PwuO3S8A84vsLMyJZN42EjIKsp/rwg19tQuUwbQus39rvNKVc
-	 U1Dn5+NN5lSsjdVstUEOnAdZdZn32HZrOqGRcMs8rLLUNd05WyXKsfYfYz21ZWOuHw
-	 SD6IXtNQGzWk8SlOHMs8CoIdflHwUpyWWeRbXTgw=
+	b=qDQH7tB0oL5dQY1XDECmB3hdFn/WjZ7wUuBPQKeMlTjUZEZolYPtWSV4sw7rfCq7x
+	 soT1aiS29kxJCFyDSKYh+cwtY9ZELc0+j5HLekJhk6zFRl719jRz1q2uWUGZaoEcTG
+	 FlltjyUFl4w9Zt7zgpDPmlNcx+IC7eRXtwI0et9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgFEOTE (ORCPT
+        id S1728802AbgFEOTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:19:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbgFEOTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:00 -0400
+        id S1728178AbgFEOTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 846FD2086A;
-        Fri,  5 Jun 2020 14:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C446208A9;
+        Fri,  5 Jun 2020 14:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366740;
-        bh=/+psG/TnWWOYGagcAsbidUdz7CsKvovDDASWLY2rwGo=;
+        s=default; t=1591366742;
+        bh=k4MdHdKkOwBPSJvJDuxl0DBhK1L0mnYClje06rnuBRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVtiXYJk1CwZ86sBQ1o90s59mPToogQ3N3ZH7uLT7QA1FdTmOpsfN2UQPNx7RSwGz
-         KVQZ3Q/xY1Er6WmAyH0maoTcGj9hh//qe1aJ5+p1S+P2iwhpbS+NRVQR9oSIiknxrb
-         OOCYjL/kOxJhwmCmghKc0lB3z6mqyZqAgQMaHJl4=
+        b=P7O0fFJ7ZXIO6dj0OTyCG8mg3AJXdTYeVzmwl08P71AIHZEIw8t8WpixZm4qiruOw
+         bWFZC64Jpf/dOHti+zu5X3DAqzu2/bAIrTsIRfhfZ6r47JnaI5DufvmP8QtLfrm3oU
+         h9xbrMiHMcaA13cwaUbq7UORUBOOPnPzrPb4aXw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Felix Fietkau <nbd@nbd.name>
-Subject: [PATCH 5.4 07/38] mt76: mt76x02u: Add support for newer versions of the XBox One wifi adapter
-Date:   Fri,  5 Jun 2020 16:14:50 +0200
-Message-Id: <20200605140252.988544163@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
+        Daniel Axtens <dja@axtens.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        David Rientjes <rientjes@google.com>,
+        Akash Goel <akash.goel@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 08/38] kernel/relay.c: handle alloc_percpu returning NULL in relay_open
+Date:   Fri,  5 Jun 2020 16:14:51 +0200
+Message-Id: <20200605140253.051743118@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 References: <20200605140252.542768750@linuxfoundation.org>
@@ -59,41 +71,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Daniel Axtens <dja@axtens.net>
 
-commit b2934279c3e9719145ff4090d4ab951e340df17e upstream.
+commit 54e200ab40fc14c863bcc80a51e20b7906608fce upstream.
 
-The current version has a new USB ID and reports as an 0x7632 device.
-Adding the IDs results in it working out of the box.
+alloc_percpu() may return NULL, which means chan->buf may be set to NULL.
+In that case, when we do *per_cpu_ptr(chan->buf, ...), we dereference an
+invalid pointer:
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  BUG: Unable to handle kernel data access at 0x7dae0000
+  Faulting instruction address: 0xc0000000003f3fec
+  ...
+  NIP relay_open+0x29c/0x600
+  LR relay_open+0x270/0x600
+  Call Trace:
+     relay_open+0x264/0x600 (unreliable)
+     __blk_trace_setup+0x254/0x600
+     blk_trace_setup+0x68/0xa0
+     sg_ioctl+0x7bc/0x2e80
+     do_vfs_ioctl+0x13c/0x1300
+     ksys_ioctl+0x94/0x130
+     sys_ioctl+0x48/0xb0
+     system_call+0x5c/0x68
+
+Check if alloc_percpu returns NULL.
+
+This was found by syzkaller both on x86 and powerpc, and the reproducer
+it found on powerpc is capable of hitting the issue as an unprivileged
+user.
+
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: Akash Goel <akash.goel@intel.com>
+Cc: Andrew Donnellan <ajd@linux.ibm.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Salvatore Bonaccorso <carnil@debian.org>
+Cc: <stable@vger.kernel.org>	[4.10+]
+Link: http://lkml.kernel.org/r/20191219121256.26480-1-dja@axtens.net
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt76/mt76x02.h    |    1 +
- drivers/net/wireless/mediatek/mt76/mt76x2/usb.c |    1 +
- 2 files changed, 2 insertions(+)
+ kernel/relay.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/wireless/mediatek/mt76/mt76x02.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02.h
-@@ -212,6 +212,7 @@ static inline bool is_mt76x0(struct mt76
- static inline bool is_mt76x2(struct mt76x02_dev *dev)
- {
- 	return mt76_chip(&dev->mt76) == 0x7612 ||
-+	       mt76_chip(&dev->mt76) == 0x7632 ||
- 	       mt76_chip(&dev->mt76) == 0x7662 ||
- 	       mt76_chip(&dev->mt76) == 0x7602;
- }
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-@@ -18,6 +18,7 @@ static const struct usb_device_id mt76x2
- 	{ USB_DEVICE(0x7392, 0xb711) },	/* Edimax EW 7722 UAC */
- 	{ USB_DEVICE(0x0846, 0x9053) },	/* Netgear A6210 */
- 	{ USB_DEVICE(0x045e, 0x02e6) },	/* XBox One Wireless Adapter */
-+	{ USB_DEVICE(0x045e, 0x02fe) },	/* XBox One Wireless Adapter */
- 	{ },
- };
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -581,6 +581,11 @@ struct rchan *relay_open(const char *bas
+ 		return NULL;
  
+ 	chan->buf = alloc_percpu(struct rchan_buf *);
++	if (!chan->buf) {
++		kfree(chan);
++		return NULL;
++	}
++
+ 	chan->version = RELAYFS_CHANNEL_VERSION;
+ 	chan->n_subbufs = n_subbufs;
+ 	chan->subbuf_size = subbuf_size;
 
 
