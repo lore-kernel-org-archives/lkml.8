@@ -2,61 +2,100 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5BFC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 345F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0B32074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13002206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="da8gJKvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbgFEM7V (ORCPT
+        id S1726965AbgFENBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:59:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58398 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbgFEM7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:59:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 044DAACAE;
-        Fri,  5 Jun 2020 12:59:21 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 14:59:18 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Yannick Cote <ycote@redhat.com>
-Cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        joe.lawrence@redhat.com, linux-kernel@vger.kernel.org,
-        mbenes@suse.cz, kamalesh@linux.vnet.ibm.com
-Subject: Re: [PATCH v2 3/4] selftests/livepatch: more verification in
- test-klp-shadow-vars
-Message-ID: <20200605125917.GB5099@linux-b0ei>
-References: <20200603182058.109470-1-ycote@redhat.com>
- <20200603182058.109470-4-ycote@redhat.com>
+        Fri, 5 Jun 2020 09:01:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgFENBI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:01:08 -0400
+X-Greylist: delayed 433 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 05 Jun 2020 06:01:08 PDT
+Received: from forward100j.mail.yandex.net (forward100j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19614C08C5C2;
+        Fri,  5 Jun 2020 06:01:08 -0700 (PDT)
+Received: from mxback29j.mail.yandex.net (mxback29j.mail.yandex.net [IPv6:2a02:6b8:0:1619::229])
+        by forward100j.mail.yandex.net (Yandex) with ESMTP id 415BB50E1CF8;
+        Fri,  5 Jun 2020 15:53:53 +0300 (MSK)
+Received: from myt6-016ca1315a73.qloud-c.yandex.net (myt6-016ca1315a73.qloud-c.yandex.net [2a02:6b8:c12:4e0e:0:640:16c:a131])
+        by mxback29j.mail.yandex.net (mxback/Yandex) with ESMTP id G4rje8wOp6-rqX4HNSC;
+        Fri, 05 Jun 2020 15:53:53 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1591361633;
+        bh=VJMA/iFx5qnj+SiqbTodaIRBgsoZ8cL9lhU50Jcr54A=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=da8gJKvqe1CpJ+nZoMXtJZlrOVzIL76aHmeBAuCFamEm558vlSBb7rh9nz9Hg6eHj
+         XA4BXtjgt93F8FC+z24AHVayoNqV5xJB2QVLvqcUc7ukeJhTafJGp9WAqRCY37AHvh
+         fFRazvzKGqdz+foc/fqK6/OM9PH5ifm2VJW3HxFs=
+Authentication-Results: mxback29j.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by myt6-016ca1315a73.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id Xi2KixYWAG-rpXaOZPu;
+        Fri, 05 Jun 2020 15:53:52 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Alexander Lobakin <bloodyreaper@yandex.ru>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sven Auhagen <sven.auhagen@voleatech.de>,
+        Alexander Lobakin <bloodyreaper@yandex.ru>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH net] net: ethernet: mvneta: fix MVNETA_SKB_HEADROOM alignment
+Date:   Fri,  5 Jun 2020 15:53:24 +0300
+Message-Id: <20200605125324.52474-1-bloodyreaper@yandex.ru>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200603182058.109470-4-ycote@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-06-03 14:20:57, Yannick Cote wrote:
-> This change makes the test feel more familiar with narrowing to a
-> typical usage by operating on a number of identical structure instances
-> and populating the same two new shadow variables symmetrically while
-> keeping the same testing and verification criteria for the extra
-> variables.
-> 
-> Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-> Acked-by: Miroslav Benes <mbenes@suse.cz>
-> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-> Signed-off-by: Yannick Cote <ycote@redhat.com>
+Commit ca23cb0bc50f ("mvneta: MVNETA_SKB_HEADROOM set last 3 bits to zero")
+added headroom alignment check against 8.
+Hovewer (if we imagine that NET_SKB_PAD or XDP_PACKET_HEADROOM is not
+aligned to cacheline size), it actually aligns headroom down, while
+skb/xdp_buff headroom should be *at least* equal to one of the values
+(depending on XDP prog presence).
+So, fix the check to align the value up. This satisfies both
+hardware/driver and network stack requirements.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Fixes: ca23cb0bc50f ("mvneta: MVNETA_SKB_HEADROOM set last 3 bits to zero")
+Signed-off-by: Alexander Lobakin <bloodyreaper@yandex.ru>
+---
+ drivers/net/ethernet/marvell/mvneta.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best Regards,
-Petr
+diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+index 011cd26953d9..4cc9abd61c43 100644
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -325,7 +325,7 @@
+ 	      cache_line_size())
+ 
+ /* Driver assumes that the last 3 bits are 0 */
+-#define MVNETA_SKB_HEADROOM	(max(XDP_PACKET_HEADROOM, NET_SKB_PAD) & ~0x7)
++#define MVNETA_SKB_HEADROOM	ALIGN(max(NET_SKB_PAD, XDP_PACKET_HEADROOM), 8)
+ #define MVNETA_SKB_PAD	(SKB_DATA_ALIGN(sizeof(struct skb_shared_info) + \
+ 			 MVNETA_SKB_HEADROOM))
+ #define MVNETA_SKB_SIZE(len)	(SKB_DATA_ALIGN(len) + MVNETA_SKB_PAD)
+-- 
+2.27.0
+
