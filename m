@@ -2,63 +2,66 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3558FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A85FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05ED4206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56BCE2065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yiwIMii5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="am/Y1U79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgFEWNz (ORCPT
+        id S1728381AbgFEWOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:13:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56534 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728157AbgFEWNy (ORCPT
+        Fri, 5 Jun 2020 18:14:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39766 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728358AbgFEWN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:13:54 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 055MDq9F083614;
-        Fri, 5 Jun 2020 17:13:52 -0500
+        Fri, 5 Jun 2020 18:13:57 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 055MDtJB102392;
+        Fri, 5 Jun 2020 17:13:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1591395232;
-        bh=bfbj0ZmfHj4Nq5JyfXLL6/Je6X3wkUQXXHeCX4U1k54=;
-        h=From:To:CC:Subject:Date;
-        b=yiwIMii5VPM+zgba3v4wuTz0d0b+yVixNyk4bxJJP/vch6mOp7kHGBLjs11IPPW49
-         Mjqb1DJi8CRLVfeMKYJvDH8o6XY9jZ4SgVeA5vdTM5B9Xf+ftFBBpOa2BgvptDMTcC
-         /U6lCNUd9x3QeuJ0DXTLFX2AMjeGeJg4OOWl0YLc=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 055MDqkM019134;
-        Fri, 5 Jun 2020 17:13:52 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 5 Jun
- 2020 17:13:52 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+        s=ti-com-17Q1; t=1591395235;
+        bh=CqhMR0vpxK3mUc0IoHvlSWIJeFVNbMt/uzsO/ymUbxA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=am/Y1U79kUIAuWnHkxFomzQlgO0Zo9gQ/MrpJETc4/bZlVXAe1xL2KpQzNqJ6bXhU
+         06H5l+zsiLHosFcEksBCSPvL2k+BKAipVnKK5YzxLZgLxGtoaghGgpBsMdJuSmgNCz
+         fXrrZNszpMO/YqkrSZD194MIncDKKLu7bTPFcYII=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 055MDtLd074194
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 5 Jun 2020 17:13:55 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
  (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 5 Jun
+ 2020 17:13:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 5 Jun 2020 17:13:52 -0500
+ Frontend Transport; Fri, 5 Jun 2020 17:13:54 -0500
 Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 055MDq8q120069;
-        Fri, 5 Jun 2020 17:13:52 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 055MDsI1120118;
+        Fri, 5 Jun 2020 17:13:54 -0500
 Received: from localhost ([10.250.70.56])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 055MDqZ3005494;
-        Fri, 5 Jun 2020 17:13:52 -0500
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 055MDsbA005514;
+        Fri, 5 Jun 2020 17:13:54 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Suman Anna <s-anna@ti.com>
-Subject: [PATCH 0/2] DRA7 timer/mailbox dts fixes
-Date:   Fri, 5 Jun 2020 17:13:45 -0500
-Message-ID: <20200605221347.15735-1-s-anna@ti.com>
+Subject: [PATCH 2/2] ARM: dts: dra7-evm-common: Fix duplicate mailbox nodes
+Date:   Fri, 5 Jun 2020 17:13:47 -0500
+Message-ID: <20200605221347.15735-3-s-anna@ti.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200605221347.15735-1-s-anna@ti.com>
+References: <20200605221347.15735-1-s-anna@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,28 +71,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+The mailbox nodes defined in various dts files have been moved to
+common dra7-ipu-dsp-common.dtsi and dra74-ipu-dsp-common.dtsi files
+in commit a11a2f73b32d ("ARM: dts: dra7-ipu-dsp-common: Move mailboxes
+into common files"), but the nodes were erroneously left out in the
+dra7-evm-common.dtsi file. Fix this by removing these duplicate nodes.
 
-The following 2 patches are couple of minor fixes that clean up
-couple of commits from the "ARM: dts: dra7/am57xx: remoteproc
-support" series [1]. Please pick these for the 5.8-rc fixes.
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ arch/arm/boot/dts/dra7-evm-common.dtsi | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-The issues look to be result of incorrect rebase-conflict resolution
-of the downstream TI patches based on 5.4 kernel.
-
-regards
-Suman
-
-[1] https://patchwork.kernel.org/cover/11508091/
-
-Suman Anna (2):
-  ARM: dts: dra7: Fix timer nodes properly for timer_sys_ck clocks
-  ARM: dts: dra7-evm-common: Fix duplicate mailbox nodes
-
- arch/arm/boot/dts/dra7-evm-common.dtsi | 20 ---------------
- arch/arm/boot/dts/dra7-l4.dtsi         | 34 ++++++++++++--------------
- 2 files changed, 16 insertions(+), 38 deletions(-)
-
+diff --git a/arch/arm/boot/dts/dra7-evm-common.dtsi b/arch/arm/boot/dts/dra7-evm-common.dtsi
+index f89a64cbcd53..2cf6a529d4ad 100644
+--- a/arch/arm/boot/dts/dra7-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra7-evm-common.dtsi
+@@ -245,26 +245,6 @@ &mcasp3 {
+ 	rx-num-evt = <32>;
+ };
+ 
+-&mailbox5 {
+-	status = "okay";
+-	mbox_ipu1_ipc3x: mbox_ipu1_ipc3x {
+-		status = "okay";
+-	};
+-	mbox_dsp1_ipc3x: mbox_dsp1_ipc3x {
+-		status = "okay";
+-	};
+-};
+-
+-&mailbox6 {
+-	status = "okay";
+-	mbox_ipu2_ipc3x: mbox_ipu2_ipc3x {
+-		status = "okay";
+-	};
+-	mbox_dsp2_ipc3x: mbox_dsp2_ipc3x {
+-		status = "okay";
+-	};
+-};
+-
+ &pcie1_rc {
+ 	status = "okay";
+ };
 -- 
 2.26.0
 
