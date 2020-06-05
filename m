@@ -2,172 +2,137 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9771C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B926F2074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:37:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="Ws/vknZe"
+	by mail.kernel.org (Postfix) with ESMTP id 87FDE2074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgFEPhR (ORCPT
+        id S1728072AbgFEPi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgFEPhQ (ORCPT
+        Fri, 5 Jun 2020 11:38:26 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:48993 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726568AbgFEPi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:37:16 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EE5C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:37:16 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 205so10101747qkg.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=6dIRalDKukNHz3swE/kQj/FCPxkqgYRrJWqT5xc0928=;
-        b=Ws/vknZem3s0dSVcrFTtK798SXVRdP/M5djs99ILMOwUF3cYzeW1g9WXvvvNqkBz1c
-         2s0fX+GDycNfAm1Zk8aKEYTel3pvPQNw3TvZ5lSnSFJD/GaPBDFpDBlOSrfC+dS0GJpY
-         g1vQRbXfD0Bc8xzezZKeS8KF7wzKj4OHElgffB0AmLr4Bt866+sOb0ZW6wtN5r0LwPNl
-         tNBN4Icemp1Xad2Osx0yClhDGcvW8Ou6RoZmZlMTARp+a2j4iKY7VaS7pbLDFSIgLvs3
-         Ptj6JycT1S8cCe5/dq3TPnQKZK0nn67ia33gCcb8kvvPpd7R2zQ54A7OvbsFobVpromX
-         sqtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=6dIRalDKukNHz3swE/kQj/FCPxkqgYRrJWqT5xc0928=;
-        b=J1wZrTeOpLk4InQwGBmOF7rsUZvixIaH2ayGK7lPyUu2EWICM/GA50wq1SiYJy1ydW
-         hU7Yn+SIaf9Q3XiKG2P7+0Lf5plGwPqLh+obnnOoMUJ+HCjx6AfaoD3JnuPFIcsztFrJ
-         qGNU7ftmyvq6EJrGCRFybXKnStp9Tuizg8yf7aS7hTnzrZhRLF9KZX3zGSTE+l6lw+fv
-         n6MafLvJLcOLB82A4q41SBbXAS6JUg+Hg0tiQiZjHLrZlhZp6LDXrYjPbeIGDhpTuEsL
-         wuAvDJsaeabrriqcUWElkeRlb/F+AcAuIsCJFZAiBH/fb6zCjtkt5gs/JFdDCWN/R/x7
-         EyrA==
-X-Gm-Message-State: AOAM531uWT/GvaVAXIJ69/zBiPesctQTe9M3Q979sGMgNx9IFGRZJllh
-        UcRqWyDW4Q9iOkGUxvM020I4bg==
-X-Google-Smtp-Source: ABdhPJwSva/8aulW2zIjT1mFgpKBNkLomhs6UlAbs0vzaebZnojmGDUsgoBL6g8XrramHpl+0a0UVg==
-X-Received: by 2002:a37:8ec3:: with SMTP id q186mr10814060qkd.231.1591371435604;
-        Fri, 05 Jun 2020 08:37:15 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id h5sm67524qkk.108.2020.06.05.08.37.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 08:37:14 -0700 (PDT)
-Message-ID: <6be2b7794c469a434befc2f71f83cf918f4e1b4b.camel@ndufresne.ca>
-Subject: Re: [PATCH 1/5] media: videodev2: add Compressed Framebuffer pixel
- formats
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Neil Armstrong <narmstrong@baylibre.com>, hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Maxime Jourdan <mjourdan@baylibre.com>
-Date:   Fri, 05 Jun 2020 11:37:13 -0400
-In-Reply-To: <02aa06fd8397b77c9a75d3a8399cb55d3b4d39c1.camel@ndufresne.ca>
-References: <20200604135317.9235-1-narmstrong@baylibre.com>
-         <20200604135317.9235-2-narmstrong@baylibre.com>
-         <02aa06fd8397b77c9a75d3a8399cb55d3b4d39c1.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Fri, 5 Jun 2020 11:38:26 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1jhEQF-003Ms0-JB; Fri, 05 Jun 2020 17:38:19 +0200
+Received: from p57bd9955.dip0.t-ipconnect.de ([87.189.153.85] helo=[192.168.178.139])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1jhEQF-003tDP-C6; Fri, 05 Jun 2020 17:38:19 +0200
+Subject: Re: [GIT PULL] sh: remove sh5 support
+To:     Rich Felker <dalias@libc.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
+        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200424221948.1120587-1-arnd@arndb.de>
+ <20200507143552.GA28683@infradead.org> <20200528054600.GA29717@infradead.org>
+ <20200528161416.GY1079@brightrain.aerifal.cx>
+ <20200529143059.GA25475@infradead.org>
+ <20200529175335.GK1079@brightrain.aerifal.cx>
+ <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
+ <20200601181259.GV1079@brightrain.aerifal.cx>
+ <20200602013332.GY1079@brightrain.aerifal.cx>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
+Date:   Fri, 5 Jun 2020 17:38:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200602013332.GY1079@brightrain.aerifal.cx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.153.85
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le vendredi 05 juin 2020 à 11:35 -0400, Nicolas Dufresne a écrit :
-> Le jeudi 04 juin 2020 à 15:53 +0200, Neil Armstrong a écrit :
-> > From: Maxime Jourdan <mjourdan@baylibre.com>
-> > 
-> > Add two generic Compressed Framebuffer pixel formats to be used
-> > with a modifier when imported back in another subsystem like DRM/KMS.
-> > 
-> > These pixel formats represents generic 8bits and 10bits compressed buffers
-> > with a vendor specific layout.
-> > 
-> > These are aligned with the DRM_FORMAT_YUV420_8BIT and DRM_FORMAT_YUV420_10BIT
-> > used to describe the underlying compressed buffers used for ARM Framebuffer
-> > Compression. In the Amlogic case, the compression is different but the
-> > underlying buffer components is the same.
-> > 
-> > Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
-> >  include/uapi/linux/videodev2.h       | 9 +++++++++
-> >  2 files changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > index 2322f08a98be..8f14adfd5bc5 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > @@ -1447,6 +1447,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
-> >  		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
-> >  		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
-> >  		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
-> > +		case V4L2_PIX_FMT_YUV420_8BIT:	descr = "Compressed YUV 4:2:0 8-bit Format"; break;
-> > +		case V4L2_PIX_FMT_YUV420_10BIT:	descr = "Compressed YUV 4:2:0 10-bit Format"; break;
-> 
-> When I read the DRM documentation [0], I'm reading that YUV420_8BIT
-> definition matches V4L2_PIX_FMT_YVU420 and V4L2_PIX_FMT_YVU420M fully.
-> In fact, on DRM side, to represent that format you want to expose here,
-> they will strictly combine this generic format (documented un-
-> compressed) with a modifier generated with the macro
-> DRM_FORMAT_MOD_ARM_AFBC(*). And only the combination represent a unique
-> and share-able format.
+Hi Rich!
 
-[0] https://www.kernel.org/doc/html/v5.5-rc1/gpu/afbc.html
+On 6/2/20 3:33 AM, Rich Felker wrote:
+>>>> [PATCH 1/2] arch/sh: vmlinux.scr
+>>>> https://marc.info/?l=linux-sh&m=158429470120959&w=2
+>>
+>> OK.
+> 
+> Included in -mm.
 
-> 
-> In absence of modifier in V4L2 API, this compressed format should be
-> named accordingly to the compressed algorithm used (something like
-> FMT_YUV420_8BIT_AML_FBC). So I believe these format name cannot be
-> copied as-is like this, as they can only introduce more ambiguity in
-> the already quite hard to follow naming of pixel formats. In fact, it
-> is very common to see multiple different vendor compressions on the
-> same SoC, so I don't really believe a "generic" compressed format make
-> sense. To site one, the IMX8M, which got Verrisillicon/Vivante DEC400
-> on the GPU, and the Hantro G2 compression format. Both will apply to
-> NV12 class of format so in DRM they would be NV12 + modifier, and the
-> combination forms the unique format. Now, in term of sharing, they must
-> be differiented by userspace, as support for compression/decompression
-> is heterogeneous (in that case the GPU does not support Hantro G2
-> decompression or compression, and the VPU does not support DEC400).
-> 
-> I'll remind that the modifier implementation has great value and is
-> much more scalable then the current V4L2 approach. There has been some
-> early proposal for this, maybe it's time to prioritize because this
-> list will starts growing with hundred or even thousands or format,
-> which is clearly indicated by the increase of modifier generator macro
-> on the DRM side.
-> 
-> >  		default:
-> >  			if (fmt->description[0])
-> >  				return;
-> > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> > index c3a1cf1c507f..90b9949acb8a 100644
-> > --- a/include/uapi/linux/videodev2.h
-> > +++ b/include/uapi/linux/videodev2.h
-> > @@ -705,6 +705,15 @@ struct v4l2_pix_format {
-> >  #define V4L2_PIX_FMT_FWHT     v4l2_fourcc('F', 'W', 'H', 'T') /* Fast Walsh Hadamard Transform (vicodec) */
-> >  #define V4L2_PIX_FMT_FWHT_STATELESS     v4l2_fourcc('S', 'F', 'W', 'H') /* Stateless FWHT (vicodec) */
-> >  
-> > +/*
-> > + * Compressed Luminance+Chrominance meta-formats
-> > + * In these formats, the component ordering is specified (Y, followed by U
-> > + * then V), but the exact Linear layout is undefined.
-> > + * These formats can only be used with a non-Linear modifier.
-> > + */
-> > +#define V4L2_PIX_FMT_YUV420_8BIT	v4l2_fourcc('Y', 'U', '0', '8') /* 1-plane YUV 4:2:0 8-bit */
-> > +#define V4L2_PIX_FMT_YUV420_10BIT	v4l2_fourcc('Y', 'U', '1', '0') /* 1-plane YUV 4:2:0 10-bit */
-> > +
-> >  /*  Vendor-specific formats   */
-> >  #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
-> >  #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov hw compress */
+I just had a look at your tree and it looks you forgot to merge the second
+patch of the series, see:
 
+> https://marc.info/?l=linux-sh&m=158429470221261&w=2
+
+Can you include the patch as well? And would it be okay to send a PR to Linus
+after that?
+
+Thanks,
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
