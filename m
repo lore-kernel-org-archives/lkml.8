@@ -2,175 +2,229 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9295C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C156C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7352067B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6432067B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgFEKSC convert rfc822-to-8bit (ORCPT
+        id S1726484AbgFEKSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:18:02 -0400
-Received: from fgw20-4.mail.saunalahti.fi ([62.142.5.107]:56503 "EHLO
-        fgw20-4.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726077AbgFEKSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:18:02 -0400
-Received: from imac.makisara.private (85-131-115-176.bb.dnainternet.fi [85.131.115.176])
-        by fgw20.mail.saunalahti.fi (Halon) with ESMTPSA
-        id d43b4859-a715-11ea-ba22-005056bd6ce9;
-        Fri, 05 Jun 2020 13:17:58 +0300 (EEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v2] scsi: st: convert convert get_user_pages() -->
- pin_user_pages()
-From:   =?utf-8?B?IkthaSBNw6RraXNhcmEgKEtvbHVtYnVzKSI=?= 
-        <kai.makisara@kolumbus.fi>
-In-Reply-To: <20200526182709.99599-1-jhubbard@nvidia.com>
-Date:   Fri, 5 Jun 2020 13:17:58 +0300
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <73970197-B412-4DD5-BA26-845355AA037B@kolumbus.fi>
-References: <20200526182709.99599-1-jhubbard@nvidia.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Fri, 5 Jun 2020 06:18:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5791 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726077AbgFEKSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 06:18:30 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 553A72EAF9686645ED9E;
+        Fri,  5 Jun 2020 18:18:27 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 5 Jun 2020
+ 18:18:17 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH v3] block: Fix use-after-free in blkdev_get()
+Date:   Fri, 5 Jun 2020 18:45:58 +0800
+Message-ID: <20200605104558.16686-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In blkdev_get() we call __blkdev_get() to do some internal jobs and if
+there is some errors in __blkdev_get(), the bdput() is called which
+means we have released the refcount of the bdev (actually the refcount of
+the bdev inode). This means we cannot access bdev after that point. But
+accually bdev is still accessed in blkdev_get() after calling
+__blkdev_get(). This may leads to use-after-free if the refcount is the
+last one we released in __blkdev_get(). Let's take a look at the
+following scenerio:
 
+  CPU0            CPU1                    CPU2
+blkdev_open     blkdev_open           Remove disk
+                  bd_acquire
+		  blkdev_get
+		    __blkdev_get      del_gendisk
+					bdev_unhash_inode
+  bd_acquire          bdev_get_gendisk
+    bd_forget           failed because of unhashed
+	  bdput
+	              bdput (the last one)
+		        bdev_evict_inode
 
-> On 26. May 2020, at 21.27, John Hubbard <jhubbard@nvidia.com> wrote:
-> 
-> This code was using get_user_pages*(), in a "Case 1" scenario
-> (Direct IO), using the categorization from [1]. That means that it's
-> time to convert the get_user_pages*() + put_page() calls to
-> pin_user_pages*() + unpin_user_pages() calls.
-> 
-> There is some helpful background in [2]: basically, this is a small
-> part of fixing a long-standing disconnect between pinning pages, and
-> file systems' use of those pages.
-> 
-> Note that this effectively changes the code's behavior as well: it now
-> ultimately calls set_page_dirty_lock(), instead of SetPageDirty().This
-> is probably more accurate.
-> 
-> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-> dealing with a file backed page where we have reference on the inode it
-> hangs off." [3]
-> 
-> Also, this deletes one of the two FIXME comments (about refcounting),
-> because there is nothing wrong with the refcounting at this point.
-> 
-> [1] Documentation/core-api/pin_user_pages.rst
-> 
-> [2] "Explicit pinning of user-space pages":
->    https://lwn.net/Articles/807108/
-> 
-> [3] https://lore.kernel.org/r/20190723153640.GB720@lst.de
-> 
-> Cc: "Kai Mäkisara (Kolumbus)" <kai.makisara@kolumbus.fi>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+	  	    access bdev => use after free
 
-Acked-by: Kai Mäkisara <kai.makisara@kolumbus.fi>
+[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
+[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
+[  459.352347]
+[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
+[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[  459.354947] Call Trace:
+[  459.355337]  dump_stack+0x111/0x19e
+[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
+[  459.356523]  print_address_description+0x60/0x223
+[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
+[  459.357887]  kasan_report.cold+0xae/0x2d8
+[  459.358503]  __lock_acquire+0x24c1/0x31b0
+[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
+[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
+[  459.361123]  ? finish_task_switch+0x125/0x600
+[  459.361812]  ? finish_task_switch+0xee/0x600
+[  459.362471]  ? mark_held_locks+0xf0/0xf0
+[  459.363108]  ? __schedule+0x96f/0x21d0
+[  459.363716]  lock_acquire+0x111/0x320
+[  459.364285]  ? blkdev_get+0xce/0xbe0
+[  459.364846]  ? blkdev_get+0xce/0xbe0
+[  459.365390]  __mutex_lock+0xf9/0x12a0
+[  459.365948]  ? blkdev_get+0xce/0xbe0
+[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
+[  459.367130]  ? blkdev_get+0xce/0xbe0
+[  459.367678]  ? destroy_inode+0xbc/0x110
+[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
+[  459.368867]  ? __blkdev_get+0x3e6/0x1280
+[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
+[  459.370114]  ? blkdev_get+0xce/0xbe0
+[  459.370656]  blkdev_get+0xce/0xbe0
+[  459.371178]  ? find_held_lock+0x2c/0x110
+[  459.371774]  ? __blkdev_get+0x1280/0x1280
+[  459.372383]  ? lock_downgrade+0x680/0x680
+[  459.373002]  ? lock_acquire+0x111/0x320
+[  459.373587]  ? bd_acquire+0x21/0x2c0
+[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.374780]  blkdev_open+0x202/0x290
+[  459.375325]  do_dentry_open+0x49e/0x1050
+[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
+[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
+[  459.377192]  ? inode_permission+0xbe/0x3a0
+[  459.377818]  path_openat+0x148c/0x3f50
+[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
+[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
+[  459.380489]  ? __lock_is_held+0xad/0x140
+[  459.381093]  do_filp_open+0x1a1/0x280
+[  459.381654]  ? may_open_dev+0xf0/0xf0
+[  459.382214]  ? find_held_lock+0x2c/0x110
+[  459.382816]  ? lock_downgrade+0x680/0x680
+[  459.383425]  ? __lock_is_held+0xad/0x140
+[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
+[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
+[  459.385280]  ? __alloc_fd+0x448/0x560
+[  459.385841]  do_sys_open+0x3c3/0x500
+[  459.386386]  ? filp_open+0x70/0x70
+[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
+[  459.388342]  ? do_syscall_64+0x1a/0x520
+[  459.388930]  do_syscall_64+0xc3/0x520
+[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.390248] RIP: 0033:0x416211
+[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
+04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
+   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
+      01
+[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
+[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
+[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
+[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
+[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
+[  459.400168]
+[  459.400430] Allocated by task 20132:
+[  459.401038]  kasan_kmalloc+0xbf/0xe0
+[  459.401652]  kmem_cache_alloc+0xd5/0x280
+[  459.402330]  bdev_alloc_inode+0x18/0x40
+[  459.402970]  alloc_inode+0x5f/0x180
+[  459.403510]  iget5_locked+0x57/0xd0
+[  459.404095]  bdget+0x94/0x4e0
+[  459.404607]  bd_acquire+0xfa/0x2c0
+[  459.405113]  blkdev_open+0x110/0x290
+[  459.405702]  do_dentry_open+0x49e/0x1050
+[  459.406340]  path_openat+0x148c/0x3f50
+[  459.406926]  do_filp_open+0x1a1/0x280
+[  459.407471]  do_sys_open+0x3c3/0x500
+[  459.408010]  do_syscall_64+0xc3/0x520
+[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  459.409415]
+[  459.409679] Freed by task 1262:
+[  459.410212]  __kasan_slab_free+0x129/0x170
+[  459.410919]  kmem_cache_free+0xb2/0x2a0
+[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
+[  459.412318]  __do_softirq+0x225/0x8ac
 
-> ---
-> 
-> Hi,
-> 
-> As mentioned in the v1 review thread, we probably still want/need
-> this. Or so I claim. :) Please see what you think...
-> 
-> Changes since v1: changed the commit log, to refer to Direct IO
-> (Case 1), instead of DMA/RDMA (Case 2). And added Bart to Cc.
-> 
-> v1:
-> https://lore.kernel.org/linux-scsi/20200519045525.2446851-1-jhubbard@nvidia.com/
-> 
-> thanks,
-> John Hubbard
-> NVIDIA
+Fix this by delaying bdput() to the end of blkdev_get() which means we
+have finished accessing bdev.
 
-I am not a memory management expert, but looks correct and necessary to me
-with the current gup implementation. (You can changed Acked-by to
-Reviewed-by if it is necessary and you accept this as a review.)
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ v3: Add bdput() when __blkdev_get() calling itself failed.
+ v2: Add Reported-by tag and cc linux-block mailing list
 
-Thanks,
-Kai
+ fs/block_dev.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> 
-> drivers/scsi/st.c | 20 +++++---------------
-> 1 file changed, 5 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
-> index c5f9b348b438..1e3eda9fa231 100644
-> --- a/drivers/scsi/st.c
-> +++ b/drivers/scsi/st.c
-> @@ -4922,7 +4922,7 @@ static int sgl_map_user_pages(struct st_buffer *STbp,
-> 	unsigned long end = (uaddr + count + PAGE_SIZE - 1) >> PAGE_SHIFT;
-> 	unsigned long start = uaddr >> PAGE_SHIFT;
-> 	const int nr_pages = end - start;
-> -	int res, i, j;
-> +	int res, i;
-> 	struct page **pages;
-> 	struct rq_map_data *mdata = &STbp->map_data;
-> 
-> @@ -4944,7 +4944,7 @@ static int sgl_map_user_pages(struct st_buffer *STbp,
-> 
->         /* Try to fault in all of the necessary pages */
->         /* rw==READ means read from drive, write into memory area */
-> -	res = get_user_pages_fast(uaddr, nr_pages, rw == READ ? FOLL_WRITE : 0,
-> +	res = pin_user_pages_fast(uaddr, nr_pages, rw == READ ? FOLL_WRITE : 0,
-> 				  pages);
-> 
-> 	/* Errors and no page mapped should return here */
-> @@ -4964,8 +4964,7 @@ static int sgl_map_user_pages(struct st_buffer *STbp,
-> 	return nr_pages;
->  out_unmap:
-> 	if (res > 0) {
-> -		for (j=0; j < res; j++)
-> -			put_page(pages[j]);
-> +		unpin_user_pages(pages, res);
-> 		res = 0;
-> 	}
-> 	kfree(pages);
-> @@ -4977,18 +4976,9 @@ static int sgl_map_user_pages(struct st_buffer *STbp,
-> static int sgl_unmap_user_pages(struct st_buffer *STbp,
-> 				const unsigned int nr_pages, int dirtied)
-> {
-> -	int i;
-> -
-> -	for (i=0; i < nr_pages; i++) {
-> -		struct page *page = STbp->mapped_pages[i];
-> +	/* FIXME: cache flush missing for rw==READ */
-> +	unpin_user_pages_dirty_lock(STbp->mapped_pages, nr_pages, dirtied);
-> 
-> -		if (dirtied)
-> -			SetPageDirty(page);
-> -		/* FIXME: cache flush missing for rw==READ
-> -		 * FIXME: call the correct reference counting function
-> -		 */
-> -		put_page(page);
-> -	}
-> 	kfree(STbp->mapped_pages);
-> 	STbp->mapped_pages = NULL;
-> 
-> -- 
-> 2.26.2
-> 
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 47860e589388..d7b74e44ad5a 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1566,7 +1566,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	if (!for_part) {
+ 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
+ 		if (ret != 0) {
+-			bdput(bdev);
+ 			return ret;
+ 		}
+ 	}
+@@ -1637,8 +1636,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 				goto out_clear;
+ 			BUG_ON(for_part);
+ 			ret = __blkdev_get(whole, mode, 1);
+-			if (ret)
++			if (ret) {
++				bdput(whole);
+ 				goto out_clear;
++			}
+ 			bdev->bd_contains = whole;
+ 			bdev->bd_part = disk_get_part(disk, partno);
+ 			if (!(disk->flags & GENHD_FL_UP) ||
+@@ -1688,7 +1689,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	disk_unblock_events(disk);
+ 	put_disk_and_module(disk);
+  out:
+-	bdput(bdev);
+ 
+ 	return ret;
+ }
+@@ -1755,6 +1755,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
+ 		bdput(whole);
+ 	}
+ 
++	if (res)
++		bdput(bdev);
++
+ 	return res;
+ }
+ EXPORT_SYMBOL(blkdev_get);
+-- 
+2.21.3
 
