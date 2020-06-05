@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E36AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683FB20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F359320663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591367036;
-	bh=kT9GL7Y6XK75ZPRKJrNeL+EQ+QvF63CVbQb4WwFxR88=;
+	s=default; t=1591367041;
+	bh=ilA4Z8elbiOlh3xjoP7C2eEXxHXicILD+BN/Nzn4i78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6pix/b6dn9453wLeal2yIxky2RGIaVd8q9boJMlxh6a+VnVOKhPNrQY4XwxwNG5U
-	 s/w0BaKogcygcYPfPCnY6Uvb2ESIA/H/LOs0BPbVZb1nuQ0lkF9esLG+YtvEXoOE5e
-	 oUygIZpv36lAnFl/sPa6aAVuJEMXnrnoNL/55y+g=
+	b=oTqy2ha/MdCYsh+LXb+ZNPO0JhymaO/7PqqlbESmps7lVn+ePuYDxTvFtsf12um5a
+	 3DFwPBeTo/ga1vCt7MhyiFcoaStsDFG9Hkxz5hUJPfRbDcJBu5wvBAIzzkOxobtkT1
+	 q9ENSn2OyJQJ9aPQ/OU6kvJ6heG7Y89OMYbJP6k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgFEOSF (ORCPT
+        id S1729095AbgFEOX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48180 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbgFEORw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:17:52 -0400
+        id S1728584AbgFEOSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:18:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAB57208A9;
-        Fri,  5 Jun 2020 14:17:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0A782086A;
+        Fri,  5 Jun 2020 14:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366671;
-        bh=kT9GL7Y6XK75ZPRKJrNeL+EQ+QvF63CVbQb4WwFxR88=;
+        s=default; t=1591366685;
+        bh=ilA4Z8elbiOlh3xjoP7C2eEXxHXicILD+BN/Nzn4i78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drN2a3kRLE5CDemz5FkZUvWyqP8s59BWwZmMyaHYMuYn1op8M40q6Vf8Vz3UdtHD5
-         so21tL2N3A+2ykAFLqrR+t5r8wDslLP43lcqJRU2DVG3IGtZeRdMpj+lXoY3s5oL/R
-         Qq1wyrQvil0uCBlhHkpya+HwG3WA6nq+pIr94I6E=
+        b=nM7fBTyeEYH9cBltsnOYmicnhgvzyJs2pKrFhRplyryc3lBDgWauKHLym1zJFxkx8
+         zEtICfzZz/Ieie77SNaS7/bdUtAvmJKNpBYzJqhf1HQMN4hR3HNRFytRBq5nlKDCtC
+         bJe+ZwmDKoCeqEO9ocj47/wc2CYXFLjR+pIh6Kuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, DENG Qingfang <dqfext@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 42/43] net: dsa: mt7530: set CPU port to fallback mode
-Date:   Fri,  5 Jun 2020 16:15:12 +0200
-Message-Id: <20200605140154.731458967@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 5.4 12/38] scsi: ufs: Release clock if DMA map fails
+Date:   Fri,  5 Jun 2020 16:14:55 +0200
+Message-Id: <20200605140253.311154217@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
-References: <20200605140152.493743366@linuxfoundation.org>
+In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
+References: <20200605140252.542768750@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,71 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: DENG Qingfang <dqfext@gmail.com>
+From: Can Guo <cang@codeaurora.org>
 
-commit 38152ea37d8bdaffa22603e0a5b5b86cfa8714c9 upstream.
+commit 17c7d35f141ef6158076adf3338f115f64fcf760 upstream.
 
-Currently, setting a bridge's self PVID to other value and deleting
-the default VID 1 renders untagged ports of that VLAN unable to talk to
-the CPU port:
+In queuecommand path, if DMA map fails, it bails out with clock held.  In
+this case, release the clock to keep its usage paired.
 
-	bridge vlan add dev br0 vid 2 pvid untagged self
-	bridge vlan del dev br0 vid 1 self
-	bridge vlan add dev sw0p0 vid 2 pvid untagged
-	bridge vlan del dev sw0p0 vid 1
-	# br0 cannot send untagged frames out of sw0p0 anymore
+[mkp: applied by hand]
 
-That is because the CPU port is set to security mode and its PVID is
-still 1, and untagged frames are dropped due to VLAN member violation.
-
-Set the CPU port to fallback mode so untagged frames can pass through.
-
-Fixes: 83163f7dca56 ("net: dsa: mediatek: add VLAN support for MT7530")
-Signed-off-by: DENG Qingfang <dqfext@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/0101016ed3d66395-1b7e7fce-b74d-42ca-a88a-4db78b795d3b-000000@us-west-2.amazonses.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[EB: resolved cherry-pick conflict caused by newer kernels not having
+ the clear_bit_unlock() line]
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/dsa/mt7530.c |   11 ++++++++---
- drivers/net/dsa/mt7530.h |    6 ++++++
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/scsi/ufs/ufshcd.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -818,10 +818,15 @@ mt7530_port_set_vlan_aware(struct dsa_sw
- 		   PCR_MATRIX_MASK, PCR_MATRIX(MT7530_ALL_MEMBERS));
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -2480,6 +2480,7 @@ static int ufshcd_queuecommand(struct Sc
  
- 	/* Trapped into security mode allows packet forwarding through VLAN
--	 * table lookup.
-+	 * table lookup. CPU port is set to fallback mode to let untagged
-+	 * frames pass through.
- 	 */
--	mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
--		   MT7530_PORT_SECURITY_MODE);
-+	if (dsa_is_cpu_port(ds, port))
-+		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
-+			   MT7530_PORT_FALLBACK_MODE);
-+	else
-+		mt7530_rmw(priv, MT7530_PCR_P(port), PCR_PORT_VLAN_MASK,
-+			   MT7530_PORT_SECURITY_MODE);
- 
- 	/* Set the port as a user port which is to be able to recognize VID
- 	 * from incoming packets before fetching entry within the VLAN table.
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -148,6 +148,12 @@ enum mt7530_port_mode {
- 	/* Port Matrix Mode: Frames are forwarded by the PCR_MATRIX members. */
- 	MT7530_PORT_MATRIX_MODE = PORT_VLAN(0),
- 
-+	/* Fallback Mode: Forward received frames with ingress ports that do
-+	 * not belong to the VLAN member. Frames whose VID is not listed on
-+	 * the VLAN table are forwarded by the PCR_MATRIX members.
-+	 */
-+	MT7530_PORT_FALLBACK_MODE = PORT_VLAN(1),
-+
- 	/* Security Mode: Discard any frame due to ingress membership
- 	 * violation or VID missed on the VLAN table.
- 	 */
+ 	err = ufshcd_map_sg(hba, lrbp);
+ 	if (err) {
++		ufshcd_release(hba);
+ 		lrbp->cmd = NULL;
+ 		clear_bit_unlock(tag, &hba->lrb_in_use);
+ 		goto out;
 
 
