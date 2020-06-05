@@ -2,183 +2,191 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6532AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3292086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260882081A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:37:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="QYOVtlB1"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rrPfO2Ri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgFEGgs (ORCPT
+        id S1726216AbgFEGhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:36:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60820 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbgFEGgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:36:47 -0400
-IronPort-SDR: d7ckQZGBK6ARJaOgyvemrRoVpiDkO+W5MIqqyYOgzMcxow9ri4sjMXwHf2yUg3PT/LSPEOWCX0
- LcbomDW6UzwA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 23:36:46 -0700
-IronPort-SDR: TXA1OSg/gf9Ggbb0Lk1H5U2fuXPLgicKdO6MwxsvyNza6YhEaIienQNHlw5xRWF/CHBUgbBlBW
- m2c1lmNyd7Yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,475,1583222400"; 
-   d="scan'208";a="257950045"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga007.fm.intel.com with ESMTP; 04 Jun 2020 23:36:46 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 4 Jun 2020 23:36:45 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 4 Jun 2020 23:36:45 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 4 Jun 2020 23:36:45 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 4 Jun 2020 23:36:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZF6IYp2VuNSNTIXQMCEZM2C9HaQm7XG8GKnaa9hcUohbTB65PFa875ql5O7VoOnOVowqS8DM3Syv2dmnhiAOzKqmuR3HOQ/63bMr2sxiOm28/qDhNivIz2mGvkIZ2exDfMs6zS1x0IWLZ9TO2//3KAPL5Rqg8QaMZ/r8CVM7igoZSPzkQ390PnpI2JDXNWcuTxpO1yB3rpFE37CJcnJuIAbfcgsRbNx/yHwaYoH2YWHMUGCv4cNB/oHAZxgKIPfZ+a2f+2hRDBucSduZulQK8Szh8lSY6fKQKYM+CFDDuVajVg42Hl65d0PET6TgrhU2ylyMFWAmrHhV6sYIVNp/YA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bt6igjb9YpZy4lfUbuKwdkSyqn2SH3AHUOe06JV9j50=;
- b=Hsj2Vj50gzQOL/0cF515jxLwH68lHoone1Jyi7goXLioQjEWZj+p83leXreoaK27oTc7GAxQudEs+4DhOMDeeTUU7rlB8a8g6CtoCI9bwlGwV9XEaTes59gJCmbVacace8OqFJUL4fLWktIL6TX+JubWLFRJ+o8+VSKxHidfLPya52nJawYF6JPlJLRZtfe+Os075ZkEVBBXjnLWkc8/c/rzGRsKFMV16WoruOTJRi4BBvxpzqO4yNRQWa/9BkiKwBqaOfsnlZrDPj4ydbQ83f72CcE9IFxdX5p44TuRYhGoFFku+QroNrnzgoYjt8iWDdw+DwPY+HIrzmPheMoBpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bt6igjb9YpZy4lfUbuKwdkSyqn2SH3AHUOe06JV9j50=;
- b=QYOVtlB1kArdwpay5raNnbRevJZEAuPEofdBRsqQkvaWwheUm9Wk+xdiwYZsR/pT/wxn6L9oepnPDitJAAj+YMrRCRa2L9FhUhQNxuSmfHLclnQiDYDnJgsnaNChko5FwaajzLF4D/9ugDYivQImSbg4EZPuQ8M2lyxA2Cxx7QQ=
-Received: from BN6PR11MB1939.namprd11.prod.outlook.com (2603:10b6:404:ff::18)
- by BN6PR11MB1747.namprd11.prod.outlook.com (2603:10b6:404:102::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 5 Jun
- 2020 06:36:42 +0000
-Received: from BN6PR11MB1939.namprd11.prod.outlook.com
- ([fe80::28d8:4c35:7dcb:4e20]) by BN6PR11MB1939.namprd11.prod.outlook.com
- ([fe80::28d8:4c35:7dcb:4e20%6]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
- 06:36:42 +0000
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "See, Chin Liang" <chin.liang.see@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Nguyen, Dinh" <dinh.nguyen@intel.com>,
-        "Westergreen, Dalon" <dalon.westergreen@intel.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        "Tan, Ley Foon" <ley.foon.tan@intel.com>
-Subject: RE: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
- documentation
-Thread-Topic: [PATCH v3 10/10] net: eth: altera: update devicetree bindings
- documentation
-Thread-Index: AQHWOkLNBKZdtzZwnESIhu+vAPDAqqjJCPCAgAB7o1A=
-Date:   Fri, 5 Jun 2020 06:36:42 +0000
-Message-ID: <BN6PR11MB1939E6BAE4121A5D0340BAB0F2860@BN6PR11MB1939.namprd11.prod.outlook.com>
-References: <20200604073256.25702-1-joyce.ooi@intel.com>
- <20200604073256.25702-11-joyce.ooi@intel.com>
- <20200604222311.GA4151468@bogus>
-In-Reply-To: <20200604222311.GA4151468@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [42.189.134.147]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 83a29671-bb51-4d02-0cae-08d8091acf8f
-x-ms-traffictypediagnostic: BN6PR11MB1747:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR11MB1747C996D78838FED7B30D54F2860@BN6PR11MB1747.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 0425A67DEF
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Eu/gJaCoO9o41Hv1InbCbU2FB5lqDdU92QRTd4rpwJ+7ecMzB4CpiJuHbyYnREyunaArDgLFXC60fPQCKL5PRefmIyU6M97JKPEfTcn+ePGxGnEU5pUq2FyDMbXG5B0pB+fbtK5wBHZt8N+/XQy2pKATKZBDYr+A/UbXGG3AppUHvRHHQYe0vOyERunhHilEpsme60gAREuhd2B7GW2RomBG0UQ/qyLsC4tDrqcuLiNQFAQHt66rG3/GFb9kPpMCgBnP6aLwNlFPRoa6QcSLRflhPEtl7Gd2YTw65TnXEnGZMEZO2o29NzLaNaN3X4j+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB1939.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(136003)(39860400002)(376002)(366004)(396003)(4326008)(186003)(478600001)(6506007)(66946007)(26005)(33656002)(66476007)(15650500001)(2906002)(53546011)(5660300002)(83380400001)(52536014)(8676002)(316002)(54906003)(71200400001)(66556008)(55016002)(86362001)(64756008)(66446008)(6916009)(7696005)(8936002)(9686003)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: MJIVCkqdjQSv9kwEJ9LWEfpJsrQWAleaU4/qAWr2llhRe0i9vgaoQ0AMXMQ6yXkO0IFXV+mukIAaujYfbqxAx/TQZ62gbyvtX/PJ+QUELGHXdU6Am43X2XzzkZCl4z0oNr9TQhv2B21fI/e4LFZraqwJd9WE+zARzFkof+BYy74ctgK/LNnSNMwTEGCsn4dC7045icx/youCZDZiTUzWgkZiINXoELTzzI0ZYAsxTRYTMYdoLx7LR/tgJZRwawlijLaBANfTAq32GJmojECYYG5J/9O61XfxZSBl6MRe4FIe82JLDCa/sa8+JK74VQzW4tsHHee3qMnP1+v4RiyAU052wglKbr5PAszHcfSqsxMrssUc/DM86bWurFPtHaMsN2H8nFiXh5pt/5KrmYN5/AU5qFP73fXbfJJRvMAyT4y6WlUc/jmxwoNN8gZK3h/Zf8bOe4wDH/7VHTsRJnKZ3p6J3uQa0XaLnyip+FWn9Bn+ehlwuuZJOO9W/9oRuVU8
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83a29671-bb51-4d02-0cae-08d8091acf8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2020 06:36:42.7354
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9FTttcEEAZpE4goQU0wg0VmzHh7FjmoXWONT/LoRsJ4LA9pcCeArwikiq797wpGrslWXnBQ7lPvfgd5DM8YmzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1747
-X-OriginatorOrg: intel.com
+        Fri, 5 Jun 2020 02:37:34 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47362 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgFEGhd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 02:37:33 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200605063731euoutp01426b83ea2db4de8c16f4e09d088a035e~Vkm_OKwzb0452804528euoutp01N
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 06:37:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200605063731euoutp01426b83ea2db4de8c16f4e09d088a035e~Vkm_OKwzb0452804528euoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591339051;
+        bh=9tj/tEQdb71uWorIGg6XsfrR4cnnT28P6d8/40RKCsQ=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=rrPfO2RiKRV7aQpnYFn2vwE0rlaHDdm42LU9oT6kZHDSvTu1nfXVEJ7UeZhyDAOOG
+         wWD1Wdekt4WzQmmTD6/L4q4+xXts7FotdQWoWxCmxCXeYJR7XxpWAjoIzNW+50CdQQ
+         aC11iwBZgkYuu/hD7Ktwid0QwPScW28Us2/wSpaY=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200605063730eucas1p11dc2ce83c6dddfef3e876f5d216f9fe6~Vkm9vlb7X0280102801eucas1p1v;
+        Fri,  5 Jun 2020 06:37:30 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id E6.42.60698.A28E9DE5; Fri,  5
+        Jun 2020 07:37:30 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6~Vkm9FhU3f1352813528eucas1p2G;
+        Fri,  5 Jun 2020 06:37:29 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200605063729eusmtrp153b9abc24a971d7add630ca87d2d616c~Vkm9Ev-Q30319803198eusmtrp1X;
+        Fri,  5 Jun 2020 06:37:29 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-03-5ed9e82a548c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 12.F6.07950.928E9DE5; Fri,  5
+        Jun 2020 07:37:29 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200605063729eusmtip279e3516d7b9ff8280c0cc07211ce6c5e~Vkm8QXta80289502895eusmtip2i;
+        Fri,  5 Jun 2020 06:37:29 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH] regulator: do not balance 'boot-on' coupled regulators
+ without constraints
+Date:   Fri,  5 Jun 2020 08:37:24 +0200
+Message-Id: <20200605063724.9030-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRju2zlnO0qr4xR8s9AcdCcvGfRBIhkVh8iI6k+i1srT1Lyx47X+
+        aEat1ZxamYwyyR/GbKljmUlZmqW5dF7SZmlkmqVpUuqwm+U8y/6973PheV54aUJWSXnRsYkp
+        nCpRES8Xu5LVz763bVz/qTcq4Mu0L64qqqDwlYEhMX419ZHC5V8HEbZaKyX43fVeEba/VItw
+        V+01MZ7UNiJcZK0TYWNjvwSPzbSK8JviLhK/sHRSeLanisTqRjuBq6bZbW7sfX2/hDUZzovZ
+        vp4HYlb3O4A1d58j2VyzAbFNtnsidtLkvY8Odw2O5uJj0ziVf8gR15jLj0pR8gxkDOi+ibLQ
+        jIcGudDAbIbTdVZKg1xpGXMLwVihjhCWKQTP6o2ksEwiKBm4gP5ZbnwwOIkyBO3NJmrBkq3L
+        lThUYiYQNOMasYPwYLIR3C1pFzkIgvlJwMMOX8fszkRCo32ccswkswpayobmNVImGOwlfyRC
+        nA+UVz6eLwVMtQQ+6gudxA4YNvcTwuwOo01mJ74CLJcukoIhB8FAm1EiLBcRdJ0ucl6xFfra
+        fsz1o+cqrYOKWn8BDoWnV4zzMDBLwDbuJpReAgXVVwkBloL6rExQrwZ9052F2Pr2TmcdFnJf
+        n5kPks3d+F6tJvOQt/5/VglCBuTJpfIJSo4PSuTS/XhFAp+aqPQ7lpRgQnN/ZJltmq5Bdb+O
+        NiCGRvLFUluHLUpGKdL4zIQGBDQh95Bub7VEyaTRisyTnCrpsCo1nuMb0HKalHtKg26ORMoY
+        pSKFO8FxyZzqHyuiXbyyEIzG+ZT71nRrldmL4oqWHk8dGb+Vu7b99m4zTPkcXKltPWTYM1rm
+        GbCl067f23DmVY5XXsQTbUtV6KNTVuPS/SbNhvzi2fCdeW4hw/k/+LCw7olBKgMimyfYz77P
+        V79dpssP31Q6FBNqsY6s0X05UJ4dvWtxsjbCv8CWF6n08kmXk3yMInA9oeIVfwHfu+mtQwMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42I5/e/4PV3NFzfjDA4/NbfYOGM9q8XUh0/Y
+        LK5/ec5qsfrjY0aL8+c3sFs8mHuTyeLblQ4mi8u75rBZfO49wmgx4/w+Jou1R+6yW7z5cZbJ
+        4va8yywWZ05fYrX4d20ji0XHkW/MFhu/ejgIeuycdZfdY9OqTjaPO9f2sHn0/zXw2HK1ncWj
+        b8sqRo/jN7YzeXzeJBfAEaVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9n
+        k5Kak1mWWqRvl6CXMWX/YsaCHxIVD/s/MTUw/hDpYuTkkBAwkZj/dBVLFyMXh5DAUkaJnadX
+        MEEkZCROTmtghbCFJf5c62KDKPrEKLFu2j6wIjYBQ4mutxAJEYFWRonzr1cxgTjMAq0sEgvu
+        rGIGqRIWiJZ4uHMdC4jNIqAqcWr5E7BuXgEbiW8L/rNDrJCXWL3hAPMERp4FjAyrGEVSS4tz
+        03OLjfSKE3OLS/PS9ZLzczcxAuNg27GfW3Ywdr0LPsQowMGoxMN74+KNOCHWxLLiytxDjBIc
+        zEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYjQFWj6RWUo0OR8Yo3kl8YamhuYWlobmxubGZhZK
+        4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhhPCbJ5GBun7vZ5rDF7/UcPc6PDFv4G11a/DJjQ
+        /jvksNRLg2mZZ9/Uz+oUXHBq6kuh5e3cEcHHE2oC/yxh+8mb37YpNlBQkOtv/GPBKi/d7PBP
+        4c07OD58y2kzcRO5OClNzP//4Q+79+jVT6tri3084/GMHpWu7SbbTs+23BVhINRzOzi656YS
+        S3FGoqEWc1FxIgBd1QSsmQIAAA==
+X-CMS-MailID: 20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6
+References: <CGME20200605063729eucas1p288dd9d3acdb62cc86745cb6af5c31fc6@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Friday, June 5, 2020 6:23 AM
-> To: Ooi, Joyce <joyce.ooi@intel.com>
-> Cc: David S . Miller <davem@davemloft.net>; Jakub Kicinski
-> <kuba@kernel.org>; Thor Thayer <thor.thayer@linux.intel.com>;
-> netdev@vger.kernel.org; Rob Herring <robh+dt@kernel.org>; See, Chin
-> Liang <chin.liang.see@intel.com>; linux-kernel@vger.kernel.org; Nguyen,
-> Dinh <dinh.nguyen@intel.com>; Westergreen, Dalon
-> <dalon.westergreen@intel.com>; devicetree@vger.kernel.org; Dalon
-> Westergreen <dalon.westergreen@linux.intel.com>; Tan, Ley Foon
-> <ley.foon.tan@intel.com>
-> Subject: Re: [PATCH v3 10/10] net: eth: altera: update devicetree binding=
-s
-> documentation
->=20
-> On Thu, 04 Jun 2020 15:32:56 +0800, Ooi, Joyce wrote:
-> > From: Dalon Westergreen <dalon.westergreen@intel.com>
-> >
-> > Update devicetree bindings documentation to include msgdma prefetcher
-> > and ptp bindings.
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
-> > Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-> > ---
-> > v2: no change
-> > v3: no change
-> > ---
-> >  .../devicetree/bindings/net/altera_tse.txt         | 103
-> +++++++++++++++++----
-> >  1 file changed, 84 insertions(+), 19 deletions(-)
-> >
->=20
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions.
-> However, there's no need to repost patches *only* to add the tags. The
-> upstream maintainer will do that for acks received on the version they ap=
-ply.
->=20
-> If a tag was not added on purpose, please state why and what changed.
+Balancing of the 'boot-on' coupled regulators must wait until the clients
+set their constraints, otherwise the balancing code might change the
+voltage of the not-yet-constrained regulator to the value below the
+bootloader-configured operation point, what might cause a system crash.
+This is achieved by assuming that, the minimal voltage allowed for the
+given 'boot-on' regulator is equal to it's current voltage until
+consumers apply their constraints.
 
-Noted, will do that next time.
+Suggested-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+This is yet another approach to fix the regulator coupling on
+Exynos5800/5422 SoCs in the regulator core. I agree with Dmitry that this
+issue is generic and if possible it should be handled in the core.
+
+This patchset is another attempt to fix the regulator coupling on
+Exynos5800/5422 SoCs. Here are links to the previous attempts and
+discussions:
+
+https://lore.kernel.org/linux-samsung-soc/20191008101709.qVNy8eijBi0LynOteWFMnTg4GUwKG599n6OyYoX1Abs@z/
+https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@samsung.com/
+https://lore.kernel.org/linux-pm/cover.1589528491.git.viresh.kumar@linaro.org/
+https://lore.kernel.org/linux-pm/20200528131130.17984-1-m.szyprowski@samsung.com/
+https://lore.kernel.org/linux-samsung-soc/57cf3a15-5d9b-7636-4c69-60742e8cfae6@samsung.com/
+
+The problem is with "vdd_int" regulator coupled with "vdd_arm" on Odroid
+XU3/XU4 boards family. "vdd_arm" is handled by CPUfreq. "vdd_int" is
+handled by devfreq. CPUfreq initialized quite early during boot and it
+starts changing OPPs and "vdd_arm" value. Sometimes CPU activity during
+boot goes down and some low-frequency OPPs are selected, what in turn
+causes lowering "vdd_arm". This happens before devfreq applies its
+requirements on "vdd_int". Regulator balancing code reduces "vdd_arm"
+voltage value, what in turn causes lowering "vdd_int" value to the lowest
+possible value. This is much below the operation point of the wcore bus,
+which still runs at the highest frequency.
+
+The issue was hard to notice because in the most cases the board managed
+to boot properly, even when the regulator was set to lowest value allowed
+by the regulator constraints. However, it caused some random issues,
+which can be observed as "Unhandled prefetch abort" or low USB stability.
+
+Best regards
+Marek Szyprowski
+---
+ drivers/regulator/core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 03154f5b939f..7e9af7ea4bdf 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3553,6 +3553,17 @@ static int regulator_get_optimal_voltage(struct regulator_dev *rdev,
+ 		if (ret < 0)
+ 			return ret;
+ 
++		/*
++		 * If no constraints set yet and regulator has boot-on flag,
++		 * keep its voltage unchanged
++		 */
++		if (tmp_min == 0 && c_rdevs[i]->constraints->boot_on) {
++			ret = regulator_get_voltage_rdev(c_rdevs[i]);
++			if (ret < 0)
++				return ret;
++			tmp_min = ret;
++		}
++
+ 		ret = regulator_check_voltage(c_rdevs[i], &tmp_min, &tmp_max);
+ 		if (ret < 0)
+ 			return ret;
+-- 
+2.17.1
 
