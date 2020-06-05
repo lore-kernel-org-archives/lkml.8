@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83631C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF812065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D51A2065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xWAgvKtw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JaMz3zFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgFEVeE (ORCPT
+        id S1728451AbgFEVeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:34:04 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37290 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgFEVeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:34:04 -0400
+        Fri, 5 Jun 2020 17:34:09 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15917 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728282AbgFEVeJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:34:09 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591392843; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1591392848; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=74kYQMg37cWWzRBKSRvkQWyEWuw7QPJU/HZWXeK5DGo=; b=xWAgvKtwJ8BsXCucaU7GzSkNxJaRzs1QyXtyHCPcq6ZpKPe03Ma7tW93XEoG/MPe1xV0Pd75
- vdmIF3nbrbdku0E9RZaSSoIwNU3eD4E/W89byWkY2xENyWYJq6XLKg434ftqnuebv//O2i4W
- BH/8K4HQgzppR4Xt5pEM0FdviiA=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=Hm2daa5UdB6UwmKvXr6RGkaV/uRxAP0jfn+qlx2EokM=; b=JaMz3zFNuGR/Q2j6rLxDVw8uBApqiewWPpJVxSdXBJCUBaDRcUlaS5U2cDR78XhL0HI9ef/O
+ CM3s0FgwvmxaGAqjv0kvtxHFDkR65cupju6oALlqrh/mijcF7Zsf4xHDfawAg9R+tHCKytQj
+ GpvOM+IziXh5rTgacipflS6v5HE=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5edaba482c549984755f73fc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 21:34:00
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5edaba4e2738686126e231c4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 21:34:06
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3DFB4C433AF; Fri,  5 Jun 2020 21:33:59 +0000 (UTC)
+        id 4FAD5C43387; Fri,  5 Jun 2020 21:34:05 +0000 (UTC)
 Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1CDCAC433A0;
-        Fri,  5 Jun 2020 21:33:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1CDCAC433A0
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 099D5C433C6;
+        Fri,  5 Jun 2020 21:33:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 099D5C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -57,9 +58,9 @@ Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
         amit.kucheria@linaro.org, lukasz.luba@arm.com,
         sudeep.holla@arm.com, smasetty@codeaurora.org,
         Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v6 2/5] cpufreq: blacklist SC7180 in cpufreq-dt-platdev
-Date:   Sat,  6 Jun 2020 03:03:29 +0530
-Message-Id: <20200605213332.609-3-sibis@codeaurora.org>
+Subject: [PATCH v6 3/5] OPP: Add and export helper to set bandwidth
+Date:   Sat,  6 Jun 2020 03:03:30 +0530
+Message-Id: <20200605213332.609-4-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200605213332.609-1-sibis@codeaurora.org>
 References: <20200605213332.609-1-sibis@codeaurora.org>
@@ -70,39 +71,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SC7180 to cpufreq-dt-platdev blacklist since the actual scaling is
-handled by the 'qcom-cpufreq-hw' driver.
+Add and export 'dev_pm_opp_set_bw' to set the bandwidth
+levels associated with an OPP.
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
 
 v6:
- * No change
+ * Pass NULL to _set_opp_bw 
 
 v5:
- * Picked up R-b from Amit
+https://lkml.org/lkml/2020/5/27/7
+ * Rework the patch based on ^^
 
 v4:
- * Updated commit message [Matthias]
- * Picked up R-b from Matthias
+https://patchwork.kernel.org/patch/11019737/
+ * Pass device opp to set bw levels [Bjorn]
 
- drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/opp/core.c     | 31 +++++++++++++++++++++++++++++++
+ include/linux/pm_opp.h |  6 ++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index be85eb494a6b3..7d01df7bfa6cd 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -132,6 +132,7 @@ static const struct of_device_id blacklist[] __initconst = {
- 	{ .compatible = "qcom,apq8096", },
- 	{ .compatible = "qcom,msm8996", },
- 	{ .compatible = "qcom,qcs404", },
-+	{ .compatible = "qcom,sc7180", },
- 	{ .compatible = "qcom,sdm845", },
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index dfbd3d10410ca..6937bf45f497f 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -831,6 +831,37 @@ static int _set_required_opps(struct device *dev,
+ 	return ret;
+ }
  
- 	{ .compatible = "st,stih407", },
++/**
++ * dev_pm_opp_set_bw() - sets bandwidth levels corresponding to an opp
++ * @dev:	device for which we do this operation
++ * @opp:	opp based on which the bandwidth levels are to be configured
++ *
++ * This configures the bandwidth to the levels specified by the OPP. However
++ * if the OPP specified is NULL the bandwidth levels are cleared out.
++ *
++ * Return: 0 on success or a negative error value.
++ */
++int dev_pm_opp_set_bw(struct device *dev, struct dev_pm_opp *opp)
++{
++	struct opp_table *opp_table;
++	int ret;
++
++	opp_table = _find_opp_table(dev);
++	if (IS_ERR(opp_table)) {
++		dev_err(dev, "%s: device opp table doesn't exist\n", __func__);
++		return PTR_ERR(opp_table);
++	}
++
++	if (opp)
++		ret = _set_opp_bw(opp_table, opp, dev, false);
++	else
++		ret = _set_opp_bw(opp_table, NULL, dev, true);
++
++	dev_pm_opp_put_opp_table(opp_table);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_set_bw);
++
+ /**
+  * dev_pm_opp_set_rate() - Configure new OPP based on frequency
+  * @dev:	 device for which we do this operation
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index d5c4a329321dd..ae68417c0ae00 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -151,6 +151,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
+ void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
++int dev_pm_opp_set_bw(struct device *dev, struct dev_pm_opp *opp);
+ int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+ void dev_pm_opp_remove_table(struct device *dev);
+@@ -342,6 +343,11 @@ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_f
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int dev_pm_opp_set_bw(struct device *dev, struct dev_pm_opp *opp)
++{
++	return -EOPNOTSUPP;
++}
++
+ static inline int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask)
+ {
+ 	return -ENOTSUPP;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
