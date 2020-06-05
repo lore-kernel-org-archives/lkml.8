@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ADBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3AC0207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CF22077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgFEReO (ORCPT
+        id S1728342AbgFERe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:34:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39248 "EHLO
+        Fri, 5 Jun 2020 13:34:28 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39126 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbgFERd7 (ORCPT
+        with ESMTP id S1727884AbgFERdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:33:59 -0400
+        Fri, 5 Jun 2020 13:33:54 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: andrzej.p)
-        with ESMTPSA id 6441C2A5091
+        with ESMTPSA id 3708F2A5080
 From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
@@ -61,9 +61,9 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
         Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
         kernel@collabora.com
-Subject: [PATCH v3 6/7] platform/x86: thinkpad_acpi: Use input_device_enabled()
-Date:   Fri,  5 Jun 2020 19:33:34 +0200
-Message-Id: <20200605173335.13753-7-andrzej.p@collabora.com>
+Subject: [PATCH v3 3/7] ACPI: button: Access input device's users under appropriate mutex
+Date:   Fri,  5 Jun 2020 19:33:31 +0200
+Message-Id: <20200605173335.13753-4-andrzej.p@collabora.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200605173335.13753-1-andrzej.p@collabora.com>
 References: <20200604072853.GP89269@dtor-ws>
@@ -73,39 +73,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper. Inspecting input device's 'users' member needs to be
-done under device's mutex, so add appropriate invocations.
+Inspecting input device's 'users' member should be done under device's
+mutex, so add appropriate invocations.
 
 Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/button.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 0f704484ae1d..8ae11b8c3ebb 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -2671,9 +2671,10 @@ static void hotkey_poll_setup(const bool may_warn)
- 	const u32 poll_driver_mask = hotkey_driver_mask & hotkey_source_mask;
- 	const u32 poll_user_mask = hotkey_user_mask & hotkey_source_mask;
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index 78cfc70cb320..ff7ab291f678 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -456,13 +456,16 @@ static int acpi_button_resume(struct device *dev)
+ {
+ 	struct acpi_device *device = to_acpi_device(dev);
+ 	struct acpi_button *button = acpi_driver_data(device);
++	struct input_dev *input = button->input;
  
-+	mutex_lock(&tpacpi_inputdev->mutex);
- 	if (hotkey_poll_freq > 0 &&
- 	    (poll_driver_mask ||
--	     (poll_user_mask && tpacpi_inputdev->users > 0))) {
-+	     (poll_user_mask && input_device_enabled(tpacpi_inputdev)))) {
- 		if (!tpacpi_hotkey_task) {
- 			tpacpi_hotkey_task = kthread_run(hotkey_kthread,
- 					NULL, TPACPI_NVRAM_KTHREAD_NAME);
-@@ -2690,6 +2691,7 @@ static void hotkey_poll_setup(const bool may_warn)
- 				  poll_user_mask, poll_driver_mask);
- 		}
+ 	button->suspended = false;
+-	if (button->type == ACPI_BUTTON_TYPE_LID && button->input->users) {
++	mutex_lock(&input->mutex);
++	if (button->type == ACPI_BUTTON_TYPE_LID && input->users) {
+ 		button->last_state = !!acpi_lid_evaluate_state(device);
+ 		button->last_time = ktime_get();
+ 		acpi_lid_initialize_state(device);
  	}
-+	mutex_unlock(&tpacpi_inputdev->mutex);
++	mutex_unlock(&input->mutex);
+ 	return 0;
  }
- 
- static void hotkey_poll_setup_safe(const bool may_warn)
+ #endif
 -- 
 2.17.1
 
