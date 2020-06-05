@@ -2,79 +2,147 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECE0C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37E92074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99CE5207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPr9+gTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgFEQYf (ORCPT
+        id S1726313AbgFEQZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:24:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58252 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgFEQYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:24:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A90C5AC5F;
-        Fri,  5 Jun 2020 16:24:37 +0000 (UTC)
-Subject: Re: [PATCH v5 17/19] mm: memcg/slab: use a single set of kmem_caches
- for all allocations
-To:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-References: <20200527223404.1008856-1-guro@fb.com>
- <20200527223404.1008856-18-guro@fb.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <d7cdecbc-db24-8ced-1a86-6f4534613763@suse.cz>
-Date:   Fri, 5 Jun 2020 18:24:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200527223404.1008856-18-guro@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 5 Jun 2020 12:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgFEQZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 12:25:57 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A08DC08C5C2;
+        Fri,  5 Jun 2020 09:25:57 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q16so3831260plr.2;
+        Fri, 05 Jun 2020 09:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NmjJTQt+IYO8O2qNw9u4ijfCErC5N7IeIeNyGgIbvio=;
+        b=mPr9+gTWNwpKDsKOJGXUCBCs6GLgzT1t4M83KwCqmr/HsvIbBW/n2qeroOgyD98R6Z
+         BC+D75K4uc8/eeWfuLhSALEX9dkCM3hVPiwIQ9XLfNdPvZl/+1DogxkGfjg6toeXhG6+
+         1Alyg0VAtCIUkzVf3hLvW+1rVyUN/+cRgky20Q0toXOK4tvV1+Nor4QYqV1rk4ho/NRz
+         oeE1h6z/SJacetRElo5Z+obsMwTLvayvvv1kQklCQkKfkapXbRJ2ygj0YIC00un1Crv/
+         zNlcapqzRA7maZ64zUDSAcH9GqZAa8JHVwA8nSgQtwYirbrMTLSy4SILBGLvhLtF9SmW
+         u6mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NmjJTQt+IYO8O2qNw9u4ijfCErC5N7IeIeNyGgIbvio=;
+        b=k9kQdE6q9aOYYgo5ohKMMRm+UV2vfha289MV9qqDsPpCJt/ClJJsJk2LVhqkpdTTMP
+         FIYoKLuyszFuQevCjAGDY3klBz5o85AkR1CFb/IMLtrVhE46CtmQJM6l4APoFwqT79CW
+         /zj0M31g7SZRd8mgsleIaKBEvl6WnA3coxdnRcIw6mHWJuBNlhVOlH1FcQC2tkM1BvoD
+         SRXfDoJMahK4v1uWVJsEJrcoUKiW9wTnDS7sskMQkFuGX/kpD0Edc7CDCBdYAoFk/+aP
+         u405ztoiL/xgYJgFk/ykyj4ylCewMwoEVeX5uhnID5IEKYMpT1WMj4wKYOla+IQybMzB
+         bgLA==
+X-Gm-Message-State: AOAM531SR7EFRux+wNv/rJmLBH8bhARYWb3eJwhJci9qIz6Yv9T6EEFZ
+        Z6zjkKAA+MTVkX1jRcB5mhMaakw2
+X-Google-Smtp-Source: ABdhPJzY/o/kBe/m0Q1OcLEXBvHQsXZ1pxuuE+S08cN5pisOWBUb/sNIFZDsOJIS8dbxTeLacLU9fg==
+X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr3833000pjb.78.1591374356024;
+        Fri, 05 Jun 2020 09:25:56 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.25.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 09:25:55 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+X-Google-Original-From: Florian Fainelli <florian.fainelli@broadcom.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Krufky <mkrufky@linuxtv.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jaedon Shin <jaedon.shin@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
+        Satendra Singh Thakur <satendra.t@samsung.com>,
+        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
+        (V4L/DVB)),
+        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
+        infrastructure))
+Subject: [PATCH stable 4.9 00/21] Unbreak 32-bit DVB applications on 64-bit kernels
+Date:   Fri,  5 Jun 2020 09:24:57 -0700
+Message-Id: <20200605162518.28099-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 12:34 AM, Roman Gushchin wrote:
-> diff --git a/mm/slab.h b/mm/slab.h
-> index c49a863adb63..57b425d623e5 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-...
-> @@ -526,8 +430,7 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
->  	 * When kmemcg is not being used, both assignments should return the
->  	 * same value. but we don't want to pay the assignment price in that
->  	 * case. If it is not compiled in, the compiler should be smart enough
-> -	 * to not do even the assignment. In that case, slab_equal_or_root
-> -	 * will also be a constant.
-> +	 * to not do even the assignment.
->  	 */
->  	if (!memcg_kmem_enabled() &&
+Hi all,
 
-Just realized that this test can go away - we don't have to call virt_to_cache()
-due to kmemcg if there is just a single cache.
+This long patch series was motivated by backporting Jaedon's changes
+which add a proper ioctl compatibility layer for 32-bit applications
+running on 64-bit kernels. We have a number of Android TV-based products
+currently running on the 4.9 kernel and this was broken for them.
 
->  	    !IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
-> @@ -535,7 +438,7 @@ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
->  		return s;
->  
->  	cachep = virt_to_cache(x);
-> -	WARN_ONCE(cachep && !slab_equal_or_root(cachep, s),
-> +	WARN_ONCE(cachep && cachep != s,
->  		  "%s: Wrong slab cache. %s but object is from %s\n",
->  		  __func__, s->name, cachep->name);
->  	return cachep;
+Thanks to Robert McConnell for identifying and providing the patches in
+their initial format.
+
+In order for Jaedon's patches to apply cleanly a number of changes were
+applied to support those changes. If you deem the patch series too big
+please let me know.
+
+Thanks
+
+Colin Ian King (2):
+  media: dvb_frontend: ensure that inital front end status initialized
+  media: dvb_frontend: initialize variable s with FE_NONE instead of 0
+
+Jaedon Shin (3):
+  media: dvb_frontend: Add unlocked_ioctl in dvb_frontend.c
+  media: dvb_frontend: Add compat_ioctl callback
+  media: dvb_frontend: Add commands implementation for compat ioct
+
+Katsuhiro Suzuki (1):
+  media: dvb_frontend: fix wrong cast in compat_ioctl
+
+Mauro Carvalho Chehab (14):
+  media: dvb/frontend.h: move out a private internal structure
+  media: dvb/frontend.h: document the uAPI file
+  media: dvb_frontend: get rid of get_property() callback
+  media: stv0288: get rid of set_property boilerplate
+  media: stv6110: get rid of a srate dead code
+  media: friio-fe: get rid of set_property()
+  media: dvb_frontend: get rid of set_property() callback
+  media: dvb_frontend: cleanup dvb_frontend_ioctl_properties()
+  media: dvb_frontend: cleanup ioctl handling logic
+  media: dvb_frontend: get rid of property cache's state
+  media: dvb_frontend: better document the -EPERM condition
+  media: dvb_frontend: fix return values for FE_SET_PROPERTY
+  media: dvb_frontend: be sure to init dvb_frontend_handle_ioctl()
+    return code
+  media: dvb_frontend: fix return error code
+
+Satendra Singh Thakur (1):
+  media: dvb_frontend: dtv_property_process_set() cleanups
+
+ .../media/uapi/dvb/fe-get-property.rst        |   7 +-
+ drivers/media/dvb-core/dvb_frontend.c         | 571 +++++++++++------
+ drivers/media/dvb-core/dvb_frontend.h         |  13 -
+ drivers/media/dvb-frontends/lg2160.c          |  14 -
+ drivers/media/dvb-frontends/stv0288.c         |   7 -
+ drivers/media/dvb-frontends/stv6110.c         |   9 -
+ drivers/media/usb/dvb-usb/friio-fe.c          |  24 -
+ fs/compat_ioctl.c                             |  17 -
+ include/uapi/linux/dvb/frontend.h             | 592 +++++++++++++++---
+ 9 files changed, 881 insertions(+), 373 deletions(-)
+
+-- 
+2.17.1
+
