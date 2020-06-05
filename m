@@ -2,255 +2,219 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A06C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E12E3206A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CFF207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgFELcM (ORCPT
+        id S1726343AbgFELel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:32:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:53908 "EHLO foss.arm.com"
+        Fri, 5 Jun 2020 07:34:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:53940 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgFELcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:32:11 -0400
+        id S1726083AbgFELel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 07:34:41 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED3A52B;
-        Fri,  5 Jun 2020 04:32:09 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 428383F52E;
-        Fri,  5 Jun 2020 04:32:07 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 12:32:04 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@matbug.net>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200605113204.srskjrunz2ezkcuj@e107158-lin.cambridge.arm.com>
-References: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
- <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
- <20200528161112.GI2483@worktop.programming.kicks-ass.net>
- <20200529100806.GA3070@suse.de>
- <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
- <87v9k84knx.derkling@matbug.net>
- <20200603101022.GG3070@suse.de>
- <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
- <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com>
- <875zc60ww2.derkling@matbug.net>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38EEA2B;
+        Fri,  5 Jun 2020 04:34:40 -0700 (PDT)
+Received: from [10.57.10.23] (unknown [10.57.10.23])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 739DB3F52E;
+        Fri,  5 Jun 2020 04:34:37 -0700 (PDT)
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <142d48ae-2725-1368-3e11-658449662371@arm.com>
+Date:   Fri, 5 Jun 2020 12:34:36 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <875zc60ww2.derkling@matbug.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200604212819.715-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/20 09:55, Patrick Bellasi wrote:
+On 2020-06-04 22:28, Florian Fainelli wrote:
+> The 4 SPI controller instances added in BCM2711 and BCM7211 SoCs (SPI3,
+> SPI4, SPI5 and SPI6) share the same interrupt line with SPI0.
 > 
-> Hi Qais,
+> For the BCM2835 case which is deemed performance critical, we would like
+> to continue using an interrupt handler which does not have the extra
+> comparison on BCM2835_SPI_CS_INTR.
+
+FWIW, if I'm reading the patch correctly, then with sensible codegen 
+that "overhead" should amount to a bit test on a live register plus a 
+not-taken conditional branch - according to the 1176 TRM that should add 
+up to a whopping 2 cycles. If that's really significant then I'd have to 
+wonder whether you want to be at the mercy of the whole generic IRQ 
+stack at all, and should perhaps consider using FIQ instead.
+
+> To support that requirement the common interrupt handling code between
+> the shared and non-shared interrupt paths is split into a
+> bcm2835_spi_interrupt_common() and both bcm2835_spi_interrupt() as well
+> as bcm2835_spi_shared_interrupt() make use of it.
 > 
-> On Wed, Jun 03, 2020 at 18:52:00 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+> During probe, we determine if there is at least another instance of this
+> SPI controller, and if there is, then we install a shared interrupt
+> handler.
 > 
-> > On 06/03/20 16:59, Vincent Guittot wrote:
-> >> When I want to stress the fast path i usually use "perf bench sched pipe -T "
-> >> The tip/sched/core on my arm octo core gives the following results for
-> >> 20 iterations of perf bench sched pipe -T -l 50000
-> >> 
-> >> all uclamp config disabled  50035.4(+/- 0.334%)
-> >> all uclamp config enabled  48749.8(+/- 0.339%)   -2.64%
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+> Changes in v2:
 > 
-> I use to run the same test but I don't remember such big numbers :/
-
-Yeah I remember you ran a lot of testing on this.
-
+> - identify other available SPI nodes to determine if we need to set-up
+>    interrupt sharing. This needs to happen for the very first instance
+>    since we cannot know for the first instance whether interrupt sharing
+>    is needed or not.
 > 
-> >> It's quite easy to reproduce and probably easier to study the impact
-> >
-> > Thanks Vincent. This is very useful!
-> >
-> > I could reproduce that on my Juno.
-> >
-> > One of the codepath I was suspecting seems to affect it.
-> >
-> >
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 0464569f26a7..9f48090eb926 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -1063,10 +1063,12 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
-> >          * e.g. due to future modification, warn and fixup the expected value.
-> >          */
-> >         SCHED_WARN_ON(bucket->value > rq_clamp);
-> > +#if 0
-> >         if (bucket->value >= rq_clamp) {
-> >                 bkt_clamp = uclamp_rq_max_value(rq, clamp_id, uc_se->value);
-> >                 WRITE_ONCE(uc_rq->value, bkt_clamp);
-> >         }
-> > +#endif
+>   drivers/spi/spi-bcm2835.c | 61 ++++++++++++++++++++++++++++++++-------
+>   1 file changed, 50 insertions(+), 11 deletions(-)
 > 
-> Yep, that's likely where we have most of the overhead at dequeue time,
-> sine _sometimes_ we need to update the cpu's clamp value.
+> diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+> index 237bd306c268..0288b5b3de1e 100644
+> --- a/drivers/spi/spi-bcm2835.c
+> +++ b/drivers/spi/spi-bcm2835.c
+> @@ -361,11 +361,10 @@ static void bcm2835_spi_reset_hw(struct spi_controller *ctlr)
+>   	bcm2835_wr(bs, BCM2835_SPI_DLEN, 0);
+>   }
+>   
+> -static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
+> +static inline irqreturn_t bcm2835_spi_interrupt_common(struct spi_controller *ctlr,
+> +						       u32 cs)
+>   {
+> -	struct spi_controller *ctlr = dev_id;
+>   	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+> -	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
+>   
+>   	/*
+>   	 * An interrupt is signaled either if DONE is set (TX FIFO empty)
+> @@ -394,6 +393,27 @@ static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
+>   	return IRQ_HANDLED;
+>   }
+>   
+> +static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
+> +{
+> +	struct spi_controller *ctlr = dev_id;
+> +	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+> +	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
+> +
+> +	return bcm2835_spi_interrupt_common(ctlr, cs);
+> +}
+> +
+> +static irqreturn_t bcm2835_spi_shared_interrupt(int irq, void *dev_id)
+> +{
+> +	struct spi_controller *ctlr = dev_id;
+> +	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+> +	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
+> +
+> +	if (!(cs & BCM2835_SPI_CS_INTR))
+> +		return IRQ_NONE;
+> +
+> +	return bcm2835_spi_interrupt_common(ctlr, cs);
+> +}
+> +
+>   static int bcm2835_spi_transfer_one_irq(struct spi_controller *ctlr,
+>   					struct spi_device *spi,
+>   					struct spi_transfer *tfr,
+> @@ -1287,12 +1307,37 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+>   	return 0;
+>   }
+>   
+> +static const struct of_device_id bcm2835_spi_match[] = {
+> +	{ .compatible = "brcm,bcm2835-spi", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
+> +
+>   static int bcm2835_spi_probe(struct platform_device *pdev)
+>   {
+> +	irq_handler_t bcm2835_spi_isr_func = bcm2835_spi_interrupt;
+>   	struct spi_controller *ctlr;
+> +	unsigned long flags = 0;
+> +	struct device_node *dn;
+>   	struct bcm2835_spi *bs;
+>   	int err;
+>   
+> +	/* On BCM2711 there can be multiple SPI controllers enabled sharing the
+> +	 * same interrupt line, but we also want to minimize the overhead if
+> +	 * there is no need to support interrupt sharing. If we find at least
+> +	 * another available instane (not counting the one we are probed from),
+> +	 * then we assume that interrupt sharing is necessary.
+> +	 */
+> +	for_each_compatible_node(dn, NULL, bcm2835_spi_match[0].compatible) {
+> +		err = of_device_is_available(dn) && dn != pdev->dev.of_node;
+> +		of_node_put(dn);
+
+This is in the wrong place - it should only be where you terminate the 
+loop early and thus bypass the "of_node_put(from)" call in the iterator 
+itself.
+
+> +		if (err) {
+> +			flags = IRQF_SHARED;
+
+Is there really any harm to setting IRQF_SHARED even when the interrupt 
+isn't shared in hardware? Sure, it means you lose a degree of API-level 
+validation and some other driver might also be able to simultaneously 
+claim it on bcm283x, but in that case the DT would be wrong and 
+*something* isn't going to work correctly anyway, so does this one 
+driver really need to care about trying to be the DT police?
+
+Robin.
+
+> +			bcm2835_spi_isr_func = bcm2835_spi_shared_interrupt;
+> +			break;
+> +		}
+> +	}
+> +
+>   	ctlr = spi_alloc_master(&pdev->dev, ALIGN(sizeof(*bs),
+>   						  dma_get_cache_alignment()));
+>   	if (!ctlr)
+> @@ -1344,8 +1389,8 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+>   	bcm2835_wr(bs, BCM2835_SPI_CS,
+>   		   BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX);
+>   
+> -	err = devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_interrupt, 0,
+> -			       dev_name(&pdev->dev), ctlr);
+> +	err = devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_isr_func,
+> +			       flags, dev_name(&pdev->dev), ctlr);
+>   	if (err) {
+>   		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
+>   		goto out_dma_release;
+> @@ -1400,12 +1445,6 @@ static void bcm2835_spi_shutdown(struct platform_device *pdev)
+>   		dev_err(&pdev->dev, "failed to shutdown\n");
+>   }
+>   
+> -static const struct of_device_id bcm2835_spi_match[] = {
+> -	{ .compatible = "brcm,bcm2835-spi", },
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
+> -
+>   static struct platform_driver bcm2835_spi_driver = {
+>   	.driver		= {
+>   		.name		= DRV_NAME,
 > 
-> However, while running perf sched pipe, I expect:
->  - all tasks to have the same clamp value
->  - all CPUs to have _always_ at least one RUNNABLE task
-> 
-> Given these two conditions above, if the CPU is never "CFS idle" (i.e.
-> without RUNNABLE CFS tasks), the code above should never be triggered.
-> More on that later...
-
-So the cost is only incurred by idle cpus is what you're saying.
-
-> 
-> >  }
-> >
-> >  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-> >
-> >
-> >
-> > uclamp_rq_max_value() could be expensive as it loops over all buckets.
-> 
-> It loops over UCLAMP_CNT values which are defined to fit into a single
-
-I think you meant to say UCLAMP_BUCKETS which is defined 5 by default.
-
-> $L. That was the optimal space/time complexity compromise we found to
-> get the MAX of a set of values.
-
-It actually covers two cachelines, see below and my other email to Mel.
-
-> 
-> > Commenting this whole path out strangely doesn't just 'fix' it,
-> > but produces  better results to no-uclamp kernel :-/
-> >
-> > # ./perf bench -r 20 sched pipe -T -l 50000
-> > Without uclamp:		5039
-> > With uclamp:		4832
-> > With uclamp+patch:	5729
-> 
-> I explain it below: with that code removed you never decrease the CPU's
-> uclamp value. Thus, the first time you schedule an RT task you go to MAX
-> OPP and stay there forever.
-
-Okay.
-
-> 
-> > It might be because schedutil gets biased differently by uclamp..? If I move to
-> > performance governor these numbers almost double.
-> >
-> > I don't know. But this promoted me to look closer and
-> 
-> Just to resume, when a task is dequeued we can have only these cases:
-> 
-> - uclamp(task) < uclamp(cpu):
->   this happens when the task was co-scheduled with other tasks with
->   higher clamp values which are still RUNNABLE.
->   In this case there are no uclamp(cpu) updates.
-> 
-> - uclamp(task) == uclamp(cpu):
->   this happens when the task was one of the tasks defining the current
->   uclamp(cpu) value, which is defined to track the MAX of the RUNNABLE
->   tasks clamp values.
-> 
-> In this last case we _not_ always need to do a uclamp(cpu) update.
-> Indeed the update is required _only_ when that task was _the last_ task
-> defining the current uclamp(cpu) value.
-> 
-> In this case we use uclamp_rq_max_value() to do a linear scan of
-> UCLAMP_CNT values which fits into a single cache line.
-
-Again, I think you mean UCLAMP_BUCKETS here. Unless I missed something, they
-span 2 cahcelines on 64bit machines and 64b cacheline size.
-
-To be specific, I am referring to struct uclamp_rq, which defines an array of
-size UCLAMP_BUCKETS of type struct uclamp_bucket.
-
-uclamp_rq_max_value() scans the buckets for a given clamp_id (UCLAMP_MIN or
-UCLAMP_MAX).
-
-So sizeof(struct uclamp_rq) = 8 * 5 + 4 = 44; on 64bit machines.
-
-And actually the compiler introduces a 4 bytes hole, so we end up with a total
-of 48 bytes.
-
-In struct rq, we define struct uclamp_rq as an array of UCLAMP_CNT which is 2.
-
-So by default we have 2 * sizeof(struct uclamp_rq) = 96 bytes.
-
-> 
-> > I think I spotted a bug where in the if condition we check for '>='
-> > instead of '>', causing us to take the supposedly impossible fail safe
-> > path.
-> 
-> The fail safe path is when the '>' condition matches, which is what the
-> SCHED_WARN_ON tell us. Indeed, we never expect uclamp(cpu) to be bigger
-> than one of its RUNNABLE tasks. If that should happen we WARN and fix
-> the cpu clamp value for the best.
-> 
-> The normal path is instead '=' and, according to by previous resume,
-> it's expected to be executed _only_ when we dequeue the last task of the
-> clamp group defining the current uclamp(cpu) value.
-
-Okay. I was mislead by the comment then. Thanks for clarifying.
-
-Can this function be broken down to deal with '=' separately from the '>' case?
-
-IIUC, for the common '=', we always want to return uclamp_idle_value() hence
-skip the potentially expensive scan?
-
-Anyway, based on Vincent results, it doesn't seem this path is an issue for him
-and the real problem is lurking somewhere else.
-
-> 
-> > Mind trying with the below patch please?
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 0464569f26a7..50d66d4016ff 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -1063,7 +1063,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
-> >          * e.g. due to future modification, warn and fixup the expected value.
-> >          */
-> >         SCHED_WARN_ON(bucket->value > rq_clamp);
-> > -       if (bucket->value >= rq_clamp) {
-> > +       if (bucket->value > rq_clamp) {
-> >                 bkt_clamp = uclamp_rq_max_value(rq, clamp_id, uc_se->value);
-> >                 WRITE_ONCE(uc_rq->value, bkt_clamp);
-> >         }
-> 
-> This patch is thus bogus, since we never expect to have uclamp(cpu)
-> bigger than uclamp(task) and thus we will never reset the clamp value of
-> a cpu.
-
-Yeah I got confused by SCHED_WARN_ON() and the comment. Thanks for clarifying.
-
-Cheers
-
---
-Qais Yousef
