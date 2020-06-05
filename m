@@ -2,93 +2,121 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E42B52074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:57:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijpJNkg9"
+	by mail.kernel.org (Postfix) with ESMTP id 99F98207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591329743;
+	bh=4YetJeTqSigg++jHP96/KxPyeD0VjSHYYjyn6+68qRE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CyUjp4bjO//jru/iKZuZo6CBE43Q1Rpv5N1XxVCFxYeG/xNagQeq3QOTHYLktjbFE
+	 zz1lDXRvOnVH+AKXG6i9VaSbirGswWoYnzCPPWBocWKJ5e5ggJ+uGoynv5MR/6kQvR
+	 Xqx0TjjPXRvDD4mCx4tqod+HPAthMNmPQOPxB7qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgFED5p (ORCPT
+        id S1726135AbgFEECW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbgFED5o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:57:44 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3589DC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 20:57:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m1so4556151pgk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 20:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6O/8gP+vgsM1SKUrwazGqcFhGPsWzja2ClLLpPozZZ0=;
-        b=ijpJNkg9fDCN3j5YOJyLDE7fBzvOwycQs3qssuh7zjEQEU6gYyIcf2y5TH51eY9Ptt
-         Rn0+SL7laU1try4AFFixoqpU4IESfaOZbxku2+d1FAUbw7j8WPF4AIIIZNO0JNurjEuh
-         Q/aMTXW+pakQr0XBUMVoGOv6NlRDBkuANKe/PtkVyp0JVsoROOW/iZM468gGS7uHRy6v
-         r5KBDmazwTmr5MdRz4uj9Pcq428NX9q4X9kKDGAa1tuw2gAzgPkFXyeijSgAUgHCnex0
-         3ObylMcwSjpnHVwlzVydaVMYlf9HpRJxHF2pdVeLpHaodptmFXecR5+dG5od8xlJOuAb
-         aTOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6O/8gP+vgsM1SKUrwazGqcFhGPsWzja2ClLLpPozZZ0=;
-        b=qY1Yt/kQbwKwxcBLM2Qdcx68c503NkDfk4wOPAoxzPvfXjDBVmAyQnLEyS6n0XgZ18
-         7fa4+OJAamxdLJjLi8WkbAaDdGnViCJBbfKQxOwEtXSvBURzpBAEafyd+LSOk3fA/5uK
-         pKCtwL4dRB6GZ7XMkNX9vk6iK67ScZ8kD6TxjFBb/+G7QcktYcvf/+UpsPd9T6GruOel
-         STwhbkm2Ukaq8/T6TEW69MYgPGUskdL9LX6Kr21pj8IYiwTn9fiL41wq7Q7aLYKOnoZ5
-         8/gCrNAY5e8QbSeqxq7Fv4Ro1YU8tAKYR4bEU4Q6GjZ7JEml5xyrZrmSeH21SHJf3fAt
-         IFtg==
-X-Gm-Message-State: AOAM531MMYjytV9fj5eQRDs/EzBtAQWF3QHKXiBVvyor4G9fGJva9Utu
-        zFoXyIFDWKRdBS1Pf7RqQ3M=
-X-Google-Smtp-Source: ABdhPJzzTafB2YWWaTrbUBiaJU7TnJmGUJpOILTnnW8ul9uoHfUzDLABsGjVW7jGHUBGYup9clzaqQ==
-X-Received: by 2002:a65:458e:: with SMTP id o14mr4678079pgq.87.1591329462561;
-        Thu, 04 Jun 2020 20:57:42 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id n189sm3853211pfn.108.2020.06.04.20.57.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 20:57:41 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Fri, 5 Jun 2020 12:57:39 +0900
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     daniel.thompson@linaro.org, kgdb-bugreport@lists.sourceforge.net,
-        jason.wessel@windriver.com, dianders@chromium.org,
-        pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] kdb: Improve console handling
-Message-ID: <20200605035739.GA525@jagdpanzerIV.localdomain>
-References: <1591264879-25920-1-git-send-email-sumit.garg@linaro.org>
+        Fri, 5 Jun 2020 00:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbgFEECW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 00:02:22 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87FA92074B;
+        Fri,  5 Jun 2020 04:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591329741;
+        bh=4YetJeTqSigg++jHP96/KxPyeD0VjSHYYjyn6+68qRE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jLOg6HijZZfOwWduH1fPcVNnijybbnBoZxdb9yJnV54wBU1RPZ+Wd1y0JHHX9TvBl
+         0y7I2k1yhVwJ0ObFKmWSU9LvEtlQJH/+10Cm4uSctE85rN+4+Anr7yJ/cxtZT5eWVh
+         nuZ0/ZCzz9rkzPtfJxxa8Il799erdbSthHyFj9jc=
+Date:   Thu, 4 Jun 2020 21:02:20 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu,
+        syzbot <syzbot+aed048f49c59eb997737@syzkaller.appspotmail.com>
+Subject: Re: linux-next test error: BUG: using smp_processor_id() in
+ preemptible [ADDR] code: systemd-rfkill/6728
+Message-ID: <20200605040220.GB2667@sol.localdomain>
+References: <000000000000a7be4a05a74ca69a@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1591264879-25920-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <000000000000a7be4a05a74ca69a@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/06/04 15:31), Sumit Garg wrote:
+Introduced by:
+
+commit 42f56b7a4a7db127a9d281da584152dc3d525d25
+Author: Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Wed May 20 12:10:34 2020 +0530
+
+    ext4: mballoc: introduce pcpu seqcnt for freeing PA to improve ENOSPC handling
+
+On Thu, Jun 04, 2020 at 07:02:18PM -0700, syzbot wrote:
+> Hello,
 > 
->  drivers/tty/serial/kgdb_nmi.c |  2 +-
->  drivers/tty/serial/kgdboc.c   | 32 +++++++++----------
->  drivers/usb/early/ehci-dbgp.c |  3 +-
->  include/linux/kgdb.h          |  5 ++-
->  kernel/debug/kdb/kdb_io.c     | 72 ++++++++++++++++++++++++++-----------------
->  5 files changed, 64 insertions(+), 50 deletions(-)
-
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-
-	-ss
+> syzbot found the following crash on:
+> 
+> HEAD commit:    0e21d462 Add linux-next specific files for 20200602
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10461661100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ecc1aef35f550ee3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=aed048f49c59eb997737
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+aed048f49c59eb997737@syzkaller.appspotmail.com
+> 
+> BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6728
+> caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+> CPU: 1 PID: 6728 Comm: systemd-rfkill Not tainted 5.7.0-next-20200602-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+>  ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+>  ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+>  ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+>  ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+>  ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+>  ext4_append+0x153/0x360 fs/ext4/namei.c:67
+>  ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+>  ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+>  vfs_mkdir+0x419/0x690 fs/namei.c:3632
+>  do_mkdirat+0x21e/0x280 fs/namei.c:3655
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7f9ffaa79687
+> Code: Bad RIP value.
+> RSP: 002b:00007ffeb3197c38 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+> RAX: ffffffffffffffda RBX: 000055c2e6155985 RCX: 00007f9ffaa79687
+> RDX: 00007ffeb3197b00 RSI: 00000000000001ed RDI: 000055c2e6155985
+> RBP: 00007f9ffaa79680 R08: 0000000000000100 R09: 0000000000000000
+> R10: 000055c2e6155980 R11: 0000000000000246 R12: 00000000000001ed
+> R13: 00007ffeb3197dc0 R14: 0000000000000000 R15: 0000000000000000
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
