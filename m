@@ -2,130 +2,158 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D58FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8865C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FD8206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591376557;
-	bh=wTZiSOR+igC/gRCry3GVm0Zp9Ahw3ee9N7yu1QHMPRc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=txGQRFpuFbO3gHL35num6gy44aDqSyenYVsKAVfXOtZcK53m+dVIspJEnsvdAHBTa
-	 pASP3NjLJfMZZkfLUH5c6m8wlT7IUQKw7yRDmRW+ud2LP8IEcFB9nhqHLqbJwfWGrn
-	 NN1B44PMFouzsWV2Dh3n44e+sCRATFYERjcf88Mo=
+	by mail.kernel.org (Postfix) with ESMTP id AD85E206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgFERCh (ORCPT
+        id S1727034AbgFERDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:02:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:47040 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgFERCg (ORCPT
+        Fri, 5 Jun 2020 13:03:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39910 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726026AbgFERDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:02:36 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g7so7060072oti.13;
-        Fri, 05 Jun 2020 10:02:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wTZiSOR+igC/gRCry3GVm0Zp9Ahw3ee9N7yu1QHMPRc=;
-        b=YiRpuDfmlt2WeNv2aLXt+VZkCxONKnM/w81WbGLR06RwqA/TQZpStDcV5Kwd0yGnj/
-         XS4/E1DB46gCzd9koUsTbKgtw0Mj7uv9EdhBYmpIE1Dyd5GJoqt7IcEEOR41nFkTkCo3
-         +6c6L/Q2m7lHJZ8jKDE0ApcxEYsFStQa7dn+KoRVaw4OF71RDuQroOH65Yxe0xjq9oR6
-         CG3GZGc1uQSz/h4C62jtwmFuKUULcYLjZZyIpPZ8jUGuRgzeEnvXHoLqmYxIseJbK3h/
-         tQm4L0Vw5rTHSIWiqOJXAlbzEzvuGwGYPH7sFtwT16VnBerEVEMONknGUKzjgQDEGT3O
-         xQGQ==
-X-Gm-Message-State: AOAM530M8q6GT5k/CVgBTqklvSWzKwDrImPvkOGfIgRGOxz5AeXUuY7Z
-        nC2NhlhO6k+B8KmOzDsyVPGnBS6iv2lSPIPYW+s=
-X-Google-Smtp-Source: ABdhPJwS8cBnOQWNPzEMxfpCbrXxhygVWp3mt32v/HYym+XE4ggBkygQ0R0aKSiHguylxsBfEP6pBBRYzxoafwh8WA0=
-X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr7997880otq.167.1591376555389;
- Fri, 05 Jun 2020 10:02:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0gq55A7880dOJD7skwx7mnjsqbCqEGFvEo552U9W2zH3Q@mail.gmail.com>
- <CAPcyv4gQNPNOmSVrp7epS5_10qLUuGbutQ2xz7LXnpEhkWeA_w@mail.gmail.com>
- <CAJZ5v0g-TSk+7d-b0j5THeNtuSDeSJmKZHcG3mBesVZgkCyJOg@mail.gmail.com> <CAPcyv4iECAzRjAUJ1hymOzZRjBYQ_baFrSz=2ah=2pfehn9S_g@mail.gmail.com>
-In-Reply-To: <CAPcyv4iECAzRjAUJ1hymOzZRjBYQ_baFrSz=2ah=2pfehn9S_g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 5 Jun 2020 19:02:24 +0200
-Message-ID: <CAJZ5v0iAwDpFYgOa+1=7_wdt4jHVftzS-o=xTJzJSVjceqhzwQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: Drop rcu usage for MMIO mappings
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Stable <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+        Fri, 5 Jun 2020 13:03:15 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055H26fP085618;
+        Fri, 5 Jun 2020 13:03:14 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31fr7rm0ne-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 13:03:13 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055GuUGY016067;
+        Fri, 5 Jun 2020 17:03:11 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf484mx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 17:03:11 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055H39ma61735242
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jun 2020 17:03:09 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E96711C054;
+        Fri,  5 Jun 2020 17:03:09 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC2AC11C05B;
+        Fri,  5 Jun 2020 17:03:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.181.45])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Jun 2020 17:03:08 +0000 (GMT)
+Message-ID: <1591376548.5816.14.camel@linux.ibm.com>
+Subject: [GIT PULL] integrity subsystem updates for v5.8
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Date:   Fri, 05 Jun 2020 13:02:28 -0400
+Mime-Version: 1.0
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-05_04:2020-06-04,2020-06-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 bulkscore=0 cotscore=-2147483648 suspectscore=2
+ spamscore=0 mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006050125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 6:39 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Fri, Jun 5, 2020 at 9:22 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> [..]
-> > > The fix we are looking at now is to pre-map operation regions in a
-> > > similar manner as the way APEI resources are pre-mapped. The
-> > > pre-mapping would arrange for synchronize_rcu_expedited() to be elided
-> > > on each dynamic mapping attempt. The other piece is to arrange for
-> > > operation-regions to be mapped at their full size at once rather than
-> > > a page at a time.
-> >
-> > However, if the RCU usage in ACPI OSL can be replaced with an rwlock,
-> > some of the ACPICA changes above may not be necessary anymore (even
-> > though some of them may still be worth making).
->
-> I don't think you can replace the RCU usage in ACPI OSL and still
-> maintain NMI lookups in a dynamic list.
+Hi Linus,
 
-I'm not sure what NMI lookups have to do with the issue at hand.
+The main changes are extending the TPM 2.0 PCR banks with bank
+specific file hashes, calculating the "boot_aggregate" based on other
+TPM PCR banks, using the default IMA hash algorithm, instead of SHA1,
+as the basis for the cache hash table key, and preventing the mprotect
+syscall to circumvent an IMA mmap appraise policy rule.
 
-If acpi_os_{read|write}_memory() is used from NMI, that is a bug
-already in there which is unrelated to the performance problem with
-opregions.
+- In preparation for extending TPM 2.0 PCR banks with bank specific
+digests, commit 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest
+structures to tpm_pcr_extend()") modified tpm_pcr_extend().  The
+original SHA1 file digests were padded/truncated, before being
+extended into the other TPM PCR banks.  This pull request calculates
+and extends the TPM PCR banks with bank specific file hashes
+completing the above change.
 
-> However, there are 3 solutions I see:
->
-> - Prevent acpi_os_map_cleanup() from triggering at high frequency by
-> pre-mapping and never unmapping operation-regions resources (internal
-> discussion in progress)
+- The "boot_aggregate", the first IMA measurement list record, is the
+"trusted boot" link between the pre-boot environment and the running
+OS.  With TPM 2.0, the "boot_aggregate" record is not limited to being
+based on the SHA1 TPM PCR bank, but can be calculated based on any
+enabled bank, assuming the hash algorithm is also enabled in the
+kernel.
 
-Yes, that can be done, if necessary.
+Other changes include the following and five other bug fixes/code
+clean up:
+- supporting both a SHA1 and a larger "boot_aggregate" digest in a
+custom template format containing both the the SHA1 ('d') and larger
+digests ('d-ng') fields.
+- Initial hash table key fix, but additional changes would be good.
 
-> - Prevent walks of the 'acpi_ioremaps' list (acpi_map_lookup_virt())
-> from NMI context by re-writing the physical addresses in the APEI
-> tables with pre-mapped virtual address, i.e. remove rcu_read_lock()
-> and list_for_each_entry_rcu() from NMI context.
+thanks,
 
-That sounds a bit convoluted to me.
+Mimi
 
-> - Split operation-region resources into a separate mapping mechanism
-> than APEI resources so that typical locking can be used for the
-> sleepable resources and let the NMI accessible resources be managed
-> separately.
->
-> That last one is one we have not discussed internally, but it occurred
-> to me when you mentioned replacing RCU.
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
-So NMI cannot use acpi_os_{read|write}_memory() safely which you have
-pointed out for a few times.
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
-But even if NMI resources are managed separately, the others will
-still not be sleepable (at least not all of them).
+are available in the git repository at:
 
-Cheers!
+  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git tags/integrity-v5.8
+
+for you to fetch changes up to 42413b49804b250ced70dac8815388af2d4ad872:
+
+  ima: Directly free *entry in ima_alloc_init_template() if digests is NULL (2020-06-05 06:04:11 -0400)
+
+----------------------------------------------------------------
+integrity-v5.8
+
+----------------------------------------------------------------
+Krzysztof Struczynski (3):
+      ima: Fix ima digest hash table key calculation
+      ima: Remove redundant policy rule set in add_rules()
+      ima: Set again build_ima_appraise variable
+
+Mimi Zohar (1):
+      ima: verify mprotect change is consistent with mmap policy
+
+Roberto Sassu (11):
+      ima: Switch to ima_hash_algo for boot aggregate
+      ima: Evaluate error in init_ima()
+      ima: Store template digest directly in ima_template_entry
+      ima: Switch to dynamically allocated buffer for template digests
+      ima: Allocate and initialize tfm for each PCR bank
+      ima: Calculate and extend PCR with digests in ima_template_entry
+      ima: Use ima_hash_algo for collision detection in the measurement list
+      evm: Fix possible memory leak in evm_calc_hmac_or_hash()
+      ima: Directly assign the ima_default_policy pointer to ima_rules
+      ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()
+      ima: Directly free *entry in ima_alloc_init_template() if digests is NULL
+
+ include/linux/ima.h                       |   7 +
+ security/integrity/evm/evm_crypto.c       |   2 +-
+ security/integrity/ima/ima.h              |  20 ++-
+ security/integrity/ima/ima_api.c          |  23 +--
+ security/integrity/ima/ima_crypto.c       | 252 +++++++++++++++++++++++++-----
+ security/integrity/ima/ima_fs.c           |   4 +-
+ security/integrity/ima/ima_init.c         |  24 ++-
+ security/integrity/ima/ima_main.c         |  54 +++++++
+ security/integrity/ima/ima_policy.c       |  12 +-
+ security/integrity/ima/ima_queue.c        |  36 +++--
+ security/integrity/ima/ima_template.c     |  25 ++-
+ security/integrity/ima/ima_template_lib.c |  18 +++
+ security/security.c                       |   7 +-
+ 13 files changed, 397 insertions(+), 87 deletions(-)
