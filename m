@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E0AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6A0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DA22074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF8720663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366913;
-	bh=MULI+Njyfm2wJqBQaQ0lcAG8tNbzME1uIFaWCPpfjBo=;
+	s=default; t=1591366916;
+	bh=sXJRCZe3wSoZKHyLoHmplsdTx1p8e9SXjjR3pDu+tIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xF9v05uKcZGzI8B6t9NGgx0smIE+NbhnYcDvrGXvwPBEE0422DAI78OjJExr1g5kQ
-	 nOjX6vsqiIJBXkn3vPJKS6G39Pgyz/v4cN8JjE3Nw2dEz0CPCV9+EWqJjj1GYDeTBZ
-	 XG1DPtRgeYxdLPnTTxPNDnTLcz/Y7tZCms76fJGE=
+	b=cGquov822KQEbFatUnvsMyfwyc5vukTRrFEmcsm7l2ndGR+JgU1wBSxNkzFB2dOVe
+	 Rr3UtSW/hkyXbnfn3nuemd8U4vW/keE3nI4H+IyeltINj6gVQhp3A6P0N6pOR1Q8DP
+	 b2mj+2q9t9zMHjBbBecVto6ZXEiJBFWfYQ1KYyXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgFEOVs (ORCPT
+        id S1728448AbgFEOT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:21:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:19:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728906AbgFEOUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:20:01 -0400
+        id S1728860AbgFEOTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 138192070B;
-        Fri,  5 Jun 2020 14:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83CE6208C3;
+        Fri,  5 Jun 2020 14:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366801;
-        bh=MULI+Njyfm2wJqBQaQ0lcAG8tNbzME1uIFaWCPpfjBo=;
+        s=default; t=1591366781;
+        bh=sXJRCZe3wSoZKHyLoHmplsdTx1p8e9SXjjR3pDu+tIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OaZF1XD9QtX75GpWwDRw6GaRVdWYnzPsipmZFy7kM/mG5g4K+roqjSH57RPZtIbHX
-         POPaDeTUX2XYyQ3bBw3z8ocA8vikMlXf7FHXNgz3EMNGX0EPCledqKfzIaronWCVAn
-         1/WjSBm11r5J7WIzz8fo1fBSRhN8pPAKN12/dN3o=
+        b=iYl0DTRjUjZN3n97YBWqAF4BVczb/HzX9F3DV1snJyhuCniYi+EruJY8R8eEOSL1e
+         JFEt1Df/T3Rb4E/KnMzIBuH7uAa0KZWGDACxGlqVFuZ7bqK/AUfuadZRc2nrzhexWa
+         rtnL6olYpvCkJshOHQ6UgB6da7F7YhPCsisxhGdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Schmidt <jan@centricular.com>,
-        Dave Airlie <airlied@redhat.com>,
+        stable@vger.kernel.org, fengsheng <fengsheng5@huawei.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 23/28] drm/edid: Add Oculus Rift S to non-desktop list
-Date:   Fri,  5 Jun 2020 16:15:25 +0200
-Message-Id: <20200605140253.749629298@linuxfoundation.org>
+Subject: [PATCH 4.19 15/28] spi: dw: use "smp_mb()" to avoid sending spi data error
+Date:   Fri,  5 Jun 2020 16:15:17 +0200
+Message-Id: <20200605140253.279609547@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -60,38 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Schmidt <jan@centricular.com>
+From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
 
-[ Upstream commit 5a3f610877e9d08968ea7237551049581f02b163 ]
+[ Upstream commit bfda044533b213985bc62bd7ca96f2b984d21b80 ]
 
-Add a quirk for the Oculus Rift S OVR0012 display so
-it shows up as a non-desktop display.
+Because of out-of-order execution about some CPU architecture,
+In this debug stage we find Completing spi interrupt enable ->
+prodrucing TXEI interrupt -> running "interrupt_transfer" function
+will prior to set "dw->rx and dws->rx_end" data, so this patch add
+memory barrier to enable dw->rx and dw->rx_end to be visible and
+solve to send SPI data error.
+eg:
+it will fix to this following low possibility error in testing environment
+which using SPI control to connect TPM Modules
 
-Signed-off-by: Jan Schmidt <jan@centricular.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200507180628.740936-1-jan@centricular.com
+kernel: tpm tpm0: Operation Timed out
+kernel: tpm tpm0: tpm_relinquish_locality: : error -1
+
+Signed-off-by: fengsheng <fengsheng5@huawei.com>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Link: https://lore.kernel.org/r/1578019930-55858-1-git-send-email-kong.kongxinwei@hisilicon.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-dw.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index d5dcee7f1fc8..108f542176b8 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -198,10 +198,11 @@ static const struct edid_quirk {
- 	{ "HVR", 0xaa01, EDID_QUIRK_NON_DESKTOP },
- 	{ "HVR", 0xaa02, EDID_QUIRK_NON_DESKTOP },
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 5a47e28e38c1..6f0f6b99953d 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -304,6 +304,9 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 	dws->len = transfer->len;
+ 	spin_unlock_irqrestore(&dws->buf_lock, flags);
  
--	/* Oculus Rift DK1, DK2, and CV1 VR Headsets */
-+	/* Oculus Rift DK1, DK2, CV1 and Rift S VR Headsets */
- 	{ "OVR", 0x0001, EDID_QUIRK_NON_DESKTOP },
- 	{ "OVR", 0x0003, EDID_QUIRK_NON_DESKTOP },
- 	{ "OVR", 0x0004, EDID_QUIRK_NON_DESKTOP },
-+	{ "OVR", 0x0012, EDID_QUIRK_NON_DESKTOP },
++	/* Ensure dw->rx and dw->rx_end are visible */
++	smp_mb();
++
+ 	spi_enable_chip(dws, 0);
  
- 	/* Windows Mixed Reality Headsets */
- 	{ "ACR", 0x7fce, EDID_QUIRK_NON_DESKTOP },
+ 	/* Handle per transfer options for bpw and speed */
 -- 
 2.25.1
 
