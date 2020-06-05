@@ -2,134 +2,203 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48605C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF77206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591363948;
-	bh=bEXIEX1CwmZOhq96kZUk/OuVmXk/e9rQen32TRHvnP4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RYBJfisy7CKDpSzamyMnYM9K7p4wtHaH0BHhuDWraxO0o1CRObEpnsrPVSq9oHWXD
-	 nE+igKbbqrfhFVAXb9il2ohCA1XdO3LkhHPO0Xr9d3++V91Ly/Om8Hqz4dYCtRUK0C
-	 tnNSuxHkjlr9vIFFWkLblUlkfX46YStZVzDmeXO0=
+	by mail.kernel.org (Postfix) with ESMTP id 182C72074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 13:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SNXabU7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgFENc1 (ORCPT
+        id S1727038AbgFENcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 09:32:27 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39472 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbgFENc0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:32:26 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g5so7583910otg.6;
-        Fri, 05 Jun 2020 06:32:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r5xkCx6S6H0OEEUFi5jI6heu9Q5+k1PSszipZkD4qO4=;
-        b=unnBItwCHN6XsJ2rGva8AJjMrdCDLG/XJt/eliLdBQYZyLRjkahhMYiA+YtZGx85ix
-         mReMxnJ7tE1D/Neqjgc00UAqit4P9EfcUvooWWQz2DIxe+Uaf3c7ah6BigpTBoQpRV6F
-         m+SS8KcY2kMhPdST7C2pn5PAiCnUOtsWe7lF5nVt+zMYan2Rzr2iWJqi8MHftErYWjkG
-         Z0C6wDBfORlYszBJbDjF247BfNLFyF7O29XRJpVVcGdykarppIk0QjCfCu9REAvthTY1
-         broQCLS36EzPisIRJaU7RMBmhAqZs4+OFxLnvYsgM+F3gWMq+ELVYODmpR9xiq6TTbeB
-         3kvQ==
-X-Gm-Message-State: AOAM530bstNAify8b7trjlUHA+L/uoqcdE7DHYZxsD+lREYe9OHYmjSz
-        E0X6uOpbQv0JWZFTSjRaBUgJtR2uTNGlPzhvSe0=
-X-Google-Smtp-Source: ABdhPJx/2s0YSjL0Yoa1CBlVQPXNsAgX1/mFvRuZ/AKVx+jsfWoonKouaBjMJfpsxJ/XGbfSXMxS1pgNexk4kOj/N9M=
-X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr7336449otq.167.1591363945478;
- Fri, 05 Jun 2020 06:32:25 -0700 (PDT)
+        Fri, 5 Jun 2020 09:32:32 -0400
+Received: from mail-eopbgr60069.outbound.protection.outlook.com ([40.107.6.69]:7894
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726844AbgFENca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:32:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=btFjvx2yXZ5BB1PcqdBt3n+kHCeICp6N1nG585vJmYLChb/yrVbH96OzJpgEGPIRgbDXLqdKf0ea11RJy/e9S0/yQ3OmyrUNQRmeIbG/pmsGDVoorFbQbTdtg+qk98k+Xlkc519/3m3snTfAm9FiSCWLodEwrkn/+YhIBYIdVQysDgVIueaaB9RRFkTJxs1W2kVl7+oTcpYSxwtJcdvImsOgn/9a55HyUy/LD8GmllySEBl7zhDZ1WEQDmWyV2PnV5XvNj/yX8ArIr4Ndd1kcDVgdikQod/DbHOKpKYik2oLLROibGiYnbGCziUP9VdHLFcfFhGTyaclt5zS5f6PlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdIr+yXh54OxuXDi8O3W+Ykd5tFiQiZLLoXyHsE8RJw=;
+ b=DhPRI/7eInbzBud4se20JRY8/I0N4B6Qy5AVM5VBIWe9ek3MyC1SKSFuYfToYZZdSrymo3+eiAgQ+Dx7ciy7F//Z5E8rH4lSpuJwLd4VbshNoy9GacRg/+/V+0ZMUuPgDCHyPNZLxseMulCxxsKkdjhU9H0IzxyHKgp6zP3/ig1vh8AHbwqxMafOD5P0DPfmO8WbnbS9SEeppedL8ZRxWyuU9OlE7/e7gvwssX2TFmG0R7Wh3TeYtW7M4jIfxwy1SjdcqYYRmJse9fYvwehysfM/P296su4B3zUoDBS4IMwTeE7lRdSHOG7hO4SgdWVCadqGx7i5ktaDLr00h2OibA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NdIr+yXh54OxuXDi8O3W+Ykd5tFiQiZLLoXyHsE8RJw=;
+ b=SNXabU7jwAbFRSIuCRQtLn61i4PP0uneGaZj+FeQUaVmmfgMPfZ84QNXViD6/DoVyTvT+s/OSZQ8VebmTMpUegdjh7TJ+iCDvMLdLzUdqLqU0Zj9aYzJK2/vbbhYdebgoXnGM8AsfRiTLI5P73acThNTluplDs9pNevHrJdqRF8=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Fri, 5 Jun
+ 2020 13:32:25 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
+ 13:32:24 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
+Subject: [PATCH v9 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+Date:   Sat,  6 Jun 2020 05:32:21 +0800
+Message-Id: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0048.apcprd02.prod.outlook.com
+ (2603:1096:3:18::36) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 5 Jun 2020 15:32:14 +0200
-Message-ID: <CAJZ5v0gq55A7880dOJD7skwx7mnjsqbCqEGFvEo552U9W2zH3Q@mail.gmail.com>
-Subject: Re: [PATCH v2] ACPI: Drop rcu usage for MMIO mappings
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Stable <stable@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR02CA0048.apcprd02.prod.outlook.com (2603:1096:3:18::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.20 via Frontend Transport; Fri, 5 Jun 2020 13:32:19 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0d9264ec-d495-43df-bb20-08d80954e1e9
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6702:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB670251626171F5ADB562EC3089860@VE1PR04MB6702.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0425A67DEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZGupSpJnibd1bjcM4+XCaxvP4vidPvwhgtiee2PlrMJ7DXzqkQr0gj05APofMYr4jHaRlts6glQHYjNAE8hOoj1WXMrU3mtCO8xt9FPvYfPV9HPu5fI3ncDMs7vfnmZ9g2lseuSRz+faBDxXUjTixzNmNY7q+bx96B87KM33LI5ds9jcKhH/+iTE0ER8t52gauxiARxDugnf1Au6l2cnSU/BpHxjW79Glx7T56plqgeyzwCt6Wo2rJOHdVY9cMj7O1H1zcjhnoCCiKwrIU2iYPZWZbtQcSgVae7B3ZgLtNVTDdu5a26/sXXi4rhM1xIXG+CCEjzGovx5z5aAi0XSh78r3B2UTDe9EI4oIDbmeY14fVaHDpBewEkErjRR5+v3sK6Jadcj6xn+BJEXfM/2NBnk+b72LM76Gai2MkVuC3fRhMFH+TUSrqmBCjj8OeMV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(6486002)(52116002)(2906002)(316002)(4326008)(6506007)(966005)(5660300002)(26005)(66946007)(2616005)(956004)(478600001)(66556008)(186003)(8676002)(16526019)(7416002)(6512007)(6666004)(36756003)(8936002)(83380400001)(86362001)(66476007)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: pGL1e60C0NJWemTbto+1Ga2ISH4gyVOcWHcdpXU1R5uvrB20z4ihnZfhGHJ9U5SF5hYEiiDdmO30RZATkqB2vXyGgJIXQSYGrwvRHOTShvtBTGCC45qzuKQTLSEqm7ZFgG1gdP78Cz62GR1pQfwgf7wlMa2LpEOhAuRWmerp+bPMnifeGg8NJPcqd/jz5hGTijMp5AXxquP2kwqk+AxptqEWh763z3/Q4mt2vI07pSD1DcBCX6fH1VVr0/Wnb8/TTuz1BcJ7C5CzG96nGbg6XzrUm622alY+Dc2npYFQe06qEGD8GcglmnCkexPQyMaR2wnSAM+2vZSdIBkdUinSoJNH7RptW+NJqh8hPV1ziiWpXO+Okq70iy5dKGafstJ47SeHVlIp9ib6Ym7/nRDRTzv1dCftbnVE+mMmz+c6sLd9zF4tKDa+KNPDuWCmeZbezCpzZWu4VfWHBlKRgUQOgp14NZ0rlOG0qZMaPXMlUTM=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d9264ec-d495-43df-bb20-08d80954e1e9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 13:32:24.7617
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zAEwBi4CkJcr1omf4iSh7RHKkLrC6aWD9sRKe4NvVFQOM1hh69eZhf0EjtMfEHXUsDvimUG37t9SkjgMOzb7kA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6702
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 1:55 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> Recently a performance problem was reported for a process invoking a
-> non-trival ASL program. The method call in this case ends up
-> repetitively triggering a call path like:
->
->     acpi_ex_store
->     acpi_ex_store_object_to_node
->     acpi_ex_write_data_to_field
->     acpi_ex_insert_into_field
->     acpi_ex_write_with_update_rule
->     acpi_ex_field_datum_io
->     acpi_ex_access_region
->     acpi_ev_address_space_dispatch
->     acpi_ex_system_memory_space_handler
->     acpi_os_map_cleanup.part.14
->     _synchronize_rcu_expedited.constprop.89
->     schedule
->
-> The end result of frequent synchronize_rcu_expedited() invocation is
-> tiny sub-millisecond spurts of execution where the scheduler freely
-> migrates this apparently sleepy task. The overhead of frequent scheduler
-> invocation multiplies the execution time by a factor of 2-3X.
->
-> For example, performance improves from 16 minutes to 7 minutes for a
-> firmware update procedure across 24 devices.
->
-> Perhaps the rcu usage was intended to allow for not taking a sleeping
-> lock in the acpi_os_{read,write}_memory() path which ostensibly could be
-> called from an APEI NMI error interrupt?
+There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+transfer to be send twice in DMA mode. Please get more information from:
+https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+new sdma ram script which works in XCH  mode as PIO inside sdma instead
+of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+exist on all legacy i.mx6/7 soc family before i.mx6ul.
+NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+or not.
+The first two reverted patches should be the same issue, though, it
+seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+have the chance to test this patch set if could fix their issues.
+Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+on i.mx8mm because the event id is zero.
 
-Not really.
+PS:
+   Please get sdma firmware from below linux-firmware and copy it to your
+local rootfs /lib/firmware/imx/sdma.
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-acpi_os_{read|write}_memory() end up being called from non-NMI
-interrupt context via acpi_hw_{read|write}(), respectively, and quite
-obviously ioremap() cannot be run from there, but in those cases the
-mappings in question are there in the list already in all cases and so
-the ioremap() isn't used then.
+v2:
+  1.Add commit log for reverted patches.
+  2.Add comment for 'ecspi_fixed' in sdma driver.
+  3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+    rather than remove.
+v3:
+  1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+    /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+    Correct dts related dts patch in v2.
+  2.Clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+    in spi-imx driver to state ERR009165 fixed or not.
+  3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+    errata workaroud, thus improve performance as possible.
+v4:
+  1.Add Ack tag from Mark and Vinod
+  2.Remove checking 'event_id1' zero as 'event_id0'.
+v5:
+  1.Add the last patch for compatible with the current uart driver which
+    using rom script, so both uart ram script and rom script supported
+    in latest firmware, by default uart rom script used. UART driver
+    will be broken without this patch.
+v6:
+  1.Resend after rebase the latest next branch.
+  2.Remove below No.13~No.15 patches of v5 because they were mergered.
+  	ARM: dts: imx6ul: add dma support on ecspi
+  	ARM: dts: imx6sll: correct sdma compatible
+  	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+  3.Revert "dmaengine: imx-sdma: fix context cache" since
+    'context_loaded' removed.
+v7:
+  1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix context
+    cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma: refine
+    to load context only once" so that no building waring during comes out
+    during bisect.
+  2.Address Sascha's comments, including eliminating any i.mx6sx in this
+    series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and taking
+    care SMC bit for PIO.
+  3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
+   'spi: imx: add new i.mx6ul compatible name in binding doc'
+v8:
+  1.remove 0003-Revert-dmaengine-imx-sdma-fix-context-cache.patch and merge
+    it into 04/13 of v7
+  2.add 0005-spi-imx-fallback-to-PIO-if-dma-setup-failure.patch for no any
+    ecspi function broken even if sdma firmware not updated.
+  3.merge 'tx.dst_maxburst' changes in the two continous patches into one
+    patch to avoid confusion.
+  4.fix typo 'duplicated'.
+v9:
+  1. add "spi: imx: add dma_sync_sg_for_device after fallback from dma"
+     to fix the potential issue brought by commit bcd8e7761ec9("spi: imx:
+     fallback to PIO if dma setup failure") which is the only one patch
+     of v8 merged. Thanks Matthias for reporting:
+     https://lore.kernel.org/linux-arm-kernel/5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com/
 
-RCU is there to protect these users from walking the list while it is
-being updated.
+Robin Gong (14):
+  Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+  Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+  Revert "dmaengine: imx-sdma: refine to load context only once"
+  dmaengine: imx-sdma: remove duplicated sdma_load_context
+  spi: imx: fallback to PIO if dma setup failure
+  spi: imx: add dma_sync_sg_for_device after fallback from dma
+  dmaengine: imx-sdma: add mcu_2_ecspi script
+  spi: imx: fix ERR009165
+  spi: imx: remove ERR009165 workaround on i.mx6ul
+  spi: imx: add new i.mx6ul compatible name in binding doc
+  dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+  dma: imx-sdma: add i.mx6ul compatible name
+  dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+  dmaengine: imx-sdma: add uart rom script
 
-> Neither rcu_read_lock() nor ioremap() are interrupt safe, so add a WARN_ONCE() to validate that rcu
-> was not serving as a mechanism to avoid direct calls to ioremap().
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   1 +
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |   1 +
+ arch/arm/boot/dts/imx6q.dtsi                       |   2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   8 +-
+ drivers/dma/imx-sdma.c                             |  67 ++++++++-----
+ drivers/spi/spi-imx.c                              | 104 ++++++++++++++++++---
+ include/linux/platform_data/dma-imx-sdma.h         |   8 +-
+ 7 files changed, 147 insertions(+), 44 deletions(-)
 
-But it would produce false-positives if the IRQ context was not NMI,
-wouldn't it?
+-- 
+2.7.4
 
-> Even the original implementation had a spin_lock_irqsave(), but that is not
-> NMI safe.
-
-Which is not a problem (see above).
-
-> APEI itself already has some concept of avoiding ioremap() from
-> interrupt context (see erst_exec_move_data()), if the new warning
-> triggers it means that APEI either needs more instrumentation like that
-> to pre-emptively fail, or more infrastructure to arrange for pre-mapping
-> the resources it needs in NMI context.
-
-Well, I'm not sure about that.
-
-Thanks!
