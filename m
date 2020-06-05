@@ -2,130 +2,97 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F3B2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF532074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKppMvOf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZyTh3aA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgFEQ3K (ORCPT
+        id S1728247AbgFEQaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:29:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40752 "EHLO
+        Fri, 5 Jun 2020 12:30:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgFEQ0K (ORCPT
+        with ESMTP id S1726154AbgFEQaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:26:10 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275F5C08C5C2;
-        Fri,  5 Jun 2020 09:26:10 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d10so5363382pgn.4;
-        Fri, 05 Jun 2020 09:26:10 -0700 (PDT)
+        Fri, 5 Jun 2020 12:30:03 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3558C08C5C2;
+        Fri,  5 Jun 2020 09:30:03 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id r10so5344001pgv.8;
+        Fri, 05 Jun 2020 09:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IEApNuKp8gKWvflXdIy4+ZsvdThFgVJg626w5D+H1A0=;
-        b=ZKppMvOf6dQxrlW1P8yxfhr/IhrEHAIY4xLXS6TZ/nZd1CEB9OKfPrCJRYA6XUxTV6
-         T8V+GemHui3biwV7wMGN1a/TERAtJtiU4KvcHx9+DaCKW4E9g1E2G7baHhOnpHfk0DnY
-         P6gv8ZhAcshCWSJE0GiTdNoF3sts1isfPcy+w0Tpcq0deZPYiYt0jx1AenyaUy3Mszbl
-         LSFJWXvMrzmJM5jhyBtHsHZ1UNj69DaCfzr7DeP+9Qwk6lQbO//BxcOnq8HvNwPx8VtB
-         VI+3Ud7lxRNg5EiBndcWaDBHXEeR6emEA+OGhy7/1USUu3xV5/UzCA6Hawo0tKtLUwr1
-         MtgQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jp+khy4Vp8GGvY8bqZxPwhAW/ULre+6+z57jAzVL3Rw=;
+        b=GZyTh3aA/LcvC8yvPdlgRzqmKfPYtofKcQx/FQG4U827xjARIiLSFMXiZrw3i/aKKZ
+         3Me1m2ly3uuxLPHjGvX6TAd3stkgKgJYiQtzrwiWCR28XaNwvL6yCZqEQaA1fyQkoXs9
+         KPIJ+WUjqPeLRaU2axFDYD1+3NTV5Z0K+npNZwT5gJghRfsAcRXmqEze+wILLn8jVKKt
+         J1dCcP8sP69zrylG8lm/0TcSWf62GWQMKLEkS9ffO3SoxSmS8RxzS4d0VQ0CTuGkyjHG
+         vGqumUVhgHHXVuy2xgG6zPOA7Q8ImVFc3krlz/9YQYJOD+UawvzAQxWIP3QheMSkUTQh
+         zQkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IEApNuKp8gKWvflXdIy4+ZsvdThFgVJg626w5D+H1A0=;
-        b=kt/urm4lIsPDOATzUVbVNEcgz25A+Y6/eEEV7CEpUiJHkhlc7410wx3s1p7LHHumVC
-         mcW0hJhIUStEQjUNA33uvN5/vmt7DgJVO3RXpAckjMt6+UDRP5vZhhfVc0SnVXW3+FZ+
-         toIZJOeoB/ITyb0kw5xogcUY1g4yp3fCcRYfXFXIUsudfq4zTJIflmSp5yDdohDkXPdU
-         UAsUXvuqwYDwlyzwsAA/3exoQRI1c+wmtr6ri5B/vEEGpLg869H24OEBL48tZEYvEzG0
-         mDW+sMO6Nv3yeN6ZVrAPcUXcRApi8QNDLh1EB12u5o8iLAz0N4xx6BW2L1lKXc4XsJSK
-         7hAA==
-X-Gm-Message-State: AOAM530mbdj8SoJdGfwVY4IaWvJZPN0f1uFS32WCB8cpgYmPC04cpUF6
-        agSoFXM0ZsIXt9zivOe43shw8uk3
-X-Google-Smtp-Source: ABdhPJxNyiAyQP0+5b2n1II/vh9F5sV6RSsX9MwOgGH3s+ZJ04N+1dI1EJJ6OrPdlE7xeS5jyEFIUA==
-X-Received: by 2002:aa7:9acc:: with SMTP id x12mr10428830pfp.24.1591374369200;
-        Fri, 05 Jun 2020 09:26:09 -0700 (PDT)
-Received: from localhost.localdomain ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b29sm86205pff.176.2020.06.05.09.26.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2020 09:26:08 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jp+khy4Vp8GGvY8bqZxPwhAW/ULre+6+z57jAzVL3Rw=;
+        b=nWdmA0ykaljvnniI//3lb262jYvaPe5jXb7LnxF+vvjjgVMMzsBYOkjh23oMMTfQ/S
+         OEVZR3ja48pciq93ZOmnYuceoCkuHQmdLtX0+YIfeoorimUZlwrUM40qt1hwtKLLOxPb
+         +s29KI8mGm0oEQqZUxxI5d3mbzLHW4E08/pXsOPQLfcVg2QjzXMlpzUvboigNajIpdpP
+         7MhkRHgQKrvK+ghhQjsGC8tbQ1819YOg+Y7Ko1dShvV/wvecu4QKbKF3b+LGGBT6g1R2
+         YoVO2eOQ7V+uv44hcUHTXZJ64ZH3OZDo/tNxC+rTKpx3PD73/G3q99y6Rr+RgxssDhok
+         TJMw==
+X-Gm-Message-State: AOAM530+eegs70H7dzRci7MuyDjlcTtTR5YEXriVz3ORDo+NoN1ttUWI
+        MGL5KSS+wxRxsimKROBV+2A=
+X-Google-Smtp-Source: ABdhPJzuqr4892KcwVWXDf3CTv6Q3Gu6P33N/sWh8wtfqRU3R4dkh7iKT1p8XGVoxwUux/mq3iNDiw==
+X-Received: by 2002:a63:6f04:: with SMTP id k4mr10390354pgc.313.1591374603313;
+        Fri, 05 Jun 2020 09:30:03 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id e25sm119363pfd.17.2020.06.05.09.30.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 09:30:02 -0700 (PDT)
+Subject: Re: [PATCH net 1/4] net: dp83869: Fix OF_MDIO config check
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
+        davem@davemloft.net, kuba@kernel.org
+Cc:     linux@armlinux.org.uk, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, michael@walle.cc
+References: <20200605140107.31275-1-dmurphy@ti.com>
+ <20200605140107.31275-2-dmurphy@ti.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-X-Google-Original-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Krufky <mkrufky@linuxtv.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>,
-        Jaedon Shin <jaedon.shin@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
-        Satendra Singh Thakur <satendra.t@samsung.com>,
-        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
-        (V4L/DVB)),
-        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
-        infrastructure))
-Subject: [PATCH stable 4.9 06/21] media: stv0288: get rid of set_property boilerplate
-Date:   Fri,  5 Jun 2020 09:25:03 -0700
-Message-Id: <20200605162518.28099-7-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200605162518.28099-1-florian.fainelli@broadcom.com>
-References: <20200605162518.28099-1-florian.fainelli@broadcom.com>
+Message-ID: <6b2ae90e-45d9-e744-53d7-59f9242c3d52@gmail.com>
+Date:   Fri, 5 Jun 2020 09:30:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <20200605140107.31275-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-commit 473e4b4c1cf3046fc6b3437be9a9f3c89c2e61ef upstream
 
-This driver doesn't implement support for set_property(). Yet,
-it implements a boilerplate for it. Get rid of it.
+On 6/5/2020 7:01 AM, Dan Murphy wrote:
+> When CONFIG_OF_MDIO is set to be a module the code block is not
+> compiled. Use the IS_ENABLED macro that checks for both built in as
+> well as module.
+> 
+> Fixes: 01db923e83779 ("net: phy: dp83869: Add TI dp83869 phy")
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/media/dvb-frontends/stv0288.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/drivers/media/dvb-frontends/stv0288.c b/drivers/media/dvb-frontends/stv0288.c
-index c93d9a45f7f7..2b8c75f28d2e 100644
---- a/drivers/media/dvb-frontends/stv0288.c
-+++ b/drivers/media/dvb-frontends/stv0288.c
-@@ -447,12 +447,6 @@ static int stv0288_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
- 	return 0;
- }
- 
--static int stv0288_set_property(struct dvb_frontend *fe, struct dtv_property *p)
--{
--	dprintk("%s(..)\n", __func__);
--	return 0;
--}
--
- static int stv0288_set_frontend(struct dvb_frontend *fe)
- {
- 	struct stv0288_state *state = fe->demodulator_priv;
-@@ -568,7 +562,6 @@ static struct dvb_frontend_ops stv0288_ops = {
- 	.set_tone = stv0288_set_tone,
- 	.set_voltage = stv0288_set_voltage,
- 
--	.set_property = stv0288_set_property,
- 	.set_frontend = stv0288_set_frontend,
- };
- 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.17.1
-
+Florian
