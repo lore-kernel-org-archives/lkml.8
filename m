@@ -2,158 +2,189 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8865C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8475FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD85E206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59DB12074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FhIg8aK5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgFERDQ (ORCPT
+        id S1726876AbgFERGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:03:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39910 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726026AbgFERDP (ORCPT
+        Fri, 5 Jun 2020 13:06:45 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42832 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726218AbgFERGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:03:15 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055H26fP085618;
-        Fri, 5 Jun 2020 13:03:14 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31fr7rm0ne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 13:03:13 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055GuUGY016067;
-        Fri, 5 Jun 2020 17:03:11 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf484mx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 17:03:11 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055H39ma61735242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Jun 2020 17:03:09 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E96711C054;
-        Fri,  5 Jun 2020 17:03:09 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC2AC11C05B;
-        Fri,  5 Jun 2020 17:03:08 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.181.45])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Jun 2020 17:03:08 +0000 (GMT)
-Message-ID: <1591376548.5816.14.camel@linux.ibm.com>
-Subject: [GIT PULL] integrity subsystem updates for v5.8
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Fri, 05 Jun 2020 13:02:28 -0400
-Mime-Version: 1.0
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+        Fri, 5 Jun 2020 13:06:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591376803;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fn51+xgx98oZsB/D59Na1SLBQWdWeTshRNoFGM9XJVg=;
+        b=FhIg8aK56SkWujMQEK4whbCDaJv8+sxO+NEfmxd731g4gbcn72SBl9D2cpsK/gDnS9fj4E
+        2gyDWOaLue9JO31OkapiBcTUV3F9COhHqBP4mi2PuPO1nUtK33c/XbtruZq5ND4jJf6zu1
+        pohJdYFF4SHWuJP0fqHYBLtlUCf5S/g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-NfHEDjfTMZS_9-9DlOrH2w-1; Fri, 05 Jun 2020 13:06:42 -0400
+X-MC-Unique: NfHEDjfTMZS_9-9DlOrH2w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2514E106B208;
+        Fri,  5 Jun 2020 17:06:35 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3EEAE707C7;
+        Fri,  5 Jun 2020 17:06:34 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com,
+        syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com
+Subject: [PATCH] KVM: let kvm_destroy_vm_debugfs clean up vCPU debugfs directories
+Date:   Fri,  5 Jun 2020 13:06:33 -0400
+Message-Id: <20200605170633.16766-1-pbonzini@redhat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-05_04:2020-06-04,2020-06-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999
- clxscore=1015 phishscore=0 bulkscore=0 cotscore=-2147483648 suspectscore=2
- spamscore=0 mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006050125
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+After commit 63d0434 ("KVM: x86: move kvm_create_vcpu_debugfs after
+last failure point") we are creating the pre-vCPU debugfs files
+after the creation of the vCPU file descriptor.  This makes it
+possible for userspace to reach kvm_vcpu_release before
+kvm_create_vcpu_debugfs has finished.  The vcpu->debugfs_dentry
+then does not have any associated inode anymore, and this causes
+a NULL-pointer dereference in debugfs_create_file.
 
-The main changes are extending the TPM 2.0 PCR banks with bank
-specific file hashes, calculating the "boot_aggregate" based on other
-TPM PCR banks, using the default IMA hash algorithm, instead of SHA1,
-as the basis for the cache hash table key, and preventing the mprotect
-syscall to circumvent an IMA mmap appraise policy rule.
+The solution is simply to avoid removing the files; they are
+cleaned up when the VM file descriptor is closed (and that must be
+after KVM_CREATE_VCPU returns).  We can stop storing the dentry
+in struct kvm_vcpu too, because it is not needed anywhere after
+kvm_create_vcpu_debugfs returns.
 
-- In preparation for extending TPM 2.0 PCR banks with bank specific
-digests, commit 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest
-structures to tpm_pcr_extend()") modified tpm_pcr_extend().  The
-original SHA1 file digests were padded/truncated, before being
-extended into the other TPM PCR banks.  This pull request calculates
-and extends the TPM PCR banks with bank specific file hashes
-completing the above change.
+Reported-by: syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com
+Fixes: 63d04348371b ("KVM: x86: move kvm_create_vcpu_debugfs after last failure point")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/arm64/kvm/arm.c     |  5 -----
+ arch/x86/kvm/debugfs.c   | 10 +++++-----
+ include/linux/kvm_host.h |  3 +--
+ virt/kvm/kvm_main.c      |  8 ++++----
+ 4 files changed, 10 insertions(+), 16 deletions(-)
 
-- The "boot_aggregate", the first IMA measurement list record, is the
-"trusted boot" link between the pre-boot environment and the running
-OS.  With TPM 2.0, the "boot_aggregate" record is not limited to being
-based on the SHA1 TPM PCR bank, but can be calculated based on any
-enabled bank, assuming the hash algorithm is also enabled in the
-kernel.
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 7a57381c05e8..45276ed50dd6 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -144,11 +144,6 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	return ret;
+ }
+ 
+-int kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+-{
+-	return 0;
+-}
+-
+ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
+ {
+ 	return VM_FAULT_SIGBUS;
+diff --git a/arch/x86/kvm/debugfs.c b/arch/x86/kvm/debugfs.c
+index 018aebce33ff..7e818d64bb4d 100644
+--- a/arch/x86/kvm/debugfs.c
++++ b/arch/x86/kvm/debugfs.c
+@@ -43,22 +43,22 @@ static int vcpu_get_tsc_scaling_frac_bits(void *data, u64 *val)
+ 
+ DEFINE_SIMPLE_ATTRIBUTE(vcpu_tsc_scaling_frac_fops, vcpu_get_tsc_scaling_frac_bits, NULL, "%llu\n");
+ 
+-void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
++void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_dentry)
+ {
+-	debugfs_create_file("tsc-offset", 0444, vcpu->debugfs_dentry, vcpu,
++	debugfs_create_file("tsc-offset", 0444, debugfs_dentry, vcpu,
+ 			    &vcpu_tsc_offset_fops);
+ 
+ 	if (lapic_in_kernel(vcpu))
+ 		debugfs_create_file("lapic_timer_advance_ns", 0444,
+-				    vcpu->debugfs_dentry, vcpu,
++				    debugfs_dentry, vcpu,
+ 				    &vcpu_timer_advance_ns_fops);
+ 
+ 	if (kvm_has_tsc_control) {
+ 		debugfs_create_file("tsc-scaling-ratio", 0444,
+-				    vcpu->debugfs_dentry, vcpu,
++				    debugfs_dentry, vcpu,
+ 				    &vcpu_tsc_scaling_fops);
+ 		debugfs_create_file("tsc-scaling-ratio-frac-bits", 0444,
+-				    vcpu->debugfs_dentry, vcpu,
++				    debugfs_dentry, vcpu,
+ 				    &vcpu_tsc_scaling_frac_fops);
+ 	}
+ }
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index f43b59b1294c..d38d6b9c24be 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -318,7 +318,6 @@ struct kvm_vcpu {
+ 	bool preempted;
+ 	bool ready;
+ 	struct kvm_vcpu_arch arch;
+-	struct dentry *debugfs_dentry;
+ };
+ 
+ static inline int kvm_vcpu_exiting_guest_mode(struct kvm_vcpu *vcpu)
+@@ -888,7 +887,7 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu);
+ 
+ #ifdef __KVM_HAVE_ARCH_VCPU_DEBUGFS
+-void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu);
++void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu, struct dentry *debugfs_dentry);
+ #endif
+ 
+ int kvm_arch_hardware_enable(void);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 7fa1e38e1659..3577eb84eac0 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2973,7 +2973,6 @@ static int kvm_vcpu_release(struct inode *inode, struct file *filp)
+ {
+ 	struct kvm_vcpu *vcpu = filp->private_data;
+ 
+-	debugfs_remove_recursive(vcpu->debugfs_dentry);
+ 	kvm_put_kvm(vcpu->kvm);
+ 	return 0;
+ }
+@@ -3000,16 +2999,17 @@ static int create_vcpu_fd(struct kvm_vcpu *vcpu)
+ static void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
+ {
+ #ifdef __KVM_HAVE_ARCH_VCPU_DEBUGFS
++	struct dentry *debugfs_dentry;
+ 	char dir_name[ITOA_MAX_LEN * 2];
+ 
+ 	if (!debugfs_initialized())
+ 		return;
+ 
+ 	snprintf(dir_name, sizeof(dir_name), "vcpu%d", vcpu->vcpu_id);
+-	vcpu->debugfs_dentry = debugfs_create_dir(dir_name,
+-						  vcpu->kvm->debugfs_dentry);
++	debugfs_dentry = debugfs_create_dir(dir_name,
++					    vcpu->kvm->debugfs_dentry);
+ 
+-	kvm_arch_create_vcpu_debugfs(vcpu);
++	kvm_arch_create_vcpu_debugfs(vcpu, debugfs_dentry);
+ #endif
+ }
+ 
+-- 
+2.26.2
 
-Other changes include the following and five other bug fixes/code
-clean up:
-- supporting both a SHA1 and a larger "boot_aggregate" digest in a
-custom template format containing both the the SHA1 ('d') and larger
-digests ('d-ng') fields.
-- Initial hash table key fix, but additional changes would be good.
-
-thanks,
-
-Mimi
-
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
-
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git tags/integrity-v5.8
-
-for you to fetch changes up to 42413b49804b250ced70dac8815388af2d4ad872:
-
-  ima: Directly free *entry in ima_alloc_init_template() if digests is NULL (2020-06-05 06:04:11 -0400)
-
-----------------------------------------------------------------
-integrity-v5.8
-
-----------------------------------------------------------------
-Krzysztof Struczynski (3):
-      ima: Fix ima digest hash table key calculation
-      ima: Remove redundant policy rule set in add_rules()
-      ima: Set again build_ima_appraise variable
-
-Mimi Zohar (1):
-      ima: verify mprotect change is consistent with mmap policy
-
-Roberto Sassu (11):
-      ima: Switch to ima_hash_algo for boot aggregate
-      ima: Evaluate error in init_ima()
-      ima: Store template digest directly in ima_template_entry
-      ima: Switch to dynamically allocated buffer for template digests
-      ima: Allocate and initialize tfm for each PCR bank
-      ima: Calculate and extend PCR with digests in ima_template_entry
-      ima: Use ima_hash_algo for collision detection in the measurement list
-      evm: Fix possible memory leak in evm_calc_hmac_or_hash()
-      ima: Directly assign the ima_default_policy pointer to ima_rules
-      ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()
-      ima: Directly free *entry in ima_alloc_init_template() if digests is NULL
-
- include/linux/ima.h                       |   7 +
- security/integrity/evm/evm_crypto.c       |   2 +-
- security/integrity/ima/ima.h              |  20 ++-
- security/integrity/ima/ima_api.c          |  23 +--
- security/integrity/ima/ima_crypto.c       | 252 +++++++++++++++++++++++++-----
- security/integrity/ima/ima_fs.c           |   4 +-
- security/integrity/ima/ima_init.c         |  24 ++-
- security/integrity/ima/ima_main.c         |  54 +++++++
- security/integrity/ima/ima_policy.c       |  12 +-
- security/integrity/ima/ima_queue.c        |  36 +++--
- security/integrity/ima/ima_template.c     |  25 ++-
- security/integrity/ima/ima_template_lib.c |  18 +++
- security/security.c                       |   7 +-
- 13 files changed, 397 insertions(+), 87 deletions(-)
