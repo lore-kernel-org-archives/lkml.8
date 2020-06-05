@@ -2,112 +2,124 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4ACB206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UzYXccvT"
+	by mail.kernel.org (Postfix) with ESMTP id 265C32065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgFEVea (ORCPT
+        id S1728567AbgFEVen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:34:30 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33241 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728517AbgFEVe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:34:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591392869; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=tNpNYJfeY31tX6QoJHuekSR2zEnXnTIqNOEEGa1XSlQ=; b=UzYXccvTlIsKzv8tkhbrZiWveWcoRdDkijcSUmTUeOwmRKtIXAN3JHkeRlmAzjRIEDncBxt1
- ouM2OLKBt7gWZ0A/Ibyqty5KOf4oqI86SvaKIvbxSAr91gv0ONX8WPmzKppwFwuPpxSzciP4
- GI9Gfc8NCM0nTqu3BA93fZdOmsA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5edaba5976fccbb4c87aa0e4 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 21:34:17
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 86D1FC4339C; Fri,  5 Jun 2020 21:34:16 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D37DCC433CA;
-        Fri,  5 Jun 2020 21:34:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D37DCC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, mka@chromium.org
-Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, lukasz.luba@arm.com,
-        sudeep.holla@arm.com, smasetty@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v6 5/5] cpufreq: qcom: Disable fast switch when scaling DDR/L3
-Date:   Sat,  6 Jun 2020 03:03:32 +0530
-Message-Id: <20200605213332.609-6-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200605213332.609-1-sibis@codeaurora.org>
-References: <20200605213332.609-1-sibis@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 5 Jun 2020 17:34:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728323AbgFEVem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 17:34:42 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055LWl6m155451;
+        Fri, 5 Jun 2020 17:34:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31fr7rta5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 17:34:40 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055LWs8r156433;
+        Fri, 5 Jun 2020 17:34:39 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31fr7rta52-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 17:34:39 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055LGgRe006768;
+        Fri, 5 Jun 2020 21:34:37 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf484xr4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 21:34:37 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055LYZij65536072
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jun 2020 21:34:35 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F38F8AE045;
+        Fri,  5 Jun 2020 21:34:34 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11EE5AE055;
+        Fri,  5 Jun 2020 21:34:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.234.64])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Jun 2020 21:34:33 +0000 (GMT)
+Message-ID: <1591392867.4615.20.camel@linux.ibm.com>
+Subject: Re: [PATCH] IMA: Add log statements for failure conditions
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Paul Moore <paul@paul-moore.com>
+Cc:     linux-integrity@vger.kernel.org, tusharsu@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, linux-audit@redhat.com
+Date:   Fri, 05 Jun 2020 17:34:27 -0400
+In-Reply-To: <48ff60f1-df93-5ce7-a254-8bfd1dba2ade@linux.microsoft.com>
+References: <20200604163243.2575-1-nramas@linux.microsoft.com>
+         <1591382782.5816.36.camel@linux.ibm.com>
+         <CAHC9VhS-EP=Kk3GKRzAGAYa5mqupkLQCHz_m_DgoAKRWcSTgLA@mail.gmail.com>
+         <8dfb3fa6-5c1f-d644-7d21-72a9448c52cc@linux.microsoft.com>
+         <CAHC9VhS8gmrWxt75aHAE16PWAay7sUrffZiT0A8VLugwexK4Uw@mail.gmail.com>
+         <48ff60f1-df93-5ce7-a254-8bfd1dba2ade@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-05_07:2020-06-04,2020-06-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 bulkscore=0 cotscore=-2147483648 suspectscore=0
+ spamscore=0 mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006050157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable fast switch when the opp-tables required for scaling DDR/L3
-are populated.
+On Fri, 2020-06-05 at 14:09 -0700, Lakshmi Ramasubramanian wrote:
+> On 6/5/20 1:49 PM, Paul Moore wrote:
+> 
+> > 
+> >> Since a pr_xyz() call was already present, I just wanted to change the
+> >> log level to keep the code change to the minimum. But if audit log is
+> >> the right approach for this case, I'll update.
+> > 
+> > Generally we reserve audit for things that are required for various
+> > security certifications and/or "security relevant".  From what you
+> > mentioned above, it seems like this would fall into the second
+> > category if not the first.
+> > 
+> > Looking at your patch it doesn't look like you are trying to record
+> > anything special so you may be able to use the existing
+> > integrity_audit_msg(...) helper.  Of course then the question comes
+> > down to the audit record type (the audit_msgno argument), the
+> > operation (op), and the comm/cause (cause).
+> > 
+> > Do you feel that any of the existing audit record types are a good fit for this?
+> > 
+> 
+> Maybe I can use the audit_msgno "AUDIT_INTEGRITY_PCR" with appropriate 
+> strings for "op" and "cause".
+> 
+> Mimi - please let me know if you think this audit_msgno would be ok to 
+> use. I see this code used, for instance, for boot aggregate measurement.
+> 
+> integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL, boot_aggregate_name, op,
+> 		    audit_cause, result, 0);
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+Yes, AUDIT_INTEGRITY_PCR is also used for failures to add to the
+measurement list.
 
-v6:
- * No change
+thanks,
 
-v5:
- * Drop dev_pm_opp_get_path_count [Saravana]
-
- drivers/cpufreq/qcom-cpufreq-hw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-index 8fa6ab6e0e4b6..56f01049fd3a3 100644
---- a/drivers/cpufreq/qcom-cpufreq-hw.c
-+++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-@@ -158,6 +158,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- 	} else if (ret != -ENODEV) {
- 		dev_err(cpu_dev, "Invalid opp table in device tree\n");
- 		return ret;
-+	} else {
-+		policy->fast_switch_possible = true;
- 	}
- 
- 	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-@@ -307,8 +309,6 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
- 
- 	dev_pm_opp_of_register_em(policy->cpus);
- 
--	policy->fast_switch_possible = true;
--
- 	return 0;
- error:
- 	devm_iounmap(dev, base);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Mimi
