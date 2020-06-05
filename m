@@ -2,117 +2,109 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71723C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63611C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B652206E6
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359762;
-	bh=M3jMtFN+CSsczEUa7TDYXsE0fUJWoZIKVdF95MVU01w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kI3icoJN4FzCJ4OQA3K1UaBO00FbSd4kzYBh3Csr9htRDYi4cAb+dmt3CGSI4TTnw
-	 m+e0hdSIkchCBkoVwR2uUhboNLPRAVyh6MMUmFqpCbXxaFjziLWDsxEZgn1O/qxfoT
-	 O3Qz4vFeLsTLq+/FoPnSm8Z6xEvhBWhcG9qkutDU=
+	by mail.kernel.org (Postfix) with ESMTP id 495C62074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgFEMWl (ORCPT
+        id S1726565AbgFEMY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:22:41 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46968 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFEMWi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:22:38 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g7so6334541oti.13;
-        Fri, 05 Jun 2020 05:22:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mPWXKsqwL8hOgvzZkdc7ooHkJ32A3QWoyaocwxX1J/4=;
-        b=iwnArzSaI7HfMoYylo2xGnXRpbMY8DZthcPrTmTlEqQMkM47QSXofSrofsJZY+uXzh
-         o7yM6Odx/y68wlh0Doe9q1O3jhm1mTAwyoe3XSWbsfpjT2BqcaBNhJMfWb+x+xpIFGEX
-         Cn+2bC/+6pq3YEu4Cr4imFnQKSXzgT22WI+PoT7hYDN+pnWa2XuHVo5/2IZDBERioJp5
-         mApcWeRuE4lmdp/t1EbGHZQczwoe2vIl9mMIGdSbSpIRumpIPi2HeWsZhA/TZxDLwJcb
-         qUDvO+hJhYAJcXbcFFGLhUvOS9Fj1nnHK+5ju+cnCnGMSYB6S+ShvMoQMSGeKpitFpuS
-         u97w==
-X-Gm-Message-State: AOAM532Qe1Lf0gKu5uKlhWHhY6/YIUEtN4oQQc7PJqV8IbNNIBplBToE
-        u01+nO0/CPRFn7UdTUQqpkhjbdGG8mOqSxdLHhQ=
-X-Google-Smtp-Source: ABdhPJzC9F6xc6dWDWIJplrkb7S6UF6TISH4Vi2pH+J29xJPCWjBOhYYpET2qLjnm079/QRrBAOOECTFl9mN+WIBwxU=
-X-Received: by 2002:a9d:5185:: with SMTP id y5mr6991224otg.118.1591359756787;
- Fri, 05 Jun 2020 05:22:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590804511-9672-1-git-send-email-wangxiongfeng2@huawei.com> <20200602051609.ahot4qv2nlb6yh3t@vireshk-i7>
-In-Reply-To: <20200602051609.ahot4qv2nlb6yh3t@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 5 Jun 2020 14:22:25 +0200
-Message-ID: <CAJZ5v0harpqoN9=jPyuD-P9B1jvRcBShUZT5=8J-uymqEKyCyg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] add SW BOOST support for CPPC
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
-        Thanu.Rangarajan@arm.com, Sudeep Holla <Sudeep.Holla@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Fri, 5 Jun 2020 08:24:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:23444 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbgFEMY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:24:27 -0400
+IronPort-SDR: JL2WcX4YiNUu2xadeHQyUhaHf2mw1oEpuPxcVzG2KeNEykADLbWXGAW5wvsxaQCfEc4VqxlPz3
+ Se2IIkdGkvHw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 05:24:27 -0700
+IronPort-SDR: Nx8uvp7v30SPS1p7EveMjLFW9NkyOtJ0mrRkf/VCiaLf2SSiLrPdR1G9bAYAqvEW4NbIBL3Jqr
+ d24R/T6HHpHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
+   d="scan'208";a="258679361"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 05 Jun 2020 05:24:25 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jhBOe-00B1df-Ar; Fri, 05 Jun 2020 15:24:28 +0300
+Date:   Fri, 5 Jun 2020 15:24:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v7 2/4] lib/test_bitmap.c: Add for_each_set_clump test
+ cases
+Message-ID: <20200605122428.GD2428291@smile.fi.intel.com>
+References: <042eddd4b87f0db3588a79d829afe6b23fa8365c.1590017578.git.syednwaris@gmail.com>
+ <202005310310.EOelU2v3%lkp@intel.com>
+ <CACG_h5oHmkAp68q0EFXZEWhG15EQSHLgx=78gZ72aLShZOztFA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACG_h5oHmkAp68q0EFXZEWhG15EQSHLgx=78gZ72aLShZOztFA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 7:16 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 30-05-20, 10:08, Xiongfeng Wang wrote:
-> > ACPI spec 6.2 section 8.4.7.1 provide the following two CPC registers.
-> >
-> > "Highest performance is the absolute maximum performance an individual
-> > processor may reach, assuming ideal conditions. This performance level
-> > may not be sustainable for long durations, and may only be achievable if
-> > other platform components are in a specific state; for example, it may
-> > require other processors be in an idle state.
-> >
-> > Nominal Performance is the maximum sustained performance level of the
-> > processor, assuming ideal operating conditions. In absence of an
-> > external constraint (power, thermal, etc.) this is the performance level
-> > the platform is expected to be able to maintain continuously. All
-> > processors are expected to be able to sustain their nominal performance
-> > state simultaneously."
-> >
-> > We can use Highest Performance as the max performance in boost mode and
-> > Nomial Performance as the max performance in non-boost mode. If the
-> > Highest Performance is greater than the Nominal Performance, we assume
-> > SW BOOST is supported.
-> >
-> > Changelog:
-> >
-> > v4 -> v5:
-> >       add 'cpu_hotplug_lock' before calling '.set_boost'
-> > v3 -> v4:
-> >       run 'boost_set_msr_each' for each CPU in the policy rather than
-> >       each CPU in the system for 'acpi-cpufreq'
-> >       add 'Suggested-by'
-> >
-> > Xiongfeng Wang (2):
-> >   cpufreq: change '.set_boost' to act on only one policy
-> >   CPPC: add support for SW BOOST
-> >
-> >  drivers/cpufreq/acpi-cpufreq.c | 14 ++++++-----
-> >  drivers/cpufreq/cppc_cpufreq.c | 39 +++++++++++++++++++++++++++--
-> >  drivers/cpufreq/cpufreq.c      | 57 +++++++++++++++++++++++-------------------
-> >  include/linux/cpufreq.h        |  2 +-
-> >  4 files changed, 77 insertions(+), 35 deletions(-)
->
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+On Fri, Jun 05, 2020 at 02:12:54AM +0530, Syed Nayyar Waris wrote:
+> On Sun, May 31, 2020 at 12:50 AM kbuild test robot <lkp@intel.com> wrote:
 
-Both patches have been applied as 5.8-rc material with slightly
-modified subjects and the changelog of patch [1/2] has been updated.
+> > >> WARNING: modpost: lib/test_bitmap.o(.data+0xe80): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp1
+> > The variable clump_test_data references
+> > the variable __initconst clump_exp1
+> > If the reference is valid then annotate the
+> > variable with or __refdata (see linux/init.h) or name the variable:
+> >
+> > --
+> > >> WARNING: modpost: lib/test_bitmap.o(.data+0xec8): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp2
+> > The variable clump_test_data references
+> > the variable __initconst clump_exp2
+> > If the reference is valid then annotate the
+> > variable with or __refdata (see linux/init.h) or name the variable:
+> >
+> > --
+> > >> WARNING: modpost: lib/test_bitmap.o(.data+0xf10): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp3
+> > The variable clump_test_data references
+> > the variable __initconst clump_exp3
+> > If the reference is valid then annotate the
+> > variable with or __refdata (see linux/init.h) or name the variable:
+> >
+> > --
+> > >> WARNING: modpost: lib/test_bitmap.o(.data+0xf58): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp4
+> > The variable clump_test_data references
+> > the variable __initconst clump_exp4
+> > If the reference is valid then annotate the
+> > variable with or __refdata (see linux/init.h) or name the variable:
 
-Thanks!
+> I am unable to reproduce the compilation warning.
+
+You have to enable section mismatch checker.
+
+> I ran the command:
+> make W=1 C=1 ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'  lib/
+> 
+> But the compilation warning didn't show up. Can anyone please point to me
+> what I am doing wrong here? How shall I reproduce the warning? Thanks !
+
+You put some data into init section of the object, while you are trying to
+access it from non-init one. It's easy-to-fix issue.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
