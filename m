@@ -2,123 +2,133 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1528FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ACBC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E13C5207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02462086A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhPcPNY6"
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="dhDeTDU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbgFECfq (ORCPT
+        id S1726147AbgFECgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFECfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:35:45 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CCFC08C5C0;
-        Thu,  4 Jun 2020 19:35:45 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id j8so8644722iog.13;
-        Thu, 04 Jun 2020 19:35:45 -0700 (PDT)
+        Thu, 4 Jun 2020 22:36:14 -0400
+Received: from mail-mw2nam12on2133.outbound.protection.outlook.com ([40.107.244.133]:37216
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725961AbgFECgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:36:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TB4lky3j1XqavK9fuP+xixYNIgoDDL+XPV02i12d9oRILfkc6X1pjlIKkJFRJ1czkwDdUrFYPOW5fL8v8AAX6SNPh2eCjwSjuvs+rbenrOg7BJdDIuDmaj/qQlw9cuc+8e2MnNxUjJcqDL+/R5mOCbsKLPoNV5zNg+zcyVJyPZ0gGsm4yMBSMMuxZ/P518hZPClhMc3kPGzVRhyiMK0VBMHrixnRsEllXcXpSWMP9xPotNFSTok1male55v0MRKEULJUFe4pioD1P9zNnjZd8OFw2wjc8DCoMUQWvwdj7/yA4XrFbEXRiZSRCPq1o5xRbUrwZnyfXKjAPtCEA/i9pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=inDzhN1/lkRJ3pvoLaRxYejowHX5F8i56ZZ5uIhGhtg=;
+ b=BZHH2ud8A7T6xa/FztdhptZbO5prIgg0ALA3TvJ3dmelIU30zBzoWZSm1G4Jih/l26Lx+wVrzMsxMJPzbhZ4ddkKC+66LlMjtXAmBlmRT8GWxoPhhV33bo5gSt13P64ooLVuGxHf7efo1vnNdSwU5Z9QaP8Vx3Tgz3LmWG4yYxTFR55HJrQzZI8hG0XyiAL2R8n5tCcGazVw5CNEmxY34IY26XGzZL3dJOsGx9SUYGv2EyIMpyecsyfvS868qhc4EoySczrihsCzQOJPPQCOD+sthNNRIHZkp/rvYXlqf/VYIcIHRSABJm1AQ8IqyjD1GK39+qITP6S8j5uzzuKtwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z9EotnjM1m15VPlAC5q/xowE94IPhwwOBWYN2BOjzoA=;
-        b=FhPcPNY6IZzPvkjXJh6YjYMplRHKQ20MHU/nL2NRUfbIITN3kpSznaGAanpix1I4sP
-         36NwGPenDSyOGhUugL1GqOIhPH68f2hooQlnyzpTFdyqL3vhBrHMPb3dgMQkJpwm5SV2
-         EGqvjvby629GYnmjl+vMb2qKtBOurXNycaEWPls5zO+ZuBZj9MeHCPlgDaSziUVXceSB
-         qnKOxxHaev+DAVLicPMiX9l7vO9NzXW1nrmJq/7tsutPV9iaz9AX4apsUJ17JpAJur/c
-         nS48mDDv8u7H2gG5uBSjA9+4KiD9wTi594Q/s/d62wEBx0lefPVfXk0NH26jPmVtRKHb
-         GM6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z9EotnjM1m15VPlAC5q/xowE94IPhwwOBWYN2BOjzoA=;
-        b=MJEmbjlkFAKe+kVbdInneIThdj81KxEaJif/N072mjs4WyIiSkBFWU1ThaqnsnoH36
-         bcxRQtVTGOa8tnyjQQ66Ys9A9QrtfnYNn9WFZaIvbH1MnUmBTDhajCDs77Bb4Hkume1P
-         TrgvOhTFs3Qa3+49rR5l/XgF7XEJzwD99FCaEuJXKME2HzQWlxU3glaPUliRJ9eFQVHQ
-         07EFlQ+Re1rA/OaNLOjDn5eWFodKKdrX7f8frmfyGPwCoJ0OZuBmgJrc+vRWuaU7o8mc
-         3VDi+PwloipfwvQPIW78ChxhsG3btEZ64aALVjWCBaPxWMR41bDaVF9zHQcyE0GEqizI
-         yvLw==
-X-Gm-Message-State: AOAM532iZXtF9dgTJiBG+tmzdELJVk+RabBRek0wT/AVNSrMLTTJgyOt
-        m+rWUBnvUZ7Dq7MCDHpfWyrk2J45y3BdRJG/UFLDsw==
-X-Google-Smtp-Source: ABdhPJwRLe/QhaF5jTfwOKU/yzPdk6R3feJAYKNyBrxr3TYeTNastPqxL25fAD1Ji+5m1Xi9BhAzpB/NJCcurgcFDPU=
-X-Received: by 2002:a02:5184:: with SMTP id s126mr6779429jaa.30.1591324544909;
- Thu, 04 Jun 2020 19:35:44 -0700 (PDT)
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=inDzhN1/lkRJ3pvoLaRxYejowHX5F8i56ZZ5uIhGhtg=;
+ b=dhDeTDU/F6FhZsunGgbH53Bh5p0cWh/5K+QV1Caq4pcSIYLfkUcNEJ/UtWpffsa6Ub17EVTosmRmU/5qwVVUJywasyvV9UTMn9Vw1WQ5Wi5vS+ScTPN/1pLmw4p/fBV6ihErcbb749CUTUM5LDUfocvDSECN1HeJ7U6cbg5rm20=
+Authentication-Results: analogixsemi.com; dkim=none (message not signed)
+ header.d=none;analogixsemi.com; dmarc=none action=none
+ header.from=analogixsemi.com;
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com (2603:10b6:a03:229::8)
+ by BY5PR04MB7091.namprd04.prod.outlook.com (2603:10b6:a03:227::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 5 Jun
+ 2020 02:36:09 +0000
+Received: from BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::844e:398b:2165:631b]) by BY5PR04MB6739.namprd04.prod.outlook.com
+ ([fe80::844e:398b:2165:631b%7]) with mapi id 15.20.3066.018; Fri, 5 Jun 2020
+ 02:36:09 +0000
+Date:   Fri, 5 Jun 2020 10:36:01 +0800
+From:   Xin Ji <xji@analogixsemi.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH v12 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter DT schema
+Message-ID: <20200605023601.GB5626@xin-VirtualBox>
+References: <cover.1591253353.git.xji@analogixsemi.com>
+ <eb82c52574bf41b5edad488e14c27cabad39b922.1591253353.git.xji@analogixsemi.com>
+ <20200604222402.GA4153046@bogus>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604222402.GA4153046@bogus>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR04CA0067.apcprd04.prod.outlook.com
+ (2603:1096:202:15::11) To BY5PR04MB6739.namprd04.prod.outlook.com
+ (2603:10b6:a03:229::8)
 MIME-Version: 1.0
-References: <20200604161133.20949-1-alexander.mikhalitsyn@virtuozzo.com>
- <CAOQ4uxhGswjxZjc3mN7K99pPrDgMV9_194U46b2MgszZnq1SDw@mail.gmail.com> <AM6PR08MB36394A00DC129791CC89296AE8890@AM6PR08MB3639.eurprd08.prod.outlook.com>
-In-Reply-To: <AM6PR08MB36394A00DC129791CC89296AE8890@AM6PR08MB3639.eurprd08.prod.outlook.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 5 Jun 2020 05:35:33 +0300
-Message-ID: <CAOQ4uxisdLt-0eT1R=V1ihagMoNfjiTrUdcdF2yDgD4O94Zjcw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] overlayfs: C/R enhancements
-To:     Alexander Mikhalitsyn <alexander.mikhalitsyn@virtuozzo.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Andrey Vagin <avagin@virtuozzo.com>,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Vasiliy Averin <vvs@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xin-VirtualBox (114.247.245.254) by HK2PR04CA0067.apcprd04.prod.outlook.com (2603:1096:202:15::11) with Microsoft SMTP Server (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.20.3066.18 via Frontend Transport; Fri, 5 Jun 2020 02:36:08 +0000
+X-Originating-IP: [114.247.245.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d4703dd5-b970-4acf-e027-08d808f9347e
+X-MS-TrafficTypeDiagnostic: BY5PR04MB7091:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR04MB7091F7053943814118071062C7860@BY5PR04MB7091.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0425A67DEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vJozTt+g3JRn/UGIcPDakFkZsvDPjcjkXam9YKcZV0ZgjFg0rLLivQOtf0yYZDBx6pAupU/EcSh4BokuBnkq/NNxDxLwC/QJDmNzVrUpAeg7qjBPQySPropO648TYy2aERjq2o2Wy0Jo74AvcVoj4IPgRAF4DN/5MdjYMBTyHOcmzCQkTlFztSiXMyJLwZjbKJiMZZTiDgJIvI1d504C68gjtgMk03jIKz+pHmcykAsjuQCpH5OSE56mroEEy9Dg//xS+C4faOLYxTvTiW0uIhvTWnGF/vtnayCVhYp5s+dgCARjDHH6JTLTx1Ik5rgZ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6739.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(136003)(396003)(346002)(39840400004)(366004)(1076003)(5660300002)(86362001)(7416002)(6916009)(316002)(2906002)(4326008)(55016002)(107886003)(66476007)(9686003)(66556008)(26005)(956004)(54906003)(186003)(6666004)(16526019)(52116002)(478600001)(33716001)(8676002)(8936002)(6496006)(33656002)(4744005)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: wZ5HRx1/sqajLeypY6RIonzXV6zRSqOiQHcg5sSGQ8+jDgiSLAJIuNVIawJHrLXOy017VFhwQleMVz9lo7/HD9P5daEiFctvC/gnx6HqUUP9HQoPG8o3oJXjM+Ko8Jsp1P9eFtjpfRv9t2LNrfPmUIFg2gzdBle/c3zEQFbtGpqjTjMHk/XNb4QYL2HShGqJuP2l5rxivIPd81dKTQd/CWKsipjc3pzXD4ofMl1jlQYif+5BbsclKwv7VUoeT1jx4s1hoVC28Cq+FAHzDN/w5+tnmnJwwtLhxhdvKijWE9iJTmkmtLGB8M8IRLxNwKBYzAfvFxWs1G/+UeTwYfAl58d5lWIH/8j381uuiV9IFpG+6XNs9jq/Thj2F/pgTiI0F6mTXpUHdVlLL1U1IjOx4I3xN9TRu6n2j5KLFEM5CsjdSIrHgQ7eaH4BvIvfbpz26b2WTK2SW4vkJxU/Or96L8R1NcK26CHta2uEqR5XphM53cz3MIwgioLrGRuMKCxM
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4703dd5-b970-4acf-e027-08d808f9347e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 02:36:09.5246
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sl1GSCOwKjNjc0OcU2kYL+VIbiyLZFj77ynmYF2/YM2igwSl0ZBQgIF3vcu1dQThgNf6BmcbK/0Ud/ieDLlOCw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 12:34 AM Alexander Mikhalitsyn
-<alexander.mikhalitsyn@virtuozzo.com> wrote:
->
-> Hello,
->
-> >But overlayfs won't accept these "output only" options as input args,
-> which is a problem.
->
-> Will it be problematic if we simply ignore "lowerdir_mnt_id" and "upperdir_mnt_id" options in ovl_parse_opt()?
->
+On Thu, Jun 04, 2020 at 04:24:02PM -0600, Rob Herring wrote:
+> On Thu, 04 Jun 2020 15:56:36 +0800, Xin Ji wrote:
+> > anx7625: MIPI to DP transmitter DT schema
+> > 
+> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > ---
+> >  .../bindings/display/bridge/analogix,anx7625.yaml  | 95 ++++++++++++++++++++++
+> >  1 file changed, 95 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7625.yaml
+> > 
+> 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-That would solve this small problem.
-
-> >Wouldn't it be better for C/R to implement mount options
-> that overlayfs can parse and pass it mntid and fhandle instead
-> of paths?
->
-> Problem is that we need to know on C/R "dump stage" which mounts are used on lower layers and upper layer. Most likely I don't understand something but I can't catch how "mount-time" options will help us.
-
-As you already know from inotify/fanotify C/R fhandle is timeless, so
-there would be no distinction between mount time and dump time.
-About mnt_id, your patches will cause the original mount-time mounts to be busy.
-That is a problem as well.
-
-I think you should describe the use case is more details.
-Is your goal to C/R any overlayfs mount that the process has open
-files on? visible to process?
-For NFS export, we use the persistent descriptor {uuid;fhandle}
-(a.k.a. struct ovl_fh) to encode
-an underlying layer object.
-
-CRIU can look for an existing mount to a filesystem with uuid as restore stage
-(or even mount this filesystem) and use open_by_handle_at() to open a
-path to layer.
-After mounting overlay, that mount to underlying fs can even be discarded.
-
-And if this works for you, you don't have to export the layers ovl_fh in
-/proc/mounts, you can export them in numerous other ways.
-One way from the top of my head, getxattr on overlay root dir.
-"trusted.overlay" xattr is anyway a reserved prefix, so "trusted.overlay.layers"
-for example could work.
+Hi Rob Herring, thanks for your comment. I'll add tags in the next
+versions.
 
 Thanks,
-Amir.
+Xin
+
