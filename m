@@ -2,117 +2,101 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC561C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257722075B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5BB207D0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:19:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LrCc0pF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgFEJSj (ORCPT
+        id S1726285AbgFEJTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:18:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36746 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgFEJSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:18:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 55BAEAEE7;
+        Fri, 5 Jun 2020 05:19:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:51844 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726260AbgFEJTA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:19:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591348739; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=rOuMTfuZSakOmsFGGhwcSiyz0vHtYC8PrlCFy1ZsKyw=; b=LrCc0pF9xRFoIwtHrKiZQFGPZKRBas+l8BfdnZkELj+iysMGVaw/bfzIjGrQO2PioMdO1w3Z
+ TPWDgiD3TiOAPgkbHFQgeb5tGEONQTrx3UT68uqqFrhiGMzDflVik1IDrutpxkJp13i5uXlw
+ k+LxdCtwK5BWfRJcOeN9RA26gAM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5eda0df6c0031c71c2438ccc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 05 Jun 2020 09:18:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1EAEEC433B2; Fri,  5 Jun 2020 09:18:45 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B846EC43387;
         Fri,  5 Jun 2020 09:18:40 +0000 (UTC)
-Subject: Re: 5.7.0 / BUG: kernel NULL pointer dereference / setup_cpu_watcher
-To:     Christian Kujau <lists@nerdbynature.de>,
-        linux-kernel@vger.kernel.org
-Cc:     xen-devel@lists.xenproject.org
-References: <alpine.DEB.2.22.395.2006050059530.13291@trent.utfs.org>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <7e2dec0c-8e27-6454-7793-d1246262283d@suse.com>
-Date:   Fri, 5 Jun 2020 11:18:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B846EC43387
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>, x86@kernel.org,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
+        b43-dev@lists.infradead.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mm@kvack.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 04/10] rtlwifi: rtl8192cu: Remove uninitialized_var() usage
+References: <20200603233203.1695403-1-keescook@chromium.org>
+        <20200603233203.1695403-5-keescook@chromium.org>
+Date:   Fri, 05 Jun 2020 12:18:22 +0300
+In-Reply-To: <20200603233203.1695403-5-keescook@chromium.org> (Kees Cook's
+        message of "Wed, 3 Jun 2020 16:31:57 -0700")
+Message-ID: <87h7vpg9b5.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.395.2006050059530.13291@trent.utfs.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.06.20 10:36, Christian Kujau wrote:
-> Hi,
-> 
-> I'm running a small Xen PVH domain and upgrading from vanilla 5.6.0 to
-> 5.7.0 caused the splat below, really early during boot. The configuration
-> has not changed, all new "make oldconfig" prompts have been answered with
-> "N". Old and new config, dmesg are here:
-> 
->    http://nerdbynature.de/bits/5.7.0/
-> 
-> Searching the interwebs for similar reports didn't return much:
-> 
->   * drm_sched_get_cleanup_job: BUG: kernel NULL pointer dereference
->     https://bugzilla.redhat.com/show_bug.cgi?id=1822984  -- but this
->     appears to be really DRM related. - https://lkml.org/lkml/2020/4/10/545
-> 
->   * A recent mm/vmstat patch, mentioning "device_offline" in its output
->     https://patchwork.kernel.org/patch/11563009/
-> 
-> But other than a few overlapping strings, I guess all of that is totally
-> unrelated :(
+Kees Cook <keescook@chromium.org> writes:
 
-Do you happen to start the guest with vcpus < maxvcpus?
+> Using uninitialized_var() is dangerous as it papers over real bugs[1]
+> (or can in the future), and suppresses unrelated compiler warnings (e.g.
+> "unused variable"). If the compiler thinks it is uninitialized, either
+> simply initialize the variable or make compiler changes. As a precursor
+> to removing[2] this[3] macro[4], just initialize this variable to NULL,
+> and avoid sending garbage by returning.
+>
+> [1] https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/
+> [2] https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/
+> [3] https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/
+> [4] https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-If yes there is already a patch pending for 5.8:
+To which tree should this go? If something else than wireless-drivers
+tree:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git/commit/?h=for-linus-5.8&id=c54b071c192dfe8061336f650ceaf358e6386e0b
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
+But let me know if you want me to take this.
 
-Juergen
-
-> 
-> Thanks,
-> Christian.
-> 
-> 
-> Note: that "Xen Platform PCI: unrecognised magic value" on the top appears
-> in 5.6 kernels as well, but no ill effects so far.
-> 
-> ---------------------------------------------------------------
-> Xen Platform PCI: unrecognised magic value
-> ACPI: No IOAPIC entries present
-> BUG: kernel NULL pointer dereference, address: 00000000000002d0
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0
-> Oops: 0000 [#1] SMP PTI
-> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0 #2
-> RIP: 0010:device_offline+0x8/0xf0
-> Code: 48 89 e7 e8 3a ee f3 ff 4c 89 e0 48 83 c4 10 5b 41 5c c3 45 31 e4 48 83 c4 10 4c 89 e0 5b 41 5c c3 90 41 54 55 53 48 83 ec 10 <f6> 87 d0 02 00 00 01 0f 85 ca 00 00 00 48 89 fb 48 8b 7f 48 48 85
-> RSP: 0000:ffffbd9100013e78 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00000000820001fa
-> RDX: ffff9c9c3dd00000 RSI: 00000000820001fa RDI: 0000000000000000
-> RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000000000000
-> R10: ffff9c9c3d5072a8 R11: 0000000000000000 R12: ffff9c9c3d594720
-> R13: ffffffff8a57e5a8 R14: 0000000000000000 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff9c9c3dc00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000000002d0 CR3: 000000006b00a001 CR4: 00000000001606b0
-> Call Trace:
->   setup_cpu_watcher+0x44/0x60
->   ? plt_clk_driver_init+0xe/0xe
->   setup_vcpu_hotplug_event+0x23/0x26
->   do_one_initcall+0x47/0x180
->   kernel_init_freeable+0x13b/0x19d
->   ? rest_init+0x95/0x95
->   kernel_init+0x5/0xeb
->   ret_from_fork+0x35/0x40
-> Modules linked in:
-> CR2: 00000000000002d0
-> ---[ end trace b0cc587db609787f ]---
-> 
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
