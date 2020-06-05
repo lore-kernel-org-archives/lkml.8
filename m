@@ -2,135 +2,131 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6344FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7399B20814
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3D220885
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgFEErh convert rfc822-to-8bit (ORCPT
+        id S1726186AbgFEEss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:47:37 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59018 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFEErh (ORCPT
+        Fri, 5 Jun 2020 00:48:48 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55371 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEEsr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:47:37 -0400
-Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1jh4GM-0005KP-Mp; Fri, 05 Jun 2020 04:47:27 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id DF8785FEE7; Thu,  4 Jun 2020 21:47:24 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id D88F59FB38;
-        Thu,  4 Jun 2020 21:47:24 -0700 (PDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-Subject: Re: [PATCH v2 1/2] PCI/ERR: Fix fatal error recovery for non-hotplug capable devices
-In-reply-to: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Comments: In-reply-to sathyanarayanan.kuppuswamy@linux.intel.com
-   message dated "Thu, 04 Jun 2020 14:50:01 -0700."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        Fri, 5 Jun 2020 00:48:47 -0400
+Received: by mail-pj1-f65.google.com with SMTP id fs4so2086763pjb.5;
+        Thu, 04 Jun 2020 21:48:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hZJ/8eC3dXgO2wjOVlMTwGutqE9JsxFfUeV6PLxhCNI=;
+        b=GkH4AZMcOOS0uJapW5bQb/EqiiT1ipzs0CMY27LrxGg/EtrtdaovejIw989+g+4TM/
+         HNW8ZL/wdPyrxXbHfYUcVN3gwF6dV7XMB5H+MGdggIk9cQjk0r2SqNVdkmk3jKm56L52
+         HZ0X2y0vEttbVab4P8MqlqxnwrhoAgMK4Ench5KCq8eiDmM8QiklUQxxJPe+9k9DWRLt
+         qtgjWpmEx1RsmJFD+HWIBq574BjVdWyd9Gr8lXS26q+jXs/vJFRch1HLAwn6X4B/tvhd
+         LNKwChUmfJPhS8aJDNSDtoiiGg1T0RHzBLWT/GZP+FaDTmxk3BKDc7UjRfa6a+YGbYDP
+         ZaoA==
+X-Gm-Message-State: AOAM530fTP/r27wg/TVg8mo/nDesvvrHkpszroWDEXEtoyd81HAuV+H+
+        n0P3fMlQJyOiCZxHPcjE9OM=
+X-Google-Smtp-Source: ABdhPJzjpcvMSRc3KdygbaK4reL7DmJ3DtfxVBQks3TRN9he4J7tpkNDbeT/u0niDt9o4m8FuIkAxw==
+X-Received: by 2002:a17:90a:2326:: with SMTP id f35mr816617pje.115.1591332526520;
+        Thu, 04 Jun 2020 21:48:46 -0700 (PDT)
+Received: from [192.168.50.149] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id m16sm5798572pfh.187.2020.06.04.21.48.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2020 21:48:45 -0700 (PDT)
+Subject: Re: [PATCH v5 5/7] blktrace: fix debugfs use after free
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        akpm@linux-foundation.org, mhocko@suse.com, yukuai3@huawei.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+References: <20200516031956.2605-1-mcgrof@kernel.org>
+ <20200516031956.2605-6-mcgrof@kernel.org>
+ <20200519163713.GA29944@infradead.org>
+ <20200527031202.GT11244@42.do-not-panic.com>
+ <20200601170500.GF13911@42.do-not-panic.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <d4ef5da1-7d11-657c-f864-8b2ca6ea082c@acm.org>
+Date:   Thu, 4 Jun 2020 21:48:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <25282.1591332444.1@famine>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 04 Jun 2020 21:47:24 -0700
-Message-ID: <25283.1591332444@famine>
+In-Reply-To: <20200601170500.GF13911@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+On 2020-06-01 10:05, Luis Chamberlain wrote:
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index a55cbfd060f5..5b0310f38e11 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -511,6 +511,11 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+>  	 */
+>  	if (bdev && bdev != bdev->bd_contains) {
+>  		dir = bdev->bd_part->debugfs_dir;
+> +	} else if (q->sg_debugfs_dir &&
+> +		   strlen(buts->name) == strlen(q->sg_debugfs_dir->d_name.name)
+> +		   && strcmp(buts->name, q->sg_debugfs_dir->d_name.name) == 0) {
+> +		/* scsi-generic requires use of its own directory */
+> +		dir = q->sg_debugfs_dir;
+>  	} else {
+>  		/*
+>  		 * For queues that do not have a gendisk attached to them, that
+> 
 
->From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->
->Fatal (DPC) error recovery is currently broken for non-hotplug
->capable devices. With current implementation, after successful
->fatal error recovery, non-hotplug capable device state won't be
->restored properly. You can find related issues in following links.
->
->https://lkml.org/lkml/2020/5/27/290
->https://lore.kernel.org/linux-pci/12115.1588207324@famine/
->https://lkml.org/lkml/2020/3/28/328
->
->Current fatal error recovery implementation relies on hotplug handler
->for detaching/re-enumerating the affected devices/drivers on DLLSC
->state changes. So when dealing with non-hotplug capable devices,
->recovery code does not restore the state of the affected devices
->correctly. Correct implementation should call report_slot_reset()
->function after resetting the link to restore the state of the
->device/driver.
->
->So use PCI_ERS_RESULT_NEED_RESET as error status for successful
->reset_link() operation and use PCI_ERS_RESULT_DISCONNECT for failure
->case. PCI_ERS_RESULT_NEED_RESET error state will ensure slot_reset()
->is called after reset link operation which will also fix the above
->mentioned issue.
->
->[original patch is from jay.vosburgh@canonical.com]
->[original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
->Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Please Cc Martin Petersen for patches that modify SCSI code.
 
-	I've tested this patch set on one of our test machines, and it
-resolves the issue.  I plan to test with other systems tomorrow.
+The string comparison check looks fragile to me. Is the purpose of that
+check perhaps to verify whether tracing is being activated through the
+SCSI generic interface? If so, how about changing that test into
+something like the following?
 
-	-J
+	MAJOR(dev) == SCSI_GENERIC_MAJOR
 
->---
-> drivers/pci/pcie/err.c | 24 ++++++++++++++++++++++--
-> 1 file changed, 22 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->index 14bb8f54723e..5fe8561c7185 100644
->--- a/drivers/pci/pcie/err.c
->+++ b/drivers/pci/pcie/err.c
->@@ -165,8 +165,28 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> 	pci_dbg(dev, "broadcast error_detected message\n");
-> 	if (state == pci_channel_io_frozen) {
-> 		pci_walk_bus(bus, report_frozen_detected, &status);
->-		status = reset_link(dev);
->-		if (status != PCI_ERS_RESULT_RECOVERED) {
->+		/*
->+		 * After resetting the link using reset_link() call, the
->+		 * possible value of error status is either
->+		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
->+		 * PCI_ERS_RESULT_NEED_RESET (success case).
->+		 * So ignore the return value of report_error_detected()
->+		 * call for fatal errors. Instead use
->+		 * PCI_ERS_RESULT_NEED_RESET as initial status value.
->+		 *
->+		 * Ignoring the status return value of report_error_detected()
->+		 * call will also help in case of EDR mode based error
->+		 * recovery. In EDR mode AER and DPC Capabilities are owned by
->+		 * firmware and hence report_error_detected() call will possibly
->+		 * return PCI_ERS_RESULT_NO_AER_DRIVER. So if we don't ignore
->+		 * the return value of report_error_detected() then
->+		 * pcie_do_recovery() would report incorrect status after
->+		 * successful recovery. Ignoring PCI_ERS_RESULT_NO_AER_DRIVER
->+		 * in non EDR case should not have any functional impact.
->+		 */
->+		status = PCI_ERS_RESULT_NEED_RESET;
->+		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
->+			status = PCI_ERS_RESULT_DISCONNECT;
-> 			pci_warn(dev, "link reset failed\n");
-> 			goto failed;
-> 		}
->-- 
->2.17.1
->
+Thanks,
 
----
-	-Jay Vosburgh, jay.vosburgh@canonical.com
+Bart.
