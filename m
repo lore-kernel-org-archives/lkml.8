@@ -2,98 +2,92 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DACA72064C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591400039;
-	bh=SCwcwOEXwYB8Rd++LcpstkfjD1m07ThcObKhyifVMlo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t84wm6rst6fzfO2oa68MrFtgiNyHKCBJGKVlvRqxMuS2QnmyEfWIPxuKYzq9ju3Rp
-	 hHi9P6WUEjwKAwxyE+R40lvBiZv5j8ZadtSFJyxtu/pdtEJkPXCpfPyUv2Dc98+YQ5
-	 cUpnKwlHCDFCepnzMlpyJYhcHRJEMKleQumyniNE=
+	by mail.kernel.org (Postfix) with ESMTP id 8AFA2207F9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgFEXd7 (ORCPT
+        id S1728564AbgFEXm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 19:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgFEXd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 19:33:57 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3915DC08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 16:33:56 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id b6so13784212ljj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 16:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ClAVloF54JIqrc+m+0ATOT37Q30+IcoX9urgdaodTTM=;
-        b=HenIB/3KEnX6g7OVHqu+kSDDosed1DGCBW9BlMitBhtXu1qUftlTh0ByQYgIxxzPaJ
-         v1BjKRoudpt4MRAW4isZGAyfXDO8MooDq35/5ak4ac6HzntoEvXpzd5SVBQKA2dAjkgz
-         VEzncixfstBUoWrWg53pxL1hUYFIG0E2zxjFk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ClAVloF54JIqrc+m+0ATOT37Q30+IcoX9urgdaodTTM=;
-        b=obz0XpL57QAV9akfnUe1k9Mr8TXbWJpR8UvrXQl6iubTpzPpJL6a9DS543byFLPODi
-         yyUx1dQxjgL0cTO0b2bIZvsrUJD9hrIfWXsV55Ld1IhAttzGyuCu3yFz2WOx1ZZnFGE/
-         24Bo9l3D25l7d9M0nP+WYnsIn1m+XNmH372rS37t3RAg9r6EB4zMhvmn1W2SOeVZMVcW
-         v2NGOuzeDJ+oaaxW1kjnnmg/Wkt3o1vTJytDId2s2dQ3m14U+ri7Op7zKBEsKQySLfO+
-         MX+0upJWNuGxfoZXOdNWak6TZWGDOKjuRJP6T6A9myAi6HU0u6vGH2K4wUDM/ZVV1Nfg
-         NFyQ==
-X-Gm-Message-State: AOAM530UrLelpHaqTRSyxWxqlkBPPhkPqD8Vhpp9e99pEhbahFLRp1sJ
-        Sm3GX1MGSI/MIamBieVZBaeG0hB/zvI=
-X-Google-Smtp-Source: ABdhPJxwAZn8pejrqIJX36pC2/e3/SUWmdpAe1bVvyanS+9qI3soZ+24pb4iBDRDAOHeLaigO8x3qQ==
-X-Received: by 2002:a2e:97c3:: with SMTP id m3mr5861578ljj.312.1591400033960;
-        Fri, 05 Jun 2020 16:33:53 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id p1sm1487563lfo.66.2020.06.05.16.33.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 16:33:52 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id 9so4097740ljv.5
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 16:33:52 -0700 (PDT)
-X-Received: by 2002:a2e:b5d7:: with SMTP id g23mr5449089ljn.70.1591400031826;
- Fri, 05 Jun 2020 16:33:51 -0700 (PDT)
+        Fri, 5 Jun 2020 19:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728378AbgFEXmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 19:42:23 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DEB8207D8;
+        Fri,  5 Jun 2020 23:42:23 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jhLyg-002sBt-9U; Fri, 05 Jun 2020 19:42:22 -0400
+Message-ID: <20200605234222.155657946@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Fri, 05 Jun 2020 19:41:52 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [PATCH RT 3/8] Revert "rt: Improve the serial console PASS_LIMIT"
+References: <20200605234149.965509211@goodmis.org>
 MIME-Version: 1.0
-References: <2240660.1591289899@warthog.procyon.org.uk>
-In-Reply-To: <2240660.1591289899@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 5 Jun 2020 16:33:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgsxbn2QamOL_xu0F8srnpmsAZ-k6eJMCFazAKOcJ4t9w@mail.gmail.com>
-Message-ID: <CAHk-=wgsxbn2QamOL_xu0F8srnpmsAZ-k6eJMCFazAKOcJ4t9w@mail.gmail.com>
-Subject: Re: [GIT PULL] afs: Improvements for v5.8
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-afs@lists.infradead.org,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 9:58 AM David Howells <dhowells@redhat.com> wrote:
->
->  (4) Improve Ext4's time updating.  Konstantin Khlebnikov said "For now,
->      I've plugged this issue with try-lock in ext4 lazy time update.  This
->      solution is much better."
+5.4.44-rt27-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-It would have been good to get acks on this from the ext4 people, but
-I've merged this as-is (but it's still going through my sanity tests,
-so if that triggers something it might get unpulled again).
+------------------
 
-                  Linus
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+There is no need to loop for longer. The message of too much work was
+removed in commit
+    9d7c249a1ef9b ("serial: 8250: drop the printk from serial8250_interrupt()")
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ drivers/tty/serial/8250/8250_core.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 809a65f68028..02bfafa8a672 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -55,16 +55,7 @@ static struct uart_driver serial8250_reg;
+ 
+ static unsigned int skip_txen_test; /* force skip of txen test at init time */
+ 
+-/*
+- * On -rt we can have a more delays, and legitimately
+- * so - so don't drop work spuriously and spam the
+- * syslog:
+- */
+-#ifdef CONFIG_PREEMPT_RT
+-# define PASS_LIMIT	1000000
+-#else
+-# define PASS_LIMIT	512
+-#endif
++#define PASS_LIMIT	512
+ 
+ #include <asm/serial.h>
+ /*
+-- 
+2.26.2
+
+
