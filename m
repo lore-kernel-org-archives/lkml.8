@@ -2,71 +2,154 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A072074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71EA20772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:04:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWoLOs1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgFEWCZ (ORCPT
+        id S1728275AbgFEWEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbgFEWCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:02:24 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A91206FA;
-        Fri,  5 Jun 2020 22:02:23 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 18:02:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Jiri Olsa" <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [RFC] perf/core: allow ftrace for functions in
- kernel/event/core.c
-Message-ID: <20200605180222.6cc3b34c@oasis.local.home>
-In-Reply-To: <595AB855-8E84-4367-AEEC-C140F035C9B4@fb.com>
-References: <20200526212826.4097888-1-songliubraving@fb.com>
-        <20200526213913.GG2483@worktop.programming.kicks-ass.net>
-        <A9B20D93-748B-4789-801E-91720E2D4F28@fb.com>
-        <20200526215415.GH2483@worktop.programming.kicks-ass.net>
-        <20200526180437.45aed950@gandalf.local.home>
-        <595AB855-8E84-4367-AEEC-C140F035C9B4@fb.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 5 Jun 2020 18:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgFEWEv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 18:04:51 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C08C08C5C2;
+        Fri,  5 Jun 2020 15:04:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id p5so11159707wrw.9;
+        Fri, 05 Jun 2020 15:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4obgiWJMjzopugCNtxoiM9Fhsn1z9LnA6SizhmkTt9g=;
+        b=oWoLOs1DYFcKnc8iyzbCZ5ZjmvwzsLAT0uIZzcGnirqHov3z6YGwjUGZSTtIs7Y8Rg
+         8xMoBSEI1DJHKhJu5l/4DyyYhmVYPtrPxGF8cidtj/AY1sx/rUmFNeqb6uhmNwyP9IKK
+         JLPa/uJZkImCV+PcqI0o8T8pHZQ74MxP+TYPEtsKScM/B6AGX6ocLuSxmazHCdCPqxBH
+         YKZQBoGBMLFLh6YbYGxROSRKqOmtbLRj0aI4EpP+VwyIxNqxnB7bO6Xe4di9FQCV5imO
+         fzTaYt/G66Z68LK/oltgGYC0EIj+e3eiMPpBQR/V0pd6dPfEv3sjVEZ0cw2C9Bsmeoy3
+         TEyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4obgiWJMjzopugCNtxoiM9Fhsn1z9LnA6SizhmkTt9g=;
+        b=li7UTBKe+b8qZx59wGmN87GkugFnblDLkzshtUjN6RKS7dRN/VRsM5FxLFZnmhG9rk
+         t8wCMVeXuu4iupwrrHu/aKwJqwsxrGlAyJzW2btPE5WypiovNKPRKNLcyz7qF12yV1iW
+         dtAblmMgWvXkvDzxtMnvy7n9WRa3zkhRmbmB0XBhd1ZFIZgCrxXM6oWWwJwMABALDvt/
+         c35vHawQPne/C3cyW5WPf3NJEpkI+yprGOva5aES/cvyXpalY/ICHgpuQFPO/E1ld5K2
+         FR6tuZaI44UapWyWgiXEQ12x5VibsycbO4f/8xnFQv50GBjf9v3q8aL++1eRQRwKYgOY
+         QhHQ==
+X-Gm-Message-State: AOAM530hO+wsMxJfiAmBcRa25p2fgZQf2Bkv9UKyMEq0PNgezJkrH2F5
+        qY/0I8TuXcmtEBKXREI2lSA=
+X-Google-Smtp-Source: ABdhPJwJjWSx6RXx3ecmtFnocQfoqBGkAO9vSi2BfvV03xiJ7JhGCPlV2aEFgXx7veXxm5wOr3U6nw==
+X-Received: by 2002:adf:8b0c:: with SMTP id n12mr12594963wra.340.1591394689565;
+        Fri, 05 Jun 2020 15:04:49 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a1sm13205415wmd.28.2020.06.05.15.04.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 15:04:48 -0700 (PDT)
+Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>, lukas@wunner.de
+Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+References: <20200604212819.715-1-f.fainelli@gmail.com>
+ <142d48ae-2725-1368-3e11-658449662371@arm.com>
+ <20200605132037.GF5413@sirena.org.uk>
+ <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
+ <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
+Date:   Fri, 5 Jun 2020 15:04:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jun 2020 21:58:48 +0000
-Song Liu <songliubraving@fb.com> wrote:
 
+
+On 6/5/2020 7:41 AM, Robin Murphy wrote:
+> On 2020-06-05 14:46, Robin Murphy wrote:
+>> On 2020-06-05 14:20, Mark Brown wrote:
+>>> On Fri, Jun 05, 2020 at 12:34:36PM +0100, Robin Murphy wrote:
+>>>> On 2020-06-04 22:28, Florian Fainelli wrote:
+>>>
+>>>>> For the BCM2835 case which is deemed performance critical, we would
+>>>>> like
+>>>>> to continue using an interrupt handler which does not have the extra
+>>>>> comparison on BCM2835_SPI_CS_INTR.
+>>>
+>>>> FWIW, if I'm reading the patch correctly, then with sensible codegen
+>>>> that
+>>>> "overhead" should amount to a bit test on a live register plus a
+>>>> not-taken
+>>>> conditional branch - according to the 1176 TRM that should add up to a
+>>>> whopping 2 cycles. If that's really significant then I'd have to wonder
+>>>> whether you want to be at the mercy of the whole generic IRQ stack
+>>>> at all,
+>>>> and should perhaps consider using FIQ instead.
+>>>
+>>> Yes, and indeed the compiler does seem to manage that.  It *is* non-zero
+>>> overhead though.
+>>
+>> True, but so's the existing level of pointer-chasing indirection that
+>> with some straightforward refactoring could be taken right out of the
+>> critical path and confined to just the conditional complete() call.
+>> That's the kind of thing leaving me unconvinced that this is code
+>> where every single cycle counts ;)
 > 
-> How does this work in your tests? 
+> Ha, and in fact having checked a build out of curiosity, this patch
+> as-is actually stands to make things considerably worse. At least with
+> GCC 8.3 and bcm2835_defconfig, bcm2835_spi_interrupt_common() doesn't
+> get inlined, which means bcm2835_spi_interrupt() pushes/pops a stack
+> frame and makes an out-of-line call to bcm2835_spi_interrupt_common(),
+> resulting in massively *more* work than the extra two instructions of
+> simply inlining the test.
+> 
+> So yes, the overhead of inlining the test vs. the alternative is indeed
+> non-zero. It's just also negative :D
 
-I started it, but got distracted by other work. It did not crash with
-the little testing I did do. I wanted to also look at my patch that
-adds tracing to the ftrace directory too.
+Is it reliable across compiler versions if we use __always_inline?
 
-I'll try to remember to address this some more next week. Feel free to
-ping me again then.
+The only other alternative that I can think of is using a static key to
+eliminate the test for the single controller case. This feels highly
+over engineered, but if that proves more reliable and gets everybody
+their cookie, why not.
 
--- Steve
-
+Lukas, do you have any way to test with the conditional being present
+that the performance or latency does not suffer so much that it becomes
+unacceptable for your use cases?
+-- 
+Florian
