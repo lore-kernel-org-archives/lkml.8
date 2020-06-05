@@ -2,141 +2,86 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78669C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE42C207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:04:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g39gSyKS"
+	by mail.kernel.org (Postfix) with ESMTP id 459142077D
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 16:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591373484;
+	bh=NZnV11U8sQBzLsjL+Ih82Hj1FQcrfTDZO6BsJVQT/T4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bw3jqzrmuVmE8MtYUoNKrt0+yR2j5EjjaHcEwKv57LUCqHjbRcbptd2Gx0MmHQvn3
+	 rMIGTFXD/j7/oZBmWhqOLWzat01hpk2Yuj9u29xHSDNLJTJSiY7bOxtozKHiWXqKSm
+	 CiM3vQQKMl7RpPNExq4RaNBLbbB1mrTumSDVKh+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgFEQE7 (ORCPT
+        id S1726083AbgFEQLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 12:04:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgFEQE6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 12:04:58 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466ACC08C5C2;
-        Fri,  5 Jun 2020 09:04:58 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so2907422pjd.1;
-        Fri, 05 Jun 2020 09:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=73E7RcoyD6PaDcTNS+l4UhJfaffhxVQRNwIljXNBTnY=;
-        b=g39gSyKSZ6nFdS355NhJxXV7kRDPp92lfjop20jdOKudJotgA9Ley+ZJhs/ANJc3uk
-         pDCQVLIAa3R1hAHTcDHOkQVw60cQN9Ez9VJjAavkzRmNoiMdOQLPyY4Yjn4K/DTONTKD
-         RYpMjFy9eNrbO9NyUCQgWrii1EJkZEVv7LB8hG9G8/vTy94NRCaXNplr42FN0BbFoyiN
-         eEy0gT7M5xNAUK0eulmJqkSnqL/pT5dYN/TjacCb/49FFpdjtd1KSTS3mn7WOaYvKU4o
-         pRXg2LkXyORq06y5fGWS0NLv0VFPeVDB77y3Q+7LdyS1tru4TjQ7nhL8PR+qo4VfKptJ
-         BSwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=73E7RcoyD6PaDcTNS+l4UhJfaffhxVQRNwIljXNBTnY=;
-        b=mtene7sWzMnvCc54kfZayBCZAPHYQJZw1K7ZvcyOKuvkXTxpivBhrbhxaeoD6EiruA
-         2zgWDeyK8+dftriUWxNi4Q4y1FccrOFfPk3N2FgcFpjpr1xLkXr2uidU8h0lnaLou7gf
-         uHrTleQ+tIgxouyvqfbt+ag2uUeKlZ6uNQjAS7gti3v97+3HArr0+RPSHaH56mbFjxFH
-         xVMxIP90dkxVVEW44PeG+k5FmDheSkX+BNPgeRo4Cchdf3yA22MX/MimNVrrP9nfRFMM
-         uoU/d/rayHBf1yfKZKwVnDOiOfY0iFsHY+BkNQc34m5Ii3q/q3XN8dt0ZHcIK+Jjk7u+
-         WugQ==
-X-Gm-Message-State: AOAM530mXgYskB7GiM4ReieDyKGN2MXhBtyAkTe0LZV9jAfW+zSMNgbL
-        i481U2+UTbVHrU6FKDkiyiTGij4Btr85msIyDyQZ1CkRisY=
-X-Google-Smtp-Source: ABdhPJzPaq665EFE1ksqX24DQEG6g0+cqU1LKgTTLqD7rhez7XPSsEjdUlhj39QWiyrEeqMUme8o/zQYAwiDdMDxHs8=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr3950020pjq.228.1591373097587;
- Fri, 05 Jun 2020 09:04:57 -0700 (PDT)
+        Fri, 5 Jun 2020 12:11:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgFEQLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 12:11:22 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C59C206DB;
+        Fri,  5 Jun 2020 16:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591373482;
+        bh=NZnV11U8sQBzLsjL+Ih82Hj1FQcrfTDZO6BsJVQT/T4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JX4sH+Kl1LUL+oFflby7emnQQW7r38BOfqmaJL7kOaC2ZYQl9dDsN8hWxk8nK44QZ
+         7wTlwJ94E/+HCpHCKV6XJmX9tF1RM/d2fbeZF3S/WSY3Blo69Gn9hJXf3YNBCOSG+P
+         hafDk7AEz42wn331P0PxE0rD0m3c4FyqQBkVEa0o=
+Date:   Fri, 5 Jun 2020 09:11:21 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     syzbot <syzbot+3eec59e770685e3dc879@syzkaller.appspotmail.com>,
+        bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: BUG: using smp_processor_id() in preemptible code in
+ radix_tree_node_alloc
+Message-ID: <20200605161121.GC1373@sol.localdomain>
+References: <000000000000a363b205a74ca6a2@google.com>
+ <20200605035555.GA2667@sol.localdomain>
+ <20200605112922.GB19604@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-5-michael@walle.cc>
- <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
- <8f042c2442852c29519c381833f3d289@walle.cc> <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
- <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net> <20200605140911.GO2428291@smile.fi.intel.com>
- <20200605150542.GA254229@roeck-us.net>
-In-Reply-To: <20200605150542.GA254229@roeck-us.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 19:04:45 +0300
-Message-ID: <CAHp75VduUG=XkvyZwdZDNqBh3KE67MWZWgqBN67fN6StAa469w@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Michael Walle <michael@walle.cc>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605112922.GB19604@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 6:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On Fri, Jun 05, 2020 at 05:09:11PM +0300, Andy Shevchenko wrote:
-> > On Fri, Jun 05, 2020 at 06:52:00AM -0700, Guenter Roeck wrote:
-> > > On 6/5/20 3:50 AM, Andy Shevchenko wrote:
-> > > > On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
-> > > >> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
-> > > >>> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
-> >
-> > ...
-> >
-> > > >>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> > > >>>> +module_param(nowayout, bool, 0);
-> > > >>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
-> > > >>>> (default="
-> > > >>>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
-> > > >>>> ")");
-> > > >>>> +
-> > > >>>> +static int timeout;
-> > > >>>> +module_param(timeout, int, 0);
-> > > >>>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> > > >>>
-> > > >>> Guenter ACKed this, but I'm wondering why we still need module
-> > > >>> parameters...
-> > > >>
-> > > >> How would a user change the nowayout or the timeout? For the latter
-> > > >> there is
-> > > >> a device tree entry, but thats not easy changable by the user.
-> > > >
-> > > > Yes, it's more question to VIm and Guenter than to you.
-> > > >
-> > >
-> > > Has support for providing module parameters with the kernel command line
-> > > been discontinued/deprecated, or did it run out of favor ? Sorry if I
-> > > missed that.
-> >
-> > Latter according to Greg KH. One of the (plenty) examples [1].
-> >
-> > [1]: https://www.mail-archive.com/driverdev-devel@linuxdriverproject.org/msg96495.html
-> >
-> What is the suggested replacement ?
+On Fri, Jun 05, 2020 at 04:29:22AM -0700, Matthew Wilcox wrote:
+> On Thu, Jun 04, 2020 at 08:55:55PM -0700, Eric Biggers wrote:
+> > Possibly a bug in lib/radix-tree.c?  this_cpu_ptr() in radix_tree_node_alloc()
+> > can be reached without a prior preempt_disable().  Or is the caller of
+> > idr_alloc() doing something wrong?
+> 
+> Yes, the idr_alloc() call is plainly wrong:
+> 
+>         mutex_lock(&qrtr_port_lock);
+>         if (!*port) {
+>                 rc = idr_alloc(&qrtr_ports, ipc,
+>                                QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
+>                                GFP_ATOMIC);
+> 
+> If we can take a mutex lock, there's no excuse to be using GFP_ATOMIC.
+> That (and the call slightly lower in the function) should be GFP_KERNEL
+> as the minimal fix (below).  I'll send a followup patch which converts
+> this IDR to the XArray instead.
 
-In some mails he suggested to use sysfs.
+I did see that the GFP_ATOMIC was unnecessary, but it wasn't obvious to me that
+it was actually *wrong*.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Shouldn't this requirement be documented for the @gfp argument to idr_alloc()?
+
+- Eric
