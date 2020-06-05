@@ -1,125 +1,179 @@
-Return-Path: <SRS0=TsDl=7R=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D553CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9759820885
-	for <linux-kernel@archiver.kernel.org>; Thu,  4 Jun 2020 23:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1249206FA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 00:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oZKNYYSd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fsyQpS9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgFDXuw (ORCPT
+        id S1726044AbgFEABi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 19:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgFDXuv (ORCPT
+        Thu, 4 Jun 2020 20:01:38 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:40412 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgFEABi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 19:50:51 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ABFC08C5C0;
-        Thu,  4 Jun 2020 16:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zd4mes2BosmuFtfxX993NYsNl3JofXApEXaS2L2Ahxo=; b=oZKNYYSdr+hQlwG33pEv98hFFt
-        xKb+ex6ntArPYooazlnjnglvCWH60//QaGdgMpdLZqxxQzSV5+wtnBxJTA4qidME6oTOXT087jtkT
-        ZRogGDJAhYiUY40e+NMTbxpLiU8lKVM2m/arjiaYuKUWo+PqodhzOn8Ws87yUhUb2xt2TauhtV2ty
-        p6cw9t+luO4t1VXTMyew+jpImhI6hDJWVLbqlJ5NobIkV7SYl1BGH0dTLU51i9vWK47MlZJw3Qn7g
-        pHZj2mstwkP3dplf9FnNJ7RZ1cFRJOAGsnth2NCphWWWDYquZH4w8kc3+nJmXY6ZiA00C28O3WPCN
-        FU24Ks1w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgzdK-0000wH-IF; Thu, 04 Jun 2020 23:50:50 +0000
-Date:   Thu, 4 Jun 2020 16:50:50 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
-Message-ID: <20200604235050.GX19604@bombadil.infradead.org>
-References: <20200604202340.29170-1-willy@infradead.org>
- <20200604225726.GU2040@dread.disaster.area>
- <20200604230519.GW19604@bombadil.infradead.org>
- <20200604233053.GW2040@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604233053.GW2040@dread.disaster.area>
+        Thu, 4 Jun 2020 20:01:38 -0400
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1825120B7185;
+        Thu,  4 Jun 2020 17:01:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1825120B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1591315297;
+        bh=9JL8mvQwy+Q0hLJa7h0p6p7R2yQdcRE5qvZum3vex+Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fsyQpS9Ye//xpHqVE9xVfUsQHlvFw8Q30QqvOwrES88tCaNh4XNagB19t1AQK+WtZ
+         dfi8SVmu2FpDC4BoraVAuLfCWRaWEDYiT6sX9jHgu/JzuBA4Q8FxL52eL9sbMzBsE5
+         YDUUlnclvbzpTQW3PvTeApIZ8xnZY2DC442ee4zQ=
+From:   Vijay Balakrishna <vijayb@linux.microsoft.com>
+To:     Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Tyler Hicks <tyhicks@linux.microsoft.com>
+Subject: [PATCH][RFC] kdump: append kernel build-id string to VMCOREINFO
+Date:   Thu,  4 Jun 2020 17:01:31 -0700
+Message-Id: <1591315291-66957-1-git-send-email-vijayb@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 09:30:53AM +1000, Dave Chinner wrote:
-> On Thu, Jun 04, 2020 at 04:05:19PM -0700, Matthew Wilcox wrote:
-> > On Fri, Jun 05, 2020 at 08:57:26AM +1000, Dave Chinner wrote:
-> > > On Thu, Jun 04, 2020 at 01:23:40PM -0700, Matthew Wilcox wrote:
-> > > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > > 
-> > > > Test generic/019 often results in:
-> > > > 
-> > > > WARNING: at fs/iomap/buffered-io.c:1069 iomap_page_mkwrite_actor+0x57/0x70
-> > > > 
-> > > > Since this can happen due to a storage error, we should not WARN for it.
-> > > > Just return -EIO, which will be converted to a SIGBUS for the hapless
-> > > > task attempting to write to the page that we can't read.
-> > > 
-> > > Why didn't the "read" part of the fault which had the EIO error fail
-> > > the page fault? i.e. why are we waiting until deep inside the write
-> > > fault path to error out on a failed page read?
-> > 
-> > I have a hypothesis that I don't know how to verify.
-> > 
-> > First the task does a load from the page and we put a read-only PTE in
-> > the page tables.  Then it writes to the page using write().  The page
-> > gets written back, but hits an error in iomap_writepage_map()
-> > which calls ClearPageUptodate().  Then the task with it mapped attempts
-> > to store to it.
-> 
-> Sure, but that's not really what I was asking: why isn't this
-> !uptodate state caught before the page fault code calls
-> ->page_mkwrite? The page fault code has a reference to the page,
-> after all, and in a couple of paths it even has the page locked.
+Make kernel GNU build-id available in VMCOREINFO.  Having
+build-id in VMCOREINFO facilitates presenting appropriate kernel
+namelist image with debug information file to kernel crash dump
+analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
+key for crash analysis automation.
 
-If there's already a PTE present, then the page fault code doesn't
-check the uptodate bit.  Here's the path I'm looking at:
+Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+---
+Regarding if this patch is necessary or matching of linux_banner
+and OSRELEASE in VMCOREINFO employed by crash(8) meets the
+need -- IMO, build-id approach more foolproof, in most instances it
+is a cryptographic hash generated using internal code/ELF bits unlike
+kernel version string upon which linux_banner is based that is
+external to the code.  I feel each is intended for a different purpose.
+Also OSRELEASE is not suitable when two different kernel builds
+from same version with different features enabled.
 
-do_wp_page()
- -> vm_normal_page()
- -> wp_page_shared()
-     -> do_page_mkwrite()
+Currently for most linux (and non-linux) systems build-id can be
+extracted using standard methods for file types such as user mode crash
+dumps, shared libraries, loadable kernel modules etc.  This is an
+exception for linux kernel dump.  Having build-id in VMCOREINFO brings
+some uniformity for automation tools.
 
-I don't see anything in there that checked Uptodate.
+ include/linux/crash_core.h |  6 +++++
+ kernel/crash_core.c        | 50 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
 
-> What I'm trying to understand is why this needs to be fixed inside
-> ->page_mkwrite, because AFAICT if we have to fix this in the iomap
-> code, we have the same "we got handed a bad page by the page fault"
-> problem in every single ->page_mkwrite implementation....
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 525510a9f965..6594dbc34a37 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -38,6 +38,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+ 
+ #define VMCOREINFO_OSRELEASE(value) \
+ 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
++#define VMCOREINFO_BUILD_ID(value) \
++	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
+ #define VMCOREINFO_PAGESIZE(value) \
+ 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
+ #define VMCOREINFO_SYMBOL(name) \
+@@ -64,6 +66,10 @@ extern unsigned char *vmcoreinfo_data;
+ extern size_t vmcoreinfo_size;
+ extern u32 *vmcoreinfo_note;
+ 
++/* raw contents of kernel .notes section */
++extern const void __start_notes __weak;
++extern const void __stop_notes __weak;
++
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len);
+ void final_note(Elf_Word *buf);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 9f1557b98468..c094db478803 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -11,6 +11,8 @@
+ #include <asm/page.h>
+ #include <asm/sections.h>
+ 
++#include <crypto/sha.h>
++
+ /* vmcoreinfo stuff */
+ unsigned char *vmcoreinfo_data;
+ size_t vmcoreinfo_size;
+@@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+ }
+ EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+ 
++#define NOTES_SIZE (&__stop_notes - &__start_notes)
++#define BUILD_ID_MAX SHA1_DIGEST_SIZE
++#define NT_GNU_BUILD_ID 3
++
++struct elf_note_section {
++	struct elf_note	n_hdr;
++	u8 n_data[];
++};
++
++/*
++ * Add build ID from .notes section as generated by the GNU ld(1)
++ * or LLVM lld(1) --build-id option.
++ */
++static void add_build_id_vmcoreinfo(void)
++{
++	char build_id[BUILD_ID_MAX * 2 + 1];
++	int n_remain = NOTES_SIZE;
++
++	while (n_remain >= sizeof(struct elf_note)) {
++		const struct elf_note_section *g_build_id =
++			&__start_notes + NOTES_SIZE - n_remain;
++		const u32 n_namesz = g_build_id->n_hdr.n_namesz;
++
++		if (g_build_id->n_hdr.n_type == NT_GNU_BUILD_ID &&
++		    n_namesz != 0 &&
++		    !strcmp((char *)&g_build_id->n_data[0], "GNU")) {
++			if (g_build_id->n_hdr.n_descsz <= BUILD_ID_MAX) {
++				const u32 n_descsz = g_build_id->n_hdr.n_descsz;
++				const u8 *s = &g_build_id->n_data[n_namesz];
++
++				s = PTR_ALIGN(s, 4);
++				bin2hex(build_id, s, n_descsz);
++				build_id[2 * n_descsz] = '\0';
++				VMCOREINFO_BUILD_ID(build_id);
++				return;
++			}
++			pr_warn("Build ID is too large to include in vmcoreinfo: %lu > %lu\n",
++				g_build_id->n_hdr.n_descsz,
++				BUILD_ID_MAX);
++			return;
++		}
++		n_remain -= sizeof(struct elf_note) +
++			ALIGN(g_build_id->n_hdr.n_namesz, 4) +
++			ALIGN(g_build_id->n_hdr.n_descsz, 4);
++	}
++}
++
+ static int __init crash_save_vmcoreinfo_init(void)
+ {
+ 	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
+@@ -394,6 +443,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	}
+ 
+ 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
++	add_build_id_vmcoreinfo();
+ 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+ 
+ 	VMCOREINFO_SYMBOL(init_uts_ns);
+-- 
+2.26.2
 
-I think the iomap code is the only filesystem which clears PageUptodate
-on errors.  I know we've argued about whether that's appropriate or not
-in the past.
-
-> > I haven't dug through what generic/019 does, so I don't know how plausible
-> > this is.
-> 
-> # Run fsstress and fio(dio/aio and mmap) and simulate disk failure
-> # check filesystem consistency at the end.
-> 
-> I don't think it is mixing buffered writes and mmap writes on the
-> same file via fio. Maybe fsstress is triggering that, but the
-> fsstress workload is single threaded so, again, I'm not sure it will
-> do this.
-
-Maybe that's not how we end up with a read-only PTE in the process's
-page tables.  Perhaps it starts out with a store, then on an fsync()
-we mark it read-only, then try to do another store.
