@@ -2,154 +2,145 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71EA20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA8C207D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 22:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWoLOs1D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+1JcSe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgFEWEw (ORCPT
+        id S1728313AbgFEWFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 18:04:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
+        Fri, 5 Jun 2020 18:05:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgFEWEv (ORCPT
+        with ESMTP id S1725878AbgFEWFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 18:04:51 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C08C08C5C2;
-        Fri,  5 Jun 2020 15:04:50 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id p5so11159707wrw.9;
-        Fri, 05 Jun 2020 15:04:50 -0700 (PDT)
+        Fri, 5 Jun 2020 18:05:51 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7B1C08C5C2;
+        Fri,  5 Jun 2020 15:05:51 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id x1so11681457ejd.8;
+        Fri, 05 Jun 2020 15:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4obgiWJMjzopugCNtxoiM9Fhsn1z9LnA6SizhmkTt9g=;
-        b=oWoLOs1DYFcKnc8iyzbCZ5ZjmvwzsLAT0uIZzcGnirqHov3z6YGwjUGZSTtIs7Y8Rg
-         8xMoBSEI1DJHKhJu5l/4DyyYhmVYPtrPxGF8cidtj/AY1sx/rUmFNeqb6uhmNwyP9IKK
-         JLPa/uJZkImCV+PcqI0o8T8pHZQ74MxP+TYPEtsKScM/B6AGX6ocLuSxmazHCdCPqxBH
-         YKZQBoGBMLFLh6YbYGxROSRKqOmtbLRj0aI4EpP+VwyIxNqxnB7bO6Xe4di9FQCV5imO
-         fzTaYt/G66Z68LK/oltgGYC0EIj+e3eiMPpBQR/V0pd6dPfEv3sjVEZ0cw2C9Bsmeoy3
-         TEyg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4f2rdGGtN0GdTt9TdrQV5swgjUs+uNX78VGk5PqhDq0=;
+        b=X+1JcSe1mzZv+JApwt8xnJpPUibiJBVICxz3EvKfLWyQRjTAYU6MhWSV2ULjQ/KsfG
+         mhbUPvHUIEMAaWhiKXNaWNCI0bei7OYeYeRiEwAmsVW34upMyy3LdJ01FgIy5zmFNkAV
+         wFYGQJa140sC3KHXGUnnMOZhKOW7qdW9F7gxbfPa58B+Nj+fkXqiW0RRydvx1tF0/ShX
+         BzfyAQuEVpX9hswye5BMFtykNHCjYgMeHacKZI+gnvIAqcdFa2w3LPa38RlRcc3QiwrL
+         +OP/C5MuWOi+jnVF4wZto0iA3XT9V3mDYjkHhsG7Hw5JP2Klg8A2sV5S9bGnngcKf7hs
+         YWFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4obgiWJMjzopugCNtxoiM9Fhsn1z9LnA6SizhmkTt9g=;
-        b=li7UTBKe+b8qZx59wGmN87GkugFnblDLkzshtUjN6RKS7dRN/VRsM5FxLFZnmhG9rk
-         t8wCMVeXuu4iupwrrHu/aKwJqwsxrGlAyJzW2btPE5WypiovNKPRKNLcyz7qF12yV1iW
-         dtAblmMgWvXkvDzxtMnvy7n9WRa3zkhRmbmB0XBhd1ZFIZgCrxXM6oWWwJwMABALDvt/
-         c35vHawQPne/C3cyW5WPf3NJEpkI+yprGOva5aES/cvyXpalY/ICHgpuQFPO/E1ld5K2
-         FR6tuZaI44UapWyWgiXEQ12x5VibsycbO4f/8xnFQv50GBjf9v3q8aL++1eRQRwKYgOY
-         QhHQ==
-X-Gm-Message-State: AOAM530hO+wsMxJfiAmBcRa25p2fgZQf2Bkv9UKyMEq0PNgezJkrH2F5
-        qY/0I8TuXcmtEBKXREI2lSA=
-X-Google-Smtp-Source: ABdhPJwJjWSx6RXx3ecmtFnocQfoqBGkAO9vSi2BfvV03xiJ7JhGCPlV2aEFgXx7veXxm5wOr3U6nw==
-X-Received: by 2002:adf:8b0c:: with SMTP id n12mr12594963wra.340.1591394689565;
-        Fri, 05 Jun 2020 15:04:49 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a1sm13205415wmd.28.2020.06.05.15.04.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 15:04:48 -0700 (PDT)
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Mark Brown <broonie@kernel.org>, lukas@wunner.de
-Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
- <142d48ae-2725-1368-3e11-658449662371@arm.com>
- <20200605132037.GF5413@sirena.org.uk>
- <2e371a32-fb52-03a2-82e4-5733d9f139cc@arm.com>
- <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d3fe8b56-83ef-8ef0-bb05-11c7cb2419f8@gmail.com>
-Date:   Fri, 5 Jun 2020 15:04:43 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4f2rdGGtN0GdTt9TdrQV5swgjUs+uNX78VGk5PqhDq0=;
+        b=fF+NbFL4j0FW11+VvY1pzEoqEfEMoVMV7XW8+ovhiyn6l9unfZME4dl56Rlazf7xpJ
+         tthF89m7m0m2DcAKVvI7PKIlGdkiv1bSCVM7m6+sAkCygpXklfhWoObX5SYMWw1L94A+
+         6U4f8/i2EpHPHm0MbntMfP2R2iSGLRJ9HF+jOU81DqeKRLmBZ1F7C4RoyETm74ETOIfd
+         LU+P9yULMu8LpD5uo/PYuJ7WVQ86BpF1mBshnXgtxwXgZz+ptDQlsESybqfH1YfUzX2B
+         4gwyik9n7KVsZNUV6+0lV7SoWcTuz7NwHY9i9/om5JiDpSNUo5CGnsjf2cyAn3+vcjU9
+         LSeQ==
+X-Gm-Message-State: AOAM533JzAdpyMxLM0Puxczco+qpz8nwfSpW238RPBT7RybPyqlZfFK6
+        DfECwxsEAoEOo6ngER3Cmg86skEWelRwf6Sl1RAc2A==
+X-Google-Smtp-Source: ABdhPJx0dvE7wkkiwQjrYiP1Jwh+Vekc7J7SHcXZpU27A/ESoitKKr80KD3XhNSjydSLiu+NqY0EFtYd8PrId2ukjag=
+X-Received: by 2002:a17:906:ae85:: with SMTP id md5mr10688752ejb.213.1591394750297;
+ Fri, 05 Jun 2020 15:05:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <06342e88-e130-ad7a-9f97-94f09156f868@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200601032204.124624-1-gthelen@google.com> <CAHbLzkq84qtOqfvP5SmPoAyL+Pyffd9K3108AOYk5yKF03jBmw@mail.gmail.com>
+ <xr937dwn454y.fsf@gthelen.svl.corp.google.com>
+In-Reply-To: <xr937dwn454y.fsf@gthelen.svl.corp.google.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 5 Jun 2020 15:05:16 -0700
+Message-ID: <CAHbLzkrCdXu0rqEAodyV_f-QnUFcgs7H_ZryX7RfMb9Jb+HpKQ@mail.gmail.com>
+Subject: Re: [PATCH] shmem, memcg: enable memcg aware shrinker
+To:     Greg Thelen <gthelen@google.com>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 4, 2020 at 1:17 AM Greg Thelen <gthelen@google.com> wrote:
+>
+> Yang Shi <shy828301@gmail.com> wrote:
+>
+> > On Sun, May 31, 2020 at 8:22 PM Greg Thelen <gthelen@google.com> wrote:
+> >>
+> >> Since v4.19 commit b0dedc49a2da ("mm/vmscan.c: iterate only over charged
+> >> shrinkers during memcg shrink_slab()") a memcg aware shrinker is only
+> >> called when the per-memcg per-node shrinker_map indicates that the
+> >> shrinker may have objects to release to the memcg and node.
+> >>
+> >> shmem_unused_huge_count and shmem_unused_huge_scan support the per-tmpfs
+> >> shrinker which advertises per memcg and numa awareness.  The shmem
+> >> shrinker releases memory by splitting hugepages that extend beyond
+> >> i_size.
+> >>
+> >> Shmem does not currently set bits in shrinker_map.  So, starting with
+> >> b0dedc49a2da, memcg reclaim avoids calling the shmem shrinker under
+> >> pressure.  This leads to undeserved memcg OOM kills.
+> >> Example that reliably sees memcg OOM kill in unpatched kernel:
+> >>   FS=/tmp/fs
+> >>   CONTAINER=/cgroup/memory/tmpfs_shrinker
+> >>   mkdir -p $FS
+> >>   mount -t tmpfs -o huge=always nodev $FS
+> >>   # Create 1000 MB container, which shouldn't suffer OOM.
+> >>   mkdir $CONTAINER
+> >>   echo 1000M > $CONTAINER/memory.limit_in_bytes
+> >>   echo $BASHPID >> $CONTAINER/cgroup.procs
+> >>   # Create 4000 files.  Ideally each file uses 4k data page + a little
+> >>   # metadata.  Assume 8k total per-file, 32MB (4000*8k) should easily
+> >>   # fit within container's 1000 MB.  But if data pages use 2MB
+> >>   # hugepages (due to aggressive huge=always) then files consume 8GB,
+> >>   # which hits memcg 1000 MB limit.
+> >>   for i in {1..4000}; do
+> >>     echo . > $FS/$i
+> >>   done
+> >
+> > It looks all the inodes which have tail THP beyond i_size are on one
+> > single list, then the shrinker actually just splits the first
+> > nr_to_scan inodes. But since the list is not memcg aware, so it seems
+> > it may split the THPs which are not charged to the victim memcg and
+> > the victim memcg still may suffer from pre-mature oom, right?
+>
+> Correct.  shmem_unused_huge_shrink() is not memcg aware.  In response to
+> memcg pressure it will split the post-i_size tails of nr_to_scan tmpfs
+> inodes regardless of if they're charged to the under-pressure memcg.
+> do_shrink_slab() looks like it'll repeatedly call
+> shmem_unused_huge_shrink().  So it will split tails of many inodes.  So
+> I think it'll avoid the oom by over shrinking.  This is not ideal.  But
+> it seems better than undeserved oom kill.
+>
+> I think the solution (as Kirill Tkhai suggested) a memcg-aware index
+> would solve both:
+> 1) avoid premature oom by registering shrinker to responding to memcg
+>    pressure
+> 2) avoid shrinking/splitting inodes unrelated to the under-pressure
+>    memcg
 
+I do agree with Kirill. Using list_lru sounds optimal. But, it looks
+the memcg index is tricky. The index of memcg which the beyond i_size
+THP is charged to should be used instead of the inode's memcg which
+may charge to different memcg.
 
-On 6/5/2020 7:41 AM, Robin Murphy wrote:
-> On 2020-06-05 14:46, Robin Murphy wrote:
->> On 2020-06-05 14:20, Mark Brown wrote:
->>> On Fri, Jun 05, 2020 at 12:34:36PM +0100, Robin Murphy wrote:
->>>> On 2020-06-04 22:28, Florian Fainelli wrote:
->>>
->>>>> For the BCM2835 case which is deemed performance critical, we would
->>>>> like
->>>>> to continue using an interrupt handler which does not have the extra
->>>>> comparison on BCM2835_SPI_CS_INTR.
->>>
->>>> FWIW, if I'm reading the patch correctly, then with sensible codegen
->>>> that
->>>> "overhead" should amount to a bit test on a live register plus a
->>>> not-taken
->>>> conditional branch - according to the 1176 TRM that should add up to a
->>>> whopping 2 cycles. If that's really significant then I'd have to wonder
->>>> whether you want to be at the mercy of the whole generic IRQ stack
->>>> at all,
->>>> and should perhaps consider using FIQ instead.
->>>
->>> Yes, and indeed the compiler does seem to manage that.  It *is* non-zero
->>> overhead though.
->>
->> True, but so's the existing level of pointer-chasing indirection that
->> with some straightforward refactoring could be taken right out of the
->> critical path and confined to just the conditional complete() call.
->> That's the kind of thing leaving me unconvinced that this is code
->> where every single cycle counts ;)
-> 
-> Ha, and in fact having checked a build out of curiosity, this patch
-> as-is actually stands to make things considerably worse. At least with
-> GCC 8.3 and bcm2835_defconfig, bcm2835_spi_interrupt_common() doesn't
-> get inlined, which means bcm2835_spi_interrupt() pushes/pops a stack
-> frame and makes an out-of-line call to bcm2835_spi_interrupt_common(),
-> resulting in massively *more* work than the extra two instructions of
-> simply inlining the test.
-> 
-> So yes, the overhead of inlining the test vs. the alternative is indeed
-> non-zero. It's just also negative :D
-
-Is it reliable across compiler versions if we use __always_inline?
-
-The only other alternative that I can think of is using a static key to
-eliminate the test for the single controller case. This feels highly
-over engineered, but if that proves more reliable and gets everybody
-their cookie, why not.
-
-Lukas, do you have any way to test with the conditional being present
-that the performance or latency does not suffer so much that it becomes
-unacceptable for your use cases?
--- 
-Florian
+>
+> I can certainly look into that (thanks Kirill for the pointers).  In the
+> short term I'm still interested in avoiding premature OOMs with the
+> original thread (i.e. restore pre-4.19 behavior to shmem shrinker for
+> memcg pressure).  I plan to test and repost v2.
