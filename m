@@ -2,141 +2,216 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C73C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A38206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:40:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bMinaiap"
+	by mail.kernel.org (Postfix) with ESMTP id 662AA206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 03:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgFEDk2 (ORCPT
+        id S1726134AbgFEDsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 23:40:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28087 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726076AbgFEDk2 (ORCPT
+        Thu, 4 Jun 2020 23:48:32 -0400
+Received: from mail.windriver.com ([147.11.1.11]:53459 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgFEDsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 23:40:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591328426;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W+XRm7Fs7zNlH2EKv4SYh8NMSzGAObCRW7/zCrf8kTM=;
-        b=bMinaiappCB0rQc0Seywa3/cVkuzqVzgZOHZhSWQYCSkZ81iRslS8kNSRBSGKgQPcCx3Eu
-        gHHK9CiCuq2raB5URMZCpac6lqycim7AIT742YFDBVZhE+poHPc5vekg0QfB/DIc6sNCgl
-        vs8r/qfW+iKVf6IEabXSwJEbgFg5uds=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-WjnfLQgyPAadytx9KbfT2Q-1; Thu, 04 Jun 2020 23:40:24 -0400
-X-MC-Unique: WjnfLQgyPAadytx9KbfT2Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD756100960F;
-        Fri,  5 Jun 2020 03:40:23 +0000 (UTC)
-Received: from [10.72.12.233] (ovpn-12-233.pek2.redhat.com [10.72.12.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3AE45C290;
-        Fri,  5 Jun 2020 03:40:18 +0000 (UTC)
-Subject: Re: [PATCH RFC 03/13] vhost: batching fetches
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Eugenio_P=c3=a9rez?= <eperezma@redhat.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-References: <20200602130543.578420-1-mst@redhat.com>
- <20200602130543.578420-4-mst@redhat.com>
- <3323daa2-19ed-02de-0ff7-ab150f949fff@redhat.com>
- <20200604045830-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6c2e6cc7-27c5-445b-f252-0356ff8a83f3@redhat.com>
-Date:   Fri, 5 Jun 2020 11:40:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 4 Jun 2020 23:48:32 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0553mE9i010497
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Thu, 4 Jun 2020 20:48:14 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 4 Jun 2020 20:48:01 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>
+CC:     <stern@rowland.harvard.edu>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] usb: gadget: function: printer: fix use-after-free in __lock_acquire
+Date:   Fri, 5 Jun 2020 11:56:52 +0800
+Message-ID: <20200605035652.10387-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200604045830-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Zqiang <qiang.zhang@windriver.com>
 
-On 2020/6/4 下午4:59, Michael S. Tsirkin wrote:
-> On Wed, Jun 03, 2020 at 03:27:39PM +0800, Jason Wang wrote:
->> On 2020/6/2 下午9:06, Michael S. Tsirkin wrote:
->>> With this patch applied, new and old code perform identically.
->>>
->>> Lots of extra optimizations are now possible, e.g.
->>> we can fetch multiple heads with copy_from/to_user now.
->>> We can get rid of maintaining the log array.  Etc etc.
->>>
->>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
->>> Signed-off-by: Eugenio Pérez<eperezma@redhat.com>
->>> Link:https://lore.kernel.org/r/20200401183118.8334-4-eperezma@redhat.com
->>> Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
->>> ---
->>>    drivers/vhost/test.c  |  2 +-
->>>    drivers/vhost/vhost.c | 47 ++++++++++++++++++++++++++++++++++++++-----
->>>    drivers/vhost/vhost.h |  5 ++++-
->>>    3 files changed, 47 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
->>> index 9a3a09005e03..02806d6f84ef 100644
->>> --- a/drivers/vhost/test.c
->>> +++ b/drivers/vhost/test.c
->>> @@ -119,7 +119,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
->>>    	dev = &n->dev;
->>>    	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
->>>    	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
->>> -	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
->>> +	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
->>>    		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
->>>    	f->private_data = n;
->>> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->>> index 8f9a07282625..aca2a5b0d078 100644
->>> --- a/drivers/vhost/vhost.c
->>> +++ b/drivers/vhost/vhost.c
->>> @@ -299,6 +299,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
->>>    {
->>>    	vq->num = 1;
->>>    	vq->ndescs = 0;
->>> +	vq->first_desc = 0;
->>>    	vq->desc = NULL;
->>>    	vq->avail = NULL;
->>>    	vq->used = NULL;
->>> @@ -367,6 +368,11 @@ static int vhost_worker(void *data)
->>>    	return 0;
->>>    }
->>> +static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
->>> +{
->>> +	return vq->max_descs - UIO_MAXIOV;
->>> +}
->> 1 descriptor does not mean 1 iov, e.g userspace may pass several 1 byte
->> length memory regions for us to translate.
->>
-> Yes but I don't see the relevance. This tells us how many descriptors to
-> batch, not how many IOVs.
+Fix this by increase object reference count.
 
+BUG: KASAN: use-after-free in __lock_acquire+0x3fd4/0x4180
+kernel/locking/lockdep.c:3831
+Read of size 8 at addr ffff8880683b0018 by task syz-executor.0/3377
 
-Yes, but questions are:
+CPU: 1 PID: 3377 Comm: syz-executor.0 Not tainted 5.6.11 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x131/0x1b0 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ __lock_acquire+0x3fd4/0x4180 kernel/locking/lockdep.c:3831
+ lock_acquire+0x127/0x350 kernel/locking/lockdep.c:4488
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x35/0x50 kernel/locking/spinlock.c:159
+ printer_ioctl+0x4a/0x110 drivers/usb/gadget/function/f_printer.c:723
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0xfb/0x130 fs/ioctl.c:763
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl fs/ioctl.c:770 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:770
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4531a9
+Code: ed 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
+01 f0 ff ff 0f 83 bb 60 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fd14ad72c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 000000000073bfa8 RCX: 00000000004531a9
+RDX: fffffffffffffff9 RSI: 000000000000009e RDI: 0000000000000003
+RBP: 0000000000000003 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004bbd61
+R13: 00000000004d0a98 R14: 00007fd14ad736d4 R15: 00000000ffffffff
 
-- this introduce another obstacle to support more than 1K queue size
-- if we support 1K queue size, does it mean we need to cache 1K 
-descriptors, which seems a large stress on the cache
+Allocated by task 2393:
+ save_stack+0x21/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc.constprop.3+0xa7/0xd0 mm/kasan/common.c:515
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0xfa/0x2d0 mm/slub.c:2813
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ gprinter_alloc+0xa1/0x870 drivers/usb/gadget/function/f_printer.c:1416
+ usb_get_function+0x58/0xc0 drivers/usb/gadget/functions.c:61
+ config_usb_cfg_link+0x1ed/0x3e0 drivers/usb/gadget/configfs.c:444
+ configfs_symlink+0x527/0x11d0 fs/configfs/symlink.c:202
+ vfs_symlink+0x33d/0x5b0 fs/namei.c:4201
+ do_symlinkat+0x11b/0x1d0 fs/namei.c:4228
+ __do_sys_symlinkat fs/namei.c:4242 [inline]
+ __se_sys_symlinkat fs/namei.c:4239 [inline]
+ __x64_sys_symlinkat+0x73/0xb0 fs/namei.c:4239
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Thanks
+Freed by task 3368:
+ save_stack+0x21/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x135/0x190 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ slab_free_hook mm/slub.c:1444 [inline]
+ slab_free_freelist_hook mm/slub.c:1477 [inline]
+ slab_free mm/slub.c:3034 [inline]
+ kfree+0xf7/0x410 mm/slub.c:3995
+ gprinter_free+0x49/0xd0 drivers/usb/gadget/function/f_printer.c:1353
+ usb_put_function+0x38/0x50 drivers/usb/gadget/functions.c:87
+ config_usb_cfg_unlink+0x2db/0x3b0 drivers/usb/gadget/configfs.c:485
+ configfs_unlink+0x3b9/0x7f0 fs/configfs/symlink.c:250
+ vfs_unlink+0x287/0x570 fs/namei.c:4073
+ do_unlinkat+0x4f9/0x620 fs/namei.c:4137
+ __do_sys_unlink fs/namei.c:4184 [inline]
+ __se_sys_unlink fs/namei.c:4182 [inline]
+ __x64_sys_unlink+0x42/0x50 fs/namei.c:4182
+ do_syscall_64+0x9e/0x510 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+The buggy address belongs to the object at ffff8880683b0000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 24 bytes inside of
+ 1024-byte region [ffff8880683b0000, ffff8880683b0400)
+The buggy address belongs to the page:
+page:ffffea0001a0ec00 refcount:1 mapcount:0 mapping:ffff88806c00e300
+index:0xffff8880683b1800 compound_mapcount: 0
+flags: 0x100000000010200(slab|head)
+raw: 0100000000010200 0000000000000000 0000000600000001 ffff88806c00e300
+raw: ffff8880683b1800 000000008010000a 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
->
+Reported-by: Kyungtae Kim <kt0755@gmail.com>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+---
+ drivers/usb/gadget/function/f_printer.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
+index 9c7ed2539ff7..8ed1295d7e35 100644
+--- a/drivers/usb/gadget/function/f_printer.c
++++ b/drivers/usb/gadget/function/f_printer.c
+@@ -31,6 +31,7 @@
+ #include <linux/types.h>
+ #include <linux/ctype.h>
+ #include <linux/cdev.h>
++#include <linux/kref.h>
+ 
+ #include <asm/byteorder.h>
+ #include <linux/io.h>
+@@ -64,7 +65,7 @@ struct printer_dev {
+ 	struct usb_gadget	*gadget;
+ 	s8			interface;
+ 	struct usb_ep		*in_ep, *out_ep;
+-
++	struct kref             kref;
+ 	struct list_head	rx_reqs;	/* List of free RX structs */
+ 	struct list_head	rx_reqs_active;	/* List of Active RX xfers */
+ 	struct list_head	rx_buffers;	/* List of completed xfers */
+@@ -218,6 +219,13 @@ static inline struct usb_endpoint_descriptor *ep_desc(struct usb_gadget *gadget,
+ 
+ /*-------------------------------------------------------------------------*/
+ 
++static void printer_dev_free(struct kref *kref)
++{
++	struct printer_dev *dev = container_of(kref, struct printer_dev, kref);
++
++	kfree(dev);
++}
++
+ static struct usb_request *
+ printer_req_alloc(struct usb_ep *ep, unsigned len, gfp_t gfp_flags)
+ {
+@@ -348,6 +356,7 @@ printer_open(struct inode *inode, struct file *fd)
+ 
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 
++	kref_get(&dev->kref);
+ 	DBG(dev, "printer_open returned %x\n", ret);
+ 	return ret;
+ }
+@@ -365,6 +374,7 @@ printer_close(struct inode *inode, struct file *fd)
+ 	dev->printer_status &= ~PRINTER_SELECTED;
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 
++	kref_put(&dev->kref, printer_dev_free);
+ 	DBG(dev, "printer_close\n");
+ 
+ 	return 0;
+@@ -1350,7 +1360,8 @@ static void gprinter_free(struct usb_function *f)
+ 	struct f_printer_opts *opts;
+ 
+ 	opts = container_of(f->fi, struct f_printer_opts, func_inst);
+-	kfree(dev);
++
++	kref_put(&dev->kref, printer_dev_free);
+ 	mutex_lock(&opts->lock);
+ 	--opts->refcnt;
+ 	mutex_unlock(&opts->lock);
+@@ -1419,6 +1430,7 @@ static struct usb_function *gprinter_alloc(struct usb_function_instance *fi)
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
++	kref_init(&dev->kref);
+ 	++opts->refcnt;
+ 	dev->minor = opts->minor;
+ 	dev->pnp_string = opts->pnp_string;
+-- 
+2.24.1
 
