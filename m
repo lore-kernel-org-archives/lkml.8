@@ -2,106 +2,117 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D17C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62A7C206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfNiz3jf"
+	by mail.kernel.org (Postfix) with ESMTP id D58B7206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591355642;
+	bh=B56LkDT4uadJJKK5s7dfdxW9sDk/65KFLSL2vl69z84=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VcjRSCxPXeIzynXgrILuIjp0nqBsHfbe44q0CsGJDtTTDTDg45N2BHpltzIXwBcYL
+	 h/DITTF1P/vgdE0vRIXpWdWEqfsQrpq+cGjH72cy4YD6YbBPJM6GMO0NZzjd6x/bm2
+	 dul/to1I8JJJVLNGZ+IbL77xZv48VkbNyD8fSv1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbgFELLP (ORCPT
+        id S1726559AbgFELOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgFELLK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:11:10 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19256C08C5C2;
-        Fri,  5 Jun 2020 04:11:10 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id k18so9862124ion.0;
-        Fri, 05 Jun 2020 04:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=1GKHLWvpFNoUWFlXO7nOa3ze1UpYMNpnsUeV0FBF7UU=;
-        b=OfNiz3jf+Vxz6C0L41VVz29Y/Zb5tN0TMhtnQAjYTKvMCCs/ws8UP8hwOPAckgdmEg
-         taAfHT1DirHPEHOUZm9Jx+oUCIOTf5d64c5hgePpe4UNGjpVKX6hrAvM0f6+S+xx18qz
-         LyrSh+BKkam+wlDUcxWPS+XVT7Ol7aZIs2/xquZWkI4YCLrCxE6HZsY7WKVRTJQfkYd+
-         q+57Cn0saXtASzVXzI7etV1G2HmZJS5dY7J2jDJnoMt75eMs6HJhBe/Urj2BdpnUkhKS
-         nJUzZLDDhpPGNz7PiS4UqVwzH8uTlxZVaJVwnCO7jksfKNt+c46sxo4mxAhhoLejtr/F
-         TYMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=1GKHLWvpFNoUWFlXO7nOa3ze1UpYMNpnsUeV0FBF7UU=;
-        b=KowvldTyy7+dZYiGeFbHeeuDgHwicmYhQXWtioYum0wUZl1s4uHidxRz9NHHbNv4i1
-         eFA64OZEF/ZXUp++6Yk683MMhvmSOjXDXa7DJXtO0NLsqnMQ6bScelTbW2lm/VdLyXHF
-         9+CdgkSD78wREFpJhj6fwAtApcS9IqjHN+S+Y7qEK8d2LjavQwXR8MXnDijm3xRi5gWQ
-         jzylIz0BJqD1xUl0Xw58ygp2PP4fZFrpSFfkk84MMjebwH02VGbBWfIGCymWPPU+ivDD
-         34tlUUeLxca+gfc7MJSUMhoWIUCG7ykQNrWyJM5eJIIeLk0nH/DyFxlJYmehEFPJ+TQc
-         Gvbg==
-X-Gm-Message-State: AOAM5339QmuMuk6EMsQKEms8z57b1irQ1jeOEsmS0/3RufLCCMmLCjXy
-        ++OPxjhIyCdTPUdoC4tNNYbH0kxglLfeCKKzKGg=
-X-Google-Smtp-Source: ABdhPJz6FfjkRT/DaW1LV+bW2+wEb1gHqRDisnlPRPITT/0TQtcZIgwyPFeBvowh+QbVY4PVz6JcQxsL7Q/YQinx2jQ=
-X-Received: by 2002:a05:6638:406:: with SMTP id q6mr8192265jap.125.1591355469426;
- Fri, 05 Jun 2020 04:11:09 -0700 (PDT)
+        Fri, 5 Jun 2020 07:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbgFELOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 07:14:01 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D83A8206DC;
+        Fri,  5 Jun 2020 11:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591355640;
+        bh=B56LkDT4uadJJKK5s7dfdxW9sDk/65KFLSL2vl69z84=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W0icm60zqzChdi2FXyl936ylO6vjnZP25qR8lZoNXpg22I4VZq4tuuyIE3ArajHmy
+         Fp3fk9t1dg46Dvlsb/G7DKoeHbQ9NteMjwEeEtDvTDEuzMP3TWEORIdS2KA1C0TVF3
+         kkasIVNk8XXgBvAMyY7Ugk+46S6OY3LbxUbLsmH8=
+Date:   Fri, 5 Jun 2020 13:13:55 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     mani@kernel.org
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com
+Subject: Re: [PATCH v3 0/2] Add support for MaxLinear/Exar USB to serial
+ converters
+Message-ID: <20200605131355.18107dbb@coco.lan>
+In-Reply-To: <20200430184924.31690-1-mani@kernel.org>
+References: <20200430184924.31690-1-mani@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de> <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
- <20200605094353.GS30374@kadam>
-In-Reply-To: <20200605094353.GS30374@kadam>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Fri, 5 Jun 2020 13:10:57 +0200
-Message-ID: <CA+icZUVFQaXGVtfGEO2=covaaRR2iKOTASsLEXv7+CsV5ibShQ@mail.gmail.com>
-Subject: Re: [PATCH v2] block: Fix use-after-free in blkdev_get()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jason Yan <yanaijie@huawei.com>, Jan Kara <jack@suse.cz>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        hulkci@huawei.com, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 11:46 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> A lot of maintainers have blocked Markus and asked him to stop trying
-> to help people write commit message.  Saying "bdev" instead of "block
-> device" is more clear so your original message was better.
->
-> The Fixes tag is a good idea though:
->
-> Fixes: 89e524c04fa9 ("loop: Fix mount(2) failure due to race with LOOP_SET_FD")
->
-> It broke last July.  Before that, we used to check if __blkdev_get()
-> failed before dereferencing "bdev".
->
-> I wonder if maybe the best fix is to re-add the "if (!res) " check back
-> to blkdev_get().  The __blkdev_get() looks like it can also free "whole"
-> though if it calls itself recursively and I don't really know this code
-> so I can't say for sure...
->
+Em Fri,  1 May 2020 00:19:22 +0530
+mani@kernel.org escreveu:
 
-In things of Fixes: tag...
+> From: Manivannan Sadhasivam <mani@kernel.org>
+> 
+> Hello,
+> 
+> This series adds support for MaxLinear/Exar USB to serial converters.
+> This driver only supports XR21V141X series but it can easily be extended
+> to other series in future.
+> 
+> This driver is inspired from the initial one submitted by Patong Yang:
+> 
+> https://patchwork.kernel.org/patch/10543261/
+> 
+> While the initial driver was a custom tty USB driver exposing whole
+> new serial interface ttyXRUSBn, this version is completely based on USB
+> serial core thus exposing the interfaces as ttyUSBn. This will avoid
+> the overhead of exposing a new USB serial interface which the userspace
+> tools are unaware of.
 
-For the first hunk I found:
+Hmm... I guess you also need the enclosed patch, to ensure that cdc_acm
+won't try to hijack it, when the Kernel is built with both drivers.
 
-commit 8266602033d6adc6d10cb8811c1fd694767909b0 ("fix bdev leak in
-block_dev.c do_open()")
+Thanks,
+Mauro
 
-- Sedat -
+[PATCH] usb: cdc-acm: ignore Exar XR21V141X when serial driver is
+ built
+
+The RTS/CTS line discipline for this device doesn't follow
+the standard. So, in order to properly support TX, a separate
+driver is needed.
+
+Ensure that cdc_acm will ignore it during probe time, if the
+Kernel is built with support for it.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
+index ded8d93834ca..f87288834ded 100644
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1889,7 +1889,11 @@ static const struct usb_device_id acm_ids[] = {
+ 	.driver_info = IGNORE_DEVICE,
+ 	},
+ #endif
+-
++#if IS_ENABLED(CONFIG_USB_SERIAL_XR)
++	{ USB_DEVICE(0x04e2, 0x1410),   /* XR21V141X uses a different rts/cts discipline */
++	.driver_info = IGNORE_DEVICE,
++	},
++#endif
+ 	/*Samsung phone in firmware update mode */
+ 	{ USB_DEVICE(0x04e8, 0x685d),
+ 	.driver_info = IGNORE_DEVICE,
+
