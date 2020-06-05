@@ -2,165 +2,122 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E645206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:30:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="X4EKdamM"
+	by mail.kernel.org (Postfix) with ESMTP id C4A7B2088E
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591371042;
+	bh=fJ1kYoP5veId5Jd8fw/yIVkYzV2PtjIiOOhQuCsrsgE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Vv7mVXA1g8JC7wl/SBoVa4XeCvmrcxM47cYapPONyxqNHnOyjoQu6dgJntE2TX0x/
+	 hgGDorwtsxJslw+++7kc/I7tLfsbVnXJKHqMIBLasT+yvmH9Z381B6Eap7YxEQa0iJ
+	 QgdvPRAqDwdm/xC6WXHN0Z8tUzpkxcfkjmKN5GU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgFEPai (ORCPT
+        id S1728189AbgFEPal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60324 "EHLO
+        Fri, 5 Jun 2020 11:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgFEPah (ORCPT
+        with ESMTP id S1728080AbgFEPak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:30:37 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303EAC08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:30:37 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id p18so7783914eds.7
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:30:37 -0700 (PDT)
+        Fri, 5 Jun 2020 11:30:40 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057F2C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:30:39 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id m2so7892357otr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=kvw05eX12Yh5FgPlRgUSXlHOGxXXNOE9RCalQGq26Xo=;
-        b=X4EKdamMjiSiB2U3W8O5PY6qGT/gQ3iDtOq81oo4CwFUfUs4QtVFNAIgUhQIez2JvK
-         RD0pzFl//irlgsZeeSP74HYMXDs1vDpoaB+QCypLSWwheaLyS9SoUVYBdUffe8ZpnFm8
-         DWSAEQXMks9fdXHdJu3fgbIwLiNOtJChxYCKk=
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uy6/ov1vILLkH7kcuXe0+MBG/XzMaYdojJE5StW+fqg=;
+        b=DI+hpKl+hUQ+AIfZj9GZk8j3r7WzMOcipaTkPdvxCb5Asn6qns/SwZZHJni5DGjzn/
+         8G0xYJRVktvVGfHikyN9FoVY6xBvGt6+8JsV+X+bIYH+B3R8oIy1lApTZLRWYj4V6lMT
+         7fdLsnHhSgOsgpxryS2H1UbujF39NVfjo1hsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=kvw05eX12Yh5FgPlRgUSXlHOGxXXNOE9RCalQGq26Xo=;
-        b=golrXaBOk65bOk1ycsJUJZv++jK9OfUk55i31Wq7Cs6kUl5jnyk4OrZGLi4aTg44XK
-         hnttInlXXGAO8zb/Gnqz/n+6MKphdOHNji58Qct+EgbMYXEfzUhafeWezWVSkd5ZY8fU
-         rYzVdC2woj4xeyJg4C4PSChNSA/W2Xa10NtgCI4v2kJGibAY2pv9wWmR8XnMP8TZeWR+
-         SG53OaCHf6FFPh0hw4PmTfIdk1PtF/ELvILpWLEvcOAIO5oGCqN+Ov2FKWNizuSRdVh5
-         mTctQmduGpGK3DsrXlB8j4manW8eKpwRIQtNytYrtrCKDSeAYJdwR2nvaj4mzZqKxp2U
-         +FGw==
-X-Gm-Message-State: AOAM530WpJxWF8jZ8iuS68JB/60qye5dK8mxw9e2XuSw4Pl97bUU+gF6
-        0+dZT2PY5t/QUTwr0Eekf6RlyFcft5T+4tW1Xq1CHQ==
-X-Google-Smtp-Source: ABdhPJzysky/6m/7l4XT3DGaswXSvfsR/17IejP2A8NgogK397u5AbKSPlAhBht80tUh9/J3O0fP7nqA+lWIyObcMo0=
-X-Received: by 2002:a50:f9cc:: with SMTP id a12mr9988020edq.227.1591371035564;
- Fri, 05 Jun 2020 08:30:35 -0700 (PDT)
-From:   Chandrakanth Patil <chandrakanth.patil@broadcom.com>
-References: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
- <yq17dwp9bss.fsf@ca-mkp.ca.oracle.com> <4779a72c878774e4e3525aae8932feda@mail.gmail.com>
- <20200604155009.63mhbsoaoq6yra77@suse.com> <4285a7ff366d7f5cfb5cae582dadf878@mail.gmail.com>
- <20200605043846.f3ciid3xpvdgumh6@suse.com>
-In-Reply-To: <20200605043846.f3ciid3xpvdgumh6@suse.com>
-MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQJb9Wzm0098wwdcUnfhuPbO5i84ZwGnJavmAYBmkM8CEG/qNQHLP1nqAXBxbNenexM2cA==
-Date:   Fri, 5 Jun 2020 21:00:32 +0530
-Message-ID: <599e459f0a657fed8a262a34f43b035c@mail.gmail.com>
-Subject: RE: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by JBOD
-To:     Kai Liu <kai.liu@suse.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Xiaoming Gao <newtongao@tencent.com>,
-        Shivasharan Srikanteshwara 
-        <shivasharan.srikanteshwara@broadcom.com>, xiakaixu1987@gmail.com,
-        jejb@linux.ibm.com, linux-scsi@vger.kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uy6/ov1vILLkH7kcuXe0+MBG/XzMaYdojJE5StW+fqg=;
+        b=CNmLLwKo+ccEc2mkrg3lBwmAA3eAhE47E/seXviGHO4HiGrYlhR2xFwyVoTHhF1dv+
+         ZWtvL1PhI+YTvZfr6EESNFh52It0iK2N2C6A9IZznxoqaxabe/NzSMbWojK3DtW0Wsqt
+         IKsjzNgpQFVFQOBsR2na/XBEu1WPmk2hMieYFKmFc/5CHnYjzgnRgERvuSPiabHCm2LZ
+         iadE8iC5ZbnmBi2ypMe5EChmfktq/gmc8VZSPF3mY6stwAFTyA6cZnQVHRQZ+9rha9gQ
+         McC1khUGkbK2Sj9zkf/7sO8TWsjjcy/yq09hhcqIPVooAC1uxEh2/15bkCBgXLpL13OV
+         b0Ow==
+X-Gm-Message-State: AOAM532YItoPS8rHHRQID6aeNqpPH+5F7bqJkFkxrD+SdemHxBuKpBcQ
+        Lc8u3Wt9Lu/4EQQihOHS4EvdrlLyQRw=
+X-Google-Smtp-Source: ABdhPJykV+GXVonGB/g4y+9di/oDQYBEb8B+1SaloTuri4DmB9oIZBrDy6MlOduor4F6bmoAIvnm1w==
+X-Received: by 2002:a9d:822:: with SMTP id 31mr7601100oty.137.1591371038337;
+        Fri, 05 Jun 2020 08:30:38 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id v20sm7144otq.64.2020.06.05.08.30.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 08:30:37 -0700 (PDT)
+Subject: Re: [PATCH 5.6 00/43] 5.6.17-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200605140152.493743366@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <dee14be9-f6fd-30f7-f399-4e74b104eefc@linuxfoundation.org>
+Date:   Fri, 5 Jun 2020 09:30:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: Re: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused
->by JBOD
->
->On 2020/06/05 Fri 01:05, Chandrakanth Patil wrote:
->>
->>Hi Kai Liu,
->>
->>Gen3 (Invader) and Gen3.5 (Ventura/Aero) generations of controllers are
->>affected.
->
->Hi Chandrakanth,
->
->My card is not one of these but it's also problematic:
->
-># lspci -nn|grep 3408
->02:00.0 RAID bus controller [0104]: Broadcom / LSI MegaRAID Tri-Mode
->SAS3408
->[1000:0017] (rev 01)
->
->According to megaraid_sas.h it's Tomcat:
->
->#define PCI_DEVICE_ID_LSI_TOMCAT                    0x0017
->
->According to product information on broadcom.com the card model is 9440-8i.
->So I tried to
->upgrade to the latest firmware version
->51.13.0-3223 but I got these error:
->
-># ./storcli64 /c0 download file=9440-8i_nopad.rom Download Completed.
->Flashing image to adapter...
->CLI Version = 007.1316.0000.0000 Mar 12, 2020 Operating system = Linux
->5.3.18-
->0.g6748ac9-default Controller = 0 Status = Failure Description = image
->corrupted
->
->I tried few more versions from broadcom website, they all failed with the
->same "image
->corrupted" error.
->
->Here is the controller information:
->
-># ./storcli64 /c0 show
->Generating detailed summary of the adapter, it may take a while to
->complete.
->
->CLI Version = 007.1316.0000.0000 Mar 12, 2020 Operating system = Linux
->5.3.18-
->0.g6748ac9-default Controller = 0 Status = Success Description = None
->
->Product Name = SAS3408
->Serial Number = 033FAT10K8000236
->SAS Address =  57c1cf15516f4000
->PCI Address = 00:02:00:00
->System Time = 06/05/2020 12:36:59
->Mfg. Date = 00/00/00
->Controller Time = 06/05/2020 04:36:58
->FW Package Build = 50.6.3-0109
->BIOS Version = 7.06.02.2_0x07060502
->FW Version = 5.060.01-2262
->Driver Name = megaraid_sas
->Driver Version = 07.713.01.00-rc1
->Vendor Id = 0x1000
->Device Id = 0x17
->SubVendor Id = 0x19E5
->SubDevice Id = 0xD213
->Host Interface = PCI-E
->Device Interface = SAS-12G
->Bus Number = 2
->Device Number = 0
->Function Number = 0
->Domain ID = 0
->Drive Groups = 3
->
->
->Thanks,
->Kai Liu
+On 6/5/20 8:14 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.17 release.
+> There are 43 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
 
-Hi Kai Liu,
+wget 
+https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
+--2020-06-05 09:24:32-- 
+https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
+Resolving www.kernel.org (www.kernel.org)... 147.75.56.137
+Connecting to www.kernel.org (www.kernel.org)|147.75.56.137|:443... 
+connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: 
+https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz 
+[following]
+--2020-06-05 09:24:32-- 
+https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
+Resolving mirrors.edge.kernel.org (mirrors.edge.kernel.org)... 147.75.69.165
+Connecting to mirrors.edge.kernel.org 
+(mirrors.edge.kernel.org)|147.75.69.165|:443... connected.
+HTTP request sent, awaiting response... 404 Not Found
+2020-06-05 09:24:33 ERROR 404: Not Found.
 
-Tomcat (Device ID: 0017) belongs to Gen3.5 controllers (Ventura family of
-controllers). So this issue is applicable.
-As this is an OEM specific firmware, Please contact Broadcom support team in
-order get the correct firmware image.
+Looks like patches didn't make it to mirror yet? Seeing the same
+error with the other stable patches.
 
--Chandrakanth Patil
+thanks,
+-- Shuah
