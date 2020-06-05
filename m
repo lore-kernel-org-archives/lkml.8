@@ -2,111 +2,129 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A66BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72642065C
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Sxoay7F4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="Zz/eImY/"
+	by mail.kernel.org (Postfix) with ESMTP id 65881206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591369332;
+	bh=bgpj3gym6zcyvL/796ubDk2qM6lfHTKVZtpH2tmkf9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0xM0M6ZUkliAwHWyfLbMHw0OjxR7iSrp7sDq7pPSekahaUpAqksnc4qI8gIM+PWMt
+	 Cd221atisCb8gClODMBeqFjKxm5bCElY+vjz1597ZUV6l75UeNGI+z+IXSY3kxhSK6
+	 KZKCY6ZzF2LPHULEKYc+ZbKyE1x+40drSp/fK5mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgFEPBK (ORCPT
+        id S1728167AbgFEPCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:01:10 -0400
-Received: from pb-smtp20.pobox.com ([173.228.157.52]:55500 "EHLO
-        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbgFEPBH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:01:07 -0400
-Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id 6AE7ED27C6;
-        Fri,  5 Jun 2020 11:01:04 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=RQ5UuhFDdm6pYUURqgzo84j9G7A=; b=Sxoay7
-        F4gA4GZdu5Zg9uUlmAkW1Zt5FcDuXuyxgJg0J1/2YOTh+oGVFPS2XCXNhnKxruau
-        MDtfSlY0eXyRJHtGFbaGy1GRIGwT91daJ30IGzYPPomdVWXXQA2tHr5SlWDA734m
-        bZRjhWd3q6ijPU6K2wBSKxViPDDqydIEEmReM=
-Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id 61111D27C5;
-        Fri,  5 Jun 2020 11:01:04 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=kGSNSFs79QpTCdEy/syIPtk8e7qpRSOVx3t4YYHSTPo=; b=Zz/eImY/hca3rOTLiCqOYWoaV6plgEo+kdFnlRPQFzRcUQoLXjJn0FtfTD7ckQtTqowgcbv/qHCqzK+ScMEpsSblxLiajcMT9GhFudy2osyOw0c/0yOkmdHSrAU5J6sKLf0oVK0xHwQO8Q2r0bmcLvvl02K0jlrhpKiphQGd6bE=
-Received: from yoda.home (unknown [24.203.50.76])
+        Fri, 5 Jun 2020 11:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726911AbgFEPCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 11:02:11 -0400
+Received: from localhost (lfbn-ncy-1-324-171.w83-196.abo.wanadoo.fr [83.196.159.171])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 263D0D27C0;
-        Fri,  5 Jun 2020 11:01:01 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 25E392DA01E9;
-        Fri,  5 Jun 2020 11:00:59 -0400 (EDT)
-Date:   Fri, 5 Jun 2020 11:00:59 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     =?ISO-8859-15?Q?Philippe_Mathieu-Daud=E9?= <f4bug@amsat.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: clean up kernel_{read,write} & friends v2
-In-Reply-To: <d67deb88-73a8-4c57-6b37-c62190422d65@amsat.org>
-Message-ID: <nycvar.YSQ.7.77.849.2006051039350.1353413@knanqh.ubzr>
-References: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com> <20200528054043.621510-1-hch@lst.de> <22778.1590697055@warthog.procyon.org.uk> <f89f0f7f-83b4-72c6-7d08-cb6eaeccd443@schaufler-ca.com> <3aea7a1c10e94ea2964fa837ae7d8fe2@AcuMS.aculab.com>
- <CAHk-=wjR0H3+2ba0UUWwoYzYBH0GX9yTf5dj2MZyo0xvyzvJnA@mail.gmail.com> <d67deb88-73a8-4c57-6b37-c62190422d65@amsat.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 4582A2065C;
+        Fri,  5 Jun 2020 15:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591369330;
+        bh=bgpj3gym6zcyvL/796ubDk2qM6lfHTKVZtpH2tmkf9g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QzA81FUfegKp0dfBpnQUt8XpUpBzawuvILeJRfM+nYLMdlLKlodlV8zxWDCGKJMPW
+         ZG3lFRIy+reihhtlXBx6kqEgxcyGZL/F87aP0pSv7V/qx0jwOq8hH11UiqxdbRMqHy
+         pUjTUVGvXHA9qHRLvna8jym0tLANpot9QJo5pGMo=
+Date:   Fri, 5 Jun 2020 17:02:08 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net, sfr@canb.auug.org.au,
+        linux@roeck-us.net
+Subject: Re: [RFC][PATCH 5/7] irq_work, smp: Allow irq_work on
+ call_single_queue
+Message-ID: <20200605150207.GA9599@lenoir>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161908.011635912@infradead.org>
+ <20200528234031.GB551@lenoir>
+ <20200529133641.GM706495@hirez.programming.kicks-ass.net>
+ <20200605093704.GB2948@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1427214125-1591369259=:1353413"
-X-Pobox-Relay-ID: 5EB18F9E-A73D-11EA-B614-B0405B776F7B-78420484!pb-smtp20.pobox.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605093704.GB2948@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Jun 05, 2020 at 11:37:04AM +0200, Peter Zijlstra wrote:
+> On Fri, May 29, 2020 at 03:36:41PM +0200, Peter Zijlstra wrote:
+> > Maybe I can anonymous-union my way around it, dunno. I'll think about
+> > it. I'm certainly not proud of this. But at least the BUILD_BUG_ON()s
+> > should catch the more blatant breakage here.
+> 
+> How's this then? Differently ugly, but at least it compiles with that
+> horrible struct randomization junk enabled.
+> 
+> ---
+>  include/linux/irq_work.h  |   28 ++++++-------------
+>  include/linux/sched.h     |    4 +-
+>  include/linux/smp.h       |   25 ++++++-----------
+>  include/linux/smp_types.h |   66 ++++++++++++++++++++++++++++++++++++++++++++++
+>  kernel/sched/core.c       |    6 ++--
+>  kernel/smp.c              |   18 ------------
+>  6 files changed, 89 insertions(+), 58 deletions(-)
+> 
+> --- a/include/linux/irq_work.h
+> +++ b/include/linux/irq_work.h
+> @@ -2,7 +2,7 @@
+>  #ifndef _LINUX_IRQ_WORK_H
+>  #define _LINUX_IRQ_WORK_H
+>  
+> -#include <linux/llist.h>
+> +#include <linux/smp_types.h>
+>  
+>  /*
+>   * An entry can be in one of four states:
+> @@ -13,26 +13,16 @@
+>   * busy      NULL, 2 -> {free, claimed} : callback in progress, can be claimed
+>   */
+>  
+> -/* flags share CSD_FLAG_ space */
+> -
+> -#define IRQ_WORK_PENDING	BIT(0)
+> -#define IRQ_WORK_BUSY		BIT(1)
+> -
+> -/* Doesn't want IPI, wait for tick: */
+> -#define IRQ_WORK_LAZY		BIT(2)
+> -/* Run hard IRQ context, even on RT */
+> -#define IRQ_WORK_HARD_IRQ	BIT(3)
+> -
+> -#define IRQ_WORK_CLAIMED	(IRQ_WORK_PENDING | IRQ_WORK_BUSY)
+> -
+> -/*
+> - * structure shares layout with single_call_data_t.
+> - */
+>  struct irq_work {
+> -	struct llist_node llnode;
+> -	atomic_t flags;
+> +	union {
+> +		struct __call_single_node node;
+> +		struct {
+> +			struct llist_node llnode;
+> +			atomic_t flags;
+> +		};
+> +	};
 
---8323328-1427214125-1591369259=:1353413
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+So why not just embed struct __call_single_node in
+struct irq_work and struct __call_single_data ?
 
-On Fri, 5 Jun 2020, Philippe Mathieu-Daud=C3=A9 wrote:
+Is the point of that anonymous second union layer to
+shorten the lines while accessing members?
 
-> Unfortunately refreshable braille displays have that "hardware
-> limitations". 80 cells displays are very expensive.
-> Visual impairments is rarely a "choice".
-> Relaxing the 80-char limit make it harder for blind developers
-> to contribute.
-
-Well, not really.
-
-It is true that 80-cells displays are awfully expensive. IMHO they are=20
-also unwieldy due to their size: they are hardly portable, and they=20
-require your hands to move twice as far which may sometimes impair=20
-reading efficiency. So I never liked them.
-
-My braille display has 40 cells only. So even with a 80-cells limit I=20
-always had to pan the display to see the whole line anyway.
-
-My text console is set to 160x128. The trick here is to have the number=20
-of columns be a multiple of the braille display's width to avoid dead=20
-areas when panning to the right.
-
-So if you ask me, I'm not against relaxing the 80 columns limit for=20
-code. What really matters to me is that I can stay clear of any GUI.
-
-
-Nicolas
---8323328-1427214125-1591369259=:1353413--
+Thanks.
