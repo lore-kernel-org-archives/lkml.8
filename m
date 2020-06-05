@@ -2,122 +2,149 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B9AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE077C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4A7B2088E
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:30:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591371042;
-	bh=fJ1kYoP5veId5Jd8fw/yIVkYzV2PtjIiOOhQuCsrsgE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Vv7mVXA1g8JC7wl/SBoVa4XeCvmrcxM47cYapPONyxqNHnOyjoQu6dgJntE2TX0x/
-	 hgGDorwtsxJslw+++7kc/I7tLfsbVnXJKHqMIBLasT+yvmH9Z381B6Eap7YxEQa0iJ
-	 QgdvPRAqDwdm/xC6WXHN0Z8tUzpkxcfkjmKN5GU8=
+	by mail.kernel.org (Postfix) with ESMTP id B5299206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgFEPal (ORCPT
+        id S1727902AbgFEPdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgFEPak (ORCPT
+        Fri, 5 Jun 2020 11:33:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12148 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726539AbgFEPdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:30:40 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057F2C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:30:39 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id m2so7892357otr.12
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:30:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uy6/ov1vILLkH7kcuXe0+MBG/XzMaYdojJE5StW+fqg=;
-        b=DI+hpKl+hUQ+AIfZj9GZk8j3r7WzMOcipaTkPdvxCb5Asn6qns/SwZZHJni5DGjzn/
-         8G0xYJRVktvVGfHikyN9FoVY6xBvGt6+8JsV+X+bIYH+B3R8oIy1lApTZLRWYj4V6lMT
-         7fdLsnHhSgOsgpxryS2H1UbujF39NVfjo1hsA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uy6/ov1vILLkH7kcuXe0+MBG/XzMaYdojJE5StW+fqg=;
-        b=CNmLLwKo+ccEc2mkrg3lBwmAA3eAhE47E/seXviGHO4HiGrYlhR2xFwyVoTHhF1dv+
-         ZWtvL1PhI+YTvZfr6EESNFh52It0iK2N2C6A9IZznxoqaxabe/NzSMbWojK3DtW0Wsqt
-         IKsjzNgpQFVFQOBsR2na/XBEu1WPmk2hMieYFKmFc/5CHnYjzgnRgERvuSPiabHCm2LZ
-         iadE8iC5ZbnmBi2ypMe5EChmfktq/gmc8VZSPF3mY6stwAFTyA6cZnQVHRQZ+9rha9gQ
-         McC1khUGkbK2Sj9zkf/7sO8TWsjjcy/yq09hhcqIPVooAC1uxEh2/15bkCBgXLpL13OV
-         b0Ow==
-X-Gm-Message-State: AOAM532YItoPS8rHHRQID6aeNqpPH+5F7bqJkFkxrD+SdemHxBuKpBcQ
-        Lc8u3Wt9Lu/4EQQihOHS4EvdrlLyQRw=
-X-Google-Smtp-Source: ABdhPJykV+GXVonGB/g4y+9di/oDQYBEb8B+1SaloTuri4DmB9oIZBrDy6MlOduor4F6bmoAIvnm1w==
-X-Received: by 2002:a9d:822:: with SMTP id 31mr7601100oty.137.1591371038337;
-        Fri, 05 Jun 2020 08:30:38 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id v20sm7144otq.64.2020.06.05.08.30.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 08:30:37 -0700 (PDT)
-Subject: Re: [PATCH 5.6 00/43] 5.6.17-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200605140152.493743366@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <dee14be9-f6fd-30f7-f399-4e74b104eefc@linuxfoundation.org>
-Date:   Fri, 5 Jun 2020 09:30:36 -0600
+        Fri, 5 Jun 2020 11:33:46 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055FWedb096598;
+        Fri, 5 Jun 2020 11:33:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31fhr9xbry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 11:33:18 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055FXDlc100023;
+        Fri, 5 Jun 2020 11:33:16 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31fhr9xbqr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 11:33:15 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055FKqLA018391;
+        Fri, 5 Jun 2020 15:33:14 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 31bf4axv19-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 15:33:14 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055FXDOt55050728
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jun 2020 15:33:13 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EE9AEB206C;
+        Fri,  5 Jun 2020 15:33:12 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6A27B206A;
+        Fri,  5 Jun 2020 15:33:12 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  5 Jun 2020 15:33:12 +0000 (GMT)
+Subject: Re: [PATCH] tpm: ibmvtpm: Wait for ready buffer before probing for
+ TPM2 attributes
+To:     David Gibson <david@gibson.dropbear.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Nayna Jain <nayna@linux.ibm.com>
+Cc:     Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200605063719.456277-1-david@gibson.dropbear.id.au>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <fe79d427-359e-7c6a-6e39-8a6ea345cbd9@linux.ibm.com>
+Date:   Fri, 5 Jun 2020 11:33:12 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
+In-Reply-To: <20200605063719.456277-1-david@gibson.dropbear.id.au>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-05_04:2020-06-04,2020-06-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 mlxlogscore=999 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 cotscore=-2147483648 impostorscore=0 spamscore=0
+ clxscore=1011 phishscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/20 8:14 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.17 release.
-> There are 43 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
+On 6/5/20 2:37 AM, David Gibson wrote:
+> The tpm2_get_cc_attrs_tbl() call will result in TPM commands being issued,
+> which will need the use of the internal command/response buffer.  But,
+> we're issuing this *before* we've waited to make sure that buffer is
+> allocated.
+>
+> This can result in intermittent failures to probe if the hypervisor / TPM
+> implementation doesn't respond quickly enough.  I find it fails almost
+> every time with an 8 vcpu guest under KVM with software emulated TPM.
 
-wget 
-https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
---2020-06-05 09:24:32-- 
-https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
-Resolving www.kernel.org (www.kernel.org)... 147.75.56.137
-Connecting to www.kernel.org (www.kernel.org)|147.75.56.137|:443... 
-connected.
-HTTP request sent, awaiting response... 301 Moved Permanently
-Location: 
-https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz 
-[following]
---2020-06-05 09:24:32-- 
-https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.17-rc1.gz
-Resolving mirrors.edge.kernel.org (mirrors.edge.kernel.org)... 147.75.69.165
-Connecting to mirrors.edge.kernel.org 
-(mirrors.edge.kernel.org)|147.75.69.165|:443... connected.
-HTTP request sent, awaiting response... 404 Not Found
-2020-06-05 09:24:33 ERROR 404: Not Found.
+Uuuh. Thanks!
 
-Looks like patches didn't make it to mirror yet? Seeing the same
-error with the other stable patches.
 
-thanks,
--- Shuah
+> Fixes: 18b3670d79ae9 "tpm: ibmvtpm: Add support for TPM2"
+> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+
+
+
+> ---
+>   drivers/char/tpm/tpm_ibmvtpm.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+> index 09fe45246b8c..994385bf37c0 100644
+> --- a/drivers/char/tpm/tpm_ibmvtpm.c
+> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
+> @@ -683,13 +683,6 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+>   	if (rc)
+>   		goto init_irq_cleanup;
+>   
+> -	if (!strcmp(id->compat, "IBM,vtpm20")) {
+> -		chip->flags |= TPM_CHIP_FLAG_TPM2;
+> -		rc = tpm2_get_cc_attrs_tbl(chip);
+> -		if (rc)
+> -			goto init_irq_cleanup;
+> -	}
+> -
+>   	if (!wait_event_timeout(ibmvtpm->crq_queue.wq,
+>   				ibmvtpm->rtce_buf != NULL,
+>   				HZ)) {
+> @@ -697,6 +690,13 @@ static int tpm_ibmvtpm_probe(struct vio_dev *vio_dev,
+>   		goto init_irq_cleanup;
+>   	}
+>   
+> +	if (!strcmp(id->compat, "IBM,vtpm20")) {
+> +		chip->flags |= TPM_CHIP_FLAG_TPM2;
+> +		rc = tpm2_get_cc_attrs_tbl(chip);
+> +		if (rc)
+> +			goto init_irq_cleanup;
+> +	}
+> +
+>   	return tpm_chip_register(chip);
+>   init_irq_cleanup:
+>   	do {
+
+
+
