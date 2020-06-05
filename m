@@ -2,145 +2,130 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52917C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF044C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35AA0207D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DD7207D0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgFEIzQ (ORCPT
+        id S1726228AbgFEIz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:55:16 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5856 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbgFEIzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:55:16 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 16EA57C305DFFA9FA863;
-        Fri,  5 Jun 2020 16:55:14 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 5 Jun 2020 16:55:06 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: allow writeback on error status filesystem
-Date:   Fri, 5 Jun 2020 16:54:53 +0800
-Message-ID: <20200605085453.45717-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Fri, 5 Jun 2020 04:55:26 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:40365 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726072AbgFEIz0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:55:26 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=39;SR=0;TI=SMTPD_---0U-diTxY_1591347318;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U-diTxY_1591347318)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 05 Jun 2020 16:55:19 +0800
+Subject: Re: [PATCH RFC v4 00/13] virtio-mem: paravirtualized memory
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20191212171137.13872-1-david@redhat.com>
+ <9acc5d04-c8e9-ef53-85e4-709030997ca6@redhat.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <1cfa9edb-47ea-1495-4e28-4cf391eab44c@linux.alibaba.com>
+Date:   Fri, 5 Jun 2020 16:55:18 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+In-Reply-To: <9acc5d04-c8e9-ef53-85e4-709030997ca6@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
-            |
-             --71.06%--wb_writeback
-                       |
-                       |--68.96%--__writeback_inodes_wb
-                       |          |
-                       |           --68.95%--writeback_sb_inodes
-                       |                     |
-                       |                     |--65.08%--__writeback_single_inode
-                       |                     |          |
-                       |                     |           --64.35%--do_writepages
-                       |                     |                     |
-                       |                     |                     |--59.83%--f2fs_write_node_pages
-                       |                     |                     |          |
-                       |                     |                     |           --59.74%--f2fs_sync_node_pages
-                       |                     |                     |                     |
-                       |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
-                       |                     |                     |                     |          |
-                       |                     |                     |                     |           --27.90%--find_get_pages_range_tag
 
-If filesystem was injected w/ checkpoint errror, before umount, kworker
-will always hold one core in order to writeback a large number of node
-pages, that looks not reasonable, to avoid that, we can allow data/node
-write in such case, since we can force all data/node writes with OPU mode,
-and clear recovery flag on node, and checkpoint is not allowed as well,
-so we don't need to worry about writeback's effect on data/node in
-previous checkpoint, then with this way, it can decrease memory footprint
-cost by node/data pages and avoid looping into data/node writeback
-process.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/data.c | 19 ++++++++++++-------
- fs/f2fs/node.c |  7 +++++--
- 2 files changed, 17 insertions(+), 9 deletions(-)
+在 2020/1/9 下午9:48, David Hildenbrand 写道:
+> Ping,
+> 
+> I'd love to get some feedback on
+> 
+> a) The remaining MM bits from MM folks (especially, patch #6 and #8).
+> b) The general virtio infrastructure (esp. uapi in patch #2) from virtio
+> folks.
+> 
+> I'm planning to send a proper v1 (!RFC) once I have all necessary MM
+> acks. In the meanwhile, I will do more testing and minor reworks (e.g.,
+> fix !CONFIG_NUMA compilation).
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 9d40db50cd65..2b3c846181bb 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2519,6 +2519,8 @@ bool f2fs_should_update_outplace(struct inode *inode, struct f2fs_io_info *fio)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 
-+	if (unlikely(f2fs_cp_error(sbi)))
-+		return true;
- 	if (f2fs_lfs_mode(sbi))
- 		return true;
- 	if (S_ISDIR(inode->i_mode))
-@@ -2702,13 +2704,16 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 	/* we should bypass data pages to proceed the kworkder jobs */
- 	if (unlikely(f2fs_cp_error(sbi))) {
- 		mapping_set_error(page->mapping, -EIO);
--		/*
--		 * don't drop any dirty dentry pages for keeping lastest
--		 * directory structure.
--		 */
--		if (S_ISDIR(inode->i_mode))
--			goto redirty_out;
--		goto out;
-+
-+		if (has_not_enough_free_secs(sbi, 0, 0)) {
-+			/*
-+			 * don't drop any dirty dentry pages for keeping lastest
-+			 * directory structure.
-+			 */
-+			if (S_ISDIR(inode->i_mode))
-+				goto redirty_out;
-+			goto out;
-+		}
- 	}
- 
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 03e24df1c84f..372c04efad38 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1527,7 +1527,10 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 			unlock_page(page);
- 			return 0;
- 		}
--		goto redirty_out;
-+		if (has_not_enough_free_secs(sbi, 0, 0))
-+			goto redirty_out;
-+		set_fsync_mark(page, 0);
-+		set_dentry_mark(page, 0);
- 	}
- 
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-@@ -1568,7 +1571,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 		goto redirty_out;
- 	}
- 
--	if (atomic && !test_opt(sbi, NOBARRIER))
-+	if (atomic && !test_opt(sbi, NOBARRIER) && !f2fs_cp_error(sbi))
- 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
- 
- 	/* should add to global list before clearing PAGECACHE status */
--- 
-2.18.0.rc1
+
+Hi David,
+
+Thanks for your work!
+
+I am trying your https://github.com/davidhildenbrand/linux.git virtio-mem-v5
+which works fine for me, but just a 'DMA error' happens when a vm start with
+less than 2GB memory, Do I missed sth?
+
+Thanks
+Alex
+
+
+(qemu) qom-set vm0 requested-size 1g
+(qemu) [   26.560026] virtio_mem virtio0: plugged size: 0x0
+[   26.560648] virtio_mem virtio0: requested size: 0x40000000
+[   26.561730] systemd-journald[167]: no db file to read /run/udev/data/+virtio:virtio0: No such file or directory
+[   26.563138] systemd-journald[167]: no db file to read /run/udev/data/+virtio:virtio0: No such file or directory
+[   26.569122] Built 1 zonelists, mobility grouping on.  Total pages: 513141
+[   26.570039] Policy zone: Normal
+
+(qemu) [   32.175838] e1000 0000:00:03.0: swiotlb buffer is full (sz: 81 bytes), total 0 (slots), used 0 (slots)
+[   32.176922] e1000 0000:00:03.0: TX DMA map failed
+[   32.177488] e1000 0000:00:03.0: swiotlb buffer is full (sz: 81 bytes), total 0 (slots), used 0 (slots)
+[   32.178535] e1000 0000:00:03.0: TX DMA map failed
+
+my qemu command is like this:
+qemu-system-x86_64  --enable-kvm \
+	-m 2G,maxmem=16G -kernel /root/linux-next/$1/arch/x86/boot/bzImage \
+	-smp 4 \
+	-append "earlyprintk=ttyS0 root=/dev/sda1 console=ttyS0 debug psi=1 nokaslr ignore_loglevel" \
+	-hda /root/CentOS-7-x86_64-Azure-1703.qcow2 \
+	-net user,hostfwd=tcp::2222-:22 -net nic -s \
+  -object memory-backend-ram,id=mem0,size=3G \
+  -device virtio-mem-pci,id=vm0,memdev=mem0,node=0,requested-size=0M \
+	--nographic
 
