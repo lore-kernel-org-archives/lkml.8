@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0EA3208A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958E4208A9
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366574;
-	bh=iK6d8iiYLeDwGlgo/490db9Xd5xTRUxqCFRX3a0V7H8=;
+	s=default; t=1591366577;
+	bh=soooZv++TuidiX10DgFCAXqHp7cSQXQK3XNQuUOTahw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Udj1UyI7x4ntpbhWtlaJvvcPT1odyj429WZLUddY6/cU5p0xW7i7KOr+ajCVXFURQ
-	 G8v/oupPchLcpdn3V/QSxevnTMSoVHnXuvAt2AIo9MIX3PLB9ChxmgtAZ4D6AVkzBu
-	 oGgG+5WXU50P4vDvriiwsKwIyBmulNqZPqo+Lry0=
+	b=uZH/O0SE6qeLaGKy0WLwGTsw8HQTUeXSV/EyI1lVnZ79fCeMJk/8TA+bQAA74d4x+
+	 BoyALFn1Mh3W6Lj9Cwp/3jhgFORwpLgqDjO/d2LA5hP0kLzMYkMCWO4yAqHyhGdfIg
+	 +4K2r4loajRc/nhY+lQS2wHPIxu1DTuY+ToSWFmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgFEOQM (ORCPT
+        id S1728202AbgFEOQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgFEOQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:16:09 -0400
+        id S1728179AbgFEOQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:16:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA1322075B;
-        Fri,  5 Jun 2020 14:16:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24C3B206A2;
+        Fri,  5 Jun 2020 14:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366569;
-        bh=iK6d8iiYLeDwGlgo/490db9Xd5xTRUxqCFRX3a0V7H8=;
+        s=default; t=1591366571;
+        bh=soooZv++TuidiX10DgFCAXqHp7cSQXQK3XNQuUOTahw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+fpA4zjlyHbo8hvf775spRJusJYugayS+9JZ9VjzjB0OgUlAxOjVx6b0R8/8o24d
-         Gq/5nxSTB8FNuuOkv7EuJQrk3ESrMlFIMSo5SB9EtZnXcRQhjSQSABY7EQJha+muxH
-         Lb6x7aZ5iMBgcqWNiu1TsJUre4CqQn6+mYlkcOuw=
+        b=YaHi07m8ACBbXzeMyN6m52kDB20YGQ2CSOuiasmR+dXDbP8R/BucaS0Cb+imCPzaN
+         5OAek6PUFqU+nBm1ElLfxdemqQNAQxdubb9zZh4+PZObr0CdJwgaP9BS873EbfbXe+
+         Vypj8bssfY/5sx2dMXcq9PPoxcVfuSxgtJN3MIPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Felix Fietkau <nbd@nbd.name>
-Subject: [PATCH 5.7 07/14] mt76: mt76x02u: Add support for newer versions of the XBox One wifi adapter
-Date:   Fri,  5 Jun 2020 16:14:57 +0200
-Message-Id: <20200605135951.447750570@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.7 08/14] crypto: api - Fix use-after-free and race in crypto_spawn_alg
+Date:   Fri,  5 Jun 2020 16:14:58 +0200
+Message-Id: <20200605135951.518381547@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605135951.018731965@linuxfoundation.org>
 References: <20200605135951.018731965@linuxfoundation.org>
@@ -59,41 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <matthewgarrett@google.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit b2934279c3e9719145ff4090d4ab951e340df17e upstream.
+commit 6603523bf5e432c7c8490fb500793bb15d4e5f61 upstream.
 
-The current version has a new USB ID and reports as an 0x7632 device.
-Adding the IDs results in it working out of the box.
+There are two problems in crypto_spawn_alg.  First of all it may
+return spawn->alg even if spawn->dead is set.  This results in a
+double-free as detected by syzbot.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Secondly the setting of the DYING flag is racy because we hold
+the read-lock instead of the write-lock.  We should instead call
+crypto_shoot_alg in a safe manner by gaining a refcount, dropping
+the lock, and then releasing the refcount.
+
+This patch fixes both problems.
+
+Reported-by: syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com
+Fixes: 4f87ee118d16 ("crypto: api - Do not zap spawn->alg")
+Fixes: 73669cc55646 ("crypto: api - Fix race condition in...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt76/mt76x02.h    |    1 +
- drivers/net/wireless/mediatek/mt76/mt76x2/usb.c |    1 +
- 2 files changed, 2 insertions(+)
+ crypto/algapi.c   |   22 ++++++++++++++++------
+ crypto/api.c      |    3 ++-
+ crypto/internal.h |    1 +
+ 3 files changed, 19 insertions(+), 7 deletions(-)
 
---- a/drivers/net/wireless/mediatek/mt76/mt76x02.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02.h
-@@ -216,6 +216,7 @@ static inline bool is_mt76x0(struct mt76
- static inline bool is_mt76x2(struct mt76x02_dev *dev)
- {
- 	return mt76_chip(&dev->mt76) == 0x7612 ||
-+	       mt76_chip(&dev->mt76) == 0x7632 ||
- 	       mt76_chip(&dev->mt76) == 0x7662 ||
- 	       mt76_chip(&dev->mt76) == 0x7602;
- }
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/usb.c
-@@ -18,6 +18,7 @@ static const struct usb_device_id mt76x2
- 	{ USB_DEVICE(0x7392, 0xb711) },	/* Edimax EW 7722 UAC */
- 	{ USB_DEVICE(0x0846, 0x9053) },	/* Netgear A6210 */
- 	{ USB_DEVICE(0x045e, 0x02e6) },	/* XBox One Wireless Adapter */
-+	{ USB_DEVICE(0x045e, 0x02fe) },	/* XBox One Wireless Adapter */
- 	{ },
- };
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -716,17 +716,27 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
  
+ static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+ {
+-	struct crypto_alg *alg;
++	struct crypto_alg *alg = ERR_PTR(-EAGAIN);
++	struct crypto_alg *target;
++	bool shoot = false;
+ 
+ 	down_read(&crypto_alg_sem);
+-	alg = spawn->alg;
+-	if (!spawn->dead && !crypto_mod_get(alg)) {
+-		alg->cra_flags |= CRYPTO_ALG_DYING;
+-		alg = NULL;
++	if (!spawn->dead) {
++		alg = spawn->alg;
++		if (!crypto_mod_get(alg)) {
++			target = crypto_alg_get(alg);
++			shoot = true;
++			alg = ERR_PTR(-EAGAIN);
++		}
+ 	}
+ 	up_read(&crypto_alg_sem);
+ 
+-	return alg ?: ERR_PTR(-EAGAIN);
++	if (shoot) {
++		crypto_shoot_alg(target);
++		crypto_alg_put(target);
++	}
++
++	return alg;
+ }
+ 
+ struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -333,12 +333,13 @@ static unsigned int crypto_ctxsize(struc
+ 	return len;
+ }
+ 
+-static void crypto_shoot_alg(struct crypto_alg *alg)
++void crypto_shoot_alg(struct crypto_alg *alg)
+ {
+ 	down_write(&crypto_alg_sem);
+ 	alg->cra_flags |= CRYPTO_ALG_DYING;
+ 	up_write(&crypto_alg_sem);
+ }
++EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+ 
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask)
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -65,6 +65,7 @@ void crypto_alg_tested(const char *name,
+ void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
+ 			  struct crypto_alg *nalg);
+ void crypto_remove_final(struct list_head *list);
++void crypto_shoot_alg(struct crypto_alg *alg);
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask);
+ void *crypto_create_tfm(struct crypto_alg *alg,
 
 
