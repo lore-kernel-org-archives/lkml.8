@@ -2,385 +2,172 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7889FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FB72074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QM7J95yi"
+	by mail.kernel.org (Postfix) with ESMTP id 7A405207DA
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 02:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591323882;
+	bh=YQtG1+E9SrqAmxEtDAvp5km0QQeWwy9JUKjo7pm80Ts=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ae13sTbV6rcGFLTTymE8xyMvNT3VbHuqVyBWpESAp118Uef6hYEIQbZHPG+GYrLtl
+	 ah+giDKT1x85TL2hfch0/7CMzHNiUp6Wq7kyJ4x7JIH35JmmDCovb2itylDpqAkcj+
+	 eGFcMNCJ1Cn33pm9z9fdnNRUtwHgilxgCvWQPRUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgFECUI (ORCPT
+        id S1726026AbgFECYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 22:20:08 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:24142 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgFECUH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 22:20:07 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200605022003epoutp0241fce069c32ae520b26e4ca9d8ab7b12~VhGL0zA4N0434604346epoutp02m
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 02:20:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200605022003epoutp0241fce069c32ae520b26e4ca9d8ab7b12~VhGL0zA4N0434604346epoutp02m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591323603;
-        bh=HqJ9XLtjvCGgP5la8izwY+izOX7HRKP7K+U8sm7hxpA=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=QM7J95yiUtC/9OK9lOopbNOlPnQDId06Dw8lDRtVOAX15IqF5GurDU5RGpGytPuNW
-         srV04bkw7/8EMcgFaf/tL/tU6rVf6X6zsrj+ocrxymgUk4CsEc1q7wHjR86Dfojo7T
-         FRarcbEV3Ivun8Tta/apWHXQilZHXJOD7ugN21uk=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p4.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200605022003epcas1p4b3dbe280d30a997ebc5a051e4ba70f10~VhGLK5ZTw1786717867epcas1p4W;
-        Fri,  5 Jun 2020 02:20:03 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [RFC PATCH 5/5] scsi: ufs: Prepare HPB read for cached sub-region
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <336371513.41591323603173.JavaMail.epsvc@epcpadp1>
-Date:   Fri, 05 Jun 2020 11:12:16 +0900
-X-CMS-MailID: 20200605021216epcms2p2034fed78fd0e5d15083066ef5e99ce21
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
-References: <963815509.21591323002276.JavaMail.epsvc@epcpadp1>
-        <231786897.01591322101492.JavaMail.epsvc@epcpadp1>
-        <336371513.41591320902369.JavaMail.epsvc@epcpadp1>
-        <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
-        <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p2>
+        Thu, 4 Jun 2020 22:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgFECYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 22:24:40 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EE902074B;
+        Fri,  5 Jun 2020 02:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591323880;
+        bh=YQtG1+E9SrqAmxEtDAvp5km0QQeWwy9JUKjo7pm80Ts=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RAAAOa54T9fzg+pPeAtX+MJm7Mn0tqYsWTdPcvIvXgJjAZOyPH+8YMOlfOt1xyv5/
+         wuDLcJnY2hL3loxljR4ldHx5LDLMsTsTnHihQy8YmXcqIUmSKg07tBBEclwPPaE3ek
+         6KBy3XzC1Sz3Fh+u59DdcNlRCosoDt9CQtKzlLkk=
+Date:   Thu, 4 Jun 2020 21:29:45 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] docs: deprecated.rst: Add zero-length and one-element arrays
+Message-ID: <20200605022945.GA520@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the read I/O to the HPB read I/O.
+Add zero-length and one-element arrays to the list.
 
-If the logical address of the read I/O belongs to active sub-region, the
-HPB driver modifies the read I/O command to HPB read. It modifies the upiu
-command of UFS instead of modifying the existing SCSI command.
+While I continue replacing zero-length and one-element arrays with
+flexible-array members, I need a reference to point people to, so
+they don't introduce more instances of such arrays. And while here,
+add a note to the "open-coded arithmetic in allocator arguments"
+section, on the use of struct_size() and the arrays-to-deprecate
+mentioned here.
 
-In the HPB version 1.0, the maximum read I/O size that can be converted to
-HPB read is 4KB.
-
-The dirty map of the active sub-region prevents an incorrect HPB read that
-has stale physical page number which is updated by previous write I/O.
-
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/scsi/ufs/ufshpb.c | 249 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 249 insertions(+)
+ Documentation/process/deprecated.rst | 84 ++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
-index f1aa8e7b5ce0..b3e488ef8675 100644
---- a/drivers/scsi/ufs/ufshpb.c
-+++ b/drivers/scsi/ufs/ufshpb.c
-@@ -46,6 +46,35 @@ static struct ufshpb_driver ufshpb_drv;
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 652e2aa02a66c..622c8ac72a615 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -85,6 +85,12 @@ Instead, use the helper::
  
- static int ufshpb_create_sysfs(struct ufs_hba *hba, struct ufshpb_lu *hpb);
+ 	header = kzalloc(struct_size(header, item, count), GFP_KERNEL);
  
-+static inline int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
-+			     struct ufshpb_subregion *srgn)
-+{
-+	return rgn->rgn_state != HPB_RGN_INACTIVE &&
-+		srgn->srgn_state == HPB_SRGN_CLEAN;
-+}
++NOTE: If you are using struct_size() on a structure containing a zero-length
++or a one-element array as a trailing array member, stop using such arrays
++and switch to `flexible arrays
++<https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays>`_
++instead.
 +
-+static inline bool ufshpb_is_read_cmd(struct scsi_cmnd *cmd)
-+{
-+	if (cmd->cmnd[0] == READ_10 || cmd->cmnd[0] == READ_16)
-+		return true;
+ See array_size(), array3_size(), and struct_size(),
+ for more details as well as the related check_add_overflow() and
+ check_mul_overflow() family of functions.
+@@ -200,3 +206,81 @@ All switch/case blocks must end in one of:
+ * continue;
+ * goto <label>;
+ * return [expression];
 +
-+	return false;
-+}
++Zero-length and one-element arrays
++----------------------------------
++Old code in the kernel uses the zero-length and one-element array extensions
++to the C90 standard, but the `preferred mechanism to declare variable-length
++types
++<https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_
++such as these ones is a `flexible array member`, introduced in C99::
 +
-+static inline bool ufshpb_is_write_discard_cmd(struct scsi_cmnd *cmd)
-+{
-+	if (cmd->cmnd[0] == WRITE_10 || cmd->cmnd[0] == WRITE_16 ||
-+	    cmd->cmnd[0] == UNMAP)
-+		return true;
++        struct something {
++                int length;
++                char data[];
++        };
 +
-+	return false;
-+}
++        struct something *instance;
 +
-+static inline bool ufshpb_is_support_chunk(int transfer_len)
-+{
-+	return transfer_len <= HPB_MULTI_CHUNK_HIGH;
-+}
++        instance = kmalloc(struct_size(instance, data, size), GFP_KERNEL);
++        instance->length = size;
++        memcpy(instance->data, source, size);
 +
- static inline bool ufshpb_is_general_lun(int lun)
- {
- 	return lun < UFS_UPIU_MAX_UNIT_NUM_ID;
-@@ -137,6 +166,225 @@ static inline void ufshpb_lu_put(struct ufshpb_lu *hpb)
- 	put_device(&hpb->hpb_lu_dev);
- }
- 
-+static inline u32 ufshpb_get_lpn(struct scsi_cmnd *cmnd)
-+{
-+	return blk_rq_pos(cmnd->request) >>
-+		(ilog2(cmnd->device->sector_size) - 9);
-+}
++By making use of the mechanism above, we get a compiler error in case the
++flexible array does not occur last in the structure, which helps to prevent
++some kind of `undefined behavior <https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=76497732932f15e7323dc805e8ea8dc11bb587cf>`_ bugs from being inadvertently introduced to
++the codebase.
 +
-+static inline unsigned int ufshpb_get_len(struct scsi_cmnd *cmnd)
-+{
-+	return blk_rq_sectors(cmnd->request) >>
-+		(ilog2(cmnd->device->sector_size) - 9);
-+}
++It is also important to notice that zero-length and one-element arrays pose
++confusion for things like sizeof() and `CONFIG_FORTIFY_SOURCE`. For instance,
++there is no mechanism that warns us that the following application of the
++sizeof() operator to a zero-length array always results in zero::
 +
-+static void ufshpb_set_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
-+			     int srgn_idx, int srgn_offset, int cnt)
-+{
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	int set_bit_len;
-+	int bitmap_len = hpb->entries_per_srgn;
++        struct something {
++                int length;
++                char data[0];
++        };
 +
-+next_srgn:
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
++        struct something *instance;
 +
-+	if ((srgn_offset + cnt) > bitmap_len)
-+		set_bit_len = bitmap_len - srgn_offset;
-+	else
-+		set_bit_len = cnt;
++        instance = kmalloc(struct_size(instance, data, size), GFP_KERNEL);
++        instance->length = size;
++        memcpy(instance->data, source, size);
++        ...
++        size = sizeof(instance->data);
 +
-+	if (rgn->rgn_state != HPB_RGN_INACTIVE)
-+		bitmap_set(srgn->mctx->ppn_dirty, srgn_offset, set_bit_len);
++At the last line of code above, ``size`` turns out to be zero --when one might have
++thought differently. Here are a couple examples of this issue `link 1
++<https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f2cd32a443da694ac4e28fbf4ac6f9d5cc63a539>`_,
++`link 2
++<https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ab91c2a89f86be2898cee208d492816ec238b2cf>`_.
++On the other hand, `flexible array members have incomplete type, and so the sizeof()
++operator may not be applied <https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
++so any  misuse of such  operator will be immediately noticed at build time.
 +
-+	srgn_offset = 0;
-+	if (++srgn_idx == hpb->srgns_per_rgn) {
-+		srgn_idx = 0;
-+		rgn_idx++;
-+	}
 +
-+	cnt -= set_bit_len;
-+	if (cnt > 0)
-+		goto next_srgn;
++With respect to one-element arrays, one has to be acutely aware that `such arrays
++occupy at least as much space as a single object of the type
++<https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
++hence they contribute to the size of the enclosing structure. This is prone
++to error every time people want to calculate the total size of dynamic memory
++to allocate for a structure containing an array of this kind as a member::
 +
-+	WARN_ON(cnt < 0);
-+}
++        struct something {
++                int length;
++                char data[1];
++        };
 +
-+static bool ufshpb_test_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
-+				   int srgn_idx, int srgn_offset, int cnt)
-+{
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	int bitmap_len = hpb->entries_per_srgn;
-+	int i, bit_len;
++        struct something *instance;
 +
-+next_srgn:
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
++        instance = kmalloc(struct_size(instance, data, size - 1), GFP_KERNEL);
++        instance->length = size;
++        memcpy(instance->data, source, size);
 +
-+	if (!ufshpb_is_valid_srgn(rgn, srgn))
-+		return true;
-+
-+	/*
-+	 * If the region state is active, mctx must be allocated.
-+	 * In this case, check whether the region is evicted or
-+	 * mctx allcation fail.
-+	 */
-+	WARN_ON(!srgn->mctx);
-+
-+	if ((srgn_offset + cnt) > bitmap_len)
-+		bit_len = bitmap_len - srgn_offset;
-+	else
-+		bit_len = cnt;
-+
-+	for (i = 0; i < bit_len; i++) {
-+		if (test_bit(srgn_offset + i, srgn->mctx->ppn_dirty))
-+			return true;
-+	}
-+
-+	srgn_offset = 0;
-+	if (++srgn_idx == hpb->srgns_per_rgn) {
-+		srgn_idx = 0;
-+		rgn_idx++;
-+	}
-+
-+	cnt -= bit_len;
-+	if (cnt > 0)
-+		goto next_srgn;
-+
-+	return false;
-+}
-+
-+static u64 ufshpb_get_ppn(struct ufshpb_lu *hpb,
-+			  struct ufshpb_map_ctx *mctx, int pos, int *error)
-+{
-+	u64 *ppn_table;
-+	struct page *page;
-+	int index, offset;
-+
-+	index = pos / (PAGE_SIZE / HPB_ENTRY_SIZE);
-+	offset = pos % (PAGE_SIZE / HPB_ENTRY_SIZE);
-+
-+	page = mctx->m_page[index];
-+	if (unlikely(!page)) {
-+		*error = -ENOMEM;
-+		dev_err(&hpb->hpb_lu_dev,
-+			"error. cannot find page in mctx\n");
-+		return 0;
-+	}
-+
-+	ppn_table = page_address(page);
-+	if (unlikely(!ppn_table)) {
-+		*error = -ENOMEM;
-+		dev_err(&hpb->hpb_lu_dev, "error. cannot get ppn_table\n");
-+		return 0;
-+	}
-+
-+	return ppn_table[offset];
-+}
-+
-+static inline void
-+ufshpb_get_pos_from_lpn(struct ufshpb_lu *hpb, unsigned long lpn, int *rgn_idx,
-+			int *srgn_idx, int *offset)
-+{
-+	int rgn_offset;
-+
-+	*rgn_idx = lpn >> hpb->entries_per_rgn_shift;
-+	rgn_offset = lpn & hpb->entries_per_rgn_mask;
-+	*srgn_idx = rgn_offset >> hpb->entries_per_srgn_shift;
-+	*offset = rgn_offset & hpb->entries_per_srgn_mask;
-+}
-+
-+static void
-+ufshpb_set_hpb_read_to_upiu(struct ufshpb_lu *hpb, struct ufshcd_lrb *lrbp,
-+				  u32 lpn, u64 ppn,  unsigned int transfer_len)
-+{
-+	unsigned char *cdb = lrbp->ucd_req_ptr->sc.cdb;
-+
-+	cdb[0] = UFSHPB_READ;
-+
-+	put_unaligned_be32(lpn, &cdb[2]);
-+	put_unaligned_be64(ppn, &cdb[6]);
-+	cdb[14] = transfer_len;
-+}
-+
-+/* routine : READ10 -> HPB_READ  */
-+static void ufshpb_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
-+{
-+	struct ufshpb_lu *hpb;
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	struct scsi_cmnd *cmd = lrbp->cmd;
-+	u32 lpn;
-+	u64 ppn;
-+	unsigned long flags;
-+	int transfer_len, rgn_idx, srgn_idx, srgn_offset;
-+	int err = 0;
-+
-+	hpb = ufshpb_get_hpb_data(cmd);
-+	err = ufshpb_lu_get(hpb);
-+	if (unlikely(err))
-+		return;
-+
-+	WARN_ON(hpb->lun != cmd->device->lun);
-+	if (!ufshpb_is_write_discard_cmd(cmd) &&
-+	    !ufshpb_is_read_cmd(cmd))
-+		goto put_hpb;
-+
-+	transfer_len = ufshpb_get_len(cmd);
-+	if (unlikely(!transfer_len))
-+		goto put_hpb;
-+
-+	lpn = ufshpb_get_lpn(cmd);
-+	ufshpb_get_pos_from_lpn(hpb, lpn, &rgn_idx, &srgn_idx, &srgn_offset);
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
-+
-+	/* If commnad type is WRITE and DISCARD, set bitmap as drity */
-+	if (ufshpb_is_write_discard_cmd(cmd)) {
-+		spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-+		ufshpb_set_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-+				 transfer_len);
-+		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+		goto put_hpb;
-+	}
-+
-+	WARN_ON(!ufshpb_is_read_cmd(cmd));
-+
-+	if (!ufshpb_is_support_chunk(transfer_len))
-+		goto put_hpb;
-+
-+	spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-+	if (ufshpb_test_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-+				   transfer_len)) {
-+		atomic_inc(&hpb->stats.miss_cnt);
-+		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+		goto put_hpb;
-+	}
-+
-+	ppn = ufshpb_get_ppn(hpb, srgn->mctx, srgn_offset, &err);
-+	spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+	if (unlikely(err)) {
-+		/*
-+		 * In this case, the region state is active,
-+		 * but the ppn table is not allocated.
-+		 * Make sure that ppn tabie must be allocated on
-+		 * active state
-+		 */
-+		WARN_ON(true);
-+		dev_err(&hpb->hpb_lu_dev,
-+			"ufshpb_get_ppn failed. err %d\n", err);
-+		goto put_hpb;
-+	}
-+
-+	ufshpb_set_hpb_read_to_upiu(hpb, lrbp, lpn, ppn, transfer_len);
-+
-+	atomic_inc(&hpb->stats.hit_cnt);
-+put_hpb:
-+	ufshpb_lu_put(hpb);
-+}
-+
- static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
- 					     struct ufshpb_subregion *srgn)
- {
-@@ -1688,6 +1936,7 @@ static struct ufshpb_driver ufshpb_drv = {
- 		.bus = &ufsf_bus_type,
- 	},
- 	.ufshpb_ops = {
-+		.prep_fn = ufshpb_prep_fn,
- 		.reset = ufshpb_reset,
- 		.reset_host = ufshpb_reset_host,
- 		.suspend = ufshpb_suspend,
++In the example above, we had to remember to calculate ``size - 1`` when using
++the struct_size() helper, otherwise we would have --unintentionally-- allocated
++memory for one too many ``data`` objects. The cleanest and least error-prone way
++to implement this is through the use of a `flexible array member`, which is
++exemplified at the `beginning
++<https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays>`_
++of this section.
 -- 
-2.17.1
+2.27.0
 
