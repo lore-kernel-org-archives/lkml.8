@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3966C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC4C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C402074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6B020820
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgFEXm0 (ORCPT
+        id S1728605AbgFEXmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 19:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 19:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbgFEXmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 19:42:23 -0400
+        id S1728374AbgFEXmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 19:42:25 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8316206FA;
-        Fri,  5 Jun 2020 23:42:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C35207DF;
+        Fri,  5 Jun 2020 23:42:23 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jhLyf-002sAr-W7; Fri, 05 Jun 2020 19:42:22 -0400
-Message-ID: <20200605234221.847811418@goodmis.org>
+        id 1jhLyg-002sDy-VX; Fri, 05 Jun 2020 19:42:22 -0400
+Message-ID: <20200605234222.837956181@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Fri, 05 Jun 2020 19:41:50 -0400
+Date:   Fri, 05 Jun 2020 19:41:56 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -38,10 +38,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        kernel test robot <rong.a.chen@intel.com>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH RT 1/8] printk: console must not schedule for drivers
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [PATCH RT 7/8] mm/zswap: Use local lock to protect per-CPU data
 References: <20200605234149.965509211@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -55,51 +53,97 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Even though the printk kthread is always preemptible, it is still not
-allowed to call cond_resched() from within console drivers. The
-task may become non-preemptible in the console driver call chain. For
-example, vt_console_print() takes a spinlock and then can call into
-fbcon_redraw(), which can conditionally invoke cond_resched():
+This is an incremental update of the zswap patch. Addtional spots were
+identified, which were lacking proper locking, during the rework of the
+patch for upstream.
+The complete patch description is available as commit
+   79410590ae87e ("mm/zswap: Use local lock to protect per-CPU data")
 
-|BUG: sleeping function called from invalid context at kernel/printk/printk.c:2322
-|in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 177, name: printk
-|CPU: 0 PID: 177 Comm: printk Not tainted 5.6.2-00011-ga536059557f1d9 #1
-|Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-|Call Trace:
-| dump_stack+0x66/0x8b
-| ___might_sleep+0x102/0x120
-| console_conditional_schedule+0x24/0x30
-| fbcon_redraw+0x96/0x1c0
-| fbcon_scroll+0x556/0xd70
-| con_scroll+0x147/0x1e0
-| lf+0x9e/0xb0
-| vt_console_print+0x253/0x3d0
-| printk_kthread_func+0x1d5/0x3b0
-
-Disable cond_resched() for the call into the console drivers.
-
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/printk/printk.c | 1 +
- 1 file changed, 1 insertion(+)
+ mm/zswap.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 2affe95866a4..9600373bcf55 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2746,6 +2746,7 @@ static int printk_kthread_func(void *data)
- 			    &len, printk_time);
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 21d2d3ed3d6d..3c9644b51f3f 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -372,6 +372,8 @@ static struct zswap_entry *zswap_entry_find_get(struct rb_root *root,
+ * per-cpu code
+ **********************************/
+ static DEFINE_PER_CPU(u8 *, zswap_dstmem);
++/* Used for zswap_dstmem and tfm */
++static DEFINE_LOCAL_IRQ_LOCK(zswap_cpu_lock);
  
- 		console_lock();
-+		console_may_schedule = 0;
- 		call_console_drivers(master_seq, ext_text, ext_len, text, len,
- 				     msg->level, msg->facility);
- 		if (len > 0 || ext_len > 0)
+ static int zswap_dstmem_prepare(unsigned int cpu)
+ {
+@@ -889,10 +891,11 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
+ 		dlen = PAGE_SIZE;
+ 		src = (u8 *)zhdr + sizeof(struct zswap_header);
+ 		dst = kmap_atomic(page);
+-		tfm = *get_cpu_ptr(entry->pool->tfm);
++		local_lock(zswap_cpu_lock);
++		tfm = *this_cpu_ptr(entry->pool->tfm);
+ 		ret = crypto_comp_decompress(tfm, src, entry->length,
+ 					     dst, &dlen);
+-		put_cpu_ptr(entry->pool->tfm);
++		local_unlock(zswap_cpu_lock);
+ 		kunmap_atomic(dst);
+ 		BUG_ON(ret);
+ 		BUG_ON(dlen != PAGE_SIZE);
+@@ -981,8 +984,6 @@ static void zswap_fill_page(void *ptr, unsigned long value)
+ 	memset_l(page, value, PAGE_SIZE / sizeof(unsigned long));
+ }
+ 
+-/* protect zswap_dstmem from concurrency */
+-static DEFINE_LOCAL_IRQ_LOCK(zswap_dstmem_lock);
+ /*********************************
+ * frontswap hooks
+ **********************************/
+@@ -1060,7 +1061,8 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ 	}
+ 
+ 	/* compress */
+-	dst = get_locked_var(zswap_dstmem_lock, zswap_dstmem);
++	local_lock(zswap_cpu_lock);
++	dst = *this_cpu_ptr(&zswap_dstmem);
+ 	tfm = *this_cpu_ptr(entry->pool->tfm);
+ 	src = kmap_atomic(page);
+ 	ret = crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
+@@ -1088,7 +1090,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ 	memcpy(buf, &zhdr, hlen);
+ 	memcpy(buf + hlen, dst, dlen);
+ 	zpool_unmap_handle(entry->pool->zpool, handle);
+-	put_locked_var(zswap_dstmem_lock, zswap_dstmem);
++	local_unlock(zswap_cpu_lock);
+ 
+ 	/* populate entry */
+ 	entry->offset = offset;
+@@ -1116,7 +1118,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
+ 	return 0;
+ 
+ put_dstmem:
+-	put_locked_var(zswap_dstmem_lock, zswap_dstmem);
++	local_unlock(zswap_cpu_lock);
+ 	zswap_pool_put(entry->pool);
+ freepage:
+ 	zswap_entry_cache_free(entry);
+@@ -1161,9 +1163,10 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
+ 	if (zpool_evictable(entry->pool->zpool))
+ 		src += sizeof(struct zswap_header);
+ 	dst = kmap_atomic(page);
+-	tfm = *get_cpu_ptr(entry->pool->tfm);
++	local_lock(zswap_cpu_lock);
++	tfm = *this_cpu_ptr(entry->pool->tfm);
+ 	ret = crypto_comp_decompress(tfm, src, entry->length, dst, &dlen);
+-	put_cpu_ptr(entry->pool->tfm);
++	local_unlock(zswap_cpu_lock);
+ 	kunmap_atomic(dst);
+ 	zpool_unmap_handle(entry->pool->zpool, entry->handle);
+ 	BUG_ON(ret);
 -- 
 2.26.2
 
