@@ -2,129 +2,96 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E538EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C175F207D0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iL9qGE+E"
+	by mail.kernel.org (Postfix) with ESMTP id 85C9020835
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 09:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591350531;
+	bh=7VfmUbTNfgHA8phpYfCqhYWcZsAaPsLsQoqo+K9rgpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nlsWJujEQwtk+UbtFYk21/RDA7HpcjYLw3pe7ysiBnPHCjoRT0nwl1YwRdkmluH0v
+	 KJleT1mBXvbhDQRS4kCbTNQT7X61ENoDaygSEFRrWZWPsJlq2OmfkeD7qhqoiB/j9m
+	 4lakGVetEUt8i3oZTyFgjbdG+J41bv9uUs5LVHgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgFEJqs (ORCPT
+        id S1726365AbgFEJsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 05:46:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgFEJqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 05:46:47 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0831DC08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 02:46:47 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f185so8451810wmf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 02:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mbmJ3LGfRiCwEeU4P9Eu8WSdnCz4EbKhItYlMOGXu1A=;
-        b=iL9qGE+E9zBWaNqdk8hDmBlMprQUairHW4PfVNjYcYGoaafczwzw9pIGtR1C8sQFTE
-         tvtjvMIA7yevSjlNLmU70R4KAJIBT169XelUrMV1mu7EZscPE620aeO1gmajhcRCla5v
-         oNn8Z7NIG2ldEbTq6q60ApoSLsbw/YjMlk1nCnzpG3yEILOdbd1S5eiVULW6bMGXYCQL
-         Ecf8AtZCnzWtn+n3tHACfowa95G40epMD0AqAR/eynPrfj52cCxH+0tPuAxiaeJWx+T9
-         VA0Kt+jw7TFw10lNElcTJX1B9QYCT8zOYBkgiXMD/k0r3goAiMGbM87IKvsSI1BMhyxE
-         BDCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mbmJ3LGfRiCwEeU4P9Eu8WSdnCz4EbKhItYlMOGXu1A=;
-        b=PfFPU+TkDg+FcxzcAEUCEh8bLS63g/4WbGjQHKFBBxcifETOfA71pNOennQV1NEplM
-         nfsxGcT3YhNVxLsX4wMimhxw+GP7a9z3Ej8j27bWvGh5wMgHEFYktpclezBQ50vyW8YE
-         zbzt8+6JiCfMYFVmMdDc4SBkBsfTzFZoxkZvp4eNvOn0h0zlxpx1fLmOLQexenzCNJEE
-         k8Vgja2J3+C3lCQVlsfRr5npvCmtiwhC6Xb+N7eAMWQDY8yJ0VC/6dlNTnnXAHt6vKfB
-         53tUFjUAnflZAo47eZCBGQ6mO72wEyFNco3SlY4zMP/1J3mYU1uQd0jwu/iPKMozJIO2
-         oO3Q==
-X-Gm-Message-State: AOAM531u7v1Ze3hsFwsQMId8qDQ4kzH3ok3LewmzIz6OM3oDhtPL3V62
-        /+c4R/VjorX1T42WkkJwbgm7fxuyjMyUokCb7LrPiQ==
-X-Google-Smtp-Source: ABdhPJz6paBIsszLKlumm4Z3GVnmnLd9zlrplUT1OaXrXB7uJgeytGX12BCwGe9vd8Vc/7j/UcCyZb0mpJOnD+AX4PM=
-X-Received: by 2002:a1c:19c1:: with SMTP id 184mr1746984wmz.29.1591350405584;
- Fri, 05 Jun 2020 02:46:45 -0700 (PDT)
+        Fri, 5 Jun 2020 05:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726253AbgFEJsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 05:48:50 -0400
+Received: from linux-8ccs (p57a23121.dip0.t-ipconnect.de [87.162.49.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C834D206A2;
+        Fri,  5 Jun 2020 09:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591350530;
+        bh=7VfmUbTNfgHA8phpYfCqhYWcZsAaPsLsQoqo+K9rgpA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HALIUzIARJO3m52oj9SlPwbge4MTdKsjO+gUs+ViVI9J9qA83rV8SEdBk860eSUAX
+         rk0QrB+sdnKGwhW2f6ZoWJn4yxdx2a9czWZkqUTk5JMjELyYH8OPXqJkMDMi4vhAuM
+         Wfh+c7IM8ZUsCHJBFKfYkQ2uA8A/CJUgesQHIrPA=
+Date:   Fri, 5 Jun 2020 11:48:46 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: build failure after merge of the origin tree
+Message-ID: <20200605094845.GA24474@linux-8ccs>
+References: <20200605083715.1a6c29ce@canb.auug.org.au>
+ <20200605000439.v75kbagqcxvctqam@treble>
 MIME-Version: 1.0
-References: <20200604084245.161480-1-glider@google.com> <202006040844.C50B47699@keescook>
-In-Reply-To: <202006040844.C50B47699@keescook>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Fri, 5 Jun 2020 11:46:34 +0200
-Message-ID: <CAG_fn=UMye_Qq3XZCVQP150iYeV3BrF_mPVLh83+H4mUy_cmnA@mail.gmail.com>
-Subject: Re: [PATCH] ovl: explicitly initialize error in ovl_copy_xattr()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     miklos@szeredi.hu, Vivek Goyal <vgoyal@redhat.com>,
-        linux-unionfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Roy Yang <royyang@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200605000439.v75kbagqcxvctqam@treble>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 4, 2020 at 5:57 PM Kees Cook <keescook@chromium.org> wrote:
++++ Josh Poimboeuf [04/06/20 19:04 -0500]:
+>On Fri, Jun 05, 2020 at 08:37:15AM +1000, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> After merging the origin tree, today's linux-next build (powerpc
+>> ppc64_defconfig) failed like this:
+>>
+>> kernel/module.c: In function 'do_init_module':
+>> kernel/module.c:3593:2: error: implicit declaration of function 'module_enable_ro'; did you mean 'module_enable_x'? [-Werror=implicit-function-declaration]
+>>  3593 |  module_enable_ro(mod, true);
+>>       |  ^~~~~~~~~~~~~~~~
+>>       |  module_enable_x
+>>
+>> Caused by commit
+>>
+>>   e6eff4376e28 ("module: Make module_enable_ro() static again")
+>>
+>> This config has neither CONFIG_ARCH_HAS_STRICT_MODULE_RWX or
+>> CONFIG_ARCH_HAS_STRICT_MODULE_RWX set.  This failure was hidden in
+>> linux-next due to commit
+>>
+>>   db991af02f11 ("module: break nested ARCH_HAS_STRICT_MODULE_RWX and STRICT_MODULE_RWX #ifdefs")
+>>
+>> from the modules tree. I have cherry-picked that commit for today.
 >
-> On Thu, Jun 04, 2020 at 10:42:45AM +0200, glider@google.com wrote:
-> > Under certain circumstances (we found this out running Docker on a
-> > Clang-built kernel with CONFIG_INIT_STACK_ALL) ovl_copy_xattr() may
-> > return uninitialized value of |error| from ovl_copy_xattr().
-> > It is then returned by ovl_create() to lookup_open(), which casts it to
-> > an invalid dentry pointer, that can be further read or written by the
-> > lookup_open() callers.
-> >
-> > The uninitialized value is returned when all the xattr on the file
-> > are ovl_is_private_xattr(), which is actually a successful case,
-> > therefore we initialize |error| with 0.
-> >
-> > Signed-off-by: Alexander Potapenko <glider@google.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Roy Yang <royyang@google.com>
-> > Cc: <stable@vger.kernel.org> # 4.1
+>Sorry, I guessed we missed that dependency between the live-patching and
+>module trees.
 >
-> Please include a Fixes (more below) and Link tags for details to help
-> guide backporting, then you don't need to bother with with "# 4.1",
-> the -stable tools will figure it out with a "Fixes" tag.
->
-> Thanks for the v2!
->
-> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1050405
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> > The bug seem to date back to at least v4.1 where the annotation has been
-> > introduced (i.e. the compilers started noticing error could be used
-> > before being initialized). I hovever didn't try to prove that the
-> > problem is actually reproducible on such ancient kernels. We've seen it
-> > on a real machine running v4.4 as well.
->
-> It seems like it came from this, but that's v4.5:
->
-> Fixes: e4ad29fa0d22 ("ovl: use a minimal buffer in ovl_copy_xattr")
+>Jessica, are you planning on sending a pull request?
 
-https://bugs.chromium.org/p/chromium/issues/detail?id=1050405 mentions v4.4.212.
-Your patch could've been slipped into that kernel as well.
+Yep, just sent. So hopefully this gets resolved in the next day or two.
 
-> What did you find in v4.1? It looks like error isn't uninitialized in
-> v4.1:
-
-The annotation appeared first in
-https://elixir.bootlin.com/linux/v4.1.18/source/fs/overlayfs/copy_up.c#L27,
-does that count as 4.1 or 4.2?
-
-> But v4.1.52 backported the above patch (e4ad29fa0d22), which is why I
-> don't try to figure these things out manually. Once we find the commit,
-> the tools will figure it out. I think you just need:
->
-> Fixes: e4ad29fa0d22 ("ovl: use a minimal buffer in ovl_copy_xattr")
-> Cc: stable@vger.kernel.org
-
-Sounds good!
