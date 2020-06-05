@@ -2,175 +2,286 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6598207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1632074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 07:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OA1KKh3w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgVXZTnw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgFEHpI (ORCPT
+        id S1726144AbgFEHp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 03:45:08 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42486 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725280AbgFEHpH (ORCPT
+        Fri, 5 Jun 2020 03:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEHp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 03:45:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591343105;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=NgeHkkpwhn4ztT9c2wYuq8z94CsEbfKZQZZuXcqkAUs=;
-        b=OA1KKh3wTQCw7/xNcBuj4qP77glLKFa40KcFOJQZTV71JKZqySGvCxf4DCFr7iM/bNY1DT
-        6GlVFyoBHu7M9i63xpEv/c2D3hipivUIK9IwZvIf9HDyCARJZKUU4RxbPocn+QWl8dNtuW
-        SBD38KMJXYwLx82ZxXHW0Q+9E86YOac=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-Uk8nkBG3PnuYyV5vB5bd6A-1; Fri, 05 Jun 2020 03:45:03 -0400
-X-MC-Unique: Uk8nkBG3PnuYyV5vB5bd6A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C246D1B18BC5;
-        Fri,  5 Jun 2020 07:45:01 +0000 (UTC)
-Received: from [10.36.114.72] (ovpn-114-72.ams2.redhat.com [10.36.114.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F48160C05;
-        Fri,  5 Jun 2020 07:44:59 +0000 (UTC)
-Subject: Re: [PATCH] x86/mm: use max memory block size with unaligned memory
- end
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Sistare <steven.sistare@oracle.com>
-References: <20200604035443.3267046-1-daniel.m.jordan@oracle.com>
- <5827baaf-0eb5-bcea-5d98-727485683512@redhat.com>
- <20200604172213.f5lufktpqvqjkv4u@ca-dmjordan1.us.oracle.com>
- <ebc31650-9e98-f286-6fc2-aafdd3cd9272@redhat.com>
- <20200604181201.lqop72ihg5butlmz@ca-dmjordan1.us.oracle.com>
- <72066bef-866a-c2a4-d536-4212c3344045@intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <b30fff52-31ba-5064-cc95-62ec49423b6b@redhat.com>
-Date:   Fri, 5 Jun 2020 09:44:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <72066bef-866a-c2a4-d536-4212c3344045@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Fri, 5 Jun 2020 03:45:26 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1498C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 00:45:25 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id v24so3315433plo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 00:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bmrm2m7W0PSX2i69F/rKXTi11ScgSrzl4tXCB1MSrUA=;
+        b=SgVXZTnwu/kB/WAJ0aBMI7PpNh2+yxXii1tt4cohX0MmEyfLL2qa/veUkJgpOLfnoe
+         VPTvuKAkPV2giTt93wef9dWmTMON5iqBWQRM1QbmQ3VXYGpp4mxSCxfEEyYoXZMYi6S3
+         Z53SYgX/AbaJV39WHCZWrrPttqh7qUxiIWzMPm8ttl1LGcovBVrw62ObioyK0pN09HV6
+         i+jZeqeOatRMHduGAFr1y4A65MPY8yziA/ZW4PsfVeejGbFSbG65OpBno1lGxwulQKai
+         t/9cQxZPzA1rHDkIsq8je4vGc5nay+QiQpoyWRKdVzMVE0XYTEIUq7zDLTNHne6+tsfF
+         r+5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bmrm2m7W0PSX2i69F/rKXTi11ScgSrzl4tXCB1MSrUA=;
+        b=dcf+875suXlLtXymu8eCUKDJPxZrq9bC+oFfTILR0gx+wy5SdOY43i0WHEPx9ZPvco
+         m1L9UqQNaS8b5fREVLoQFwYZmhkEHuonaizDqaNteqcxC3rrswpEz4zdFXTCIrTAFG9N
+         6++0NoFpTA63J/+yYZEhhjJ0IKG33TjZss2BsNPVVgOFraQuPkJNG78X5GVqOAh6asUC
+         4XrWUEJ5fhjy8R1hBCfkkWLvhSMYHRENQSzC2xXVRGVXSfDTbdhj1qxX+mfzb6WYSrhm
+         osTZFvP3N8WbXSJhEpF9lSaQmqzF0eO8I6DwzckYaoDoFxk2O0uRQsTv3vmwjCBhYwVC
+         7F3w==
+X-Gm-Message-State: AOAM531tq40Rth3VTZ9THqMhwhgFSSggwPrJhX7+b9hDDcYcnh880J7R
+        AkeLgVA1XKBdfiy5/ug+VnTXV+wg
+X-Google-Smtp-Source: ABdhPJw4vZeUd7aqryBVZOFCiyyc/Phkd9UtE5FELuWOks5+AwIiDCiyLgenDYl2GB5h4biJXb3BMA==
+X-Received: by 2002:a17:90a:d784:: with SMTP id z4mr1597708pju.30.1591343125201;
+        Fri, 05 Jun 2020 00:45:25 -0700 (PDT)
+Received: from laptop.hsd1.wa.comcast.net ([2601:600:817f:a132:df3e:521d:99d5:710d])
+        by smtp.gmail.com with ESMTPSA id 145sm6562544pfa.53.2020.06.05.00.45.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 00:45:24 -0700 (PDT)
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Dmitry Safonov <dima@arista.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrei Vagin <avagin@gmail.com>
+Subject: [PATCH 3/6 v4] arm64/vdso: Add time namespace page
+Date:   Fri,  5 Jun 2020 00:45:19 -0700
+Message-Id: <20200605074519.354579-1-avagin@gmail.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20200602180259.76361-4-avagin@gmail.com>
+References: <20200602180259.76361-4-avagin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.06.20 22:00, Dave Hansen wrote:
-> On 6/4/20 11:12 AM, Daniel Jordan wrote:
->>> E.g., on powerpc that's 16MB so they have *a lot* of memory blocks.
->>> That's why that's not papering over the problem. Increasing the memory
->>> block size isn't always the answer.
->> Ok.  If you don't mind, what's the purpose of hotplugging at that granularity?
->> I'm simply curious.
-> 
-> FWIW, the 128MB on x86 came from the original sparsemem/hotplug
-> implementation.  It was the size of the smallest DIMM that my server
-> system at the time would take.  ppc64's huge page size was and is 16MB
-> and that's also the granularity with which hypervisors did hot-add way
-> back then.  I'm not actually sure what they do now.
-> 
-> My belief at the time was that the section size would grow over time as
-> DIMMs and hotplug units grew.  I was young and naive. :)
+Allocate the time namespace page among VVAR pages.  Provide
+__arch_get_timens_vdso_data() helper for VDSO code to get the
+code-relative position of VVARs on that special page.
 
-BTW, I recently studied your old hotplug papers and they are highly
-appreciated :)
+If a task belongs to a time namespace then the VVAR page which contains
+the system wide VDSO data is replaced with a namespace specific page
+which has the same layout as the VVAR page. That page has vdso_data->seq
+set to 1 to enforce the slow path and vdso_data->clock_mode set to
+VCLOCK_TIMENS to enforce the time namespace handling path.
 
-> 
-> I actually can't think of anything that's *keeping* it at 128MB on x86
-> though.  We don't, for instance, require a whole section to be
-> pfn_valid().
+The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
+update of the VDSO data is in progress, is not really affecting regular
+tasks which are not part of a time namespace as the task is spin waiting
+for the update to finish and vdso_data->seq to become even again.
 
-Well, sub-section hotadd is only done for vmemmap and we only use it for
-!(memory block devices) stuff, a.k.a. ZONE_DEVICE. IIRC, sub-section
-hotadd works in granularity of 2M.
+If a time namespace task hits that code path, it invokes the corresponding
+time getter function which retrieves the real VVAR page, reads host time
+and then adds the offset for the requested clock which is stored in the
+special VVAR page.
 
-AFAIK:
-- The lower limit for a section is MAX_ORDER - 1 / pageblock_order
-- The smaller the section, the more bits are wasted to store the section
-  number in page->flags for page_to_pfn() (!vmemmap IIRC)
-- The smaller the section, the bigger the section array(s)
-- We want to make sure  the section memmap always spans full pages
-  (IIRC, not always the case e.g., arm64 with 256k page size. But arm64
-  is weird either way - 512MB (transparent) huge pages with 64k base
-  pages ...)
+Cc: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Reviewed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+---
+v4: - fix an issue reported by the lkp robot.
+    - vvar has the same size with/without CONFIG_TIME_NAMESPACE, but the
+      timens page isn't allocated on !CONFIG_TIME_NAMESPACE. This
+      simplifies criu/vdso migration between different kernel configs.
 
-Changing the section size to get rid of sub-section memory hotadd does
-not seem to be easily possible. I assume we don't want to create memory
-block devices for something as small as current sub-section memory
-hotadd size (e.g., 2MB). So having significantly smaller sections might
-not make too much sense and your initial section size might have been a
-very good, initial pick :)
+ arch/arm64/include/asm/vdso.h                 |  2 ++
+ .../include/asm/vdso/compat_gettimeofday.h    | 12 +++++++++++
+ arch/arm64/include/asm/vdso/gettimeofday.h    |  8 ++++++++
+ arch/arm64/kernel/vdso.c                      | 20 ++++++++++++++++---
+ arch/arm64/kernel/vdso/vdso.lds.S             |  5 ++++-
+ arch/arm64/kernel/vdso32/vdso.lds.S           |  5 ++++-
+ include/vdso/datapage.h                       |  1 +
+ 7 files changed, 48 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm64/include/asm/vdso.h b/arch/arm64/include/asm/vdso.h
+index 07468428fd29..f99dcb94b438 100644
+--- a/arch/arm64/include/asm/vdso.h
++++ b/arch/arm64/include/asm/vdso.h
+@@ -12,6 +12,8 @@
+  */
+ #define VDSO_LBASE	0x0
+ 
++#define __VVAR_PAGES    2
++
+ #ifndef __ASSEMBLY__
+ 
+ #include <generated/vdso-offsets.h>
+diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+index b6907ae78e53..b7c549d46d18 100644
+--- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+@@ -152,6 +152,18 @@ static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_TIME_NS
++static __always_inline const struct vdso_data *__arch_get_timens_vdso_data(void)
++{
++	const struct vdso_data *ret;
++
++	/* See __arch_get_vdso_data(). */
++	asm volatile("mov %0, %1" : "=r"(ret) : "r"(_timens_data));
++
++	return ret;
++}
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
+diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
+index afba6ba332f8..cf39eae5eaaf 100644
+--- a/arch/arm64/include/asm/vdso/gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/gettimeofday.h
+@@ -96,6 +96,14 @@ const struct vdso_data *__arch_get_vdso_data(void)
+ 	return _vdso_data;
+ }
+ 
++#ifdef CONFIG_TIME_NS
++static __always_inline
++const struct vdso_data *__arch_get_timens_vdso_data(void)
++{
++	return _timens_data;
++}
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
+diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
+index 33df3cdf7982..fd609120386d 100644
+--- a/arch/arm64/kernel/vdso.c
++++ b/arch/arm64/kernel/vdso.c
+@@ -46,6 +46,12 @@ enum arch_vdso_type {
+ #define VDSO_TYPES		(ARM64_VDSO + 1)
+ #endif /* CONFIG_COMPAT_VDSO */
+ 
++enum vvar_pages {
++	VVAR_DATA_PAGE_OFFSET,
++	VVAR_TIMENS_PAGE_OFFSET,
++	VVAR_NR_PAGES,
++};
++
+ struct __vdso_abi {
+ 	const char *name;
+ 	const char *vdso_code_start;
+@@ -81,6 +87,7 @@ static union {
+ } vdso_data_store __page_aligned_data;
+ struct vdso_data *vdso_data = vdso_data_store.data;
+ 
++
+ static int __vdso_remap(enum arch_vdso_type arch_index,
+ 			const struct vm_special_mapping *sm,
+ 			struct vm_area_struct *new_vma)
+@@ -132,6 +139,11 @@ static int __vdso_init(enum arch_vdso_type arch_index)
+ }
+ 
+ #ifdef CONFIG_TIME_NS
++struct vdso_data *arch_get_vdso_data(void *vvar_page)
++{
++	return (struct vdso_data *)(vvar_page);
++}
++
+ /*
+  * The vvar page layout depends on whether a task belongs to the root or
+  * non-root time namespace. Whenever a task changes its namespace, the VVAR
+@@ -180,9 +192,11 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
+ 	unsigned long vdso_base, vdso_text_len, vdso_mapping_len;
+ 	void *ret;
+ 
++	BUILD_BUG_ON(VVAR_NR_PAGES != __VVAR_PAGES);
++
+ 	vdso_text_len = vdso_lookup[arch_index].vdso_pages << PAGE_SHIFT;
+ 	/* Be sure to map the data page */
+-	vdso_mapping_len = vdso_text_len + PAGE_SIZE;
++	vdso_mapping_len = vdso_text_len + VVAR_NR_PAGES * PAGE_SIZE;
+ 
+ 	vdso_base = get_unmapped_area(NULL, 0, vdso_mapping_len, 0, 0);
+ 	if (IS_ERR_VALUE(vdso_base)) {
+@@ -190,13 +204,13 @@ static int __setup_additional_pages(enum arch_vdso_type arch_index,
+ 		goto up_fail;
+ 	}
+ 
+-	ret = _install_special_mapping(mm, vdso_base, PAGE_SIZE,
++	ret = _install_special_mapping(mm, vdso_base, VVAR_NR_PAGES * PAGE_SIZE,
+ 				       VM_READ|VM_MAYREAD|VM_PFNMAP,
+ 				       vdso_lookup[arch_index].dm);
+ 	if (IS_ERR(ret))
+ 		goto up_fail;
+ 
+-	vdso_base += PAGE_SIZE;
++	vdso_base += VVAR_NR_PAGES * PAGE_SIZE;
+ 	mm->context.vdso = (void *)vdso_base;
+ 	ret = _install_special_mapping(mm, vdso_base, vdso_text_len,
+ 				       VM_READ|VM_EXEC|
+diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
+index 7ad2d3a0cd48..d808ad31e01f 100644
+--- a/arch/arm64/kernel/vdso/vdso.lds.S
++++ b/arch/arm64/kernel/vdso/vdso.lds.S
+@@ -17,7 +17,10 @@ OUTPUT_ARCH(aarch64)
+ 
+ SECTIONS
+ {
+-	PROVIDE(_vdso_data = . - PAGE_SIZE);
++	PROVIDE(_vdso_data = . - __VVAR_PAGES * PAGE_SIZE);
++#ifdef CONFIG_TIME_NS
++	PROVIDE(_timens_data = _vdso_data + PAGE_SIZE);
++#endif
+ 	. = VDSO_LBASE + SIZEOF_HEADERS;
+ 
+ 	.hash		: { *(.hash) }			:text
+diff --git a/arch/arm64/kernel/vdso32/vdso.lds.S b/arch/arm64/kernel/vdso32/vdso.lds.S
+index a3944927eaeb..06cc60a9630f 100644
+--- a/arch/arm64/kernel/vdso32/vdso.lds.S
++++ b/arch/arm64/kernel/vdso32/vdso.lds.S
+@@ -17,7 +17,10 @@ OUTPUT_ARCH(arm)
+ 
+ SECTIONS
+ {
+-	PROVIDE_HIDDEN(_vdso_data = . - PAGE_SIZE);
++	PROVIDE_HIDDEN(_vdso_data = . - __VVAR_PAGES * PAGE_SIZE);
++#ifdef CONFIG_TIME_NS
++	PROVIDE_HIDDEN(_timens_data = _vdso_data + PAGE_SIZE);
++#endif
+ 	. = VDSO_LBASE + SIZEOF_HEADERS;
+ 
+ 	.hash		: { *(.hash) }			:text
+diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
+index 7955c56d6b3c..ee810cae4e1e 100644
+--- a/include/vdso/datapage.h
++++ b/include/vdso/datapage.h
+@@ -109,6 +109,7 @@ struct vdso_data {
+  * relocation, and this is what we need.
+  */
+ extern struct vdso_data _vdso_data[CS_BASES] __attribute__((visibility("hidden")));
++extern struct vdso_data _timens_data[CS_BASES] __attribute__((visibility("hidden")));
+ 
+ /*
+  * The generic vDSO implementation requires that gettimeofday.h
 -- 
-Thanks,
-
-David / dhildenb
+2.24.1
 
