@@ -2,54 +2,53 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC95C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482B9208B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80BAB208B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366809;
-	bh=5J7NALb6RK7TOv0ylJHhaJY8+SNpxeudsxz5OEu+xro=;
+	s=default; t=1591366813;
+	bh=BIYWajaI1KvjRnL5KKXrEQDz4NUESrwTb95Dq8TCVnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iK0kFms0LGNtFIZUKGDOtSAzQjQZyRuGzR0+m83DLWTTyDulfBMCXewZdGDmryq4l
-	 fECcYqggFxspTqm+FubmZhx5VR9VNaL130zGqzeIkUMtDr+DgTJIdpytdg0E2NAfe1
-	 JcFnuZfqZh+ttgkE78YEjQgH1cr6RnFBx12/PLZc=
+	b=OnnZT2joyGonkVn3C4PtQrM69nV4nLl4v5JEbrDPfH1jz01NoxxTwsvCxss2yzGil
+	 YHkop+sTGmW3fvh8h5Izbc8R7ovSXw6ChA38VJCTIvtMiYa7LGexEdqFozhyQcc41Z
+	 FJ49q9d3lhcnyvY4D8PuVl9b4nHQK5MZHq4YySK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgFEOUI (ORCPT
+        id S1728929AbgFEOUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50806 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:20:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728333AbgFEOTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:51 -0400
+        id S1728881AbgFEOTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CEA4208A9;
-        Fri,  5 Jun 2020 14:19:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F145C2086A;
+        Fri,  5 Jun 2020 14:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366790;
-        bh=5J7NALb6RK7TOv0ylJHhaJY8+SNpxeudsxz5OEu+xro=;
+        s=default; t=1591366792;
+        bh=BIYWajaI1KvjRnL5KKXrEQDz4NUESrwTb95Dq8TCVnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QQA10iVF0m8112JJZDFtOv95/c1OPTNZQH8KeUZMUW0ng3Oo1gnzuRdW2QTBR9W1m
-         neM17fV1wlHQh1DoeDnGr+q0ML1YikywUGsKc4Hpip9MZ3wQD5fxEowxyBebykreri
-         p8t1ebBI20QdFrOe3js2cVgivH2xIHTHQXXBrRxU=
+        b=C+rnbEzlrsmj1ukJacz88HrCIx6EViU968If+TvKwyEQuE9UmiYKCH+a6YJ26OB/9
+         GZlGbQIX/6mqwGkejIfDJ8TdMW3BM3FqlkOXbZph0tP4SWvuMK2epoqp2UAdLcBI1o
+         49y2ST31MWXckc6+GnnAMVaSuZQwhAzb/kv/+MOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/28] evm: Fix RCU list related warnings
-Date:   Fri,  5 Jun 2020 16:15:21 +0200
-Message-Id: <20200605140253.523085576@linuxfoundation.org>
+        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: =?UTF-8?q?=5BPATCH=204=2E19=2002/28=5D=20libnvdimm=3A=20Fix=20endian=20conversion=20issues=C2=A0?=
+Date:   Fri,  5 Jun 2020 16:15:04 +0200
+Message-Id: <20200605140252.475940014@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -62,93 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 770f60586d2af0590be263f55fd079226313922c ]
+commit 86aa66687442ef45909ff9814b82b4d2bb892294 upstream.
 
-This patch fixes the following warning and few other instances of
-traversal of evm_config_xattrnames list:
+nd_label->dpa issue was observed when trying to enable the namespace created
+with little-endian kernel on a big-endian kernel. That made me run
+`sparse` on the rest of the code and other changes are the result of that.
 
-[   32.848432] =============================
-[   32.848707] WARNING: suspicious RCU usage
-[   32.848966] 5.7.0-rc1-00006-ga8d5875ce5f0b #1 Not tainted
-[   32.849308] -----------------------------
-[   32.849567] security/integrity/evm/evm_main.c:231 RCU-list traversed in non-reader section!!
+Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
+Fixes: 9dedc73a4658 ("libnvdimm/btt: Fix LBA masking during 'free list' population")
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Link: https://lore.kernel.org/r/20190809074726.27815-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Since entries are only added to the list and never deleted, use
-list_for_each_entry_lockless() instead of list_for_each_entry_rcu for
-traversing the list.  Also, add a relevant comment in evm_secfs.c to
-indicate this fact.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org> (RCU viewpoint)
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/evm/evm_crypto.c | 2 +-
- security/integrity/evm/evm_main.c   | 4 ++--
- security/integrity/evm/evm_secfs.c  | 9 ++++++++-
- 3 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/nvdimm/btt.c            |    8 ++++----
+ drivers/nvdimm/namespace_devs.c |    7 ++++---
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index f0878d81dcef..d20f5792761c 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -215,7 +215,7 @@ static int evm_calc_hmac_or_hash(struct dentry *dentry,
- 	data->hdr.length = crypto_shash_digestsize(desc->tfm);
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -400,9 +400,9 @@ static int btt_flog_write(struct arena_i
+ 	arena->freelist[lane].sub = 1 - arena->freelist[lane].sub;
+ 	if (++(arena->freelist[lane].seq) == 4)
+ 		arena->freelist[lane].seq = 1;
+-	if (ent_e_flag(ent->old_map))
++	if (ent_e_flag(le32_to_cpu(ent->old_map)))
+ 		arena->freelist[lane].has_err = 1;
+-	arena->freelist[lane].block = le32_to_cpu(ent_lba(ent->old_map));
++	arena->freelist[lane].block = ent_lba(le32_to_cpu(ent->old_map));
  
- 	error = -ENODATA;
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		bool is_ima = false;
+ 	return ret;
+ }
+@@ -568,8 +568,8 @@ static int btt_freelist_init(struct aren
+ 		 * FIXME: if error clearing fails during init, we want to make
+ 		 * the BTT read-only
+ 		 */
+-		if (ent_e_flag(log_new.old_map) &&
+-				!ent_normal(log_new.old_map)) {
++		if (ent_e_flag(le32_to_cpu(log_new.old_map)) &&
++		    !ent_normal(le32_to_cpu(log_new.old_map))) {
+ 			arena->freelist[i].has_err = 1;
+ 			ret = arena_clear_freelist_error(arena, i);
+ 			if (ret)
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -1996,7 +1996,7 @@ static struct device *create_namespace_p
+ 		nd_mapping = &nd_region->mapping[i];
+ 		label_ent = list_first_entry_or_null(&nd_mapping->labels,
+ 				typeof(*label_ent), list);
+-		label0 = label_ent ? label_ent->label : 0;
++		label0 = label_ent ? label_ent->label : NULL;
  
- 		if (strcmp(xattr->name, XATTR_NAME_IMA) == 0)
-diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index 7f3f54d89a6e..e11d860fdce4 100644
---- a/security/integrity/evm/evm_main.c
-+++ b/security/integrity/evm/evm_main.c
-@@ -102,7 +102,7 @@ static int evm_find_protected_xattrs(struct dentry *dentry)
- 	if (!(inode->i_opflags & IOP_XATTR))
- 		return -EOPNOTSUPP;
+ 		if (!label0) {
+ 			WARN_ON(1);
+@@ -2332,8 +2332,9 @@ static struct device **scan_labels(struc
+ 			continue;
  
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		error = __vfs_getxattr(dentry, inode, xattr->name, NULL, 0);
- 		if (error < 0) {
- 			if (error == -ENODATA)
-@@ -233,7 +233,7 @@ static int evm_protected_xattr(const char *req_xattr_name)
- 	struct xattr_list *xattr;
+ 		/* skip labels that describe extents outside of the region */
+-		if (nd_label->dpa < nd_mapping->start || nd_label->dpa > map_end)
+-			continue;
++		if (__le64_to_cpu(nd_label->dpa) < nd_mapping->start ||
++		    __le64_to_cpu(nd_label->dpa) > map_end)
++				continue;
  
- 	namelen = strlen(req_xattr_name);
--	list_for_each_entry_rcu(xattr, &evm_config_xattrnames, list) {
-+	list_for_each_entry_lockless(xattr, &evm_config_xattrnames, list) {
- 		if ((strlen(xattr->name) == namelen)
- 		    && (strncmp(req_xattr_name, xattr->name, namelen) == 0)) {
- 			found = 1;
-diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-index 77de71b7794c..f112ca593adc 100644
---- a/security/integrity/evm/evm_secfs.c
-+++ b/security/integrity/evm/evm_secfs.c
-@@ -237,7 +237,14 @@ static ssize_t evm_write_xattrs(struct file *file, const char __user *buf,
- 		goto out;
- 	}
- 
--	/* Guard against races in evm_read_xattrs */
-+	/*
-+	 * xattr_list_mutex guards against races in evm_read_xattrs().
-+	 * Entries are only added to the evm_config_xattrnames list
-+	 * and never deleted. Therefore, the list is traversed
-+	 * using list_for_each_entry_lockless() without holding
-+	 * the mutex in evm_calc_hmac_or_hash(), evm_find_protected_xattrs()
-+	 * and evm_protected_xattr().
-+	 */
- 	mutex_lock(&xattr_list_mutex);
- 	list_for_each_entry(tmp, &evm_config_xattrnames, list) {
- 		if (strcmp(xattr->name, tmp->name) == 0) {
--- 
-2.25.1
-
+ 		i = add_namespace_resource(nd_region, nd_label, devs, count);
+ 		if (i < 0)
 
 
