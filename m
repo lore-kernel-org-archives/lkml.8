@@ -2,110 +2,108 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED13C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E74C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0E4207D5
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB0820872
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b2bHcJxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgFEF6k (ORCPT
+        id S1726127AbgFEF7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 01:58:40 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:6671 "EHLO
-        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgFEF6k (ORCPT
+        Fri, 5 Jun 2020 01:59:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEF7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 01:58:40 -0400
-X-IronPort-AV: E=Sophos;i="5.73,475,1583190000"; 
-   d="scan'208";a="350650169"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 07:58:37 +0200
-Date:   Fri, 5 Jun 2020 07:58:37 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>, cocci@systeme.lip6.fr,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] docs: dev-tools: coccinelle: underlines
-In-Reply-To: <20200605030405.6479-1-xypron.glpk@gmx.de>
-Message-ID: <alpine.DEB.2.21.2006050758150.2567@hadrien>
-References: <20200605030405.6479-1-xypron.glpk@gmx.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 5 Jun 2020 01:59:47 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24766C08C5C2;
+        Thu,  4 Jun 2020 22:59:47 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49dX6S51Bkz9sT6;
+        Fri,  5 Jun 2020 15:59:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1591336785;
+        bh=jrSarrFkaLqRVlO7fpe3eJP+9MxgBrcvr8Z/DafsGs0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=b2bHcJxTA4CgJVzNlX/m05K433GD520Q8NqWU5GHvhv45GAFM3u+M0cPlTQ/ONpEv
+         /cY5DQ4U9PBCSoT+1pFTaqbCTQr8DwAfphbFLq5jDi7HVPR+UsdgzSWPC2aRw3DiSd
+         1tSCClprcU78LJXH5OGH88AEY4//MuSkFD6KDkjhllo/B2Zi0HdvTByz75XMXIQyh0
+         211rMfrHPyJuO/VVCsE1cr+dg64kiI/4q2DQoAsrkf1gcFt8R7PUxlFjl4AaHLdotP
+         21fqHW2jCeguBquQ0J63pzC7nBCLMDTJotz8zg0FvJSL5q4D+LfSH524MlEqsBD9/+
+         Yayq1bLvlLlnQ==
+Date:   Fri, 5 Jun 2020 15:59:43 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Rich Felker <dalias@libc.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: linux-next: manual merge of the akpm tree with the sh tree
+Message-ID: <20200605155943.2eb372a2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/qjwOQKHeMv1U447Ql9iqATJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/qjwOQKHeMv1U447Ql9iqATJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On Fri, 5 Jun 2020, Heinrich Schuchardt wrote:
+Today's linux-next merge of the akpm tree got a conflict in:
 
-> Underline lengths should match the lengths of headings to avoid build
-> warnings with Sphinx.
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+  arch/sh/include/asm/pgtable_64.h
 
+between commit:
 
-Acked-by: Julia Lawall <julia.lawall@inria.fr>
+  37744feebc08 ("sh: remove sh5 support")
 
-Thanks for your help.
+from the sh tree and patch:
 
-> ---
->  Documentation/dev-tools/coccinelle.rst | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/dev-tools/coccinelle.rst b/Documentation/dev-tools/coccinelle.rst
-> index 00a3409b0c28..70274c3f5f5a 100644
-> --- a/Documentation/dev-tools/coccinelle.rst
-> +++ b/Documentation/dev-tools/coccinelle.rst
-> @@ -14,7 +14,7 @@ many uses in kernel development, including the application of complex,
->  tree-wide patches and detection of problematic programming patterns.
->
->  Getting Coccinelle
-> --------------------
-> +------------------
->
->  The semantic patches included in the kernel use features and options
->  which are provided by Coccinelle version 1.0.0-rc11 and above.
-> @@ -56,7 +56,7 @@ found at:
->  https://github.com/coccinelle/coccinelle/blob/master/install.txt
->
->  Supplemental documentation
-> ----------------------------
-> +--------------------------
->
->  For supplemental documentation refer to the wiki:
->
-> @@ -128,7 +128,7 @@ To enable verbose messages set the V= variable, for example::
->     make coccicheck MODE=report V=1
->
->  Coccinelle parallelization
-> ----------------------------
-> +--------------------------
->
->  By default, coccicheck tries to run as parallel as possible. To change
->  the parallelism, set the J= variable. For example, to run across 4 CPUs::
-> @@ -333,7 +333,7 @@ as an example if requiring at least Coccinelle >= 1.0.5::
->  	// Requires: 1.0.5
->
->  Proposing new semantic patches
-> --------------------------------
-> +------------------------------
->
->  New semantic patches can be proposed and submitted by kernel
->  developers. For sake of clarity, they should be organized in the
-> --
-> 2.26.2
->
->
+  "mm: consolidate pmd_index() and pmd_offset() definitions"
+
+from the akpm tree.
+
+I fixed it up (the former deleted the file, so I did that) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qjwOQKHeMv1U447Ql9iqATJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Z308ACgkQAVBC80lX
+0GyTjwf/eZlal0iFtCHDCg+OXFNYmFw3cMpAzuZrdUxHLp7cx4/uJkxHjDLqpWS2
+iQrJ7z75ElzA8qPDR+CdP2s9RIuNy2tspJltV2T3iNcYRpf5yVM+7hznWj0NXLK/
+YbteStMXwJ/p0MX8x7KARXkSH3VRwsM8ExG4+vQfc1/gJRvxA4AIzvC9bRZVWn2Y
+PsX5FTsbux+6/PKZA0rfUPYPT/IpKzFK4Dd1Vm2g4h5cQPdgWIQjh+f3Pp0Ad+2x
+7FqfNuvNrmUmaPysIBvCKNcyOLQLqR7witW+ov0GA2aVTQkwPJ+MvtFl4Wqk+4RP
+pmiEhn2tcMzcHkeUAD8+l/zHRzEl0Q==
+=fD//
+-----END PGP SIGNATURE-----
+
+--Sig_/qjwOQKHeMv1U447Ql9iqATJ--
