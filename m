@@ -2,139 +2,181 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2252BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7167BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9938207ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5EC207ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 06:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZSzwOxeV"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="vnwXky2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgFEGFO (ORCPT
+        id S1726144AbgFEGGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 02:05:14 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:38939 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726044AbgFEGFN (ORCPT
+        Fri, 5 Jun 2020 02:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgFEGGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 02:05:13 -0400
-X-UUID: b13683df1aa74d8aad688b4045fa9b7e-20200605
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NswnMBEYCB0ATqA+z8ftWgQH27FC9O8GRg7nuiNH9lw=;
-        b=ZSzwOxeVGLQC7llW/m8kKGil0p405CRXv6I+Jnt87x1FcQ82xIa3bertIlbSbQ5BIJoss4Po7WE3XpSo++lUYqXueEkRpyyPj5mSnuzz+UbQkNgFMc3UVx+dDqAtTcdD21pKtK9FPuhq9HAd9PqUYGOMcHHFrz66GGj7qBfLCMY=;
-X-UUID: b13683df1aa74d8aad688b4045fa9b7e-20200605
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1904687962; Fri, 05 Jun 2020 14:05:08 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 5 Jun
- 2020 14:05:07 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 5 Jun 2020 14:05:04 +0800
-Message-ID: <1591336981.31802.3.camel@mhfsdcap03>
-Subject: Re: [PATCH v8 05/14] media: platform: Improve power on and power
- off flow
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>
-Date:   Fri, 5 Jun 2020 14:03:01 +0800
-In-Reply-To: <20200521152253.GE209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
-         <20200403094033.8288-6-xia.jiang@mediatek.com>
-         <20200521152253.GE209565@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 5 Jun 2020 02:06:47 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68D59C08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu,  4 Jun 2020 23:06:47 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id x93so6484927ede.9
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jun 2020 23:06:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I0e6wuwvfc4O/N1ElVRQyamkuRzorrjrFf6chH6dVdA=;
+        b=vnwXky2nNWr8II/vtU4PUoe2WZ/P3/k0fZi7aBpDk2Jb+pHsdmlXaCnQfm7NMC3yic
+         8VQNaneB52KzN4+Bq4v9EWyFtkOCzfPrRqwJ9asTZD820tGbr24FEruYzUTTeICrPgLH
+         OZl4YP6/atwTjmDIRs1p108dwWRN9f5kEkGYg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I0e6wuwvfc4O/N1ElVRQyamkuRzorrjrFf6chH6dVdA=;
+        b=JCj1gYl+sch0uNmwFTR9t9NBpOB3x+Wn/Bw+I6rZHjvhSPFmzvHjTvLGTN660wwCvH
+         jNhJz0a1RZIIw3ujKwpMj/JQ9dC6TdvXvsfeT69a/9Fjgv23o4ryvTTLDaDeQXWmGKMY
+         yASr+4liPs1/J7yHCd3ZBN/h4/CqYueXnIj5QrgRJlQlQtHrUeUfB0Mz9scRXjpQ9UD9
+         CfwMXjY/hnoqYVOTj/vQXGctZDBV9iz6xu8o/YkJFdAwIasH5z8MQKj072DvfJeFfNLy
+         D3VsWHJJgu0v214pkLAwz7pET1vkOSBBgkjmS/ur9MMWblIMz9T7fYuY4/71vG8PPHr3
+         vjow==
+X-Gm-Message-State: AOAM531rl4DkZQ9W6MLW6jMPN/kzZztBLJcpDNpewcEA9q+2Zura6LDQ
+        bjPTQkSF5M6zQVM6uCyfKMLhzePkwDc/zoSulQqgLA==
+X-Google-Smtp-Source: ABdhPJxMC1d+LqzxSwRL/ssVtqfJGiWPpfH3U2HfyrhUbz080LI+O9WCidUCNyhHUPeYJdIc/2u+DmlTlbZGQPQrYpE=
+X-Received: by 2002:a05:6402:b37:: with SMTP id bo23mr7937529edb.24.1591337205697;
+ Thu, 04 Jun 2020 23:06:45 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D4D85237458B3F37009A20C7C482D59AA2A1276C3CD07436513B69A34E50B8692000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200530055953.817666-1-krisman@collabora.com>
+In-Reply-To: <20200530055953.817666-1-krisman@collabora.com>
+From:   Sargun Dhillon <sargun@sargun.me>
+Date:   Thu, 4 Jun 2020 23:06:09 -0700
+Message-ID: <CAMp4zn--RbHeViLOmRi4USE7hwTNhVqASJJJeXjCkOah5R4-0A@mail.gmail.com>
+Subject: Re: [PATCH RFC] seccomp: Implement syscall isolation based on memory areas
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com, Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Gofman <gofmanp@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTIxIGF0IDE1OjIyICswMDAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
-SGkgWGlhLA0KPiANCj4gT24gRnJpLCBBcHIgMDMsIDIwMjAgYXQgMDU6NDA6MjRQTSArMDgwMCwg
-WGlhIEppYW5nIHdyb3RlOg0KPiA+IENhbGwgcG1fcnVudGltZV9nZXRfc3luYygpIGJlZm9yZSBz
-dGFydGluZyBhIGZyYW1lIGFuZCB0aGVuDQo+ID4gcG1fcnVudGltZV9wdXQoKSBhZnRlciBjb21w
-bGV0aW5nIGl0LiBUaGlzIGNhbiBzYXZlIHBvd2VyIGZvciB0aGUgdGltZQ0KPiA+IGJldHdlZW4g
-cHJvY2Vzc2luZyB0d28gZnJhbWVzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYSBKaWFu
-ZyA8eGlhLmppYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL21lZGlhL3BsYXRm
-b3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYyAgIHwgMjcgKysrKystLS0tLS0tLS0tLS0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkNCj4g
-PiANCj4gDQo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLiBQbGVhc2Ugc2VlIG15IGNvbW1lbnRz
-IGlubGluZS4NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRr
-LWpwZWcvbXRrX2pwZWdfY29yZS5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9t
-dGtfanBlZ19jb3JlLmMNCj4gPiBpbmRleCBhNTM2ZmE5NWIzZDYuLmRkNWNhZGQxMDFlZiAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2Nv
-cmUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdf
-Y29yZS5jDQo+ID4gQEAgLTcxMCwyMyArNzEwLDYgQEAgc3RhdGljIHN0cnVjdCB2YjJfdjRsMl9i
-dWZmZXIgKm10a19qcGVnX2J1Zl9yZW1vdmUoc3RydWN0IG10a19qcGVnX2N0eCAqY3R4LA0KPiA+
-ICAJCXJldHVybiB2NGwyX20ybV9kc3RfYnVmX3JlbW92ZShjdHgtPmZoLm0ybV9jdHgpOw0KPiA+
-ICB9DQo+ID4gIA0KPiA+IC1zdGF0aWMgaW50IG10a19qcGVnX3N0YXJ0X3N0cmVhbWluZyhzdHJ1
-Y3QgdmIyX3F1ZXVlICpxLCB1bnNpZ25lZCBpbnQgY291bnQpDQo+ID4gLXsNCj4gPiAtCXN0cnVj
-dCBtdGtfanBlZ19jdHggKmN0eCA9IHZiMl9nZXRfZHJ2X3ByaXYocSk7DQo+ID4gLQlzdHJ1Y3Qg
-dmIyX3Y0bDJfYnVmZmVyICp2YjsNCj4gPiAtCWludCByZXQgPSAwOw0KPiA+IC0NCj4gPiAtCXJl
-dCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoY3R4LT5qcGVnLT5kZXYpOw0KPiA+IC0JaWYgKHJldCA8
-IDApDQo+ID4gLQkJZ290byBlcnI7DQo+ID4gLQ0KPiA+IC0JcmV0dXJuIDA7DQo+ID4gLWVycjoN
-Cj4gPiAtCXdoaWxlICgodmIgPSBtdGtfanBlZ19idWZfcmVtb3ZlKGN0eCwgcS0+dHlwZSkpKQ0K
-PiA+IC0JCXY0bDJfbTJtX2J1Zl9kb25lKHZiLCBWQjJfQlVGX1NUQVRFX1FVRVVFRCk7DQo+ID4g
-LQlyZXR1cm4gcmV0Ow0KPiA+IC19DQo+ID4gLQ0KPiA+ICBzdGF0aWMgdm9pZCBtdGtfanBlZ19z
-dG9wX3N0cmVhbWluZyhzdHJ1Y3QgdmIyX3F1ZXVlICpxKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3Qg
-bXRrX2pwZWdfY3R4ICpjdHggPSB2YjJfZ2V0X2Rydl9wcml2KHEpOw0KPiA+IEBAIC03NTEsOCAr
-NzM0LDYgQEAgc3RhdGljIHZvaWQgbXRrX2pwZWdfc3RvcF9zdHJlYW1pbmcoc3RydWN0IHZiMl9x
-dWV1ZSAqcSkNCj4gPiAgDQo+ID4gIAl3aGlsZSAoKHZiID0gbXRrX2pwZWdfYnVmX3JlbW92ZShj
-dHgsIHEtPnR5cGUpKSkNCj4gPiAgCQl2NGwyX20ybV9idWZfZG9uZSh2YiwgVkIyX0JVRl9TVEFU
-RV9FUlJPUik7DQo+ID4gLQ0KPiA+IC0JcG1fcnVudGltZV9wdXRfc3luYyhjdHgtPmpwZWctPmRl
-dik7DQo+ID4gIH0NCj4gPiAgDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgdmIyX29wcyBtdGtf
-anBlZ19xb3BzID0gew0KPiA+IEBAIC03NjEsNyArNzQyLDYgQEAgc3RhdGljIGNvbnN0IHN0cnVj
-dCB2YjJfb3BzIG10a19qcGVnX3FvcHMgPSB7DQo+ID4gIAkuYnVmX3F1ZXVlICAgICAgICAgID0g
-bXRrX2pwZWdfYnVmX3F1ZXVlLA0KPiA+ICAJLndhaXRfcHJlcGFyZSAgICAgICA9IHZiMl9vcHNf
-d2FpdF9wcmVwYXJlLA0KPiA+ICAJLndhaXRfZmluaXNoICAgICAgICA9IHZiMl9vcHNfd2FpdF9m
-aW5pc2gsDQo+ID4gLQkuc3RhcnRfc3RyZWFtaW5nICAgID0gbXRrX2pwZWdfc3RhcnRfc3RyZWFt
-aW5nLA0KPiA+ICAJLnN0b3Bfc3RyZWFtaW5nICAgICA9IG10a19qcGVnX3N0b3Bfc3RyZWFtaW5n
-LA0KPiA+ICB9Ow0KPiA+ICANCj4gPiBAQCAtODEyLDcgKzc5Miw3IEBAIHN0YXRpYyB2b2lkIG10
-a19qcGVnX2RldmljZV9ydW4odm9pZCAqcHJpdikNCj4gPiAgCXN0cnVjdCBtdGtfanBlZ19zcmNf
-YnVmICpqcGVnX3NyY19idWY7DQo+ID4gIAlzdHJ1Y3QgbXRrX2pwZWdfYnMgYnM7DQo+ID4gIAlz
-dHJ1Y3QgbXRrX2pwZWdfZmIgZmI7DQo+ID4gLQlpbnQgaTsNCj4gPiArCWludCBpLCByZXQ7DQo+
-ID4gIA0KPiA+ICAJc3JjX2J1ZiA9IHY0bDJfbTJtX25leHRfc3JjX2J1ZihjdHgtPmZoLm0ybV9j
-dHgpOw0KPiA+ICAJZHN0X2J1ZiA9IHY0bDJfbTJtX25leHRfZHN0X2J1ZihjdHgtPmZoLm0ybV9j
-dHgpOw0KPiA+IEBAIC04MzIsNiArODEyLDEwIEBAIHN0YXRpYyB2b2lkIG10a19qcGVnX2Rldmlj
-ZV9ydW4odm9pZCAqcHJpdikNCj4gPiAgCQlyZXR1cm47DQo+ID4gIAl9DQo+ID4gIA0KPiA+ICsJ
-cmV0ID0gcG1fcnVudGltZV9nZXRfc3luYyhqcGVnLT5kZXYpOw0KPiA+ICsJaWYgKHJldCA8IDAp
-DQo+ID4gKwkJZ290byBkZWNfZW5kOw0KPiA+ICsNCj4gPiAgCW10a19qcGVnX3NldF9kZWNfc3Jj
-KGN0eCwgJnNyY19idWYtPnZiMl9idWYsICZicyk7DQo+ID4gIAlpZiAobXRrX2pwZWdfc2V0X2Rl
-Y19kc3QoY3R4LCAmanBlZ19zcmNfYnVmLT5kZWNfcGFyYW0sICZkc3RfYnVmLT52YjJfYnVmLCAm
-ZmIpKQ0KPiA+ICAJCWdvdG8gZGVjX2VuZDsNCj4gPiBAQCAtOTU3LDYgKzk0MSw3IEBAIHN0YXRp
-YyBpcnFyZXR1cm5fdCBtdGtfanBlZ19kZWNfaXJxKGludCBpcnEsIHZvaWQgKnByaXYpDQo+ID4g
-IAl2NGwyX20ybV9idWZfZG9uZShzcmNfYnVmLCBidWZfc3RhdGUpOw0KPiA+ICAJdjRsMl9tMm1f
-YnVmX2RvbmUoZHN0X2J1ZiwgYnVmX3N0YXRlKTsNCj4gPiAgCXY0bDJfbTJtX2pvYl9maW5pc2go
-anBlZy0+bTJtX2RldiwgY3R4LT5maC5tMm1fY3R4KTsNCj4gPiArCXBtX3J1bnRpbWVfcHV0X3N5
-bmMoY3R4LT5qcGVnLT5kZXYpOw0KPiANCj4gVGhlIF9zeW5jIHZhcmlhbnQgZXhwbGljaXRseSB3
-YWl0cyB1bnRpbCB0aGUgYXN5bmNocm9ub3VzIFBNIG9wZXJhdGlvbg0KPiBjb21wbGV0ZXMuIFRo
-aXMgaXMgdXN1YWxseSB1bmRlc2lyZWQsIGJlY2F1c2UgdGhlIENQVSBzdGF5cyBibG9ja2VkIGZv
-cg0KPiBubyBnb29kIHJlYXNvbi4gSW4gdGhpcyBjb250ZXh0IGl0IGlzIGFjdHVhbGx5IGEgYnVn
-LCBiZWNhdXNlIHRoaXMgaXMgYW4NCj4gaW50ZXJydXB0IGhhbmRsZXIgYW5kIGl0J3Mgbm90IGFs
-bG93ZWQgdG8gc2xlZXAuIEkgd29uZGVyIHdoeSB0aGlzDQo+IGFjdHVhbGx5IGRpZG4ndCBjcmFz
-aCBpbiB5b3VyIHRlc3RpbmcuIFBsZWFzZSBjaGFuZ2UgdG8gdGhlIHJlZ3VsYXINCj4gcG1fcnVu
-dGltZV9wdXQoKS4NCkRvbmUuDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KDQo=
+On Fri, May 29, 2020 at 11:01 PM Gabriel Krisman Bertazi
+<krisman@collabora.com> wrote:
+>
+> Modern Windows applications are executing system call instructions
+> directly from the application's code without going through the WinAPI.
+> This breaks Wine emulation, because it doesn't have a chance to
+> intercept and emulate these syscalls before they are submitted to Linux.
+>
+> In addition, we cannot simply trap every system call of the application
+> to userspace using PTRACE_SYSEMU, because performance would suffer,
+> since our main use case is to run Windows games over Linux.  Therefore,
+> we need some in-kernel filtering to decide whether the syscall was
+> issued by the wine code or by the windows application.
+>
+> The filtering cannot really be done based solely on the syscall number,
+> because those could collide with existing Linux syscalls.  Instead, our
+> proposed solution is to trap syscalls based on the userspace memory
+> region that triggered the syscall, as wine is responsible for the
+> Windows code allocations and it can apply correct memory protections to
+> those areas.
+>
+> Therefore, this patch reuses the seccomp infrastructure to trap
+> system calls, but introduces a new mode to trap based on a vma attribute
+> that describes whether the userspace memory region is allowed to execute
+> syscalls or not.  The protection is defined at mmap/mprotect time with a
+> new protection flag PROT_NOSYSCALL.  This setting only takes effect if
+> the new SECCOMP_MODE_MEMMAP is enabled through seccomp().
+>
+> It goes without saying that this is in no way a security mechanism
+> despite being built on top of seccomp, since an evil application can
+> always jump to a whitelisted memory region and run the syscall.  This
+> is not a concern for Wine games.  Nevertheless, we reuse seccomp as a
+> way to avoid adding a new mechanism to essentially do the same job of
+> filtering system calls.
+>
+> * Why not SECCOMP_MODE_FILTER?
+>
+> We experimented with dynamically generating BPF filters for whitelisted
+> memory regions and using SECCOMP_MODE_FILTER, but there are a few
+> reasons why it isn't enough nor a good idea for our use case:
+>
+> 1. We cannot set the filters at program initialization time and forget
+> about it, since there is no way of knowing which modules will be loaded,
+> whether native and windows.  Filter would need a way to be updated
+> frequently during game execution.
+>
+> 2. We cannot predict which Linux libraries will issue syscalls directly.
+> Most of the time, whitelisting libc and a few other libraries is enough,
+> but there are no guarantees other Linux libraries won't issue syscalls
+> directly and break the execution.  Adding every linux library that is
+> loaded also has a large performance cost due to the large resulting
+> filter.
+>
+> 3. As I mentioned before, performance is critical.  In our testing with
+> just a single memory segment blacklisted/whitelisted, the minimum size
+> of a bpf filter would be 4 instructions.  In that scenario,
+> SECCOMP_MODE_FILTER added an average overhead of 10% to the execution
+> time of sysinfo(2) in comparison to seccomp disabled, while the impact
+> of SECCOMP_MODE_MEMMAP was averaged around 1.5%.
+>
+> Indeed, points 1 and 2 could be worked around with some userspace work
+> and improved SECCOMP_MODE_FILTER support, but at a high performance and
+> some stability cost, to obtain the semantics we want.  Still, the
+> performance would suffer, and SECCOMP_MODE_MEMMAP is non intrusive
+> enough that I believe it should be considered as an upstream solution.
+>
+> Sending as an RFC for now to get the discussion started.  In particular:
+I have a totally different question. I am experimenting with a
+patchset which is designed
+to help with the "extended syscall" case (as Kees calls it).
+Effectively syscalls like openat2,
+where the syscall arguments are passed as a (potentially mixed size)
+structure need to be
+able to be inspected through user notif. `We can kind-of deal with
+this with other syscalls
+with mechanisms like pidfd_getfd, addfd, and potentially being able to
+(re)set the registers
+prior to actual invocation of the syscall. Unfortunately, you cannot
+do the same trick with
+user memory, because it opens you up to a time-of-check, time-of-use
+attack, since the
+kernel copies the syscall arguments from the invoking program again.
 
+One of the things I've been experimenting with is using tricks like
+userfaultfd / mprotect to
+try to deal with this. I think that I might have to add some
+capability to the kernel to actually
+deal with this. In general, the approach is:
+1. Syscall is invoked, and wakes up the manager
+2. The manager gets the arguments, and a handle (either the ID, or an
+FD). It then uses this
+ID to read memory. Either something like process_vm_readv, an ioctl, or read.
+3. When the kernel reads these arguments, it splits the VMA for the
+address the pointer
+lies in, and sets up access() with a special mapping that checks if
+the page has been
+tampered with by userspace in the read ranges between the manager read
+and the writes.
+We can either SIGBUS or stall writes to the range if we want to make
+things "simple",
+or we can mess with uaccess bits and EPERM if the kernel tries to read
+that memory.
+4. When the syscall returns, or the kernel writes to that area, we
+reset the mapping.
+
+I'm wondering if you're dynamically generating these special mappings
+with protection,
+and how many of them you're generating. How often are you generating them? What
+kind of performance cost do you see in normal programs?
