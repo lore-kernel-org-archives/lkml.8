@@ -2,147 +2,121 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C34C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 983B4207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:25:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o3YUkD21"
+	by mail.kernel.org (Postfix) with ESMTP id 3B0AE207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgFEBZF (ORCPT
+        id S1726147AbgFEB05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 21:25:05 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:39180 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbgFEBZE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 21:25:04 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200605012502epoutp04add9324edb6c04a2f3f9e207a70dd2ed~VgWIzwG8z2598425984epoutp04R
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:25:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200605012502epoutp04add9324edb6c04a2f3f9e207a70dd2ed~VgWIzwG8z2598425984epoutp04R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591320302;
-        bh=eWOwq3gc8L6F3LRSI4hZGh75IoHndYy1Qji02XbvxJE=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=o3YUkD219xA3sP/JyODXgksOCaThvWhWMAX/Rfw6dIXq48E9MUfU2G4cel4XN0QjN
-         gBb2YCouSTlbL97RYskopXx+n+maMYrKy7laLzYba/J3XRZUZCvB5eT4wTqvcCoITD
-         /dq82qtjR90Z3biuDUsyNW1ZFmACHDBypfa2G4HY=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200605012501epcas1p13794fcfee22420754980cde7ed237ef2~VgWIX-sn02926929269epcas1p1j;
-        Fri,  5 Jun 2020 01:25:01 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [RFC PATCH 1/5] scsi: ufs: Add UFS feature related parameter
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <963815509.21591320301642.JavaMail.epsvc@epcpadp1>
-Date:   Fri, 05 Jun 2020 10:22:06 +0900
-X-CMS-MailID: 20200605012206epcms2p563210b047b39666d1a1f800952e7f478
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
-References: <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
-        <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p5>
+        Thu, 4 Jun 2020 21:26:57 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5854 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725863AbgFEB05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 21:26:57 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E8A6B1303D2CBD83AA15;
+        Fri,  5 Jun 2020 09:26:54 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.10) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 5 Jun 2020
+ 09:26:44 +0800
+Subject: Re: Question: livepatch failed for new fork() task stack unreliable
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
+        <cj.chengjian@huawei.com>, <mingo@redhat.com>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <live-patching@vger.kernel.org>,
+        <mbenes@suse.cz>, <devel@etsukata.com>, <viro@zeniv.linux.org.uk>,
+        <esyr@redhat.com>
+References: <20200529101059.39885-1-bobo.shaobowang@huawei.com>
+ <20200529174433.wpkknhypx2bmjika@treble>
+ <a9ed9157-f3cf-7d2c-7a8e-56150a2a114e@huawei.com>
+ <20200601180538.o5agg5trbdssqken@treble>
+ <a5e0f476-02b5-cc44-8d4e-d33ff2138143@huawei.com>
+ <20200602131450.oydrydelpdaval4h@treble>
+ <1353648b-f3f7-5b8d-f0bb-28bdb1a66f0f@huawei.com>
+ <20200603153358.2ezz2pgxxxld7mj7@treble>
+ <2225bc83-95f2-bf3d-7651-fdd10a3ddd00@huawei.com>
+ <20200604024051.6ovbr6tbrowwg6jr@treble>
+From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Message-ID: <c3a81224-bea1-116b-7528-f03f90be5264@huawei.com>
+Date:   Fri, 5 Jun 2020 09:26:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <20200604024051.6ovbr6tbrowwg6jr@treble>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.10]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for parameters to be used for UFS features layer and HPB
-module.
 
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- drivers/scsi/ufs/ufs.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+在 2020/6/4 10:40, Josh Poimboeuf 写道:
+> On Thu, Jun 04, 2020 at 09:24:55AM +0800, Wangshaobo (bobo) wrote:
+>> 在 2020/6/3 23:33, Josh Poimboeuf 写道:
+>>> On Wed, Jun 03, 2020 at 10:06:07PM +0800, Wangshaobo (bobo) wrote:
+>>> To be honest, I don't remember what I meant by sibling calls.  They
+>>> don't even leave anything on the stack.
+>>>
+>>> For noreturns, the code might be laid out like this:
+>>>
+>>> func1:
+>>> 	...
+>>> 	call noreturn_foo
+>>> func2:
+>>>
+>>> func2 is immediately after the call to noreturn_foo.  So the return
+>>> address on the stack will actually be 'func2'.  We want to retrieve the
+>>> ORC data for the call instruction (inside func1), instead of the
+>>> instruction at the beginning of func2.
+>>>
+>>> I should probably update that comment.
+>> So, I want to ask is there any side effects if i modify like this ? this
+>> modification is based on
+>>
+>> your fix. It looks like ok with proper test.
+>>
+>> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+>> index e9cc182aa97e..ecce5051e8fd 100644
+>> --- a/arch/x86/kernel/unwind_orc.c
+>> +++ b/arch/x86/kernel/unwind_orc.c
+>> @@ -620,6 +620,7 @@ void __unwind_start(struct unwind_state *state, struct
+>> task_struct *task,
+>>                  state->sp = task->thread.sp;
+>>                  state->bp = READ_ONCE_NOCHECK(frame->bp);
+>>                  state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
+>> +              state->signal = ((void *)state->ip == ret_from_fork);
+>>          }
+>>
+>> diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+>> index 7f969b2d240f..d7396431261a 100644
+>> --- a/arch/x86/kernel/unwind_orc.c
+>> +++ b/arch/x86/kernel/unwind_orc.c
+>> @@ -540,7 +540,7 @@ bool unwind_next_frame(struct unwind_state *state)
+>>           state->sp = sp;
+>>           state->regs = NULL;
+>>           state->prev_regs = NULL;
+>> -        state->signal = ((void *)state->ip == ret_from_fork);
+>> +        state->signal = false;
+>>           break;
+> Yes that's correct.
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index c70845d41449..4a4cb790e34c 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -146,6 +146,7 @@ enum flag_idn {
- 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
-+	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
- };
- 
- /* Attribute idn for Query requests */
-@@ -229,6 +230,9 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
-+	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
-+	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
- 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
- };
- 
-@@ -269,6 +273,8 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-+	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
-+	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
- 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
- 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
- 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
-@@ -317,6 +323,10 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_HPB_REGION_SIZE		= 0x48,
-+	GEOMETRY_DESC_HPB_NUMBER_LU		= 0x49,
-+	GEOMETRY_DESC_HPB_SUBREGION_SIZE	= 0x4A,
-+	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
- 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
- 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
- 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-@@ -571,6 +581,7 @@ struct ufs_dev_info {
- 	u8 *model;
- 	u16 wspecversion;
- 	u32 clk_gating_wait_us;
-+	u8 b_ufs_feature_sup;
- 	u32 d_ext_ufs_feature_sup;
- 	u8 b_wb_buffer_type;
- 	u32 d_wb_alloc_units;
--- 
-2.17.1
+Hi, josh
+
+Could i ask when are you free to send the patch, all the tests are 
+passed by.
+
+thanks for your help.
+
+Wang ShaoBo
+
+>
+
