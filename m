@@ -2,53 +2,53 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B79C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1829820663
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC8220663
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591366930;
-	bh=LdEIPkjvJ8xqDM/hFsUn+psk8VzAVH/5vIvKuDXWIC8=;
+	s=default; t=1591366934;
+	bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H/BwyR8FRHCmwQkBeWgHjoB3Mso0KNJGTw7PW4P15Bk6gT2UIzYCQh3PH16UHKsgn
-	 OpRyrQaYyGZ5+QQbzoJ0jgIpYj/Re5RqSX87gk2m8BUHKaWixodpCnt9iPkiKtXfQX
-	 /XueLTz95wIQDa0lstcpv+0ECK2zl2XWtWqgnmqM=
+	b=eX1uruJEmGaS3T6fWwRncAA3Yi7yK43pdXqs/W5pqDeYvbvpR1JwsSG/ldvT8ua74
+	 FpxPXANc9dCg9TP0QH8BTlCc7e6vkE0a3Y3pNl9FK8yC99EGSIZnR2PcCeyFFkEJXO
+	 cTYFQjCF79K1CBBdEhcE8dkCjU3g0SUy+r0y+XrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgFEOWI (ORCPT
+        id S1728770AbgFEOWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50502 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 10:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728851AbgFEOTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:19:36 -0400
+        id S1728838AbgFEOTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:19:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E889D2086A;
-        Fri,  5 Jun 2020 14:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 674412086A;
+        Fri,  5 Jun 2020 14:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591366776;
-        bh=LdEIPkjvJ8xqDM/hFsUn+psk8VzAVH/5vIvKuDXWIC8=;
+        s=default; t=1591366771;
+        bh=I/C5wTw0k+vOVdGvsWnZiMB/R9OHvicC4Y/1i2mXlxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nT0eW/54FSl9XKoNMlskrSqJAaqZ10+2XOq2Hrj7+hcvbbgXiQmKBNIFry8KK+Gej
-         PpUGyTSojYbTlD5fIcjpLrKzcmjs+2QQKzadou7lFYIOD/ICT5lrY2kWkWPLcJ4ewH
-         nuqEOkrOjLUtIlkHsk89Ste95L7hkwvpwUWubMY8=
+        b=eA9/72DJJisvAjf8gXW4QdbfdIIOx9M6z0sd3QyZvnBq1g+RSBi94q+wU+szuR9Bu
+         qrYLIwihxlVy8vW7hdNdBlaMTLnt9xnuCU10KxHI0NKGy5+vF4DkAWDDCJrp+qWGi2
+         8U/BCSQc/NFsXDmenHqdwldHpu6PHJ6WdtvjXjQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 13/28] scsi: hisi_sas: Check sas_port before using it
-Date:   Fri,  5 Jun 2020 16:15:15 +0200
-Message-Id: <20200605140253.156033023@linuxfoundation.org>
+        stable@vger.kernel.org, Hu Jiahui <kirin.say@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 11/28] airo: Fix read overflows sending packets
+Date:   Fri,  5 Jun 2020 16:15:13 +0200
+Message-Id: <20200605140253.020506861@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
 References: <20200605140252.338635395@linuxfoundation.org>
@@ -61,42 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8c39673d5474b95374df2104dc1f65205c5278b8 ]
+commit 11e7a91994c29da96d847f676be023da6a2c1359 upstream.
 
-Need to check the structure sas_port before using it.
+The problem is that we always copy a minimum of ETH_ZLEN (60) bytes from
+skb->data even when skb->len is less than ETH_ZLEN so it leads to a read
+overflow.
 
-Link: https://lore.kernel.org/r/1573551059-107873-2-git-send-email-john.garry@huawei.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The fix is to pad skb->data to at least ETH_ZLEN bytes.
+
+Cc: <stable@vger.kernel.org>
+Reported-by: Hu Jiahui <kirin.say@gmail.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200527184830.GA1164846@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/cisco/airo.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 33191673249c..de4f41bce8e9 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -789,12 +789,13 @@ static void hisi_sas_port_notify_formed(struct asd_sas_phy *sas_phy)
- 	struct hisi_hba *hisi_hba = sas_ha->lldd_ha;
- 	struct hisi_sas_phy *phy = sas_phy->lldd_phy;
- 	struct asd_sas_port *sas_port = sas_phy->port;
--	struct hisi_sas_port *port = to_hisi_sas_port(sas_port);
-+	struct hisi_sas_port *port;
- 	unsigned long flags;
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -1928,6 +1928,10 @@ static netdev_tx_t mpi_start_xmit(struct
+ 		airo_print_err(dev->name, "%s: skb == NULL!",__func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 	npacks = skb_queue_len (&ai->txq);
  
- 	if (!sas_port)
- 		return;
+ 	if (npacks >= MAXTXQ - 1) {
+@@ -2130,6 +2134,10 @@ static netdev_tx_t airo_start_xmit(struc
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
  
-+	port = to_hisi_sas_port(sas_port);
- 	spin_lock_irqsave(&hisi_hba->lock, flags);
- 	port->port_attached = 1;
- 	port->id = phy->port_id;
--- 
-2.25.1
-
+ 	/* Find a vacant FID */
+ 	for( i = 0; i < MAX_FIDS / 2 && (fids[i] & 0xffff0000); i++ );
+@@ -2204,6 +2212,10 @@ static netdev_tx_t airo_start_xmit11(str
+ 		airo_print_err(dev->name, "%s: skb == NULL!", __func__);
+ 		return NETDEV_TX_OK;
+ 	}
++	if (skb_padto(skb, ETH_ZLEN)) {
++		dev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
+ 
+ 	/* Find a vacant FID */
+ 	for( i = MAX_FIDS / 2; i < MAX_FIDS && (fids[i] & 0xffff0000); i++ );
 
 
