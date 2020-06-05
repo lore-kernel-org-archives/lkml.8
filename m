@@ -2,143 +2,197 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 100932070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="daE+BMqR"
+	by mail.kernel.org (Postfix) with ESMTP id 806992063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFELtL (ORCPT
+        id S1726410AbgFELu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:49:11 -0400
-Received: from mout.web.de ([212.227.15.14]:55495 "EHLO mout.web.de"
+        Fri, 5 Jun 2020 07:50:27 -0400
+Received: from mga12.intel.com ([192.55.52.136]:37514 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbgFELtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:49:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591357725;
-        bh=YNFT3W4I68wx1XkHhFni77rj2hPxvVddydb8cu7DO9o=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=daE+BMqRpFRjN0dgKypNu6WW0o/+81qYrDOX3n3oli3L7Oqi5zs22ex155LBMU20o
-         pmh64APWKWN7ky9U2Mr4S2eHkk2Pnvi1NKsT0a9tiMiXK8nZFyoykCcx8axWY5eEy8
-         Vd5pvbcJchM1ehh6RLsRvEXmdbH0jPa6/W1XO84A=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.102.114]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MP384-1jK8jh0Pvg-00PJmf; Fri, 05
- Jun 2020 13:48:45 +0200
-Subject: Re: block: Fix use-after-free in blkdev_get()
-To:     Matthew Wilcox <willy@infradead.org>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Yan <yanaijie@huawei.com>, hulkci@huawei.com,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
-References: <88676ff2-cb7e-70ec-4421-ecf8318990b1@web.de>
- <5fa658bf-3028-9b5c-30cc-dbdef6bf8f7a@huawei.com>
- <20200605094353.GS30374@kadam> <2ee6f2f7-eaec-e748-bead-0ad59f4c378b@web.de>
- <20200605111049.GA19604@bombadil.infradead.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b6c8ebd7-ccd3-2a94-05b2-7b92a30ec8a9@web.de>
-Date:   Fri, 5 Jun 2020 13:48:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        id S1726314AbgFELu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 07:50:27 -0400
+IronPort-SDR: HAcpdxWUCfEnhWSBkW2fMK6NgfTCmK5PfD6n1ofiYxPa6uMJsg3ppPwBWi7RQmyFY3jxbnQwhi
+ sudtz41iVYIA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 04:50:26 -0700
+IronPort-SDR: 9Zr71LGna9tos8vciIEEwPAEvBtFlLlSVKLzz8i0DRY3gY0S/rjZHrBX3HUsxDXZ1ylTAIFNDr
+ Qmpoa3dv2Dog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
+   d="scan'208";a="417248582"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 05 Jun 2020 04:50:26 -0700
+Received: from [10.249.226.228] (abudanko-mobl.ccr.corp.intel.com [10.249.226.228])
+        by linux.intel.com (Postfix) with ESMTP id D654C5805B5;
+        Fri,  5 Jun 2020 04:50:23 -0700 (PDT)
+Subject: Re: [PATCH v7 01/13] tools/libperf: introduce notion of static polled
+ file descriptors
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <5de4b954-24f0-1e8d-5a0d-7b12783b8218@linux.intel.com>
+ <3c92a0ad-d7d3-4e78-f0b8-1d3a7122c69e@linux.intel.com>
+ <20200605105051.GA1404794@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <b1934951-1dc2-a6b8-ddb3-25643ba37a00@linux.intel.com>
+Date:   Fri, 5 Jun 2020 14:50:22 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200605111049.GA19604@bombadil.infradead.org>
+In-Reply-To: <20200605105051.GA1404794@krava>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bZ+hVVmU4XPXH+XKnHAH2xGaJwrtCqJlHTSItq4yaYzqHaMI9g2
- W1CSjONn27C2Tfuhp5V2ume1kaV7tSuI9aM5PBouWO+qmqwP/dWWG4OcBS4+BHi/oT/Ri7E
- YsKT/bskw2flOCodpNSNDWqE4Sd8uWn74cDABHOHbDECvQjyduzVJWULdLFq05c5HQqi8Lt
- e7ptZXECO+UVIWfEFLaMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OrqltsMFwFc=:0j+EbyMb27QL99NCg5MdlA
- 0fzja0LrbVnUa8sBjMt2JGY+HIAS8jeT+MJxOqkdHkPAQJKF9MxVBjji9sSH6J0uZX7wJcBVg
- QC0BPrdjiN5x365BXpRk70HRljnh9GeNcotALM9VN1yrehgDhHsMdWaPaK5fU+aBQwEBeh/Rp
- UEuLj4klIXr8j+ozrPORdWR+hegX3Zja0D6lk8vN2C+/zeRWMogoTCrMbu4qV5O3uAD/A57/G
- 6BZ3uf/KJZ1Co0KRric0turluyDDC8ZtnYrDlkBuRcFePJqeXRprYQnPZKkr4EV5hUOQJEq2y
- /YgZqmJfFuJyBuLjUx5BtBIwholHVCT8FXhPuUT/oHnImMAjV0ydrF602HzIf2sdCKFKP0uvz
- Ygw5hv+T9zX9Hvu4slX/Ezuk7L/4zjtTPBzHQZfyE8eEGlOYC1h764eV/HzMHfFrYOI4lrlmS
- GFc6Bbu0T0cScXsuOLDeDzwIXxXvW6mpNEULhhu9Bh+s0DfqxYTotvddNV9EUu/HqmyjYP+wE
- NLw3kwhiGMjPb5EUxSfUd9tEmeLsNfQdF0UaDF9KAuk7oxcf89f/bxXiwD84al706sPe+adAr
- WIhH4LdgVM3CXv38IBUatbQUomOe3jF1i+4pVL2bn3ex1JkVCceL+b4qQtqHxGQiLr/zG0j1N
- 59vIXLLWv/FTKL/BsD5kn5DNmSOieH034Uxrml3w9s68xZeV1ifm83Ga1NzI6Eo357noqAkxY
- yyOG0hJnemNzyk5voly6/1nP2Kkj/TdFded63GwhTZvWwhGp2vz1AEXcoD/mQtOvxd+laab1q
- mZ6lhKvDgp39Cd/6cJo2avAZA2abvt6n7zTMqwem99Xg7gcZhQH8ERVD7TgaoI3itP2855KW5
- Cn1QoO7oEdcMwVxPq3jmBmWZpu1gBqaE/aJ+t/5MHLxkh2mdz7aFR2RD7dveyMRQN3Tz2zmee
- mYB/Kaw64dOXZMGjysDGL+R48LV9brMCT5deO/3LM9OI4piuJEkD7F5Xgt8FtZdHI1Hj2InT4
- JWXUpq2GBHz5ctg7XEvPL2kV3WZJj9hiMViQefWQ7RGHEPO0yJlAFb2Czvn7iedevGvR4WLSH
- 2SZyz4cgb41/rr782zdtYasMC6m2RU94o666HsG0bihE7YFscAbjQvQgIvGkYh8PNhxVv/n24
- BquU5D4MGd29iTk/w4IsZOk0szJYhAuMtzLOPuzgomkjw+2qpmeHxExmIxxoGBIJc8jVRkkme
- twhVHzquFZZtvtqet
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> I am trying to contribute a bit of patch review as usual.
->
-> Please stop criticising people's commit messages.  Your suggestions
-> are usually not improvements.
 
-The details can vary also for my suggestions.
-Would you point any more disagreemnents out on concrete items?
+On 05.06.2020 13:50, Jiri Olsa wrote:
+> On Wed, Jun 03, 2020 at 06:52:59PM +0300, Alexey Budankov wrote:
+>>
+>> Implement adding of file descriptors by fdarray__add_stat() to
+>> fix-sized (currently 1) stat_entries array located at struct fdarray.
+>> Append added file descriptors to the array used by poll() syscall
+>> during fdarray__poll() call. Copy poll() result of the added
+>> descriptors from the array back to the storage for analysis.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/lib/api/fd/array.c                 | 42 +++++++++++++++++++++++-
+>>  tools/lib/api/fd/array.h                 |  7 ++++
+>>  tools/lib/perf/evlist.c                  | 11 +++++++
+>>  tools/lib/perf/include/internal/evlist.h |  2 ++
+>>  4 files changed, 61 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+>> index 58d44d5eee31..b0027f2169c7 100644
+>> --- a/tools/lib/api/fd/array.c
+>> +++ b/tools/lib/api/fd/array.c
+>> @@ -11,10 +11,16 @@
+>>  
+>>  void fdarray__init(struct fdarray *fda, int nr_autogrow)
+>>  {
+>> +	int i;
+>> +
+>>  	fda->entries	 = NULL;
+>>  	fda->priv	 = NULL;
+>>  	fda->nr		 = fda->nr_alloc = 0;
+>>  	fda->nr_autogrow = nr_autogrow;
+>> +
+>> +	fda->nr_stat = 0;
+>> +	for (i = 0; i < FDARRAY__STAT_ENTRIES_MAX; i++)
+>> +		fda->stat_entries[i].fd = -1;
+>>  }
+>>  
+>>  int fdarray__grow(struct fdarray *fda, int nr)
+>> @@ -83,6 +89,20 @@ int fdarray__add(struct fdarray *fda, int fd, short revents)
+>>  	return pos;
+>>  }
+>>  
+>> +int fdarray__add_stat(struct fdarray *fda, int fd, short revents)
+>> +{
+>> +	int pos = fda->nr_stat;
+>> +
+>> +	if (pos >= FDARRAY__STAT_ENTRIES_MAX)
+>> +		return -1;
+>> +
+>> +	fda->stat_entries[pos].fd = fd;
+>> +	fda->stat_entries[pos].events = revents;
+>> +	fda->nr_stat++;
+>> +
+>> +	return pos;
+>> +}
+>> +
+>>  int fdarray__filter(struct fdarray *fda, short revents,
+>>  		    void (*entry_destructor)(struct fdarray *fda, int fd, void *arg),
+>>  		    void *arg)
+>> @@ -113,7 +133,27 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>>  
+>>  int fdarray__poll(struct fdarray *fda, int timeout)
+>>  {
+>> -	return poll(fda->entries, fda->nr, timeout);
+>> +	int nr, i, pos, res;
+>> +
+>> +	nr = fda->nr;
+>> +
+>> +	for (i = 0; i < fda->nr_stat; i++) {
+>> +		if (fda->stat_entries[i].fd != -1) {
+>> +			pos = fdarray__add(fda, fda->stat_entries[i].fd,
+>> +					   fda->stat_entries[i].events);
+> 
+> so every call to fdarray__poll will add whatever is
+> in stat_entries to entries? how is it removed?
 
+Whatever stat fd which is not -1 is added. If static fd is -1 then it is skipped for
+poll() call. Complete stat slot (fd == -1) isn't expected to be reused but reuse could
+be supported by simple change at fdarray__add_stat()
+and probably bring required generality.
 
-> But refcount -> reference count is not particularly interesting.
+> 
+> I think you should either follow what Adrian said
+> and put 'static' descriptors early and check for
+> filter number to match it as an 'quick fix'
+> 
+> or we should fix it for real and make it generic
 
-Can a wording clarification become helpful also for this issue?
+It would complicate without a reason. If it really matters I would add possibility of
+realloc of stat entries in fdarray__add_stat() and that would make stat entries usage
+more similar to filterable ones without dramatic change and risk of regressions.
 
-Regards,
-Markus
+~Alexey
+
+> 
+> so currently the interface is like this:
+> 
+>   pos1 = fdarray__add(a, fd1 ... );
+>   pos2 = fdarray__add(a, fd2 ... );
+>   pos3 = fdarray__add(a, fd2 ... );
+> 
+>   fdarray__poll(a);
+> 
+>   num = fdarray__filter(a, revents, destructor, arg);
+> 
+> when fdarray__filter removes some of the fds the 'pos1,pos2,pos3'
+> indexes are not relevant anymore
+> 
+> how about we make the 'pos indexes' being stable by allocating
+> separate object for each added descriptor and each poll call
+> would create pollfd array from current objects, and entries
+> would keep pointer to its pollfd entry
+> 
+>   struct fdentry *entry {
+>        int              fd;
+>        int              events;
+>        struct pollfd   *pollfd;
+>   }
+> 
+>   entry1 = fdarray__add(a, fd1 ...);
+>   entry2 = fdarray__add(a, fd2 ...);
+>   entry3 = fdarray__add(a, fd3 ...);
+> 
+>   fdarray__poll(a);
+> 
+>   struct pollfd *fdarray__entry_pollfd(a, entry1);
+> 
+> or smoething like that ;-)
+> 
+> jirka
+> 
