@@ -2,85 +2,174 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52481C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C53C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0A12074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F762074B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 15:44:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NikDzLOK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgFEPnp (ORCPT
+        id S1728396AbgFEPoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 11:43:45 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:41448 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgFEPno (ORCPT
+        Fri, 5 Jun 2020 11:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbgFEPoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:43:44 -0400
-Date:   Fri, 5 Jun 2020 11:43:44 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org,
-        ysato@users.sourceforge.jp, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Rob Landley <rob@landley.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] sh: remove sh5 support
-Message-ID: <20200605154343.GU1079@brightrain.aerifal.cx>
-References: <20200424221948.1120587-1-arnd@arndb.de>
- <20200507143552.GA28683@infradead.org>
- <20200528054600.GA29717@infradead.org>
- <20200528161416.GY1079@brightrain.aerifal.cx>
- <20200529143059.GA25475@infradead.org>
- <20200529175335.GK1079@brightrain.aerifal.cx>
- <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
- <20200601181259.GV1079@brightrain.aerifal.cx>
- <20200602013332.GY1079@brightrain.aerifal.cx>
- <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
+        Fri, 5 Jun 2020 11:44:11 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3630C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 08:44:11 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q24so2884945pjd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 08:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1mULMROuThJEJ5mn2BpH3TCtjO6X9vn9NXYKq1SVXCQ=;
+        b=NikDzLOKEbkdHl/a+qsn72HQQdgG4lUWew7gJeKOem2r+jk/zX/zfvHnv0NNmhzFm7
+         zYt45PiWRzHSua6gEBvhxICbkJ5xlf/RiDfUJZz+Pg7FKaHqMzUC7gOAd2VZzDeTZ/8/
+         QO+Gu1UWhZuFTFXNwtbOJqb0F1nglhXU1rzYA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1mULMROuThJEJ5mn2BpH3TCtjO6X9vn9NXYKq1SVXCQ=;
+        b=PFzYHAA74S7fXKFnzbKoUNNHaypAHLB40eu9cc68eIeEtTFTbA/Le9zqmecJkk8Lyr
+         yqYYOztvOhs0MF8L/HXivnM1cV+0LGVwbC163/aLwwiir8hQ07HUHsn/dDwZntxfrFHA
+         aocZVyo+z1qXxaJSQpFEbXpKZQ7jvZ1Rq8xCk5fxMtRRWxoRYesqEu3aSeq2SJ+dXsrd
+         kI5sgmFlJJ69M1eWl2VQaZAV9iTC1AVXhNdZSG0F5KkLI/QfhHVwmHoYCu5c+2wNBnL+
+         Q+PV3koJ01IDCUFl/PnqxFlPOwjplmoPWKyUjnNAiiLQegCbmHWFnCpFWYdJbkdvig7Z
+         X8VA==
+X-Gm-Message-State: AOAM533bKv7GZnNN+vi+rUVIJIB7AcdAYrv86Q+Qb08YTAdrBbs8Lhvb
+        Jqjqg7bp7w8LBd+Xzj7P91FlWQ==
+X-Google-Smtp-Source: ABdhPJxCJZj6genPtMB0lpkEc5DOWzQaxfWZ3R8Dw3uF3dgSiNjDe0nqGoGObx9Tl6gZci9hQn2mJg==
+X-Received: by 2002:a17:90a:f694:: with SMTP id cl20mr3815256pjb.141.1591371851304;
+        Fri, 05 Jun 2020 08:44:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w190sm39003pfw.35.2020.06.05.08.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 08:44:09 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 08:44:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+Message-ID: <202006050828.F85A75D13@keescook>
+References: <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
+ <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+ <202006041054.874AA564@keescook>
+ <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
+ <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
+ <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+ <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 05:38:18PM +0200, John Paul Adrian Glaubitz wrote:
-> Hi Rich!
-> 
-> On 6/2/20 3:33 AM, Rich Felker wrote:
-> >>>> [PATCH 1/2] arch/sh: vmlinux.scr
-> >>>> https://marc.info/?l=linux-sh&m=158429470120959&w=2
-> >>
-> >> OK.
+On Fri, Jun 05, 2020 at 04:44:51PM +0200, Vegard Nossum wrote:
+> On 2020-06-05 16:08, Vlastimil Babka wrote:
+> > On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
+> > > On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+> > > > 
+> > > > On 2020-06-05 11:36, Vegard Nossum wrote:
+> > > > > 
+> > > > > On 2020-06-05 11:11, Vlastimil Babka wrote:
+> > > > > > So, with Kees' patch reverted, booting with slub_debug=F (or even more
+> > > > > > specific slub_debug=F,ftrace_event_field) also hits this bug below. I
+> > > > > > wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
+> > > > > > further in history. So it's not new at all, and likely very specific to
+> > > > > > your config+QEMU? (and related to the ACPI error messages that precede
+> > > > > > it?).
+> > [...]
+> > [    0.140408] ------------[ cut here ]------------
+> > [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+> > [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+
+Ah yes! Good. I had improved this check recently too, and I was worried
+the freelist pointer patch was somehow blocking it, but I see now that
+the failing config didn't have CONFIG_SLAB_FREELIST_HARDENED=y. Once
+SLAB_CONSISTENCY_CHECKS was enabled ("slub_debug=F"), it started
+tripping. Whew.
+
+I wonder if that entire test block should just be removed from
+cache_from_obj():
+
+        if (!memcg_kmem_enabled() &&
+            !IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+            !unlikely(s->flags & SLAB_CONSISTENCY_CHECKS))
+                return s;
+
+and make this test unconditional? It's mostly only called during free(),
+and shouldn't be too expensive to be made unconditional. Hmm.
+
+> > And it seems ACPI is allocating an object via kmalloc() and then freeing it
+> > via kmem_cache_free(<"Acpi-Namespace" kmem_cache>) which is wrong.
 > > 
-> > Included in -mm.
+> > > ./scripts/faddr2line vmlinux 'acpi_ns_root_initialize+0xb6'
+> > acpi_ns_root_initialize+0xb6/0x2d1:
+> > kmalloc at include/linux/slab.h:555
+> > (inlined by) kzalloc at include/linux/slab.h:669
+> > (inlined by) acpi_os_allocate_zeroed at include/acpi/platform/aclinuxex.h:57
+> > (inlined by) acpi_ns_root_initialize at drivers/acpi/acpica/nsaccess.c:102
+> > 
 > 
-> I just had a look at your tree and it looks you forgot to merge the second
-> patch of the series, see:
+> That's it :-) This fixes it for me:
 > 
-> > https://marc.info/?l=linux-sh&m=158429470221261&w=2
+> diff --git a/drivers/acpi/acpica/nsaccess.c b/drivers/acpi/acpica/nsaccess.c
+> index 2566e2d4c7803..b76bbab917941 100644
+> --- a/drivers/acpi/acpica/nsaccess.c
+> +++ b/drivers/acpi/acpica/nsaccess.c
+> @@ -98,14 +98,12 @@ acpi_status acpi_ns_root_initialize(void)
+>                  * predefined names are at the root level. It is much easier
+> to
+>                  * just create and link the new node(s) here.
+>                  */
+> -               new_node =
+> -                   ACPI_ALLOCATE_ZEROED(sizeof(struct
+> acpi_namespace_node));
+> +               new_node = acpi_ns_create_node(*ACPI_CAST_PTR (u32,
+> init_val->name));
+>                 if (!new_node) {
+>                         status = AE_NO_MEMORY;
+>                         goto unlock_and_exit;
+>                 }
 > 
-> Can you include the patch as well?
+> -               ACPI_COPY_NAMESEG(new_node->name.ascii, init_val->name);
+>                 new_node->descriptor_type = ACPI_DESC_TYPE_NAMED;
+>                 new_node->type = init_val->type;
 
-This one is outside arch/sh and I'm not sure it's permissible to go up
-through my tree. I was also under the impression that only part 1 was
-needed to fix the immediate problem on sh and tha part 2 was for
-completeness and to make sure the same doesn't happen on other archs
-in the future, but maybe my understanding here is incorrect.
+I'm a bit confused by the internals of acpi_ns_create_note(). It can still
+end up calling ACPI_ALLOCATE_ZEROED() via acpi_os_acquire_object(). Is
+this fix correct?
 
-> And would it be okay to send a PR to Linus
-> after that?
-
-Sure, will do right away once we resolve what to do with the above,
-and provided you don't have anything else you want me to evaluate for
-inclusion.
-
-Rich
+-- 
+Kees Cook
