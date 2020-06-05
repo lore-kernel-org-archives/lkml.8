@@ -2,247 +2,437 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF7FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74204C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7BDC207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4364620772
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 08:49:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JHKB7BPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgFEIrF (ORCPT
+        id S1726197AbgFEItW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 04:47:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42012 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgFEIrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 04:47:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 796BAACD0;
-        Fri,  5 Jun 2020 08:47:05 +0000 (UTC)
-Message-ID: <f728f55fe6266718b5041b6f3b1864a673991129.camel@suse.de>
-Subject: Re: [PATCH v2] spi: bcm2835: Enable shared interrupt support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Scott Branden <sbranden@broadcom.com>, lukas@wunner.de,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Date:   Fri, 05 Jun 2020 10:46:57 +0200
-In-Reply-To: <20200604212819.715-1-f.fainelli@gmail.com>
-References: <20200604212819.715-1-f.fainelli@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-mEv3c87MBb44GSiC5RXV"
-User-Agent: Evolution 3.36.2 
+        Fri, 5 Jun 2020 04:49:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbgFEItU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 04:49:20 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACD7C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:49:19 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g10so7663425wmh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 01:49:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ShIPEKLtHJNI7EgByJ7TzTteP7weEEoEK5XnGUnAnDA=;
+        b=JHKB7BPtiDQpdqRj4iwj2PaCKo2ZYMwCEXh3GY/NEwFYFSE47qjrQmxrSB7T0iodw6
+         RmMzOO/L8Msz58TpWxpu/ANCKEiUHGO9/amUCaByExYyC/UBu+ANQPXnWnataTsRLNix
+         noronmmlyJ/akaNcxh7RNjTQtVPrDG5zYwQHZKYCxuIvGiMYbl2wO2WwNKj7bO+BZRDy
+         VTU1uipZn/zZ7AeGaRUFx/ZnDlR4XWs6tXLm7o3NZNl0L9nq7dqN2eMCQ21F2xri8uAg
+         nNF/9kpYLeZpM3I9M3QDpLL6TwDnOLzYVcNamQUkqcoCdclagZ4fvhx+DNoGufhzKrib
+         5y/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ShIPEKLtHJNI7EgByJ7TzTteP7weEEoEK5XnGUnAnDA=;
+        b=TV+pZxLmg2tg61GXvzdjCi0ILL9Ce7dd6Q77iPnVr8Ks4mCW6+0fHJGoN9bxLSy8WM
+         SCHH/CduCgD3gpzJnF6aGcvmDBLLvPc5OnfowfqTsT7a/9+3TET8T+h9FyeGxIosv5ux
+         0nIv7XtFGr3oBihAbjA70//9nLc4H2DpkSZOxeILOOFoFaDBVU5mXG4aqJMJh//WJFjy
+         qOugyR8JZPgNBw633MDR5s+lWJRsYKfyD043idhBzB7Wg3so5frWI7cI+2//KXNaJZDD
+         ACalFPdxqYOzujzu2idUyhYjrDBce/EGinKogXPIzPuyPY5e0UEzRMrDmeDGk1u/8RWg
+         M+3Q==
+X-Gm-Message-State: AOAM531hazwDsgdOnRPW5URkcxx8tP5Bi8M+ezbMlBKhk8Mk9TPQ04G8
+        /AhyMmwm1FmPRCGW6Nbyxh+cgg==
+X-Google-Smtp-Source: ABdhPJzFLO8h/vvGcmXwgNoyFftB5nfR424h9jxB25M8PSh39Yyc0S54n+rRnjr0KPF2rHImbfY5hg==
+X-Received: by 2002:a7b:cf02:: with SMTP id l2mr1609865wmg.136.1591346958101;
+        Fri, 05 Jun 2020 01:49:18 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id j5sm11113810wrq.39.2020.06.05.01.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 01:49:17 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 09:49:15 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 05/11] pwm: add support for sl28cpld PWM controller
+Message-ID: <20200605084915.GE3714@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-6-michael@walle.cc>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604211039.12689-6-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 04 Jun 2020, Michael Walle wrote:
 
---=-mEv3c87MBb44GSiC5RXV
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Florian,
-Thanks for taking over this!
-
-On Thu, 2020-06-04 at 14:28 -0700, Florian Fainelli wrote:
-> The 4 SPI controller instances added in BCM2711 and BCM7211 SoCs (SPI3,
-> SPI4, SPI5 and SPI6) share the same interrupt line with SPI0.
-
-I think this isn't 100% correct. SPI0 has its own interrupt, but SPI[3-6] s=
-hare
-the same interrupt.
-
-> For the BCM2835 case which is deemed performance critical, we would like
-> to continue using an interrupt handler which does not have the extra
-> comparison on BCM2835_SPI_CS_INTR.
->=20
-> To support that requirement the common interrupt handling code between
-> the shared and non-shared interrupt paths is split into a
-> bcm2835_spi_interrupt_common() and both bcm2835_spi_interrupt() as well
-> as bcm2835_spi_shared_interrupt() make use of it.
->=20
-> During probe, we determine if there is at least another instance of this
-> SPI controller, and if there is, then we install a shared interrupt
-> handler.
-
-As there was pushback to use a different compatible string for an otherwise
-identical IP, I think it's a good compromise.
-
->=20
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Add support for the PWM controller of the sl28cpld board management
+> controller. This is part of a multi-function device driver.
+> 
+> The controller has one PWM channel and can just generate four distinct
+> frequencies.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
-> Changes in v2:
->=20
-> - identify other available SPI nodes to determine if we need to set-up
->   interrupt sharing. This needs to happen for the very first instance
->   since we cannot know for the first instance whether interrupt sharing
->   is needed or not.
->=20
->  drivers/spi/spi-bcm2835.c | 61 ++++++++++++++++++++++++++++++++-------
->  1 file changed, 50 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-> index 237bd306c268..0288b5b3de1e 100644
-> --- a/drivers/spi/spi-bcm2835.c
-> +++ b/drivers/spi/spi-bcm2835.c
-> @@ -361,11 +361,10 @@ static void bcm2835_spi_reset_hw(struct spi_control=
-ler
-> *ctlr)
->  	bcm2835_wr(bs, BCM2835_SPI_DLEN, 0);
->  }
-> =20
-> -static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
-> +static inline irqreturn_t bcm2835_spi_interrupt_common(struct spi_contro=
-ller
-> *ctlr,
-> +						       u32 cs)
+>  drivers/pwm/Kconfig        |  10 ++
+>  drivers/pwm/Makefile       |   1 +
+>  drivers/pwm/pwm-sl28cpld.c | 201 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 212 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-sl28cpld.c
+> 
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index cb8d739067d2..a39371c11ff6 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -437,6 +437,16 @@ config PWM_SIFIVE
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-sifive.
+>  
+> +config PWM_SL28CPLD
+> +	tristate "Kontron sl28 PWM support"
+> +	depends on MFD_SL28CPLD
+> +	help
+> +	  Generic PWM framework driver for board management controller
+> +	  found on the Kontron sl28 CPLD.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-sl28cpld.
+> +
+>  config PWM_SPEAR
+>  	tristate "STMicroelectronics SPEAr PWM support"
+>  	depends on PLAT_SPEAR || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index a59c710e98c7..c479623724e8 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -41,6 +41,7 @@ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+>  obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+>  obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+> +obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
+>  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+>  obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
+>  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+> new file mode 100644
+> index 000000000000..d82303f509f5
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-sl28cpld.c
+> @@ -0,0 +1,201 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * sl28cpld PWM driver.
+> + *
+> + * Copyright 2019 Kontron Europe GmbH
 
-Keep in mind the new 100 character limit.
+This is out of date.
 
->  {
-> -	struct spi_controller *ctlr =3D dev_id;
->  	struct bcm2835_spi *bs =3D spi_controller_get_devdata(ctlr);
-> -	u32 cs =3D bcm2835_rd(bs, BCM2835_SPI_CS);
-> =20
->  	/*
->  	 * An interrupt is signaled either if DONE is set (TX FIFO empty)
-> @@ -394,6 +393,27 @@ static irqreturn_t bcm2835_spi_interrupt(int irq, vo=
-id
-> *dev_id)
->  	return IRQ_HANDLED;
->  }
-> =20
-> +static irqreturn_t bcm2835_spi_interrupt(int irq, void *dev_id)
-> +{
-> +	struct spi_controller *ctlr =3D dev_id;
-> +	struct bcm2835_spi *bs =3D spi_controller_get_devdata(ctlr);
-> +	u32 cs =3D bcm2835_rd(bs, BCM2835_SPI_CS);
+> + */
 > +
-> +	return bcm2835_spi_interrupt_common(ctlr, cs);
-> +}
+> +#include <linux/bitfield.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
 > +
-> +static irqreturn_t bcm2835_spi_shared_interrupt(int irq, void *dev_id)
-> +{
-> +	struct spi_controller *ctlr =3D dev_id;
-> +	struct bcm2835_spi *bs =3D spi_controller_get_devdata(ctlr);
-> +	u32 cs =3D bcm2835_rd(bs, BCM2835_SPI_CS);
+> +/*
+> + * PWM timer block registers.
+> + */
+> +#define PWM_CTRL		0x00
+> +#define   PWM_ENABLE		BIT(7)
+> +#define   PWM_MODE_250HZ	0
+> +#define   PWM_MODE_500HZ	1
+> +#define   PWM_MODE_1KHZ		2
+> +#define   PWM_MODE_2KHZ		3
+> +#define   PWM_MODE_MASK		GENMASK(1, 0)
+> +#define PWM_CYCLE		0x01
+> +#define   PWM_CYCLE_MAX		0x7f
 > +
-> +	if (!(cs & BCM2835_SPI_CS_INTR))
-> +		return IRQ_NONE;
-> +
-> +	return bcm2835_spi_interrupt_common(ctlr, cs);
-> +}
-> +
->  static int bcm2835_spi_transfer_one_irq(struct spi_controller *ctlr,
->  					struct spi_device *spi,
->  					struct spi_transfer *tfr,
-> @@ -1287,12 +1307,37 @@ static int bcm2835_spi_setup(struct spi_device *s=
-pi)
->  	return 0;
->  }
-> =20
-> +static const struct of_device_id bcm2835_spi_match[] =3D {
-> +	{ .compatible =3D "brcm,bcm2835-spi", },
-> +	{}
+> +struct sl28cpld_pwm {
+> +	struct pwm_chip pwm_chip;
+> +	struct regmap *regmap;
+> +	u32 offset;
 > +};
-> +MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
 > +
->  static int bcm2835_spi_probe(struct platform_device *pdev)
->  {
-> +	irq_handler_t bcm2835_spi_isr_func =3D bcm2835_spi_interrupt;
->  	struct spi_controller *ctlr;
-> +	unsigned long flags =3D 0;
-> +	struct device_node *dn;
->  	struct bcm2835_spi *bs;
->  	int err;
-> =20
-> +	/* On BCM2711 there can be multiple SPI controllers enabled sharing the
-> +	 * same interrupt line, but we also want to minimize the overhead if
-> +	 * there is no need to support interrupt sharing. If we find at least
-> +	 * another available instane (not counting the one we are probed from),
+> +struct sl28cpld_pwm_periods {
+> +	u8 ctrl;
+> +	unsigned long duty_cycle;
+> +};
+> +
+> +struct sl28cpld_pwm_config {
+> +	unsigned long period_ns;
+> +	u8 max_duty_cycle;
+> +};
 
-"instance"
+Also, instead of hand rolling your own structure here, I think it
+would be prudent to re-use something that already exists.  Seeing as
+this will be used to describe possible state, perhaps 'struct
+pwm_state' would be suitable - leaving polarity and enabled
+unpopulated of course.
 
-> +	 * then we assume that interrupt sharing is necessary.
-> +	 */
-> +	for_each_compatible_node(dn, NULL, bcm2835_spi_match[0].compatible) {
-> +		err =3D of_device_is_available(dn) && dn !=3D pdev->dev.of_node;
+Ah wait (sorry, thinking allowed and on-the-fly here), what is
+max_duty_cycle here?  I assume this does not have the same
+meaning/value-type as the one in 'struct pwm_state'.  What does
+max_duty_cycle represent in your use-case?
 
-nit: maybe err is not the ideal variable name here.
+> +static struct sl28cpld_pwm_config sl28cpld_pwm_config[] = {
+> +	[PWM_MODE_250HZ] = { .period_ns = 4000000, .max_duty_cycle = 0x80 },
+> +	[PWM_MODE_500HZ] = { .period_ns = 2000000, .max_duty_cycle = 0x40 },
+> +	[PWM_MODE_1KHZ] = { .period_ns = 1000000, .max_duty_cycle = 0x20 },
+> +	[PWM_MODE_2KHZ] = { .period_ns =  500000, .max_duty_cycle = 0x10 },
+> +};
 
-> +		of_node_put(dn);
-> +		if (err) {
-> +			flags =3D IRQF_SHARED;
-> +			bcm2835_spi_isr_func =3D bcm2835_spi_shared_interrupt;
+Tiny nit: If you lined these up from the '{'s it would be easier to
+see/compare the period_ns values at first glance, rather than having
+to count the ' 's and '0's.
+
+> +static inline struct sl28cpld_pwm *to_sl28cpld_pwm(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct sl28cpld_pwm, pwm_chip);
+> +}
+
+Why not save yourself the trouble and just:
+
+  struct sl28cpld_pwm *pwm = dev_get_drvdata(chip->dev);
+
+> +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+> +				   struct pwm_device *pwm,
+> +				   struct pwm_state *state)
+> +{
+> +	struct sl28cpld_pwm *spc = to_sl28cpld_pwm(chip);
+> +	static struct sl28cpld_pwm_config *config;
+> +	unsigned int reg;
+> +	unsigned long cycle;
+
+Why is this 'long' here and 'long long' in *_apply()?
+
+> +	unsigned int mode;
+> +
+> +	regmap_read(spc->regmap, spc->offset + PWM_CTRL, &reg);
+> +
+> +	state->enabled = reg & PWM_ENABLE;
+> +
+> +	mode = FIELD_GET(PWM_MODE_MASK, reg);
+> +	config = &sl28cpld_pwm_config[mode];
+> +	state->period = config->period_ns;
+> +
+> +	regmap_read(spc->regmap, spc->offset + PWM_CYCLE, &reg);
+> +	cycle = reg * config->period_ns;
+> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(cycle,
+> +						  config->max_duty_cycle);
+> +}
+> +
+> +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			      const struct pwm_state *state)
+> +{
+> +	struct sl28cpld_pwm *spc = to_sl28cpld_pwm(chip);
+> +	struct sl28cpld_pwm_config *config;
+> +	unsigned long long cycle;
+> +	int ret;
+> +	int mode;
+> +	u8 ctrl;
+> +
+> +	/* update config, first search best matching period */
+
+Please use correct grammar (less full stops) in comments.
+
+> +	for (mode = 0; mode < ARRAY_SIZE(sl28cpld_pwm_config); mode++) {
+> +		config = &sl28cpld_pwm_config[mode];
+> +		if (state->period == config->period_ns)
 > +			break;
-> +		}
 > +	}
 > +
->  	ctlr =3D spi_alloc_master(&pdev->dev, ALIGN(sizeof(*bs),
->  						  dma_get_cache_alignment()));
->  	if (!ctlr)
-> @@ -1344,8 +1389,8 @@ static int bcm2835_spi_probe(struct platform_device
-> *pdev)
->  	bcm2835_wr(bs, BCM2835_SPI_CS,
->  		   BCM2835_SPI_CS_CLEAR_RX | BCM2835_SPI_CS_CLEAR_TX);
-> =20
-> -	err =3D devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_interrupt, 0,
-> -			       dev_name(&pdev->dev), ctlr);
-> +	err =3D devm_request_irq(&pdev->dev, bs->irq, bcm2835_spi_isr_func,
-> +			       flags, dev_name(&pdev->dev), ctlr);
->  	if (err) {
->  		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
->  		goto out_dma_release;
-> @@ -1400,12 +1445,6 @@ static void bcm2835_spi_shutdown(struct platform_d=
-evice
-> *pdev)
->  		dev_err(&pdev->dev, "failed to shutdown\n");
->  }
-> =20
-> -static const struct of_device_id bcm2835_spi_match[] =3D {
-> -	{ .compatible =3D "brcm,bcm2835-spi", },
-> -	{}
-> -};
-> -MODULE_DEVICE_TABLE(of, bcm2835_spi_match);
-> -
->  static struct platform_driver bcm2835_spi_driver =3D {
->  	.driver		=3D {
->  		.name		=3D DRV_NAME,
+> +	if (mode == ARRAY_SIZE(sl28cpld_pwm_config))
+> +		return -EINVAL;
+> +
+> +	ctrl = FIELD_PREP(PWM_MODE_MASK, mode);
+> +	if (state->enabled)
+> +		ctrl |= PWM_ENABLE;
+> +
+> +	cycle = state->duty_cycle * config->max_duty_cycle;
+> +	do_div(cycle, state->period);
 
+Forgive my ignorance (I'm new here!), but what are these 2 lines
+doing?  Here we are multiplying the current duty_cycle with the
+maximum value, then dividing by the period.
 
---=-mEv3c87MBb44GSiC5RXV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+So in the case of PWM_MODE_1KHZ with a 50% duty cycle, you'd have:
 
------BEGIN PGP SIGNATURE-----
+   (500000 * 0x20[16]) / 1000000 = [0x10]16
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7aBoIACgkQlfZmHno8
-x/76iQf/YhcuGS7sdr9nlK7KZasWwzVQMm4sUpwC4aTP2ok0f8XY2omANTcOMXPi
-boV38p9L8EZnRCGxPJH5gcd+P+mzq7E36L0CmhXh0llna9Y0PCDNRiAun7xax26+
-AdZ5CP5pxseRYL/hvDKGiErbDAaygtPFdxvo9u034SYQyQTnP5J8YxjTX0V0TTVz
-NWPslb+n33JCLVrkFhoIsxr2sgW/dFJTaZ3V1/Bzj5Lktz4dw16ro4tCX86I4ltO
-NlvwGVykL6qjn+j0dOvnx6JvHoI5ScPqzkCDXDwQJekTzitTIdiaD2e70AZZ1B+q
-S0WCbZgciVz5xKBJn1sx5kPtsVZwng==
-=mzr5
------END PGP SIGNATURE-----
+Thus, the above gives as a proportional representation of the maximum
+valid value for placement into the cycle control register(s), right?
 
---=-mEv3c87MBb44GSiC5RXV--
+Either way (whether I'm correct or not), I think it would be nice to
+mention this in a comment.  Maybe even clarify with a simple example.
 
+> +	/*
+> +	 * The hardware doesn't allow to set max_duty_cycle if the
+> +	 * 250Hz mode is enabled. But since this is "all-high" output
+> +	 * just use the 500Hz mode with the duty cycle to max value.
+> +	 */
+> +	if (cycle == config->max_duty_cycle) {
+> +		ctrl &= ~PWM_MODE_MASK;
+> +		ctrl |= FIELD_PREP(PWM_MODE_MASK, PWM_MODE_500HZ);
+> +		cycle = PWM_CYCLE_MAX;
+> +	}
+
+This is being executed even when 250Hz mode is not enabled.
+
+Is that by design?  If so, it doesn't match the comment.
+
+> +	ret = regmap_write(spc->regmap, spc->offset + PWM_CTRL, ctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(spc->regmap, spc->offset + PWM_CYCLE, (u8)cycle);
+> +}
+> +
+> +static const struct pwm_ops sl28cpld_pwm_ops = {
+> +	.apply = sl28cpld_pwm_apply,
+> +	.get_state = sl28cpld_pwm_get_state,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int sl28cpld_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct sl28cpld_pwm *pwm;
+
+This is super confusing.  Here you call it 'pwm', but when you bring
+the data to the fore for consumption, you call it something different
+('spc') for some reason.
+
+Is there logic behind this?
+
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+> +	if (!pwm)
+> +		return -ENOMEM;
+> +
+> +	pwm->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!pwm->regmap)
+> +		return -ENODEV;
+> +
+> +	ret = device_property_read_u32(&pdev->dev, "reg", &pwm->offset);
+
+Really?  Can you use the 'reg' property in this way?
+
+Side question:
+  Do any of your child address spaces actually overlap/intersect?
+
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	/* initialize struct pwm_chip */
+
+Proper grammar please.
+
+> +	chip = &pwm->pwm_chip;
+> +	chip->dev = &pdev->dev;
+> +	chip->ops = &sl28cpld_pwm_ops;
+> +	chip->base = -1;
+> +	chip->npwm = 1;
+> +
+> +	ret = pwmchip_add(&pwm->pwm_chip);
+> +	if (ret < 0)
+
+Is '> 0' even valid?
+
+Suggest "!ret" here, as you have done above.
+
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, pwm);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sl28cpld_pwm_remove(struct platform_device *pdev)
+> +{
+> +	struct sl28cpld_pwm *pwm = platform_get_drvdata(pdev);
+> +
+> +	return pwmchip_remove(&pwm->pwm_chip);
+> +}
+> +
+> +static const struct of_device_id sl28cpld_pwm_of_match[] = {
+> +	{ .compatible = "kontron,sl28cpld-pwm" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sl28cpld_pwm_of_match);
+> +
+> +static const struct platform_device_id sl28cpld_pwm_id_table[] = {
+> +	{"sl28cpld-pwm"},
+
+Spaces either side of the "'s please.
+
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, sl28cpld_pwm_id_table);
+
+What are you using this for?
+
+> +static struct platform_driver sl28cpld_pwm_driver = {
+> +	.probe = sl28cpld_pwm_probe,
+> +	.remove	= sl28cpld_pwm_remove,
+> +	.id_table = sl28cpld_pwm_id_table,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+
+Please just use the quoted name in full.
+
+> +		.of_match_table = sl28cpld_pwm_of_match,
+> +	},
+> +};
+> +module_platform_driver(sl28cpld_pwm_driver);
+> +
+> +MODULE_DESCRIPTION("sl28cpld PWM Driver");
+
+"SL28CPLD" ?
+
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
