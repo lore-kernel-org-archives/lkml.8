@@ -2,131 +2,142 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A86AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52AFA207D0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:48:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kG53gJfK"
+	by mail.kernel.org (Postfix) with ESMTP id 273812065C
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgFEMsc (ORCPT
+        id S1726889AbgFEMt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbgFEMsb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:48:31 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2829EC08C5C2;
-        Fri,  5 Jun 2020 05:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+W0k3BgZajHHBqJN7IRx+U2nGAZwZKKC8BfjUAFcIMA=; b=kG53gJfK5kWHtokiyBxfJbTb7v
-        v5xJMhAwcLxLaxyos1C08nBeenVsOEyKQ6HM1vCbCxSd8fQswpm59H0WHRf9V+tgqDYFM+dhemQU1
-        sNWSPO90/4ev/NU8qpRPUz7bisgIm22+Ofsnl6dEu2n7WHaYIfTBQblXb6tP9G5PY2FSonicbr+jP
-        cWrOh2VOgwaxkr7Pr6hfiXMKzyVWJWRTGZBsmWLqE07afy0vc4lUT91n1ML+adFJAKzRjOKTvZSpI
-        6vtM0o/tzVO9JU5IZFClD1STvj85a9/5aB60JqrEurQmzZL202ZxCgPrTU5DExyKe8Hv/TNCx9N5H
-        3a+9Uv9w==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jhBlq-00058s-76; Fri, 05 Jun 2020 12:48:26 +0000
-Date:   Fri, 5 Jun 2020 05:48:26 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Handle I/O errors gracefully in page_mkwrite
-Message-ID: <20200605124826.GF19604@bombadil.infradead.org>
-References: <20200604202340.29170-1-willy@infradead.org>
- <20200604225726.GU2040@dread.disaster.area>
- <20200604230519.GW19604@bombadil.infradead.org>
- <20200604233053.GW2040@dread.disaster.area>
- <20200604235050.GX19604@bombadil.infradead.org>
- <20200605003159.GX2040@dread.disaster.area>
- <20200605022451.GZ19604@bombadil.infradead.org>
- <20200605030758.GB2040@dread.disaster.area>
+        Fri, 5 Jun 2020 08:49:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53850 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbgFEMt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:49:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7335AAD85;
+        Fri,  5 Jun 2020 12:49:30 +0000 (UTC)
+Message-ID: <400023013d9b53b0f4647909387d844f1a959d09.camel@suse.de>
+Subject: Re: [PATCH v3 22/25] clk: bcm: rpi: Give firmware clocks a name
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Fri, 05 Jun 2020 14:49:25 +0200
+In-Reply-To: <135a5d32e42d9a117e264f1f52ac9fb6b9dc20e6.1590594293.git-series.maxime@cerno.tech>
+References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
+         <135a5d32e42d9a117e264f1f52ac9fb6b9dc20e6.1590594293.git-series.maxime@cerno.tech>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-6BoIZ1J7R/yVno28uORR"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605030758.GB2040@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 01:07:58PM +1000, Dave Chinner wrote:
-> On Thu, Jun 04, 2020 at 07:24:51PM -0700, Matthew Wilcox wrote:
-> > On Fri, Jun 05, 2020 at 10:31:59AM +1000, Dave Chinner wrote:
-> > > On Thu, Jun 04, 2020 at 04:50:50PM -0700, Matthew Wilcox wrote:
-> > > > > Sure, but that's not really what I was asking: why isn't this
-> > > > > !uptodate state caught before the page fault code calls
-> > > > > ->page_mkwrite? The page fault code has a reference to the page,
-> > > > > after all, and in a couple of paths it even has the page locked.
-> > > > 
-> > > > If there's already a PTE present, then the page fault code doesn't
-> > > > check the uptodate bit.  Here's the path I'm looking at:
-> > > > 
-> > > > do_wp_page()
-> > > >  -> vm_normal_page()
-> > > >  -> wp_page_shared()
-> > > >      -> do_page_mkwrite()
-> > > > 
-> > > > I don't see anything in there that checked Uptodate.
-> > > 
-> > > Yup, exactly the code I was looking at when I asked this question.
-> > > The kernel has invalidated the contents of a page, yet we still have
-> > > it mapped into userspace as containing valid contents, and we don't
-> > > check it at all when userspace generates a protection fault on the
-> > > page?
-> > 
-> > Right.  The iomap error path only clears PageUptodate.  It doesn't go
-> > to the effort of unmapping the page from userspace, so userspace has a
-> > read-only view of a !Uptodate page.
-> 
-> Hmmm - did you miss the ->discard_page() callout just before we call
-> ClearPageUptodate() on error in iomap_writepage_map()? That results
-> in XFS calling iomap_invalidatepage() on the page, which ....
 
-... I don't think that's the interesting path.  I mean, that's
-the submission path, and usually we discover errors in the completion
-path, not the submission path.
+--=-6BoIZ1J7R/yVno28uORR
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> /me sighs as he realises that ->invalidatepage doesn't actually
-> invalidate page mappings but only clears the page dirty state and
-> releases filesystem references to the page.
-> 
-> Yay. We leave -invalidated page cache pages- mapped into userspace,
-> and page faults on those pages don't catch access to invalidated
-> pages.
+On Wed, 2020-05-27 at 17:45 +0200, Maxime Ripard wrote:
+> We've registered the firmware clocks using their ID as name, but it's muc=
+h
+> more convenient to register them using their proper name. Since the
+> firmware doesn't provide it, we have to duplicate it.
+>=20
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  drivers/clk/bcm/clk-raspberrypi.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-
+> raspberrypi.c
+> index 8d3acf3ee053..cee634cb5323 100644
+> --- a/drivers/clk/bcm/clk-raspberrypi.c
+> +++ b/drivers/clk/bcm/clk-raspberrypi.c
+> @@ -36,6 +36,23 @@ enum rpi_firmware_clk_id {
+>  	RPI_FIRMWARE_NUM_CLK_ID,
+>  };
+> =20
+> +static char *rpi_firmware_clk_names[] =3D {
+> +	[RPI_FIRMWARE_EMMC_CLK_ID]	=3D "emmc",
+> +	[RPI_FIRMWARE_UART_CLK_ID]	=3D "uart",
+> +	[RPI_FIRMWARE_ARM_CLK_ID]	=3D "arm",
+> +	[RPI_FIRMWARE_CORE_CLK_ID]	=3D "core",
+> +	[RPI_FIRMWARE_V3D_CLK_ID]	=3D "v3d",
+> +	[RPI_FIRMWARE_H264_CLK_ID]	=3D "h264",
+> +	[RPI_FIRMWARE_ISP_CLK_ID]	=3D "isp",
+> +	[RPI_FIRMWARE_SDRAM_CLK_ID]	=3D "sdram",
+> +	[RPI_FIRMWARE_PIXEL_CLK_ID]	=3D "pixel",
+> +	[RPI_FIRMWARE_PWM_CLK_ID]	=3D "pwm",
+> +	[RPI_FIRMWARE_HEVC_CLK_ID]	=3D "hevc",
+> +	[RPI_FIRMWARE_EMMC2_CLK_ID]	=3D "emmc2",
+> +	[RPI_FIRMWARE_M2MC_CLK_ID]	=3D "m2mc",
+> +	[RPI_FIRMWARE_PIXEL_BVB_CLK_ID]	=3D "pixel-bvb",
+> +};
+> +
+>  #define RPI_FIRMWARE_STATE_ENABLE_BIT	BIT(0)
+>  #define RPI_FIRMWARE_STATE_WAIT_BIT	BIT(1)
+> =20
+> @@ -343,7 +360,9 @@ static struct clk_hw *raspberrypi_clk_register(struct
+> raspberrypi_clk *rpi,
+>  	data->rpi =3D rpi;
+>  	data->id =3D id;
+> =20
+> -	init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL, "fw-clk-%u", id);
+> +	init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL,
+> +				   "fw-clk-%s",
+> +				   rpi_firmware_clk_names[id]);
+>  	init.ops =3D &raspberrypi_firmware_clk_ops;
+>  	init.flags =3D CLK_GET_RATE_NOCACHE;
+> =20
+> @@ -367,8 +386,8 @@ static struct clk_hw *raspberrypi_clk_register(struct
+> raspberrypi_clk *rpi,
+>  		return ERR_PTR(ret);
+>  	}
+> =20
+> -	dev_info(rpi->dev, "Clock %d frequency range: min %u, max %u\n",
+> -		 id, min_rate, max_rate);
+> +	dev_info(rpi->dev, "Clock %s frequency range: min %u, max %u\n",
+> +		 rpi_firmware_clk_names[id], min_rate, max_rate);
 
-More than that ... by clearing Uptodate, you're trying to prevent
-future reads to this page from succeeding without verifying the data
-is still on storage, but a task that had it mapped before can still
-load the data that was written but never made it to storage.
-So at some point it'll teleport backwards when another task has a
-successful read().  Funfunfun.
+I belive this might change. Otherwise:
 
-> Geez, we really suck at this whole software thing, don't we?
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Certainly at handling errors ...
+Regards,
+Nicolas
 
-> It's not clear to me that we can actually unmap those pages safely
-> in a race free manner from this code - can we actually do that from
-> the page writeback path?
 
-I don't see why it can't be done from the submission path.
-unmap_mapping_range() calls i_mmap_lock_write(), which is
-down_write(i_mmap_rwsem) in drag.  There might be a lock ordering
-issue there, although lockdep should find it pretty quickly.
+--=-6BoIZ1J7R/yVno28uORR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-The bigger problem is the completion path.  We're in softirq context,
-so that will have to punt to a thread that can take mutexes.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7aP1UACgkQlfZmHno8
+x/4I8wf+NnWnFjJw0qH9nDGFXtvQQsS46VYH+/3Yq9GiuXvy1QwmQT9m2+ccW6CJ
+tMMkIsE2hJLoi4gO9EZSN5JV1lH0Og/xPxdNmyCn9sGFTIkFIDdM8QMHktC0V79k
+wsyq5qNw3WgywB8l9k8EyFls41sLxhi53tI9Qt/DXW7cNr2sx164JVgPCwc4wlO5
+WS+5CKWxhQPhLmWWpl0YzB3SnRMQROvu536EDJnjcrf7Y+j8du492UUqLylmIaNz
+QkEoR5YInC/jxgdx9o09Jp46D13Exf6frU6vS18ic792fDX4AWhqVMocjdjNcW+K
+xE8gA09s5OQ9+K+olo6lL0HBuQtD0Q==
+=UER2
+-----END PGP SIGNATURE-----
+
+--=-6BoIZ1J7R/yVno28uORR--
+
