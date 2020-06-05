@@ -2,34 +2,34 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0D4C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8B4C433DF
 	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFA2207F9
+	by mail.kernel.org (Postfix) with ESMTP id 6CBA02074B
 	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 23:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgFEXm0 (ORCPT
+        id S1728533AbgFEXmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 19:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 19:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbgFEXmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728314AbgFEXmX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 5 Jun 2020 19:42:23 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DEB8207D8;
-        Fri,  5 Jun 2020 23:42:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD2A9206E6;
+        Fri,  5 Jun 2020 23:42:22 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jhLyg-002sBt-9U; Fri, 05 Jun 2020 19:42:22 -0400
-Message-ID: <20200605234222.155657946@goodmis.org>
+        id 1jhLyf-002sAG-QK; Fri, 05 Jun 2020 19:42:21 -0400
+Message-ID: <20200605234149.965509211@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Fri, 05 Jun 2020 19:41:52 -0400
+Date:   Fri, 05 Jun 2020 19:41:49 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -39,55 +39,76 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Kacur <jkacur@redhat.com>, Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
         "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: [PATCH RT 3/8] Revert "rt: Improve the serial console PASS_LIMIT"
-References: <20200605234149.965509211@goodmis.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH RT 0/8] Linux 5.4.44-rt27-rc1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.4.44-rt27-rc1 stable review patch.
-If anyone has any objections, please let me know.
 
-------------------
+Dear RT Folks,
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+This is the RT stable review cycle of patch 5.4.44-rt27-rc1.
 
-There is no need to loop for longer. The message of too much work was
-removed in commit
-    9d7c249a1ef9b ("serial: 8250: drop the printk from serial8250_interrupt()")
+Please scream at me if I messed something up. Please test the patches too.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+The -rc release will be uploaded to kernel.org and will be deleted when
+the final release is out. This is just a review release (or release candidate).
+
+The pre-releases will not be pushed to the git repository, only the
+final release is.
+
+If all goes well, this patch will be converted to the next main release
+on 6/9/2020.
+
+Enjoy,
+
+-- Steve
+
+
+To build 5.4.44-rt27-rc1 directly, the following patches should be applied:
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.44.xz
+
+  http://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.44-rt27-rc1.patch.xz
+
+You can also build from 5.4.44-rt26 by applying the incremental patch:
+
+http://www.kernel.org/pub/linux/kernel/projects/rt/5.4/incr/patch-5.4.44-rt26-rt27-rc1.patch.xz
+
+
+Changes from 5.4.44-rt26:
+
 ---
+
+
+John Ogness (1):
+      printk: console must not schedule for drivers
+
+Kevin Hao (1):
+      mm: slub: Always flush the delayed empty slubs in flush_all()
+
+Liwei Song (1):
+      mm: Don't warn about atomic memory allocations during suspend
+
+Sebastian Andrzej Siewior (3):
+      fs/dcache: Include swait.h header
+      Revert "rt: Improve the serial console PASS_LIMIT"
+      mm/zswap: Use local lock to protect per-CPU data
+
+Steven Rostedt (VMware) (1):
+      Linux 5.4.44-rt27-rc1
+
+汪勇10269566 (1):
+      printk: Force a line break on pr_cont(" ")
+
+----
  drivers/tty/serial/8250/8250_core.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
-
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index 809a65f68028..02bfafa8a672 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -55,16 +55,7 @@ static struct uart_driver serial8250_reg;
- 
- static unsigned int skip_txen_test; /* force skip of txen test at init time */
- 
--/*
-- * On -rt we can have a more delays, and legitimately
-- * so - so don't drop work spuriously and spam the
-- * syslog:
-- */
--#ifdef CONFIG_PREEMPT_RT
--# define PASS_LIMIT	1000000
--#else
--# define PASS_LIMIT	512
--#endif
-+#define PASS_LIMIT	512
- 
- #include <asm/serial.h>
- /*
--- 
-2.26.2
-
-
+ fs/proc/base.c                      |  1 +
+ kernel/printk/printk.c              |  2 ++
+ localversion-rt                     |  2 +-
+ mm/slub.c                           | 11 +++++------
+ mm/zswap.c                          | 21 ++++++++++++---------
+ 6 files changed, 22 insertions(+), 26 deletions(-)
