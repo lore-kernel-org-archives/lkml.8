@@ -2,92 +2,91 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56904C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D07CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3650D2074B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18119206E6
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 11:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgFELgB (ORCPT
+        id S1726429AbgFELhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 07:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgFELgB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 07:36:01 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F07C08C5C2;
-        Fri,  5 Jun 2020 04:36:01 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 820A0300020B3;
-        Fri,  5 Jun 2020 13:35:59 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 5361E2913BD; Fri,  5 Jun 2020 13:35:59 +0200 (CEST)
-Date:   Fri, 5 Jun 2020 13:35:59 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 3/3] spi: bcm2835: Enable shared interrupt support
-Message-ID: <20200605113559.oia5xmc2r5n7e2fd@wunner.de>
+        Fri, 5 Jun 2020 07:37:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35686 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbgFELhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 07:37:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1854AAD76;
+        Fri,  5 Jun 2020 11:37:03 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 13:36:58 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     "chengjian (D)" <cj.chengjian@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, chenwandun@huawei.com,
+        xiexiuqi@huawei.com, bobo.shaobowang@huawei.com,
+        huawei.libin@huawei.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org
+Subject: Re: [RFC PATCH] panic: fix deadlock in panic()
+Message-ID: <20200605113658.GL22497@linux-b0ei>
+References: <20200603141915.38739-1-cj.chengjian@huawei.com>
+ <20200604082947.GB22497@linux-b0ei>
+ <7b6f8522-f9b2-29e8-2dde-3bbfac19335b@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <21772111-fa1f-7a50-aa92-e44b09cff4eb@gmail.com>
- <8c8d6007-e4c6-8484-9d40-3b679842be27@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <7b6f8522-f9b2-29e8-2dde-3bbfac19335b@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 01:24:54PM -0700, Florian Fainelli wrote:
-> So we do need to know for the first time we install the interrupt
-> handler whether we will be in a shared situation or not, I cannot think
-> of any solution other than counting the number of available DT nodes
-> with the "brcm,bcm2835-spi" compatible string.
+On Fri 2020-06-05 18:42:57, chengjian (D) wrote:
+> Hi, Petr
+> 
+> On 2020/6/4 16:29, Petr Mladek wrote:
+> 
+> > It might cause double unlock (deadlock) on architectures that did not
+> > use NMI to stop the CPUs.
+> > 
+> > I have created a conservative fix for this problem for SLES, see
+> > https://github.com/openSUSE/kernel-source/blob/SLE15-SP2-UPDATE/patches.suse/printk-panic-Avoid-deadlock-in-printk-after-stopping-CPUs-by-NMI.patch
+> > It solves the problem only on x86 architecture.
+> > 
+> > There are many hacks that try to solve various scenarios but it
+> > is getting too complicated and does not solve all problems.
+> 
+> I have read your conservative fix and I have some question,
+> 
+> 1-- does the console_sem need to be reinitialized ?
 
-In principle it would be possible to iterate over the entire DT using
-for_each_of_allnodes() and call of_irq_parse_one() on each device_node
-if it's enabled and not the one we're probing.  Then check if any of that
-device_node's IRQs is identical to that of the device_node we're probing.
-That would give you a generic method to test for sharedness of an
-interrupt.
+No, it is not needed:
 
-However the solution you've found is simpler and cheaper than such a
-brute-force search, hence seems perfectly valid to me.
+  + printk() itself does try_lock() and skips console handling when the
+    semaphore is not available.
+
+  + panic() tries to push the messages later in console_flush_on_panic().
+    It ignores the semaphore. Also most console drivers ignore their
+    internal locks because oops_in_progress is set by bust_spinlocks().
 
 
-> I appreciate that
-> Lukas has spent some tremendous amount of time working on this
-> controller driver and he has a sensitivity for performance.
+> 2-- Other architectures without NMI, is there no such problem ?
 
-Thanks!  Indeed I think spi-bcm2835.c is by now among the best performing
-and most featureful SPI drivers in the kernel.  I've recently had a
-discussion on netdev with someone testing an SPI-attached Ethernet
-chip on iMX6Q and on STM32MP1 and couldn't get it to work.
-With a BCM2837 no problem at all:
+The situation is more complicated when NMI is not used. Non-stopped
+CPUs are in unknown state, most likely in a busy loop. Nobody knows
+whether printk() is repeatedly called in the loop. When it was called,
+re-initializing any lock would cause double unlock and deadlock.
 
-https://lore.kernel.org/netdev/ac0f7227-a4ae-b6cd-36ec-3bcb02b1adbe@denx.de/
+It would be possible to add some more hacks. One problem is that
+there are two groups of users. One prefer to risk a deadlock and
+have a chance to see the messages. Others prefer to always
+reach emergency_restart() and reboot the machine.
 
-Lukas
+This is one big motivation for working on lockless printk().
+
+Best Regards,
+Petr
