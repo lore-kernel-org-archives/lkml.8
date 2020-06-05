@@ -2,127 +2,146 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5405EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 243C120738
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591329970;
-	bh=C9y2n9lFDA6FBJxdno1XJNGe5jOYfBYcSITJkIxJtYo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TKWDdo1fVmcApUwnnLrTIxL1Kyr6oKLJPN/K2Z7ec7lOvJoCjaG3JtN8sXKliiYu5
-	 zhzkhVE7z2kgFqgczKSBbhCHCxTUKK1mHYHzm26ZkNvvup8ti88K2hYSeyvgRvZx8C
-	 h50wM2In6sqhZXu609e7UEjSXauAGNhW02Rv9HP8=
+	by mail.kernel.org (Postfix) with ESMTP id 34B4820738
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 04:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgFEEGJ (ORCPT
+        id S1726151AbgFEEHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 00:06:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbgFEEGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 00:06:08 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 707BD20738;
-        Fri,  5 Jun 2020 04:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591329967;
-        bh=C9y2n9lFDA6FBJxdno1XJNGe5jOYfBYcSITJkIxJtYo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1r4NSGDSyOrLnpclI3deDQihcLGg6oWadLtmlEc/solN908H2EKx2JqcsZ09Vzkr+
-         dK407a9jccUE7dQrM2nI4qXm1BxPgvDyiiU/fAvxzfCd3ziFRSbOddwYJeW+rzfYDH
-         fa1SCDfd8TYPMPncDNs3+5Df4u67HeKcz8ZMorpg=
-Date:   Thu, 4 Jun 2020 21:06:06 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+9e0b179ae55eaf7a307a@syzkaller.appspotmail.com>
-Cc:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: using smp_processor_id() in preemptible code in
- debug_smp_processor_id
-Message-ID: <20200605040606.GC2667@sol.localdomain>
-References: <000000000000c4abec05a7432666@google.com>
+        Fri, 5 Jun 2020 00:07:51 -0400
+Received: from smtprelay0145.hostedemail.com ([216.40.44.145]:40948 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726022AbgFEEHu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 00:07:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 46926180A9558;
+        Fri,  5 Jun 2020 04:07:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: aunt58_4302bd226d9d
+X-Filterd-Recvd-Size: 4478
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  5 Jun 2020 04:07:47 +0000 (UTC)
+Message-ID: <2f93895709e5837c3b6f38a753057505a9d48ac4.camel@perches.com>
+Subject: Re: [PATCH] pwm: Add missing "CONFIG_" prefix
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Date:   Thu, 04 Jun 2020 21:07:46 -0700
+In-Reply-To: <202006041451.19491ECA@keescook>
+References: <202006031539.4198EA6@keescook>
+         <b08611018fdb6d88757c6008a5c02fa0e07b32fb.camel@perches.com>
+         <202006041451.19491ECA@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000c4abec05a7432666@google.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 07:42:18AM -0700, syzbot wrote:
-> Hello,
+On Thu, 2020-06-04 at 14:52 -0700, Kees Cook wrote:
+> On Wed, Jun 03, 2020 at 04:04:31PM -0700, Joe Perches wrote:
+> > On Wed, 2020-06-03 at 15:40 -0700, Kees Cook wrote:
+> > > The IS_ENABLED() use was missing the CONFIG_ prefix which would have
+> > > lead to skipping this code.
+> > > 
+> > > Fixes: 3ad1f3a33286 ("pwm: Implement some checks for lowlevel drivers")
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  drivers/pwm/core.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > > index 9973c442b455..6b3cbc0490c6 100644
+> > > --- a/drivers/pwm/core.c
+> > > +++ b/drivers/pwm/core.c
+> > > @@ -121,7 +121,7 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
+> > >  		pwm->chip->ops->get_state(pwm->chip, pwm, &pwm->state);
+> > >  		trace_pwm_get(pwm, &pwm->state);
+> > >  
+> > > -		if (IS_ENABLED(PWM_DEBUG))
+> > > +		if (IS_ENABLED(CONFIG_PWM_DEBUG))
+> > >  			pwm->last = pwm->state;
+> > >  	}
+> > >  
+> > > -- 
+> > > 2.25.1
+> > > 
+> > 
+> > more odd uses (mostly in comments)
+> > 
+> > $ git grep -P -oh '\bIS_ENABLED\s*\(\s*\w+\s*\)'| \
+> >   sed -r 's/\s+//g'| \
+> >   grep -v '(CONFIG_' | \
+> >   sort | uniq -c | sort -rn
+> >       7 IS_ENABLED(DEBUG)
+> >       4 IS_ENABLED(DRM_I915_SELFTEST)
+> >       4 IS_ENABLED(cfg)
+> >       2 IS_ENABLED(opt_name)
+> >       2 IS_ENABLED(DEBUG_PRINT_TRIE_GRAPHVIZ)
+> >       2 IS_ENABLED(config)
+> >       2 IS_ENABLED(cond)
+> >       2 IS_ENABLED(__BIG_ENDIAN)
+> >       1 IS_ENABLED(x)
+> >       1 IS_ENABLED(STRICT_KERNEL_RWX)
+> >       1 IS_ENABLED(PWM_DEBUG)
+> >       1 IS_ENABLED(option)
+> >       1 IS_ENABLED(ETHTOOL_NETLINK)
+> >       1 IS_ENABLED(DEBUG_RANDOM_TRIE)
+> >       1 IS_ENABLED(DEBUG_CHACHA20POLY1305_SLOW_CHUNK_TEST)
+> > 
+> > STRICT_KERNEL_RWX is misused here in ppc
+> > 
+> > ---
+> > 
+> > Fix pr_warn without newline too.
+> > 
+> >  arch/powerpc/mm/book3s64/hash_utils.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+> > index 51e3c15f7aff..dd60c5f2b991 100644
+> > --- a/arch/powerpc/mm/book3s64/hash_utils.c
+> > +++ b/arch/powerpc/mm/book3s64/hash_utils.c
+> > @@ -660,11 +660,10 @@ static void __init htab_init_page_sizes(void)
+> >  		 * Pick a size for the linear mapping. Currently, we only
+> >  		 * support 16M, 1M and 4K which is the default
+> >  		 */
+> > -		if (IS_ENABLED(STRICT_KERNEL_RWX) &&
+> > +		if (IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) &&
+> >  		    (unsigned long)_stext % 0x1000000) {
+> >  			if (mmu_psize_defs[MMU_PAGE_16M].shift)
+> > -				pr_warn("Kernel not 16M aligned, "
+> > -					"disabling 16M linear map alignment");
+> > +				pr_warn("Kernel not 16M aligned, disabling 16M linear map alignment\n");
+> >  			aligned = false;
+> >  		}
 > 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    065fcfd4 selftests: net: ip_defrag: ignore EPERM
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15c3e516100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d89141553e61b775
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9e0b179ae55eaf7a307a
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131b5cf2100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176dfcf2100000
-> 
-> The bug was bisected to:
-> 
-> commit e42671084361302141a09284fde9bbc14fdd16bf
-> Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Date:   Thu May 7 12:53:06 2020 +0000
-> 
->     net: qrtr: Do not depend on ARCH_QCOM
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1295eb91100000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1195eb91100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1695eb91100000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+9e0b179ae55eaf7a307a@syzkaller.appspotmail.com
-> Fixes: e42671084361 ("net: qrtr: Do not depend on ARCH_QCOM")
-> 
-> RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000004
-> RBP: 00000000006cb018 R08: 0000000000000001 R09: 00000000004002c8
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401e90
-> R13: 0000000000401f20 R14: 0000000000000000 R15: 0000000000000000
-> BUG: using smp_processor_id() in preemptible [00000000] code: syz-executor013/7182
-> caller is radix_tree_node_alloc.constprop.0+0x200/0x330 lib/radix-tree.c:264
-> CPU: 0 PID: 7182 Comm: syz-executor013 Not tainted 5.7.0-rc7-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  check_preemption_disabled lib/smp_processor_id.c:47 [inline]
->  debug_smp_processor_id.cold+0x88/0x9b lib/smp_processor_id.c:57
->  radix_tree_node_alloc.constprop.0+0x200/0x330 lib/radix-tree.c:264
->  radix_tree_extend+0x234/0x4a0 lib/radix-tree.c:426
->  idr_get_free+0x60c/0x8e0 lib/radix-tree.c:1494
->  idr_alloc_u32+0x170/0x2d0 lib/idr.c:46
->  idr_alloc+0xc2/0x130 lib/idr.c:87
->  qrtr_port_assign net/qrtr/qrtr.c:703 [inline]
->  __qrtr_bind.isra.0+0x12e/0x5c0 net/qrtr/qrtr.c:756
->  qrtr_autobind net/qrtr/qrtr.c:787 [inline]
->  qrtr_autobind+0xaf/0xf0 net/qrtr/qrtr.c:775
->  qrtr_sendmsg+0x1d6/0x770 net/qrtr/qrtr.c:895
->  sock_sendmsg_nosec net/socket.c:652 [inline]
->  sock_sendmsg+0xcf/0x120 net/socket.c:672
->  ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
->  ___sys_sendmsg+0x100/0x170 net/socket.c:2406
->  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x4405a9
-> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffe905331b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: ffffffffffffffda RBX: 00000000004a1bd8 RCX: 00000000004405a9
-> RDX: 0000000000000000 RSI: 00000000
+> Joe, I was going to send all of the fixes for these issues, but your
+> patch doesn't have a SoB. Shall I add one for the above patch?
 
-#syz dup: BUG: using smp_processor_id() in preemptible code in radix_tree_node_alloc
+<shrug> sure if you want, or submit it yourself.
 
-See discussion at https://lkml.kernel.org/lkml/000000000000a363b205a74ca6a2@google.com/T/#u
+My feeling about these types of changes is the maintainers
+of the subsystems, in this case ppc, should manage this
+themselves and shouldn't require anyone else to actually
+bother to send real patches.
+
+
