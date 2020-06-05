@@ -2,75 +2,106 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A080EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65045C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71F39207D0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591353866;
-	bh=zq0dLpWeux6wGCdLIRjeW49wWf65BJVsXb+ImWJe0Y4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vfAV4FmOfEJZBthMahJXUz/EermnPArfxGXcpJa5w+zd/lk5bd/S+S/pqh+ukSxTO
-	 SGS6sP4krKDzwSWlDADsmtCQqYaGZSuy02LCU4QrLvnC8CesKZDtLgsia9DV0engc+
-	 4bZRJK5Bkjtaxw3ffsHXwEJ44KfWH+k+e61XAg1c=
+	by mail.kernel.org (Postfix) with ESMTP id 450C32075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 10:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgFEKoZ (ORCPT
+        id S1726744AbgFEKpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 06:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47142 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 06:45:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:53494 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgFEKoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 06:44:25 -0400
-Received: from linux-8ccs (p57a23121.dip0.t-ipconnect.de [87.162.49.33])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E1692075B;
-        Fri,  5 Jun 2020 10:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591353865;
-        bh=zq0dLpWeux6wGCdLIRjeW49wWf65BJVsXb+ImWJe0Y4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zLDyNKt2wA2sIILms0TpT1ELfdaj00VWXxueBEwXnmGars3JRPdiOUE4URHVbFNfU
-         CLx8MHL9TGKfUrL6r/cWR1i9yMldygv9Ak9NQOv/ABauMNqFhbXmlPbnSdi2PzOKD6
-         1XIkrFZzXImQsTchjpfdfkdmRI2Yk4XRlXqlxfJA=
-Date:   Fri, 5 Jun 2020 12:44:21 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Anatoly Pugachev <matorola@gmail.com>
-Cc:     Linux Kernel list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: Re: unable to compile after "module: Make module_enable_ro() static
- again"
-Message-ID: <20200605104421.GC24474@linux-8ccs>
-References: <CADxRZqwxxvxo_JhtDVX7ke09tVDOW-d6dz4bw1OVhHETnrE+mQ@mail.gmail.com>
+        id S1726465AbgFEKpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 06:45:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBB442B;
+        Fri,  5 Jun 2020 03:45:22 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C1303F52E;
+        Fri,  5 Jun 2020 03:45:20 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 11:45:17 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200605104517.r65dqhzavnnrnfb2@e107158-lin.cambridge.arm.com>
+References: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+ <20200529100806.GA3070@suse.de>
+ <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
+ <87v9k84knx.derkling@matbug.net>
+ <20200603101022.GG3070@suse.de>
+ <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
+ <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com>
+ <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CADxRZqwxxvxo_JhtDVX7ke09tVDOW-d6dz4bw1OVhHETnrE+mQ@mail.gmail.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Anatoly Pugachev [05/06/20 13:21 +0300]:
->Hello!
->
->i'm unable to compile kernel on debian sid/unstable (tested on sparc64
->and ppc64) after commit e6eff4376e2897c2e14b70d87bf7284cdb093830
+On 06/04/20 14:14, Vincent Guittot wrote:
+> I have tried your patch and I don't see any difference compared to
+> previous tests. Let me give you more details of my setup:
+> I create 3 levels of cgroups and usually run the tests in the 4 levels
+> (which includes root). The result above are for the root level
+> 
+> But I see a difference at other levels:
+> 
+>                            root           level 1       level 2       level 3
+> 
+> /w patch uclamp disable     50097         46615         43806         41078
+> tip uclamp enable           48706(-2.78%) 45583(-2.21%) 42851(-2.18%)
+> 40313(-1.86%)
+> /w patch uclamp enable      48882(-2.43%) 45774(-1.80%) 43108(-1.59%)
+> 40667(-1.00%)
+> 
+> Whereas tip with uclamp stays around 2% behind tip without uclamp, the
+> diff of uclamp with your patch tends to decrease when we increase the
+> number of level
 
-There are some module changes that still need to be merged that should
-fix this issue. Please wait until after the merge window or at least
-until after the following pull request gets merged into mainline:
+Thanks for the extra info. Let me try this.
 
-    https://lore.kernel.org/r/20200605093354.GA23721@linux-8ccs.fritz.box
+If you can run perf and verify that you see activate/deactivate_task showing up
+as overhead I'd appreciate it. Just to confirm that indeed what we're seeing
+here are symptoms of the same problem Mel is seeing.
 
-Thanks, and apologies for the inconvenience,
+> Beside this, that's also interesting to notice the ~6% of perf impact
+> between each level for the same image
 
-Jessica
+Interesting indeed.
+
+Thanks
+
+--
+Qais Yousef
