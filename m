@@ -2,225 +2,176 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A93C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1927C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2402207D3
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12F1207F7
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 05:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgFEFBA (ORCPT
+        id S1726112AbgFEFJ0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 01:01:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:51777 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbgFEFA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 01:00:59 -0400
-IronPort-SDR: 6i/DvY34nhiow8PBjqidsyf4LC1He06SSXVlt6Vu6BwS32Tw2KBRn1oRwdhJfaMN/807d7Gm5g
- lg5pF+/QWtYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 22:00:58 -0700
-IronPort-SDR: KTmbzwYRqU1143COmUSMc9+OGMtwL3lsPG0+NcNGGyVs3xfGObUzjSMCKihL7MdI/OF0qBWxY8
- ZaKijs/d9awA==
-X-IronPort-AV: E=Sophos;i="5.73,475,1583222400"; 
-   d="scan'208";a="471784741"
-Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 22:00:55 -0700
-Subject: Re: [PATCH][v6] KVM: X86: support APERF/MPERF registers
-To:     Li RongQing <lirongqing@baidu.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, x86@kernel.org, hpa@zytor.com, bp@alien8.de,
-        mingo@redhat.com, tglx@linutronix.de, jmattson@google.com,
-        wanpengli@tencent.com, vkuznets@redhat.com,
-        sean.j.christopherson@intel.com, pbonzini@redhat.com,
-        wei.huang2@amd.com
-References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <b70d03dd-947f-dee5-5499-3b381372497d@intel.com>
-Date:   Fri, 5 Jun 2020 13:00:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 5 Jun 2020 01:09:26 -0400
+Received: from smtp180.sjtu.edu.cn ([202.120.2.180]:42920 "EHLO
+        smtp180.sjtu.edu.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgFEFJ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 01:09:26 -0400
+Received: from proxy01.sjtu.edu.cn (smtp185.sjtu.edu.cn [202.120.2.185])
+        by smtp180.sjtu.edu.cn (Postfix) with ESMTPS id 7E3DA1008CA2F;
+        Fri,  5 Jun 2020 13:09:22 +0800 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by proxy01.sjtu.edu.cn (Postfix) with ESMTP id 6F64220426A48;
+        Fri,  5 Jun 2020 13:09:22 +0800 (CST)
+X-Virus-Scanned: amavisd-new at proxy01.sjtu.edu.cn
+Received: from proxy01.sjtu.edu.cn ([127.0.0.1])
+        by localhost (proxy01.sjtu.edu.cn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id dMvMIeiIXkov; Fri,  5 Jun 2020 13:09:22 +0800 (CST)
+Received: from fans-air.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+        (Authenticated sender: Fan_Yang@sjtu.edu.cn)
+        by proxy01.sjtu.edu.cn (Postfix) with ESMTPSA id 80AD220426998;
+        Fri,  5 Jun 2020 13:09:15 +0800 (CST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v3] mm: Fix mremap not considering huge pmd devmap
+From:   Fan Yang <Fan_Yang@sjtu.edu.cn>
+In-Reply-To: <1591295025-1080-1-git-send-email-akaher@vmware.com>
+Date:   Fri, 5 Jun 2020 13:09:15 +0800
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        gregkh@linuxfoundation.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu
+Content-Transfer-Encoding: 8BIT
+Message-Id: <B9824572-C3C0-4D3B-88B8-D3A34D645653@sjtu.edu.cn>
+References: <FB4049FE-AC4A-4B13-B39D-B96393EFCCB8@sjtu.edu.cn>
+ <1591295025-1080-1-git-send-email-akaher@vmware.com>
+To:     Ajay Kaher <akaher@vmware.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/2020 9:44 AM, Li RongQing wrote:
-> Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
-> this is confused to user when turbo is enable, and aperf/mperf
-> can be used to show current cpu frequency after 7d5905dc14a
-> "(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
-> so guest should support aperf/mperf capability
+Hi Ajay,
+
+> On Jun 5, 2020 at 02:23，Ajay Kaher <akaher@vmware.com> wrote：
 > 
-> This patch implements aperf/mperf by three mode: none, software
-> emulation, and pass-through
+> So, v4.9.y should be vulnerable, however not able to reproduce on v4.9.y.
+> Does any specific scenerio need to test for v4.9.y?
 > 
-> None: default mode, guest does not support aperf/mperf
+> For v4.9, modified test program as MAP_SHARED_VALIDATE is not available:
+> - return mmap(NULL, REGION_PM_SIZE, PROT, MAP_SHARED_VALIDATE|MAP_SYNC,
+> + return mmap(NULL, REGION_PM_SIZE, PROT, MAP_SHARED|MAP_SYNC,
 > 
-> Software emulation: the period of aperf/mperf in guest mode are
-> accumulated as emulated value
+> Let me know if I need to test some other way for v4.9.y.
 > 
-> Pass-though: it is only suitable for KVM_HINTS_REALTIME, Because
-> that hint guarantees we have a 1:1 vCPU:CPU binding and guaranteed
-> no over-commit.
-> 
-> And a per-VM capability is added to configure aperfmperf mode
-> 
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
-> Signed-off-by: Chai Wen <chaiwen@baidu.com>
-> Signed-off-by: Jia Lina <jialina01@baidu.com>
-> ---
-> diff v5:
-> return error if guest is configured with mperf/aperf, but host cpu has not
-> 
-> diff v4:
-> fix maybe-uninitialized warning
-> 
-> diff v3:
-> fix interception of MSR_IA32_MPERF/APERF in svm
-> 
-> diff v2:
-> support aperfmperf pass though
-> move common codes to kvm_get_msr_common
-> 
-> diff v1:
-> 1. support AMD, but not test
-> 2. support per-vm capability to enable
-> 
-> 
->   Documentation/virt/kvm/api.rst  | 10 ++++++++++
->   arch/x86/include/asm/kvm_host.h | 11 +++++++++++
->   arch/x86/kvm/cpuid.c            | 15 ++++++++++++++-
->   arch/x86/kvm/svm/svm.c          |  8 ++++++++
->   arch/x86/kvm/vmx/vmx.c          |  6 ++++++
->   arch/x86/kvm/x86.c              | 42 +++++++++++++++++++++++++++++++++++++++++
->   arch/x86/kvm/x86.h              | 15 +++++++++++++++
->   include/uapi/linux/kvm.h        |  1 +
->   8 files changed, 107 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index d871dacb984e..f854f4da6fd8 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -6126,3 +6126,13 @@ KVM can therefore start protected VMs.
->   This capability governs the KVM_S390_PV_COMMAND ioctl and the
->   KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
->   guests when the state change is invalid.
-> +
-> +8.23 KVM_CAP_APERFMPERF
-> +----------------------------
-> +
-> +:Architectures: x86
-> +:Parameters: args[0] is aperfmperf mode;
-> +             0 for not support, 1 for software emulation, 2 for pass-through
-> +:Returns: 0 on success; -1 on error
-> +
-> +This capability indicates that KVM supports APERF and MPERF MSR registers
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index fd78bd44b2d6..14643f8af9c4 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -824,6 +824,9 @@ struct kvm_vcpu_arch {
->   
->   	/* AMD MSRC001_0015 Hardware Configuration */
->   	u64 msr_hwcr;
-> +
-> +	u64 v_mperf;
-> +	u64 v_aperf;
->   };
->   
->   struct kvm_lpage_info {
-> @@ -889,6 +892,12 @@ enum kvm_irqchip_mode {
->   	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
->   };
->   
-> +enum kvm_aperfmperf_mode {
-> +	KVM_APERFMPERF_NONE,
-> +	KVM_APERFMPERF_SOFT,      /* software emulate aperfmperf */
-> +	KVM_APERFMPERF_PT,        /* pass-through aperfmperf to guest */
-> +};
-> +
->   #define APICV_INHIBIT_REASON_DISABLE    0
->   #define APICV_INHIBIT_REASON_HYPERV     1
->   #define APICV_INHIBIT_REASON_NESTED     2
-> @@ -986,6 +995,8 @@ struct kvm_arch {
->   
->   	struct kvm_pmu_event_filter *pmu_event_filter;
->   	struct task_struct *nx_lpage_recovery_thread;
-> +
-> +	enum kvm_aperfmperf_mode aperfmperf_mode;
->   };
->   
->   struct kvm_vm_stat {
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index cd708b0b460a..80f18b29a845 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -122,6 +122,16 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->   					   MSR_IA32_MISC_ENABLE_MWAIT);
->   	}
->   
-> +	best = kvm_find_cpuid_entry(vcpu, 6, 0);
-> +	if (best) {
-> +		if (guest_has_aperfmperf(vcpu->kvm)) {
-> +			if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
-> +				return -EINVAL;
 
-kvm_vm_ioctl_enable_cap() ensures that guest_has_aperfmperf() always 
-aligns with boot_cpu_has(X86_FEATURE_APERFMPERF). So above is unnecessary.
+I further looked into this.  In v4.9, fsdax (mount a dax file
+system, then open, mmap, mremap) does not suffer this issue
+because fsdax does not use huge page (FS_DAX_PMD is marked
+BROKEN).
 
-> +			best->ecx |= 1;
-> +		} else {
-> +			best->ecx &= ~1;
-> +		}
-> +	}
+fs/dax.c:dax_pmd_fault:
 
-you could do
+        if (!IS_ENABLED(CONFIG_FS_DAX_PMD))
+                return VM_FAULT_FALLBACK;
 
-	bool guest_cpuid_aperfmperf = false;
-	if (best)
-		guest_cpuid_aperfmperf = !!(best->ecx & BIT(0));
+fs/Kconfig:
 
-	if (guest_cpuid_aperfmerf != guest_has_aperfmperf(vcpu->kvm))
-		return -EINVAL;
+config FS_DAX_PMD
+        bool
+        default FS_DAX
+        depends on FS_DAX
+        depends on ZONE_DEVICE
+        depends on TRANSPARENT_HUGEPAGE
+        depends on BROKEN
 
 
-In fact, I think we can do nothing here. Leave it as what usersapce 
-wants just like how KVM treats other CPUID bits.
+However, I can re-produce the issue for the devdax mode.  Here is how
+I re-produce it:
 
-Paolo,
+1. It seems some interface changed for ndctl.  So I use an old
+   commit (4295f1ea614a26e1304ed590fb7209c8c78270ab) in the repo
+   https://github.com/pmem/ndctl.
+2. sudo ./ndctl/ndctl create-namespace -f -t pmem -m dax -e 'namespace0.0'
+3. then use the following program:
 
-What's your point?
+#define _GNU_SOURCE
+#include <sys/mman.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <errno.h>
 
->   	/* Note, maxphyaddr must be updated before tdp_level. */
->   	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
->   	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
+#define PROT                    PROT_READ|PROT_WRITE
 
-[...]
+#define REGION_PM_TMP_PATH      "/dev/dax0.0"
 
-> @@ -4930,6 +4939,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->   		kvm->arch.exception_payload_enabled = cap->args[0];
->   		r = 0;
->   		break;
-> +	case KVM_CAP_APERFMPERF:
-> +		kvm->arch.aperfmperf_mode =
-> +			boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
+#define REGION_MEM_SIZE 1024ULL*1024*1024*2
+#define REGION_PM_SIZE  1024ULL*1024*1024*4
+#define REMAP_MEM_OFF   1024ULL*1024*1024*1
+#define REMAP_PM_OFF    1024ULL*1024*1024*3
+#define REMAP_SIZE      1024ULL*1024*1024*1
 
-Shouldn't check whether cap->args[0] is a valid value?
+#define REGION_MEM_PTR  ((void *)0x7fd400000000ULL)
+#define REGION_PM_PTR   ((void *)0x4fd300000000ULL)
 
-> +		r = 0;
-> +		break;
->   	default:
->   		r = -EINVAL;
->   		break;
+char * map_tmp_pm_region(void)
+{
+        int fd;
 
+        fd = open(REGION_PM_TMP_PATH, O_RDWR, 0644);
+        if (fd < 0) {
+                perror(REGION_PM_TMP_PATH);
+                exit(-1);
+        }
+
+        return mmap(REGION_PM_PTR, REGION_PM_SIZE, PROT, MAP_SHARED|MAP_SYNC,
+                   fd, 0);
+}
+
+int main(int argc, char **argv)
+{
+        char *regm, *regp, *remap;
+        int ret;
+
+        regm = mmap(REGION_MEM_PTR, REGION_MEM_SIZE, PROT, MAP_PRIVATE|MAP_ANONYMOUS,
+                    -1, 0);
+        if (regm == MAP_FAILED) {
+                perror("regm");
+                return -1;
+        }
+
+        regp = map_tmp_pm_region();
+        if (regp == MAP_FAILED) {
+                perror("regp");
+                return -1;
+        }
+
+        memset(regm, 'a', REGION_MEM_SIZE);
+        memset(regp, 'i', REGION_PM_SIZE);
+
+        remap = mremap(regp + REMAP_PM_OFF, REMAP_SIZE, REMAP_SIZE,
+                       MREMAP_MAYMOVE|MREMAP_FIXED, regm + REMAP_MEM_OFF);
+        if (remap != regm + REMAP_MEM_OFF) {
+                perror("mremap");
+                return -1;
+        }
+
+        *(regm + REMAP_MEM_OFF) = 0x00;
+        return 0;
+}
+
+4. Then I was able to see the "Corrupted page table" message in dmesg.
+
+Best regards,
+Fan
 
