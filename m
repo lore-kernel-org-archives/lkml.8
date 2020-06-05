@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD386C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 078B3208B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9229720897
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359961;
-	bh=tCBSlHI63YTEIG2JR4d62oOhc6aMNrY2obvYr7pkk18=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXyq1u0yktdnQ1J7iXahzOS4ipQeQ3Uz963PRX1hM5IRDsoCMWSAfLjcuL+R2kZNM
-	 04642NBfMUkmLxhvbn2JcoeGik/9MVAug0qF+YyqjfVS4YrXo4eGsQmPwbChJjOCaD
-	 e71wGruehSiimh1LFgWNegtnzmTFJIG7O2LrP3hY=
+	s=default; t=1591359966;
+	bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sNPWa+adie6vKhqKU7/7VT/46ccbUCdNR+6juNQJ6x0XyizAV1tngzIZbH3icHQ6L
+	 wPEvUe2E2zwUHOtyW4RTy9aUWEBEXqLVoo+6gx6JOeo/XO4rd3Rb6iS2BDZsqFPEhP
+	 IarRsYgRUyg1sUb/+vKN5vFCuqMXP0ZMvWcxOl3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgFEMZ7 (ORCPT
+        id S1727047AbgFEM0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57618 "EHLO mail.kernel.org"
+        Fri, 5 Jun 2020 08:26:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbgFEMZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:25:51 -0400
+        id S1727017AbgFEM0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 08:26:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C0920820;
-        Fri,  5 Jun 2020 12:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1013920820;
+        Fri,  5 Jun 2020 12:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591359950;
-        bh=tCBSlHI63YTEIG2JR4d62oOhc6aMNrY2obvYr7pkk18=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eI9yBqYJQSMS4L7AI5dOJX8KQwGNnCuOe30Mf5phjn93ebWjn1rdvrqlOtOKM1Njn
-         FVaZoKDaTGHph2UtthcdJMpD90FC+a4r9odFDQfCR7gAf4tprt1DBv552rLC6drriw
-         jrNlYUcCEEPFrd7qAqqvtZ42qNZmYN9nrehBKlkc=
+        s=default; t=1591359959;
+        bh=+/l/HKb94QJ1fLl/aY9Ci1ZVow5m6nAWV0fLci86yno=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ai8AfOaRun5UtE8+K3s7ii5XJMsBhy584xcYCUEDfzBwykR7TGVqvlYBwWcYvvPhT
+         InI0aeWp6+n0y69FmfFo6Vx3ehtjUyI4kI9aUSTaKpmhO113/BcQ9O1pl+j3BVLBbU
+         uIGLueetq4xw39kG+Cai96bpI9LHy3KT+sObhPHo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heinrich Kuhn <heinrich.kuhn@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/14] nfp: flower: fix used time of merge flow statistics
-Date:   Fri,  5 Jun 2020 08:25:34 -0400
-Message-Id: <20200605122540.2882539-8-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Andi Shyti <andi@etezian.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 1/9] Input: mms114 - fix handling of mms345l
+Date:   Fri,  5 Jun 2020 08:25:49 -0400
+Message-Id: <20200605122558.2882712-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200605122540.2882539-1-sashal@kernel.org>
-References: <20200605122540.2882539-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,43 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heinrich Kuhn <heinrich.kuhn@netronome.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 5b186cd60f033110960a3db424ffbd6de4cee528 ]
+[ Upstream commit 3f8f770575d911c989043d8f0fb8dec96360c41c ]
 
-Prior to this change the correct value for the used counter is calculated
-but not stored nor, therefore, propagated to user-space. In use-cases such
-as OVS use-case at least this results in active flows being removed from
-the hardware datapath. Which results in both unnecessary flow tear-down
-and setup, and packet processing on the host.
+MMS345L is another first generation touch screen from Melfas,
+which uses the same registers as MMS152.
 
-This patch addresses the problem by saving the calculated used value
-which allows the value to propagate to user-space.
+However, using I2C_M_NOSTART for it causes errors when reading:
 
-Found by inspection.
+	i2c i2c-0: sendbytes: NAK bailout.
+	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
 
-Fixes: aa6ce2ea0c93 ("nfp: flower: support stats update for merge flows")
-Signed-off-by: Heinrich Kuhn <heinrich.kuhn@netronome.com>
-Signed-off-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The driver works fine as soon as I2C_M_NOSTART is removed.
+
+Reviewed-by: Andi Shyti <andi@etezian.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200405170904.61512-1-stephan@gerhold.net
+[dtor: removed separate mms345l handling, made everyone use standard
+transfer mode, propagated the 10bit addressing flag to the read part of the
+transfer as well.]
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/offload.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/mms114.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/offload.c b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-index 987ae221f6be..4dd3f8a5a9b8 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
-@@ -1368,7 +1368,8 @@ __nfp_flower_update_merge_stats(struct nfp_app *app,
- 		ctx_id = be32_to_cpu(sub_flow->meta.host_ctx_id);
- 		priv->stats[ctx_id].pkts += pkts;
- 		priv->stats[ctx_id].bytes += bytes;
--		max_t(u64, priv->stats[ctx_id].used, used);
-+		priv->stats[ctx_id].used = max_t(u64, used,
-+						 priv->stats[ctx_id].used);
+diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+index a5ab774da4cc..fca908ba4841 100644
+--- a/drivers/input/touchscreen/mms114.c
++++ b/drivers/input/touchscreen/mms114.c
+@@ -91,15 +91,15 @@ static int __mms114_read_reg(struct mms114_data *data, unsigned int reg,
+ 	if (reg <= MMS114_MODE_CONTROL && reg + len > MMS114_MODE_CONTROL)
+ 		BUG();
+ 
+-	/* Write register: use repeated start */
++	/* Write register */
+ 	xfer[0].addr = client->addr;
+-	xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
++	xfer[0].flags = client->flags & I2C_M_TEN;
+ 	xfer[0].len = 1;
+ 	xfer[0].buf = &buf;
+ 
+ 	/* Read data */
+ 	xfer[1].addr = client->addr;
+-	xfer[1].flags = I2C_M_RD;
++	xfer[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
+ 	xfer[1].len = len;
+ 	xfer[1].buf = val;
+ 
+@@ -428,10 +428,8 @@ static int mms114_probe(struct i2c_client *client,
+ 	const void *match_data;
+ 	int error;
+ 
+-	if (!i2c_check_functionality(client->adapter,
+-				I2C_FUNC_PROTOCOL_MANGLING)) {
+-		dev_err(&client->dev,
+-			"Need i2c bus that supports protocol mangling\n");
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
++		dev_err(&client->dev, "Not supported I2C adapter\n");
+ 		return -ENODEV;
  	}
- }
  
 -- 
 2.25.1
