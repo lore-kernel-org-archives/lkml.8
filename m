@@ -2,179 +2,176 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB30C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6BEB2077D
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760EE20659
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 19:05:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFJHWNkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgFETE7 (ORCPT
+        id S1728070AbgFETFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 15:04:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:12924 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726958AbgFETE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 15:04:59 -0400
-IronPort-SDR: /8QlvB6ZhTf5XF37AYd1aCtLm3c8IfOVmUtr5JQks5z76GKlnZtuFDTtrPAJCBUH7nQMOlbQi0
- i+mKMA+3SYGQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 12:04:56 -0700
-IronPort-SDR: so7DLzq1yp6BvnF8hi/wQpHSwI9mxUiGmwxwaZxc+/8kX6NPxrmAl9DSAi+Bs1TmGoUhfFt2S5
- NH6vdXfBLFwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="417372231"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga004.jf.intel.com with ESMTP; 05 Jun 2020 12:04:54 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
+        Fri, 5 Jun 2020 15:05:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgFETFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 15:05:15 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80161C08C5C2;
+        Fri,  5 Jun 2020 12:05:15 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id v26so1164977oof.7;
+        Fri, 05 Jun 2020 12:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qs9QY5b17T4Lq7hXEjIEKo/PvUm237YC2CaO1E2diG8=;
+        b=VFJHWNkvJmJX90giuV61jQ7kiccmFLdEVVLKXu4PxdWYurrYFYiz8lZuwxQWZ0n7Wc
+         yqhbt4czbepmBIz1HVMw2BU/xHofgVZYcZm0m0aVuYOen8J93WMKJpwRqnhpQwseb4iP
+         nTFIBviunhhNqVx4bUpLna4pcFh6INqif/J0SF3SC+uoE8WFCRj2qscO9r/1vfsmztE3
+         o7wjoeaB2YtJa4j9v5pgS8XhcZUXkTN99tYl0TCs6fCTmvGrocK2Mq38lJW1pjm8rDWH
+         UN4rar2FhGwgjKTcGmzkuz1GVOX1F7W+0aC+6XQe/gtufZf02nh1NDaa2YE7hsg6x5mN
+         130w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qs9QY5b17T4Lq7hXEjIEKo/PvUm237YC2CaO1E2diG8=;
+        b=TldVy0fnyLJPvGIiWrUizTZ9+bIIuaPwSkDB8wesOC2zE+HWvyT8R3/28vcFIQriM5
+         y1gvwowYvkDK/nqgXiWJNdmszB6z48do0/PXmuPmfhe6r7G4tKsA6CsPxrTO6S/oO8e7
+         xQWCBBuZScLEoc617x7ZL3S0lVortx88gdzFwG8jMOM31fnHpsvox2hjSOqUGoKIXtXd
+         QxPmP7SMiZcS+OfGoKl+/KXb1H8AyQbhj+XxpQNU8AMtOhbT2xs//V8NwgXPfqB/MEQc
+         LgeXS3qYUPTauw81bSvhQMHEXGQO1Xl2RxaSJUjm3fZKPCba1DLTSCtsXEWkMO7aHk9n
+         LL5g==
+X-Gm-Message-State: AOAM532x30ZhCouE1J8abR888VZie9+WiJSR+1xL3uXZdSLsP2DBjsn0
+        iGjX5OG13egn2NvM1TMd9o3fSl6hwWYNvLCz0Kw=
+X-Google-Smtp-Source: ABdhPJzW6MwzWQBJS+ULgHeL/swNJlQvIM9FQrimswHIkx7+3vzQXKk44yBXf+5Rg347qSGB5Q2c1/W7jwgGKQuIKYI=
+X-Received: by 2002:a4a:98c7:: with SMTP id b7mr8842755ooj.42.1591383914796;
+ Fri, 05 Jun 2020 12:05:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXgSWHd-w_vgv-2mrYwJ2trcdDNniKFGCDGbn3ts-CkjA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXgSWHd-w_vgv-2mrYwJ2trcdDNniKFGCDGbn3ts-CkjA@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 5 Jun 2020 20:04:48 +0100
+Message-ID: <CA+V-a8skA0Gf+bnWJA_TaVsX2uLCrdGqVkZnioW0X0XULVeDrg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for
+ iWave G21D-Q7 board based on RZ/G1H
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 2/2][RFC] PM-runtime: add tracepoints to cover all usage_count changes
-Date:   Sat,  6 Jun 2020 03:05:52 +0800
-Message-Id: <6ce5c2d21758363b7c9a31187eda1787bc4a6160.1591380524.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1591380524.git.yu.c.chen@intel.com>
-References: <cover.1591380524.git.yu.c.chen@intel.com>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-has added some tracepoints to monitor the change of runtime usage, and
-there is something to improve:
-1. There are some places that adjust the usage count have not
-   been traced yet. For example, pm_runtime_get_noresume() and
-   pm_runtime_put_noidle()
-2. The change of the usage count will not be tracked if decreased
-   from 1 to 0.
+Hi Geert,
 
-This patch address above issues by tracking the usage count whenever
-it has been modified. And these changes has helped track down the
-e1000e runtime issue.
+On Fri, Jun 5, 2020 at 1:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > @@ -0,0 +1,37 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the iWave-RZ/G1H Qseven board
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "r8a7742-iwg21m.dtsi"
+> > +
+> > +/ {
+> > +       model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+> > +       compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
+> > +
+> > +       aliases {
+> > +               serial2 = &scifa2;
+> > +       };
+> > +
+> > +       chosen {
+> > +               bootargs = "ignore_loglevel root=/dev/mmcblk0p1 rw rootwait";
+> > +               stdout-path = "serial2:115200n8";
+> > +       };
+> > +};
+> > +
+> > +&pfc {
+> > +       scifa2_pins: scifa2 {
+> > +               groups = "scifa2_data_c";
+>
+> Upon second look, I think this group is wrong.  While labeled SCIFA2 in
+> the SOM schematics, these signals seem to be connected to a debugging
+> interface.
+>
+> The real UART2 seems to be present on the camera daughter board.  Those
+> signals are labeled "SCIFA2" in the camera board schematics, but "SCIF2"
+> in the SOM schematics.  This is OK, as "scif2_data" and "scifa2_data"
+> share the same pins, so you can choose either SCIF2 or SCIFA2 to drive
+> them.
+>
+> If I'm right, please change the group, and move all serial2 descriptions
+> to the camera board DTS.
+>
+I took a closer look at the schematics, SCIFA2 is connected to the
+debug interface similarly on G1M where SCIF0 is connected to the debug
+interface.
 
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/base/power/runtime.c | 37 ++++++++++++++++++++++--------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+I will send the user guide privately which should clarify the serial
+interfaces on the board.
 
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 85a248e196ca..4aa2b5aa0bb8 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1004,10 +1004,11 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
- 	int retval;
- 
- 	if (rpmflags & RPM_GET_PUT) {
--		if (!atomic_dec_and_test(&dev->power.usage_count)) {
--			trace_rpm_usage_rcuidle(dev, rpmflags);
-+		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-+
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+		if (non_zero)
- 			return 0;
--		}
- 	}
- 
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-@@ -1038,10 +1039,12 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
- 	int retval;
- 
- 	if (rpmflags & RPM_GET_PUT) {
--		if (!atomic_dec_and_test(&dev->power.usage_count)) {
--			trace_rpm_usage_rcuidle(dev, rpmflags);
-+		bool non_zero = !atomic_dec_and_test(&dev->power.usage_count);
-+
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+		if (non_zero)
- 			return 0;
--		}
-+
- 	}
- 
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-@@ -1073,8 +1076,10 @@ int __pm_runtime_resume(struct device *dev, int rpmflags)
- 	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe &&
- 			dev->power.runtime_status != RPM_ACTIVE);
- 
--	if (rpmflags & RPM_GET_PUT)
-+	if (rpmflags & RPM_GET_PUT) {
- 		atomic_inc(&dev->power.usage_count);
-+		trace_rpm_usage_rcuidle(dev, rpmflags);
-+	}
- 
- 	spin_lock_irqsave(&dev->power.lock, flags);
- 	retval = rpm_resume(dev, rpmflags);
-@@ -1448,16 +1453,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
-  */
- void pm_runtime_allow(struct device *dev)
- {
-+	bool is_zero;
-+
- 	spin_lock_irq(&dev->power.lock);
- 	if (dev->power.runtime_auto)
- 		goto out;
- 
- 	dev->power.runtime_auto = true;
--	if (atomic_dec_and_test(&dev->power.usage_count))
-+	is_zero = atomic_dec_and_test(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-+	if (is_zero)
- 		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
--	else
--		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
--
-  out:
- 	spin_unlock_irq(&dev->power.lock);
- }
-@@ -1523,9 +1529,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
- 		/* If it used to be allowed then prevent it. */
- 		if (!old_use || old_delay >= 0) {
- 			atomic_inc(&dev->power.usage_count);
--			rpm_resume(dev, 0);
--		} else {
- 			trace_rpm_usage_rcuidle(dev, 0);
-+			rpm_resume(dev, 0);
- 		}
- 	}
- 
-@@ -1533,8 +1538,10 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
- 	else {
- 
- 		/* If it used to be prevented then allow it. */
--		if (old_use && old_delay < 0)
-+		if (old_use && old_delay < 0) {
- 			atomic_dec(&dev->power.usage_count);
-+			trace_rpm_usage_rcuidle(dev, 0);
-+		}
- 
- 		/* Maybe we can autosuspend now. */
- 		rpm_idle(dev, RPM_AUTO);
-@@ -1741,12 +1748,14 @@ void pm_runtime_drop_link(struct device *dev)
- void pm_runtime_get_noresume(struct device *dev)
- {
- 	atomic_inc(&dev->power.usage_count);
-+	trace_rpm_usage_rcuidle(dev, 0);
- }
- EXPORT_SYMBOL_GPL(pm_runtime_get_noresume);
- 
- void pm_runtime_put_noidle(struct device *dev)
- {
- 	atomic_add_unless(&dev->power.usage_count, -1, 0);
-+	trace_rpm_usage_rcuidle(dev, 0);
- }
- EXPORT_SYMBOL_GPL(pm_runtime_put_noidle);
- 
--- 
-2.20.1
+Cheers,
+--Prabhakar
 
+
+> > +               function = "scifa2";
+> > +       };
+> > +};
+> > +
+> > +&scifa2 {
+> > +       pinctrl-0 = <&scifa2_pins>;
+> > +       pinctrl-names = "default";
+> > +
+> > +       status = "okay";
+> > +};
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
