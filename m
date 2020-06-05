@@ -2,167 +2,293 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C84C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D454206DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792BC206DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 14:47:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v+23+yRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgFEOre (ORCPT
+        id S1728177AbgFEOrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 10:47:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:22528 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727101AbgFEOrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:47:33 -0400
-IronPort-SDR: emjq8j6Uf7Hvui7rJhK1Yyy7mYqm0WP+TecBACIKER1Fb2oBl0T9IKx9U6FMX03Qc2DCDX0Omc
- czZ/Doa7AHKw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 07:47:32 -0700
-IronPort-SDR: 1r8QDFTlHGj0Gbr3R32FmKCmc+dxYSVnMCZqyuSz8efxxc/l7322tU5jKcbejJTq9Zs9ajAOJC
- DJXjOEGCGH9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
-   d="scan'208";a="294712837"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Jun 2020 07:47:31 -0700
-Received: from [10.249.226.228] (abudanko-mobl.ccr.corp.intel.com [10.249.226.228])
-        by linux.intel.com (Postfix) with ESMTP id 45C5F580569;
-        Fri,  5 Jun 2020 07:47:29 -0700 (PDT)
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <e5cac8dd-7aa4-ec7c-671c-07756907acba@linux.intel.com>
- <8ffc9f9f-af58-deea-428b-f8a69004e3cb@linux.intel.com>
- <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
- <20200601233732.GA691017@tassilo.jf.intel.com>
- <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
- <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
- <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
- <20200605105108.GB1404794@krava>
- <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
- <20200605135743.GD1404794@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
-Date:   Fri, 5 Jun 2020 17:47:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Fri, 5 Jun 2020 10:47:49 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35350 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727101AbgFEOrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 10:47:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055Ekb5t002278;
+        Fri, 5 Jun 2020 14:47:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=VLw7SULwH8cvgHH/9FjoXViVSzh+U9OXfZkSN4vYUIk=;
+ b=v+23+yRwx3krrkwtFiH602kYnFUf31f6hGB/tld0kK5K7O825B0rP25UfBSuMSBlqcNX
+ DIqsTA2e5d5lfOR4tAC3ZlaEoHw5insH32AN9/YsXTX6Hiy2hyAJsY2Yicaey7jKW0wQ
+ g3gCh+pGeh7cDj8bO/cxwQlfxrOkXH8y76FBpxEH18z3dEx4Lwbwcyy314da8Dv2XYAk
+ skp72yT6NE/u2Pf8WQpT3jpUAvf668aiKmZY8ynMR7xcMpfBqfHZdqRde/+qRCVtvPjb
+ KmBwpizr98bOnqgKaAoqR8bG/Dpne+fJEH2c+fUR4WuN9MFRaZ+HefUU4++vGErGyX4/ 2A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31f91du8v4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 05 Jun 2020 14:46:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 055EhR94122774;
+        Fri, 5 Jun 2020 14:44:59 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 31f92svwbn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 Jun 2020 14:44:59 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 055EivT8013734;
+        Fri, 5 Jun 2020 14:44:57 GMT
+Received: from [10.175.51.78] (/10.175.51.78)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 05 Jun 2020 07:44:56 -0700
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <4dc93ff8-f86e-f4c9-ebeb-6d3153a78d03@oracle.com>
+ <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz>
+ <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+ <202006041054.874AA564@keescook>
+ <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz>
+ <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com>
+ <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+Message-ID: <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+Date:   Fri, 5 Jun 2020 16:44:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200605135743.GD1404794@krava>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9642 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1011 cotscore=-2147483648 malwarescore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006050110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 05.06.2020 16:57, Jiri Olsa wrote:
-> On Fri, Jun 05, 2020 at 04:15:52PM +0300, Alexey Budankov wrote:
->>
->> On 05.06.2020 13:51, Jiri Olsa wrote:
->>> On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
->>>> On 2/06/20 12:12 pm, Alexey Budankov wrote:
->>>>>
->>>>> On 02.06.2020 11:32, Alexey Budankov wrote:
->>>>>>
->>>>>> On 02.06.2020 2:37, Andi Kleen wrote:
->>>>>>>>> or a pathname, or including also the event default of "disabled".
->>>>>>>>
->>>>>>>> For my cases conversion of pathnames into open fds belongs to external
->>>>>>>> controlling process e.g. like in the examples provided in the patch set.
->>>>>>>> Not sure about "event default of 'disabled'"
->>>>>>>
->>>>>>> It would be nicer for manual use cases if perf supported the path names
->>>>>>> directly like in Adrian's example, not needing a complex wrapper script.
->>>>>>
->>>>>> fds interface is required for VTune integration since VTune wants control
->>>>>> over files creation aside of Perf tool process. The script demonstrates
->>>>>> just one possible use case.
->>>>>>
->>>>>> Control files could easily be implemented on top of fds making open operations
->>>>>> for paths and then initializing fds. Interface below is vague and with explicit
->>>>>> options like below it could be more explicit:
->>>>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
->>>>>
->>>>> Or even clearer:
->>>>>
->>>>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
+On 2020-06-05 16:08, Vlastimil Babka wrote:
+> On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
+>> On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+>>>
+>>> On 2020-06-05 11:36, Vegard Nossum wrote:
 >>>>
->>>> If people are OK with having so many options, then that is fine by me.
+>>>> On 2020-06-05 11:11, Vlastimil Babka wrote:
+>>>>> On 6/4/20 8:46 PM, Vlastimil Babka wrote:
+>>>>>> On 6/4/20 7:57 PM, Kees Cook wrote:
+>>>>>>> On Thu, Jun 04, 2020 at 07:20:18PM +0200, Vegard Nossum wrote:
+>>>>>>>> On 2020-06-04 19:18, Vlastimil Babka wrote:
+>>>>>>>>> On 6/4/20 7:14 PM, Vegard Nossum wrote:
+>>>>>>>>>>
+>>>>>>>>>> Hi all,
+>>>>>>>>>>
+>>>>>>>>>> I ran into a boot problem with latest linus/master
+>>>>>>>>>> (6929f71e46bdddbf1c4d67c2728648176c67c555) that manifests like this:
+>>>>>>>>>
+>>>>>>>>> Hi, what's the .config you use?
+>>>>>>>>
+>>>>>>>> Pretty much x86_64 defconfig minus a few options (PCI, USB, ...)
+>>>>>>>
+>>>>>>> Oh yes indeed. I immediately crash in the same way with this config.
+>>>>>>> I'll
+>>>>>>> start digging...
+>>>>>>>
+>>>>>>> (defconfig finishes boot)
+>>>>>>
+>>>>>> This is funny, booting with slub_debug=F results in:
+>>>>>> I'm not sure if it's ACPI or ftrace wrong here, but looks like the
+>>>>>> changed
+>>>>>> free pointer offset merely exposes a bug in something else.
+>>>>>
+>>>>> So, with Kees' patch reverted, booting with slub_debug=F (or even more
+>>>>> specific slub_debug=F,ftrace_event_field) also hits this bug below. I
+>>>>> wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
+>>>>> further in history. So it's not new at all, and likely very specific to
+>>>>> your config+QEMU? (and related to the ACPI error messages that precede
+>>>>> it?).
+>>>>
+>>>> I see it too, but not on v5.0. I can bisect it.
 >>>
->>> the single option Adrian suggested seems better to me:
+>>> commit 67a72420a326b45514deb3f212085fb2cd1595b5
+>>> Author: Bob Moore <robert.moore@intel.com>
+>>> Date:   Fri Aug 16 14:43:21 2019 -0700
 >>>
->>>  --control
->>>  --control 11
->>>  --control 11,15
->>
->> What if a user specifies fifos named like this above, not fds?
->>
->>>  --control 11,15,disabled
->>>  --control 11,,disabled
->>>  --control /tmp/my-perf.fifo
->>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
->>
->> What if a user wants not fifos but other type of comm channels?
->>
->>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
->>>  --control /tmp/my-perf.fifo,,disabled
+>>>       ACPICA: Increase total number of possible Owner IDs
 >>>
->>> we already support this kind of options arguments, like for --call-graph
+>>>       ACPICA commit 1f1652dad88b9d767767bc1f7eb4f7d99e6b5324
 >>>
->>> jirka
+>>>       From 255 to 4095 possible IDs.
 >>>
+>>>       Link: https://github.com/acpica/acpica/commit/1f1652da
+>>>       Reported-by: Hedi Berriche <hedi.berriche @hpe.com>
+>>>       Signed-off-by: Bob Moore <robert.moore@intel.com>
+>>>       Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
+>>>       Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 >>
->> IMHO,
->> this interface, of course, looks more compact (in amount of options) however
->> the other side it is less user friendly. One simple option for one simple
->> purpose is more convenient as for users as for developers. Also complex
->> option syntax tends to have limitations and there are probably more
->> non-obvious ones.
->>
->> Please speak up. I might have missed something meaningful.
+>> Bob, Erik, did we miss something in that patch?
 > 
-> how about specify the type like:
+> Maybe the patch just changes layout in a way that exposes the bug.
 > 
-> --control fd:1,2,...
-
-What do these ... mean?
-
-> --control fifo:/tmp/fifo1,/tmp/fifo2
-> --control xxx:....
+> Anyway the "ftrace_event_field" cache is not really involved, this is just
+> because of slab merging. After adding "slub_nomerge" to "slub_debug=F", it
+> starts making more sense, as the cache becomes Acpi-Namespace
 > 
-> this way we can extend the functionality in the future
-> and stay backward compatible, while keeping single option
-
-Well, it clarifies more. However it still implicitly assumes
-and requires proper ordering e.g. 1 is ctl-fd and 2 is ack-fd
-and if there are some more positions there will be gaps like
---control fd:10,,something,,something ...
-
-Why is one single option with complex syntax more preferable
-than several simple options? Also it would still consume almost
-equal amount of command line space in shell.
-
-Thanks,
-Alexey
-
+> [    0.140408] ------------[ cut here ]------------
+> [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+> [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+> [    0.142105] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #45
+> [    0.142393] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+> [    0.142393] RIP: 0010:kmem_cache_free+0x1d3/0x250
+> [    0.142393] Code: 18 4d 85 ed 0f 84 10 ff ff ff 4c 39 ed 74 2f 49 8b 4d 58 48 8b 55 58 48 c7 c6 10 47 a1 ac 48 c7 c7 00 c2 b0 ac e8 b1 cc eb ff <0f> 0b 48 89 de 4c 89 ef e8 10 d7 ff ff 48 8b 15 59 36 9b 00 4c 89
+> [    0.142393] RSP: 0018:ffffb39cc0013dc0 EFLAGS: 00010282
+> [    0.142393] RAX: 0000000000000000 RBX: ffff937287409e00 RCX: 0000000000000000
+> [    0.142393] RDX: 0000000000000001 RSI: 0000000000000092 RDI: ffffffffacfdd32c
+> [    0.142393] RBP: ffff93728742ef00 R08: ffffb39cc0013c7d R09: 00000000000000fc
+> [    0.142393] R10: ffffb39cc0013c78 R11: ffffb39cc0013c7d R12: ffff937307409e00
+> [    0.142393] R13: ffff937287401d00 R14: 0000000000000000 R15: 0000000000000000
+> [    0.142393] FS:  0000000000000000(0000) GS:ffff937287a00000(0000) knlGS:0000000000000000
+> [    0.142393] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.142393] CR2: 0000000000000000 CR3: 0000000003a0a000 CR4: 00000000003406f0
+> [    0.142393] Call Trace:
+> [    0.142393]  acpi_os_release_object+0x5/0x10
+> [    0.142393]  acpi_ns_delete_children+0x46/0x59
+> [    0.142393]  acpi_ns_delete_namespace_subtree+0x5c/0x79
+> [    0.142393]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.142393]  acpi_ns_terminate+0xc/0x31
+> [    0.142393]  acpi_ut_subsystem_shutdown+0x45/0xa3
+> [    0.142393]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.142393]  acpi_terminate+0x5/0xf
+> [    0.142393]  acpi_init+0x27b/0x308
+> [    0.142393]  ? video_setup+0x79/0x79
+> [    0.142393]  do_one_initcall+0x7b/0x160
+> [    0.142393]  kernel_init_freeable+0x190/0x1f2
+> [    0.142393]  ? rest_init+0x9a/0x9a
+> [    0.142393]  kernel_init+0x5/0xf6
+> [    0.142393]  ret_from_fork+0x22/0x30
+> [    0.142393] ---[ end trace 3539f236ef812ba1 ]---
+> [    0.142396] ------------[ cut here ]------------
 > 
-> jirka
+> I've also changed the warning so it's not printed just once, and also prints tracking info
+> (see the hunk at the end of my mail, I'll turn this to a proper patch later).
 > 
+> With "slub_debug=FU slub_nomerge" there are now multiple warnings, but they all look the same:
+> 
+> [    0.143815] ------------[ cut here ]------------
+> [    0.144131] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+> [    0.144929] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+> [    0.145129] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0+ #45
+> [    0.145129] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+> [    0.145129] RIP: 0010:kmem_cache_free+0x1d3/0x250
+> [    0.145129] Code: 18 4d 85 ed 0f 84 10 ff ff ff 4c 39 ed 74 2f 49 8b 4d 58 48 8b 55 58 48 c7 c6 10 47 c1 8d 48 c7 c7 00 c2 d0 8d e8 b1 cc eb ff <0f> 0b 48 89 de 4c 89 ef e8 10 d7 ff ff 48 8b 15 59 36 9b 00 4c 89
+> [    0.145129] RSP: 0018:ffff990b80013dc0 EFLAGS: 00010282
+> [    0.145129] RAX: 0000000000000000 RBX: ffff972d474ada80 RCX: 0000000000000000
+> [    0.145129] RDX: 0000000000000001 RSI: 0000000000000092 RDI: ffffffff8e1dd32c
+> [    0.145129] RBP: ffff972d47425680 R08: ffff990b80013c7d R09: 00000000000000fc
+> [    0.145129] R10: ffff990b80013c78 R11: ffff990b80013c7d R12: ffff972dc74ada80
+> [    0.145129] R13: ffff972d474038c0 R14: 0000000000000000 R15: 0000000000000000
+> [    0.145129] FS:  0000000000000000(0000) GS:ffff972d47a00000(0000) knlGS:0000000000000000
+> [    0.145129] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.145129] CR2: 0000000000000000 CR3: 000000000660a000 CR4: 00000000003406f0
+> [    0.145129] Call Trace:
+> [    0.145129]  acpi_os_release_object+0x5/0x10
+> [    0.145129]  acpi_ns_delete_children+0x46/0x59
+> [    0.145129]  acpi_ns_delete_namespace_subtree+0x5c/0x79
+> [    0.145129]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.145129]  acpi_ns_terminate+0xc/0x31
+> [    0.145129]  acpi_ut_subsystem_shutdown+0x45/0xa3
+> [    0.145129]  ? acpi_sleep_proc_init+0x1f/0x1f
+> [    0.145129]  acpi_terminate+0x5/0xf
+> [    0.145129]  acpi_init+0x27b/0x308
+> [    0.145129]  ? video_setup+0x79/0x79
+> [    0.145129]  do_one_initcall+0x7b/0x160
+> [    0.145129]  kernel_init_freeable+0x190/0x1f2
+> [    0.145129]  ? rest_init+0x9a/0x9a
+> [    0.145129]  kernel_init+0x5/0xf6
+> [    0.145129]  ret_from_fork+0x22/0x30
+> [    0.145129] ---[ end trace 574554fca7bd06bb ]---
+> [    0.145133] INFO: Allocated in acpi_ns_root_initialize+0xb6/0x2d1 age=58 cpu=0 pid=0
+> [    0.145881]  kmem_cache_alloc_trace+0x1a9/0x1c0
+> [    0.146132]  acpi_ns_root_initialize+0xb6/0x2d1
+> [    0.146578]  acpi_initialize_subsystem+0x65/0xa8
+> [    0.147024]  acpi_early_init+0x5d/0xd1
+> [    0.147132]  start_kernel+0x45b/0x518
+> [    0.147491]  secondary_startup_64+0xb6/0xc0
+> [    0.147897] ------------[ cut here ]------------
+> 
+> And it seems ACPI is allocating an object via kmalloc() and then freeing it
+> via kmem_cache_free(<"Acpi-Namespace" kmem_cache>) which is wrong.
+> 
+>> ./scripts/faddr2line vmlinux 'acpi_ns_root_initialize+0xb6'
+> acpi_ns_root_initialize+0xb6/0x2d1:
+> kmalloc at include/linux/slab.h:555
+> (inlined by) kzalloc at include/linux/slab.h:669
+> (inlined by) acpi_os_allocate_zeroed at include/acpi/platform/aclinuxex.h:57
+> (inlined by) acpi_ns_root_initialize at drivers/acpi/acpica/nsaccess.c:102
+> 
+
+That's it :-) This fixes it for me:
+
+diff --git a/drivers/acpi/acpica/nsaccess.c b/drivers/acpi/acpica/nsaccess.c
+index 2566e2d4c7803..b76bbab917941 100644
+--- a/drivers/acpi/acpica/nsaccess.c
++++ b/drivers/acpi/acpica/nsaccess.c
+@@ -98,14 +98,12 @@ acpi_status acpi_ns_root_initialize(void)
+                  * predefined names are at the root level. It is much 
+easier to
+                  * just create and link the new node(s) here.
+                  */
+-               new_node =
+-                   ACPI_ALLOCATE_ZEROED(sizeof(struct 
+acpi_namespace_node));
++               new_node = acpi_ns_create_node(*ACPI_CAST_PTR (u32, 
+init_val->name));
+                 if (!new_node) {
+                         status = AE_NO_MEMORY;
+                         goto unlock_and_exit;
+                 }
+
+-               ACPI_COPY_NAMESEG(new_node->name.ascii, init_val->name);
+                 new_node->descriptor_type = ACPI_DESC_TYPE_NAMED;
+                 new_node->type = init_val->type;
+
+
+Vegard
