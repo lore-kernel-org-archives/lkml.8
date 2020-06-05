@@ -2,87 +2,103 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94333C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CC9C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700D52070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591359043;
-	bh=ki0XRRt/3xylS2T7+BudBy+Y2/q2g6zhA3yfCqfbxE0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=om/bEylYdMWxDc0F7qWgrqcq27Z+a4QEGTTjwz/3ygK8fSESWXg/atscmeeRuJTjm
-	 Nkc6lN/L8i280/Vc0cHSthmhFBxuMU5ApQbIeIUvLGZIeqZYyWY2CyP61AvPrISJQl
-	 25r1nbi1GM7n3vu5IZVUg3AghN2wKQj653P1UaRI=
+	by mail.kernel.org (Postfix) with ESMTP id 01150206A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 12:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgFEMKm (ORCPT
+        id S1726537AbgFEMLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 08:10:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43725 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbgFEMKm (ORCPT
+        Fri, 5 Jun 2020 08:11:21 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48862 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbgFEMLU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:10:42 -0400
-Received: by mail-ot1-f66.google.com with SMTP id u23so7389317otq.10;
-        Fri, 05 Jun 2020 05:10:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ki0XRRt/3xylS2T7+BudBy+Y2/q2g6zhA3yfCqfbxE0=;
-        b=dk2Dm4C267jEc5CVqmcRgY5RJGl9lBjbH8fVkw+UC5HzpPfhH+zLkoN3QAv7wRgNH5
-         R5sJpxY7acyw0pTQNaRcE0WzJFJh9L3YYJLQveLSXU0MxqgsZIk0qV4bzBRtaoyzJP/z
-         o8wnOVHfZBxJhj7G3hg4hBhefAN8tpVTUWPFZP9tSrh8LwpuTjA2Uov2j0xcuUgYRmyY
-         z3bQ5Pl0SAwcJJHsB2hjrXdM9hlRxCqvTsb3SUzwZOo8OkDXzfh44dyPYONRtn/4fi25
-         mQ4xxVe68noj/T4zzL8xxMYH2VJNoWfdw55vwWq0eZRo7WnkUsBQyJTL9b79THCa/cWv
-         x1AQ==
-X-Gm-Message-State: AOAM531R1OWfyNArvf0qkZAImgGIebTk7YPOZ2MFSTN9u7tvlINv5m4v
-        lNN9B1nUyjcYb4LV77tqXX4on7X5wK0E/8f5bh4=
-X-Google-Smtp-Source: ABdhPJyHw96qrI71jDhVPI5gmoPjUoqV7YYa2stYFxVhrtUOTBQZp72w5lsLlPJKXihcUL8pzSZ1tQUCksbYhaAckeE=
-X-Received: by 2002:a9d:5185:: with SMTP id y5mr6958142otg.118.1591359041284;
- Fri, 05 Jun 2020 05:10:41 -0700 (PDT)
+        Fri, 5 Jun 2020 08:11:20 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 3A9011C0BD2; Fri,  5 Jun 2020 14:11:19 +0200 (CEST)
+Date:   Fri, 5 Jun 2020 14:11:18 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        devicetree@vger.kernel.org,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200605121118.GC31680@duo.ucw.cz>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-2-dmurphy@ti.com>
+ <20200527014902.GA859634@bogus>
+ <20200527133948.GA5011@amd>
+ <CAL_Jsq+rS=awLC_maPGjeWhh1Sb9U31xfvLecVe9sPTh83eDBw@mail.gmail.com>
+ <20200602200436.GA6535@amd>
+ <CAL_JsqLaycpi4EtXK-7GV49fm0GbPmPsrNwz2WSBFFO_zdQG0Q@mail.gmail.com>
+ <20200604125111.GA7222@duo.ucw.cz>
+ <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
 MIME-Version: 1.0
-References: <94fe944c-c528-9459-fc75-7c94273dd2b1@gmail.com>
-In-Reply-To: <94fe944c-c528-9459-fc75-7c94273dd2b1@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 5 Jun 2020 14:10:30 +0200
-Message-ID: <CAJZ5v0i-6PBa=UuOkwZhmGvEpuUYkMeu9eubbvUNcGvc=DmDuA@mail.gmail.com>
-Subject: Re: [PATCH] PM: runtime: add RPM_IDLE_SUSPEND / RPM_IDLE_NO_SUSPEND constants
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ1XOYXyqj_VO2cFigVT=k5NTX3BO6RsDqQ-+pDBNJsrw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 30, 2020 at 6:33 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->
-> runtime_idle() callback implementations have to return a non-zero value
-> if they don't intend to suspend now. Several drivers use an errno like
-> -EBUSY for this purpose. This can be problematic because the return
-> value is propagated up the call chain, from rpm_idle() to
-> __pm_runtime_idle(), and from there to callers like
-> pm_runtime_put_sync(). A driver author checking the return value of
-> e.g. pm_runtime_put_sync() may as usual check for retval < 0 and
-> bail out.
 
-Which would be a bug anyway, because rpm_idle() may return -EAGAIN or
--EINPROGRESS due to concurrency and -EBUSY should be treated
-similarly.
+--i7F3eY7HS/tUJxUd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Therefore a positive value should be returned.
 
-While it is recommended to return a positive value then, returning
--EBUSY or -EAGAIN should still work if the callers are careful enough
-(and they should be).
+> > > There's no risk because you are supposed to apply both patches. I
+> > > don't apply binding patches that are a part of a series like this.
+> >
+> > Yes, this is always guaranteed to happen, because "git bisect"
+> > understand patch series. Oh, wait.
+>=20
+> What!? If the binding patch with the header comes first, how would
+> bisect build the driver change without the header?
 
-Thanks!
+The driver is already in tree, and includes array of strings. When you
+change the define, you need to update the array, too, because you
+don't want to have invalid value in there.
+
+> > Patches are supposed to be correct on their own. If your repository
+> > filtering can not handle that, you need to fix that...
+>=20
+> I'm just asking you to follow the process that *everyone* else is
+> following and works. It's not really about the repository filtering.
+> That doesn't care. A binding ABI is defined by the schema and any
+> defines it has. That is the logical unit that stands on its own.
+
+It does not work in this case.
+
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--i7F3eY7HS/tUJxUd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXto2ZgAKCRAw5/Bqldv6
+8rBGAKCkPxiODKIJjKg68MpWT85olQkZqACgqZJOnmhVx7xwFXtkwTDiHMAe8mM=
+=vUEk
+-----END PGP SIGNATURE-----
+
+--i7F3eY7HS/tUJxUd--
