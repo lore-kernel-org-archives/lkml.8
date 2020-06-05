@@ -2,124 +2,351 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FB5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F902086A
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KTvBU4sq"
+	by mail.kernel.org (Postfix) with ESMTP id 8F61D207D3
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgFEReG (ORCPT
+        id S1728244AbgFEReM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:34:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47247 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728132AbgFEReC (ORCPT
+        Fri, 5 Jun 2020 13:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728123AbgFEReA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:34:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591378441;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0aal65plzbeSyYXmLW554nnRb5RbtIzEAofuK3KvvwQ=;
-        b=KTvBU4sq750Ywo0idwMvbbJf4ZPgb1sF3EJIA1R/AQqzKf0grQ43X9Fv4yIFNBoKoAxEHy
-        wFZuOI67jG5eFlFTQceqJQVWtHRc2uKSiwEZFh23vKD5wwtbIi9nGcnrrme8+st+p0pWnK
-        p9EEpEHH412xzPwli6v5qqyiHAvPxyU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-3m7Plw0LN7usO8lqMK3j3g-1; Fri, 05 Jun 2020 13:33:59 -0400
-X-MC-Unique: 3m7Plw0LN7usO8lqMK3j3g-1
-Received: by mail-wr1-f72.google.com with SMTP id p10so4055918wrn.19
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:33:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0aal65plzbeSyYXmLW554nnRb5RbtIzEAofuK3KvvwQ=;
-        b=AyFSyFdBhINMAmNoGbwrceoJP5oyTpiDVtytT00fmY/xBG24PSRxkHKqNd8xenLVyr
-         KN1DSSxHUdKTaf7Skuez/RiGYsc3Lhxr3LgZsei4eeWSmPI4FhW9XuqlvKoTXpxncCfO
-         Gw3q7yvOdpAxVnGrlBpSVR9dJaGPNZnfdzfN0PokkYGVEJStVp5z+Qn+xFM4tCtlEqsv
-         9EQnjoUwVF7VVPkJSX+IECNcoXIK4KPd25pnaIa/dfRfDV84DE9JMBmVgCIe4PxnoQqj
-         OUDjxPM344Jux0YkYZrrN9FtSPjK15sN0JnKDgiNxuXSY5ArLFW1zR9wZcX1zWRttb8d
-         cwPA==
-X-Gm-Message-State: AOAM532mBaU+vw+6twrsyf9cKLlud3UQQmcb7hRkn4pjIFn6tpYE3VIC
-        VOYuNVSw6aV0orYoEdeIqWAIscgm02PkyF9HBxwZ6YqFvf8zspKTY48lDUaK/FbWSP6RdXi+KbD
-        uVMo2Tkq+MS5HMQVB67ljzX+2
-X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr10304102wru.194.1591378437013;
-        Fri, 05 Jun 2020 10:33:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyWiRtmf6SMYmlHoEbROCKhYR9wsQ37MKaaPkjq7nH4qScnMbizM4PvJ33BL3NHlCV8yf8D+g==
-X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr10304083wru.194.1591378436727;
-        Fri, 05 Jun 2020 10:33:56 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.243.176])
-        by smtp.gmail.com with ESMTPSA id c16sm12977772wrx.4.2020.06.05.10.33.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 10:33:56 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] Revert "KVM: x86: work around leak of
- uninitialized stack contents"
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-References: <20200605115906.532682-1-vkuznets@redhat.com>
- <20200605115906.532682-2-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <100b82ab-d6f5-7b0e-2d4b-13bc16ec273f@redhat.com>
-Date:   Fri, 5 Jun 2020 19:33:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200605115906.532682-2-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 5 Jun 2020 13:34:00 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8957C08C5C2;
+        Fri,  5 Jun 2020 10:33:59 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 086762A509B
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        kernel@collabora.com, Patrik Fimml <patrikf@chromium.org>
+Subject: [PATCH v3 7/7] Input: Add "inhibited" property
+Date:   Fri,  5 Jun 2020 19:33:35 +0200
+Message-Id: <20200605173335.13753-8-andrzej.p@collabora.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200605173335.13753-1-andrzej.p@collabora.com>
+References: <20200604072853.GP89269@dtor-ws>
+ <20200605173335.13753-1-andrzej.p@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/20 13:59, Vitaly Kuznetsov wrote:
-> handle_vmptrst()/handle_vmread() stopped injecting #PF unconditionally
-> and switched to nested_vmx_handle_memory_failure() which just kills the
-> guest with KVM_EXIT_INTERNAL_ERROR in case of MMIO access, zeroing
-> 'exception' in kvm_write_guest_virt_system() is not needed anymore.
-> 
-> This reverts commit 541ab2aeb28251bf7135c7961f3a6080eebcc705.
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/x86.c | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 9e41b5135340..0097a97d331f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -5647,13 +5647,6 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
->  	/* kvm_write_guest_virt_system can pull in tons of pages. */
->  	vcpu->arch.l1tf_flush_l1d = true;
->  
-> -	/*
-> -	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
-> -	 * is returned, but our callers are not ready for that and they blindly
-> -	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
-> -	 * uninitialized kernel stack memory into cr2 and error code.
-> -	 */
-> -	memset(exception, 0, sizeof(*exception));
->  	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
->  					   PFERR_WRITE_MASK, exception);
->  }
-> 
+From: Patrik Fimml <patrikf@chromium.org>
 
-Queued, thanks.
+Userspace might want to implement a policy to temporarily disregard input
+from certain devices, including not treating them as wakeup sources.
 
-Paolo
+An example use case is a laptop, whose keyboard can be folded under the
+screen to create tablet-like experience. The user then must hold the laptop
+in such a way that it is difficult to avoid pressing the keyboard keys. It
+is therefore desirable to temporarily disregard input from the keyboard,
+until it is folded back. This obviously is a policy which should be kept
+out of the kernel, but the kernel must provide suitable means to implement
+such a policy.
+
+This patch adds a sysfs interface for exactly this purpose.
+
+To implement the said interface it adds an "inhibited" property to struct
+input_dev, and effectively creates four states a device can be in: closed
+uninhibited, closed inhibited, open uninhibited, open inhibited. It also
+defers calling driver's ->open() and ->close() to until they are actually
+needed, e.g. it makes no sense to prepare the underlying device for
+generating events (->open()) if the device is inhibited.
+
+              uninhibit
+closed      <------------ closed
+uninhibited ------------> inhibited
+      | ^     inhibit        | ^
+ 1st  | |               1st  | |
+ open | |               open | |
+      | |                    | |
+      | | last               | | last
+      | | close              | | close
+      v |     uninhibit      v |
+open        <------------ open
+uninhibited ------------> inhibited
+
+The top inhibit/uninhibit transition happens when users == 0.
+The bottom inhibit/uninhibit transition happens when users > 0.
+The left open/close transition happens when !inhibited.
+The right open/close transition happens when inhibited.
+Due to all transitions being serialized with dev->mutex, it is impossible
+to have "diagonal" transitions between closed uninhibited and open
+inhibited or between open uninhibited and closed inhibited.
+
+No new callbacks are added to drivers, because their open() and close()
+serve exactly the purpose to tell the driver to start/stop providing
+events to the input core. Consequently, open() and close() - if provided
+- are called in both inhibit and uninhibit paths.
+
+Signed-off-by: Patrik Fimml <patrikf@chromium.org>
+Co-developed-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+---
+ drivers/input/input.c | 115 +++++++++++++++++++++++++++++++++++++++---
+ include/linux/input.h |  12 ++++-
+ 2 files changed, 118 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/input/input.c b/drivers/input/input.c
+index 41377bfa142d..4110b5797219 100644
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -284,8 +284,11 @@ static int input_get_disposition(struct input_dev *dev,
+ 	case EV_KEY:
+ 		if (is_event_supported(code, dev->keybit, KEY_MAX)) {
+ 
+-			/* auto-repeat bypasses state updates */
+-			if (value == 2) {
++			/*
++			 * auto-repeat bypasses state updates but repeat
++			 * events are ignored if the key is not pressed
++			 */
++			if (value == 2 && test_bit(code, dev->key)) {
+ 				disposition = INPUT_PASS_TO_HANDLERS;
+ 				break;
+ 			}
+@@ -367,8 +370,13 @@ static int input_get_disposition(struct input_dev *dev,
+ static void input_handle_event(struct input_dev *dev,
+ 			       unsigned int type, unsigned int code, int value)
+ {
+-	int disposition = input_get_disposition(dev, type, code, &value);
++	int disposition;
++
++	/* filter-out events from inhibited devices */
++	if (dev->inhibited)
++		return;
+ 
++	disposition = input_get_disposition(dev, type, code, &value);
+ 	if (disposition != INPUT_IGNORE_EVENT && type != EV_SYN)
+ 		add_input_randomness(type, code, value);
+ 
+@@ -612,7 +620,7 @@ int input_open_device(struct input_handle *handle)
+ 
+ 	handle->open++;
+ 
+-	if (dev->users++) {
++	if (dev->users++ || dev->inhibited) {
+ 		/*
+ 		 * Device is already opened, so we can exit immediately and
+ 		 * report success.
+@@ -675,10 +683,9 @@ void input_close_device(struct input_handle *handle)
+ 
+ 	__input_release_device(handle);
+ 
+-	if (!--dev->users) {
++	if (!dev->inhibited && !--dev->users) {
+ 		if (dev->poller)
+ 			input_dev_poller_stop(dev->poller);
+-
+ 		if (dev->close)
+ 			dev->close(dev);
+ 	}
+@@ -1416,12 +1423,49 @@ static ssize_t input_dev_show_properties(struct device *dev,
+ }
+ static DEVICE_ATTR(properties, S_IRUGO, input_dev_show_properties, NULL);
+ 
++static int input_inhibit_device(struct input_dev *dev);
++static int input_uninhibit_device(struct input_dev *dev);
++
++static ssize_t inhibited_show(struct device *dev,
++			      struct device_attribute *attr,
++			      char *buf)
++{
++	struct input_dev *input_dev = to_input_dev(dev);
++
++	return scnprintf(buf, PAGE_SIZE, "%d\n", input_dev->inhibited);
++}
++
++static ssize_t inhibited_store(struct device *dev,
++			       struct device_attribute *attr, const char *buf,
++			       size_t len)
++{
++	struct input_dev *input_dev = to_input_dev(dev);
++	ssize_t rv;
++	bool inhibited;
++
++	if (strtobool(buf, &inhibited))
++		return -EINVAL;
++
++	if (inhibited)
++		rv = input_inhibit_device(input_dev);
++	else
++		rv = input_uninhibit_device(input_dev);
++
++	if (rv != 0)
++		return rv;
++
++	return len;
++}
++
++static DEVICE_ATTR_RW(inhibited);
++
+ static struct attribute *input_dev_attrs[] = {
+ 	&dev_attr_name.attr,
+ 	&dev_attr_phys.attr,
+ 	&dev_attr_uniq.attr,
+ 	&dev_attr_modalias.attr,
+ 	&dev_attr_properties.attr,
++	&dev_attr_inhibited.attr,
+ 	NULL
+ };
+ 
+@@ -1703,6 +1747,63 @@ void input_reset_device(struct input_dev *dev)
+ }
+ EXPORT_SYMBOL(input_reset_device);
+ 
++static int input_inhibit_device(struct input_dev *dev)
++{
++	int ret = 0;
++
++	mutex_lock(&dev->mutex);
++
++	if (dev->inhibited)
++		goto out;
++
++	if (dev->users) {
++		if (dev->close)
++			dev->close(dev);
++		if (dev->poller)
++			input_dev_poller_stop(dev->poller);
++	}
++
++	spin_lock_irq(&dev->event_lock);
++	input_dev_release_keys(dev);
++	input_dev_toggle(dev, false);
++	spin_unlock_irq(&dev->event_lock);
++
++	dev->inhibited = true;
++
++out:
++	mutex_unlock(&dev->mutex);
++	return ret;
++}
++
++static int input_uninhibit_device(struct input_dev *dev)
++{
++	int ret = 0;
++
++	mutex_lock(&dev->mutex);
++
++	if (!dev->inhibited)
++		goto out;
++
++	if (dev->users) {
++		if (dev->open) {
++			ret = dev->open(dev);
++			if (ret)
++				goto out;
++		}
++		if (dev->poller)
++			input_dev_poller_start(dev->poller);
++	}
++
++	dev->inhibited = false;
++	spin_lock_irq(&dev->event_lock);
++	input_dev_toggle(dev, true);
++	spin_unlock_irq(&dev->event_lock);
++
++out:
++	mutex_unlock(&dev->mutex);
++	return ret;
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int input_dev_suspend(struct device *dev)
+ {
+@@ -2131,7 +2232,7 @@ bool input_device_enabled(struct input_dev *dev)
+ {
+ 	lockdep_assert_held(&dev->mutex);
+ 
+-	return dev->users > 0;
++	return !dev->inhibited && dev->users > 0;
+ }
+ EXPORT_SYMBOL_GPL(input_device_enabled);
+ 
+diff --git a/include/linux/input.h b/include/linux/input.h
+index eda4587dba67..0354b298d874 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -90,9 +90,11 @@ enum input_clock_type {
+  * @open: this method is called when the very first user calls
+  *	input_open_device(). The driver must prepare the device
+  *	to start generating events (start polling thread,
+- *	request an IRQ, submit URB, etc.)
++ *	request an IRQ, submit URB, etc.). The meaning of open() is
++ *	to start providing events to the input core.
+  * @close: this method is called when the very last user calls
+- *	input_close_device().
++ *	input_close_device(). The meaning of close() is to stop
++ *	providing events to the input core.
+  * @flush: purges the device. Most commonly used to get rid of force
+  *	feedback effects loaded into the device when disconnecting
+  *	from it
+@@ -127,6 +129,10 @@ enum input_clock_type {
+  *	and needs not be explicitly unregistered or freed.
+  * @timestamp: storage for a timestamp set by input_set_timestamp called
+  *  by a driver
++ * @inhibited: indicates that the input device is inhibited. If that is
++ * the case then input core ignores any events generated by the device.
++ * Device's close() is called when it is being inhibited and its open()
++ * is called when it is being uninhibited.
+  */
+ struct input_dev {
+ 	const char *name;
+@@ -201,6 +207,8 @@ struct input_dev {
+ 	bool devres_managed;
+ 
+ 	ktime_t timestamp[INPUT_CLK_MAX];
++
++	bool inhibited;
+ };
+ #define to_input_dev(d) container_of(d, struct input_dev, dev)
+ 
+-- 
+2.17.1
 
