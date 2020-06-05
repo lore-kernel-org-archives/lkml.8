@@ -2,142 +2,104 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 781B3206DC
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE8D206DC
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 21:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9uEVO9p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D0W/A4TI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgFEVT3 (ORCPT
+        id S1728515AbgFEVTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 17:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58610 "EHLO
+        Fri, 5 Jun 2020 17:19:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbgFEVT2 (ORCPT
+        with ESMTP id S1728248AbgFEVTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 17:19:28 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8ACC08C5C2;
-        Fri,  5 Jun 2020 14:19:27 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 5so3352028pjd.0;
-        Fri, 05 Jun 2020 14:19:27 -0700 (PDT)
+        Fri, 5 Jun 2020 17:19:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529F8C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 14:19:32 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bh7so4185489plb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 14:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wpIJ/pCsCHfvMrUjgnLtjwLHPcHaPzmZRezwzKb361g=;
-        b=D9uEVO9pBGBuM5rac9wGkOcr0GyHQpJh+pyiTwwl4iR+n8MT0M8tnX76R8O3Erohyt
-         EgCEGnv4Mz82lsf7a9akAwu34HW2vqe7iywOWhpUtUkLfpZmBZfDKKpeROyYLIz/Q/9a
-         rVVTBUC8cb7ary8XzT2Axnq/WuPSe3OfTb+cx54B1Sd0kslAc3h6S2iBStuNex94GU7b
-         mDrIor/QDPWPPok3o1LPVI9hc+jsBy3DbeNpEIKujOSXLRYqUlg9Yzqck5pY8r5bnHMx
-         KahFrX/fv73aD5HFjXluO9dCAmxd4zhpoKXGu/oj1o/ZfE0bEOXanH6mfuhV60ZDBRI6
-         dWIQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/DT8KaqdvTHpY2pdkwC/qpDtPEs0oqYy0DlmoYI6060=;
+        b=D0W/A4TIxeMbHVU7mcGxqr9tmsLnd9fwjOIfXwwAiqDbXhQKlm82IeqQVIAKcBM3aj
+         8CxseH4wDPHoMGwc86GrKxUEwfF6dr8VVVl0l1GusyAqeJqTF8M+jHpLpdsloiYHIxDo
+         EXkgKHYsBGFvSZ3EQw+G1l47XUh7kJgE58QFvsGHY+uQv7EiE/9enrDAuDqIXiAUbOfS
+         1J7Y7ryh6pXGHV4AagqtrHQAopBw4F3zmOa6GK3H0+DLuJMUHiMMsn+Z97CmBnEbs/sc
+         7JDKhCu/EmG1hQkwct5nYnEFnw2fBNsOSPgXfqG4BaFYmx9BkUuKQqmcQe5AJuHg6aNd
+         dGvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wpIJ/pCsCHfvMrUjgnLtjwLHPcHaPzmZRezwzKb361g=;
-        b=XdbHsrSsgW8R9qaKOQWwqVSOb4cW9DlsgIWQw8QraWHauKLTjiRrvQql30XKNURWQg
-         COYrLaIycu4VvhhGkya14+EYAuGJmCSV54ikKruxTKJvcrO2TjJKWcURqMoNH8uvFj8j
-         txOKipFbeac6c4GisFSMn1qGXlEYDj3BmkVcGxSWk7VZcj7kxdqE6Kf/g9FFr0QE5Rps
-         DyPI7WFOhhZohNWjEdpr1TYHlGfUz0NxOuULrUSm9teG0xNHDIQEsxPhmUlP4hMcdT+K
-         szYIwKbAEt5LawJCCq+oMumJD0vfeodDVBl3/gY791+Kw7h+thUVjlYjRrZS9sPGQC35
-         DkWw==
-X-Gm-Message-State: AOAM533petZ5ZCYxdAjH+wpjFwgHZ9eVHBaNQ3m0swH73hSHzR80dCKC
-        zKZ3tBu63Yi3I8ZrdYcy1zjxGdc+f1yt3aJXgiY=
-X-Google-Smtp-Source: ABdhPJxXNB8ca/IQamWPxX4c7rhF1Ss/vRoiBGn2rbgdaO/EsyN0ZDTBvKrDVxNQzxgEJDIyY06sXaaxVufze1JWhZE=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr4991653pjd.181.1591391967317;
- Fri, 05 Jun 2020 14:19:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-7-michael@walle.cc>
- <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
- <216db3154b46bd80202873df055bb3f3@walle.cc> <20200605131525.GK2428291@smile.fi.intel.com>
- <bf587fc3f907d58609a0ea3d65cd5b37@walle.cc>
-In-Reply-To: <bf587fc3f907d58609a0ea3d65cd5b37@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 6 Jun 2020 00:19:10 +0300
-Message-ID: <CAHp75Vcqv8rdqfBdttLb2vgj12AOUAOFK+ya7MZtRT+0_U+rYA@mail.gmail.com>
-Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/DT8KaqdvTHpY2pdkwC/qpDtPEs0oqYy0DlmoYI6060=;
+        b=csZIihJIdJvnbka8Aqw6Jw4a3nugP/WEYmaKWwsJHtdTtDPKTbSGbU6T6tmgW8wvUZ
+         r3XltdPqD2eg79LCOg45SYAlY9rCdn3fts3IGgfqQSS+IoZxJ+eLwlutKMZqLvNPb46Q
+         9jbbjeL/riPsrI51QtO+T/vzQRvydTSAL5n88wfAi8O/1B57IoZ7OaE3ZU6tRMv9Rt2p
+         dHOsBpbbu0v8lAcetcGaYnKeykZ/HCdpZYdp1da5y2d/6c/lCdXq8DzV7SlbNSS+4DS8
+         pKLchmkad6CcASjFqMT4clSbZlh03Y0XIfH6IBkleRB4JK2YoRp7Htn8asR5N+zG50a3
+         jNYQ==
+X-Gm-Message-State: AOAM5317XX/d2ZVUHm45lcn1Kb6h67f4Vl0IqiIBCyXHYpYyuLwwYG5D
+        iEavomV/NW6lYC7oF69c8+85LFG8skE=
+X-Google-Smtp-Source: ABdhPJzJZXzNp787muuA7EB3j0sZ07R24oGZ7ooutcPi22eAqHT6ton+M88dLERu90HuIw9ZOFDMgA==
+X-Received: by 2002:a17:90b:19ce:: with SMTP id nm14mr4929980pjb.23.1591391971562;
+        Fri, 05 Jun 2020 14:19:31 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id k126sm472302pfd.129.2020.06.05.14.19.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 14:19:30 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        alsa-devel@alsa-project.org, John Stultz <john.stultz@linaro.org>
+Subject: [RFC][PATCH] slimbus: core: Set fwnode for a device when setting of_node
+Date:   Fri,  5 Jun 2020 21:19:25 +0000
+Message-Id: <20200605211925.87873-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 9:44 PM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-06-05 15:15, schrieb Andy Shevchenko:
-> > On Fri, Jun 05, 2020 at 02:42:53PM +0200, Michael Walle wrote:
-> >> Am 2020-06-05 14:00, schrieb Andy Shevchenko:
-> >> > On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+From: Saravana Kannan <saravanak@google.com>
 
-...
+When setting the of_node for a newly created device, also set the
+fwnode. This allows fw_devlink to work for slimbus devices.
 
-> >> > > +       if (irq_support &&
-> >> >
-> >> > Why do you need this flag? Can't simple IRQ number be sufficient?
-> >>
-> >> I want to make sure, the is no misconfiguration. Eg. only GPIO
-> >> flavors which has irq_support set, have the additional interrupt
-> >> registers.
-> >
-> > In gpio-dwapb, for example, we simple check two things: a) hardware
-> > limitation
-> > (if IRQ is assigned to a proper port) and b) if there is any IRQ comes
-> > from DT,
-> > ACPI, etc.
->
-> I can't follow you here. irq_support is like your (a); or the
-> "pp->idx == 0" in your example.
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: alsa-devel@alsa-project.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/slimbus/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-And you have type already. Why do you need to duplicate it? Moreover,
-is it protection from wrong type to have interrupts?
-
-You can move this all stuff under corresponding switch-case.
-
-> >> > > +           device_property_read_bool(&pdev->dev,
-> >> > > "interrupt-controller")) {
-> >> > > +               irq = platform_get_irq(pdev, 0);
-> >> > > +               if (irq < 0)
-> >> > > +                       return irq;
-> >> > > +
-> >> > > +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
-> >> > > +                                            base, irq);
-> >> > > +               if (ret)
-> >> > > +                       return ret;
-> >> > > +
-> >> > > +               config.irq_domain =
-> >> > > regmap_irq_get_domain(gpio->irq_data);
-
-
+diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
+index 526e3215d8fe..44228a5b246d 100644
+--- a/drivers/slimbus/core.c
++++ b/drivers/slimbus/core.c
+@@ -163,8 +163,10 @@ static int slim_add_device(struct slim_controller *ctrl,
+ 	INIT_LIST_HEAD(&sbdev->stream_list);
+ 	spin_lock_init(&sbdev->stream_list_lock);
+ 
+-	if (node)
++	if (node) {
+ 		sbdev->dev.of_node = of_node_get(node);
++		sbdev->dev.fwnode = of_fwnode_handle(node);
++	}
+ 
+ 	dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
+ 				  sbdev->e_addr.manf_id,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
