@@ -2,118 +2,126 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF69B206F0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:22:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1626IfH"
+	by mail.kernel.org (Postfix) with ESMTP id A1350206F0
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 17:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgFERWJ (ORCPT
+        id S1727069AbgFER00 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 13:22:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20751 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726885AbgFERWI (ORCPT
+        Fri, 5 Jun 2020 13:26:26 -0400
+Received: from mailoutvs50.siol.net ([185.57.226.241]:34137 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726939AbgFER0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:22:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591377726;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RuGOZnvDJQpKp0vYUjuXJhQewOvwWhd7fsqAjWE3CVg=;
-        b=g1626IfHyB6QfQ0W+j8pIHCLXHFlhzLZguhdJHSt5s80+RzFrJD/SuVA2VUvOfYr8x6poO
-        zBtCJX+xjFxM4SBh1LSuM+lgSDUZPnArnLYSpAD8/j+GMpyMcvCPhi/MWQupbVh7am4ESp
-        iLh/RXtGURKES8zQ/Y4CZH4w4XJVudc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-AUpy80pMO8SqAQST4-oqSg-1; Fri, 05 Jun 2020 13:22:05 -0400
-X-MC-Unique: AUpy80pMO8SqAQST4-oqSg-1
-Received: by mail-wr1-f69.google.com with SMTP id d6so4034326wrn.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 10:22:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RuGOZnvDJQpKp0vYUjuXJhQewOvwWhd7fsqAjWE3CVg=;
-        b=EAQTRGPGT+Fd6UtfkxYtFsL+RhKMR2Dkkv6oMgwsyr7zSTScr5vU6fkUQPtF+LZxdA
-         9hlGM6u/5kph1fClo6xrZClDZc+F3Ml2jOGL/mLy39W4Iyedq5c/WqPmFQ5own4Ub8Qa
-         ZNZfjld9lWcfxu6tKH4GnQGPt9MZzkj/uHsht+oWH9cqOmT2M7+IEiDkYqP8+lc5aZ7B
-         hPQh5DGHOKR1z6oRXr6EzBFQcn31ckE+gnAJCz2ef3O9CmQKwKEc9kEIroST5/MD8DUY
-         SQF0ZKNJmoBNBN4yuh8XhvY1L2DMOom6tguuq0j0V8n5ooCJ2cpBWwUJZqitvPhdNZV7
-         QgyA==
-X-Gm-Message-State: AOAM531QPffUp1AyplJjIIVlfSDmqMkMztQlLJi4xyQLYOOLQl1rtody
-        AvS038/FmvXkCqZdBB/4dUbNg8ayOsLdqlWgJrfgwYRhZ2eftz7A0dk2HegGBwBsP0PeL0ct2MP
-        /NhXpViEKzCruLK1ZJPmPe8zn
-X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr3603534wme.152.1591377724075;
-        Fri, 05 Jun 2020 10:22:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy5wq8gAEGIe/TueSuRhHHG/GUN8VXb01KrQUne6C0jKYAGiBSE6KmKG/6ub93AAeD3fqYx8g==
-X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr3603512wme.152.1591377723877;
-        Fri, 05 Jun 2020 10:22:03 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.243.176])
-        by smtp.gmail.com with ESMTPSA id j11sm12720518wru.69.2020.06.05.10.22.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 10:22:03 -0700 (PDT)
-Subject: Re: [PATCH][v6] KVM: X86: support APERF/MPERF registers
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        wei.huang2@amd.com
-References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
- <b70d03dd-947f-dee5-5499-3b381372497d@intel.com>
- <72a75924-c3cb-6b23-62bd-67b739dec166@redhat.com>
- <CALMp9eSrDehftA5o6tU2sE_098F2ucztYtzhvgguYDnWqwHJaw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a1aa9cc5-96c7-11fe-17e1-22fe46b940f3@redhat.com>
-Date:   Fri, 5 Jun 2020 19:22:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 5 Jun 2020 13:26:25 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 33D78521D26;
+        Fri,  5 Jun 2020 19:26:22 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Hkdlf3xJ94FU; Fri,  5 Jun 2020 19:26:21 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id C0F03521D2D;
+        Fri,  5 Jun 2020 19:26:21 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id C2B65521CA7;
+        Fri,  5 Jun 2020 19:26:20 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     paul.kocialkowski@bootlin.com, mripard@kernel.org,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     mchehab@kernel.org, wens@csie.org, hverkuil-cisco@xs4all.nl,
+        gregkh@linuxfoundation.org, jonas@kwiboo.se,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/3] media: cedrus: h264: Properly configure reference field
+Date:   Fri, 05 Jun 2020 19:26:20 +0200
+Message-ID: <2479507.UA2pHCgT9S@jernej-laptop>
+In-Reply-To: <7e74e15b7b3f9fc765182f1a43cfcf1e0e9602fc.camel@ndufresne.ca>
+References: <20200604185745.23568-1-jernej.skrabec@siol.net> <20200604185745.23568-3-jernej.skrabec@siol.net> <7e74e15b7b3f9fc765182f1a43cfcf1e0e9602fc.camel@ndufresne.ca>
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eSrDehftA5o6tU2sE_098F2ucztYtzhvgguYDnWqwHJaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/20 19:16, Jim Mattson wrote:
->>>> @@ -4930,6 +4939,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->>>>           kvm->arch.exception_payload_enabled = cap->args[0];
->>>>           r = 0;
->>>>           break;
->>>> +    case KVM_CAP_APERFMPERF:
->>>> +        kvm->arch.aperfmperf_mode =
->>>> +            boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
->>> Shouldn't check whether cap->args[0] is a valid value?
->> Yes, only valid values should be allowed.
->>
->> Also, it should fail with -EINVAL if the host does not have
->> X86_FEATURE_APERFMPERF.
-> Should enabling/disabling this capability be disallowed once vCPUs
-> have been created?
+Dne petek, 05. junij 2020 ob 19:16:35 CEST je Nicolas Dufresne napisal(a):
+> Le jeudi 04 juin 2020 à 20:57 +0200, Jernej Skrabec a écrit :
+> > When interlaced H264 content is being decoded, references must indicate
+> > which field is being referenced. Currently this was done by checking
+> > capture buffer flags. However, that is not correct because capture
+> > buffer may hold both fields.
+> > 
+> > Fix this by checking newly introduced flags in reference lists.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
+> Perhaps an additional patch could cleanup the miss-leading comment in
+> v4l2_h264_dpb_entry definition.
 
-That's a good idea, yes.
+I missed that. I think this change actually belongs to patch 1. I'll fix it in 
+v2.
 
-Paolo
+Best regards,
+Jernej
+
+> 
+> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> 
+> > ---
+> > 
+> >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
+> > cce527bbdf86..c87717d17ec5 100644
+> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > @@ -183,7 +183,6 @@ static void _cedrus_write_ref_list(struct cedrus_ctx
+> > *ctx,> 
+> >  	for (i = 0; i < num_ref; i++) {
+> >  	
+> >  		const struct v4l2_h264_dpb_entry *dpb;
+> >  		const struct cedrus_buffer *cedrus_buf;
+> > 
+> > -		const struct vb2_v4l2_buffer *ref_buf;
+> > 
+> >  		unsigned int position;
+> >  		int buf_idx;
+> >  		u8 dpb_idx;
+> > 
+> > @@ -198,12 +197,11 @@ static void _cedrus_write_ref_list(struct cedrus_ctx
+> > *ctx,> 
+> >  		if (buf_idx < 0)
+> >  		
+> >  			continue;
+> > 
+> > -		ref_buf = to_vb2_v4l2_buffer(cap_q->bufs[buf_idx]);
+> > -		cedrus_buf = vb2_v4l2_to_cedrus_buffer(ref_buf);
+> > +		cedrus_buf = vb2_to_cedrus_buffer(cap_q->bufs[buf_idx]);
+> > 
+> >  		position = cedrus_buf->codec.h264.position;
+> >  		
+> >  		sram_array[i] |= position << 1;
+> > 
+> > -		if (ref_buf->field == V4L2_FIELD_BOTTOM)
+> > +		if (ref_list[i].flags & 
+V4L2_H264_REFERENCE_FLAG_BOTTOM_FIELD)
+> > 
+> >  			sram_array[i] |= BIT(0);
+> >  	
+> >  	}
+
+
+
 
