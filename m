@@ -2,142 +2,153 @@ Return-Path: <SRS0=RcPI=7S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F343820823
-	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0177E20870
+	for <linux-kernel@archiver.kernel.org>; Fri,  5 Jun 2020 01:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b8wLoTuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726123AbgFEBT6 (ORCPT
+        id S1726166AbgFEBUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 4 Jun 2020 21:19:58 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725863AbgFEBT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 4 Jun 2020 21:19:58 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 049E4A98727A423C7765;
-        Fri,  5 Jun 2020 09:19:55 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Fri, 5 Jun 2020 09:19:54 +0800
-Received: from [10.65.91.233] (10.65.91.233) by dggeme762-chm.china.huawei.com
- (10.3.19.108) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Fri, 5 Jun
- 2020 09:19:54 +0800
-Subject: Re: [PATCH v2] crypto: hisilicon - allow smaller reads in debugfs
-To:     <b6da310b-e633-9f74-f7af-7791d803aaf5@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20200602135409.GA59808@mwanda>
-From:   Shukun Tan <tanshukun1@huawei.com>
-Message-ID: <3e9b204f-ef53-31c5-afcd-e0791224c2b0@huawei.com>
-Date:   Fri, 5 Jun 2020 09:19:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200602135409.GA59808@mwanda>
-Content-Type: text/plain; charset="gbk"
+        Thu, 4 Jun 2020 21:20:08 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:36210 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbgFEBUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 4 Jun 2020 21:20:05 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200605012002epoutp046dab4fcad4d6bff297de26fdc98cc953~VgRxZLCiX2170621706epoutp04h
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 01:20:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200605012002epoutp046dab4fcad4d6bff297de26fdc98cc953~VgRxZLCiX2170621706epoutp04h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591320002;
+        bh=jutr7CvxY0Z0Ep4LAxqYwasBfx4P75gJk8iYttlHMAc=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=b8wLoTuTr/rqiEjfa1zD5pzk1ZqT+GZ9lzTMjyhrlhxRE4zwy+D9A3Pml8/Q4V2j4
+         DWGdcR1gsn13y+LQ6LaIAngXlW0925lYZC5TjLLzxjarA7Mk4kfkUi6uJU3EX0EZJI
+         3PZb/YvpaC6G7BpxdIdgUMIKv2jrv6Vg1PBs0Axw=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p3.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200605012001epcas1p38044c63946e19a5bd85da1b0b7d084b7~VgRw1tlm60328903289epcas1p3A;
+        Fri,  5 Jun 2020 01:20:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [RFC PATCH 0/5] scsi: ufs: Add Host Performance Booster Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        Daejun Park <daejun7.park@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01591320001492.JavaMail.epsvc@epcpadp1>
+Date:   Fri, 05 Jun 2020 10:16:04 +0900
+X-CMS-MailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.91.233]
-X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882
+References: <CGME20200605011604epcms2p8bec8ef6682583d7248dc7d9dc1bfc882@epcms2p8>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+NAND flash memory-based storage devices use Flash Translation Layer (FTL)
+to translate logical addresses of I/O requests to corresponding flash
+memory addresses. Mobile storage devices typically have RAM with
+constrained size, thus lack in memory to keep the whole mapping table.
+Therefore, mapping tables are partially retrieved from NAND flash on
+demand, causing random-read performance degradation.
 
-On 2020/6/2 21:54, Dan Carpenter wrote:
-> Originally this code rejected any read less than 256 bytes.  There
-> is no need for this artificial limit.  We should just use the normal
-> helper functions to read a string from the kernel.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> v2: Use simple_read_from_buffer().  The v1 was slightly half arsed
-> because I left the original check for:
-> 
-> 	if (*pos)
-> 		return 0;
-> 
-> So it could result in partial reads.  The new code means that if you
-> want to read the buffer one byte at a time, that's fine or if you want
-> to read it in one 256 byte chunk that's also fine.  Plus it deletes 21
-> lines of code and is a lot cleaner.
-> 
+To improve random read performance, we propose HPB (Host Performance
+Booster) which uses host system memory as a cache for the FTL mapping
+table. By using HPB, FTL data can be read from host memory faster than from
+NAND flash memory. 
 
-In fact, In our original design, we do not hope the user do the partial reads.
-Thank you for your work, but I still insist on adding this limit.
+The current version only supports the DCM (device control mode).
+This patch consists of 4 parts to support HPB feature.
 
-Thanks,
-Shukun
+1) UFS-feature layer
+2) HPB probe and initialization process
+3) READ -> HPB READ using cached map information
+4) L2P (logical to physical) map management
 
->  drivers/crypto/hisilicon/qm.c | 33 ++++++---------------------------
->  1 file changed, 6 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-> index 9bb263cec6c30..13ccb9e29a2e1 100644
-> --- a/drivers/crypto/hisilicon/qm.c
-> +++ b/drivers/crypto/hisilicon/qm.c
-> @@ -1064,19 +1064,10 @@ static ssize_t qm_cmd_read(struct file *filp, char __user *buffer,
->  	char buf[QM_DBG_READ_LEN];
->  	int len;
->  
-> -	if (*pos)
-> -		return 0;
-> -
-> -	if (count < QM_DBG_READ_LEN)
-> -		return -ENOSPC;
-> +	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n",
-> +			"Please echo help to cmd to get help information");
->  
-> -	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n",
-> -		       "Please echo help to cmd to get help information");
-> -
-> -	if (copy_to_user(buffer, buf, len))
-> -		return -EFAULT;
-> -
-> -	return (*pos = len);
-> +	return simple_read_from_buffer(buffer, count, pos, buf, len);
->  }
->  
->  static void *qm_ctx_alloc(struct hisi_qm *qm, size_t ctx_size,
-> @@ -2691,24 +2682,12 @@ static ssize_t qm_status_read(struct file *filp, char __user *buffer,
->  {
->  	struct hisi_qm *qm = filp->private_data;
->  	char buf[QM_DBG_READ_LEN];
-> -	int val, cp_len, len;
-> -
-> -	if (*pos)
-> -		return 0;
-> -
-> -	if (count < QM_DBG_READ_LEN)
-> -		return -ENOSPC;
-> +	int val, len;
->  
->  	val = atomic_read(&qm->status.flags);
-> -	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
-> -	if (!len)
-> -		return -EFAULT;
-> -
-> -	cp_len = copy_to_user(buffer, buf, len);
-> -	if (cp_len)
-> -		return -EFAULT;
-> +	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
->  
-> -	return (*pos = len);
-> +	return simple_read_from_buffer(buffer, count, pos, buf, len);
->  }
->  
->  static const struct file_operations qm_status_fops = {
-> 
+The UFS-feature is an additional layer to avoid the structure in which the
+UFS-core driver and the UFS-feature are entangled with each other in a 
+single module.
+By adding the layer, UFS-features composed of various combinations can be
+supported. Also, even if a new feature is added, modification of the 
+UFS-core driver can be minimized.
+
+In the HPB probe and init process, the device information of the UFS is
+queried. After checking supported features, the data structure for the HPB
+is initialized according to the device information.
+
+A read I/O in the active sub-region where the map is cached is changed to
+HPB READ by the HPB module.
+
+The HPB module manages the L2P map using information received from the
+device. For active sub-region, the HPB module caches through ufshpb_map
+request. For the in-active region, the HPB module discards the L2P map.
+When a write I/O occurs in an active sub-region area, associated dirty
+bitmap checked as dirty for preventing stale read.
+
+HPB is shown to have a performance improvement of 58 - 67% for random read
+workload. [1]
+
+This series patches are based on the "5.8/scsi-queue" branch.
+
+[1]:
+https://www.usenix.org/conference/hotstorage17/program/presentation/jeong
+
+Daejun park (5):
+ scsi: ufs: Add UFS feature related parameter
+ scsi: ufs: Add UFS feature layer
+ scsi: ufs: Introduce HPB module
+ scsi: ufs: L2P map management for HPB read
+ scsi: ufs: Prepare HPB read for cached sub-region
+ 
+ drivers/scsi/ufs/Kconfig      |    8 +
+ drivers/scsi/ufs/Makefile     |    3 +-
+ drivers/scsi/ufs/ufs.h        |   11 +
+ drivers/scsi/ufs/ufsfeature.c |  178 ++++
+ drivers/scsi/ufs/ufsfeature.h |   95 ++
+ drivers/scsi/ufs/ufshcd.c     |   19 +
+ drivers/scsi/ufs/ufshcd.h     |    3 +
+ drivers/scsi/ufs/ufshpb.c     | 2029 +++++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshpb.h     |  257 ++++++
+ 9 files changed, 2602 insertions(+), 1 deletion(-)
+ created mode 100644 drivers/scsi/ufs/ufsfeature.c
+ created mode 100644 drivers/scsi/ufs/ufsfeature.h
+ created mode 100644 drivers/scsi/ufs/ufshpb.c
+ created mode 100644 drivers/scsi/ufs/ufshpb.h
