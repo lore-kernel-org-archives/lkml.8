@@ -2,102 +2,86 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8534AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAEF207DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SiCFxSQR"
+	by mail.kernel.org (Postfix) with ESMTP id 6B66B206DC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgFFGcK (ORCPT
+        id S1728596AbgFFGc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 02:32:10 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1502 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgFFGcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 02:32:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5edb38100000>; Fri, 05 Jun 2020 23:30:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 05 Jun 2020 23:32:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 05 Jun 2020 23:32:09 -0700
-Received: from [10.26.72.65] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 6 Jun
- 2020 06:32:07 +0000
-Subject: Re: [PATCH 4.19 00/28] 4.19.127-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200605140252.338635395@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <29f81676-b293-2264-b7b4-77ebcd6326f1@nvidia.com>
-Date:   Sat, 6 Jun 2020 07:32:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591425040; bh=OZHQ47mDxq6zFilAAEclFEWXhcggRYiBL/bQd3vSZpk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SiCFxSQR149DTuOIhyHR+CM6OOtEHbk8DIO79DK5zagerJ4nyKQxonKwmIGunCWi2
-         zBsqXbouINkUd5MeAmpmHoggtqzSxncRosgV8w7xR7Pruj41jkEtP5HLhd0o0zGzY7
-         yx9UO6dpYhXQx2mnqZgKVFBZn5nTdSux3wxHMzyZ/ygl/Y4mfHKrUnApuuLMuHyBIR
-         1elq9IlZDVqJzvH8GB0CximWO1ZRoN0I26eKa4X2wNFUJ1uQg96sRjkh5+XZaqxY2Y
-         6HET2GaI+0R8SuOPKZM24j0AfmorM9RLSnnGjOxRuNQU85+dB0stdwlsk5DpRMEp84
-         Y69M+mO4YianQ==
+        Sat, 6 Jun 2020 02:32:26 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:38862 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726605AbgFFGc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 02:32:26 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2p0ONtesFg+AA--.1141S4;
+        Sat, 06 Jun 2020 14:32:21 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH 3/3] docs: admin-guide: Explain cmdline argument exceed_file_max_panic in fs.rst
+Date:   Sat,  6 Jun 2020 14:32:20 +0800
+Message-Id: <1591425140-20613-3-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1591425140-20613-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1591425140-20613-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxj2p0ONtesFg+AA--.1141S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFyxXry7tr4xuryxAF1fZwb_yoWkGFXEya
+        92gan3K3yUJFW8tF1UKFn8AFZxur42g3sIqws8ArW7G347twsrJ3WDArWDZ3yrur4v9Fsx
+        Wa4qvrWxWrnF9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbh8FF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
+        0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS
+        0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF1l42xK82
+        IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRiGYJUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Explain the cmdline argument exceed_file_max_panic in the file
+Documentation/admin-guide/sysctl/fs.rst
 
-On 05/06/2020 15:15, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.127 release.
-> There are 28 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.127-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ Documentation/admin-guide/sysctl/fs.rst | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
-All tests are passing for Tegra. I am missing the report for this one. I
-can see everything passed but now our builders have been off-lined for
-the weekend. Can't believe we are giving the builders the weekend off!
-
-Cheers
-Jon
-
+diff --git a/Documentation/admin-guide/sysctl/fs.rst b/Documentation/admin-guide/sysctl/fs.rst
+index 2a45119..0cfc5c4 100644
+--- a/Documentation/admin-guide/sysctl/fs.rst
++++ b/Documentation/admin-guide/sysctl/fs.rst
+@@ -126,6 +126,13 @@ Attempts to allocate more file descriptors than file-max are
+ reported with printk, look for "VFS: file-max limit <number>
+ reached".
+ 
++If there exists file descriptor leaks, when file-max limit reached,
++we can see that the system can not work well and at worst the user
++can do nothing, it is even impossible to execute reboot command due
++to too many open files in system. In order to reboot automatically
++to recover to the normal status, we can use the cmdline argument
++exceed_file_max_panic to control whether to call panic in this case.
++
+ 
+ nr_open
+ -------
 -- 
-nvpublic
+2.1.0
+
