@@ -2,69 +2,69 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4847FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24AAE207F9
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591463722;
-	bh=vsU2301gIDf/OmzajL3nrKOBah/MCVmrV9K45F8uQZ4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=c126vsqEzqh5z8jmtfZwffF7vSrVNSYGAJBSaUtTLWH3nM3ATkusutgHrE6yyiZkf
-	 QAMhcyBHHpvEfuYZy/q8q4G9puwHyYJHan1xXKq/o9m+s2NdStKDuI8V2XgY+4pwX4
-	 Qgq1gn2sGyQC85s54o7IlUg5fW/ZDQjT2274WP+o=
+	by mail.kernel.org (Postfix) with ESMTP id 7DE0D2067B
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgFFRPV (ORCPT
+        id S1728854AbgFFRR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 13:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39360 "EHLO mail.kernel.org"
+        Sat, 6 Jun 2020 13:17:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:44122 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728854AbgFFRPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 13:15:16 -0400
-Subject: Re: [GIT PULL] workqueue changes for v5.8-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591463716;
-        bh=vsU2301gIDf/OmzajL3nrKOBah/MCVmrV9K45F8uQZ4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ymoADC3PAEHbcnO7W5VzzLIjpEDAXLIvN2zKheAxaWT/WBBVxcgqmkToYhU2ZMRWk
-         T5Gjh7c94viNSIo47737KKsV/e8CaujOdnqNGZIntyoauvbdDFG+6sn28OgjGuqEGt
-         pzCTFTkTZ1VI8FAwILtFEl5cy5xOo3ZLJPdkv9aE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200605202022.GK31548@mtj.thefacebook.com>
-References: <20200605202022.GK31548@mtj.thefacebook.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200605202022.GK31548@mtj.thefacebook.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git
- for-5.8
-X-PR-Tracked-Commit-Id: 10cdb15759540f03d056e2f73fe26377ed7dcfda
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fe3bc8a988a4d38dc090e77071ff9b8ea266528a
-Message-Id: <159146371596.31751.11183902635465176338.pr-tracker-bot@kernel.org>
-Date:   Sat, 06 Jun 2020 17:15:15 +0000
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>
+        id S1726389AbgFFRR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 13:17:26 -0400
+IronPort-SDR: 8Q6KPWq+seKknQelPUbgjuXiUpwYkzIio3C2QENmQEF1MqoblsXTuQfbmX8VkaUqtnQaPO646T
+ 1nasLXgkGRiQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2020 10:17:24 -0700
+IronPort-SDR: j5v0gMfuGTjpLcr+3dT2X/x/7FkneIpNZ+Q06w7AiHW57U44I1+haxyfwLkFnvCrITwArhsAhc
+ FNXDJ8IXMbWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,481,1583222400"; 
+   d="scan'208";a="472257243"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Jun 2020 10:17:22 -0700
+Date:   Sun, 7 Jun 2020 01:18:23 +0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2][RFC] PM-runtime: Move all runtime usage related
+ function to runtime.c
+Message-ID: <20200606171822.GA3705@chenyu-office.sh.intel.com>
+References: <cover.1591380524.git.yu.c.chen@intel.com>
+ <3e7c571eb9e444c6e326d5cbb1f6e2dce4bb52fe.1591380524.git.yu.c.chen@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e7c571eb9e444c6e326d5cbb1f6e2dce4bb52fe.1591380524.git.yu.c.chen@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 5 Jun 2020 16:20:22 -0400:
+On Sat, Jun 06, 2020 at 03:05:35AM +0800, Chen Yu wrote:
+> In order to track all the runtime usage count change, move the code
+> related to runtime usage count change from pm_runtime.h to runtime.c,
+> so that in runtime.c we can leverage trace event to do the tracking.
+> Meanwhile export pm_runtime_get_noresume() and pm_runtime_put_noidle()
+> so the module can use them.
+> 
+> No functional change.
+>
+There is a compile issue found by lkp, will send a
+new version out.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-5.8
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fe3bc8a988a4d38dc090e77071ff9b8ea266528a
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks,
+Chenyu
