@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD63C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 859C920772
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA82B207BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RIMhhhmo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OVOMqoIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgFFQMW (ORCPT
+        id S1728730AbgFFQ05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 12:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36252 "EHLO
+        Sat, 6 Jun 2020 12:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbgFFQMU (ORCPT
+        with ESMTP id S1726075AbgFFQ05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 12:12:20 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89624C08C5C2
-        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 09:12:20 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s1so15456608ljo.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 09:12:20 -0700 (PDT)
+        Sat, 6 Jun 2020 12:26:57 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7974C08C5C2
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 09:26:56 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 202so7657157lfe.5
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 09:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=OG5llYWkn5ZpZagpX7W+tCCaDr6jjTc5m5YMMo8l7Zo=;
-        b=RIMhhhmoI8UwYKTaRLxkh0h69EFG+8vPgB0xAZcBNFa4lnNxKESC4KSXBt8gFrhAUE
-         Oi+JRFdXlVPE34BG7/HmvYmzlnC+hDguRK/3Xj+fX/PSPcMnlccucMCKj3+aODceoNyE
-         ypeL5bCX59z1VGqnVEkm5Cvy1e6gj0CXNxmJrezyXpcb6OJwFAwfVV2MtNqUk162Pjez
-         7O9akbngW5USEJsCP3ZLJOHqa8N2maMpTB/bobZ5wK/F+qoXkn/SIDO/GEslzgB5+r1X
-         NnR/t82w4yUl3Mu1uOPLVDcoZuhkJYXBfjnhcAn3/wMgF24LKVjWlHWYpH2shiAhSX2d
-         3whA==
+        bh=WVipMmANOU1TRs4bJMqo6LMdlj1YJeAI2TUZczm2aTw=;
+        b=OVOMqoIe555B1hV0WAdydYjQa7QDL/leZXjEUsZ8+vZo7TeKPnb+ULGJUXJGfOfTga
+         yFnVaDYZZlutVlYX/pUGAU3wdNkv+1U5cDWfoISagxa7G8SaiVktuSlF9q7+HTf7Xql5
+         vHEOvO8ZHYBGk8CQxE61hJJg9iRhJLZcOch9XyeBCvsuoDWRMsYuicf4b3eQbPBDWBHm
+         6ELxLqMp8NZmtZJIol7Px8HpK8rJMmlhYuXgigzLn9tvLY1R2udqC8M7+ERkTCGPkaA/
+         uzEb9Z2eYB54KkEx/nsTeXmApRRkv/yWngxm1sJ9t3mbdtoOMeGTva7KzBjbXegxzbvr
+         nrSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OG5llYWkn5ZpZagpX7W+tCCaDr6jjTc5m5YMMo8l7Zo=;
-        b=gSaMcJdkI7f58JSxei07/Oc8DvtW7HpbhC5/M7FPjfm0I1pDpeFGLUaXBe+382vajh
-         vp93bs0LN7mS1SnPXdGhxuWmtb9x/DbSkb+UJZ2zQW41XmFwHv5C2+vC4XegyinXG8lJ
-         LZuXDEHEbeFtiRvvocPju6pC+4TnJ//9apflhwLTM+Peds3b8LK4zZpmflLzlEL87e/W
-         uotRTt8hyky8xNbKCNeZkJFe7p3gYNPCDTBoUp+ycYzvY3RGJl1R6Gn/yG/KlCGPeEa2
-         eUaQAtw0GwSz9LEtw68xrmgXBkrVzptUUT9Ad0QigZX5Cl/jcWd0XtuPiyl673BKQ/q8
-         iCHQ==
-X-Gm-Message-State: AOAM530NYtjs0LafRqvFQ4xxgaAYawhKY0AjYIRPb1a8Wg7ZQXleDwZm
-        dtcyhuKCkAEUIHnolpwB814S0CYRAIOIsP8XkH7/JQ==
-X-Google-Smtp-Source: ABdhPJx1bJBffMprTiS1CSYX4PIv3MJoz0FvJRUKQinahJ0Wo/qcO1CalKfwe4bKmuLz4AUd5ISsCSvhslEIpIVUUWI=
-X-Received: by 2002:a2e:9c91:: with SMTP id x17mr7774513lji.366.1591459938611;
- Sat, 06 Jun 2020 09:12:18 -0700 (PDT)
+        bh=WVipMmANOU1TRs4bJMqo6LMdlj1YJeAI2TUZczm2aTw=;
+        b=QJfiQ9YKJyfIJOTwENyzo5vSJjtBBn9MbTOIBMtcBno2zh70QlMFLBwoNDSiOX8ehV
+         PbELHZ37GvL4YAAzIV/YX72IldaEnz5qIzItN3ZgbmiMPAx2V11dJ6g8zxHEf4kAEGFL
+         +qxJMB4Ys96kSW08gMTI6fhnGUXVMG8ETN7Nz28kFnx9MO8dbM+gJdUdM4bDSniQsdwg
+         3jJICX6GYMSPxd1HK3YRksQb7m2YDQ+6tqQvlK0p/yKJd2kWA7lkIJhOQyOpGGN75osE
+         fxPKvZWhfWKATqELxcT5RVLrziuPB8W/VxKqDZsN+iTjTO0v1eZHo3tOwxyQHg/0mGm5
+         0sjw==
+X-Gm-Message-State: AOAM5305ZqzrlITxr/picFnSwuwfdA40ujFY84mSdB375JcWLPxw0pn/
+        IpN5sR5+OfXD3/nkGRD8XbxiswMO7NyaD7kGPZMxQDzboZ1ajg==
+X-Google-Smtp-Source: ABdhPJyJjX1YglqzJhvvFpLs8hNGBh+SSfnFt6AP22UOBLoSHqX6yu6LfxIB4yln42330u/EGAq+9Ic0ZJFeWdKVYe8=
+X-Received: by 2002:a19:641b:: with SMTP id y27mr7657667lfb.74.1591460814960;
+ Sat, 06 Jun 2020 09:26:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200605140152.493743366@linuxfoundation.org>
-In-Reply-To: <20200605140152.493743366@linuxfoundation.org>
+References: <20200605140252.542768750@linuxfoundation.org>
+In-Reply-To: <20200605140252.542768750@linuxfoundation.org>
 From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 6 Jun 2020 21:42:07 +0530
-Message-ID: <CA+G9fYvDNVD0h8mKCsg+v2J=+dDuC4fcHT2Qk+u_1FMFHtWtZw@mail.gmail.com>
-Subject: Re: [PATCH 5.6 00/43] 5.6.17-rc1 review
+Date:   Sat, 6 Jun 2020 21:56:43 +0530
+Message-ID: <CA+G9fYs8M4h-j+t4zypuTw+013F5vkvkAUxKu6iEwGHRxKC_4Q@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/38] 5.4.45-rc1 review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     open list <linux-kernel@vger.kernel.org>,
         Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
@@ -78,11 +78,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 5 Jun 2020 at 19:48, Greg Kroah-Hartman
+On Fri, 5 Jun 2020 at 19:49, Greg Kroah-Hartman
 <gregkh@linuxfoundation.org> wrote:
 >
-> This is the start of the stable review cycle for the 5.6.17 release.
-> There are 43 patches in this series, all will be posted as a response
+> This is the start of the stable review cycle for the 5.4.45 release.
+> There are 38 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 >
@@ -91,10 +91,10 @@ On Fri, 5 Jun 2020 at 19:48, Greg Kroah-Hartman
 >
 > The whole patch series can be found in one patch at:
 >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.17-rc1.gz
+5.4.45-rc1.gz
 > or in the git tree and branch at:
 >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
+-rc.git linux-5.4.y
 > and the diffstat can be found below.
 >
 > thanks,
@@ -107,20 +107,20 @@ No regressions on arm64, arm, x86_64, and i386.
 Summary
 ------------------------------------------------------------------------
 
-kernel: 5.6.17-rc1
+kernel: 5.4.45-rc1
 git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
 le-rc.git
-git branch: linux-5.6.y
-git commit: 6266fb28693fc3d724b6a365a86e04a846a4f991
-git describe: v5.6.16-44-g6266fb28693f
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.16-44-g6266fb28693f
+git branch: linux-5.4.y
+git commit: 0e4e419d5fc3f776cc5ac829737dd6020f89f2a6
+git describe: v5.4.44-39-g0e4e419d5fc3
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.44-39-g0e4e419d5fc3
 
-No regressions (compared to build v5.6.16)
+No regressions (compared to build v5.4.44)
 
-No fixes (compared to build v5.6.16)
+No fixes (compared to build v5.4.44)
 
-Ran 33592 total tests in the following environments and test suites.
+Ran 32219 total tests in the following environments and test suites.
 
 Environments
 --------------
@@ -149,36 +149,36 @@ Test Suites
 * kselftest/filesystems
 * kselftest/net
 * libgpiod
-* libhugetlbfs
 * linux-log-parser
 * ltp-cap_bounds-tests
 * ltp-commands-tests
 * ltp-containers-tests
-* ltp-controllers-tests
 * ltp-cpuhotplug-tests
 * ltp-crypto-tests
 * ltp-dio-tests
+* ltp-hugetlb-tests
 * ltp-io-tests
-* ltp-ipc-tests
 * ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
+* ltp-mm-tests
 * ltp-sched-tests
-* ltp-securebits-tests
 * ltp-syscalls-tests
 * perf
+* v4l2-compliance
+* libhugetlbfs
 * ltp-cve-tests
-* ltp-hugetlb-tests
-* ltp-mm-tests
 * ltp-fcntl-locktests-tests
 * ltp-filecaps-tests
 * ltp-fs-tests
 * ltp-fs_bind-tests
 * ltp-fs_perms_simple-tests
 * ltp-fsx-tests
-* ltp-open-posix-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
 * network-basic-tests
-* v4l2-compliance
+* ltp-controllers-tests
+* ltp-open-posix-tests
 * kvm-unit-tests
 * kselftest-vsyscall-mode-native
 * kselftest-vsyscall-mode-native/drivers
