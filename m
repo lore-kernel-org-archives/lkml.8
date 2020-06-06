@@ -2,87 +2,142 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 09:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73417C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 10:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBDA20897
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 09:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534ED20656
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 10:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgFFJur (ORCPT
+        id S1728696AbgFFKPQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 05:50:47 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60212 "EHLO loongson.cn"
+        Sat, 6 Jun 2020 06:15:16 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2101 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728662AbgFFJuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 05:50:40 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz2nZZtteMWk+AA--.1096S3;
-        Sat, 06 Jun 2020 17:50:18 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 2/3] irqchip/ti-sci-inta: Fix return value about devm_ioremap_resource()
-Date:   Sat,  6 Jun 2020 17:50:16 +0800
-Message-Id: <1591437017-5295-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1591437017-5295-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1591437017-5295-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxz2nZZtteMWk+AA--.1096S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7JryxCw1kKrWruw1DKF48JFb_yoWDXrg_Ca
-        1j9an3Kryv9r4DAry8tw4fZFy7tFnYgr1v93y0qa9Iv34UWwn3Cr42vrn5Jws3Ga1ktrZ7
-        KrW3Zr1ayr17CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbykFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
-        0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-        e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI
-        8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-        jcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0x
-        kIwI1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
-        MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
-        AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
-        80aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI
-        43ZEXa7VUUy89tUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        id S1725831AbgFFKPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 06:15:15 -0400
+Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id EEEDD7E626AAB48BA848;
+        Sat,  6 Jun 2020 18:15:12 +0800 (CST)
+Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.10]) by
+ dggemi402-hub.china.huawei.com ([10.3.17.135]) with mapi id 14.03.0487.000;
+ Sat, 6 Jun 2020 18:15:06 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Philip Li <philip.li@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+CC:     "kbuild@lists.01.org" <kbuild@lists.01.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "lkp@intel.com" <lkp@intel.com>, Dan Carpenter <error27@gmail.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: RE: [kbuild-all] Re: [PATCH 1/3] dma-direct: provide the ability to
+ reserve per-numa CMA
+Thread-Topic: [kbuild-all] Re: [PATCH 1/3] dma-direct: provide the ability
+ to reserve per-numa CMA
+Thread-Index: AQHWOVDkjt//8Ixq2UKuAS4YcS/rw6jH0AqAgAG65oD//6sagIABO3aAgADxzcA=
+Date:   Sat, 6 Jun 2020 10:15:06 +0000
+Message-ID: <B926444035E5E2439431908E3842AFD24E1541@DGGEMI525-MBS.china.huawei.com>
+References: <20200603024231.61748-2-song.bao.hua@hisilicon.com>
+ <20200604113631.GP30374@kadam>
+ <B926444035E5E2439431908E3842AFD24E0011@DGGEMI525-MBS.china.huawei.com>
+ <20200605085751.GQ30374@kadam> <20200606034655.GH2459@intel.com>
+In-Reply-To: <20200606034655.GH2459@intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.200.154]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When call function devm_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
 
-Fixes: 9f1463b86c13 ("irqchip/ti-sci-inta: Add support for Interrupt Aggregator driver")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/irqchip/irq-ti-sci-inta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index c20c9f7..df1f7fe 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -570,7 +570,7 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	inta->base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(inta->base))
--		return -ENODEV;
-+		return PTR_ERR(inta->base);
- 
- 	domain = irq_domain_add_linear(dev_of_node(dev),
- 				       ti_sci_get_num_resources(inta->vint),
--- 
-2.1.0
+> -----Original Message-----
+> From: Philip Li [mailto:philip.li@intel.com]
+> Sent: Saturday, June 6, 2020 3:47 PM
+> To: Dan Carpenter <dan.carpenter@oracle.com>
+> Cc: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>;
+> kbuild@lists.01.org; hch@lst.de; m.szyprowski@samsung.com;
+> robin.murphy@arm.com; catalin.marinas@arm.com; lkp@intel.com; Dan
+> Carpenter <error27@gmail.com>; kbuild-all@lists.01.org;
+> iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>; Jonathan
+> Cameron <jonathan.cameron@huawei.com>; John Garry
+> <john.garry@huawei.com>
+> Subject: Re: [kbuild-all] Re: [PATCH 1/3] dma-direct: provide the ability to
+> reserve per-numa CMA
+> 
+> On Fri, Jun 05, 2020 at 11:57:51AM +0300, Dan Carpenter wrote:
+> > On Fri, Jun 05, 2020 at 06:04:31AM +0000, Song Bao Hua (Barry Song)
+> wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
+> > > > Sent: Thursday, June 4, 2020 11:37 PM
+> > > > To: kbuild@lists.01.org; Song Bao Hua (Barry Song)
+> > > > <song.bao.hua@hisilicon.com>; hch@lst.de;
+> > > > m.szyprowski@samsung.com; robin.murphy@arm.com;
+> > > > catalin.marinas@arm.com
+> > > > Cc: lkp@intel.com; Dan Carpenter <error27@gmail.com>;
+> > > > kbuild-all@lists.01.org; iommu@lists.linux-foundation.org;
+> > > > linux-arm-kernel@lists.infradead.org;
+> > > > linux-kernel@vger.kernel.org; Linuxarm <linuxarm@huawei.com>;
+> > > > Jonathan Cameron <jonathan.cameron@huawei.com>; John Garry
+> > > > <john.garry@huawei.com>
+> > > > Subject: Re: [PATCH 1/3] dma-direct: provide the ability to
+> > > > reserve per-numa CMA
+> > > >
+> > > > Hi Barry,
+> > > >
+> > > > url:
+> > > > https://github.com/0day-ci/linux/commits/Barry-Song/support-per-nu
+> > > > ma-CM
+> > > > A-for-ARM-server/20200603-104821
+> > > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+> > > > for-next/core
+> > > > config: x86_64-randconfig-m001-20200603 (attached as .config)
+> > > > compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> > > >
+> > > > If you fix the issue, kindly add following tag as appropriate
+> > > > Reported-by: kernel test robot <lkp@intel.com>
+> > > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > >
+> > > Dan, thanks! Good catch!
+> > > as this patch has not been in mainline yet, is it correct to add these
+> "reported-by" in patch v2?
+> Hi Barry, we provides the suggestion here, but you may decide to add or not as
+> appropriate for your situation. For the patch still under development, it is not
+> that necessary to add i think.
+
+Hi Philip, Dan,
+Thanks for clarification.
+> 
+> >
+> > These are just an automated email from the zero day bot.  I look over
+> > the Smatch warnings and then forward them on.
+> >
+> > regards,
+> > dan carpenter
+
+Best regards
+Barry
 
