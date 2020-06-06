@@ -2,97 +2,123 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36516C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50907206A2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="lfkkMYR9"
+	by mail.kernel.org (Postfix) with ESMTP id 106B8206DC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591404634;
+	bh=CuRHLjTyuPunfNrv70CyULCZflgdhzPhs1cTICD3X2k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cdcR1eh+THADUVEDPs7rA0VqZZSA9p608iyhQaleD5rW+0778l7+BVMQ1tlS0XFtB
+	 mqJA3wfR5Iy4AvFJ3V0nk3x7aUXW351b2cYBn97yH0ckLF5j/vRoCrnHmjtdAQfcgr
+	 JeEbUR7PmrFEDpaDmab229E1LLiVDwaavCFSbUTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgFFAuA (ORCPT
+        id S1728549AbgFFAud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 20:50:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41287 "EHLO ozlabs.org"
+        Fri, 5 Jun 2020 20:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728353AbgFFAuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 20:50:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728353AbgFFAuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 20:50:32 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49f1BX1WpMz9sPF;
-        Sat,  6 Jun 2020 10:49:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1591404598;
-        bh=bpz89eaW2nodXZsziinGBtDvy2HqL3ahKn1/V/FFoQg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=lfkkMYR9ta/gv5TFJjtrQEC8a8XmvWYaxu1udQreNWFEiovWa5hqfxX1/GkNas9Jb
-         353UR7g42BQnlkRNxq+dLf+Krax6hZenJ/w8DCede5c5a6ueCGAu+BIeeun3UgCuTh
-         THB64aOM7w/RyfJlxpp5cVVImWQ274o/DDXqPglIJaBOoVMR8AA3eQwpAfjFhtmoCz
-         YPNHWcS0xAySPVmHcT5FgsM+qenQfehzI4Z7VU/aNTMyu9LlFtM5yA/wtM5Ol/irC8
-         8w51uT9sez3I0LiF+T68/LXhAdE8CZyJsNbEP3FOwTROQVu95OpZK/zz0brfVC98kH
-         rbamWSCf12F+g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, ajd@linux.ibm.com,
-        alistair@popple.id.au,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
-        chenzhou10@huawei.com,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        christophe.leroy@csgroup.eu, clg@kaod.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        ego@linux.vnet.ibm.com,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        emmanuel.nicolet@gmail.com, fbarrat@linux.ibm.com,
-        geoff@infradead.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        haren@linux.ibm.com, hbathini@linux.ibm.com,
-        Herbert Xu <herbert@gondor.apana.org.au>, huhai@tj.kylinos.cn,
-        jniethe5@gmail.com, kernelfans@gmail.com, kjain@linux.ibm.com,
-        leobras.c@gmail.com, leonardo@linux.ibm.com,
+        by mail.kernel.org (Postfix) with ESMTPSA id 75869206A2;
+        Sat,  6 Jun 2020 00:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591404630;
+        bh=CuRHLjTyuPunfNrv70CyULCZflgdhzPhs1cTICD3X2k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iMlBI540mDGXKme1TVukXUOLwM8Rd5wwZISsElK/RsPhEsrg1Pqatge8MQ/nxnxGw
+         ostJsU+3eK2bFQh7gLlQ8IKysxp6XCtWgiFdAuUe1R39qqzzGHO0GDSII6lTtMm0ql
+         3G1z4bMUsdDh+TxnTUa26vcL4W7OD22qVBzm2hsY=
+Date:   Fri, 5 Jun 2020 17:50:30 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Rich Felker <dalias@libc.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linuxram@us.ibm.com, mahesh@linux.ibm.com, michal.simek@xilinx.com,
-        mikey@neuling.org, Nathan Chancellor <natechancellor@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        rzinsly@linux.ibm.com, sbobroff@linux.ibm.com,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, st5pub@yandex.ru,
-        Takashi Iwai <tiwai@suse.de>, wangxiongfeng2@huawei.com,
-        wsa@kernel.org
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.8-1 tag
-In-Reply-To: <CAHk-=wg33hLZHjqcMhvWzmgNrE6Gv+xpEcFXUx7iUHS2t5QtdQ@mail.gmail.com>
-References: <87eeqth3hi.fsf@mpe.ellerman.id.au> <CAHk-=wh5vSwYqF=YiKOOGBHE=hCwnes_ndbP4QOyjPK_Xocz7w@mail.gmail.com> <CAHk-=wg33hLZHjqcMhvWzmgNrE6Gv+xpEcFXUx7iUHS2t5QtdQ@mail.gmail.com>
-Date:   Sat, 06 Jun 2020 10:50:22 +1000
-Message-ID: <877dwlggq9.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Rob Landley <rob@landley.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] sh: remove sh5 support
+Message-Id: <20200605175030.feba7dc6fc1233b815c72afb@linux-foundation.org>
+In-Reply-To: <CAMuHMdVTWz33sbn2PPvcNW8KnAcNFvv31yj-z5V3VJ87Xv=tjQ@mail.gmail.com>
+References: <20200528054600.GA29717@infradead.org>
+        <20200528161416.GY1079@brightrain.aerifal.cx>
+        <20200529143059.GA25475@infradead.org>
+        <20200529175335.GK1079@brightrain.aerifal.cx>
+        <e86e1d78-9597-811a-da0e-42a910b0c9fe@physik.fu-berlin.de>
+        <20200601181259.GV1079@brightrain.aerifal.cx>
+        <20200602013332.GY1079@brightrain.aerifal.cx>
+        <0af28795-b27a-2dd9-0d0f-c2a8d4b8d512@physik.fu-berlin.de>
+        <20200605154343.GU1079@brightrain.aerifal.cx>
+        <c4900bf6-99b3-c9b9-4fd0-7f491bd46de6@physik.fu-berlin.de>
+        <20200605155954.GV1079@brightrain.aerifal.cx>
+        <25e0729d-8158-94a4-f081-ccdfa50ecb1d@physik.fu-berlin.de>
+        <CAMuHMdVTWz33sbn2PPvcNW8KnAcNFvv31yj-z5V3VJ87Xv=tjQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> On Fri, Jun 5, 2020 at 12:01 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> ..and then when I actually compared whether I otherwise got the same
->> result as you, I realized that this all depends on the module tree.
->>
->> I'll go merge that first, and then re-do this all. Oh well.
->
-> Ok, redone and pushed out. Can you check that the end result makes sense?
+On Fri, 5 Jun 2020 20:23:07 +0200 Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-Yep, looks good to me. Has passed all my basic build & boot tests.
+> Hi Adrian,
+> 
+> On Fri, Jun 5, 2020 at 7:58 PM John Paul Adrian Glaubitz
+> <glaubitz@physik.fu-berlin.de> wrote:
+> > On 6/5/20 5:59 PM, Rich Felker wrote:
+> > >> Ah, sorry, I missed that. You're right, it should probably go through
+> > >> someone else's tree then.
+> > >
+> > > Do you know if it's needed to un-break sh4? If so we should push to
+> > > get whoever has jurisdiction over it to include it; otherwise I'm
+> > > indifferent.
+> 
+> I think the above is about the asm-generic/vmlinux.lds.h patch?
+> https://marc.info/?l=linux-sh&m=158429470221261&w=2
+> 
+> That one falls under Arnd's jurisdiction.
+> And AFAIUC, it matters for recent binutils only? So Arnd should know.
+> 
 
-cheers
+Aligning RO_AFTER_INIT_DATA is simply a no-brainer:
+
+--- a/include/asm-generic/vmlinux.lds.h~include-asm-generic-vmlinuxldsh-align-ro_after_init
++++ a/include/asm-generic/vmlinux.lds.h
+@@ -374,6 +374,7 @@
+  */
+ #ifndef RO_AFTER_INIT_DATA
+ #define RO_AFTER_INIT_DATA						\
++	. = ALIGN(8);							\
+ 	__start_ro_after_init = .;					\
+ 	*(.data..ro_after_init)						\
+ 	JUMP_TABLE_DATA							\
+
+So I'll send this in to Linus for 5.8-rc1.  And I think I'll add a cc:stable to
+it, so people can use older kernels with newer toolchains.
+
+
+I still have a few other sh patches sitting here:
+
+https://ozlabs.org/~akpm/mmotm/broken-out/sh-clkfwk-remove-r8-r16-r32.patch
+https://ozlabs.org/~akpm/mmotm/broken-out/sh-remove-call-to-memset-after-dma_alloc_coherent.patch
+https://ozlabs.org/~akpm/mmotm/broken-out/sh-use-generic-strncpy.patch
+https://ozlabs.org/~akpm/mmotm/broken-out/sh-add-missing-export_symbol-for-__delay.patch
+
+What should I do with those?
