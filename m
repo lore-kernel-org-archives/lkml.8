@@ -2,135 +2,122 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6598C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 12:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94BF92073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 12:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08DF92074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z8/PWot/"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="hBxIwCoO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgFFM6K (ORCPT
+        id S1727910AbgFFN2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 08:58:10 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26816 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728796AbgFFM6I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 08:58:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591448287; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=L0dPa4WboKgSG/BnSettdX0rSi6ZEV66DQzLoB4TqbA=;
- b=Z8/PWot/mZJpZ6offqOlc5SSFc4YZOvHO41zPKsZo9Glg0S1hFBnYnYMSe6f5Ovn4ygV7g6u
- qGZYVfCLFv9idF5EwKYG/IRKroCaxQwI21G9YjQY2H/yt7GO+X+v6ZCo41LHNMsw3G3wBqwK
- mBMiW/O9okwMb12HsbEWuP41Lic=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5edb92d8b2f512dd9d5705bd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 06 Jun 2020 12:58:00
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D4F1BC43391; Sat,  6 Jun 2020 12:57:59 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bgodavar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 42C22C433CA;
-        Sat,  6 Jun 2020 12:57:59 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Sat, 6 Jun 2020 09:28:10 -0400
+Received: from mail-db8eur05on2121.outbound.protection.outlook.com ([40.107.20.121]:23583
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725831AbgFFN2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 09:28:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EaY2d5jj8+N1oYm/oYcfZtmtzv/HOQuidUZ+99cxZg31XvaaA0G0r4ht0msw3wK1zS4lzC2821HhMPskrYFUoQVpge9WcJ4Pr+NqX+8Vo7vJK24lbS5BjZsWSeZ9HYt2ao4PurOOw+NS4N13PKw3TmXQSbq/jweBJ0qz/93PeesFlEsa+J7uhBTw9y6T1P/VhlbUbroFRhaWfCMTMZs/mhLI1kWM1hgKNjRBUbjs+BCcXMkNZPvk25gDiLVL+An+4IbMf5KaW1KJmVxZ/9WQa9YXHFbub9qeD/YZu2pZo3EzBqDEc9O86i/I5qptbZaNAfYAuLM/r/lncMTjxem0iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6tQu/+U+RiR3o1XbXMXm/y3rifPMPNR6XMErWrp41Js=;
+ b=Eh7717LbE4vvz/j0OLoF79EvtpokSN1f8Etnja2xhMkYaCxrgyNyu20hYtX6VIb+Ve4viFVMC00LxOlXQCxu9Ey7k9XGMvm7J5SWYth2V/piAnoswY9m7xp4QrKOZ7nhXhLybPLvKex9SqkPjcqC3J3n4Sg6w0zBMHAUZb5mWEDx+wBP7HB+pViAOzY4y5UENZnYuhzWVQl5gzAKd6INuMbloLNDrq19zyXwimfeG/oBbALInLPhxZIKVE7cgBVNwgiGTqdvYDWVPC7hIsZa0kvvRAghnsx6lZnBatiiFxJPWmMgJav5hxm0wtAEId9NMmDQe/XDnxbVY0TJYlWLLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6tQu/+U+RiR3o1XbXMXm/y3rifPMPNR6XMErWrp41Js=;
+ b=hBxIwCoOVXmAOgC7tyGHUxq24tj+pkSsOHrQ7KmSKi4jM05j1Owh+FLmR6PmIjSgJPKJE48K4AdLfHm6nOfSVxarBbpTwb0ROnMzc9lBwEtlq63QXMiojzi6CU/pcvqmRKJNFl3nq+CTflT+gbJ07sGaR0Svx/09llZpPMd3hkU=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=virtuozzo.com;
+Received: from AM0PR08MB5140.eurprd08.prod.outlook.com (2603:10a6:208:162::17)
+ by AM0PR08MB3987.eurprd08.prod.outlook.com (2603:10a6:208:134::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Sat, 6 Jun
+ 2020 13:28:04 +0000
+Received: from AM0PR08MB5140.eurprd08.prod.outlook.com
+ ([fe80::b8a9:edfd:bfd6:a1a2]) by AM0PR08MB5140.eurprd08.prod.outlook.com
+ ([fe80::b8a9:edfd:bfd6:a1a2%6]) with mapi id 15.20.3066.022; Sat, 6 Jun 2020
+ 13:28:03 +0000
+From:   Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH] lib/lz4: smatch warning in LZ4_decompress_generic()
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Gao Xiang <xiang@kernel.org>
+Message-ID: <e109dba0-eaa8-aa21-3b97-f999c76a72a4@virtuozzo.com>
+Date:   Sat, 6 Jun 2020 16:28:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 06 Jun 2020 18:27:59 +0530
-From:   bgodavar@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Zijun Hu <zijuhu@codeaurora.org>, linux-kernel@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Claire Chang <tientzu@chromium.org>, hemantg@codeaurora.org
-Subject: Re: [PATCH 2/3] Bluetooth: hci_qca: Skip serdev wait when no transfer
- is pending
-In-Reply-To: <20200605114552.2.I2a095adb2a9a98b15c11d7310db142b27f8cab28@changeid>
-References: <20200605184611.252218-1-mka@chromium.org>
- <20200605114552.2.I2a095adb2a9a98b15c11d7310db142b27f8cab28@changeid>
-Message-ID: <ca3bb368e9959770720c8a3fbe149652@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-ClientProxiedBy: AM0PR04CA0004.eurprd04.prod.outlook.com
+ (2603:10a6:208:122::17) To AM0PR08MB5140.eurprd08.prod.outlook.com
+ (2603:10a6:208:162::17)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.16.24.21] (185.231.240.5) by AM0PR04CA0004.eurprd04.prod.outlook.com (2603:10a6:208:122::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Sat, 6 Jun 2020 13:28:03 +0000
+X-Originating-IP: [185.231.240.5]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5e3c6061-3697-43c9-6332-08d80a1d70da
+X-MS-TrafficTypeDiagnostic: AM0PR08MB3987:
+X-Microsoft-Antispam-PRVS: <AM0PR08MB398727EA13CE12D5BC752669AA870@AM0PR08MB3987.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:311;
+X-Forefront-PRVS: 04267075BD
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sOctHLxpIBenbztGi1mwIo6HUWkGYc/CTzAAlXOnHX4PekyWSWeZoveX+lXK2Qzx6WtN/bx5iOMztNuYWKAB3Ik3BucQArOmyY1vSFc4Bd25B9KLgwKZyU3K8zHvaS6IlleYeizb1/2bbcnUxPIf6RbkYyBzt+cgS3VM+QUw3NH0Esd9byEjG/DiJGZhfagelPn1jR6jm0AMuFSmb+qpA6SA076kGPd/0nBOIcgK96VMFG/GcwOTzCIPmf/y9aBmDxmhdVYGpqOIFz3Bjbh+y0gF70kviZSqtxriLQ0Oq+9mpa/8aBUuyFb032QKW8BwBIAz5s1pMSM/dmH5gjGtKp3RPY4fMc5N+mJFE1NMdRMP5sffWeDtnsVNSUeu4cJOlE5V0G6//ecmQ1iOUEY63RPz0d5TO3hEFwzzr+qu8DmjlDKtx/w4k0Hgla/g86SQjH4aCIj+xur7a/XehxHlHbCLpbWCGNPG8SuLfqPUsIA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB5140.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(39840400004)(366004)(4326008)(478600001)(6916009)(36756003)(83380400001)(966005)(54906003)(2906002)(16576012)(316002)(52116002)(26005)(8936002)(956004)(2616005)(6486002)(4744005)(86362001)(66946007)(66556008)(31686004)(8676002)(66476007)(16526019)(186003)(5660300002)(31696002)(41533002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: KfoDA2lZcwhqYfOs/vUNRqnbgK5EBb6AWYjeExMcAw1Mi2HTVQnTEw9/z7qnJSDtqEazDYlXbtkH07ynSQAoChKMyLZWl/5PdaCe0s/o5Yp1fWyubAQWDtgMQ3kwekWt025OO8p+woc6oSyjXXm7o3IyM0pSqi1/T/0qlhhxcIOUeJujXAoMaEGtGWIdtg2ixtBJTQVIzW14BeXxlwZramSLm1CbK0Yq0Y4MSZe+MN4l0F1b1WelhMvaDHx3nXqDrK5/EqjWOFnvDet7S8zN+nelM9qSIvEDzTPeEbAUxoU1VC7owXEx21cOwypO5CSc4fsqAXTb6mbBoewoabqjrNhc/XvXJTKzy5qLDcWaR3beKRSbD68AUxzDhgfnZDWeJNAEkRYRTsB4o5SsDLf8L6rE5tiVHskOJKY7zxQ19APo8bpVMprcI//EpgrEVEZQ7WXZTHZn9QVdXFY7Smb9cXKJ/4UxCNNcw0nkFmJGbOk=
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e3c6061-3697-43c9-6332-08d80a1d70da
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2020 13:28:03.7984
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ltDzdooo/0nXoIa+bZzAZn3FvBx20ZNtvUmQvs36H+kIC1zhVrsuUcamDBxu1Hw78QyekgzPcjzXppQ9BG8jyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3987
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi matthias,
+Found by smatch:
+lib/lz4/lz4_decompress.c:150 LZ4_decompress_generic() warn: maybe use && instead of &
+It was realy incorrectly copied from
+https://github.com/lz4/lz4/commit/45f8603aae389d34c689d3ff7427b314071ccd2c
+line 1431
 
-On 2020-06-06 00:16, Matthias Kaehlcke wrote:
-> qca_suspend() calls serdev_device_wait_until_sent() regardless of
-> whether a transfer is pending. While it does no active harm since
-> the function should return immediately it makes the code more
-> confusing. Add a flag to track whether a transfer is pending and
-> only call serdev_device_wait_until_sent() is needed.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> 
->  drivers/bluetooth/hci_qca.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index b1d82d32892e9..90ffd8ca1fb0d 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -2050,6 +2050,7 @@ static int __maybe_unused qca_suspend(struct 
-> device *dev)
->  	struct hci_uart *hu = &qcadev->serdev_hu;
->  	struct qca_data *qca = hu->priv;
->  	unsigned long flags;
-> +	bool tx_pending = false;
->  	int ret = 0;
->  	u8 cmd;
-> 
-> @@ -2083,6 +2084,7 @@ static int __maybe_unused qca_suspend(struct 
-> device *dev)
-> 
->  		qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
->  		qca->ibs_sent_slps++;
-> +		tx_pending = true;
->  		break;
-> 
->  	case HCI_IBS_TX_ASLEEP:
-> @@ -2099,8 +2101,10 @@ static int __maybe_unused qca_suspend(struct 
-> device *dev)
->  	if (ret < 0)
->  		goto error;
-> 
-> -	serdev_device_wait_until_sent(hu->serdev,
-> -				      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
-> +	if (tx_pending) {
-[Bala]: Good idea why don't we move this call to switch case under 
-HCI_IBS_TX_AWAKE
-https://elixir.bootlin.com/linux/latest/source/drivers/bluetooth/hci_qca.c#L1994
+Fixes: 2209fda323e2 ("lib/lz4: update LZ4 decompressor module")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+---
+ lib/lz4/lz4_decompress.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-i.e. i would recommend below sequence
+diff --git a/lib/lz4/lz4_decompress.c b/lib/lz4/lz4_decompress.c
+index 0c9d3ad..f7f7dca 100644
+--- a/lib/lz4/lz4_decompress.c
++++ b/lib/lz4/lz4_decompress.c
+@@ -147,7 +147,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
+ 		    * strictly "less than" on input, to re-enter
+ 		    * the loop with at least one byte
+ 		    */
+-		   && likely((endOnInput ? ip < shortiend : 1) &
++		   && likely((endOnInput ? ip < shortiend : 1) &&
+ 			     (op <= shortoend))) {
+ 			/* Copy the literals */
+ 			memcpy(op, ip, endOnInput ? 16 : 8);
+-- 
+1.8.3.1
 
-1. Send SLEEP BYTE
-2. wait for some time to write SLEEP Byte on Tx line
-3. call for Tx clock off qca_wq_serial_tx_clock_vote_off
-
-> +		serdev_device_wait_until_sent(hu->serdev,
-> +					      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
-> +	}
-> 
->  	/* Wait for HCI_IBS_SLEEP_IND sent by device to indicate its Tx is 
-> going
->  	 * to sleep, so that the packet does not wake the system later.
