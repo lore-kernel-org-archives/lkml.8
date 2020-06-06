@@ -2,220 +2,95 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9153C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 05:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CECC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0E2206DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 05:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12E520723
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="oT9c+V5G"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gNCGfebt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgFFFkU (ORCPT
+        id S1726554AbgFFGAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 01:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgFFFkT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 01:40:19 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E13C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 22:40:18 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id q13so9093571edi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 22:40:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wMJkhQnWLIK0t2nhWF/2eUs4TMDM1FwvFYEyzsHbS2k=;
-        b=oT9c+V5GfGutAJ8014uEjd++MW4JDywDazRZT9HiOfz/byK/B3E3HwW/7Be+dS9xhx
-         JF48qTS+1CbxoUufXNEWn/DXWjQmAf0GrTQg9cHMlSeQLe7TeKhvk8BGD7XFv54oVEMq
-         lcq4HZCIzNbchMlSci98gWrdFYNwBFSBHDu4KJJ0K8dNIl11lJhMRT80oaQNmpJ0JyaK
-         Rsn2CLKZs5i32GWDaDniLn8H4xg0Pi4vVqspYlmQiXwri71Ew/GjLPxCjcAV4Mb7hs2J
-         K0hjZ2S35SGjPcMZnqhl5h9/b8Tyl/9Zo87EGdVLFdju3320HRrskjJauYmNuvNZaGbY
-         7mDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wMJkhQnWLIK0t2nhWF/2eUs4TMDM1FwvFYEyzsHbS2k=;
-        b=G2XJvf6rsmVFxifO5Oq+Z3mFEKCGFimLZY2xB8e4E+7odt0ZiVLLJ0bizXEXj9xTKM
-         1k7EBfKNX/JAMDXbJCfboKsvrJtE5vd8xKiwvSVl6/U/Tqkh8pydMilbzTTCscf9h1U7
-         bhXHB7mhp21EkiFonCny7djJu2t+EI6j6WLqTLy43tijKpKS+Cylfs58ye/5alki4/6h
-         Ic7At4QHq/CNmzvfrLNpk8TEejJds+wJr8LvILVmLlfOldCN9C28YxDx/CYD90H6Vym4
-         Q3S9oDyB8bhVxzTHxhxy8clRL2Q21+rt/yK+2U3myGJ2Bq3AXuPMqbm9xqopjoxkO4SP
-         aymA==
-X-Gm-Message-State: AOAM531jeE5+iyQH+Fx7zLrL74uML3Jvzzqpt7ROSvXN1IT3jLO/Srff
-        1GCoeedL/maRYt3h4Xzj3JnyblrVh65ln0ZzXArm7g==
-X-Google-Smtp-Source: ABdhPJypPEN+3QTtet+AfbpuEfd0Jqz2YHf3qVsFbXVSBjLFnbM9Sv84m0UmAGLyMZleeanm+YT2sFXqR7xqGXtfFpM=
-X-Received: by 2002:aa7:d483:: with SMTP id b3mr5079356edr.71.1591422016776;
- Fri, 05 Jun 2020 22:40:16 -0700 (PDT)
+        Sat, 6 Jun 2020 02:00:41 -0400
+Received: from mout.web.de ([212.227.15.4]:41239 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgFFGAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 02:00:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591423234;
+        bh=H1Ao6vP9lU9EngLrseK+nBm2ub0kJKTgSlPISojb9Fc=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=gNCGfebth34IK5pFJBE9pLGSTqQJ5oOHDcK6xbnOs54+Glwmobfu+iHqs6TWgy8Mv
+         Tg+oyGvX+0UO3oVjx+rxcF/ORcHju56yAliVMj9ro6eGznniks3bdy0LJ3Lw0vWkqG
+         faA04T7UYmIF56406SiX1L4SkTX6FNxpT1C0uQ20=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.40.239]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2BI2-1ixzPY0HuQ-013cVF; Sat, 06
+ Jun 2020 08:00:34 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Joe Perches <joe@perches.com>
+Subject: Re: coccinelle: api: add kzfree script
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Message-ID: <e10d3917-da30-94d6-9f41-b0343daf3e23@web.de>
+Date:   Sat, 6 Jun 2020 08:00:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200520171457.11937-1-jernej.skrabec@siol.net>
-In-Reply-To: <20200520171457.11937-1-jernej.skrabec@siol.net>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Sat, 6 Jun 2020 02:40:05 -0300
-Message-ID: <CAAEAJfD2MeaZrRqjYU9uD9cbJZE1JZUz0VeMw01YJSL+Vro-Hg@mail.gmail.com>
-Subject: Re: [PATCH] media: cedrus: Add support for additional output formats
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:YRbsCH7PYA848quT921A20ta+BtCVKbtvkjQLNMZwo7UgvP3arS
+ oHuP2hBrrwCnlVaRqTvnOTmPuvoFqEh6z1JmUhrU5aAU4cQkiplI9k8d3RTD+SLTQpHTT9b
+ ED5mg4NfN4xxinp5O9BUr60e4P31u3MfMsAzjN3KPBriyPpZw/jqSfxzSphk6Ihunh5hvaD
+ BsVxfZZUC2NS8qAZt03vg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CMT8fhY/qqs=:oHylNa2ezW901Ss5jsFNbz
+ KqHJbN0AAXIwlFx6sc0SnCABecSqlWMrHLxA3JP/bi636I89HYqCOR3kqKdCelcFqMzBuuV/h
+ nke0fBo4HGiXYxda7Cy2jA+GrY8pSfE0N08DOTXnl3vyNkxEXmTGMuiVX8wpMXYt9cq/7+DAj
+ fmo9aiN7rkuyr4mkKSzwtbn3QZHJAgPMJuvGLytQcRgQeYa1Gu9T/6cXGy7VnKasAwTmCq9rS
+ 2TPAGXxcuoGtQFEYcv61H8uDlP230YaM7MDCHPifsYV7H7V5GLcD/C2Jmvneb7jMCldzbHGkL
+ TjHS3EP/uzW2QKlvzR+2ikG0cxl63Vu+9Ww/rJ0mc1Q/q0mBAc6qDeV3CRxXTvzwotgJGesVW
+ D4Na/k9T/8g29QuINlvPpXMMiNon9dXWA/NDLf56zwG3czQnqUSVB9V1VT8Qp51/pBtQbKKDd
+ 0EfmguGxtJnNSq1Af1pbbTPVD8yOif7Rvpc7ZaUm8L3kC0yLiVLltjXvPOmdIMaHwS2NGp2ez
+ pJem+hmpx5AnsHnxV/uruUJzBn0hQ8kLv/41uCR9NLaegwCkuainsBK5yitE+b2UfVLnXz3jn
+ TeV8YbQ9qJQnz64vA7649IKpBIlHAhKsPpYtYsUYffWehxrfXSWVmAPf3crjZd2kyyMpBrqv+
+ LFAhKNSk5xpC+IsCKQoSKF4Wcjef9NSkk6YZi7bG+DO4626GGmG/phMvupnbJg8/03xIfSbc9
+ 6Yj4T8mvMihusUYb1oErlts7rb0hAAJ2/jXdRIlKpOcELW89VQyrnKgrbkoHDAV3t97WqrQiu
+ cWIhQZuvZzLITXy6pmLoDdT5z8k9197m6SlHUgXZxv7FwSHJzXZlU5uCXf/EUFLre2EvseZUH
+ zSRadRWrjrbYThocHY3s7DPzBzCAz81LvV1+prQ1hNa6/tHB+JXYBRa8MrVlWu/ehuyFKnkv4
+ 0GGlTY1hCC2MCpJRyGXTFR3JXAJi9CLyE0mYt/VDCxquf6zt2dDsDKxtCDB+w4JyamCiImDAj
+ 3agqsn8w7sCC716IBsOqs+gRl1HDdwoi6Tvc2mrGV0VahFMASaTF34q9s+aX0naFzrN3LB21x
+ 3gK5rfzyMrRbZbwiD+wTRLisyjuXl0qJcBrsKRbhuV8T1d96hKPwQ+OBHKgytVpgX1JLHDl+I
+ IjcI/6i/3AWKATYEZdXTpkckdWdfHo4TP4xCB8Ns0vU/X7tDoHaeMErclVjQIyZSxvK/qgzXl
+ yWyVdhlflLBnxwnR3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jernej,
+> Is avoiding transforming the case where E is not verified to be a pointer a concern?
 
-Thanks for the patch.
+I imagine that answers to this question have got consequences also on
+the confidence level for such SmPL scripts.
+The desire and requirement to specify data type restrictions (for expressions)
+can influence data processing efforts in significant ways.
 
-On Wed, 20 May 2020 at 14:12, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
->
-> If VPU supports untiled output, it actually supports several different
-> YUV 4:2:0 layouts, namely NV12, NV21, YUV420 and YVU420.
->
-> Add support for all of them.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 18 +++++++++++++++++-
->  .../staging/media/sunxi/cedrus/cedrus_video.c  | 18 ++++++++++++++++++
->  2 files changed, 35 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> index daf5f244f93b..c119fd8c4b92 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> @@ -83,9 +83,25 @@ void cedrus_dst_format_set(struct cedrus_dev *dev,
->
->         switch (fmt->pixelformat) {
->         case V4L2_PIX_FMT_NV12:
-> +       case V4L2_PIX_FMT_NV21:
-> +       case V4L2_PIX_FMT_YUV420:
-> +       case V4L2_PIX_FMT_YVU420:
->                 chroma_size = ALIGN(width, 16) * ALIGN(height, 16) / 2;
->
-> -               reg = VE_PRIMARY_OUT_FMT_NV12;
-> +               switch (fmt->pixelformat) {
-> +               case V4L2_PIX_FMT_NV12:
-> +                       reg = VE_PRIMARY_OUT_FMT_NV12;
-> +                       break;
-> +               case V4L2_PIX_FMT_NV21:
-> +                       reg = VE_PRIMARY_OUT_FMT_NV21;
-> +                       break;
-> +               case V4L2_PIX_FMT_YUV420:
-> +                       reg = VE_PRIMARY_OUT_FMT_YU12;
-> +                       break;
-> +               case V4L2_PIX_FMT_YVU420:
-> +                       reg = VE_PRIMARY_OUT_FMT_YV12;
-> +                       break;
-> +               }
->                 cedrus_write(dev, VE_PRIMARY_OUT_FMT, reg);
->
+* If it would be accepted to choose a simpler source code search approach,
+  there are corresponding risks to consider.
 
-I think it would result in a cleaner code if you extend
-cedrus_format to include the hw_format.
+* If you would like to reduce the general possibility for false positives
+  according to advanced software analysis, the amount of data processing
+  will increase because information from header files will probably be needed.
+  The run time characteristics will become more interesting then.
+  Additional program execution parameters will be relevant for this use case.
 
-Something along these lines (not a complete patch):
-
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-index 15cf1f10221b..618daaa65a82 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -48,10 +48,12 @@ static struct cedrus_format cedrus_formats[] = {
-        },
-        {
-                .pixelformat    = V4L2_PIX_FMT_SUNXI_TILED_NV12,
-+               .hw_format      = VE_PRIMARY_OUT_FMT_TILED_32_NV12,
-                .directions     = CEDRUS_DECODE_DST,
-        },
-        {
-                .pixelformat    = V4L2_PIX_FMT_NV12,
-+               .hw_format      = VE_PRIMARY_OUT_FMT_NV12,
-                .directions     = CEDRUS_DECODE_DST,
-                .capabilities   = CEDRUS_CAPABILITY_UNTILED,
-        },
-@@ -274,6 +276,7 @@ static int cedrus_s_fmt_vid_cap(struct file *file,
-void *priv,
- {
-        struct cedrus_ctx *ctx = cedrus_file2ctx(file);
-        struct cedrus_dev *dev = ctx->dev;
-+       struct cedrus_format *fmt;
-        struct vb2_queue *vq;
-        int ret;
-
-@@ -287,7 +290,10 @@ static int cedrus_s_fmt_vid_cap(struct file
-*file, void *priv,
-
-        ctx->dst_fmt = f->fmt.pix;
-
--       cedrus_dst_format_set(dev, &ctx->dst_fmt);
-+       fmt = cedrus_find_format(ctx->dst_fmt.pixelformat,
-+                                CEDRUS_DECODE_DST,
-+                                dev->capabilities);
-+       cedrus_dst_format_set(dev, fmt);
-
-        return 0;
- }
-
-So then in cedrus_dst_format_set() you can just
-write VE_PRIMARY_OUT_FMT with fmt->hw_format.
-
->                 reg = chroma_size / 2;
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> index 15cf1f10221b..016021d71df2 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> @@ -55,6 +55,21 @@ static struct cedrus_format cedrus_formats[] = {
->                 .directions     = CEDRUS_DECODE_DST,
->                 .capabilities   = CEDRUS_CAPABILITY_UNTILED,
->         },
-> +       {
-> +               .pixelformat    = V4L2_PIX_FMT_NV21,
-> +               .directions     = CEDRUS_DECODE_DST,
-> +               .capabilities   = CEDRUS_CAPABILITY_UNTILED,
-> +       },
-> +       {
-> +               .pixelformat    = V4L2_PIX_FMT_YUV420,
-> +               .directions     = CEDRUS_DECODE_DST,
-> +               .capabilities   = CEDRUS_CAPABILITY_UNTILED,
-> +       },
-> +       {
-> +               .pixelformat    = V4L2_PIX_FMT_YVU420,
-> +               .directions     = CEDRUS_DECODE_DST,
-> +               .capabilities   = CEDRUS_CAPABILITY_UNTILED,
-> +       },
->  };
->
->  #define CEDRUS_FORMATS_COUNT   ARRAY_SIZE(cedrus_formats)
-> @@ -130,6 +145,9 @@ void cedrus_prepare_format(struct v4l2_pix_format *pix_fmt)
->                 break;
->
->         case V4L2_PIX_FMT_NV12:
-> +       case V4L2_PIX_FMT_NV21:
-> +       case V4L2_PIX_FMT_YUV420:
-> +       case V4L2_PIX_FMT_YVU420:
->                 /* 16-aligned stride. */
->                 bytesperline = ALIGN(width, 16);
->
-> --
-> 2.26.2
->
-
-Thanks,
-Ezequiel
+Regards,
+Markus
