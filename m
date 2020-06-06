@@ -2,136 +2,133 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC02C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 19:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16B7C2077D
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 19:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD9C20772
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSGIPCGF"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="snyxI1RF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgFFT7m (ORCPT
+        id S1728901AbgFFUBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 15:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
+        Sat, 6 Jun 2020 16:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgFFT7l (ORCPT
+        with ESMTP id S1728229AbgFFUB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 15:59:41 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B64C03E96A;
-        Sat,  6 Jun 2020 12:59:41 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id k11so13896714ejr.9;
-        Sat, 06 Jun 2020 12:59:41 -0700 (PDT)
+        Sat, 6 Jun 2020 16:01:29 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD0BC03E96A
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 13:01:29 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id n11so13413618qkn.8
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 13:01:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n5XWxTbu49klTKh2OV1xwSrup891qcSS3M98k2q6wzs=;
-        b=bSGIPCGFYpQplqdBDclrszoeF5pyhcx6S+wIRfcQu/G4/SFH80rDHzkwmphCDZ6UFO
-         m01JiC8oKBG8tGDEVHlbV2efJOLblFM+rMVn7GwbM8XdnGHflCJtCXR3OSjy3HegQ/4A
-         Jsqn0+nmWUDhqmAuZoX/p749Bint1svFLDUaDQarA8WSiddXJgj+lwJJP3siqfhp5v51
-         FaRKnlAV9GmiZVG/CpeRJ8FEkMnIN9HKeeTZMq5rj4UP2Rvr2KWGLEN2M9XgyErxch7G
-         UtY+oinumc93T8wm2lD1niYj7yivi6oTUEG7fM5Quz68ah0BY8NOc1MWAqVGIT7iM26B
-         +UTw==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Pq6RzQqJCNvdcxNmu8B5Dj+UAbb2+P92x9klLCwkTg=;
+        b=snyxI1RFz4ks9PuyfJj3AxurO0chMruanXZ4FnuGVI+PtJ8+px+72zjIAOr27ekn0D
+         XraBfMx3R5YFIXc+cr9zw/rejrQL8CWlZ0zjvmMv4l4UWQay4UWiUC0IlVINrxGJKUDE
+         VFuKWUUtwEetvUMSTSW6J/SBJGIgCMxpuZ6vMAETDsC2fT9gY+G0B2gwP76MwCRxhRvh
+         /8XNqPoimET0t01e5gPHwEi95jaPxlulGpbcGkM/IK0mG/CGlfX7o+uaapqaUCoEvchF
+         4no8e2CQFkig7qtwEXrh0zgYaVsVXM1Ahiu7llTifsB69tg6rTxIcI5y0N6FZOBfXnKE
+         pLyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=n5XWxTbu49klTKh2OV1xwSrup891qcSS3M98k2q6wzs=;
-        b=buZOWWJc/h2oYzO/oDX8oh6gzvgX2d0ofX5NkqPl9sS6xZ1TW6FVvZAHwrlz2hyblc
-         fnf6qtJrjQy/DAA//a/1BjcYm0PT+lGU6RxevQPkztxaznuflKK27VJdNPa3g6xpgTsg
-         fEcCZ33IrhWS0REorZEAi3DtNXT+ogBEQh3K9xhCp+LWKm3LJ5Pfp9ksKGXVYz7K8thZ
-         /WSfrVxeW/+bn/ffDUFYRepv2szIxl6U+8C+Qz4J+psvSvJIrHf0QEtA65WFERWCgcqy
-         /EpvTZ0hhpGeVGJMDjRvWIjn9XTX4FnuelulAkdn6z8fe1v+o57rtTjpZzNwYWI+MUXD
-         RtbQ==
-X-Gm-Message-State: AOAM530ur93Rk8ld3PXRlXXU3vEDAvJvLm2R32bfTue1UPeiu2a72GV7
-        ceP6DWjyQWkG2yDnpacy+BGLxtXL
-X-Google-Smtp-Source: ABdhPJwXMA7ZLUaMLk1avqpZMTY4TtEV3VlReQVsStdY4Z2Tyn0cFunI//SB1V20iNokJijzxpQZfg==
-X-Received: by 2002:a17:907:4096:: with SMTP id nm6mr14445477ejb.4.1591473579565;
-        Sat, 06 Jun 2020 12:59:39 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:e442:880b:6e2c:2ebd? ([2a01:110f:b59:fd00:e442:880b:6e2c:2ebd])
-        by smtp.gmail.com with ESMTPSA id cd17sm6726607ejb.115.2020.06.06.12.59.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jun 2020 12:59:38 -0700 (PDT)
-Subject: Re: [PATCH v26 03/15] leds: multicolor: Introduce a multicolor class
- definition
-To:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc:     devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200604120504.32425-1-dmurphy@ti.com>
- <20200604120504.32425-4-dmurphy@ti.com> <20200606155324.GA21130@amd>
- <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <a8cb3d33-7a7d-82ee-e598-0f48368677cd@gmail.com>
-Date:   Sat, 6 Jun 2020 21:59:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        bh=+Pq6RzQqJCNvdcxNmu8B5Dj+UAbb2+P92x9klLCwkTg=;
+        b=EEZS9RjWy2BBRjZwu8SoUvP4z1QuiUXtr2dQHCC02Bx/Pu9CSKF0HmkaKrlikfQA4O
+         DrHOPyK3I1QTeAyjvXh9njVXuosZcxGR6oprWS/MhzytIyTs8pepcBzMbSFZ5JbmZo+p
+         F5hHFofh5rxRUShiveeOyS/ukhIYgfB/yU7ot4YDn9h+TKcsr9LhwGCyhGy1O9/iaNnu
+         Dg4rsk07Ayq4SY+I5AkYo/hmSxHwcgoGut/XTs0l5sk12han1ZH5YrZxLgcfVBpjLsgV
+         k2rw684PfrVNQenKphkE5icipid6TMY/TDiEjor5PswDRnogkYRYTOA9AD6cRqAFXb1j
+         sZSA==
+X-Gm-Message-State: AOAM532uExhl7a4S+vkCdpyCf75DCSYiPlWnay0HUTJhzpRNWYLe32Sd
+        ncbLZD8TIKMvEYc5FVDKwHxXvg==
+X-Google-Smtp-Source: ABdhPJxaj9ZWumNwHhmlL7/HI4iCEPKtVDD/DQlVN8Qr2cveSXoE+w30VfvYEcyRHG62uRqGgA9R8Q==
+X-Received: by 2002:a37:4595:: with SMTP id s143mr16482248qka.449.1591473688461;
+        Sat, 06 Jun 2020 13:01:28 -0700 (PDT)
+Received: from ovpn-112-93.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e1sm3170960qto.51.2020.06.06.13.01.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Jun 2020 13:01:27 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jeffrey.t.kirsher@intel.com
+Cc:     sergey.nemov@intel.com, davem@davemloft.net,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] i40e: silence an UBSAN false positive
+Date:   Sat,  6 Jun 2020 16:01:16 -0400
+Message-Id: <20200606200116.1398-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-In-Reply-To: <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+virtchnl_rss_lut.lut is used for the RSS lookup table, but in
+i40e_vc_config_rss_lut(), it is indexed by subscript results in a false
+positive.
 
-On 6/6/20 6:39 PM, Dan Murphy wrote:
-> Pavek
-> 
-> Thanks for the review
-> 
-> On 6/6/20 10:53 AM, Pavel Machek wrote:
->> Hi!
->>
->>> Introduce a multicolor class that groups colored LEDs
->>> within a LED node.
->>>
->>> The multi color class groups monochrome LEDs and allows controlling two
->>> aspects of the final combined color: hue and lightness. The former is
->>> controlled via the intensity file and the latter is controlled
->>> via brightness file.
->>>
->>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor 
->>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
->>> new file mode 100644
-[...]
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -9533,6 +9533,14 @@ F:    Documentation/devicetree/bindings/leds/
->>>   F:    drivers/leds/
->>>   F:    include/linux/leds.h
->>> +LED MULTICOLOR FRAMEWORK
->>> +M:    Dan Murphy <dmurphy@ti.com>
->>> +L:    linux-leds@vger.kernel.org
->> I'd like to be mentioned here, too. "M: Pavel Machek
->> <pavel@ucw.cz>". And I'm not sure if I should be taking MAINTAINER
->> file update through a LED tree. Should definitely go to separate
->> patch.
-> 
-> Oh definitely.  I thought it was implied that you and Jacek are both 
-> Maintainers as well.
-> 
-> I will add you but will wait to see if Jacek wants to be added.
+ UBSAN: array-index-out-of-bounds in drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c:2983:15
+ index 1 is out of range for type 'u8 [1]'
+ CPU: 34 PID: 871 Comm: kworker/34:2 Not tainted 5.7.0-next-20200605+ #5
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 03/09/2018
+ Workqueue: i40e i40e_service_task [i40e]
+ Call Trace:
+  dump_stack+0xa7/0xea
+  ubsan_epilogue+0x9/0x45
+  __ubsan_handle_out_of_bounds+0x6f/0x80
+  i40e_vc_process_vf_msg+0x457c/0x4660 [i40e]
+  i40e_service_task+0x96c/0x1ab0 [i40e]
+  process_one_work+0x57d/0xbd0
+  worker_thread+0x63/0x5b0
+  kthread+0x20c/0x230
+  ret_from_fork+0x22/0x30
 
-Actually I don't think that we need to add this separate entry
-for LED multicolor class. This is still under LED subsystem,
-and I didn't add anything for LED class flash.
+Fixes: d510497b8397 ("i40e: add input validation for virtchnl handlers")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> I will separate this out and make it a separate patch
-
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 56b9e445732b..d5a959d91ba9 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -2971,6 +2971,7 @@ static int i40e_vc_config_rss_lut(struct i40e_vf *vf, u8 *msg)
+ 	struct i40e_vsi *vsi = NULL;
+ 	i40e_status aq_ret = 0;
+ 	u16 i;
++	u8 *lut = vrl->lut;
+ 
+ 	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states) ||
+ 	    !i40e_vc_isvalid_vsi_id(vf, vrl->vsi_id) ||
+@@ -2980,13 +2981,13 @@ static int i40e_vc_config_rss_lut(struct i40e_vf *vf, u8 *msg)
+ 	}
+ 
+ 	for (i = 0; i < vrl->lut_entries; i++)
+-		if (vrl->lut[i] >= vf->num_queue_pairs) {
++		if (lut[i] >= vf->num_queue_pairs) {
+ 			aq_ret = I40E_ERR_PARAM;
+ 			goto err;
+ 		}
+ 
+ 	vsi = pf->vsi[vf->lan_vsi_idx];
+-	aq_ret = i40e_config_rss(vsi, NULL, vrl->lut, I40E_VF_HLUT_ARRAY_SIZE);
++	aq_ret = i40e_config_rss(vsi, NULL, lut, I40E_VF_HLUT_ARRAY_SIZE);
+ 	/* send the response to the VF */
+ err:
+ 	return i40e_vc_send_resp_to_vf(vf, VIRTCHNL_OP_CONFIG_RSS_LUT,
 -- 
-Best regards,
-Jacek Anaszewski
+2.21.0 (Apple Git-122.2)
+
