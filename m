@@ -2,92 +2,68 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 09:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 09:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9DC20663
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 09:01:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpBr/WGQ"
+	by mail.kernel.org (Postfix) with ESMTP id A32DB20663
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 09:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591434190;
+	bh=fC/gCpvkFb7u3yKY51L/6vMoxU5Cruln6J8iTYu42ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yQoiWGn5dCpxWcc6zrVWpzcqMwYpGi5HZjJi8+8iD60/3kJxgBqwpI2O3i+d6snBk
+	 IdLhgWV+KPMQ8Rvjj28U0e1hMAuDXkbRwpLbAPPjDRVhuUicksEOi6j9YODk2cLCZj
+	 GWILSiK4ulHOU8E5kaj0OcZ+5EAZ/orKUSm92was=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgFFI61 (ORCPT
+        id S1728659AbgFFJDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 04:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgFFI6Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 04:58:25 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 826A7C08C5C2
-        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 01:58:25 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d10so6328148pgn.4
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 01:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4GQMb8Nb0ppLYW2rE9M0rp7cTPLVnp9iUypsRvJ/Hds=;
-        b=jpBr/WGQjriKnX/rNrN6/3ksuCr+B8P+zJ0oF9HUMIXPffbDYMNQdsZtXr22IiOw6l
-         BDPBCxWaqCLsmO/Ptb2Ppxaq82RlJtRgRo18hZ7X1BwS5tLIqEawAgWlBd6g9oqnmUDK
-         pgMa8jrufS/icSCEgbYxL822M/ddWT/GoS3Ld4gNqvYwrXsFOzn7+u8z3mvPOGod3Vjn
-         JDwS+Wroeqe5EGfh2MR3IL08rw4hxkKOhSQzt0CSEk/6Bhj/nP0M4Qs+8dk0mB4D1qVO
-         2aluF+6k1yh2w/ch3MjcqckA69X3b7CHTFSn6rHT022OkctiaB2kVAzUHQuPD0HF88GG
-         A4dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4GQMb8Nb0ppLYW2rE9M0rp7cTPLVnp9iUypsRvJ/Hds=;
-        b=DI4a6gXsbUG0YrtOW8u8duLqo0WZqwCB+wtSwj2DNxH8+S1ehmFQuGZDBXavMe4KEW
-         5xRFTa5B6yOh/9N2j+E7nEwJYp6ohu7SqYzrKfOCFK46NzVESTYs8Car+p2b/W/gwugv
-         zll4I9EzB40J1A/AQ/2rwSEl15jfGrKT2w/g4PSrV0ExXYnQe2PGzEOxBVPulqWrVpoq
-         EnqY3jfD3zHc6lERh/04ZxsJWceLMmoUGL+fAmFJst5D9IIHJ67b2/AfkdClO+4zF/km
-         U/IXbRXUcXkxY38gbb1XV0vwtsn9ODGDzjyM9VO1aKx4vPrZZVm/YABrmqsAloYQ97Ro
-         uNqQ==
-X-Gm-Message-State: AOAM530kQWsjTB/E/oTyruSDjZK9PpzyEMYYUO5+/MuPQ9F5NboFzvDK
-        EnNBXGiRYvmgPPXEhuWxKI/otSJ+
-X-Google-Smtp-Source: ABdhPJxIYXXnZ1MIaB4lBImX1CnGc3obC46IUhjsWTw/Sl04M2Cn7Ymq+/QSFK/KWCSm6vqkF7cWog==
-X-Received: by 2002:a63:741c:: with SMTP id p28mr12856359pgc.33.1591433904823;
-        Sat, 06 Jun 2020 01:58:24 -0700 (PDT)
-Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id 136sm1796354pfa.152.2020.06.06.01.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2020 01:58:23 -0700 (PDT)
-Date:   Sat, 6 Jun 2020 01:58:22 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH RESEND v3 0/6] arm64: add the time namespace support
-Message-ID: <20200606085822.GA8351@gmail.com>
-References: <20200602180259.76361-1-avagin@gmail.com>
- <20200605104904.GE85498@C02TD0UTHF1T.local>
+        Sat, 6 Jun 2020 05:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbgFFJDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 05:03:09 -0400
+Received: from linux-8ccs.fritz.box (p57a23121.dip0.t-ipconnect.de [87.162.49.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD5EB20663;
+        Sat,  6 Jun 2020 09:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591434188;
+        bh=fC/gCpvkFb7u3yKY51L/6vMoxU5Cruln6J8iTYu42ec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AL8yqJuY2h3fGELtDOe89ZsoWgUiaJOj286fQlvFLG6WJF6/tSd2vOLAVX1aZFjer
+         pq5kRLRAbNBGNL27NkQ/fGBsSh///D5TmxE8SuV7a7xAbNmlU5VZRskQrMljPxKt30
+         Ix8JHhl9a0loQpwiIcQFOS2ZIOoxiPFWHU2rbMNA=
+Date:   Sat, 6 Jun 2020 11:03:05 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Modules updates for v5.8
+Message-ID: <20200606090304.GA11017@linux-8ccs.fritz.box>
+References: <20200605093354.GA23721@linux-8ccs.fritz.box>
+ <CAHk-=wgNqzQ0CUJ9LP+cLR8FMKwHTqOuSzqvFFKn7Duqquxo1g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200605104904.GE85498@C02TD0UTHF1T.local>
+In-Reply-To: <CAHk-=wgNqzQ0CUJ9LP+cLR8FMKwHTqOuSzqvFFKn7Duqquxo1g@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 11:49:04AM +0100, Mark Rutland wrote:
-> Hi Andrei,
-> 
-> As a heads up, in mainline the arm64 vdso code has been refactored since
-> v5.7, and this series will need to be rebased atop. Given we're in the
-> middle of the merge window, I would suggest waiting until rc1 before
-> posting a rebased series.
++++ Linus Torvalds [05/06/20 13:38 -0700]:
+>On Fri, Jun 5, 2020 at 2:34 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> Please pull below to receive modules updates for the v5.8 merge window.
+>
+>Done. Considering the confusion this merge window with the
+>dependencies of trees with each other, can you verify that what I got
+>matches what you expect?
 
-
-Ok. I will resend this series after rc1. Thanks!
+I reviewed the result of the merge and it matches what I expected. Thank you!
