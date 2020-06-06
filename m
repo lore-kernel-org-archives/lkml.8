@@ -2,215 +2,190 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B392C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A76B820820
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2456D20723
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:03:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qi0rYfZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgFFEDI (ORCPT
+        id S1726358AbgFFED5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 00:03:08 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:53238 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725791AbgFFEDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 00:03:07 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxJuppFdtebUs+AA--.1078S2;
-        Sat, 06 Jun 2020 12:02:50 +0800 (CST)
-From:   Bibo Mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v2 1/2] MIPS: Set page access bit with pgprot on platforms with RIXI
-Date:   Sat,  6 Jun 2020 12:02:48 +0800
-Message-Id: <1591416169-26666-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9AxJuppFdtebUs+AA--.1078S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3WF43GF1UtFy3CryUJFW3trb_yoWxur1kpF
-        97A34xArW2qry3AryxurnrAa1rCwsrtFWUJw17C3W8Z3y7XrykKrnrCa97ZrykuFWvva18
-        Aa1UXr48WayIvFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyvb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l
-        4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-        cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-        8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-        wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU56c_DUUUUU==
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Sat, 6 Jun 2020 00:03:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgFFED4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 00:03:56 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B5EC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 21:03:55 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id u186so14393068ybf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 21:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=lkHQ0AMN1NLC6Z6ECpqhjd9XH4I1l/DaQ7IG53sVopM=;
+        b=qi0rYfZ2Vz7R7UUYW/v0PnJqEk0QGLvKOA6zsTuf7zUiqb7t5jnUe1RAEHfCQz+XGS
+         NvqHwdaNyHgucl7rfIBaIvs8tDB3m8yIXSkrMCeLvWPpIrVcnGVM4UuTCOHdS66eD/uV
+         zv1rhV1y2sdjz6m3K6o2kjZgTbJGB1azrWb2oFgl2qllXuiE5Jwcewp4Xrip6cAQM9Wl
+         RzfcZtA8/1EBecqo0v6q1jBPBPNIXOy1oXLTjbuC6HS/pzT/dVHneFseYhprtEigiiqI
+         wLnxQhuWaxrVpB7xFYlf1SibW4R8PfsYPgsxD89XbJLav5GgknsWXheSHP0LJ8XndADQ
+         tSRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=lkHQ0AMN1NLC6Z6ECpqhjd9XH4I1l/DaQ7IG53sVopM=;
+        b=ZUAJjMn/URi0yBdbxjz0vTJwbDCWmaqzko+IjVw4E3x2hR0wW/XupV/txf33KQ5UbM
+         fhW+Ra30iuN1da8cbyGqIvPf6qQx1JWkr4Dz2sp4c43fYOLiSgCTclQ6DkrwLk7k7v/z
+         ZpCA5S+ZUczAuGJBqJDZ/Cpn0NDO35dhRju94PDuY+KjH6sWvgYDXS9zC2Dv/hTNcFGq
+         Dd5D7mW60FH+vIAB+o+RWrzgKnTCWG9zzXbfJfc6JpDz/I38mvBjfzVWV1htug+AiTmN
+         2If0FjPmy50LePuc8fzNwhrqZB8SFgfot7Pf4TQyyFXUfR+oWcrkaEdMHRSOAziTyCEC
+         f60g==
+X-Gm-Message-State: AOAM532BtCJLZx83HiUD927idnjC4n4DEQEKoN0adV43c6KRTm7uYApq
+        9Ql1qzQ/jY9AsK+X8ueoGHJnzonguZVA1A==
+X-Google-Smtp-Source: ABdhPJwRBv+1vaW1yDKasnaLw2XbVm4EnuxvnvqMWugg378lnavd1Zze7FDdKJR0mD0JCynXuT+3jBU5v/dPCA==
+X-Received: by 2002:a25:328b:: with SMTP id y133mr21693800yby.468.1591416234543;
+ Fri, 05 Jun 2020 21:03:54 -0700 (PDT)
+Date:   Fri,  5 Jun 2020 21:03:44 -0700
+Message-Id: <20200606040349.246780-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
+Subject: [PATCH v8 0/5] KUnit-KASAN Integration
+From:   David Gow <davidgow@google.com>
+To:     trishalfonso@google.com, brendanhiggins@google.com,
+        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, andreyknvl@google.com, shuah@kernel.org
+Cc:     David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On MIPS system which has rixi hardware bit, page access bit is not
-set in pgrot. For memory reading, there will be one page fault to
-allocate physical page; however valid bit is not set, there will
-be the second fast tlb-miss fault handling to set valid/access bit.
+This patchset contains everything needed to integrate KASAN and KUnit.
 
-This patch set page access/valid bit with pgrot if there is reading
-access privilege. It will reduce one tlb-miss handling for memory
-reading access.
+KUnit will be able to:
+(1) Fail tests when an unexpected KASAN error occurs
+(2) Pass tests when an expected KASAN error occurs
 
-The valid/access bit will be cleared in order to track memory
-accessing activity. If the page is accessed, tlb-miss fast handling
-will set valid/access bit, pte_sw_mkyoung is not necessary in slow
-page fault path. This patch removes pte_sw_mkyoung function which
-is defined as empty function except MIPS system.
+Convert KASAN tests to KUnit with the exception of copy_user_test
+because KUnit is unable to test those.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
----
-v2:
-- refine commit log title
----
- arch/mips/include/asm/pgtable.h | 10 ++++++++--
- arch/mips/mm/cache.c            | 34 +++++++++++++++++-----------------
- include/asm-generic/pgtable.h   | 16 ----------------
- mm/memory.c                     |  3 ---
- 4 files changed, 25 insertions(+), 38 deletions(-)
+Add documentation on how to run the KASAN tests with KUnit and what to
+expect when running these tests.
 
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index 85b39c9..d066469 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -25,6 +25,14 @@
- struct mm_struct;
- struct vm_area_struct;
- 
-+#define __PP	_PAGE_PRESENT
-+#define __NX	_PAGE_NO_EXEC
-+#define __NR	_PAGE_NO_READ
-+#define ___W	_PAGE_WRITE
-+#define ___A	_PAGE_ACCESSED
-+#define ___R	(_PAGE_SILENT_READ | _PAGE_ACCESSED)
-+#define __PC	_page_cachable_default
-+
- #define PAGE_NONE	__pgprot(_PAGE_PRESENT | _PAGE_NO_READ | \
- 				 _page_cachable_default)
- #define PAGE_SHARED	__pgprot(_PAGE_PRESENT | _PAGE_WRITE | \
-@@ -414,8 +422,6 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	return pte;
- }
- 
--#define pte_sw_mkyoung	pte_mkyoung
--
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
- static inline int pte_huge(pte_t pte)	{ return pte_val(pte) & _PAGE_HUGE; }
- 
-diff --git a/arch/mips/mm/cache.c b/arch/mips/mm/cache.c
-index ad6df1c..f814e43 100644
---- a/arch/mips/mm/cache.c
-+++ b/arch/mips/mm/cache.c
-@@ -158,23 +158,23 @@ void __update_cache(unsigned long address, pte_t pte)
- static inline void setup_protection_map(void)
- {
- 	if (cpu_has_rixi) {
--		protection_map[0]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
--		protection_map[1]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
--		protection_map[2]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
--		protection_map[3]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
--		protection_map[4]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
--		protection_map[5]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
--		protection_map[6]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
--		protection_map[7]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
--
--		protection_map[8]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
--		protection_map[9]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
--		protection_map[10] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE | _PAGE_NO_READ);
--		protection_map[11] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE);
--		protection_map[12] = __pgprot(_page_cachable_default | _PAGE_PRESENT);
--		protection_map[13] = __pgprot(_page_cachable_default | _PAGE_PRESENT);
--		protection_map[14] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_WRITE);
--		protection_map[15] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_WRITE);
-+		protection_map[0]  = __pgprot(__PC | __PP | __NX | __NR);
-+		protection_map[1]  = __pgprot(__PC | __PP | __NX | ___R);
-+		protection_map[2]  = __pgprot(__PC | __PP | __NX | __NR);
-+		protection_map[3]  = __pgprot(__PC | __PP | __NX | ___R);
-+		protection_map[4]  = __pgprot(__PC | __PP | ___R);
-+		protection_map[5]  = __pgprot(__PC | __PP | ___R);
-+		protection_map[6]  = __pgprot(__PC | __PP | ___R);
-+		protection_map[7]  = __pgprot(__PC | __PP | ___R);
-+
-+		protection_map[8]  = __pgprot(__PC | __PP | __NX | __NR);
-+		protection_map[9]  = __pgprot(__PC | __PP | __NX | ___R);
-+		protection_map[10] = __pgprot(__PC | __PP | __NX | ___W | __NR);
-+		protection_map[11] = __pgprot(__PC | __PP | __NX | ___W | ___R);
-+		protection_map[12] = __pgprot(__PC | __PP | ___R);
-+		protection_map[13] = __pgprot(__PC | __PP | ___R);
-+		protection_map[14] = __pgprot(__PC | __PP | ___W | ___R);
-+		protection_map[15] = __pgprot(__PC | __PP | ___W | ___R);
- 
- 	} else {
- 		protection_map[0] = PAGE_NONE;
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index b5278ec..fa5c73f 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -244,22 +244,6 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addres
- }
- #endif
- 
--/*
-- * On some architectures hardware does not set page access bit when accessing
-- * memory page, it is responsibilty of software setting this bit. It brings
-- * out extra page fault penalty to track page access bit. For optimization page
-- * access bit can be set during all page fault flow on these arches.
-- * To be differentiate with macro pte_mkyoung, this macro is used on platforms
-- * where software maintains page access bit.
-- */
--#ifndef pte_sw_mkyoung
--static inline pte_t pte_sw_mkyoung(pte_t pte)
--{
--	return pte;
--}
--#define pte_sw_mkyoung	pte_sw_mkyoung
--#endif
--
- #ifndef pte_savedwrite
- #define pte_savedwrite pte_write
- #endif
-diff --git a/mm/memory.c b/mm/memory.c
-index c7c8960..8bb31c4 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2704,7 +2704,6 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		}
- 		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
- 		entry = mk_pte(new_page, vma->vm_page_prot);
--		entry = pte_sw_mkyoung(entry);
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
- 		/*
- 		 * Clear the pte entry and flush it first, before updating the
-@@ -3379,7 +3378,6 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 	__SetPageUptodate(page);
- 
- 	entry = mk_pte(page, vma->vm_page_prot);
--	entry = pte_sw_mkyoung(entry);
- 	if (vma->vm_flags & VM_WRITE)
- 		entry = pte_mkwrite(pte_mkdirty(entry));
- 
-@@ -3662,7 +3660,6 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
- 
- 	flush_icache_page(vma, page);
- 	entry = mk_pte(page, vma->vm_page_prot);
--	entry = pte_sw_mkyoung(entry);
- 	if (write)
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
- 	/* copy-on-write page */
+This patchset depends on:
+- "kunit: extend kunit resources API" [1]
+- "Fix some incompatibilites between KASAN and FORTIFY_SOURCE" [2]
+ - This is already upstream for 5.8[3,4]
+
+Changes from v7:
+ - Rebased on top of kselftest/kunit
+ - Rebased on top of v4 of the kunit resources API[1]
+ - Rebased on top of v4 of the FORTIFY_SOURCE fix[2,3,4]
+ - Updated the Kconfig entry to support KUNIT_ALL_TESTS
+
+Changes from v6:
+ - Rebased on top of kselftest/kunit
+ - Rebased on top of Daniel Axtens' fix for FORTIFY_SOURCE
+   incompatibilites [2]
+ - Removed a redundant report_enabled() check.
+ - Fixed some places with out of date Kconfig names in the
+   documentation.
+
+Changes from v5:
+ - Split out the panic_on_warn changes to a separate patch.
+ - Fix documentation to fewer to the new Kconfig names.
+ - Fix some changes which were in the wrong patch.
+ - Rebase on top of kselftest/kunit (currently identical to 5.7-rc1)
+
+Changes from v4:
+ - KASAN no longer will panic on errors if both panic_on_warn and
+   kasan_multishot are enabled.
+ - As a result, the KASAN tests will no-longer disable panic_on_warn.
+ - This also means panic_on_warn no-longer needs to be exported.
+ - The use of temporary "kasan_data" variables has been cleaned up
+   somewhat.
+ - A potential refcount/resource leak should multiple KASAN errors
+   appear during an assertion was fixed.
+ - Some wording changes to the KASAN test Kconfig entries.
+
+Changes from v3:
+ - KUNIT_SET_KASAN_DATA and KUNIT_DO_EXPECT_KASAN_FAIL have been
+ combined and included in KUNIT_DO_EXPECT_KASAN_FAIL() instead.
+ - Reordered logic in kasan_update_kunit_status() in report.c to be
+ easier to read.
+ - Added comment to not use the name "kasan_data" for any kunit tests
+ outside of KUNIT_EXPECT_KASAN_FAIL().
+
+Changes since v2:
+ - Due to Alan's changes in [1], KUnit can be built as a module.
+ - The name of the tests that could not be run with KUnit has been
+ changed to be more generic: test_kasan_module.
+ - Documentation on how to run the new KASAN tests and what to expect
+ when running them has been added.
+ - Some variables and functions are now static.
+ - Now save/restore panic_on_warn in a similar way to kasan_multi_shot
+ and renamed the init/exit functions to be more generic to accommodate.
+ - Due to [4] in kasan_strings, kasan_memchr, and
+ kasan_memcmp will fail if CONFIG_AMD_MEM_ENCRYPT is enabled so return
+ early and print message explaining this circumstance.
+ - Changed preprocessor checks to C checks where applicable.
+
+Changes since v1:
+ - Make use of Alan Maguire's suggestion to use his patch that allows
+   static resources for integration instead of adding a new attribute to
+   the kunit struct
+ - All KUNIT_EXPECT_KASAN_FAIL statements are local to each test
+ - The definition of KUNIT_EXPECT_KASAN_FAIL is local to the
+   test_kasan.c file since it seems this is the only place this will
+   be used.
+ - Integration relies on KUnit being builtin
+ - copy_user_test has been separated into its own file since KUnit
+   is unable to test these. This can be run as a module just as before,
+   using CONFIG_TEST_KASAN_USER
+ - The addition to the current task has been separated into its own
+   patch as this is a significant enough change to be on its own.
+
+
+[1] https://lore.kernel.org/linux-kselftest/CAFd5g46Uu_5TG89uOm0Dj5CMq+11cwjBnsd-k_CVy6bQUeU4Jw@mail.gmail.com/T/#t
+[2] https://lore.kernel.org/linux-mm/20200424145521.8203-1-dja@axtens.net/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=adb72ae1915db28f934e9e02c18bfcea2f3ed3b7
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=47227d27e2fcb01a9e8f5958d8997cf47a820afc
+[5] https://bugzilla.kernel.org/show_bug.cgi?id=206337
+
+David Gow (1):
+  mm: kasan: Do not panic if both panic_on_warn and kasan_multishot set
+
+Patricia Alfonso (4):
+  Add KUnit Struct to Current Task
+  KUnit: KASAN Integration
+  KASAN: Port KASAN Tests to KUnit
+  KASAN: Testing Documentation
+
+ Documentation/dev-tools/kasan.rst |  70 +++
+ include/kunit/test.h              |   5 +
+ include/linux/kasan.h             |   6 +
+ include/linux/sched.h             |   4 +
+ lib/Kconfig.kasan                 |  19 +-
+ lib/Makefile                      |   3 +-
+ lib/kunit/test.c                  |  13 +-
+ lib/test_kasan.c                  | 688 +++++++++++++-----------------
+ lib/test_kasan_module.c           |  76 ++++
+ mm/kasan/report.c                 |  34 +-
+ 10 files changed, 515 insertions(+), 403 deletions(-)
+ create mode 100644 lib/test_kasan_module.c
+
 -- 
-1.8.3.1
+2.27.0.278.ge193c7cf3a9-goog
 
