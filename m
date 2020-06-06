@@ -2,144 +2,208 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0094A20663
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="MgUvTfyi"
+	by mail.kernel.org (Postfix) with ESMTP id 91DDD20663
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgFFLVz (ORCPT
+        id S1728785AbgFFLW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 07:21:55 -0400
-Received: from mout.web.de ([212.227.15.3]:41925 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728718AbgFFLVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 07:21:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591442504;
-        bh=PvdB1jlig5gPjk+E7qkJrOtVJDGK6YtwTQrAFwVDAOc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=MgUvTfyidmi8txwizqxSxAENby0jq3hyXjH2GzmoNdZxZSVHEGtlS+BP34cKNBJqd
-         UmpTbPHWV32YQk2PMvNpYgQNiXY9NRj+fKYYCCoggHDgQcmhTqZQWW49mAklF07/Cz
-         U1BjA4q9wohMhUDNwzdtKrHjDbDcEIT5sOoH68X8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.40.239]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Luu81-1izIF720av-0103Qa; Sat, 06
- Jun 2020 13:21:44 +0200
-Subject: Re: coccinelle: api: add kvfree script
-To:     Julia Lawall <julia.lawall@inria.fr>,
-        Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <99ed463c-b7ba-0400-7cf7-5bcc1992baef@web.de>
- <alpine.DEB.2.21.2006060944320.2578@hadrien>
- <51a176d4-8c59-5da1-b4d2-c97b17b691a7@web.de>
- <alpine.DEB.2.21.2006061307020.2578@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <bf698c44-4384-e471-3ff0-e38587140b98@web.de>
-Date:   Sat, 6 Jun 2020 13:21:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sat, 6 Jun 2020 07:22:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23048 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728718AbgFFLW2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 07:22:28 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 056B1KJP149205;
+        Sat, 6 Jun 2020 07:21:51 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31g42qq2d9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jun 2020 07:21:51 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 056BClkk177079;
+        Sat, 6 Jun 2020 07:21:50 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31g42qq2cs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jun 2020 07:21:50 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 056BF2Od015969;
+        Sat, 6 Jun 2020 11:21:49 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7rj7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jun 2020 11:21:48 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 056BLkna67043406
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 6 Jun 2020 11:21:46 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3934A4060;
+        Sat,  6 Jun 2020 11:21:46 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D48F4A4054;
+        Sat,  6 Jun 2020 11:21:42 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.89.98])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Sat,  6 Jun 2020 11:21:42 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Sat, 06 Jun 2020 16:51:41 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Cc:     Santosh Sivaraj <santosh@fossix.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v10 4/6] powerpc/papr_scm: Improve error logging and handling papr_scm_ndctl()
+In-Reply-To: <CAPcyv4g2x7LV3ARRj-RBS1K84WNayr9oDcupzPQ1gtK1A_e+aQ@mail.gmail.com>
+References: <20200604234136.253703-1-vaibhav@linux.ibm.com> <20200604234136.253703-5-vaibhav@linux.ibm.com> <20200605171313.GO1505637@iweiny-DESK2.sc.intel.com> <CAPcyv4g2x7LV3ARRj-RBS1K84WNayr9oDcupzPQ1gtK1A_e+aQ@mail.gmail.com>
+Date:   Sat, 06 Jun 2020 16:51:41 +0530
+Message-ID: <87zh9gfni2.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2006061307020.2578@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:cyWwJjQSkVzLGnBAQuoHWGcniaoteW35rJSoEbMM0j+hrQOr7mn
- HdsPmERCSi+Mr4MSxVJB2wBGCuvz2QHlcN8uUTTiWGhNMP0wm8rScctq04LA0NOQFHB/wfW
- Do2M6QF2Vm7AMr89e3uI91Ujn0F7612DFQoA+Gs8cPnzm4XbSgtGfA6V+aaNtVEaj3bIKD8
- aUYvcmISXdKkL8WPUxKxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J0appR+Bq6A=:vpbi3TTa9+syRiX1gqs84W
- byzk4x6JHDfwzYZUdALzIvZcnK4tALCh9jwQm+Ed774lv5ZLAYe8mO+NXt7FLUQG1cvCR+7PQ
- XkkRPVQvmKCaD+BV3ATWMgXxiBw9BJETGi22g6ZSVG4h/UX8xx2Zat6b2difGZXzg5VAQ266g
- jW5NXEPjibPa8hZnUssVHdaxlXuZ00eHbF9djCvrg+usmNxSQ/VeoVXI4rnGLrmBwz4tgCT0z
- ofv8KSIKk8uk02aJUuF1WOBny0/mXATyPdTThIJUgK9MnzC8YUWRCNGWnknSIqVP3RmmREO/Y
- Cih+4+2FTEY5FbVrsq7n+6KGAaLRKniNQPF5sq4WCbD6Y16danAfMnFHpmt9f5ExQIRbkzpC+
- HOsgfmrN6Y1CqopBh1bCr2SmOi4zcwy/yoUj3zkWpG1qWMfWwyWU1ixTOI4SzUw6VFNf3VU09
- rW/0+IUCF8hm+GOu93NuknMBHemor9F+4FUANi6Yr9FFzqetdaABaz0B+zrN3tZlDp9+Ydb2Z
- 2CXDb/L8qRy89ezWSv/RO0V17Wekbi8WAmQB4sWNp88Es5Ueta23HtqopPoQPG2gT7CTH8MKj
- 5LE3im7oNabDD30qJvjgD2nvzCFDTV6L0YO7fUL0hXn3djOonc2pfISH5n15VM8Zt4uRk2+Dx
- o0hhdfolDiE/AtrBDSQ2DdTROws4M2WhHr7tjCW2LwjEuNBoB42Eb5BnypmKiDKpWhnVrXGho
- +Au0FIOZZswuDBGHRYIkCt50Uuo3YRxkWGSRkHzEink7TIFWDO6MCO60aXLiSo062hVjau6OM
- uLEkCowNbR8c0M7JzKYrvjm7GwHzew5PAaA5NLThUI6VFjsj91sH3uIU63nNYmT96HL6AVjKY
- dHMrST740UvrP9q7i4KI9QGirpj9xQBvKniqHB8s7b19bTJmKTdACEK0YVEzWx48ARkb+V/eH
- JbLeWxd1Lh3sXwS/zrr1vzQlaEMVxZ+fH2pvGBCFr9Ttqzkd0i7VSovhSsTziT7zLWRQVrMqT
- 07WwRptqnV1tZeFd1olRUwM8StKkC60Ddd/tVCVhORcsGuZ8y5Fhz3xUgh4/9onVqsICJV84y
- Mxyip/vA5vFo6eyN1Sr+kpXi4h2H+ZU00xr9bVofV+PEAd9icG4vDYefTCX2Dz4R9GKOVUp6y
- vAYmLr5COw2Y7EZio+gbFaysTkq9kGBWV3F+BVOvECNE4VJk8T2dv76C5zmpabTlEA7v2v1b/
- Mo2m1MoQDDMi1E7Ky
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-06_06:2020-06-04,2020-06-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 suspectscore=1 cotscore=-2147483648 lowpriorityscore=0
+ adultscore=0 mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006060084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> So there are a lot of reasons why constraints are useful.
+Hi Ira and Dan,
 
-Thanks for such a view.
+Thanks for reviewing this patch. Have updated the patch based on your
+feedback to upadate cmd_rc only when the nd_cmd was handled and return
+'0' in that case.
 
-Thus I dare to point the possibility out to consider their application
-for mentioned function name lists (besides using SmPL disjunctions).
-Can coding style concerns be resolved in a more constructive way then?
+Other errors in case the nd_cmd was unrecognized or invalid result in
+error returned from this functions as you suggested.
+
+~ Vaibhav
+
+Dan Williams <dan.j.williams@intel.com> writes:
+
+> On Fri, Jun 5, 2020 at 10:13 AM Ira Weiny <ira.weiny@intel.com> wrote:
+>>
+>> On Fri, Jun 05, 2020 at 05:11:34AM +0530, Vaibhav Jain wrote:
+>> > Since papr_scm_ndctl() can be called from outside papr_scm, its
+>> > exposed to the possibility of receiving NULL as value of 'cmd_rc'
+>> > argument. This patch updates papr_scm_ndctl() to protect against such
+>> > possibility by assigning it pointer to a local variable in case cmd_rc
+>> > == NULL.
+>> >
+>> > Finally the patch also updates the 'default' clause of the switch-case
+>> > block removing a 'return' statement thereby ensuring that value of
+>> > 'cmd_rc' is always logged when papr_scm_ndctl() returns.
+>> >
+>> > Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+>> > Cc: Dan Williams <dan.j.williams@intel.com>
+>> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> > Cc: Ira Weiny <ira.weiny@intel.com>
+>> > Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+>> > ---
+>> > Changelog:
+>> >
+>> > v9..v10
+>> > * New patch in the series
+>>
+>> Thanks for making this a separate patch it is easier to see what is going on
+>> here.
+>>
+>> > ---
+>> >  arch/powerpc/platforms/pseries/papr_scm.c | 10 ++++++++--
+>> >  1 file changed, 8 insertions(+), 2 deletions(-)
+>> >
+>> > diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+>> > index 0c091622b15e..6512fe6a2874 100644
+>> > --- a/arch/powerpc/platforms/pseries/papr_scm.c
+>> > +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+>> > @@ -355,11 +355,16 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>> >  {
+>> >       struct nd_cmd_get_config_size *get_size_hdr;
+>> >       struct papr_scm_priv *p;
+>> > +     int rc;
+>> >
+>> >       /* Only dimm-specific calls are supported atm */
+>> >       if (!nvdimm)
+>> >               return -EINVAL;
+>> >
+>> > +     /* Use a local variable in case cmd_rc pointer is NULL */
+>> > +     if (!cmd_rc)
+>> > +             cmd_rc = &rc;
+>> > +
+>>
+>> This protects you from the NULL.  However...
+>>
+>> >       p = nvdimm_provider_data(nvdimm);
+>> >
+>> >       switch (cmd) {
+>> > @@ -381,12 +386,13 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>> >               break;
+>> >
+>> >       default:
+>> > -             return -EINVAL;
+>> > +             dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
+>> > +             *cmd_rc = -EINVAL;
+>>
+>> ... I think you are conflating rc and cmd_rc...
+>>
+>> >       }
+>> >
+>> >       dev_dbg(&p->pdev->dev, "returned with cmd_rc = %d\n", *cmd_rc);
+>> >
+>> > -     return 0;
+>> > +     return *cmd_rc;
+>>
+>> ... this changes the behavior of the current commands.  Now if the underlying
+>> papr_scm_meta_[get|set]() fails you return that failure as rc rather than 0.
+>>
+>> Is that ok?
+>
+> The expectation is that rc is "did the command get sent to the device,
+> or did it fail for 'transport' reasons". The role of cmd_rc is to
+> translate the specific status response of the command into a common
+> error code. The expectations are:
+
+>
+> rc < 0: Error code, Linux terminated the ioctl before talking to hardware
+>
+> rc == 0: Linux successfully submitted the command to hardware, cmd_rc
+> is valid for command specific response
+>
+> rc > 0: Linux successfully submitted the command, but detected that
+> only a subset of the data was accepted for "write"-style commands, or
+> that only subset of data was returned for "read"-style commands. I.e.
+> short-write / short-read semantics. cmd_rc is valid in this case and
+> its up to userspace to determine if a short transfer is an error or
+> not.
+>
+>> Also 'logging cmd_rc' in the invalid cmd case does not seem quite right unless
+>> you really want rc to be cmd_rc.
+>>
+>> The architecture is designed to separate errors which occur in the kernel vs
+>> errors in the firmware/dimm.  Are they always the same?  The current code
+>> differentiates them.
+>
+> Yeah, they're distinct, transport vs end-point / command-specific
+> status returns.
 
 
-> But hiding information that could be apparent to the SmPL compiler
-> and could be used to improve the performance of the matching
-> process is not one of them.
-
-Will any software extensions become possible also in this area?
-
-Regards,
-Markus
+-- 
+Cheers
+~ Vaibhav
