@@ -2,112 +2,147 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7C53207F7
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01FD20723
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:37:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="aj1QcmnX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvuzJmYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgFFOhJ (ORCPT
+        id S1728713AbgFFOh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:37:09 -0400
-Received: from sonic312-23.consmr.mail.gq1.yahoo.com ([98.137.69.204]:44407
-        "EHLO sonic312-23.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726340AbgFFOhI (ORCPT
+        Sat, 6 Jun 2020 10:37:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgFFOh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:37:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1591454226; bh=qaqF6Rrc7BFkCaJu4Wlhw/SUbONSZUkTwp66TO2xEfI=; h=Date:From:To:Cc:Subject:In-Reply-To:References:From:Subject; b=aj1QcmnXfKKE5YovxlGnLyRraZpQ9cYQo94JweSkhjElAvb06ciCOmnX4jwrrdxun7A2E3Ay5QXw0+EhPpHuS0oTedL0vCZTfLsnOMYskX5cQqFJhhxfXJJlIUDDlzpVKTFoantOVpRLgZMJKQradkpnQ2ZBW+A2IYm/4SUEiIVwSxbGTtGQ/v5l4Lw6Qi4QCRAZFu0ZVKOF49qeMUXyGfqypzMa5p86ip/3SYMyCGwTP857eUvyqp3Nx53qF8b7SvFPpEeIxx/dTQ+T5p8AixkduTXGBf3za/hcnNygCO/Ct0BXzq1vWLC2Oupd66cU5KfNtPb2oAfByJA8T+pVXQ==
-X-YMail-OSG: kfFK5GQVM1mnuhY5DTVDh.Rv6Q0R6hX.dCWmi_uDH8..B5l1eKG1HTLXVlUve0b
- 94evMK5m4D1ASBUVY7nurwoEqR47W1JKCRQd3S5.pr6Us7yN8fx.lAp7U3_TU.YwyUTlj6aZu1L9
- rRb9SeFzodoJruCs.r4GrCL2GugNtqkpaQCiiIHQU7f.AHW.nSbS6GSpOl_CKeibnyG9l2qqiYix
- 6fg1jz8ptsZudanH9hC8WZ9q16wxRuLQAPsjq_qY7ECJY6o0drF_7VoPv6zS_i9wVeXjHi9oMcyq
- eKyKbYEeYL7q6SqQw6GTUJshmcyGR2PHGAk07DzaUfOGEp8d3RLIxqR04GuJPxmbS.8yCskfdaba
- lT6mvzB5EK1VrLCJMKN8b4VerH2v2JvP_LzZ8IPSuKbCEDpQ29DZBiht6ihZxZd40HLkfoeHTYSb
- W78n6es71X3zHYU7RU2I_45Due3twL8JRotYRwX1nWj.0mO2xOwh6jATnJPqnrVOPFel8dVK1NQj
- mvzT0tIR2io3BDHaVpFI_zBvjiEp0PI.HSM9SDpMd7CBn8zrRskCzYnwbBHtOcyE5biqw9Ycdx8N
- MS03_eD5lzXIB8Nu2.1c7KKAGJIAKEMo8XPTb6LyudAio0.CanpUtFiVYXvPd7oDVLXPFJhLSMsL
- QjXL9e64Vvu8E7MbG7Sqvzd.QzW3dUfnvrj82mdUrvpT37Q.A14DOrpPgra_vbdkvAPR_3qcVBKb
- qq4bIDiBKv2k953U3gEW0JYN_CO8avnJU4N.v1mkA1CoQPkI4Xuc3wnPFaZdEPOSQdOD0M2xGDao
- f0OSofj3CR6DM8KjbNyx5MNtRpcUPG2njgFc21w2_8M36s2EBd7WksVK6PnjltUwgzLzs8DzNzEZ
- K9GYZ4nhauc_Ik8T4OWFvk2lwDNv6DzCSI9vBQLC89.2OGUwHLkxcbqZtOUSk.d6mtuKM_OSwm5R
- Edwwyv1uWhj8dqnrSEM5nRSI0.DMptFP5PpMFzht448FyHUudk0mJDKcnyy_B8nx8eIg_Z79Nl.f
- acdGmIvDqGeTakxer7eyMypkWEQshxOw6NbW3W2qvxhkvmnpjYHl.XF6fhH8ku7MREKzpLQuSPpo
- b.1GkZtmWwShl1RzmhVQAl7dh1oJkyW2_sQvDdXe.8svjFVjWGtociPZxrKkdXgRuMSFUoeVBiaR
- Qpoo7cviEZe_6gC4jZ.4XVWev7Fgo.q2NjP9l9gizvavhNbKBwcGoKxMwMl55QT2OE6hUFieejKN
- 432bVwgjRwRkq1fwfklMicweprizVmVz0vRIL_AZlL1KSOye_xvymB9qZeA011wwypK3c3ckNYVy
- Gnz2g76KA5JWnV1aj0Sl1Ex2e_pSw5.JslRfWIX6LsVOZ1ocqaeZmaTWU8LWgIkkqjAQG9Q--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.gq1.yahoo.com with HTTP; Sat, 6 Jun 2020 14:37:06 +0000
-Received: by smtp425.mail.ir2.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 0571a4f7d2a72a46ce0f757b81ae3129;
-          Sat, 06 Jun 2020 14:37:02 +0000 (UTC)
-Date:   Sat, 6 Jun 2020 22:36:47 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Vasily Averin <vvs@virtuozzo.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Gao Xiang <xiang@kernel.org>
-Subject: Re: [PATCH] lib/lz4: smatch warning in LZ4_decompress_generic()
-Message-ID: <20200606143646.GB10839@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Sat, 6 Jun 2020 10:37:28 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36FA7C03E96A
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 07:37:28 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id a127so6357174pfa.12
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=E1Fv+s5L2F/uAnknDc396R1kc5K7SHvRSPFaa7r0VFU=;
+        b=rvuzJmYOJDTv0MkjZegUyK7QbqlrXkrOg9GtGVZJqHBSK3dy30tJoTKLQsBLJsDLT5
+         OIPzGrUFieVpKy2qgtP1KkKMVaOZpH3M2o4/cWC4+nFVTb9PgAKEtvV6431Lu7afhhCv
+         4kAD/JMDvvR0uGEoT9lH86qfTgF2TZDkTbV/SfZGvejnPDA6nEFvQop2sn3nPVQ2X6+8
+         29/AUie7rpsRRBjSbXwzxkpy5rFREgLh0L2S4pj/Bi1sE8ySvifiBOcwnbItbA6he8ke
+         9YFMoayxHfJsa+q1IuWGIamyqJUWYUuC3xoPBSTOhAasZxWgL4QxnlbFE8X4IE9Q7wp0
+         8riQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E1Fv+s5L2F/uAnknDc396R1kc5K7SHvRSPFaa7r0VFU=;
+        b=ml6edQIvW79YsqKeLma9ZD6lEbj/tJf71kkUjD1uJE0+goq6ngOABEKKmasIMepCU3
+         A2FzY/xBx9x0d/oouNOe+zZbUrBpmoB6W/QfnL5XOzwvcMkXPMR4jVW7+6TZ2R4RUiUx
+         a+D1Mk4Puv3ECY9RxIZ/1dWg4ULrWk28n0L68fJ58j+NchnDTWIHsx33X85prAGUb+Ml
+         lCCSgWaR3fYUTL/A8FYJUJ49yY+QgeYZAVXHmx4xzzI8Xyq9ddLoJbwU03JhVpiepefL
+         47OxzfB9i00X2Aa1iR26h2YHBrx0t42X8Va8a25YtZuT0ogfJokRjyBtOd4F15yhTdc+
+         tLrg==
+X-Gm-Message-State: AOAM533fc7nTx3O3nrBqs3VPRoVJdwjvXQk6MhRYT7mIsrBidrYI/Ikx
+        tb/1yHgpSFTp9l3g7gbp6bA=
+X-Google-Smtp-Source: ABdhPJxbYIZgWC6Y9A6NpEYf3wb9yXChpOi8xvZTUOB1E+gDsgeRDItzuMgmV3WUpctdoYzhuSVsew==
+X-Received: by 2002:a63:d652:: with SMTP id d18mr13998597pgj.164.1591454247770;
+        Sat, 06 Jun 2020 07:37:27 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id cm13sm10911911pjb.5.2020.06.06.07.37.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jun 2020 07:37:26 -0700 (PDT)
+Date:   Sat, 6 Jun 2020 22:37:17 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/19] perf ftrace: show trace column header
+Message-ID: <20200606143717.pxtjbx5hrpuwp4hs@mail.google.com>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200510150628.16610-16-changbin.du@gmail.com>
+ <20200520211101.GD32678@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e109dba0-eaa8-aa21-3b97-f999c76a72a4@virtuozzo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-References: <20200606143646.GB10839.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-Mailer: WebService/1.1.16072 hermes_aol Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+In-Reply-To: <20200520211101.GD32678@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(I'm not sure whether my email was finally sent out since
- I haven't seen it in lore yet. Resend with my another email...)
-
-On Sat, Jun 06, 2020 at 04:28:02PM +0300, Vasily Averin wrote:
-> Found by smatch:
-> lib/lz4/lz4_decompress.c:150 LZ4_decompress_generic() warn: maybe use && instead of &
-> It was realy incorrectly copied from
-> https://github.com/lz4/lz4/commit/45f8603aae389d34c689d3ff7427b314071ccd2c
-> line 1431
-
-Simply no.
-
+On Wed, May 20, 2020 at 06:11:01PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sun, May 10, 2020 at 11:06:24PM +0800, Changbin Du escreveu:
+> > This makes perf-ftrace display column header before printing trace.
 > 
-> Fixes: 2209fda323e2 ("lib/lz4: update LZ4 decompressor module")
-> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-> ---
->  lib/lz4/lz4_decompress.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> [acme@five perf]$ perf report -h header
 > 
-> diff --git a/lib/lz4/lz4_decompress.c b/lib/lz4/lz4_decompress.c
-> index 0c9d3ad..f7f7dca 100644
-> --- a/lib/lz4/lz4_decompress.c
-> +++ b/lib/lz4/lz4_decompress.c
-> @@ -147,7 +147,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  		    * strictly "less than" on input, to re-enter
->  		    * the loop with at least one byte
->  		    */
-> -		   && likely((endOnInput ? ip < shortiend : 1) &
-> +		   && likely((endOnInput ? ip < shortiend : 1) &&
+>  Usage: perf report [<options>]
+> 
+>         --header          Show data header.
+>         --header-only     Show only data header.
+> 
+> [acme@five perf]$
+> 
+> Perhaps there is value in --header-only to show the default that will be
+> setup when using some set of options.
+> 
+Arnaldo, what is the '--header-only' option used for? As for ftrace, the header
+format is different for different trace options.
 
-I'd like to say, this is not my mistake (even not an issue).
-If you notice the latest LZ4 upstream
-https://github.com/lz4/lz4/blob/dev/lib/lz4.c#L1865
+> - Arnaldo
+> 
+> > $ sudo perf ftrace
+> > \# tracer: function
+> > \#
+> > \# entries-in-buffer/entries-written: 0/0   #P:8
+> > \#
+> > \#           TASK-PID     CPU#   TIMESTAMP  FUNCTION
+> > \#              | |         |       |         |
+> >            <...>-9246  [006]  10726.262760: mutex_unlock <-rb_simple_write
+> >            <...>-9246  [006]  10726.262764: __fsnotify_parent <-vfs_write
+> >            <...>-9246  [006]  10726.262765: fsnotify <-vfs_write
+> >            <...>-9246  [006]  10726.262766: __sb_end_write <-vfs_write
+> >            <...>-9246  [006]  10726.262767: fpregs_assert_state_consistent <-do_syscall_64
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  tools/perf/builtin-ftrace.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 64c22f367ba2..0b39b6a88026 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -614,6 +614,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> >  	fcntl(trace_fd, F_SETFL, O_NONBLOCK);
+> >  	pollfd.fd = trace_fd;
+> >  
+> > +	/* display column headers */
+> > +	read_tracing_file_to_stdout("trace");
+> > +
+> >  	if (write_tracing_file("tracing_on", "1") < 0) {
+> >  		pr_err("can't enable tracing\n");
+> >  		goto out_close_fd;
+> > -- 
+> > 2.25.1
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
 
-Or some related change, the lz4 author Cyan did it on purpose.
-https://github.com/lz4/lz4/commit/1a191b3f8d26b50a7c1d41590b529ec308d768cd
-
-I think we could follow the latest LZ4 upstream in order to
-avoid further maintainence overhead. That's my own thought
-anyway.
-
-Thanks,
-Gao Xiang
-
+-- 
+Cheers,
+Changbin Du
