@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 373652073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76632073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRaR2Pgg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qr/OTDIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgFFOa7 (ORCPT
+        id S1728657AbgFFOca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:30:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48714 "EHLO
+        Sat, 6 Jun 2020 10:32:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgFFOa6 (ORCPT
+        with ESMTP id S1726133AbgFFOc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:30:58 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 382CEC03E96A
-        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 07:30:58 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id h95so4058945pje.4
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:30:58 -0700 (PDT)
+        Sat, 6 Jun 2020 10:32:29 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6150BC03E96A
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 07:32:29 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 23so5482433pfw.10
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=q9ACHO/wqUnF1zJ7y6x8firkYJLD6+Czjoa4v+iXsOw=;
-        b=dRaR2PggpUpkrojrzCcfbeVo5j59uju93fEO9CDVhTFooFQsBcSuiq6hDz85hqZmWj
-         vOh9y/aJME6ffIiGynBcWATosuiUoIhImhCJ9j7KBvLe1ySIDf4jKx+j1NQt2ht+5OfN
-         vZjaO3SsH+UFRKn3VbmyzIV601h/y4BsezeoJg6nz4v8a9balK2zSVrnj1r/S59c6xnC
-         fo7VZ12i+QdEDsv9HK6abBHu2KfroJA9g5gsyBdRoBsfXjACbeV3Tck2C11EOFdF/pIV
-         0j3fZeAYHnGqpPPsd0GZk7Gwsl9gMkuR8z8eXfe1/3OlO3W7aa2b7l2VwxwFCM7VFox3
-         Yr6g==
+        bh=13Bg+r53Hgf+6+xiFNVDDsBz9vyOQUz3FCM2y7AOtgE=;
+        b=qr/OTDIP77AagDZPrNCnWY81dxefjRLJvS7YlWLOzEdmZxY/lQMkxk419Zw5yb6yXa
+         A+wg0oz9CDM+2/T3X/jZQZBEnj84gU81uqrn1VsR7F3RpLYS/wrZENQjRjtzL46JMLc3
+         4u/rFHZpeE5sz7Vcigj/tNLLagOLYNUByI1gZWqfe7ghrtkY60WbBmrCq7JtkeqRVnW1
+         ClSxqWMZ5Y5uR6HCViNzPj3nNIKQqBOr18x6qkbOjabI3T/f1MreEE4WZ47gG0hM6xMp
+         pUVR8r/TxUKFXiDVUW6Jfn5fMN3XMXlhxcZTrIkvgMnGnDdzKuh5EawBruIPC9ohtQJ6
+         eaEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=q9ACHO/wqUnF1zJ7y6x8firkYJLD6+Czjoa4v+iXsOw=;
-        b=daWy9al9AAAIk5/tShjv91kJySUzhHqxmPn31dO+D01CNPiEBTfCHLTNMgU234mwH4
-         k1tuZdQowCcMIWFwhFNPGrVPSLcQjBx6Hehw9Bsc+Z+fEilbn514AM9vLmKffZDRwJZ3
-         wcZMpr4QjS8CvfBcKur0boe+pjW9E/HgdFnfxCIe0Vo6me81JngXxzTEt2o7oBhfFH5/
-         et/oIZtx2y3dZThTMmUPmtBsUy0/UXc2nxmtTKCwwRd+HNwWHzDk195+kmAI1TtpUwFo
-         OUjHbNsHCh6Ea44/QNQmicJBJl/rfp0tS2khA1XMJbJq3FiYcKrP784Vs1x219AebwtY
-         gmEw==
-X-Gm-Message-State: AOAM531ftpJygq017i/Rlknkj6rAAchxTPo5eHscUCTFB9tLsnmizFO8
-        /5uJ4VciN89Ta2T7Yg0oIGA=
-X-Google-Smtp-Source: ABdhPJzypgnds9sW1mosLPOWtZWuJOr8jl8jHopAWfr0CdUH6kjgkY+8WnComQ0NF7G3L86B8ezL9w==
-X-Received: by 2002:a17:902:74cb:: with SMTP id f11mr14083386plt.239.1591453857699;
-        Sat, 06 Jun 2020 07:30:57 -0700 (PDT)
+        bh=13Bg+r53Hgf+6+xiFNVDDsBz9vyOQUz3FCM2y7AOtgE=;
+        b=DP2IA506L3+WbvWxT2y0JUvaowAC6gps/X9CC+15GTi+fZbyNTbGwXs0RUyLmHoAvx
+         kAC1Fxkdk85EWd9T8+itCcSKLTBBshu2OQ6l/TGWp5bncs9A8Tq+obGnG9rDCF+X+1ZM
+         8DtixKhpPKXGVgW3SI2w0Rhv3bcYPOYw+r/0NO2E6H4lADuJPItMKoq1+BU5XpbQyrnh
+         DyBTQa1vHKgUwwHKrDGAZreyMu0vJZEoAthWpB55iVl95f9cBIVZyq1D4MPBpX5PoS7O
+         8tJC261nXjc2zNAQ/loAo8P8QuLpN+f0DeOqFjf6wD/dcBw1RpfMdqYEkYmGcRfcj7n/
+         3Yhw==
+X-Gm-Message-State: AOAM530tWimxR40fZJq3I926N1Yay40QvxrO7eeXnge8spw9lbjJPzR4
+        qCo84jhQohWu+cZ+9efc+Pg=
+X-Google-Smtp-Source: ABdhPJy9NWDzWc9ihQ5mfFsRS0vNfa3QXRYaCvHfdPWBOir5y+RtZ+eOeeHDUc+XHGG72NuwNzhH3Q==
+X-Received: by 2002:a62:6d01:: with SMTP id i1mr14678812pfc.286.1591453948970;
+        Sat, 06 Jun 2020 07:32:28 -0700 (PDT)
 Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id j19sm2519104pfn.109.2020.06.06.07.30.52
+        by smtp.gmail.com with ESMTPSA id k101sm11626595pjb.26.2020.06.06.07.32.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2020 07:30:56 -0700 (PDT)
-Date:   Sat, 6 Jun 2020 22:30:49 +0800
+        Sat, 06 Jun 2020 07:32:28 -0700 (PDT)
+Date:   Sat, 6 Jun 2020 22:32:17 +0800
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
@@ -68,89 +68,52 @@ Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 17/19] perf ftrace: add option -d/--delay to delay tracing
-Message-ID: <20200606143049.xvszf32j2bbpi4yx@mail.google.com>
+Subject: Re: [PATCH 16/19] perf ftrace: add option -t/--tid to filter by
+ thread id
+Message-ID: <20200606143217.my254phsg7vv4bnm@mail.google.com>
 References: <20200510150628.16610-1-changbin.du@gmail.com>
- <20200510150628.16610-18-changbin.du@gmail.com>
- <20200520211331.GA3898@kernel.org>
+ <20200510150628.16610-17-changbin.du@gmail.com>
+ <20200520211228.GE32678@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520211331.GA3898@kernel.org>
+In-Reply-To: <20200520211228.GE32678@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:13:31PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Sun, May 10, 2020 at 11:06:26PM +0800, Changbin Du escreveu:
-> > This adds an option '-d/--delay' to allow us to start tracing some
-> > times later after workload is launched.
+On Wed, May 20, 2020 at 06:12:28PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sun, May 10, 2020 at 11:06:25PM +0800, Changbin Du escreveu:
+> > This allows us to trace single thread instead of the whole process.
 > 
-> [acme@five perf]$ perf record -h delay
+> I was going to adjust the patch to add, but you forgot to add the entry
+> to tools/perf/Documentation/perf-ftrace.txt,
 > 
->  Usage: perf record [<options>] [<command>]
->     or: perf record [<options>] -- <command> [<options>]
-> 
->     -D, --delay <n>       ms to wait before starting measurement after program start
-> 
-> [acme@five perf]$
+> Please do so,
 >
-Sure, will change the short option name.
+no problem. I will apend a new patch to update all the documentation.
 
+> - Arnaldo
+>  
 > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > > ---
-> >  tools/perf/builtin-ftrace.c | 19 ++++++++++++++++---
-> >  1 file changed, 16 insertions(+), 3 deletions(-)
+> >  tools/perf/builtin-ftrace.c | 2 ++
+> >  1 file changed, 2 insertions(+)
 > > 
 > > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > index 8d04e5afe2d3..d376b37c53fc 100644
+> > index 0b39b6a88026..8d04e5afe2d3 100644
 > > --- a/tools/perf/builtin-ftrace.c
 > > +++ b/tools/perf/builtin-ftrace.c
-> > @@ -49,6 +49,7 @@ struct perf_ftrace {
-> >  	bool			trace_children;
-> >  	unsigned		buffer_size_kb;
-> >  	bool			no_pager;
-> > +	unsigned		initial_delay;
-> >  };
-> >  
-> >  struct filter_entry {
-> > @@ -617,13 +618,23 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-> >  	/* display column headers */
-> >  	read_tracing_file_to_stdout("trace");
-> >  
-> > -	if (write_tracing_file("tracing_on", "1") < 0) {
-> > -		pr_err("can't enable tracing\n");
-> > -		goto out_close_fd;
-> > +	if (!ftrace->initial_delay) {
-> > +		if (write_tracing_file("tracing_on", "1") < 0) {
-> > +			pr_err("can't enable tracing\n");
-> > +			goto out_close_fd;
-> > +		}
-> >  	}
-> >  
-> >  	perf_evlist__start_workload(ftrace->evlist);
-> >  
-> > +	if (ftrace->initial_delay) {
-> > +		usleep(ftrace->initial_delay * 1000);
-> > +		if (write_tracing_file("tracing_on", "1") < 0) {
-> > +			pr_err("can't enable tracing\n");
-> > +			goto out_close_fd;
-> > +		}
-> > +	}
-> > +
-> >  	while (!done) {
-> >  		if (poll(&pollfd, 1, -1) < 0)
-> >  			break;
-> > @@ -747,6 +758,8 @@ int cmd_ftrace(int argc, const char **argv)
-> >  		     "size of per cpu buffer in kb"),
-> >  	OPT_BOOLEAN('P', "no-pager", &ftrace.no_pager,
-> >  		    "Do not use pager"),
-> > +	OPT_UINTEGER('d', "delay", &ftrace.initial_delay,
-> > +		     "Wait <n> ms before tracing"),
-> >  	OPT_END()
-> >  	};
-> >  
+> > @@ -707,6 +707,8 @@ int cmd_ftrace(int argc, const char **argv)
+> >  		    "List available functions to filter"),
+> >  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+> >  		   "trace on existing process id"),
+> > +	OPT_STRING('t', "tid", &ftrace.target.tid, "tid",
+> > +		   "trace on existing thread id (exclusive to --pid)"),
+> >  	OPT_INCR('v', "verbose", &verbose,
+> >  		 "be more verbose"),
+> >  	OPT_BOOLEAN('a', "all-cpus", &ftrace.target.system_wide,
 > > -- 
 > > 2.25.1
 > > 
