@@ -2,188 +2,164 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 02:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45268C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 03:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB5C4207F9
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 02:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D941206F0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 03:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgFFCzL (ORCPT
+        id S1728549AbgFFDCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 22:55:11 -0400
-Received: from mx2.freebsd.org ([96.47.72.81]:51310 "EHLO mx2.freebsd.org"
+        Fri, 5 Jun 2020 23:02:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:15561 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbgFFCzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 22:55:10 -0400
-Received: from mx1.freebsd.org (mx1.freebsd.org [96.47.72.80])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits)
-         client-signature RSA-PSS (4096 bits))
-        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx2.freebsd.org (Postfix) with ESMTPS id BD28A75ACF;
-        Sat,  6 Jun 2020 02:55:09 +0000 (UTC)
-        (envelope-from kevans@freebsd.org)
-Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
-        by mx1.freebsd.org (Postfix) with ESMTPS id 49f3z13wywz4ZkW;
-        Sat,  6 Jun 2020 02:55:09 +0000 (UTC)
-        (envelope-from kevans@freebsd.org)
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client CN "smtp.gmail.com", Issuer "GTS CA 1O1" (verified OK))
-        (Authenticated sender: kevans)
-        by smtp.freebsd.org (Postfix) with ESMTPSA id 82112212CA;
-        Sat,  6 Jun 2020 02:55:09 +0000 (UTC)
-        (envelope-from kevans@freebsd.org)
-Received: by mail-qk1-f173.google.com with SMTP id g28so11899439qkl.0;
-        Fri, 05 Jun 2020 19:55:09 -0700 (PDT)
-X-Gm-Message-State: AOAM532riWmv7cGl2ZwB9ZtfOBcYRF39wa/XiGoJHVgKrM2p5i2DLCa7
-        L/izMow0XHXtjNQyozI2pgQWFofbqtDCD4TnBnk=
-X-Google-Smtp-Source: ABdhPJzCJryMmTEHoBZFevF7W9bLiWqO53WxuwraCmT96xgfbY3GgRwjvBH4rxb/qz0FJwXOmpcjWZbqgc2/y757xgw=
-X-Received: by 2002:ae9:dc84:: with SMTP id q126mr13079508qkf.430.1591412108517;
- Fri, 05 Jun 2020 19:55:08 -0700 (PDT)
+        id S1728390AbgFFDCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 23:02:24 -0400
+IronPort-SDR: KyvzVIMYi4Vqt+/KENsCsMhCdAtarSf8JJykwdgxV8g8GfaiiSY8v5WFV+VTFHykrvvpMYQvCp
+ by4W48p3MEfA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 20:02:22 -0700
+IronPort-SDR: Z9HrgzCzjS5Cz81PKTZSVw9qZ0pyvQCJEvGRPUrnmB4B4p9C/6sIgfVak/Qe0p3cq33NlkV2Zv
+ 2l5IcKWaom7w==
+X-IronPort-AV: E=Sophos;i="5.73,478,1583222400"; 
+   d="scan'208";a="446111559"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.79]) ([10.249.169.79])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 20:02:19 -0700
+Subject: Re: [PATCH] x86/split_lock: Sanitize userspace and guest error output
+To:     Prarit Bhargava <prarit@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <20200605114459.22200-1-prarit@redhat.com>
+ <96b5c5fa-6b4e-a5f4-34cc-682477a27370@intel.com>
+ <3e1f1fac-fa46-7a2a-1424-d5c931e521d7@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <6d8e658b-8ffb-2af7-de94-d01c5fdd5789@intel.com>
+Date:   Sat, 6 Jun 2020 11:02:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200602204219.186620-1-christian.brauner@ubuntu.com>
- <20200602204219.186620-2-christian.brauner@ubuntu.com> <20200605145549.GC673948@port70.net>
-In-Reply-To: <20200605145549.GC673948@port70.net>
-From:   Kyle Evans <kevans@freebsd.org>
-Date:   Fri, 5 Jun 2020 21:54:56 -0500
-X-Gmail-Original-Message-ID: <CACNAnaEjjQBB8ieZH+td8jk-Aitg3CjGB1WwGQwEv-STg5Do+g@mail.gmail.com>
-Message-ID: <CACNAnaEjjQBB8ieZH+td8jk-Aitg3CjGB1WwGQwEv-STg5Do+g@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] open: add close_range()
-To:     Szabolcs Nagy <nsz@port70.net>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        torvalds@linux-foundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Victor Stinner <victor.stinner@gmail.com>,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, fweimer@redhat.com, jannh@google.com,
-        oleg@redhat.com, arnd@arndb.de, shuah@kernel.org,
-        dhowells@redhat.com, ldv@altlinux.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3e1f1fac-fa46-7a2a-1424-d5c931e521d7@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 9:55 AM Szabolcs Nagy <nsz@port70.net> wrote:
->
-> * Christian Brauner <christian.brauner@ubuntu.com> [2020-06-02 22:42:17 +0200]:
-> > [... snip ...]
-> >
-> > First, it helps to close all file descriptors of an exec()ing task. This
-> > can be done safely via (quoting Al's example from [1] verbatim):
-> >
-> >         /* that exec is sensitive */
-> >         unshare(CLONE_FILES);
-> >         /* we don't want anything past stderr here */
-> >         close_range(3, ~0U);
-> >         execve(....);
->
-> this api needs a documentation patch if there isn't yet.
->
-> currently there is no libc interface contract in place that
-> says which calls may use libc internal fds e.g. i've seen
->
->   openlog(...) // opens libc internal syslog fd
->   ...
->   fork()
->   closefrom(...) // close syslog fd
->   open(...) // something that reuses the closed fd
->   syslog(...) // unsafe: uses the wrong fd
->   execve(...)
->
-> syslog uses a libc internal fd that the user trampled on and
-> this can go bad in many ways depending on what libc apis are
-> used between closefrom (or equivalent) and exec.
->
+On 6/6/2020 12:42 AM, Prarit Bhargava wrote:
+> 
+> 
+> On 6/5/20 11:29 AM, Xiaoyao Li wrote:
+>> On 6/5/2020 7:44 PM, Prarit Bhargava wrote:
+>>> There are two problems with kernel messages in fatal mode that
+>>> were found during testing of guests and userspace programs.
+>>>
+>>> The first is that no kernel message is output when the split lock detector
+>>> is triggered with a userspace program.  As a result the userspace process
+>>> dies from receiving SIGBUS with no indication to the user of what caused
+>>> the process to die.
+>>>
+>>> The second problem is that only the first triggering guest causes a kernel
+>>> message to be output because the message is output with pr_warn_once().
+>>> This also results in a loss of information to the user.
+>>>
+>>> While fixing these I noticed that the same message was being output
+>>> three times so I'm cleaning that up too.
+>>>
+>>> Fix fatal mode output, and use consistent messages for fatal and
+>>> warn modes for both userspace and guests.
+>>>
+>>> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>> Cc: Ingo Molnar <mingo@redhat.com>
+>>> Cc: Borislav Petkov <bp@alien8.de>
+>>> Cc: x86@kernel.org
+>>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>>> Cc: Tony Luck <tony.luck@intel.com>
+>>> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+>>> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+>>> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+>>> Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+>>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>>> ---
+>>>    arch/x86/kernel/cpu/intel.c | 24 ++++++++++--------------
+>>>    1 file changed, 10 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+>>> index 166d7c355896..463022aa9b7a 100644
+>>> --- a/arch/x86/kernel/cpu/intel.c
+>>> +++ b/arch/x86/kernel/cpu/intel.c
+>>> @@ -1074,10 +1074,14 @@ static void split_lock_init(void)
+>>>        split_lock_verify_msr(sld_state != sld_off);
+>>>    }
+>>>    -static void split_lock_warn(unsigned long ip)
+>>> +static bool split_lock_warn(unsigned long ip, int fatal)
+>>>    {
+>>> -    pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+>>> -                current->comm, current->pid, ip);
+>>> +    pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
+>>> +                current->comm, current->pid,
+>>> +                sld_state == sld_fatal ? "fatal " : "", ip);
+>>> +
+>>> +    if (sld_state == sld_fatal || fatal)
+>>> +        return false;
+>>>          /*
+>>>         * Disable the split lock detection for this task so it can make
+>>> @@ -1086,18 +1090,13 @@ static void split_lock_warn(unsigned long ip)
+>>>         */
+>>>        sld_update_msr(false);
+>>>        set_tsk_thread_flag(current, TIF_SLD);
+>>> +    return true;
+>>>    }
+>>>      bool handle_guest_split_lock(unsigned long ip)
+>>>    {
+>>> -    if (sld_state == sld_warn) {
+>>> -        split_lock_warn(ip);
+>>> +    if (split_lock_warn(ip, 0))
+>>>            return true;
+>>> -    }
+>>> -
+>>> -    pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
+>>> -             current->comm, current->pid,
+>>> -             sld_state == sld_fatal ? "fatal" : "bogus", ip);
+>>>          current->thread.error_code = 0;
+>>>        current->thread.trap_nr = X86_TRAP_AC;
+>>> @@ -1108,10 +1107,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
+>>>      bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+>>>    {
+>>> -    if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
+>>> -        return false;
+>>> -    split_lock_warn(regs->ip);
+>>> -    return true;
+>>> +    return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
+>>
+>> It's incorrect. You change the behavior that it will print the split lock
+>> warning even when CPL 3 Alignment Check is turned on.
+> 
+> Do you want the message to be displayed in the fatal case of CPL 3 Alignment check?
+> 
 
-Documentation is good. :-) I think you'll find that while this example
-seems to be innocuous on FreeBSD (and likely other *BSD), this is an
-atypical scenario and generally not advised.  You would usually not
-start closing until you're actually ready to exec/fail.
+No. It should never be displayed if #AC happens in CPL 3 and 
+X86_EFLAGS_AC is set. In this case, an unaligned access triggers #AC 
+regardless of #LOCK prefix. What's more, even there is a #LOCK prefix, 
+we still cannot tell the cause because we don't know the priority of 
+legacy alignment check #AC and split lock #AC.
 
-> > The code snippet above is one way of working around the problem that file
-> > descriptors are not cloexec by default. This is aggravated by the fact that
-> > we can't just switch them over without massively regressing userspace. For
->
-> why is a switch_to_cloexec_range worse than close_range?
-> the former seems safer to me. (and allows libc calls
-> to be made between such switch and exec: libc internal
-> fds have to be cloexec anyway)
->
+If you do want a message, we can only say "unaligned access at address xxx".
 
-I wouldn't say it's worse, but it only solves half the problem. While
-closefrom -> exec is the most common usage by a long shot, there are
-also times (e.g. post-fork without intent to exec for a daemon/service
-type) that you want to go ahead and close everything except maybe a
-pipe fd that you've opened for IPC. While uncommon, there's no reason
-this needs to devolve into a loop to close 'all the fds' when you can
-instead introduce close_range to solve both the exec case and other
-less common scenarios.
-
-> > a whole class of programs having an in-kernel method of closing all file
-> > descriptors is very helpful (e.g. demons, service managers, programming
-> > language standard libraries, container managers etc.).
-> > (Please note, unshare(CLONE_FILES) should only be needed if the calling
-> > task is multi-threaded and shares the file descriptor table with another
-> > thread in which case two threads could race with one thread allocating file
-> > descriptors and the other one closing them via close_range(). For the
-> > general case close_range() before the execve() is sufficient.)
-> >
-> > Second, it allows userspace to avoid implementing closing all file
-> > descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
-> > file descriptor. From looking at various large(ish) userspace code bases
-> > this or similar patterns are very common in:
-> > - service managers (cf. [4])
-> > - libcs (cf. [6])
-> > - container runtimes (cf. [5])
-> > - programming language runtimes/standard libraries
-> >   - Python (cf. [2])
-> >   - Rust (cf. [7], [8])
-> > As Dmitry pointed out there's even a long-standing glibc bug about missing
-> > kernel support for this task (cf. [3]).
-> > In addition, the syscall will also work for tasks that do not have procfs
-> > mounted and on kernels that do not have procfs support compiled in. In such
-> > situations the only way to make sure that all file descriptors are closed
-> > is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
-> > OPEN_MAX trickery (cf. comment [8] on Rust).
->
-> close_range still seems like a bad operation to expose.
->
-> if users really want closing behaviour (instead of marking
-> fds cloexec) then they likely need coordination with libc
-> and other libraries.
->
-> e.g. this usage does not work:
->
->   maxfd = findmaxfd();
->   call_that_may_leak_fds();
->   close_range(maxfd,~0U);
->
-> as far as i can tell only the close right before exec works.
-
-I don't have much to say on this one, except that's also an unusual
-case. I don't know that I'd anticipate close_range getting used for
-that kind of cleanup job (I've never seen a similar use of closefrom),
-which seems to just be papering over application/library bugs.
-
-Coordination with libc is generally not much of an issue, because this
-is really one of the last things you do before exec() or swiftly
-failing miserably. Applications that currently loop over all fd <=
-maxfd and close(fd) right now are subject to the very same
-constraints, this is just a much more efficient way and
-debugger-friendly way to accomplish it. You've absolutely not lived
-life until you've had to watch thousands of close() calls painfully
-scroll by in truss/strace.
-
-Thank,
-
-Kyle Evans
