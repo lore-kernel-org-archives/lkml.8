@@ -2,208 +2,100 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE18C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91DDD20663
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE22206DC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgFFLW3 (ORCPT
+        id S1728757AbgFFLxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 07:22:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23048 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728718AbgFFLW2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 07:22:28 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 056B1KJP149205;
-        Sat, 6 Jun 2020 07:21:51 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31g42qq2d9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 06 Jun 2020 07:21:51 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 056BClkk177079;
-        Sat, 6 Jun 2020 07:21:50 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31g42qq2cs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 06 Jun 2020 07:21:50 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 056BF2Od015969;
-        Sat, 6 Jun 2020 11:21:49 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7rj7r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 06 Jun 2020 11:21:48 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 056BLkna67043406
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 6 Jun 2020 11:21:46 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3934A4060;
-        Sat,  6 Jun 2020 11:21:46 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D48F4A4054;
-        Sat,  6 Jun 2020 11:21:42 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.89.98])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Sat,  6 Jun 2020 11:21:42 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Sat, 06 Jun 2020 16:51:41 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Cc:     Santosh Sivaraj <santosh@fossix.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v10 4/6] powerpc/papr_scm: Improve error logging and handling papr_scm_ndctl()
-In-Reply-To: <CAPcyv4g2x7LV3ARRj-RBS1K84WNayr9oDcupzPQ1gtK1A_e+aQ@mail.gmail.com>
-References: <20200604234136.253703-1-vaibhav@linux.ibm.com> <20200604234136.253703-5-vaibhav@linux.ibm.com> <20200605171313.GO1505637@iweiny-DESK2.sc.intel.com> <CAPcyv4g2x7LV3ARRj-RBS1K84WNayr9oDcupzPQ1gtK1A_e+aQ@mail.gmail.com>
-Date:   Sat, 06 Jun 2020 16:51:41 +0530
-Message-ID: <87zh9gfni2.fsf@linux.ibm.com>
+        Sat, 6 Jun 2020 07:53:42 -0400
+Received: from mx24.baidu.com ([111.206.215.185]:36350 "EHLO baidu.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725831AbgFFLxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 07:53:41 -0400
+Received: from BC-Mail-Ex14.internal.baidu.com (unknown [172.31.51.54])
+        by Forcepoint Email with ESMTPS id 48047EE440090CF01259;
+        Sat,  6 Jun 2020 19:53:30 +0800 (CST)
+Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
+ BC-Mail-Ex14.internal.baidu.com (172.31.51.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1531.3; Sat, 6 Jun 2020 19:53:29 +0800
+Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
+ BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
+ 15.01.1713.004; Sat, 6 Jun 2020 19:53:23 +0800
+From:   "Li,Rongqing" <lirongqing@baidu.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+CC:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        "wei.huang2@amd.com" <wei.huang2@amd.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3Y2XSBLVk06IFg4Njogc3VwcG9ydCBBUEVSRi9N?=
+ =?utf-8?Q?PERF_registers?=
+Thread-Topic: [PATCH][v6] KVM: X86: support APERF/MPERF registers
+Thread-Index: AQHWOtrZ4X/t3pkmBEG7o3WCZUgoeKjI8MGAgAAac4CAALL6AIAAAaWAgAG8BDA=
+Date:   Sat, 6 Jun 2020 11:53:23 +0000
+Message-ID: <15a134b739614f8bbaf18ce40662f6b3@baidu.com>
+References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
+ <b70d03dd-947f-dee5-5499-3b381372497d@intel.com>
+ <72a75924-c3cb-6b23-62bd-67b739dec166@redhat.com>
+ <CALMp9eSrDehftA5o6tU2sE_098F2ucztYtzhvgguYDnWqwHJaw@mail.gmail.com>
+ <a1aa9cc5-96c7-11fe-17e1-22fe46b940f3@redhat.com>
+In-Reply-To: <a1aa9cc5-96c7-11fe-17e1-22fe46b940f3@redhat.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.127.81.84]
+x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex14_2020-06-06 19:53:30:236
+x-baidu-bdmsfe-viruscheck: BC-Mail-Ex14_GRAY_Inside_WithoutAtta_2020-06-06
+ 19:53:30:173
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-06_06:2020-06-04,2020-06-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 bulkscore=0 priorityscore=1501
- mlxlogscore=999 suspectscore=1 cotscore=-2147483648 lowpriorityscore=0
- adultscore=0 mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006060084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ira and Dan,
-
-Thanks for reviewing this patch. Have updated the patch based on your
-feedback to upadate cmd_rc only when the nd_cmd was handled and return
-'0' in that case.
-
-Other errors in case the nd_cmd was unrecognized or invalid result in
-error returned from this functions as you suggested.
-
-~ Vaibhav
-
-Dan Williams <dan.j.williams@intel.com> writes:
-
-> On Fri, Jun 5, 2020 at 10:13 AM Ira Weiny <ira.weiny@intel.com> wrote:
->>
->> On Fri, Jun 05, 2020 at 05:11:34AM +0530, Vaibhav Jain wrote:
->> > Since papr_scm_ndctl() can be called from outside papr_scm, its
->> > exposed to the possibility of receiving NULL as value of 'cmd_rc'
->> > argument. This patch updates papr_scm_ndctl() to protect against such
->> > possibility by assigning it pointer to a local variable in case cmd_rc
->> > == NULL.
->> >
->> > Finally the patch also updates the 'default' clause of the switch-case
->> > block removing a 'return' statement thereby ensuring that value of
->> > 'cmd_rc' is always logged when papr_scm_ndctl() returns.
->> >
->> > Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
->> > Cc: Dan Williams <dan.j.williams@intel.com>
->> > Cc: Michael Ellerman <mpe@ellerman.id.au>
->> > Cc: Ira Weiny <ira.weiny@intel.com>
->> > Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
->> > ---
->> > Changelog:
->> >
->> > v9..v10
->> > * New patch in the series
->>
->> Thanks for making this a separate patch it is easier to see what is going on
->> here.
->>
->> > ---
->> >  arch/powerpc/platforms/pseries/papr_scm.c | 10 ++++++++--
->> >  1 file changed, 8 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
->> > index 0c091622b15e..6512fe6a2874 100644
->> > --- a/arch/powerpc/platforms/pseries/papr_scm.c
->> > +++ b/arch/powerpc/platforms/pseries/papr_scm.c
->> > @@ -355,11 +355,16 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
->> >  {
->> >       struct nd_cmd_get_config_size *get_size_hdr;
->> >       struct papr_scm_priv *p;
->> > +     int rc;
->> >
->> >       /* Only dimm-specific calls are supported atm */
->> >       if (!nvdimm)
->> >               return -EINVAL;
->> >
->> > +     /* Use a local variable in case cmd_rc pointer is NULL */
->> > +     if (!cmd_rc)
->> > +             cmd_rc = &rc;
->> > +
->>
->> This protects you from the NULL.  However...
->>
->> >       p = nvdimm_provider_data(nvdimm);
->> >
->> >       switch (cmd) {
->> > @@ -381,12 +386,13 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
->> >               break;
->> >
->> >       default:
->> > -             return -EINVAL;
->> > +             dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
->> > +             *cmd_rc = -EINVAL;
->>
->> ... I think you are conflating rc and cmd_rc...
->>
->> >       }
->> >
->> >       dev_dbg(&p->pdev->dev, "returned with cmd_rc = %d\n", *cmd_rc);
->> >
->> > -     return 0;
->> > +     return *cmd_rc;
->>
->> ... this changes the behavior of the current commands.  Now if the underlying
->> papr_scm_meta_[get|set]() fails you return that failure as rc rather than 0.
->>
->> Is that ok?
->
-> The expectation is that rc is "did the command get sent to the device,
-> or did it fail for 'transport' reasons". The role of cmd_rc is to
-> translate the specific status response of the command into a common
-> error code. The expectations are:
-
->
-> rc < 0: Error code, Linux terminated the ioctl before talking to hardware
->
-> rc == 0: Linux successfully submitted the command to hardware, cmd_rc
-> is valid for command specific response
->
-> rc > 0: Linux successfully submitted the command, but detected that
-> only a subset of the data was accepted for "write"-style commands, or
-> that only subset of data was returned for "read"-style commands. I.e.
-> short-write / short-read semantics. cmd_rc is valid in this case and
-> its up to userspace to determine if a short transfer is an error or
-> not.
->
->> Also 'logging cmd_rc' in the invalid cmd case does not seem quite right unless
->> you really want rc to be cmd_rc.
->>
->> The architecture is designed to separate errors which occur in the kernel vs
->> errors in the firmware/dimm.  Are they always the same?  The current code
->> differentiates them.
->
-> Yeah, they're distinct, transport vs end-point / command-specific
-> status returns.
-
-
--- 
-Cheers
-~ Vaibhav
+DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFBhb2xvIEJvbnppbmkg
+W21haWx0bzpwYm9uemluaUByZWRoYXQuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMjDlubQ25pyI
+NuaXpSAxOjIyDQo+IOaUtuS7tuS6ujogSmltIE1hdHRzb24gPGptYXR0c29uQGdvb2dsZS5jb20+
+DQo+IOaKhOmAgTogWGlhb3lhbyBMaSA8eGlhb3lhby5saUBpbnRlbC5jb20+OyBMaSxSb25ncWlu
+ZyA8bGlyb25ncWluZ0BiYWlkdS5jb20+Ow0KPiBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnPjsga3ZtIGxpc3QgPGt2bUB2Z2VyLmtlcm5lbC5vcmc+OyB0aGUNCj4gYXJjaC94ODYg
+bWFpbnRhaW5lcnMgPHg4NkBrZXJuZWwub3JnPjsgSCAuIFBldGVyIEFudmluIDxocGFAenl0b3Iu
+Y29tPjsNCj4gQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+OyBJbmdvIE1vbG5hciA8bWlu
+Z29AcmVkaGF0LmNvbT47IFRob21hcw0KPiBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsg
+V2FucGVuZyBMaSA8d2FucGVuZ2xpQHRlbmNlbnQuY29tPjsgVml0YWx5DQo+IEt1em5ldHNvdiA8
+dmt1em5ldHNAcmVkaGF0LmNvbT47IFNlYW4gQ2hyaXN0b3BoZXJzb24NCj4gPHNlYW4uai5jaHJp
+c3RvcGhlcnNvbkBpbnRlbC5jb20+OyB3ZWkuaHVhbmcyQGFtZC5jb20NCj4g5Li76aKYOiBSZTog
+W1BBVENIXVt2Nl0gS1ZNOiBYODY6IHN1cHBvcnQgQVBFUkYvTVBFUkYgcmVnaXN0ZXJzDQo+IA0K
+PiBPbiAwNS8wNi8yMCAxOToxNiwgSmltIE1hdHRzb24gd3JvdGU6DQo+ID4+Pj4gQEAgLTQ5MzAs
+NiArNDkzOSwxMSBAQCBpbnQga3ZtX3ZtX2lvY3RsX2VuYWJsZV9jYXAoc3RydWN0IGt2bQ0KPiAq
+a3ZtLA0KPiA+Pj4+ICAgICAgICAgICBrdm0tPmFyY2guZXhjZXB0aW9uX3BheWxvYWRfZW5hYmxl
+ZCA9IGNhcC0+YXJnc1swXTsNCj4gPj4+PiAgICAgICAgICAgciA9IDA7DQo+ID4+Pj4gICAgICAg
+ICAgIGJyZWFrOw0KPiA+Pj4+ICsgICAgY2FzZSBLVk1fQ0FQX0FQRVJGTVBFUkY6DQo+ID4+Pj4g
+KyAgICAgICAga3ZtLT5hcmNoLmFwZXJmbXBlcmZfbW9kZSA9DQo+ID4+Pj4gKyAgICAgICAgICAg
+IGJvb3RfY3B1X2hhcyhYODZfRkVBVFVSRV9BUEVSRk1QRVJGKSA/DQo+IGNhcC0+YXJnc1swXSA6
+DQo+ID4+Pj4gKyAwOw0KPiA+Pj4gU2hvdWxkbid0IGNoZWNrIHdoZXRoZXIgY2FwLT5hcmdzWzBd
+IGlzIGEgdmFsaWQgdmFsdWU/DQo+ID4+IFllcywgb25seSB2YWxpZCB2YWx1ZXMgc2hvdWxkIGJl
+IGFsbG93ZWQuDQo+ID4+DQo+ID4+IEFsc28sIGl0IHNob3VsZCBmYWlsIHdpdGggLUVJTlZBTCBp
+ZiB0aGUgaG9zdCBkb2VzIG5vdCBoYXZlDQo+ID4+IFg4Nl9GRUFUVVJFX0FQRVJGTVBFUkYuDQo+
+ID4gU2hvdWxkIGVuYWJsaW5nL2Rpc2FibGluZyB0aGlzIGNhcGFiaWxpdHkgYmUgZGlzYWxsb3dl
+ZCBvbmNlIHZDUFVzDQo+ID4gaGF2ZSBiZWVuIGNyZWF0ZWQ/DQo+ID4NCj4gDQo+IFRoYXQncyBh
+IGdvb2QgaWRlYSwgeWVzLg0KPiANCj4gUGFvbG8NCg0KDQpUaGFuayB5b3UgYWxsLCBJIHdpbGwg
+c2VuZCBhIG5ldyB2ZXJzaW9uDQoNCi1MaQ0K
