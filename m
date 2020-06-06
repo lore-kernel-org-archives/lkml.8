@@ -5,70 +5,73 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D40C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF34020723
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA4920723
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oj56ULPG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8EF7ZmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgFFOjv (ORCPT
+        id S1728788AbgFFOkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50110 "EHLO
+        Sat, 6 Jun 2020 10:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgFFOju (ORCPT
+        with ESMTP id S1726340AbgFFOkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:39:50 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DDDC03E96A
-        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 07:39:50 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 23so5488368pfw.10
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:39:50 -0700 (PDT)
+        Sat, 6 Jun 2020 10:40:18 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE78C03E96A;
+        Sat,  6 Jun 2020 07:40:18 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i4so21685pjd.0;
+        Sat, 06 Jun 2020 07:40:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gQtShVWRbRV3vDwG2MUTjwFzTibMeozspEDCmK0TQQY=;
-        b=Oj56ULPGaz66CE8lVQtuuiU9Z+YALKkHNGtBqomALKQ9XR5zma2jjWXZs+9VIqaql/
-         duhC8Odx6uNYhTme6vqZYT+xJmDMzE2ednBkTfqzuhsFe37bn9eXLy86XtZ3+BCDzgJk
-         GYJcRgItdMVRWgulhJPOLg1aJ4U5OqeIcipxHVm/9J2QJVDHvnjrRYGj7Gzp0TkdZ0sl
-         svQbqlgMkSHOkR24fDI+As8PZ26wxHQnIExfaMI4KMmFlO2mUOGhAckGJJkp3uG71RsB
-         9KNT0rmp+Eb837kTALL3WJ/vEJOtnMf1ndaOX6pPLs90/35c91lOsq0l7QsPHg/tgkB6
-         FUzQ==
+        bh=GViXQwsNEwMzcKcJUYZl3xJtNTykxgzCsHdmjAqnXzM=;
+        b=U8EF7ZmU68bm6zgAlAT6va0itAw+yn7pqzGaR6lzefVRdBE90I+MY1MyKRGrMdF4J1
+         tlz2GtQZQgQTgerWFadVanqNRVkv5QUXj2k8JefG2gE37LpMzpa9W7DbkLvE9Y+YTc8/
+         cpdywjazBlA5QQOX8zkupnKCslJ3paREnivZGtOUzF9B0UGVvZ5txtuTdLW71gj3NnH4
+         AursxlNtmjwYVBUtlB+jRfFtofhgGHL8ujRgf1Zk1vwrCcoMg+ODHyldb+kmm1xJMBdY
+         3ABVTW0XgITYHSDpPH+T/Db6aitPYIwzSOnyeQacqrOUj8yodlIZPk1sZCWf789oetj2
+         yREw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=gQtShVWRbRV3vDwG2MUTjwFzTibMeozspEDCmK0TQQY=;
-        b=SxD3iANFx6oSyd0x2cXetBc9oW1+mRdhYLKK/Gb+qBEga9LAj+N7oUPl6kgWIyAoky
-         2ODh+oCaNfMVJxNzbvFRrpZrokNwTVhuePJW42SvVPsxtfXUUo5GfA1PXNQJ3N++d1iD
-         iC1Ys8FcULyh7RgO4DrBKUGYnEJta2D3aIP+givE/Dwl2fe/ds432ovbMX3tYXb0t5ue
-         tLF6n1M4VXw6NNcOe4pDk7ETXgYnJwYXCvgMFQlK+RFA3p6pE3VDCU3U3cuBKINLFizl
-         1VQuSTLhWkG8QTIE55zAnww3WIirojpJyetOiL4nnzwOWJfx290Gjjud+8hsYHJH1zlQ
-         U6hQ==
-X-Gm-Message-State: AOAM533qZjgickjLia3ToC9V84FDKhrVAx9f4VdyebHkZAPj4nvcKBk2
-        jOb+Pc33yOVRBbhRNI/5wdc=
-X-Google-Smtp-Source: ABdhPJwP4glFkSUhej2ZQC5gO9u9guBkgKYNiD/VR66L7SisOLQoldYfLWtGFzunssNN+0QaphNvSQ==
-X-Received: by 2002:a63:658:: with SMTP id 85mr13331078pgg.181.1591454390416;
-        Sat, 06 Jun 2020 07:39:50 -0700 (PDT)
+        bh=GViXQwsNEwMzcKcJUYZl3xJtNTykxgzCsHdmjAqnXzM=;
+        b=Jxl0civFxgaDNWlz7LBblCkToPNfNkGx+ZjeClTVGBoTgcvzi9HRiI+X1VlAjxv+IS
+         +bFWcR4kKmuv86RpwE4G1SCPdWq8aeqtc+7IEfApNVK9tCAsrFMJCitjzhzwTDjZg5zr
+         l/827rDQNwxl/0/nUz9e6yn5LN/uq7MAwMLdDayASs5MR1RebeTHIONVP+IOPedwk+W8
+         izSrtraNiK1pS27SDDwCmfuuRZQmwRT2BxuPHbq/oI4B5gGZApGPnTN45yx8zrS0v7nN
+         UwmPKN0deGssL8unokvqK4zn4PRFIcSQge/U3Dki6HtrFWny8Ivb9Z+pj8cOq0QbwXCg
+         n4YQ==
+X-Gm-Message-State: AOAM5321xg9EBo8DAGFrTg4LMfA9+ZSS+kKz0iv5pCvRgazvVwIH1rVX
+        UKl+XyvU7JbuSIMahGvmUk4=
+X-Google-Smtp-Source: ABdhPJwAZdRXZcOhokbba7h2K+v6sjLwBsq0222yXcaZc3mexqnhURCKrPM8PwjXVsswJo3Wzq92hw==
+X-Received: by 2002:a17:902:bb86:: with SMTP id m6mr13971345pls.341.1591454418202;
+        Sat, 06 Jun 2020 07:40:18 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id p14sm10938108pju.7.2020.06.06.07.39.46
+        by smtp.gmail.com with ESMTPSA id h6sm2511935pfq.214.2020.06.06.07.40.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2020 07:39:49 -0700 (PDT)
+        Sat, 06 Jun 2020 07:40:17 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Sundar Iyer <sundar.iyer@stericsson.com>,
-        Linus Walleij <linus.walleij@stericsson.com>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] mfd: tc3589x: Use devm_request_threaded_irq() to fix  the missing undo bug
-Date:   Sat,  6 Jun 2020 22:39:41 +0800
-Message-Id: <20200606143941.2869594-1-hslester96@gmail.com>
+Subject: [PATCH] serial: mxs-auart: Use devm_ioremap() to fix the missing undo bug
+Date:   Sat,  6 Jun 2020 22:40:08 +0800
+Message-Id: <20200606144008.2869652-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,33 +81,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver calls request_threaded_irq() in probe, but it misses calling
-free_irq() in probe's error handler and remove.
-Replace request_threaded_irq() with the devm version to fix it.
+This driver calls ioremap() in probe, but it misses calling iounmap() in 
+probe's error handler and remove.
+Replace ioremap() with the devm version to fix it.
 
-Fixes: 20406ebff4a2 ("mfd/tc3589x: rename tc35892 structs/registers to tc359x")
+Fixes: 47d37d6f94cc ("serial: Add auart driver for i.MX23/28")
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/mfd/tc3589x.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/mxs-auart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/tc3589x.c b/drivers/mfd/tc3589x.c
-index 67c9995bb1aa..0fd8ba1c68d0 100644
---- a/drivers/mfd/tc3589x.c
-+++ b/drivers/mfd/tc3589x.c
-@@ -412,9 +412,9 @@ static int tc3589x_probe(struct i2c_client *i2c,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index b4f835e7de23..b3e16fd72eaf 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -1679,7 +1679,7 @@ static int mxs_auart_probe(struct platform_device *pdev)
+ 	}
  
--	ret = request_threaded_irq(tc3589x->i2c->irq, NULL, tc3589x_irq,
--				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--				   "tc3589x", tc3589x);
-+	ret = devm_request_threaded_irq(&i2c->dev, tc3589x->i2c->irq, NULL,
-+					tc3589x_irq, IRQF_TRIGGER_FALLING |
-+					IRQF_ONESHOT, "tc3589x", tc3589x);
- 	if (ret) {
- 		dev_err(tc3589x->dev, "failed to request IRQ: %d\n", ret);
- 		return ret;
+ 	s->port.mapbase = r->start;
+-	s->port.membase = ioremap(r->start, resource_size(r));
++	s->port.membase = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+ 	if (!s->port.membase) {
+ 		ret = -ENOMEM;
+ 		goto out_disable_clks;
 -- 
 2.26.2
 
