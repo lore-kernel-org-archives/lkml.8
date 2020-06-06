@@ -2,220 +2,203 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA317C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA2120723
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmaR+Yx1"
+	by mail.kernel.org (Postfix) with ESMTP id C04712077D
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgFFOnu (ORCPT
+        id S1728856AbgFFOny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50738 "EHLO
+        Sat, 6 Jun 2020 10:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgFFOnt (ORCPT
+        with ESMTP id S1726340AbgFFOnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:43:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82028C03E96A
-        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 07:43:49 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id n9so4885981plk.1
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Yl5B71x5WRVLHY9W7Cygav4B233CiJaZgXz0nwScr1k=;
-        b=nmaR+Yx16ZjKd4987CctgQlRiXBAarBAYrESs0qnk4hOuejlJHIaCnBTE4LyDJRAtV
-         2gApuzJp7sBDEzKVtYcsZYoA1fI3EH6fbk4KKpNS5hC9XkaiT2+8CUaEakAkwq89VUi1
-         +yfvMFxMexAVK5huM1fOu6m4sbDe2pbCeFpnh4Z3zyqihFg+j0+ctveq8gcIv4AYqFyF
-         We4MUAhJtkj39ZphDK2MXX47OLD4OyIGRicLM0nkH+zWo6CjZCPrbC6Y8lMbSfkR3g60
-         domcYIOyPha9iNLfzUI4V4sTXF2tTfWojKbokml3gHD6yPRE/WW+Q+SS6nAjadEUNzMf
-         5BPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Yl5B71x5WRVLHY9W7Cygav4B233CiJaZgXz0nwScr1k=;
-        b=egy2q64l9YVhMW2bWGG2pX5VcTgMWWHr/Ho+TAecGLRHOnOE/LlU6jtWMmJz2PpzzB
-         a2mAX09wY9ukRpye4wQDioDAPOHIfFJNKeOlI8LRVx67CfFM2HGEtkEiJ1PrGhjktnal
-         IjXN8cLNgiEcx4iiNkPD60YzB+oFRN9E7FV8enAcRcYcFZxPuXvpN5m525K59R3wrInc
-         IMvJNWL2zRKTwkYtLiJiYIwUwK24EY12Itid/hpGgNQReQNtLlLwNs5M8GEhh5NjRENm
-         N3YrVytLQO6EmXJaNFhJFzWAuADtx+AxJvYq+mUrW/5ZOPsdU/f/H9WyoSll9htiSbF2
-         4XYQ==
-X-Gm-Message-State: AOAM53169FxAqE/VXOInrCJiiQdPKE8Uk8yW3FyUpLkVkd3Ai6G3RUof
-        3vOcWOlabShscQtpQSxcgnA=
-X-Google-Smtp-Source: ABdhPJy/0V3hV9sjcZWZaG1l826/LBrZHpl+dR6t5xULcD/GRwSzFhV/crvumHrjdD9J86PAr0e3TA==
-X-Received: by 2002:a17:90a:65c9:: with SMTP id i9mr8477138pjs.201.1591454629003;
-        Sat, 06 Jun 2020 07:43:49 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id l63sm2553795pfd.122.2020.06.06.07.43.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 6 Jun 2020 10:43:52 -0400
+X-Greylist: delayed 41542 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 06 Jun 2020 07:43:52 PDT
+Received: from mx2.freebsd.org (mx2.freebsd.org [IPv6:2610:1c1:1:606c::19:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E44C03E96A;
+        Sat,  6 Jun 2020 07:43:52 -0700 (PDT)
+Received: from mx1.freebsd.org (mx1.freebsd.org [IPv6:2610:1c1:1:606c::19:1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mx1.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx2.freebsd.org (Postfix) with ESMTPS id F063E83B79;
+        Sat,  6 Jun 2020 14:43:48 +0000 (UTC)
+        (envelope-from kevans@freebsd.org)
+Received: from smtp.freebsd.org (smtp.freebsd.org [IPv6:2610:1c1:1:606c::24b:4])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "smtp.freebsd.org", Issuer "Let's Encrypt Authority X3" (verified OK))
+        by mx1.freebsd.org (Postfix) with ESMTPS id 49fMhh5MVXz44cv;
+        Sat,  6 Jun 2020 14:43:48 +0000 (UTC)
+        (envelope-from kevans@freebsd.org)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client CN "smtp.gmail.com", Issuer "GTS CA 1O1" (verified OK))
+        (Authenticated sender: kevans)
+        by smtp.freebsd.org (Postfix) with ESMTPSA id B300126DA6;
+        Sat,  6 Jun 2020 14:43:48 +0000 (UTC)
+        (envelope-from kevans@freebsd.org)
+Received: by mail-qt1-f172.google.com with SMTP id k22so11101560qtm.6;
         Sat, 06 Jun 2020 07:43:48 -0700 (PDT)
-Date:   Sat, 6 Jun 2020 22:43:38 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/19] perf ftrace: add option '-b/--buffer-size' to set
- per-cpu buffer size
-Message-ID: <20200606144338.fz6soq2sirjiyi7w@mail.google.com>
-References: <20200510150628.16610-1-changbin.du@gmail.com>
- <20200510150628.16610-14-changbin.du@gmail.com>
- <20200520210814.GB32678@kernel.org>
+X-Gm-Message-State: AOAM532xnNedebAQiT1QeIf61vEi/zG7DEKaReBR5H/TbNGkaUAne1D1
+        JgZW1vw2gcw4Ot3+l2nb/iv65B4vulWaESgP/fg=
+X-Google-Smtp-Source: ABdhPJw5u2OzhTuoEP5vvDbcC8qGZRAnK6u13FsA//yzZMuHUjWOvqQmor8sq+9BcYt9S/T/OrufE9pQ/lYAXA8t/Aw=
+X-Received: by 2002:aed:3169:: with SMTP id 96mr14649066qtg.211.1591454628260;
+ Sat, 06 Jun 2020 07:43:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200520210814.GB32678@kernel.org>
+References: <20200602204219.186620-1-christian.brauner@ubuntu.com>
+ <20200602204219.186620-2-christian.brauner@ubuntu.com> <20200605145549.GC673948@port70.net>
+ <CACNAnaEjjQBB8ieZH+td8jk-Aitg3CjGB1WwGQwEv-STg5Do+g@mail.gmail.com> <20200606115537.GB871552@port70.net>
+In-Reply-To: <20200606115537.GB871552@port70.net>
+From:   Kyle Evans <kevans@freebsd.org>
+Date:   Sat, 6 Jun 2020 09:43:36 -0500
+X-Gmail-Original-Message-ID: <CACNAnaEBgTspsw-yq2gc-9a0+tVfnx+g2z6RH5G6LwPYhaBNXA@mail.gmail.com>
+Message-ID: <CACNAnaEBgTspsw-yq2gc-9a0+tVfnx+g2z6RH5G6LwPYhaBNXA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] open: add close_range()
+To:     Szabolcs Nagy <nsz@port70.net>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        torvalds@linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Victor Stinner <victor.stinner@gmail.com>,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, fweimer@redhat.com, jannh@google.com,
+        oleg@redhat.com, arnd@arndb.de, shuah@kernel.org,
+        dhowells@redhat.com, ldv@altlinux.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:08:14PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Sun, May 10, 2020 at 11:06:22PM +0800, Changbin Du escreveu:
-> > This adds an option '-b/--buffer-size' to allow us set the size of per-cpu
-> > tracing buffer.
-> 
-> -m
+On Sat, Jun 6, 2020 at 6:55 AM Szabolcs Nagy <nsz@port70.net> wrote:
 >
-sure.
+> * Kyle Evans <kevans@freebsd.org> [2020-06-05 21:54:56 -0500]:
+> > On Fri, Jun 5, 2020 at 9:55 AM Szabolcs Nagy <nsz@port70.net> wrote:
+> > > this api needs a documentation patch if there isn't yet.
+> > >
+> > > currently there is no libc interface contract in place that
+> > > says which calls may use libc internal fds e.g. i've seen
+> > >
+> > >   openlog(...) // opens libc internal syslog fd
+> > >   ...
+> > >   fork()
+> > >   closefrom(...) // close syslog fd
+> > >   open(...) // something that reuses the closed fd
+> > >   syslog(...) // unsafe: uses the wrong fd
+> > >   execve(...)
+> > >
+> > > syslog uses a libc internal fd that the user trampled on and
+> > > this can go bad in many ways depending on what libc apis are
+> > > used between closefrom (or equivalent) and exec.
+> > >
+> >
+> > Documentation is good. :-) I think you'll find that while this example
+> > seems to be innocuous on FreeBSD (and likely other *BSD), this is an
+> > atypical scenario and generally not advised.  You would usually not
+> > start closing until you're actually ready to exec/fail.
+>
+> it's a recent bug https://bugs.kde.org/show_bug.cgi?id=420921
+>
+> but not the first closefrom bug i saw: it is a fundamentally
+> unsafe operation that frees resources owned by others.
+>
 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  tools/perf/builtin-ftrace.c | 45 ++++++++++++++++++++++++++++---------
-> >  1 file changed, 35 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > index 8fd95c109fe8..a93fbdac6aa4 100644
-> > --- a/tools/perf/builtin-ftrace.c
-> > +++ b/tools/perf/builtin-ftrace.c
-> > @@ -47,6 +47,7 @@ struct perf_ftrace {
-> >  	bool			long_info;
-> >  	unsigned		tracing_thresh;
-> >  	bool			trace_children;
-> > +	unsigned		buffer_size_kb;
-> >  };
-> >  
-> >  struct filter_entry {
-> > @@ -187,6 +188,17 @@ static int read_tracing_file_to_stdout(const char *name)
-> >  	return ret;
-> >  }
-> >  
-> > +static int write_tracing_file_int(const char *name, int value)
-> > +{
-> > +	char buf[16];
-> > +
-> > +	snprintf(buf, sizeof(buf), "%d", value);
-> > +	if (write_tracing_file(name, buf) < 0)
-> > +		return -1;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int reset_tracing_cpu(void);
-> >  static void reset_tracing_filters(void);
-> >  
-> > @@ -360,8 +372,6 @@ static void reset_tracing_filters(void)
-> >  
-> >  static int set_tracing_depth(struct perf_ftrace *ftrace)
-> >  {
-> > -	char buf[16];
-> > -
-> >  	if (ftrace->graph_depth == 0)
-> >  		return 0;
-> >  
-> > @@ -370,9 +380,7 @@ static int set_tracing_depth(struct perf_ftrace *ftrace)
-> >  		return -1;
-> >  	}
-> >  
-> > -	snprintf(buf, sizeof(buf), "%d", ftrace->graph_depth);
-> > -
-> > -	if (write_tracing_file("max_graph_depth", buf) < 0)
-> > +	if (write_tracing_file_int("max_graph_depth", ftrace->graph_depth) < 0)
-> >  		return -1;
-> >  
-> >  	return 0;
-> > @@ -419,14 +427,10 @@ static int set_tracing_long_info(struct perf_ftrace *ftrace)
-> >  
-> >  static int set_tracing_thresh(struct perf_ftrace *ftrace)
-> >  {
-> > -	char buf[16];
-> > -
-> >  	if (ftrace->tracing_thresh == 0)
-> >  		return 0;
-> >  
-> > -	snprintf(buf, sizeof(buf), "%d", ftrace->tracing_thresh);
-> > -
-> > -	if (write_tracing_file("tracing_thresh", buf) < 0)
-> > +	if (write_tracing_file_int("tracing_thresh", ftrace->tracing_thresh) < 0)
-> >  		return -1;
-> >  
-> >  	return 0;
-> > @@ -454,6 +458,20 @@ static int set_tracing_trace_children(struct perf_ftrace *ftrace)
-> >  	return 0;
-> >  }
-> >  
-> > +static int set_tracing_buffer_size_kb(struct perf_ftrace *ftrace)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (ftrace->buffer_size_kb == 0)
-> > +		return 0;
-> > +
-> > +	ret = write_tracing_file_int("buffer_size_kb", ftrace->buffer_size_kb);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-> >  {
-> >  	char *trace_file;
-> > @@ -557,6 +575,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
-> >  		goto out_reset;
-> >  	}
-> >  
-> > +	if (set_tracing_buffer_size_kb(ftrace) < 0) {
-> > +		pr_err("failed to set tracing per-cpu buffer size\n");
-> > +		goto out_reset;
-> > +	}
-> > +
-> >  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
-> >  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
-> >  		goto out_reset;
-> > @@ -706,6 +729,8 @@ int cmd_ftrace(int argc, const char **argv)
-> >  		     "Only show functions of which the duration is greater than <n>µs"),
-> >  	OPT_BOOLEAN(0, "trace-children", &ftrace.trace_children,
-> >  		    "Trace children processes"),
-> > +	OPT_UINTEGER('b', "buffer-size", &ftrace.buffer_size_kb,
-> > +		     "size of per cpu buffer in kb"),
-> >  	OPT_END()
-> >  	};
-> >  
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+Yes, close() is an inherently unsafe operation, and they managed this
+bug without even having closefrom/close_range. I'm not entirely
+convinced folks are going to spontaneously develop a need to massively
+close things just because close_range exists. If they have a need,
+they're already doing it with what they have available and causing
+bugs like the above.
 
--- 
-Cheers,
-Changbin Du
+> > > > The code snippet above is one way of working around the problem that file
+> > > > descriptors are not cloexec by default. This is aggravated by the fact that
+> > > > we can't just switch them over without massively regressing userspace. For
+> > >
+> > > why is a switch_to_cloexec_range worse than close_range?
+> > > the former seems safer to me. (and allows libc calls
+> > > to be made between such switch and exec: libc internal
+> > > fds have to be cloexec anyway)
+> > >
+> >
+> > I wouldn't say it's worse, but it only solves half the problem. While
+> > closefrom -> exec is the most common usage by a long shot, there are
+> > also times (e.g. post-fork without intent to exec for a daemon/service
+> > type) that you want to go ahead and close everything except maybe a
+> > pipe fd that you've opened for IPC. While uncommon, there's no reason
+> > this needs to devolve into a loop to close 'all the fds' when you can
+> > instead introduce close_range to solve both the exec case and other
+> > less common scenarios.
+>
+> the syslog example shows why post-fork closefrom without
+> intent to exec does not work: there is no contract about
+> which api calls behave like syslog, so calling anything
+> after closefrom can be broken.
+>
+
+I think that example shows one scenario where it's not safe, that's
+again in firmly "don't do that" territory. You can close arbitrary fds
+very early or very late, but not somewhere in the middle of an even
+remotely complex application. This problem exists with or without
+close_range.
+
+Like I said before, this is already done quite successfully now, along
+with other not-even-forked uses. e.g. OpenSSH sshd will closefrom()
+just after argument parsing:
+https://github.com/openbsd/src/blob/master/usr.bin/ssh/sshd.c#L1582
+
+> libc can introduce new api contracts e.g. that some apis
+> don't use fds internally or after a closefrom call some
+> apis behave differently, if this is the expected direction
+> then it would be nice to propose that on the libc-coord
+> at openwall.com list.
+>
+
+I suspect it's likely better to document that one should close
+arbitrary fds very early or very late instead. Documenting which APIs
+are inherently unsafe before/after would seem to be fraught with peril
+-- you can enumerate what in libc is a potential problem, but there
+are other libs in use by applications that will also use fds
+internally and potentially cause problems, but we can't possibly raise
+awareness of all of them. We can, however, raise awareness of the
+valid and incredibly useful use-cases.
+
+> > Coordination with libc is generally not much of an issue, because this
+> > is really one of the last things you do before exec() or swiftly
+> > failing miserably. Applications that currently loop over all fd <=
+> > maxfd and close(fd) right now are subject to the very same
+> > constraints, this is just a much more efficient way and
+> > debugger-friendly way to accomplish it. You've absolutely not lived
+> > life until you've had to watch thousands of close() calls painfully
+> > scroll by in truss/strace.
+>
+> applications do a 'close all fds' operation because there
+> is no alternative. (i think there are better ways to do
+> this than looping: you can poll on the fds and only close
+> the ones that didnt POLLNVAL, this should be more portable
+> than /proc, but it's besides my point) optimizing this
+> operation may not be the only way to achive whatever those
+> applications are trying to do.
+
+In most cases, those applications really are just trying to close all
+fds other than the ones they want to stick around. Polling the fds
+before trying to close them would just *double* the current problem
+without fixing your other concern at all -- you still can't arbitrary
+close open fds without understanding their provenance, and now you've
+doubled the number of syscalls required just to close what you don't
+need.
+
+fdwalk() + close() is an (IMO) great alternative that's even more
+flexible, but that still has its own problems.
+
+Thanks,
+
+Kyle Evans
