@@ -6,96 +6,126 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE18C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF035C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE22206DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BA42074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 11:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgFFLxm (ORCPT
+        id S1728786AbgFFLzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 07:53:42 -0400
-Received: from mx24.baidu.com ([111.206.215.185]:36350 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725831AbgFFLxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 07:53:41 -0400
-Received: from BC-Mail-Ex14.internal.baidu.com (unknown [172.31.51.54])
-        by Forcepoint Email with ESMTPS id 48047EE440090CF01259;
-        Sat,  6 Jun 2020 19:53:30 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- BC-Mail-Ex14.internal.baidu.com (172.31.51.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1531.3; Sat, 6 Jun 2020 19:53:29 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Sat, 6 Jun 2020 19:53:23 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-CC:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "wei.huang2@amd.com" <wei.huang2@amd.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdW3Y2XSBLVk06IFg4Njogc3VwcG9ydCBBUEVSRi9N?=
- =?utf-8?Q?PERF_registers?=
-Thread-Topic: [PATCH][v6] KVM: X86: support APERF/MPERF registers
-Thread-Index: AQHWOtrZ4X/t3pkmBEG7o3WCZUgoeKjI8MGAgAAac4CAALL6AIAAAaWAgAG8BDA=
-Date:   Sat, 6 Jun 2020 11:53:23 +0000
-Message-ID: <15a134b739614f8bbaf18ce40662f6b3@baidu.com>
-References: <1591321466-2046-1-git-send-email-lirongqing@baidu.com>
- <b70d03dd-947f-dee5-5499-3b381372497d@intel.com>
- <72a75924-c3cb-6b23-62bd-67b739dec166@redhat.com>
- <CALMp9eSrDehftA5o6tU2sE_098F2ucztYtzhvgguYDnWqwHJaw@mail.gmail.com>
- <a1aa9cc5-96c7-11fe-17e1-22fe46b940f3@redhat.com>
-In-Reply-To: <a1aa9cc5-96c7-11fe-17e1-22fe46b940f3@redhat.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.127.81.84]
-x-baidu-bdmsfe-datecheck: 1_BC-Mail-Ex14_2020-06-06 19:53:30:236
-x-baidu-bdmsfe-viruscheck: BC-Mail-Ex14_GRAY_Inside_WithoutAtta_2020-06-06
- 19:53:30:173
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 6 Jun 2020 07:55:43 -0400
+Received: from port70.net ([81.7.13.123]:59992 "EHLO port70.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728761AbgFFLzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 07:55:42 -0400
+Received: by port70.net (Postfix, from userid 1002)
+        id 3A428ABEC0C2; Sat,  6 Jun 2020 13:55:37 +0200 (CEST)
+Date:   Sat, 6 Jun 2020 13:55:37 +0200
+From:   Szabolcs Nagy <nsz@port70.net>
+To:     Kyle Evans <kevans@freebsd.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        torvalds@linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Victor Stinner <victor.stinner@gmail.com>,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, fweimer@redhat.com, jannh@google.com,
+        oleg@redhat.com, arnd@arndb.de, shuah@kernel.org,
+        dhowells@redhat.com, ldv@altlinux.org
+Subject: Re: [PATCH v5 1/3] open: add close_range()
+Message-ID: <20200606115537.GB871552@port70.net>
+References: <20200602204219.186620-1-christian.brauner@ubuntu.com>
+ <20200602204219.186620-2-christian.brauner@ubuntu.com>
+ <20200605145549.GC673948@port70.net>
+ <CACNAnaEjjQBB8ieZH+td8jk-Aitg3CjGB1WwGQwEv-STg5Do+g@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACNAnaEjjQBB8ieZH+td8jk-Aitg3CjGB1WwGQwEv-STg5Do+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFBhb2xvIEJvbnppbmkg
-W21haWx0bzpwYm9uemluaUByZWRoYXQuY29tXQ0KPiDlj5HpgIHml7bpl7Q6IDIwMjDlubQ25pyI
-NuaXpSAxOjIyDQo+IOaUtuS7tuS6ujogSmltIE1hdHRzb24gPGptYXR0c29uQGdvb2dsZS5jb20+
-DQo+IOaKhOmAgTogWGlhb3lhbyBMaSA8eGlhb3lhby5saUBpbnRlbC5jb20+OyBMaSxSb25ncWlu
-ZyA8bGlyb25ncWluZ0BiYWlkdS5jb20+Ow0KPiBMS01MIDxsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnPjsga3ZtIGxpc3QgPGt2bUB2Z2VyLmtlcm5lbC5vcmc+OyB0aGUNCj4gYXJjaC94ODYg
-bWFpbnRhaW5lcnMgPHg4NkBrZXJuZWwub3JnPjsgSCAuIFBldGVyIEFudmluIDxocGFAenl0b3Iu
-Y29tPjsNCj4gQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+OyBJbmdvIE1vbG5hciA8bWlu
-Z29AcmVkaGF0LmNvbT47IFRob21hcw0KPiBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsg
-V2FucGVuZyBMaSA8d2FucGVuZ2xpQHRlbmNlbnQuY29tPjsgVml0YWx5DQo+IEt1em5ldHNvdiA8
-dmt1em5ldHNAcmVkaGF0LmNvbT47IFNlYW4gQ2hyaXN0b3BoZXJzb24NCj4gPHNlYW4uai5jaHJp
-c3RvcGhlcnNvbkBpbnRlbC5jb20+OyB3ZWkuaHVhbmcyQGFtZC5jb20NCj4g5Li76aKYOiBSZTog
-W1BBVENIXVt2Nl0gS1ZNOiBYODY6IHN1cHBvcnQgQVBFUkYvTVBFUkYgcmVnaXN0ZXJzDQo+IA0K
-PiBPbiAwNS8wNi8yMCAxOToxNiwgSmltIE1hdHRzb24gd3JvdGU6DQo+ID4+Pj4gQEAgLTQ5MzAs
-NiArNDkzOSwxMSBAQCBpbnQga3ZtX3ZtX2lvY3RsX2VuYWJsZV9jYXAoc3RydWN0IGt2bQ0KPiAq
-a3ZtLA0KPiA+Pj4+ICAgICAgICAgICBrdm0tPmFyY2guZXhjZXB0aW9uX3BheWxvYWRfZW5hYmxl
-ZCA9IGNhcC0+YXJnc1swXTsNCj4gPj4+PiAgICAgICAgICAgciA9IDA7DQo+ID4+Pj4gICAgICAg
-ICAgIGJyZWFrOw0KPiA+Pj4+ICsgICAgY2FzZSBLVk1fQ0FQX0FQRVJGTVBFUkY6DQo+ID4+Pj4g
-KyAgICAgICAga3ZtLT5hcmNoLmFwZXJmbXBlcmZfbW9kZSA9DQo+ID4+Pj4gKyAgICAgICAgICAg
-IGJvb3RfY3B1X2hhcyhYODZfRkVBVFVSRV9BUEVSRk1QRVJGKSA/DQo+IGNhcC0+YXJnc1swXSA6
-DQo+ID4+Pj4gKyAwOw0KPiA+Pj4gU2hvdWxkbid0IGNoZWNrIHdoZXRoZXIgY2FwLT5hcmdzWzBd
-IGlzIGEgdmFsaWQgdmFsdWU/DQo+ID4+IFllcywgb25seSB2YWxpZCB2YWx1ZXMgc2hvdWxkIGJl
-IGFsbG93ZWQuDQo+ID4+DQo+ID4+IEFsc28sIGl0IHNob3VsZCBmYWlsIHdpdGggLUVJTlZBTCBp
-ZiB0aGUgaG9zdCBkb2VzIG5vdCBoYXZlDQo+ID4+IFg4Nl9GRUFUVVJFX0FQRVJGTVBFUkYuDQo+
-ID4gU2hvdWxkIGVuYWJsaW5nL2Rpc2FibGluZyB0aGlzIGNhcGFiaWxpdHkgYmUgZGlzYWxsb3dl
-ZCBvbmNlIHZDUFVzDQo+ID4gaGF2ZSBiZWVuIGNyZWF0ZWQ/DQo+ID4NCj4gDQo+IFRoYXQncyBh
-IGdvb2QgaWRlYSwgeWVzLg0KPiANCj4gUGFvbG8NCg0KDQpUaGFuayB5b3UgYWxsLCBJIHdpbGwg
-c2VuZCBhIG5ldyB2ZXJzaW9uDQoNCi1MaQ0K
+* Kyle Evans <kevans@freebsd.org> [2020-06-05 21:54:56 -0500]:
+> On Fri, Jun 5, 2020 at 9:55 AM Szabolcs Nagy <nsz@port70.net> wrote:
+> > this api needs a documentation patch if there isn't yet.
+> >
+> > currently there is no libc interface contract in place that
+> > says which calls may use libc internal fds e.g. i've seen
+> >
+> >   openlog(...) // opens libc internal syslog fd
+> >   ...
+> >   fork()
+> >   closefrom(...) // close syslog fd
+> >   open(...) // something that reuses the closed fd
+> >   syslog(...) // unsafe: uses the wrong fd
+> >   execve(...)
+> >
+> > syslog uses a libc internal fd that the user trampled on and
+> > this can go bad in many ways depending on what libc apis are
+> > used between closefrom (or equivalent) and exec.
+> >
+> 
+> Documentation is good. :-) I think you'll find that while this example
+> seems to be innocuous on FreeBSD (and likely other *BSD), this is an
+> atypical scenario and generally not advised.  You would usually not
+> start closing until you're actually ready to exec/fail.
+
+it's a recent bug https://bugs.kde.org/show_bug.cgi?id=420921
+
+but not the first closefrom bug i saw: it is a fundamentally
+unsafe operation that frees resources owned by others.
+
+> > > The code snippet above is one way of working around the problem that file
+> > > descriptors are not cloexec by default. This is aggravated by the fact that
+> > > we can't just switch them over without massively regressing userspace. For
+> >
+> > why is a switch_to_cloexec_range worse than close_range?
+> > the former seems safer to me. (and allows libc calls
+> > to be made between such switch and exec: libc internal
+> > fds have to be cloexec anyway)
+> >
+> 
+> I wouldn't say it's worse, but it only solves half the problem. While
+> closefrom -> exec is the most common usage by a long shot, there are
+> also times (e.g. post-fork without intent to exec for a daemon/service
+> type) that you want to go ahead and close everything except maybe a
+> pipe fd that you've opened for IPC. While uncommon, there's no reason
+> this needs to devolve into a loop to close 'all the fds' when you can
+> instead introduce close_range to solve both the exec case and other
+> less common scenarios.
+
+the syslog example shows why post-fork closefrom without
+intent to exec does not work: there is no contract about
+which api calls behave like syslog, so calling anything
+after closefrom can be broken.
+
+libc can introduce new api contracts e.g. that some apis
+don't use fds internally or after a closefrom call some
+apis behave differently, if this is the expected direction
+then it would be nice to propose that on the libc-coord
+at openwall.com list.
+
+> Coordination with libc is generally not much of an issue, because this
+> is really one of the last things you do before exec() or swiftly
+> failing miserably. Applications that currently loop over all fd <=
+> maxfd and close(fd) right now are subject to the very same
+> constraints, this is just a much more efficient way and
+> debugger-friendly way to accomplish it. You've absolutely not lived
+> life until you've had to watch thousands of close() calls painfully
+> scroll by in truss/strace.
+
+applications do a 'close all fds' operation because there
+is no alternative. (i think there are better ways to do
+this than looping: you can poll on the fds and only close
+the ones that didnt POLLNVAL, this should be more portable
+than /proc, but it's besides my point) optimizing this
+operation may not be the only way to achive whatever those
+applications are trying to do.
+
+if closefrom only works before exec then that should be
+documented and callers that do otherwise fixed, if
+important users do things between closefrom and exec then
+i think a different design is needed with libc maintainers
+involved.
