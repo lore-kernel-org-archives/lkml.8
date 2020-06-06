@@ -2,172 +2,117 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2799BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59914C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA0B2207F9
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B4F207F9
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VaXQHtQJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXoVtgJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgFFIiE (ORCPT
+        id S1728689AbgFFIiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 04:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50938 "EHLO
+        Sat, 6 Jun 2020 04:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbgFFIiC (ORCPT
+        with ESMTP id S1728638AbgFFIiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 04:38:02 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7438BC08C5C2;
-        Sat,  6 Jun 2020 01:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bBoDKAW2lJXm+wJrPYbdtaUURKFNhWDjub7YetELq/E=; b=VaXQHtQJNnpoh3zej1C4DS0E7
-        qJDThrbbJFYV3m5qt2lKjJLkJMO63RDmX2RtzvLH+oT9bDQ4sOe/I6KLb2/1EXM1rCNwKM31vo7ga
-        G+6aefq8zOUjfJFj3WT+PRhEumhRr81+lMGhaMclKJykWTLZhhip/2nDfzyCVUYsaQ97rkIgtDRRo
-        LHHfTRtQKDOmlJICM1W6oN7b7M1D/AzoqNXcauL93EXo7OKosBU+x+1O7rBH/2ntesyrR6jk81lwk
-        TzBskNeZ7XfT6oCRhLOTV72dKy8GX0NER4x26+zcHOQyCKZ4Lg1qMGZHzyn5OZvta6bqj+ZBm6xVT
-        rVKcVzxgA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39538)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jhUKp-00046J-G6; Sat, 06 Jun 2020 09:37:47 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jhUKj-0008Kk-A2; Sat, 06 Jun 2020 09:37:41 +0100
-Date:   Sat, 6 Jun 2020 09:37:41 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: dsa: qca8k: introduce SGMII configuration
- options
-Message-ID: <20200606083741.GK1551@shell.armlinux.org.uk>
-References: <cover.1591380105.git.noodles@earth.li>
- <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
- <20200605183843.GB1006885@lunn.ch>
- <20200606074916.GM311@earth.li>
+        Sat, 6 Jun 2020 04:38:04 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EF3C08C5C3;
+        Sat,  6 Jun 2020 01:38:02 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c35so9301726edf.5;
+        Sat, 06 Jun 2020 01:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U+mZMH7FZT8/XDSN90bizQnNTdFgeLrPvSbFGEBIcJo=;
+        b=ZXoVtgJW9HaOKOdiTNRUlO/fYPFU+K4Ji4FBaE8E1PlsjaLrIz98H/jL+JaYeGvg28
+         bIl0uXXTdIGrC2GRP6D9XrXwZjlYB8QkT4/H3GU2FrGHQ1+RNNV9/D3Cvu2B5Lh0ok6r
+         qarjPzmBvDWP4BjARLo4XjeBiYKTJvEKmSrd+i8Tr0N9xk/a5rcKxBBGfAghB8xSBFCB
+         AOX+95E6fkmpXkGDIm0ZFxN7YOBhomCT7EkXV+VJO4p2bqU9IIqEW9Hstfpxes5L13JQ
+         uk8c6fEZHPkYKq4SS7pC3i5+0671lOKkCUAdhU8w4uz+S1eReffPTeAd8kTdgYhemn9D
+         LwGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U+mZMH7FZT8/XDSN90bizQnNTdFgeLrPvSbFGEBIcJo=;
+        b=FI+LSUXidmwxEC0ZlHA3oATYFMcNQZhPtBGmtq0oek0LArF0C3NaM0BJ/9FuCwJn25
+         SYgFZjbAjHkMwbnAeROOiGQqwkSYhhD6c5sWsEJ4pwo+AB1XS/gFbdpfhCWhEkf2dtoU
+         s5EqX73ax+b19wCFUg4p3cbMoWVZw9OyWz0LL4cZT+R2GNlU7g4J+ciEcCZLjMEYpzBt
+         l1OI/Zt32CbGNQoNPtgK2hJ54/zdz9OUqgm/rNq41erEwOlttEnSFrsNFdJD4cHfsYlK
+         bdu3chA1hT1kVuR+7zXq48CgaQCbWf54xEEtGWtGSW29MxQGrfHG0gVf3/it7F9Hibtg
+         6EAg==
+X-Gm-Message-State: AOAM533qWQQT71umbwx10S8sEJ/HfJASpSdRDeoWK5DdYv86w0g+kkLY
+        Oz5pHKYRDqhN8qSmIo83hdwRN91U
+X-Google-Smtp-Source: ABdhPJxtqWd1EEMgXjTYYraJgnUhL4ABolgArVH5GMZiLm1nR99OWZjf7PijLYaGEFfnk/hMqC431g==
+X-Received: by 2002:a05:6402:30ae:: with SMTP id df14mr12643516edb.310.1591432681267;
+        Sat, 06 Jun 2020 01:38:01 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:18e0:2e8c:fd0:e5fb])
+        by smtp.gmail.com with ESMTPSA id c17sm6174320eja.42.2020.06.06.01.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jun 2020 01:38:00 -0700 (PDT)
+From:   SeongJae Park <sj38.park@gmail.com>
+X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
+To:     paulmck@kernel.org, corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        SeongJae Park <sjpark@amazon.de>
+Subject: [PATCH] docs/memory-barriers.txt/kokr: smp_mb__{before,after}_atomic(): update Documentation
+Date:   Sat,  6 Jun 2020 10:37:46 +0200
+Message-Id: <20200606083746.20869-1-sjpark@amazon.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200606074916.GM311@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 08:49:16AM +0100, Jonathan McDowell wrote:
-> On Fri, Jun 05, 2020 at 08:38:43PM +0200, Andrew Lunn wrote:
-> > On Fri, Jun 05, 2020 at 07:10:58PM +0100, Jonathan McDowell wrote:
-> > > The QCA8337(N) has an SGMII port which can operate in MAC, PHY or BASE-X
-> > > mode depending on what it's connected to (e.g. CPU vs external PHY or
-> > > SFP). At present the driver does no configuration of this port even if
-> > > it is selected.
-> > > 
-> > > Add support for making sure the SGMII is enabled if it's in use, and
-> > > device tree support for configuring the connection details.
-> > 
-> > It is good to include Russell King in Cc: for patches like this.
-> 
-> No problem, I can keep him in the thread; I used get_maintainer for the
-> initial set of people/lists to copy.
+Translate this commit to Korean:
 
-get_maintainer is not always "good" at selecting the right people,
-especially when your patches don't match the criteria; MAINTAINERS
-contains everything that is sensible, but Andrew is suggesting that
-you copy me because in his opinion, you should be using phylink -
-and that's something that you can't encode into a program.
+  39323c64b8a9 ("smp_mb__{before,after}_atomic(): update Documentation")
 
-Note that I haven't seen your patches.
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Yunjae Lee <lyj7694@gmail.com>
+---
+ .../translations/ko_KR/memory-barriers.txt        | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-> > Also, netdev is closed at the moment, so please post patches as RFC.
-> 
-> "closed"? If you mean this won't get into 5.8 then I wasn't expecting it
-> to, I'm aware the merge window for that is already open.
-
-See https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
-"How often do changes from these trees make it to the mainline Linus
-tree?"
-
-> > It sounds like the hardware has a PCS which can support SGMII or
-> > 1000BaseX. phylink will tell you what mode to configure it to. e.g. A
-> > fibre SFP module will want 1000BaseX. A copper SFP module will want
-> > SGMII. A switch is likely to want 1000BaseX. A PHY is likely to want
-> > SGMII. So remove the "sgmii-mode" property and configure it as phylink
-> > is requesting.
-> 
-> It's more than SGMII or 1000BaseX as I read it. The port can act as if
-> it's talking to an SGMII MAC, i.e. a CPU, or an SGMII PHY, i.e. an
-> external PHY, or in BaseX mode for an SFP. I couldn't figure out a way
-> in the current framework to automatically work out if I wanted PHY or
-> MAC mode. For the port tagged CPU I can assume MAC mode, but a port that
-> doesn't have that might still be attached to the CPU rather than an
-> external PHY.
-
-That depends what you're connected to. Some people call the two sides
-of SGMII "System side" and "Media side". System side is where you're
-receiving the results of AN from a PHY. Media side is where you're
-telling the partner what you want it to do.
-
-Media side is only useful if you're connected to another MAC, and
-unless you have a requirement for it, I would suggest not implementing
-that - you could come up with something using fixed-link, or it may
-need some other model if the settings need to change.  That depends on
-the application.
-
-> > What exactly does sgmii-delay do?
-> 
-> As per the device tree documentation update I sent it delays the SGMII
-> clock by 2ns. From the data sheet:
-> 
-> SGMII_SEL_CLK125M	sgmii_clk125m_rx_delay is delayed by 2ns
-
-This sounds like a new world of RGMII delay pain but for SGMII. There
-is no mention of "delay" in the SGMII v1.8 specification, so I guess
-it's something the vendor is doing. Is this device capable of
-recovering the clock from a single serdes pair carrying the data,
-or does it always require the separate clock?
-
-> > > +#define QCA8K_REG_SGMII_CTRL				0x0e0
-> > > +#define   QCA8K_SGMII_EN_PLL				BIT(1)
-> > > +#define   QCA8K_SGMII_EN_RX				BIT(2)
-> > > +#define   QCA8K_SGMII_EN_TX				BIT(3)
-> > > +#define   QCA8K_SGMII_EN_SD				BIT(4)
-> > > +#define   QCA8K_SGMII_CLK125M_DELAY			BIT(7)
-> > > +#define   QCA8K_SGMII_MODE_CTRL_MASK			(BIT(22) | BIT(23))
-> > > +#define   QCA8K_SGMII_MODE_CTRL_BASEX			0
-> > > +#define   QCA8K_SGMII_MODE_CTRL_PHY			BIT(22)
-> > > +#define   QCA8K_SGMII_MODE_CTRL_MAC			BIT(23)
-> > 
-> > I guess these are not really bits. You cannot combine
-> > QCA8K_SGMII_MODE_CTRL_MAC and QCA8K_SGMII_MODE_CTRL_PHY. So it makes
-> > more sense to have:
-> > 
-> > #define   QCA8K_SGMII_MODE_CTRL_BASEX			(0x0 << 22)
-> > #define   QCA8K_SGMII_MODE_CTRL_PHY			(0x1 << 22)
-> > #define   QCA8K_SGMII_MODE_CTRL_MAC			(0x2 << 22)
-> 
-> Sure; given there's no 0x3 choice I just went for the bits that need
-> set, but that works too.
-
-I also prefer Andrew's suggestion, as it makes it clear that it's a two
-bit field.
-
+diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
+index 2e831ece6e26..b74c32d7c584 100644
+--- a/Documentation/translations/ko_KR/memory-barriers.txt
++++ b/Documentation/translations/ko_KR/memory-barriers.txt
+@@ -1842,12 +1842,15 @@ Mandatory 배리어들은 SMP 시스템에서도 UP 시스템에서도 SMP 효
+  (*) smp_mb__before_atomic();
+  (*) smp_mb__after_atomic();
+ 
+-     이것들은 값을 리턴하지 않는 (더하기, 빼기, 증가, 감소와 같은) 어토믹
+-     함수들을 위한, 특히 그것들이 레퍼런스 카운팅에 사용될 때를 위한
+-     함수들입니다.  이 함수들은 메모리 배리어를 내포하고 있지는 않습니다.
+-
+-     이것들은 값을 리턴하지 않으며 어토믹한 (set_bit 과 clear_bit 같은) 비트
+-     연산에도 사용될 수 있습니다.
++     이것들은 메모리 배리어를 내포하지 않는 어토믹 RMW 함수를 사용하지만 코드에
++     메모리 배리어가 필요한 경우를 위한 것들입니다.  메모리 배리어를 내포하지
++     않는 어토믹 RMW 함수들의 예로는 더하기, 빼기, (실패한) 조건적
++     오퍼레이션들, _relaxed 함수들이 있으며, atomic_read 나 atomic_set 은 이에
++     해당되지 않습니다.  메모리 배리어가 필요해지는 흔한 예로는 어토믹
++     오퍼레이션을 사용해 레퍼런스 카운트를 수정하는 경우를 들 수 있습니다.
++
++     이것들은 또한 (set_bit 과 clear_bit 같은) 메모리 배리어를 내포하지 않는
++     어토믹 RMW bitop 함수들을 위해서도 사용될 수 있습니다.
+ 
+      한 예로, 객체 하나를 무효한 것으로 표시하고 그 객체의 레퍼런스 카운트를
+      감소시키는 다음 코드를 보세요:
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+2.17.1
+
