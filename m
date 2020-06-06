@@ -2,85 +2,167 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B73C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337A3206DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0D22073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 06:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591426016;
+	bh=mLZHmMirACSxQrSa91VzuYDeW3/mQTqcQq+jOcIbPMo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XPHPtwzAWRWFh/hlxKFzgmkylTQyyFUMM9H2K/c+j1lLzizyNdWNK9aT6v++BWyCJ
+	 z4WhEba/eTx/FcFruXXUhhkFOZpdVTDSv8UKjAjsvbw6L+Qhw05PvdC8MzD07jNbDP
+	 7tNnytcg1fNcEUA+czgX5KRct3mhrzFXBm+fHmEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgFFGce (ORCPT
+        id S1728566AbgFFGqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 02:32:34 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:38850 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727077AbgFFGc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 02:32:29 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj2p0ONtesFg+AA--.1141S2;
-        Sat, 06 Jun 2020 14:32:20 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH 1/3] fs: Use get_max_files() instead of files_stat.max_files in alloc_empty_file()
-Date:   Sat,  6 Jun 2020 14:32:18 +0800
-Message-Id: <1591425140-20613-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxj2p0ONtesFg+AA--.1141S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKr15KFyrAry5tw4xZryDtrb_yoWfZrb_Z3
-        srtryDurWUAr4rXas2yrW5Xr9Yg34UAw4Fvw4YgrZFv3W3X3yxJw4Dur1rCF4UZa17CFnY
-        qr1rWFykCryq9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-        Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-        WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r47
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU1MKuUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Sat, 6 Jun 2020 02:46:55 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39758 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgFFGqz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 02:46:55 -0400
+Received: by mail-oi1-f195.google.com with SMTP id d67so10273326oig.6;
+        Fri, 05 Jun 2020 23:46:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gwWaD5Q8IVHw1QydWU1MECvDrlkrGMlMpGEjvbM9ZfM=;
+        b=skc17AceG0eTRbieph+TCKSJ5sBkDkP+Az3IZe+z4oMkmeP+pv5o6hncBJjwLl8Zv5
+         A93GF99rRBpd2zcO3r8T+ZvSTOJfXWVSnG98LXn6pK/T1SDeqIzfjpZxFplxV6eL5Q6G
+         w59kpNthIh/YEH/nL5HUBr6BxfRv/jN49awkeNGgpN5hnG2CdJkKwHoI5XE8WjGtdzpG
+         Jw5vOyn8NP4nBAuzcjlow+BaQnYL+8bvQUt/f6Kmrulg856noYuL1jOPLClF7lyyhMrq
+         3oogE97+Jcgc7vRLUpxW4hStMmBABxy6fsDiyDXZ6bsoBDxXzrUD0WicMYMJlWQbqKI8
+         UeWQ==
+X-Gm-Message-State: AOAM533+nyFt9rqaWU1UarnuGieaQos1ChNAoQ+xc0cYzaYCd4THvpex
+        ONinYMXxt/zycPUkktIC3drOonkEBRA1rEfyJhU=
+X-Google-Smtp-Source: ABdhPJy8ArS/aVX9wRHilqeUfr+43DhbEyNX79e34r1Xe4ZcflEBe71GLGg2bZktyqMUHusjoJpLpFXn2OmGWL71c0w=
+X-Received: by 2002:aca:ad88:: with SMTP id w130mr4395472oie.103.1591426014336;
+ Fri, 05 Jun 2020 23:46:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <7839183d-1c0b-da02-73a2-bf5e1e8b02b9@suse.cz> <94296941-1073-913c-2adb-bf2e41be9f0f@oracle.com>
+ <202006041054.874AA564@keescook> <cb0cdaaa-7825-0b87-0384-db22329305bb@suse.cz>
+ <34455dce-6675-1fc2-8d61-45bf56f3f554@suse.cz> <6b2b149e-c2bc-f87a-ea2c-3046c5e39bf9@oracle.com>
+ <faea2c18-edbe-f8b4-b171-6be866624856@oracle.com> <CAJZ5v0jqmUmf7mv3wjniVM-YqPqhDSjxunU0E4VYCsUQqvrF_Q@mail.gmail.com>
+ <ce333dcb-2b2c-3e1f-2a7e-02a7819b1db4@suse.cz> <894e8cee-33df-1f63-fb12-72dceb024ea7@oracle.com>
+ <202006050828.F85A75D13@keescook>
+In-Reply-To: <202006050828.F85A75D13@keescook>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 6 Jun 2020 08:46:42 +0200
+Message-ID: <CAJZ5v0jWZUWUco_RuBfrZEVvQ+bo8BMXRn96YtEtfUyZK1khQA@mail.gmail.com>
+Subject: Re: slub freelist issue / BUG: unable to handle page fault for
+ address: 000000003ffe0018
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vegard Nossum <vegard.nossum@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marco Elver <elver@google.com>,
+        Waiman Long <longman@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is better to use get_max_files() instead of files_stat.max_files
-to improve readability.
+On Fri, Jun 5, 2020 at 5:44 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Jun 05, 2020 at 04:44:51PM +0200, Vegard Nossum wrote:
+> > On 2020-06-05 16:08, Vlastimil Babka wrote:
+> > > On 6/5/20 3:12 PM, Rafael J. Wysocki wrote:
+> > > > On Fri, Jun 5, 2020 at 2:48 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+> > > > >
+> > > > > On 2020-06-05 11:36, Vegard Nossum wrote:
+> > > > > >
+> > > > > > On 2020-06-05 11:11, Vlastimil Babka wrote:
+> > > > > > > So, with Kees' patch reverted, booting with slub_debug=F (or even more
+> > > > > > > specific slub_debug=F,ftrace_event_field) also hits this bug below. I
+> > > > > > > wanted to bisect it, but v5.7 was also bad, and also v5.6. Didn't try
+> > > > > > > further in history. So it's not new at all, and likely very specific to
+> > > > > > > your config+QEMU? (and related to the ACPI error messages that precede
+> > > > > > > it?).
+> > > [...]
+> > > [    0.140408] ------------[ cut here ]------------
+> > > [    0.140837] cache_from_obj: Wrong slab cache. Acpi-Namespace but object is from kmalloc-64
+> > > [    0.141406] WARNING: CPU: 0 PID: 1 at mm/slab.h:524 kmem_cache_free+0x1d3/0x250
+>
+> Ah yes! Good. I had improved this check recently too, and I was worried
+> the freelist pointer patch was somehow blocking it, but I see now that
+> the failing config didn't have CONFIG_SLAB_FREELIST_HARDENED=y. Once
+> SLAB_CONSISTENCY_CHECKS was enabled ("slub_debug=F"), it started
+> tripping. Whew.
+>
+> I wonder if that entire test block should just be removed from
+> cache_from_obj():
+>
+>         if (!memcg_kmem_enabled() &&
+>             !IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+>             !unlikely(s->flags & SLAB_CONSISTENCY_CHECKS))
+>                 return s;
+>
+> and make this test unconditional? It's mostly only called during free(),
+> and shouldn't be too expensive to be made unconditional. Hmm.
+>
+> > > And it seems ACPI is allocating an object via kmalloc() and then freeing it
+> > > via kmem_cache_free(<"Acpi-Namespace" kmem_cache>) which is wrong.
+> > >
+> > > > ./scripts/faddr2line vmlinux 'acpi_ns_root_initialize+0xb6'
+> > > acpi_ns_root_initialize+0xb6/0x2d1:
+> > > kmalloc at include/linux/slab.h:555
+> > > (inlined by) kzalloc at include/linux/slab.h:669
+> > > (inlined by) acpi_os_allocate_zeroed at include/acpi/platform/aclinuxex.h:57
+> > > (inlined by) acpi_ns_root_initialize at drivers/acpi/acpica/nsaccess.c:102
+> > >
+> >
+> > That's it :-) This fixes it for me:
+> >
+> > diff --git a/drivers/acpi/acpica/nsaccess.c b/drivers/acpi/acpica/nsaccess.c
+> > index 2566e2d4c7803..b76bbab917941 100644
+> > --- a/drivers/acpi/acpica/nsaccess.c
+> > +++ b/drivers/acpi/acpica/nsaccess.c
+> > @@ -98,14 +98,12 @@ acpi_status acpi_ns_root_initialize(void)
+> >                  * predefined names are at the root level. It is much easier
+> > to
+> >                  * just create and link the new node(s) here.
+> >                  */
+> > -               new_node =
+> > -                   ACPI_ALLOCATE_ZEROED(sizeof(struct
+> > acpi_namespace_node));
+> > +               new_node = acpi_ns_create_node(*ACPI_CAST_PTR (u32,
+> > init_val->name));
+> >                 if (!new_node) {
+> >                         status = AE_NO_MEMORY;
+> >                         goto unlock_and_exit;
+> >                 }
+> >
+> > -               ACPI_COPY_NAMESEG(new_node->name.ascii, init_val->name);
+> >                 new_node->descriptor_type = ACPI_DESC_TYPE_NAMED;
+> >                 new_node->type = init_val->type;
+>
+> I'm a bit confused by the internals of acpi_ns_create_note(). It can still
+> end up calling ACPI_ALLOCATE_ZEROED() via acpi_os_acquire_object().
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- fs/file_table.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+No, it can't.
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 656647f..26516d0 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -139,12 +139,12 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
- 	/*
- 	 * Privileged users can go above max_files
- 	 */
--	if (get_nr_files() >= files_stat.max_files && !capable(CAP_SYS_ADMIN)) {
-+	if (get_nr_files() >= get_max_files() && !capable(CAP_SYS_ADMIN)) {
- 		/*
- 		 * percpu_counters are inaccurate.  Do an expensive check before
- 		 * we go and fail.
- 		 */
--		if (percpu_counter_sum_positive(&nr_files) >= files_stat.max_files)
-+		if (percpu_counter_sum_positive(&nr_files) >= get_max_files())
- 			goto over;
- 	}
- 
--- 
-2.1.0
+Linux uses the one from include/acpi/platform/aclinuxex.h
 
+> Is this fix correct?
+
+Yes, it is, AFAICS.
+
+Cheers!
