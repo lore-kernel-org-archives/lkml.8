@@ -2,153 +2,188 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E55AA2077D
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5DF2077D
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="Vypu7//t"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BU0izaRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgFFQai (ORCPT
+        id S1728766AbgFFQjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 12:30:38 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:44861 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgFFQah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 12:30:37 -0400
-Received: from [192.168.1.9] (hst-208-212.medicom.bg [84.238.208.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 83EB6CFCE;
-        Sat,  6 Jun 2020 19:30:33 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1591461033; bh=9Jbiod1vB7zOrB+Jk7X53N7PxKajryvdgLEigxtjI4s=;
-        h=Subject:To:Cc:From:Date:From;
-        b=Vypu7//tMZa9tpCbHL1Ji6VLjIFz9l8PJtA/ehTMfAnRvO4uAcQfwY79lq3e5Fwch
-         4rmpKpGcm+EJs6gL4yMeDuyy3oAD++xm7GMZlnvoQnvtIUHNAYq34yYyAkXP3lOKuT
-         UATDVvO1+KWvaS/TPQlavw0RK5u4glJTkTWL3ynu4PTbjomzb1jisW9lViFz96HAGS
-         ai87vqIUSdYp+cU8ptRD4geRFAQXGLMX2wh0Cy2w1LsU5xPvVq1S4Wr63ZDYzYnDHr
-         zEpb2eanVKJAg/9pOIF4PsjOILDA6vAKrQyTz62cAHVrV4g1le3GJdynBuaoi+Qjgf
-         6NMu8VIxXg/+g==
-Subject: Re: [PATCH v5 07/11] PCI: qcom: Define some PARF params needed for
- ipq8064 SoC
-To:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200602115353.20143-1-ansuelsmth@gmail.com>
- <20200602115353.20143-8-ansuelsmth@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <f0f86fd3-c6ad-94f6-5256-8089e2b8af65@mm-sol.com>
-Date:   Sat, 6 Jun 2020 19:30:26 +0300
+        Sat, 6 Jun 2020 12:39:17 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52184 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgFFQjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 12:39:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 056GdAlG058684;
+        Sat, 6 Jun 2020 11:39:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591461550;
+        bh=Ugkz7GYUu48jS3AIMTbMtgHcCWZimFbSV4I8Cr+DtBg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BU0izaRHATiWN35Wg2Df2Ox5hCwcgza3HRm5z2lGMOQc+netXofbEZICjHLhevZ+R
+         HLi1/pIPXWNWMjCDSYN++udPRbsyzF2lf9+5lPNwmZYI8JgC86MXRTJCqTQuwvRlJi
+         zijc/ZlmuluC4A8WxNxTclprd8QZ1p85SYF7NOeo=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 056GdA1g080324
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 6 Jun 2020 11:39:10 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 6 Jun
+ 2020 11:39:10 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sat, 6 Jun 2020 11:39:10 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 056Gd9Bv041871;
+        Sat, 6 Jun 2020 11:39:10 -0500
+Subject: Re: [PATCH v26 03/15] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200604120504.32425-1-dmurphy@ti.com>
+ <20200604120504.32425-4-dmurphy@ti.com> <20200606155324.GA21130@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <92d71058-a75b-fd3f-59b1-5133be1c21b5@ti.com>
+Date:   Sat, 6 Jun 2020 11:39:09 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200602115353.20143-8-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200606155324.GA21130@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Pavek
 
-On 6/2/20 2:53 PM, Ansuel Smith wrote:
-> Set some specific value for Tx De-Emphasis, Tx Swing and Rx equalization
-> needed on some ipq8064 based device (Netgear R7800 for example). Without
-> this the system locks on kernel load.
-> 
-> Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Cc: stable@vger.kernel.org # v4.5+
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 27 ++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index f2ea1ab6f584..f5398b0d270c 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -46,6 +46,9 @@
->  
->  #define PCIE20_PARF_PHY_CTRL			0x40
->  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> +#define PHY_REFCLK_SSP_EN			BIT(16)
-> +#define PHY_REFCLK_USE_PAD			BIT(12)
+Thanks for the review
 
-These two are not used in the patch, please move it in 08/11.
+On 6/6/20 10:53 AM, Pavel Machek wrote:
+> Hi!
+>
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The multi color class groups monochrome LEDs and allows controlling two
+>> aspects of the final combined color: hue and lightness. The former is
+>> controlled via the intensity file and the latter is controlled
+>> via brightness file.
+>>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> new file mode 100644
+>> index 000000000000..7d33a82a4b07
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> @@ -0,0 +1,34 @@
+>> +What:		/sys/class/leds/<led>/brightness
+>> +Date:		March 2020
+>> +KernelVersion:	5.8
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		Writing to this file will update all LEDs within the group to a
+>> +		calculated percentage of what each color LED intensity is set
+>> +		to. The percentage is calculated for each grouped LED via the
+>> +		equation below:
+>> +		led_brightness = brightness * multi_intensity/max_brightness
+>> +
+>> +		For additional details please refer to
+>> +		Documentation/leds/leds-class-multicolor.rst.
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/max_brightness.
+> It is not too clear to me what "color" means here.
+>
+> It would be worth mentioning that this is single integer.
 
-> +
->  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
->  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
->  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-> @@ -77,6 +80,18 @@
->  #define DBI_RO_WR_EN				1
->  
->  #define PERST_DELAY_US				1000
-> +/* PARF registers */
-> +#define PCIE20_PARF_PCS_DEEMPH			0x34
-> +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		((x) << 16)
-> +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	((x) << 8)
-> +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	((x) << 0)
-> +
-> +#define PCIE20_PARF_PCS_SWING			0x38
-> +#define PCS_SWING_TX_SWING_FULL(x)		((x) << 8)
-> +#define PCS_SWING_TX_SWING_LOW(x)		((x) << 0)
-> +
-> +#define PCIE20_PARF_CONFIG_BITS		0x50
-> +#define PHY_RX0_EQ(x)				((x) << 24)
->  
->  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
->  #define SLV_ADDR_SPACE_SZ			0x10000000
-> @@ -293,6 +308,7 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
->  	struct dw_pcie *pci = pcie->pci;
->  	struct device *dev = pci->dev;
-> +	struct device_node *node = dev->of_node;
->  	u32 val;
->  	int ret;
->  
-> @@ -347,6 +363,17 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	val &= ~BIT(0);
->  	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
->  
-> +	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-> +		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
-> +			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
-> +			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
-> +		       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
-> +		writel(PCS_SWING_TX_SWING_FULL(120) |
-> +			       PCS_SWING_TX_SWING_LOW(120),
-> +		       pcie->parf + PCIE20_PARF_PCS_SWING);
+OK I will update this
 
-Please fix the indentations above.
 
-> +		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
-> +	}
-> +
->  	/* enable external reference clock */
->  	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
->  	val |= BIT(16);
-> 
+>> +What:		/sys/class/leds/<led>/multi_index
+>> +Date:		March 2020
+>> +KernelVersion:	5.8
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read
+>> +		The multi_index array, when read, will output the LED colors
+>> +		by name as they are indexed in the multi_intensity file.
+> This should specify that it is array of strings.
 
--- 
-regards,
-Stan
+Yeah this sounds better
+
+
+>> +What:		/sys/class/leds/<led>/multi_intensity
+>> +Date:		March 2020
+>> +KernelVersion:	5.8
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		Intensity level for the LED color within the array.
+>> +		The intensities for each color must be entered based on the
+>> +		multi_index array.
+> I'd mention here that it is array of integers, and what the maximum
+> values are.
+
+Same here.  I will indicate max value cannot exceed max_brightness
+
+But that was what the max_intensity file was for in prior patchsets.
+
+>
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -9533,6 +9533,14 @@ F:	Documentation/devicetree/bindings/leds/
+>>   F:	drivers/leds/
+>>   F:	include/linux/leds.h
+>>   
+>> +LED MULTICOLOR FRAMEWORK
+>> +M:	Dan Murphy <dmurphy@ti.com>
+>> +L:	linux-leds@vger.kernel.org
+> I'd like to be mentioned here, too. "M: Pavel Machek
+> <pavel@ucw.cz>". And I'm not sure if I should be taking MAINTAINER
+> file update through a LED tree. Should definitely go to separate
+> patch.
+
+Oh definitely.  I thought it was implied that you and Jacek are both 
+Maintainers as well.
+
+I will add you but will wait to see if Jacek wants to be added.
+
+I will separate this out and make it a separate patch
+
+
+>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 9cdc4cfc5d11..fe7d90d4fa23 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
+>>   	  for the flash related features of a LED device. It can be built
+>>   	  as a module.
+>>   
+>> +config LEDS_CLASS_MULTI_COLOR
+>> +	tristate "LED MultiColor LED Class Support"
+> "LED MultiColor Class Support"
+
+OK.
+
+Dan
+
+>
+> Best regards,
+> 									Pavel
