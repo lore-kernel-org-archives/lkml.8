@@ -2,163 +2,374 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74921C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E2BC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4390E20772
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089B0207BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oY8ltAia"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="HCtzslmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgFFPVe (ORCPT
+        id S1728871AbgFFPVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 11:21:34 -0400
-Received: from mail-eopbgr70048.outbound.protection.outlook.com ([40.107.7.48]:33664
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728660AbgFFPV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 11:21:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TJVuBmoKVP/yntNXT7lJbvw+ek1MqkGKWRVMk5wTrgerUaXlTphXhtO1Up41F0nqNYFOrTPu+ZpO3hUtQVqYoEL2NLShobvGRzbT7Aw0zPJhGQyO/rZyijdiOiwSyhNvqUPP18xAO/dJPirQtfJa7XO6YhfM8+4xbUCf5y/V/nnCeT9OQoRsYla1YS8jOLDuzQ31QkjClKYdszYCbCF4YubOG+3GUgPutZinwGYOxiunNo8fpl5nh8Vzg2yIADFJKkgCKZ8crORALYTTGo20AC7OITlFwd+ec+IWcdIp1Ynhj/p3A2sP55I6VmAz3EBtrETlf+F7z0Rbe9muMcFeRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j8bHalFai1IPzAYRt3Uf7FuWi//Xa5PjTOrdEZJL9qQ=;
- b=H4B2lQotgaFt3pPW0nro5t2ItE8t09cIpMixuk+KV5AURJYa6Qe5xe/ewzkoMHHU6qpHVwvWVt81WS98ow/sWtOocda/5WNCO9LIKsAsnQsC4vQU2QoX4RatqKZF5Xdl91v/G1O+LHJ/dTCEJA2A8t9WN3CMUG/uPDqPuRnkNtbpzxNKqC2ifq2H7vDLM4OgCOlLVJ1TFyD3x1Ha4vO6RuWBRtoz+Z7+LutQ/UUSfXOvoPp76sut2nvk2EL2ou+nTFX9RN01FYBzwv5XBOMEJiNMP1fFGe0WwOIIicbIBpTQV78QIUdpm2fJIMtqn0gOJc/dtkHkn6L696RB62JI0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j8bHalFai1IPzAYRt3Uf7FuWi//Xa5PjTOrdEZJL9qQ=;
- b=oY8ltAiaPaUJSWr4fF48dehsF54n4WBfK1NyeMwVJov0wfq9Zj7pmW8VcHMtjDmIDK8Vwy2aIJXture1IIolYafmZhc3rqyS18VG/bdZ8vkX1VVdwpIIGY7bLFiAf+m/2fI1WRZQbCjT8ysmPIxaRupAMp/Lpdi2gfJX5+0MzSc=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6511.eurprd04.prod.outlook.com (2603:10a6:803:11f::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Sat, 6 Jun
- 2020 15:21:22 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.019; Sat, 6 Jun 2020
- 15:21:22 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Subject: [PATCH v9 RESEND 03/13] Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
-Date:   Sun,  7 Jun 2020 07:21:07 +0800
-Message-Id: <1591485677-20533-4-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0184.apcprd04.prod.outlook.com
- (2603:1096:4:14::22) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Sat, 6 Jun 2020 11:21:39 -0400
+Received: from cmta18.telus.net ([209.171.16.91]:55370 "EHLO cmta18.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728832AbgFFPVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 11:21:31 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id hadSjyUCKVEJfhadTjiTAT; Sat, 06 Jun 2020 09:21:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1591456889; bh=acRMgmXS6uF437+l0bg28fHQ4L6K4pZsGqCvVybiXV8=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=HCtzslmgSjtOMMu+C8mO38bSPqKiHGQAaNkD7Ijefw+YzB463gB0L7IvR1N5IvLUB
+         OkocJ/00YXdXipbF6yX579Kt3HObLQe/2PojrChxnBqFALwvx0M4mGqvoclOntLhPG
+         WBIoj3MankywoMwnRz7nKbrBnX4R67EJnzFoPycypctMb/HEpoA/Fl+rbtUxZ1wuNt
+         YRru0Ikd+4hUFTpCLJ/mLaDRAzZg1O6R+JOZ1QEOhx+kZtvd4aDTGiJA+bCzs0ezKz
+         9ulIK0go4WRZ7/2RT6WRmN4ft527ygLB8IoG+3ihlOL+bAZt7YFWlkmWVpsRg9GOM/
+         ItYl6NbMEmnKQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=KIck82No c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
+ a=VwQbUJbxAAAA:8 a=9E8nperVKYpAKzPi-k0A:9 a=CjuIK1q_8ugA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Len Brown'" <len.brown@intel.com>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <2931539.RsFqoHxarq@kreacher>
+In-Reply-To: <2931539.RsFqoHxarq@kreacher>
+Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode with HWP enabled
+Date:   Sat, 6 Jun 2020 08:21:25 -0700
+Message-ID: <000101d63c16$265d3cc0$7317b640$@net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR04CA0184.apcprd04.prod.outlook.com (2603:1096:4:14::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.18 via Frontend Transport; Sat, 6 Jun 2020 15:21:17 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b0d58d60-ed4e-4849-724a-08d80a2d4542
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6511:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB651123F9FBF72F4A85956B8B89870@VE1PR04MB6511.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:660;
-X-Forefront-PRVS: 04267075BD
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 243wZ3SnFNOIPcitcVtRUpejdvt+dff/uBVdMOyQXE+E6tp5MmKwpuymqkxNOqeDzXKYl8sspdG84uXlPywrIdX1OPCkC7B5QYTnjC1bmFIeBpb6qJHVnyuvaDoFOoQ3/oKnsjsUKp1kYIiDsG3pdiJc1e3o3H76o56ulAjD+s9V21K4qfzn5h37r3BR0OvxNjQsotA6qHQ/SOvZiYvx8PreISFbT0lxrskrp8VIkjxFQ9RFhS4BNfiHpaogXByvO9WFrEsN/YtEPLdjc0I76AOIODc+LR1MAJUaVGAK5jpAi6LmOrfw/dptqiGaktK32iBkHTYViWNzAY3yCMHsbBGu6wGynhu9n3yz5m16wow/jc2m1dsaWEnDQNUsZyTZU6O/Wc7WVxaKfy0hpbAlOGjFAl/8ZdWiAB4wLBrFBjhSUxridAzLDzt3NZD12tUNEntCFVdHwu0sYQmCibt/HA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(86362001)(5660300002)(66476007)(16526019)(6506007)(66946007)(956004)(6666004)(2616005)(186003)(36756003)(2906002)(7416002)(316002)(66556008)(4326008)(478600001)(52116002)(26005)(6486002)(6512007)(8676002)(83380400001)(8936002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: IDxsi30zQsQhZRbv+oDwSDZqN3TcWiMeJxnqCPl6HJt+Lyr0nPdLKyBCCEt2SIlsw/LLFi70PkPN+mECKr40iy4MybehTp+3sX6k9MBDvOTrF4s8nAQHB/Jib8zIhbvSCa7In2+mLCrrrp7XuAChF+00LS+17QhZbw8KX5JA+R+xVlPbqOVO16ikYjHl1KkDxKYGPc5Nvzuk2Ia3iMtoV8qI/KAj7qR2/N/aQVOGUJgkcp+uK/T0zpGLryr3PHKEiaez9Hej53CkO5P+lnyY0zGRCWDBbd0VjG2+Zdn4pvvOPPX+YglLnUeIQ7rLO51NShB1CfVykuxXp40Tk4ReZGFqC5XVf7xAAfEYZveVtH7sjE59RQPOd1/HrjZDBmcQJseju/SlalkniIwC0ch7ynucqlNSShwxauEWB6skQTJg3U/EqVYVSflkPoRnpQC2aFlXvg0zWI4rVcTK5N+GkOqozOd7DH5iDQ6Zk3EpnHk=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0d58d60-ed4e-4849-724a-08d80a2d4542
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2020 15:21:22.6972
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /EcOm8FYGgc0woMHR2LcdJ9I47E1rGy65rmezu691MhehvMTXBfBoeG+6tV40txs7MelYx9qgfD375q0GgBdWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6511
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdYzimEBSb+8wZd2QXK6gu6IWqSeRQFZYydA
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfNhjr2RbLuvnMKpbPjqt/4UERj5RsojBBMSbY+H4Udb3XdsDznK3piqmWeLLIZsGtO22keQOqAFqf+aLgCrwKBQviN941VPg4tckh5S8lwDc9WLfLyPm
+ Oy+GbFQTl2pCcbmGSjlw4ZmRZ60psGKfbkIaVeIfjBGzq8EL7k72/V7tVEcITHNkToaJwM9Fl13I+tzoHxkC1DNeNn/4RKn8u2zuJHtXQ1H2Ny7NvP8wxygQ
+ 1rJncm3UB0WjGqtPSU0CfLmyNAbSwzxwqnMluaZAkMyRfNT6IjLaQxFi9jiIldhzW/cKi2qzyNkPR+6RoQrw+Hr7F5RJHf+lB9TDQ84FDD8q4ajdWgodEZhE
+ pGspa7XNVVonAWj7HBBV3VPde9a97FmGzemBP/GUE/zNbCRQaJVx8oU0XuAewqL4T8wrOuYK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two ways for SDMA accessing SPBA devices: one is SDMA->AIPS
-->SPBA(masterA port), another is SDMA->SPBA(masterC port). Please refer
-to the 'Figure 58-1. i.MX 6Dual/6Quad SPBA connectivity' of i.mx6DQ
-Reference Manual. SDMA provide the corresponding app_2_mcu/mcu_2_app and
-shp_2_mcu/mcu_2_shp script for such two options. So both AIPS and SPBA
-scripts should keep the same behaviour, the issue only caught in AIPS
-script sounds not solide.
-The issue is more likely as the ecspi errata
-ERR009165(http://www.nxp.com/docs/en/errata/IMX6DQCE.pdf):
-eCSPI: TXFIFO empty flag glitch can cause the current FIFO transfer to
-           be sent twice
-So revert commit 'dd4b487b32a3' firstly.
+Hi Rafael,
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+As you well know, I often test first and
+ask questions and review code later.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 32114cf..9479a90 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -338,7 +338,7 @@
- 					clocks = <&clks IMX6QDL_CLK_ECSPI1>,
- 						 <&clks IMX6QDL_CLK_ECSPI1>;
- 					clock-names = "ipg", "per";
--					dmas = <&sdma 3 8 1>, <&sdma 4 8 2>;
-+					dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
- 					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
-@@ -352,7 +352,7 @@
- 					clocks = <&clks IMX6QDL_CLK_ECSPI2>,
- 						 <&clks IMX6QDL_CLK_ECSPI2>;
- 					clock-names = "ipg", "per";
--					dmas = <&sdma 5 8 1>, <&sdma 6 8 2>;
-+					dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
- 					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
-@@ -366,7 +366,7 @@
- 					clocks = <&clks IMX6QDL_CLK_ECSPI3>,
- 						 <&clks IMX6QDL_CLK_ECSPI3>;
- 					clock-names = "ipg", "per";
--					dmas = <&sdma 7 8 1>, <&sdma 8 8 2>;
-+					dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
- 					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
-@@ -380,7 +380,7 @@
- 					clocks = <&clks IMX6QDL_CLK_ECSPI4>,
- 						 <&clks IMX6QDL_CLK_ECSPI4>;
- 					clock-names = "ipg", "per";
--					dmas = <&sdma 9 8 1>, <&sdma 10 8 2>;
-+					dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
- 					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
--- 
-2.7.4
+I think I should have questioned this first.
+
+To the best of my ability/availability, I am
+committed to follow up on the hwp issue raised on
+the other branch of this thread. However, moving
+forward the typical CPU frequency scaling
+configuration for my test system will be:
+
+driver: intel-cpufreq, forced at boot.
+governor: schedutil
+hwp: forced off at boot.
+
+On 2020.05.26 11:21 Rafael J. Wysocki wrote:
+> 
+> Allow intel_pstate to work in the passive mode with HWP enabled and
+> make it set the HWP minimum performance limit to 75% of the P-state
+> value corresponding to the target frequency supplied by the cpufreq
+> governor, so as to prevent the HWP algorithm and the CPU scheduler
+> from working against each other at least when the schedutil governor
+> is in use.
+
+I think we need to define what "passive" mode is.
+I have always interpreted it to mean "I would like
+this pstate please. It has been requested by some higher level
+servo". The name intel_cpufreq makes sense.
+
+I have always interpreted "active" to mean "I would like
+the intel_pstate CPU frequency driver to decide what pstate
+I need".
+
+As mentioned on the other branch of this thread, I don't have
+a stable test baseline, but the servos are still fighting each other
+with this version of the patch.
+
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> This is a replacement for https://patchwork.kernel.org/patch/11563615/ that
+> uses the HWP floor (minimum performance limit) as the feedback to the HWP
+> algorithm (instead of the EPP).
+> 
+> The INTEL_CPUFREQ_TRANSITION_DELAY_HWP is still 5000 and the previous comments
+> still apply to it.
+> 
+> In addition to that, the 75% fraction used in intel_cpufreq_adjust_hwp() can be
+> adjusted too, but I would like to use a value with a power-of-2 denominator for
+> that (so the next candidate would be 7/8).
+
+The issue here is that the lag of the CPU frequency is not a constant, but rather
+a function of the task work/sleep timing verses whatever else is going on. One has
+to allow for the worst case. From thousands of seconds of intel_pstate trace data,
+that limit needs to be about 3% (31/32).
+
+Disclaimer: Done with no-hwp, active/powersave. The results might not be transferrable
+to hwp enabled.
+
+> 
+> Everyone who can do that is kindly requested to test this and let me know
+> the outcome.
+> 
+> Of course, the documentation still needs to be updated.  Also, the EPP can be
+> handled in analogy with the active mode now, but that part can be added in a
+> separate patch on top of this one.
+> 
+> Thanks!
+> 
+> ---
+>  drivers/cpufreq/intel_pstate.c |  119 ++++++++++++++++++++++++++++++-----------
+>  1 file changed, 88 insertions(+), 31 deletions(-)
+> 
+> Index: linux-pm/drivers/cpufreq/intel_pstate.c
+> ===================================================================
+> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+> +++ linux-pm/drivers/cpufreq/intel_pstate.c
+> @@ -36,6 +36,7 @@
+>  #define INTEL_PSTATE_SAMPLING_INTERVAL	(10 * NSEC_PER_MSEC)
+> 
+>  #define INTEL_CPUFREQ_TRANSITION_LATENCY	20000
+> +#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP	5000
+>  #define INTEL_CPUFREQ_TRANSITION_DELAY		500
+> 
+>  #ifdef CONFIG_ACPI
+> @@ -2175,7 +2176,10 @@ static int intel_pstate_verify_policy(st
+> 
+>  static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
+>  {
+> -	intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+> +	if (hwp_active)
+> +		intel_pstate_hwp_force_min_perf(policy->cpu);
+> +	else
+> +		intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+>  }
+> 
+>  static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+> @@ -2183,12 +2187,10 @@ static void intel_pstate_stop_cpu(struct
+>  	pr_debug("CPU %d exiting\n", policy->cpu);
+> 
+>  	intel_pstate_clear_update_util_hook(policy->cpu);
+> -	if (hwp_active) {
+> +	if (hwp_active)
+>  		intel_pstate_hwp_save_state(policy);
+> -		intel_pstate_hwp_force_min_perf(policy->cpu);
+> -	} else {
+> -		intel_cpufreq_stop_cpu(policy);
+> -	}
+> +
+> +	intel_cpufreq_stop_cpu(policy);
+>  }
+> 
+>  static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
+> @@ -2318,13 +2320,58 @@ static void intel_cpufreq_trace(struct c
+>  		fp_toint(cpu->iowait_boost * 100));
+>  }
+> 
+> +static void intel_cpufreq_update_hwp_request(struct cpudata *cpu, u32 min_perf)
+> +{
+> +	u64 value, prev;
+> +
+> +	rdmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, &prev);
+> +	value = prev;
+> +
+> +	value &= ~HWP_MIN_PERF(~0L);
+> +	value |= HWP_MIN_PERF(min_perf);
+> +
+> +	/*
+> +	 * The entire MSR needs to be updated in order to update the HWP min
+> +	 * field in it, so opportunistically update the max too if needed.
+> +	 */
+> +	value &= ~HWP_MAX_PERF(~0L);
+> +	value |= HWP_MAX_PERF(cpu->max_perf_ratio);
+> +
+> +	if (value != prev)
+> +		wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
+> +}
+> +
+> +/**
+> + * intel_cpufreq_adjust_hwp - Adjust the HWP reuqest register.
+                                                ^^^^^^^
+request/request
+
+> + * @cpu: Target CPU.
+> + * @target_pstate: P-state corresponding to the target frequency.
+> + *
+> + * Set the HWP minimum performance limit to 75% of @target_pstate taking the
+> + * global min and max policy limits into account.
+> + *
+> + * The purpose of this is to avoid situations in which the kernel and the HWP
+> + * algorithm work against each other by giving a hint about the expectations of
+
+
+
+> + * the former to the latter.
+> + */
+> +static void intel_cpufreq_adjust_hwp(struct cpudata *cpu, u32 target_pstate)
+> +{
+> +	u32 min_perf;
+> +
+> +	min_perf = max_t(u32, (3 * target_pstate) / 4, cpu->min_perf_ratio);
+> +	min_perf = min_t(u32, min_perf, cpu->max_perf_ratio);
+> +	if (min_perf != cpu->pstate.current_pstate) {
+> +		cpu->pstate.current_pstate = min_perf;
+> +		intel_cpufreq_update_hwp_request(cpu, min_perf);
+> +	}
+> +}
+> +
+>  static int intel_cpufreq_target(struct cpufreq_policy *policy,
+>  				unsigned int target_freq,
+>  				unsigned int relation)
+>  {
+>  	struct cpudata *cpu = all_cpu_data[policy->cpu];
+> +	int target_pstate, old_pstate = cpu->pstate.current_pstate;
+>  	struct cpufreq_freqs freqs;
+> -	int target_pstate, old_pstate;
+> 
+>  	update_turbo_state();
+> 
+> @@ -2332,26 +2379,33 @@ static int intel_cpufreq_target(struct c
+>  	freqs.new = target_freq;
+> 
+>  	cpufreq_freq_transition_begin(policy, &freqs);
+> +
+>  	switch (relation) {
+>  	case CPUFREQ_RELATION_L:
+> -		target_pstate = DIV_ROUND_UP(freqs.new, cpu->pstate.scaling);
+> +		target_pstate = DIV_ROUND_UP(target_freq, cpu->pstate.scaling);
+>  		break;
+>  	case CPUFREQ_RELATION_H:
+> -		target_pstate = freqs.new / cpu->pstate.scaling;
+> +		target_pstate = target_freq / cpu->pstate.scaling;
+>  		break;
+>  	default:
+> -		target_pstate = DIV_ROUND_CLOSEST(freqs.new, cpu->pstate.scaling);
+> +		target_pstate = DIV_ROUND_CLOSEST(target_freq, cpu->pstate.scaling);
+>  		break;
+>  	}
+> -	target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+> -	old_pstate = cpu->pstate.current_pstate;
+> -	if (target_pstate != cpu->pstate.current_pstate) {
+> -		cpu->pstate.current_pstate = target_pstate;
+> -		wrmsrl_on_cpu(policy->cpu, MSR_IA32_PERF_CTL,
+> -			      pstate_funcs.get_val(cpu, target_pstate));
+> +
+> +	if (hwp_active) {
+> +		intel_cpufreq_adjust_hwp(cpu, target_pstate);
+> +	} else {
+> +		target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+> +		if (target_pstate != old_pstate) {
+> +			cpu->pstate.current_pstate = target_pstate;
+> +			wrmsrl_on_cpu(cpu->cpu, MSR_IA32_PERF_CTL,
+> +				      pstate_funcs.get_val(cpu, target_pstate));
+> +		}
+>  	}
+> -	freqs.new = target_pstate * cpu->pstate.scaling;
+>  	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET, old_pstate);
+> +
+> +	freqs.new = target_pstate * cpu->pstate.scaling;
+> +
+>  	cpufreq_freq_transition_end(policy, &freqs, false);
+> 
+>  	return 0;
+> @@ -2361,14 +2415,19 @@ static unsigned int intel_cpufreq_fast_s
+>  					      unsigned int target_freq)
+>  {
+>  	struct cpudata *cpu = all_cpu_data[policy->cpu];
+> -	int target_pstate, old_pstate;
+> +	int target_pstate, old_pstate = cpu->pstate.current_pstate;
+> 
+>  	update_turbo_state();
+> 
+>  	target_pstate = DIV_ROUND_UP(target_freq, cpu->pstate.scaling);
+> -	target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+> -	old_pstate = cpu->pstate.current_pstate;
+> -	intel_pstate_update_pstate(cpu, target_pstate);
+> +
+> +	if (hwp_active) {
+> +		intel_cpufreq_adjust_hwp(cpu, target_pstate);
+> +	} else {
+> +		target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+> +		intel_pstate_update_pstate(cpu, target_pstate);
+> +	}
+> +
+>  	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_FAST_SWITCH, old_pstate);
+>  	return target_pstate * cpu->pstate.scaling;
+>  }
+> @@ -2389,7 +2448,6 @@ static int intel_cpufreq_cpu_init(struct
+>  		return ret;
+> 
+>  	policy->cpuinfo.transition_latency = INTEL_CPUFREQ_TRANSITION_LATENCY;
+> -	policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY;
+>  	/* This reflects the intel_pstate_get_cpu_pstates() setting. */
+>  	policy->cur = policy->cpuinfo.min_freq;
+> 
+> @@ -2401,10 +2459,13 @@ static int intel_cpufreq_cpu_init(struct
+> 
+>  	cpu = all_cpu_data[policy->cpu];
+> 
+> -	if (hwp_active)
+> +	if (hwp_active) {
+>  		intel_pstate_get_hwp_max(policy->cpu, &turbo_max, &max_state);
+> -	else
+> +		policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY_HWP;
+> +	} else {
+>  		turbo_max = cpu->pstate.turbo_pstate;
+> +		policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY;
+> +	}
+> 
+>  	min_freq = DIV_ROUND_UP(turbo_max * global.min_perf_pct, 100);
+>  	min_freq *= cpu->pstate.scaling;
+> @@ -2505,9 +2566,6 @@ static int intel_pstate_register_driver(
+> 
+>  static int intel_pstate_unregister_driver(void)
+>  {
+> -	if (hwp_active)
+> -		return -EBUSY;
+> -
+>  	cpufreq_unregister_driver(intel_pstate_driver);
+>  	intel_pstate_driver_cleanup();
+> 
+> @@ -2815,12 +2873,11 @@ static int __init intel_pstate_setup(cha
+>  	if (!str)
+>  		return -EINVAL;
+> 
+> -	if (!strcmp(str, "disable")) {
+> +	if (!strcmp(str, "disable"))
+>  		no_load = 1;
+> -	} else if (!strcmp(str, "passive")) {
+> +	else if (!strcmp(str, "passive"))
+>  		default_driver = &intel_cpufreq;
+> -		no_hwp = 1;
+> -	}
+> +
+>  	if (!strcmp(str, "no_hwp")) {
+>  		pr_info("HWP disabled\n");
+>  		no_hwp = 1;
+> 
+
 
