@@ -2,106 +2,122 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B4620748
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="u5vq99qw"
+	by mail.kernel.org (Postfix) with ESMTP id 96E7120663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgFGJe2 (ORCPT
+        id S1726501AbgFGJgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 05:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54680 "EHLO
+        Sun, 7 Jun 2020 05:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgFGJe1 (ORCPT
+        with ESMTP id S1726418AbgFGJgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 05:34:27 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33017C08C5C2
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 02:34:26 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c71so12409759wmd.5
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 02:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+jO4Gf5vLoDxG10CqidsBX3PHY+cpXa3QTlcT6snTQY=;
-        b=u5vq99qwD8VvgdNaC9gqTFFkWqZzfiHN3S9h5GUQ+biyLVXmEqHMVoa3jYbJG98FGT
-         A/l2kQxNffa0d5B0d6pXPCg6xtEsM7fbgmR1QYM+uxoUwDCFzDWcaJam+g9i01jMNAbA
-         Hi+A2rlMZoBHCso8VkwQtW2+WSLZV7bZDTffltj7r9p8VDF1I8lYouu4wGslGCdpYN2f
-         jvREBKhdxBDHjC9zT1LvZDH6af7DXBG4OoC+hOo1JK1zrfyOMD9NSQuOVWJj/KU/H942
-         7QHC5ayh+5lmVsF1kbwnVZRKi6JKeUb+9Hx83VmD4WZPxwTgugxV9zvJ/ajIY+1V97/S
-         ap0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+jO4Gf5vLoDxG10CqidsBX3PHY+cpXa3QTlcT6snTQY=;
-        b=ZEQCgdLOqtx57XEmtfRGi9SWXznCnpLyXGkd6si6qbWHpurLow4nOfKTAbkQ4Mj/VL
-         PTUSbqRUwxVBZwxc78JxL/lbbBD+eeT3BeeM5oTOmte+TEkll1Ss4J+Sb/HeQ8+KPNNL
-         PuwG+PKprgkanXfW+AkmX/LeOW1mvbLaUcpug8k0XMkM62vA5tugUFZS6mCQw4WwdZfu
-         agHLilSoyqnMohngq71NVMeQg2KsbWCn/OnKFS07VkroR8lLhPOeErTGB1ZL+CB55Ju+
-         VQdEDdbQMESnjnwzs+NiQIQo9SuCzFNbndK8QiL9odjCYKjP+XhfCwEbwUr0erBmR5Mm
-         qFIg==
-X-Gm-Message-State: AOAM530rzYLM1irwPNoM2XD5aobkfKJuADqLecooU1WGjt3Pf7GejspN
-        LghnX7LxcmFIXBtgSWQsh+UIqA==
-X-Google-Smtp-Source: ABdhPJyU515hX/Hph4grEQkiRDNx5GwFKo/3OyB935wW6tQNYCMoV3+gA98My1/SDk53Et+YPOUozg==
-X-Received: by 2002:a1c:4189:: with SMTP id o131mr11467437wma.110.1591522464745;
-        Sun, 07 Jun 2020 02:34:24 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 40sm20304162wrc.15.2020.06.07.02.34.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 02:34:24 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] regmap: fix the kerneldoc for regmap_test_bits()
-Date:   Sun,  7 Jun 2020 11:34:21 +0200
-Message-Id: <20200607093421.22209-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Sun, 7 Jun 2020 05:36:06 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 137EFC08C5C2;
+        Sun,  7 Jun 2020 02:36:06 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jhrih-0000KB-7L; Sun, 07 Jun 2020 11:35:59 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6E173FF805;
+        Sun,  7 Jun 2020 11:35:58 +0200 (CEST)
+Message-Id: <20200606221531.963970768@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Sat, 06 Jun 2020 23:51:16 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, x86@kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org
+Subject: [patch 2/3] lib/vdso: Provide sanity check for cycles (again)
+References: <20200606215114.380723277@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+The original x86 VDSO implementation checked for the validity of the clock
+source read by testing whether the returned signed cycles value is less
+than zero. This check was also used by the vdso read function to signal
+that the current selected clocksource is not VDSO capable.
 
-The kerneldoc comment for regmap_test_bits() says that it returns -1 on
-regmap_read() failure. This is not true - it will propagate the error
-code returned by regmap_read(). Fix it.
+During the rework of the VDSO code the check was removed and replaced with
+a check for the clocksource mode being != NONE.
 
-Fixes: aa2ff9dbaedd ("regmap: provide helpers for simple bit operations")
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+This turned out to be a mistake because the check is necessary for paravirt
+and hyperv clock sources. The reason is that these clock sources have their
+own internal sequence counter to validate the clocksource at the point of
+reading it. This is necessary because the hypervisor can invalidate the
+clocksource asynchronously so a check during the VDSO data update is not
+sufficient. Having a separate indicator for the validity is slower than
+just validating the cycles value. The check for it being negative turned
+out to be the fastest implementation and safe as it would require an uptime
+of ~73 years with a 4GHz counter frequency to result in a false positive.
+
+Add an optional function to validate the cycles with a default
+implementation which allows the compiler to optimize it out for
+architectures which do not require it.
+
+Reported-by: Miklos Szeredi <miklos@szeredi.hu>
+Fixes: 5d51bee725cc ("clocksource: Add common vdso clock mode storage")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
 ---
- drivers/base/regmap/regmap.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/vdso/gettimeofday.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index c472f624382d..1aedca53cca2 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -2944,8 +2944,9 @@ EXPORT_SYMBOL_GPL(regmap_update_bits_base);
-  * @reg: Register to read from
-  * @bits: Bits to test
-  *
-- * Returns -1 if the underlying regmap_read() fails, 0 if at least one of the
-- * tested bits is not set and 1 if all tested bits are set.
-+ * Returns 0 if at least one of the tested bits is not set, 1 if all tested
-+ * bits are set and a negative error number if the underlying regmap_read()
-+ * fails.
-  */
- int regmap_test_bits(struct regmap *map, unsigned int reg, unsigned int bits)
- {
--- 
-2.26.1
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -38,6 +38,13 @@ static inline bool vdso_clocksource_ok(c
+ }
+ #endif
+ 
++#ifndef vdso_cycles_ok
++static inline bool vdso_cycles_ok(u64 cycles)
++{
++	return true;
++}
++#endif
++
+ #ifdef CONFIG_TIME_NS
+ static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
+ 			  struct __kernel_timespec *ts)
+@@ -62,6 +69,8 @@ static int do_hres_timens(const struct v
+ 			return -1;
+ 
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
++		if (unlikely(!vdso_cycles_ok(cycles)))
++			return -1;
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+@@ -130,6 +139,8 @@ static __always_inline int do_hres(const
+ 			return -1;
+ 
+ 		cycles = __arch_get_hw_counter(vd->clock_mode);
++		if (unlikely(!vdso_cycles_ok(cycles)))
++			return -1;
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
 
