@@ -2,118 +2,211 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7348C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A852920663
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64E7207D3
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:04:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bu5U9oAZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iLkfwZ5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgFFUBn (ORCPT
+        id S1728920AbgFFUE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 16:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgFFUBm (ORCPT
+        Sat, 6 Jun 2020 16:04:27 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27569 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728553AbgFFUE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 16:01:42 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5FB6C03E96A;
-        Sat,  6 Jun 2020 13:01:41 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id g1so10176158edv.6;
-        Sat, 06 Jun 2020 13:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gfDYgYWWxAJkhuooZJo8FujLn97cONbso3rrCXc9f20=;
-        b=bu5U9oAZ2jARjpmZA6hTFVFeLL7tj7VWCyExyfPooRuVwhvPZbFCNsNmAQsbYUR+RH
-         hufagq6aobUco9EOjt6bNN3QWktKTMnigHMAVxR/uihFRfqb2JkYCMfs9Pj5QZpb+IR7
-         NiVLOTBGkCGPVtiK7llT82HhjMAXBlqc2gpYTbEEbDrJ0VWf5DQaVSlk1LzWVm1E/Xez
-         bMOOZ/Hh/jcq+qEuqwF08Qo2rGg95xROkA93XMrV32GPRvPu7Q015Nb+i4bZAu2xrGnU
-         J2fRR9lfLHVX3Zr90OFGlSvw6sJKvaTK1/k94Pf/NB6zyqbT55A0P8IKdKgiw51j+nWu
-         eN/w==
+        Sat, 6 Jun 2020 16:04:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591473864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dbpBb4MSkQWgLg9Nn7J60Pj1PPVIBaYGkqlC19OVAoU=;
+        b=iLkfwZ5RI5dAwhs23tvDYVkDaMLmzXgbnoWZWH4jGUcW9wWjQcIf6zriu5o68Q1PtGaWpl
+        72GkJYecc9Wkg3hteOyhKB8WPhcTEpa5rQoDrT3s3aIzQjX8rPaw06VX8LQbAHXAcSzPkY
+        SPAT8UD8FdTrzRJYBRR7TUNSj03b5gs=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-1PXOvpjIOouTQ5EuFSWAOg-1; Sat, 06 Jun 2020 16:04:20 -0400
+X-MC-Unique: 1PXOvpjIOouTQ5EuFSWAOg-1
+Received: by mail-wr1-f69.google.com with SMTP id m14so5338452wrj.12
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 13:04:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gfDYgYWWxAJkhuooZJo8FujLn97cONbso3rrCXc9f20=;
-        b=GpD5pplSM+w8yZ/tRr+zT9J2sQnkPO+RaKNgR+p2fLrGpabEs55yj4y5xLwyx1sUdd
-         6GUiohjHLEHLT/bObIKm1/m8f2HMlImk1z1XZEg4DdndJ5XTlvwnxzNfVLwEMOWwKv9G
-         Vqe1BAabWZVMsIHzErUroYLI1SwHpsdd32/FaUpNqb2IDVjoFVZYNJEkrOx5MQktfFs0
-         4VV0yR5k/Sh7+xiDDTDoyHPf7lemIHCOzuSYXCNU1xQwTHEaZZLSUhgRMybkBHkRwKmV
-         SE574CrEQ3Fm7gmHe76sjfI+y9o6EsHXxPE72nwa/WxTUkMq4ec6Z1/GMVa00r8Y+WmO
-         1OUw==
-X-Gm-Message-State: AOAM5321/8Tyt1swlenlGoD4rm7eXvwhn5LL0Q7VWEgysLyVCWoxID5L
-        HgrrTBiSKaqXufioLDPiQowMEcyewrlG4pS2+nA=
-X-Google-Smtp-Source: ABdhPJzuK37hwXZ07Js5fDY8Fkv33sx1ZVKV3+QYhH8xXee99VgutbGekCi2YmJBeYfXFRtNbl5FcVF45jO7Uu1jeU8=
-X-Received: by 2002:a50:c017:: with SMTP id r23mr15868263edb.120.1591473700459;
- Sat, 06 Jun 2020 13:01:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dbpBb4MSkQWgLg9Nn7J60Pj1PPVIBaYGkqlC19OVAoU=;
+        b=mskWArh6V5SA/vAzw6Bi27K5JmsR2Ct7cgcFFiWnteT0nc4/NG+1SgOVekOXXXJY5o
+         feunB5O+CJzK0mKTDDQds2eeTs2q3W6gouEZIWVvZ2fXtlpqKoY6QwiSunQ5SuJs9XuB
+         gvVUzTt3WdTy9S3z0JR+bQje5sqFdJPxCxMl96RG61gAuR0CaHdm6GqTLwhTZfjQshFt
+         OZw10CEXzP9mtlMSxITcj3QtW+AnPfTNtmSUEQXi/eJLcqrZzPouRSDn/exg4jT/QF5Q
+         Y2Oi124vhbF99O1zVv64YpuTDFNyG5ov0kxE+cWl8C76dCmcohs+Ur1yekObwwPPj2IU
+         l+hw==
+X-Gm-Message-State: AOAM532+npiuEiWaeLYzGa/kwQk13RyheCEy5AOyNRawNRvCZRn1HL5u
+        79E2rG/e8R/uZrdBrI3+4xm4hbl2hjbPrLPeR3LVP4PGoZbIK/JowTqOE6p5clokWSC8vhPBeyr
+        gvcy3B/NSS7X12rywydm93OXe
+X-Received: by 2002:a1c:9acf:: with SMTP id c198mr8645765wme.172.1591473859003;
+        Sat, 06 Jun 2020 13:04:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyF/K0kPe+1BU5+z6wf6mCOoFiN46YBrIzFqjnlbkr449lWKdRucwcJZf/rZHdlV+ssrzYp6g==
+X-Received: by 2002:a1c:9acf:: with SMTP id c198mr8645737wme.172.1591473858743;
+        Sat, 06 Jun 2020 13:04:18 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id b8sm17369698wrm.35.2020.06.06.13.04.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jun 2020 13:04:17 -0700 (PDT)
+Date:   Sat, 6 Jun 2020 16:04:14 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Stevens <stevensd@chromium.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH v4 1/3] virtio: add dma-buf support for exported objects
+Message-ID: <20200606160155-mutt-send-email-mst@kernel.org>
+References: <20200526105811.30784-1-stevensd@chromium.org>
+ <20200526105811.30784-2-stevensd@chromium.org>
+ <20200604145620-mutt-send-email-mst@kernel.org>
+ <CAD=HUj74mKs5AfcViD3CBva86E0Hvg_pmYChAJe3ny8jtnZ8Tw@mail.gmail.com>
 MIME-Version: 1.0
-References: <5a663096b489b86472fe3bfbd5138c411d669bad.camel@perches.com>
-In-Reply-To: <5a663096b489b86472fe3bfbd5138c411d669bad.camel@perches.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sat, 6 Jun 2020 13:02:05 -0700
-Message-ID: <CAF6AEGsqoei_uDQgNFdRF2ZA47YzWEvV7noVmjxLaa=VB-QL5A@mail.gmail.com>
-Subject: Re: [Possible PATCH] iommu/qcom: Change CONFIG_BIG_ENDIAN to CONFIG_CPU_BIG_ENDIAN
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=HUj74mKs5AfcViD3CBva86E0Hvg_pmYChAJe3ny8jtnZ8Tw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 6, 2020 at 12:16 PM Joe Perches <joe@perches.com> wrote:
->
-> CONFIG_BIG_ENDIAN does not exist as a Kconfig symbol.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->
-> I don't have the hardware, so I can't tell if this is a
-> correct change, but it is a logical one.
+On Fri, Jun 05, 2020 at 10:28:42AM +0900, David Stevens wrote:
+> On Fri, Jun 5, 2020 at 4:05 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > On Tue, May 26, 2020 at 07:58:09PM +0900, David Stevens wrote:
+> > > This change adds a new flavor of dma-bufs that can be used by virtio
+> > > drivers to share exported objects. A virtio dma-buf can be queried by
+> > > virtio drivers to obtain the UUID which identifies the underlying
+> > > exported object.
+> > >
+> > > Signed-off-by: David Stevens <stevensd@chromium.org>
+> >
+> > Is this just for graphics? If yes I'd rather we put it in the graphics
+> > driver. We can always move it later ...
+> 
+> As stated in the cover letter, this will be used by virtio-video.
+> 
+> The proposed virtio-video patches: https://markmail.org/thread/p5d3k566srtdtute
+> The patch which imports these dma-bufs (slightly out of data, uses v3
+> of this patch set): https://markmail.org/thread/j4xlqaaim266qpks
+> 
+> > > ---
+> > >  drivers/virtio/Makefile         |  2 +-
+> > >  drivers/virtio/virtio.c         |  6 +++
+> > >  drivers/virtio/virtio_dma_buf.c | 89 +++++++++++++++++++++++++++++++++
+> > >  include/linux/virtio.h          |  1 +
+> > >  include/linux/virtio_dma_buf.h  | 58 +++++++++++++++++++++
+> > >  5 files changed, 155 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/virtio/virtio_dma_buf.c
+> > >  create mode 100644 include/linux/virtio_dma_buf.h
+> > >
+> > > diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> > > index 29a1386ecc03..ecdae5b596de 100644
+> > > --- a/drivers/virtio/Makefile
+> > > +++ b/drivers/virtio/Makefile
+> > > @@ -1,5 +1,5 @@
+> > >  # SPDX-License-Identifier: GPL-2.0
+> > > -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
+> > > +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
+> > >  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
+> > >  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
+> > >  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+> > > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> > > index a977e32a88f2..5d46f0ded92d 100644
+> > > --- a/drivers/virtio/virtio.c
+> > > +++ b/drivers/virtio/virtio.c
+> > > @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(register_virtio_device);
+> > >
+> > > +bool is_virtio_device(struct device *dev)
+> > > +{
+> > > +     return dev->bus == &virtio_bus;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(is_virtio_device);
+> > > +
+> > >  void unregister_virtio_device(struct virtio_device *dev)
+> > >  {
+> > >       int index = dev->index; /* save for after device release */
+> > > diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
+> > > new file mode 100644
+> > > index 000000000000..23e3399b11ed
+> > > --- /dev/null
+> > > +++ b/drivers/virtio/virtio_dma_buf.c
+> > > @@ -0,0 +1,89 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * dma-bufs for virtio exported objects
+> > > + *
+> > > + * Copyright (C) 2020 Google, Inc.
+> > > + */
+> > > +
+> > > +#include <linux/virtio_dma_buf.h>
+> > > +
+> > > +/**
+> > > + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
+> > > + *
+> > > + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
+> > > + * for an virtio exported object that can be queried by other virtio drivers
+> > > + * for the object's UUID.
+> > > + */
+> > > +struct dma_buf *virtio_dma_buf_export(
+> > > +             const struct virtio_dma_buf_export_info *virtio_exp_info)
+> > > +{
+> > > +     struct dma_buf_export_info exp_info;
+> > > +
+> > > +     if (!virtio_exp_info->ops
+> > > +             || virtio_exp_info->ops->ops.attach != &virtio_dma_buf_attach
+> > > +             || !virtio_exp_info->ops->get_uuid) {
+> > > +             return ERR_PTR(-EINVAL);
+> > > +     }
+> > > +
+> > > +     exp_info.exp_name = virtio_exp_info->exp_name;
+> > > +     exp_info.owner = virtio_exp_info->owner;
+> > > +     exp_info.ops = &virtio_exp_info->ops->ops;
+> > > +     exp_info.size = virtio_exp_info->size;
+> > > +     exp_info.flags = virtio_exp_info->flags;
+> > > +     exp_info.resv = virtio_exp_info->resv;
+> > > +     exp_info.priv = virtio_exp_info->priv;
+> > > +     BUILD_BUG_ON(sizeof(struct virtio_dma_buf_export_info)
+> > > +                  != sizeof(struct dma_buf_export_info));
+> >
+> > This is the only part that gives me pause. Why do we need this hack?
+> > What's wrong with just using dma_buf_export_info directly,
+> > and if you want the virtio ops, just using container_off?
+> 
+> This approach provides a more explicit type signature and a little
+> more type safety, I think. If others don't think it's a worthwhile
+> tradeoff, I can remove it.
+> 
+> -David
 
-I'm not sure *anyone* has a working snapdragon big-endian setup these
-days.. sboyd used to tinker with that ages ago.
+The cost is that if dma_buf_export_info changes even slightly, we get
+weird crashes.
 
-But, SCTLR.E is the bit to set for big-endian, so this looks like the
-right thing to do.
+-- 
+MST
 
-Reviewed-by: Rob Clark <robdclark@gmail.com>
-
-> Found by a test script that looks for IS_ENABLED(FOO)
-> where FOO must also exist in Kconfig files.
->
->  drivers/iommu/qcom_iommu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-> index c3e1fbd1988c..69e113471ecb 100644
-> --- a/drivers/iommu/qcom_iommu.c
-> +++ b/drivers/iommu/qcom_iommu.c
-> @@ -304,7 +304,7 @@ static int qcom_iommu_init_domain(struct iommu_domain *domain,
->                       ARM_SMMU_SCTLR_M | ARM_SMMU_SCTLR_S1_ASIDPNE |
->                       ARM_SMMU_SCTLR_CFCFG;
->
-> -               if (IS_ENABLED(CONFIG_BIG_ENDIAN))
-> +               if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
->                         reg |= ARM_SMMU_SCTLR_E;
->
->                 iommu_writel(ctx, ARM_SMMU_CB_SCTLR, reg);
->
