@@ -2,257 +2,177 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94567C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 05:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E653BC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 05:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F019206DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 05:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C6D207D5
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 05:05:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="InEycAZc"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BNngZ7SH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgFFFBj (ORCPT
+        id S1726508AbgFFFFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 01:01:39 -0400
-Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:21710 "EHLO
-        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725468AbgFFFBi (ORCPT
+        Sat, 6 Jun 2020 01:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgFFFFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 01:01:38 -0400
-Received: from pps.filterd (m0127839.ppops.net [127.0.0.1])
-        by mx0a-002c1b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05650NlY005694;
-        Fri, 5 Jun 2020 22:00:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version;
- s=proofpoint20171006; bh=ox2RdgBkzEw8LVvMC1Q8pmOCqGboaVf4C7pwWBm8Lk0=;
- b=InEycAZcxB3LvH8DQ3j+G0oPCVw+pQn1crg48MvC8RLe1NLq0orzXS0snf+wwcfaZyoG
- QZi/AuCTiMsB3WxSqPT8Z7s+htNimUCPjMqaiJR3Q5iyFuK4fyssldTuOe8JS1L8+YPU
- MvKEFpoi3hU4LIZAV/nRGYEH23aJZ91AYMXfbxPyRWYdFKtn40UXyZj6p74upwbZO4Qj
- SXmqpCI6r7ro5pD8FZrySgSnzp8RM3/kBFNkfZNup/ylVfDcsQdicPH2clbvhxHZSNt6
- kdY1cCp3NrRPrsP2IGJEH9Kbd3RNK2GXG8zMNS34N5EhqA5e1axW8BMfF13m8VivJO3U bA== 
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2176.outbound.protection.outlook.com [104.47.58.176])
-        by mx0a-002c1b01.pphosted.com with ESMTP id 31f938u1y3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Jun 2020 22:00:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QwVQNq6fkYip5HBoX1qqQey1sxXWH09i5rDuZhGtzCSxrQCMWNMHd2o2nRxbX562oy2xSzmnCPMvzJo5qAOAjf98gJTZDDkUGtDnH1WAID0NgBY2UUeNvB6cdllAeaY+8NKNk/3Ja9Lhr609Xlt7sVLCB3xeGwxnpNJoAW8q8iPg0nxs9TpSJ1yHaDLExEqfx+U5mGmQW/YE52ujPIOowB7k+gxo5VTI14z1nsntLwXckDceSqHgYGEfTzmZxJP4sdRXsUhMFps4hL7bK8WRQPN/aREAgVv2Nl2LRpDmn8irvG/EZiRC16BzqdtHnOk0Co6b3e9ucwl1g+EH8nNN7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ox2RdgBkzEw8LVvMC1Q8pmOCqGboaVf4C7pwWBm8Lk0=;
- b=Son9mKQ2DCXD/XzZ6mJF56E7KFC/swnC6hAjmIcOAabjJ9oeg+0p2hzf5Sir+1XqSfywobCW9vK3k/YPgBba2mYlG0VU80pJBpn3E6CQJ85rHrxYQ29mg0xD7tEGW8mGAOUvatnLVTV967Br2XwnU9r+R9sp9zh144trDYeZoV9Ok6YBLmoTLmKYeNdxKvNJAk1kchjSH3ua39zntyX74rGkHFpNI1u5MxskrhsLL/HQg7mJJ7Z4inl98Cg3QFb5ZIIIZ/FXcRHQUsdnJtoPFsTrgQw42u8K3aRHBbTqcSImiVmonUt2Jzjk7xHXxHQQcUtRbY+YKnzOXT6ELwTkeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-Received: from BY5PR02MB6690.namprd02.prod.outlook.com (2603:10b6:a03:213::10)
- by BY5PR02MB6353.namprd02.prod.outlook.com (2603:10b6:a03:1fb::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.19; Sat, 6 Jun
- 2020 05:00:18 +0000
-Received: from BY5PR02MB6690.namprd02.prod.outlook.com
- ([fe80::6ceb:66bd:bb5f:179e]) by BY5PR02MB6690.namprd02.prod.outlook.com
- ([fe80::6ceb:66bd:bb5f:179e%9]) with mapi id 15.20.3066.018; Sat, 6 Jun 2020
- 05:00:18 +0000
-From:   Eiichi Tsukata <eiichi.tsukata@nutanix.com>
-To:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Felipe Franciosi <felipe@nutanix.com>
-Subject: Re: [RFC PATCH] KVM: x86: Fix APIC page invalidation race
-Thread-Topic: [RFC PATCH] KVM: x86: Fix APIC page invalidation race
-Thread-Index: AQHWO7rKzyOSDfpNlUO9aScE6IXasajLB0iA
-Date:   Sat, 6 Jun 2020 05:00:18 +0000
-Message-ID: <75DCBAE1-6DC6-4450-9697-AD27891B497B@nutanix.com>
-References: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
-In-Reply-To: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nutanix.com;
-x-originating-ip: [39.110.210.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e29a444c-cad2-4c21-9593-08d809d6824e
-x-ms-traffictypediagnostic: BY5PR02MB6353:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR02MB6353EEBFE81130E2A0665C2180870@BY5PR02MB6353.namprd02.prod.outlook.com>
-x-proofpoint-crosstenant: true
-x-ms-oob-tlc-oobclassifiers: OLM:275;
-x-forefront-prvs: 04267075BD
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wEcTy3IjUGO+nGW7SR1bV64b0CBmTutfqX2LoELzy3SUsW94wh4Q5rxgbL54prOE1aozAfd/OyouMjtU4DiRgWnyhSf6wFeCBmrV5j7xlL0EvROgKgBiUq7rQMe3dYQqD4L8QxN3ZcH6/ES8I0wKj5DoBfURWRoCg86uR6TPknQ/EDGKx+XV4L/UBGq9WYaQOu08KUR9awxrJGZPcn7yEiCbavnyuqWPvD2IlBAJ3YRyZ4hLbZ1O74UMi0YxwLRanqYI4dQug7n0JYSFGlVqRPYuvYXBmI4sNO6NYS9wpCKVdvIo5W9w0K6jdt9P7ueP0NPuvBT1uSLoyE34GQH+QYxGeMWqMSfV9enmWf16/kyqs8ZOck2neHL3yCdejLir15npvqaukFuaV8m6uIPqYjIA1Hd6qIjtggPms4HiH7JvAwQlPnEEBMIzQVaUcRm4f0obcqW6qh3DOkmNmY/eAA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6690.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(376002)(366004)(346002)(396003)(136003)(44832011)(6506007)(316002)(110136005)(33656002)(86362001)(66446008)(66556008)(76116006)(64756008)(83380400001)(5660300002)(71200400001)(478600001)(66946007)(66476007)(966005)(53546011)(2906002)(107886003)(36756003)(2616005)(186003)(6486002)(8676002)(7416002)(4326008)(26005)(6512007)(8936002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: sR5WyBniwWUpN/18SrqWd8h/RTZIGN+/rLUjzNWRp3G0rZs1QIkFcphLhdOgawAI+gxaEEyVP491YUlEOc6IYtqrmYoXKWepOXbYV9VR8FCIatZ9i8+EZni2wQ5quA2N9ljcw25C8hlrbW3ZQ6yYG8mLWEhiKezY7wMq6nSDsfP0LuLvm9/SLN0lDnaWFDh3y00JLtu58BBNIqR3qo8sus2nGzdAWF1HqsNtRfa0sl/x1obgu4SBLLdjkFSjsGG778HZbODizFsyiD3yqKEaBJ7gkRrV3hc8ZXNy/25xJbp+YQjK3NaRr8mzkuamZn15Nyug6gmcX8RjW/Azv93swVGKBEtDGksxold8qqQY62xpNJSjrUi/gxcbfbAkPaU8wzrjjXReKvRBiFYenxYOfNGyWyMpOXVs4J9A5NlU/w3SfI49607WBQEA5KfZZB6yKdjfXm2QVN4avc8nAJqcLBdNVEjSZWN+sMrHLztKvJS6hZWedtyeeG2kEw1VIpjP
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DA2B0731D0711249A4C28EEF598CA60A@namprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e29a444c-cad2-4c21-9593-08d809d6824e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2020 05:00:18.4424
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wkagmekk/HzTcuMmR+IUeiYNUuIV/31qHvEY7a1h2Ylz505Wkc2PxaYbLLAdSCg4/fJuUBFaUh99T4z0a5/7qwYK38biKRvGmaw9CDJKHVQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6353
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-06_01:2020-06-04,2020-06-06 signatures=0
-X-Proofpoint-Spam-Reason: safe
+        Sat, 6 Jun 2020 01:05:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D511C08C5C6
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 22:05:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d6so3681181pjs.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 22:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=tZK4z4NpRXbZ8SJxKOE6PewY/fU6fvBPpDi8Rn1Dflg=;
+        b=BNngZ7SHzjRf6h0P9KT4WtAybmmNTGYWY2Nie7eI7GIDB6ADUhA4NxRmqdoLcrhJA6
+         3EBImbWjgk0rjo6Pk3HclIPD8NLbduxN+xNIPWrCIGYMvcF3WF28ZCqWTmk5+IIFRhkv
+         vB8odMxQz900yo2V6z3jc0h0Z78Ygosdfwm2Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tZK4z4NpRXbZ8SJxKOE6PewY/fU6fvBPpDi8Rn1Dflg=;
+        b=I6IZPiWeeggcYcWDTHitGG+g5JIIrfTDyqRBfhxuDhfSSGoCFviswzjbIded4abcrY
+         mhabMYwy2hvr9yc0YQL3byacp0KELI2Vi05OC0HlT4aWVCdvjCdUR5AMLk+oMU+GNvgW
+         nDi8lBKtJznPrxs2R67rNLpPxBR4payvcHICPCiE7TliTJ+3jTKJYaL71wNgi05qalf1
+         RnrxOh6l4ih9Yk65xEa+iwdKGQqLUGGCPyXuh+0ud+XrCw1Z63nfKMAgTbTwa1CQGF8G
+         CJA8AxSbS0Q6Q9M36hDd3xrrFbCnN+0FPMo2vKi36EZjpzMm4jF+FEvR89OJ2SKHq5lV
+         7YFA==
+X-Gm-Message-State: AOAM531APniV1QmlX5o84Ijb/VuzihxSiuCAMZznxxCn2J6Y0Cj9hFAu
+        taP7gf13RbqrE2gnuh46fYHujQ==
+X-Google-Smtp-Source: ABdhPJzAWgx3RsxBTLvWnN69wJxCUJCvJ7BnPkT4keJT4glrjGJmMarQpXqtJ1jeJ0zvETXkYMcx+A==
+X-Received: by 2002:a17:902:b706:: with SMTP id d6mr13046012pls.304.1591419943488;
+        Fri, 05 Jun 2020 22:05:43 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id v8sm1057636pfn.217.2020.06.05.22.05.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 22:05:42 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Wolfram Sang <wsa@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v7 0/8] firmware: add partial read support in request_firmware_into_buf
+Date:   Fri,  5 Jun 2020 22:04:50 -0700
+Message-Id: <20200606050458.17281-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8NCg0KVGhlIHJhY2Ugd2luZG93IEkgbWVudGlvbmVkIGluIHRoZSBjb21taXQgbWVzc2Fn
-ZSBpcyBwcmV0dHkgc21hbGwuIFNvIGl04oCZcyBkaWZmaWN1bHQgdG8gcmVwcm9kdWNlIGl0Lg0K
-QnV0IHdpdGggdGhlIGZvbGxvd2luZyDigJhkZWxheeKAmSBwYXRjaCwgaXQgY2FuIGJlIHZlcnkg
-ZWFzeSB0byByZXByb2R1Y2UuDQoNCmBgYA0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS94ODYu
-YyBiL2FyY2gveDg2L2t2bS94ODYuYw0KaW5kZXggYzE3ZTZlYjlhZDQzLi5iNjcyOGJmODBhN2Qg
-MTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9rdm0veDg2LmMNCisrKyBiL2FyY2gveDg2L2t2bS94ODYu
-Yw0KQEAgLTU1LDYgKzU1LDcgQEANCiAjaW5jbHVkZSA8bGludXgvc2NoZWQvc3RhdC5oPg0KICNp
-bmNsdWRlIDxsaW51eC9zY2hlZC9pc29sYXRpb24uaD4NCiAjaW5jbHVkZSA8bGludXgvbWVtX2Vu
-Y3J5cHQuaD4NCisjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCiANCiAjaW5jbHVkZSA8dHJhY2Uv
-ZXZlbnRzL2t2bS5oPg0KIA0KQEAgLTgxNjEsOCArODE2MiwxMCBAQCBpbnQga3ZtX2FyY2hfbW11
-X25vdGlmaWVyX2ludmFsaWRhdGVfcmFuZ2Uoc3RydWN0IGt2bSAqa3ZtLA0KICAgICAgICAgKiBV
-cGRhdGUgaXQgd2hlbiBpdCBiZWNvbWVzIGludmFsaWQuDQogICAgICAgICAqLw0KICAgICAgICBh
-cGljX2FkZHJlc3MgPSBnZm5fdG9faHZhKGt2bSwgQVBJQ19ERUZBVUxUX1BIWVNfQkFTRSA+PiBQ
-QUdFX1NISUZUKTsNCi0gICAgICAgaWYgKHN0YXJ0IDw9IGFwaWNfYWRkcmVzcyAmJiBhcGljX2Fk
-ZHJlc3MgPCBlbmQpDQorICAgICAgIGlmIChzdGFydCA8PSBhcGljX2FkZHJlc3MgJiYgYXBpY19h
-ZGRyZXNzIDwgZW5kKSB7DQogICAgICAgICAgICAgICAga3ZtX21ha2VfYWxsX2NwdXNfcmVxdWVz
-dChrdm0sIEtWTV9SRVFfQVBJQ19QQUdFX1JFTE9BRCk7DQorICAgICAgICAgICAgICAgbWRlbGF5
-KDEwMDApOw0KKyAgICAgICB9DQogDQogICAgICAgIHJldHVybiAwOw0KIH0NCmBgYA0KDQpTdGVw
-cyB0byBSZXByb2R1Y2U6DQotIHN0YXJ0IFdpbmRvd3MgVk0oZXg6IFdpbmRvd3MgU2VydmVyIDIw
-MTYpIGFuZCB3YXRjaCBZb3VUdWJlIHZpZGVvIHRvIHN0aW11bGF0ZSBWTV9FTlRFUi9FWElUDQot
-IOKAmXN0cmVzcyDigJR2bSBYIOKAlHZtLWJ5dGVzIFnigJkgdG8gbWFrZSB0aGUgQVBJQyBwYWdl
-IHN3YXBwZWQgb3V0DQotIFdpbmRvd3MgT1Mgd2lsbCBjcmFzaCB3aXRoIEJ1Z0NoZWNrIDB4MTA5
-DQoNClRoYW5rcywNCg0KRWlpY2hpDQoNCj4gT24gSnVuIDYsIDIwMjAsIGF0IDEzOjI2LCBFaWlj
-aGkgVHN1a2F0YSA8ZWlpY2hpLnRzdWthdGFAbnV0YW5peC5jb20+IHdyb3RlOg0KPiANCj4gQ29t
-bWl0IGIxMzk0ZTc0NWI5NCAoIktWTTogeDg2OiBmaXggQVBJQyBwYWdlIGludmFsaWRhdGlvbiIp
-IHRyaWVkIHRvDQo+IGZpeCBpbmFwcHJvcHJpYXRlIEFQSUMgcGFnZSBpbnZhbGlkYXRpb24gYnkg
-cmUtaW50cm9kdWNpbmcgYXJjaCBzcGVjaWZpYw0KPiBrdm1fYXJjaF9tbXVfbm90aWZpZXJfaW52
-YWxpZGF0ZV9yYW5nZSgpIGFuZCBjYWxsaW5nIGl0IGZyb20NCj4ga3ZtX21tdV9ub3RpZmllcl9p
-bnZhbGlkYXRlX3JhbmdlX3N0YXJ0LiBCdXQgdGhyZXJlIGNvdWxkIGJlIHRoZQ0KPiBmb2xsb3dp
-bmcgcmFjZSBiZWNhdXNlIFZNQ1MgQVBJQyBhZGRyZXNzIGNhY2hlIGNhbiBiZSB1cGRhdGVkDQo+
-ICpiZWZvcmUqIGl0IGlzIHVubWFwcGVkLg0KPiANCj4gUmFjZToNCj4gIChJbnZhbGlkYXRvcikg
-a3ZtX21tdV9ub3RpZmllcl9pbnZhbGlkYXRlX3JhbmdlX3N0YXJ0KCkNCj4gIChJbnZhbGlkYXRv
-cikga3ZtX21ha2VfYWxsX2NwdXNfcmVxdWVzdChrdm0sIEtWTV9SRVFfQVBJQ19QQUdFX1JFTE9B
-RCkNCj4gIChLVk0gVkNQVSkgdmNwdV9lbnRlcl9ndWVzdCgpDQo+ICAoS1ZNIFZDUFUpIGt2bV92
-Y3B1X3JlbG9hZF9hcGljX2FjY2Vzc19wYWdlKCkNCj4gIChJbnZhbGlkYXRvcikgYWN0dWFsbHkg
-dW5tYXAgcGFnZQ0KPiANCj4gU3ltcHRvbToNCj4gIFRoZSBhYm92ZSByYWNlIGNhbiBtYWtlIEd1
-ZXN0IE9TIHNlZSBhbHJlYWR5IGZyZWVkIHBhZ2UgYW5kIEd1ZXN0IE9TDQo+IHdpbGwgc2VlIGJy
-b2tlbiBBUElDIHJlZ2lzdGVyIHZhbHVlcy4gRXNwZWNpYWxseSwgV2luZG93cyBPUyBjaGVja3MN
-Cj4gTEFQSUMgbW9kaWZpY2F0aW9uIHNvIGl0IGNhbiBjYXVzZSBCU09EIGNyYXNoIHdpdGggQnVn
-Q2hlY2sNCj4gQ1JJVElDQUxfU1RSVUNUVVJFX0NPUlJVUFRJT04gKDEwOSkuIFRoZXNlIHN5bXB0
-b21zIGFyZSB0aGUgc2FtZSBhcyB3ZQ0KPiBwcmV2aW91c2x5IHNhdyBpbiBodHRwczovL3VybGRl
-ZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cHMtM0FfX2J1Z3ppbGxhLmtlcm5lbC5v
-cmdfc2hvdy01RmJ1Zy5jZ2ktM0ZpZC0zRDE5Nzk1MSZkPUR3SURBZyZjPXM4ODNHcFVDT0NoS09I
-aW9jWXRHY2cmcj1keTAxRHI0THk4bWh2blVkeDFwWmhoVDFia3E0aDl6NWFWV3UzcGFvWnRrJm09
-MFR5ay0xNFJRNEU3cVVIRXozcWZrVUdKRVVpc3FtNWZyNndGZ2VuNm05byZzPXVUa3lhc2JVTk1v
-cHRnZnNMa2czRDVJRGJfeHhPU2prbGYySWZMTFV6Z0kmZT0gIGFuZA0KPiB3ZSBhcmUgY3VycmVu
-dGx5IHNlZWluZyBpbg0KPiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJs
-P3U9aHR0cHMtM0FfX2J1Z3ppbGxhLnJlZGhhdC5jb21fc2hvdy01RmJ1Zy5jZ2ktM0ZpZC0zRDE3
-NTEwMTcmZD1Ed0lEQWcmYz1zODgzR3BVQ09DaEtPSGlvY1l0R2NnJnI9ZHkwMURyNEx5OG1odm5V
-ZHgxcFpoaFQxYmtxNGg5ejVhVld1M3Bhb1p0ayZtPTBUeWstMTRSUTRFN3FVSEV6M3Fma1VHSkVV
-aXNxbTVmcjZ3RmdlbjZtOW8mcz1weVJrRmJzMUE5YTlBWHhXTXFpREVPb0dKR0JibUY4dUpkTHU4
-dktTUENzJmU9IC4NCj4gDQo+IFRvIHByZXZlbnQgR3Vlc3QgT1MgZnJvbSBhY2Nlc3NpbmcgYWxy
-ZWFkeSBmcmVlZCBwYWdlLCB0aGlzIHBhdGNoIGNhbGxzDQo+IGt2bV9hcmNoX21tdV9ub3RpZmll
-cl9pbnZhbGlkYXRlX3JhbmdlKCkgZnJvbQ0KPiBrdm1fbW11X25vdGlmaWVyX2ludmFsaWRhdGVf
-cmFuZ2UoKSBpbnN0ZWFkIG9mIC4uLl9yYW5nZV9zdGFydCgpLg0KPiANCj4gRml4ZXM6IGIxMzk0
-ZTc0NWI5NCAoIktWTTogeDg2OiBmaXggQVBJQyBwYWdlIGludmFsaWRhdGlvbiIpDQo+IFNpZ25l
-ZC1vZmYtYnk6IEVpaWNoaSBUc3VrYXRhIDxlaWljaGkudHN1a2F0YUBudXRhbml4LmNvbT4NCj4g
-LS0tDQo+IGFyY2gveDg2L2t2bS94ODYuYyAgICAgICB8ICA3ICsrLS0tLS0NCj4gaW5jbHVkZS9s
-aW51eC9rdm1faG9zdC5oIHwgIDQgKystLQ0KPiB2aXJ0L2t2bS9rdm1fbWFpbi5jICAgICAgfCAy
-NiArKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0KPiAzIGZpbGVzIGNoYW5nZWQsIDIwIGluc2Vy
-dGlvbnMoKyksIDE3IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2
-bS94ODYuYyBiL2FyY2gveDg2L2t2bS94ODYuYw0KPiBpbmRleCBjMTdlNmViOWFkNDMuLjE3MDBh
-YWRlMzlkMSAxMDA2NDQNCj4gLS0tIGEvYXJjaC94ODYva3ZtL3g4Ni5jDQo+ICsrKyBiL2FyY2gv
-eDg2L2t2bS94ODYuYw0KPiBAQCAtODE1MCw5ICs4MTUwLDggQEAgc3RhdGljIHZvaWQgdmNwdV9s
-b2FkX2VvaV9leGl0bWFwKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkNCj4gCWt2bV94ODZfb3BzLmxv
-YWRfZW9pX2V4aXRtYXAodmNwdSwgZW9pX2V4aXRfYml0bWFwKTsNCj4gfQ0KPiANCj4gLWludCBr
-dm1fYXJjaF9tbXVfbm90aWZpZXJfaW52YWxpZGF0ZV9yYW5nZShzdHJ1Y3Qga3ZtICprdm0sDQo+
-IC0JCXVuc2lnbmVkIGxvbmcgc3RhcnQsIHVuc2lnbmVkIGxvbmcgZW5kLA0KPiAtCQlib29sIGJs
-b2NrYWJsZSkNCj4gK3ZvaWQga3ZtX2FyY2hfbW11X25vdGlmaWVyX2ludmFsaWRhdGVfcmFuZ2Uo
-c3RydWN0IGt2bSAqa3ZtLA0KPiArCQkJCQkgICAgdW5zaWduZWQgbG9uZyBzdGFydCwgdW5zaWdu
-ZWQgbG9uZyBlbmQpDQo+IHsNCj4gCXVuc2lnbmVkIGxvbmcgYXBpY19hZGRyZXNzOw0KPiANCj4g
-QEAgLTgxNjMsOCArODE2Miw2IEBAIGludCBrdm1fYXJjaF9tbXVfbm90aWZpZXJfaW52YWxpZGF0
-ZV9yYW5nZShzdHJ1Y3Qga3ZtICprdm0sDQo+IAlhcGljX2FkZHJlc3MgPSBnZm5fdG9faHZhKGt2
-bSwgQVBJQ19ERUZBVUxUX1BIWVNfQkFTRSA+PiBQQUdFX1NISUZUKTsNCj4gCWlmIChzdGFydCA8
-PSBhcGljX2FkZHJlc3MgJiYgYXBpY19hZGRyZXNzIDwgZW5kKQ0KPiAJCWt2bV9tYWtlX2FsbF9j
-cHVzX3JlcXVlc3Qoa3ZtLCBLVk1fUkVRX0FQSUNfUEFHRV9SRUxPQUQpOw0KPiAtDQo+IC0JcmV0
-dXJuIDA7DQo+IH0NCj4gDQo+IHZvaWQga3ZtX3ZjcHVfcmVsb2FkX2FwaWNfYWNjZXNzX3BhZ2Uo
-c3RydWN0IGt2bV92Y3B1ICp2Y3B1KQ0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9rdm1f
-aG9zdC5oIGIvaW5jbHVkZS9saW51eC9rdm1faG9zdC5oDQo+IGluZGV4IDEzMWNjMTUyN2Q2OC4u
-OTJlZmEzOWVhM2Q3IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2t2bV9ob3N0LmgNCj4g
-KysrIGIvaW5jbHVkZS9saW51eC9rdm1faG9zdC5oDQo+IEBAIC0xNDA2LDggKzE0MDYsOCBAQCBz
-dGF0aWMgaW5saW5lIGxvbmcga3ZtX2FyY2hfdmNwdV9hc3luY19pb2N0bChzdHJ1Y3QgZmlsZSAq
-ZmlscCwNCj4gfQ0KPiAjZW5kaWYgLyogQ09ORklHX0hBVkVfS1ZNX1ZDUFVfQVNZTkNfSU9DVEwg
-Ki8NCj4gDQo+IC1pbnQga3ZtX2FyY2hfbW11X25vdGlmaWVyX2ludmFsaWRhdGVfcmFuZ2Uoc3Ry
-dWN0IGt2bSAqa3ZtLA0KPiAtCQl1bnNpZ25lZCBsb25nIHN0YXJ0LCB1bnNpZ25lZCBsb25nIGVu
-ZCwgYm9vbCBibG9ja2FibGUpOw0KPiArdm9pZCBrdm1fYXJjaF9tbXVfbm90aWZpZXJfaW52YWxp
-ZGF0ZV9yYW5nZShzdHJ1Y3Qga3ZtICprdm0sDQo+ICsJCQkJCSAgICB1bnNpZ25lZCBsb25nIHN0
-YXJ0LCB1bnNpZ25lZCBsb25nIGVuZCk7DQo+IA0KPiAjaWZkZWYgQ09ORklHX0hBVkVfS1ZNX1ZD
-UFVfUlVOX1BJRF9DSEFOR0UNCj4gaW50IGt2bV9hcmNoX3ZjcHVfcnVuX3BpZF9jaGFuZ2Uoc3Ry
-dWN0IGt2bV92Y3B1ICp2Y3B1KTsNCj4gZGlmZiAtLWdpdCBhL3ZpcnQva3ZtL2t2bV9tYWluLmMg
-Yi92aXJ0L2t2bS9rdm1fbWFpbi5jDQo+IGluZGV4IDczMWMxZTUxNzcxNi4uNzdhYTkxZmIwOGQy
-IDEwMDY0NA0KPiAtLS0gYS92aXJ0L2t2bS9rdm1fbWFpbi5jDQo+ICsrKyBiL3ZpcnQva3ZtL2t2
-bV9tYWluLmMNCj4gQEAgLTE1NSwxMCArMTU1LDkgQEAgc3RhdGljIHZvaWQga3ZtX3VldmVudF9u
-b3RpZnlfY2hhbmdlKHVuc2lnbmVkIGludCB0eXBlLCBzdHJ1Y3Qga3ZtICprdm0pOw0KPiBzdGF0
-aWMgdW5zaWduZWQgbG9uZyBsb25nIGt2bV9jcmVhdGV2bV9jb3VudDsNCj4gc3RhdGljIHVuc2ln
-bmVkIGxvbmcgbG9uZyBrdm1fYWN0aXZlX3ZtczsNCj4gDQo+IC1fX3dlYWsgaW50IGt2bV9hcmNo
-X21tdV9ub3RpZmllcl9pbnZhbGlkYXRlX3JhbmdlKHN0cnVjdCBrdm0gKmt2bSwNCj4gLQkJdW5z
-aWduZWQgbG9uZyBzdGFydCwgdW5zaWduZWQgbG9uZyBlbmQsIGJvb2wgYmxvY2thYmxlKQ0KPiAr
-X193ZWFrIHZvaWQga3ZtX2FyY2hfbW11X25vdGlmaWVyX2ludmFsaWRhdGVfcmFuZ2Uoc3RydWN0
-IGt2bSAqa3ZtLA0KPiArCQkJCQkJICAgdW5zaWduZWQgbG9uZyBzdGFydCwgdW5zaWduZWQgbG9u
-ZyBlbmQpDQo+IHsNCj4gLQlyZXR1cm4gMDsNCj4gfQ0KPiANCj4gYm9vbCBrdm1faXNfem9uZV9k
-ZXZpY2VfcGZuKGt2bV9wZm5fdCBwZm4pDQo+IEBAIC0zODQsNiArMzgzLDE4IEBAIHN0YXRpYyBp
-bmxpbmUgc3RydWN0IGt2bSAqbW11X25vdGlmaWVyX3RvX2t2bShzdHJ1Y3QgbW11X25vdGlmaWVy
-ICptbikNCj4gCXJldHVybiBjb250YWluZXJfb2YobW4sIHN0cnVjdCBrdm0sIG1tdV9ub3RpZmll
-cik7DQo+IH0NCj4gDQo+ICtzdGF0aWMgdm9pZCBrdm1fbW11X25vdGlmaWVyX2ludmFsaWRhdGVf
-cmFuZ2Uoc3RydWN0IG1tdV9ub3RpZmllciAqbW4sDQo+ICsJCQkJCSAgICAgIHN0cnVjdCBtbV9z
-dHJ1Y3QgKm1tLA0KPiArCQkJCQkgICAgICB1bnNpZ25lZCBsb25nIHN0YXJ0LCB1bnNpZ25lZCBs
-b25nIGVuZCkNCj4gK3sNCj4gKwlzdHJ1Y3Qga3ZtICprdm0gPSBtbXVfbm90aWZpZXJfdG9fa3Zt
-KG1uKTsNCj4gKwlpbnQgaWR4Ow0KPiArDQo+ICsJaWR4ID0gc3JjdV9yZWFkX2xvY2soJmt2bS0+
-c3JjdSk7DQo+ICsJa3ZtX2FyY2hfbW11X25vdGlmaWVyX2ludmFsaWRhdGVfcmFuZ2Uoa3ZtLCBz
-dGFydCwgZW5kKTsNCj4gKwlzcmN1X3JlYWRfdW5sb2NrKCZrdm0tPnNyY3UsIGlkeCk7DQo+ICt9
-DQo+ICsNCj4gc3RhdGljIHZvaWQga3ZtX21tdV9ub3RpZmllcl9jaGFuZ2VfcHRlKHN0cnVjdCBt
-bXVfbm90aWZpZXIgKm1uLA0KPiAJCQkJCXN0cnVjdCBtbV9zdHJ1Y3QgKm1tLA0KPiAJCQkJCXVu
-c2lnbmVkIGxvbmcgYWRkcmVzcywNCj4gQEAgLTQwOCw3ICs0MTksNiBAQCBzdGF0aWMgaW50IGt2
-bV9tbXVfbm90aWZpZXJfaW52YWxpZGF0ZV9yYW5nZV9zdGFydChzdHJ1Y3QgbW11X25vdGlmaWVy
-ICptbiwNCj4gew0KPiAJc3RydWN0IGt2bSAqa3ZtID0gbW11X25vdGlmaWVyX3RvX2t2bShtbik7
-DQo+IAlpbnQgbmVlZF90bGJfZmx1c2ggPSAwLCBpZHg7DQo+IC0JaW50IHJldDsNCj4gDQo+IAlp
-ZHggPSBzcmN1X3JlYWRfbG9jaygma3ZtLT5zcmN1KTsNCj4gCXNwaW5fbG9jaygma3ZtLT5tbXVf
-bG9jayk7DQo+IEBAIC00MjUsMTQgKzQzNSw5IEBAIHN0YXRpYyBpbnQga3ZtX21tdV9ub3RpZmll
-cl9pbnZhbGlkYXRlX3JhbmdlX3N0YXJ0KHN0cnVjdCBtbXVfbm90aWZpZXIgKm1uLA0KPiAJCWt2
-bV9mbHVzaF9yZW1vdGVfdGxicyhrdm0pOw0KPiANCj4gCXNwaW5fdW5sb2NrKCZrdm0tPm1tdV9s
-b2NrKTsNCj4gLQ0KPiAtCXJldCA9IGt2bV9hcmNoX21tdV9ub3RpZmllcl9pbnZhbGlkYXRlX3Jh
-bmdlKGt2bSwgcmFuZ2UtPnN0YXJ0LA0KPiAtCQkJCQlyYW5nZS0+ZW5kLA0KPiAtCQkJCQltbXVf
-bm90aWZpZXJfcmFuZ2VfYmxvY2thYmxlKHJhbmdlKSk7DQo+IC0NCj4gCXNyY3VfcmVhZF91bmxv
-Y2soJmt2bS0+c3JjdSwgaWR4KTsNCj4gDQo+IC0JcmV0dXJuIHJldDsNCj4gKwlyZXR1cm4gMDsN
-Cj4gfQ0KPiANCj4gc3RhdGljIHZvaWQga3ZtX21tdV9ub3RpZmllcl9pbnZhbGlkYXRlX3Jhbmdl
-X2VuZChzdHJ1Y3QgbW11X25vdGlmaWVyICptbiwNCj4gQEAgLTUzOCw2ICs1NDMsNyBAQCBzdGF0
-aWMgdm9pZCBrdm1fbW11X25vdGlmaWVyX3JlbGVhc2Uoc3RydWN0IG1tdV9ub3RpZmllciAqbW4s
-DQo+IH0NCj4gDQo+IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbW11X25vdGlmaWVyX29wcyBrdm1fbW11
-X25vdGlmaWVyX29wcyA9IHsNCj4gKwkuaW52YWxpZGF0ZV9yYW5nZQk9IGt2bV9tbXVfbm90aWZp
-ZXJfaW52YWxpZGF0ZV9yYW5nZSwNCj4gCS5pbnZhbGlkYXRlX3JhbmdlX3N0YXJ0CT0ga3ZtX21t
-dV9ub3RpZmllcl9pbnZhbGlkYXRlX3JhbmdlX3N0YXJ0LA0KPiAJLmludmFsaWRhdGVfcmFuZ2Vf
-ZW5kCT0ga3ZtX21tdV9ub3RpZmllcl9pbnZhbGlkYXRlX3JhbmdlX2VuZCwNCj4gCS5jbGVhcl9m
-bHVzaF95b3VuZwk9IGt2bV9tbXVfbm90aWZpZXJfY2xlYXJfZmx1c2hfeW91bmcsDQo+IC0tIA0K
-PiAyLjIxLjMNCj4gDQoNCg==
+This patch series adds partial read support in request_firmware_into_buf.
+In order to accept the enhanced API it has been requested that kernel
+selftests and upstreamed driver utilize the API enhancement and so
+are included in this patch series.
+
+Also in this patch series is the addition of a new Broadcom VK driver
+utilizing the new request_firmware_into_buf enhanced API.
+
+Further comment followed to add IMA support of the partial reads
+originating from request_firmware_into_buf calls.
+
+Changes from v6:
+ - update ima_post_read_file check on IMA_FIRMWARE_PARTIAL_READ
+ - adjust new driver i2c-slave-eeprom.c use of request_firmware_into_buf
+ - remove an extern
+Changes from v5:
+ - add IMA FIRMWARE_PARTIAL_READ support
+ - change kernel pread flags to enum
+ - removed legacy support from driver
+ - driver fixes
+Changes from v4:
+ - handle reset issues if card crashes
+ - allow driver to have min required msix
+ - add card utilization information
+Changes from v3:
+ - fix sparse warnings
+ - fix printf format specifiers for size_t
+ - fix 32-bit cross-compiling reports 32-bit shifts
+ - use readl/writel,_relaxed to access pci ioremap memory,
+  removed memory barriers and volatile keyword with such change
+ - driver optimizations for interrupt/poll functionalities
+Changes from v2:
+ - remove unnecessary code and mutex locks in lib/test_firmware.c
+ - remove VK_IOCTL_ACCESS_BAR support from driver and use pci sysfs instead
+ - remove bitfields
+ - remove Kconfig default m
+ - adjust formatting and some naming based on feedback
+ - fix error handling conditions
+ - use appropriate return codes
+ - use memcpy_toio instead of direct access to PCIE bar
+
+Scott Branden (8):
+  fs: introduce kernel_pread_file* support
+  firmware: add offset to request_firmware_into_buf
+  test_firmware: add partial read support for request_firmware_into_buf
+  firmware: test partial file reads of request_firmware_into_buf
+  bcm-vk: add bcm_vk UAPI
+  misc: bcm-vk: add Broadcom VK driver
+  MAINTAINERS: bcm-vk: add maintainer for Broadcom VK Driver
+  ima: add FIRMWARE_PARTIAL_READ support
+
+ MAINTAINERS                                   |    7 +
+ drivers/base/firmware_loader/firmware.h       |    5 +
+ drivers/base/firmware_loader/main.c           |   59 +-
+ drivers/i2c/i2c-slave-eeprom.c                |    4 +-
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/bcm-vk/Kconfig                   |   29 +
+ drivers/misc/bcm-vk/Makefile                  |   11 +
+ drivers/misc/bcm-vk/bcm_vk.h                  |  408 +++++
+ drivers/misc/bcm-vk/bcm_vk_dev.c              | 1312 +++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_msg.c              | 1438 +++++++++++++++++
+ drivers/misc/bcm-vk/bcm_vk_msg.h              |  201 +++
+ drivers/misc/bcm-vk/bcm_vk_sg.c               |  271 ++++
+ drivers/misc/bcm-vk/bcm_vk_sg.h               |   60 +
+ drivers/misc/bcm-vk/bcm_vk_tty.c              |  352 ++++
+ drivers/soc/qcom/mdt_loader.c                 |    7 +-
+ fs/exec.c                                     |  101 +-
+ include/linux/firmware.h                      |    8 +-
+ include/linux/fs.h                            |   30 +
+ include/uapi/linux/misc/bcm_vk.h              |   99 ++
+ lib/test_firmware.c                           |  144 +-
+ security/integrity/ima/ima_main.c             |   24 +-
+ .../selftests/firmware/fw_filesystem.sh       |   80 +
+ 23 files changed, 4598 insertions(+), 54 deletions(-)
+ create mode 100644 drivers/misc/bcm-vk/Kconfig
+ create mode 100644 drivers/misc/bcm-vk/Makefile
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_dev.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_msg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.c
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_sg.h
+ create mode 100644 drivers/misc/bcm-vk/bcm_vk_tty.c
+ create mode 100644 include/uapi/linux/misc/bcm_vk.h
+
+-- 
+2.17.1
+
