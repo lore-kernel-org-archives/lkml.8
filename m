@@ -2,125 +2,99 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4676CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A01E207D0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591453587;
-	bh=F1nHPq3X9RQbi/97Daf6xDhCdpiGKoVqb9h1Vn5ISUU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SdYT0HvKu7FaELpesrIK+2az6i73PPRLcOs68B2EpaoMKwX3NjgR+R/p/1ZdffUup
-	 wcGWcqGm2+LmnL7aRIHfqVz5YWZka+tiG2dhzyFlAkYmcLt+MQu/3NxcN4ihKnJgrf
-	 dvE2Q/JTONQ4DL8Td/DFmwObh5e+yaRG17tQ4SH0=
+	by mail.kernel.org (Postfix) with ESMTP id E84D7207C4
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:27:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="J41o5AQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgFFO00 (ORCPT
+        id S1728641AbgFFO11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:26:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44998 "EHLO mail.kernel.org"
+        Sat, 6 Jun 2020 10:27:27 -0400
+Received: from mout01.posteo.de ([185.67.36.65]:53748 "EHLO mout01.posteo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgFFO00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:26:26 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 832B62073E;
-        Sat,  6 Jun 2020 14:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591453585;
-        bh=F1nHPq3X9RQbi/97Daf6xDhCdpiGKoVqb9h1Vn5ISUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fG84cNlOkS//66ghfaLNnlTJed53+jqmd/1pmlvZ1mP8jr32P7t0uCHNsPr3y0lyU
-         9ICAFBRDX8bqP+gV6xZl9C2/JIyMQFDxicPCvjIGIbA8ujYgo5FYWXhi8LlLGoWY40
-         Lw8tnxQWx+KKZwZ0mcrFpLc74UyNLLf2W6h2ac6c=
-Date:   Sat, 6 Jun 2020 15:26:20 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com
-Subject: Re: [PATCH] iio: Kconfig: at91_adc: add COMPILE_TEST dependency to
- driver
-Message-ID: <20200606152620.4c3bc9a2@archlinux>
-In-Reply-To: <20200602060650.vlfx26qb57sewcjw@sekiro>
-References: <20200525102744.131672-1-alexandru.ardelean@analog.com>
-        <20200531154017.04fc727f@archlinux>
-        <20200602060650.vlfx26qb57sewcjw@sekiro>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726133AbgFFO11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 10:27:27 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 929E516005C
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 16:27:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1591453645; bh=4nxpxQrUWni6STaypYRZCfXgD235Nbb9ZEifOwmXI6I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=J41o5AQfeYKrF+eCdIXC1X4Q7fFBGDuVRijSshR/5HJKUZMIAmgqfKpJXqStPPK8G
+         tGRdStu7e44eyfa4ECw32IFVHvSyvzBG9h8V7udejiOcpPd1r9CHmAYT/WXEpcu8HE
+         SPsGx53E+Ot0tDdwYTVd1FjoJXz4dadlytpWffwREDT3DXsn7bubk51GL2n3EBUCU+
+         TOqZkRLUD8KU7iq223hWQPadmgz0otbcw3B+YXqXJSyPVmrFFCYOD7CZCh5kwQWdcV
+         bX4826Rp3uyS3L6K6y2LJJLyd2/YcJuUbkF+E1YZs2N6uxuLybtrZUxH38ZSxvw3Qv
+         RIzw92R7x8qVg==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 49fMKm4sdDz6tmH;
+        Sat,  6 Jun 2020 16:27:24 +0200 (CEST)
+From:   Benjamin Thiel <b.thiel@posteo.de>
+To:     Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Cc:     x86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Benjamin Thiel <b.thiel@posteo.de>
+Subject: [PATCH] x86/xen: Fix a -Wmissing prototypes warning for xen_start_kernel()
+Date:   Sat,  6 Jun 2020 16:27:21 +0200
+Message-Id: <20200606142721.19486-1-b.thiel@posteo.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2 Jun 2020 08:06:50 +0200
-Ludovic Desroches <ludovic.desroches@microchip.com> wrote:
+Fix:
 
-> On Sun, May 31, 2020 at 03:40:17PM +0100, Jonathan Cameron wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On Mon, 25 May 2020 13:27:44 +0300
-> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> >   
-> > > Since changes can come from all sort of places, it may make sense to have
-> > > this symbol as a dependency to make sure that the 'make allmodconfig' &&
-> > > 'make allyesconfig' build rules cover this driver as well for a
-> > > compile-build/test.
-> > >
-> > > It seemed useful [recently] when trying to apply a change for this.
-> > >
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
-> > Makes sense.   Given this sort of change can expose weird an wonderful
-> > dependencies that were previously hidden, I'll be wanting an
-> > ack from at91 people.  
-> 
-> Agree.
-> 
-> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+  arch/x86/xen/enlighten_pv.c:1212:34:
+  warning: no previous prototype for ‘xen_start_kernel’ [-Wmissing-prototypes]
+  asmlinkage __visible void __init xen_start_kernel(void)
 
-Thanks,
+Add a prototype for xen_start_kernel() in a separate xen-specific header.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to see if they can find any problems with relaxing
-this.
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+---
+ arch/x86/include/asm/xen/setup.h | 7 +++++++
+ arch/x86/xen/enlighten_pv.c      | 1 +
+ 2 files changed, 8 insertions(+)
+ create mode 100644 arch/x86/include/asm/xen/setup.h
 
-Thanks,
-
-Jonathan
-
-> 
-> Regards
-> 
-> Ludovic
-> 
-> > 
-> > Jonathan
-> >   
-> > > ---
-> > >  drivers/iio/adc/Kconfig | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > > index c48c00077775..c1f4c0aec265 100644
-> > > --- a/drivers/iio/adc/Kconfig
-> > > +++ b/drivers/iio/adc/Kconfig
-> > > @@ -294,7 +294,7 @@ config ASPEED_ADC
-> > >
-> > >  config AT91_ADC
-> > >       tristate "Atmel AT91 ADC"
-> > > -     depends on ARCH_AT91
-> > > +     depends on ARCH_AT91 || COMPILE_TEST
-> > >       depends on INPUT && SYSFS
-> > >       select IIO_BUFFER
-> > >       select IIO_TRIGGERED_BUFFER  
-> >   
+diff --git a/arch/x86/include/asm/xen/setup.h b/arch/x86/include/asm/xen/setup.h
+new file mode 100644
+index 000000000000..b7bd97f4b837
+--- /dev/null
++++ b/arch/x86/include/asm/xen/setup.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_XEN_SETUP_H
++#define _ASM_X86_XEN_SETUP_H
++
++asmlinkage __visible void __init xen_start_kernel(void);
++
++#endif /*_ASM_X86_XEN_SETUP_H */
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 35321f4d49f1..dc0850f09c70 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -55,6 +55,7 @@
+ #include <asm/xen/hypercall.h>
+ #include <asm/xen/hypervisor.h>
+ #include <asm/xen/cpuid.h>
++#include <asm/xen/setup.h>
+ #include <asm/fixmap.h>
+ #include <asm/processor.h>
+ #include <asm/proto.h>
+-- 
+2.20.1
 
