@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F301DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9DA207D8
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA26920872
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 00:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hDabG4zj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tCvb0rty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgFFAgC (ORCPT
+        id S1728648AbgFFAgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 20:36:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32942 "EHLO
+        Fri, 5 Jun 2020 20:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728620AbgFFAgA (ORCPT
+        with ESMTP id S1728620AbgFFAgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 20:36:00 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83C6C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 17:35:58 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k186so13650015ybc.19
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 17:35:58 -0700 (PDT)
+        Fri, 5 Jun 2020 20:36:03 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D8B0C08C5C3
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 17:36:01 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id w14so10062843qtv.19
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 17:36:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=yfWV0PXIV5PpQ5wJBNut7KX55zaCQiiUSrjbwEbMGQE=;
-        b=hDabG4zjcTPcxEXraRYdCV5IGq5A5N+2z/Kwosmi2e8VE0UeXfqNaXSzz9G1/2Lfrs
-         1gfGPtg/SSbtaU7GYKC+lIhWX9tVXm1SXXD77ml3Mx1DF7zKbQAMU/LRwE1N+qF0gIqx
-         6F4QneK92uZu516vUeWP0nRO7ZincYWZbqwD2AAX1qLItxpazt+PGZXqocwLlomvxT6k
-         4lDCdyOJGrqCPSajxsGxkdybLsL+jo3hGIH+mXXZIuK5gVBMPFCXDcjsPCCN8AKdwokU
-         mrDzmx/c2B8wI5DOhyAbOLqerxHD1Ve1E+5eCi+ChberuGBbwRecPbox5uKUr+oZdGHk
-         6cdg==
+        bh=3rwiHKUr1AxIgiBs+EhDy5U0uXajwFWLvUrsluBnWtI=;
+        b=tCvb0rtydIlX1l4DUSCJVmszhVO51xYb7WShxVYCeQ4/d0kx1dKfC2bg7G/wsjyPjQ
+         FwUwjGLiu2XNax8R/EglZq5mK+tGs/gFowOzTYa4SayjRVzsXHMGxOFVwueAimqfrU9l
+         59A6NeH3HzXMXd5WSIkuiOYFm8pE7MeGGp8nohynUjWP7a9L9GYLsFiwCtbCsVKQpOjJ
+         K/Kr8P++ltSnDdxxdIkcuoAsiWvQaL9mmRTARBAvRx8LXkoG8LmX43ckouIXZhEYOVvP
+         0XN9aTXSCYrAJWLnYIgoB8FFWbtoN2dojWDZPr1HKW8nlk2G2hMJ2SG8p3SZ1poirWDK
+         8Jfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=yfWV0PXIV5PpQ5wJBNut7KX55zaCQiiUSrjbwEbMGQE=;
-        b=CweFnVh/sKfmHaLRsSxdSt0/8Xa+u/AqD9AUpyiHQq6l85jHGNN+Et8TJrhKRwSoRN
-         0oOxd4QFH3RSCAfHuDjSWQqeXT6gIgE9IB6rCfiagMZvcJx1GSMjElKE90ZZaT0bRmXT
-         twSqTJP7kBkR0xVjvjAayjC38kpEQd4P3T8NTEurAsFs9euL3hgwckZlhw0C9+zaN4cU
-         Jj5oRiVAnK1iPeQLnbs2LBrhBDc5Yp6/voVD50F3T8iI9X05i6hMVcpJdMapf+6iIJNj
-         G7m4qzA99Yr1jlXkqVO6hPZZPuFysp8yaeue1LaIPWa3lwaKNjqSfOw1tK4yyjvRidKk
-         bSaA==
-X-Gm-Message-State: AOAM532rO5He7vrGLns7xz2v9Jm78EqvBh8rn7BdTG8HjJ4lzgFiKh0b
-        xVc/F0CtV6jT0VAB2biuWXDhiGpfPqqxGd4=
-X-Google-Smtp-Source: ABdhPJyamEg7iPPMO/P4Ajg/c05XHJ4f4AwNLvmL3Kp8Mx8OKK5lAA5mkRGzah80mh3MNvTlFcsjfT0ggbfnvfc=
-X-Received: by 2002:a25:2d24:: with SMTP id t36mr20076041ybt.426.1591403758190;
- Fri, 05 Jun 2020 17:35:58 -0700 (PDT)
-Date:   Fri,  5 Jun 2020 17:35:51 -0700
+        bh=3rwiHKUr1AxIgiBs+EhDy5U0uXajwFWLvUrsluBnWtI=;
+        b=RJqj132nfRwkOxyoEC4wi8H0ag/29Tj9FNB8YTVE9U5i+7AGTl1nNracDoy2ndNtKm
+         3x9RWCQm3dl4FoY9FAwVLEDChB1bfBRh8XM7Um6LcSWwNgZfxmI2MNBeWFWw+ZHD+vuj
+         p7nEQNCvZBvVPnntVZH2xz5OSDAP1PZ6kAOdHiRt4Ct8IlVP3MQSGufyacd22OY2vyWB
+         6NAqJWmT3TVfb25t1/DjhY5m3t+QG9Ys4WFlTnNBVvT7lU7oSZ6F+Mx3BLqeWshZ4SPW
+         4PN9WLC/BWtgV9oqbyburLh5j1s9+n2ge3L/XC3KJpds0yF9DZ3yA5DhFfX3R9ocIacc
+         V7FQ==
+X-Gm-Message-State: AOAM5336jHtpQunCIv7dQlAn1nFtu4Nu4GaV/0HyG8lD4aED+oYvf5jr
+        Al7b61cVzFG2YTEesc8eDMRP653JZsiIZrg=
+X-Google-Smtp-Source: ABdhPJwV3a2b/+6U0mme/bYd1RKRwfA69Mx7Lz6ZtA+jAeGPVXgF0nmNeRGRbtwJpF4WcsU807OIswt+7IpP0aw=
+X-Received: by 2002:a0c:b516:: with SMTP id d22mr12553717qve.88.1591403760519;
+ Fri, 05 Jun 2020 17:36:00 -0700 (PDT)
+Date:   Fri,  5 Jun 2020 17:35:52 -0700
 In-Reply-To: <20200606003552.247693-1-saravanak@google.com>
-Message-Id: <20200606003552.247693-2-saravanak@google.com>
+Message-Id: <20200606003552.247693-3-saravanak@google.com>
 Mime-Version: 1.0
 References: <20200606003552.247693-1-saravanak@google.com>
 X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH v1 1/2] driver core: Add device_is_dependent() to linux/device.h
+Subject: [PATCH v1 2/2] of: property: Improve cycle detection when one of the
+ devices is never added
 From:   Saravana Kannan <saravanak@google.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -76,40 +77,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DT implementation of fw_devlink needs this function to detect cycles. So
-make it available.
+Consider this example where -> means LHS device is a consumer of RHS
+device and indentation represents "child of" of the previous device.
+
+Device A -> Device C
+
+Device B -> Device A
+	Device C
+
+Without this commit:
+1. Device A is added.
+2. Device A is added to waiting for supplier list (Device C)
+3. Device B is added
+4. Device B is linked as a consumer to Device A
+5. Device A doesn't probe because it's waiting for Device C to be added.
+6. Device B doesn't probe because Device A hasn't probed.
+7. Device C will never be added because it's parent hasn't probed.
+
+So, Device A, B and C will be in a probe/add deadlock.
+
+This commit detects this scenario and stops trying to create a device
+link between Device A and Device C since doing so would create a cycle:
+Device A -> Devic C -(parent)-> Device B -> Device A.
+
+With this commit:
+1. Device A is added.
+3. Device B is added
+4. Device B is linked as a consumer to Device A
+5. Device A probes.
+6. Device B probes because Device A has probed.
+7. Device C is added and probed.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c    | 2 +-
- include/linux/device.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/of/property.c | 44 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 139cdf7e7327..509b13610b56 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -118,7 +118,7 @@ int device_links_read_lock_held(void)
-  * Check if @target depends on @dev or any device dependent on it (its child or
-  * its consumer etc).  Return 1 if that is the case or 0 otherwise.
-  */
--static int device_is_dependent(struct device *dev, void *target)
-+int device_is_dependent(struct device *dev, void *target)
- {
- 	struct device_link *link;
- 	int ret;
-diff --git a/include/linux/device.h b/include/linux/device.h
-index ac8e37cd716a..5c618effc51e 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -829,6 +829,7 @@ extern int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
- extern const char *device_get_devnode(struct device *dev,
- 				      umode_t *mode, kuid_t *uid, kgid_t *gid,
- 				      const char **tmp);
-+extern int device_is_dependent(struct device *dev, void *target);
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 1f2086f4e7ce..7eebe21274a4 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1014,6 +1014,20 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+ 	return false;
+ }
  
- static inline bool device_supports_offline(struct device *dev)
++static struct device *of_get_next_parent_dev(struct device_node *np)
++{
++	struct device *dev = NULL;
++
++	of_node_get(np);
++	do {
++		np = of_get_next_parent(np);
++		if (np)
++			dev = get_dev_from_fwnode(&np->fwnode);
++	} while (np && !dev);
++	of_node_put(np);
++	return dev;
++}
++
+ /**
+  * of_link_to_phandle - Add device link to supplier from supplier phandle
+  * @dev: consumer device
+@@ -1035,10 +1049,9 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+ 			      u32 dl_flags)
  {
+-	struct device *sup_dev;
++	struct device *sup_dev, *sup_par_dev;
+ 	int ret = 0;
+ 	struct device_node *tmp_np = sup_np;
+-	int is_populated;
+ 
+ 	of_node_get(sup_np);
+ 	/*
+@@ -1075,16 +1088,35 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+ 		return -EINVAL;
+ 	}
+ 	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
+-	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
+-	of_node_put(sup_np);
+-	if (!sup_dev && is_populated) {
++	if (!sup_dev && of_node_check_flag(sup_np, OF_POPULATED)) {
+ 		/* Early device without struct device. */
+ 		dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
+ 			sup_np);
++		of_node_put(sup_np);
+ 		return -ENODEV;
+ 	} else if (!sup_dev) {
+-		return -EAGAIN;
++		sup_par_dev = of_get_next_parent_dev(sup_np);
++		of_node_put(sup_np);
++
++		/*
++		 * DL_FLAG_SYNC_STATE_ONLY doesn't block probing, so cycle
++		 * detection isn't necessary and shouldn't be done.
++		 */
++		if (dl_flags & DL_FLAG_SYNC_STATE_ONLY)
++			return -EAGAIN;
++
++		/*
++		 * If devices haven't been created for any of the ancestors, we
++		 * can't check for cycles. So let's try again later.
++		 */
++		if (!sup_par_dev)
++			return -EAGAIN;
++
++		/* Cyclic dependency detected, don't try to link */
++		if (device_is_dependent(dev, sup_par_dev))
++			return -EINVAL;
+ 	}
++	of_node_put(sup_np);
+ 	if (!device_link_add(dev, sup_dev, dl_flags))
+ 		ret = -EINVAL;
+ 	put_device(sup_dev);
 -- 
 2.27.0.278.ge193c7cf3a9-goog
 
