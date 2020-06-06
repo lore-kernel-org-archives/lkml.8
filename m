@@ -2,442 +2,103 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0376C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E309207BC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591459549;
-	bh=+jlhZLp3sLk8FgbNUlOCxtJtsDS/N8rlUVI+uYKDP94=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=j1JlCSHvQbdta/DnpSeliMaUxDd1fFAbMYA8ceKSOVGi3Bcr72eF0z9yht6iLUUu/
-	 O2DS7LOu57BaQhQJDXsnthXM7lQltsMeMI6lem55tBfqYwNqSP5tqM+VEPuTrU66in
-	 AvRuqZ8+RzgLzmAcl1kqext+YF0lpGvyTRpf4jlw=
+	by mail.kernel.org (Postfix) with ESMTP id 44B9F20772
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 16:09:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l9zrYwam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgFFQFt (ORCPT
+        id S1728766AbgFFQJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 12:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgFFQFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 12:05:48 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A6D720772;
-        Sat,  6 Jun 2020 16:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591459546;
-        bh=+jlhZLp3sLk8FgbNUlOCxtJtsDS/N8rlUVI+uYKDP94=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ecFNiClf31r0tkFhupXgERs+622kgS8FYbvmq+if8kNT92Dgqzo970jnpzXUWRjOU
-         GMEyvWKQt543RU+2OijYiVGWiOKrh6rxKM3CqET2qa837UR8GXSNqcWjOie4sx6kuw
-         yhXlrRigeKikpCL54mAFygrR8kw+j6/YXroHup3Q=
-Date:   Sat, 6 Jun 2020 17:05:42 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <johan@kernel.org>, <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 6/6] iio: remove left-over parent assignments
-Message-ID: <20200606170542.41c9323c@archlinux>
-In-Reply-To: <20200603114023.175102-7-alexandru.ardelean@analog.com>
-References: <20200603114023.175102-1-alexandru.ardelean@analog.com>
-        <20200603114023.175102-7-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 6 Jun 2020 12:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgFFQJO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 12:09:14 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49772C03E96A
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 09:09:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=13YtnQ2W0ggJKbLEu3bFimjEIxdnhaslWMy02eqYWY0=; b=l9zrYwamZIr/QfDf2aUeD7ffBG
+        I0I0Ako+vDy/Jre5SIY9GzQifYG9b1oEDSlQll9rP0d0klsfvIdzcvrSJFG5wLQpcgnpUc7IZD9Jx
+        fcO7YhGI5nBzKAYvkKH7epU/Ql4T7MiwMhrTwoDm5RmhFV9eb68Vg7kY69FLcMLS7aI3ED8zWEnmO
+        YbV4PRnmIgd12P1WMer2dNopVBk2igda0koAjKZ4S1j/FruSa82nZnr+C6i5IpZt13+9AE2+krnxW
+        9NNnPQb4gTY9zUfNR+N6dIelmgdENGPC0geo30zFF/uvCz7COP9E1ma0tgg9KOw95qlTcN6HjYXL1
+        Uh5CdKdw==;
+Received: from 213-225-38-56.nat.highway.a1.net ([213.225.38.56] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhbNf-0002F7-N1; Sat, 06 Jun 2020 16:09:12 +0000
+Date:   Sat, 6 Jun 2020 18:06:57 +0200
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] dma-mapping updates for 5.8, part 1
+Message-ID: <20200606160657.GA3482728@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 3 Jun 2020 14:40:23 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
-> These were found by doing some shell magic:
-> ------------
-> for file in $(git grep -w devm_iio_device_alloc | cut -d: -f1 | sort | uniq) ; do
-> 	if grep 'parent =' $file | grep -v trig | grep -vq devm_; then
-> 		echo "$file -> $(grep "parent =" $file)"
-> 	fi
-> done
-> -----------
-> 
-> The output is bearable [after the semantic patch is applied].
-> There is a mix of trigger assignments with some iio device parent
-> assignments that are removed via this patch.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
-I added a bunch more via a grep of simple parent\ = 
-and eyeballing it.  Much easier to do after your patches as far
-fewer entries.
+are available in the Git repository at:
 
-vcnl3020 (new)
-ms5611 (hidden via an extra call)
-st_sensors_spi (hidden via an extra call)
-st_sensors_i2c (hidden via an extra call)
-cros_ec_sensors_core (hidden via an extra call)
-> ---
->  drivers/iio/accel/kxcjk-1013.c                    | 1 -
->  drivers/iio/accel/mma8452.c                       | 1 -
->  drivers/iio/accel/mma9553.c                       | 1 -
->  drivers/iio/adc/ad7192.c                          | 1 -
->  drivers/iio/adc/hx711.c                           | 1 -
->  drivers/iio/adc/max1363.c                         | 2 --
->  drivers/iio/adc/mcp3911.c                         | 1 -
->  drivers/iio/adc/qcom-spmi-iadc.c                  | 1 -
->  drivers/iio/amplifiers/ad8366.c                   | 1 -
->  drivers/iio/chemical/vz89x.c                      | 1 -
->  drivers/iio/dac/ad5770r.c                         | 1 -
->  drivers/iio/health/afe4403.c                      | 1 -
->  drivers/iio/health/afe4404.c                      | 1 -
->  drivers/iio/humidity/dht11.c                      | 1 -
->  drivers/iio/humidity/hts221_core.c                | 1 -
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c        | 1 -
->  drivers/iio/light/cm3605.c                        | 1 -
->  drivers/iio/light/ltr501.c                        | 1 -
->  drivers/iio/magnetometer/ak8975.c                 | 1 -
->  drivers/iio/orientation/hid-sensor-rotation.c     | 1 -
->  drivers/iio/potentiostat/lmp91000.c               | 1 -
->  drivers/iio/proximity/ping.c                      | 1 -
->  drivers/iio/proximity/pulsedlight-lidar-lite-v2.c | 1 -
->  drivers/iio/proximity/srf04.c                     | 1 -
->  drivers/iio/proximity/srf08.c                     | 1 -
->  drivers/iio/temperature/tsys01.c                  | 1 -
->  drivers/staging/iio/addac/adt7316.c               | 1 -
->  27 files changed, 28 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk-1013.c
-> index c9924a65c32a..6b93521c0e17 100644
-> --- a/drivers/iio/accel/kxcjk-1013.c
-> +++ b/drivers/iio/accel/kxcjk-1013.c
-> @@ -1311,7 +1311,6 @@ static int kxcjk1013_probe(struct i2c_client *client,
->  
->  	mutex_init(&data->mutex);
->  
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->channels = kxcjk1013_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(kxcjk1013_channels);
->  	indio_dev->available_scan_masks = kxcjk1013_scan_masks;
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 00e100fc845a..ef3df402fc3c 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -1592,7 +1592,6 @@ static int mma8452_probe(struct i2c_client *client,
->  	i2c_set_clientdata(client, indio_dev);
->  	indio_dev->info = &mma8452_info;
->  	indio_dev->name = id->name;
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->channels = data->chip_info->channels;
->  	indio_dev->num_channels = data->chip_info->num_channels;
-> diff --git a/drivers/iio/accel/mma9553.c b/drivers/iio/accel/mma9553.c
-> index 312070dcf035..c15908faa381 100644
-> --- a/drivers/iio/accel/mma9553.c
-> +++ b/drivers/iio/accel/mma9553.c
-> @@ -1103,7 +1103,6 @@ static int mma9553_probe(struct i2c_client *client,
->  	if (ret < 0)
->  		return ret;
->  
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->channels = mma9553_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(mma9553_channels);
->  	indio_dev->name = name;
-> diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-> index 08ba1a8f05eb..a0837d7e9176 100644
-> --- a/drivers/iio/adc/ad7192.c
-> +++ b/drivers/iio/adc/ad7192.c
-> @@ -970,7 +970,6 @@ static int ad7192_probe(struct spi_device *spi)
->  
->  	spi_set_drvdata(spi, indio_dev);
->  	st->chip_info = of_device_get_match_data(&spi->dev);
-> -	indio_dev->dev.parent = &spi->dev;
->  	indio_dev->name = st->chip_info->name;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
-> diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
-> index c8686558429b..6a173531d355 100644
-> --- a/drivers/iio/adc/hx711.c
-> +++ b/drivers/iio/adc/hx711.c
-> @@ -551,7 +551,6 @@ static int hx711_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, indio_dev);
->  
->  	indio_dev->name = "hx711";
-> -	indio_dev->dev.parent = &pdev->dev;
->  	indio_dev->info = &hx711_iio_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->channels = hx711_chan_spec;
-> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> index 9d92017c79b2..cc1ba7bfc8e6 100644
-> --- a/drivers/iio/adc/max1363.c
-> +++ b/drivers/iio/adc/max1363.c
-> @@ -1652,8 +1652,6 @@ static int max1363_probe(struct i2c_client *client,
->  	if (ret)
->  		goto error_disable_reg;
->  
-> -	/* Establish that the iio_dev is a child of the i2c device */
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->dev.of_node = client->dev.of_node;
->  	indio_dev->name = id->name;
->  	indio_dev->channels = st->chip_info->channels;
-> diff --git a/drivers/iio/adc/mcp3911.c b/drivers/iio/adc/mcp3911.c
-> index dd52f08ec82e..818b92518c66 100644
-> --- a/drivers/iio/adc/mcp3911.c
-> +++ b/drivers/iio/adc/mcp3911.c
-> @@ -293,7 +293,6 @@ static int mcp3911_probe(struct spi_device *spi)
->  	if (ret)
->  		goto clk_disable;
->  
-> -	indio_dev->dev.parent = &spi->dev;
->  	indio_dev->dev.of_node = spi->dev.of_node;
->  	indio_dev->name = spi_get_device_id(spi)->name;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> diff --git a/drivers/iio/adc/qcom-spmi-iadc.c b/drivers/iio/adc/qcom-spmi-iadc.c
-> index 46858eddf1c3..1c90ad33a881 100644
-> --- a/drivers/iio/adc/qcom-spmi-iadc.c
-> +++ b/drivers/iio/adc/qcom-spmi-iadc.c
-> @@ -553,7 +553,6 @@ static int iadc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	indio_dev->dev.parent = dev;
->  	indio_dev->dev.of_node = node;
->  	indio_dev->name = pdev->name;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-> index 62167b87caea..2595e9cb0b2d 100644
-> --- a/drivers/iio/amplifiers/ad8366.c
-> +++ b/drivers/iio/amplifiers/ad8366.c
-> @@ -274,7 +274,6 @@ static int ad8366_probe(struct spi_device *spi)
->  	}
->  
->  	st->info = &ad8366_infos[st->type];
-> -	indio_dev->dev.parent = &spi->dev;
->  	indio_dev->name = spi_get_device_id(spi)->name;
->  	indio_dev->info = &ad8366_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> diff --git a/drivers/iio/chemical/vz89x.c b/drivers/iio/chemical/vz89x.c
-> index 415b39339d4e..5586eb8e12cd 100644
-> --- a/drivers/iio/chemical/vz89x.c
-> +++ b/drivers/iio/chemical/vz89x.c
-> @@ -382,7 +382,6 @@ static int vz89x_probe(struct i2c_client *client,
->  	data->last_update = jiffies - HZ;
->  	mutex_init(&data->lock);
->  
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->info = &vz89x_info;
->  	indio_dev->name = dev_name(&client->dev);
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> diff --git a/drivers/iio/dac/ad5770r.c b/drivers/iio/dac/ad5770r.c
-> index 2d7623b9b2c0..84dcf149261f 100644
-> --- a/drivers/iio/dac/ad5770r.c
-> +++ b/drivers/iio/dac/ad5770r.c
-> @@ -651,7 +651,6 @@ static int ad5770r_probe(struct spi_device *spi)
->  		}
->  	}
->  
-> -	indio_dev->dev.parent = &spi->dev;
->  	indio_dev->name = spi_get_device_id(spi)->name;
->  	indio_dev->info = &ad5770r_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> diff --git a/drivers/iio/health/afe4403.c b/drivers/iio/health/afe4403.c
-> index e9f87e42ff4f..ed230f12b2f8 100644
-> --- a/drivers/iio/health/afe4403.c
-> +++ b/drivers/iio/health/afe4403.c
-> @@ -509,7 +509,6 @@ static int afe4403_probe(struct spi_device *spi)
->  	}
->  
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> -	indio_dev->dev.parent = afe->dev;
->  	indio_dev->channels = afe4403_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(afe4403_channels);
->  	indio_dev->name = AFE4403_DRIVER_NAME;
-> diff --git a/drivers/iio/health/afe4404.c b/drivers/iio/health/afe4404.c
-> index e728bbb21ca8..3a3efae4695a 100644
-> --- a/drivers/iio/health/afe4404.c
-> +++ b/drivers/iio/health/afe4404.c
-> @@ -517,7 +517,6 @@ static int afe4404_probe(struct i2c_client *client,
->  	}
->  
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> -	indio_dev->dev.parent = afe->dev;
->  	indio_dev->channels = afe4404_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(afe4404_channels);
->  	indio_dev->name = AFE4404_DRIVER_NAME;
-> diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
-> index d05c6fdb758b..9a7819817488 100644
-> --- a/drivers/iio/humidity/dht11.c
-> +++ b/drivers/iio/humidity/dht11.c
-> @@ -321,7 +321,6 @@ static int dht11_probe(struct platform_device *pdev)
->  	init_completion(&dht11->completion);
->  	mutex_init(&dht11->lock);
->  	iio->name = pdev->name;
-> -	iio->dev.parent = &pdev->dev;
->  	iio->info = &dht11_iio_info;
->  	iio->modes = INDIO_DIRECT_MODE;
->  	iio->channels = dht11_chan_spec;
-> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-> index 7ce1bd1defa0..16657789dc45 100644
-> --- a/drivers/iio/humidity/hts221_core.c
-> +++ b/drivers/iio/humidity/hts221_core.c
-> @@ -572,7 +572,6 @@ int hts221_probe(struct device *dev, int irq, const char *name,
->  		return err;
->  
->  	iio_dev->modes = INDIO_DIRECT_MODE;
-> -	iio_dev->dev.parent = hw->dev;
->  	iio_dev->available_scan_masks = hts221_scan_masks;
->  	iio_dev->channels = hts221_channels;
->  	iio_dev->num_channels = ARRAY_SIZE(hts221_channels);
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> index 4d604fe842e5..153f855db8d6 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -1530,7 +1530,6 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
->  	}
->  
->  	dev_set_drvdata(dev, indio_dev);
-> -	indio_dev->dev.parent = dev;
->  	/* name will be NULL when enumerated via ACPI */
->  	if (name)
->  		indio_dev->name = name;
-> diff --git a/drivers/iio/light/cm3605.c b/drivers/iio/light/cm3605.c
-> index 964ede49f662..4c83953672be 100644
-> --- a/drivers/iio/light/cm3605.c
-> +++ b/drivers/iio/light/cm3605.c
-> @@ -239,7 +239,6 @@ static int cm3605_probe(struct platform_device *pdev)
->  	led_trigger_register_simple("cm3605", &cm3605->led);
->  	led_trigger_event(cm3605->led, LED_FULL);
->  
-> -	indio_dev->dev.parent = dev;
->  	indio_dev->info = &cm3605_info;
->  	indio_dev->name = "cm3605";
->  	indio_dev->channels = cm3605_channels;
-> diff --git a/drivers/iio/light/ltr501.c b/drivers/iio/light/ltr501.c
-> index 5a3fcb127cd2..4bac0646398d 100644
-> --- a/drivers/iio/light/ltr501.c
-> +++ b/drivers/iio/light/ltr501.c
-> @@ -1480,7 +1480,6 @@ static int ltr501_probe(struct i2c_client *client,
->  	if ((partid >> 4) != data->chip_info->partid)
->  		return -ENODEV;
->  
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->info = data->chip_info->info;
->  	indio_dev->channels = data->chip_info->channels;
->  	indio_dev->num_channels = data->chip_info->no_channels;
-> diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> index a23422aad97d..03d71f796177 100644
-> --- a/drivers/iio/magnetometer/ak8975.c
-> +++ b/drivers/iio/magnetometer/ak8975.c
-> @@ -940,7 +940,6 @@ static int ak8975_probe(struct i2c_client *client,
->  	}
->  
->  	mutex_init(&data->lock);
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->channels = ak8975_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(ak8975_channels);
->  	indio_dev->info = &ak8975_info;
-> diff --git a/drivers/iio/orientation/hid-sensor-rotation.c b/drivers/iio/orientation/hid-sensor-rotation.c
-> index b99f41240e3e..23bc61a7f018 100644
-> --- a/drivers/iio/orientation/hid-sensor-rotation.c
-> +++ b/drivers/iio/orientation/hid-sensor-rotation.c
-> @@ -281,7 +281,6 @@ static int hid_dev_rot_probe(struct platform_device *pdev)
->  	}
->  
->  	indio_dev->num_channels = ARRAY_SIZE(dev_rot_channels);
-> -	indio_dev->dev.parent = &pdev->dev;
->  	indio_dev->info = &dev_rot_info;
->  	indio_dev->name = name;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> diff --git a/drivers/iio/potentiostat/lmp91000.c b/drivers/iio/potentiostat/lmp91000.c
-> index 2cb11da18e0f..2d601889c8c0 100644
-> --- a/drivers/iio/potentiostat/lmp91000.c
-> +++ b/drivers/iio/potentiostat/lmp91000.c
-> @@ -321,7 +321,6 @@ static int lmp91000_probe(struct i2c_client *client,
->  	indio_dev->channels = lmp91000_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(lmp91000_channels);
->  	indio_dev->name = LMP91000_DRV_NAME;
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	i2c_set_clientdata(client, indio_dev);
->  
-> diff --git a/drivers/iio/proximity/ping.c b/drivers/iio/proximity/ping.c
-> index 2e99eeb27f2e..1283ac1c2e03 100644
-> --- a/drivers/iio/proximity/ping.c
-> +++ b/drivers/iio/proximity/ping.c
-> @@ -309,7 +309,6 @@ static int ping_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, indio_dev);
->  
->  	indio_dev->name = "ping";
-> -	indio_dev->dev.parent = &pdev->dev;
->  	indio_dev->info = &ping_iio_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->channels = ping_chan_spec;
-> diff --git a/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c b/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c
-> index 5b369645ef49..a8e716dbd24e 100644
-> --- a/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c
-> +++ b/drivers/iio/proximity/pulsedlight-lidar-lite-v2.c
-> @@ -270,7 +270,6 @@ static int lidar_probe(struct i2c_client *client,
->  	indio_dev->name = LIDAR_DRV_NAME;
->  	indio_dev->channels = lidar_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(lidar_channels);
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
->  	i2c_set_clientdata(client, indio_dev);
-> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-> index 568b76e06385..2a3acff431d7 100644
-> --- a/drivers/iio/proximity/srf04.c
-> +++ b/drivers/iio/proximity/srf04.c
-> @@ -317,7 +317,6 @@ static int srf04_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, indio_dev);
->  
->  	indio_dev->name = "srf04";
-> -	indio_dev->dev.parent = &pdev->dev;
->  	indio_dev->info = &srf04_iio_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->channels = srf04_chan_spec;
-> diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
-> index b23ce446b7be..6677221d5818 100644
-> --- a/drivers/iio/proximity/srf08.c
-> +++ b/drivers/iio/proximity/srf08.c
-> @@ -483,7 +483,6 @@ static int srf08_probe(struct i2c_client *client,
->  	}
->  
->  	indio_dev->name = id->name;
-> -	indio_dev->dev.parent = &client->dev;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->channels = srf08_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(srf08_channels);
-> diff --git a/drivers/iio/temperature/tsys01.c b/drivers/iio/temperature/tsys01.c
-> index d41f050c2fea..2c631a1ca33b 100644
-> --- a/drivers/iio/temperature/tsys01.c
-> +++ b/drivers/iio/temperature/tsys01.c
-> @@ -160,7 +160,6 @@ static int tsys01_probe(struct iio_dev *indio_dev, struct device *dev)
->  
->  	indio_dev->info = &tsys01_info;
->  	indio_dev->name = dev->driver->name;
-> -	indio_dev->dev.parent = dev;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	indio_dev->channels = tsys01_channels;
->  	indio_dev->num_channels = ARRAY_SIZE(tsys01_channels);
-> diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
-> index 9cb3d0e42c38..ccbafcaaf27e 100644
-> --- a/drivers/staging/iio/addac/adt7316.c
-> +++ b/drivers/staging/iio/addac/adt7316.c
-> @@ -2171,7 +2171,6 @@ int adt7316_probe(struct device *dev, struct adt7316_bus *bus,
->  	if ((chip->id & ID_FAMILY_MASK) == ID_ADT75XX)
->  		chip->int_mask |= ADT7516_AIN_INT_MASK;
->  
-> -	indio_dev->dev.parent = dev;
->  	if ((chip->id & ID_FAMILY_MASK) == ID_ADT75XX)
->  		indio_dev->info = &adt7516_info;
->  	else
+  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.8
 
+for you to fetch changes up to 298f3db6ee690259927b105d5ad1079563361323:
+
+  dma-contiguous: fix comment for dma_release_from_contiguous (2020-04-25 13:17:06 +0200)
+
+----------------------------------------------------------------
+dma-mapping updates for 5.8, part 1
+
+ - enhance the dma pool to allow atomic allocation on x86 with AMD SEV
+   (David Rientjes)
+ - two small cleanups (Jason Yan and Peter Collingbourne)
+
+----------------------------------------------------------------
+David Rientjes (7):
+      dma-remap: separate DMA atomic pools from direct remap code
+      dma-pool: add additional coherent pools to map to gfp mask
+      dma-pool: dynamically expanding atomic pools
+      dma-direct: atomic allocations must come from atomic coherent pools
+      dma-pool: add pool sizes to debugfs
+      x86/mm: unencrypted non-blocking DMA allocations use coherent pools
+      dma-pool: scale the default DMA coherent pool size with memory capacity
+
+Jason Yan (1):
+      dma-debug: make __dma_entry_alloc_check_leak() static
+
+Peter Collingbourne (1):
+      dma-contiguous: fix comment for dma_release_from_contiguous
+
+ arch/x86/Kconfig            |   1 +
+ drivers/iommu/dma-iommu.c   |   5 +-
+ include/linux/dma-direct.h  |   2 +
+ include/linux/dma-mapping.h |   6 +-
+ kernel/dma/Kconfig          |   6 +-
+ kernel/dma/Makefile         |   1 +
+ kernel/dma/contiguous.c     |   4 +-
+ kernel/dma/debug.c          |   2 +-
+ kernel/dma/direct.c         |  56 ++++++++--
+ kernel/dma/pool.c           | 264 ++++++++++++++++++++++++++++++++++++++++++++
+ kernel/dma/remap.c          | 121 +-------------------
+ 11 files changed, 327 insertions(+), 141 deletions(-)
+ create mode 100644 kernel/dma/pool.c
