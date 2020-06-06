@@ -2,108 +2,112 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBACC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB83320723
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FF3207D0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591454652;
-	bh=SACxwNAwDrkOE5Vi3gD3HuslW/wimFytRZ7SVjgblMs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eRkop//autpKQlg0SVtsXv0Xg3Z8qxAXTfLhAOkL8NFr9vnI8fw+aIzOgTZ9jak2S
-	 ahjHNWP0JwEmxDn5IiDqFHzorfHNMcvO8GFvPnQwLI0TxeoLr+JsC60uPFQInKUDn2
-	 eUykWlK2QdW0KzAlPnXbY/sDwcq4MZUs1QBDKNSg=
+	s=default; t=1591454768;
+	bh=PBym/DGHE9NjcaE0h+p9wR4vb3R6jof0PH+usemivzI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PE9vXzcw/f+3z+8FQcWGZRZoTCTZJTxG08JkZqoy4dASZ8+rQgJmmF6mWy62VMTI1
+	 +F7zzxVS5+lqPu1L71xtMQ4ZUNzggw2k93e2BKt0W+bZYDqaOmUFea2GZrGMoSuaR5
+	 2MiC8+wD0FJQWpb9IoRxz2SF5NCxfSErhEAHFDns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgFFOoL (ORCPT
+        id S1728791AbgFFOqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:44:11 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:17257 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbgFFOoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:44:10 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 056Ehlgo016107;
-        Sat, 6 Jun 2020 23:43:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 056Ehlgo016107
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591454628;
-        bh=tjJf9yrzYB6UwD08OE5+OR5eSSMZmjyIOBpMcr//QGs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XdFCzxLJAslsQWU56itcSH1zKDbWp9ff4kDDB3fvjOQ819Iwf0gSg0V7h4ewqaoxE
-         +Uc5qixP6UwBWGCoszF7KflJ2D0UOmPiZ6lWwKnOrCtBwdd566Z9g3a3a4VonBYKPd
-         UhafJeNa3cJePf6XfVF1vl76zEgnZ8xxxndENJ5Xa3GGPnbaLMEeWZSCk9N3sPQZMH
-         IHgFQSZuy8yJGWoLcGvROhr8XeQo1BoDYtOsmupGH+WD+r3J4M90/f+bPnC7dJfHbO
-         myC55bb++rPDG+rtOAb5nc1Y3EkAc+8dtWaNy/3Tx+/DpqdcKLSw7nG0rvCvT/3R/Y
-         3WygLVcNF1ulw==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id k13so7267798vsm.13;
-        Sat, 06 Jun 2020 07:43:48 -0700 (PDT)
-X-Gm-Message-State: AOAM531Iac1wPR9bYCQi8ci9JWCcydQTJ2iNGabPxQASWDGn0paivAk9
-        QAzKk1upuC49fzBwa3AK+2MiZhPCBxA//waKlvg=
-X-Google-Smtp-Source: ABdhPJze68VJW1GjAz6C7aMA4c3Yup2JuYfY+OwIzZcDBKZhh9WKEFkXfNY/v+kHw+DNFLcjNwhDt+DWkQbWCm6WhlE=
-X-Received: by 2002:a67:22c7:: with SMTP id i190mr10578583vsi.179.1591454627220;
- Sat, 06 Jun 2020 07:43:47 -0700 (PDT)
+        Sat, 6 Jun 2020 10:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728630AbgFFOqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 10:46:07 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1F1320723;
+        Sat,  6 Jun 2020 14:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591454767;
+        bh=PBym/DGHE9NjcaE0h+p9wR4vb3R6jof0PH+usemivzI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=F4YXPTm3dniH8D5Dv2Qb5R9QGBzWomEEaJ3psaxgtE9IhLaxVfC2iw77xoV3AvGFf
+         Cvg7XeMUPZzHdnNgLSSMVrs6GKKopZewjdFXJPKeI6iI+xX4Qj2xrNFrUefovlugQr
+         eCMiGwes5PeWq5iTcCUuNtztPSbQXePD4io/2DPk=
+Date:   Sat, 6 Jun 2020 15:46:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Matt Ranostay <mranostay@gmail.com>
+Subject: Re: [PATCH] iio: improve IIO_CONCENTRATION channel type description
+Message-ID: <20200606154603.0fd52019@archlinux>
+In-Reply-To: <CAJCx=gkXrNV1pHHBYFcKUttkN=Vc9i_1fOh4stCG3f_GWVJfYA@mail.gmail.com>
+References: <20200601161552.34579-1-tomasz.duszynski@octakon.com>
+        <CAJCx=gkXrNV1pHHBYFcKUttkN=Vc9i_1fOh4stCG3f_GWVJfYA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200514131234.380097-1-efremov@linux.com> <20200605073955.6384-1-efremov@linux.com>
-In-Reply-To: <20200605073955.6384-1-efremov@linux.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 6 Jun 2020 23:43:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARqJpM1m38o_5Ft1HV_sriDTBNE27JgxJfmbv2PM9EjQA@mail.gmail.com>
-Message-ID: <CAK7LNARqJpM1m38o_5Ft1HV_sriDTBNE27JgxJfmbv2PM9EjQA@mail.gmail.com>
-Subject: Re: [PATCH v5] kbuild: add variables for compression tools
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 4:40 PM Denis Efremov <efremov@linux.com> wrote:
->
-> Allow user to use alternative implementations of compression tools,
-> such as pigz, pbzip2, pxz. For example, multi-threaded tools to
-> speed up the build:
-> $ make GZIP=pigz BZIP2=pbzip2
->
-> Variables _GZIP, _BZIP2, _LZOP are used internally because original env
-> vars are reserved by the tools. The use of GZIP in gzip tool is obsolete
-> since 2015. However, alternative implementations (e.g., pigz) still rely
-> on it. BZIP2, BZIP, LZOP vars are not obsolescent.
->
-> The credit goes to @grsecurity.
->
-> As a sidenote, for multi-threaded lzma, xz compression one can use:
-> $ export XZ_OPT="--threads=0"
->
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
-> Changes in v2:
->   - _GZIP used instead of GZIP
->   - tar commands altered to use tools from the vars
-> Changes in v3:
->   - _BZIP2 used instead of BZIP2
->   - _LZOP used instead of LZOP
-> Changes in v4:
->   - Unexports removed from Kbuild.include
->   - MAKEOVERRIDES used in top Makefile
->   - All variables checks removed from scripts
-> Changes in v5:
->   - Conflict with removed LASAT resolved
+On Mon, 1 Jun 2020 14:19:43 -0700
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
+> On Mon, Jun 1, 2020 at 9:18 AM Tomasz Duszynski
+> <tomasz.duszynski@octakon.com> wrote:
+> >
+> > IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
+> > raw concentrations of pollutants. Raw value should be meaningless
+> > before being properly scaled. Because of that description shouldn't
+> > mention raw value unit whatsoever.
+> >
+> > Fix this by rephrasing existing description so it follows conventions
+> > used throughout IIO ABI docs.  
+> 
+> Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
 
-Replaced. Thanks.
+Thanks for tidying that up.
 
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to ignore.
 
+Thanks,
 
--- 
-Best Regards
-Masahiro Yamada
+Jonathan
+
+> 
+> >
+> > Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
+> > Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> > index d3e53a6d8331..5c62bfb0f3f5 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-iio
+> > +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> > @@ -1569,7 +1569,8 @@ What:             /sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
+> >  KernelVersion: 4.3
+> >  Contact:       linux-iio@vger.kernel.org
+> >  Description:
+> > -               Raw (unscaled no offset etc.) percentage reading of a substance.
+> > +               Raw (unscaled no offset etc.) reading of a substance. Units
+> > +               after application of scale and offset are percents.
+> >
+> >  What:          /sys/bus/iio/devices/iio:deviceX/in_resistance_raw
+> >  What:          /sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
+> > --
+> > 2.26.2
+> >  
+
