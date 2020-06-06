@@ -2,69 +2,121 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE0D2067B
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210B62077D
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591464586;
+	bh=InFdTWf+AQ3EEuNVLEAMS/IifpeSAsaN4CaqB7gUAzk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ivB+xpMkXX8VJdtR/JrVA6Rqc25EqRVCsBYb53phXFHCoP03WnQn9pBn6Ws/kUmcB
+	 edE9VJvANYgxDwmjyMWZnhbcmxaEb9fGVsIBy6rOvJus1LdcLv1qQuHBShGuHQK9zO
+	 hKRax7gaXgUZFc6T5Di5nI2E9gvOGPx/i+YWYzWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgFFRR0 (ORCPT
+        id S1728768AbgFFR3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 13:17:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44122 "EHLO mga07.intel.com"
+        Sat, 6 Jun 2020 13:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbgFFRR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 13:17:26 -0400
-IronPort-SDR: 8Q6KPWq+seKknQelPUbgjuXiUpwYkzIio3C2QENmQEF1MqoblsXTuQfbmX8VkaUqtnQaPO646T
- 1nasLXgkGRiQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2020 10:17:24 -0700
-IronPort-SDR: j5v0gMfuGTjpLcr+3dT2X/x/7FkneIpNZ+Q06w7AiHW57U44I1+haxyfwLkFnvCrITwArhsAhc
- FNXDJ8IXMbWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,481,1583222400"; 
-   d="scan'208";a="472257243"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Jun 2020 10:17:22 -0700
-Date:   Sun, 7 Jun 2020 01:18:23 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2][RFC] PM-runtime: Move all runtime usage related
- function to runtime.c
-Message-ID: <20200606171822.GA3705@chenyu-office.sh.intel.com>
-References: <cover.1591380524.git.yu.c.chen@intel.com>
- <3e7c571eb9e444c6e326d5cbb1f6e2dce4bb52fe.1591380524.git.yu.c.chen@intel.com>
+        id S1727906AbgFFR3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 13:29:42 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AA632073E;
+        Sat,  6 Jun 2020 17:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591464582;
+        bh=InFdTWf+AQ3EEuNVLEAMS/IifpeSAsaN4CaqB7gUAzk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=GiJAvw09oFkrMoCXInmQ6jKjBSjNEMyqu4+3zWeDhgsq3R8kVbSyprV8OaKxR3kQ9
+         cUmhveo68DnzuNxdNGDFO08Sr+8GtjwglGcYaQQNqKGTM7uMX3Rpgc+pXN8R/DPTuj
+         V64CNmVgW1ulp4BEKFkczum3vkH5XCCcW8NNXGQQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1A0A935209C2; Sat,  6 Jun 2020 10:29:42 -0700 (PDT)
+Date:   Sat, 6 Jun 2020 10:29:42 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
+Message-ID: <20200606172942.GA30594@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200604225445.GA32319@paulmck-ThinkPad-P72>
+ <20200605131451.GE2750@hirez.programming.kicks-ass.net>
+ <20200605141607.GB4455@paulmck-ThinkPad-P72>
+ <20200605184159.GA4062@paulmck-ThinkPad-P72>
+ <20200606005126.GA21507@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3e7c571eb9e444c6e326d5cbb1f6e2dce4bb52fe.1591380524.git.yu.c.chen@intel.com>
+In-Reply-To: <20200606005126.GA21507@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 03:05:35AM +0800, Chen Yu wrote:
-> In order to track all the runtime usage count change, move the code
-> related to runtime usage count change from pm_runtime.h to runtime.c,
-> so that in runtime.c we can leverage trace event to do the tracking.
-> Meanwhile export pm_runtime_get_noresume() and pm_runtime_put_noidle()
-> so the module can use them.
+On Fri, Jun 05, 2020 at 05:51:26PM -0700, Paul E. McKenney wrote:
+> On Fri, Jun 05, 2020 at 11:41:59AM -0700, Paul E. McKenney wrote:
+> > On Fri, Jun 05, 2020 at 07:16:07AM -0700, Paul E. McKenney wrote:
+> > > On Fri, Jun 05, 2020 at 03:14:51PM +0200, Peter Zijlstra wrote:
+> > > 
+> > > No KCSAN.  GCC 8.2.1.  No cgroups unless the kernel creates some.
+> > > No userspace other than a C-language binary named "init" that
+> > > sleeps in an infinite loop.
+> > > 
+> > > .config attached.
+> > 
+> > And in case it is helpful, here is the output of "git bisect view",
+> > which lists rather more commits than "git bisect run" claims, but there
+> > are only a few scheduler commits below.  I don't see anything that
+> > I can prove can cause this problem, but there are some that are at
+> > least related to this code path.
+> > 
+> > Is there anything that is actually relevant?
 > 
-> No functional change.
->
-There is a compile issue found by lkp, will send a
-new version out.
+> And the run with the WARN and tracing did hit two failures, and the
+> corresponding console logs are in the attached tarball.  Both of them
+> triggered a warning as well as the failure.
 
-Thanks,
-Chenyu
+And the current state of the bisection, for whatever it is worth.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+dbe9337109c2 sched/cpuacct: Fix charge cpuacct.usage_sys
+04f5c362ec6d sched/fair: Replace zero-length array with flexible-array
+95d685935a2e sched/pelt: Sync util/runnable_sum with PELT window when propagating
+12aa2587388d sched/cpuacct: Use __this_cpu_add() instead of this_cpu_ptr()
+7d148be69e3a sched/fair: Optimize enqueue_task_fair()
+9013196a467e Merge branch 'sched/urgent'
+2a0a24ebb499 sched: Make scheduler_ipi inline
+90b5363acd47 sched: Clean up scheduler_ipi()
+b1d1779e5ef7 sched/core: Simplify sched_init()
+12ac6782a40a sched/swait: Reword some of the main description
+17c891ab3491 sched/fair: Use __this_cpu_read() in wake_wide()
+bf2c59fce407 sched/core: Fix illegal RCU from offline CPUs
+f38f12d1e081 sched/fair: Mark sched_init_granularity __init
+5a6d6a6ccb5f sched/fair: Refill bandwidth before scaling
+457d1f465778 sched: Extract the task putting code from pick_next_task()
+d91cecc15662 sched: Make newidle_balance() static again
+36c5bdc43870 sched/topology: Kill SD_LOAD_BALANCE
+e669ac8ab952 sched: Remove checks against SD_LOAD_BALANCE
+9818427c6270 sched/debug: Make sd->flags sysctl read-only
+45da27732b0b sched/fair: find_idlest_group(): Remove unused sd_flag parameter
+586b58cac8b4 exit: Move preemption fixup up, move blocking operations down
+64297f2b03cc sched/fair: Simplify the code of should_we_balance()
+ab93a4bc955b sched/fair: Remove distribute_running from CFS bandwidth
+e98fa02c4f2e sched/fair: Eliminate bandwidth race between throttling and distribution
+f080d93e1d41 sched/debug: Fix trival print_task() format
