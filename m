@@ -2,127 +2,121 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1119C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C26820723
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F4620723
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:39:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nT7hJKA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgFFOjR (ORCPT
+        id S1728768AbgFFOj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:39:17 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:62183
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726340AbgFFOjR (ORCPT
+        Sat, 6 Jun 2020 10:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgFFOj2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:39:17 -0400
-X-IronPort-AV: E=Sophos;i="5.73,480,1583190000"; 
-   d="scan'208";a="350775451"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2020 16:39:14 +0200
-Date:   Sat, 6 Jun 2020 16:39:13 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] coccinelle: api: add kvfree script
-In-Reply-To: <119d91fd-1ad0-8842-10eb-ee8fa16da1b0@web.de>
-Message-ID: <alpine.DEB.2.21.2006061634130.19534@hadrien>
-References: <119d91fd-1ad0-8842-10eb-ee8fa16da1b0@web.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 6 Jun 2020 10:39:28 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997D7C03E96A;
+        Sat,  6 Jun 2020 07:39:28 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id h95so4065228pje.4;
+        Sat, 06 Jun 2020 07:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wqOstxJrjo/D8MxXyGqLeaamC5JLOgifEHoNbT411cg=;
+        b=nT7hJKA5MHFwq8c41LpXMdHu3Tq1XjTubxJ3P60rld5rrdPTG31QFBE/wFG4zdjSN8
+         YCzdWoOURoSsQCPwu82dFWkA7HNsAxVoxJI6JzNqLgk4FCLpaHKJMDxLlCa0AjbYevfm
+         45Qi+Ka7w7Tb8n/vFSGGicNGC287JLypwG4Isk4uzYUA0RXYBENordWyVDnLnn9ZHwVw
+         ukkTQXvL8K2aYEDPGxX8oCncxWp3by8yTqXFeSIxl7EottuJi+LcoNrxtwMFKZboRPXM
+         Vi1TA2MZuiawcnFZ5gaX9vICAPDJY6nO235IYFajpsU6uxnC1tvCOB6G7miCRz95/qES
+         hyvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wqOstxJrjo/D8MxXyGqLeaamC5JLOgifEHoNbT411cg=;
+        b=hduDb2InSpJgK0VPrLL5FiAgg80PgHty31Rtg6lOZJzgf7XL/YoXHQTTLnVO4KT+kM
+         okJRTSckeOliiAyDJg7xr7UqaSYGr4mbPnwNFD5hKCzJni6d9euImP4Cz2bk5msR0GTL
+         Scnnxot1KwvSUMYPzZJps1vsE6ncIIASTX9QxFq+0fDo78qjoiEFstwdDhJo3vSdCRX2
+         BwddpHHvUD8Hg8c3I3pSYYicpXeYR3oqCTBePj+RhGpYmij0tLwasL/397qv1YFYLBgQ
+         Xmvyj35ltFXOUfautYXGuCf1P43/+H9YA/4+7g6I+EdTgwqqRpJ1D/ENnoZvS4nvii8W
+         quLA==
+X-Gm-Message-State: AOAM531VoJw9Nuzn2FZrSJBhoJPkaL8qlo6dICOrlJL+IlAmOE+2fgk2
+        jKn4PiADjhd6OtVOOwDfzJtN1PoP5lY=
+X-Google-Smtp-Source: ABdhPJwhnbejvFdJHOzwgZL6Gzjlwu5DYNJJwe1TYCeqEoQSyxjfTv/iQst5NnyJ5gpCw3x5eQdCnw==
+X-Received: by 2002:a17:90a:d086:: with SMTP id k6mr7709095pju.133.1591454368085;
+        Sat, 06 Jun 2020 07:39:28 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id l63sm2546999pfd.122.2020.06.06.07.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jun 2020 07:39:27 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] media: tvp5150: Add missed media_entity_cleanup()
+Date:   Sat,  6 Jun 2020 22:39:18 +0800
+Message-Id: <20200606143918.2869528-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1629768455-1591454354=:19534"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This driver does not call media_entity_cleanup() in the error handler
+of tvp5150_registered() and tvp5150_remove(), while it has called
+media_entity_pads_init() at first.
+Add the missed calls to fix it.
 
---8323329-1629768455-1591454354=:19534
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Fixes: 0556f1d580d4 ("media: tvp5150: add input source selection of_graph support")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/media/i2c/tvp5150.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index eb39cf5ea089..9df575238952 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1664,8 +1664,10 @@ static int tvp5150_registered(struct v4l2_subdev *sd)
+ 	return 0;
+ 
+ err:
+-	for (i = 0; i < decoder->connectors_num; i++)
++	for (i = 0; i < decoder->connectors_num; i++) {
+ 		media_device_unregister_entity(&decoder->connectors[i].ent);
++		media_entity_cleanup(&decoder->connectors[i].ent);
++	}
+ 	return ret;
+ #endif
+ 
+@@ -2248,8 +2250,10 @@ static int tvp5150_remove(struct i2c_client *c)
+ 
+ 	for (i = 0; i < decoder->connectors_num; i++)
+ 		v4l2_fwnode_connector_free(&decoder->connectors[i].base);
+-	for (i = 0; i < decoder->connectors_num; i++)
++	for (i = 0; i < decoder->connectors_num; i++) {
+ 		media_device_unregister_entity(&decoder->connectors[i].ent);
++		media_entity_cleanup(&decoder->connectors[i].ent);
++	}
+ 	v4l2_async_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&decoder->hdl);
+ 	pm_runtime_disable(&c->dev);
+-- 
+2.26.2
 
-
-On Sat, 6 Jun 2020, Markus Elfring wrote:
-
-> > +@choice@
-> > +expression E, E1;
-> > +position kok, vok;
-> > +@@
-> > +
-> > +(
-> > +  if (...) {
-> > +    ...
-> > +    E = \(kmalloc@kok\|…\)(...)
->
-> Further implementation details from this SmPL script caught my software
-> development attention.
->
-> * Is there a need to add the specification “when any” to the SmPL ellipses
->   before such assignment statements?
-
-Having multiple assignments to kmalloc in one if seems unlikely, and
-perhaps one would want to think about such a case differently, so it seems
-ok as is.
-
->
-> * A limited search approach was expressed. Will additional source code variations
->   become relevant?
->   + switch statement
->   + if branches with single statements
->   + conditional operator
-
-The point is that there is a kmalloc in one branch and a vmalloc in
-another branch, so a if with a single branch doesn't seem relevant.
-
-The other cases sem highly improbable.
-
->
-> > +@opportunity depends on !patch …@
-> …
-> > +  E = \(kmalloc\|…\)(..., size, ...)
-> > +  ... when != E = E1
-> > +      when != size = E1
->
-> I wonder that two assignments should be excluded here according to
-> the same expression metavariable.
-
-Doesn't matter.  The metavariables are considered separately in the
-different whens.
-
->
-> +@pkfree depends on patch exists@
-> …
-> +- \(kfree\|kvfree\)(E)
-> ++ vfree(E)
->
-> Would you like to use a SmPL code variant like the following
-> at any more places?
-> (Is it occasionally helpful to increase the change precision?)
->
-> +-\(kfree\|kvfree\)
-> ++vfree
-> +      (E)
-
-"increase the change precision" seems to be an obscure way to say "improve
-the formatting".  Indeed, leaving (E) as is would have the effect of not
-changing the formatting.  But the problem seems unlikely for a functoin
-with such a short name.  And this presentation will likely run afoul of
-the fact that you can't attach + code to a disjunction.  So the original
-presentation was more concise, and should be fine in practice.
-
-julia
---8323329-1629768455-1591454354=:19534--
