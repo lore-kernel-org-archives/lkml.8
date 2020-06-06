@@ -2,125 +2,108 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F39C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 01:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D26AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 01:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0711D2074B
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 01:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EBF2065C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 01:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="guyzmat0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hZPAno3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgFFBnD (ORCPT
+        id S1728564AbgFFBpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 21:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
+        Fri, 5 Jun 2020 21:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728426AbgFFBnC (ORCPT
+        with ESMTP id S1726803AbgFFBpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 21:43:02 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FDE9C08C5C3
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 18:43:01 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b201so5790256pfb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 18:43:01 -0700 (PDT)
+        Fri, 5 Jun 2020 21:45:41 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A23C08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 18:45:40 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 185so5958872pgb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 18:45:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=DbXAp5/mOHSUcFP2m8gAxFQyaj9/4HkDHeSJAHvf2Nk=;
-        b=guyzmat0kRSj8x3VdhawIMvoQHYsLeFauJNEXxE0MRbUB2V51M1Vvl3QRecFNf3hcH
-         hM0XPrc64T9pNtRjIbBF8DNKIldsQ2lDkAjx/3rWjYCSovwBPUEBRshuSiA2p8uJ0CH5
-         pjf1ltkaAt7VD+v+zlWwja4/tl3TBWXxOSrlavZf0WAewZNGE2prQYLpIGDjR6CjQhK9
-         Gubub7dH84Qm+DJ5tEkW3fO/fPWUBkGmjaOsWgBr1JW9CnphaFcJdQngcrvLWKpXaase
-         WJKTu12+VxHd6hrhmvsqLzCit5j20BkiOUzQ4tz5W0jEQCNOK3j4fQgI2bo0ZUk1JcAl
-         TGQQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EYATkoDd/DlTVvMSnKtKT7ZrCQbghipgNSfif3PPTdQ=;
+        b=hZPAno3Zqe8dlYsL2LzWn8Cqbw5Cy5a1a5fGUH7kjV6Aa8+ckDOu3YxIijiEO9YlRg
+         pTgQlBFXKXs/hWsbaLmVRsuzPAujEobi8t/Y9ydG3Jz0HbuKrJinEMzu4mf2CsSC2QY2
+         8KgrfNit1c2PnHzP9N69IE2PvHFFPWPNxYRfA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=DbXAp5/mOHSUcFP2m8gAxFQyaj9/4HkDHeSJAHvf2Nk=;
-        b=oJ21GRv0Ug0CmbdG8MDcUWYHHd2Oyyffshrg339kbFQLXOivu9VLBLkr/ICjYcxE+D
-         knfeVRGhMR/aAbXjrC5v79C6ahoM28h3SSTvscFkfy3Esth1FMMh5X5LkhDEcqBLsfS5
-         7axb4thB9vVzi3QoF7KxW7L3FO+4unz7RHTL3rG2umEG4yuRvPdKg3mo67HuF9SOvyYA
-         v4D3swIaofhuq2BD3eHh2RlslY9sOHznktY54KU+wR8A/EFXpEgX2w0tW0a4zGnuM7cU
-         LxfheGos21orOPfMLdByQ3dsLIC6O8lNWGqZHE4M4cdsi28KUJ6bGFonJ3tbDHUK5IGw
-         z3ow==
-X-Gm-Message-State: AOAM5339ACvlY8oVxCpRquSRc0PjDLmJjHpgDrCbIv+G/cLFnU3nrYdL
-        Waz/B3VNSYtMukIWGHEnSG36vw==
-X-Google-Smtp-Source: ABdhPJxcd87YcZ9bbiQmBGZIYjSw43dGEGVkhQnC2vBIXHHobdOt4ZFUVFlarn1pk1MXioPWHpje/Q==
-X-Received: by 2002:a63:b0f:: with SMTP id 15mr11589015pgl.6.1591407780601;
-        Fri, 05 Jun 2020 18:43:00 -0700 (PDT)
-Received: from [10.110.2.214] ([45.135.186.59])
-        by smtp.gmail.com with ESMTPSA id y4sm599785pgr.76.2020.06.05.18.42.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 18:42:59 -0700 (PDT)
-Subject: Re: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        wangzhou1 <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kbuild-all@lists.01.org
-References: <202006032110.BEbKqovX%lkp@intel.com>
- <1591241524-6452-1-git-send-email-zhangfei.gao@linaro.org>
- <20200604033918.GA2286@gondor.apana.org.au>
- <b6ad8af2-1cb7-faac-0446-5e09e97f3616@linaro.org>
- <20200604061811.GA28759@gondor.apana.org.au>
- <b23433f8-d95d-8142-c830-fb92e5ccd4a1@linaro.org>
- <20200604065009.GA29822@gondor.apana.org.au>
- <f8dceec5-6835-c064-bb43-fd12668c2dbb@linaro.org>
- <20200605121703.GA3792@gondor.apana.org.au>
- <47b747d2-3b27-4f39-85c9-204c2b8a92e1@linaro.org>
- <20200605154902.GA1373@sol.localdomain>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <e17e20cf-c62b-e4a6-4acc-e08e1c655c90@linaro.org>
-Date:   Sat, 6 Jun 2020 09:42:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EYATkoDd/DlTVvMSnKtKT7ZrCQbghipgNSfif3PPTdQ=;
+        b=qjwtxBr4JwsbccM7CWiN3gW72ASXte71x2pF+mKcEct6dx3qlHOZdcwD6y/c3I8lb5
+         2IsqCiSMoVPANZ99c0G6iaYKM1B5w6wOVlXNR/cA+aULpjTYc9DDXB5V/FBKEpcWvO2J
+         +CivEsNN1vPIOjVj90bv8uhXb5mM2gvMiaUSVj0Qiabr99i44ub7jePL2BiiLX3U6uxS
+         ovgr/ZiUEnEHt/Mnp8tcrBKw0N+Uuxv3vtkKL3TzZ0yudXWsAyqrGR/gms4hIUzeMoTh
+         UgnBVXYXiOCm0hggztY3xj6RpuE9waH5oXcHp/iEa3E4wYqMe+KN8dMY25KzL0lQ2s8t
+         l6Sg==
+X-Gm-Message-State: AOAM533mGzoHtZ33QHl2b4u7R+xwXIWi7CpvASJ2xdFf7/APW1cCtzYY
+        geC9HUkcoDJiNoTZCwKEaB1bZw==
+X-Google-Smtp-Source: ABdhPJxjBK6bdJJIde1SuASUwSUrqHloLqXlowG4H6YmCkN1UfVnFk8Oo7dg72GZPLT/Vb2F4UEmuw==
+X-Received: by 2002:a62:c185:: with SMTP id i127mr12889207pfg.132.1591407939582;
+        Fri, 05 Jun 2020 18:45:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m4sm531153pgp.32.2020.06.05.18.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2020 18:45:38 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 18:45:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Relocate execve() sanity checks
+Message-ID: <202006051844.2EBA35A7@keescook>
+References: <20200605160013.3954297-1-keescook@chromium.org>
+ <20200605174053.eea9557878d81024d2519e47@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200605154902.GA1373@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605174053.eea9557878d81024d2519e47@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 05, 2020 at 05:40:53PM -0700, Andrew Morton wrote:
+> On Fri,  5 Jun 2020 09:00:10 -0700 Kees Cook <keescook@chromium.org> wrote:
+> 
+> > While looking at the code paths for the proposed O_MAYEXEC flag, I saw
+> > some things that looked like they should be fixed up.
+> > 
+> >   exec: Change uselib(2) IS_SREG() failure to EACCES
+> > 	This just regularizes the return code on uselib(2).
+> > 
+> >   exec: Move S_ISREG() check earlier
+> > 	This moves the S_ISREG() check even earlier than it was already.
+> > 
+> >   exec: Move path_noexec() check earlier
+> > 	This adds the path_noexec() check to the same place as the
+> > 	S_ISREG() check.
+> 
+> Thanks.
+> 
+> These don't seem super-urgent and they aren't super-reviewed, so I
+> suggest we hold them off until the next cycle?
 
+Agreed; that's fine by me. It's mostly clean up and preparation for
+performing future checking through the MAY_EXEC path.
 
-On 2020/6/5 下午11:49, Eric Biggers wrote:
-> On Fri, Jun 05, 2020 at 11:26:20PM +0800, Zhangfei Gao wrote:
->>
->> On 2020/6/5 下午8:17, Herbert Xu wrote:
->>> On Fri, Jun 05, 2020 at 05:34:32PM +0800, Zhangfei Gao wrote:
->>>> Will add a check after the copy.
->>>>
->>>>           strlcpy(interface.name, pdev->driver->name, sizeof(interface.name));
->>>>           if (strlen(pdev->driver->name) != strlen(interface.name))
->>>>                   return -EINVAL;
->>> You don't need to do strlen.  The function strlcpy returns the
->>> length of the source string.
->>>
->>> Better yet use strscpy which will even return an error for you.
->>>
->>>
->> Yes, good idea, we can use strscpy.
->>
->> +       int ret;
->>
->> -       strncpy(interface.name, pdev->driver->name, sizeof(interface.name));
->> +       ret = strscpy(interface.name, pdev->driver->name,
->> sizeof(interface.name));
->> +       if (ret < 0)
->> +               return ret;
-> You might want to use -ENAMETOOLONG instead of the strscpy return value of
-> -E2BIG.
-Yes, make sense, thanks Eric
+And I'd love to get an Ack from Al or Aleksa, nudge nudge. :)
 
+-- 
+Kees Cook
