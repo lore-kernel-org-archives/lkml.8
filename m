@@ -2,170 +2,361 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37159C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 23:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 23:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2213206A2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 23:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQY+qCqg"
+	by mail.kernel.org (Postfix) with ESMTP id F33A320723
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 23:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgFFXPe (ORCPT
+        id S1728885AbgFFXU6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 19:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgFFXPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 19:15:33 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE5AC03E96A
-        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 16:15:32 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id p20so14530921iop.11
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 16:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8JwwA28kFEr2K+hwz3o2CYavppFRtw92oMBlKZ9y8AI=;
-        b=LQY+qCqgDdWGF48D01HaAcNl+szEzhD/WznXKmRktd/679xIRT9UKnJitNpkdGCLoz
-         +SHPCuoI4znTJVjEbaF5vDqzr2Nfre8/nWn/SJOT9dBCTLJHp6kCLLPQ2I4ldwvW6rem
-         LbxR0EYHErz9/9OvgMaB+4lvUMpPO3AUL47U0cwH+eMzqRkq15/V69bTZpL4dutoB570
-         vbc8zBe4gnSE6hx5UwncoZvIXlo+QGxDvEcSu5M1g9/5i9V8GSgb94QhV8RA/gMfd36W
-         FhhNnGiPfWioSbqKRYkcL7Sakj88AmyMCMBFDh8K1TmWyVXnbV2XjME3YunH2+8zLvzH
-         blKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8JwwA28kFEr2K+hwz3o2CYavppFRtw92oMBlKZ9y8AI=;
-        b=PCSnQoCYoSnzCff8wd+YeTUEyPg85xCKf+w7eSim1kVTrSA7s/9dngN8I6siOdy5Gi
-         E2pxUqQkHXKghGKAzz2Cdkwaw4JK2EHYKQKLpBlSfqgnONhci+imo32QvXqPguUn3nPJ
-         UHlr/P4dKmiKjTvdKfN7526yMYSTgYTZv8CTYo1bNFveeBkJO9RM1P/rarlPs/btjGNM
-         ATTIhEZicYQQ+J4fVPLKTvBWXN/02YbJGtmDFaCrd31GbW+uedxCSJodAZNAZr9JUjKw
-         GVKK/A2fmffK79lduuvrVg0ovUgbCHnAalo5664jSSqi2L7Z3Psyx4QRy+Vj5aQ5giZM
-         QY4A==
-X-Gm-Message-State: AOAM530+TppCYSed3ScQyFUtbCNsqlBVPTWrremsrbBUByU6x3wm2C68
-        MJgB8M5QBbZ6lIdvNvceBwN1Jw8Czz8x8aCzvHA=
-X-Google-Smtp-Source: ABdhPJywFdNHAguqbB6g0aoIh8Y5HlKBy217pJd6EYkPSv5G9eGrwEL6bWP7XkCzdMuMsHLCtVUhY5FIzdYmS+ihntw=
-X-Received: by 2002:a02:390b:: with SMTP id l11mr15291247jaa.54.1591485331321;
- Sat, 06 Jun 2020 16:15:31 -0700 (PDT)
+        Sat, 6 Jun 2020 19:20:58 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21233 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728479AbgFFXU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 19:20:57 -0400
+IronPort-SDR: HlWn9kk24lSYkG4M4oypZmDK1a6q9Q8x6spKvnCiqQgCz3K8h8dITL9FGuQPOxHKNYZNbX4kXz
+ tGJ7pX1H/OHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2020 16:20:52 -0700
+IronPort-SDR: ti0jvJLpGcgLyivV4rGyGGTAd4EL7uaOFyxLjmxnunkK0gCGCEjCcju7bcu7vpY6eLJE8GLH2L
+ aHQrjgrwqLiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,482,1583222400"; 
+   d="scan'208";a="446311414"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2020 16:20:52 -0700
+Received: from lcsmsx603.ger.corp.intel.com (10.109.210.12) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 6 Jun 2020 16:20:52 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ LCSMSX603.ger.corp.intel.com (10.109.210.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 7 Jun 2020 02:20:49 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Sun, 7 Jun 2020 02:20:49 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Bean Huo <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "ebiggers@kernel.org" <ebiggers@kernel.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 1/2] scsi: ufs: Add SPDX GPL-2.0 to replace GPL v2
+ boilerplate
+Thread-Topic: [PATCH v3 1/2] scsi: ufs: Add SPDX GPL-2.0 to replace GPL v2
+ boilerplate
+Thread-Index: AQHWO3S8UoN7m4BGoEOt/WDIdsv7Y6jMOuqg
+Date:   Sat, 6 Jun 2020 23:20:49 +0000
+Message-ID: <b9f2970c5061433b8acc16a10885e5b4@intel.com>
+References: <20200605200520.20831-1-huobean@gmail.com>
+ <20200605200520.20831-2-huobean@gmail.com>
+In-Reply-To: <20200605200520.20831-2-huobean@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <042eddd4b87f0db3588a79d829afe6b23fa8365c.1590017578.git.syednwaris@gmail.com>
- <202005310310.EOelU2v3%lkp@intel.com> <CACG_h5oHmkAp68q0EFXZEWhG15EQSHLgx=78gZ72aLShZOztFA@mail.gmail.com>
- <20200605122428.GD2428291@smile.fi.intel.com>
-In-Reply-To: <20200605122428.GD2428291@smile.fi.intel.com>
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-Date:   Sun, 7 Jun 2020 04:45:19 +0530
-Message-ID: <CACG_h5pHC1gQ62zAatUvgHakuGO6P-OLEwMHoU4_ObNDufXFqA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/4] lib/test_bitmap.c: Add for_each_set_clump test cases
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kbuild-all@lists.01.org,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 5:54 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jun 05, 2020 at 02:12:54AM +0530, Syed Nayyar Waris wrote:
-> > On Sun, May 31, 2020 at 12:50 AM kbuild test robot <lkp@intel.com> wrote:
->
-> > > >> WARNING: modpost: lib/test_bitmap.o(.data+0xe80): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp1
-> > > The variable clump_test_data references
-> > > the variable __initconst clump_exp1
-> > > If the reference is valid then annotate the
-> > > variable with or __refdata (see linux/init.h) or name the variable:
-> > >
-> > > --
-> > > >> WARNING: modpost: lib/test_bitmap.o(.data+0xec8): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp2
-> > > The variable clump_test_data references
-> > > the variable __initconst clump_exp2
-> > > If the reference is valid then annotate the
-> > > variable with or __refdata (see linux/init.h) or name the variable:
-> > >
-> > > --
-> > > >> WARNING: modpost: lib/test_bitmap.o(.data+0xf10): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp3
-> > > The variable clump_test_data references
-> > > the variable __initconst clump_exp3
-> > > If the reference is valid then annotate the
-> > > variable with or __refdata (see linux/init.h) or name the variable:
-> > >
-> > > --
-> > > >> WARNING: modpost: lib/test_bitmap.o(.data+0xf58): Section mismatch in reference from the variable clump_test_data to the variable .init.rodata:clump_exp4
-> > > The variable clump_test_data references
-> > > the variable __initconst clump_exp4
-> > > If the reference is valid then annotate the
-> > > variable with or __refdata (see linux/init.h) or name the variable:
->
-> > I am unable to reproduce the compilation warning.
->
-> You have to enable section mismatch checker.
->
-> > I ran the command:
-> > make W=1 C=1 ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'  lib/
-> >
-> > But the compilation warning didn't show up. Can anyone please point to me
-> > what I am doing wrong here? How shall I reproduce the warning? Thanks !
->
-> You put some data into init section of the object, while you are trying to
-> access it from non-init one. It's easy-to-fix issue.
->
+> 
+> From: Bean Huo <beanhuo@micron.com>
+> 
+> Add SPDX GPL-2.0 to UFS driver files that specified the GPL version 2 license,
+> remove the full boilerplate text.
+> 
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+LGTM.
+Thanks
+Tomas
+
+> ---
+>  drivers/scsi/ufs/ufs.h           | 27 +--------------------------
+>  drivers/scsi/ufs/ufshcd-pci.c    | 25 +------------------------
+>  drivers/scsi/ufs/ufshcd-pltfrm.c | 27 +--------------------------
+>  drivers/scsi/ufs/ufshcd.c        | 30 +-----------------------------
+>  drivers/scsi/ufs/ufshcd.h        | 27 +--------------------------
+>  drivers/scsi/ufs/ufshci.h        | 27 +--------------------------
+>  6 files changed, 6 insertions(+), 157 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h index
+> c70845d41449..7df4bdc813d6 100644
+> --- a/drivers/scsi/ufs/ufs.h
+> +++ b/drivers/scsi/ufs/ufs.h
+> @@ -1,36 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>  /*
+>   * Universal Flash Storage Host controller driver
+> - *
+> - * This code is based on drivers/scsi/ufs/ufs.h
+>   * Copyright (C) 2011-2013 Samsung India Software Operations
+>   *
+>   * Authors:
+>   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+>   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - * See the COPYING file in the top-level directory or visit
+> - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> - * without warranty of any kind. You are solely responsible for
+> - * determining the appropriateness of using and distributing
+> - * the program and assume all risks associated with your exercise
+> - * of rights with respect to the program, including but not limited
+> - * to infringement of third party rights, the risks and costs of
+> - * program errors, damage to or loss of data, programs or equipment,
+> - * and unavailability or interruption of operations. Under no
+> - * circumstances will the contributor of this Program be liable for
+> - * any damages of any kind arising from your use or distribution of
+> - * this program.
+>   */
+> 
+>  #ifndef _UFS_H
+> diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c index
+> 8f78a8151499..f407b13883ac 100644
+> --- a/drivers/scsi/ufs/ufshcd-pci.c
+> +++ b/drivers/scsi/ufs/ufshcd-pci.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   * Universal Flash Storage Host controller PCI glue driver
+>   *
+> @@ -7,30 +8,6 @@
+>   * Authors:
+>   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+>   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - * See the COPYING file in the top-level directory or visit
+> - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> - * without warranty of any kind. You are solely responsible for
+> - * determining the appropriateness of using and distributing
+> - * the program and assume all risks associated with your exercise
+> - * of rights with respect to the program, including but not limited
+> - * to infringement of third party rights, the risks and costs of
+> - * program errors, damage to or loss of data, programs or equipment,
+> - * and unavailability or interruption of operations. Under no
+> - * circumstances will the contributor of this Program be liable for
+> - * any damages of any kind arising from your use or distribution of
+> - * this program.
+>   */
+> 
+>  #include "ufshcd.h"
+> diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> index 76f9be71c31b..3db0af66c71c 100644
+> --- a/drivers/scsi/ufs/ufshcd-pltfrm.c
+> +++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+> @@ -1,36 +1,11 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   * Universal Flash Storage Host controller Platform bus based glue driver
+> - *
+> - * This code is based on drivers/scsi/ufs/ufshcd-pltfrm.c
+>   * Copyright (C) 2011-2013 Samsung India Software Operations
+>   *
+>   * Authors:
+>   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+>   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - * See the COPYING file in the top-level directory or visit
+> - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> - * without warranty of any kind. You are solely responsible for
+> - * determining the appropriateness of using and distributing
+> - * the program and assume all risks associated with your exercise
+> - * of rights with respect to the program, including but not limited
+> - * to infringement of third party rights, the risks and costs of
+> - * program errors, damage to or loss of data, programs or equipment,
+> - * and unavailability or interruption of operations. Under no
+> - * circumstances will the contributor of this Program be liable for
+> - * any damages of any kind arising from your use or distribution of
+> - * this program.
+>   */
+> 
+>  #include <linux/platform_device.h>
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
+> ad4fc829cbb2..ec4f55211648 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -1,40 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+>   * Universal Flash Storage Host controller driver Core
+> - *
+> - * This code is based on drivers/scsi/ufs/ufshcd.c
+>   * Copyright (C) 2011-2013 Samsung India Software Operations
+>   * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+>   *
+>   * Authors:
+>   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+>   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - * See the COPYING file in the top-level directory or visit
+> - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> - * without warranty of any kind. You are solely responsible for
+> - * determining the appropriateness of using and distributing
+> - * the program and assume all risks associated with your exercise
+> - * of rights with respect to the program, including but not limited
+> - * to infringement of third party rights, the risks and costs of
+> - * program errors, damage to or loss of data, programs or equipment,
+> - * and unavailability or interruption of operations. Under no
+> - * circumstances will the contributor of this Program be liable for
+> - * any damages of any kind arising from your use or distribution of
+> - * this program.
+> - *
+> - * The Linux Foundation chooses to take subject only to the GPLv2
+> - * license terms, and distributes only under these terms.
+>   */
+> 
+>  #include <linux/async.h>
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h index
+> bf97d616e597..ef92c4a9e378 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -1,37 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>  /*
+>   * Universal Flash Storage Host controller driver
+> - *
+> - * This code is based on drivers/scsi/ufs/ufshcd.h
+>   * Copyright (C) 2011-2013 Samsung India Software Operations
+>   * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+>   *
+>   * Authors:
+>   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+>   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - * See the COPYING file in the top-level directory or visit
+> - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> - * without warranty of any kind. You are solely responsible for
+> - * determining the appropriateness of using and distributing
+> - * the program and assume all risks associated with your exercise
+> - * of rights with respect to the program, including but not limited
+> - * to infringement of third party rights, the risks and costs of
+> - * program errors, damage to or loss of data, programs or equipment,
+> - * and unavailability or interruption of operations. Under no
+> - * circumstances will the contributor of this Program be liable for
+> - * any damages of any kind arising from your use or distribution of
+> - * this program.
+>   */
+> 
+>  #ifndef _UFSHCD_H
+> diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h index
+> c2961d37cc1c..2c1c7a277430 100644
+> --- a/drivers/scsi/ufs/ufshci.h
+> +++ b/drivers/scsi/ufs/ufshci.h
+> @@ -1,36 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>  /*
+>   * Universal Flash Storage Host controller driver
+> - *
+> - * This code is based on drivers/scsi/ufs/ufshci.h
+>   * Copyright (C) 2011-2013 Samsung India Software Operations
+>   *
+>   * Authors:
+>   *	Santosh Yaraganavi <santosh.sy@samsung.com>
+>   *	Vinayak Holikatti <h.vinayak@samsung.com>
+> - *
+> - * This program is free software; you can redistribute it and/or
+> - * modify it under the terms of the GNU General Public License
+> - * as published by the Free Software Foundation; either version 2
+> - * of the License, or (at your option) any later version.
+> - * See the COPYING file in the top-level directory or visit
+> - * <http://www.gnu.org/licenses/gpl-2.0.html>
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * This program is provided "AS IS" and "WITH ALL FAULTS" and
+> - * without warranty of any kind. You are solely responsible for
+> - * determining the appropriateness of using and distributing
+> - * the program and assume all risks associated with your exercise
+> - * of rights with respect to the program, including but not limited
+> - * to infringement of third party rights, the risks and costs of
+> - * program errors, damage to or loss of data, programs or equipment,
+> - * and unavailability or interruption of operations. Under no
+> - * circumstances will the contributor of this Program be liable for
+> - * any damages of any kind arising from your use or distribution of
+> - * this program.
+>   */
+> 
+>  #ifndef _UFSHCI_H
 > --
-> With Best Regards,
-> Andy Shevchenko
+> 2.17.1
 
-Thanks! I have made code changes for the above warning. Actually I am
-still unable to reproduce the compilation warning. But I believe the
-following code fix will fix the compilation warning:
-
-In file lib/test_bitmap.c
-
-@@ -692,7 +692,7 @@ struct clump_test_data_params {
-        unsigned long const *exp;
- };
-
--struct clump_test_data_params clump_test_data[] =
-+static struct clump_test_data_params clump_test_data[] __initdata =
-                                        { {{0}, 2, 0, 64, 8, clump_exp1},
-                                        {{0}, 8, 2, 240, 24, clump_exp2},
-                                        {{0}, 8, 10, 240, 30, clump_exp3},
-
-
-
-Let me know if I should submit a new patchset (v8) for
-'for_each_set_clump' including above code fix.
-
-Just to share how I attempted to reproduce the warning (but unsuccessful):
-
-Step 1: Use the config file in attachment. Download, extract, rename
-file to .config at the root of the tree.
-Step 2: '$ make lib/'
-No warning reproduced after above step 2.
-Step 3: '$ make W=1 C=1 ARCH=x86_64 CF='-fdiagnostic-prefix
--D__CHECK_ENDIAN__' lib/'
-After step 3 I got error in build:
-scripts/kconfig/conf  --syncconfig Kconfig
-  CHECK   scripts/mod/empty.c
-No such file: asan-globals=1
-scripts/Makefile.build:266: recipe for target 'scripts/mod/empty.o' failed
-make[1]: *** [scripts/mod/empty.o] Error 1
-Makefile:1147: recipe for target 'prepare0' failed
-make: *** [prepare0] Error 2
-
-The command in above step 3 was mentioned in the bot mail.
-
-Regards
-Syed Nayyar Waris
