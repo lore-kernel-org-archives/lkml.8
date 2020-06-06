@@ -2,38 +2,38 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F34820663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8FE206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgFGJgK (ORCPT
+        id S1726526AbgFGJgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 05:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54938 "EHLO
+        Sun, 7 Jun 2020 05:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgFGJgH (ORCPT
+        with ESMTP id S1726418AbgFGJgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jun 2020 05:36:07 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B06D5C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 02:36:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA65FC08C5C2;
+        Sun,  7 Jun 2020 02:36:06 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jhrie-0000K4-Ui; Sun, 07 Jun 2020 11:35:57 +0200
+        id 1jhrii-0000LD-62; Sun, 07 Jun 2020 11:36:00 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id F02F5FF805;
-        Sun,  7 Jun 2020 11:35:55 +0200 (CEST)
-Message-Id: <20200606215114.380723277@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id A89A110108F;
+        Sun,  7 Jun 2020 11:35:59 +0200 (CEST)
+Message-Id: <20200606221532.080560273@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Sat, 06 Jun 2020 23:51:14 +0200
+Date:   Sat, 06 Jun 2020 23:51:17 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Miklos Szeredi <miklos@szeredi.hu>, x86@kernel.org,
@@ -41,8 +41,12 @@ Cc:     Miklos Szeredi <miklos@szeredi.hu>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Juergen Gross <jgross@suse.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [patch 0/3] vdso: Unbreak VDSO with PV and HyperV clocksources
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        stable@vger.kernel.org
+Subject: [patch 3/3] x86/vdso: Unbreak paravirt VDSO clocks
+References: <20200606215114.380723277@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -52,34 +56,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos reported [1] that the recent VDSO changes broke paravirt clocksource
-based VDSO in the case that the clocksource is invalidated by the
-hypervisor which happens after a suspend/resume cycle of the host.
+The conversion of x86 VDSO to the generic clock mode storage broke the
+paravirt and hyperv clocksource logic. These clock sources have their own
+internal sequence counter to validate the clocksource at the point of
+reading it. This is necessary because the hypervisor can invalidate the
+clocksource asynchronously so a check during the VDSO data update is not
+sufficient. If the internal check during read invalidates the clocksource
+the read return U64_MAX. The original code checked this efficiently by
+testing whether the result (casted to signed) is negative, i.e. bit 63 is
+set. This was done that way because an extra indicator for the validity had
+more overhead.
 
-The result is a stale clocksource which is about 2200 seconds ahead of the
-actual time and jumps forward by 2200 seconds once 2200 seconds have
-elapsed.
+The conversion broke this check because the check was replaced by a check
+for a valid VDSO clock mode.
 
-The reason for this is the core code change which optimized the VDSO
-clocksource validation by checking for the clocksource mode instead of
-using the rather subtle check for the clocksource read return value whether
-it has bit 63 set.
+The wreckage manifests itself when the paravirt clock is installed as a
+valid VDSO clock and during runtime invalidated by the hypervisor,
+e.g. after a host suspend/resume cycle. After the invalidation the read
+function returns U64_MAX which is used as cycles and makes the clock jump
+by ~2200 seconds, and become stale until the 2200 seconds have elapsed
+where it starts to jump again. The period of this effect depends on the
+shift/mult pair of the clocksource and the jumps and staleness are an
+artifact of undefined but reproducible behaviour of math overflow.
 
-For some reason my brain blanked when doing that change, even if I should
-have known better.
+Implement an x86 version of the new vdso_cycles_ok() inline which adds this
+check back and a variant of vdso_clocksource_ok() which lets the compiler
+optimize it out to avoid the extra conditional. That's suboptimal when the
+system does not have a VDSO capable clocksource, but that's not the case
+which is optimized for.
 
-The following series restores the previous behaviour but preserves the
-initially intended optimization for architectures which don't need that PV
-handling.
-
-Thanks,
-
-	tglx
-
-[1] https://lore.kernel.org/r/CAJfpegstNYeseo_C4KOF9Y74qRxr78x2tK-9rTgmYM4CK30nRQ@mail.gmail.com
-
-8<-----------------
+Reported-by: Miklos Szeredi <miklos@szeredi.hu>
+Fixes: 5d51bee725cc ("clocksource: Add common vdso clock mode storage")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+---
  arch/x86/include/asm/vdso/gettimeofday.h |   18 ++++++++++++++++++
- kernel/time/clocksource.c                |    2 --
- lib/vdso/gettimeofday.c                  |   19 +++++++++++++++++++
- 3 files changed, 37 insertions(+), 2 deletions(-)
+ 1 file changed, 18 insertions(+)
+
+--- a/arch/x86/include/asm/vdso/gettimeofday.h
++++ b/arch/x86/include/asm/vdso/gettimeofday.h
+@@ -271,6 +271,24 @@ static __always_inline const struct vdso
+ 	return __vdso_data;
+ }
+ 
++static inline bool arch_vdso_clocksource_ok(const struct vdso_data *vd)
++{
++	return true;
++}
++#define vdso_clocksource_ok arch_vdso_clocksource_ok
++
++/*
++ * Clocksource read value validation to handle PV and HyperV clocksources
++ * which can be invalidated asynchronously and indicate invalidation by
++ * returning U64_MAX, which can be effectively tested by checking for a
++ * negative value after casting it to s64.
++ */
++static inline bool arch_vdso_cycles_ok(u64 cycles)
++{
++	return (s64)cycles >= 0;
++}
++#define vdso_cycles_ok arch_vdso_cycles_ok
++
+ /*
+  * x86 specific delta calculation.
+  *
+
