@@ -4,188 +4,185 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE22BC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9000C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD81D206DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA60F2065C
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgFFEgk (ORCPT
+        id S1726329AbgFFEpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 00:36:40 -0400
-Received: from [192.146.154.243] ([192.146.154.243]:59784 "EHLO
-        mcp01.nutanix.com" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725931AbgFFEgj (ORCPT
+        Sat, 6 Jun 2020 00:45:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18562 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725931AbgFFEpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 00:36:39 -0400
-X-Greylist: delayed 557 seconds by postgrey-1.27 at vger.kernel.org; Sat, 06 Jun 2020 00:36:39 EDT
-Received: from C02Z20B5LVDL.corp.nutanix.com (unknown [10.150.245.9])
-        by mcp01.nutanix.com (Postfix) with ESMTP id A26EB102CA91;
-        Sat,  6 Jun 2020 04:27:18 +0000 (UTC)
-From:   Eiichi Tsukata <eiichi.tsukata@nutanix.com>
-To:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     felipe.franciosi@nutanix.com, rkrcmar@redhat.com,
-        Eiichi Tsukata <eiichi.tsukata@nutanix.com>
-Subject: [RFC PATCH] KVM: x86: Fix APIC page invalidation race
-Date:   Sat,  6 Jun 2020 13:26:27 +0900
-Message-Id: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
-X-Mailer: git-send-email 2.25.0
+        Sat, 6 Jun 2020 00:45:19 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0564Xe3r140479;
+        Sat, 6 Jun 2020 00:45:16 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g41c0bv2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jun 2020 00:45:15 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0564ivrh026510;
+        Sat, 6 Jun 2020 04:45:13 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma01fra.de.ibm.com with ESMTP id 31g2s7r1nn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 06 Jun 2020 04:45:13 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0564jBRL47775810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 6 Jun 2020 04:45:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 628ADAE057;
+        Sat,  6 Jun 2020 04:45:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC231AE053;
+        Sat,  6 Jun 2020 04:45:09 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.79.181.79])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  6 Jun 2020 04:45:09 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     hbathini@linux.ibm.com, mahesh@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
+Subject: [PATCH] powerpc/fadump: update kernel logs before fadump crash begins
+Date:   Sat,  6 Jun 2020 10:15:06 +0530
+Message-Id: <20200606044506.44551-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-06_01:2020-06-04,2020-06-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=999
+ bulkscore=0 suspectscore=1 cotscore=-2147483648 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006060029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit b1394e745b94 ("KVM: x86: fix APIC page invalidation") tried to
-fix inappropriate APIC page invalidation by re-introducing arch specific
-kvm_arch_mmu_notifier_invalidate_range() and calling it from
-kvm_mmu_notifier_invalidate_range_start. But threre could be the
-following race because VMCS APIC address cache can be updated
-*before* it is unmapped.
+When we hit the fadump crash via the panic path the pstore update is
+missing. This is observed when commit 8341f2f222d7 ("sysrq: Use panic()
+to force a crash") changed the sysrq-trigger to take panic path instead
+of die path.
 
-Race:
-  (Invalidator) kvm_mmu_notifier_invalidate_range_start()
-  (Invalidator) kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD)
-  (KVM VCPU) vcpu_enter_guest()
-  (KVM VCPU) kvm_vcpu_reload_apic_access_page()
-  (Invalidator) actually unmap page
+The PPC panic event handler addresses the system panic in two different
+ways based on the system configuration. It first allows the FADump (if
+configured) to handle the kernel panic else forwards the call to platform
+specific panic function. Now pstore update is missing only if FADump
+handles the kernel panic, the platform-specific panic function do update
+the pstore by calling panic_flush_kmsg_end function.
 
-Symptom:
-  The above race can make Guest OS see already freed page and Guest OS
-will see broken APIC register values. Especially, Windows OS checks
-LAPIC modification so it can cause BSOD crash with BugCheck
-CRITICAL_STRUCTURE_CORRUPTION (109). These symptoms are the same as we
-previously saw in https://bugzilla.kernel.org/show_bug.cgi?id=197951 and
-we are currently seeing in
-https://bugzilla.redhat.com/show_bug.cgi?id=1751017.
+The simplest approach to handle this issue is to add pstore update in PPC
+panic handler before FADump handles the panic. But this leads to multiple
+pstore updates in case FADump is not configured and platform-specific
+panic function serves the kernel panic.
 
-To prevent Guest OS from accessing already freed page, this patch calls
-kvm_arch_mmu_notifier_invalidate_range() from
-kvm_mmu_notifier_invalidate_range() instead of ..._range_start().
+Hence the function panic_flush_kmsg_end (used by the platform-specific
+panic function to update the kernel logs) is split into two functions, one
+will update the pstore (called in ppc panic event handler) and others will
+flush the kmsg on the console (called in platform specific panic function).
 
-Fixes: b1394e745b94 ("KVM: x86: fix APIC page invalidation")
-Signed-off-by: Eiichi Tsukata <eiichi.tsukata@nutanix.com>
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- arch/x86/kvm/x86.c       |  7 ++-----
- include/linux/kvm_host.h |  4 ++--
- virt/kvm/kvm_main.c      | 26 ++++++++++++++++----------
- 3 files changed, 20 insertions(+), 17 deletions(-)
+ arch/powerpc/include/asm/bug.h         |  2 ++
+ arch/powerpc/kernel/setup-common.c     |  1 +
+ arch/powerpc/kernel/traps.c            | 12 +++++++++++-
+ arch/powerpc/platforms/ps3/setup.c     |  2 +-
+ arch/powerpc/platforms/pseries/setup.c |  2 +-
+ 5 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index c17e6eb9ad43..1700aade39d1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8150,9 +8150,8 @@ static void vcpu_load_eoi_exitmap(struct kvm_vcpu *vcpu)
- 	kvm_x86_ops.load_eoi_exitmap(vcpu, eoi_exit_bitmap);
+diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
+index 338f36cd9934..9268551a69bc 100644
+--- a/arch/powerpc/include/asm/bug.h
++++ b/arch/powerpc/include/asm/bug.h
+@@ -118,6 +118,8 @@ extern void _exception_pkey(struct pt_regs *, unsigned long, int);
+ extern void die(const char *, struct pt_regs *, long);
+ extern bool die_will_crash(void);
+ extern void panic_flush_kmsg_start(void);
++extern void panic_flush_kmsg_dump(void);
++extern void panic_flush_kmsg_console(void);
+ extern void panic_flush_kmsg_end(void);
+ #endif /* !__ASSEMBLY__ */
+ 
+diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+index 7f8c890360fe..2d546a9e8bb1 100644
+--- a/arch/powerpc/kernel/setup-common.c
++++ b/arch/powerpc/kernel/setup-common.c
+@@ -699,6 +699,7 @@ static int ppc_panic_event(struct notifier_block *this,
+ 	 * want interrupts to be hard disabled.
+ 	 */
+ 	hard_irq_disable();
++	panic_flush_kmsg_dump();
+ 
+ 	/*
+ 	 * If firmware-assisted dump has been registered then trigger
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index 82a3438300fd..bb6bc19992b3 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -169,15 +169,25 @@ extern void panic_flush_kmsg_start(void)
+ 	bust_spinlocks(1);
  }
  
--int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
--		unsigned long start, unsigned long end,
--		bool blockable)
-+void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-+					    unsigned long start, unsigned long end)
+-extern void panic_flush_kmsg_end(void)
++extern void panic_flush_kmsg_dump(void)
  {
- 	unsigned long apic_address;
- 
-@@ -8163,8 +8162,6 @@ int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
- 	apic_address = gfn_to_hva(kvm, APIC_DEFAULT_PHYS_BASE >> PAGE_SHIFT);
- 	if (start <= apic_address && apic_address < end)
- 		kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD);
--
--	return 0;
- }
- 
- void kvm_vcpu_reload_apic_access_page(struct kvm_vcpu *vcpu)
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 131cc1527d68..92efa39ea3d7 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1406,8 +1406,8 @@ static inline long kvm_arch_vcpu_async_ioctl(struct file *filp,
- }
- #endif /* CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL */
- 
--int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
--		unsigned long start, unsigned long end, bool blockable);
-+void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-+					    unsigned long start, unsigned long end);
- 
- #ifdef CONFIG_HAVE_KVM_VCPU_RUN_PID_CHANGE
- int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 731c1e517716..77aa91fb08d2 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -155,10 +155,9 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm);
- static unsigned long long kvm_createvm_count;
- static unsigned long long kvm_active_vms;
- 
--__weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
--		unsigned long start, unsigned long end, bool blockable)
-+__weak void kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
-+						   unsigned long start, unsigned long end)
- {
--	return 0;
- }
- 
- bool kvm_is_zone_device_pfn(kvm_pfn_t pfn)
-@@ -384,6 +383,18 @@ static inline struct kvm *mmu_notifier_to_kvm(struct mmu_notifier *mn)
- 	return container_of(mn, struct kvm, mmu_notifier);
- }
- 
-+static void kvm_mmu_notifier_invalidate_range(struct mmu_notifier *mn,
-+					      struct mm_struct *mm,
-+					      unsigned long start, unsigned long end)
-+{
-+	struct kvm *kvm = mmu_notifier_to_kvm(mn);
-+	int idx;
-+
-+	idx = srcu_read_lock(&kvm->srcu);
-+	kvm_arch_mmu_notifier_invalidate_range(kvm, start, end);
-+	srcu_read_unlock(&kvm->srcu, idx);
+ 	printk_safe_flush_on_panic();
+ 	kmsg_dump(KMSG_DUMP_PANIC);
 +}
 +
- static void kvm_mmu_notifier_change_pte(struct mmu_notifier *mn,
- 					struct mm_struct *mm,
- 					unsigned long address,
-@@ -408,7 +419,6 @@ static int kvm_mmu_notifier_invalidate_range_start(struct mmu_notifier *mn,
++extern void panic_flush_kmsg_console(void)
++{
+ 	bust_spinlocks(0);
+ 	debug_locks_off();
+ 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+ }
+ 
++extern void panic_flush_kmsg_end(void)
++{
++	panic_flush_kmsg_dump();
++	panic_flush_kmsg_console();
++}
++
+ static unsigned long oops_begin(struct pt_regs *regs)
  {
- 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
- 	int need_tlb_flush = 0, idx;
--	int ret;
+ 	int cpu;
+diff --git a/arch/powerpc/platforms/ps3/setup.c b/arch/powerpc/platforms/ps3/setup.c
+index b29368931c56..f96ba34284a1 100644
+--- a/arch/powerpc/platforms/ps3/setup.c
++++ b/arch/powerpc/platforms/ps3/setup.c
+@@ -101,7 +101,7 @@ static void ps3_panic(char *str)
+ 	printk("   System does not reboot automatically.\n");
+ 	printk("   Please press POWER button.\n");
+ 	printk("\n");
+-	panic_flush_kmsg_end();
++	panic_flush_kmsg_console();
  
- 	idx = srcu_read_lock(&kvm->srcu);
- 	spin_lock(&kvm->mmu_lock);
-@@ -425,14 +435,9 @@ static int kvm_mmu_notifier_invalidate_range_start(struct mmu_notifier *mn,
- 		kvm_flush_remote_tlbs(kvm);
+ 	while(1)
+ 		lv1_pause(1);
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 0c8421dd01ab..66ecb88c4b8e 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -788,7 +788,7 @@ static void __init pSeries_setup_arch(void)
  
- 	spin_unlock(&kvm->mmu_lock);
--
--	ret = kvm_arch_mmu_notifier_invalidate_range(kvm, range->start,
--					range->end,
--					mmu_notifier_range_blockable(range));
--
- 	srcu_read_unlock(&kvm->srcu, idx);
- 
--	return ret;
-+	return 0;
+ static void pseries_panic(char *str)
+ {
+-	panic_flush_kmsg_end();
++	panic_flush_kmsg_console();
+ 	rtas_os_term(str);
  }
  
- static void kvm_mmu_notifier_invalidate_range_end(struct mmu_notifier *mn,
-@@ -538,6 +543,7 @@ static void kvm_mmu_notifier_release(struct mmu_notifier *mn,
- }
- 
- static const struct mmu_notifier_ops kvm_mmu_notifier_ops = {
-+	.invalidate_range	= kvm_mmu_notifier_invalidate_range,
- 	.invalidate_range_start	= kvm_mmu_notifier_invalidate_range_start,
- 	.invalidate_range_end	= kvm_mmu_notifier_invalidate_range_end,
- 	.clear_flush_young	= kvm_mmu_notifier_clear_flush_young,
 -- 
-2.21.3
+2.25.4
 
