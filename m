@@ -2,102 +2,89 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0944EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0725C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 21:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE02720760
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 20:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D8D20760
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 21:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WxiiwQIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgFFUu0 (ORCPT
+        id S1728876AbgFFVCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 16:50:26 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:47836 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727994AbgFFUu0 (ORCPT
+        Sat, 6 Jun 2020 17:02:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23047 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727994AbgFFVCy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 16:50:26 -0400
-X-IronPort-AV: E=Sophos;i="5.73,481,1583190000"; 
-   d="scan'208";a="453335185"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jun 2020 22:50:08 +0200
-Date:   Sat, 6 Jun 2020 22:50:08 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Denis Efremov <efremov@linux.com>
-cc:     Joe Perches <joe@perches.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH 1/2] Coccinelle: extend memdup_user transformation
- with GFP_USER
-In-Reply-To: <6f83e89b-f261-5251-19f8-4ba52ef0e6f4@linux.com>
-Message-ID: <alpine.DEB.2.21.2006062249170.2578@hadrien>
-References: <20200530205348.5812-1-efremov@linux.com> <20200530205348.5812-2-efremov@linux.com> <alpine.DEB.2.21.2006061024100.2578@hadrien> <6f83e89b-f261-5251-19f8-4ba52ef0e6f4@linux.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 6 Jun 2020 17:02:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591477373;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=+D2GdxTX6b6hA1PHo0qrCmyz04ljiq/Wrl6lhJ+DuTY=;
+        b=WxiiwQIHvAmcpjFLqm/NxvFzete+/uvYkqt/2bZhBhmrSYtkXiuDQ8Uf85p32OOfVrNLIU
+        S23dYoyOJHXNZ76T3RhqFBA4T0uu8wqfoEBhOTSRtHG1R9AlyjqF2HMtTkSXzFKf8cLVwc
+        nLRYv9wmCLHzlvFXIWvhGaIfDw27XVU=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-444-a7mA8_5oMmGswOgqX2VeCQ-1; Sat, 06 Jun 2020 17:02:50 -0400
+X-MC-Unique: a7mA8_5oMmGswOgqX2VeCQ-1
+Received: by mail-qt1-f197.google.com with SMTP id y5so7140510qto.10
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 14:02:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+D2GdxTX6b6hA1PHo0qrCmyz04ljiq/Wrl6lhJ+DuTY=;
+        b=VIcI4CKQFDCC2xX1Km53aZ8jELgDXEUpYBcxZOkZcgNAceUiFEYsDp1zFr0qFuP/13
+         fVrt2b+PgrcCwyevPJosc4wM9TG6yodKXegoTHNJXsvWp/OfVI8NTyvzLrUxdQqQxwc2
+         KzPqRDWWcYdhY8flUkC0mRO614g8ACptevGwOcByw9u8kk5mkKlTF1KLFsoNmmW4TNw8
+         zod0do+2dN2hRF7IeNd7chnTVYaGHoikJvYBt1u3G8ax9CzHZisGi/t5wFiO3uRAf4Yr
+         5SzOgLxbeJ3NvFf5MLpq1vhHP/7Yn8I2HIjtPhdUWyzJr1cU9TjMSJ40AH6rRLsKVE4p
+         MLng==
+X-Gm-Message-State: AOAM530c42YoiWX4P8Hu4PsmCto7jbW2ywLYamcO2/2oGa2a13GoGx8J
+        8ngR32X9JLtiYKd1YeK0lj+l2sYBhtYgc6h00ZzcLCNjGgwvPWEpXwEdt+GhtAJzYo1epay0txs
+        BA6lk7UCfVBak+9baJSyoHori
+X-Received: by 2002:a05:620a:2158:: with SMTP id m24mr7472249qkm.310.1591477369487;
+        Sat, 06 Jun 2020 14:02:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw65D2mGOUIJtzIY7DgEMQIIow8keOsqE+PTJD5okzf/CUeT0JbIh3nJd4smxJsAU+Cg+2Sug==
+X-Received: by 2002:a05:620a:2158:: with SMTP id m24mr7472221qkm.310.1591477369152;
+        Sat, 06 Jun 2020 14:02:49 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id d14sm3025299qkg.25.2020.06.06.14.02.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jun 2020 14:02:48 -0700 (PDT)
+From:   trix@redhat.com
+To:     mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH 0/1] fpga: dfl: Fix dead store
+Date:   Sat,  6 Jun 2020 14:02:40 -0700
+Message-Id: <20200606210241.7459-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tom Rix <trix@redhat.com>
 
+Repo linux-next
+Tag next-20200605
 
-On Sat, 6 Jun 2020, Denis Efremov wrote:
+A couple of fixes for dead stores found by clang's sa tool scan-build
 
->
->
-> On 6/6/20 11:24 AM, Julia Lawall wrote:
-> >
-> >
-> > On Sat, 30 May 2020, Denis Efremov wrote:
-> >
-> >> Match GFP_USER allocations with memdup_user.cocci rule.
-> >> Commit 6c2c97a24f09 ("memdup_user(): switch to GFP_USER") switched
-> >> memdup_user() from GFP_KERNEL to GFP_USER. In most cases it is still
-> >> a good idea to use memdup_user() for GFP_KERNEL allocations. The
-> >> motivation behind altering memdup_user() to GFP_USER is here:
-> >> https://lkml.org/lkml/2018/1/6/333
-> >
-> > Should the rule somehow document the cases in which memdup_user should now
-> > not be used?
-> >
-> > julia
-> >
-> >
-> >>
-> >> Signed-off-by: Denis Efremov <efremov@linux.com>
-> >> ---
-> >>  scripts/coccinelle/api/memdup_user.cocci | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle/api/memdup_user.cocci
-> >> index c809ab10bbce..49f487e6a5c8 100644
-> >> --- a/scripts/coccinelle/api/memdup_user.cocci
-> >> +++ b/scripts/coccinelle/api/memdup_user.cocci
-> >> @@ -20,7 +20,7 @@ expression from,to,size;
-> >>  identifier l1,l2;
-> >>  @@
-> >>
-> >> --  to = \(kmalloc\|kzalloc\)(size,GFP_KERNEL);
-> >> +-  to = \(kmalloc\|kzalloc\)(size,\(GFP_KERNEL\|GFP_USER\));
->
-> Actually, we can add optional __GFP_NOWARN here to match such cases as:
-> GFP_KERNEL | __GFP_NOWARN
->
-> However, I don't know how to express it in elegant way. Something like?
-> (
-> -  to = \(kmalloc\|kzalloc\)(size,\(GFP_KERNEL\|GFP_USER\));
-> |
-> -  to = \(kmalloc\|kzalloc\)(size, GFP_KERNEL|__GFP_NOWARN);
-> |
-> -  to = \(kmalloc\|kzalloc\)(size, GFP_USER|__GFP_NOWARN);
-> )
+Tom Rix (1):
+  Fix dead store
 
-I guess you could do:
+ drivers/fpga/fpga-bridge.c | 6 ++----
+ drivers/fpga/fpga-mgr.c    | 4 +---
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-\(GFP_KERNEL\|GFP_USER\|\(GFP_KERNEL\|GFP_USER\)|__GFP_NOWARN\)
+-- 
+2.26.0
 
-julia
