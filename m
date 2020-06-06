@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB47D20723
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9EC207DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 04:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yw2TjbZf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SeSUTQIo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgFFEEC (ORCPT
+        id S1727029AbgFFEEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 00:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36628 "EHLO
+        Sat, 6 Jun 2020 00:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgFFED6 (ORCPT
+        with ESMTP id S1725791AbgFFEED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 00:03:58 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DF5C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 21:03:57 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id e20so14113432ybc.23
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 21:03:57 -0700 (PDT)
+        Sat, 6 Jun 2020 00:04:03 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E8FC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri,  5 Jun 2020 21:04:03 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id k186so14062505ybc.19
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jun 2020 21:04:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=og6aLJN4ELJf8ujcyhVHLwiOkETXN2fux8N+5uOmros=;
-        b=Yw2TjbZfqO7BR8Z+rdQauW0blSDY61NfK6iq+vipx19CT8oOy3nxvfW0lXAlzm5j7I
-         4F5eZVvaQDY+lFonPbBEAESzserEOWIFcD2LpZzu2Azo3gMlcFpj2kYOg9b/P252oKhz
-         D0C4/GIgHjTo9o7xtCmqggR9L6JEFCUSJ5zyeeKTSwpWdiscYNRs8bOIByVWGGcpvlIL
-         tYhab6ooLvqETdhEgMHobEisGMzF/+R9+fNSwQptVOo445XTEJYg8TwnoshnHJVVG9wY
-         hkTeqofaDtiu1PuRhg5pynNx0D+mA1NjtOKQRSZ1WulmcSq5kAe2awqRMuQPS7oMkRmU
-         weww==
+        bh=LRVbJ2IzntUJ3rFAogfVmsjnLs4DtIrCaWey4mp2L10=;
+        b=SeSUTQIoS5KBxUNns3vhXOLxzCuHPitMl0Aw8ZqFbQxtsIZgPssjlMMQr6EhJg6or0
+         5CYrWi61PMDIKkTSNqDGSDtpUo7fr71ykQhgZJya/77gBGAF4aEZM2/KBfXmIz8dBf5t
+         0SbgOBzAN8G8jpjzEnC6lhPyCmTWXdfOOSbIsu9lBqeSlY5+Ipqvt8IQk/fhIJlpofGj
+         h/3PpS0tHl4+QQpfkozW9Ud+wRnFLtmfl6xu5FYANVXHQP61TIKgKcvSsoqNtgVPi48O
+         j4oXqSIPmjUmi7PboCDnYtDpxEBMx6tT/hoEVmFcFve9PZXby44sts3x9G8512DsVZcp
+         6oBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=og6aLJN4ELJf8ujcyhVHLwiOkETXN2fux8N+5uOmros=;
-        b=WYZRXn0/wr3dRSUILONJAO0T+vCDRfaL6UVB3iyMBOevIUG8u9dop/FTHJrFUGVDuu
-         j8CpEzKSEYDiSMag7xsVoN9p8DI8vMtkY5h57pf/nCS/xPQ5LJ4LuKpQj31wQmCDGHhi
-         zQi4LmtTlcNMXVnT8oGoc1XE9cSeOUWd65dOy/jnoLVmDhoof+e83Ekxp8UciikpCCoW
-         l5BnBUwTGdo0PyTokwKQXtZTqaCue1Q8RiCHgLh2obZ7XA3h1iePh+ese5NB1HlT6cl+
-         bB4wG7IhNRv/ebNAoE9Od2Dm4gUDvEr60gQAtgHXxI7bMK3Z2Fo1U22LNzREBB8X0oHl
-         khTQ==
-X-Gm-Message-State: AOAM5328Mv72Xzb67WtDNGYH8XkGpaD06pOh1MM0x5gfR4c4ra7Q2Fn3
-        OSuIG6LD+yyWmK8VeLRO77x7gvg2I6uclg==
-X-Google-Smtp-Source: ABdhPJzPXTXIY3eyePHEYSuFSmhdKtJr3OV90MeGFlPhv6dE6T5rySReWu7+/kP8N0kSIMpNQ86sDpckpeKS1Q==
-X-Received: by 2002:a25:7ac2:: with SMTP id v185mr21268882ybc.278.1591416236401;
- Fri, 05 Jun 2020 21:03:56 -0700 (PDT)
-Date:   Fri,  5 Jun 2020 21:03:45 -0700
+        bh=LRVbJ2IzntUJ3rFAogfVmsjnLs4DtIrCaWey4mp2L10=;
+        b=iY4IXWka87DDpfSORISPc/YuS3pl261B3ulFlDk+rlyc/wFtXt8+JwUj21OlopbhEw
+         d+Gev1WJWSgcJS2ZooDDDzecn+se53OviAyTuZyvWCyRglXVLPfv5HjpvSRXUdq2dAfB
+         6QrdusOSBnCPw+sJ4T6e1p30yu309sjvT9QuhcNyzkC+gPUR7MaPXjsLSpwfONMO8VEj
+         tly6PYE0uL8PldzChgKkY1p+qClRmOOXNORgGRWSBCOYOE7+4e8ES/HRdV1mIddqOD7B
+         /YgC0nXm7HjI099VvVxc4zHNvq+ixYcGt+kJ4478ZPEzGLhQaFATnCqCBiF4v14XB6He
+         Zh6Q==
+X-Gm-Message-State: AOAM530rbFiGwTGtsMmX8laM9hpBN9p4wMjfz9kPrIHYCbMhquIOzs75
+        Cb6dL/uSaf/mmJqGujYTrOzFID+TjepPkA==
+X-Google-Smtp-Source: ABdhPJzMRf6MxnJE7ZzaLIOPvUIqU9bM0F72J+tmpYHrGd1C9wffpnYL+0o+BdYK1pKGlwnPK9f4EyEHq0ocGQ==
+X-Received: by 2002:a25:b5c2:: with SMTP id d2mr22710530ybg.9.1591416242137;
+ Fri, 05 Jun 2020 21:04:02 -0700 (PDT)
+Date:   Fri,  5 Jun 2020 21:03:48 -0700
 In-Reply-To: <20200606040349.246780-1-davidgow@google.com>
-Message-Id: <20200606040349.246780-2-davidgow@google.com>
+Message-Id: <20200606040349.246780-5-davidgow@google.com>
 Mime-Version: 1.0
 References: <20200606040349.246780-1-davidgow@google.com>
 X-Mailer: git-send-email 2.27.0.278.ge193c7cf3a9-goog
-Subject: [PATCH v8 1/5] Add KUnit Struct to Current Task
+Subject: [PATCH v8 4/5] KASAN: Testing Documentation
 From:   David Gow <davidgow@google.com>
 To:     trishalfonso@google.com, brendanhiggins@google.com,
         aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
@@ -78,32 +78,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Patricia Alfonso <trishalfonso@google.com>
 
-In order to integrate debugging tools like KASAN into the KUnit
-framework, add KUnit struct to the current task to keep track of the
-current KUnit test.
+Include documentation on how to test KASAN using CONFIG_TEST_KASAN_KUNIT
+and CONFIG_TEST_KASAN_MODULE.
 
 Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 Signed-off-by: David Gow <davidgow@google.com>
----
- include/linux/sched.h | 4 ++++
- 1 file changed, 4 insertions(+)
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4418f5cb8324..e50c568a8dc7 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1188,6 +1188,10 @@ struct task_struct {
- 	unsigned int			kasan_depth;
- #endif
+---
+ Documentation/dev-tools/kasan.rst | 70 +++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+
+diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
+index c652d740735d..b4b109d88f9e 100644
+--- a/Documentation/dev-tools/kasan.rst
++++ b/Documentation/dev-tools/kasan.rst
+@@ -281,3 +281,73 @@ unmapped. This will require changes in arch-specific code.
  
-+#if IS_ENABLED(CONFIG_KUNIT)
-+	struct kunit			*kunit_test;
-+#endif
+ This allows ``VMAP_STACK`` support on x86, and can simplify support of
+ architectures that do not have a fixed module region.
 +
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	/* Index of current stored address in ret_stack: */
- 	int				curr_ret_stack;
++CONFIG_TEST_KASAN_KUNIT & CONFIG_TEST_KASAN_MODULE
++--------------------------------------------------
++
++``CONFIG_TEST_KASAN_KUNIT`` utilizes the KUnit Test Framework for testing.
++This means each test focuses on a small unit of functionality and
++there are a few ways these tests can be run.
++
++Each test will print the KASAN report if an error is detected and then
++print the number of the test and the status of the test:
++
++pass::
++
++        ok 28 - kmalloc_double_kzfree
++or, if kmalloc failed::
++
++        # kmalloc_large_oob_right: ASSERTION FAILED at lib/test_kasan.c:163
++        Expected ptr is not null, but is
++        not ok 4 - kmalloc_large_oob_right
++or, if a KASAN report was expected, but not found::
++
++        # kmalloc_double_kzfree: EXPECTATION FAILED at lib/test_kasan.c:629
++        Expected kasan_data->report_expected == kasan_data->report_found, but
++        kasan_data->report_expected == 1
++        kasan_data->report_found == 0
++        not ok 28 - kmalloc_double_kzfree
++
++All test statuses are tracked as they run and an overall status will
++be printed at the end::
++
++        ok 1 - kasan_kunit_test
++
++or::
++
++        not ok 1 - kasan_kunit_test
++
++(1) Loadable Module
++~~~~~~~~~~~~~~~~~~~~
++
++With ``CONFIG_KUNIT`` enabled, ``CONFIG_TEST_KASAN_KUNIT`` can be built as
++a loadable module and run on any architecture that supports KASAN
++using something like insmod or modprobe.
++
++(2) Built-In
++~~~~~~~~~~~~~
++
++With ``CONFIG_KUNIT`` built-in, ``CONFIG_TEST_KASAN_KUNIT`` can be built-in
++on any architecure that supports KASAN. These and any other KUnit
++tests enabled will run and print the results at boot as a late-init
++call.
++
++(3) Using kunit_tool
++~~~~~~~~~~~~~~~~~~~~~
++
++With ``CONFIG_KUNIT`` and ``CONFIG_TEST_KASAN_KUNIT`` built-in, we can also
++use kunit_tool to see the results of these along with other KUnit
++tests in a more readable way. This will not print the KASAN reports
++of tests that passed. Use `KUnit documentation <https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html>`_ for more up-to-date
++information on kunit_tool.
++
++.. _KUnit: https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html
++
++``CONFIG_TEST_KASAN_MODULE`` is a set of KASAN tests that could not be
++converted to KUnit. These tests can be run only as a module with
++``CONFIG_TEST_KASAN_MODULE`` built as a loadable module and
++``CONFIG_KASAN`` built-in. The type of error expected and the
++function being run is printed before the expression expected to give
++an error. Then the error is printed, if found, and that test
++should be interpretted to pass only if the error was the one expected
++by the test.
 -- 
 2.27.0.278.ge193c7cf3a9-goog
 
