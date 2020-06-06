@@ -2,122 +2,95 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 07:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 07:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE28F207D0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 07:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB0720663
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 07:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgFFHOB (ORCPT
+        id S1728588AbgFFHac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 03:14:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35934 "EHLO mga05.intel.com"
+        Sat, 6 Jun 2020 03:30:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:44832 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbgFFHOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 03:14:00 -0400
-IronPort-SDR: kHbHi/ij+rm0+8UiKEMWdIXa6mdGl8N/qYYNbiFjKOIbWyKl76qKwQIYBfNoa6c9qeSTqm438f
- 5a+J5gtkdMjg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2020 00:14:00 -0700
-IronPort-SDR: D4dNIC/fQGk/CW5xPPs6mtaEpw7hfoyc4R0kcaR1TF0bej7gaiSSB/rAERDvfOrFriMuk4a+Pu
- bSJtDUyApLtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,479,1583222400"; 
-   d="scan'208";a="472163028"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Jun 2020 00:13:58 -0700
-Date:   Sat, 6 Jun 2020 15:14:59 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2][RFC] PM-runtime: add tracepoints to cover all
- usage_count changes
-Message-ID: <20200606071459.GA1298@chenyu-office.sh.intel.com>
-References: <cover.1591380524.git.yu.c.chen@intel.com>
- <6ce5c2d21758363b7c9a31187eda1787bc4a6160.1591380524.git.yu.c.chen@intel.com>
- <20200605193311.GB9553@qmqm.qmqm.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200605193311.GB9553@qmqm.qmqm.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1728135AbgFFHab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 03:30:31 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49fB4Y2pkwz9v6VQ;
+        Sat,  6 Jun 2020 09:30:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1VOIR6gHcwWC; Sat,  6 Jun 2020 09:30:21 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49fB4Y1hMHz9v6VP;
+        Sat,  6 Jun 2020 09:30:21 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8C5E38B774;
+        Sat,  6 Jun 2020 09:30:22 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 06WYmrPJF0JY; Sat,  6 Jun 2020 09:30:22 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 56F868B75B;
+        Sat,  6 Jun 2020 09:30:22 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id E07A363B15; Sat,  6 Jun 2020 07:30:21 +0000 (UTC)
+Message-Id: <bafd8df9e743c433196c727293c5015620fae2b8.1591428452.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] tty: serial: cpm_uart: Fix behaviour for non existing GPIOs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-serial@vger.kernel.org
+Date:   Sat,  6 Jun 2020 07:30:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Fri, Jun 05, 2020 at 09:33:11PM +0200, Michal Miroslaw wrote:
-> On Sat, Jun 06, 2020 at 03:05:52AM +0800, Chen Yu wrote:
-> > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-> > has added some tracepoints to monitor the change of runtime usage, and
-> > there is something to improve:
-> > 1. There are some places that adjust the usage count have not
-> >    been traced yet. For example, pm_runtime_get_noresume() and
-> >    pm_runtime_put_noidle()
-> > 2. The change of the usage count will not be tracked if decreased
-> >    from 1 to 0.
-> [...]
-> > @@ -1448,16 +1453,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
-> >   */
-> >  void pm_runtime_allow(struct device *dev)
-> >  {
-> > +	bool is_zero;
-> > +
-> >  	spin_lock_irq(&dev->power.lock);
-> >  	if (dev->power.runtime_auto)
-> >  		goto out;
-> >  
-> >  	dev->power.runtime_auto = true;
-> > -	if (atomic_dec_and_test(&dev->power.usage_count))
-> > +	is_zero = atomic_dec_and_test(&dev->power.usage_count);
-> > +	trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-> > +	if (is_zero)
-> >  		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
-> > -	else
-> > -		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-> > -
-> [...]
-> 
-> IIRC, rpm_idle() has a tracepoint already.
-> 
-Yes, this is what I concerned previously. If someone
-want to track the change of usage_count, then he might
-have to enable both trace rpm_usage and rpm_idle so
-as to track the moment when the counter drops from 1 to
-0. It might be more consistent if we only enable
-trace rpm_usage to track the whole process.
-> > @@ -1523,9 +1529,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
-> >  		/* If it used to be allowed then prevent it. */
-> >  		if (!old_use || old_delay >= 0) {
-> >  			atomic_inc(&dev->power.usage_count);
-> > -			rpm_resume(dev, 0);
-> > -		} else {
-> >  			trace_rpm_usage_rcuidle(dev, 0);
-> > +			rpm_resume(dev, 0);
-> >  		}
-> >  	}
-> [...]
-> 
-> This actually changes logic, so it doesn't match the patch description.
-> 
-This patch intends to adjust the logic to be consistent with
-the change of usage_counter, that is to say, only after the
-counter has been possibly modified, we record it. In current
-logic above, it tracks the usage count where the latter does
-not change.
+devm_gpiod_get_index() doesn't return NULL but -ENOENT when the
+requested GPIO doesn't exist,  leading to the following messages:
 
-Thanks,
-Chenyu
-> Best Regards
-> Michał Mirosław
+[    2.742468] gpiod_direction_input: invalid GPIO (errorpointer)
+[    2.748147] can't set direction for gpio #2: -2
+[    2.753081] gpiod_direction_input: invalid GPIO (errorpointer)
+[    2.758724] can't set direction for gpio #3: -2
+[    2.763666] gpiod_direction_output: invalid GPIO (errorpointer)
+[    2.769394] can't set direction for gpio #4: -2
+[    2.774341] gpiod_direction_input: invalid GPIO (errorpointer)
+[    2.779981] can't set direction for gpio #5: -2
+[    2.784545] ff000a20.serial: ttyCPM1 at MMIO 0xfff00a20 (irq = 39, base_baud = 8250000) is a CPM UART
+
+Use IS_ERR_OR_NULL() to properly check gpiod validity.
+
+Fixes: 97cbaf2c829b ("tty: serial: cpm_uart: Convert to use GPIO descriptors")
+Cc: stable@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index a04f74d2e854..3cbe24802296 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -1217,7 +1217,7 @@ static int cpm_uart_init_port(struct device_node *np,
+ 
+ 		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+ 
+-		if (gpiod) {
++		if (!IS_ERR_OR_NULL(gpiod)) {
+ 			if (i == GPIO_RTS || i == GPIO_DTR)
+ 				ret = gpiod_direction_output(gpiod, 0);
+ 			else
+-- 
+2.25.0
+
