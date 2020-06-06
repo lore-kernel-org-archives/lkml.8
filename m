@@ -2,203 +2,358 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D643C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6153120772
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2E5207BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pt06oYzm"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="OnrHi8/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgFFPVO (ORCPT
+        id S1728786AbgFFPVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 11:21:14 -0400
-Received: from mail-eopbgr60072.outbound.protection.outlook.com ([40.107.6.72]:60166
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727089AbgFFPVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 11:21:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IYb1sutWPYEoVJSv419dQ7tmaKSDU3fS8tWc3MJqKk96l5bL4ri1OJaOhbZJwyT+WtedaQN35MbHGBUnLEPAnrqJ9m5ZlMrjWGkN32zBj7o2HbEBD76B1CcRQUtxjm/bNfCTYtzLa3YxFeOztpFgqvea4gAXQyUEN0AD2dyVJlOt+NQz6600HzoBnwEMqOoLL61BepEEBoviKmbFNgWVeuWbGcIxXzjL5ZkWNiN0Nwvuhps+ejz5zUfOco8rDaZ8NatuhxS229ZVa97vMWi6hzyehMt/n9q6apDf+aurCbAmasyFlslhmxVK8Ei/r94mHdT+hpYiOnyRv/6HutYU5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oZpmqO2oHdeXDFr7hNrHeCQjrrs0RHrCSx5R7z4Nrwo=;
- b=kn0yvTX5be4n5JwMYpTmqMwxfZIxaklt6w8toU7udOo9QEDtkSlKajc7JtxK/S2SJCRC84+7kf6KYbfdBLOmaVviVXaHXgrMgzpfCkfQ1eYU7lNBLiWzjufrHM1/naL3zF6nzq8CepEfVJNz37M3Q82OypRZZ7kgfKIWJ4DPR64GPvrpyBbnjtnXc10XthKGviLmgKW93ZDjXV8f3LcHTunC3eDF7FrGG89/gHHCfDY3rLyNX+CDG2m5G+y7vLndXzAhXjXqujOPs6ZCg0aLKVvK2OBAVCLItV58wu7aUFSZSO5dS/42ZeF2OcucsewBG9stWDP2sk4KcXOhzOBVAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oZpmqO2oHdeXDFr7hNrHeCQjrrs0RHrCSx5R7z4Nrwo=;
- b=pt06oYzmjk4C2i0xOylLmNvQ/377974IETKzasD1lOFGsSs84qR73qGkRgYiwMQNgQdPbHUTn4cSrl6w28zSGgpcLJW6IAjTatbRPfrwp5lyIDuzmG+cxXx/lMoDbCc0MLjJ8H7Si4X0h+eeS/t1qY3+BW5R22RMB0J9VqYzPBU=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6511.eurprd04.prod.outlook.com (2603:10a6:803:11f::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Sat, 6 Jun
- 2020 15:21:05 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.019; Sat, 6 Jun 2020
- 15:21:05 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Subject: [PATCH v9 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc family
-Date:   Sun,  7 Jun 2020 07:21:04 +0800
-Message-Id: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0184.apcprd04.prod.outlook.com
- (2603:1096:4:14::22) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Sat, 6 Jun 2020 11:21:18 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:53224 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728641AbgFFPVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 11:21:13 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id had5jYF0p2DNIhad7jqGR3; Sat, 06 Jun 2020 09:21:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1591456869; bh=uOxn5FNAbjgCIjHRF/u6CYwICtWoh+9aGnyj2hCy6cg=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=OnrHi8/dJr2Il/xdNnPgV2NEwHQiewPLYG7UuKi+SuX4Zj0E1VZCQcyWurFVdcZid
+         GkbUiWfejW0lPjjcUCIXIwTO/RAJOoXpIrZ3IUosJNpVP1mHE19oHyL3+KOvJThZ0w
+         6XQ0ZG4k7jZFkUS2wJTUC2IL1piLyCA7lna4cOenGWf+McB3WiA8XglC2hmpqEbJkz
+         ds1i5V6z0GnHEfhKVf4l/mLDiq1zYIvAQ4UKGYwD+Sd4KvS2FqyndPymYxLgdULaVs
+         BbfQNzTlkVrSCvN8+/wDeOLSQJ+QdiudLATRtNp2Z/+mUIBUjrZGuNCRNz5D2eEBrP
+         W9G8Dg1gzpSrA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=H+qlPNQi c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=p-nOP-kxAAAA:8
+ a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=Rq_R0krhRepCojYYGuIA:9 a=CjuIK1q_8ugA:10
+ a=XN2wCei03jY4uMu7D0Wg:22 a=AjGcO6oz07-iQ99wixmX:22
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
+Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Len Brown'" <len.brown@intel.com>,
+        "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
+        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+References: <2931539.RsFqoHxarq@kreacher> <000001d6376a$03bbaae0$0b3300a0$@net>
+In-Reply-To: <000001d6376a$03bbaae0$0b3300a0$@net>
+Subject: RE: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode with HWP enabled
+Date:   Sat, 6 Jun 2020 08:21:03 -0700
+Message-ID: <000001d63c16$1a972b30$4fc58190$@net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR04CA0184.apcprd04.prod.outlook.com (2603:1096:4:14::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.18 via Frontend Transport; Sat, 6 Jun 2020 15:21:00 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 88c68ebb-5007-45c3-a21d-08d80a2d3b03
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6511:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB651199B5654AD96618EAD46589870@VE1PR04MB6511.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 04267075BD
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: guoJ+c1s16rmY7C9xICeUn2O+EDCcm03UaZX4bPejGt4z511oy0eudWSRnPjM4qkynUVzllL+0zbGDf+B1ueEh8moZFsPjz4cuR3yWA7lAWfrVekNuDzMvCS0a/+MvUTGnSKqiZuxfkL3kj9+jR7hPSw3YZpkRb8IkvINW2jdevK+y6d1nk+7jLAY5yhxVnPrMqMK6QxRSacnzvLTL1KeSeYyfryP/CLsIaODwXgZ4hetacEsMNcdhbey6wJ/+Czjpzu09uox0Ibsh3M8FHoTppl/ruiT98pP/rA5etBf8+ICoPG65zE33TiTP7zTmIVX5JSQvbGH8YwSZ3PkxiOhAWB1JTisUnQyLBBh8mQbtgFX4RDGY3sClPUqK90nYBK+LRReTgqlHXKvL90BxUoRTfl41RIMxPBsHvm7Ssu0+glEmYD0l/WQESkhQ9Pthi5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(86362001)(5660300002)(66476007)(16526019)(6506007)(66946007)(956004)(2616005)(186003)(36756003)(2906002)(7416002)(316002)(66556008)(4326008)(478600001)(52116002)(26005)(6486002)(966005)(6512007)(8676002)(83380400001)(8936002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: cGurvKvXiyo8N/P/U+fj/23Iua+7d3VvxNhl/W7EFpDjH+ggkK3c6tf/aQUu71Vf6ayzlxxgOtVsliBo0zcbxKbAafW4Z+xJS/PEt1X9jG4HXgJ8VM7/c2d1adJGEdiAciRkMkICG3e1UHiRVPQTD7Sz1czJ5uFY8S2vm2CMzzjgioaVS1cFUBGme+j/F9S5tdiBM07A/q+gQ9d9kPQHLRJkJQsmPZ2xDVQiXqTtA+8b1eHiyg74KSMY023F9DuF0OztqKS52tuZCF43sD8MeceHdH/QSd5NoyOBrdndo0s7G9R5tRssmxytndQSI3kOBDDMJ9LRUHs8IOWtUzlYLPlpaGEyJePLwiQGkOce5KDi8HrAIIFnLk5k138LeaWG0dsI5IbO8k1zMiv9r0IrpnA1IB/HnBf/KrtEliRBmKCp55bzjSOWCtZVo0N0M0Ra46yIhwHhOcBh8s9ce0N4U66kRNgltA22xDk4B3t8AHY=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88c68ebb-5007-45c3-a21d-08d80a2d3b03
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2020 15:21:05.5293
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WFpvAZesSv8XZcs1x0r+SuIVWpvlFDgK6giKNCbFk/2dbQ8K0rLI4LVb0N6DFFu9ob21dNkqAKPZVCfBhPnz2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6511
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdYzimEBSb+8wZd2QXK6gu6IWqSeRQBbEZjAAcSKPdA=
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfBtxeAR0RLMY6azxvE5hSY4lybZhOGVvERAE2KGLwLoa7o6ZXIt1zgn5aE5aJqrpPzwvLw2hbXBalAO5Im04Rs1DThCivuqna1EB//zfTxJVGz5+IO+h
+ mSdHM2XPxbEbQ6D9BbGIpW8ADYIUvzbqSbJOSJEY4YNPHWwKj2Sgq/QSFlWuoSOBzAKZD+3/axZ6uxaqATRimqvJuc2HNi1xGcxtNIdxbHh6GpNYCxBv4QUE
+ NmzKZ6FRDVi+V3y07QeuTQRp/R1P9jBQH2IwK/7MfhFYikDhT/SxYCShdGdKy/qJmRyBGm2doa99Oj6xOSsz4/IJmInesyWso9ASANg7EEmoB1CrHoyv3KeG
+ Av0C0QNtssD6IfHbabEK99RHzaWmS8Fm30upNdtVFh1QCEzceDXFPc1jgwPZdcHCdR8eAlCN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-transfer to be send twice in DMA mode. Please get more information from:
-https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
-new sdma ram script which works in XCH  mode as PIO inside sdma instead
-of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
-exist on all legacy i.mx6/7 soc family before i.mx6ul.
-NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
-6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
-still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
-or not.
-The first two reverted patches should be the same issue, though, it
-seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
-have the chance to test this patch set if could fix their issues.
-Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-on i.mx8mm because the event id is zero.
+Note 1: I have gone back a few e-mails in the thread for this reply.
+Note 2: Srinivas and I have exchanged several e-mails off-list. Thanks.
 
-PS:
-   Please get sdma firmware from below linux-firmware and copy it to your
-local rootfs /lib/firmware/imx/sdma.
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
+On 2020.05.31 09:39 Doug wrote:
 
-v2:
-  1.Add commit log for reverted patches.
-  2.Add comment for 'ecspi_fixed' in sdma driver.
-  3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
-    rather than remove.
-v3:
-  1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
-    /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
-    Correct dts related dts patch in v2.
-  2.Clean eratta information in binding doc and new 'tx_glitch_fixed' flag
-    in spi-imx driver to state ERR009165 fixed or not.
-  3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
-    errata workaroud, thus improve performance as possible.
-v4:
-  1.Add Ack tag from Mark and Vinod
-  2.Remove checking 'event_id1' zero as 'event_id0'.
-v5:
-  1.Add the last patch for compatible with the current uart driver which
-    using rom script, so both uart ram script and rom script supported
-    in latest firmware, by default uart rom script used. UART driver
-    will be broken without this patch.
-v6:
-  1.Resend after rebase the latest next branch.
-  2.Remove below No.13~No.15 patches of v5 because they were mergered.
-  	ARM: dts: imx6ul: add dma support on ecspi
-  	ARM: dts: imx6sll: correct sdma compatible
-  	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
-  3.Revert "dmaengine: imx-sdma: fix context cache" since
-    'context_loaded' removed.
-v7:
-  1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix context
-    cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma: refine
-    to load context only once" so that no building waring during comes out
-    during bisect.
-  2.Address Sascha's comments, including eliminating any i.mx6sx in this
-    series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and taking
-    care SMC bit for PIO.
-  3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
-   'spi: imx: add new i.mx6ul compatible name in binding doc'
-v8:
-  1.remove 0003-Revert-dmaengine-imx-sdma-fix-context-cache.patch and merge
-    it into 04/13 of v7
-  2.add 0005-spi-imx-fallback-to-PIO-if-dma-setup-failure.patch for no any
-    ecspi function broken even if sdma firmware not updated.
-  3.merge 'tx.dst_maxburst' changes in the two continous patches into one
-    patch to avoid confusion.
-  4.fix typo 'duplicated'.
-v9:
-  1. add "spi: imx: add dma_sync_sg_for_device after fallback from dma"
-     to fix the potential issue brought by commit bcd8e7761ec9("spi: imx:
-     fallback to PIO if dma setup failure") which is the only one patch
-     of v8 merged. Thanks Matthias for reporting:
-     https://lore.kernel.org/linux-arm-kernel/5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com/
-  2. remove 05/13 of v8 "spi: imx:fallback to PIO if dma setup failure"
-     since it's been merged.
+> 
+> The content of this e-mail is also at [1],
+> with annotated graphs.
 
-Robin Gong (13):
-  spi: imx: add dma_sync_sg_for_device after fallback from dma
-  Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
-  Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
-  Revert "dmaengine: imx-sdma: refine to load context only once"
-  dmaengine: imx-sdma: remove duplicated sdma_load_context
-  dmaengine: imx-sdma: add mcu_2_ecspi script
-  spi: imx: fix ERR009165
-  spi: imx: remove ERR009165 workaround on i.mx6ul
-  spi: imx: add new i.mx6ul compatible name in binding doc
-  dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
-  dma: imx-sdma: add i.mx6ul compatible name
-  dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
-  dmaengine: imx-sdma: add uart rom script
+That reference is now a few days out of date.
 
- .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
- .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
- arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
- arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
- drivers/dma/imx-sdma.c                             | 67 ++++++++++++--------
- drivers/spi/spi-imx.c                              | 73 +++++++++++++++++++---
- include/linux/platform_data/dma-imx-sdma.h         |  8 ++-
- 7 files changed, 120 insertions(+), 40 deletions(-)
+> 
+> Hi Rafael,
+> 
+> Hmmm... I think the most important takeaway from
+> my previous e-mail might have been missed!
+> 
+> HWP does not work properly on my i5-9600K test computer.
+> 
+> For those that don't have to read all this, my upgraded
+> assertion is:
+> 
+> With HWP enabled, if idle state 2 is used, there is a probability
+> that the CPU frequency might unexpectedly drop significantly.
+> 
 
--- 
-2.7.4
+After another week of investigation, my refined assertion is:
+
+For any workload from periodic to 100% busy but with infrequent small gaps,
+there is a significant probability that the processor will lock
+at minimum CPU frequency for a period of up to 30 milliseconds.
+
+Gap definition:
+lower limit not known, but < 747 uSeconds.
+Upper limit is between 952 and 955 uSeconds (there will be some overhead uncertainties).
+Must be preceded by busy time spanning a couple of HWP sampling boundaries
+or jiffy boundaries or something (I don't actually know how HWP does stuff).
+
+My long e-mail from last week was entirely based on periodic work in the 347 hertz area.
+This e-mail is about the same fundamental issue, but a completely different approach.
+
+Workflow: long busy, short gap, busy but taking loop time samples so as to estimate CPU frequency.
+I am calling it an inverse impulse response test.
+
+Results:
+
+If 747 uSec < gap < 950 uSeconds then there is approximately a 17% probability
+that upon exit from the gap back to busy the CPU will be held at 800 Mhz (or whatever minimum)
+for about 30 milliseconds before ramping up. The expectation is that the CPU frequency
+ramp up time would even be detectable by my test program, and that is the case for
+the other 83% of test runs.
+
+Sanity check (842 uSec gap time):
+
+O.K. so I should be able to observe this with the workflow running in
+a loop if I run turbostat at the same time. If I use a 3 second sample time,
+sometimes a frequency drop from 4600 MHz to 4573 is shown. If there is an
+event during a turbostat sample, there can be only one. So let's reverse
+calculate the frequency from the data:
+
+ave mhz = (time at 4600 + time at 0 + time at 800 Mhz)/3
+let the time at 800 MHz be Y.
+
+4573 = (4600 * ((3 Sec - gap) - Y) + 800 * Y)/3
+4573 = (13796.1268 - 3800 Y)/3
+13719 = 13796.1268 -  3800 Y
+Y = 20.3 milliseconds.
+
+Note: the transition time from 800 MHz to 4600 MHz
+Is not really 0, so the real Y should be longer.
+
+Real data:
+
+Test runs: 511
+Bad runs: 86 (17%)
+Average time at suppressed CPU frequency: ~ 29.8 milliseconds.
+
+Overall I have run this test about 6,500 times.
+So far, nohwp, passive, schedutil has failed the test 0 times
+out of 361 runs.
+
+Note: under these condition this computer should never
+throttle back from 4600 MHz, because (from turbostat):
+
+cpu2: MSR_TURBO_RATIO_LIMIT: 0x2b2b2e2e2e2e2e2e
+43 * 100.0 = 4300.0 MHz max turbo 8 active cores << I don't have 8 cores
+43 * 100.0 = 4300.0 MHz max turbo 7 active cores << I don't have 7 cores
+46 * 100.0 = 4600.0 MHz max turbo 6 active cores << I do have 6
+46 * 100.0 = 4600.0 MHz max turbo 5 active cores
+46 * 100.0 = 4600.0 MHz max turbo 4 active cores
+46 * 100.0 = 4600.0 MHz max turbo 3 active cores
+46 * 100.0 = 4600.0 MHz max turbo 2 active cores
+46 * 100.0 = 4600.0 MHz max turbo 1 active cores
+
+> Detail (see [1] for supporting graphs and links):
+> 
+> I can not proceed with testing this.
+> Why not?
+> Because I do not have a stable good system on top of which to add this patch.
+> I do not know what is wrong such that HWP appears broken.
+> 
+> For my part of it, I had to stop and dig into
+> why HWP doesn't seem to work properly on my newer test computer.
+> 
+> Notes:
+> I have never used HWP before, and have had it disabled so far on this
+> newer test computer. This patch seemed like a great opportunity to try it.
+> Why (in addition to helping via review/test)? Because trace now works,
+> whereas it doesn't in active mode with HWP.
+> 
+> It is on my list to explore viability of a mode for trace where it monitors
+> what the processor is doing via HWP, rather than reporting what the
+> processor is being told to do. However, in the meantime, this is great.
+> 
+> Example of what is wrong on my system (repeated, but new example trace data,
+> from earlier e-mail):
+> 
+> Kernel: 5.7-rc6 and + this version of patch when trace data required.
+> Patch config: DELAY_HWP 10000 ; 87.5% fraction (7/8).
+> Keep in mind that the trace entry is the scaled min value, not the target p-state.
+> 
+> Load:
+> Single thread, forced CPU affinity.
+> fixed work packet per work period, i.e. the amount of work to do is independent of CPU frequency.
+> 347 hertz work / sleep frequency.
+> To reveal any hysteresis (i.e. with conservative governor) load ramps up from none
+> to 100% and then back down to none at 3 seconds per step (step size is uncalibrated).
+> 
+> Processor:
+> Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz
+> 
+> What do I see?
+> 
+> Unexpected frequency drops at around 70% load.
+> Example, from trace:
+> 
+> Event begins at 17.456 seconds elapsed time.
+> Previous event was about 107 milliseconds ago.
+> 
+> Old min ; new min ; freq GHz; load % ; duration mS
+> 27      ; 28      ; 4.60    ; 68.17  ; 10.226
+> 28      ; 26      ; 4.53    ; 57.47  ; 10.005
+> 26      ; 40      ; 2.87    ; 100.00 ; 10.996  <<<< What? Why freq down? (note: it is always above old
+> min)
+> 40      ; 29      ; 4.25    ; 69.67  ; 10.002  <<<< O.K. recovering, but damage done.
+> 29      ; 26      ; 4.60    ; 59.14  ; 10.652  <<<< Event ends. Next event in 128 milliseconds.
+> 
+> I can not think of any reason why the frequency would have been reduced so far by HWP.
+> 
+> O.K., the above had to be done with the patch so that trace could be used.
+> Ondemand was the governor, because its response curve looks the same as
+> active/powersave in the area of concern.
+> 
+> The below was done with kernel 5.7-rc6 and only turbostat, at a low sample rate of 15 seconds per,
+> in addition to the test load. 100 seconds each:
+> 
+> intel_pstate/powersave hwp:
+> 
+> Overruns: 11327
+> Ave. work percent: 77.952091
+> Processor package power: ~13 watts.
+> Average CPU frequency: 3.8 gigahertz
+> 
+> intel_pstate/powersave no-hwp:
+> 
+> Overruns: 7 (task start ramp up related. I have trace proof.)
+> Ave. work percent: 74.932603
+> Processor package power: ~11.5 watts.
+> Average CPU frequency: 4.0 gigahertz
+> 
+> Question: What is the relevance of the 347 hertz and
+> the >=70% load for this issue? Why does it appear
+> to be such a sharp works/fine doesn't work issue?
+> 
+> Answer: The issue seems to be related to when the
+> sleep portion of a work/sleep periodic workflow
+> approaches and goes below 1 millisecond (1 jiffy).
+> 
+> some tests were done, varying the work/sleep frequency,
+> and idle states and overruns and such, the web version
+> of this e-mail has graphs.
+> 
+> Notes:
+> 
+> The breakpoint between no-overruns/overruns is around 950 microseconds.
+> 
+> A 250 hertz kernel was tested, and it did not have this issue in this area.
+> Perhaps elsewhere, I didn't look.
+> 
+> 1000 hertz kernels were tested back to kernel 5.2, all failed.
+> 
+> If the issue is jiffy related (a race condition?) then a work/sleep frequency
+> of 333.3333 hertz should behave in binary way, either lots of overruns or none
+> as a function of the task start time. (Preliminary) It does.
+> 
+> If the issue is jiffy related (a race condition?) then a work/sleep frequency
+> of 500.00 hertz should behave in binary way, either lots of overruns or none
+> as a function of the task start time. It does. There are occurrences when idle
+> state 2 is used somewhat without overruns.
+> 
+> Both teo and menu idle governors were tested, and while both suffer from
+> unexpected CPU frequency drop, teo seems much worse. However failure points
+> for both governors are repeatable.
+> 
+> There was new BIOS for this test computer a week ago.
+> System now upgraded and tested with default BIOS settings (by accident)
+> and my settings. (Note: slight changes in processor package power for
+> system idle and one CPU loaded with new BIOS, and earlier tests NOT re-done).
+> 
+> Is the processor using the latest microcode? Currently 0xcc. Can not figure out if there is anything
+> newer.
+> 
+> Leaving out the details, but all the tests and results are available, a mess but available, the
+> summary is:
+> 
+> With HWP enabled, if idle state 2 is used, there is a probability that the CPU frequency might
+> unexpectedly drop significantly.
+> If the processor does this by itself, or by being told to via sources outside of the intel_pstate CPU
+> frequency driver, I don't
+> know.
+> 
+> The load sweep test was run at 6 seconds per step during increasing load and 3 seconds per step
+> decreasing
+> (by mistake, if you must know), while monitoring the idle statistics.
+> The test was done in a hurry, so many above/below statistics are 0%, due to insufficient sample size.
+> The overruns and use of idle state 0 are exactly correlated.
+> There are a lot of graphs on the idle statistics web page, but the idle state 2 usage correlates
+> exactly with
+> undesired low CPU frequency and overruns.
+> 
+> Side note: Even in the areas where HWP appears to behave, the no-hwp power use is much better.
+> 
+> O.K., so now, do a couple of more turbostat samples:
+> 
+> intel_pstate/powersave hwp idle state 2 disabled:
+> 
+> Overruns: 3
+> Ave. work percent: 66.647895
+> Processor package power: ~16.8 watts.
+> Average CPU frequency: 4.6 gigahertz
+> 
+> intel_pstate/powersave hwp idle state 3 disabled:
+> 
+> Overruns: 22
+> Ave. work percent: 66.647895
+> Processor package power: ~16.2 watts.
+> Average CPU frequency: 4.6 gigahertz
+> 
+> To prevent all the bots that burden my site, the link is coded:
+> [1] double u double u double u dot smythies dot com /~doug/linux/s18/hwp/index.html
+> 
+> ... Doug
+> 
+> > -----Original Message-----
+> > From: Rafael J. Wysocki [mailto:rjw@rjwysocki.net]
+> > Sent: May 26, 2020 11:21 AM
+> > To: Linux PM; Doug Smythies
+> > Cc: LKML; Len Brown; Srinivas Pandruvada; Peter Zijlstra; Giovanni Gherdovich; Francisco Jerez
+> > Subject: [RFC/RFT][PATCH] cpufreq: intel_pstate: Accept passive mode with HWP enabled
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Allow intel_pstate to work in the passive mode with HWP enabled and
+> > make it set the HWP minimum performance limit to 75% of the P-state
+> > value corresponding to the target frequency supplied by the cpufreq
+> > governor, so as to prevent the HWP algorithm and the CPU scheduler
+> > from working against each other at least when the schedutil governor
+> > is in use.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > This is a replacement for https://patchwork.kernel.org/patch/11563615/ that
+> > uses the HWP floor (minimum performance limit) as the feedback to the HWP
+> > algorithm (instead of the EPP).
+> >
+> > The INTEL_CPUFREQ_TRANSITION_DELAY_HWP is still 5000 and the previous comments
+> > still apply to it.
+> >
+> > In addition to that, the 75% fraction used in intel_cpufreq_adjust_hwp() can be
+> > adjusted too, but I would like to use a value with a power-of-2 denominator for
+> > that (so the next candidate would be 7/8).
+> >
+> > Everyone who can do that is kindly requested to test this and let me know
+> > the outcome.
+
 
