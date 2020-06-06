@@ -2,121 +2,84 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D36EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D68F02073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mUH728r7"
+	by mail.kernel.org (Postfix) with ESMTP id 3627F206A2
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgFFNoQ (ORCPT
+        id S1726336AbgFFODF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 09:44:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgFFNoP (ORCPT
+        Sat, 6 Jun 2020 10:03:05 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:55212 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgFFODE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 09:44:15 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0D5C03E96A;
-        Sat,  6 Jun 2020 06:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vozlHdf9KLuw8QLuy6Exnt1trvwv2FE24skv0EkmY5k=; b=mUH728r7zwGBlIvp2uCjOU3mX
-        CQiRiWQ/jVofdPufbya+44rAPdc/CLynbPpiQYOKFquKevYKj8eB8TlOyHxOEYTpU6slfNZ/sQZ6F
-        91qNUFzD1f9DRerSSnMKHWBU0LuuuCBLkE8B5eQ6UU+ItLuEupbm565+QvKB6nT5oUeBFxy2sUfx3
-        Hc00plYurfpoGGr1GTXl50b/e4R/x99UOPJzHIkWDS60bVcDK1yvRFHGuRxie+2X2p6WU4QQrrtt9
-        Z/Ekh7c8oPX8zLh6s99KLPI+KKEDSkazk2X/pm3e6OJU0ZQa6Tk6FiHOzQbIghsKnCRPpf0Yxg9Qf
-        JruJuFsbA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42072)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jhZ7C-0004Xy-Ln; Sat, 06 Jun 2020 14:44:02 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jhZ77-00005S-0G; Sat, 06 Jun 2020 14:43:57 +0100
-Date:   Sat, 6 Jun 2020 14:43:56 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: dsa: qca8k: introduce SGMII configuration
- options
-Message-ID: <20200606134356.GM1551@shell.armlinux.org.uk>
-References: <cover.1591380105.git.noodles@earth.li>
- <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
- <20200605183843.GB1006885@lunn.ch>
- <20200606074916.GM311@earth.li>
- <20200606083741.GK1551@shell.armlinux.org.uk>
- <20200606105909.GN311@earth.li>
+        Sat, 6 Jun 2020 10:03:04 -0400
+Received: by mail-io1-f70.google.com with SMTP id t23so7691620iog.21
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:03:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=LJZAuGgzfSnkvHTmE00Iff6jeeP1gMLsIve5vPXs9J8=;
+        b=bdLZQJ3p7HZbjJ4SWil/V1IVKE2GLUZMraEu7lCJabJWsLtw39+jIQp95SrQ/4uHf/
+         j48xAFhnqjmGPa3b3NWnJQ9VCQtR5dLkLeU3Er5Iajz3WdpwGMi8b8bbggA84SVWGSIA
+         ekWPxK7E1iPvI2nD1H/FsZeIYDKvk3H1tN2+5hLhdUDglBvSJTfzUcYxY74cvejPGolB
+         7+hePo022KcdAJq782EA12R1lYYNvlySyXFmDGVaPcf6laqT+VDa3REbbhgZnRTHuTAN
+         CJGJLPwNoY3gRWOwm3OaBlt40tKeEx7xQbkalSa4lad+v+ds+iYvS64lkyIa4KpqR3CC
+         g82Q==
+X-Gm-Message-State: AOAM533Tw4VOhg/U47OWIK0YYdjPLw5NRN0t5cPv02VSywlLhMUOXISr
+        1MqJ1a07K9dfULQqO2F2tcjQlV366OQVr2m7JtqLfLevgO5s
+X-Google-Smtp-Source: ABdhPJzqn+ZSrIp0x1Uvpzv2NUn6zmkiotwyelbnzRpg0vI/I0Hdz20BOyamVd6Xl18toENqbikwZsxqDbgImYnWA1pkJU5UCXOc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200606105909.GN311@earth.li>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a02:998b:: with SMTP id a11mr13290455jal.117.1591452183421;
+ Sat, 06 Jun 2020 07:03:03 -0700 (PDT)
+Date:   Sat, 06 Jun 2020 07:03:03 -0700
+In-Reply-To: <000000000000c54420059e4f08ff@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000011eb1705a76ad69d@google.com>
+Subject: Re: WARNING in dev_change_net_namespace
+From:   syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, dsahern@gmail.com,
+        ebiederm@xmission.com, edumazet@google.com, eric.dumazet@gmail.com,
+        hawk@kernel.org, jiri@mellanox.com, johannes.berg@intel.com,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, leon@kernel.org, linux-kernel@vger.kernel.org,
+        mkubecek@suse.cz, netdev@vger.kernel.org,
+        saiprakash.ranjan@codeaurora.org, songliubraving@fb.com,
+        suzuki.poulose@arm.com, syzkaller-bugs@googlegroups.com,
+        will@kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 11:59:09AM +0100, Jonathan McDowell wrote:
-> So the device in question is a 7 port stand alone switch chip. There's a
-> single SGMII port which is configurable between port 0 + 6 (they can
-> also be configure up as RGMII, while the remaining 5 ports have their
-> own phys).
-> 
-> It sounds like there's a strong preference to try and auto configure
-> things as much as possible, so I should assume the CPU port is in MAC
-> mode, and anything not tagged as a CPU port is talking to a PHY/BASEX.
-> 
-> I assume I can use PHY_INTERFACE_MODE_1000BASEX on the
-> phylink_mac_config call to choose BASEX?
+syzbot has bisected this bug to:
 
-Yes, but from what you've mentioned above, I think I need to ensure that
-there's a proper understanding here.
+commit 13dc4d836179444f0ca90188cfccd23f9cd9ff05
+Author: Will Deacon <will@kernel.org>
+Date:   Tue Apr 21 14:29:18 2020 +0000
 
-1000BASE-X is the IEEE 802.3 defined 1G single lane Serdes protocol.
-SGMII is different; it's a vendor derivative of 1000BASE-X which has
-become a de-facto standard.
+    arm64: cpufeature: Remove redundant call to id_aa64pfr0_32bit_el0()
 
-Both are somewhat compatible with each other; SGMII brings with it
-additional data replication to achieve 100M and 10M speeds, while
-keeping the link running at 1.25Gbaud.  In both cases, there is a
-16-bit "configuration" word that is passed between the partners.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109aa3b1100000
+start commit:   7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=129aa3b1100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=149aa3b1100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
+dashboard link: https://syzkaller.appspot.com/bug?extid=830c6dbfc71edc4f0b8f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12032832100000
 
-1000BASE-X uses this configuration word to advertise the abilities of
-each end, which is limited to duplex and pause modes only.  This you
-get by specifying the phy-mode="1000base-x" and
-managed="in-band-status" in DT.
+Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
+Fixes: 13dc4d836179 ("arm64: cpufeature: Remove redundant call to id_aa64pfr0_32bit_el0()")
 
-SGMII uses this configuration word for the media side to inform the
-system side which mode it wishes to operate the link: the speed and
-duplex.  Some vendors extend it to include EEE parameters as well,
-or pause modes.  You get this via phy-mode="sgmii" and
-managed="in-band-status" in DT.
-
-Then there are variants where the configuration word is not present.
-In this case, the link has to be manually configured, and without the
-configuration word, SGMII operating at 1G is compatible with
-1000base-X operating at 1G.  Fixed-link can be used for this, although
-fixed-link will always report that the link is up at the moment; that
-may change in the future, it's something that is being looked into at
-the moment.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
