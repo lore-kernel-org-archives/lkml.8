@@ -2,95 +2,115 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7270EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 03:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 03:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F11206DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 03:20:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HrDnOjP8"
+	by mail.kernel.org (Postfix) with ESMTP id 7599B20656
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 03:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgFFDUS (ORCPT
+        id S1728566AbgFFDrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 5 Jun 2020 23:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728523AbgFFDUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 5 Jun 2020 23:20:17 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2CE4C08C5C2;
-        Fri,  5 Jun 2020 20:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QCHbUkMYkrQJAPIqPlZ6VLNz3QmvlT+5Bsoz5d+kZkc=; b=HrDnOjP8lxTV2gp0+5S/V/+6Fe
-        TJRoS3b62IqjQPH+Zb5/opZi+c4jc1QX24zhotF/L58RfchUFUuIGkNIlD9CbsM98qcbucS/ae8bB
-        wMiWijV5Dl1Cpo3BzYy6ptUO5/P8TVIg7LXzYl7GTSLgsP9bSReADMpSbfCCf+8sFx/j92lJhM870
-        +2YkvOm2FukwHVomLONhTQdt7rzMaK8wCbonT+O+IbtaVvC9HBtlRbGpCskkxDG+iR6N7fKSJzAfa
-        Df6OTAVzzn2VTbeklQUgl8LO6FiQPsUBExeD1fuZHBrmv8RRRxtKy7MUbpguf6N/UtXwTMlkil0lB
-        B59V0GAQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jhPNT-0001pB-IT; Sat, 06 Jun 2020 03:20:11 +0000
-Date:   Fri, 5 Jun 2020 20:20:11 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v6 1/8] fs: introduce kernel_pread_file* support
-Message-ID: <20200606032011.GM19604@bombadil.infradead.org>
-References: <20200605225959.12424-1-scott.branden@broadcom.com>
- <20200605225959.12424-2-scott.branden@broadcom.com>
+        Fri, 5 Jun 2020 23:47:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:5462 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728477AbgFFDrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 5 Jun 2020 23:47:46 -0400
+IronPort-SDR: QA3PoOGOn8A/dinoiLqcAtBbN5v9a+Y7UJ2VEsNitratyKoztzH4H+7nr0fbHuCubdZnYqR8e1
+ BDEPH7Gr6JQA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 20:47:45 -0700
+IronPort-SDR: doFUxYktMjT+9Frop2VWFJ+ZWLisjHACPXrUod+jj8Xgaxgn+uxK0KBDx7WxpnM44pJGmFiBTX
+ CUa8FImuX1pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,478,1583222400"; 
+   d="scan'208";a="287935558"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
+  by orsmga002.jf.intel.com with ESMTP; 05 Jun 2020 20:47:41 -0700
+Date:   Sat, 6 Jun 2020 11:46:55 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
+        "kbuild@lists.01.org" <kbuild@lists.01.org>,
+        "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "lkp@intel.com" <lkp@intel.com>, Dan Carpenter <error27@gmail.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [kbuild-all] Re: [PATCH 1/3] dma-direct: provide the ability to
+ reserve per-numa CMA
+Message-ID: <20200606034655.GH2459@intel.com>
+References: <20200603024231.61748-2-song.bao.hua@hisilicon.com>
+ <20200604113631.GP30374@kadam>
+ <B926444035E5E2439431908E3842AFD24E0011@DGGEMI525-MBS.china.huawei.com>
+ <20200605085751.GQ30374@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605225959.12424-2-scott.branden@broadcom.com>
+In-Reply-To: <20200605085751.GQ30374@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 03:59:52PM -0700, Scott Branden wrote:
-> -int kernel_read_file(struct file *file, void **buf, loff_t *size,
-> -		     loff_t max_size, enum kernel_read_file_id id)
-> -{
-> -	loff_t i_size, pos;
-> +int kernel_pread_file(struct file *file, void **buf, loff_t *size,
-> +		      loff_t pos, loff_t max_size,
-> +		      enum kernel_pread_opt opt,
-> +		      enum kernel_read_file_id id)
+On Fri, Jun 05, 2020 at 11:57:51AM +0300, Dan Carpenter wrote:
+> On Fri, Jun 05, 2020 at 06:04:31AM +0000, Song Bao Hua (Barry Song) wrote:
+> > 
+> > 
+> > > -----Original Message-----
+> > > From: Dan Carpenter [mailto:dan.carpenter@oracle.com]
+> > > Sent: Thursday, June 4, 2020 11:37 PM
+> > > To: kbuild@lists.01.org; Song Bao Hua (Barry Song)
+> > > <song.bao.hua@hisilicon.com>; hch@lst.de; m.szyprowski@samsung.com;
+> > > robin.murphy@arm.com; catalin.marinas@arm.com
+> > > Cc: lkp@intel.com; Dan Carpenter <error27@gmail.com>;
+> > > kbuild-all@lists.01.org; iommu@lists.linux-foundation.org;
+> > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Linuxarm
+> > > <linuxarm@huawei.com>; Jonathan Cameron
+> > > <jonathan.cameron@huawei.com>; John Garry <john.garry@huawei.com>
+> > > Subject: Re: [PATCH 1/3] dma-direct: provide the ability to reserve per-numa
+> > > CMA
+> > > 
+> > > Hi Barry,
+> > > 
+> > > url:
+> > > https://github.com/0day-ci/linux/commits/Barry-Song/support-per-numa-CM
+> > > A-for-ARM-server/20200603-104821
+> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+> > > for-next/core
+> > > config: x86_64-randconfig-m001-20200603 (attached as .config)
+> > > compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
+> > > 
+> > > If you fix the issue, kindly add following tag as appropriate
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > 
+> > Dan, thanks! Good catch!
+> > as this patch has not been in mainline yet, is it correct to add these "reported-by" in patch v2?
+Hi Barry, we provides the suggestion here, but you may decide
+to add or not as appropriate for your situation. For the
+patch still under development, it is not that necessary to add i think.
 
-What is this 'kernel_pread_opt' foolishness?  Why not just pass in
-~0UL as max_size if you want the entire file?
-
-> -int kernel_read_file_from_path_initns(const char *path, void **buf,
-> -				      loff_t *size, loff_t max_size,
-> -				      enum kernel_read_file_id id)
-> +extern int kernel_pread_file_from_path_initns(const char *path, void **buf,
-
-extern?  really?  i'm shocked gcc doesn't vomit on that.
-
+> 
+> These are just an automated email from the zero day bot.  I look over
+> the Smatch warnings and then forward them on.
+> 
+> regards,
+> dan carpenter
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
