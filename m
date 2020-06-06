@@ -2,181 +2,172 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2799BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A56A7207D0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0B2207F9
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 08:38:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AEQP4mJx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VaXQHtQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgFFI2F (ORCPT
+        id S1728668AbgFFIiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 04:28:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52374 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725283AbgFFI2D (ORCPT
+        Sat, 6 Jun 2020 04:38:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbgFFIiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 04:28:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591432081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cI+J3XaYv4s5eMcqs0Xe5DiyhG/i5iBDcjDr1HvW0xY=;
-        b=AEQP4mJxj9KjcpurUukjIbFBh3bkqd/5PCJtGCSs6Zkz1LZf2bl2Aw3kwzYcQHz90iUqdA
-        RGXsY1QfmkPPdSTuFa5olWXMmJYLtdI8AckNMyAWRokkKjlvhA+SKrM1vcgEuXFwn/SOrj
-        KQepouxfrB+z3WoJrD13PnULzfbb8u8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-413-M5wIGaAROM6cAWbn1D6Ung-1; Sat, 06 Jun 2020 04:27:58 -0400
-X-MC-Unique: M5wIGaAROM6cAWbn1D6Ung-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B9F6764AD0;
-        Sat,  6 Jun 2020 08:27:56 +0000 (UTC)
-Received: from krava (unknown [10.40.192.28])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 84A31610AF;
-        Sat,  6 Jun 2020 08:27:54 +0000 (UTC)
-Date:   Sat, 6 Jun 2020 10:27:53 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 13/13] perf record: introduce --ctl-fd[-ack] options
-Message-ID: <20200606082753.GA1449048@krava>
-References: <923c40c7-7c0b-9fad-314d-69e7acbee201@intel.com>
- <937c8cc1-b4c2-8531-3fa4-d0ad9df6a65f@linux.intel.com>
- <20200601233732.GA691017@tassilo.jf.intel.com>
- <1bc7c72b-9d78-5184-a27c-8025beadaaf0@linux.intel.com>
- <d7924d7c-e2e5-c067-b9e0-cfea919e7780@linux.intel.com>
- <935187e8-6fc8-5f47-b88d-6e8c92a27286@intel.com>
- <20200605105108.GB1404794@krava>
- <3ac6d0b8-5fae-348f-8556-4bf7a66285f6@linux.intel.com>
- <20200605135743.GD1404794@krava>
- <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
+        Sat, 6 Jun 2020 04:38:02 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7438BC08C5C2;
+        Sat,  6 Jun 2020 01:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bBoDKAW2lJXm+wJrPYbdtaUURKFNhWDjub7YetELq/E=; b=VaXQHtQJNnpoh3zej1C4DS0E7
+        qJDThrbbJFYV3m5qt2lKjJLkJMO63RDmX2RtzvLH+oT9bDQ4sOe/I6KLb2/1EXM1rCNwKM31vo7ga
+        G+6aefq8zOUjfJFj3WT+PRhEumhRr81+lMGhaMclKJykWTLZhhip/2nDfzyCVUYsaQ97rkIgtDRRo
+        LHHfTRtQKDOmlJICM1W6oN7b7M1D/AzoqNXcauL93EXo7OKosBU+x+1O7rBH/2ntesyrR6jk81lwk
+        TzBskNeZ7XfT6oCRhLOTV72dKy8GX0NER4x26+zcHOQyCKZ4Lg1qMGZHzyn5OZvta6bqj+ZBm6xVT
+        rVKcVzxgA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39538)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jhUKp-00046J-G6; Sat, 06 Jun 2020 09:37:47 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jhUKj-0008Kk-A2; Sat, 06 Jun 2020 09:37:41 +0100
+Date:   Sat, 6 Jun 2020 09:37:41 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] net: dsa: qca8k: introduce SGMII configuration
+ options
+Message-ID: <20200606083741.GK1551@shell.armlinux.org.uk>
+References: <cover.1591380105.git.noodles@earth.li>
+ <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
+ <20200605183843.GB1006885@lunn.ch>
+ <20200606074916.GM311@earth.li>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c4f3fc64-0ea1-8a5a-ee9d-7d581510c70b@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200606074916.GM311@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 05:47:28PM +0300, Alexey Budankov wrote:
-> 
-> On 05.06.2020 16:57, Jiri Olsa wrote:
-> > On Fri, Jun 05, 2020 at 04:15:52PM +0300, Alexey Budankov wrote:
-> >>
-> >> On 05.06.2020 13:51, Jiri Olsa wrote:
-> >>> On Tue, Jun 02, 2020 at 04:43:58PM +0300, Adrian Hunter wrote:
-> >>>> On 2/06/20 12:12 pm, Alexey Budankov wrote:
-> >>>>>
-> >>>>> On 02.06.2020 11:32, Alexey Budankov wrote:
-> >>>>>>
-> >>>>>> On 02.06.2020 2:37, Andi Kleen wrote:
-> >>>>>>>>> or a pathname, or including also the event default of "disabled".
-> >>>>>>>>
-> >>>>>>>> For my cases conversion of pathnames into open fds belongs to external
-> >>>>>>>> controlling process e.g. like in the examples provided in the patch set.
-> >>>>>>>> Not sure about "event default of 'disabled'"
-> >>>>>>>
-> >>>>>>> It would be nicer for manual use cases if perf supported the path names
-> >>>>>>> directly like in Adrian's example, not needing a complex wrapper script.
-> >>>>>>
-> >>>>>> fds interface is required for VTune integration since VTune wants control
-> >>>>>> over files creation aside of Perf tool process. The script demonstrates
-> >>>>>> just one possible use case.
-> >>>>>>
-> >>>>>> Control files could easily be implemented on top of fds making open operations
-> >>>>>> for paths and then initializing fds. Interface below is vague and with explicit
-> >>>>>> options like below it could be more explicit:
-> >>>>>> --ctl-file /tmp/my-perf.fifo --ctl-file-ack /tmp/my-perf-ack.fifo
-> >>>>>
-> >>>>> Or even clearer:
-> >>>>>
-> >>>>> --ctl-fifo /tmp/my-perf --ctl-fifo-ack /tmp/my-perf-ack
-> >>>>
-> >>>> If people are OK with having so many options, then that is fine by me.
-> >>>
-> >>> the single option Adrian suggested seems better to me:
-> >>>
-> >>>  --control
-> >>>  --control 11
-> >>>  --control 11,15
-> >>
-> >> What if a user specifies fifos named like this above, not fds?
-> >>
-> >>>  --control 11,15,disabled
-> >>>  --control 11,,disabled
-> >>>  --control /tmp/my-perf.fifo
-> >>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
-> >>
-> >> What if a user wants not fifos but other type of comm channels?
-> >>
-> >>>  --control /tmp/my-perf.fifo,/tmp/my-perf-ack.fifo,disabled
-> >>>  --control /tmp/my-perf.fifo,,disabled
-> >>>
-> >>> we already support this kind of options arguments, like for --call-graph
-> >>>
-> >>> jirka
-> >>>
-> >>
-> >> IMHO,
-> >> this interface, of course, looks more compact (in amount of options) however
-> >> the other side it is less user friendly. One simple option for one simple
-> >> purpose is more convenient as for users as for developers. Also complex
-> >> option syntax tends to have limitations and there are probably more
-> >> non-obvious ones.
-> >>
-> >> Please speak up. I might have missed something meaningful.
+On Sat, Jun 06, 2020 at 08:49:16AM +0100, Jonathan McDowell wrote:
+> On Fri, Jun 05, 2020 at 08:38:43PM +0200, Andrew Lunn wrote:
+> > On Fri, Jun 05, 2020 at 07:10:58PM +0100, Jonathan McDowell wrote:
+> > > The QCA8337(N) has an SGMII port which can operate in MAC, PHY or BASE-X
+> > > mode depending on what it's connected to (e.g. CPU vs external PHY or
+> > > SFP). At present the driver does no configuration of this port even if
+> > > it is selected.
+> > > 
+> > > Add support for making sure the SGMII is enabled if it's in use, and
+> > > device tree support for configuring the connection details.
 > > 
-> > how about specify the type like:
+> > It is good to include Russell King in Cc: for patches like this.
+> 
+> No problem, I can keep him in the thread; I used get_maintainer for the
+> initial set of people/lists to copy.
+
+get_maintainer is not always "good" at selecting the right people,
+especially when your patches don't match the criteria; MAINTAINERS
+contains everything that is sensible, but Andrew is suggesting that
+you copy me because in his opinion, you should be using phylink -
+and that's something that you can't encode into a program.
+
+Note that I haven't seen your patches.
+
+> > Also, netdev is closed at the moment, so please post patches as RFC.
+> 
+> "closed"? If you mean this won't get into 5.8 then I wasn't expecting it
+> to, I'm aware the merge window for that is already open.
+
+See https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+"How often do changes from these trees make it to the mainline Linus
+tree?"
+
+> > It sounds like the hardware has a PCS which can support SGMII or
+> > 1000BaseX. phylink will tell you what mode to configure it to. e.g. A
+> > fibre SFP module will want 1000BaseX. A copper SFP module will want
+> > SGMII. A switch is likely to want 1000BaseX. A PHY is likely to want
+> > SGMII. So remove the "sgmii-mode" property and configure it as phylink
+> > is requesting.
+> 
+> It's more than SGMII or 1000BaseX as I read it. The port can act as if
+> it's talking to an SGMII MAC, i.e. a CPU, or an SGMII PHY, i.e. an
+> external PHY, or in BaseX mode for an SFP. I couldn't figure out a way
+> in the current framework to automatically work out if I wanted PHY or
+> MAC mode. For the port tagged CPU I can assume MAC mode, but a port that
+> doesn't have that might still be attached to the CPU rather than an
+> external PHY.
+
+That depends what you're connected to. Some people call the two sides
+of SGMII "System side" and "Media side". System side is where you're
+receiving the results of AN from a PHY. Media side is where you're
+telling the partner what you want it to do.
+
+Media side is only useful if you're connected to another MAC, and
+unless you have a requirement for it, I would suggest not implementing
+that - you could come up with something using fixed-link, or it may
+need some other model if the settings need to change.  That depends on
+the application.
+
+> > What exactly does sgmii-delay do?
+> 
+> As per the device tree documentation update I sent it delays the SGMII
+> clock by 2ns. From the data sheet:
+> 
+> SGMII_SEL_CLK125M	sgmii_clk125m_rx_delay is delayed by 2ns
+
+This sounds like a new world of RGMII delay pain but for SGMII. There
+is no mention of "delay" in the SGMII v1.8 specification, so I guess
+it's something the vendor is doing. Is this device capable of
+recovering the clock from a single serdes pair carrying the data,
+or does it always require the separate clock?
+
+> > > +#define QCA8K_REG_SGMII_CTRL				0x0e0
+> > > +#define   QCA8K_SGMII_EN_PLL				BIT(1)
+> > > +#define   QCA8K_SGMII_EN_RX				BIT(2)
+> > > +#define   QCA8K_SGMII_EN_TX				BIT(3)
+> > > +#define   QCA8K_SGMII_EN_SD				BIT(4)
+> > > +#define   QCA8K_SGMII_CLK125M_DELAY			BIT(7)
+> > > +#define   QCA8K_SGMII_MODE_CTRL_MASK			(BIT(22) | BIT(23))
+> > > +#define   QCA8K_SGMII_MODE_CTRL_BASEX			0
+> > > +#define   QCA8K_SGMII_MODE_CTRL_PHY			BIT(22)
+> > > +#define   QCA8K_SGMII_MODE_CTRL_MAC			BIT(23)
 > > 
-> > --control fd:1,2,...
-> 
-> What do these ... mean?
-
-other possible options
-
-> 
-> > --control fifo:/tmp/fifo1,/tmp/fifo2
-> > --control xxx:....
+> > I guess these are not really bits. You cannot combine
+> > QCA8K_SGMII_MODE_CTRL_MAC and QCA8K_SGMII_MODE_CTRL_PHY. So it makes
+> > more sense to have:
 > > 
-> > this way we can extend the functionality in the future
-> > and stay backward compatible, while keeping single option
+> > #define   QCA8K_SGMII_MODE_CTRL_BASEX			(0x0 << 22)
+> > #define   QCA8K_SGMII_MODE_CTRL_PHY			(0x1 << 22)
+> > #define   QCA8K_SGMII_MODE_CTRL_MAC			(0x2 << 22)
 > 
-> Well, it clarifies more. However it still implicitly assumes
-> and requires proper ordering e.g. 1 is ctl-fd and 2 is ack-fd
-> and if there are some more positions there will be gaps like
-> --control fd:10,,something,,something ...
+> Sure; given there's no 0x3 choice I just went for the bits that need
+> set, but that works too.
 
-right, that's what we do for other options
+I also prefer Andrew's suggestion, as it makes it clear that it's a two
+bit field.
 
-> 
-> Why is one single option with complex syntax more preferable
-> than several simple options? Also it would still consume almost
-> equal amount of command line space in shell.
-
-I think it's better for future.. say if there's going to be support
-for passing file paths you'll need to add something like --ctl-fifo
-and --ctl-fifo-ack no?  with single option we'd just add something
-like:
-
-  --control fifo:/tmp/my-perf.fifo,/tmp/my-perf-ack.fifo
-
-jirka
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
