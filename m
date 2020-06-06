@@ -2,232 +2,158 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9589AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C97A22077D
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7581C2077D
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 15:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hdWfJjyv"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CTKfbrCW";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="L2jAIXty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgFFPpU (ORCPT
+        id S1728657AbgFFPpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 11:45:20 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20598 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727063AbgFFPpS (ORCPT
+        Sat, 6 Jun 2020 11:45:23 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:52568 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727807AbgFFPpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 11:45:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591458315;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VJQzV0rdN7ALnL6NeYYp172fRlPbPlchooy6Ga8Vcnw=;
-        b=hdWfJjyv+qpTD95utnbVggtkePgX7CNyj9QZWTdGduImB6TzY9AWYSkiCNKMxKBwWAgup0
-        hVgg/ncIdOCVrOYtcXU2mLdl9zI80gcwCurBEI0pZeVcwP3xKsBkFPObpAr1HYAa5syaJf
-        kFnHnhe3RNwAIzdm+UJfPKFLpMGt4qg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-BmcrIUfmPBiDXwb1h2BrVA-1; Sat, 06 Jun 2020 11:45:13 -0400
-X-MC-Unique: BmcrIUfmPBiDXwb1h2BrVA-1
-Received: by mail-wm1-f72.google.com with SMTP id u11so3649577wmc.7
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 08:45:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VJQzV0rdN7ALnL6NeYYp172fRlPbPlchooy6Ga8Vcnw=;
-        b=VbG2AOsv6uO5KxMpwgQpPSFugR8Vnu/Tjk2PTo/yuFLFYm2So2XlgGmAeVQatH/EGw
-         voXEunMzwTornhjtoNRXuKFwoQUDpsCZKbOaBAKnHHoPqJhdpKgmyZdJs1SmVjdA6wEm
-         uY1ozMqZCIdsnYNAfGIg4BLdR1Ie5AApfFtJkqD8dj4U1XNxV1jkWa7sPhOnlOWZXLXJ
-         ZwJoYsaO6z+G13s6md/AgdL4ripvCdlyfUt7LWgvQHzGI2xMwq5qk/+/9vXzdUfX1sNo
-         kkeBGp0vAiRdIvCdjcTv/r1Gk5OcAodt5HY6BWg9Q48Tyn6YP/ImAmuYMEOdLW8VYNWg
-         hcwA==
-X-Gm-Message-State: AOAM533bA1k6Sl8LwDkON0q5P5SjhijbQ5JH7Ez4kjL5PtPNOSbe7eQ8
-        gTUwbYdsaRQFoW+tXHpo92TM5kqRjQgGmLyNPJrvFe1+oSh8Vdji04Ts1a9se8BVlT3c8BKQA9T
-        35cuLPU98odoRpgkvpCGtQxwC
-X-Received: by 2002:a1c:3987:: with SMTP id g129mr7911375wma.139.1591458311895;
-        Sat, 06 Jun 2020 08:45:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwCDW5eisq+hVdc/k8mWioQT6xTsFq1sXcnNLuRMkVzcYDUxMLASfVmmPO56Y+qGXj0fQVHZA==
-X-Received: by 2002:a1c:3987:: with SMTP id g129mr7911353wma.139.1591458311579;
-        Sat, 06 Jun 2020 08:45:11 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id t14sm18219200wrb.94.2020.06.06.08.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jun 2020 08:45:10 -0700 (PDT)
-Subject: Re: [PATCH] ACPI: PM: Avoid using power resources if there are none
- for D0
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        youling257@gmail.com, LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200603194659.185757-1-hdegoede@redhat.com>
- <CAJZ5v0g7rhiWs0ZeGGS5OoSMH7DiVT1D-EUgX5HFXYkcvXcm2Q@mail.gmail.com>
- <d084b424-a340-a24a-d681-c92d80d8421d@redhat.com>
- <13388608.OHKVb9tm6R@kreacher>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fddf7e38-cbc3-e923-9e4c-fe4f9903f24e@redhat.com>
-Date:   Sat, 6 Jun 2020 17:45:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <13388608.OHKVb9tm6R@kreacher>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sat, 6 Jun 2020 11:45:20 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 94C53406BF;
+        Sat,  6 Jun 2020 15:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1591458319; bh=O560krAgh4WhvRdlf819YQrn/zlaNtR0w0KD4HK1A+k=;
+        h=From:To:Subject:Date:References:In-Reply-To:From;
+        b=CTKfbrCWrHoLJlaHU5w6G90ZSue66i48meEAT9YpsF5cexuV7dP7VKzXJUL5haIO2
+         CLX9L4VpymOap0HzM19gkJwRsu10UAbtbfDcx0Ur97ZR2AlPevugTNDVMQDFxOs3hr
+         mLskmZQHR6SscZV70yGUIEPfUNX0g1ZHEh3lbB4q4UvlABE04mLVmA7PS37PkYRuWO
+         L/a4FKDkqHfQD3TOqNZthfsJG0ihcbpX6sYwZXnI1phEVH9I/f5yAZc0kUBJ/0mIKm
+         Inn51+7G2idLxd39pMjHs/dGPJ2LfPySmK2lXykgu/7oJavcR8N6dPMt0OYWpgW3N0
+         qp+6mCzO9xRzA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 91072A0071;
+        Sat,  6 Jun 2020 15:45:17 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Sat, 6 Jun 2020 08:45:17 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Sat, 6 Jun 2020 08:45:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vtl3jID1WQ3b3Dj7RSNJVzP5/+jyakpl5m1DYorSA4YdELWgqTvTby5VOI7T1DDa5Ao3uTJMRjuD5YEQZpZkzJuRP+iD5sp1/ElO2eKYfcqQer2ZS6qeCDzVG8klUQJBMvvPg2D1CdjATlFNOxs50fTonOy5Hw4iW89xE9DoWK8BWz64xzlqL4Kb6doLMgF8Mvf59cKrv3RIb3upIg76Kf+Xg5cweBGelZJKQxwM0xHJ+DkwO3eNKVtVknRQkI26rSkbczsu7qVs/zqyomHBqSAE/XXh95sRmJzRPlmkz7AA0ij1hOvX8Rq6HdN1PIzOPGlrgGZPU61PZJPT922pqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HPd+oPLp7VONbjjKEVQKluPsvaA8+PyRtHhVPtZ3E4w=;
+ b=HT0CBJAaUeWfOOx921waJVPfN3sUFHcl3kHuyEeYJbUkvCU8JAUi/mimvZ8RRfHeL91PxMzE2wWLMtfqAqj5fFabogWDtXZ5lbF2cv0mI5H6bfe3o9+Lc/R40o28LQGaI1Oxso9brBL/fIVKukfgobDjEEzeR6j0e80WUYs7YwBCgAjllZRiCXosH+BsPuQ0YFyEkQ61XaYCxQyhgqNoAFR7iKb/i0w38pmbzphVsqYZPlD9tapr0OSRWYDQCBM41marPPu2mRuLBHGQ9X5YxOO4PpIOHYd5tfCggNhO6M9r4OEjd97MxvGlwnN+3HdWS3fTs4PnZO/7HfRSTFFI9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HPd+oPLp7VONbjjKEVQKluPsvaA8+PyRtHhVPtZ3E4w=;
+ b=L2jAIXtyYYny+D4lZEPKaivRglBCDuI/z8HbHL108Zo6rs9hblprG8eVQEshjVtLJ5PzKpVkFf6hk9oFi/XWWWG7S8H0YGdMIgXXcRNJLjxeHiNByxu4x6iNjPsBafLsX5KUWTZqKLLDQuPLW/FgvBayFPmLJJu/Z0W/nBoAJo4=
+Received: from SN1PR12MB2557.namprd12.prod.outlook.com (2603:10b6:802:22::15)
+ by SN1PR12MB2367.namprd12.prod.outlook.com (2603:10b6:802:26::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Sat, 6 Jun
+ 2020 15:45:14 +0000
+Received: from SN1PR12MB2557.namprd12.prod.outlook.com
+ ([fe80::78a8:d153:7e1c:57a5]) by SN1PR12MB2557.namprd12.prod.outlook.com
+ ([fe80::78a8:d153:7e1c:57a5%7]) with mapi id 15.20.3066.023; Sat, 6 Jun 2020
+ 15:45:14 +0000
+X-SNPS-Relay: synopsys.com
+From:   Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+To:     Pavel Machek <pavel@denx.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "trivial@kernel.org" <trivial@kernel.org>
+Subject: Re: [PATCH] sr: dwc2/gadget: remove unneccessary if
+Thread-Topic: [PATCH] sr: dwc2/gadget: remove unneccessary if
+Thread-Index: AQHWPBhw3SL7LTHMVUK+qAoLyD/PXKjLur6A
+Date:   Sat, 6 Jun 2020 15:45:14 +0000
+Message-ID: <4057a9d1-2cf4-78a1-9f29-587a87b523b4@synopsys.com>
+References: <20200606153703.GA18931@amd>
+In-Reply-To: <20200606153703.GA18931@amd>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+authentication-results: denx.de; dkim=none (message not signed)
+ header.d=none;denx.de; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7f110b41-301d-4fa9-afa9-08d80a309ada
+x-ms-traffictypediagnostic: SN1PR12MB2367:
+x-microsoft-antispam-prvs: <SN1PR12MB2367059F7E92F2FA0FB65D5BA7870@SN1PR12MB2367.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-forefront-prvs: 04267075BD
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HtKv+YNeT9Nq5S6gpAfyfjFQjEiMuPEWEVetqD2l9yBjPQmGXOMiN5pwet3l4WDqwTt4WQ8Qn0J0nPBvs+k6+rhsz5lX0DTVCpEGwgILlMR2NYt17GYLYaFYpB3FIkp19ePs/amXnSF5Z6ESJg519nDO5BjJv8WBLraxzbxZTti6E0J+3x+vnC5myJHytKxXPbJELKOKQVaZf/cE5Z5vefVh7LsqR7DmgPRXBdO0e6FYPsnsgK3IDWEatCP36q22F/Jrs47WpfrHx5gELL+XX37aXy1x4qpI8utRNBG9Oe/ta7JK9uWU+a+wK1JWtGMaRINrTycgdsMItkQF4Ni8ei5jv0nKMkStmANBSXXxRpxpoFVC8AgZjVMBcuB6KdcH
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(136003)(346002)(376002)(39860400002)(26005)(76116006)(186003)(36756003)(66946007)(66476007)(71200400001)(66556008)(86362001)(66446008)(91956017)(8676002)(2616005)(64756008)(6486002)(316002)(2906002)(53546011)(110136005)(8936002)(6506007)(478600001)(83380400001)(4744005)(31686004)(5660300002)(6512007)(31696002)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: bqPoI4zqFEqQAOp1Ygi5zsXWZ7pAizvvyslx2UOt+yXOqoCb/Pooi3kZqTmcNg083qdMTbKDkFg9f9aPd4Ucs3FZdo63pzj/+2Q5rk0Y8mDJR+Ec/TA+jKo0CIzZiK9rCnoctsgjMqkT4QjNa9xMrCebI2D2tF7oc2Wu+dGIaXUXxYdhUYdgVhzZH4VzpdAJiLIskOJ8ZbXuLhZjXxvgxNhUtQWLguBN7d0Pzxhnidsvw5cIenXprEau3phMqjk6V0KE02sLXrd3u+/9SJyXUiq2TcJcpwIgHjG2fuau/8V3ozvsxMc0jrCK5D6SaE52E/Qq+rqNxwYcsJ+2AZNht+Q9hdLFM+U4Vz3VfJV7XdQeDjZf5J648Gp/BcMnmsWYb9CEei4czUW2Q/YDVRGmomApTUnFKV1z3gLITPnyh7ZZJ0LBUhKtYfx2Q96PTAdKQZkLHilxb19dWwlE3fAg+Bd7UXb/+sqH60wOnI27LQyYhzV6Bb4fEUQuM6QXQ7AT
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <4FBD9350E4DDCC46881ECFE74041C926@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f110b41-301d-4fa9-afa9-08d80a309ada
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2020 15:45:14.4376
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Q6JGeZW9teQntQIomGdRXOMULjpJb+EKPpev0xc96BG0Lq5/wFrGzUkxoXBbwMoUtN0ahGgrjzCaR38xLY/6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2367
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Pavel,
 
-On 6/4/20 7:22 PM, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> As recently reported, some platforms provide a list of power
-> resources for device power state D3hot, through the _PR3 object,
-> but they do not provide a list of power resources for device power
-> state D0.
-> 
-> Among other things, this causes acpi_device_get_power() to return
-> D3hot as the current state of the device in question if all of the
-> D3hot power resources are "on", because it sees the power_resources
-> flag set and calls acpi_power_get_inferred_state() which finds that
-> D3hot is the shallowest power state with all of the associated power
-> resources turned "on", so that's what it returns.  Moreover, that
-> value takes precedence over the acpi_dev_pm_explicit_get() return
-> value, because it means a deeper power state.  The device may very
-> well be in D0 physically at that point, however.
-> 
-> Moreover, the presence of _PR3 without _PR0 for a given device
-> means that only one D3-level power state can be supported by it.
-> Namely, because there are no power resources to turn "off" when
-> transitioning the device from D0 into D3cold (which should be
-> supported since _PR3 is present), the evaluation of _PS3 should
-> be sufficient to put it straight into D3cold, but this means that
-> the effect of turning "on" the _PR3 power resources is unclear,
-> so it is better to avoid doing that altogether.  Consequently,
-> there is no practical way do distinguish D3cold from D3hot for
-> the device in question and the power states of it can be labeled
-> so that D3hot is the deepest supported one (and Linux assumes
-> that putting a device into D3hot via ACPI may cause power to be
-> removed from it anyway, for legacy reasons).
-> 
-> To work around the problem described above modify the ACPI
-> enumeration of devices so that power resources are only used
-> for device power management if the list of D0 power resources
-> is not empty and make it mart D3cold as supported only if that
-> is the case and the D3hot list of power resources is not empty
-> too.
-> 
-> Fixes: ef85bdbec444 ("ACPI / scan: Consolidate extraction of power resources lists")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=205057
-> Link: https://lore.kernel.org/linux-acpi/20200603194659.185757-1-hdegoede@redhat.com/
-> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 6/6/2020 7:37 PM, Pavel Machek wrote:
+> We don't really need if/else to set variable to 1/0.
+>=20
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+>=20
+> diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+> index 12b98b466287..f9f6fd470c81 100644
+> --- a/drivers/usb/dwc2/gadget.c
+> +++ b/drivers/usb/dwc2/gadget.c
+> @@ -1761,10 +1761,7 @@ static int dwc2_hsotg_process_req_feature(struct d=
+wc2_hsotg *hsotg,
+>   	case USB_RECIP_DEVICE:
+>   		switch (wValue) {
+>   		case USB_DEVICE_REMOTE_WAKEUP:
+> -			if (set)
+> -				hsotg->remote_wakeup_allowed =3D 1;
+> -			else
+> -				hsotg->remote_wakeup_allowed =3D 0;
+> +			hsotg->remote_wakeup_allowed =3D set;
+>   			break;
+>  =20
+>   		case USB_DEVICE_TEST_MODE:
+>=20
 
-Thank you.
+It's good catch, but 'set' declared as 'bool' while=20
+'remote_wakeup_allowed' is 'unsigned int'. Maybe update 'set' type to same.
 
-I've tested this and I can confirm that it fixes the issue:
-
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-
-I've also looked at the code and it looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
-
-> ---
->   drivers/acpi/device_pm.c |    2 +-
->   drivers/acpi/scan.c      |   28 +++++++++++++++++++---------
->   2 files changed, 20 insertions(+), 10 deletions(-)
-> 
-> Index: linux-pm/drivers/acpi/scan.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/scan.c
-> +++ linux-pm/drivers/acpi/scan.c
-> @@ -919,12 +919,9 @@ static void acpi_bus_init_power_state(st
->   
->   		if (buffer.length && package
->   		    && package->type == ACPI_TYPE_PACKAGE
-> -		    && package->package.count) {
-> -			int err = acpi_extract_power_resources(package, 0,
-> -							       &ps->resources);
-> -			if (!err)
-> -				device->power.flags.power_resources = 1;
-> -		}
-> +		    && package->package.count)
-> +			acpi_extract_power_resources(package, 0, &ps->resources);
-> +
->   		ACPI_FREE(buffer.pointer);
->   	}
->   
-> @@ -971,14 +968,27 @@ static void acpi_bus_get_power_flags(str
->   		acpi_bus_init_power_state(device, i);
->   
->   	INIT_LIST_HEAD(&device->power.states[ACPI_STATE_D3_COLD].resources);
-> -	if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
-> -		device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
->   
-> -	/* Set defaults for D0 and D3hot states (always valid) */
-> +	/* Set the defaults for D0 and D3hot (always supported). */
->   	device->power.states[ACPI_STATE_D0].flags.valid = 1;
->   	device->power.states[ACPI_STATE_D0].power = 100;
->   	device->power.states[ACPI_STATE_D3_HOT].flags.valid = 1;
->   
-> +	/*
-> +	 * Use power resources only if the D0 list of them is populated, because
-> +	 * some platforms may provide _PR3 only to indicate D3cold support and
-> +	 * in those cases the power resources list returned by it may be bogus.
-> +	 */
-> +	if (!list_empty(&device->power.states[ACPI_STATE_D0].resources)) {
-> +		device->power.flags.power_resources = 1;
-> +		/*
-> +		 * D3cold is supported if the D3hot list of power resources is
-> +		 * not empty.
-> +		 */
-> +		if (!list_empty(&device->power.states[ACPI_STATE_D3_HOT].resources))
-> +			device->power.states[ACPI_STATE_D3_COLD].flags.valid = 1;
-> +	}
-> +
->   	if (acpi_bus_init_power(device))
->   		device->flags.power_manageable = 0;
->   }
-> Index: linux-pm/drivers/acpi/device_pm.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/device_pm.c
-> +++ linux-pm/drivers/acpi/device_pm.c
-> @@ -186,7 +186,7 @@ int acpi_device_set_power(struct acpi_de
->   		 * possibly drop references to the power resources in use.
->   		 */
->   		state = ACPI_STATE_D3_HOT;
-> -		/* If _PR3 is not available, use D3hot as the target state. */
-> +		/* If D3cold is not supported, use D3hot as the target state. */
->   		if (!device->power.states[ACPI_STATE_D3_COLD].flags.valid)
->   			target_state = state;
->   	} else if (!device->power.states[state].flags.valid) {
-> 
-> 
-> 
-
+Thanks,
+Minas
