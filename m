@@ -2,98 +2,123 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA6FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 12:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07785C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 12:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26009207F7
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 12:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25782074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 12:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXcJ4fdZ"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="HB/On//S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgFFMRe (ORCPT
+        id S1728774AbgFFM0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 08:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgFFMRd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 08:17:33 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6129C03E96A;
-        Sat,  6 Jun 2020 05:17:32 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l27so13089082ejc.1;
-        Sat, 06 Jun 2020 05:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hk6smH/b5kGoli94Coye/vpZUm75/XTObILHR+CQub8=;
-        b=TXcJ4fdZL0BsokOMUMMqykJ59VFN+WipCD2zlXZKEt5pAt7b7fQSeQHVXPxyLmK50V
-         ksUybD5baLvUukSmNGKpu64CA6DbsbDV2zw8Gl1D1SMrLPkBo60IB2tKIxyRVEYj1F2x
-         2SqJ+zLZaoJQIZ5uMns04hJrEyx1VBmzOXmgATDSbf44d/YmWqweOSzawiYB2hiQDGWu
-         rFvycZTfM+X/WLbDBnWpCnTLPkBI43lHxLgWbF9J1mjlRQKX4KZaeLXTB6nZ6CAYcBeW
-         PxmUcgn3ZfWqXLlklJuPZ5jZyX7jkyDyKw2eZ1V4L3tVjMdn0KYnDAmeNRk5HQUGo9/j
-         XzcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hk6smH/b5kGoli94Coye/vpZUm75/XTObILHR+CQub8=;
-        b=Rvor+Os74wjz+afNL+Ao8zmVHOOEyucKsXL7EphADMesZaVBifmd1wm2Z08zLNV1vd
-         l6+Oef+njaMDEh65NozINBodAZXsSW/0RpwzN74EHa40NLx28ZpiuUjwNL4uUBWhyCNm
-         KI4t+JHjALblKnm30CBCA0VIah4GcO/wsS4xhzDuUkTpM8spVH//CuNz3eZibuSiavLV
-         qOzqXUUQChhKsU/KgdqkQdh70NHyjbhvRdSDKv9osXd+E/LspvecSau7ge4yhvnNddEB
-         U2fipuS9HZwCtNMUaHbPZbFQN6VL4AqrylrIXBQlf1aAwaAP7TMNpAMBSHzl5AALahMr
-         NVOQ==
-X-Gm-Message-State: AOAM530a4OifCo6GfZ2tcJtL6LylM/bwoizNkhDFtUfw43yPJ2zLhjON
-        UQiPMe6kcZtDV41NQZzhajDXIEPL
-X-Google-Smtp-Source: ABdhPJwSaYyoaFlbI0H8hTTfGXKsk8LoUGH+cwY4yIqCp5SSYD09Ek3aTEdXFj1HwIOtjmZwutqi9w==
-X-Received: by 2002:a17:906:48d8:: with SMTP id d24mr5768698ejt.369.1591445851627;
-        Sat, 06 Jun 2020 05:17:31 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id e9sm7201502edl.25.2020.06.06.05.17.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jun 2020 05:17:30 -0700 (PDT)
-Subject: Re: [PATCH] PCI: rcar: handle the failure case of pm_runtime_get_sync
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
-References: <20200605032315.39071-1-navid.emamdoost@gmail.com>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <a83f5750-d58b-4a59-5253-880c74642ae2@gmail.com>
-Date:   Sat, 6 Jun 2020 14:17:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sat, 6 Jun 2020 08:26:36 -0400
+Received: from mout02.posteo.de ([185.67.36.66]:40471 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725831AbgFFM0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 08:26:36 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id 5C33F2400FF
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 14:26:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1591446393; bh=epeJiDa1gJiuVNMTII1fQFigLnJl1skHt7r0UvbAQ2w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HB/On//SfGLVG9Awz2iNs8FoSBZR+hBG9UceI1vTthis1m4pStTTh7e8ohuNdOutr
+         VE65n0Qjt7l0YExLaMYwAaWTgIIIvxqzwcuI9td/0/VdG0Kn2iq3Rhxhs3J6efsTOu
+         gIcGKJXy9PytHDWI8sWUGtk3Htz5uKQTAQr08OzOrqGHiYwqiOU9u3wmlP++Ph87Wm
+         EpjkjUnW/vkNOVcGCy7RKiTZHJpFUTges9hyHo8n45ht4KOBxUdjbeI0ziIBZxkzJK
+         iP/yggZHxAy2VSRQE2o8i19ye6QZWYqCOr03uzbi5ppsyQQjIuFSwyvVUifOq6fZrm
+         62zclJzw33jgw==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 49fJfJ6qxGz6tmN;
+        Sat,  6 Jun 2020 14:26:32 +0200 (CEST)
+From:   Benjamin Thiel <b.thiel@posteo.de>
+To:     x86 ML <x86@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Benjamin Thiel <b.thiel@posteo.de>
+Subject: [PATCH] x86/mm: Fix -Wmissing-prototypes warning in init.c
+Date:   Sat,  6 Jun 2020 14:26:29 +0200
+Message-Id: <20200606122629.2720-1-b.thiel@posteo.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200605032315.39071-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/20 5:23 AM, Navid Emamdoost wrote:
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count. Call pm_runtime_put if
-> pm_runtime_get_sync fails.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Fix -Wmissing-prototypes warning by including the respective header containing prototypes:
 
-This looks like a V2 of
-[PATCH] PCI: rcar: fix runtime pm imbalance on error
+  arch/x86/mm/init.c:81:6:
+  warning: no previous prototype for ‘x86_has_pat_wp’ [-Wmissing-prototypes]
+  bool x86_has_pat_wp(void)
 
-This looks good to me, but I'm no runtime-pm expert.
+  arch/x86/mm/init.c:86:22:
+  warning: no previous prototype for ‘pgprot2cachemode’ [-Wmissing-prototypes]
+  enum page_cache_mode pgprot2cachemode(pgprot_t pgprot)
+
+Fix:
+
+  arch/x86/mm/init.c:893:13:
+  warning: no previous prototype for ‘mem_encrypt_free_decrypted_mem’ [-Wmissing-prototypes]
+  void __weak mem_encrypt_free_decrypted_mem(void) { }
+
+by making it static inline for the !CONFIG_AMD_MEM_ENCRYPT case.
+This warning happens when CONFIG_AMD_MEM_ENCRYPT is not enabled (defconfig for example):
+
+  ./arch/x86/include/asm/mem_encrypt.h:80:27:
+  warning: inline function ‘mem_encrypt_free_decrypted_mem’ declared weak [-Wattributes]
+  static inline void __weak mem_encrypt_free_decrypted_mem(void) { }
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It's ok to convert to static inline because the function is only use in x86.
+Is not shared with other architectures so that it is not necessary to be __weak.
+
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+---
+ arch/x86/include/asm/mem_encrypt.h | 2 ++
+ arch/x86/mm/init.c                 | 3 +--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 848ce43b9040..8e8140cfded9 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -77,6 +77,8 @@ early_set_memory_decrypted(unsigned long vaddr, unsigned long size) { return 0;
+ static inline int __init
+ early_set_memory_encrypted(unsigned long vaddr, unsigned long size) { return 0; }
+ 
++static inline  void mem_encrypt_free_decrypted_mem(void) { }
++
+ #define __bss_decrypted
+ 
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 112d3b98a3b6..a751b15f89c0 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -25,6 +25,7 @@
+ #include <asm/cpufeature.h>
+ #include <asm/pti.h>
+ #include <asm/text-patching.h>
++#include <asm/memtype.h>
+ 
+ /*
+  * We need to define the tracepoints somewhere, and tlb.c
+@@ -890,8 +891,6 @@ void free_kernel_image_pages(const char *what, void *begin, void *end)
+ 		set_memory_np_noalias(begin_ul, len_pages);
+ }
+ 
+-void __weak mem_encrypt_free_decrypted_mem(void) { }
+-
+ void __ref free_initmem(void)
+ {
+ 	e820__reallocate_tables();
+-- 
+2.20.1
+
