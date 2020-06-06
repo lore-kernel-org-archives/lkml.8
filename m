@@ -2,121 +2,203 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 210B62077D
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591464586;
-	bh=InFdTWf+AQ3EEuNVLEAMS/IifpeSAsaN4CaqB7gUAzk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ivB+xpMkXX8VJdtR/JrVA6Rqc25EqRVCsBYb53phXFHCoP03WnQn9pBn6Ws/kUmcB
-	 edE9VJvANYgxDwmjyMWZnhbcmxaEb9fGVsIBy6rOvJus1LdcLv1qQuHBShGuHQK9zO
-	 hKRax7gaXgUZFc6T5Di5nI2E9gvOGPx/i+YWYzWo=
+	by mail.kernel.org (Postfix) with ESMTP id 0F26E207BC
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 17:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ev0M7hLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgFFR3n (ORCPT
+        id S1728764AbgFFRqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 13:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727906AbgFFR3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 13:29:42 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AA632073E;
-        Sat,  6 Jun 2020 17:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591464582;
-        bh=InFdTWf+AQ3EEuNVLEAMS/IifpeSAsaN4CaqB7gUAzk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=GiJAvw09oFkrMoCXInmQ6jKjBSjNEMyqu4+3zWeDhgsq3R8kVbSyprV8OaKxR3kQ9
-         cUmhveo68DnzuNxdNGDFO08Sr+8GtjwglGcYaQQNqKGTM7uMX3Rpgc+pXN8R/DPTuj
-         V64CNmVgW1ulp4BEKFkczum3vkH5XCCcW8NNXGQQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1A0A935209C2; Sat,  6 Jun 2020 10:29:42 -0700 (PDT)
-Date:   Sat, 6 Jun 2020 10:29:42 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: BUG: kernel NULL pointer dereference from check_preempt_wakeup()
-Message-ID: <20200606172942.GA30594@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200604225445.GA32319@paulmck-ThinkPad-P72>
- <20200605131451.GE2750@hirez.programming.kicks-ass.net>
- <20200605141607.GB4455@paulmck-ThinkPad-P72>
- <20200605184159.GA4062@paulmck-ThinkPad-P72>
- <20200606005126.GA21507@paulmck-ThinkPad-P72>
+        Sat, 6 Jun 2020 13:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbgFFRqN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 13:46:13 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72EAC03E96A
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 10:46:11 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id 7so2664621oof.8
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 10:46:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9FTx+jphm/lLacI7W/EoGrspqF//hnRGVpfw1BWx6hc=;
+        b=Ev0M7hLQ9ENXb2BTvaz91PCbx1fqgPBPdFIwc+1xGai2U3y+hqIN4H6zdTxZkFhsOx
+         YZDoYfDoJjFNElquYws3h/m1BbMLPMkFCp84lwo5AgmzGNowfxDRlHF6AwCwEGhB8t6P
+         qA3mmUZKcG78fwWRIRzsiuBr6L6z4MmVybJ5jX7WhnGUhcL9kh1acfGpsBP9gdZ5P1Q6
+         rBB2bfYAWrEt/HJsVtun2yYpyjhFxkTjA2BRqxxy5NAwVqz5luPdWqtg2N3q11BKsyOH
+         GRFQWcIcZzbTiy0+nRfiz/4UGBjuYPtFTQEg6wD8p6+S3x11lqzADQTTesQv1wUp/dBl
+         Wh4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9FTx+jphm/lLacI7W/EoGrspqF//hnRGVpfw1BWx6hc=;
+        b=ZhOdr0H4o5DIVuVkcRe91uTeUzP0vuLM4B6a/xecrFJitA2WTDs1mo4W4TAv2VgYHr
+         vmfckYKmg0E2+OU35O/z8NyJQRVqhWVAo+y20N6kjQPVNC9qWVezNZKR6ubrRD25PHGJ
+         W42fIzwbK2bXOCh/YuHZOfqYsuEOS15jRWV/SwLTpyq43fpUB72S2yxPMX0Zp/Px58cp
+         AVpgKxd2EbCDVKGk5MdFMZoxcyNn6hJsBqJzBzPqo/B2H4RRTUEedc8nzCpw3C/xA9tH
+         Hl+gCZldps0+EaIs2WuJgRzNrj+avcyBoXnmjeB1FHpIsOv+lVYTjHGa7FXqDavzyRQ4
+         H6zQ==
+X-Gm-Message-State: AOAM530eigmwNq0OFJgXE7tj2MfN2Yuh4dnRyzlopHOv/IuXh1HwSGoE
+        W9ecrdYfnjzsp8e/GTQmvzf5sB7ScC+pEmicOU1WGg==
+X-Google-Smtp-Source: ABdhPJxy4ZsnRRjBwanalABT43t4/eoN4tc25jTOSNzsJ5z6HV+MW9CMyrLY1sAN87Wp24jHgw+InkK1qpcJXM338ho=
+X-Received: by 2002:a4a:7ac2:: with SMTP id a185mr12223320ooc.84.1591465570614;
+ Sat, 06 Jun 2020 10:46:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200606005126.GA21507@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200606003552.247693-1-saravanak@google.com> <20200606003552.247693-3-saravanak@google.com>
+In-Reply-To: <20200606003552.247693-3-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Sat, 6 Jun 2020 10:45:34 -0700
+Message-ID: <CAGETcx-yGztpfATAYRRwPD87uLmYPN53bt146=NTc-+qYzh8Ng@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] of: property: Improve cycle detection when one of
+ the devices is never added
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, John Stultz <john.stultz@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 05:51:26PM -0700, Paul E. McKenney wrote:
-> On Fri, Jun 05, 2020 at 11:41:59AM -0700, Paul E. McKenney wrote:
-> > On Fri, Jun 05, 2020 at 07:16:07AM -0700, Paul E. McKenney wrote:
-> > > On Fri, Jun 05, 2020 at 03:14:51PM +0200, Peter Zijlstra wrote:
-> > > 
-> > > No KCSAN.  GCC 8.2.1.  No cgroups unless the kernel creates some.
-> > > No userspace other than a C-language binary named "init" that
-> > > sleeps in an infinite loop.
-> > > 
-> > > .config attached.
-> > 
-> > And in case it is helpful, here is the output of "git bisect view",
-> > which lists rather more commits than "git bisect run" claims, but there
-> > are only a few scheduler commits below.  I don't see anything that
-> > I can prove can cause this problem, but there are some that are at
-> > least related to this code path.
-> > 
-> > Is there anything that is actually relevant?
-> 
-> And the run with the WARN and tracing did hit two failures, and the
-> corresponding console logs are in the attached tarball.  Both of them
-> triggered a warning as well as the failure.
+On Fri, Jun 5, 2020 at 5:36 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Consider this example where -> means LHS device is a consumer of RHS
+> device and indentation represents "child of" of the previous device.
+>
+> Device A -> Device C
+>
+> Device B -> Device A
+>         Device C
+>
+> Without this commit:
+> 1. Device A is added.
+> 2. Device A is added to waiting for supplier list (Device C)
+> 3. Device B is added
+> 4. Device B is linked as a consumer to Device A
+> 5. Device A doesn't probe because it's waiting for Device C to be added.
+> 6. Device B doesn't probe because Device A hasn't probed.
+> 7. Device C will never be added because it's parent hasn't probed.
+>
+> So, Device A, B and C will be in a probe/add deadlock.
+>
+> This commit detects this scenario and stops trying to create a device
+> link between Device A and Device C since doing so would create a cycle:
+> Device A -> Devic C -(parent)-> Device B -> Device A.
+>
+> With this commit:
+> 1. Device A is added.
+> 3. Device B is added
+> 4. Device B is linked as a consumer to Device A
+> 5. Device A probes.
+> 6. Device B probes because Device A has probed.
+> 7. Device C is added and probed.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/of/property.c | 44 +++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 38 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 1f2086f4e7ce..7eebe21274a4 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1014,6 +1014,20 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+>         return false;
+>  }
+>
+> +static struct device *of_get_next_parent_dev(struct device_node *np)
+> +{
+> +       struct device *dev = NULL;
+> +
+> +       of_node_get(np);
+> +       do {
+> +               np = of_get_next_parent(np);
+> +               if (np)
+> +                       dev = get_dev_from_fwnode(&np->fwnode);
+> +       } while (np && !dev);
+> +       of_node_put(np);
+> +       return dev;
+> +}
+> +
+>  /**
+>   * of_link_to_phandle - Add device link to supplier from supplier phandle
+>   * @dev: consumer device
+> @@ -1035,10 +1049,9 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+>  static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+>                               u32 dl_flags)
+>  {
+> -       struct device *sup_dev;
+> +       struct device *sup_dev, *sup_par_dev;
+>         int ret = 0;
+>         struct device_node *tmp_np = sup_np;
+> -       int is_populated;
+>
+>         of_node_get(sup_np);
+>         /*
+> @@ -1075,16 +1088,35 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+>                 return -EINVAL;
+>         }
+>         sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
+> -       is_populated = of_node_check_flag(sup_np, OF_POPULATED);
+> -       of_node_put(sup_np);
+> -       if (!sup_dev && is_populated) {
+> +       if (!sup_dev && of_node_check_flag(sup_np, OF_POPULATED)) {
+>                 /* Early device without struct device. */
+>                 dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
+>                         sup_np);
+> +               of_node_put(sup_np);
+>                 return -ENODEV;
+>         } else if (!sup_dev) {
+> -               return -EAGAIN;
+> +               sup_par_dev = of_get_next_parent_dev(sup_np);
+> +               of_node_put(sup_np);
+> +
+> +               /*
+> +                * DL_FLAG_SYNC_STATE_ONLY doesn't block probing, so cycle
+> +                * detection isn't necessary and shouldn't be done.
+> +                */
+> +               if (dl_flags & DL_FLAG_SYNC_STATE_ONLY)
+> +                       return -EAGAIN;
 
-And the current state of the bisection, for whatever it is worth.
+I need to put_device(sup_par_dev) before I return here and at other places
+below. I'll send a v2 later to fix this.
 
-							Thanx, Paul
 
-------------------------------------------------------------------------
+-Saravana
 
-dbe9337109c2 sched/cpuacct: Fix charge cpuacct.usage_sys
-04f5c362ec6d sched/fair: Replace zero-length array with flexible-array
-95d685935a2e sched/pelt: Sync util/runnable_sum with PELT window when propagating
-12aa2587388d sched/cpuacct: Use __this_cpu_add() instead of this_cpu_ptr()
-7d148be69e3a sched/fair: Optimize enqueue_task_fair()
-9013196a467e Merge branch 'sched/urgent'
-2a0a24ebb499 sched: Make scheduler_ipi inline
-90b5363acd47 sched: Clean up scheduler_ipi()
-b1d1779e5ef7 sched/core: Simplify sched_init()
-12ac6782a40a sched/swait: Reword some of the main description
-17c891ab3491 sched/fair: Use __this_cpu_read() in wake_wide()
-bf2c59fce407 sched/core: Fix illegal RCU from offline CPUs
-f38f12d1e081 sched/fair: Mark sched_init_granularity __init
-5a6d6a6ccb5f sched/fair: Refill bandwidth before scaling
-457d1f465778 sched: Extract the task putting code from pick_next_task()
-d91cecc15662 sched: Make newidle_balance() static again
-36c5bdc43870 sched/topology: Kill SD_LOAD_BALANCE
-e669ac8ab952 sched: Remove checks against SD_LOAD_BALANCE
-9818427c6270 sched/debug: Make sd->flags sysctl read-only
-45da27732b0b sched/fair: find_idlest_group(): Remove unused sd_flag parameter
-586b58cac8b4 exit: Move preemption fixup up, move blocking operations down
-64297f2b03cc sched/fair: Simplify the code of should_we_balance()
-ab93a4bc955b sched/fair: Remove distribute_running from CFS bandwidth
-e98fa02c4f2e sched/fair: Eliminate bandwidth race between throttling and distribution
-f080d93e1d41 sched/debug: Fix trival print_task() format
+> +
+> +               /*
+> +                * If devices haven't been created for any of the ancestors, we
+> +                * can't check for cycles. So let's try again later.
+> +                */
+> +               if (!sup_par_dev)
+> +                       return -EAGAIN;
+> +
+> +               /* Cyclic dependency detected, don't try to link */
+> +               if (device_is_dependent(dev, sup_par_dev))
+> +                       return -EINVAL;
+>         }
+> +       of_node_put(sup_np);
+>         if (!device_link_add(dev, sup_dev, dl_flags))
+>                 ret = -EINVAL;
+>         put_device(sup_dev);
+> --
+> 2.27.0.278.ge193c7cf3a9-goog
+>
