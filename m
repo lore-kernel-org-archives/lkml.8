@@ -2,157 +2,214 @@ Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE67DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C375C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B587F207C4
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288162077D
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 14:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kHRhckqz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rielDmLO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgFFOmu (ORCPT
+        id S1728839AbgFFOnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 10:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50568 "EHLO
+        Sat, 6 Jun 2020 10:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgFFOmt (ORCPT
+        with ESMTP id S1727104AbgFFOnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 10:42:49 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16609C08C5C2
-        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 07:42:48 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x11so4867371plv.9
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:42:48 -0700 (PDT)
+        Sat, 6 Jun 2020 10:43:04 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE1AC03E96A
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 07:43:04 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i4so23757pjd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 07:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=uRszDx+SWbrUSA1S9dvL1khB1G3QVBSQcKh5Peg+R5c=;
-        b=kHRhckqzf6lsVhYRZE5hxpsmQRw3lkGndVmIteEJTmWrJsvPThCy+KhTwgBNtITuJf
-         TjOJtWMig5GLG3otDAPq/wRJHWobLieiuSKjpp8m4lhOnnDA52i/6+ARiHyE8zTpcc1a
-         AbM/KA6MUJKRhHqYyPI0OcMBcSVTs+93kK3LI=
+        bh=6fVvDEg9dvVr8g8jrbspeCmxyGJQxBX/m09SYt/oUAU=;
+        b=rielDmLOlMg0ZoTWdM4GwR0ttPSxu9WBcFiRMQITTkSH4i5QJffJbm/qfvrE2FycC1
+         Qh0iNyIWji1tg66WmDqXh5c//vuSOoyS/qt+FD/0z1R0tyYtN2HFGK1wyky6lh8DTtRK
+         r9w/GNlX7F2tHry31RbTZFtCSoiSQB8NOI5PwJ8UNU/EvVtC3eOY43RV7b+9S/b8JR4e
+         +XjAlMvexnMDfw/qsgCV2YwW57MAl6DJiyuK/BTclm4BMr1IqmiDhWB+T8KalXR1ZhtZ
+         W4jAoLpRskOLRQVnBygq357pyiI7vkNTLagGb2okzYrB2bic5G5teWE0qfmPhZzlDqxG
+         2hMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uRszDx+SWbrUSA1S9dvL1khB1G3QVBSQcKh5Peg+R5c=;
-        b=hAXYWhp4KiNo/kGJWOI+OW/s2cQF0t0CCi5dkAzZBOdoo3dpzhy0mX0xwV3qCVGcMg
-         5CYtFWZYrqSyxsaLrr+13+9wsUQ0P689dUm1wxLKhRswoPHgNzmwSjyjxrW7CfnQzQme
-         QWjov5nvldfZUcnq4WuGP0ghw6/oWlszEzJYysfDv2dc/GAGhKknhv8/gqtBLcqnBVjs
-         KAaroqXDOfSDnt2cOkIS1B7EyCR/GFWdFjOPR4f7VwCVjJOjVuOGRY28Sp7Ik15P0OaB
-         18/wT3wUDmTtVP+xuYSX7+jj9ixyHV8i9RfvKqfaqvzMa0QDsf09rUN/cmjieQgHgq8R
-         KpTA==
-X-Gm-Message-State: AOAM5324Kj5vU6iBTdKtAljo9xWoIVz+WNjWIDR3R5ZSpV5o/iYE9XKo
-        Z7w1VEHElWtHYxYptR3uFAln2h+MGsg=
-X-Google-Smtp-Source: ABdhPJzJPm9LWmRykZ+Wwq7yuiFVr8kdt+iI1STB0GexFIGxsUc2AZ1pIQoukw5vm0+Aqnx9QD3lJQ==
-X-Received: by 2002:a17:902:a412:: with SMTP id p18mr14119856plq.111.1591454567480;
-        Sat, 06 Jun 2020 07:42:47 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id n24sm10638960pjt.47.2020.06.06.07.42.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jun 2020 07:42:46 -0700 (PDT)
-Date:   Sat, 6 Jun 2020 07:42:45 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     bgodavar@codeaurora.org
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Zijun Hu <zijuhu@codeaurora.org>, linux-kernel@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Claire Chang <tientzu@chromium.org>, hemantg@codeaurora.org
-Subject: Re: [PATCH 2/3] Bluetooth: hci_qca: Skip serdev wait when no
- transfer is pending
-Message-ID: <20200606144245.GQ4525@google.com>
-References: <20200605184611.252218-1-mka@chromium.org>
- <20200605114552.2.I2a095adb2a9a98b15c11d7310db142b27f8cab28@changeid>
- <ca3bb368e9959770720c8a3fbe149652@codeaurora.org>
+        bh=6fVvDEg9dvVr8g8jrbspeCmxyGJQxBX/m09SYt/oUAU=;
+        b=byjSH/ijyQipMYQqu2VMf/xMiCQitPKDg/4k+qGXM6624XbCgtJ0dz0f59FYJbHbYs
+         8tHODase/ABtlYvOxbBOsDkDM1lJD9ToQ3SmnRMkYlXlxJEgJguGakao8r4KnQ70H55s
+         Qn6iEY2cCmS28+xhIeikGRgjfnMg4UnoJVKYCag1i2opX79wOXtuUEqplu5sb/qTcwX2
+         +Pzh3Gp/gbNj6PFdlNinxp7wywrDdVZK872b8l95Gopsvml3iCeGD1cPDFrx9rp8k+VF
+         rhyZ5Pp6ZC/YfGB/V07r8c5bqjWF+Hey+UsE6azp/B1IZm24Q/S9UgDOlfGqmdwTE98R
+         qWrA==
+X-Gm-Message-State: AOAM530BXETirVsX1THN1zI/n9s25R+4fOek8oFSOMVMrvhEL/ZXpJFL
+        nljJDFn3pBY4gzFiWVVDczE=
+X-Google-Smtp-Source: ABdhPJzP/4rbEAovPYdVQyGqKML/PKuPLgzh9zCVQppBY5MXMLcZk7pyUtg3jlTn+/BZfIVUoDMqrQ==
+X-Received: by 2002:a17:90a:2270:: with SMTP id c103mr7874875pje.184.1591454583713;
+        Sat, 06 Jun 2020 07:43:03 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id j15sm11002967pjj.12.2020.06.06.07.42.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jun 2020 07:43:02 -0700 (PDT)
+Date:   Sat, 6 Jun 2020 22:42:53 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/19] perf ftrace: add option '-l/--list-functions' to
+ list available functions
+Message-ID: <20200606144253.sdo2f5o54d5zdic7@mail.google.com>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200510150628.16610-6-changbin.du@gmail.com>
+ <20200520205940.GS32678@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ca3bb368e9959770720c8a3fbe149652@codeaurora.org>
+In-Reply-To: <20200520205940.GS32678@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bala,
-
-On Sat, Jun 06, 2020 at 06:27:59PM +0530, bgodavar@codeaurora.org wrote:
-> Hi matthias,
+On Wed, May 20, 2020 at 05:59:40PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sun, May 10, 2020 at 11:06:14PM +0800, Changbin Du escreveu:
+> > This adds an option '-l/--list-functions' to list all available functions
+> > which is read from tracing file 'available_filter_functions'.
 > 
-> On 2020-06-06 00:16, Matthias Kaehlcke wrote:
-> > qca_suspend() calls serdev_device_wait_until_sent() regardless of
-> > whether a transfer is pending. While it does no active harm since
-> > the function should return immediately it makes the code more
-> > confusing. Add a flag to track whether a transfer is pending and
-> > only call serdev_device_wait_until_sent() is needed.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Here, in 'perf probe' we have:
+> 
+> [acme@five perf]$ perf probe -F tcp_* | head
+> tcp_abort
+> tcp_ack
+> tcp_ack_update_rtt.isra.0
+> tcp_add_backlog
+> tcp_add_reno_sack
+> tcp_adjust_pcount
+> tcp_alloc_md5sig_pool
+> tcp_any_retrans_done.part.0
+> tcp_assign_congestion_control
+> tcp_bpf_clone
+> [acme@five perf]$ perf probe -h -F
+> 
+>  Usage: perf probe [<options>] 'PROBEDEF' ['PROBEDEF' ...]
+>     or: perf probe [<options>] --add 'PROBEDEF' [--add 'PROBEDEF' ...]
+>     or: perf probe [<options>] --del '[GROUP:]EVENT' ...
+>     or: perf probe --list [GROUP:]EVENT ...
+>     or: perf probe [<options>] --line 'LINEDESC'
+>     or: perf probe [<options>] --vars 'PROBEPOINT'
+>     or: perf probe [<options>] --funcs
+> 
+>     -F, --funcs <[FILTER]>
+>                           Show potential probe-able functions.
+> 
+> [acme@five perf]$
+> 
+> So I think we should align with this.
+> 
+> - Arnaldo
+>
+Agreed. Will do that in next revision.
+
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > > ---
+> >  tools/perf/builtin-ftrace.c | 43 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
 > > 
-> >  drivers/bluetooth/hci_qca.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> > index b1d82d32892e9..90ffd8ca1fb0d 100644
-> > --- a/drivers/bluetooth/hci_qca.c
-> > +++ b/drivers/bluetooth/hci_qca.c
-> > @@ -2050,6 +2050,7 @@ static int __maybe_unused qca_suspend(struct
-> > device *dev)
-> >  	struct hci_uart *hu = &qcadev->serdev_hu;
-> >  	struct qca_data *qca = hu->priv;
-> >  	unsigned long flags;
-> > +	bool tx_pending = false;
-> >  	int ret = 0;
-> >  	u8 cmd;
-> > 
-> > @@ -2083,6 +2084,7 @@ static int __maybe_unused qca_suspend(struct
-> > device *dev)
-> > 
-> >  		qca->tx_ibs_state = HCI_IBS_TX_ASLEEP;
-> >  		qca->ibs_sent_slps++;
-> > +		tx_pending = true;
-> >  		break;
-> > 
-> >  	case HCI_IBS_TX_ASLEEP:
-> > @@ -2099,8 +2101,10 @@ static int __maybe_unused qca_suspend(struct
-> > device *dev)
-> >  	if (ret < 0)
-> >  		goto error;
-> > 
-> > -	serdev_device_wait_until_sent(hu->serdev,
-> > -				      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
-> > +	if (tx_pending) {
-> [Bala]: Good idea why don't we move this call to switch case under
-> HCI_IBS_TX_AWAKE
-> https://elixir.bootlin.com/linux/latest/source/drivers/bluetooth/hci_qca.c#L1994
-
-I agree that this would make the code easier to follow, however the
-reason this wasn't done in the first place is (probably) that the
-IBS spinlock is held during the switch/case block.
-
-In principle the unlock could be done before calling _wait_until_sent(),
-but then the unlock also needs to happen in the other 'case' branches.
-It's not ideal, but also not necessarily worse than introducing
-'tx_pending', the repeated unlocks might be preferable in terms of
-readability.
-
-> i.e. i would recommend below sequence
-> 
-> 1. Send SLEEP BYTE
-> 2. wait for some time to write SLEEP Byte on Tx line
-> 3. call for Tx clock off qca_wq_serial_tx_clock_vote_off
-> 
-> > +		serdev_device_wait_until_sent(hu->serdev,
-> > +					      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 1d30c2d5f88b..8133d910d5d8 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -33,6 +33,7 @@ struct perf_ftrace {
+> >  	struct evlist		*evlist;
+> >  	struct target		target;
+> >  	const char		*tracer;
+> > +	bool			list_avail_functions;
+> >  	struct list_head	filters;
+> >  	struct list_head	notrace;
+> >  	struct list_head	graph_funcs;
+> > @@ -142,6 +143,43 @@ static int write_tracing_option_file(const char *name, const char *val)
+> >  	return ret;
+> >  }
+> >  
+> > +static int read_tracing_file_to_stdout(const char *name)
+> > +{
+> > +	char buf[4096];
+> > +	char *file;
+> > +	int fd;
+> > +	int ret = -1;
+> > +
+> > +	file = get_tracing_file(name);
+> > +	if (!file) {
+> > +		pr_debug("cannot get tracing file: %s\n", name);
+> > +		return -1;
 > > +	}
+> > +
+> > +	fd = open(file, O_RDONLY);
+> > +	if (fd < 0) {
+> > +		pr_debug("cannot open tracing file: %s: %s\n",
+> > +			 name, str_error_r(errno, buf, sizeof(buf)));
+> > +		goto out;
+> > +	}
+> > +
+> > +	/* read contents to stdout */
+> > +	while (true) {
+> > +		int n = read(fd, buf, sizeof(buf));
+> > +		if (n <= 0)
+> > +			goto out_close;
+> > +		if (fwrite(buf, n, 1, stdout) != 1)
+> > +			goto out_close;
+> > +	}
+> > +	ret = 0;
+> > +
+> > +out_close:
+> > +	close(fd);
+> > +out:
+> > +	put_tracing_file(file);
+> > +	return ret;
+> > +}
+> > +
+> >  static int reset_tracing_cpu(void);
+> >  static void reset_tracing_filters(void);
+> >  
+> > @@ -332,6 +370,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> >  	signal(SIGCHLD, sig_handler);
+> >  	signal(SIGPIPE, sig_handler);
+> >  
+> > +	if (ftrace->list_avail_functions)
+> > +		return read_tracing_file_to_stdout("available_filter_functions");
+> > +
+> >  	if (reset_tracing_files(ftrace) < 0) {
+> >  		pr_err("failed to reset ftrace\n");
+> >  		goto out;
+> > @@ -483,6 +524,8 @@ int cmd_ftrace(int argc, const char **argv)
+> >  		NULL
+> >  	};
+> >  	const struct option ftrace_options[] = {
+> > +	OPT_BOOLEAN('L', "list-functions", &ftrace.list_avail_functions,
+> > +		    "List available functions to filter"),
+> >  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+> >  		   "trace on existing process id"),
+> >  	OPT_INCR('v', "verbose", &verbose,
+> > -- 
+> > 2.25.1
 > > 
-> >  	/* Wait for HCI_IBS_SLEEP_IND sent by device to indicate its Tx is
-> > going
-> >  	 * to sleep, so that the packet does not wake the system later.
+> 
+> -- 
+> 
+> - Arnaldo
+
+-- 
+Cheers,
+Changbin Du
