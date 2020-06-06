@@ -6,140 +6,117 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F020C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D36EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCE0206DC
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68F02073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 13:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVIf8juW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="mUH728r7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgFFNev (ORCPT
+        id S1728581AbgFFNoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 09:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
+        Sat, 6 Jun 2020 09:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgFFNeu (ORCPT
+        with ESMTP id S1726078AbgFFNoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 09:34:50 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 310D4C03E96A;
-        Sat,  6 Jun 2020 06:34:50 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k7so9878pjj.4;
-        Sat, 06 Jun 2020 06:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QdYgfPVgJsp4oh97F1pD98XMgFr+KvAclh3DzIXgN04=;
-        b=UVIf8juW7xtgF20ksVnFMRiG6EH/fQKVPsdtYllcHVowuY2hvfcvBP2DCByRWVZWNI
-         ySmxZk+v3IFSdwwUgQSXjvGZNPEmlBvPLhBVF6qmFlwwrSlwQzZq/FE99Oul8uPBt+pp
-         rnS4uj0y6DJMd0lSdsY63Yf3l3ixguJeqIU0swjkYQE/oDhd0fqG2UobyyjMdY5t4dtd
-         8MTpuT+6Qxsl5yA4yuz+xMXE22AZuR+QI3ExQINK8On0sjrkv6r/ozce4wWLVZIapV45
-         RNeUMAh4ijZR/hELAB+BgKfDSnX0muUn+a++/8gk/RyfS8sCmVE7Ap/TgdVvG6Cvg5aU
-         gjVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QdYgfPVgJsp4oh97F1pD98XMgFr+KvAclh3DzIXgN04=;
-        b=eRC4PCHxEDE1Q+5MgDBp5vHZQdTH1OK7BZJAFypSS+fwdvtdr3BWn6A1LcONsQEg1C
-         182xT3ATM/NgIIQyYgiMW1S29fSOD3KgT76PIMgQ4yu/GVvCj2W04vJDYSEnETywIAF5
-         pbVSo7o1Doe52sIQcgfVJPvdM/+IN031XZ6Nou8hvpkCYtxTpJcSgZHXiLpsHRB36xJc
-         6RzKCfHH/MQGEW6LOeNbvX8q0jtvnJj6V01RWBsRBvrWNRxhquOKh0LAQpbGterMlWXf
-         HmZztdBCoJqn1ch6rdE85qYrRJuXyZlyz3aAtMLga/IhufjmMipKBSviABZY+eFkDYym
-         M4dw==
-X-Gm-Message-State: AOAM530g+MPnlxQvSpRNHp9wah5k3DV2e6H4SqgA20WG6/cDL29SWvCE
-        iE0ouI5V4Aa0QcCtaMUHfNiZAPHb
-X-Google-Smtp-Source: ABdhPJwUwO8m1XHwImjLhes6ZpTy7wkLXtarUnUMN+HRgCmpRsVhV9OOJGM0lX+uIUSkErRlmSLLYg==
-X-Received: by 2002:a17:902:710b:: with SMTP id a11mr13946293pll.156.1591450489597;
-        Sat, 06 Jun 2020 06:34:49 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p14sm10824481pju.7.2020.06.06.06.34.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jun 2020 06:34:49 -0700 (PDT)
-Subject: Re: [PATCH 5.7 00/14] 5.7.1-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sat, 6 Jun 2020 09:44:15 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0D5C03E96A;
+        Sat,  6 Jun 2020 06:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vozlHdf9KLuw8QLuy6Exnt1trvwv2FE24skv0EkmY5k=; b=mUH728r7zwGBlIvp2uCjOU3mX
+        CQiRiWQ/jVofdPufbya+44rAPdc/CLynbPpiQYOKFquKevYKj8eB8TlOyHxOEYTpU6slfNZ/sQZ6F
+        91qNUFzD1f9DRerSSnMKHWBU0LuuuCBLkE8B5eQ6UU+ItLuEupbm565+QvKB6nT5oUeBFxy2sUfx3
+        Hc00plYurfpoGGr1GTXl50b/e4R/x99UOPJzHIkWDS60bVcDK1yvRFHGuRxie+2X2p6WU4QQrrtt9
+        Z/Ekh7c8oPX8zLh6s99KLPI+KKEDSkazk2X/pm3e6OJU0ZQa6Tk6FiHOzQbIghsKnCRPpf0Yxg9Qf
+        JruJuFsbA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42072)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jhZ7C-0004Xy-Ln; Sat, 06 Jun 2020 14:44:02 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jhZ77-00005S-0G; Sat, 06 Jun 2020 14:43:57 +0100
+Date:   Sat, 6 Jun 2020 14:43:56 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200605135951.018731965@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <77f30512-ff14-47a4-9350-9fd4151657a9@roeck-us.net>
-Date:   Sat, 6 Jun 2020 06:34:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Subject: Re: [PATCH 2/2] net: dsa: qca8k: introduce SGMII configuration
+ options
+Message-ID: <20200606134356.GM1551@shell.armlinux.org.uk>
+References: <cover.1591380105.git.noodles@earth.li>
+ <8ddd76e484e1bedd12c87ea0810826b60e004a65.1591380105.git.noodles@earth.li>
+ <20200605183843.GB1006885@lunn.ch>
+ <20200606074916.GM311@earth.li>
+ <20200606083741.GK1551@shell.armlinux.org.uk>
+ <20200606105909.GN311@earth.li>
 MIME-Version: 1.0
-In-Reply-To: <20200605135951.018731965@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200606105909.GN311@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/5/20 7:14 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.1 release.
-> There are 14 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sat, Jun 06, 2020 at 11:59:09AM +0100, Jonathan McDowell wrote:
+> So the device in question is a 7 port stand alone switch chip. There's a
+> single SGMII port which is configurable between port 0 + 6 (they can
+> also be configure up as RGMII, while the remaining 5 ports have their
+> own phys).
 > 
-> Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
-> Anything received after that time might be too late.
+> It sounds like there's a strong preference to try and auto configure
+> things as much as possible, so I should assume the CPU port is in MAC
+> mode, and anything not tagged as a CPU port is talking to a PHY/BASEX.
 > 
+> I assume I can use PHY_INTERFACE_MODE_1000BASEX on the
+> phylink_mac_config call to choose BASEX?
 
+Yes, but from what you've mentioned above, I think I need to ensure that
+there's a proper understanding here.
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+1000BASE-X is the IEEE 802.3 defined 1G single lane Serdes protocol.
+SGMII is different; it's a vendor derivative of 1000BASE-X which has
+become a de-facto standard.
 
-Guenter
+Both are somewhat compatible with each other; SGMII brings with it
+additional data replication to achieve 100M and 10M speeds, while
+keeping the link running at 1.25Gbaud.  In both cases, there is a
+16-bit "configuration" word that is passed between the partners.
+
+1000BASE-X uses this configuration word to advertise the abilities of
+each end, which is limited to duplex and pause modes only.  This you
+get by specifying the phy-mode="1000base-x" and
+managed="in-band-status" in DT.
+
+SGMII uses this configuration word for the media side to inform the
+system side which mode it wishes to operate the link: the speed and
+duplex.  Some vendors extend it to include EEE parameters as well,
+or pause modes.  You get this via phy-mode="sgmii" and
+managed="in-band-status" in DT.
+
+Then there are variants where the configuration word is not present.
+In this case, the link has to be manually configured, and without the
+configuration word, SGMII operating at 1G is compatible with
+1000base-X operating at 1G.  Fixed-link can be used for this, although
+fixed-link will always report that the link is up at the moment; that
+may change in the future, it's something that is being looked into at
+the moment.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
