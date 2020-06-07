@@ -2,96 +2,101 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B47C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80252C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E54C2074B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591521717;
-	bh=LHu8Je2iFMQ+RisxyR/UI9uRpVWn2Y0Lc1Cp+/YeenY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sA2JHC6PAXh5fkzOY1RMuizJDMbFzAVdCXMg9V5Db61575m5BHYZQjTPPOBCa5Qb3
-	 S/bR3gnzR2nnLGwO0NTtSC57ETn2etsiQ9OwQnZdqUMATYAtkqa65JFhgEmOkFyyVe
-	 8pBlXPoMHDoKyjAcGxbdefK9ZD2Wx9K1FwcVkqx0=
+	by mail.kernel.org (Postfix) with ESMTP id 5D3CB2073B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgFGJV4 (ORCPT
+        id S1726463AbgFGJcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 05:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbgFGJVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 05:21:55 -0400
-Received: from localhost (p5486cb80.dip0.t-ipconnect.de [84.134.203.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D054020663;
-        Sun,  7 Jun 2020 09:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591521715;
-        bh=LHu8Je2iFMQ+RisxyR/UI9uRpVWn2Y0Lc1Cp+/YeenY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GGo/ngLpWBFwbICNIUGJIa9T9e6YpPanaIp6t1ghNKY9xEiGJjDP/1LASjkMoMGd9
-         bSjsLLAq7wP/10lNqfL+BEhTTPfUiMJdqZH7u1E3eurA/lGQsJpESm5h51GyaS8D5S
-         f6gjORQLPBoluzkPHTFxO/bH3rqsbzSxSifcaqmg=
-Date:   Sun, 7 Jun 2020 11:21:51 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Tali Perry <tali.perry1@gmail.com>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] i2c: npcm7xx: Remove unnecessary parentheses
-Message-ID: <20200607092150.GA981@ninjato>
-References: <20200604153957.GA14839@embeddedor>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-In-Reply-To: <20200604153957.GA14839@embeddedor>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 7 Jun 2020 05:32:00 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:8716 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726418AbgFGJcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 05:32:00 -0400
+Received: from localhost.localdomain (unknown [10.192.85.18])
+        by mail-app2 (Coremail) with SMTP id by_KCgB375b2s9xeoZiZAA--.56237S4;
+        Sun, 07 Jun 2020 17:31:38 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] PCI: rcar: Fix runtime PM imbalance on error
+Date:   Sun,  7 Jun 2020 17:31:33 +0800
+Message-Id: <20200607093134.6393-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgB375b2s9xeoZiZAA--.56237S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFyDGryUXFyDAryfXw4fXwb_yoW8Jw4rpF
+        W7Way2yF4kX3y5Zr45JF1kZFyav3ZYy347J397Ww17Zwnxua4ktryFkFyFqFyUKFW8X3WU
+        t3W5tay8CFW5JrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvK1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
+        cxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF
+        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+        VjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsEBlZdtOgTHAAAsT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a corresponding decrement is
+needed on the error handling path to keep the counter balanced.
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
-On Thu, Jun 04, 2020 at 10:39:57AM -0500, Gustavo A. R. Silva wrote:
-> Remove unnecessary parentheses around _bus_.
->=20
-> This issue was found with the help of Coccinelle.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Changelog:
 
-Applied to for-next, thanks!
+v2: - Remove unnecessary 'err_pm_put' label.
+      Refine commit message.
+---
+ drivers/pci/controller/pcie-rcar.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
+index 759c6542c5c8..f9595ab54bc4 100644
+--- a/drivers/pci/controller/pcie-rcar.c
++++ b/drivers/pci/controller/pcie-rcar.c
+@@ -1143,7 +1143,7 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 	err = rcar_pcie_get_resources(pcie);
+ 	if (err < 0) {
+ 		dev_err(dev, "failed to request resources: %d\n", err);
+-		goto err_pm_put;
++		goto err_pm_disable;
+ 	}
+ 
+ 	err = clk_prepare_enable(pcie->bus_clk);
+@@ -1206,10 +1206,8 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 	irq_dispose_mapping(pcie->msi.irq2);
+ 	irq_dispose_mapping(pcie->msi.irq1);
+ 
+-err_pm_put:
+-	pm_runtime_put(dev);
+-
+ err_pm_disable:
++	pm_runtime_put(dev);
+ 	pm_runtime_disable(dev);
+ 	pci_free_resource_list(&pcie->resources);
+ 
+-- 
+2.17.1
 
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7csaoACgkQFA3kzBSg
-KbZ34w/9F7glIsi9VLOyKc2V+vuK9byLCo9tK4y7lCQzzwialHHVNqoEMYuLMYCC
-CWwJ0JDjG88ys9gCOmCbSaHOPiY52dbFH1QlU3DMQQOEoKHcCrKkoy15gQMbMwXn
-R2bEw0D5U65GYc9QtGokQtFUSqfNGQqxY7oEEN1B2A0WtuPeH2PqCSvN7O6YVIte
-2q+0RFiyuqFGU/LlPhjkE5F26/T9SvrFKLgRwUzBPTXs/lZM/7pv1F6Ia+okjApR
-3WaPR/+IboLAxZ85tbcKzPX4BOr0KhmNS6PSSeeHo+n9fMB4j+nD7/9UQ0YGvHm+
-jXfHIfdcZDT3kM1CZaK5G1fJjEUyVe1ixg2uJrWsB4w6nltFazOtyAkp8QbuI9XB
-eZEwdYDV+9FHJhhEoDrUMcr3gAc15Wox29t1oqfQfih8zW0xxCevOZfFoPrJE+12
-+ZRFrIfBjQzl6gI22wftNYQYZhbQsfiKNqIkDUVx5D1OkXFbO5nnhDVcsEo+NLeT
-S2YFu16SLTD/Acjmi0en+NvbQXim++4vr0NmxrmE7pB3LYgUeP0wpRH/ANZHQiV+
-YFFPmNCdUnVB64Q1W4TR5ufniXwDmmbGHFHcUeBEP9uhVh7z7ecyWQi4WdpWRyam
-oPbxZU2p430+gflPMq5cayRgtHV7n5ey4MMx8uoruQzcUvsyBRI=
-=n8mE
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
