@@ -2,98 +2,92 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79678C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8262078B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5619B2075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgFGUJO (ORCPT
+        id S1727115AbgFGUOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 16:09:14 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50840 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgFGUJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 16:09:13 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 5ADE61C0BD2; Sun,  7 Jun 2020 22:09:11 +0200 (CEST)
-Date:   Sun, 7 Jun 2020 22:09:11 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        fengsheng <fengsheng5@huawei.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 15/28] spi: dw: use "smp_mb()" to avoid sending spi
- data error
-Message-ID: <20200607200910.GA13138@amd>
-References: <20200605140252.338635395@linuxfoundation.org>
- <20200605140253.279609547@linuxfoundation.org>
+        Sun, 7 Jun 2020 16:14:32 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2288 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726093AbgFGUOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 16:14:31 -0400
+Received: from lhreml741-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 3A925397A483B6B3DAEC;
+        Sun,  7 Jun 2020 21:14:29 +0100 (IST)
+Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
+ lhreml741-chm.china.huawei.com (10.201.108.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Sun, 7 Jun 2020 21:14:29 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sun, 7 Jun 2020 22:14:28 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Sun, 7 Jun 2020 22:14:28 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>
+CC:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: RE: [GIT PULL] integrity subsystem updates for v5.8
+Thread-Topic: [GIT PULL] integrity subsystem updates for v5.8
+Thread-Index: AQHWO1s53vl2WKAKHUKDciwMlVYPIajNc++AgAAkf5A=
+Date:   Sun, 7 Jun 2020 20:14:28 +0000
+Message-ID: <7ebbfdc6a5ca447c9b19231da6e2fc9f@huawei.com>
+References: <1591376548.5816.14.camel@linux.ibm.com>
+ <CAHk-=whV2B4fPSkHA1Z6qEbwRTcJF0gYWBfAuqSGG+p-05HtfQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whV2B4fPSkHA1Z6qEbwRTcJF0gYWBfAuqSGG+p-05HtfQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.48.210.130]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
-Content-Disposition: inline
-In-Reply-To: <20200605140253.279609547@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Because of out-of-order execution about some CPU architecture,
-> In this debug stage we find Completing spi interrupt enable ->
-> prodrucing TXEI interrupt -> running "interrupt_transfer" function
-> will prior to set "dw->rx and dws->rx_end" data, so this patch add
-> memory barrier to enable dw->rx and dw->rx_end to be visible and
-> solve to send SPI data error.
-
-So, this is apparently CPU-vs-device issue...
-
-> +++ b/drivers/spi/spi-dw.c
-> @@ -304,6 +304,9 @@ static int dw_spi_transfer_one(struct spi_controller =
-*master,
->  	dws->len =3D transfer->len;
->  	spin_unlock_irqrestore(&dws->buf_lock, flags);
-> =20
-> +	/* Ensure dw->rx and dw->rx_end are visible */
-> +	smp_mb();
-> +
-
-But we use SMP-only memory barrier, thus the bug will still be there
-in single-processor configurations. Should this be mb()?
-
-Best regards,
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7dSWYACgkQMOfwapXb+vK1GgCeKhaQnkGotAXJ3JtVtBG/A9mH
-rU0AniQYz4+EoB5HTc6vo3KNbewgHGFg
-=8y43
------END PGP SIGNATURE-----
-
---OXfL5xGRrasGEqWY--
+PiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGlu
+dXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBMaW51
+cyBUb3J2YWxkcw0KPiBTZW50OiBTdW5kYXksIEp1bmUgNywgMjAyMCA5OjU5IFBNDQo+IE9uIEZy
+aSwgSnVuIDUsIDIwMjAgYXQgMTA6MDMgQU0gTWltaSBab2hhciA8em9oYXJAbGludXguaWJtLmNv
+bT4gd3JvdGU6DQo+ID4NCj4gPiBUaGUgbWFpbiBjaGFuZ2VzIGFyZSBleHRlbmRpbmcgdGhlIFRQ
+TSAyLjAgUENSIGJhbmtzIHdpdGggYmFuaw0KPiA+IHNwZWNpZmljIGZpbGUgaGFzaGVzLCBjYWxj
+dWxhdGluZyB0aGUgImJvb3RfYWdncmVnYXRlIiBiYXNlZCBvbiBvdGhlcg0KPiA+IFRQTSBQQ1Ig
+YmFua3MsIHVzaW5nIHRoZSBkZWZhdWx0IElNQSBoYXNoIGFsZ29yaXRobSwgaW5zdGVhZCBvZiBT
+SEExLA0KPiA+IGFzIHRoZSBiYXNpcyBmb3IgdGhlIGNhY2hlIGhhc2ggdGFibGUga2V5LCBhbmQg
+cHJldmVudGluZyB0aGUgbXByb3RlY3QNCj4gPiBzeXNjYWxsIHRvIGNpcmN1bXZlbnQgYW4gSU1B
+IG1tYXAgYXBwcmFpc2UgcG9saWN5IHJ1bGUuDQo+IA0KPiBJJ20gbm90IHN1cmUgd2h5IEkgZGlk
+bid0IG5vdGljZSB0aGlzIGR1cmluZyBteSB0ZXN0IGJ1aWxkcywgYnV0IHRoaXMNCj4gcmVzdWx0
+cyBpbiBhIG5ldyB3YXJuaW5nOg0KPiANCj4gICBXQVJOSU5HOiBtb2Rwb3N0OiB2bWxpbnV4Lm8o
+LnRleHQrMHg0OTYyNjQpOiBTZWN0aW9uIG1pc21hdGNoIGluDQo+IHJlZmVyZW5jZSBmcm9tIHRo
+ZSBmdW5jdGlvbiBpbWFfY2FsY19ib290X2FnZ3JlZ2F0ZSgpIHRvIHRoZSBmdW5jdGlvbg0KPiAu
+aW5pdC50ZXh0OmltYV9wY3JyZWFkKCkNCj4gICBUaGUgZnVuY3Rpb24gaW1hX2NhbGNfYm9vdF9h
+Z2dyZWdhdGUoKSByZWZlcmVuY2VzDQo+ICAgdGhlIGZ1bmN0aW9uIF9faW5pdCBpbWFfcGNycmVh
+ZCgpLg0KPiAgIFRoaXMgaXMgb2Z0ZW4gYmVjYXVzZSBpbWFfY2FsY19ib290X2FnZ3JlZ2F0ZSBs
+YWNrcyBhIF9faW5pdA0KPiAgIGFubm90YXRpb24gb3IgdGhlIGFubm90YXRpb24gb2YgaW1hX3Bj
+cnJlYWQgaXMgd3JvbmcuDQo+IA0KPiBhbmQgSSB0aGluayB0aGUgd2FybmluZyBpcyByZWFsIC0g
+YW5kIHRoZSBwcm9ibGVtIGlzIHJlYWwsIG5vdCBqdXN0IGENCj4gbWlzc2luZyBhbm5vdGF0aW9u
+Lg0KPiANCj4gSXQgbG9va3MgbGlrZSBpbWFfY2FsY19ib290X2FnZ3JlZ2F0ZSgpIG1heSBiZSBj
+YWxsZWQgbm90IG9ubHkgYXQgaW5pdA0KPiB0aW1lIChpbWFfZXZlbnRkaWdlc3RfaW5pdCgpIGlz
+IHJlZmVyZW5jZWQgZnJvbSAic3RydWN0DQo+IGltYV90ZW1wbGF0ZV9maWVsZCBzdXBwb3J0ZWRf
+ZmllbGRzW10iLCBmb3IgZXhhbXBsZSkNCj4gDQo+IFNvIGNhbGxpbmcgYW4gX19pbml0IGZ1bmN0
+aW9uIHdvdWxkIGJlIHZlcnkgd3JvbmcsIGJlY2F1c2UgaXQgbWlnaHQgYmUNCj4gZ29uZSBieSB0
+aGF0IHRpbWUuDQo+IA0KPiBIbW0/DQoNClJpZ2h0LCBJIGFsc28gbWlzc2VkIGl0LiBXaWxsIHNl
+bmQgYSBwYXRjaCBzb29uLg0KDQpSb2JlcnRvDQoNCkhVQVdFSSBURUNITk9MT0dJRVMgRHVlc3Nl
+bGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5hZ2luZyBEaXJlY3RvcjogTGkgUGVuZywgTGkgSmlh
+biwgU2hpIFlhbmxpDQo=
