@@ -2,143 +2,210 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B98A20663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qTNJgXII"
+	by mail.kernel.org (Postfix) with ESMTP id 6A31820663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgFGLJr (ORCPT
+        id S1726534AbgFGLNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 07:09:47 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:45309 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgFGLJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 07:09:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1591528185; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=/hsbFOuqSBY+VZzRO8uUfNPtY30KTsN27zx5uQIR8g0=; b=qTNJgXIIJHvdm3JLCgZaVZdNAVUHCLHAitZc4UI2kMUGnasVN3ZBoQvtK9/L73D/Z2CvCxf1
- Cl3yaJHl6KDsZmcyXNBtPdSmDVSLG9pMMBziWGwZFqBgEvCERHsKB8RM0Rf27XCFhmfEZkbJ
- MG0wGZeTzGQtJi39l6eWZVzCA4Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5edccae8f1889e857a9ad789 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 07 Jun 2020 11:09:28
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EEC45C43395; Sun,  7 Jun 2020 11:09:27 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BEA0BC433CA;
-        Sun,  7 Jun 2020 11:09:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BEA0BC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [RFC PATCH] iommu/arm-smmu: Remove shutdown callback
-Date:   Sun,  7 Jun 2020 16:39:18 +0530
-Message-Id: <20200607110918.1733-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        Sun, 7 Jun 2020 07:13:18 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:46286 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgFGLNP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 07:13:15 -0400
+Received: by mail-il1-f200.google.com with SMTP id d16so5818648ilc.13
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 04:13:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=YYswQKILazrP4JetGbUd/7c68gWgB2rDDnGxYj3VwNg=;
+        b=l23/xClzilZ+zjNKXRT0JctvKyis3iCDCtRK/X92zWi/ifPL7HoBtShS6+OejpEpJX
+         56MJm8a/137JY3RjAk0qg65X5AwltYmQbF8/+owqvgmCCe+hVhSgmosCzqyn9PcytNC1
+         hBPWSwFqcC9dLMc25QAbEpIkAJTy4G/dwa1STsex7CWwzubKCwCzDtZn6/QB5JM4hk+p
+         9V56/RA827l5k1cfl+PGq8bXmJ4hNRCQ82foamjXtkjsvcTD39DnLaPj4R4iOXdW4IMF
+         JjhIdApiZcmmypkkMiw6X2km58+9msIB9Cw5O9EUS9ZIrEpBqda2/TJ1+k5WF1Orgchp
+         cgOA==
+X-Gm-Message-State: AOAM530Q9hx7gb3tFwV0jXWzGRPA4pxm3fxMzdZI7+olVKAczsp0pQUH
+        +M0Xq9aAWUJ7zH0C62kAhQFnkCxg4oHj2Ox/2ydJxSJIvfiS
+X-Google-Smtp-Source: ABdhPJySQ8ZAplF7MdltxSKJlLlkH3hlQAtoOHrebOYLk69a2youR7LbvDdePK2EYU/LId4vY4dtcDxDZ7/COo51gtB1irIdJBTJ
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:2e81:: with SMTP id m1mr6185835iow.147.1591528392687;
+ Sun, 07 Jun 2020 04:13:12 -0700 (PDT)
+Date:   Sun, 07 Jun 2020 04:13:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007f04d405a77c9485@google.com>
+Subject: linux-next test error: BUG: using smp_processor_id() in preemptible
+ [ADDR] code: kworker/u4:LINE/4205
+From:   syzbot <syzbot+5c2f1b4ae8c49a698784@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove SMMU shutdown callback since it seems to cause more
-problems than benefits. With this callback, we need to make
-sure that all clients/consumers of SMMU do not perform any
-DMA activity once the SMMU is shutdown and translation is
-disabled. In other words we need to add shutdown callbacks
-for all those clients to make sure they do not perform any
-DMA or else we see all kinds of weird crashes during reboot
-or shutdown. This is clearly not scalable as the number of
-clients of SMMU would vary across SoCs and we would need to
-add shutdown callbacks to almost all drivers eventually.
-This callback was added for kexec usecase where it was known
-to cause memory corruptions when SMMU was not shutdown but
-that does not directly relate to SMMU because the memory
-corruption could be because of the client of SMMU which is
-not shutdown properly before booting into new kernel. So in
-that case, we need to identify the client of SMMU causing
-the memory corruption and add appropriate shutdown callback
-to the client rather than to the SMMU.
+Hello,
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+syzbot found the following crash on:
+
+HEAD commit:    48f99181 Add linux-next specific files for 20200603
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=148e22f2100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=365f706273eaf502
+dashboard link: https://syzkaller.appspot.com/bug?extid=5c2f1b4ae8c49a698784
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+5c2f1b4ae8c49a698784@syzkaller.appspotmail.com
+
+BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
+ mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
+ ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
+ do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
+ __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
+ writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
+ __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
+ wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
+ wb_do_writeback fs/fs-writeback.c:2049 [inline]
+ wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
+ process_one_work+0x965/0x1690 kernel/workqueue.c:2269
+ worker_thread+0x96/0xe10 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
+ writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
+ __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
+ wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
+ wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
+ wb_do_writeback fs/fs-writeback.c:2049 [inline]
+ wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
+ process_one_work+0x965/0x1690 kernel/workqueue.c:2269
+ worker_thread+0x96/0xe10 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 1 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
+ mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
+ ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
+ do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
+ __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
+ writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
+ __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
+ wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
+ wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
+ wb_do_writeback fs/fs-writeback.c:2049 [inline]
+ wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
+ process_one_work+0x965/0x1690 kernel/workqueue.c:2269
+ worker_thread+0x96/0xe10 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
+ mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
+ ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
+ do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
+ __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
+ writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
+ __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
+ wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
+ wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
+ wb_do_writeback fs/fs-writeback.c:2049 [inline]
+ wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
+ process_one_work+0x965/0x1690 kernel/workqueue.c:2269
+ worker_thread+0x96/0xe10 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: writeback wb_workfn (flush-8:0)
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
+ mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
+ ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
+ do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
+ __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
+ writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
+ __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
+ wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
+ wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
+ wb_do_writeback fs/fs-writeback.c:2049 [inline]
+ wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
+ process_one_work+0x965/0x1690 kernel/workqueue.c:2269
+ worker_thread+0x96/0xe10 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+tipc: TX() has been purged, node left!
+
+
 ---
- drivers/iommu/arm-smmu-v3.c | 6 ------
- drivers/iommu/arm-smmu.c    | 6 ------
- 2 files changed, 12 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 8a908c50c306..634da02fef78 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -4142,11 +4142,6 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static void arm_smmu_device_shutdown(struct platform_device *pdev)
--{
--	arm_smmu_device_remove(pdev);
--}
--
- static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,smmu-v3", },
- 	{ },
-@@ -4161,7 +4156,6 @@ static struct platform_driver arm_smmu_driver = {
- 	},
- 	.probe	= arm_smmu_device_probe,
- 	.remove	= arm_smmu_device_remove,
--	.shutdown = arm_smmu_device_shutdown,
- };
- module_platform_driver(arm_smmu_driver);
- 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 243bc4cb2705..4d80516c789f 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -2276,11 +2276,6 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static void arm_smmu_device_shutdown(struct platform_device *pdev)
--{
--	arm_smmu_device_remove(pdev);
--}
--
- static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
- {
- 	struct arm_smmu_device *smmu = dev_get_drvdata(dev);
-@@ -2335,7 +2330,6 @@ static struct platform_driver arm_smmu_driver = {
- 	},
- 	.probe	= arm_smmu_device_probe,
- 	.remove	= arm_smmu_device_remove,
--	.shutdown = arm_smmu_device_shutdown,
- };
- module_platform_driver(arm_smmu_driver);
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
