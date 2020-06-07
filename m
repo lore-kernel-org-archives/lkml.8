@@ -2,128 +2,133 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4631C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 08:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E184C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 08:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2292065C
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 08:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3DF206F6
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 08:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="IJ5qErtG"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="0CJQJp/F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CK//fHRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgFGIUh (ORCPT
+        id S1726465AbgFGIkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 04:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgFGIUh (ORCPT
+        Sun, 7 Jun 2020 04:40:45 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:56273 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726396AbgFGIko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 04:20:37 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B329CC08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 01:20:36 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x6so14062546wrm.13
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 01:20:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d6y0/beVX2prGG9BaE8oNlZtYuIjUlHNGhxvleEO0bg=;
-        b=IJ5qErtG21ULmz69a5xEiMSHuCWvqzTbWhUhp1hh4fbxsqJP6xZ2Prgzz+wFtA0ZhO
-         5llr2H/GttTs9TLm6c8dlzvbbjDs2LKrFy6lno4XdfRvUDY3xj7SoMeeEcvXf8dg5+Vr
-         Wl44IfE9RxaitCau+KqAiKKI96hf7MRwA6DPg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d6y0/beVX2prGG9BaE8oNlZtYuIjUlHNGhxvleEO0bg=;
-        b=nJEYk+C0X+W4XoabdqRTkb59yO9sjcqvZtwP/XHyntHg6tWrAagwwDK1O00GY67mGY
-         OZ3uYZJvY5jQY6hKcJkhQKXP38RQihQUcFPCXYel7DhCRYrD+w7ZWR95+ynu2z5UTm3d
-         jeB+RvN8O4TZpwEFbJOS5rZjAtmvd9s8w/8vjQG0M3KVieaPyyb5Upx3p0BqCBAYxcNq
-         BfIVC80FrhWD/0kqcITg45I4Qll2kfGKT0ud7oyY57dsgp1JsU0tlXZXdeEdPI8rV5/H
-         rR0cHd5KqdFP5579MgSqsMjhxnlhHtaUbmJpNj/DZw802a0a9/mmuAVxfJuflg4WOVIE
-         UbWg==
-X-Gm-Message-State: AOAM531kldZ6OJ8PhHGRWqOmH7h1OVOqD/kSP0Uv9wxI9hfRbeuoTWUe
-        B5zq9z5dXPxJwlkopsCXw97w6oLx8+w=
-X-Google-Smtp-Source: ABdhPJyrLG5zH3hR7xWaSH2JPAz+F2TCGNki4XEF8+f2WSz6+lF2sVGbgdCLcSVEy4IPAlpSagcgVQ==
-X-Received: by 2002:a5d:6289:: with SMTP id k9mr18715571wru.358.1591518035028;
-        Sun, 07 Jun 2020 01:20:35 -0700 (PDT)
-Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id g3sm21445618wrb.46.2020.06.07.01.20.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jun 2020 01:20:34 -0700 (PDT)
-Subject: Re: [PATCH] ipv4: nexthop: Fix deadcode issue by performing a proper
- NULL check
-To:     David Miller <davem@davemloft.net>
-Cc:     patrickeigensatz@gmail.com, dsahern@kernel.org,
-        scan-admin@coverity.com, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200601111201.64124-1-patrick.eigensatz@gmail.com>
- <20200601.110654.1178868171436999333.davem@davemloft.net>
- <4e6ba1a8-be3b-fd22-e0b8-485d33bb51eb@cumulusnetworks.com>
- <20200602.140108.2199333313862275860.davem@davemloft.net>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <438a628d-e742-0bc6-a67b-41a2d0a62bab@cumulusnetworks.com>
-Date:   Sun, 7 Jun 2020 11:20:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 7 Jun 2020 04:40:44 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 460045C00A9;
+        Sun,  7 Jun 2020 04:40:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Sun, 07 Jun 2020 04:40:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        LEdB9Bo5hxAS0lxQEDRgkwN6u4BWFSF7qj8zTu/DWjs=; b=0CJQJp/F9XO0FSzM
+        HoEgDzmwDAlTDgJCypTbAfBykPi7NCxAIK7l9rC3C9o3hAh02uZlQsce0Nw3+sqX
+        IjqlDEXwBT2lm4hhhW5D89ZEoMXXkvxrLAI19jcUpFLbLQNyGm8CuCTl2h2raEBq
+        s3oebkhq2YuiafZXyS4hPDz9F/K2vLODhngsh89nGn1W5TXS5jNu8VwIDugCKeBa
+        FPvxoigJNs8XiWDOhU2tW/HvBFa7GxBkbwlgUhGGITMbuMaguzfDGFdbpJVeGUV7
+        cjLN2fCvKDsY84bjNh9bCBTvv0UuK1uPeEHsDoVg3I76RPHml8d0VU6Bz+xMiKES
+        YEiNiA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=LEdB9Bo5hxAS0lxQEDRgkwN6u4BWFSF7qj8zTu/DW
+        js=; b=CK//fHRnUtyzutf/dnr25BBM7kKSuEX3QTp3YsfcPDR3a13xwQaCceD0w
+        dHahxYVa1uaZdVpM81J+XgNmpd1ZRHerq4rnFmQDfvZil3/60xgMChltn6p0BRKP
+        S7swEmiAX+FKk1uv9FLRm2CyESB517nfNo1gIIYvS4vTLGuvm0sVdjLPu5n7dUqu
+        Ec5ipRM0lH8NnjnNyciErH+F06pXLioe9xlnUA+/CeHAQxefG/dBhG8Y8jqriT31
+        cCSxM1SNK8m7HRruNYuW7AE5OgBqeUks4Xqq9KCCB7YCXgYBCrUzg+GbCm5bAn/s
+        UtvuDlrngulIkN4oEWRL6gj/6VKdA==
+X-ME-Sender: <xms:CajcXhsyxS7y1RMPqi1Y2U2HU3PBnkGMaNe5XTWqeZ88o-6PWhDOQw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudegledgtdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    effeettedvgeduvdevfeevfeettdffudduheeuiefhueevgfevheffledugefgjeenucfk
+    phepheekrdejrddvvddtrdegjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:CajcXqez1PdZemylizuJKcu4dPJeyGYuN0xvjzfNXGNFWdYTMo7fJg>
+    <xmx:CajcXkzgTAYoi410hVtROe7hKpYG64OtMf2nxXPFjhBgZNLbKxx8jg>
+    <xmx:CajcXoM0M7P7HGgOSgk823yedy2gVqoKpz6_rsEb1BAvmImonuS8OQ>
+    <xmx:C6jcXknutgXrzIFXkxfV4htF6QotfJ9KUeeDkAo7_MkPwTMhIC4aiA>
+Received: from mickey.themaw.net (58-7-220-47.dyn.iinet.net.au [58.7.220.47])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 29791328005A;
+        Sun,  7 Jun 2020 04:40:37 -0400 (EDT)
+Message-ID: <36e2d782d1aea1cfbe17f3bfee35f723f2f89c0d.camel@themaw.net>
+Subject: Re: [PATCH 1/4] kernfs: switch kernfs to use an rwsem
+From:   Ian Kent <raven@themaw.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        l Viro <viro@ZenIV.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        Rick Lindsley <ricklind@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Sun, 07 Jun 2020 16:40:33 +0800
+In-Reply-To: <159038562460.276051.5267555021380171295.stgit@mickey.themaw.net>
+References: <159038508228.276051.14042452586133971255.stgit@mickey.themaw.net>
+         <159038562460.276051.5267555021380171295.stgit@mickey.themaw.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200602.140108.2199333313862275860.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06/2020 00:01, David Miller wrote:
-> From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-> Date: Tue, 2 Jun 2020 10:23:09 +0300
-> 
->> On 01/06/2020 21:06, David Miller wrote:
->>> From: patrickeigensatz@gmail.com
->>> Date: Mon,  1 Jun 2020 13:12:01 +0200
->>>
->>>> From: Patrick Eigensatz <patrickeigensatz@gmail.com>
->>>>
->>>> After allocating the spare nexthop group it should be tested for kzalloc()
->>>> returning NULL, instead the already used nexthop group (which cannot be
->>>> NULL at this point) had been tested so far.
->>>>
->>>> Additionally, if kzalloc() fails, return ERR_PTR(-ENOMEM) instead of NULL.
->>>>
->>>> Coverity-id: 1463885
->>>> Reported-by: Coverity <scan-admin@coverity.com>
->>>> Signed-off-by: Patrick Eigensatz <patrickeigensatz@gmail.com>
->>>
->>> Applied, thank you.
->>>
->>
->> Hi Dave,
->> I see this patch in -net-next but it should've been in -net as I wrote in my
->> review[1]. This patch should go along with the recent nexthop set that fixes
->> a few bugs, since it could result in a null ptr deref if the spare group cannot
->> be allocated.
->> How would you like to proceed? Should it be submitted for -net as well?
-> 
-> When I'm leading up to the merge window I just toss everything into net-next
-> and still queue things to -stable as needed.
-> 
+Hi Greg,
 
-Got it, in that case could you please queue the patch for -stable?
+On Mon, 2020-05-25 at 13:47 +0800, Ian Kent wrote:
+> @@ -189,9 +189,9 @@ int kernfs_iop_getattr(const struct path *path,
+> struct kstat *stat,
+>  	struct inode *inode = d_inode(path->dentry);
+>  	struct kernfs_node *kn = inode->i_private;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_read(&kernfs_rwsem);
+>  	kernfs_refresh_inode(kn, inode);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  
+>  	generic_fillattr(inode, stat);
+>  	return 0;
+> @@ -281,9 +281,9 @@ int kernfs_iop_permission(struct inode *inode,
+> int mask)
+>  
+>  	kn = inode->i_private;
+>  
+> -	mutex_lock(&kernfs_mutex);
+> +	down_read(&kernfs_rwsem);
+>  	kernfs_refresh_inode(kn, inode);
+> -	mutex_unlock(&kernfs_mutex);
+> +	up_read(&kernfs_rwsem);
+>  
+>  	return generic_permission(inode, mask);
+>  }
 
-I checked https://patchwork.ozlabs.org/bundle/davem/stable/?state=* and
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-but didn't find it.
+I changed these from a write lock to a read lock late in the
+development.
 
-Thanks,
- Nik
+But kernfs_refresh_inode() modifies the inode so I think I should
+have taken the inode lock as well as taking the read lock.
 
+I'll look again but a second opinion (anyone) would be welcome.
+
+Ian
 
