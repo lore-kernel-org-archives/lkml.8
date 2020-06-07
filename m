@@ -2,180 +2,133 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4591C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 17:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47020C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCEA2075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 17:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC8C2074B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgFGR5t (ORCPT
+        id S1726982AbgFGSAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 13:57:49 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:50347 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726738AbgFGR5s (ORCPT
+        Sun, 7 Jun 2020 14:00:46 -0400
+Received: from smtpout1.mo803.mail-out.ovh.net ([79.137.123.219]:51801 "EHLO
+        smtpout1.mo803.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726841AbgFGSAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 13:57:48 -0400
-X-IronPort-AV: E=Sophos;i="5.73,485,1583161200"; 
-   d="scan'208";a="48825340"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 08 Jun 2020 02:57:47 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5044740B4F51;
-        Mon,  8 Jun 2020 02:57:45 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] ARM: dts: r8a7742-iwg21d-q7-dbcm-ca: Add device tree for camera DB
-Date:   Sun,  7 Jun 2020 18:57:39 +0100
-Message-Id: <1591552659-21314-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 7 Jun 2020 14:00:45 -0400
+Received: from pro2.mail.ovh.net (unknown [10.109.156.68])
+        by mo803.mail-out.ovh.net (Postfix) with ESMTPS id 6911955D9B70;
+        Sun,  7 Jun 2020 20:00:42 +0200 (CEST)
+Received: from arch.lan (89.70.180.118) by DAG2EX1.emp2.local (172.16.2.11)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Sun, 7 Jun 2020
+ 20:00:35 +0200
+From:   Tomasz Duszynski <tomasz.duszynski@octakon.com>
+To:     <linux-iio@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <jic23@kernel.org>,
+        <andy.shevchenko@gmail.com>, <pmeerw@pmeerw.net>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Subject: [PATCH v5 0/4] Add support for SCD30 sensor
+Date:   Sun, 7 Jun 2020 19:58:08 +0200
+Message-ID: <20200607175812.95777-1-tomasz.duszynski@octakon.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [89.70.180.118]
+X-ClientProxiedBy: DAG2EX2.emp2.local (172.16.2.12) To DAG2EX1.emp2.local
+ (172.16.2.11)
+X-Ovh-Tracer-Id: 3119305692199738391
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedrudegledguddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecunecujfgurhephffvufffkffoggfgtghisehtkeertdertddtnecuhfhrohhmpefvohhmrghsiicuffhushiihihnshhkihcuoehtohhmrghsiidrughushiihihnshhkihesohgtthgrkhhonhdrtghomheqnecuggftrfgrthhtvghrnhephedtgefgkeduvdekheeggefghffhteekleetvdekvddtveeutdetueefueehieetnecukfhppedtrddtrddtrddtpdekledrjedtrddukedtrdduudeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhrohdvrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepthhomhgrshiirdguuhhsiiihnhhskhhisehotghtrghkohhnrdgtohhmpdhrtghpthhtohepphhmvggvrhifsehpmhgvvghrfidrnhgvth
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the camera daughter board which is connected to
-iWave's RZ/G1H Qseven carrier board. Also enable ttySC[0135] and
-ethernet1 interfaces.
+Following series adds support for Sensirion SCD30 sensor module capable of
+measuring carbon dioxide, temperature and relative humidity. CO2 measurements
+base on NDIR principle while temperature and relative humidity are measured by
+the on board SHT31. As for sensor communication, both I2C and serial interfaces
+are supported.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v1->v2
-* Enabled support for RTS/CTS for SCIFB1 interface through gpio pins
-* Included Reviewed-by tag from Geert 
----
- arch/arm/boot/dts/Makefile                      |  1 +
- arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts | 97 +++++++++++++++++++++++++
- 2 files changed, 98 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
+v5:
+* set pressure calibration via output channel
+* use kstrtobool() to read value into _enabled attribute
+* drop explicit parent asignment as the default one is good enough
+  (seems 'iio: core: pass parent device as parameter during allocation'
+   series was accepted)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ed3376c..118e35c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -918,6 +918,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7742-iwg21d-q7.dtb \
-+	r8a7742-iwg21d-q7-dbcm-ca.dtb \
- 	r8a7743-iwg20d-q7.dtb \
- 	r8a7743-iwg20d-q7-dbcm-ca.dtb \
- 	r8a7743-sk-rzg1m.dtb \
-diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
-new file mode 100644
-index 0000000..1479ced
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
-@@ -0,0 +1,97 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the iWave-RZ/G1H Qseven board development
-+ * platform with camera daughter board
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7742-iwg21d-q7.dts"
-+
-+/ {
-+	model = "iWave Systems RZ/G1H Qseven development platform with camera add-on";
-+	compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
-+
-+	aliases {
-+		serial0 = &scif0;
-+		serial1 = &scif1;
-+		serial3 = &scifb1;
-+		serial5 = &hscif0;
-+		ethernet1 = &ether;
-+	};
-+};
-+
-+&avb {
-+	/* Pins shared with VIN0, keep status disabled */
-+	status = "disabled";
-+};
-+
-+&ether {
-+	pinctrl-0 = <&ether_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		micrel,led-mode = <1>;
-+	};
-+};
-+
-+&hscif0 {
-+	pinctrl-0 = <&hscif0_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&pfc {
-+	ether_pins: ether {
-+		groups = "eth_mdio", "eth_rmii";
-+		function = "eth";
-+	};
-+
-+	hscif0_pins: hscif0 {
-+		groups = "hscif0_data", "hscif0_ctrl";
-+		function = "hscif0";
-+	};
-+
-+	scif0_pins: scif0 {
-+		groups = "scif0_data";
-+		function = "scif0";
-+	};
-+
-+	scif1_pins: scif1 {
-+		groups = "scif1_data";
-+		function = "scif1";
-+	};
-+
-+	scifb1_pins: scifb1 {
-+		groups = "scifb1_data";
-+		function = "scifb1";
-+	};
-+};
-+
-+&scif0 {
-+	pinctrl-0 = <&scif0_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&scif1 {
-+	pinctrl-0 = <&scif1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&scifb1 {
-+	pinctrl-0 = <&scifb1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	rts-gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
-+	cts-gpios = <&gpio4 17 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.7.4
+v4:
+* improve formatting
+* improve error handling readability
+* fix message validity check on serial write
+
+v3:
+* simplify code by scaling temperature & humidity in _read_meas()
+* update realbits in scan types
+* s/adjecent/adjacent
+* drop IIO_CHAN_INFO_RAW from _write_raw_get_fmt because there's no raw
+  output channel
+* rework locking in _read_raw
+* fix endianess problem on BE machine
+* align timestamp properly before pushing to buffers
+* explain why interrupt gets disabled after registration
+* add trigger validation
+* drop SCALE for temperature and humidity channel as they are processed
+* register action which stops measuring after starting measurements
+* spit generic calibration attr into two doing specific things
+* add comment explaining why priv in struct scd30_state is for
+* rename node in binding example to co2-sensor
+
+v2:
+* move asm/byteorder.h towards the bottom of include list
+* make channel address names in enum more specific
+* add postfixes to defines and extra comments
+* drop unneeded i2c include from scd30 header
+* break generic command sending function into specialized options
+* expose automatic calibration and forced calibration via the same attr
+* use SAMP_FREQ to set frequency instead of meas_interval attr
+* use CALISCALE to set pressure compensation instead of pressure_comp attr
+* use CALIBBIAS to set temperature offset instead of temp_offset attr
+* fix order in MAINTAINERS
+* drop attribute allowing one to reset sensor
+* as we have dt probing drop board file based probing (i2c_device_id)
+* merge patches touching related files
+* use fwnode API to retrieve interrupt from dt
+* fix interrupt-parent spelling
+* change binding license
+* drop supply from required property
+
+Tomasz Duszynski (4):
+  iio: chemical: scd30: add core driver
+  iio: chemical: scd30: add I2C interface driver
+  iio: chemical: scd30: add serial interface driver
+  dt-bindings: iio: scd30: add device binding file
+
+ Documentation/ABI/testing/sysfs-bus-iio-scd30 |  34 +
+ .../iio/chemical/sensirion,scd30.yaml         |  68 ++
+ MAINTAINERS                                   |   9 +
+ drivers/iio/chemical/Kconfig                  |  33 +
+ drivers/iio/chemical/Makefile                 |   3 +
+ drivers/iio/chemical/scd30.h                  |  78 ++
+ drivers/iio/chemical/scd30_core.c             | 770 ++++++++++++++++++
+ drivers/iio/chemical/scd30_i2c.c              | 139 ++++
+ drivers/iio/chemical/scd30_serial.c           | 263 ++++++
+ 9 files changed, 1397 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-scd30
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensirion,scd30.yaml
+ create mode 100644 drivers/iio/chemical/scd30.h
+ create mode 100644 drivers/iio/chemical/scd30_core.c
+ create mode 100644 drivers/iio/chemical/scd30_i2c.c
+ create mode 100644 drivers/iio/chemical/scd30_serial.c
+
+--
+2.27.0
 
