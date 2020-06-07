@@ -2,114 +2,96 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5926DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 17:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 17:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C22420659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 17:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53CF2073B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 17:43:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="J8xcGiwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgFGRl6 (ORCPT
+        id S1726917AbgFGRnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 13:41:58 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37850 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgFGRl5 (ORCPT
+        Sun, 7 Jun 2020 13:43:12 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:34640 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgFGRnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 13:41:57 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a3so1216804oid.4;
-        Sun, 07 Jun 2020 10:41:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mQJfVlcJ7JmVpiY5UxgE7ElosJdOo6Jg9Pl/1tvjxg0=;
-        b=YTroi0TLnjCdJSXQ4oOv4L2nVx5RIj8UquLyqmxP3opAx8YFoGOI6s1gppj43f/jZl
-         HjwjFs0T2QNF8R4PvYyMaaVxrRkr9xky7xT1VFo1iP/Yh6xpyxJoMDsWlNsUuLIQmh9n
-         /kUHAjJ2jYrrKa6jLMx18FVE3QnN2+hK4m2y6hSwwFgqLqWqHaX0Fk8oDBEUdK7HQ19F
-         3bb7dSpq1ABuRMMniA3lIl/ojEm0BVSIHCKOEMmWbjCMw5UPR4VQPO5kUE2eODiFHL1t
-         ptGbK5u5P1FD/0HXBdYPNEoop/Eh7k9STsM5w7NAuSez3SwfTrRf8OmM7aqj9DAnkXaO
-         fJug==
-X-Gm-Message-State: AOAM53396pTA+cmbew+iU+vALUK537EkZUCBYzuVtIYavt2XOTK7QxRh
-        M4LvDc0P2dPuq1XrwIxqXdvzfvmOkuB3zz2gKMM=
-X-Google-Smtp-Source: ABdhPJxvgvICQ9ES5Ct5NdRo84WTGl2cg/CETWMVmgEhmPtU9IV6i+KCWwpnNVXMICyGZI7QrL+MYFKgfYQi8KhtI/o=
-X-Received: by 2002:a54:4006:: with SMTP id x6mr1041165oie.148.1591551716688;
- Sun, 07 Jun 2020 10:41:56 -0700 (PDT)
+        Sun, 7 Jun 2020 13:43:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1591551789; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=FSFQiXi8mo7IP2wgLUtgrK+iWKDgIGEwYt8WEKc9CXM=;
+        b=J8xcGiwAWTIA3WSET0jy8NBC/G7jJAZFejSYvDyK6v6M3MR6fUj4Gxc1UrUXLUkAjmCvy8
+        C7aXNtydM9PqoL7MHyyW4GsY4CHSYjn+cEwPGHIn/xQqd4wzr8BXn+GXa5hdKuvxTVzcYt
+        UhQa9wAXTqTeAE1VTqkiBnqtlo348WM=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] pinctrl: ingenic: Add NAND FRE/FWE pins for JZ4740
+Date:   Sun,  7 Jun 2020 19:42:43 +0200
+Message-Id: <20200607174243.2361664-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <1590586141-21006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdX+M+k-JRy1Ps=hRZR=mSuexSQbJ0+Cw1337uO6nak_qQ@mail.gmail.com> <CA+V-a8vDVa0DSX_XT=NsmBta4O=v0p_Nn9M5x9N7gw_zc0yoyg@mail.gmail.com>
-In-Reply-To: <CA+V-a8vDVa0DSX_XT=NsmBta4O=v0p_Nn9M5x9N7gw_zc0yoyg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 7 Jun 2020 19:41:44 +0200
-Message-ID: <CAMuHMdUpqbzvbm4Dwt3PYB_irzNXERdSnH5KOmO-myo_=r7cAA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: r8a7742-iwg21d-q7-dbcm-ca: Add device tree for
- camera DB
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Add the FRE/FWE pins for the JZ4740.
 
-On Sun, Jun 7, 2020 at 6:19 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Fri, Jun 5, 2020 at 1:27 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, May 27, 2020 at 3:29 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add support for the camera daughter board which is connected to
-> > > iWave's RZ/G1H Qseven carrier board. Also enable ttySC[0135] and
-> > > ethernet1 interfaces.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
-> >
-> > > +&scifb1 {
-> > > +       pinctrl-0 = <&scifb1_pins>;
-> > > +       pinctrl-names = "default";
-> > > +       status = "okay";
-> >
-> > Before I queue this in renesas-devel for v5.9, I have on question:
-> > As this port carries RTS/CTS signals, perhaps you want to add
-> >
-> >     rts-gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
-> >     cts-gpios = <&gpio4 17 GPIO_ACTIVE_LOW>;
-> >
-> Aaha the user manual mentioned RTS/CTS wasn't connected, but I tested
-> this with the above which disproves the Doc. Shall I post it as a
+These pins must be in function #0 for the NAND to work. The reason it
+worked before was because the bootloader did set these pins to the
+correct function beforehand.
 
-RTS/CTS are indeed not connected to the dedicated RTS/CTS pins of
-SCIFB1, so the documentation is right.
-However, the pins on the serial port connector can be used as GPIOs,
-hence they can be used with software-controlled RTS/CTS.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> separate patch or post a v2 including it.
-
-Up to you, I can handle both.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 6a8d44504f94..1da72438d680 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -124,6 +124,7 @@ static int jz4740_nand_cs1_pins[] = { 0x39, };
+ static int jz4740_nand_cs2_pins[] = { 0x3a, };
+ static int jz4740_nand_cs3_pins[] = { 0x3b, };
+ static int jz4740_nand_cs4_pins[] = { 0x3c, };
++static int jz4740_nand_fre_fwe_pins[] = { 0x5c, 0x5d, };
+ static int jz4740_pwm_pwm0_pins[] = { 0x77, };
+ static int jz4740_pwm_pwm1_pins[] = { 0x78, };
+ static int jz4740_pwm_pwm2_pins[] = { 0x79, };
+@@ -146,6 +147,7 @@ static int jz4740_nand_cs1_funcs[] = { 0, };
+ static int jz4740_nand_cs2_funcs[] = { 0, };
+ static int jz4740_nand_cs3_funcs[] = { 0, };
+ static int jz4740_nand_cs4_funcs[] = { 0, };
++static int jz4740_nand_fre_fwe_funcs[] = { 0, 0, };
+ static int jz4740_pwm_pwm0_funcs[] = { 0, };
+ static int jz4740_pwm_pwm1_funcs[] = { 0, };
+ static int jz4740_pwm_pwm2_funcs[] = { 0, };
+@@ -178,6 +180,7 @@ static const struct group_desc jz4740_groups[] = {
+ 	INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2),
+ 	INGENIC_PIN_GROUP("nand-cs3", jz4740_nand_cs3),
+ 	INGENIC_PIN_GROUP("nand-cs4", jz4740_nand_cs4),
++	INGENIC_PIN_GROUP("nand-fre-fwe", jz4740_nand_fre_fwe),
+ 	INGENIC_PIN_GROUP("pwm0", jz4740_pwm_pwm0),
+ 	INGENIC_PIN_GROUP("pwm1", jz4740_pwm_pwm1),
+ 	INGENIC_PIN_GROUP("pwm2", jz4740_pwm_pwm2),
+@@ -195,7 +198,7 @@ static const char *jz4740_lcd_groups[] = {
+ 	"lcd-8bit", "lcd-16bit", "lcd-18bit", "lcd-18bit-tft", "lcd-no-pins",
+ };
+ static const char *jz4740_nand_groups[] = {
+-	"nand-cs1", "nand-cs2", "nand-cs3", "nand-cs4",
++	"nand-cs1", "nand-cs2", "nand-cs3", "nand-cs4", "nand-fre-fwe",
+ };
+ static const char *jz4740_pwm0_groups[] = { "pwm0", };
+ static const char *jz4740_pwm1_groups[] = { "pwm1", };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
