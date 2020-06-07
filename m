@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD89C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3019C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B4B20748
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D822067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dv/XUq+W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hgMmXQrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgFGQbI (ORCPT
+        id S1727912AbgFGQbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 12:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34442 "EHLO
+        Sun, 7 Jun 2020 12:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgFGQbD (ORCPT
+        with ESMTP id S1727788AbgFGQbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 12:31:03 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C667EC08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 09:31:02 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so17532299ljn.4
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 09:31:02 -0700 (PDT)
+        Sun, 7 Jun 2020 12:31:07 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D5FC08C5C4
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 09:31:06 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a9so13936233ljn.6
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 09:31:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VUUHzTYdCTkEy8qJLKBgOAUld/T0D8KqCFLo4EbK13A=;
-        b=dv/XUq+WdfVan0lSFHWk+qgDn/wSsMi9bV9WLipNALihtYxVDlZ5TyFZOdJFDN3/7H
-         cDRzz/M5jcdpPR0vOKqIQo3pOs0vxr1rXvXeelKgzgktgDvHHxQvMq7ghf+eDhjhO5mH
-         Ip8cJ/kSPzI840wrR3SNLc/gSWwoO/KfEAH70YodQrITPITS12uNAiO+gBH9xshBz7H+
-         BN2BhGK7Gp+AMqrmFiaK3VZlQ8NxPKjkdt1yScsfYogANa2qcXuCTUwyXxtEhPlGaaJS
-         L5/bkNPRpdusnIzTCW8LOuGRDRkVroIRt5AWG5LJxmfx1F8fV5FfpuysqAjt6aQQb/N+
-         jHag==
+        bh=ZN8pb1DxbDLuAa3GwJ440N0/6Zk96TU9nPo+rlxSNXs=;
+        b=hgMmXQrmQr4gLMphT0IR3nsiRZgO+DUmJ3Jk8kWCmvJJkWdlGe8cAbh9VOYwOIqVjD
+         V4oz0SXiDfTtEt7QnN+7tS0C5/r5ys9CSB/0SevtYjrYtp+38gyPGwdqDNJ7ZOeIRtVs
+         rXO/zgcXzFu4ryb6uENXqD1Zw5RNVpBLPtqtsQkhq7uApRlntzg+xFh27ORacmkgvkn9
+         RD0QTa6dONTYPTxsL/gB44FSKAZ2oGXG+7Hj7o/Bl3/Dx+IWIMZqNbWs4hfnyUDNKXuV
+         TFjRWiJfOjfyo0jFcRelceUsoPmgmZrKsuZUzx0znCkiFpDlDW7F+25HnPgiLYjAaRrk
+         VQWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=VUUHzTYdCTkEy8qJLKBgOAUld/T0D8KqCFLo4EbK13A=;
-        b=pY1mtQ6zpLvir3KHbYZbmClGjsnQiUwEFsk8R0t2S3Niie+AYnQU//BhnKMEtri0y1
-         Fn9Ogal7FLUPauVWg2sT6uEgUpUv9xxukKm4QmboeTW/E/+OaUPt3GYRD4W5yQHAV8Fs
-         6PawFRL0nWjLZqV4YSHYnbxSMu8TE1YOw5gR523E9v2OHS7fas3UneD6a73kpXG6PLZf
-         dN0b7dWJfnM0m34ls7FUFP/qXqHezL/DS84UX1A4eBQDh8w0gn6zwnOdVAQyrq8hydEL
-         fCaCryZvR0EanPInQotjAtdGzSB0aLXwCK/bsDUWxprSQwUQsDY2Ci5+0P5C8Tylxrgc
-         UebQ==
-X-Gm-Message-State: AOAM531pT/LvwiWj0zfGRGx1a+TvJApI3bpdM0nMKpvrGkyTHsj0CXfq
-        U9q5aUgJKZlWcYfDN75HF6tZOQ==
-X-Google-Smtp-Source: ABdhPJwUO3GSSqzVk9B3bZCVYJUf3X9ZKgSM1/1T9D2s9BR1VOO8qfvlTsbykFp1BPj6WrWXZNVl0w==
-X-Received: by 2002:a2e:2f0f:: with SMTP id v15mr8348721ljv.219.1591547461316;
-        Sun, 07 Jun 2020 09:31:01 -0700 (PDT)
+        bh=ZN8pb1DxbDLuAa3GwJ440N0/6Zk96TU9nPo+rlxSNXs=;
+        b=s9JtGs00yNFXwVLzkP6x5Vv0Us7OCIhYf9+UT2S3VpMflaxq+PWtBJYWRWyV9N4h7d
+         NPdtOMON/Gd16pkN+pmeWbqpBYW3edjDpd1D5HnhBdwSOnTHSg7dA+DruCx6qWNjR17P
+         UBgQLBL0rT7T2/Hhoy7ex26ZLh1hwxu0DbvLfR7hkd5xoB9qeAF8CRoM3twvUvvc2xKi
+         SpSDg1aehA0xp6p2m+VCR3EnpIcHw05XpCpi977+K7RjULd+GuuRorDMIG2cjnRnOARs
+         ty1UBRpMg55NEv5NMnjJaeK14iJUQGzc6K9iYDzVZL3BvKyrHuaqk6l+G3QO0NGo8Hng
+         jTIQ==
+X-Gm-Message-State: AOAM530Sty/7KGZiPmYN4QzI4YBufl+yV085EnFPL5cqCtr2gxum58R+
+        sVDQs3iQshogb3NrN3I/02yR/A==
+X-Google-Smtp-Source: ABdhPJwKvDoJhrs1A3GxUZPAsk4YJqgk84ISg9RDQ8bOuu1WO9sTe68xjvI+5fEFyJEEzp396jhkgg==
+X-Received: by 2002:a2e:87da:: with SMTP id v26mr8806511ljj.14.1591547464950;
+        Sun, 07 Jun 2020 09:31:04 -0700 (PDT)
 Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id l7sm1726511ljj.55.2020.06.07.09.31.00
+        by smtp.googlemail.com with ESMTPSA id l7sm1726511ljj.55.2020.06.07.09.31.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 09:31:00 -0700 (PDT)
+        Sun, 07 Jun 2020 09:31:04 -0700 (PDT)
 From:   Andrey Konovalov <andrey.konovalov@linaro.org>
 To:     mchehab@kernel.org, sakari.ailus@iki.fi,
         manivannan.sadhasivam@linaro.org
@@ -65,9 +65,9 @@ Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
         Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v4 07/10] media: i2c: imx290: Add RAW12 mode support
-Date:   Sun,  7 Jun 2020 19:30:22 +0300
-Message-Id: <20200607163025.8409-8-andrey.konovalov@linaro.org>
+Subject: [PATCH v4 08/10] media: i2c: imx290: Add support to enumerate all frame sizes
+Date:   Sun,  7 Jun 2020 19:30:23 +0300
+Message-Id: <20200607163025.8409-9-andrey.konovalov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200607163025.8409-1-andrey.konovalov@linaro.org>
 References: <20200607163025.8409-1-andrey.konovalov@linaro.org>
@@ -78,108 +78,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
-12 bit formats. Since the driver already supports RAW10 mode, let's add
-the missing RAW12 mode as well.
+Add support to enumerate all frame sizes supported by IMX290. This is
+required for using with userspace tools such as libcamera.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
 ---
- drivers/media/i2c/imx290.c | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ drivers/media/i2c/imx290.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index 67725a5aabd3..c654a9a8fb08 100644
+index c654a9a8fb08..fd147fac5ef2 100644
 --- a/drivers/media/i2c/imx290.c
 +++ b/drivers/media/i2c/imx290.c
-@@ -67,6 +67,7 @@ struct imx290 {
- 	struct clk *xclk;
- 	struct regmap *regmap;
- 	u8 nlanes;
-+	u8 bpp;
- 
- 	struct v4l2_subdev sd;
- 	struct v4l2_fwnode_endpoint ep;
-@@ -86,10 +87,12 @@ struct imx290 {
- 
- struct imx290_pixfmt {
- 	u32 code;
-+	u8 bpp;
- };
- 
- static const struct imx290_pixfmt imx290_formats[] = {
--	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
-+	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
-+	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
- };
- 
- static const struct regmap_config imx290_regmap_config = {
-@@ -257,6 +260,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
- 	{ 0x300b, 0x00},
- };
- 
-+static const struct imx290_regval imx290_12bit_settings[] = {
-+	{ 0x3005, 0x01 },
-+	{ 0x3046, 0x01 },
-+	{ 0x3129, 0x00 },
-+	{ 0x317c, 0x00 },
-+	{ 0x31ec, 0x0e },
-+	{ 0x3441, 0x0c },
-+	{ 0x3442, 0x0c },
-+	{ 0x300a, 0xf0 },
-+	{ 0x300b, 0x00 },
-+};
-+
- /* supported link frequencies */
- #define FREQ_INDEX_1080P	0
- #define FREQ_INDEX_720P		1
-@@ -478,7 +493,12 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
- 		} else {
- 			imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
- 			msleep(10);
--			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
-+			if (imx290->bpp == 10)
-+				imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
-+						 0x3c);
-+			else /* 12 bits per pixel */
-+				imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
-+						 0xf0);
- 			imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
- 		}
- 		break;
-@@ -550,7 +570,7 @@ static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
- 
- 	/* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
- 	pixel_rate = link_freq * 2 * nlanes;
--	do_div(pixel_rate, 10);
-+	do_div(pixel_rate, imx290->bpp);
- 	return pixel_rate;
+@@ -528,6 +528,28 @@ static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
+ 	return 0;
  }
  
-@@ -587,6 +607,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
- 	} else {
- 		format = &imx290->current_format;
- 		imx290->current_mode = mode;
-+		imx290->bpp = imx290_formats[i].bpp;
- 
- 		if (imx290->link_freq)
- 			__v4l2_ctrl_s_ctrl(imx290->link_freq,
-@@ -631,6 +652,15 @@ static int imx290_write_current_format(struct imx290 *imx290)
- 			return ret;
- 		}
- 		break;
-+	case MEDIA_BUS_FMT_SRGGB12_1X12:
-+		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-+						ARRAY_SIZE(
-+							imx290_12bit_settings));
-+		if (ret < 0) {
-+			dev_err(imx290->dev, "Could not set format registers\n");
-+			return ret;
-+		}
-+		break;
- 	default:
- 		dev_err(imx290->dev, "Unknown pixel format\n");
- 		return -EINVAL;
++static int imx290_enum_frame_size(struct v4l2_subdev *sd,
++				  struct v4l2_subdev_pad_config *cfg,
++				  struct v4l2_subdev_frame_size_enum *fse)
++{
++	const struct imx290 *imx290 = to_imx290(sd);
++	const struct imx290_mode *imx290_modes = imx290_modes_ptr(imx290);
++
++	if ((fse->code != imx290_formats[0].code) &&
++	    (fse->code != imx290_formats[1].code))
++		return -EINVAL;
++
++	if (fse->index >= imx290_modes_num(imx290))
++		return -EINVAL;
++
++	fse->min_width = imx290_modes[fse->index].width;
++	fse->max_width = imx290_modes[fse->index].width;
++	fse->min_height = imx290_modes[fse->index].height;
++	fse->max_height = imx290_modes[fse->index].height;
++
++	return 0;
++}
++
+ static int imx290_get_fmt(struct v4l2_subdev *sd,
+ 			  struct v4l2_subdev_pad_config *cfg,
+ 			  struct v4l2_subdev_format *fmt)
+@@ -873,6 +895,7 @@ static const struct v4l2_subdev_video_ops imx290_video_ops = {
+ static const struct v4l2_subdev_pad_ops imx290_pad_ops = {
+ 	.init_cfg = imx290_entity_init_cfg,
+ 	.enum_mbus_code = imx290_enum_mbus_code,
++	.enum_frame_size = imx290_enum_frame_size,
+ 	.get_fmt = imx290_get_fmt,
+ 	.set_fmt = imx290_set_fmt,
+ };
 -- 
 2.17.1
 
