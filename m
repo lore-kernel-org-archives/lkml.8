@@ -5,70 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD58C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B36C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E760B2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA262067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H3pdxkqa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bpROrwDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgFGONH (ORCPT
+        id S1728080AbgFGONM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 10:13:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20049 "EHLO
+        Sun, 7 Jun 2020 10:13:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31231 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726742AbgFGOLl (ORCPT
+        with ESMTP id S1726697AbgFGOLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 10:11:41 -0400
+        Sun, 7 Jun 2020 10:11:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591539100;
+        s=mimecast20190719; t=1591539097;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=VWXM+ipVrzQXYONFpt3zkOQmQtQZ231iT3DOSd7IMMo=;
-        b=H3pdxkqa44l0b8TxXpY64UbNfMagHP21i9p33NKHoZbDsyN9h4480ULfO9JS1P7+jxgSap
-        7KlhZnv+p3YinuEau9cCYari5gFC49/5u96FkI8jBsdTKs0wrw262Q5AegRCqAshgbrls9
-        lBMN7S4nVlW5N0r+4zRwqX5MTbEjraU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-31YA3-kUO1uUbQugldyHGA-1; Sun, 07 Jun 2020 10:11:37 -0400
-X-MC-Unique: 31YA3-kUO1uUbQugldyHGA-1
-Received: by mail-wr1-f70.google.com with SMTP id s17so6018687wrt.7
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 07:11:37 -0700 (PDT)
+        bh=JQR7Mpm9OBikwgtvyKeD/N9hz5sz6YikG7pS21JFzQo=;
+        b=bpROrwDoGrfk/f22tIGoDnQQdwnk3dxKKY6ASNFC9bLdHKR2BIsIV9HUP8aHfl+lxSLj8p
+        RNxpjQgPKpXmXnmplaF0TBCaL6KgC7a7hxanY8Z4wYpF2oVs30+c7d3GZGckHKsPGvSBBD
+        ChUEd8+Sy3PtHlMiEzeVo3I6YPrUO18=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-189-HUIlMPsxNNSvG-o4ClhAXg-1; Sun, 07 Jun 2020 10:11:35 -0400
+X-MC-Unique: HUIlMPsxNNSvG-o4ClhAXg-1
+Received: by mail-wm1-f72.google.com with SMTP id b65so4289265wmb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 07:11:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=VWXM+ipVrzQXYONFpt3zkOQmQtQZ231iT3DOSd7IMMo=;
-        b=JDZCOgr6UPxid64Po7hEdXki3n+YpVRPMySUoTeB9qs1PXyzEVz1TqwaGABJa1EL8m
-         u0vXWb9Sxt4futveYhFyT2gZvLeHIsHC7pok4qJ46rxWc/tt9eKh1z5liTW55Rpr0s8u
-         iQBURY34CEVRehjKODLv1AW0keLcMaYsjvGkU08FdBSWOL0gotHe9/6oIz97JuVYNH2h
-         iz8E1F1peSkK3Q42iRlgTOBzGWEBllR2Zn8N83iEcPY7Od0rcalTTZ2Y+XuSmf6WpMMa
-         D/GCJa2LWcW59OGcsww0u/Dilq214TnYneQJIY+DtITLc4sXvc1AbtLVOpUwosPY4cdH
-         u+1Q==
-X-Gm-Message-State: AOAM531/iSoOhlDkMpEcg0l97Rxf0xjsGx2YN46Rz8LkQ9til5NBcWkx
-        U3y2JwG8rXJnisW9+OVBnQ8eLlnacb+Q9wfbKhEkP0pP868iFD+Um8AmYI5Pf0HgstsB16B6aDR
-        CSBbIVQeOyzrlSx9xcaBD8ckD
-X-Received: by 2002:a05:6000:4c:: with SMTP id k12mr18631308wrx.215.1591539096211;
-        Sun, 07 Jun 2020 07:11:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxsDPwjtzJkhZbEN5e2/BnYi49yW0667WAP6g+jfWClMBgHDrBFyPNt/+F7HwozzDjFjLGjTw==
-X-Received: by 2002:a05:6000:4c:: with SMTP id k12mr18631293wrx.215.1591539096029;
-        Sun, 07 Jun 2020 07:11:36 -0700 (PDT)
+        bh=JQR7Mpm9OBikwgtvyKeD/N9hz5sz6YikG7pS21JFzQo=;
+        b=m+liDo2zzvz3dfovpkdTId8j62Na1kiSiNlfjuRzbmFK5iqYzAIxyAo6NcCmjtIiqO
+         mdyf1lh64MQmk7GCC1EWPlqJPFsrwawELcV4aytxqoXf6APMrHO1DyPrKK8ZmKF15ZjG
+         o4Fqf80Kv5N5h5zjpT/xd1OfpMf8tE4TaAtiws3jjtDj4Opn8n7qatydfh8ZoIWnf2jf
+         WqWwjB24ALQlz8epUE9S0kz7svLuTQj30SqsB5TPS16LguKwsD2XKrrmhml0qlETZkJc
+         SjEXq3ai4fMUYuGuI21zy2RA9ohjWF1V/sQsvijCR0i0jOVuKVTpWkTSgTq8bSlIDgOr
+         hGOQ==
+X-Gm-Message-State: AOAM530BMJi9ZWXx8PISKahy4UZ/HTR9bL6u1Z3lyXAS+yOGf6YB1TGB
+        7Sf0/RY6fDh16eue/zEhwUTLhKoZl2VcvLi/d3Xqqt15vGjBl1zh/XVtYVdgomaPtXARO2zlKNC
+        5sGAxK0tXUjHeJP3/eGKYmTi1
+X-Received: by 2002:adf:dc8e:: with SMTP id r14mr18094716wrj.333.1591539094201;
+        Sun, 07 Jun 2020 07:11:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxqzRAoAIzc/LlIJf21AHME4RusNkUCf33IpFFYIMKnPoUw8fHgwURZWyZ6ZiKcq55sRTypMg==
+X-Received: by 2002:adf:dc8e:: with SMTP id r14mr18094706wrj.333.1591539094004;
+        Sun, 07 Jun 2020 07:11:34 -0700 (PDT)
 Received: from redhat.com (bzq-82-81-31-23.red.bezeqint.net. [82.81.31.23])
-        by smtp.gmail.com with ESMTPSA id d2sm20296210wrs.95.2020.06.07.07.11.35
+        by smtp.gmail.com with ESMTPSA id k17sm18626832wmj.15.2020.06.07.07.11.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 07:11:35 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 10:11:34 -0400
+        Sun, 07 Jun 2020 07:11:33 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 10:11:30 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
         netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
         eperezma@redhat.com
-Subject: [PATCH RFC v5 05/13] vhost/net: pass net specific struct pointer
-Message-ID: <20200607141057.704085-6-mst@redhat.com>
+Subject: [PATCH RFC v5 04/13] vhost: cleanup fetch_buf return code handling
+Message-ID: <20200607141057.704085-5-mst@redhat.com>
 References: <20200607141057.704085-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -81,80 +81,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for further cleanup, pass net specific pointer
-to ubuf callbacks so we can move net specific fields
-out to net structures.
+Return code of fetch_buf is confusing, so callers resort to
+tricks to get to sane values. Let's switch to something standard:
+0 empty, >0 non-empty, <0 error.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/vhost/net.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/vhost/vhost.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index bf5e1d81ae25..ff594eec8ae3 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -94,7 +94,7 @@ struct vhost_net_ubuf_ref {
- 	 */
- 	atomic_t refcount;
- 	wait_queue_head_t wait;
--	struct vhost_virtqueue *vq;
-+	struct vhost_net_virtqueue *nvq;
- };
- 
- #define VHOST_NET_BATCH 64
-@@ -231,7 +231,7 @@ static void vhost_net_enable_zcopy(int vq)
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 3b0609801381..5075505cfe55 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2189,6 +2189,8 @@ static int fetch_indirect_descs(struct vhost_virtqueue *vq,
+ 	return 0;
  }
  
- static struct vhost_net_ubuf_ref *
--vhost_net_ubuf_alloc(struct vhost_virtqueue *vq, bool zcopy)
-+vhost_net_ubuf_alloc(struct vhost_net_virtqueue *nvq, bool zcopy)
++/* This function returns a value > 0 if a descriptor was found, or 0 if none were found.
++ * A negative code is returned on error. */
+ static int fetch_buf(struct vhost_virtqueue *vq)
  {
- 	struct vhost_net_ubuf_ref *ubufs;
- 	/* No zero copy backend? Nothing to count. */
-@@ -242,7 +242,7 @@ vhost_net_ubuf_alloc(struct vhost_virtqueue *vq, bool zcopy)
- 		return ERR_PTR(-ENOMEM);
- 	atomic_set(&ubufs->refcount, 1);
- 	init_waitqueue_head(&ubufs->wait);
--	ubufs->vq = vq;
-+	ubufs->nvq = nvq;
- 	return ubufs;
+ 	unsigned int i, head, found = 0;
+@@ -2205,7 +2207,7 @@ static int fetch_buf(struct vhost_virtqueue *vq)
+ 	if (unlikely(vq->avail_idx == vq->last_avail_idx)) {
+ 		/* If we already have work to do, don't bother re-checking. */
+ 		if (likely(vq->ndescs))
+-			return vq->num;
++			return 0;
+ 
+ 		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+ 			vq_err(vq, "Failed to access avail idx at %p\n",
+@@ -2224,7 +2226,7 @@ static int fetch_buf(struct vhost_virtqueue *vq)
+ 		 * invalid.
+ 		 */
+ 		if (vq->avail_idx == last_avail_idx)
+-			return vq->num;
++			return 0;
+ 
+ 		/* Only get avail ring entries after they have been
+ 		 * exposed by guest.
+@@ -2294,12 +2296,14 @@ static int fetch_buf(struct vhost_virtqueue *vq)
+ 	/* On success, increment avail index. */
+ 	vq->last_avail_idx++;
+ 
+-	return 0;
++	return 1;
  }
  
-@@ -384,13 +384,13 @@ static void vhost_zerocopy_signal_used(struct vhost_net *net,
- static void vhost_zerocopy_callback(struct ubuf_info *ubuf, bool success)
++/* This function returns a value > 0 if a descriptor was found, or 0 if none were found.
++ * A negative code is returned on error. */
+ static int fetch_descs(struct vhost_virtqueue *vq)
  {
- 	struct vhost_net_ubuf_ref *ubufs = ubuf->ctx;
--	struct vhost_virtqueue *vq = ubufs->vq;
-+	struct vhost_net_virtqueue *nvq = ubufs->nvq;
- 	int cnt;
+-	int ret = 0;
++	int ret;
  
- 	rcu_read_lock_bh();
+ 	if (unlikely(vq->first_desc >= vq->ndescs)) {
+ 		vq->first_desc = 0;
+@@ -2309,10 +2313,14 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+ 	if (vq->ndescs)
+ 		return 0;
  
- 	/* set len to mark this desc buffers done DMA */
--	vq->heads[ubuf->desc].len = success ?
-+	nvq->vq.heads[ubuf->desc].in_len = success ?
- 		VHOST_DMA_DONE_LEN : VHOST_DMA_FAILED_LEN;
- 	cnt = vhost_net_ubuf_put(ubufs);
+-	while (!ret && vq->ndescs <= vhost_vq_num_batch_descs(vq))
+-		ret = fetch_buf(vq);
++	for (ret = 1;
++	     ret > 0 && vq->ndescs <= vhost_vq_num_batch_descs(vq);
++	     ret = fetch_buf(vq))
++		;
  
-@@ -402,7 +402,7 @@ static void vhost_zerocopy_callback(struct ubuf_info *ubuf, bool success)
- 	 * less than 10% of times).
- 	 */
- 	if (cnt <= 1 || !(cnt % 16))
--		vhost_poll_queue(&vq->poll);
-+		vhost_poll_queue(&nvq->vq.poll);
- 
- 	rcu_read_unlock_bh();
+-	return vq->ndescs ? 0 : ret;
++	/* On success we expect some descs */
++	BUG_ON(ret > 0 && !vq->ndescs);
++	return ret;
  }
-@@ -1525,7 +1525,7 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
- 	/* start polling new socket */
- 	oldsock = vhost_vq_get_backend(vq);
- 	if (sock != oldsock) {
--		ubufs = vhost_net_ubuf_alloc(vq,
-+		ubufs = vhost_net_ubuf_alloc(nvq,
- 					     sock && vhost_sock_zcopy(sock));
- 		if (IS_ERR(ubufs)) {
- 			r = PTR_ERR(ubufs);
+ 
+ /* This looks in the virtqueue and for the first available buffer, and converts
+@@ -2331,7 +2339,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+ 	int ret = fetch_descs(vq);
+ 	int i;
+ 
+-	if (ret)
++	if (ret <= 0)
+ 		return ret;
+ 
+ 	/* Now convert to IOV */
 -- 
 MST
 
