@@ -2,176 +2,120 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 336E22074B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18792206F6
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591556460;
-	bh=Fl258mB/MTQoFYm2btDcWAXYmS1Ssp1OF7Iz2Rguyic=;
+	s=default; t=1591556922;
+	bh=aimXNnD+PVaJEw0UQzhYrUjR4ij+FbdM/GXqDgyISfM=;
 	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
 	 From;
-	b=eLKq+tHxA2nK/e2lWrQk2sOQjCSHDC2P0napz4NS5PGvs/vZVIlGS1XUkhRWih49r
-	 vqwvuqU99slDTpuuXrXTriuESMqKvuRP0507QorxDkL0xnDpIuddplatJWcVOT2plN
-	 RGV1oW6tyJyHGXgg1x/XyZG9lA9AwFd3O8Ouw6Yw=
+	b=IhwV3zqhZZ/OczqvLNldbx50tsxGTDDYqwWVbwLDR6IgRmd0mmc2M96wC9IQdNi5P
+	 x65oh9N+XWh27qTITtLukVsqfvKRBu+m8U40Oord5/XUWQdqqHrdwxEvpj0U+OlkBq
+	 BJsvs7JY/INCBJUMSOK1HsBCtJ8NLUN2rT16qyKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgFGTA7 (ORCPT
+        id S1727115AbgFGTIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 15:00:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
+        Sun, 7 Jun 2020 15:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgFGTA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 15:00:58 -0400
+        id S1726780AbgFGTIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 15:08:40 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA4C82067B;
-        Sun,  7 Jun 2020 19:00:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CCBA206D5;
+        Sun,  7 Jun 2020 19:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591556457;
-        bh=Fl258mB/MTQoFYm2btDcWAXYmS1Ssp1OF7Iz2Rguyic=;
+        s=default; t=1591556920;
+        bh=aimXNnD+PVaJEw0UQzhYrUjR4ij+FbdM/GXqDgyISfM=;
         h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YckBe4jZIbV0kQIif/OKKJ13cbWAZnngHErWTqDeDGyucRYtBKqC6IOPK0ZBIOHzb
-         p+Z9/EdQCm8pcy2uvB342FHkVtvpFx5Yt3YbeT2Rz/bmMUAdzi8yocdpdJBo/BprGw
-         GG28vmBoDdCkiuyj+Z+Vw99WDr3Fl2szJxFXkAx0=
+        b=jvuyLO1ljh8cBnSYm7M6fodXklTc77xJLwa8pAKuyjAjcyReM6xvxvPrh8ZwfwD4b
+         /xXmMuV+ffG9xOYKRHXAgMSfgvDERF+SK9+qGfoexGh7o7UINMpLqQQi/0NWXNempY
+         TU3m1ybhV3vklUqBBuexkjzzVAcZ3xuAmOcmHRAI=
 Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BEE1835228C7; Sun,  7 Jun 2020 12:00:57 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 12:00:57 -0700
+        id 59EEB35228C7; Sun,  7 Jun 2020 12:08:40 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 12:08:40 -0700
 From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>, kbuild-all@lists.01.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        wangkefeng.wang@huawei.com
-Subject: Re: [rcu:dev.2020.06.02a 67/90] kernel/rcu/rcuperf.c:727:38:
- warning: format specifies type 'size_t' (aka 'unsigned int') but the
- argument has type 'unsigned long'
-Message-ID: <20200607190057.GA19362@paulmck-ThinkPad-P72>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Amol Grover <frextrite@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH RESEND] device_cgroup: Fix RCU list debugging warning
+Message-ID: <20200607190840.GG4455@paulmck-ThinkPad-P72>
 Reply-To: paulmck@kernel.org
-References: <202006060704.dM7SxfSK%lkp@intel.com>
- <20200606001914.GE4455@paulmck-ThinkPad-P72>
+References: <20200406105950.GA2285@workstation-kernel-dev>
+ <20200607062340.7be7e8d5@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200606001914.GE4455@paulmck-ThinkPad-P72>
+In-Reply-To: <20200607062340.7be7e8d5@canb.auug.org.au>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 05:19:14PM -0700, Paul E. McKenney wrote:
-> On Sat, Jun 06, 2020 at 07:07:10AM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.06.02a
-> > head:   5216948905dd07a84cef8a7dc72c2ec076802efd
-> > commit: 7d16add62717136b1839f0b3d7ea4cbb98f38c2a [67/90] rcuperf: Fix kfree_mult to match printk() format
-> > config: arm-randconfig-r004-20200605 (attached as .config)
-> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 6dd738e2f0609f7d3313b574a1d471263d2d3ba1)
-> > reproduce (this is a W=1 build):
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # install arm cross compiling tool for clang build
-> >         # apt-get install binutils-arm-linux-gnueabi
-> >         git checkout 7d16add62717136b1839f0b3d7ea4cbb98f38c2a
-> >         # save the attached .config to linux build tree
-> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=arm 
-> > 
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
+On Sun, Jun 07, 2020 at 06:23:40AM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Adding Kefeng on CC.  Kefeng, thoughts?
+> On Mon, 6 Apr 2020 16:29:50 +0530 Amol Grover <frextrite@gmail.com> wrote:
+> >
+> > exceptions may be traversed using list_for_each_entry_rcu()
+> > outside of an RCU read side critical section BUT under the
+> > protection of decgroup_mutex. Hence add the corresponding
+> > lockdep expression to fix the following false-positive
+> > warning:
+> > 
+> > [    2.304417] =============================
+> > [    2.304418] WARNING: suspicious RCU usage
+> > [    2.304420] 5.5.4-stable #17 Tainted: G            E
+> > [    2.304422] -----------------------------
+> > [    2.304424] security/device_cgroup.c:355 RCU-list traversed in non-reader section!!
+> > 
+> > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> > ---
+> >  security/device_cgroup.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/security/device_cgroup.c b/security/device_cgroup.c
+> > index 7d0f8f7431ff..b7da9e0970d9 100644
+> > --- a/security/device_cgroup.c
+> > +++ b/security/device_cgroup.c
+> > @@ -352,7 +352,8 @@ static bool match_exception_partial(struct list_head *exceptions, short type,
+> >  {
+> >  	struct dev_exception_item *ex;
+> >  
+> > -	list_for_each_entry_rcu(ex, exceptions, list) {
+> > +	list_for_each_entry_rcu(ex, exceptions, list,
+> > +				lockdep_is_held(&devcgroup_mutex)) {
+> >  		if ((type & DEVCG_DEV_BLOCK) && !(ex->type & DEVCG_DEV_BLOCK))
+> >  			continue;
+> >  		if ((type & DEVCG_DEV_CHAR) && !(ex->type & DEVCG_DEV_CHAR))
+> > -- 
+> > 2.24.1
+> > 
+> 
+> I have been carrying the above patch in linux-next for some time now.
+> I have been carrying it because it fixes problems for syzbot (see the
+> third warning in
+> https://lore.kernel.org/linux-next/CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com/).
+> Is there some reason it has not been applied to some tree?
 
-Like this, perhaps?
+The RCU changes on which this patch depends have long since made it to
+mainline, so it can go up any tree.  I can take it if no one else will,
+but it might be better going in via the security tree.
 
 							Thanx, Paul
-
-diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
-index 962869d..dc7483a 100644
---- a/kernel/rcu/rcuperf.c
-+++ b/kernel/rcu/rcuperf.c
-@@ -724,7 +724,7 @@ kfree_perf_init(void)
- 		schedule_timeout_uninterruptible(1);
- 	}
- 
--	pr_alert("kfree object size=%zu\n", kfree_mult * sizeof(struct kfree_obj));
-+	pr_alert("kfree object size=%zu\n", (size_t)kfree_mult * sizeof(struct kfree_obj));
- 
- 	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
- 			       GFP_KERNEL);
-
-> > All warnings (new ones prefixed by >>, old ones prefixed by <<):
-> > 
-> > >> kernel/rcu/rcuperf.c:727:38: warning: format specifies type 'size_t' (aka 'unsigned int') but the argument has type 'unsigned long' [-Wformat]
-> > pr_alert("kfree object size=%zun", kfree_mult * sizeof(struct kfree_obj));
-> > ~~~     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > %lu
-> > include/linux/printk.h:295:35: note: expanded from macro 'pr_alert'
-> > printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
-> > ~~~     ^~~~~~~~~~~
-> > 1 warning generated.
-> > 
-> > vim +727 kernel/rcu/rcuperf.c
-> > 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  709) 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  710) static int __init
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  711) kfree_perf_init(void)
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  712) {
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  713) 	long i;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  714) 	int firsterr = 0;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  715) 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  716) 	kfree_nrealthreads = compute_real(kfree_nthreads);
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  717) 	/* Start up the kthreads. */
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  718) 	if (shutdown) {
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  719) 		init_waitqueue_head(&shutdown_wq);
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  720) 		firsterr = torture_create_kthread(kfree_perf_shutdown, NULL,
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  721) 						  shutdown_task);
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  722) 		if (firsterr)
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  723) 			goto unwind;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  724) 		schedule_timeout_uninterruptible(1);
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  725) 	}
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  726) 
-> > b3e2d20973db3e Kefeng Wang             2020-04-17 @727  	pr_alert("kfree object size=%zu\n", kfree_mult * sizeof(struct kfree_obj));
-> > f87dc808009ac8 Joel Fernandes (Google  2020-03-16  728) 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  729) 	kfree_reader_tasks = kcalloc(kfree_nrealthreads, sizeof(kfree_reader_tasks[0]),
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  730) 			       GFP_KERNEL);
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  731) 	if (kfree_reader_tasks == NULL) {
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  732) 		firsterr = -ENOMEM;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  733) 		goto unwind;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  734) 	}
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  735) 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  736) 	for (i = 0; i < kfree_nrealthreads; i++) {
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  737) 		firsterr = torture_create_kthread(kfree_perf_thread, (void *)i,
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  738) 						  kfree_reader_tasks[i]);
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  739) 		if (firsterr)
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  740) 			goto unwind;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  741) 	}
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  742) 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  743) 	while (atomic_read(&n_kfree_perf_thread_started) < kfree_nrealthreads)
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  744) 		schedule_timeout_uninterruptible(1);
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  745) 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  746) 	torture_init_end();
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  747) 	return 0;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  748) 
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  749) unwind:
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  750) 	torture_init_end();
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  751) 	kfree_perf_cleanup();
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  752) 	return firsterr;
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  753) }
-> > e6e78b004fa7e0 Joel Fernandes (Google  2019-08-30  754) 
-> > 
-> > :::::: The code at line 727 was first introduced by commit
-> > :::::: b3e2d20973db3ec87a6dd2fee0c88d3c2e7c2f61 rcuperf: Fix printk format warning
-> > 
-> > :::::: TO: Kefeng Wang <wangkefeng.wang@huawei.com>
-> > :::::: CC: Paul E. McKenney <paulmck@kernel.org>
-> > 
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> 
-> 
