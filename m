@@ -2,131 +2,185 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D07C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0562C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14732067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8556C2075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:29:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lx7xbUmK"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="qoEfppc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgFGU2p (ORCPT
+        id S1727886AbgFGU3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 16:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42954 "EHLO
+        Sun, 7 Jun 2020 16:29:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgFGU2o (ORCPT
+        with ESMTP id S1726093AbgFGU3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 16:28:44 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A538C08C5C3;
-        Sun,  7 Jun 2020 13:28:44 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x18so1446779lji.1;
-        Sun, 07 Jun 2020 13:28:44 -0700 (PDT)
+        Sun, 7 Jun 2020 16:29:43 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B71C08C5C3
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 13:29:42 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w1so15384367qkw.5
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 13:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:user-agent:mime-version;
-        bh=iFVK6T7mzGjOxx/JmauiHPsqIRO2z2WuG+ZMZIcwVqo=;
-        b=lx7xbUmKVNZ6m3ubB0bjZkaMvbGlZCjUfViAnzvxo/HI7FAF5Xvc6Byo/ewVl7h1qw
-         n8RFIa4uKuvPs4EiIGjP0Cv6sABrElT4ke9CxAu0J4qMJxP7yTOnyQQKL6u6vqcfZ7Uz
-         ZmjlJi5TThxOy4lz04H9/1nVSLMh/swG7jJCTPsAfJOBltRv62K7NGW6KSH6CbzgEAfl
-         1ywC2KtDSM7Umfvy7ln4NAuHieVu6PRyCYefo6oPvO47BeiI8zES69fUABrsaXqw/sY2
-         ogLaqngnSePlQjl45aajdpn36fM+PiyXd9caLV0MVLZNHUuhtFptxcP7bENXfHZn/wY7
-         oDKw==
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=Lz6rtZK9cjNPAtEwtLuwX/TSYzMGfXgJilYQqWDsi+k=;
+        b=qoEfppc4l1T7Tnteea4ezpFwHMv4wHuEtUnWK1i2WOujZ0/uUUZEV5JDjWhOQm0HM5
+         lmadO2e2RzPCpHob2PJQCUv8pduTvChQW5AB7tJolmxF+HYaMF+dYSYpllfmikA7wfWx
+         fO/vgHjOzLtTDAIj+9bg7i5F7L5/5012scP4UNidpfkLffOv9AlAuiMjUjHrD34hjeCj
+         0N59QLDrFIzqpCN8KC4XDuD6Vsby4PBF3VyR7YVUnc+hv3i0x2J8nvxGZGjxFSH7r+fu
+         ODBQnt0VqGo9ici5Mry9hDofKgpGRmJiWdat8GvmeLh0/1VHA81xYDIbIqtJlzcsXRzE
+         MAaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:user-agent
-         :mime-version;
-        bh=iFVK6T7mzGjOxx/JmauiHPsqIRO2z2WuG+ZMZIcwVqo=;
-        b=CQkO3TpnfTAAx9EYiKuNBhnN9CP53UvR3fFeun3xqJKf5mYSLuHsi9zm8CQbCIjHnq
-         gGDByoFQpz3pnVfK7B68t6eNBngculW/56lM4gTLA69kr1yyPWZ+Yh1m/rPoVqJFJgD0
-         7bi4mP8stRpmA+fHXPg+keO6znHNf2kYZ0dxcoNBe38TxVVIbrfO3bZTK1qUNIFEoQmt
-         vqxc3Fvqgz1nPkhW8lYSKJr26y9YPOjFX9F0J1GVA1yjqAmFANqNyxdALz8aF2NDmd7m
-         LJTzPkRXu+PBo9sVzhIlxOG6V4ly0svf8UbwZC8pSYs6eLW0ZukqVT9UeXV5/w0V+hIH
-         kytw==
-X-Gm-Message-State: AOAM5338MCDdPlVzA36N0+dukKjV8Uz8mVkUog/aNvJvaOYkDs1Dxec1
-        1Ft64HAR0Yj7eqnv+AEK6453DC5L
-X-Google-Smtp-Source: ABdhPJxvJ7ov+tMzMbbwiPZ3dCyV2yFPVYR6dLmPbgpVyHjoeiPAy2+ePLym3GRhyJ3ZNyHo8yhwqA==
-X-Received: by 2002:a2e:b88e:: with SMTP id r14mr9070233ljp.197.1591561722546;
-        Sun, 07 Jun 2020 13:28:42 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id r9sm1685046ljj.127.2020.06.07.13.28.41
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Lz6rtZK9cjNPAtEwtLuwX/TSYzMGfXgJilYQqWDsi+k=;
+        b=fi6Snmfx51PcUI7jx716vVzdFm0DOhTKbmw/gq71u4Pmo209SkXVdVceqlLinvpTW0
+         16xMLp5TPBJT2n3ycywUp1O6kuwym2O2nNyNYrNEghcrNWGoybVbqypFaSLqzASDLLQX
+         TtDEwRiNSKeI1VbunugmvRl4QWmhZ9TL4s4Z0FQCT1F4K5lQqy9VqFGsHlLADK6lzY9C
+         aLu0RTjT3ITKNcfN5B8h1tUdQwkRYIGghMgNEROuuRbWx/FXOorNsuoBvIZcv1O0mKV3
+         m2os9lPpkFvFmP+jqech/+J9n3NKWM8n6ZzA6YrCbYUMphFstKc5s4DRTlqr52T+I1kW
+         NzxA==
+X-Gm-Message-State: AOAM533imsTBIys8ew/v0pc65debujEZJgaUEhG6BrONhhVgQyUFlfQw
+        e0xYm/PLGx5G3QzY4bAuqxgmiA==
+X-Google-Smtp-Source: ABdhPJxBY2kuRju1y7Y4Wso16zjhQCkYP7wBN9y8dzrRiSnIbCCe0LSgRuYomUlAn2H++WcfunFvTA==
+X-Received: by 2002:a37:a504:: with SMTP id o4mr19036370qke.245.1591561782070;
+        Sun, 07 Jun 2020 13:29:42 -0700 (PDT)
+Received: from skullcanyon (marriott-chateau-champlain-montreal.sites.intello.com. [66.171.169.34])
+        by smtp.gmail.com with ESMTPSA id z4sm5237262qkj.131.2020.06.07.13.29.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 13:28:41 -0700 (PDT)
-From:   Sergey Organov <sorganov@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, "NXP Linux Team" <linux-imx@nxp.com>
-Subject: iMX 6SX FEC: broken hardware timestamping using external PTP PHY
-Date:   Sun, 07 Jun 2020 23:28:40 +0300
-Message-ID: <87r1uqtybr.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Sun, 07 Jun 2020 13:29:41 -0700 (PDT)
+Message-ID: <3b1150a327aa1e6810b153a4ba1fe32cf6c98f45.camel@ndufresne.ca>
+Subject: Re: [PATCH 0/3] media: uapi: cedrus: Fix decoding interlaced H264
+ content
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>, devel@driverdev.osuosl.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-media <linux-media@vger.kernel.org>
+Date:   Sun, 07 Jun 2020 16:29:40 -0400
+In-Reply-To: <572f23d1945a685bf899e96de147454f31674ae1.camel@ndufresne.ca>
+References: <20200604185745.23568-1-jernej.skrabec@siol.net>
+         <CAAEAJfDFMzMkDkN7zzNvkwsmYzgQPNGkP=dhW7neycYYRBJzHA@mail.gmail.com>
+         <572f23d1945a685bf899e96de147454f31674ae1.camel@ndufresne.ca>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Le dimanche 07 juin 2020 à 16:21 -0400, Nicolas Dufresne a écrit :
+> Le samedi 06 juin 2020 à 09:46 -0300, Ezequiel Garcia a écrit :
+> > Hi Jernej,
+> > 
+> > On Thu, 4 Jun 2020 at 15:55, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+> > > Currently H264 interlaced content it's not properly decoded on Cedrus.
+> > > There are two reasons for this:
+> > > 1. slice parameters control doesn't provide enough information
+> > > 2. bug in frame list construction in Cedrus driver
+> > > 
+> > > As described in commit message in patch 1, references stored in
+> > > reference lists should tell if reference targets top or bottom field.
+> > > However, this information is currently not provided. Patch 1 adds
+> > > it in form of flags which are set for each reference. Patch 2 then
+> > > uses those flags in Cedrus driver.
+> > > 
+> > > Frame list construction is fixed in patch 3.
+> > > 
+> > > This solution was extensively tested using Kodi on LibreELEC with A64,
+> > > H3, H5 and H6 SoCs in slightly different form (flags were transmitted
+> > > in MSB bits in index).
+> > > 
+> > 
+> > So, if I understand correctly the field needs to be passed per-reference,
+> > and the current per-DPB entry is not good?
+> 
+> For interlaced content we reference fields separately. That's the
+> reason there is 32 entries in l0/l1. Though, as we decode both fields
+> in the same buffer (interleaved), the DPB indice is not sufficient to
+> inform the decoder what we are referencing. Understand that a top field
+> can be used to decode the next bottom field. This even make sense as
+> they are closer on the capture timeline. This covers slice based
+> decoders.
+> 
+> The flags to indicate presence of top/bottom fields in DPB array seems
+> only useful to frame base decoders. This is so that decoder can avoid
+> using lost fields when constructing it's own l0/l1 internally.
+> 
+> > If you could point at the userspace code for this, it would be interesting
+> > to take a look.
+> > 
+> > > Note: I'm not 100% sure if flags for both, top and bottom fields are
+> > > needed. Any input here would be welcome.
+> > > 
+> > 
+> > Given enum v4l2_field is already part of the uAPI, perhaps it makes
+> > sense to just reuse that for the field type? Maybe it's an overkill,
+> > but it would make sense to reuse the concepts and types that
+> > already exist.
+> > 
+> > We can still add a reserved field to make this new reference type
+> > extensive.
+> 
+> I think it's fine to create new flag for this, as your solution would
+> require extending a reference to 24bit (this patch extend to 16bits).
+> Though indeed, we could combine frame and TOP and reserve more bits for
+> future use.
 
-I'm using DP83640 PTP PHY connected to builtin fec1 (that
-has its own PTP support) of the iMX 6SX microcontroller.
+Sorry for the oversight, the flags is 16bits, so we already use 24bits.
+But looking at "enum v4l2_field", which is not a flag, seems like a
+miss-fit. It would create such a confusion, as V4L2_FIELD_SEQ_TB/BT can
+still be used with this interface, even though we still need to say if
+we reference TOP or BOTTOM. Only V4L2_FIELD_ALTERNATE is not supported.
+But as you can see, "enum v4l2_fiel" is really meant to describe the
+layout of the interleaved frame rather then signalling a field
+directly.
 
-Almost everything works fine out of the box, except hardware
-timestamping. The problems are that I apparently get timestamps from fec
-built-in PTP instead of external PHY, and that
+> 
+> > Thanks,
+> > Ezequiel
+> > 
+> > 
+> > > Please take a look.
+> > > 
+> > > Best regards,
+> > > Jernej
+> > > 
+> > > Jernej Skrabec (3):
+> > >   media: uapi: h264: update reference lists
+> > >   media: cedrus: h264: Properly configure reference field
+> > >   media: cedrus: h264: Fix frame list construction
+> > > 
+> > >  .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
+> > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 27 +++++++------
+> > >  include/media/h264-ctrls.h                    | 12 +++++-
+> > >  3 files changed, 62 insertions(+), 17 deletions(-)
+> > > 
+> > > --
+> > > 2.27.0
+> > > 
+> > > 
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-  ioctl(fd, SIOCSHWTSTAMP, &ifr)
-
-ends up being executed by fec1 built-in PTP code instead of being
-forwarded to the external PHY, and that this happens despite the call to
-
-   info.cmd = ETHTOOL_GET_TS_INFO;                                                                             
-   ioctl(fd, SIOCETHTOOL, &ifr);                                                                     
-
-returning phc_index = 1 that corresponds to external PHY, and reports
-features of the external PHY, leading to major inconsistency as seen
-from user-space.
-
-I chased the ioctl() problem down to the fec_enet_ioctl() function in
-
-  drivers/net/ethernet/freescale/fec_main.c:2722
-
-that specifically for SIOCSHWTSTAMP (and SIOCGHWTSTAMP) explicitly
-calls
-
-  fec_ptp_set() (and fec_ptp_get())
-
-instead of delegating to phy_mii_ioctl() as it does for the rest of
-ioctls.
-
-I've then commented-out this fec_ptp_set() calling code, and now ioctls
-go to the external PHY, but I'd like to have proper fix instead of 
-quick'n'dirty hack.
-
-I checked DTS documentation, but didn't find a way to disable fec
-builtin PTP support (nor would I actually like to, as it could be
-useful as a hardware PPS source), or its timestamping feature.
-
-I need to fix this, and, being newbie to the codebase, I don't even know
-where to start, as I can't figure what's the supposed way of selecting
-which unit should be used for hardware timestamping when there are two
-of them on the current active path of newtork packets. I mean,
-configuring PTP clocks is OK, as they are accessible separately through
-'/dev/ptpX' interface, but hardware timestamping is to be configured
-through (single) if-name, and there doesn't seem to be a way to address
-different hardware timestamping units.
-
-I'm using rather old 4.9.146 kernel, so I checked the tip of the git
-master, and the code there still looks the same. I also didn't notice
-any relevant commits in the recent git history.
-
-Could somebody please help me implement (or point me to) proper fix to
-reliably use external PHY to timestamp network packets?
-
--- Sergey
