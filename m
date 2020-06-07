@@ -2,99 +2,131 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2703BC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2077CC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106CC2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F317720659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591547862;
+	bh=GMZS6Ep+zIM0ZGj3QPwKLwGCuAJNsMWCwnCGrZ+QF9g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=r3PX0oKHG0TWacD4YFul1AGNLlp3A44eznESUQ6QdJ/gAtzoMwQgAfFh+sczQsYIC
+	 wNU0AUhJfwM+B02v5It4X/L3vx3VTVUqCr+8weF14PsJaLgMlHfySQqQpmhsxvqnh3
+	 e6DTI9jiwz0FYwg1Rl+FwrM1yQq+nv169Hbk9DRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgFGQea (ORCPT
+        id S1726788AbgFGQhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 12:34:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58842 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbgFGQe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 12:34:29 -0400
-IronPort-SDR: UFC7Ab1xN9mMIw+3cO9GT6fLGmIBJT4aLikBO+OucFtE6gIEWtvtT0tJ2/TxGqNdSbKIIK411G
- 961vTGiXO+YQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 09:34:28 -0700
-IronPort-SDR: Fyk1InqYMPYgh1T0kcnxxfilbZ5XgWp5wHXXAKKqigkdTzUJ4X4gN7NUquJyqONUiDLVB/kR+a
- Tw6xi5oUdIhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,484,1583222400"; 
-   d="scan'208";a="258486290"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Jun 2020 09:34:28 -0700
-Date:   Sun, 7 Jun 2020 09:34:28 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, kbuild-all@lists.01.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, Brad Campbell <lists2009@fnarfbargle.com>
-Subject: Re: [PATCH] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during
- wakeup
-Message-ID: <20200607163428.GB24576@linux.intel.com>
-References: <20200605200728.10145-1-sean.j.christopherson@intel.com>
- <202006060421.fTpTXYbe%lkp@intel.com>
+        Sun, 7 Jun 2020 12:37:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgFGQhk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 12:37:40 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE34C08C5C4
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 09:37:40 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id s1so17530944ljo.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 09:37:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tXd1D478P4SNq4RE8o4BF66Z33QidHeZFXik7VjM730=;
+        b=W+WavM/Q4g1r7QpDGscIj1K4HsPcCtXjCr239DLBu5DURS8jE72otmlkWcQN9NjSj1
+         SWpy1ih6gLF5LjUNCSFUMQuTEtCbzh/l+4WFpz+vgjC3Bk5zMrnKyVg2tX8TRQLWUy51
+         4PhiIER9DTFk5NgUQjepDvbJFOnGkOYYAQCus=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tXd1D478P4SNq4RE8o4BF66Z33QidHeZFXik7VjM730=;
+        b=Qt99oGIzNFzE0ga717IhIV/RdfcYaZaY8w1/ZrdYXLA0yQya2eDWtewJHkng4JIWsu
+         XoV14ib0TWfA/BRzNoluO1r4WUwJ0gTJ0zQVNGWOekLo5+5PfBPieqIf0FGAQdtYcTDg
+         B4j1gfHE3xqmT2+1mxohlSlTQjFp2KKb6fS+dey91ggXOqGmPg+8RyPdowUubB5/z52D
+         CvxzL4blpfR8IaYdv4AUqMulEoos0GuRCOzAFihLv3sqAZKGt3ychNUWAiOJXFJCJC0k
+         sCJDj0xZFY6aKcuFf6obPadHCyt48C35/blPo59J+2L2RcvOMnRAK1lWkBdvMTklv4y0
+         1SGw==
+X-Gm-Message-State: AOAM531cCKn0xHDw1XIuXLMsI54Ro2YYLDnwPSl/i0smsDJ94HI2oe5B
+        616BcVJnhAm1d/BCwTt+AA834Lo4bSw=
+X-Google-Smtp-Source: ABdhPJwWeL5KSZFyilbvhWPrO6GeC0El75E6sfs0Ya366+UdNT+LyPLmrmGcZXiDcXQquGPgQTmNoA==
+X-Received: by 2002:a05:651c:1126:: with SMTP id e6mr9188465ljo.123.1591547858444;
+        Sun, 07 Jun 2020 09:37:38 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id h24sm3631196lfj.11.2020.06.07.09.37.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 09:37:37 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id c21so8732964lfb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 09:37:37 -0700 (PDT)
+X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr10598957lfn.10.1591547857000;
+ Sun, 07 Jun 2020 09:37:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202006060421.fTpTXYbe%lkp@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
+ <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com> <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
+In-Reply-To: <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 7 Jun 2020 09:37:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
+Message-ID: <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
+Subject: Re: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 05:08:38AM +0800, kernel test robot wrote:
- arch/x86/kernel/cpu/centaur.c: In function 'init_centaur':
-> >> arch/x86/kernel/cpu/centaur.c:219:2: error: implicit declaration of function 'init_ia32_feat_ctl' [-Werror=implicit-function-declaration]
-> 219 |  init_ia32_feat_ctl(c);
-> |  ^~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
-> --
-> arch/x86/kernel/cpu/zhaoxin.c: In function 'init_zhaoxin':
-> >> arch/x86/kernel/cpu/zhaoxin.c:110:2: error: implicit declaration of function 'init_ia32_feat_ctl' [-Werror=implicit-function-declaration]
-> 110 |  init_ia32_feat_ctl(c);
-> |  ^~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
+On Sun, Jun 7, 2020 at 6:22 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> Yes, I did think about that, but I thought this was the more obviously
+> correct approach, and that in practice one only sees the 0X44 and 0X55
+> cases.
 
-Blech, zhaoxin.c an centaur.c don't include asm/cpu.h, and I (obviously)
-don't have them enabled in my configs.  I'll wait a day or two more before
-sending v2.
+I'm not sure about that - it probably depends on your umask.
 
-diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
-index 426792565d86..c5cf336e5077 100644
---- a/arch/x86/kernel/cpu/centaur.c
-+++ b/arch/x86/kernel/cpu/centaur.c
-@@ -3,6 +3,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
+Because I see a lot of -rw-rw-r--. in my home directory, and it looks
+like I have a umask of 0002.
 
-+#include <asm/cpu.h>
- #include <asm/cpufeature.h>
- #include <asm/e820/api.h>
- #include <asm/mtrr.h>
-diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
-index df1358ba622b..05fa4ef63490 100644
---- a/arch/x86/kernel/cpu/zhaoxin.c
-+++ b/arch/x86/kernel/cpu/zhaoxin.c
-@@ -2,6 +2,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
+That's just the Fedora default, I think. Looking at /etc/bashrc, it does
 
-+#include <asm/cpu.h>
- #include <asm/cpufeature.h>
+    if [ $UID -gt 199 ] && [ "`/usr/bin/id -gn`" = "`/usr/bin/id -un`" ]; then
+       umask 002
+    else
+       umask 022
+    fi
 
- #include "cpu.h"
+iow, if you have the same user-name and group name, then umask is 002
+by default for regular users.
 
+Honestly, I'm not sure why Fedora has that "each user has its own
+group" thing, but it's at least one common setup.
+
+So I think that the system you are looking at just happens to have
+umask 0022, which is traditional when you have just a 'user' group.
+
+> That will kinda work, except you do that mask &= MAY_RWX before
+> check_acl(), which cares about MAY_NOT_BLOCK and who knows what other bits.
+
+Good catch.
+
+> Perhaps this? As a whole function, I think that's a bit easier for
+> brain-storming. It's your patch, just with that rwx thing used instead
+> of mask, except for the call to check_acl().
+
+Looks fine to me. Once we have to have rwx/mask separate, I'm not sure
+it's worth having that early masking at all (didn't check what the
+register pressure is over that "check_acl()" call, but at least it is
+fairly easy to follow along.
+
+Send me a patch with commit message etc, and I'll apply it.
+
+               Linus
