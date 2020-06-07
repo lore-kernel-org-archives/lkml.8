@@ -4,65 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B05C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 23:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 23:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3867B2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 23:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C242076A
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 23:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591572028;
-	bh=K8Y9gTguNEjLWcNjeyv6g1Bzwf1U4ltlXcbuZFGecZU=;
+	s=default; t=1591572031;
+	bh=LU0P94n3W1KJvtoZNSnoPaCtRms3WhAriJoh2850sU0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QjlwMNq3KHtnaI0N4EXu05JE8wDVIuliru/kgNUiFkkH7DPV6p5bcLbx5CAzYfSak
-	 Mt8jsrqBAz8FuZeK62X6gz6XEPg4gtV1wx7ToKIRjLG5z5DjxK1Mw8xiyWKkH+DH6A
-	 fGSfmoRpF4W2Ao1mO2baMNawv2B0ssY+yP9PgSls=
+	b=NPMHvc1Z2tYDz6SnswxiRa/UtwEHk3mRQCKaAZ95+u52LNZEq4tkPQSbUcE833/aR
+	 yKfYfdggWcfpVKsiU0TytPdSOVXfg5gNsGd50rDeYJvXP5kFiYcVwOx+j5YgTM4uli
+	 3MTaklolS4sV6xHrlJ6Y079e/7phLFVkOuu9BKfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgFGXU1 (ORCPT
+        id S1728834AbgFGXUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 19:20:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32874 "EHLO mail.kernel.org"
+        Sun, 7 Jun 2020 19:20:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726922AbgFGXUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 19:20:25 -0400
-Subject: Re: [GIT PULL] apparmor updates for 5.8
+        id S1728007AbgFGXU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 19:20:26 -0400
+Subject: Re: [GIT PULL] Pin control bulk changes for the v5.8 cycle
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591572024;
-        bh=K8Y9gTguNEjLWcNjeyv6g1Bzwf1U4ltlXcbuZFGecZU=;
+        s=default; t=1591572025;
+        bh=LU0P94n3W1KJvtoZNSnoPaCtRms3WhAriJoh2850sU0=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=H4mrmyO1TU4tdd3+rVcOUeR6F4xPGhCYUXYcxu9U1eePnJn9fEov1QuQ4g9TwjAL6
-         o9ZWnyJ6/ZX65//x8TNDEmgE17LQJbJiWySiHuDMTOvMssLVl+RPDN0wmM1NPjmxz3
-         J4makwvySAN3puqg6S8Jvvr/SS7lUc2nIcB8e4f8=
+        b=fTZXrGsxapBcmW0MyCml3lbi+KGAgT+J2ecEVl76iwBskK0L/RN0MrgqUHYCRDxWH
+         xXxllG7J9IDCEMmV1uEticcdtb09p9YNfIZBp1sz68zJ7e8hWuxvc0kyvrV42YaShW
+         /sjTMS7lXd/j3QNBUqfx6MlPbaQL+FlkomVPiHD4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <9856bf93-c801-6831-fe9d-e12e43245f6f@canonical.com>
-References: <9856bf93-c801-6831-fe9d-e12e43245f6f@canonical.com>
+In-Reply-To: <CACRpkdYfwd-4gPbTkQZWybkjLCHOHPi6mVg8fjF--54qj3zcEA@mail.gmail.com>
+References: <CACRpkdYfwd-4gPbTkQZWybkjLCHOHPi6mVg8fjF--54qj3zcEA@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <9856bf93-c801-6831-fe9d-e12e43245f6f@canonical.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor
- tags/apparmor-pr-2020-06-07
-X-PR-Tracked-Commit-Id: 3622ad25d4d68fcbdef3bc084b5916873e785344
+X-PR-Tracked-Message-Id: <CACRpkdYfwd-4gPbTkQZWybkjLCHOHPi6mVg8fjF--54qj3zcEA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+ tags/pinctrl-v5.8-1
+X-PR-Tracked-Commit-Id: 94873f6b46f8c103759c28adc121a58022972d01
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a2b447066cacb6db82a1f69b46d9f894f695badf
-Message-Id: <159157202469.17419.9226288427332705882.pr-tracker-bot@kernel.org>
-Date:   Sun, 07 Jun 2020 23:20:24 +0000
-To:     John Johansen <john.johansen@canonical.com>
+X-PR-Merge-Commit-Id: cf0c97f148e9e50aa5a7ddd1984a604dd2bde4af
+Message-Id: <159157202578.17419.6978691349982915472.pr-tracker-bot@kernel.org>
+Date:   Sun, 07 Jun 2020 23:20:25 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKLM <linux-kernel@vger.kernel.org>,
-        "open list:SECURITY SUBSYSTEM" 
-        <linux-security-module@vger.kernel.org>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 7 Jun 2020 14:12:54 -0700:
+The pull request you sent on Mon, 8 Jun 2020 00:08:50 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor tags/apparmor-pr-2020-06-07
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.8-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a2b447066cacb6db82a1f69b46d9f894f695badf
+https://git.kernel.org/torvalds/c/cf0c97f148e9e50aa5a7ddd1984a604dd2bde4af
 
 Thank you!
 
