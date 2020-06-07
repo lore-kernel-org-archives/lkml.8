@@ -2,93 +2,248 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F21BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0178DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391BF2076C
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75C8206F6
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="puekgSe8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmQuxAaa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgFGSqH (ORCPT
+        id S1727791AbgFGS5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 14:46:07 -0400
-Received: from www.zeus03.de ([194.117.254.33]:59774 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726881AbgFGSqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 14:46:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=KMLSh2UfURcetn72D61oTlOE6OdF
-        ooRMz6SLcFP6dQk=; b=puekgSe8QJadZ5X8CG/NdjPsGlJKr2ZcX9G07PRuRXVD
-        fT+5LGKMr1ELMIeM7R25Ih8rnAdvfogowIXZvNvWf7OrsMbSbJRBAcsf1SBssaZX
-        5v+EI755xxXz5MitKTBtGk15cejAekr+UaL8Re2eAAdteVUc++n1QQJDhp/YjGs=
-Received: (qmail 2771393 invoked from network); 7 Jun 2020 20:46:04 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Jun 2020 20:46:04 +0200
-X-UD-Smtp-Session: l3s3148p1@FAEV6IKneKkgAwDPXy3ZACQyXnoVRx3W
-Date:   Sun, 7 Jun 2020 20:46:04 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Max Staudt <max@enpas.org>
-Cc:     linux-i2c@vger.kernel.org, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] i2c: icy: Fix build with CONFIG_AMIGA_PCMCIA=n
-Message-ID: <20200607184604.GA12911@ninjato>
-References: <20200607182812.9438-1-max@enpas.org>
+        Sun, 7 Jun 2020 14:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgFGS5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 14:57:11 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF3DC061A0E;
+        Sun,  7 Jun 2020 11:57:10 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z206so8873359lfc.6;
+        Sun, 07 Jun 2020 11:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ae6a9nCDm2KzYQLj6wbd7HxqxcYRyF5nPSiaEUxKZM=;
+        b=BmQuxAaasHBCfu5Cl9o2r1W5xH5I+5bng3aYROK840m+XCGlvJ1+6Vvo9nfu1cBHOs
+         lUuiq8I2hFHzsLLEH0HSfdhq8LZNS76O6R9yHOe0IuY16jRkC+TVgQaozcS46lX3MYZF
+         5VJ/dqCSnXMXe4JZKNDQhezJMnXXYKEwoh6TZ5GrtMgipKtXCP2OoKyaG+Q6jLk7ZBZX
+         G9U6d2eACPvb0HW69qI/xQVqun3mXWWQRS851ZnYvGaNeytd/Rd37A5kUE2+yuDuC2Ow
+         cexL5stCsUS+5bA6Z3mGgugewTOeBPi+nHtgkoT2v0tJC+ThdcIme1DJYBiKQ52A8vAO
+         fwxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4ae6a9nCDm2KzYQLj6wbd7HxqxcYRyF5nPSiaEUxKZM=;
+        b=mx9969GpW+gc/Fpn6ASISpZ8S+N4AN4P/Ads4FY6l2l5ZQhYa/+s8BOjpLFlbIbBGv
+         KGJF+yxon9XD+R3lMHQYogKDZ4T6JwOSxZtNJFQ3mhVyNMdOFHA/bNhjBZnit/piFeRX
+         K9rgSnUlDUhp7/pv14CgIv2UUH9+3z7SXmGWuiiOYHJAHzUJcU3NPcPmVrg2RLNnT+D0
+         pqP+Eu2MW1DXSkpF9vTzOe33d6goCMqNvDtdCqX1dock39gU4rNox43aJhD8lF+37jpA
+         S2LznLZCoZcOBElbodd0GQuEG5Rv9ehUbokiZJiFfaw9szr7BbhwCT/Z0eEpD6ZbH0U1
+         wqoQ==
+X-Gm-Message-State: AOAM531jN7acrjC5KnmojOL/6jXqdGcWlUlTmvcYiCLEoB8kp1mhiA/Z
+        2nsOTWbHT0HVIuN95xdL7vs=
+X-Google-Smtp-Source: ABdhPJzLz39/CsDmRrwQ7tGXw0tdzOPbr0gv8gV8MEvQX75D7DSbuFKApTaEfDuyTPBc9XubcZt2gw==
+X-Received: by 2002:ac2:5a07:: with SMTP id q7mr10710765lfn.77.1591556229117;
+        Sun, 07 Jun 2020 11:57:09 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id e21sm3650953ljb.135.2020.06.07.11.57.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 11:57:08 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 00/39] Introduce memory interconnect for NVIDIA Tegra SoCs
+Date:   Sun,  7 Jun 2020 21:54:51 +0300
+Message-Id: <20200607185530.18113-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
-In-Reply-To: <20200607182812.9438-1-max@enpas.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series brings initial support for memory interconnect to Tegra20 and
+Tegra30 SoCs.
 
-On Sun, Jun 07, 2020 at 08:28:12PM +0200, Max Staudt wrote:
-> This has been found by the Kernel Test Robot:
-> http://lkml.iu.edu/hypermail/linux/kernel/2006.0/06862.html
->=20
-> With CONFIG_AMIGA_PCMCIA=3Dn, io_mm.h does not pull in amigahw.h and
-> ZTWO_VADDR is undefined. Add forgotten include to i2c-icy.c
->=20
-> Fixes: 4768e90ecaec ("i2c: Add i2c-icy for I2C on m68k/Amiga")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Max Staudt <max@enpas.org>
+For the starter only display controllers are getting interconnect API
+support, others could be supported later on. The display controllers
+have the biggest demand for interconnect API right now because dynamic
+memory frequency scaling can't be done safely without taking into account
+bandwidth requirement from the displays.
 
-Applied to for-next (i.e. for-5.8), thanks!
+Changelog:
 
+v3: - Added acks from Rob Herring that were given to some of the v2 patches.
 
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
+    - Specified name of the TRM documentation chapter in the patch
+      "dt-bindings: host1x: Document new interconnect properties", which was
+      suggested by Rob Herring in the review comment to v2.
 
------BEGIN PGP SIGNATURE-----
+    - Added patches that allow EMC drivers to be compiled as a loadable kernel
+      modules. This came up during of the v2 review when Georgi Djakov pointed
+      out that interconnect-core could be compiled as a kernel module. Please
+      note that the Tegra124 EMC driver is compile-tested only, I don't have
+      Tegra124 HW.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7dNecACgkQFA3kzBSg
-KbYwoxAArfkCxw9qH+Qy6A6Slh2+plQr6o4BywjoAJoolZ2/AleathzwM/rH7+g4
-QkAuwn/daVjBkDk3BC4HGLh/1iHycpo5agr/EpBxAWGS+cLA58IKS1M4uUVFzOcV
-DN1eUVUTTBj+XNzWYQwBngaE6ovbDobFGw82V1q98wmBSSt4vzXRZxLr+XAK+iz0
-YzihJa6/K24CRQJOgrsOxCtibUkUkI+yJSb6WzG3QeDUVi78fgBwoO9CK7/As09t
-kQfOPFaPPUFG38HyEM3FkfRvksYGi5f0/pekmcsm87B3CVEsOdho22rUAruCEl5F
-mmMn0b9r8uqf11oSTHDQ4KsjmqeBcr8wzcQXyYtv6uFdmd5YkSQOFzRNfgmHwV1t
-glafoz54RciFXmfuRNgOcJePQuqTYPS9Rd+8EwT2bDhqeV8I1jVRQt9txefYHvOv
-h20o8PasqqxooLN0oLFZ1Um389IM8wllhs2mYM6o7BoswAztLSrtwaRNZbTdAwQd
-gqfbJLd0xHtHS3Y7fthi7wLazDMSXFm/yzCQtk7LqzYPmhSCAJOVpnWWaprukp+v
-hE9GedHD4LHzswVgznAH9fcTByulDwb/uIrY+L+7b0XVV4FZWYPu2xgNUdVnLKqD
-ZMVLZwE+BE4F32uUu/e/hE7wpGYVI20Zjasu2YQ4OXQssJ/ZLCE=
-=NyL2
------END PGP SIGNATURE-----
+    - In the review comment to [1] Stephen Boyd suggested that it will be
+      better not to make changes to clk API, which was needed in order to
+      avoid clashing of the interconnect driver with the devfreq in regards
+      to memory clk-rate rounding.
 
---EVF5PPMfhYS0aIcm--
+      [1] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200330231617.17079-3-digetx@gmail.com/
+
+      Stephen Boyd suggested that instead we should provide OPP table via DT.
+      I tried to investigate whether this could be done and turned out
+      it's a bit complicated. Technically it should be doable, but:
+
+        1. For now we don't fully support voltage scaling of the CORE regulator
+           and so OPP table in the DT isn't really needed today. We can
+           generate table from the memory timings, which is what Tegra devfreq
+           drivers already do.
+
+        2. The OPP table should be defined in the DT for the Memory Controller
+           node and then its usage somehow should be shared by both interconnect
+           and devfreq drivers. It's not obvious what's the best way to do it.
+
+      So, it will be much better to postpone the DT OPP table addition
+      until these questions are resolved. We can infer OPPs from the
+      memory timings and we could get the memory rates from the memory
+      driver directly, avoiding the problems induced by the clk API usage.
+      This idea is implemented in v3, see these patches:
+
+        PM / devfreq: tegra20: Use MC timings for building OPP table
+        PM / devfreq: tegra30: Use MC timings for building OPP table
+
+v2: - Instead of a single dma-mem interconnect path, the paths are now
+      defined per memory client.
+
+    - The EMC provider now uses #interconnect-cells=<0>.
+
+    - Dropped Tegra124 because there is no enough information about how to
+      properly calculate required EMC clock rate for it and I don't have
+      hardware for testing. Somebody else will have to work on it.
+
+    - Moved interconnect providers code into drivers/memory/tegra/*.
+
+    - Added "Create tegra20-devfreq device" patch because interconnect
+      is not very usable without the devfreq memory auto-scaling since
+      memory freq will be fixed to the display's requirement.
+
+Artur Świgoń (1):
+  interconnect: Relax requirement in of_icc_get_from_provider()
+
+Dmitry Osipenko (38):
+  clk: Export clk_hw_reparent()
+  clk: tegra: Remove Memory Controller lock
+  clk: tegra: Export Tegra20 EMC kernel symbols
+  memory: tegra20-emc: Make driver modular
+  memory: tegra30-emc: Make driver modular
+  memory: tegra124-emc: Make driver modular
+  memory: tegra124-emc: Use devm_platform_ioremap_resource
+  soc/tegra: fuse: Export tegra_read_ram_code()
+  memory: tegra20-emc: Initialize MC timings
+  PM / devfreq: tegra20: Silence deferred probe error
+  PM / devfreq: tegra30: Silence deferred probe error
+  PM / devfreq: tegra20: Use MC timings for building OPP table
+  PM / devfreq: tegra30: Use MC timings for building OPP table
+  PM / devfreq: tegra20: Add error messages to tegra_devfreq_target()
+  PM / devfreq: tegra30: Add error messages to tegra_devfreq_target()
+  PM / devfreq: tegra20: Adjust clocks conversion ratio and polling
+    interval
+  PM / devfreq: tegra20: Relax Kconfig dependency
+  dt-bindings: memory: tegra20: mc: Document new interconnect property
+  dt-bindings: memory: tegra20: emc: Document new interconnect property
+  dt-bindings: memory: tegra30: mc: Document new interconnect property
+  dt-bindings: memory: tegra30: emc: Document new interconnect property
+  dt-bindings: host1x: Document new interconnect properties
+  dt-bindings: memory: tegra20: Add memory client IDs
+  dt-bindings: memory: tegra30: Add memory client IDs
+  ARM: tegra: Add interconnect properties to Tegra20 device-tree
+  ARM: tegra: Add interconnect properties to Tegra30 device-tree
+  memory: tegra: Register as interconnect provider
+  memory: tegra20-emc: Use devm_platform_ioremap_resource
+  memory: tegra20-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra20-emc: Register as interconnect provider
+  memory: tegra20-emc: Create tegra20-devfreq device
+  memory: tegra30-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra30-emc: Register as interconnect provider
+  drm/tegra: dc: Support memory bandwidth management
+  drm/tegra: dc: Tune up high priority request controls for Tegra20
+  drm/tegra: dc: Extend debug stats with total number of events
+  ARM: tegra: Enable interconnect API in tegra_defconfig
+  ARM: multi_v7_defconfig: Enable interconnect API
+
+ .../display/tegra/nvidia,tegra20-host1x.txt   |  68 +++++
+ .../memory-controllers/nvidia,tegra20-emc.txt |   2 +
+ .../memory-controllers/nvidia,tegra20-mc.txt  |   3 +
+ .../nvidia,tegra30-emc.yaml                   |   6 +
+ .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
+ arch/arm/boot/dts/tegra20.dtsi                |  22 +-
+ arch/arm/boot/dts/tegra30.dtsi                |  23 +-
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ arch/arm/configs/tegra_defconfig              |   1 +
+ drivers/clk/clk.c                             |   1 +
+ drivers/clk/tegra/clk-divider.c               |   4 +-
+ drivers/clk/tegra/clk-tegra114.c              |   6 +-
+ drivers/clk/tegra/clk-tegra124-emc.c          |  63 ++--
+ drivers/clk/tegra/clk-tegra124.c              |   8 +-
+ drivers/clk/tegra/clk-tegra20-emc.c           |   3 +
+ drivers/clk/tegra/clk-tegra20.c               |   3 +-
+ drivers/clk/tegra/clk-tegra30.c               |   3 +-
+ drivers/clk/tegra/clk.h                       |  14 +-
+ drivers/devfreq/Kconfig                       |   2 +-
+ drivers/devfreq/tegra20-devfreq.c             |  52 ++--
+ drivers/devfreq/tegra30-devfreq.c             | 115 +++++--
+ drivers/gpu/drm/tegra/dc.c                    | 289 +++++++++++++++++-
+ drivers/gpu/drm/tegra/dc.h                    |  13 +
+ drivers/gpu/drm/tegra/drm.c                   |  19 ++
+ drivers/gpu/drm/tegra/plane.c                 |   1 +
+ drivers/gpu/drm/tegra/plane.h                 |   4 +-
+ drivers/interconnect/core.c                   |  11 +-
+ drivers/memory/tegra/Kconfig                  |   6 +-
+ drivers/memory/tegra/mc.c                     | 121 ++++++++
+ drivers/memory/tegra/mc.h                     |   8 +
+ drivers/memory/tegra/tegra124-emc.c           |  35 ++-
+ drivers/memory/tegra/tegra20-emc.c            | 219 +++++++++++--
+ drivers/memory/tegra/tegra30-emc.c            | 160 ++++++++--
+ drivers/soc/tegra/fuse/tegra-apbmisc.c        |   2 +
+ include/dt-bindings/memory/tegra20-mc.h       |  53 ++++
+ include/dt-bindings/memory/tegra30-mc.h       |  67 ++++
+ include/linux/clk/tegra.h                     |  11 +
+ include/soc/tegra/emc.h                       |  16 -
+ include/soc/tegra/mc.h                        |   3 +
+ 39 files changed, 1245 insertions(+), 198 deletions(-)
+ delete mode 100644 include/soc/tegra/emc.h
+
+-- 
+2.26.0
+
