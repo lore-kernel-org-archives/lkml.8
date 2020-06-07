@@ -2,133 +2,140 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2E3C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 115A02075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646C72067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgFGUYT (ORCPT
+        id S1727981AbgFGUY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 16:24:19 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:53638 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgFGUYS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 16:24:18 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 44C241C0BD2; Sun,  7 Jun 2020 22:24:15 +0200 (CEST)
-Date:   Sun, 7 Jun 2020 22:24:14 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com
-Subject: Re: [PATCH v3 0/7] Support inhibiting input devices
-Message-ID: <20200607202414.GB13138@amd>
-References: <20200604072853.GP89269@dtor-ws>
- <20200605173335.13753-1-andrzej.p@collabora.com>
+        Sun, 7 Jun 2020 16:24:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60100 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727065AbgFGUY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 16:24:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 95E8AAC4A;
+        Sun,  7 Jun 2020 20:24:58 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 3F05F602EB; Sun,  7 Jun 2020 22:24:52 +0200 (CEST)
+Date:   Sun, 7 Jun 2020 22:24:52 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Petr Machata <petrm@mellanox.com>
+Subject: Re: [PATCH v2 3/3] netlink: add LINKSTATE SQI support
+Message-ID: <20200607202452.md4nnp47cfjetylp@lion.mk-sys.cz>
+References: <20200528115414.11516-1-o.rempel@pengutronix.de>
+ <20200528115414.11516-4-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6rexytvx3x3wksna"
 Content-Disposition: inline
-In-Reply-To: <20200605173335.13753-1-andrzej.p@collabora.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200528115414.11516-4-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---E39vaYmALEf/7YXx
+--6rexytvx3x3wksna
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri 2020-06-05 19:33:28, Andrzej Pietrasiewicz wrote:
-> Userspace might want to implement a policy to temporarily disregard input
-> from certain devices.
-
-Wow, you certainly cc a lot of lists.
-
-> An example use case is a convertible laptop, whose keyboard can be folded
-> under the screen to create tablet-like experience. The user then must hold
-> the laptop in such a way that it is difficult to avoid pressing the keybo=
-ard
-> keys. It is therefore desirable to temporarily disregard input from the
-> keyboard, until it is folded back. This obviously is a policy which should
-> be kept out of the kernel, but the kernel must provide suitable means to
-> implement such a policy.
+On Thu, May 28, 2020 at 01:54:14PM +0200, Oleksij Rempel wrote:
+> Some PHYs provide Signal Quality Index (SQI) if the link is in active
+> state. This information can help to diagnose cable and system design
+> related issues.
 >=20
-> Due to interactions with suspend/resume, a helper has been added for driv=
-ers
-> to decide if the device is being used or not (PATCH 1/7) and it has been
-> applied to relevant drivers (PATCH 2,4,5,6/7).
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-But is that a right way to implement it?
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 
-We want this for cellphones, too -- touchscreen should be disabled
-while the device is locked in the pocket -- but we really want the
-touchscreen hardware to be powered down in that case (because it keeps
-SoC busy and eats a _lot_ of electricity).
+> ---
+>  netlink/desc-ethtool.c |  2 ++
+>  netlink/settings.c     | 16 ++++++++++++++++
+>  2 files changed, 18 insertions(+)
+>=20
+> diff --git a/netlink/desc-ethtool.c b/netlink/desc-ethtool.c
+> index b0a793c..8f4c36b 100644
+> --- a/netlink/desc-ethtool.c
+> +++ b/netlink/desc-ethtool.c
+> @@ -93,6 +93,8 @@ static const struct pretty_nla_desc __linkstate_desc[] =
+=3D {
+>  	NLATTR_DESC_INVALID(ETHTOOL_A_LINKSTATE_UNSPEC),
+>  	NLATTR_DESC_NESTED(ETHTOOL_A_LINKSTATE_HEADER, header),
+>  	NLATTR_DESC_BOOL(ETHTOOL_A_LINKSTATE_LINK),
+> +	NLATTR_DESC_U32(ETHTOOL_A_LINKSTATE_SQI),
+> +	NLATTR_DESC_U32(ETHTOOL_A_LINKSTATE_SQI_MAX),
+>  };
+> =20
+>  static const struct pretty_nla_desc __debug_desc[] =3D {
+> diff --git a/netlink/settings.c b/netlink/settings.c
+> index 851de15..cd4b9a7 100644
+> --- a/netlink/settings.c
+> +++ b/netlink/settings.c
+> @@ -638,6 +638,22 @@ int linkstate_reply_cb(const struct nlmsghdr *nlhdr,=
+ void *data)
+>  		printf("\tLink detected: %s\n", val ? "yes" : "no");
+>  	}
+> =20
+> +	if (tb[ETHTOOL_A_LINKSTATE_SQI]) {
+> +		uint32_t val =3D mnl_attr_get_u32(tb[ETHTOOL_A_LINKSTATE_SQI]);
+> +
+> +		print_banner(nlctx);
+> +		printf("\tSQI: %u", val);
+> +
+> +		if (tb[ETHTOOL_A_LINKSTATE_SQI_MAX]) {
+> +			uint32_t max;
+> +
+> +			max =3D mnl_attr_get_u32(tb[ETHTOOL_A_LINKSTATE_SQI_MAX]);
+> +			printf("/%u\n", max);
+> +		} else {
+> +			printf("\n");
+> +		}
+> +	}
+> +
+>  	return MNL_CB_OK;
+>  }
+> =20
+> --=20
+> 2.26.2
+>=20
 
-But simplistic "receive an event and then drop it if device is
-inhibited" does not allow that...
-
-Best regards,
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---E39vaYmALEf/7YXx
+--6rexytvx3x3wksna
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAl7dTO4ACgkQMOfwapXb+vKNuACgw3cpx7Z15Nm3EAs8yyTuu1RS
-DsYAn1yorcZKMbA2oKpOoVakbRalRIie
-=Dt1J
+iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7dTRQACgkQ538sG/LR
+dpXMcgf/aGnDZaDpaT7K8y35E0CVbPgFarkAgkDcEFirAQpugKWj/EUo93DXoMor
+5q5vy72IpW4R2tZvGYDQ42hltd2n2Y1vOFs13ElgUTqfk7UGUFpBzKXfuLCGY1yN
+rd+BWgWTK02dSqHyF7Vb+2FVfxNfo27n21btYa7iCMAxFWyDm6xrbONPP/lcu/+O
+8wRmAG+51q4rbc9pETQ1KwQc9EZ58hQglXPeUQzzQR+aiCVSP7gud6IXiUOVhmah
+w/MWl8SRIU1sOjwTkXQha5TDXDq7KxG8Gc4YdmtNQFjW8wz3+msVfjNeeCtFK14u
+GVB1itG2veq/GAEcSN4X5imlvEFkFA==
+=Qh5H
 -----END PGP SIGNATURE-----
 
---E39vaYmALEf/7YXx--
+--6rexytvx3x3wksna--
