@@ -2,91 +2,85 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10F742067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591547066;
-	bh=fFoDKeB402RPaZ30lWRnaWtGGIGIaStgUveP8+V815U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XeLwS92TXT3+j7073GT+xlaqhsdXd6tKwfh2kUQhrTbQRv+qmBPY1ytdbvz3/lm5I
-	 XeZ/DWlPxqEOWOclsY6tPajixxCjAb4BXEPmHEkN1eD0bE+eeIBhVG1pElRLmvDjGS
-	 S03NcqIm8va7Ju+B+P80OcxUmPW6Xd22hiGskaSY=
+	by mail.kernel.org (Postfix) with ESMTP id B7D0B2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hhWz1HIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgFGQYZ (ORCPT
+        id S1726818AbgFGQ1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 12:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49836 "EHLO mail.kernel.org"
+        Sun, 7 Jun 2020 12:27:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38750 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgFGQYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 12:24:23 -0400
-Received: from localhost.localdomain (unknown [157.51.228.97])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 642D42067B;
-        Sun,  7 Jun 2020 16:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591547063;
-        bh=fFoDKeB402RPaZ30lWRnaWtGGIGIaStgUveP8+V815U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWNlZmoxDenF24Xvqgxo0uTUV28Ocb+71oZ/6eCX2hAVh9Sk3epHLXrKEQWAFYacu
-         x9d7VBL62l0fGD1pMWfy6Jza0bMGx1xRGOjRIhPAQJ7lnq8fHUim6bgYwsD6W2EqLK
-         +z+esVgpuQ6d7s0MCWxybNdKCRB7SItq34GtG8cU=
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     johan@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patong.mxl@gmail.com, linus.walleij@linaro.org,
-        mchehab+huawei@kernel.org, Manivannan Sadhasivam <mani@kernel.org>
-Subject: [RESEND PATCH v4 3/3] usb: cdc-acm: Ignore Exar XR21V141X when serial driver is built
-Date:   Sun,  7 Jun 2020 21:53:50 +0530
-Message-Id: <20200607162350.21297-4-mani@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200607162350.21297-1-mani@kernel.org>
-References: <20200607162350.21297-1-mani@kernel.org>
+        id S1726571AbgFGQ1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 12:27:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=uwaql4O17QvEqQO+cQA0wrTlh19QNuCc70lVhi13b/4=; b=hhWz1HIkD9X7dwPKMJdPEoaL38
+        AQC+ZbyVr2abmGhQIIV/IiO4i3M85XS5zNq+kqkXDfzdH5SFdumYzzJ7szBR8Ot5WfQd3YjUivRbO
+        c5W0Q1MuPYl3AEI8eH8kYo+WVGreCHclgh6x0gd0BpKXggSdb7xPdF4nHKF1b3HwC2i4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jhy8q-004Lbn-JB; Sun, 07 Jun 2020 18:27:24 +0200
+Date:   Sun, 7 Jun 2020 18:27:24 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Amit Cohen <amitc@mellanox.com>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+        corbet@lwn.net, jiri@mellanox.com, idosch@mellanox.com,
+        shuah@kernel.org, mkubecek@suse.cz, gustavo@embeddedor.com,
+        cforno12@linux.vnet.ibm.com, f.fainelli@gmail.com,
+        linux@rempel-privat.de, alexandru.ardelean@analog.com,
+        ayal@mellanox.com, petrm@mellanox.com, mlxsw@mellanox.com,
+        liuhangbin@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH net-next 04/10] ethtool: Add link extended state
+Message-ID: <20200607162724.GF1022955@lunn.ch>
+References: <20200607145945.30559-1-amitc@mellanox.com>
+ <20200607145945.30559-5-amitc@mellanox.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607145945.30559-5-amitc@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On Sun, Jun 07, 2020 at 05:59:39PM +0300, Amit Cohen wrote:
+> Currently, drivers can only tell whether the link is up/down using
+> LINKSTATE_GET, but no additional information is given.
+> 
+> Add attributes to LINKSTATE_GET command in order to allow drivers
+> to expose the user more information in addition to link state to ease
+> the debug process, for example, reason for link down state.
+> 
+> Extended state consists of two attributes - ext_state and ext_substate.
+> The idea is to avoid 'vendor specific' states in order to prevent
+> drivers to use specific ext_state that can be in the future common
+> ext_state.
+> 
+> The substates allows drivers to add more information to the common
+> ext_state. For example, vendor can expose 'Autoneg failure' as
+> ext_state and add 'No partner detected during force mode' as
+> ext_substate.
+> 
+> If a driver cannot pinpoint the extended state with the substate
+> accuracy, it is free to expose only the extended state and omit the
+> substate attribute.
 
-The RTS/CTS line discipline for this device doesn't follow
-the standard. So, in order to properly support TX, a separate
-driver is needed.
+Maybe it is hiding somewhere, but shoudn't there be a check to see if
+the interface is administratively up? I don't think the information
+returned here makes much sense if the interface is configured down.
 
-Ensure that cdc_acm will ignore it during probe time, if the
-Kernel is built with support for it.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/usb/class/cdc-acm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
-index 84d6f7df09a4..30e20d06d044 100644
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -1864,6 +1864,12 @@ static const struct usb_device_id acm_ids[] = {
- 	},
- #endif
- 
-+#if IS_ENABLED(CONFIG_USB_SERIAL_XR)
-+	{ USB_DEVICE(0x04e2, 0x1410),   /* Ignore XR21V141X USB to Serial converter */
-+	.driver_info = IGNORE_DEVICE,
-+	},
-+#endif
-+
- 	/*Samsung phone in firmware update mode */
- 	{ USB_DEVICE(0x04e8, 0x685d),
- 	.driver_info = IGNORE_DEVICE,
--- 
-2.17.1
-
+	 Andrew
