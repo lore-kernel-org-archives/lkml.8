@@ -2,129 +2,82 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7988DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 04:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F921C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D1120656
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 04:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B99206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ADXGRqbK"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ViwkInPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgFGEzj (ORCPT
+        id S1726344AbgFGFNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 00:55:39 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:37520 "EHLO rere.qmqm.pl"
+        Sun, 7 Jun 2020 01:13:18 -0400
+Received: from m12-17.163.com ([220.181.12.17]:46121 "EHLO m12-17.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgFGEzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 00:55:38 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49fkbY015Mz2d;
-        Sun,  7 Jun 2020 06:55:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1591505737; bh=6UnrK/OmV85PtsxFuB58PQ6KMxKOlyohnWQ5M2B8m/w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ADXGRqbKXr8x5pGtBTlY2ESBhWsOswJXSYhc6uZxv1K7Zix+J1UkTt5JS2sS1NAD7
-         JgF0iq6PAghMubWJCN+NLQCUTrQOfd0veuC2pMF/JiJI3yLniL9BkqWWhMdl8oATgE
-         C2P0AL85++UK2UFShBYhxNpb1NHZNBXZG5a6QciKwSxsQXxvQHMn19lZua+Pc6sYE1
-         aDcvEPh4pV8CVI1a11EVonEQ2TYKnZR0RrviiiysW/B2o/Ln4eM5khlyrDlB1Kjrzt
-         mQK5nSUTs/BPK9CgIK/q3/2e0PpQaZD3teLUV7bKEp2c8PRRDLozB6ebuF4JPSQvru
-         wfTSrdXeD8Vkg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 7 Jun 2020 06:55:35 +0200
-From:   Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2][RFC] PM-runtime: add tracepoints to cover all
- usage_count changes
-Message-ID: <20200607045535.GD12913@qmqm.qmqm.pl>
-References: <cover.1591380524.git.yu.c.chen@intel.com>
- <6ce5c2d21758363b7c9a31187eda1787bc4a6160.1591380524.git.yu.c.chen@intel.com>
- <20200605193311.GB9553@qmqm.qmqm.pl>
- <20200606071459.GA1298@chenyu-office.sh.intel.com>
+        id S1725998AbgFGFNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 01:13:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ZO7p3
+        p3ByhDzJyx816+feQ76oRubAg/S9uBFNb4/ZaI=; b=ViwkInPN9yZ3I6zBq2zvC
+        INV8dy7zX/9LpEe94fjX00paYYHfuE0PGBvURdqzDnpf/JzDO4yqeOHJlmAnrbxX
+        QLVI6tqQ5AJg6bxJXVE72fKpnha11rrtN2y3F6PC+7NzALK+g2ryXBMQxqyh3T2z
+        hfpEGa2gZEXcS8jzLBzXlU=
+Received: from localhost.localdomain (unknown [125.82.15.164])
+        by smtp13 (Coremail) with SMTP id EcCowAAnDTdQd9xeHoO6GA--.62079S4;
+        Sun, 07 Jun 2020 13:12:49 +0800 (CST)
+From:   Hu Haowen <xianfengting221@163.com>
+To:     saeedm@mellanox.com, leon@kernel.org, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hu Haowen <xianfengting221@163.com>
+Subject: [PATCH] net/mlx5: Add a missing macro undefinition
+Date:   Sun,  7 Jun 2020 13:12:40 +0800
+Message-Id: <20200607051241.5375-1-xianfengting221@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200606071459.GA1298@chenyu-office.sh.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CM-TRANSID: EcCowAAnDTdQd9xeHoO6GA--.62079S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZrW8Ar43Ar1xXw18WryrCrg_yoWfJFb_Kw
+        1DZF13Wa1DArnIkr1Igrs8KFW0kw1qg39agFW7KFWYy3W29r1xJ34xW34SqF1rWFWIyFZr
+        tF12yayYv34UWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU88wI3UUUUU==
+X-Originating-IP: [125.82.15.164]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiWxE8AFSInEs9XQAAsd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 03:14:59PM +0800, Chen Yu wrote:
-> Hi,
-> On Fri, Jun 05, 2020 at 09:33:11PM +0200, Michal Miroslaw wrote:
-> > On Sat, Jun 06, 2020 at 03:05:52AM +0800, Chen Yu wrote:
-> > > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
-> > > has added some tracepoints to monitor the change of runtime usage, and
-> > > there is something to improve:
-> > > 1. There are some places that adjust the usage count have not
-> > >    been traced yet. For example, pm_runtime_get_noresume() and
-> > >    pm_runtime_put_noidle()
-> > > 2. The change of the usage count will not be tracked if decreased
-> > >    from 1 to 0.
-> > [...]
-> > > @@ -1448,16 +1453,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
-> > >   */
-> > >  void pm_runtime_allow(struct device *dev)
-> > >  {
-> > > +	bool is_zero;
-> > > +
-> > >  	spin_lock_irq(&dev->power.lock);
-> > >  	if (dev->power.runtime_auto)
-> > >  		goto out;
-> > >  
-> > >  	dev->power.runtime_auto = true;
-> > > -	if (atomic_dec_and_test(&dev->power.usage_count))
-> > > +	is_zero = atomic_dec_and_test(&dev->power.usage_count);
-> > > +	trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-> > > +	if (is_zero)
-> > >  		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
-> > > -	else
-> > > -		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-> > > -
-> > [...]
-> > 
-> > IIRC, rpm_idle() has a tracepoint already.
-> > 
-> Yes, this is what I concerned previously. If someone
-> want to track the change of usage_count, then he might
-> have to enable both trace rpm_usage and rpm_idle so
-> as to track the moment when the counter drops from 1 to
-> 0. It might be more consistent if we only enable
-> trace rpm_usage to track the whole process.
-> > > @@ -1523,9 +1529,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
-> > >  		/* If it used to be allowed then prevent it. */
-> > >  		if (!old_use || old_delay >= 0) {
-> > >  			atomic_inc(&dev->power.usage_count);
-> > > -			rpm_resume(dev, 0);
-> > > -		} else {
-> > >  			trace_rpm_usage_rcuidle(dev, 0);
-> > > +			rpm_resume(dev, 0);
-> > >  		}
-> > >  	}
-> > [...]
-> > 
-> > This actually changes logic, so it doesn't match the patch description.
-> > 
-> This patch intends to adjust the logic to be consistent with
-> the change of usage_counter, that is to say, only after the
-> counter has been possibly modified, we record it. In current
-> logic above, it tracks the usage count where the latter does
-> not change.
+The macro ODP_CAP_SET_MAX is only used in function handle_hca_cap_odp()
+in file main.c, so it should be undefined when there are no more uses
+of it.
 
-I see now what you intended. I think it would be nice to put the idea
-(that all usage changes be shown using rpm_usage even if included in
-other trace points) into the commit message. Otherwise, looks ok.
+Signed-off-by: Hu Haowen <xianfengting221@163.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Best Regards
-Micha³ Miros³aw
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index df46b1fce3a7..1143297eccaa 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -489,6 +489,8 @@ static int handle_hca_cap_odp(struct mlx5_core_dev *dev, void *set_ctx)
+ 	ODP_CAP_SET_MAX(dev, dc_odp_caps.read);
+ 	ODP_CAP_SET_MAX(dev, dc_odp_caps.atomic);
+ 
++#undef ODP_CAP_SET_MAX
++
+ 	if (!do_set)
+ 		return 0;
+ 
+-- 
+2.25.1
+
+
