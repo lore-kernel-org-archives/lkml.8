@@ -2,99 +2,162 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F081C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23DAF20663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E5B20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="FzKcLYPM"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="RTqzxRQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgFGNUd (ORCPT
+        id S1726583AbgFGNWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 09:20:33 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:27676 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgFGNUd (ORCPT
+        Sun, 7 Jun 2020 09:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgFGNWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 09:20:33 -0400
-X-Greylist: delayed 767 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jun 2020 09:20:32 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1591536031;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=y+pfta7yNhwYUoOid0wjMxSVJZWGEZuuSBhFq5hUIHM=;
-        b=FzKcLYPMGs7r0Kd68NvJHpqiQH/IDA/W/lB6hhSUpPOEi3vELKNP5rq6FbzWLtGkPj
-        U1P5EgYcjH8vN7qsg5Xixa8yEdb+RKUZqvNWeU1eogH5Noq8qjK5qEDoILf0rfFnhfga
-        IHpeZGAGCMKgfVz7Pkc1K2thsW/wE+NRMEGrL/llLwzEhwhIaQOxl8Py3oGI6eWsszLf
-        CFB5JUXsz2qGD/yjQHvm8WN79oIwcwhOCwDqmtRKef74gtsrpWNtOzZZKZgSYvU0wdhG
-        5C51JZralCjjeH+kRm+XX4TH10Pivoyt7P9Gee8L8fB/8WxI0TfUPYMoPN3QREQ5TsWQ
-        nDww==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXvdOeueZtw="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 46.9.1 DYNA|AUTH)
-        with ESMTPSA id I05374w57DKQFgz
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 7 Jun 2020 15:20:26 +0200 (CEST)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v3] crypto: DRBG - always try to free Jitter RNG instance
-Date:   Sun, 07 Jun 2020 15:20:26 +0200
-Message-ID: <4563687.31r3eYUQgx@positron.chronox.de>
-In-Reply-To: <2551009.mvXUDI8C0e@positron.chronox.de>
-References: <0000000000002a280b05a725cd93@google.com> <20200603110919.GK30374@kadam> <2551009.mvXUDI8C0e@positron.chronox.de>
+        Sun, 7 Jun 2020 09:22:19 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D959C08C5C3
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 06:22:18 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id mb16so15258118ejb.4
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 06:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fzHKd/0Iik52KxAHm17miqHrvv8VGhsBlmCTklHYBK0=;
+        b=RTqzxRQSbAil8qchRl589zrlc8vgCLgJXlDKlctrTiR6SE4e630dxGjEVVMmvoI0g7
+         Rjn9gWOtfOxqB1rhf5xpCNQ5YtandOBkwYH1zPlSmnoGT2bfKdckbdTDe4PJtwpBgunz
+         IF6+1Mn8yjbbVH77tmCjaT7tRzqLyScUFLGSw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fzHKd/0Iik52KxAHm17miqHrvv8VGhsBlmCTklHYBK0=;
+        b=ZmWAuxmIvMrKlRg/XmcSvTfklWwiYSCEoM/D55pAixN3a4CyPxT695ZJS+Ect0f8Oz
+         Tmbekq9TK3NfgXX4HOc+mPvhjzZhC9QjEcqT+rJpw0g0iaBqaQHCKYV7awLWIzSNDAD8
+         MHbgSfD4lTOPeSva4qYlJaKCKq6XXpIIqEGL5EzR0rjkjLivgxzKN8vrl7w08PBMYflM
+         rQG1OZLnzAJf+DGiIVAvFJQ3fCeL+Kt5Prp5FIOooPXnpJlQ9dy5dfj1LbMp6FQlwVm6
+         o/V0RorvyYqfH9v1zMD/zkREY+2OCr4oCJHKLhO5v7Mpt5UETfDHxVpIINe/AN4AVH/Y
+         1ACQ==
+X-Gm-Message-State: AOAM5323sByT4k1W4x/k7hER39cjYxPymAmet59Rm3yvlz52KsXid5fN
+        itpSuSk4YUVNjlcV8pGPGwPr+p0A1yw=
+X-Google-Smtp-Source: ABdhPJzf8CLvNZNNXbqFYmb0UVquLXUsUW98berfmNFKWpfgPm3Y8VOMkt/oakzb+bYcCF4FBIW4Ug==
+X-Received: by 2002:a17:906:2615:: with SMTP id h21mr16577823ejc.84.1591536136693;
+        Sun, 07 Jun 2020 06:22:16 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
+        by smtp.gmail.com with ESMTPSA id l1sm8526325ejd.114.2020.06.07.06.22.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 06:22:15 -0700 (PDT)
+Subject: Re: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
+ <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
+Date:   Sun, 7 Jun 2020 15:22:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Jitter RNG is unconditionally allocated as a seed source follwoing
-the patch 97f2650e5040. Thus, the instance must always be deallocated.
+On 05/06/2020 22.18, Linus Torvalds wrote:
+> On Fri, Jun 5, 2020 at 7:23 AM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+>>
+>> +               /*
+>> +                * If the "group" and "other" permissions are the same,
+>> +                * there's no point calling in_group_p() to decide which
+>> +                * set to use.
+>> +                */
+>> +               if ((((mode >> 3) ^ mode) & 7) && in_group_p(inode->i_gid))
+>>                         mode >>= 3;
+> 
+> Ugh. Not only is this ugly, but it's not even the best optimization.
+>
+> We don't care that group and other match exactly. We only care that
+> they match in the low 3 bits of the "mask" bits.
 
-Reported-by: syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com
-Fixes: 97f2650e5040 ("crypto: drbg - always seeded with SP800-90B ...")
-Signed-off-by: Stephan Mueller <smueller@chronox.de>
----
- crypto/drbg.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Yes, I did think about that, but I thought this was the more obviously
+correct approach, and that in practice one only sees the 0X44 and 0X55
+cases.
 
-diff --git a/crypto/drbg.c b/crypto/drbg.c
-index 37526eb8c5d5..8d80d93cab97 100644
---- a/crypto/drbg.c
-+++ b/crypto/drbg.c
-@@ -1631,10 +1631,12 @@ static int drbg_uninstantiate(struct drbg_state *drbg)
- 	if (drbg->random_ready.func) {
- 		del_random_ready_callback(&drbg->random_ready);
- 		cancel_work_sync(&drbg->seed_work);
--		crypto_free_rng(drbg->jent);
--		drbg->jent = NULL;
- 	}
- 
-+	if (!IS_ERR_OR_NULL(drbg->jent))
-+		crypto_free_rng(drbg->jent);
-+	drbg->jent = NULL;
-+
- 	if (drbg->d_ops)
- 		drbg->d_ops->crypto_fini(drbg);
- 	drbg_dealloc_state(drbg);
--- 
-2.26.2
+> So if we want this optimization - and it sounds worth it - I think we
+> should do it right. But I also think it should be written more
+> legibly.
+> 
+> And the "& 7" is the same "& (MAY_READ | MAY_WRITE | MAY_EXEC)" we do later.
+> 
+> In other words, if we do this, I'd like it to be done even more
+> aggressively, but I'd also like the end result to be a lot more
+> readable and have more comments about why we do that odd thing.
+> 
+> Something like this *UNTESTED* patch, perhaps?
 
+That will kinda work, except you do that mask &= MAY_RWX before
+check_acl(), which cares about MAY_NOT_BLOCK and who knows what other bits.
 
+> I might have gotten something wrong, so this would need
+> double-checking, but if it's right, I find it a _lot_ more easy to
+> understand than making one expression that is pretty complicated and
+> opaque.
 
+Well, I thought this was readable enough with the added comment. There's
+already that magic constant 3 in the shifts, so the 7 seemed entirely
+sensible, though one could spell it 0007. Whatever.
 
+Perhaps this? As a whole function, I think that's a bit easier for
+brain-storming. It's your patch, just with that rwx thing used instead
+of mask, except for the call to check_acl().
+
+static int acl_permission_check(struct inode *inode, int mask)
+{
+	unsigned int mode = inode->i_mode;
+	unsigned int rwx = mask & (MAY_READ | MAY_WRITE | MAY_EXEC);
+
+	/* Are we the owner? If so, ACL's don't matter */
+	if (likely(uid_eq(current_fsuid(), inode->i_uid))) {
+		if ((rwx << 6) & ~mode)
+			return -EACCES;
+		return 0;
+	}
+
+	/* Do we have ACL's? */
+	if (IS_POSIXACL(inode) && (mode & S_IRWXG)) {
+		int error = check_acl(inode, mask);
+		if (error != -EAGAIN)
+			return error;
+	}
+
+	/*
+	 * Are the group permissions different from
+	 * the other permissions in the bits we care
+	 * about? Need to check group ownership if so.
+	 */
+	if (rwx & (mode ^ (mode >> 3))) {
+		if (in_group_p(inode->i_gid))
+			mode >>= 3;
+	}
+
+	/* Bits in 'mode' clear that we require? */
+	return (rwx & ~mode) ? -EACCES : 0;
+}
+
+Rasmus
