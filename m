@@ -2,142 +2,129 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 04:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7988DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 04:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D65AD20723
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 04:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D1120656
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 04:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLMe/PmU"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ADXGRqbK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgFGEhq (ORCPT
+        id S1726290AbgFGEzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 00:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgFGEhp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 00:37:45 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F914C08C5C2;
-        Sat,  6 Jun 2020 21:37:44 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id n9so5335304plk.1;
-        Sat, 06 Jun 2020 21:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+RfD0GNAG9wtYBIqQI83YWVj2YPAQjhlZZhEwrpiUR0=;
-        b=nLMe/PmUWDpie/4JGJYHvkGhZglWExGklzZHubXRcJ6RxiFhblxTs8k3fF10Uid1Ta
-         bpc7bIEWxPpsiFBPi3SVzGXJ/tjHI+KiYncdvsCaC/HImbCqo82N0Qc3snQPMKZwzLDp
-         zHSUlpFGgwzr6OuCuvmqJEeC3Ycv3PX31TewQteofq1cKucP6N9zeog0BqHP/sUeIfxK
-         P0E6yzvLL0NLQH/9t3Eq9gPuIpT/Ridn796+GV/qg/2qiIRDWv+1ccLCp0ld51mjffX3
-         5uGUZpcfOMEg64PuGSiUMn1gIO7Z0CWVFGUGn5CMJncw7VCGMfm2DnZvmHPiMMzFYBsL
-         drGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+RfD0GNAG9wtYBIqQI83YWVj2YPAQjhlZZhEwrpiUR0=;
-        b=bwKEc2f8lSqySOlbS0D76NoUL7C61ABCF15VTXYyRyOFx6BoC+3yGybJuENGhdYA1p
-         8hRraikzhyDIjHFRqphhdKdhO0aFSCiiNyOfs5zxrd+CiKslSAmOuxgkTYmp4/QZ73Nt
-         b+/K8xvg23WsBh/nBArdpYMBkArc1tOnI4DmgFSBJRQvOScEkm1ZO+K+meXTKyweIsFp
-         np/x+I+8HnI9FsNSE/nPxw1WjNkvvd/U4UeDW8zVStZODEMJ6ng6R2OnlPSrxKenDMqb
-         NMj2uJqFihb+IeVr1jZKOqqj/bVfIuu89lJW1wfKj6w1xg1Ru/KzAGFeJB4LOk8akYEi
-         tjBQ==
-X-Gm-Message-State: AOAM53369ahSEnbzsD1RyYKLHLlItW0KGhZFo/G3KCZGhBvKGnH3H3qI
-        OxIAQ4ixvpOpiiZvpouBimIU+yGMXg==
-X-Google-Smtp-Source: ABdhPJyoao4/TQK4XdT5KWfP0hv+v1BBqmn3ekWDOpZYWfIvpZDArQFDyOAGJTYOrU5Fr13uLyMo2g==
-X-Received: by 2002:a17:90b:517:: with SMTP id r23mr11643417pjz.191.1591504663554;
-        Sat, 06 Jun 2020 21:37:43 -0700 (PDT)
-Received: from localhost (98.86.92.34.bc.googleusercontent.com. [34.92.86.98])
-        by smtp.gmail.com with ESMTPSA id t201sm3633265pfc.104.2020.06.06.21.37.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2020 21:37:43 -0700 (PDT)
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     linux-edac@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
-        x86@kernel.org, Jacky Hu <hengqing.hu@gmail.com>
-Subject: [PATCH 2/2] EDAC/amd64: Add family ops for Family 17h Models 60h-6Fh
-Date:   Sun,  7 Jun 2020 12:37:09 +0800
-Message-Id: <20200607043709.48178-3-hengqing.hu@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200607043709.48178-1-hengqing.hu@gmail.com>
-References: <20200607043709.48178-1-hengqing.hu@gmail.com>
+        Sun, 7 Jun 2020 00:55:39 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:37520 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726093AbgFGEzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 00:55:38 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49fkbY015Mz2d;
+        Sun,  7 Jun 2020 06:55:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1591505737; bh=6UnrK/OmV85PtsxFuB58PQ6KMxKOlyohnWQ5M2B8m/w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ADXGRqbKXr8x5pGtBTlY2ESBhWsOswJXSYhc6uZxv1K7Zix+J1UkTt5JS2sS1NAD7
+         JgF0iq6PAghMubWJCN+NLQCUTrQOfd0veuC2pMF/JiJI3yLniL9BkqWWhMdl8oATgE
+         C2P0AL85++UK2UFShBYhxNpb1NHZNBXZG5a6QciKwSxsQXxvQHMn19lZua+Pc6sYE1
+         aDcvEPh4pV8CVI1a11EVonEQ2TYKnZR0RrviiiysW/B2o/Ln4eM5khlyrDlB1Kjrzt
+         mQK5nSUTs/BPK9CgIK/q3/2e0PpQaZD3teLUV7bKEp2c8PRRDLozB6ebuF4JPSQvru
+         wfTSrdXeD8Vkg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 7 Jun 2020 06:55:35 +0200
+From:   Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2][RFC] PM-runtime: add tracepoints to cover all
+ usage_count changes
+Message-ID: <20200607045535.GD12913@qmqm.qmqm.pl>
+References: <cover.1591380524.git.yu.c.chen@intel.com>
+ <6ce5c2d21758363b7c9a31187eda1787bc4a6160.1591380524.git.yu.c.chen@intel.com>
+ <20200605193311.GB9553@qmqm.qmqm.pl>
+ <20200606071459.GA1298@chenyu-office.sh.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200606071459.GA1298@chenyu-office.sh.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add family ops to support AMD Family 17h, Models 60h-6Fh systems.
+On Sat, Jun 06, 2020 at 03:14:59PM +0800, Chen Yu wrote:
+> Hi,
+> On Fri, Jun 05, 2020 at 09:33:11PM +0200, Michal Miroslaw wrote:
+> > On Sat, Jun 06, 2020 at 03:05:52AM +0800, Chen Yu wrote:
+> > > Commit d229290689ae ("PM-runtime: add tracepoints for usage_count changes")
+> > > has added some tracepoints to monitor the change of runtime usage, and
+> > > there is something to improve:
+> > > 1. There are some places that adjust the usage count have not
+> > >    been traced yet. For example, pm_runtime_get_noresume() and
+> > >    pm_runtime_put_noidle()
+> > > 2. The change of the usage count will not be tracked if decreased
+> > >    from 1 to 0.
+> > [...]
+> > > @@ -1448,16 +1453,17 @@ EXPORT_SYMBOL_GPL(pm_runtime_forbid);
+> > >   */
+> > >  void pm_runtime_allow(struct device *dev)
+> > >  {
+> > > +	bool is_zero;
+> > > +
+> > >  	spin_lock_irq(&dev->power.lock);
+> > >  	if (dev->power.runtime_auto)
+> > >  		goto out;
+> > >  
+> > >  	dev->power.runtime_auto = true;
+> > > -	if (atomic_dec_and_test(&dev->power.usage_count))
+> > > +	is_zero = atomic_dec_and_test(&dev->power.usage_count);
+> > > +	trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+> > > +	if (is_zero)
+> > >  		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
+> > > -	else
+> > > -		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+> > > -
+> > [...]
+> > 
+> > IIRC, rpm_idle() has a tracepoint already.
+> > 
+> Yes, this is what I concerned previously. If someone
+> want to track the change of usage_count, then he might
+> have to enable both trace rpm_usage and rpm_idle so
+> as to track the moment when the counter drops from 1 to
+> 0. It might be more consistent if we only enable
+> trace rpm_usage to track the whole process.
+> > > @@ -1523,9 +1529,8 @@ static void update_autosuspend(struct device *dev, int old_delay, int old_use)
+> > >  		/* If it used to be allowed then prevent it. */
+> > >  		if (!old_use || old_delay >= 0) {
+> > >  			atomic_inc(&dev->power.usage_count);
+> > > -			rpm_resume(dev, 0);
+> > > -		} else {
+> > >  			trace_rpm_usage_rcuidle(dev, 0);
+> > > +			rpm_resume(dev, 0);
+> > >  		}
+> > >  	}
+> > [...]
+> > 
+> > This actually changes logic, so it doesn't match the patch description.
+> > 
+> This patch intends to adjust the logic to be consistent with
+> the change of usage_counter, that is to say, only after the
+> counter has been possibly modified, we record it. In current
+> logic above, it tracks the usage count where the latter does
+> not change.
 
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
----
- drivers/edac/amd64_edac.c | 14 ++++++++++++++
- drivers/edac/amd64_edac.h |  3 +++
- 2 files changed, 17 insertions(+)
+I see now what you intended. I think it would be nice to put the idea
+(that all usage changes be shown using rpm_usage even if included in
+other trace points) into the commit message. Otherwise, looks ok.
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 9cf7cc1f3f72..0e74027d3660 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -2319,6 +2319,16 @@ static struct amd64_family_type family_types[] = {
- 			.dbam_to_cs		= f17_addr_mask_to_cs_size,
- 		}
- 	},
-+	[F17_M60H_CPUS] = {
-+		.ctl_name = "F17h_M60h",
-+		.f0_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F0,
-+		.f6_id = PCI_DEVICE_ID_AMD_17H_M60H_DF_F6,
-+		.max_mcs = 2,
-+		.ops = {
-+			.early_channel_count	= f17_early_channel_count,
-+			.dbam_to_cs		= f17_addr_mask_to_cs_size,
-+		}
-+	},
- 	[F17_M70H_CPUS] = {
- 		.ctl_name = "F17h_M70h",
- 		.f0_id = PCI_DEVICE_ID_AMD_17H_M70H_DF_F0,
-@@ -3357,6 +3367,10 @@ static struct amd64_family_type *per_family_init(struct amd64_pvt *pvt)
- 			fam_type = &family_types[F17_M30H_CPUS];
- 			pvt->ops = &family_types[F17_M30H_CPUS].ops;
- 			break;
-+		} else if (pvt->model >= 0x60 && pvt->model <= 0x6f) {
-+			fam_type = &family_types[F17_M60H_CPUS];
-+			pvt->ops = &family_types[F17_M60H_CPUS].ops;
-+			break;
- 		} else if (pvt->model >= 0x70 && pvt->model <= 0x7f) {
- 			fam_type = &family_types[F17_M70H_CPUS];
- 			pvt->ops = &family_types[F17_M70H_CPUS].ops;
-diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-index abbf3c274d74..52b5d03eeba0 100644
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -120,6 +120,8 @@
- #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F6 0x15ee
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F0 0x1490
- #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F6 0x1496
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F0 0x1448
-+#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F6 0x144e
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F0 0x1440
- #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F6 0x1446
- #define PCI_DEVICE_ID_AMD_19H_DF_F0	0x1650
-@@ -293,6 +295,7 @@ enum amd_families {
- 	F17_CPUS,
- 	F17_M10H_CPUS,
- 	F17_M30H_CPUS,
-+	F17_M60H_CPUS,
- 	F17_M70H_CPUS,
- 	F19_CPUS,
- 	NUM_FAMILIES,
--- 
-2.27.0
-
+Best Regards
+Micha³ Miros³aw
