@@ -2,77 +2,101 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5927DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB75C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C75206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3872820663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ab0R0dfE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7Jzkz7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgFGPbJ (ORCPT
+        id S1726703AbgFGPeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 11:31:09 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38658 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgFGPbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 11:31:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=oGjdbZkTfG2shZbhkVg+O0cltlsoKRjKsMT0FxY6qS0=; b=ab0R0dfEkIhxgsHfHtOTFaaxIQ
-        96+8r5pe9piLn8nb3wMxysCpWNXfL1ar3ebbJd4HnhxmFlb8AkWd8bv9pENn6oydGIedu65Vc8DYe
-        k0mqMyiyQtc//EYv42hBbhasPnei+3tGOPh6AxcEdtxF4YNDfqNxrUrbRTnBuUJv/frU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jhxFq-004LP3-A3; Sun, 07 Jun 2020 17:30:34 +0200
-Date:   Sun, 7 Jun 2020 17:30:34 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Amit Cohen <amitc@mellanox.com>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
-        corbet@lwn.net, jiri@mellanox.com, idosch@mellanox.com,
-        shuah@kernel.org, mkubecek@suse.cz, gustavo@embeddedor.com,
-        cforno12@linux.vnet.ibm.com, f.fainelli@gmail.com,
-        linux@rempel-privat.de, alexandru.ardelean@analog.com,
-        ayal@mellanox.com, petrm@mellanox.com, mlxsw@mellanox.com,
-        liuhangbin@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH net-next 04/10] ethtool: Add link extended state
-Message-ID: <20200607153034.GC1022955@lunn.ch>
-References: <20200607145945.30559-1-amitc@mellanox.com>
- <20200607145945.30559-5-amitc@mellanox.com>
+        Sun, 7 Jun 2020 11:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbgFGPeF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 11:34:05 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED5DC08C5C3;
+        Sun,  7 Jun 2020 08:34:05 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id u13so12925871wml.1;
+        Sun, 07 Jun 2020 08:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2o3QvPMuAvXtLGnv5lwxLj6qG0phhHtf5j/mBFrQWX8=;
+        b=T7Jzkz7ikIc5D1pUfCwNeC8rqL7NCIYixAiV7fhBPoSx7udCUKh1WAe97YiyFnqctU
+         K6c5EK4wmPeTv+0MxxaMv8vVVYR2zJ3LQL0yDCDPQYokPZ4xITxf06VuSPocGzd7JVQP
+         yv32gmNlQI6S4kawq3XRxur08Fni+EBVCmw3n3uUZG9GLHQX5T0rqFur8UwbOI7rpDsa
+         XNTT85AciWBhtc8ALOWWo++LtrVXpuBlvFavODPv8d2RQSx7dIDTm9HHSPxEEkZ7/V6b
+         uO+2sEb4lqIK56zZRoUQFdfdGV+uYnSdEdKQaIhsFIDOOI04UIhkjfdX9WCJrD1LWKP8
+         3tYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2o3QvPMuAvXtLGnv5lwxLj6qG0phhHtf5j/mBFrQWX8=;
+        b=cWzIa7cytc91uVbJJw3qOY4rq32UzvLe3vUmwMXgTNGcycIkgIp83pNm7oRnEbSUNg
+         hBeSj1vQr997YjCC9R2sSxqyuziJM6ggApR1owtVRN76Uxf/z7kJJ3wF2Gj4EcZo+b5U
+         5zzIURpFdIXWo5a8TbiznxH49qVlF9C8yJlNKs+QgTFFIPELS8CLDvs51t0Rfd5SnaOk
+         n8p3w9QZTiNPKulAaTvJjBikHC4i/cZIM1uVzBv/T8KsyOUvlecn2qg9AbnvF+gkT+RY
+         cPfB3L01/VuXzZpAO8mq+C+7SyBmXjZPSVUN7iFJKZR/xFyXkmpzHvHKh1xkPWTwhJI+
+         5uXg==
+X-Gm-Message-State: AOAM5335HJtqZz1Lu/lrPwdeMDwx7qlTcJ0M6Q/OMpwHzxdrwcHydi/W
+        i9aOWrkuOjn1rpV0/etw3ZiLHgSw
+X-Google-Smtp-Source: ABdhPJwW0EH8q+M6K5oIxSIYYpIB4JOeHqAhVn31rq9Yp6uMNRnBJfwDp1t2vDzlYFiR5qWkLzEZPQ==
+X-Received: by 2002:a1c:7903:: with SMTP id l3mr12025809wme.50.1591544043835;
+        Sun, 07 Jun 2020 08:34:03 -0700 (PDT)
+Received: from localhost.localdomain ([5.100.193.151])
+        by smtp.gmail.com with ESMTPSA id 1sm19589015wmz.13.2020.06.07.08.34.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 08:34:03 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] cancel all reqs of an exiting task
+Date:   Sun,  7 Jun 2020 18:32:20 +0300
+Message-Id: <cover.1591541128.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607145945.30559-5-amitc@mellanox.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +/**
-> + * enum ethtool_ext_substate_cable_issue - more information in
-> + * addition to ETHTOOL_EXT_STATE_CABLE_ISSUE.
-> + */
-> +enum ethtool_ext_substate_cable_issue {
-> +	ETHTOOL_EXT_SUBSTATE_UNSUPPORTED_CABLE = 1,
-> +	ETHTOOL_EXT_SUBSTATE_SHORTED_CABLE,
-> +};
+io_uring_flush() {
+        ...
+        if (fatal_signal_pending(current) || (current->flags & PF_EXITING))
+                io_wq_cancel_pid(ctx->io_wq, task_pid_vnr(current));
+}
 
-I'm not too happy about shorted cable. I can see this getting extended
-to open cable, shorted to another pair, etc. It then becomes a
-duplicate of the PHY cable testing infrastructure. A more generic
+This cancels only the first matched request. The pathset is mainly
+about fixing that. [1,2] are preps, [3/4] is the fix.
 
-> +	ETHTOOL_EXT_SUBSTATE_CABLE_TEST_FAILURE,
+The [4/4] tries to improve the worst case for io_uring_cancel_files(),
+that's when they are a lot of inflights with ->files. Instead of doing
+{kill(); wait();} one by one, it cancels all of them at once.
 
-would be better, and then the user can use then use the cable testing
-infrastructure to get the full details.
+Pavel Begunkov (4):
+  io-wq: reorder cancellation pending -> running
+  io-wq: add an option to cancel all matched reqs
+  io_uring: cancel all task's requests on exit
+  io_uring: batch cancel in io_uring_cancel_files()
 
-	Andrew
+ fs/io-wq.c    | 108 ++++++++++++++++++++++++++------------------------
+ fs/io-wq.h    |   3 +-
+ fs/io_uring.c |  29 ++++++++++++--
+ 3 files changed, 83 insertions(+), 57 deletions(-)
+
+-- 
+2.24.0
+
