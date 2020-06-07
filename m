@@ -5,70 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F253AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9788C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1CBE206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8048D2075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TVc/UIRc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KClBS+4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgFGOL5 (ORCPT
+        id S1727069AbgFGOMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 10:11:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40023 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726824AbgFGOLv (ORCPT
+        Sun, 7 Jun 2020 10:12:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52011 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726835AbgFGOLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jun 2020 10:11:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591539108;
+        s=mimecast20190719; t=1591539109;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=UNoiNEJvdgOZ9xjiajXEUBmq7bdVAGmYmXBWji52Kn0=;
-        b=TVc/UIRcBnpwmj9hhrUg5KiYSqnZbYP9pvdxG3wCesqSbEGWZ08Kr2AiL8G3bLvRZdiDe6
-        WXlkonGj76vturCQc40IBTV7g3/ioME9+mwDSYRGhOwQTBebX+VQPQOr3zy7i+75/ScCZa
-        QoTxA+V1Ct0ZBx3WkamYrhLP2xgTlU8=
+        bh=LkIC7lu04RjihR3CHtt6ay4K/Xfv1eAdqmqMBhW1nUc=;
+        b=KClBS+4StlfbF/xhh1Xsa+8ZofIAwN4Csgy1OuU5MWFcVXP+KiBoc/D+7Ulm4LldWcpHyK
+        OpAxpKZLXq1gtj/ZKUmnyAqTqllcGajFqTqwZ0GuusxWvjZM3y67PvidQnJostOo389zYR
+        4gjtd/sWcQSLjg3I0SS4CnixbPPLs9o=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-BJbgLch1OhOHFWCVlZ2q1Q-1; Sun, 07 Jun 2020 10:11:44 -0400
-X-MC-Unique: BJbgLch1OhOHFWCVlZ2q1Q-1
-Received: by mail-wm1-f72.google.com with SMTP id x6so4286299wmj.9
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 07:11:44 -0700 (PDT)
+ us-mta-249-94ad2rzAMxyWm9966tbcSA-1; Sun, 07 Jun 2020 10:11:48 -0400
+X-MC-Unique: 94ad2rzAMxyWm9966tbcSA-1
+Received: by mail-wm1-f72.google.com with SMTP id s15so4283876wmc.8
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 07:11:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UNoiNEJvdgOZ9xjiajXEUBmq7bdVAGmYmXBWji52Kn0=;
-        b=sZI/SI1jaVdfr5wvE7Uy0ApkajAdBVoAL7fnIAz8++AI53axZW78DYTMdr52KK+n57
-         TXSzig2kl6+56Y8oF+Sq4/D2SOWBXei8i7/Tq7YXCA8Y1WIKNaYquAc0S5X069HQBqPr
-         CD+a1v/MBUZuAE3aoG/LCwB91vdWm1vZ1lYRb8568qkVX99HVHqMEis3aCCrF5mJNW45
-         HMUXOX1qh/HfN8J9Hi02GbiJx+xn/NUx4MRNy/xh6f70lYTzIxtEmxkWwQ/zFTB3FHoi
-         aUDm38MEdVtM/7MhbgofDHfy4x07K2cnVo2RP/1KZI/juBtNGNWOr81jVlNFTV1E4UWA
-         T/Zw==
-X-Gm-Message-State: AOAM532cN7MaIhDXBvsSAQpAzT931MOnwENQmPSBBnbAbhLp3gQxRRkY
-        3fPxD5VyWv2VuhF2N//S3tlQfJwQjNzAatAphUPqdB6QUzxhRZL7KMmG4nq2K7nMLkQFXlA4SFs
-        3bAFEf/DMOBVLNQUzAj+MfPmZ
-X-Received: by 2002:adf:f245:: with SMTP id b5mr18499147wrp.303.1591539102992;
-        Sun, 07 Jun 2020 07:11:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw8OA7pZgMkBMdE1HqvI59+uGkA/WXtF7auBUBUdg9bZYkTex0K9gv/gjYOrLDiqCrjSJQYJg==
-X-Received: by 2002:adf:f245:: with SMTP id b5mr18499106wrp.303.1591539102218;
-        Sun, 07 Jun 2020 07:11:42 -0700 (PDT)
+        bh=LkIC7lu04RjihR3CHtt6ay4K/Xfv1eAdqmqMBhW1nUc=;
+        b=Jl9Vmp3MwWxvjeeLGxh8qNDwR9msKOcIIlyhtXeyicDMTemRaZZbmueTCdeUU/kFSe
+         kcQSqftLj9RbsIEaVX8YJZoDFjnDyfdQsrMvzZ3lEmjfPtjBhTHBocEHScUohFWHONzs
+         nNGorG/2ZXiWK6ru/bJBZb+NiPcbN8qZE+sQ81y0wIcvn5pr80iGZbljC91sQn2xVC/J
+         Rc2JNWX+kqgSa915RmhNxrkJ+NlrvAeAea3PrYUkZdjkheZ5kOkz+Hsb1tMD8lEakykL
+         jfKcJDfTG9raKpt/V7tD5xNOlSMaL1SB6kFoPi9Y4cGD8nCFy7kwOiNuBO8Ny8Erx+8t
+         fcrQ==
+X-Gm-Message-State: AOAM533mrWm6wHsdME5omiXsbbV+5mEQ6oFXD8rEJFsPU1dG6Hk6YXZv
+        KG/uBOW+DIM54f1x/wBGRAxdejJcerpNli3gkZjTIcTbyxj7OnufWbAEBTAbAH3lAH3eDT+/WU7
+        0B7BvG3X/SX3SgTYtBbso8U1Q
+X-Received: by 2002:a1c:7215:: with SMTP id n21mr10409309wmc.10.1591539106885;
+        Sun, 07 Jun 2020 07:11:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwCfLPmb9+BZnCuC5u2jfWuqmXeqMS8Ihho5hEhJLUW08ori7QKr5nyQ1D2eMu4yFMhmwKabg==
+X-Received: by 2002:a1c:7215:: with SMTP id n21mr10409289wmc.10.1591539106521;
+        Sun, 07 Jun 2020 07:11:46 -0700 (PDT)
 Received: from redhat.com (bzq-82-81-31-23.red.bezeqint.net. [82.81.31.23])
-        by smtp.gmail.com with ESMTPSA id a14sm21523947wrv.20.2020.06.07.07.11.41
+        by smtp.gmail.com with ESMTPSA id a81sm20684853wmd.25.2020.06.07.07.11.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 07:11:41 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 10:11:40 -0400
+        Sun, 07 Jun 2020 07:11:46 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 10:11:44 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
         netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
         eperezma@redhat.com
-Subject: [PATCH RFC v5 08/13] vhost/net: convert to new API: heads->bufs
-Message-ID: <20200607141057.704085-9-mst@redhat.com>
+Subject: [PATCH RFC v5 10/13] vhost/test: convert to the buf API
+Message-ID: <20200607141057.704085-11-mst@redhat.com>
 References: <20200607141057.704085-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -81,194 +81,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert vhost net to use the new format-agnostic API.
-In particular, don't poke at vq internals such as the
-heads array.
-
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/vhost/net.c | 154 +++++++++++++++++++++++---------------------
- 1 file changed, 82 insertions(+), 72 deletions(-)
+ drivers/vhost/test.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index ff594eec8ae3..830fe84912a5 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -59,13 +59,13 @@ MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
-  * status internally; used for zerocopy tx only.
-  */
- /* Lower device DMA failed */
--#define VHOST_DMA_FAILED_LEN	((__force __virtio32)3)
-+#define VHOST_DMA_FAILED_LEN	(3)
- /* Lower device DMA done */
--#define VHOST_DMA_DONE_LEN	((__force __virtio32)2)
-+#define VHOST_DMA_DONE_LEN	(2)
- /* Lower device DMA in progress */
--#define VHOST_DMA_IN_PROGRESS	((__force __virtio32)1)
-+#define VHOST_DMA_IN_PROGRESS	(1)
- /* Buffer unused */
--#define VHOST_DMA_CLEAR_LEN	((__force __virtio32)0)
-+#define VHOST_DMA_CLEAR_LEN	(0)
- 
- #define VHOST_DMA_IS_DONE(len) ((__force u32)(len) >= (__force u32)VHOST_DMA_DONE_LEN)
- 
-@@ -112,9 +112,12 @@ struct vhost_net_virtqueue {
- 	/* last used idx for outstanding DMA zerocopy buffers */
- 	int upend_idx;
- 	/* For TX, first used idx for DMA done zerocopy buffers
--	 * For RX, number of batched heads
-+	 * For RX, number of batched bufs
- 	 */
- 	int done_idx;
-+	/* Outstanding user bufs. UIO_MAXIOV in length. */
-+	/* TODO: we can make this smaller for sure. */
-+	struct vhost_buf *bufs;
- 	/* Number of XDP frames batched */
- 	int batched_xdp;
- 	/* an array of userspace buffers info */
-@@ -271,6 +274,8 @@ static void vhost_net_clear_ubuf_info(struct vhost_net *n)
- 	int i;
- 
- 	for (i = 0; i < VHOST_NET_VQ_MAX; ++i) {
-+		kfree(n->vqs[i].bufs);
-+		n->vqs[i].bufs = NULL;
- 		kfree(n->vqs[i].ubuf_info);
- 		n->vqs[i].ubuf_info = NULL;
- 	}
-@@ -282,6 +287,12 @@ static int vhost_net_set_ubuf_info(struct vhost_net *n)
- 	int i;
- 
- 	for (i = 0; i < VHOST_NET_VQ_MAX; ++i) {
-+		n->vqs[i].bufs = kmalloc_array(UIO_MAXIOV,
-+					       sizeof(*n->vqs[i].bufs),
-+					       GFP_KERNEL);
-+		if (!n->vqs[i].bufs)
-+			goto err;
-+
- 		zcopy = vhost_net_zcopy_mask & (0x1 << i);
- 		if (!zcopy)
- 			continue;
-@@ -364,18 +375,18 @@ static void vhost_zerocopy_signal_used(struct vhost_net *net,
- 	int j = 0;
- 
- 	for (i = nvq->done_idx; i != nvq->upend_idx; i = (i + 1) % UIO_MAXIOV) {
--		if (vq->heads[i].len == VHOST_DMA_FAILED_LEN)
-+		if (nvq->bufs[i].in_len == VHOST_DMA_FAILED_LEN)
- 			vhost_net_tx_err(net);
--		if (VHOST_DMA_IS_DONE(vq->heads[i].len)) {
--			vq->heads[i].len = VHOST_DMA_CLEAR_LEN;
-+		if (VHOST_DMA_IS_DONE(nvq->bufs[i].in_len)) {
-+			nvq->bufs[i].in_len = VHOST_DMA_CLEAR_LEN;
- 			++j;
- 		} else
- 			break;
- 	}
- 	while (j) {
- 		add = min(UIO_MAXIOV - nvq->done_idx, j);
--		vhost_add_used_and_signal_n(vq->dev, vq,
--					    &vq->heads[nvq->done_idx], add);
-+		vhost_put_used_n_bufs(vq, &nvq->bufs[nvq->done_idx], add);
-+		vhost_signal(vq->dev, vq);
- 		nvq->done_idx = (nvq->done_idx + add) % UIO_MAXIOV;
- 		j -= add;
- 	}
-@@ -390,7 +401,7 @@ static void vhost_zerocopy_callback(struct ubuf_info *ubuf, bool success)
- 	rcu_read_lock_bh();
- 
- 	/* set len to mark this desc buffers done DMA */
--	nvq->vq.heads[ubuf->desc].in_len = success ?
-+	nvq->bufs[ubuf->desc].in_len = success ?
- 		VHOST_DMA_DONE_LEN : VHOST_DMA_FAILED_LEN;
- 	cnt = vhost_net_ubuf_put(ubufs);
- 
-@@ -452,7 +463,8 @@ static void vhost_net_signal_used(struct vhost_net_virtqueue *nvq)
- 	if (!nvq->done_idx)
- 		return;
- 
--	vhost_add_used_and_signal_n(dev, vq, vq->heads, nvq->done_idx);
-+	vhost_put_used_n_bufs(vq, nvq->bufs, nvq->done_idx);
-+	vhost_signal(dev, vq);
- 	nvq->done_idx = 0;
- }
- 
-@@ -558,6 +570,7 @@ static void vhost_net_busy_poll(struct vhost_net *net,
- 
- static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
- 				    struct vhost_net_virtqueue *tnvq,
-+				    struct vhost_buf *buf,
- 				    unsigned int *out_num, unsigned int *in_num,
- 				    struct msghdr *msghdr, bool *busyloop_intr)
+diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+index 02806d6f84ef..251fd2bf74a3 100644
+--- a/drivers/vhost/test.c
++++ b/drivers/vhost/test.c
+@@ -44,9 +44,10 @@ static void handle_vq(struct vhost_test *n)
  {
-@@ -565,10 +578,10 @@ static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
- 	struct vhost_virtqueue *rvq = &rnvq->vq;
- 	struct vhost_virtqueue *tvq = &tnvq->vq;
- 
--	int r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
--				  out_num, in_num, NULL, NULL);
-+	int r = vhost_get_avail_buf(tvq, buf, tvq->iov, ARRAY_SIZE(tvq->iov),
-+				    out_num, in_num, NULL, NULL);
- 
--	if (r == tvq->num && tvq->busyloop_timeout) {
-+	if (!r && tvq->busyloop_timeout) {
- 		/* Flush batched packets first */
- 		if (!vhost_sock_zcopy(vhost_vq_get_backend(tvq)))
- 			vhost_tx_batch(net, tnvq,
-@@ -577,8 +590,8 @@ static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
- 
- 		vhost_net_busy_poll(net, rvq, tvq, busyloop_intr, false);
- 
--		r = vhost_get_vq_desc(tvq, tvq->iov, ARRAY_SIZE(tvq->iov),
--				      out_num, in_num, NULL, NULL);
-+		r = vhost_get_avail_buf(tvq, buf, tvq->iov, ARRAY_SIZE(tvq->iov),
-+					out_num, in_num, NULL, NULL);
- 	}
- 
- 	return r;
-@@ -607,6 +620,7 @@ static size_t init_iov_iter(struct vhost_virtqueue *vq, struct iov_iter *iter,
- 
- static int get_tx_bufs(struct vhost_net *net,
- 		       struct vhost_net_virtqueue *nvq,
-+		       struct vhost_buf *buf,
- 		       struct msghdr *msg,
- 		       unsigned int *out, unsigned int *in,
- 		       size_t *len, bool *busyloop_intr)
-@@ -614,9 +628,9 @@ static int get_tx_bufs(struct vhost_net *net,
- 	struct vhost_virtqueue *vq = &nvq->vq;
- 	int ret;
- 
--	ret = vhost_net_tx_get_vq_desc(net, nvq, out, in, msg, busyloop_intr);
-+	ret = vhost_net_tx_get_vq_desc(net, nvq, buf, out, in, msg, busyloop_intr);
- 
--	if (ret < 0 || ret == vq->num)
-+	if (ret <= 0)
- 		return ret;
- 
- 	if (*in) {
-@@ -761,7 +775,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 	struct vhost_net_virtqueue *nvq = &net->vqs[VHOST_NET_VQ_TX];
- 	struct vhost_virtqueue *vq = &nvq->vq;
+ 	struct vhost_virtqueue *vq = &n->vqs[VHOST_TEST_VQ];
  	unsigned out, in;
 -	int head;
 +	int ret;
- 	struct msghdr msg = {
- 		.msg_name = NULL,
- 		.msg_namelen = 0,
-@@ -773,6 +787,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 	int err;
- 	int sent_pkts = 0;
- 	bool sock_can_batch = (sock->sk->sk_sndbuf == INT_MAX);
+ 	size_t len, total_len = 0;
+ 	void *private;
 +	struct vhost_buf buf;
  
- 	do {
- 		bool busyloop_intr = false;
-@@ -780,13 +795,13 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 		if (nvq->done_idx == VHOST_NET_BATCH)
- 			vhost_tx_batch(net, nvq, sock, &msg);
+ 	mutex_lock(&vq->mutex);
+ 	private = vhost_vq_get_backend(vq);
+@@ -58,15 +59,15 @@ static void handle_vq(struct vhost_test *n)
+ 	vhost_disable_notify(&n->dev, vq);
  
--		head = get_tx_bufs(net, nvq, &msg, &out, &in, &len,
--				   &busyloop_intr);
-+		ret = get_tx_bufs(net, nvq, &buf, &msg, &out, &in, &len,
-+				  &busyloop_intr);
+ 	for (;;) {
+-		head = vhost_get_vq_desc(vq, vq->iov,
+-					 ARRAY_SIZE(vq->iov),
+-					 &out, &in,
+-					 NULL, NULL);
++		ret = vhost_get_avail_buf(vq, vq->iov, &buf,
++					  ARRAY_SIZE(vq->iov),
++					  &out, &in,
++					  NULL, NULL);
  		/* On error, stop handling until the next kick. */
 -		if (unlikely(head < 0))
 +		if (unlikely(ret < 0))
@@ -276,271 +121,26 @@ index ff594eec8ae3..830fe84912a5 100644
  		/* Nothing new?  Wait for eventfd to tell us they refilled. */
 -		if (head == vq->num) {
 +		if (!ret) {
- 			if (unlikely(busyloop_intr)) {
- 				vhost_poll_queue(&vq->poll);
- 			} else if (unlikely(vhost_enable_notify(&net->dev,
-@@ -808,7 +823,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 				goto done;
- 			} else if (unlikely(err != -ENOSPC)) {
- 				vhost_tx_batch(net, nvq, sock, &msg);
--				vhost_discard_vq_desc(vq, 1);
-+				vhost_discard_avail_bufs(vq, &buf, 1);
- 				vhost_net_enable_vq(net, vq);
- 				break;
- 			}
-@@ -829,7 +844,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 		/* TODO: Check specific error and bomb out unless ENOBUFS? */
- 		err = sock->ops->sendmsg(sock, &msg, len);
- 		if (unlikely(err < 0)) {
--			vhost_discard_vq_desc(vq, 1);
-+			vhost_discard_avail_bufs(vq, &buf, 1);
- 			vhost_net_enable_vq(net, vq);
+ 			if (unlikely(vhost_enable_notify(&n->dev, vq))) {
+ 				vhost_disable_notify(&n->dev, vq);
+ 				continue;
+@@ -78,13 +79,14 @@ static void handle_vq(struct vhost_test *n)
+ 			       "out %d, int %d\n", out, in);
  			break;
  		}
-@@ -837,8 +852,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
- 			pr_debug("Truncated TX packet: len %d != %zd\n",
- 				 err, len);
- done:
--		vq->heads[nvq->done_idx].id = cpu_to_vhost32(vq, head);
--		vq->heads[nvq->done_idx].len = 0;
-+		nvq->bufs[nvq->done_idx] = buf;
- 		++nvq->done_idx;
- 	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
- 
-@@ -850,7 +864,7 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
- 	struct vhost_net_virtqueue *nvq = &net->vqs[VHOST_NET_VQ_TX];
- 	struct vhost_virtqueue *vq = &nvq->vq;
- 	unsigned out, in;
--	int head;
-+	int ret;
- 	struct msghdr msg = {
- 		.msg_name = NULL,
- 		.msg_namelen = 0,
-@@ -864,6 +878,7 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
- 	struct vhost_net_ubuf_ref *uninitialized_var(ubufs);
- 	bool zcopy_used;
- 	int sent_pkts = 0;
-+	struct vhost_buf buf;
- 
- 	do {
- 		bool busyloop_intr;
-@@ -872,13 +887,13 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
- 		vhost_zerocopy_signal_used(net, vq);
- 
- 		busyloop_intr = false;
--		head = get_tx_bufs(net, nvq, &msg, &out, &in, &len,
--				   &busyloop_intr);
-+		ret = get_tx_bufs(net, nvq, &buf, &msg, &out, &in, &len,
-+				  &busyloop_intr);
- 		/* On error, stop handling until the next kick. */
--		if (unlikely(head < 0))
-+		if (unlikely(ret < 0))
- 			break;
- 		/* Nothing new?  Wait for eventfd to tell us they refilled. */
--		if (head == vq->num) {
-+		if (!ret) {
- 			if (unlikely(busyloop_intr)) {
- 				vhost_poll_queue(&vq->poll);
- 			} else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
-@@ -897,8 +912,8 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
- 			struct ubuf_info *ubuf;
- 			ubuf = nvq->ubuf_info + nvq->upend_idx;
- 
--			vq->heads[nvq->upend_idx].id = cpu_to_vhost32(vq, head);
--			vq->heads[nvq->upend_idx].len = VHOST_DMA_IN_PROGRESS;
-+			nvq->bufs[nvq->upend_idx] = buf;
-+			nvq->bufs[nvq->upend_idx].in_len = VHOST_DMA_IN_PROGRESS;
- 			ubuf->callback = vhost_zerocopy_callback;
- 			ubuf->ctx = nvq->ubufs;
- 			ubuf->desc = nvq->upend_idx;
-@@ -930,17 +945,19 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
- 				nvq->upend_idx = ((unsigned)nvq->upend_idx - 1)
- 					% UIO_MAXIOV;
- 			}
--			vhost_discard_vq_desc(vq, 1);
-+			vhost_discard_avail_bufs(vq, &buf, 1);
- 			vhost_net_enable_vq(net, vq);
+-		len = iov_length(vq->iov, out);
++		len = buf.out_len;
+ 		/* Sanity check */
+ 		if (!len) {
+ 			vq_err(vq, "Unexpected 0 len for TX\n");
  			break;
  		}
- 		if (err != len)
- 			pr_debug("Truncated TX packet: "
- 				 " len %d != %zd\n", err, len);
--		if (!zcopy_used)
--			vhost_add_used_and_signal(&net->dev, vq, head, 0);
--		else
-+		if (!zcopy_used) {
-+			vhost_put_used_buf(vq, &buf);
-+			vhost_signal(&net->dev, vq);
-+		} else {
- 			vhost_zerocopy_signal_used(net, vq);
-+		}
- 		vhost_net_tx_packet(net);
- 	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
- }
-@@ -1004,7 +1021,7 @@ static int vhost_net_rx_peek_head_len(struct vhost_net *net, struct sock *sk,
- 	int len = peek_head_len(rnvq, sk);
- 
- 	if (!len && rvq->busyloop_timeout) {
--		/* Flush batched heads first */
-+		/* Flush batched bufs first */
- 		vhost_net_signal_used(rnvq);
- 		/* Both tx vq and rx socket were polled here */
- 		vhost_net_busy_poll(net, rvq, tvq, busyloop_intr, true);
-@@ -1022,11 +1039,11 @@ static int vhost_net_rx_peek_head_len(struct vhost_net *net, struct sock *sk,
-  * @iovcount	- returned count of io vectors we fill
-  * @log		- vhost log
-  * @log_num	- log offset
-- * @quota       - headcount quota, 1 for big buffer
-- *	returns number of buffer heads allocated, negative on error
-+ * @quota       - bufcount quota, 1 for big buffer
-+ *	returns number of buffers allocated, negative on error
-  */
- static int get_rx_bufs(struct vhost_virtqueue *vq,
--		       struct vring_used_elem *heads,
-+		       struct vhost_buf *bufs,
- 		       int datalen,
- 		       unsigned *iovcount,
- 		       struct vhost_log *log,
-@@ -1035,30 +1052,24 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
- {
- 	unsigned int out, in;
- 	int seg = 0;
--	int headcount = 0;
--	unsigned d;
-+	int bufcount = 0;
- 	int r, nlogs = 0;
- 	/* len is always initialized before use since we are always called with
- 	 * datalen > 0.
- 	 */
- 	u32 uninitialized_var(len);
- 
--	while (datalen > 0 && headcount < quota) {
-+	while (datalen > 0 && bufcount < quota) {
- 		if (unlikely(seg >= UIO_MAXIOV)) {
- 			r = -ENOBUFS;
- 			goto err;
- 		}
--		r = vhost_get_vq_desc(vq, vq->iov + seg,
--				      ARRAY_SIZE(vq->iov) - seg, &out,
--				      &in, log, log_num);
--		if (unlikely(r < 0))
-+		r = vhost_get_avail_buf(vq, bufs + bufcount, vq->iov + seg,
-+					ARRAY_SIZE(vq->iov) - seg, &out,
-+					&in, log, log_num);
-+		if (unlikely(r <= 0))
- 			goto err;
- 
--		d = r;
--		if (d == vq->num) {
--			r = 0;
--			goto err;
--		}
- 		if (unlikely(out || in <= 0)) {
- 			vq_err(vq, "unexpected descriptor format for RX: "
- 				"out %d, in %d\n", out, in);
-@@ -1069,14 +1080,12 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
- 			nlogs += *log_num;
- 			log += *log_num;
- 		}
--		heads[headcount].id = cpu_to_vhost32(vq, d);
- 		len = iov_length(vq->iov + seg, in);
--		heads[headcount].len = cpu_to_vhost32(vq, len);
- 		datalen -= len;
--		++headcount;
-+		++bufcount;
- 		seg += in;
- 	}
--	heads[headcount - 1].len = cpu_to_vhost32(vq, len + datalen);
-+	bufs[bufcount - 1].in_len = len + datalen;
- 	*iovcount = seg;
- 	if (unlikely(log))
- 		*log_num = nlogs;
-@@ -1086,9 +1095,9 @@ static int get_rx_bufs(struct vhost_virtqueue *vq,
- 		r = UIO_MAXIOV + 1;
- 		goto err;
- 	}
--	return headcount;
-+	return bufcount;
- err:
--	vhost_discard_vq_desc(vq, headcount);
-+	vhost_discard_avail_bufs(vq, bufs, bufcount);
- 	return r;
- }
- 
-@@ -1113,7 +1122,7 @@ static void handle_rx(struct vhost_net *net)
- 	};
- 	size_t total_len = 0;
- 	int err, mergeable;
--	s16 headcount;
-+	int bufcount;
- 	size_t vhost_hlen, sock_hlen;
- 	size_t vhost_len, sock_len;
- 	bool busyloop_intr = false;
-@@ -1147,14 +1156,14 @@ static void handle_rx(struct vhost_net *net)
+-		vhost_add_used_and_signal(&n->dev, vq, head, 0);
++		vhost_put_used_buf(vq, &buf);
++		vhost_signal(&n->dev, vq);
+ 		total_len += len;
+ 		if (unlikely(vhost_exceeds_weight(vq, 0, total_len)))
  			break;
- 		sock_len += sock_hlen;
- 		vhost_len = sock_len + vhost_hlen;
--		headcount = get_rx_bufs(vq, vq->heads + nvq->done_idx,
--					vhost_len, &in, vq_log, &log,
--					likely(mergeable) ? UIO_MAXIOV : 1);
-+		bufcount = get_rx_bufs(vq, nvq->bufs + nvq->done_idx,
-+				       vhost_len, &in, vq_log, &log,
-+				       likely(mergeable) ? UIO_MAXIOV : 1);
- 		/* On error, stop handling until the next kick. */
--		if (unlikely(headcount < 0))
-+		if (unlikely(bufcount < 0))
- 			goto out;
- 		/* OK, now we need to know about added descriptors. */
--		if (!headcount) {
-+		if (!bufcount) {
- 			if (unlikely(busyloop_intr)) {
- 				vhost_poll_queue(&vq->poll);
- 			} else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
-@@ -1171,7 +1180,7 @@ static void handle_rx(struct vhost_net *net)
- 		if (nvq->rx_ring)
- 			msg.msg_control = vhost_net_buf_consume(&nvq->rxq);
- 		/* On overrun, truncate and discard */
--		if (unlikely(headcount > UIO_MAXIOV)) {
-+		if (unlikely(bufcount > UIO_MAXIOV)) {
- 			iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
- 			err = sock->ops->recvmsg(sock, &msg,
- 						 1, MSG_DONTWAIT | MSG_TRUNC);
-@@ -1195,7 +1204,7 @@ static void handle_rx(struct vhost_net *net)
- 		if (unlikely(err != sock_len)) {
- 			pr_debug("Discarded rx packet: "
- 				 " len %d, expected %zd\n", err, sock_len);
--			vhost_discard_vq_desc(vq, headcount);
-+			vhost_discard_avail_bufs(vq, nvq->bufs + nvq->done_idx, bufcount);
- 			continue;
- 		}
- 		/* Supply virtio_net_hdr if VHOST_NET_F_VIRTIO_NET_HDR */
-@@ -1214,15 +1223,15 @@ static void handle_rx(struct vhost_net *net)
- 		}
- 		/* TODO: Should check and handle checksum. */
- 
--		num_buffers = cpu_to_vhost16(vq, headcount);
-+		num_buffers = cpu_to_vhost16(vq, bufcount);
- 		if (likely(mergeable) &&
- 		    copy_to_iter(&num_buffers, sizeof num_buffers,
- 				 &fixup) != sizeof num_buffers) {
- 			vq_err(vq, "Failed num_buffers write");
--			vhost_discard_vq_desc(vq, headcount);
-+			vhost_discard_avail_bufs(vq, nvq->bufs + nvq->done_idx, bufcount);
- 			goto out;
- 		}
--		nvq->done_idx += headcount;
-+		nvq->done_idx += bufcount;
- 		if (nvq->done_idx > VHOST_NET_BATCH)
- 			vhost_net_signal_used(nvq);
- 		if (unlikely(vq_log))
-@@ -1314,6 +1323,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 	n->vqs[VHOST_NET_VQ_TX].vq.handle_kick = handle_tx_kick;
- 	n->vqs[VHOST_NET_VQ_RX].vq.handle_kick = handle_rx_kick;
- 	for (i = 0; i < VHOST_NET_VQ_MAX; i++) {
-+		n->vqs[i].bufs = NULL;
- 		n->vqs[i].ubufs = NULL;
- 		n->vqs[i].ubuf_info = NULL;
- 		n->vqs[i].upend_idx = 0;
 -- 
 MST
 
