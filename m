@@ -2,199 +2,113 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 03:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 03:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC35D2076D
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 03:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591500126;
-	bh=ouJh7ctrFQIX2AaifD+Bpxmo4jwPHs0v28YTqMiM5Bg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=t6W6sFkV/1YvJHJO9TyH7goXRdXnBRO1ndsdj2vJOTsf1Yfh928YpUr6PisY5iDeu
-	 ySmxjSysIBd1bauuoTF/FyVlKwegDAK7FELxKNQi5afhpCFjciBDBqVkBL1/cQsCDj
-	 uZEAPO/kL5HJPK7xtNbEAiN5H0szdzAV4xD/GVYY=
+	by mail.kernel.org (Postfix) with ESMTP id A0F3B20723
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 03:58:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MeQZD4uZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgFGDWG (ORCPT
+        id S1726288AbgFGD6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 23:22:06 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:32272 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgFGDWF (ORCPT
+        Sat, 6 Jun 2020 23:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgFGD6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 23:22:05 -0400
-Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 0573L2JF032694;
-        Sun, 7 Jun 2020 12:21:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 0573L2JF032694
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1591500063;
-        bh=RZSBo4uUs11Af4WbcUObWOlCtSGazVl7ad8S22WoF3c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KgYKiWqgQ/g7oz7cNrX5ZywlcaqUaJecOmaqHEU1+3uCRn/mw+BlNrLV0NfmzFrKz
-         en0WhehQQfS4oHg+4gMyZ91YMyLesEqbNZ5fwqOha8PFVM2LOtqsOZ8ejPsRnNGv8B
-         umXrYMvFZJgh4140UqrRZd3W/xxLnPOkxD+b0i4U2ZioM34GOgUBPcs2kzX8xgbGpl
-         SMpvlenaNJvd984HWiJYB5vI+mnx0Ec9vh6i9NMWfjdmFuC0drL2kn0tkVvHhrKuWS
-         eAH+52B/ggBI1qRSdDBgPJlzS8oRN3IJTq6lDmvzbKH3xYG5+S9P5p11fFWEaCu7vi
-         ODOjVs4MSWx4w==
-X-Nifty-SrcIP: [126.90.202.47]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: [PATCH] samples: binderfs: really compile this sample and fix build issues
-Date:   Sun,  7 Jun 2020 12:20:53 +0900
-Message-Id: <20200607032053.145302-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Sat, 6 Jun 2020 23:58:53 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D732C08C5C2;
+        Sat,  6 Jun 2020 20:58:53 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id e11so8474797ilr.4;
+        Sat, 06 Jun 2020 20:58:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X/cS6f9J812r4tB7KJdDZrfq1C/ybFEsRANYeNySp4k=;
+        b=MeQZD4uZ6vTmE3PAchgTkj7gmhhxkP+W+zxoGusUUgTLlesbNdh4/X7eEp8TGdIVZ/
+         b6kNFbVPfH2yf7VphObnxKbWCMGhRXHqET421pu8NcVhYkSYUN5E6i+t8/KE2La5XaLq
+         0Al1/sqz/8FPrBxBPZrTxSm4YXb0YmkFEp0WE4kDyKIvaY7hoZHa+lTqTmhr0K4fe5R2
+         zXr26adUiDnkUDh+kLLJklSI31mW937Ian6FnLkOitb8So2IpSjnqmD23ilCSpKOTuUk
+         WxmFNPXPEmSM2Vp5FbTAuqWO1h1/Iv/xWaXkcwypq3FNucej/Jm1DDI8sUn2FsZjBzZu
+         oM7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X/cS6f9J812r4tB7KJdDZrfq1C/ybFEsRANYeNySp4k=;
+        b=bKLYp274+22mly58bhjJ/mZKwYZMA+QC8hdI221PzzfUJyA9ahsT+tZKX3WNQgXFXE
+         pPj6sYFJ+WdAcmRBguL2yQFM95zbgU3k5RWcF/Sfi4N6x1KUhV6KQciYRGuOVQ5+lh2Z
+         fYg5w5nNNpRRTtRDtOCu8w8pmpDS+1ZK72iQsh7TBFNTanrNJHPo8OgeH5v+qaj/w/T0
+         1rgENZUrix7BH1nVImIF7y6ln+ITM0p1OX3oWoGbC7djDis61BWBbu/3W+hqA1G/xaN9
+         83fqtJCPS3EZ0PGcXnWn2dO2M5MLtXNLoHeUAdq8r7aNbinuPSK6EB4XhkW58dnKq/UZ
+         JNnA==
+X-Gm-Message-State: AOAM5306BrwZ6yaTJVWVApdDJBdnHDpyKaPXqo4aqKLXVW3tYY/2kH9f
+        zJ5hXLy72rRGXCTVIs+z6/c2vTy2+8Jv7quhFRA=
+X-Google-Smtp-Source: ABdhPJzMi/3wPZFwa2oAlzgvtoQfZz316Ivh4jYLtc5QdAG+EJe0AfZMzK02CXZySv8brt+JFKAQps/8eFWcCfggxxg=
+X-Received: by 2002:a92:aa07:: with SMTP id j7mr16305228ili.40.1591502331972;
+ Sat, 06 Jun 2020 20:58:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200316124929.GA389@syed.domain.name> <20200318020506.GA45571@icarus>
+ <20200322175831.74e10aa7@archlinux> <CACG_h5qctM0S2buQHHNnJ_qVY6YY2wYruj9aTKH9RiJ=9_LfoQ@mail.gmail.com>
+ <20200404150633.2421decd@archlinux>
+In-Reply-To: <20200404150633.2421decd@archlinux>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Sun, 7 Jun 2020 09:28:40 +0530
+Message-ID: <CACG_h5o=V_y33krqojmANnqG+Uf7FJmOVmkY-MGZ+zLJR+Q2YQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] counter: 104-quad-8: Add lock guards - generic interface
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even after commit c624adc9cb6e ("samples: fix binderfs sample"), this
-sample is never compiled.
+On Sat, Apr 4, 2020 at 7:36 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Mon, 30 Mar 2020 23:54:32 +0530
+> Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+>
+> > Hi Jonathan
+> >
+> > >Looks good.  I'm not sure right now which tree I'll take this through
+> > >(depends on whether it looks like we'll get an rc8 and hence I can sneak
+> > >it in for the coming merge window or not).
+> > >
+> > >So poke me if I seem to have forgotten to apply this in a week or so.
+> >
+> > Gentle Reminder.
+> > Thanks !
+> > Syed Nayyar Waris
+>
+> Thanks.  I've applied it to the fixes-togreg branch of iio.git which will go
+> upstream after the merge window closes.
+>
+> Thanks,
+>
+> Jonathan
+>
 
-'hostprogs' teaches Kbuild that this is a host program, but not enough
-to order to compile it. You must add it to 'always-y' to really compile
-it.
+HI Jonathan,
 
-Since this sample has never been compiled in upstream, various issues
-are left unnoticed.
+I think only the patch [1/3] has been applied. Patches [2/3] and [3/3] have not.
 
-[1] compilers without <linux/android/binderfs.h> are still widely used
+The three patches were:
+https://lore.kernel.org/patchwork/patch/1210135/
+https://lore.kernel.org/patchwork/patch/1210136/
+https://lore.kernel.org/patchwork/patch/1210137/
 
-<linux/android/binderfs.h> is only available since commit c13295ad219d
-("binderfs: rename header to binderfs.h"), i.e., Linux 5.0
+The last 2 patches need to be applied, I think.
 
-If your compiler is based on UAPI headers older than Linux 5.0, you
-will see the following error:
-
-  samples/binderfs/binderfs_example.c:16:10: fatal error: linux/android/binderfs.h: No such file or directory
-   #include <linux/android/binderfs.h>
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-  compilation terminated.
-
-You cannot rely on compilers to have such a new header.
-
-The common approach is to install UAPI headers of this kernel into
-usr/include, and then add it to the header include path.
-
-I added 'depends on HEADERS_INSTALL' in Kconfig, and '-I usr/include'
-compiler flag in Makefile.
-
-[2] compile the sample for target architecture
-
-Since headers_install works for the target architecture, only the native
-build was able to build sample code that requires '-I usr/include'.
-
-Commit 7f3a59db274c ("kbuild: add infrastructure to build userspace
-programs") added the new syntax 'userprogs' to compile user-space
-programs for the target architecture.
-
-Use it, and 'ifndef CROSS_COMPILE' will go away.
-
-I added 'depends on CC_CAN_LINK' because $(CC) is not necessarily capable
-of linking user-space programs.
-
-[3] use subdir-y to descend into samples/binderfs/
-
-Since this directory does not contain any kernel-space code, it has no
-point to generate built-in.a or modules.order.
-
-Replace obj-$(CONFIG_...) with subdir-$(CONFIG_...).
-
-[4] -Wunused-variable warning
-
-If I compile this, I see the following warning.
-
-  samples/binderfs/binderfs_example.c: In function 'main':
-  samples/binderfs/binderfs_example.c:21:9: warning: unused variable 'len' [-Wunused-variable]
-     21 |  size_t len;
-        |         ^~~
-
-I removed the unused 'len'.
-
-[5] CONFIG_ANDROID_BINDERFS is not required
-
-Since this is a user-space standalone program, it is independent of
-the kernel configuration.
-
-Remove 'depends on ANDROID_BINDERFS'.
-
-Fixes: 9762dc1432e1 ("samples: add binderfs sample program")
-Fixes: c624adc9cb6e ("samples: fix binderfs sample")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- samples/Kconfig                     | 2 +-
- samples/Makefile                    | 2 +-
- samples/binderfs/Makefile           | 9 ++++-----
- samples/binderfs/binderfs_example.c | 1 -
- 4 files changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/samples/Kconfig b/samples/Kconfig
-index 0cbb6146f3cf..953abbdebf7b 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -185,7 +185,7 @@ config SAMPLE_VFIO_MDEV_MBOCHS
- 
- config SAMPLE_ANDROID_BINDERFS
- 	bool "Build Android binderfs example"
--	depends on ANDROID_BINDERFS
-+	depends on CC_CAN_LINK && HEADERS_INSTALL
- 	help
- 	  Builds a sample program to illustrate the use of the Android binderfs
- 	  filesystem.
-diff --git a/samples/Makefile b/samples/Makefile
-index 29c66aadd954..4029d207cebb 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for Linux samples code
- 
- subdir-$(CONFIG_SAMPLE_AUXDISPLAY)	+= auxdisplay
--obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
-+subdir-$(CONFIG_SAMPLE_ANDROID_BINDERFS) += binderfs
- obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
- obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
- subdir-$(CONFIG_SAMPLE_HIDRAW)		+= hidraw
-diff --git a/samples/binderfs/Makefile b/samples/binderfs/Makefile
-index a3ac5476338a..989e4badaee2 100644
---- a/samples/binderfs/Makefile
-+++ b/samples/binderfs/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--ifndef CROSS_COMPILE
--ifdef CONFIG_SAMPLE_ANDROID_BINDERFS
--hostprogs := binderfs_example
--endif
--endif
-+userprogs := binderfs_example
-+always-y := $(userprogs)
-+
-+userccflags += -I usr/include
-diff --git a/samples/binderfs/binderfs_example.c b/samples/binderfs/binderfs_example.c
-index 5bbd2ebc0aea..0fd92cdda460 100644
---- a/samples/binderfs/binderfs_example.c
-+++ b/samples/binderfs/binderfs_example.c
-@@ -18,7 +18,6 @@
- int main(int argc, char *argv[])
- {
- 	int fd, ret, saved_errno;
--	size_t len;
- 	struct binderfs_device device = { 0 };
- 
- 	ret = unshare(CLONE_NEWNS);
--- 
-2.25.1
-
+Regards
+Syed Nayyar Waris
