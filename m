@@ -2,160 +2,101 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5003C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2D720760
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591564671;
-	bh=wEivynlQPef/VO9ow2cpwEO2SaJr8PZ0KsNxmupY4ow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iHJQ87cfqiP0gSNwwr8KBRBzMLAZWW+vok/Fsq9cViMlc+swDExQ09Z1l0SNkKDu8
-	 F6WIzWs+LW0dT2BYpGQgMIzw18XqgRcM7aT9SjdOasFwDC4yXoFd4FmeYbLnpPAg7a
-	 AhcxfwGCV7Hl5g4SHPeE7+KACx6DNRKZfPrJgR14=
+	by mail.kernel.org (Postfix) with ESMTP id B66372073B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:21:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7A2sf3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgFGVRu (ORCPT
+        id S1727804AbgFGVV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 17:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgFGVRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 17:17:49 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AA602067B;
-        Sun,  7 Jun 2020 21:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591564668;
-        bh=wEivynlQPef/VO9ow2cpwEO2SaJr8PZ0KsNxmupY4ow=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZoH/4EUI9REPKk0bBji19GyKSCDMvacGfoanlTwN0pj+3YTM0gblFj4c9cHA2Od+4
-         /dZfB+D0a+nb4P4Npvv5HLrdPKof+oT2cMsZCK2Gj6OhDG/dyJPk4GmPmlDSB6cn3e
-         ZkGERTwXJIhckZoQZR2xdDghrPONm4k3e7tsJbGc=
-Date:   Sun, 7 Jun 2020 14:17:48 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH] f2fs: allow writeback on error status filesystem
-Message-ID: <20200607211748.GA26785@google.com>
-References: <20200605085453.45717-1-yuchao0@huawei.com>
+        Sun, 7 Jun 2020 17:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgFGVV2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 17:21:28 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25776C08C5C3
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 14:21:28 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n11so15463199qkn.8
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 14:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1cQSDj+7so0T7k1BgVBgs5wD+MuPzNckE4uP70HqryA=;
+        b=h7A2sf3NAFTKXBS9IbbBTbxpix/3Z+143NnMpVxGCJwoaqM1q8hQkqbA4rnMHSIzDO
+         h6c64ZVJKN8EILdtQ67iu+lXtiaAd3/H/M6wmyxlkprIBa12rxSUKEIAzajVDZo1qtwa
+         oGGc60tfPpdosZKNA7K80bQNCRuWXf3Dd8PH6h+UqFvc83bcwNF4Esllnj2asBC2iQfF
+         +pRe8Vj523Rjmo0XYvcvpLjkACtJJndqtpOSnbmwPuVzL9e/RirY7QJaBIVUYRL34EJS
+         JR1C+xdJcECs2fu9fcEjb1ckJdene5PpU0MY8moBDJkYevOeU+pbty2zgF3GPW6NGjuM
+         kqjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1cQSDj+7so0T7k1BgVBgs5wD+MuPzNckE4uP70HqryA=;
+        b=LxtSm9shcFldhh8lTLocz5tQpb9HyeOXBtL+lgkGZrM+AL4NX9wQ4oYjgLiQz9pePU
+         D3SDV+mPIxS72ZodbJq+4uR7nuQO2rAMRh0nAQWD4S+061vKGb3/rGfai0wd9K7r8oM/
+         gSb4Sei3Ov6EMOh5W7kIFy7A7iDeUpTsS61p96/0ujF0FRAnjb2Xv6I2TfOOKWPaDIkD
+         po8rYGruEfeq7TEQTUhipdq3nglvosEIiuWdHrA7a7BkkB1EzSFRPzIfsy9QLhjFz2vF
+         nlRIVIuolHlxTPFbLDXTT8pGciJfXFIVHrE6jYpsY21cMjxg+mBvt4tpr9YNZo7yinQz
+         z9dw==
+X-Gm-Message-State: AOAM531Gx4Z8XQO3Z689CnJsO7z7rjOvejrA/b/5JueFZ8o6sNUjPbvo
+        xb7eP4WFXGPGfqrZ80fLqQ==
+X-Google-Smtp-Source: ABdhPJw28PBaLu+3wXhVyEXsCdhxptWAexRVhvPQRHuom5rxKCtjuttJ1zq1/6pTjbui1hXdkXSI0A==
+X-Received: by 2002:a37:9cb:: with SMTP id 194mr19222688qkj.456.1591564887161;
+        Sun, 07 Jun 2020 14:21:27 -0700 (PDT)
+Received: from localhost.localdomain ([142.119.96.191])
+        by smtp.googlemail.com with ESMTPSA id g9sm5786880qtq.66.2020.06.07.14.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 14:21:26 -0700 (PDT)
+From:   Keyur Patel <iamkeyur96@gmail.com>
+Cc:     Keyur Patel <iamkeyur96@gmail.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: ocfs2: fix spelling mistake
+Date:   Sun,  7 Jun 2020 17:21:14 -0400
+Message-Id: <20200607212115.99278-1-iamkeyur96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605085453.45717-1-yuchao0@huawei.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05, Chao Yu wrote:
->     71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
->             |
->              --71.06%--wb_writeback
->                        |
->                        |--68.96%--__writeback_inodes_wb
->                        |          |
->                        |           --68.95%--writeback_sb_inodes
->                        |                     |
->                        |                     |--65.08%--__writeback_single_inode
->                        |                     |          |
->                        |                     |           --64.35%--do_writepages
->                        |                     |                     |
->                        |                     |                     |--59.83%--f2fs_write_node_pages
->                        |                     |                     |          |
->                        |                     |                     |           --59.74%--f2fs_sync_node_pages
->                        |                     |                     |                     |
->                        |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
->                        |                     |                     |                     |          |
->                        |                     |                     |                     |           --27.90%--find_get_pages_range_tag
-> 
-> If filesystem was injected w/ checkpoint errror, before umount, kworker
-> will always hold one core in order to writeback a large number of node
-> pages, that looks not reasonable, to avoid that, we can allow data/node
-> write in such case, since we can force all data/node writes with OPU mode,
-> and clear recovery flag on node, and checkpoint is not allowed as well,
-> so we don't need to worry about writeback's effect on data/node in
-> previous checkpoint, then with this way, it can decrease memory footprint
-> cost by node/data pages and avoid looping into data/node writeback
-> process.
+./ocfs2/mmap.c:65: bebongs ==> belongs
 
-This patch breaks fault injection test with filesystem corruption. Please check.
+Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
+---
+ fs/ocfs2/mmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/data.c | 19 ++++++++++++-------
->  fs/f2fs/node.c |  7 +++++--
->  2 files changed, 17 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 9d40db50cd65..2b3c846181bb 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -2519,6 +2519,8 @@ bool f2fs_should_update_outplace(struct inode *inode, struct f2fs_io_info *fio)
->  {
->  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->  
-> +	if (unlikely(f2fs_cp_error(sbi)))
-> +		return true;
->  	if (f2fs_lfs_mode(sbi))
->  		return true;
->  	if (S_ISDIR(inode->i_mode))
-> @@ -2702,13 +2704,16 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
->  	/* we should bypass data pages to proceed the kworkder jobs */
->  	if (unlikely(f2fs_cp_error(sbi))) {
->  		mapping_set_error(page->mapping, -EIO);
-> -		/*
-> -		 * don't drop any dirty dentry pages for keeping lastest
-> -		 * directory structure.
-> -		 */
-> -		if (S_ISDIR(inode->i_mode))
-> -			goto redirty_out;
-> -		goto out;
-> +
-> +		if (has_not_enough_free_secs(sbi, 0, 0)) {
-> +			/*
-> +			 * don't drop any dirty dentry pages for keeping lastest
-> +			 * directory structure.
-> +			 */
-> +			if (S_ISDIR(inode->i_mode))
-> +				goto redirty_out;
-> +			goto out;
-> +		}
->  	}
->  
->  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index 03e24df1c84f..372c04efad38 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -1527,7 +1527,10 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
->  			unlock_page(page);
->  			return 0;
->  		}
-> -		goto redirty_out;
-> +		if (has_not_enough_free_secs(sbi, 0, 0))
-> +			goto redirty_out;
-> +		set_fsync_mark(page, 0);
-> +		set_dentry_mark(page, 0);
->  	}
->  
->  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-> @@ -1568,7 +1571,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
->  		goto redirty_out;
->  	}
->  
-> -	if (atomic && !test_opt(sbi, NOBARRIER))
-> +	if (atomic && !test_opt(sbi, NOBARRIER) && !f2fs_cp_error(sbi))
->  		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
->  
->  	/* should add to global list before clearing PAGECACHE status */
-> -- 
-> 2.18.0.rc1
+diff --git a/fs/ocfs2/mmap.c b/fs/ocfs2/mmap.c
+index 3a44e461828a..39a77e903fdf 100644
+--- a/fs/ocfs2/mmap.c
++++ b/fs/ocfs2/mmap.c
+@@ -62,7 +62,7 @@ static vm_fault_t __ocfs2_page_mkwrite(struct file *file,
+ 	last_index = (size - 1) >> PAGE_SHIFT;
+ 
+ 	/*
+-	 * There are cases that lead to the page no longer bebongs to the
++	 * There are cases that lead to the page no longer belongs to the
+ 	 * mapping.
+ 	 * 1) pagecache truncates locally due to memory pressure.
+ 	 * 2) pagecache truncates when another is taking EX lock against 
+-- 
+2.26.2
+
