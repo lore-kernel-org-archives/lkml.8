@@ -2,110 +2,144 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F37C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68752C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53FD6206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A35206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZiMoy6k"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DONDXx4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgFGSZl (ORCPT
+        id S1727988AbgFGS14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 14:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52254 "EHLO
+        Sun, 7 Jun 2020 14:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbgFGSZi (ORCPT
+        with ESMTP id S1726779AbgFGS1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 14:25:38 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 015A6C061A0E;
-        Sun,  7 Jun 2020 11:25:39 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m1so7734536pgk.1;
-        Sun, 07 Jun 2020 11:25:38 -0700 (PDT)
+        Sun, 7 Jun 2020 14:27:55 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B76C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 11:27:55 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id r16so7309789qvm.6
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 11:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Ph49GcY3aIPW6rucwTefkRQZ2djxmUWpfLK/Y1wBdY=;
-        b=bZiMoy6kE8AOKBmfjDDSx3b8RSH/CoKQJ3U6FaV/6euMuTF9VfzDCIJiC6daTxsUEq
-         Xx+EI5zBYSjTyzNv8PLm1xwPM6c/NAcL8ZnfYqIIJzrnIrPjGhQEr+pDRYMdFK7eYdJC
-         HOnxKO11v4E9XtN2bTatUlr/UaYd1pq1sEfB3tS+HEYS8YnX7uPsLjQY81+2E3qkG/HZ
-         l5HTrBtE/glH6dmKbT44UnyTLRHWeYAm0xl5sheWXSAIQDXHdY0CYdCyc4BPc4yMtfmY
-         Gc0I1ztodg0No6BUZLe7aINqz3x65bTyfM9tc3vWKPUvVFWBdTjfSZyO1G8JVB75dLQE
-         zuLQ==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QmioGnH7qJDU3OT9mDHd8GSZIvVq3zAcNpAh4ZmXQXQ=;
+        b=DONDXx4kIl1CWLeuYYZotwdR/DNK0w4LSW4LZSyed98N0pJTL1+KCUMJ2ZSgA0mIW4
+         eCIGEqZr+9L50bW44bbsfAf9ugAIpc4moImHi4WPyhYfHdJBlXqdHw6jH8Jmp/a7zLbE
+         wvCHYg9/ov8KNQUqWE2zlkvE1GnltqZ/kMKMEt7gNkZc6K4jTjS0LvuePx9uzdpHxc2J
+         wYWK1+CPyTjG0S7G8d5i2gn9u232/Amylyk0oW03+led6h5mIB3F4MJfV2AiLmW8BOFa
+         28fuVnO2gIeIocWC3I5jqlzoOOd+pCzBDytw2eauHzWBdTqs6XBTYqPX8thm0rQLTqqa
+         7DzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Ph49GcY3aIPW6rucwTefkRQZ2djxmUWpfLK/Y1wBdY=;
-        b=XnEkqhVlYGlZ7tayD0I6pJmcFHQQLhpUOX7mDC+Tm+gH0VlrgTDddJCQsl2KIfE7lP
-         /yiXQrC11HjN6nCkT6h4JAksV4gLljaP6zokKzvlxCYSHHQC2/Co7OEcbbWwl7N2J3/e
-         3Ivrt3LFlEh2m1Rqx7D3iZVvkzLVl/ZCDpNyA0zf7px2eusSfLO6i5RqQ0KxFQlMsVdY
-         e90tXEpCb5hT1ck2z8gpOoZE2CzyMZ6q+/+H+p2oKW0F2gL6BMkZzqw9rqMV8ACIujGo
-         o9YcXlKfvsOp8dqDkEujMY7v5cU+VV4EmL12ztwUMOAiV3JI6rw5aogkAxXyykuCop5b
-         YSbA==
-X-Gm-Message-State: AOAM533tS4xyNRkbt4SlC1LaTc0NZEY0X9AEj3pW3Qng2MW3lTXkk/M3
-        86XOoTa967zGL53wzN3VqoS2cK/M
-X-Google-Smtp-Source: ABdhPJyR0Ptywo8mEVWAEG7PRsAnOjIpK+XM4lmTbKb4kdj9deD1RS8C3KpBLVVJ5YjWChTqJGcyBw==
-X-Received: by 2002:a63:550d:: with SMTP id j13mr5858163pgb.139.1591554338198;
-        Sun, 07 Jun 2020 11:25:38 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id o11sm6040967pjq.54.2020.06.07.11.25.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jun 2020 11:25:37 -0700 (PDT)
-Subject: Re: [RFC PATCH net-next 07/10] mlxsw: spectrum_ethtool: Add link
- extended state
-To:     Amit Cohen <amitc@mellanox.com>, netdev@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org, corbet@lwn.net,
-        jiri@mellanox.com, idosch@mellanox.com, shuah@kernel.org,
-        mkubecek@suse.cz, gustavo@embeddedor.com,
-        cforno12@linux.vnet.ibm.com, andrew@lunn.ch,
-        linux@rempel-privat.de, alexandru.ardelean@analog.com,
-        ayal@mellanox.com, petrm@mellanox.com, mlxsw@mellanox.com,
-        liuhangbin@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20200607145945.30559-1-amitc@mellanox.com>
- <20200607145945.30559-8-amitc@mellanox.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7dcb004e-7bab-3026-7863-af16c1a4d556@gmail.com>
-Date:   Sun, 7 Jun 2020 11:25:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QmioGnH7qJDU3OT9mDHd8GSZIvVq3zAcNpAh4ZmXQXQ=;
+        b=EfflaPkhjIPv18+Cm0jk16MpuA1tKMzperHIb3erJ5q6/9KnZ21dhh4klDRUqnBGEJ
+         eyLWolqmAWz7Fp9goM+Z5CqSZlf7W96v5Fc0Jf7gsCnGC5LzYlCrDAtVlu8oTGdC7fNL
+         G22zRZoUwrrCUxFSQThH3ok2M5cHm2K6rMUmLaWiRRGbLpPMr4bRNoGqs3+iJUVvBmVB
+         +8HInzmH5FqmaOdwK29s6hgJkv2Aex4o080DG2vYcd7S6XgdXYi9u/h51KVpNDvC6RNz
+         GSUdk/yTpk4bkTYg0DZd4ncDxs9S2DiBAa9Em5cAmzvthItoB3POSa0cgaf7Udzi9Md1
+         thFg==
+X-Gm-Message-State: AOAM530yeaZmMJzsunIYKuE3x3H4PtJeMzo3nAmXXRc7WmOIEV5gMeOx
+        C9hhNVmCIjrwOxSbb9AJBo7x/g==
+X-Google-Smtp-Source: ABdhPJxzVAgSN0Cs3q/FkwYmpiknOWuq5kQ37Mbx7o3xldPy74zuaHdSaiGFb+u0Mem356Cm3OhizA==
+X-Received: by 2002:ad4:5485:: with SMTP id q5mr10600649qvy.62.1591554474520;
+        Sun, 07 Jun 2020 11:27:54 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 5sm5102607qko.14.2020.06.07.11.27.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 11:27:53 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 14:27:46 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [patch V9 10/39] x86/entry: Provide helpers for execute on
+ irqstack
+Message-ID: <20200607182746.GA1361@lca.pw>
+References: <20200521200513.656533920@linutronix.de>
+ <20200521202117.763775313@linutronix.de>
+ <20200605171816.GA4259@lca.pw>
+ <20200605173622.GL3976@hirez.programming.kicks-ass.net>
+ <20200605175200.GA5393@lca.pw>
+ <87v9k3jdc6.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200607145945.30559-8-amitc@mellanox.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9k3jdc6.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/7/2020 7:59 AM, Amit Cohen wrote:
-> Implement .get_down_ext_state() as part of ethtool_ops.
-> Query link down reason from PDDR register and convert it to ethtool
-> ext_state.
+On Sun, Jun 07, 2020 at 01:59:53PM +0200, Thomas Gleixner wrote:
 > 
-> In case that more information than common ext_state is provided,
-> fill ext_substate also with the appropriate value.
+> CC:+ Alexander
 > 
-> Signed-off-by: Amit Cohen <amitc@mellanox.com>
-> Reviewed-by: Petr Machata <petrm@mellanox.com>
-> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+> Qian Cai <cai@lca.pw> writes:
+> > On Fri, Jun 05, 2020 at 07:36:22PM +0200, Peter Zijlstra wrote:
+> >> > [ 9371.959858]  asm_call_on_stack+0x12/0x20
+> >> > asm_call_on_stack at arch/x86/entry/entry_64.S:710
+> >
+> > This is one piece of call from the warning call traces that introduced
+> > by the patch which leads me to revert the commit in the first place. It
+> > may or may not be the real culprit, but just wanted to highlight it in
+> > case.
+> 
+> Oh well. The warning is a storage check in the stack depot code,
+> i.e. stack depot ran out of storage space.
+> 
+> Even if that commit causes stack traces to be larger that revert does
+> not make any sense at all and handwaving about recursions does not help
+> either. If that commit introduced a recursion then that would have worse
+> effects than triggering this warning.
+> 
+> The difference between the interrupt stack switching introduced by this
+> commit is that it generates another entry in the stack trace compared to
+> the state before it, which obviously has an effect on the storage
+> requirements in the stack depot.
 
-Is the firmware smart enough to report
-ETHTOOL_EXT_SUBSTATE_LT_KR_FRAME_LOCK_NOT_ACQUIRED only when using a *KR
-link mode for instance, or do you need to sanitize that against the
-supported/advertised mode?
--- 
-Florian
+Sorry, not meant to propose the reverting as a final solution to the
+problem, but rather a data point. My problem is that I knew so little
+about this kernel area, so I was to throw out something where I saw
+something similiar while working in other areas over the years. Of
+course, my "random" tips could be wrong.
+
+The effect is quite bad for our CI because it will disable lockdep in
+the middle of the tests which could miss regression bugs lockdep might
+find later. Anyway, I am not motivate enough to measure how much "an
+effect" is yet due to this patchset. I'll trim our .config and tests to
+hopefully not running out of the storage this early.
