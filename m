@@ -2,134 +2,188 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9181C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5881FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29E520748
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="naq53QIi"
+	by mail.kernel.org (Postfix) with ESMTP id 27C8C206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgFGNNr (ORCPT
+        id S1726631AbgFGNOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 09:13:47 -0400
-Received: from mail-eopbgr00065.outbound.protection.outlook.com ([40.107.0.65]:23777
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726534AbgFGNNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 09:13:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oIJnDsfHf0Ek8AmY+QNZ1UbKLRCY40n+DcG3fjiawCsND/bou+BnEr2WBfg381vW75Yo3irfmdXs1yD+fjDlz8sPTF4ihsXpDWwjWLrKwI7VS9MtqvM6Ni4Wg9WoG3EjIwRAIUI1Nd0ooSKW2uQLiPSm/+1N56E0JQ00Kc6wcYy6Ii5zFVtHuNpRF7hIoLUggbgmnAyqCgv6WYHWIpg+1Q2Sb7QwIS0WROEMW4Wq/OBvalSKIYUJuyX+/O/o68yLf9mdsfiTNT/Q/j0ztpE1PfjVEXgJ3N5/XkbG/Dw70RoXjS3+PAAhLIQ/nVChjMw44vb9eBSeVLsvZy/MwhODig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aiTvlEHB8omd/syWfL4oev857MsEuXHx+VT5AGdU3qA=;
- b=ZVNa6SDFuVi0WCnxMj6CQv/KNY7cEtuSTiPhjC1z5BnZnGJyw/2A3lBKWPcOXSs1mZpP0eIfGG4LBQqHxzGSjJybQodoLbr1ezxcwxe/n8cwMhfXlBsajqz3BnSXsPe74btgOHBXhmvL2D83Zbjv3WKvNee3WhLsH0erF+xT98wbG55f4B3pOMTHLRr9b7aEYL0QaYeaWa7MjTM+b0SslRG3XndZCOsMcRyDxjfGhBXfiHsbVL9PAupOL4Yx8Dvm/i5AMVbw0lJA9ta/bovHi/T4O59sSyzuOCguZnyXLuWMMl8nC27QajE+iphjQde/+pOWJtm/i9iiSQhlDQULgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aiTvlEHB8omd/syWfL4oev857MsEuXHx+VT5AGdU3qA=;
- b=naq53QIiu+w3nx5nuv24uk41+UPJecSTr5r5/FIdENkJS2rJHoHSekwgaGn23cveiRYL2lM8KJhY9ClP9DBrscwGjzc6/DiPi6gGt775aocVuKlIMuHT8x1ok68Bm0ts9QZNCY9Zyt2/VmL803+vdps3iWfxYRkLfRoDLakKNzA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=mellanox.com;
-Received: from AM0PR05MB5810.eurprd05.prod.outlook.com (2603:10a6:208:11f::18)
- by AM0PR05MB6369.eurprd05.prod.outlook.com (2603:10a6:208:148::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Sun, 7 Jun
- 2020 13:13:44 +0000
-Received: from AM0PR05MB5810.eurprd05.prod.outlook.com
- ([fe80::d05d:35af:3f2f:9110]) by AM0PR05MB5810.eurprd05.prod.outlook.com
- ([fe80::d05d:35af:3f2f:9110%5]) with mapi id 15.20.3066.023; Sun, 7 Jun 2020
- 13:13:44 +0000
-Subject: Re: [PATCH] nvme: do not call del_gendisk() on a disk that was never
- added
-To:     Niklas Cassel <niklas.cassel@wdc.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        James Smart <james.smart@broadcom.com>,
-        Israel Rukshin <israelr@mellanox.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200607114520.130756-1-niklas.cassel@wdc.com>
-From:   Max Gurtovoy <maxg@mellanox.com>
-Message-ID: <e7a92bb5-6400-34cf-393c-489ae6c6f072@mellanox.com>
-Date:   Sun, 7 Jun 2020 16:13:39 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200607114520.130756-1-niklas.cassel@wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR06CA0135.eurprd06.prod.outlook.com
- (2603:10a6:208:ab::40) To AM0PR05MB5810.eurprd05.prod.outlook.com
- (2603:10a6:208:11f::18)
+        Sun, 7 Jun 2020 09:14:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23966 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726564AbgFGNOe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 09:14:34 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 057D2Zk0174558;
+        Sun, 7 Jun 2020 09:13:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g77p9p5k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 07 Jun 2020 09:13:59 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 057DAW2Z017931;
+        Sun, 7 Jun 2020 09:13:59 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g77p9p54-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 07 Jun 2020 09:13:58 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 057DAsbJ018881;
+        Sun, 7 Jun 2020 13:13:56 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 31g2s7t7de-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 07 Jun 2020 13:13:56 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 057DDrvG61997282
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 7 Jun 2020 13:13:53 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2A7A5204E;
+        Sun,  7 Jun 2020 13:13:53 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.85.68.227])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 005BC52054;
+        Sun,  7 Jun 2020 13:13:48 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Sun, 07 Jun 2020 18:43:47 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Santosh Sivaraj <santosh@fossix.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH v11 1/6] powerpc: Document details on H_SCM_HEALTH hcall
+Date:   Sun,  7 Jun 2020 18:43:34 +0530
+Message-Id: <20200607131339.476036-2-vaibhav@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200607131339.476036-1-vaibhav@linux.ibm.com>
+References: <20200607131339.476036-1-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.0.0.3] (89.139.203.251) by AM0PR06CA0135.eurprd06.prod.outlook.com (2603:10a6:208:ab::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18 via Frontend Transport; Sun, 7 Jun 2020 13:13:42 +0000
-X-Originating-IP: [89.139.203.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 61a0c261-98a2-4a4c-7e96-08d80ae49ab4
-X-MS-TrafficTypeDiagnostic: AM0PR05MB6369:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR05MB6369E3A29024B7C8C0D31FD8B6840@AM0PR05MB6369.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 04270EF89C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Cv8cb+2GwAbkul6VbRzNsMa6V9ypduKLPByXO0IUCMIzuav6RVwJXzYQllaeP/QU91i3nLfREXLwp5rx2+lBEGXAm5saoQQPKfN5v3pD2iNYC4r5+zphmxZ/BSZE/huRhGJzV+MZOhfb2Xtu5AXEp+herHAM595z/8aP7nYburpOz4RXZ3CcAsqwVs6pyWshWWspqS5J/IwQEfpqUC6sab0NOWzgYOGikM2oDJBaTi+sp5ud/KOe8/rUsqTr6iy3NdJGlFZODUSI6tekau47uTuQkIPs77HLm/cq6sucMjdeqBVrTuD5JmCscyRutkN9PyA28wsIp5I/ghJCUOBZz6Xs2U3Re2NWoQrnfxQF+m/Br2lePdl1uekAV3OiTKXL
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB5810.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(16576012)(6636002)(110136005)(316002)(5660300002)(36756003)(66556008)(6486002)(6666004)(66946007)(2616005)(956004)(31696002)(2906002)(53546011)(52116002)(66476007)(478600001)(86362001)(83380400001)(4326008)(186003)(26005)(16526019)(8936002)(8676002)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: KQZcjapqDHs1T3EdL2sawfkM8L5I/AnVmF4mEYZ9wlXgQEzS2vqU13CKImfeRBbCgF8x2DgOsnm4I2UdOKgK2GGm24FEvs2qZDAE/EMTDK0kfyjIfCb+0TB76ILyUhpsleEqllsr9lgGWDylp+EyG6xUq0zY1dJ4T775yGMF/cPGFT7qXo0d3OK7AcBixrFRu0t0MFpQwXKziuXh8yW981r+LJFa4a1h3nkFGYGQljKDT5/0w/hWouSAPzDfxoTRRi1VzUi9LU8usCJHBiGXzOf7QW4FXQiJcZUxsKxYDdfheu1E085yKI4UBvpagOs1N2p3cL+EZQR0AE9MojA0UWX4rf385nYvZmip9d4ApC/LQLCDaY8f9T33yNTvqLW3zPYHD/VunZPCA06Y+AU9VBu+5r8S27zn8E00MH6RWAstd6YQEP6H/A0CA9lPqpaJzO5Vn9qrxXX5Fe+IIrnMNiZ860Pj0Bb6CGoCodebeddyk4iQ5pkm7EWHs7AGOCJA
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61a0c261-98a2-4a4c-7e96-08d80ae49ab4
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2020 13:13:43.9895
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5Fpa0gpleWxj3ch+3IHu541focH5oWHGV+mo3uiQ34pgdEJ14PrsmAXXF1txXr4thR4JRW+Y9OOrQbRAMUh3sA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6369
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-07_03:2020-06-04,2020-06-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 impostorscore=0 mlxscore=0 adultscore=0 clxscore=1015
+ cotscore=-2147483648 malwarescore=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006070100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add documentation to 'papr_hcalls.rst' describing the bitmap flags
+that are returned from H_SCM_HEALTH hcall as per the PAPR-SCM
+specification.
 
-On 6/7/2020 2:45 PM, Niklas Cassel wrote:
-> device_add_disk() is negated by del_gendisk().
-> alloc_disk_node() is negated by put_disk().
->
-> In nvme_alloc_ns(), device_add_disk() is one of the last things being
-> called in the success case, and only void functions are being called
-> after this. Therefore this call should not be negated in the error path.
->
-> The superfluous call to del_gendisk() leads to the following prints:
-> [    7.839975] kobject: '(null)' (000000001ff73734): is not initialized, yet kobject_put() is being called.
-> [    7.840865] WARNING: CPU: 2 PID: 361 at lib/kobject.c:736 kobject_put+0x70/0x120
->
-> Fixes: 33cfdc2aa696 ("nvme: enforce extended LBA format for fabrics metadata")
-> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-> ---
-> An alternative would be to do like nvme_ns_remove(), i.e. in the error
-> path; check if ns->disk->flags & GENHD_FL_UP is set, and only then call
-> del_gendisk(). However, that seems unnecessary, since as nvme_alloc_ns()
-> is currently written, we know that device_add_disk() does not need to be
-> negated.
->
->   drivers/nvme/host/core.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
+Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+---
+Changelog:
 
-Looks good,
+v10..v11:
+* None
 
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+v9..v10:
+* Added ack from Ira.
 
+Resend:
+* None
+
+v8..v9:
+* s/SCM/PMEM device. [ Dan Williams, Aneesh ]
+
+v7..v8:
+* Added a clarification on bit-ordering of Health Bitmap
+
+Resend:
+* None
+
+v6..v7:
+* None
+
+v5..v6:
+* New patch in the series
+---
+ Documentation/powerpc/papr_hcalls.rst | 46 ++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/powerpc/papr_hcalls.rst b/Documentation/powerpc/papr_hcalls.rst
+index 3493631a60f8..48fcf1255a33 100644
+--- a/Documentation/powerpc/papr_hcalls.rst
++++ b/Documentation/powerpc/papr_hcalls.rst
+@@ -220,13 +220,51 @@ from the LPAR memory.
+ **H_SCM_HEALTH**
+ 
+ | Input: drcIndex
+-| Out: *health-bitmap, health-bit-valid-bitmap*
++| Out: *health-bitmap (r4), health-bit-valid-bitmap (r5)*
+ | Return Value: *H_Success, H_Parameter, H_Hardware*
+ 
+ Given a DRC Index return the info on predictive failure and overall health of
+-the NVDIMM. The asserted bits in the health-bitmap indicate a single predictive
+-failure and health-bit-valid-bitmap indicate which bits in health-bitmap are
+-valid.
++the PMEM device. The asserted bits in the health-bitmap indicate one or more states
++(described in table below) of the PMEM device and health-bit-valid-bitmap indicate
++which bits in health-bitmap are valid. The bits are reported in
++reverse bit ordering for example a value of 0xC400000000000000
++indicates bits 0, 1, and 5 are valid.
++
++Health Bitmap Flags:
++
+++------+-----------------------------------------------------------------------+
++|  Bit |               Definition                                              |
+++======+=======================================================================+
++|  00  | PMEM device is unable to persist memory contents.                     |
++|      | If the system is powered down, nothing will be saved.                 |
+++------+-----------------------------------------------------------------------+
++|  01  | PMEM device failed to persist memory contents. Either contents were   |
++|      | not saved successfully on power down or were not restored properly on |
++|      | power up.                                                             |
+++------+-----------------------------------------------------------------------+
++|  02  | PMEM device contents are persisted from previous IPL. The data from   |
++|      | the last boot were successfully restored.                             |
+++------+-----------------------------------------------------------------------+
++|  03  | PMEM device contents are not persisted from previous IPL. There was no|
++|      | data to restore from the last boot.                                   |
+++------+-----------------------------------------------------------------------+
++|  04  | PMEM device memory life remaining is critically low                   |
+++------+-----------------------------------------------------------------------+
++|  05  | PMEM device will be garded off next IPL due to failure                |
+++------+-----------------------------------------------------------------------+
++|  06  | PMEM device contents cannot persist due to current platform health    |
++|      | status. A hardware failure may prevent data from being saved or       |
++|      | restored.                                                             |
+++------+-----------------------------------------------------------------------+
++|  07  | PMEM device is unable to persist memory contents in certain conditions|
+++------+-----------------------------------------------------------------------+
++|  08  | PMEM device is encrypted                                              |
+++------+-----------------------------------------------------------------------+
++|  09  | PMEM device has successfully completed a requested erase or secure    |
++|      | erase procedure.                                                      |
+++------+-----------------------------------------------------------------------+
++|10:63 | Reserved / Unused                                                     |
+++------+-----------------------------------------------------------------------+
+ 
+ **H_SCM_PERFORMANCE_STATS**
+ 
+-- 
+2.26.2
 
