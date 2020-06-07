@@ -2,131 +2,167 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2077CC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F317720659
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591547862;
-	bh=GMZS6Ep+zIM0ZGj3QPwKLwGCuAJNsMWCwnCGrZ+QF9g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r3PX0oKHG0TWacD4YFul1AGNLlp3A44eznESUQ6QdJ/gAtzoMwQgAfFh+sczQsYIC
-	 wNU0AUhJfwM+B02v5It4X/L3vx3VTVUqCr+8weF14PsJaLgMlHfySQqQpmhsxvqnh3
-	 e6DTI9jiwz0FYwg1Rl+FwrM1yQq+nv169Hbk9DRQ=
+	by mail.kernel.org (Postfix) with ESMTP id C576120659
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgFGQhl (ORCPT
+        id S1726861AbgFGQiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 12:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbgFGQhk (ORCPT
+        Sun, 7 Jun 2020 12:38:07 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54508 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbgFGQiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 12:37:40 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE34C08C5C4
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 09:37:40 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id s1so17530944ljo.0
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 09:37:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tXd1D478P4SNq4RE8o4BF66Z33QidHeZFXik7VjM730=;
-        b=W+WavM/Q4g1r7QpDGscIj1K4HsPcCtXjCr239DLBu5DURS8jE72otmlkWcQN9NjSj1
-         SWpy1ih6gLF5LjUNCSFUMQuTEtCbzh/l+4WFpz+vgjC3Bk5zMrnKyVg2tX8TRQLWUy51
-         4PhiIER9DTFk5NgUQjepDvbJFOnGkOYYAQCus=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tXd1D478P4SNq4RE8o4BF66Z33QidHeZFXik7VjM730=;
-        b=Qt99oGIzNFzE0ga717IhIV/RdfcYaZaY8w1/ZrdYXLA0yQya2eDWtewJHkng4JIWsu
-         XoV14ib0TWfA/BRzNoluO1r4WUwJ0gTJ0zQVNGWOekLo5+5PfBPieqIf0FGAQdtYcTDg
-         B4j1gfHE3xqmT2+1mxohlSlTQjFp2KKb6fS+dey91ggXOqGmPg+8RyPdowUubB5/z52D
-         CvxzL4blpfR8IaYdv4AUqMulEoos0GuRCOzAFihLv3sqAZKGt3ychNUWAiOJXFJCJC0k
-         sCJDj0xZFY6aKcuFf6obPadHCyt48C35/blPo59J+2L2RcvOMnRAK1lWkBdvMTklv4y0
-         1SGw==
-X-Gm-Message-State: AOAM531cCKn0xHDw1XIuXLMsI54Ro2YYLDnwPSl/i0smsDJ94HI2oe5B
-        616BcVJnhAm1d/BCwTt+AA834Lo4bSw=
-X-Google-Smtp-Source: ABdhPJwWeL5KSZFyilbvhWPrO6GeC0El75E6sfs0Ya366+UdNT+LyPLmrmGcZXiDcXQquGPgQTmNoA==
-X-Received: by 2002:a05:651c:1126:: with SMTP id e6mr9188465ljo.123.1591547858444;
-        Sun, 07 Jun 2020 09:37:38 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id h24sm3631196lfj.11.2020.06.07.09.37.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jun 2020 09:37:37 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id c21so8732964lfb.3
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 09:37:37 -0700 (PDT)
-X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr10598957lfn.10.1591547857000;
- Sun, 07 Jun 2020 09:37:37 -0700 (PDT)
+        Sun, 7 Jun 2020 12:38:06 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4BFA81C0BD2; Sun,  7 Jun 2020 18:38:04 +0200 (CEST)
+Date:   Sun, 7 Jun 2020 18:38:03 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     alsa-devel@alsa-project.org, bp@alien8.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, perex@perex.cz,
+        tglx@linutronix.de, tiwai@suse.com, x86@kernel.org,
+        rientjes@google.com, hch@lst.de, hch@infradead.org
+Subject: 82fef0ad811f "x86/mm: unencrypted non-blocking DMA allocations use
+ coherent pools" was Re: next-0519 on thinkpad x60: sound related? window
+ manager crash
+Message-ID: <20200607163803.GA10303@duo.ucw.cz>
+References: <20200520111136.GA3802@amd>
+ <1591545088.74ii116nf2.none@localhost>
 MIME-Version: 1.0
-References: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
- <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com> <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
-In-Reply-To: <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 7 Jun 2020 09:37:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
-Message-ID: <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
-Subject: Re: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <1591545088.74ii116nf2.none@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 7, 2020 at 6:22 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> Yes, I did think about that, but I thought this was the more obviously
-> correct approach, and that in practice one only sees the 0X44 and 0X55
-> cases.
 
-I'm not sure about that - it probably depends on your umask.
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Because I see a lot of -rw-rw-r--. in my home directory, and it looks
-like I have a umask of 0002.
+Hi!
 
-That's just the Fedora default, I think. Looking at /etc/bashrc, it does
+> I have a similar issue, caused between aaa2faab4ed8 and b170290c2836.
+>=20
+> [   20.263098] BUG: unable to handle page fault for address: ffffb2b582cc=
+2000
+> [   20.263104] #PF: supervisor write access in kernel mode
+> [   20.263105] #PF: error_code(0x000b) - reserved bit violation
+> [   20.263107] PGD 3fd03b067 P4D 3fd03b067 PUD 3fd03c067 PMD 3f8822067 PT=
+E 8000273942ab2163
+> [   20.263113] Oops: 000b [#1] PREEMPT SMP
+> [   20.263117] CPU: 3 PID: 691 Comm: mpv Not tainted 5.7.0-11262-gb170290=
+c2836 #1
+> [   20.263119] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.=
+M./B450 Pro4, BIOS P4.10 03/05/2020
+> [   20.263125] RIP: 0010:__memset+0x24/0x30
+> [   20.263128] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89 d1 8=
+3 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <=
+f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
+> [   20.263131] RSP: 0018:ffffb2b583d07e10 EFLAGS: 00010216
+> [   20.263133] RAX: 0000000000000000 RBX: ffff8b8000102c00 RCX: 000000000=
+0004000
+> [   20.263134] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb2b58=
+2cc2000
+> [   20.263136] RBP: ffff8b8000101000 R08: 0000000000000000 R09: ffffb2b58=
+2cc2000
+> [   20.263137] R10: 0000000000005356 R11: ffff8b8000102c18 R12: 000000000=
+0000000
+> [   20.263139] R13: 0000000000000000 R14: ffff8b8039944200 R15: ffffffff9=
+794daa0
+> [   20.263141] FS:  00007f41aa4b4200(0000) GS:ffff8b803ecc0000(0000) knlG=
+S:0000000000000000
+> [   20.263143] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   20.263144] CR2: ffffb2b582cc2000 CR3: 00000003b6731000 CR4: 000000000=
+03406e0
+> [   20.263146] Call Trace:
+> [   20.263151]  ? snd_pcm_hw_params+0x3f3/0x47a
+> [   20.263154]  ? snd_pcm_common_ioctl+0xf2/0xf73
+> [   20.263158]  ? snd_pcm_ioctl+0x1e/0x29
+> [   20.263161]  ? ksys_ioctl+0x77/0x91
+> [   20.263163]  ? __x64_sys_ioctl+0x11/0x14
+> [   20.263166]  ? do_syscall_64+0x3d/0xf5
+> [   20.263170]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [   20.263173] Modules linked in: uvcvideo videobuf2_vmalloc videobuf2_me=
+mops videobuf2_v4l2 videodev snd_usb_audio videobuf2_common snd_hwdep snd_u=
+sbmidi_lib input_leds snd_rawmidi led_class
+> [   20.263182] CR2: ffffb2b582cc2000
+> [   20.263184] ---[ end trace c6b47a774b91f0a0 ]---
+> [   20.263187] RIP: 0010:__memset+0x24/0x30
+> [   20.263190] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89 d1 8=
+3 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <=
+f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
+> [   20.263192] RSP: 0018:ffffb2b583d07e10 EFLAGS: 00010216
+> [   20.263193] RAX: 0000000000000000 RBX: ffff8b8000102c00 RCX: 000000000=
+0004000
+> [   20.263195] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb2b58=
+2cc2000
+> [   20.263196] RBP: ffff8b8000101000 R08: 0000000000000000 R09: ffffb2b58=
+2cc2000
+> [   20.263197] R10: 0000000000005356 R11: ffff8b8000102c18 R12: 000000000=
+0000000
+> [   20.263199] R13: 0000000000000000 R14: ffff8b8039944200 R15: ffffffff9=
+794daa0
+> [   20.263201] FS:  00007f41aa4b4200(0000) GS:ffff8b803ecc0000(0000) knlG=
+S:0000000000000000
+> [   20.263202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   20.263204] CR2: ffffb2b582cc2000 CR3: 00000003b6731000 CR4: 000000000=
+03406e0
+>=20
+> I bisected this to 82fef0ad811f "x86/mm: unencrypted non-blocking DMA=20
+> allocations use coherent pools". Reverting 1ee18de92927 resolves the=20
+> issue.
+>=20
+> Looks like Thinkpad X60 doesn't have VT-d, but could still be DMA=20
+> related.
 
-    if [ $UID -gt 199 ] && [ "`/usr/bin/id -gn`" = "`/usr/bin/id -un`" ]; then
-       umask 002
-    else
-       umask 022
-    fi
+Note that newer -next releases seem to behave okay for me. The commit
+pointed out by siection is really simple:
 
-iow, if you have the same user-name and group name, then umask is 002
-by default for regular users.
+AFAIK you could verify it is responsible by turning off
+CONFIG_AMD_MEM_ENCRYPT on latest kernel...
 
-Honestly, I'm not sure why Fedora has that "each user has its own
-group" thing, but it's at least one common setup.
+Best regards,
+								Pavel
 
-So I think that the system you are looking at just happens to have
-umask 0022, which is traditional when you have just a 'user' group.
+index 1d6104ea8af0..2bf2222819d3 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1520,6 +1520,7 @@ config X86_CPA_STATISTICS
+ config AMD_MEM_ENCRYPT
+        bool "AMD Secure Memory Encryption (SME) support"
+        depends on X86_64 && CPU_SUP_AMD
++       select DMA_COHERENT_POOL
+        select DYNAMIC_PHYSICAL_MASK
+        select ARCH_USE_MEMREMAP_PROT
+        select ARCH_HAS_FORCE_DMA_UNENCRYPTED
 
-> That will kinda work, except you do that mask &= MAY_RWX before
-> check_acl(), which cares about MAY_NOT_BLOCK and who knows what other bits.
 
-Good catch.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> Perhaps this? As a whole function, I think that's a bit easier for
-> brain-storming. It's your patch, just with that rwx thing used instead
-> of mask, except for the call to check_acl().
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Looks fine to me. Once we have to have rwx/mask separate, I'm not sure
-it's worth having that early masking at all (didn't check what the
-register pressure is over that "check_acl()" call, but at least it is
-fairly easy to follow along.
+-----BEGIN PGP SIGNATURE-----
 
-Send me a patch with commit message etc, and I'll apply it.
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXt0X6wAKCRAw5/Bqldv6
+8nR9AKCEQ5c2R1u4+cXEO0PCRlvn6BRgQwCeLIGOijUJZFuQ4aVPjBCzO69tKp8=
+=cYie
+-----END PGP SIGNATURE-----
 
-               Linus
+--1yeeQ81UyVL57Vl7--
