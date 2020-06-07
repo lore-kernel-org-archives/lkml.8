@@ -2,149 +2,99 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F081C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 646E9206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23DAF20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="FzKcLYPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgFGNPL (ORCPT
+        id S1726590AbgFGNUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 09:15:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17402 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726655AbgFGNOz (ORCPT
+        Sun, 7 Jun 2020 09:20:33 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:27676 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgFGNUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 09:14:55 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 057D1Vku178108;
-        Sun, 7 Jun 2020 09:14:19 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg8008dg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 07 Jun 2020 09:14:19 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 057D2CqY179848;
-        Sun, 7 Jun 2020 09:14:19 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg8008cw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 07 Jun 2020 09:14:18 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 057DA4sG001486;
-        Sun, 7 Jun 2020 13:14:16 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 31g2s80vtd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 07 Jun 2020 13:14:16 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 057DEDb963897868
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 7 Jun 2020 13:14:13 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EAE611C04A;
-        Sun,  7 Jun 2020 13:14:13 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0305B11C058;
-        Sun,  7 Jun 2020 13:14:09 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.68.227])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Sun,  7 Jun 2020 13:14:08 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Sun, 07 Jun 2020 18:44:07 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Santosh Sivaraj <santosh@fossix.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v11 4/6] powerpc/papr_scm: Improve error logging and handling papr_scm_ndctl()
-Date:   Sun,  7 Jun 2020 18:43:37 +0530
-Message-Id: <20200607131339.476036-5-vaibhav@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200607131339.476036-1-vaibhav@linux.ibm.com>
-References: <20200607131339.476036-1-vaibhav@linux.ibm.com>
+        Sun, 7 Jun 2020 09:20:33 -0400
+X-Greylist: delayed 767 seconds by postgrey-1.27 at vger.kernel.org; Sun, 07 Jun 2020 09:20:32 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1591536031;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=y+pfta7yNhwYUoOid0wjMxSVJZWGEZuuSBhFq5hUIHM=;
+        b=FzKcLYPMGs7r0Kd68NvJHpqiQH/IDA/W/lB6hhSUpPOEi3vELKNP5rq6FbzWLtGkPj
+        U1P5EgYcjH8vN7qsg5Xixa8yEdb+RKUZqvNWeU1eogH5Noq8qjK5qEDoILf0rfFnhfga
+        IHpeZGAGCMKgfVz7Pkc1K2thsW/wE+NRMEGrL/llLwzEhwhIaQOxl8Py3oGI6eWsszLf
+        CFB5JUXsz2qGD/yjQHvm8WN79oIwcwhOCwDqmtRKef74gtsrpWNtOzZZKZgSYvU0wdhG
+        5C51JZralCjjeH+kRm+XX4TH10Pivoyt7P9Gee8L8fB/8WxI0TfUPYMoPN3QREQ5TsWQ
+        nDww==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXvdOeueZtw="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.9.1 DYNA|AUTH)
+        with ESMTPSA id I05374w57DKQFgz
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 7 Jun 2020 15:20:26 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v3] crypto: DRBG - always try to free Jitter RNG instance
+Date:   Sun, 07 Jun 2020 15:20:26 +0200
+Message-ID: <4563687.31r3eYUQgx@positron.chronox.de>
+In-Reply-To: <2551009.mvXUDI8C0e@positron.chronox.de>
+References: <0000000000002a280b05a725cd93@google.com> <20200603110919.GK30374@kadam> <2551009.mvXUDI8C0e@positron.chronox.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-07_03:2020-06-04,2020-06-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 adultscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 impostorscore=0 clxscore=1015 bulkscore=0
- mlxlogscore=999 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006070096
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since papr_scm_ndctl() can be called from outside papr_scm, its
-exposed to the possibility of receiving NULL as value of 'cmd_rc'
-argument. This patch updates papr_scm_ndctl() to protect against such
-possibility by assigning it pointer to a local variable in case cmd_rc
-== NULL.
+The Jitter RNG is unconditionally allocated as a seed source follwoing
+the patch 97f2650e5040. Thus, the instance must always be deallocated.
 
-Finally the patch also updates the 'default' add a debug log unknown
-'cmd' values.
-
-Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+Reported-by: syzbot+2e635807decef724a1fa@syzkaller.appspotmail.com
+Fixes: 97f2650e5040 ("crypto: drbg - always seeded with SP800-90B ...")
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
 ---
-Changelog:
+ crypto/drbg.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-v10..v11:
-* Instead of returning *cmd_rd just return '0' in case nd_cmd is
-  handled. In case of unknown nd-cmd return -EINVAL
-  [ Ira and Dan Williams ]
-* Updated patch description.
-
-v9..v10
-* New patch in the series
----
- arch/powerpc/platforms/pseries/papr_scm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index 0c091622b15e..692ad3d79826 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -355,11 +355,16 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
- {
- 	struct nd_cmd_get_config_size *get_size_hdr;
- 	struct papr_scm_priv *p;
-+	int rc;
- 
- 	/* Only dimm-specific calls are supported atm */
- 	if (!nvdimm)
- 		return -EINVAL;
- 
-+	/* Use a local variable in case cmd_rc pointer is NULL */
-+	if (!cmd_rc)
-+		cmd_rc = &rc;
-+
- 	p = nvdimm_provider_data(nvdimm);
- 
- 	switch (cmd) {
-@@ -381,6 +386,7 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
- 		break;
- 
- 	default:
-+		dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
- 		return -EINVAL;
+diff --git a/crypto/drbg.c b/crypto/drbg.c
+index 37526eb8c5d5..8d80d93cab97 100644
+--- a/crypto/drbg.c
++++ b/crypto/drbg.c
+@@ -1631,10 +1631,12 @@ static int drbg_uninstantiate(struct drbg_state *drbg)
+ 	if (drbg->random_ready.func) {
+ 		del_random_ready_callback(&drbg->random_ready);
+ 		cancel_work_sync(&drbg->seed_work);
+-		crypto_free_rng(drbg->jent);
+-		drbg->jent = NULL;
  	}
  
++	if (!IS_ERR_OR_NULL(drbg->jent))
++		crypto_free_rng(drbg->jent);
++	drbg->jent = NULL;
++
+ 	if (drbg->d_ops)
+ 		drbg->d_ops->crypto_fini(drbg);
+ 	drbg_dealloc_state(drbg);
 -- 
 2.26.2
+
+
+
 
