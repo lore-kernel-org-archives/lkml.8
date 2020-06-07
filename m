@@ -2,76 +2,44 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 07:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC07C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 08:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7316206F6
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 07:45:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iko766C5"
+	by mail.kernel.org (Postfix) with ESMTP id 1191820663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 08:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgFGHpQ (ORCPT
+        id S1726400AbgFGIAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 03:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgFGHpP (ORCPT
+        Sun, 7 Jun 2020 04:00:02 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:46367 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgFGIAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 03:45:15 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B8E4C08C5C2;
-        Sun,  7 Jun 2020 00:45:14 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b27so14281389qka.4;
-        Sun, 07 Jun 2020 00:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qJewHZgXVptpTMME2jd76HAuP8EK/22gQ7MoD9mKDSI=;
-        b=iko766C5rmjLFB5/Iu7tzwvVPx89SFd/qOIOvHQcVKOustaNybWNTW1hlRo4KIEiJN
-         OmsoXN0Iyk9ra2bS/RR42rWoP8ZNx3+RtV2k3UdKiauLQIAivCG1s0B1D4ZBlrdmiI8U
-         TiT4nzVUD5RdGYZb/Dg5fPZpQPU9W8CVNva7BaOGTwoAmUbs1f7ZRki3+6kcwIULiU/+
-         2Lh6sWGaLRxCG9MUFt94zU2DEdpvBM61l4rxOsBHs8SprlU/nmckQc+btCAZqFX06BJZ
-         yWw+QXvalFXHu1meMqIurBLbU0pb78I8+vFDP/r83gCX1ug9oeFbFx1Tr9aVkM9q28TN
-         QWng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qJewHZgXVptpTMME2jd76HAuP8EK/22gQ7MoD9mKDSI=;
-        b=ngN0RFU5D900R3/z08Vn6SOntm4dBtH4xUHrsN6cEpMsNlxRLmVm/2uFrY0kHh0VqB
-         V6DTvI9lpSef3P5HQN/cPBuAJdDXuOKqPOmEjleypajjohRBQ53UqcUZcwGcz2fte26H
-         AHyHkm1bfucg3vV7mnoO77a5SI/GeF5glZCpmW1gw/R7u+tadysl1RI+td2cZce/K9i2
-         OkyG81iTzIAxvDo8dUtseKOfzbfDzYe3Z9pgOc8OS0MmwVKXeKdMS6GekqXU6o8wW2/O
-         fI53A2T0w0Ilwwy6HU4xHUtqvlGrXbS/k4JFtaa79UH18LrjhItafyIhKwHgyMTEDVrn
-         eDkQ==
-X-Gm-Message-State: AOAM533TBznOyzOuMLrL07QbHgcOtDVSszgYkNt0jh+bCNHTgnuOJjMP
-        t/Y9wzIID6rdhk0nUmS3gA==
-X-Google-Smtp-Source: ABdhPJwwrNr2rsp6x47jIKO9J37R0q3CQYFJK82E3BL1kWqDvKP3ZusE8X0yyY6ZVkEyOTWKe7SOrQ==
-X-Received: by 2002:a05:620a:52d:: with SMTP id h13mr17020930qkh.424.1591515913191;
-        Sun, 07 Jun 2020 00:45:13 -0700 (PDT)
-Received: from localhost.localdomain ([142.119.96.191])
-        by smtp.googlemail.com with ESMTPSA id v2sm4476114qtq.8.2020.06.07.00.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 00:45:12 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-To:     iamkeyur96@gmail.com
-Cc:     allison.henderson@oracle.com, bfoster@redhat.com,
-        chandanrlinux@gmail.com, darrick.wong@oracle.com,
-        dchinner@redhat.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH] xfs: Couple of typo fixes in comments
-Date:   Sun,  7 Jun 2020 03:44:59 -0400
-Message-Id: <20200607074459.98284-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200607073958.97829-1-iamkeyur96@gmail.com>
-References: <20200607073958.97829-1-iamkeyur96@gmail.com>
+        Sun, 7 Jun 2020 04:00:01 -0400
+Received: from localhost.localdomain (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id A5B6B240003;
+        Sun,  7 Jun 2020 07:59:50 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Zong Li <zong.li@sifive.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org
+Cc:     Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v5 0/4] vmalloc kernel mapping and relocatable kernel
+Date:   Sun,  7 Jun 2020 03:59:45 -0400
+Message-Id: <20200607075949.665-1-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,41 +47,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-./xfs/libxfs/xfs_inode_buf.c:56: unnecssary ==> unnecessary
-./xfs/libxfs/xfs_inode_buf.c:59: behavour ==> behaviour
-./xfs/libxfs/xfs_inode_buf.c:206: unitialized ==> uninitialized
+This patchset originally implemented relocatable kernel support but now          
+also moves the kernel mapping into the vmalloc zone.                             
+                                                                                 
+The first patch explains why we need to move the kernel into vmalloc             
+zone (instead of memcpying it around). That patch should ease KASLR              
+implementation a lot.                                                            
+                                                                                 
+The second patch allows to build relocatable kernels but is not selected         
+by default.                                                                      
+                                                                                 
+The third and fourth patches take advantage of an already existing powerpc       
+script that checks relocations at compile-time, and uses it for riscv.           
+                                                                                 
+Changes in v5:
+  * Add "static __init" to create_kernel_page_table function as reported by
+    Kbuild test robot
+  * Add reviewed-by from Zong
+  * Rebase onto v5.7
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
----
- fs/xfs/libxfs/xfs_inode_buf.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes in v4:                                                                   
+  * Fix BPF region that overlapped with kernel's as suggested by Zong            
+  * Fix end of module region that could be larger than 2GB as suggested by Zong  
+  * Fix the size of the vm area reserved for the kernel as we could lose         
+    PMD_SIZE if the size was already aligned on PMD_SIZE                         
+  * Split compile time relocations check patch into 2 patches as suggested by Anup
+  * Applied Reviewed-by from Zong and Anup                                       
+                                                                                 
+Changes in v3:                                                                   
+  * Move kernel mapping to vmalloc                                               
+                                                                                 
+Changes in v2:                                                                   
+  * Make RELOCATABLE depend on MMU as suggested by Anup                          
+  * Rename kernel_load_addr into kernel_virt_addr as suggested by Anup           
+  * Use __pa_symbol instead of __pa, as suggested by Zong                        
+  * Rebased on top of v5.6-rc3                                                   
+  * Tested with sv48 patchset                                                    
+  * Add Reviewed/Tested-by from Zong and Anup 
 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index 6f84ea85fdd8..5c93e8e6de74 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -53,10 +53,10 @@ xfs_inobp_check(
-  * If the readahead buffer is invalid, we need to mark it with an error and
-  * clear the DONE status of the buffer so that a followup read will re-read it
-  * from disk. We don't report the error otherwise to avoid warnings during log
-- * recovery and we don't get unnecssary panics on debug kernels. We use EIO here
-+ * recovery and we don't get unnecessary panics on debug kernels. We use EIO here
-  * because all we want to do is say readahead failed; there is no-one to report
-  * the error to, so this will distinguish it from a non-ra verifier failure.
-- * Changes to this readahead error behavour also need to be reflected in
-+ * Changes to this readahead error behaviour also need to be reflected in
-  * xfs_dquot_buf_readahead_verify().
-  */
- static void
-@@ -203,7 +203,7 @@ xfs_inode_from_disk(
- 	/*
- 	 * First get the permanent information that is needed to allocate an
- 	 * inode. If the inode is unused, mode is zero and we shouldn't mess
--	 * with the unitialized part of it.
-+	 * with the uninitialized part of it.
- 	 */
- 	to->di_flushiter = be16_to_cpu(from->di_flushiter);
- 	inode->i_generation = be32_to_cpu(from->di_gen);
+Alexandre Ghiti (4):
+  riscv: Move kernel mapping to vmalloc zone
+  riscv: Introduce CONFIG_RELOCATABLE
+  powerpc: Move script to check relocations at compile time in scripts/
+  riscv: Check relocations at compile time
+
+ arch/powerpc/tools/relocs_check.sh |  18 +----
+ arch/riscv/Kconfig                 |  12 +++
+ arch/riscv/Makefile                |   5 +-
+ arch/riscv/Makefile.postlink       |  36 +++++++++
+ arch/riscv/boot/loader.lds.S       |   3 +-
+ arch/riscv/include/asm/page.h      |  10 ++-
+ arch/riscv/include/asm/pgtable.h   |  38 ++++++---
+ arch/riscv/kernel/head.S           |   3 +-
+ arch/riscv/kernel/module.c         |   4 +-
+ arch/riscv/kernel/vmlinux.lds.S    |   9 ++-
+ arch/riscv/mm/Makefile             |   4 +
+ arch/riscv/mm/init.c               | 121 +++++++++++++++++++++++++----
+ arch/riscv/mm/physaddr.c           |   2 +-
+ arch/riscv/tools/relocs_check.sh   |  26 +++++++
+ scripts/relocs_check.sh            |  20 +++++
+ 15 files changed, 259 insertions(+), 52 deletions(-)
+ create mode 100644 arch/riscv/Makefile.postlink
+ create mode 100755 arch/riscv/tools/relocs_check.sh
+ create mode 100755 scripts/relocs_check.sh
+
 -- 
-2.26.2
+2.20.1
 
