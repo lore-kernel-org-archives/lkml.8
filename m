@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C49EC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14487C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A31820663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AD42077D
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 11:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgFGLNS (ORCPT
+        id S1726571AbgFGLNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 07:13:18 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:46286 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726494AbgFGLNP (ORCPT
+        Sun, 7 Jun 2020 07:13:23 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:44594 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgFGLNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 7 Jun 2020 07:13:15 -0400
-Received: by mail-il1-f200.google.com with SMTP id d16so5818648ilc.13
+Received: by mail-il1-f198.google.com with SMTP id l11so8704385ils.11
         for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 04:13:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=YYswQKILazrP4JetGbUd/7c68gWgB2rDDnGxYj3VwNg=;
-        b=l23/xClzilZ+zjNKXRT0JctvKyis3iCDCtRK/X92zWi/ifPL7HoBtShS6+OejpEpJX
-         56MJm8a/137JY3RjAk0qg65X5AwltYmQbF8/+owqvgmCCe+hVhSgmosCzqyn9PcytNC1
-         hBPWSwFqcC9dLMc25QAbEpIkAJTy4G/dwa1STsex7CWwzubKCwCzDtZn6/QB5JM4hk+p
-         9V56/RA827l5k1cfl+PGq8bXmJ4hNRCQ82foamjXtkjsvcTD39DnLaPj4R4iOXdW4IMF
-         JjhIdApiZcmmypkkMiw6X2km58+9msIB9Cw5O9EUS9ZIrEpBqda2/TJ1+k5WF1Orgchp
-         cgOA==
-X-Gm-Message-State: AOAM530Q9hx7gb3tFwV0jXWzGRPA4pxm3fxMzdZI7+olVKAczsp0pQUH
-        +M0Xq9aAWUJ7zH0C62kAhQFnkCxg4oHj2Ox/2ydJxSJIvfiS
-X-Google-Smtp-Source: ABdhPJySQ8ZAplF7MdltxSKJlLlkH3hlQAtoOHrebOYLk69a2youR7LbvDdePK2EYU/LId4vY4dtcDxDZ7/COo51gtB1irIdJBTJ
+        bh=W1Rg6cRe7b/N6uSt4UPD2jGQ5CGoT9dlXj8hlmAKSYs=;
+        b=LAeqZcuwOxTS/OPfyIr8jACA+oRz8lG7zPJIrGZ4AyY44bUXkvEyCcXAQ7E1WlOuuC
+         R15reirBHDkUsCaPBlYTTNLajc2gWCY1qWdsekCvp1mfeCfXIqCcngDyJXKIeJ5kL6AD
+         SxmYRItiitGXzAF5K578zx5qX4hbBIX+tUlLr3t431XuEfh27PjCyn8aqLIUEh8WXJiz
+         yPC6GUN6a6NbdG4RGoUk86zjzjHmekPQ5GzPEhSKeG/rq9qrmRYK8Cuwslbh4aP/WlwH
+         LxK570DWY4K0EFi8Cc7r+Q+lzF/lgjfQ8ZykIzzImORshS1C/l6hizQA6dFW+9767yxm
+         z85g==
+X-Gm-Message-State: AOAM533uGfn/PtYvVb6e86JQP6GjKq6nWJS47QIpRpRvC076FFSesxlt
+        jkPltfbaUcb7fGnlp54D30TitTCqBuZEfGW/vdCdRqqMvhyW
+X-Google-Smtp-Source: ABdhPJzzsk4M1SaDCyyuCP8qH1WADQT+dguvupEBiykLFaRHd7dCPmivZyOvpG9rapZLEmbc3p0IlXcIk+WJTKcmQUCwbKker/ry
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2e81:: with SMTP id m1mr6185835iow.147.1591528392687;
- Sun, 07 Jun 2020 04:13:12 -0700 (PDT)
-Date:   Sun, 07 Jun 2020 04:13:12 -0700
+X-Received: by 2002:a05:6e02:1067:: with SMTP id q7mr13709118ilj.71.1591528393221;
+ Sun, 07 Jun 2020 04:13:13 -0700 (PDT)
+Date:   Sun, 07 Jun 2020 04:13:13 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007f04d405a77c9485@google.com>
+Message-ID: <000000000000872ad205a77c947c@google.com>
 Subject: linux-next test error: BUG: using smp_processor_id() in preemptible
- [ADDR] code: kworker/u4:LINE/4205
-From:   syzbot <syzbot+5c2f1b4ae8c49a698784@syzkaller.appspotmail.com>
+ [ADDR] code: syz-fuzzer/6793
+From:   syzbot <syzbot+878f276b4892a4438f95@syzkaller.appspotmail.com>
 To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
         sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
@@ -61,19 +61,18 @@ syzbot found the following crash on:
 
 HEAD commit:    48f99181 Add linux-next specific files for 20200603
 git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=148e22f2100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1006bca6100000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=365f706273eaf502
-dashboard link: https://syzkaller.appspot.com/bug?extid=5c2f1b4ae8c49a698784
+dashboard link: https://syzkaller.appspot.com/bug?extid=878f276b4892a4438f95
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5c2f1b4ae8c49a698784@syzkaller.appspotmail.com
+Reported-by: syzbot+878f276b4892a4438f95@syzkaller.appspotmail.com
 
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
+BUG: using smp_processor_id() in preemptible [00000000] code: syz-fuzzer/6793
 caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
+CPU: 1 PID: 6793 Comm: syz-fuzzer Not tainted 5.7.0-next-20200603-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0x18f/0x20d lib/dump_stack.c:118
@@ -81,125 +80,23 @@ Call Trace:
  ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
  ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
  ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
- __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
-caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
-caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 1 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
- __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
-caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
- __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u4:5/4205
-caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
-CPU: 0 PID: 4205 Comm: kworker/u4:5 Not tainted 5.7.0-next-20200603-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
- ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
- ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
- ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
- mpage_map_one_extent fs/ext4/inode.c:2377 [inline]
- mpage_map_and_submit_extent fs/ext4/inode.c:2430 [inline]
- ext4_writepages+0x1ab5/0x3400 fs/ext4/inode.c:2782
- do_writepages+0xfa/0x2a0 mm/page-writeback.c:2354
- __writeback_single_inode+0x12a/0x13d0 fs/fs-writeback.c:1452
- writeback_sb_inodes+0x515/0xdc0 fs/fs-writeback.c:1716
- __writeback_inodes_wb+0xc3/0x250 fs/fs-writeback.c:1785
- wb_writeback+0x8db/0xd50 fs/fs-writeback.c:1894
- wb_check_old_data_flush fs/fs-writeback.c:1996 [inline]
- wb_do_writeback fs/fs-writeback.c:2049 [inline]
- wb_workfn+0xab3/0x1090 fs/fs-writeback.c:2078
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-tipc: TX() has been purged, node left!
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3632
+ do_mkdirat+0x21e/0x280 fs/namei.c:3655
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4b02a0
+Code: Bad RIP value.
+RSP: 002b:000000c00004f4b8 EFLAGS: 00000212 ORIG_RAX: 0000000000000102
+RAX: ffffffffffffffda RBX: 000000c00002c000 RCX: 00000000004b02a0
+RDX: 00000000000001c0 RSI: 000000c000026960 RDI: ffffffffffffff9c
+RBP: 000000c00004f510 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000212 R12: ffffffffffffffff
+R13: 000000000000004c R14: 000000000000004b R15: 0000000000000100
 
 
 ---
