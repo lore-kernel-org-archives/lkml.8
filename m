@@ -2,105 +2,194 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9868020723
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FFE20656
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="L1q8bK4P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m4mFjgZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgFGFka (ORCPT
+        id S1726358AbgFGFoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 01:40:30 -0400
-Received: from mail-eopbgr70120.outbound.protection.outlook.com ([40.107.7.120]:28551
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726238AbgFGFka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 01:40:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gs4VU4V4Oge+OQlZD5ucBgIvixvzIm6ykyDfvcvenx7YhRS8kod/qHBjT+NYMmQI0fBxAo8tTCN15IbyaD3L3QhX2yKHx5/jgyLIQckFRRCKD5xmgn/V913pMaW/cov34v7264066yHrvU1s2kw28cerkeIBqcjusDuC5O11tyOBlZBAOxfZi8m1aLt3tBntYbMKZ0G2Ivoo274VH8/UJR+NFqNo5UBC7jbzfpAJf/QQDSNN6N6+R4g0m1DCphTQEMwkUhlIzg0EXWQlCBKVJnsBmKxPeSCWHSXtx0vk4Vx2jRSTnRmtb9GP+HVZMcg6T5lsC4Bb2i/ogp0e5dsopw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yhq5e4onxDjmABxJWEP8D8wWXLcHHNK75z3U6q8anWQ=;
- b=JMZr3mKpBfkJVaCfWx9139JEoMQ4HtKej8aOPDdji5CzP2hS+CLJph8phxt126eI++Fwr11b3qte3HuaAW/6vdg6YqebmNCawy76Ae6I1AFXfVpUrSJfYcIc5OI3Qfx+NywCAylwnJfU5hpp8pCAxTdrAxxXTI89zQCthSD+UGDV877EYAQobJhu+/+wDYHL+Kkzar18nRdH8FXRCFK05KgDsh6oocj3o6AI2ABYGasW/UjNYOYqtaYgz8+nw74isMwAc+o5NWj+6sM84xx9QHBb2SAtUpdP9fDSWpI7dONMHwtrIVjgpUtlXkW9VcGo6MImxYKyAMoUhHLGfcXZZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
+        Sun, 7 Jun 2020 01:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbgFGFoQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 01:44:16 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCCCC08C5C2
+        for <linux-kernel@vger.kernel.org>; Sat,  6 Jun 2020 22:44:14 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 9so16515224ljc.8
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 22:44:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yhq5e4onxDjmABxJWEP8D8wWXLcHHNK75z3U6q8anWQ=;
- b=L1q8bK4PGe/72LUPmS4ccBo6s0K77ShM4Dnw6cKhC2bEDPCJXDv8vswxBJUwRy2ekUpOunQLzXLBVFK0HX0AgvS3AKTPoaBF0gi/Mbk7R+xt5snZx69vK+o1l8uao+Pw+nNs3RIe7CF3hTPoFbSbLdkjVB8sy+/OGwjF5mBGDHc=
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
- by DB8PR02MB5897.eurprd02.prod.outlook.com (2603:10a6:10:119::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Sun, 7 Jun
- 2020 05:40:25 +0000
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::207a:b49c:79e1:d713]) by DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::207a:b49c:79e1:d713%6]) with mapi id 15.20.3066.023; Sun, 7 Jun 2020
- 05:40:24 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        SW_Drivers <SW_Drivers@habana.ai>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH 1/2] habanalabs: block scalar load_and_exe on external
- queue
-Thread-Topic: [PATCH 1/2] habanalabs: block scalar load_and_exe on external
- queue
-Thread-Index: AQHWO3cRyT3wksYDhE6zR82ey5VLcqjMpOWw
-Date:   Sun, 7 Jun 2020 05:40:24 +0000
-Message-ID: <DB8PR02MB546827507A4779E0535659FCD2840@DB8PR02MB5468.eurprd02.prod.outlook.com>
-References: <20200605212842.18424-1-oded.gabbay@gmail.com>
-In-Reply-To: <20200605212842.18424-1-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
-x-originating-ip: [217.132.152.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b88c3611-c1b5-429c-3d68-08d80aa546f5
-x-ms-traffictypediagnostic: DB8PR02MB5897:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR02MB589750743864723641565A31D2840@DB8PR02MB5897.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 04270EF89C
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bxH6aP8VHpx2dMWTAjb8cOBhhw4hpQqWSa56KT+GCU6FtS18859F0GfCn5V55bAhs5zJmgxlV4vhpTEEYiqk7jKiwZSyDVBei13W8LTpttGbVuq8XJw3CsPUTlus+u4Oy475iUC0DrtOn2BkY8NVeyWvKHrRHeS5l29SMaEWpMhbDl2GMejC7I5LD5NSv1WgKWiolv+q2pzDIRagRk1cQR/uez8uwugPbr+Dl7QPzluCmFcwEgNUYhsMJPb3Rx56G99fUgUWhNk0iKiK78vtrn9ZNgBAPSY4rB9LJQZoAlEs9z22Y8p7KqWaNaYSTKQG6gTU1W1ySK45ZrCLIP6vPg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(366004)(396003)(39840400004)(478600001)(4326008)(8676002)(8936002)(7696005)(33656002)(86362001)(4744005)(83380400001)(53546011)(66946007)(66556008)(64756008)(6636002)(6506007)(186003)(26005)(5660300002)(2906002)(316002)(71200400001)(110136005)(52536014)(9686003)(55016002)(66476007)(66446008)(76116006);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: q4ZCpRzQU8wLBU0WOoOXEQlMvLDfMO6WxSliLhdmeceeEM3JMEZyWiUCqbHaOrOLJKZstDDv1DD/WNdJm85lfxlgMJ9nbRd17sQnclOZPjhmSTgbM54BXajvPPhA91cpBwtISuCqAwqkM5sHyLbL3biMtWGq86oM1RN0iefPs9vvtCK6AVBg1AN3M6zXS5sSYtOz3Cm0c8lCojd0tz+KDyVSJw5T6lxEUnLRFgf6k4A/Karh5kemnpofSRzwUb7evlezYf78QugdMKLA1xM6law/4D1nVZBp1PaOG9yfdkRTXZ5PzRjEQcna1XQI2TAxuZWmTOjTTVWc1P7JI9PA+nwjymPbVBEsXRFNmeeg7v9qvxdaZYVpDHc3ZPpMTZ/FXtZNocL/PWNJZk5iy3vkXvhSs34k2vLALGZcJx283sDmC4xG8aR656DdIm7hn5L7BLzm3Ali/TteRQQj1WCKaSD3cvH22Ya4Zkka2moRJ9oebB/u+zG+bnu1i1OBly7L
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UoU2bDdv+MdG+/9ThH3R0k+UfNqB3rI33QgE+dDEvlk=;
+        b=m4mFjgZDGBJGlVvSY8+85jkJ1+IQH/pG//Xy5+jwnJhi5dPtnypPzdrIOlgR3JQpNP
+         5F3+W0mL15lcKJdXadtDq0EnvYRVlZUlTDbIKtI0Zg56DnM/Qk/T5BxVSYQCx+2PTYOT
+         p5YWu39/OXNXRPMz1VnPYYCD1/+Cc4/ln6MVi5ko5GcSS2u85jBG93xJ/OqZ//MBhkPm
+         98tktpI9B1h8GCXdEt+G+M9Bwr7FXvomJjAj93tPW/Ed9wZvZ36gp2v97C5gh1raVJbD
+         Y1UU1mtioD70eN3+y8pQas76fMcx7Dfswtadx42cz6wTzKIzVD0N2c1BFyKcLKnrnJ2D
+         rxKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UoU2bDdv+MdG+/9ThH3R0k+UfNqB3rI33QgE+dDEvlk=;
+        b=b2GygwtHcehwPX3KNLu0FMaS8I3IbdII6S+Gbpki70KTfObmLatJ3YrvqmoJIlIk5l
+         SRJnpcOS8bwjNTEANyCo9NISh4QWYQua2SQOkGF7z1s3FjzQzPZ5CFY+QpwBU17IDAHH
+         eBZEINNqivS/1r3/P/adk6zUkcIvN0eDiod6ER14xYzVsQUqrEE+WiDMal1b/sdkPDaE
+         xw4lWXkxliahWMBH58kMwTnM56SfHlL67w5m8vAiowh/R6tmPcWX2flsKNEog+fH9v42
+         qKI31P0QLNvl9ljpoVH5D+GdqG47jC13kgcxZu7LI4p4o4haIFpxAyq8wS/+YBFYbu5n
+         bvHQ==
+X-Gm-Message-State: AOAM530ZUBfT6ptw8Ze+P1Ra3l4gOXztG/uxStGCDhXU2sN5WTTcLty2
+        k8cVirdJn5yJntXOGBBBscTULRQrdRP/eZHy8BDdnuln7FsATg==
+X-Google-Smtp-Source: ABdhPJx8tZF4pxo4A3Y+o/D9PdaVeLWfZ8ESsIIJo/9NY/7ZyMIXMAFQehQ6BBWrn6V3JZxEWevDXgyHqk+fYPpTzUc=
+X-Received: by 2002:a2e:9009:: with SMTP id h9mr8158978ljg.266.1591508652780;
+ Sat, 06 Jun 2020 22:44:12 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: b88c3611-c1b5-429c-3d68-08d80aa546f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2020 05:40:24.8194
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PSolZL/ET3yjVTShcDQMx58N4tvA9Jr5MubpOGVdsC0R8a8JBy+InsxtpSaHjskJZmaGd1dxQxqOdrOGOgb0Sg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5897
+References: <20200605140252.338635395@linuxfoundation.org>
+In-Reply-To: <20200605140252.338635395@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sun, 7 Jun 2020 11:14:01 +0530
+Message-ID: <CA+G9fYu-WobdAq_Xw_uHk4tiTi4=NLgYQrqAnd8DB+mtWYx=nA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/28] 4.19.127-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 6, 2020 at 0:29, Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> In Gaudi, the user can't execute scalar load_and_exe on external queue
-> because it can be a security hole. The driver doesn't parse the commands
-> being loaded and it can be msg_prot, which the user isn't allowed to use.
->=20
-> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+On Fri, 5 Jun 2020 at 19:50, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.127 release.
+> There are 28 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.127-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.127-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 65151bf9f715983d62613a4d9196525eb64dda53
+git describe: v4.19.126-29-g65151bf9f715
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.126-29-g65151bf9f715
+
+
+No regressions (compared to build v4.19.126)
+
+No fixes (compared to build v4.19.126)
+
+
+Ran 32146 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-ipc-tests
+* ltp-sched-tests
+* perf
+* v4l2-compliance
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
