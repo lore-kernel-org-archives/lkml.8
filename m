@@ -2,136 +2,79 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D67C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 02:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B31EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 03:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD482073A
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 02:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498942067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 03:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vYWK7GgW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q4dNKWO7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgFGCmT (ORCPT
+        id S1728943AbgFGDE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 22:42:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47294 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728887AbgFGCmS (ORCPT
+        Sat, 6 Jun 2020 23:04:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbgFGDE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 22:42:18 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B80D52C9;
-        Sun,  7 Jun 2020 04:42:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591497736;
-        bh=oTn7cqfZc4UogV7TuRHH/rTKoy5a8jctSncWTCB7xDU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vYWK7GgWo21C9DD4MiGtHQOn3ZSxvM+hN8+JXW2ca6Ok0/eh2IvNOgKnhhaKPvjj6
-         mZxQuKqKnrnSMAYj/L191r19vez4xKl+zkSWryve60qz2shocpeKbzP4MmIjhE4Or9
-         EvIkB9iRI9st3dY7RX4Qz3y2JKHtEvWdiGv4NwoY=
-Date:   Sun, 7 Jun 2020 05:41:58 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com, ezequiel@collabora.com,
-        seanpaul@chromium.org, linux-renesas-soc@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        michael.dege@renesas.com, gotthard.voellmeke@renesas.com,
-        efriedrich@de.adit-jv.com, mrodin@de.adit-jv.com,
-        ChaitanyaKumar.Borah@in.bosch.com,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Message-ID: <20200607024158.GD7339@pendragon.ideasonboard.com>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20200527071555.GA23912@lxhi-065.adit-jv.com>
- <20200605132900.on527xcggg6f6pil@uno.localdomain>
- <20200605134124.GA28734@lxhi-065.adit-jv.com>
- <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
+        Sat, 6 Jun 2020 23:04:56 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78045C08C5C2;
+        Sat,  6 Jun 2020 20:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=S3FsUUp8iXLmWySNCgqZUVANUjvem9zIZH7o+aGND30=; b=q4dNKWO73dvv/w2gR5rVJs4uHc
+        SSRMpCrEhQJBGJNJHiXI2ImHh5CIVaaFicv7gtGSZ0lonH97AaIFXeQUsJOm0csmj/8RqI6I+DNVl
+        X185hBYPYnOtmCup1cPrexAyQtT0zc9hDY5o195HKK6PKWWq4WNNoDvu/WlqNfsZlgF8ejf9XJEQy
+        /rvBf0Efdbmmr2sL2ShPseC6+L9WMlfWFE5KWaGLJgVU3koUMYaYqMVVpTJyRwyT9hflXRlaKfkCX
+        0zbkAZcHfum4vM8taTDEij3C9A6bxIxJJRr1kv6u+rXYYQLHj4Jvq+jNBLfQDljRtlEXjhZ4W33Lq
+        kWLAFCzw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jhlcB-0008FJ-Eg; Sun, 07 Jun 2020 03:04:51 +0000
+Date:   Sat, 6 Jun 2020 20:04:51 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 18/25] mm: Allow large pages to be added to the page
+ cache
+Message-ID: <20200607030451.GR19604@bombadil.infradead.org>
+References: <20200429133657.22632-1-willy@infradead.org>
+ <20200429133657.22632-19-willy@infradead.org>
+ <20200504031036.GB16070@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200605135315.xlph44pl7kvmt23a@uno.localdomain>
+In-Reply-To: <20200504031036.GB16070@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Fri, Jun 05, 2020 at 03:53:15PM +0200, Jacopo Mondi wrote:
-> On Fri, Jun 05, 2020 at 03:41:24PM +0200, Eugeniu Rosca wrote:
-> > On Fri, Jun 05, 2020 at 03:29:00PM +0200, Jacopo Mondi wrote:
-> >> On Wed, May 27, 2020 at 09:15:55AM +0200, Eugeniu Rosca wrote:
-> >>> Could you kindly share the cross compilation steps for your kmsxx fork?
-> >>
-> >> I usually build it on the target :)
-> >
-> > Interesting approach. With ARM getting more and more potent, why not? :)
+On Sun, May 03, 2020 at 08:10:36PM -0700, Matthew Wilcox wrote:
+> On Wed, Apr 29, 2020 at 06:36:50AM -0700, Matthew Wilcox wrote:
+> > @@ -886,7 +906,7 @@ static int __add_to_page_cache_locked(struct page *page,
+> >  	/* Leave page->index set: truncation relies upon it */
+> >  	if (!huge)
+> >  		mem_cgroup_cancel_charge(page, memcg, false);
+> > -	put_page(page);
+> > +	page_ref_sub(page, nr);
+> >  	return xas_error(&xas);
+> >  }
+> >  ALLOW_ERROR_INJECTION(__add_to_page_cache_locked, ERRNO);
 > 
-> For 'small' utilities like kmsxx it's doable
-> 
-> >>> Just out of curiosity, have you ever tried to pull the display's HDMI
-> >>> cable while reading from CM2_LUT_TBL?
-> >>
-> >> Ahem, not really :) Did I get you right, you mean disconnecting the
-> >> HDMI cable from the board ?
-> >
-> > Right.
-> 
-> So, no, I have not tried. Do you see any intersting failure with the
-> mainline version ?
+> This is wrong.  page_ref_sub() will not call __put_page() if the refcount
+> gets to zero.  What do people prefer?
 
-Jacopo, would you be able to give this a try ?
+*sigh*.  It's not wrong.  The caller holds a reference on the page
+already, so calling page_ref_sub() will never reduce the refcount to 0.
+The latest version looks like this:
 
-> >>> At least with the out-of-tree CMM implementation [*], this sends the
-> >>> R-Car3 reference targets into an unrecoverable freeze, with no lockup
-> >>> reported by the kernel (i.e. looks like an serious HW issue).
-> >>>
-> >>>> CMM functionalities are retained between suspend/resume cycles (tested with
-> >>>> suspend-to-idle) without requiring a re-programming of the LUT tables.
-> >>>
-> >>> Hmm. Is this backed up by any statement in the HW User's manual?
-> >>> This comes in contrast with the original Renesas CMM implementation [**]
-> >>> which does make use of suspend (where the freeze actually happens).
-> >>>
-> >>> Can we infer, based on your statement, that we could also get rid of
-> >>> the suspend callback in [**]?
-> >>
-> >> As Geert (thanks) explained what I've tested with is suspend-to-idle,
-> >> which retains the state of the LUT tables (and I assume other
-> >> not-yet-implemented CMM features, like CLU). I recall the out-of-tree
-> >> driver has suspend/resume routines but I never really tested that.
-> >
-> > I see. JFYI, there is a flaw in the suspend handling in the out-of-tree
-> > CMM patch [*], which renders the SoC unresponsive on HDMI hotplug. The
-> > fix is currently under review. Hopefully it will make its way to [*]
-> > in the nearest future. Just to keep in mind for the moment when CMM
-> > s2ram will become a mainline feature.
-> 
-> Thanks, let's keep this in mind. Next week I'll run a few tests again
-> with s2ram and will get back to you.
++       page_ref_sub(page, nr);
++       VM_BUG_ON_PAGE(page_count(page) <= 0, page);
 
-Note that the CMM driver is controlled by the DU driver. As the DU
-driver will reenable the display during resume, it will call
-rcar_du_cmm_setup() at resume time, which will reprogram the CMM. There
-should thus be no need for manual suspend/resume handling in the CMM as
-far as I can tell, but we need to ensure that the CMM is suspended
-before and resumed after the DU. I believe this could be implemented
-using device links.
-
-> >>> [*] https://github.com/renesas-rcar/du_cmm
-> >>> [**] https://github.com/renesas-rcar/du_cmm/blob/c393ed49834bdbc/meta-rcar-gen3/recipes-kernel/linux/linux-renesas/0001-drm-rcar-du-Add-DU-CMM-support.patch#L1912
-
--- 
-Regards,
-
-Laurent Pinchart
