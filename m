@@ -2,120 +2,157 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18792206F6
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591556922;
-	bh=aimXNnD+PVaJEw0UQzhYrUjR4ij+FbdM/GXqDgyISfM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=IhwV3zqhZZ/OczqvLNldbx50tsxGTDDYqwWVbwLDR6IgRmd0mmc2M96wC9IQdNi5P
-	 x65oh9N+XWh27qTITtLukVsqfvKRBu+m8U40Oord5/XUWQdqqHrdwxEvpj0U+OlkBq
-	 BJsvs7JY/INCBJUMSOK1HsBCtJ8NLUN2rT16qyKE=
+	by mail.kernel.org (Postfix) with ESMTP id BF1F0206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 19:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KU5ygKCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgFGTIl (ORCPT
+        id S1727988AbgFGTLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 15:08:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726780AbgFGTIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 15:08:40 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CCBA206D5;
-        Sun,  7 Jun 2020 19:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591556920;
-        bh=aimXNnD+PVaJEw0UQzhYrUjR4ij+FbdM/GXqDgyISfM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=jvuyLO1ljh8cBnSYm7M6fodXklTc77xJLwa8pAKuyjAjcyReM6xvxvPrh8ZwfwD4b
-         /xXmMuV+ffG9xOYKRHXAgMSfgvDERF+SK9+qGfoexGh7o7UINMpLqQQi/0NWXNempY
-         TU3m1ybhV3vklUqBBuexkjzzVAcZ3xuAmOcmHRAI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 59EEB35228C7; Sun,  7 Jun 2020 12:08:40 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 12:08:40 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Amol Grover <frextrite@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH RESEND] device_cgroup: Fix RCU list debugging warning
-Message-ID: <20200607190840.GG4455@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200406105950.GA2285@workstation-kernel-dev>
- <20200607062340.7be7e8d5@canb.auug.org.au>
+        Sun, 7 Jun 2020 15:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgFGTLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 15:11:05 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 300A3C061A0E;
+        Sun,  7 Jun 2020 12:11:06 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id k2so4834819pjs.2;
+        Sun, 07 Jun 2020 12:11:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fx8ZDPbjLqrJ/ye5aLr7B04mOPqMqfhQ6CkJiC2rhAg=;
+        b=KU5ygKCSnowH1AJviUI0XGU5GaDvMhRlNCgUKT1heLzjBtixM4v4k10UX3e8hR1zAx
+         Jyp2bGWgQ+r3lNixViN11j6vHxZGecV8sPORl+hGbICEA3iB4AEYuetecCGl2RLUN0oU
+         RjKSxwNGuzbTrKd51oQ9VMF9Pxdm1zJcJCenchPMcsoXbmQypK2A3/CKzXj51q3z8/xL
+         bwMEYHaE10KADmFUAZB5kRuqiGwqBKTPpndIq4kbtytRCCiy0FgOOlkCzofgZ3X7724k
+         8Ar8xSpUCAqdBTwatXmCN/V6JbcoHvCYQQsg/4L9T6BjyFfSDEFRzGWmZBI2P6hUJZBH
+         fkQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fx8ZDPbjLqrJ/ye5aLr7B04mOPqMqfhQ6CkJiC2rhAg=;
+        b=WSYf9CHLQ/bXZMCJ2obqCTMz7uhnb/yWR2hD/5yzylv5wH/Hf1onY5ENU3Lpi8cV2l
+         myfOuScUjw0HUA+SPLcTJV8H6SUGQMjK7AYqacw6vq9lq868iMb9himqwpvWLvPNoKmp
+         WZ0J8YIdzQxdsz0NG6h8xP9Z7UW/d04q8aCaV1O9EqkxXYLlWWiJXlhO3p66hG//wbv1
+         rNKl+PEr8zk1D6eoMxc4jKkysXbiFLPAYIjXVgFOsJcIzlwS4h1NgTCmxbUUC8PNkLlT
+         lE8BUUU1OP3SaLRyK0wHoJwjp66jY0M5l9yTat9I+5D8HSKNLJS1f52g8dFDAQCvZ46N
+         z2sQ==
+X-Gm-Message-State: AOAM5334t8tq5c1KG8U6L82bZ4gqNaM6vSQJUweIK2WmL6KBBbbz04rf
+        rjuvJKg9nn2dUrfqubtx6HIfYVUq
+X-Google-Smtp-Source: ABdhPJzsJEIFZrU0c5F0lzlp8839oXC7BcdruIb3QnRVKkfjFEJLqd6iAU/LHK18eGZWM4XXjMdZgw==
+X-Received: by 2002:a17:902:bc84:: with SMTP id bb4mr5993404plb.55.1591557065013;
+        Sun, 07 Jun 2020 12:11:05 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id 9sm13129803pju.1.2020.06.07.12.11.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 12:11:04 -0700 (PDT)
+Subject: Re: [RFC PATCH net-next 05/10] Documentation: networking:
+ ethtool-netlink: Add link extended state
+To:     Amit Cohen <amitc@mellanox.com>, netdev@vger.kernel.org
+Cc:     davem@davemloft.net, kuba@kernel.org, corbet@lwn.net,
+        jiri@mellanox.com, idosch@mellanox.com, shuah@kernel.org,
+        mkubecek@suse.cz, gustavo@embeddedor.com,
+        cforno12@linux.vnet.ibm.com, andrew@lunn.ch,
+        linux@rempel-privat.de, alexandru.ardelean@analog.com,
+        ayal@mellanox.com, petrm@mellanox.com, mlxsw@mellanox.com,
+        liuhangbin@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20200607145945.30559-1-amitc@mellanox.com>
+ <20200607145945.30559-6-amitc@mellanox.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <de5a37cd-df07-4912-6928-f1c3effba01b@gmail.com>
+Date:   Sun, 7 Jun 2020 12:11:02 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607062340.7be7e8d5@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200607145945.30559-6-amitc@mellanox.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 06:23:40AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Mon, 6 Apr 2020 16:29:50 +0530 Amol Grover <frextrite@gmail.com> wrote:
-> >
-> > exceptions may be traversed using list_for_each_entry_rcu()
-> > outside of an RCU read side critical section BUT under the
-> > protection of decgroup_mutex. Hence add the corresponding
-> > lockdep expression to fix the following false-positive
-> > warning:
-> > 
-> > [    2.304417] =============================
-> > [    2.304418] WARNING: suspicious RCU usage
-> > [    2.304420] 5.5.4-stable #17 Tainted: G            E
-> > [    2.304422] -----------------------------
-> > [    2.304424] security/device_cgroup.c:355 RCU-list traversed in non-reader section!!
-> > 
-> > Signed-off-by: Amol Grover <frextrite@gmail.com>
-> > ---
-> >  security/device_cgroup.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/security/device_cgroup.c b/security/device_cgroup.c
-> > index 7d0f8f7431ff..b7da9e0970d9 100644
-> > --- a/security/device_cgroup.c
-> > +++ b/security/device_cgroup.c
-> > @@ -352,7 +352,8 @@ static bool match_exception_partial(struct list_head *exceptions, short type,
-> >  {
-> >  	struct dev_exception_item *ex;
-> >  
-> > -	list_for_each_entry_rcu(ex, exceptions, list) {
-> > +	list_for_each_entry_rcu(ex, exceptions, list,
-> > +				lockdep_is_held(&devcgroup_mutex)) {
-> >  		if ((type & DEVCG_DEV_BLOCK) && !(ex->type & DEVCG_DEV_BLOCK))
-> >  			continue;
-> >  		if ((type & DEVCG_DEV_CHAR) && !(ex->type & DEVCG_DEV_CHAR))
-> > -- 
-> > 2.24.1
-> > 
-> 
-> I have been carrying the above patch in linux-next for some time now.
-> I have been carrying it because it fixes problems for syzbot (see the
-> third warning in
-> https://lore.kernel.org/linux-next/CACT4Y+YnjK+kq0pfb5fe-q1bqe2T1jq_mvKHf--Z80Z3wkyK1Q@mail.gmail.com/).
-> Is there some reason it has not been applied to some tree?
 
-The RCU changes on which this patch depends have long since made it to
-mainline, so it can go up any tree.  I can take it if no one else will,
-but it might be better going in via the security tree.
 
-							Thanx, Paul
+On 6/7/2020 7:59 AM, Amit Cohen wrote:
+> Add link extended state attributes.
+> 
+> Signed-off-by: Amit Cohen <amitc@mellanox.com>
+> Reviewed-by: Petr Machata <petrm@mellanox.com>
+> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+
+If you need to resubmit, I would swap the order of patches #4 and #5
+such that the documentation comes first.
+
+[snip]
+
+>  
+> +Link extended states:
+> +
+> +  ============================    =============================================
+> +  ``Autoneg failure``             Failure during auto negotiation mechanism
+> +
+> +  ``Link training failure``       Failure during link training
+> +
+> +  ``Link logical mismatch``       Logical mismatch in physical coding sublayer
+> +                                  or forward error correction sublayer
+> +
+> +  ``Bad signal integrity``        Signal integrity issues
+> +
+> +  ``No cable``                    No cable connected
+> +
+> +  ``Cable issue``                 Failure is related to cable,
+> +                                  e.g., unsupported cable
+> +
+> +  ``EEPROM issue``                Failure is related to EEPROM, e.g., failure
+> +                                  during reading or parsing the data
+> +
+> +  ``Calibration failure``         Failure during calibration algorithm
+> +
+> +  ``Power budget exceeded``       The hardware is not able to provide the
+> +                                  power required from cable or module
+> +
+> +  ``Overheat``                    The module is overheated
+> +  ============================    =============================================
+> +
+> +Many of the substates are obvious, or terms that someone working in the
+> +particular area will be familiar with. The following table summarizes some
+> +that are not:
+
+Not sure this comment is helping that much, how about documenting each
+of the sub-states currently defined, even if this is just paraphrasing
+their own name? Being able to quickly go to the documentation rather
+than looking at the header is appreciable.
+
+Thank you!
+
+> +
+> +Link extended substates:
+> +
+> +  ============================    =============================================
+> +  ``Unsupported rate``            The system attempted to operate the cable at
+> +                                  a rate that is not formally supported, which
+> +                                  led to signal integrity issues
+
+Do you have examples? Would you consider a 4-pair copper cable for
+Gigabit that has a damaged pair and would downshift somehow fall in that
+category?
+-- 
+Florian
