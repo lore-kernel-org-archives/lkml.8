@@ -2,85 +2,77 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0562C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0020DC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8556C2075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97412067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="qoEfppc4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBx1SIw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgFGU3n (ORCPT
+        id S1727800AbgFGUeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 16:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
+        Sun, 7 Jun 2020 16:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgFGU3n (ORCPT
+        with ESMTP id S1726093AbgFGUeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 16:29:43 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B71C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 13:29:42 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id w1so15384367qkw.5
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 13:29:42 -0700 (PDT)
+        Sun, 7 Jun 2020 16:34:23 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC51C08C5C3;
+        Sun,  7 Jun 2020 13:34:22 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 82so8945730lfh.2;
+        Sun, 07 Jun 2020 13:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=Lz6rtZK9cjNPAtEwtLuwX/TSYzMGfXgJilYQqWDsi+k=;
-        b=qoEfppc4l1T7Tnteea4ezpFwHMv4wHuEtUnWK1i2WOujZ0/uUUZEV5JDjWhOQm0HM5
-         lmadO2e2RzPCpHob2PJQCUv8pduTvChQW5AB7tJolmxF+HYaMF+dYSYpllfmikA7wfWx
-         fO/vgHjOzLtTDAIj+9bg7i5F7L5/5012scP4UNidpfkLffOv9AlAuiMjUjHrD34hjeCj
-         0N59QLDrFIzqpCN8KC4XDuD6Vsby4PBF3VyR7YVUnc+hv3i0x2J8nvxGZGjxFSH7r+fu
-         ODBQnt0VqGo9ici5Mry9hDofKgpGRmJiWdat8GvmeLh0/1VHA81xYDIbIqtJlzcsXRzE
-         MAaA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hVGN1pbBMj1LI0YMFYQuoWlroMgiHGZyjGcnKUmCbDY=;
+        b=nBx1SIw/ZoH2JQeVJyeovJqFLEb7QHnssBx26NsAP9PZsz4QRMT9Ze7EmC4O14gyiK
+         EHb0T3eMX1xFbkT5yB5R6k870415wlK1bjDIUE1rnqdGoEFdX/J8pQ4uwQxOk9pTqZGu
+         vsmruhpHqSB4cHDHukJy28poSVR/F2oEWyRRK9NM7YEFnrjBCY9icZksP3A+EOtLZzJH
+         aTK06pfXxNu8ZL9ITDciKFyOAXQfkDYaJqS7A8i/tF5eUWZe618G+b2TSkeb40uSV3Sd
+         e97K0qg8zJ5eWR4SRCty70/M263wFNP1JMfUOyz2zlw/Tdf4yZ1ZRQMLUbQurX0IHF2o
+         7s5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Lz6rtZK9cjNPAtEwtLuwX/TSYzMGfXgJilYQqWDsi+k=;
-        b=fi6Snmfx51PcUI7jx716vVzdFm0DOhTKbmw/gq71u4Pmo209SkXVdVceqlLinvpTW0
-         16xMLp5TPBJT2n3ycywUp1O6kuwym2O2nNyNYrNEghcrNWGoybVbqypFaSLqzASDLLQX
-         TtDEwRiNSKeI1VbunugmvRl4QWmhZ9TL4s4Z0FQCT1F4K5lQqy9VqFGsHlLADK6lzY9C
-         aLu0RTjT3ITKNcfN5B8h1tUdQwkRYIGghMgNEROuuRbWx/FXOorNsuoBvIZcv1O0mKV3
-         m2os9lPpkFvFmP+jqech/+J9n3NKWM8n6ZzA6YrCbYUMphFstKc5s4DRTlqr52T+I1kW
-         NzxA==
-X-Gm-Message-State: AOAM533imsTBIys8ew/v0pc65debujEZJgaUEhG6BrONhhVgQyUFlfQw
-        e0xYm/PLGx5G3QzY4bAuqxgmiA==
-X-Google-Smtp-Source: ABdhPJxBY2kuRju1y7Y4Wso16zjhQCkYP7wBN9y8dzrRiSnIbCCe0LSgRuYomUlAn2H++WcfunFvTA==
-X-Received: by 2002:a37:a504:: with SMTP id o4mr19036370qke.245.1591561782070;
-        Sun, 07 Jun 2020 13:29:42 -0700 (PDT)
-Received: from skullcanyon (marriott-chateau-champlain-montreal.sites.intello.com. [66.171.169.34])
-        by smtp.gmail.com with ESMTPSA id z4sm5237262qkj.131.2020.06.07.13.29.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hVGN1pbBMj1LI0YMFYQuoWlroMgiHGZyjGcnKUmCbDY=;
+        b=PNeo5nDAAei97UYwSBA1r+Yth/DFlNB+Rnwuf2NNJF1Nopa4hYl5L4IDq/NhSliVbc
+         2miSpznm0uI+87nenBVgeLZQ+tjQUkvdwoGpUuy6Wvxm2YYW9EZFWXM5Yz/geAVY+WeX
+         iicalOLE6Rp5cwX9wewFOJ8VqD78EhOdPjyDpFFg7iGEANhu5ZsNASzfro1CWEEKE16q
+         Im8CiTixw/rOCDkaSXjnh9Sa8G+9LaInbM/jNHKQZpuJAKYJo0ygxcw0c2du3nF5/Gm6
+         Ww78oRlIV7KX9s3vU5l+9lbVVt7+8g1j2LbaGd05rT8Wy1P0PNQ3oneCul18+C0natTZ
+         AzJw==
+X-Gm-Message-State: AOAM530xUYINpLm1rVKm7znwxsUauLqR2U0nTkFl1UK3IhzV59PLBgRQ
+        iZ3U69boyTc5m7EzagJmjAk=
+X-Google-Smtp-Source: ABdhPJwNl/Aap6OU/hpC/S3C18mQPxQNKuqoEkSx/13yYZ0cl4WkbW2UiFG9vcSpvPQUCdvCB5DRfA==
+X-Received: by 2002:a19:6c4:: with SMTP id 187mr10829587lfg.1.1591562061231;
+        Sun, 07 Jun 2020 13:34:21 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-136.NA.cust.bahnhof.se. [82.196.111.136])
+        by smtp.gmail.com with ESMTPSA id j133sm3850029lfd.58.2020.06.07.13.34.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 13:29:41 -0700 (PDT)
-Message-ID: <3b1150a327aa1e6810b153a4ba1fe32cf6c98f45.camel@ndufresne.ca>
-Subject: Re: [PATCH 0/3] media: uapi: cedrus: Fix decoding interlaced H264
- content
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>, devel@driverdev.osuosl.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-media <linux-media@vger.kernel.org>
-Date:   Sun, 07 Jun 2020 16:29:40 -0400
-In-Reply-To: <572f23d1945a685bf899e96de147454f31674ae1.camel@ndufresne.ca>
-References: <20200604185745.23568-1-jernej.skrabec@siol.net>
-         <CAAEAJfDFMzMkDkN7zzNvkwsmYzgQPNGkP=dhW7neycYYRBJzHA@mail.gmail.com>
-         <572f23d1945a685bf899e96de147454f31674ae1.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Sun, 07 Jun 2020 13:34:20 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     rikard.falkeborn@gmail.com
+Cc:     akpm@linux-foundation.org, andy.shevchenko@gmail.com,
+        arnd@arndb.de, emil.l.velikov@gmail.com, keescook@chromium.org,
+        linus.walleij@linaro.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkp@intel.com, syednwaris@gmail.com,
+        vilhelm.gray@gmail.com, yamada.masahiro@socionext.com
+Subject: [PATCH v2 1/2] linux/bits.h: fix unsigned less than zero warnings
+Date:   Sun,  7 Jun 2020 22:34:10 +0200
+Message-Id: <20200607203411.70913-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200604233003.GA102768@rikard>
+References: <20200604233003.GA102768@rikard>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,99 +80,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le dimanche 07 juin 2020 à 16:21 -0400, Nicolas Dufresne a écrit :
-> Le samedi 06 juin 2020 à 09:46 -0300, Ezequiel Garcia a écrit :
-> > Hi Jernej,
-> > 
-> > On Thu, 4 Jun 2020 at 15:55, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
-> > > Currently H264 interlaced content it's not properly decoded on Cedrus.
-> > > There are two reasons for this:
-> > > 1. slice parameters control doesn't provide enough information
-> > > 2. bug in frame list construction in Cedrus driver
-> > > 
-> > > As described in commit message in patch 1, references stored in
-> > > reference lists should tell if reference targets top or bottom field.
-> > > However, this information is currently not provided. Patch 1 adds
-> > > it in form of flags which are set for each reference. Patch 2 then
-> > > uses those flags in Cedrus driver.
-> > > 
-> > > Frame list construction is fixed in patch 3.
-> > > 
-> > > This solution was extensively tested using Kodi on LibreELEC with A64,
-> > > H3, H5 and H6 SoCs in slightly different form (flags were transmitted
-> > > in MSB bits in index).
-> > > 
-> > 
-> > So, if I understand correctly the field needs to be passed per-reference,
-> > and the current per-DPB entry is not good?
-> 
-> For interlaced content we reference fields separately. That's the
-> reason there is 32 entries in l0/l1. Though, as we decode both fields
-> in the same buffer (interleaved), the DPB indice is not sufficient to
-> inform the decoder what we are referencing. Understand that a top field
-> can be used to decode the next bottom field. This even make sense as
-> they are closer on the capture timeline. This covers slice based
-> decoders.
-> 
-> The flags to indicate presence of top/bottom fields in DPB array seems
-> only useful to frame base decoders. This is so that decoder can avoid
-> using lost fields when constructing it's own l0/l1 internally.
-> 
-> > If you could point at the userspace code for this, it would be interesting
-> > to take a look.
-> > 
-> > > Note: I'm not 100% sure if flags for both, top and bottom fields are
-> > > needed. Any input here would be welcome.
-> > > 
-> > 
-> > Given enum v4l2_field is already part of the uAPI, perhaps it makes
-> > sense to just reuse that for the field type? Maybe it's an overkill,
-> > but it would make sense to reuse the concepts and types that
-> > already exist.
-> > 
-> > We can still add a reserved field to make this new reference type
-> > extensive.
-> 
-> I think it's fine to create new flag for this, as your solution would
-> require extending a reference to 24bit (this patch extend to 16bits).
-> Though indeed, we could combine frame and TOP and reserve more bits for
-> future use.
+When calling the GENMASK and GENMASK_ULL macros with zero lower bit and
+an unsigned unknown high bit, some gcc versions warn due to the
+comparisons of the high and low bit in GENMASK_INPUT_CHECK.
 
-Sorry for the oversight, the flags is 16bits, so we already use 24bits.
-But looking at "enum v4l2_field", which is not a flag, seems like a
-miss-fit. It would create such a confusion, as V4L2_FIELD_SEQ_TB/BT can
-still be used with this interface, even though we still need to say if
-we reference TOP or BOTTOM. Only V4L2_FIELD_ALTERNATE is not supported.
-But as you can see, "enum v4l2_fiel" is really meant to describe the
-layout of the interleaved frame rather then signalling a field
-directly.
+To silence the warnings, only perform the check if both inputs are
+known. This does not trigger any warnings, from the Wtype-limits help:
 
-> 
-> > Thanks,
-> > Ezequiel
-> > 
-> > 
-> > > Please take a look.
-> > > 
-> > > Best regards,
-> > > Jernej
-> > > 
-> > > Jernej Skrabec (3):
-> > >   media: uapi: h264: update reference lists
-> > >   media: cedrus: h264: Properly configure reference field
-> > >   media: cedrus: h264: Fix frame list construction
-> > > 
-> > >  .../media/v4l/ext-ctrls-codec.rst             | 40 ++++++++++++++++++-
-> > >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 27 +++++++------
-> > >  include/media/h264-ctrls.h                    | 12 +++++-
-> > >  3 files changed, 62 insertions(+), 17 deletions(-)
-> > > 
-> > > --
-> > > 2.27.0
-> > > 
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+	Warn if a comparison is always true or always false due to the
+	limited range of the data type, but do not warn for constant
+	expressions.
+
+As an example of the warning, kindly reported by the kbuild test robot:
+
+from drivers/mfd/atmel-smc.c:11:
+drivers/mfd/atmel-smc.c: In function 'atmel_smc_cs_encode_ncycles':
+include/linux/bits.h:26:28: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+26 |   __builtin_constant_p((l) > (h)), (l) > (h), 0)))
+|                            ^
+include/linux/build_bug.h:16:62: note: in definition of macro 'BUILD_BUG_ON_ZERO'
+16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+|                                                              ^
+include/linux/bits.h:39:3: note: in expansion of macro 'GENMASK_INPUT_CHECK'
+39 |  (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+|   ^~~~~~~~~~~~~~~~~~~
+>> drivers/mfd/atmel-smc.c:49:25: note: in expansion of macro 'GENMASK'
+49 |  unsigned int lsbmask = GENMASK(msbpos - 1, 0);
+|                         ^~~~~~~
+
+Fixes: 295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Emil Velikov <emil.l.velikov@gmail.com>
+Reported-by: Syed Nayyar Waris <syednwaris@gmail.com>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+v1->v2
+* Change to require both high and low bit to be constant expressions
+  instead of introducing somewhat arbitrary casts
+
+ include/linux/bits.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 4671fbf28842..35ca3f5d11a0 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -23,7 +23,8 @@
+ #include <linux/build_bug.h>
+ #define GENMASK_INPUT_CHECK(h, l) \
+ 	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+-		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
++		__builtin_constant_p(l) && __builtin_constant_p(h), \
++		(l) > (h), 0)))
+ #else
+ /*
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+-- 
+2.27.0
 
