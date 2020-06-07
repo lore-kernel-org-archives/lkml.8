@@ -2,102 +2,99 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2703BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04F9D2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:31:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aD4r7KAY"
+	by mail.kernel.org (Postfix) with ESMTP id 106CC2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 16:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgFGQbm (ORCPT
+        id S1726772AbgFGQea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 12:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgFGQav (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 12:30:51 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC86AC08C5C6
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 09:30:49 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e4so17531927ljn.4
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 09:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
-        b=aD4r7KAYyBWRL+r3cCNFwandPIp1eaBY0+mJVtAAbLtlNeZCVeWmO4LdP98zGXkx2f
-         mWWk3CuksVHnax1r1AAVz5876ez1ow5sbWhBGtJY0DmabUBtHAGnvlt1bxUVFJwk9OLz
-         7X0SneyAfRhAjPkbAtwQ5OMzdMWIBSmbJvkSdy+lvAsyfSJErqbJmvJThSZjFU1KJrCe
-         cpuYcZOGcVK3QquNEw3olj2fEPbf6FCVU/qXa6LhWsako84djR1C25QZQWcwdUQSgW8x
-         SvqFhDiRFY/zVHG2Bw1dgI24DdE66sH6Hwl+PPj1Wzd/7mBFNJSFnOWgN0q14Jl7jDgy
-         ft4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ythenNMgCasy/26fjGx9+1WbKj8OM9GaH/NHc6AXhOM=;
-        b=nc/Yvr1HzmPaSabU+7THBcVpxqSECaRH+Hi/AEQZOZ3pQ3/Dn38Pbmclg4RN11JN6/
-         XACnlKCJ0oyx7qNJtYJcaLwyvfZz9Zu7ZUoJhXW6zqru3iSuD5l9KtBrmoja1dNyLGUu
-         ICLTPmljoTGIF94z6gLhda9wOpcJEnUVI09kBPaR3G6EpB1SsBMTbPNxP8sOrnTQNiZt
-         kkqimSiUCibtn+nJsMQrfmHLkE5wajkRSraGWyGO3toDaffUlOSiDdzJ5Iy/47CI6xwi
-         vIoDByDejAalJXnzZX0REi53L5FivUF1j1mLpmVwzYS2RHvfoAyqL5kv6zn7uSlQ/Bwq
-         3fcg==
-X-Gm-Message-State: AOAM532yJEoVDkpg3vjjY0Z2SM4MQvkaMl0xerKFcOC+MLsyivo4wLnx
-        gt6Yv2hVrZN40vrG3gJ2eSecVA==
-X-Google-Smtp-Source: ABdhPJztgQw/a4CxBiVGeklrqq34QTqDSxO6rZE1olhTeauKdcDOH+dSCnusoO2D30v2fZFAEdjbEQ==
-X-Received: by 2002:a05:651c:1103:: with SMTP id d3mr9651976ljo.110.1591547448299;
-        Sun, 07 Jun 2020 09:30:48 -0700 (PDT)
-Received: from localhost.localdomain (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.googlemail.com with ESMTPSA id l7sm1726511ljj.55.2020.06.07.09.30.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 09:30:47 -0700 (PDT)
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-To:     mchehab@kernel.org, sakari.ailus@iki.fi,
-        manivannan.sadhasivam@linaro.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org,
-        Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: [PATCH v4 02/10] media: i2c: imx290: fix the order of the args in SET_RUNTIME_PM_OPS()
-Date:   Sun,  7 Jun 2020 19:30:17 +0300
-Message-Id: <20200607163025.8409-3-andrey.konovalov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200607163025.8409-1-andrey.konovalov@linaro.org>
-References: <20200607163025.8409-1-andrey.konovalov@linaro.org>
+        Sun, 7 Jun 2020 12:34:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:58842 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726646AbgFGQe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 12:34:29 -0400
+IronPort-SDR: UFC7Ab1xN9mMIw+3cO9GT6fLGmIBJT4aLikBO+OucFtE6gIEWtvtT0tJ2/TxGqNdSbKIIK411G
+ 961vTGiXO+YQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 09:34:28 -0700
+IronPort-SDR: Fyk1InqYMPYgh1T0kcnxxfilbZ5XgWp5wHXXAKKqigkdTzUJ4X4gN7NUquJyqONUiDLVB/kR+a
+ Tw6xi5oUdIhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,484,1583222400"; 
+   d="scan'208";a="258486290"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Jun 2020 09:34:28 -0700
+Date:   Sun, 7 Jun 2020 09:34:28 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, kbuild-all@lists.01.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, Brad Campbell <lists2009@fnarfbargle.com>
+Subject: Re: [PATCH] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during
+ wakeup
+Message-ID: <20200607163428.GB24576@linux.intel.com>
+References: <20200605200728.10145-1-sean.j.christopherson@intel.com>
+ <202006060421.fTpTXYbe%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006060421.fTpTXYbe%lkp@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro is defined as SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn),
-so imx290_power_off must be the 1st arg, and imx290_power_on the 2nd.
+On Sat, Jun 06, 2020 at 05:08:38AM +0800, kernel test robot wrote:
+ arch/x86/kernel/cpu/centaur.c: In function 'init_centaur':
+> >> arch/x86/kernel/cpu/centaur.c:219:2: error: implicit declaration of function 'init_ia32_feat_ctl' [-Werror=implicit-function-declaration]
+> 219 |  init_ia32_feat_ctl(c);
+> |  ^~~~~~~~~~~~~~~~~~
+> cc1: some warnings being treated as errors
+> --
+> arch/x86/kernel/cpu/zhaoxin.c: In function 'init_zhaoxin':
+> >> arch/x86/kernel/cpu/zhaoxin.c:110:2: error: implicit declaration of function 'init_ia32_feat_ctl' [-Werror=implicit-function-declaration]
+> 110 |  init_ia32_feat_ctl(c);
+> |  ^~~~~~~~~~~~~~~~~~
+> cc1: some warnings being treated as errors
 
-Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/media/i2c/imx290.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Blech, zhaoxin.c an centaur.c don't include asm/cpu.h, and I (obviously)
+don't have them enabled in my configs.  I'll wait a day or two more before
+sending v2.
 
-diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index 2d8c38ffe2f0..d0322f9a8856 100644
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -648,7 +648,7 @@ static int imx290_power_off(struct device *dev)
- }
- 
- static const struct dev_pm_ops imx290_pm_ops = {
--	SET_RUNTIME_PM_OPS(imx290_power_on, imx290_power_off, NULL)
-+	SET_RUNTIME_PM_OPS(imx290_power_off, imx290_power_on, NULL)
- };
- 
- static const struct v4l2_subdev_video_ops imx290_video_ops = {
--- 
-2.17.1
+diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
+index 426792565d86..c5cf336e5077 100644
+--- a/arch/x86/kernel/cpu/centaur.c
++++ b/arch/x86/kernel/cpu/centaur.c
+@@ -3,6 +3,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/clock.h>
+
++#include <asm/cpu.h>
+ #include <asm/cpufeature.h>
+ #include <asm/e820/api.h>
+ #include <asm/mtrr.h>
+diff --git a/arch/x86/kernel/cpu/zhaoxin.c b/arch/x86/kernel/cpu/zhaoxin.c
+index df1358ba622b..05fa4ef63490 100644
+--- a/arch/x86/kernel/cpu/zhaoxin.c
++++ b/arch/x86/kernel/cpu/zhaoxin.c
+@@ -2,6 +2,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/clock.h>
+
++#include <asm/cpu.h>
+ #include <asm/cpufeature.h>
+
+ #include "cpu.h"
 
