@@ -2,196 +2,116 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C340AC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 12:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4968CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 12:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DE62076A
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 12:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591534761;
-	bh=WDsW2qnpuZpg/U9uPZFFUJY1LIlYlPmFy0tX5B5DDbc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=PP7/diEVp5/gn+I0Px28SeHnwFSTaKkk4kK6WNiwVBB3ena8T61pTcTxOEGIkAohH
-	 xxUTtxzZW5Z0W4NiaCR9+UOleef55Z4pBvVek0Ed+JaMxefS47LMzjHATsil89p2ep
-	 9YY0Ae2Ao46nywhDRh3IhVxc/JFnq4oTCSVdE5m0=
+	by mail.kernel.org (Postfix) with ESMTP id 219052064C
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 12:59:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iksT6XN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgFGM7P (ORCPT
+        id S1726662AbgFGM7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 08:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbgFGM7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 08:59:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A4020663;
-        Sun,  7 Jun 2020 12:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591534742;
-        bh=WDsW2qnpuZpg/U9uPZFFUJY1LIlYlPmFy0tX5B5DDbc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=afksgbTtdxnhmtzzoQTRbxrwFUKOhUS5sOHXyf4zOo5Bb7HEnVbdXcbfNcAaHdMbe
-         5Cy+7antPApB4dPjq8sI+n416zP/PWyKnMulTrZbi+RDyw8KYk9IGs9NAl85zLMNLM
-         WEVEctzefaYw3uTsxQZTX9hNhl8ID99w9hbKxjwU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.19.127
-Date:   Sun,  7 Jun 2020 14:58:56 +0200
-Message-Id: <159153473624839@kroah.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 7 Jun 2020 08:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbgFGM7l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 08:59:41 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B509C08C5C2
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 05:59:41 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id y18so5574234plr.4
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 05:59:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=13Yqp6cwkFCZ9XR53+tBkYuICFMznkDxO3gGMIN0iL8=;
+        b=iksT6XN5g4yhaxFtLLKlddI7+CySOqTPEAHzw9yQGDPzU4V2r9rA5XS6xSv+2xgKl0
+         rqPbFedISCJmLiswEZdbLRJDRVEO5P8GhZqBqt+nxHT7/jpnzDmg7Ah3t3LG3Rh59XT+
+         xDlCvdLC54WKOt3K1cwvLAhqpSaazrqw+lquSK/P/dtwLYLybCmDhRnASk8v5SKXEFme
+         o2JQkxQxdLcUNrhBCVR8/3QoI8kgLhADVAyESFB+WodtcBAAk8IY/cvQEjxiuosdkpjB
+         jD0FgcQ4nYo2XeuaPEzZhOcIk0vnL0kDKMDnbbG8DwT6IdWBY0xaWeMq2aMyuQAHPDCi
+         z+Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=13Yqp6cwkFCZ9XR53+tBkYuICFMznkDxO3gGMIN0iL8=;
+        b=l/Hs0ANqv1XUPC0hRuMbNy3++BzA7wswle7tGNrUVDcqzXrrVstpUSQJ0II/Gy9cj0
+         OENAwSo6drbcTPHtK29UqF2SczSCx/iHb/QOQkZH9KHRGPQfls7XYpKIuViHBYToehRT
+         Xv25njuQACegq33jrsWRKDd7Dg9g4SunYUkt81BvQMYPw+97UpFQUMu8n1F1tGrnWlnV
+         qAASpPTm8nAUCScRqOnDD7aPhiI9l3HqsGxuWD9FLQoEhL4yyr+Y+Q80E04HvQJxM036
+         b3oTxbexc938K6w8zZkE7hQYOW9wIhVo6vWrOgnEn/3h/RHP29FJxYi7UCtBYb4RW3D6
+         yN2Q==
+X-Gm-Message-State: AOAM532jx9qF+kZBbxtPo1knE8A76zRDsj/xHv21jBY9xePG7a6+Yiu2
+        9GXoUGxAWTz4o5UImaJNCt7+Tt5v
+X-Google-Smtp-Source: ABdhPJxFibV/dZxY6uOTSc5YZxGEi/sbNehCkRkwBNNnmxni3lI0utK+5zrEeYfqoZXWbj4MlibPNA==
+X-Received: by 2002:a17:90a:a897:: with SMTP id h23mr12310158pjq.90.1591534780441;
+        Sun, 07 Jun 2020 05:59:40 -0700 (PDT)
+Received: from localhost ([49.207.54.208])
+        by smtp.gmail.com with ESMTPSA id u35sm3656450pgm.48.2020.06.07.05.59.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 07 Jun 2020 05:59:39 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 18:29:32 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: ARM: vmsplit 4g/4g
+Message-ID: <20200607125932.GA4576@afzalpc>
+References: <20200511142113.GA31707@afzalpc>
+ <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
+ <20200512104758.GA12980@afzalpc>
+ <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
+ <20200514111755.GA4997@afzalpc>
+ <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
+ <20200514133545.GA5020@afzalpc>
+ <CAK8P3a1PVwkAi8ycUAB-7EMk4nQ_qOu0rC5vJAQk_q9j5xvOJw@mail.gmail.com>
+ <20200516060624.GA6371@afzalpc>
+ <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a01FYoWY9sZKU1q=UQ3ut4srwXXUeGRzW6APi+GpoKo1w@mail.gmail.com>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.19.127 kernel.
+Hi,
 
-All users of the 4.19 kernel series must upgrade.
+On Sat, May 16, 2020 at 09:35:57AM +0200, Arnd Bergmann wrote:
+> On Sat, May 16, 2020 at 8:06 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
 
-The updated 4.19.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.19.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+> > Okay, so the conclusion i take is,
+> > 1. VMSPLIT 4G/4G have to live alongside highmem
+> > 2. For user space copy, do pinning followed by kmap
 
-thanks,
+> Right, though kmap_atomic() should be sufficient here
+> because it is always a short-lived mapping.
 
-greg k-h
+get_user_pages_fast() followed by kmap_atomic() & then memcpy() seems
+to work in principle for user copy.
 
-------------
+Verified in a crude way by pointing TTBR0 to a location that has user
+pgd's cleared upon entry to copy_to_user() & restoring TTBR0 to
+earlier value after user copying was done and ensuring boot.
 
- Makefile                                            |    2 -
- arch/arc/kernel/setup.c                             |    5 +-
- arch/arc/plat-eznps/Kconfig                         |    1 
- arch/powerpc/platforms/powernv/opal-imc.c           |   39 ++++++++------------
- arch/s390/kernel/mcount.S                           |    1 
- arch/s390/mm/hugetlbpage.c                          |    9 +++-
- arch/x86/include/asm/pgtable.h                      |    1 
- arch/x86/mm/mmio-mod.c                              |    4 +-
- drivers/block/null_blk_zoned.c                      |    4 ++
- drivers/gpu/drm/drm_edid.c                          |    3 +
- drivers/gpu/drm/i915/intel_dp.c                     |    7 +--
- drivers/gpu/drm/i915/intel_dp_mst.c                 |   22 ++++++++---
- drivers/hid/hid-sony.c                              |   17 ++++++++
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c            |    8 ++++
- drivers/i2c/busses/i2c-altera.c                     |   10 ++++-
- drivers/net/dsa/mt7530.c                            |   11 ++++-
- drivers/net/dsa/mt7530.h                            |    6 +++
- drivers/net/ethernet/apple/bmac.c                   |    2 -
- drivers/net/ethernet/freescale/ucc_geth.c           |   13 +++---
- drivers/net/ethernet/smsc/smsc911x.c                |    9 ++--
- drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c |   13 ++++++
- drivers/net/wireless/cisco/airo.c                   |   12 ++++++
- drivers/net/wireless/intersil/p54/p54usb.c          |    1 
- drivers/nvdimm/btt.c                                |    8 ++--
- drivers/nvdimm/namespace_devs.c                     |    7 ++-
- drivers/scsi/hisi_sas/hisi_sas_main.c               |    3 +
- drivers/scsi/ufs/ufshcd.c                           |    1 
- drivers/spi/spi-dw.c                                |    3 +
- include/uapi/linux/mmc/ioctl.h                      |    1 
- kernel/cgroup/rstat.c                               |   16 +-------
- kernel/relay.c                                      |    5 ++
- mm/mremap.c                                         |    2 -
- security/integrity/evm/evm_crypto.c                 |    2 -
- security/integrity/evm/evm_main.c                   |    4 +-
- security/integrity/evm/evm_secfs.c                  |    9 ++++
- 35 files changed, 177 insertions(+), 84 deletions(-)
+Meanwhile more testing w/ kernel static mapping in vmalloc space
+revealed a major issue, w/ LPAE it was not booting. There were issues
+related to pmd handling, w/ !LPAE those issues were not present as pmd
+is in effect equivalent to pgd. The issues has been fixed, though now
+LPAE boots, but feel a kind of fragile, will probably have to revisit
+it.
 
-Aneesh Kumar K.V (1):
-      libnvdimm: Fix endian conversion issues 
-
-Anju T Sudhakar (1):
-      powerpc/powernv: Avoid re-registration of imc debugfs directory
-
-Atsushi Nemoto (1):
-      i2c: altera: Fix race between xfer_msg and isr thread
-
-Can Guo (1):
-      scsi: ufs: Release clock if DMA map fails
-
-Chaitanya Kulkarni (1):
-      null_blk: return error for invalid zone size
-
-DENG Qingfang (1):
-      net: dsa: mt7530: set CPU port to fallback mode
-
-Dan Carpenter (1):
-      airo: Fix read overflows sending packets
-
-Daniel Axtens (1):
-      kernel/relay.c: handle alloc_percpu returning NULL in relay_open
-
-Dinghao Liu (1):
-      net: smsc911x: Fix runtime PM imbalance on error
-
-Eugeniy Paltsev (1):
-      ARC: Fix ICCM & DCCM runtime size checks
-
-Fan Yang (1):
-      mm: Fix mremap not considering huge pmd devmap
-
-Gerald Schaefer (1):
-      s390/mm: fix set_huge_pte_at() for empty ptes
-
-Giuseppe Marco Randazzo (1):
-      p54usb: add AirVasT USB stick device-id
-
-Greg Kroah-Hartman (1):
-      Linux 4.19.127
-
-Jan Schmidt (1):
-      drm/edid: Add Oculus Rift S to non-desktop list
-
-Jeremy Kerr (1):
-      net: bmac: Fix read of MAC address from ROM
-
-Jonathan McDowell (1):
-      net: ethernet: stmmac: Enable interface clocks on probe for IPQ806x
-
-Julian Sax (1):
-      HID: i2c-hid: add Schneider SCL142ALM to descriptor override
-
-Jérôme Pouiller (1):
-      mmc: fix compilation of user API
-
-Lucas De Marchi (1):
-      drm/i915: fix port checks for MST support on gen >= 11
-
-Madhuparna Bhowmik (1):
-      evm: Fix RCU list related warnings
-
-Nathan Chancellor (1):
-      x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
-
-Scott Shumate (1):
-      HID: sony: Fix for broken buttons on DS3 USB dongles
-
-Tejun Heo (1):
-      Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race window"
-
-Valentin Longchamp (1):
-      net/ethernet/freescale: rework quiesce/activate for ucc_geth
-
-Vasily Gorbik (1):
-      s390/ftrace: save traced function caller
-
-Vineet Gupta (1):
-      ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT
-
-Xiang Chen (1):
-      scsi: hisi_sas: Check sas_port before using it
-
-Xinwei Kong (1):
-      spi: dw: use "smp_mb()" to avoid sending spi data error
-
+Regards
+afzal
