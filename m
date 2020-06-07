@@ -2,101 +2,148 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5003C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A73C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66372073B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:21:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h7A2sf3N"
+	by mail.kernel.org (Postfix) with ESMTP id B61E22073B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgFGVV3 (ORCPT
+        id S1727878AbgFGV3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 17:21:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgFGVV2 (ORCPT
+        Sun, 7 Jun 2020 17:29:47 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41637 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgFGV3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 17:21:28 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25776C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 14:21:28 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id n11so15463199qkn.8
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 14:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1cQSDj+7so0T7k1BgVBgs5wD+MuPzNckE4uP70HqryA=;
-        b=h7A2sf3NAFTKXBS9IbbBTbxpix/3Z+143NnMpVxGCJwoaqM1q8hQkqbA4rnMHSIzDO
-         h6c64ZVJKN8EILdtQ67iu+lXtiaAd3/H/M6wmyxlkprIBa12rxSUKEIAzajVDZo1qtwa
-         oGGc60tfPpdosZKNA7K80bQNCRuWXf3Dd8PH6h+UqFvc83bcwNF4Esllnj2asBC2iQfF
-         +pRe8Vj523Rjmo0XYvcvpLjkACtJJndqtpOSnbmwPuVzL9e/RirY7QJaBIVUYRL34EJS
-         JR1C+xdJcECs2fu9fcEjb1ckJdene5PpU0MY8moBDJkYevOeU+pbty2zgF3GPW6NGjuM
-         kqjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1cQSDj+7so0T7k1BgVBgs5wD+MuPzNckE4uP70HqryA=;
-        b=LxtSm9shcFldhh8lTLocz5tQpb9HyeOXBtL+lgkGZrM+AL4NX9wQ4oYjgLiQz9pePU
-         D3SDV+mPIxS72ZodbJq+4uR7nuQO2rAMRh0nAQWD4S+061vKGb3/rGfai0wd9K7r8oM/
-         gSb4Sei3Ov6EMOh5W7kIFy7A7iDeUpTsS61p96/0ujF0FRAnjb2Xv6I2TfOOKWPaDIkD
-         po8rYGruEfeq7TEQTUhipdq3nglvosEIiuWdHrA7a7BkkB1EzSFRPzIfsy9QLhjFz2vF
-         nlRIVIuolHlxTPFbLDXTT8pGciJfXFIVHrE6jYpsY21cMjxg+mBvt4tpr9YNZo7yinQz
-         z9dw==
-X-Gm-Message-State: AOAM531Gx4Z8XQO3Z689CnJsO7z7rjOvejrA/b/5JueFZ8o6sNUjPbvo
-        xb7eP4WFXGPGfqrZ80fLqQ==
-X-Google-Smtp-Source: ABdhPJw28PBaLu+3wXhVyEXsCdhxptWAexRVhvPQRHuom5rxKCtjuttJ1zq1/6pTjbui1hXdkXSI0A==
-X-Received: by 2002:a37:9cb:: with SMTP id 194mr19222688qkj.456.1591564887161;
-        Sun, 07 Jun 2020 14:21:27 -0700 (PDT)
-Received: from localhost.localdomain ([142.119.96.191])
-        by smtp.googlemail.com with ESMTPSA id g9sm5786880qtq.66.2020.06.07.14.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 14:21:26 -0700 (PDT)
-From:   Keyur Patel <iamkeyur96@gmail.com>
-Cc:     Keyur Patel <iamkeyur96@gmail.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] fs: ocfs2: fix spelling mistake
-Date:   Sun,  7 Jun 2020 17:21:14 -0400
-Message-Id: <20200607212115.99278-1-iamkeyur96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Sun, 7 Jun 2020 17:29:46 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 35D35240004;
+        Sun,  7 Jun 2020 21:29:43 +0000 (UTC)
+Date:   Sun, 7 Jun 2020 23:29:43 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RTC for 5.8
+Message-ID: <20200607212943.GA1821798@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-./ocfs2/mmap.c:65: bebongs ==> belongs
+Hello Linus,
 
-Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
----
- fs/ocfs2/mmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Not much this cycle apart from the ingenic rtc driver rework. The fixes
+are mainly minor issues reported by coccinelle rather than real world
+issues.
 
-diff --git a/fs/ocfs2/mmap.c b/fs/ocfs2/mmap.c
-index 3a44e461828a..39a77e903fdf 100644
---- a/fs/ocfs2/mmap.c
-+++ b/fs/ocfs2/mmap.c
-@@ -62,7 +62,7 @@ static vm_fault_t __ocfs2_page_mkwrite(struct file *file,
- 	last_index = (size - 1) >> PAGE_SHIFT;
- 
- 	/*
--	 * There are cases that lead to the page no longer bebongs to the
-+	 * There are cases that lead to the page no longer belongs to the
- 	 * mapping.
- 	 * 1) pagecache truncates locally due to memory pressure.
- 	 * 2) pagecache truncates when another is taking EX lock against 
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.8
+
+for you to fetch changes up to 4601e24a6fb819d38d1156d0f690cbe6a42c6d76:
+
+  rtc: pcf2127: watchdog: handle nowayout feature (2020-06-06 00:34:16 +0200)
+
+----------------------------------------------------------------
+RTC for 5.8
+
+Subsystem:
+ - new VL flag for backup switch over
+
+Drivers:
+ - ingenic: only support device tree
+ - pcf2127: report battery switch over, handle nowayout
+
+----------------------------------------------------------------
+Alexandre Belloni (8):
+      rtc: mt2712: remove unnecessary error string
+      rtc: mt2712: switch to devm_platform_ioremap_resource
+      rtc: 88pm860x: remove useless range check
+      rtc: add new VL flag for backup switchover
+      rtc: pcf2127: let the core handle rtc range
+      rtc: pcf2127: remove unnecessary #ifdef
+      rtc: pcf2127: set regmap max_register
+      rtc: pcf2127: report battery switch over
+
+Anson Huang (2):
+      rtc: snvs: Make SNVS clock always prepared
+      rtc: snvs: Add necessary clock operations for RTC APIs
+
+Bruno Thomsen (1):
+      rtc: pcf2127: watchdog: handle nowayout feature
+
+Chuhong Yuan (1):
+      rtc: rv3028: Add missed check for devm_regmap_init_i2c()
+
+Dan Carpenter (1):
+      rtc: rc5t619: Fix an ERR_PTR vs NULL check
+
+Kevin P. Fleming (2):
+      rtc: abx80x: Add Device Tree matching table
+      rtc: abx80x: Provide debug feedback for invalid dt properties
+
+Markus Elfring (1):
+      rtc: remove unnecessary error message after platform_get_irq
+
+Paul Cercueil (7):
+      rtc: ingenic: Only support probing from devicetree
+      rtc: ingenic: Use local 'dev' variable in probe
+      rtc: ingenic: Enable clock in probe
+      rtc: ingenic: Set wakeup params in probe
+      rtc: ingenic: Remove unused fields from private structure
+      rtc: ingenic: Fix masking of error code
+      rtc: ingenic: Reset regulator register in probe
+
+Qiushi Wu (1):
+      rtc: mc13xxx: fix a double-unlock issue
+
+Ran Wang (1):
+      rtc: fsl-ftm-alarm: fix freeze(s2idle) failed to wake
+
+Thierry Reding (1):
+      rtc: max77686: Use single-byte writes on MAX77620
+
+Tiezhu Yang (2):
+      rtc: goldfish: Use correct return value for goldfish_rtc_probe()
+      rtc: mpc5121: Use correct return value for mpc5121_rtc_probe()
+
+Wolfram Sang (1):
+      rtc: stmp3xxx: update contact email
+
+ drivers/rtc/Kconfig             |   1 +
+ drivers/rtc/rtc-88pm860x.c      |   6 --
+ drivers/rtc/rtc-abx80x.c        |  66 +++++++++++++--
+ drivers/rtc/rtc-fsl-ftm-alarm.c |  10 ++-
+ drivers/rtc/rtc-goldfish.c      |   2 +-
+ drivers/rtc/rtc-jz4740.c        | 173 +++++++++++++++++++---------------------
+ drivers/rtc/rtc-lpc24xx.c       |   4 +-
+ drivers/rtc/rtc-max77686.c      |  22 +++--
+ drivers/rtc/rtc-mc13xxx.c       |   4 +-
+ drivers/rtc/rtc-mpc5121.c       |   2 +-
+ drivers/rtc/rtc-mt2712.c        |  16 +---
+ drivers/rtc/rtc-pcf2127.c       |  31 ++++---
+ drivers/rtc/rtc-rc5t619.c       |   4 +-
+ drivers/rtc/rtc-rv3028.c        |   2 +
+ drivers/rtc/rtc-snvs.c          |  59 +++++++++++++-
+ drivers/rtc/rtc-stmp3xxx.c      |   2 +-
+ include/uapi/linux/rtc.h        |   1 +
+ 17 files changed, 256 insertions(+), 149 deletions(-)
+
 -- 
-2.26.2
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
