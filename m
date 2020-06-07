@@ -2,148 +2,107 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A73C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61E22073B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB20206D5
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXUjmROc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgFGV3r (ORCPT
+        id S1727961AbgFGVsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 17:29:47 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:41637 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgFGV3q (ORCPT
+        Sun, 7 Jun 2020 17:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgFGVsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 17:29:46 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 35D35240004;
-        Sun,  7 Jun 2020 21:29:43 +0000 (UTC)
-Date:   Sun, 7 Jun 2020 23:29:43 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RTC for 5.8
-Message-ID: <20200607212943.GA1821798@piout.net>
+        Sun, 7 Jun 2020 17:48:02 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00485C08C5C3;
+        Sun,  7 Jun 2020 14:48:01 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 202so9020321lfe.5;
+        Sun, 07 Jun 2020 14:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ay8EHASwjhU1bjGhoJPlUWvuPWuHbO/3W1nJ49RR5ag=;
+        b=VXUjmROcDERX9tK85WWAf5vfiKHroxFpPZt28aMBYRGZJrksc/ZUrpeM9TsQMSJYhE
+         DCITogpNAOT9Fc+Gi+ICLkihzUbwLylqKb/dcK0HtK1cI+ZK0ifujYEBYE3Zm5T0bI7/
+         ndXyIvGU5qnUYWG7cgegvpLWugs08MGmrb1n9B+z4fvgrsP1ufvxgTT4i+A52SSOcCFI
+         UJcJC7/316SDrGbaTqwo+5Zb5uvFbANULzWL3G0apNvUCEde3IQKRFBLhyodvRGYgU2t
+         6PIVdLaYwdOjQR3mMPlA/+QkUOYQbs2wLgcTNhwK37jZoFCfK29uk5xOHFMGZwPwb5QA
+         iZiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ay8EHASwjhU1bjGhoJPlUWvuPWuHbO/3W1nJ49RR5ag=;
+        b=W5rz3G/l5OYYyFZydriQ8JL9p7Bxh0TUT3GxldvWjcl7/+VlUjBNRAaCef2K/PdnMj
+         /p/QIfZmvF3f/jKTOYL1FkOqZMb3g+HLsCjkO/3I8p4le/Kr8i7nRpVKLPks4OtS14mt
+         W6AgT3PRV8nVpshjP9vW9pJPlhvTQ1dnCynXwIanjHn88yJC5JXHU7QoANi9CFW0TgVK
+         XggJMZ/r7UgDvVQu8/uh538KdPeKS3iZUs0Z1wBU5B04JhHZVbtDTdRDmCrbgf/dYoty
+         fpb6A/2rVY1QDf4zfp0M3XptUMXqeMtdnQ+YamUd6lI4F/zgMq7YGXUAJq+oV98ZXuIo
+         8nvw==
+X-Gm-Message-State: AOAM530l71D3tvMr+lUMOePkVo5latDLWtTxxX/neRMzZH9bP3dPormY
+        UZdRq65B4VHn6GU1w3kXgCtQx/uA
+X-Google-Smtp-Source: ABdhPJz+DegAGZHDYRJIlKVV0XxJ0lW/Q/FEgvkvROG5VVEspAJPGPKSKwJCvEcs43RZ2CG7mC0kdQ==
+X-Received: by 2002:a05:6512:3b6:: with SMTP id v22mr10767583lfp.97.1591566479992;
+        Sun, 07 Jun 2020 14:47:59 -0700 (PDT)
+Received: from [192.168.2.145] (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.googlemail.com with ESMTPSA id u30sm3325110ljd.94.2020.06.07.14.47.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jun 2020 14:47:59 -0700 (PDT)
+Subject: Re: [PATCH v3 31/39] memory: tegra20-emc: Register as interconnect
+ provider
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200607185530.18113-1-digetx@gmail.com>
+ <20200607185530.18113-32-digetx@gmail.com>
+Message-ID: <89b690be-d2fa-a679-5773-d5906a93ffcc@gmail.com>
+Date:   Mon, 8 Jun 2020 00:47:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200607185530.18113-32-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+07.06.2020 21:55, Dmitry Osipenko пишет:
+...
+> +	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
+> +		err = tegra_emc_interconnect_init(emc);
+> +		if (err)
+> +			dev_err(&pdev->dev, "failed to initialize ICC: %d\n",
+> +				err);
+> +	}
 
-Not much this cycle apart from the ingenic rtc driver rework. The fixes
-are mainly minor issues reported by coccinelle rather than real world
-issues.
-
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
-
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.8
-
-for you to fetch changes up to 4601e24a6fb819d38d1156d0f690cbe6a42c6d76:
-
-  rtc: pcf2127: watchdog: handle nowayout feature (2020-06-06 00:34:16 +0200)
-
-----------------------------------------------------------------
-RTC for 5.8
-
-Subsystem:
- - new VL flag for backup switch over
-
-Drivers:
- - ingenic: only support device tree
- - pcf2127: report battery switch over, handle nowayout
-
-----------------------------------------------------------------
-Alexandre Belloni (8):
-      rtc: mt2712: remove unnecessary error string
-      rtc: mt2712: switch to devm_platform_ioremap_resource
-      rtc: 88pm860x: remove useless range check
-      rtc: add new VL flag for backup switchover
-      rtc: pcf2127: let the core handle rtc range
-      rtc: pcf2127: remove unnecessary #ifdef
-      rtc: pcf2127: set regmap max_register
-      rtc: pcf2127: report battery switch over
-
-Anson Huang (2):
-      rtc: snvs: Make SNVS clock always prepared
-      rtc: snvs: Add necessary clock operations for RTC APIs
-
-Bruno Thomsen (1):
-      rtc: pcf2127: watchdog: handle nowayout feature
-
-Chuhong Yuan (1):
-      rtc: rv3028: Add missed check for devm_regmap_init_i2c()
-
-Dan Carpenter (1):
-      rtc: rc5t619: Fix an ERR_PTR vs NULL check
-
-Kevin P. Fleming (2):
-      rtc: abx80x: Add Device Tree matching table
-      rtc: abx80x: Provide debug feedback for invalid dt properties
-
-Markus Elfring (1):
-      rtc: remove unnecessary error message after platform_get_irq
-
-Paul Cercueil (7):
-      rtc: ingenic: Only support probing from devicetree
-      rtc: ingenic: Use local 'dev' variable in probe
-      rtc: ingenic: Enable clock in probe
-      rtc: ingenic: Set wakeup params in probe
-      rtc: ingenic: Remove unused fields from private structure
-      rtc: ingenic: Fix masking of error code
-      rtc: ingenic: Reset regulator register in probe
-
-Qiushi Wu (1):
-      rtc: mc13xxx: fix a double-unlock issue
-
-Ran Wang (1):
-      rtc: fsl-ftm-alarm: fix freeze(s2idle) failed to wake
-
-Thierry Reding (1):
-      rtc: max77686: Use single-byte writes on MAX77620
-
-Tiezhu Yang (2):
-      rtc: goldfish: Use correct return value for goldfish_rtc_probe()
-      rtc: mpc5121: Use correct return value for mpc5121_rtc_probe()
-
-Wolfram Sang (1):
-      rtc: stmp3xxx: update contact email
-
- drivers/rtc/Kconfig             |   1 +
- drivers/rtc/rtc-88pm860x.c      |   6 --
- drivers/rtc/rtc-abx80x.c        |  66 +++++++++++++--
- drivers/rtc/rtc-fsl-ftm-alarm.c |  10 ++-
- drivers/rtc/rtc-goldfish.c      |   2 +-
- drivers/rtc/rtc-jz4740.c        | 173 +++++++++++++++++++---------------------
- drivers/rtc/rtc-lpc24xx.c       |   4 +-
- drivers/rtc/rtc-max77686.c      |  22 +++--
- drivers/rtc/rtc-mc13xxx.c       |   4 +-
- drivers/rtc/rtc-mpc5121.c       |   2 +-
- drivers/rtc/rtc-mt2712.c        |  16 +---
- drivers/rtc/rtc-pcf2127.c       |  31 ++++---
- drivers/rtc/rtc-rc5t619.c       |   4 +-
- drivers/rtc/rtc-rv3028.c        |   2 +
- drivers/rtc/rtc-snvs.c          |  59 +++++++++++++-
- drivers/rtc/rtc-stmp3xxx.c      |   2 +-
- include/uapi/linux/rtc.h        |   1 +
- 17 files changed, 256 insertions(+), 149 deletions(-)
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+It just occurred to me that I completely forgot to remove the
+IS_ENABLED() and change Kconfig to properly set up the build dependency
+on interconnect. Will correct it in v4.
