@@ -2,156 +2,133 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CD6C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2E3C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF8722067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eFlCDugB"
+	by mail.kernel.org (Postfix) with ESMTP id 115A02075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgFGUVU (ORCPT
+        id S1727877AbgFGUYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 16:21:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbgFGUVS (ORCPT
+        Sun, 7 Jun 2020 16:24:19 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53638 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726093AbgFGUYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 16:21:18 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94C2C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 13:21:17 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a9so14347628ljn.6
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 13:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vwR94gDmiVuhD4hMsQgo9dWaCe9Q+3Shvhlwse4oSpQ=;
-        b=eFlCDugBRnYJsqfdotXruR2B3AE0R2wPRXEZY96oKNBIo7h0O2MJdNUsTr3hYYK1Hr
-         qVla+zUmGPIVdU7T6EzsKgAeVbzYI2J3qDyE9yHx6UWsYmSNe604mFk75YM+kT9CiZiH
-         JbM5ELiI+/B40PVG+/dOUh83FBdzs+VIPR/pi1rUjuBU8eQ0tDnZsfLXN6W9VrP8fmCC
-         ET8JW4fSydwxN8QaTpnxVjsqligducBLivhavMozEq8t+nrLZj4D/nfpc/8Ee0+gfG2v
-         VQGwv/X8NMfmAtnfCotTcRxrsyxENvhPppPvcPriukuUUi/6SfOSwI5pm6Hz13Q38KZ8
-         HltA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vwR94gDmiVuhD4hMsQgo9dWaCe9Q+3Shvhlwse4oSpQ=;
-        b=H3evECCnSbkeAhZk+YgxUIzQHVv4/Am7EAhZi5P+O8os9nk7jRvnWTmevPTWXdFVRk
-         FX1LS8zE13hHDauVQOKxpzMofFvCvCTpR28jTBdfPcUcG80mNseZOPo6KIWtPexJ0QLV
-         t6BXqDFwcNbyggKmkMXSJ7wOjcYLV0peHSKR7npGQCSxJtMHVMGIcNisFu2I+fbvzyt8
-         N0yjgAYoUfaIEBfdu/6etK7NBxWNGQz3E9AE/815EQWc51EfuuNTroDyQJJ/vo6Kiy+j
-         OIR1fVHRL2BY/iBm4CB9lo6I2UC2C3Pr/ryeYMMrS0Rbz5G3WLsEB5fdpBRg5i2UU6gp
-         b4pQ==
-X-Gm-Message-State: AOAM5314DvA3xWd6M9L/MMdNnvZUrH1HT3rKvhV02xIYTFrasOjdTbIp
-        v5eqAUgESITJ5GIEzwqyLBuT5DhsnxCoeuoBhvLCTA==
-X-Google-Smtp-Source: ABdhPJxVvkkdzUxXowl/ZPN6X2ELJgyci660wKby/FBmOcEpkkXMOd9/vsG63pCI4b3Va2VVtaIWNcKaPfPZzoPn89E=
-X-Received: by 2002:a2e:974e:: with SMTP id f14mr9213285ljj.102.1591561276084;
- Sun, 07 Jun 2020 13:21:16 -0700 (PDT)
+        Sun, 7 Jun 2020 16:24:18 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 44C241C0BD2; Sun,  7 Jun 2020 22:24:15 +0200 (CEST)
+Date:   Sun, 7 Jun 2020 22:24:14 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        kernel@collabora.com
+Subject: Re: [PATCH v3 0/7] Support inhibiting input devices
+Message-ID: <20200607202414.GB13138@amd>
+References: <20200604072853.GP89269@dtor-ws>
+ <20200605173335.13753-1-andrzej.p@collabora.com>
 MIME-Version: 1.0
-References: <20200605135951.018731965@linuxfoundation.org> <CA+G9fYsuzQ1BiAx74K2VGK4enUoNLe=jzpT-+AX2NB=wd4PHPw@mail.gmail.com>
- <20200607112026.GD47740@kroah.com>
-In-Reply-To: <20200607112026.GD47740@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 8 Jun 2020 01:51:04 +0530
-Message-ID: <CA+G9fYvXunowhCzvg3oF1Q42m1Ze1+p+B4_hV1ErYYyKKVJKUQ@mail.gmail.com>
-Subject: Re: [PATCH 5.7 00/14] 5.7.1-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+Content-Disposition: inline
+In-Reply-To: <20200605173335.13753-1-andrzej.p@collabora.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 7 Jun 2020 at 16:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sat, Jun 06, 2020 at 09:19:53PM +0530, Naresh Kamboju wrote:
-> > On Fri, 5 Jun 2020 at 19:46, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > This is the start of the stable review cycle for the 5.7.1 release.
-> > > There are 14 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, plea=
-se
-> > > let me know.
-> > >
-> > > Responses should be made by Sun, 07 Jun 2020 13:54:56 +0000.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/pa=
-tch-5.7.1-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
-able-rc.git linux-5.7.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > Results from Linaro=E2=80=99s test farm.
-> >
-> > While running kselftest memfd_test case the kernel panic noticed on i38=
-6
-> > which started with kernel BUG and followed by kernel panic.
-> >
-> > steps to reproduce: (Not always reproducible)
-> >           - cd /opt/kselftests/mainline/memfd/
-> >           - ./run_fuse_test.sh || true
-> >           - ./run_hugetlbfs_test.sh || true
-> >
-> > [  417.473220] run_hugetlbfs_t (10826): drop_caches: 3
-> > [  417.491120] audit: type=3D1701 audit(1591388532.357:87503):
-> > auid=3D4294967295 uid=3D0 gid=3D0 ses=3D4294967295 subj=3Dkernel pid=3D=
-10829
-> > comm=3D\"memfd_test\" exe=3D\"/opt/kselftests/mainline/memfd/memfd_test=
-\"
-> > sig=3D6 res=3D1
-> > [  417.511294] BUG: kernel NULL pointer dereference, address: 00000043
-> > [  417.517569] #PF: supervisor read access in kernel mode
-> > [  417.522699] #PF: error_code(0x0000) - not-present page
-> > [  417.527830] *pde =3D 00000000
-> > [  417.530707] Oops: 0000 [#2] SMP
-> > [  417.533846] CPU: 3 PID: 10829 Comm: memfd_test Tainted: G      D W
-> >        5.7.1-rc1 #1
-> > [  417.541845] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > 2.0b 07/27/2017
-> > [  417.549327] EIP: kmem_cache_alloc_trace+0x81/0x2b0
-> > <>
-> > [  931.776242] Kernel panic - not syncing: Attempted to kill init!
-> > exitcode=3D0x00000009
-> > [  931.783933] Kernel Offset: 0x1ce00000 from 0xc1000000 (relocation
-> > range: 0xc0000000-0xf77fdfff)
-> > [  931.792627] ---[ end Kernel panic - not syncing: Attempted to kill
-> > init! exitcode=3D0x00000009 ]---
->
-> Did you see this on Linus's tree too?
 
-Yes.
-I have noticed 4 out of 10 kselftest full runs.
+--E39vaYmALEf/7YXx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Is it a regression from 5.7.0?
+On Fri 2020-06-05 19:33:28, Andrzej Pietrasiewicz wrote:
+> Userspace might want to implement a policy to temporarily disregard input
+> from certain devices.
 
-It is a regression on Linus 's tree and the same problem was noticed on
-stable-rc 5.7 branch.
+Wow, you certainly cc a lot of lists.
 
-- Naresh
+> An example use case is a convertible laptop, whose keyboard can be folded
+> under the screen to create tablet-like experience. The user then must hold
+> the laptop in such a way that it is difficult to avoid pressing the keybo=
+ard
+> keys. It is therefore desirable to temporarily disregard input from the
+> keyboard, until it is folded back. This obviously is a policy which should
+> be kept out of the kernel, but the kernel must provide suitable means to
+> implement such a policy.
+>=20
+> Due to interactions with suspend/resume, a helper has been added for driv=
+ers
+> to decide if the device is being used or not (PATCH 1/7) and it has been
+> applied to relevant drivers (PATCH 2,4,5,6/7).
+
+But is that a right way to implement it?
+
+We want this for cellphones, too -- touchscreen should be disabled
+while the device is locked in the pocket -- but we really want the
+touchscreen hardware to be powered down in that case (because it keeps
+SoC busy and eats a _lot_ of electricity).
+
+But simplistic "receive an event and then drop it if device is
+inhibited" does not allow that...
+
+Best regards,
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--E39vaYmALEf/7YXx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7dTO4ACgkQMOfwapXb+vKNuACgw3cpx7Z15Nm3EAs8yyTuu1RS
+DsYAn1yorcZKMbA2oKpOoVakbRalRIie
+=Dt1J
+-----END PGP SIGNATURE-----
+
+--E39vaYmALEf/7YXx--
