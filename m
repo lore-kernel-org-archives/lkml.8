@@ -2,165 +2,162 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2759CC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3ABC2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E372A20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:57:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="pkqJ9LWq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aTNdTtFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgFGNxf (ORCPT
+        id S1726646AbgFGN5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 09:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgFGNxe (ORCPT
+        Sun, 7 Jun 2020 09:57:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36710 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726522AbgFGN5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 09:53:34 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B77C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 06:53:34 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b16so7298388pfi.13
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 06:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=2vRbY4KOtns2itvV4Abjc+mSm6ew8Al41Vyl7F7LcdA=;
-        b=pkqJ9LWqDAS5lRiZQyChQWq4Ql4oVB7yZYVmVP9QEO2MGsIa59vlJgAsGzKAgfE3Jy
-         RHLPh+DxdnqnrKOA+dsbC+u5gow9pNytetMHbFV74Wb2hor7Uif26+wGX07mn3BVf5az
-         jx9FndQ7hd9l4HxGJWMDaDbVANiRUoDzyq9X0ip5Dipe2HiEV9rZQm88DfbCnvokZW7E
-         UXd6dXr/L0ViHgnBu8zW1IALGI62NRvXYP1qL0573prf7awQYay639gplEXUcz/ad/Hz
-         +bxvHEs1jhS4/U1RCHkzrxChD1xMPxeKANKwMfEj5i4hUjHgsaQ736oackQc7GsEDNwL
-         Y66w==
+        Sun, 7 Jun 2020 09:57:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591538236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vfoj+F+YdFYc+88chRAUvS2eMr2A8z0PiugZ6+kTuqY=;
+        b=aTNdTtFtlI41bsnvuOuN8Nnyxq+su1pqF7+UVg5BHpyuEq5RipDkxzmWmGolOg2RfxV3RF
+        HcgzbQI8pKU23macPwQHAH3CWJKXREytYA1snNXvsgRWWxawUjkPq/vokmyUCC6HuWmrra
+        HDwoIdOHeIZqDvMz4/Tya5Er+ae+r2s=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-VRrE7V0UPhK-2Zy_16pStQ-1; Sun, 07 Jun 2020 09:57:14 -0400
+X-MC-Unique: VRrE7V0UPhK-2Zy_16pStQ-1
+Received: by mail-wr1-f71.google.com with SMTP id p9so6057246wrx.10
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 06:57:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2vRbY4KOtns2itvV4Abjc+mSm6ew8Al41Vyl7F7LcdA=;
-        b=SA3t6xVV5rhvUV9gAzsuMJlfc9JsSDLahetgXQU1kR9NGUzAoYFJ9qmuXIQDnk2nEU
-         znWhEBXO1rrOG9NC88ZOLocejy8cpkSC3EE7p52En0a+VSyW+UneY1xdqMHcuiKy1DX+
-         VP+tQUHAwZ2hJDFaF0BdtayMLLzIxPBNQ5+Uyr+W2BX13jQkwkV9eTQ1uJIPvIIbjpSJ
-         2igg7xN/AeqqOuZXhd/OggOgaEST7p50tQD2WbxR9bDg21JNPpB35o3zSfKaa2QPxse/
-         ZYSM8kaB6rbnGxhQ3rwFNjE5ghzVP/nJz1Cp+1qnCJHYBoHZ7FiH8RdTWzdtyJQlGNWz
-         jh4w==
-X-Gm-Message-State: AOAM530ofJbu/3qmMLivkrSoAzWaeviSBae6ykAr+S3RNILHpTQk9ovc
-        vZwWknR6X0XQwu5lwzKCSA3Isg==
-X-Google-Smtp-Source: ABdhPJwdpj4ZwamU05hG0KQmIvoD0WamjgfDFFYtmjeTTgBJhoo3BbvUo29iRqr+j1rjX3ZTfJt4Mg==
-X-Received: by 2002:aa7:8506:: with SMTP id v6mr17711930pfn.303.1591538013449;
-        Sun, 07 Jun 2020 06:53:33 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.174])
-        by smtp.gmail.com with ESMTPSA id 77sm4610313pfu.139.2020.06.07.06.53.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 07 Jun 2020 06:53:32 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 19:23:25 +0530
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     linux-media@vger.kernel.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com,
-        laurent.pinchart@ideasonboard.com
-Subject: [RFC PATCH] vimc: Add colors' order over test image
-Message-ID: <20200607135325.GA16838@kaaira-HP-Pavilion-Notebook>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Vfoj+F+YdFYc+88chRAUvS2eMr2A8z0PiugZ6+kTuqY=;
+        b=gcCsbAD7GfL40lV+IPzD8G9WZ7UWJQ9ItX33upQvOwsT6V2zE+JheOYPCYn/lk+vKJ
+         qGOOxRrRBrH5PbUwtG/VA1mRi16djz1uIJYlcXtiPLt/vOR1S0xmM2LbRyT1O70xPhUe
+         RvtMFQXDjBTVk438cY6WKwoUpiKb5JEkgiarO/BwWyp6PfugrrRLupQi5Xl9Y0QNzu0E
+         cKSdCGFZnDnlX9rF6H/Fd9eENFiC0yGCt4wGAiCQmc0UDenihmRyowZlyEfmFfZMaLcb
+         eSyky+L3aQ+95IQbkddtCXmXrgp1+6dEFkvMNziuEpQEv3IVN6HPi1e1aVv1zwAgf/SY
+         BQUQ==
+X-Gm-Message-State: AOAM532lE7BViBiMqV2FeV+cPQJg+tE8rStnboC/QgA6hxcUgjvo4kqB
+        9E1q1bRnSLOmAv0fAh1McWOfOC5Q8obJgPzse/hPgKTACWCo0RADK/Nfj4h6hixNXf4yruJ7/O1
+        xx45ANVr0mKpzeXYIC5gTitCI
+X-Received: by 2002:adf:e692:: with SMTP id r18mr18040348wrm.192.1591538233486;
+        Sun, 07 Jun 2020 06:57:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzdpLNXIJ5j1LCUCT+yl4S8d3+2bKw0KjrOrbk8tNVbTrugKBbeL7cu5E4wnBuzOcL/qjm20w==
+X-Received: by 2002:adf:e692:: with SMTP id r18mr18040336wrm.192.1591538233326;
+        Sun, 07 Jun 2020 06:57:13 -0700 (PDT)
+Received: from redhat.com (bzq-82-81-31-23.red.bezeqint.net. [82.81.31.23])
+        by smtp.gmail.com with ESMTPSA id o10sm20468647wrj.37.2020.06.07.06.57.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 06:57:12 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 09:57:10 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH RFC 03/13] vhost: batching fetches
+Message-ID: <20200607095219-mutt-send-email-mst@kernel.org>
+References: <20200602130543.578420-1-mst@redhat.com>
+ <20200602130543.578420-4-mst@redhat.com>
+ <3323daa2-19ed-02de-0ff7-ab150f949fff@redhat.com>
+ <20200604045830-mutt-send-email-mst@kernel.org>
+ <6c2e6cc7-27c5-445b-f252-0356ff8a83f3@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c2e6cc7-27c5-445b-f252-0356ff8a83f3@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is no method to know if the test image generated by vimc
-is correct (except for comparing it with a known 'correct' image). Add
-text over the test image, representing the correct order of colors.
+On Fri, Jun 05, 2020 at 11:40:17AM +0800, Jason Wang wrote:
+> 
+> On 2020/6/4 下午4:59, Michael S. Tsirkin wrote:
+> > On Wed, Jun 03, 2020 at 03:27:39PM +0800, Jason Wang wrote:
+> > > On 2020/6/2 下午9:06, Michael S. Tsirkin wrote:
+> > > > With this patch applied, new and old code perform identically.
+> > > > 
+> > > > Lots of extra optimizations are now possible, e.g.
+> > > > we can fetch multiple heads with copy_from/to_user now.
+> > > > We can get rid of maintaining the log array.  Etc etc.
+> > > > 
+> > > > Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+> > > > Signed-off-by: Eugenio Pérez<eperezma@redhat.com>
+> > > > Link:https://lore.kernel.org/r/20200401183118.8334-4-eperezma@redhat.com
+> > > > Signed-off-by: Michael S. Tsirkin<mst@redhat.com>
+> > > > ---
+> > > >    drivers/vhost/test.c  |  2 +-
+> > > >    drivers/vhost/vhost.c | 47 ++++++++++++++++++++++++++++++++++++++-----
+> > > >    drivers/vhost/vhost.h |  5 ++++-
+> > > >    3 files changed, 47 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+> > > > index 9a3a09005e03..02806d6f84ef 100644
+> > > > --- a/drivers/vhost/test.c
+> > > > +++ b/drivers/vhost/test.c
+> > > > @@ -119,7 +119,7 @@ static int vhost_test_open(struct inode *inode, struct file *f)
+> > > >    	dev = &n->dev;
+> > > >    	vqs[VHOST_TEST_VQ] = &n->vqs[VHOST_TEST_VQ];
+> > > >    	n->vqs[VHOST_TEST_VQ].handle_kick = handle_vq_kick;
+> > > > -	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
+> > > > +	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
+> > > >    		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
+> > > >    	f->private_data = n;
+> > > > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > > > index 8f9a07282625..aca2a5b0d078 100644
+> > > > --- a/drivers/vhost/vhost.c
+> > > > +++ b/drivers/vhost/vhost.c
+> > > > @@ -299,6 +299,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
+> > > >    {
+> > > >    	vq->num = 1;
+> > > >    	vq->ndescs = 0;
+> > > > +	vq->first_desc = 0;
+> > > >    	vq->desc = NULL;
+> > > >    	vq->avail = NULL;
+> > > >    	vq->used = NULL;
+> > > > @@ -367,6 +368,11 @@ static int vhost_worker(void *data)
+> > > >    	return 0;
+> > > >    }
+> > > > +static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
+> > > > +{
+> > > > +	return vq->max_descs - UIO_MAXIOV;
+> > > > +}
+> > > 1 descriptor does not mean 1 iov, e.g userspace may pass several 1 byte
+> > > length memory regions for us to translate.
+> > > 
+> > Yes but I don't see the relevance. This tells us how many descriptors to
+> > batch, not how many IOVs.
+> 
+> 
+> Yes, but questions are:
+> 
+> - this introduce another obstacle to support more than 1K queue size
+> - if we support 1K queue size, does it mean we need to cache 1K descriptors,
+> which seems a large stress on the cache
+> 
+> Thanks
+> 
+> 
+> > 
 
-I have sent it as an RFC because we can add the text as an optional
-control, and maybe we can print some other useful information as well
-(like vivid does).
-
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
----
- drivers/media/test-drivers/vimc/Kconfig       | 2 ++
- drivers/media/test-drivers/vimc/vimc-core.c   | 9 +++++++++
- drivers/media/test-drivers/vimc/vimc-sensor.c | 8 ++++++++
- 3 files changed, 19 insertions(+)
-
-diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
-index 4068a67585f9..da4b2ad6e40c 100644
---- a/drivers/media/test-drivers/vimc/Kconfig
-+++ b/drivers/media/test-drivers/vimc/Kconfig
-@@ -2,6 +2,8 @@
- config VIDEO_VIMC
- 	tristate "Virtual Media Controller Driver (VIMC)"
- 	depends on VIDEO_DEV && VIDEO_V4L2
-+	select FONT_SUPPORT
-+	select FONT_8x16
- 	select MEDIA_CONTROLLER
- 	select VIDEO_V4L2_SUBDEV_API
- 	select VIDEOBUF2_VMALLOC
-diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
-index 11210aaa2551..8142bfbcbd49 100644
---- a/drivers/media/test-drivers/vimc/vimc-core.c
-+++ b/drivers/media/test-drivers/vimc/vimc-core.c
-@@ -5,10 +5,12 @@
-  * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
-  */
- 
-+#include <linux/font.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <media/media-device.h>
-+#include <media/tpg/v4l2-tpg.h>
- #include <media/v4l2-device.h>
- 
- #include "vimc-common.h"
-@@ -265,7 +267,14 @@ static int vimc_probe(struct platform_device *pdev)
- {
- 	struct vimc_device *vimc;
- 	int ret;
-+	const struct font_desc *font = find_font("VGA8x16");
- 
-+	if (font == NULL) {
-+		pr_err("vimc: could not find font\n");
-+		return -ENODEV;
-+	}
-+
-+	tpg_set_font(font->data);
- 	dev_dbg(&pdev->dev, "probe");
- 
- 	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
-diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-index a2f09ac9a360..4b13955c502a 100644
---- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-+++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-@@ -185,10 +185,18 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
- static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
- 				    const void *sink_frame)
- {
-+	u8 *basep[TPG_MAX_PLANES][2];
-+	char str[100];
- 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
- 						    ved);
- 
-+	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
- 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
-+
-+	snprintf(str, sizeof(str),
-+		 "Order: white, yellow, cyan, green, magenta, red, blue, black");
-+	tpg_gen_text(&vsen->tpg, basep, 1, 1, str);
-+
- 	return vsen->frame;
- }
- 
--- 
-2.17.1
+Still don't understand the relevance. We support up to 1K descriptors
+per buffer just for IOV since we always did. This adds 64 more
+descriptors - is that a big deal?
 
