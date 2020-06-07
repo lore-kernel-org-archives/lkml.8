@@ -2,186 +2,98 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB37C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A09AC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D1D20663
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF872067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clpcWgvE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PURl8DuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgFGPe0 (ORCPT
+        id S1726679AbgFGPnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 11:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53876 "EHLO
+        Sun, 7 Jun 2020 11:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgFGPeJ (ORCPT
+        with ESMTP id S1726595AbgFGPnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 11:34:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F30AC08C5C3;
-        Sun,  7 Jun 2020 08:34:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x6so14672883wrm.13;
-        Sun, 07 Jun 2020 08:34:08 -0700 (PDT)
+        Sun, 7 Jun 2020 11:43:13 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DDCC08C5C3;
+        Sun,  7 Jun 2020 08:43:13 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id gl26so15464778ejb.11;
+        Sun, 07 Jun 2020 08:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=C3aCZY+VITj7C4JItC4Fgt+Bj4MVRdBKF8f/Zz68P+4=;
-        b=clpcWgvEsZLyg5pL8qXsCoM5iQp/C/TsvDbvJEhaxmT0VYHmzdHx+H3f1BGFIcNOsX
-         LjrDIw5vHzoJzzUTftsR7Cdv9NQlkbv6wrhrmpdrjtE2O2/brlI018/Pt4hVBn7h6HW3
-         pBauvaC8WePu+ftpt5YjOXy05Kyn2OJX6gSh+yzKBCgOLKcoDgNo7SsQjzymSzrhTj1c
-         c5PhbQoojzODRwuMx8KT0kvNqNxMJsw63XGzLNC+gpMBWbXqGQ7dfXfSjIppyV7VE3vs
-         K73gZ0X4Z4lo3XNynYowMYdDtLsKDyfsj/Zgmd80lgGtJsROSfsOb0x+f8jskZ4s5A58
-         HHSg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QCe7MTPBluIQ+Z4ZBffv4cvKmqrkB70PcCAPj5Z/6/M=;
+        b=PURl8DuPm18P85nvRkNFBSVL56dyuzstSURexfOKdBK8mcAm3gyieRPV3BlgVa3SSE
+         N0wW8j4f11D+ttsY+i3qVNHBnXa39L8BSI62z7AM6JWKDZE+/gQzBa5Z6CHtV9xpgxV7
+         YkTVmcgCjU5DylWKrmJycRLfWKDJKvzUlt/Ul9DK/Q73l8RjJ8oWNTrbRqhifmZinZYM
+         jyMRBvVpbieP7ndnOv/6WHW9S3AZtGWDaH7O2U7ldJ/u97UESY9HZrWYYQYjOtV620+3
+         Lot10ftS5416syWttEH5NflrM0/vix58FQefD1dNP3lUa3aeRpDscZwAdI7GCmt5v4KS
+         2Smw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C3aCZY+VITj7C4JItC4Fgt+Bj4MVRdBKF8f/Zz68P+4=;
-        b=fRSyum3c+YtlxsDeqvq6uF5KNRR3NjPRmnSCcjbO9Kh6d5H8rc9uWhajfREa8fgjjv
-         guidk2716yX2Hu03bGst9LolnCcF+g1yiNQ13dHlM4l5BBW3Nl7lkw9UmxtuBkBF2X+4
-         nOxnqjvYy3zj1Wv4uvvmCTPBTM/Wu5A4++PVAaDqzQrgCQKQRtfO/JSpCS9etujNXOe/
-         VrOeokj7yzphCWIP+blP1UdvwdNIdzlPI3QSfgDSHQSXwM1PR/PwgFsX8XzN3hTnyNL5
-         nivMKu+L/8bOKBerp7jq6UN+utSAZGb1QlnQFqwh7TpJHCy7Ng/FPwLW5IOdVyZNAx1o
-         m5OQ==
-X-Gm-Message-State: AOAM530cBgF6THyJk8QCKFvv/JOlKyWkvOwT+B9ye2IP/79X2100JOK0
-        RApigZSTYS1zaNhAt56Wo9M=
-X-Google-Smtp-Source: ABdhPJw1LdN+FBG+kt9GK5YA2HX3rrxobVovURYwMaN9JoKOKYaBsQiVzDIv5vUxkojvavNQ8ldRew==
-X-Received: by 2002:a5d:4e87:: with SMTP id e7mr18323418wru.427.1591544046951;
-        Sun, 07 Jun 2020 08:34:06 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id 1sm19589015wmz.13.2020.06.07.08.34.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QCe7MTPBluIQ+Z4ZBffv4cvKmqrkB70PcCAPj5Z/6/M=;
+        b=EFFdoPEPLa5yuS2RbUMXsq0tq7HV1UPMf4IMuGznoy3nRJRAlZKulB/1bJh0QglsVW
+         KPRyFtnP1CZPsrE+FsPmOD5Ov7K/5QKYT7xJF6wKD2wXLAMmZlQ0wmdvTEk2WQcdLHSc
+         FQwgoRhCDVdSB+2sJ7XXYlsx4nyzatyZxYBdBQTOz8K5r3KG+HD3d4KBJ0aIvNZxV8j4
+         M869kppJWRJ7DqzfwoOpiKQCTto91giuU6XTvBRZIGnNXQHGclSoDnRyVjT3l25ZX74A
+         ry/kr9ipIS8k04FU93oU56wPzfNX8ocUMXNWe+rjRbxN98H/8SJDyInRurvGpORxJww6
+         1qnA==
+X-Gm-Message-State: AOAM530alrlj7rd7xqXoOZnU2ff9xT97jjgZpsXr2TbbVwZRGPhuTrKU
+        mChn7f0FIsAczIsW1oZklMEDo16cs6wGIw==
+X-Google-Smtp-Source: ABdhPJxNQ9+nxJwOsJeEozyjH/xmSciV4dHlbIHLKHmqctmbT0MNAgwDY4ybECcF32Vz8qtYUYKbKw==
+X-Received: by 2002:a17:907:20e5:: with SMTP id rh5mr17929162ejb.80.1591544591522;
+        Sun, 07 Jun 2020 08:43:11 -0700 (PDT)
+Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
+        by smtp.gmail.com with ESMTPSA id ce16sm8638425ejb.76.2020.06.07.08.43.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 08:34:06 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] io-wq: reorder cancellation pending -> running
-Date:   Sun,  7 Jun 2020 18:32:22 +0300
-Message-Id: <4d250faf3029d6bd31973276701d5971db696004.1591541128.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1591541128.git.asml.silence@gmail.com>
-References: <cover.1591541128.git.asml.silence@gmail.com>
+        Sun, 07 Jun 2020 08:43:10 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 17:42:59 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Nuno Das Neves <nuno.das@microsoft.com>
+Subject: Re: [RFC PATCH 0/2] VMBus channel interrupts re-balancing
+Message-ID: <20200607154259.GA10780@andrea>
+References: <20200526223218.184057-1-parri.andrea@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526223218.184057-1-parri.andrea@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Go all over all pending lists and cancel works there, and only then
-try to match running requests. No functional changes here, just a
-preparation for bulk cancellation.
+> These changes originated from (and address /try to resolve) two known
+> limitations of the current interrupts-to-CPUs mapping scheme, that is,
+> (1) the "static" nature of this mapping scheme (that, e.g., can end up
+> preventing the hot removal of certain CPUs) and (2) the lack of global
+> visibility in such scheme (where devices/channels are mapped only "one
+> at a time"/as they are offered, with the end result that globally the
+> various interrupts are not always evenly spread across CPUs).
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io-wq.c | 54 ++++++++++++++++++++++++++++++++----------------------
- 1 file changed, 32 insertions(+), 22 deletions(-)
+One thing I didn't mention here is that, well, we probably don't want
+any of this when CONFIG_SMP=n:  clearly, I didn't pay much attention
+to (optimize) this config in this RFC (FWIW, neither seems to do the
+current mapping scheme) but I'll look into this if there is interest
+on this regard (once back from vacation of course  ;-) and, probably,
+at the cost of adding some #ifdeffery to this RFC).
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 4023c9846860..3283f8c5b5a1 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -931,19 +931,14 @@ static bool io_wq_worker_cancel(struct io_worker *worker, void *data)
- 	return ret;
- }
- 
--static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
--					    struct io_cb_cancel_data *match)
-+static bool io_wqe_cancel_pending_work(struct io_wqe *wqe,
-+				       struct io_cb_cancel_data *match)
- {
- 	struct io_wq_work_node *node, *prev;
- 	struct io_wq_work *work;
- 	unsigned long flags;
- 	bool found = false;
- 
--	/*
--	 * First check pending list, if we're lucky we can just remove it
--	 * from there. CANCEL_OK means that the work is returned as-new,
--	 * no completion will be posted for it.
--	 */
- 	spin_lock_irqsave(&wqe->lock, flags);
- 	wq_list_for_each(node, prev, &wqe->work_list) {
- 		work = container_of(node, struct io_wq_work, list);
-@@ -956,21 +951,20 @@ static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
- 	}
- 	spin_unlock_irqrestore(&wqe->lock, flags);
- 
--	if (found) {
-+	if (found)
- 		io_run_cancel(work, wqe);
--		return IO_WQ_CANCEL_OK;
--	}
-+	return found;
-+}
-+
-+static bool io_wqe_cancel_running_work(struct io_wqe *wqe,
-+				       struct io_cb_cancel_data *match)
-+{
-+	bool found;
- 
--	/*
--	 * Now check if a free (going busy) or busy worker has the work
--	 * currently running. If we find it there, we'll return CANCEL_RUNNING
--	 * as an indication that we attempt to signal cancellation. The
--	 * completion will run normally in this case.
--	 */
- 	rcu_read_lock();
- 	found = io_wq_for_each_worker(wqe, io_wq_worker_cancel, match);
- 	rcu_read_unlock();
--	return found ? IO_WQ_CANCEL_RUNNING : IO_WQ_CANCEL_NOTFOUND;
-+	return found;
- }
- 
- enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
-@@ -980,18 +974,34 @@ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
- 		.fn	= cancel,
- 		.data	= data,
- 	};
--	enum io_wq_cancel ret = IO_WQ_CANCEL_NOTFOUND;
- 	int node;
- 
-+	/*
-+	 * First check pending list, if we're lucky we can just remove it
-+	 * from there. CANCEL_OK means that the work is returned as-new,
-+	 * no completion will be posted for it.
-+	 */
- 	for_each_node(node) {
- 		struct io_wqe *wqe = wq->wqes[node];
- 
--		ret = io_wqe_cancel_work(wqe, &match);
--		if (ret != IO_WQ_CANCEL_NOTFOUND)
--			break;
-+		if (io_wqe_cancel_pending_work(wqe, &match))
-+			return IO_WQ_CANCEL_OK;
- 	}
- 
--	return ret;
-+	/*
-+	 * Now check if a free (going busy) or busy worker has the work
-+	 * currently running. If we find it there, we'll return CANCEL_RUNNING
-+	 * as an indication that we attempt to signal cancellation. The
-+	 * completion will run normally in this case.
-+	 */
-+	for_each_node(node) {
-+		struct io_wqe *wqe = wq->wqes[node];
-+
-+		if (io_wqe_cancel_running_work(wqe, &match))
-+			return IO_WQ_CANCEL_RUNNING;
-+	}
-+
-+	return IO_WQ_CANCEL_NOTFOUND;
- }
- 
- static bool io_wq_io_cb_cancel_data(struct io_wq_work *work, void *data)
--- 
-2.24.0
-
+Thanks,
+  Andrea
