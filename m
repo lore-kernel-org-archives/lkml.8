@@ -1,225 +1,108 @@
-Return-Path: <SRS0=ne2O=7T=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D68C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 23:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 00:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A7820723
-	for <linux-kernel@archiver.kernel.org>; Sat,  6 Jun 2020 23:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D18620760
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 00:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgFFX2b convert rfc822-to-8bit (ORCPT
+        id S1728893AbgFGADS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 6 Jun 2020 19:28:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:54184 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbgFFX2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 6 Jun 2020 19:28:30 -0400
-IronPort-SDR: ByHdZ0rLPU1KpECvvrDx2603g9CcuIJjl9MK//h7o+uYhdLVvKGU9ms6nSM/uvyDD1AZyn90zu
- 3EbliYWEQBlg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2020 16:28:29 -0700
-IronPort-SDR: 3g2TkjMhcgIIZypQZ8+xavgUSkzRtojFWzrnvIM8kpb/KrItSzmLgGhE3hKi0dMifsT9IdN5GL
- Egf2q875184w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,482,1583222400"; 
-   d="scan'208";a="270136311"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga003.jf.intel.com with ESMTP; 06 Jun 2020 16:28:28 -0700
-Received: from lcsmsx601.ger.corp.intel.com (10.109.210.10) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 6 Jun 2020 16:28:28 -0700
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- LCSMSX601.ger.corp.intel.com (10.109.210.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 7 Jun 2020 02:28:25 +0300
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Sun, 7 Jun 2020 02:28:25 +0300
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Bean Huo <huobean@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "ebiggers@kernel.org" <ebiggers@kernel.org>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 2/2] scsi: ufs: remove wrapper function
- ufshcd_setup_clocks()
-Thread-Topic: [PATCH v3 2/2] scsi: ufs: remove wrapper function
- ufshcd_setup_clocks()
-Thread-Index: AQHWO3S7gFtcaJKwGkOhBlXWlS1UyqjMPK7g
-Date:   Sat, 6 Jun 2020 23:28:25 +0000
-Message-ID: <bd961d352864412381ca551512ea759e@intel.com>
-References: <20200605200520.20831-1-huobean@gmail.com>
- <20200605200520.20831-3-huobean@gmail.com>
-In-Reply-To: <20200605200520.20831-3-huobean@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sat, 6 Jun 2020 20:03:18 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:50015 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728806AbgFGADR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 6 Jun 2020 20:03:17 -0400
+Received: by mail-il1-f200.google.com with SMTP id i7so5497619ilq.16
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jun 2020 17:03:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=J1SUHUAuYP0ErR/dAXOCHj8wL1Ryzt/cArP3DPalUi4=;
+        b=Aha50KKXOvonwLAWm7QUu7lLQn4PqZOPaauUb8O3bjNWn1GiHGNaxffjkE7cJQlzKw
+         FHewVLF2+IKff1aVFHk35uLTVOA4+QAFBq1pYEfkBrv4MjqpRBShadarBOR8FkO6S2kj
+         BxMtkAP0xwX4V8d27LLZwG3mZkFj/ETPskkFaR6fpi5Fu13e6U2+gI6YBJP+z9Elec0G
+         rUO7KU35dtUrthpWmmkblP+FoyyCMd1IGxREdUcvrjN4uOegGG3hF1OhgvriJYoCgVt9
+         IYMowLmSWR8XaU+vcTUGLacM4g6iTP2GeGhbrx82FShylsO1sUgIqUHqsiI7qC0T2uSw
+         VI1g==
+X-Gm-Message-State: AOAM53059cVBBGO/epd8MjVKp37FgbAQrZixptdQYBykUnU+aMFfM7Yo
+        VxayNK2AC5T0exPmKpKMbFQGEERNgZBBopYbvX7orl6NdEud
+X-Google-Smtp-Source: ABdhPJyyoBtNWcyZKoBQvMV+DhN/9Y/V39PgXlVbBEI8djWHmarUow57F7HvciEhBxC2QQvxPo7FoWBG5hGAOU5rk0V+sYpYDwPh
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:c:: with SMTP id h12mr14766210ilr.125.1591488195121;
+ Sat, 06 Jun 2020 17:03:15 -0700 (PDT)
+Date:   Sat, 06 Jun 2020 17:03:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000088d87205a7733830@google.com>
+Subject: linux-next test error: BUG: using smp_processor_id() in preemptible
+ [ADDR] code: systemd-rfkill/6910
+From:   syzbot <syzbot+c2a0ce95f0c47bcd4b37@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-> 
-> From: Bean Huo <beanhuo@micron.com>
-> 
-> The static function ufshcd_setup_clocks() is just a wrapper around
-> __ufshcd_setup_clocks(), remove it. Rename original function wrapped
-> __ufshcd_setup_clocks() to new ufshcd_setup_clocks().
+syzbot found the following crash on:
 
-Not sure about this change, we have only one call with skip_ref_clock set to true, the original code actually make sense from readability stand point. 
+HEAD commit:    0e21d462 Add linux-next specific files for 20200602
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1461fcf2100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ecc1aef35f550ee3
+dashboard link: https://syzkaller.appspot.com/bug?extid=c2a0ce95f0c47bcd4b37
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> 
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 32 ++++++++++++--------------------
->  1 file changed, 12 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
-> ec4f55211648..531d0b7878db 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -215,9 +215,7 @@ static int ufshcd_eh_host_reset_handler(struct
-> scsi_cmnd *cmd);  static int ufshcd_clear_tm_cmd(struct ufs_hba *hba, int
-> tag);  static void ufshcd_hba_exit(struct ufs_hba *hba);  static int
-> ufshcd_probe_hba(struct ufs_hba *hba, bool async); -static int
-> __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
-> -				 bool skip_ref_clk);
-> -static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on);
-> +static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on, bool
-> +skip_ref_clk);
->  static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba);  static inline void
-> ufshcd_add_delay_before_dme_cmd(struct ufs_hba *hba);  static int
-> ufshcd_host_reset_and_restore(struct ufs_hba *hba); @@ -1497,7 +1495,7
-> @@ static void ufshcd_ungate_work(struct work_struct *work)
->  	}
-> 
->  	spin_unlock_irqrestore(hba->host->host_lock, flags);
-> -	ufshcd_setup_clocks(hba, true);
-> +	ufshcd_setup_clocks(hba, true, false);
-> 
->  	ufshcd_enable_irq(hba);
-> 
-> @@ -1655,10 +1653,10 @@ static void ufshcd_gate_work(struct work_struct
-> *work)
->  	ufshcd_disable_irq(hba);
-> 
->  	if (!ufshcd_is_link_active(hba))
-> -		ufshcd_setup_clocks(hba, false);
-> +		ufshcd_setup_clocks(hba, false, false);
->  	else
->  		/* If link is active, device ref_clk can't be switched off */
-> -		__ufshcd_setup_clocks(hba, false, true);
-> +		ufshcd_setup_clocks(hba, false, true);
-> 
->  	/*
->  	 * In case you are here to cancel this work the gating state @@ -
-> 7683,8 +7681,7 @@ static int ufshcd_init_hba_vreg(struct ufs_hba *hba)
->  	return 0;
->  }
-> 
-> -static int __ufshcd_setup_clocks(struct ufs_hba *hba, bool on,
-> -					bool skip_ref_clk)
-> +static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on, bool
-> +skip_ref_clk)
->  {
->  	int ret = 0;
->  	struct ufs_clk_info *clki;
-> @@ -7747,11 +7744,6 @@ static int __ufshcd_setup_clocks(struct ufs_hba
-> *hba, bool on,
->  	return ret;
->  }
-> 
-> -static int ufshcd_setup_clocks(struct ufs_hba *hba, bool on) -{
-> -	return  __ufshcd_setup_clocks(hba, on, false);
-> -}
-> -
->  static int ufshcd_init_clocks(struct ufs_hba *hba)  {
->  	int ret = 0;
-> @@ -7858,7 +7850,7 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
->  	if (err)
->  		goto out_disable_hba_vreg;
-> 
-> -	err = ufshcd_setup_clocks(hba, true);
-> +	err = ufshcd_setup_clocks(hba, true, false);
->  	if (err)
->  		goto out_disable_hba_vreg;
-> 
-> @@ -7880,7 +7872,7 @@ static int ufshcd_hba_init(struct ufs_hba *hba)
->  out_disable_vreg:
->  	ufshcd_setup_vreg(hba, false);
->  out_disable_clks:
-> -	ufshcd_setup_clocks(hba, false);
-> +	ufshcd_setup_clocks(hba, false, false);
->  out_disable_hba_vreg:
->  	ufshcd_setup_hba_vreg(hba, false);
->  out:
-> @@ -7896,7 +7888,7 @@ static void ufshcd_hba_exit(struct ufs_hba *hba)
->  		if (ufshcd_is_clkscaling_supported(hba))
->  			if (hba->devfreq)
->  				ufshcd_suspend_clkscaling(hba);
-> -		ufshcd_setup_clocks(hba, false);
-> +		ufshcd_setup_clocks(hba, false, false);
->  		ufshcd_setup_hba_vreg(hba, false);
->  		hba->is_powered = false;
->  		ufs_put_device_desc(hba);
-> @@ -8259,10 +8251,10 @@ static int ufshcd_suspend(struct ufs_hba *hba,
-> enum ufs_pm_op pm_op)
->  	ufshcd_disable_irq(hba);
-> 
->  	if (!ufshcd_is_link_active(hba))
-> -		ufshcd_setup_clocks(hba, false);
-> +		ufshcd_setup_clocks(hba, false, false);
->  	else
->  		/* If link is active, device ref_clk can't be switched off */
-> -		__ufshcd_setup_clocks(hba, false, true);
-> +		ufshcd_setup_clocks(hba, false, true);
-> 
->  	hba->clk_gating.state = CLKS_OFF;
->  	trace_ufshcd_clk_gating(dev_name(hba->dev), hba-
-> >clk_gating.state); @@ -8321,7 +8313,7 @@ static int ufshcd_resume(struct
-> ufs_hba *hba, enum ufs_pm_op pm_op)
-> 
->  	ufshcd_hba_vreg_set_hpm(hba);
->  	/* Make sure clocks are enabled before accessing controller */
-> -	ret = ufshcd_setup_clocks(hba, true);
-> +	ret = ufshcd_setup_clocks(hba, true, false);
->  	if (ret)
->  		goto out;
-> 
-> @@ -8404,7 +8396,7 @@ static int ufshcd_resume(struct ufs_hba *hba,
-> enum ufs_pm_op pm_op)
->  	ufshcd_disable_irq(hba);
->  	if (hba->clk_scaling.is_allowed)
->  		ufshcd_suspend_clkscaling(hba);
-> -	ufshcd_setup_clocks(hba, false);
-> +	ufshcd_setup_clocks(hba, false, false);
->  out:
->  	hba->pm_op_in_progress = 0;
->  	if (ret)
-> --
-> 2.17.1
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c2a0ce95f0c47bcd4b37@syzkaller.appspotmail.com
 
+BUG: using smp_processor_id() in preemptible [00000000] code: systemd-rfkill/6910
+caller is ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+CPU: 0 PID: 6910 Comm: systemd-rfkill Not tainted 5.7.0-next-20200602-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_preemption_disabled+0x20d/0x220 lib/smp_processor_id.c:48
+ ext4_mb_new_blocks+0xa4d/0x3b70 fs/ext4/mballoc.c:4711
+ ext4_ext_map_blocks+0x201b/0x33e0 fs/ext4/extents.c:4244
+ ext4_map_blocks+0x4cb/0x1640 fs/ext4/inode.c:626
+ ext4_getblk+0xad/0x520 fs/ext4/inode.c:833
+ ext4_bread+0x7c/0x380 fs/ext4/inode.c:883
+ ext4_append+0x153/0x360 fs/ext4/namei.c:67
+ ext4_init_new_dir fs/ext4/namei.c:2757 [inline]
+ ext4_mkdir+0x5e0/0xdf0 fs/ext4/namei.c:2802
+ vfs_mkdir+0x419/0x690 fs/namei.c:3632
+ do_mkdirat+0x21e/0x280 fs/namei.c:3655
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7ff18513b687
+Code: Bad RIP value.
+RSP: 002b:00007ffcc5bd1218 EFLAGS: 00000246 ORIG_RAX: 0000000000000053
+RAX: ffffffffffffffda RBX: 0000560bebc67985 RCX: 00007ff18513b687
+RDX: 00007ffcc5bd10e0 RSI: 00000000000001ed RDI: 0000560bebc67985
+RBP: 00007ff18513b680 R08: 0000000000000100 R09: 0000000000000000
+R10: 0000560bebc67980 R11: 0000000000000246 R12: 00000000000001ed
+R13: 00007ffcc5bd13a0 R14: 0000000000000000 R15: 0000000000000000
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
