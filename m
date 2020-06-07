@@ -2,291 +2,161 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE312067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADAE206A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 14:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkUgyYM0"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DG2GqDBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgFGN7O (ORCPT
+        id S1726653AbgFGOCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 09:59:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20645 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726528AbgFGN7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 09:59:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591538345;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=49hQQxJz0ezLYVnWHq736mWDL47lS1M2M2KOpADI1+8=;
-        b=dkUgyYM0Ml5IogJnzksC4sYhsrLJMRlftBkj1D4tdXz+N4OoIT/pDxVCDQy/LoC17AC4Mr
-        ylIFkfmocHu+AQu5cbnh+IfETelrPgzAKLGfyR7eF1GamKfBbl2+Kn+nbLhd29c6p3imuf
-        meDekaebhhPAPfVbuY8Z8A/QDzskBwA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-WC5tpMxnMPSFRD7OIrem1w-1; Sun, 07 Jun 2020 09:59:04 -0400
-X-MC-Unique: WC5tpMxnMPSFRD7OIrem1w-1
-Received: by mail-wm1-f71.google.com with SMTP id g84so4277677wmf.4
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 06:59:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=49hQQxJz0ezLYVnWHq736mWDL47lS1M2M2KOpADI1+8=;
-        b=Dgn0fk75I8s0+woHTAnnjBkVp04l7HaXZSSLHYFfD48X7h8izXCQ/mRq+M31WcfEh4
-         eKAMOL7z8aBF2uffmKEuMgp0kpN1zYKQY/HqHZUF/LXbotKfsKJefjmQBC6D2AK622ns
-         92COgcX/wGAFY4vmifbVkNZzOAe6iK9RPZhCYl4/t1/OwL3tW2NW4260hqO3jrizPoO0
-         7RS/pb9cm9xluFE7FR0fh4ophAievo3VXcggxdSaKk+sc6ZuS//BvyBnh+oKwMXTesmu
-         7Rcp6VfIkOPhNMFq1HEiJsPcV0DqADiafR26U7Lp+7nB/CGjOXc9lbAjM5yQ4wwSHVNd
-         saZQ==
-X-Gm-Message-State: AOAM533sm/qwAnzl015+n1FeGrjdSJO1QcdWeb3nELV5cJTEtqV3/5m/
-        ihbSPSLPfpvdVhXZob+Ya/15wni4tSclAfflcofwug9wiNYnXDoPcTm1Z0LffM1AzB9oA2oFokD
-        oZteoi/qsoi1A0Ajx2gXl9s7K
-X-Received: by 2002:a1c:7e52:: with SMTP id z79mr12393937wmc.104.1591538343139;
-        Sun, 07 Jun 2020 06:59:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzPhCdg8nsVcYSKRsQtxYqjMu3Z2lGeq+GOYXsFNupGugKNhvKfrGs/gdkikgAZslAUpcg9tw==
-X-Received: by 2002:a1c:7e52:: with SMTP id z79mr12393918wmc.104.1591538342920;
-        Sun, 07 Jun 2020 06:59:02 -0700 (PDT)
-Received: from redhat.com (bzq-82-81-31-23.red.bezeqint.net. [82.81.31.23])
-        by smtp.gmail.com with ESMTPSA id y37sm23372137wrd.55.2020.06.07.06.59.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 06:59:02 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 09:59:00 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC 01/13] vhost: option to fetch descriptors through an
- independent struct
-Message-ID: <20200607095810-mutt-send-email-mst@kernel.org>
-References: <20200602130543.578420-1-mst@redhat.com>
- <20200602130543.578420-2-mst@redhat.com>
- <e35e5df9-7e36-227e-7981-232a62b06607@redhat.com>
- <20200603045825-mutt-send-email-mst@kernel.org>
- <48e6d644-c4aa-2754-9d06-22133987b3be@redhat.com>
+        Sun, 7 Jun 2020 10:02:45 -0400
+Received: from mout.web.de ([217.72.192.78]:49521 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbgFGOCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 10:02:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1591538557;
+        bh=5QtWumSDrQ9lY8+/aCrrp9DRjDuI13kxcHSTQiJNETE=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=DG2GqDBsbnOExDjB/bKtbVCNSxGDjOCLRZmYgtkXab+EzmAyYnJMAnrIjk/+4iH1I
+         LGVaWeEfLjKn/VHt9Oa1QyZ9jvg7fuPDtGO7A+eBqXXk2QFJ78WA+YeGpyO6gZbNjO
+         dssCJmAFeoO3LZOjQeg4qjYzD5yDL1kPvIBZJsiE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.149.75]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mc1VF-1j68Hq0Cp5-00dMY3; Sun, 07
+ Jun 2020 16:02:37 +0200
+Subject: Re: Coccinelle: Extending capabilities for source file pre-selection
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Julia Lawall <julia.lawall@inria.fr>,
+        Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <99ed463c-b7ba-0400-7cf7-5bcc1992baef@web.de>
+ <alpine.DEB.2.21.2006060944320.2578@hadrien>
+ <cfb8a321-1f6e-8d0f-65c4-e7f73a1b111d@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <4c70ade8-1ab0-6a9a-30c0-d25b0e22ec8c@web.de>
+Date:   Sun, 7 Jun 2020 16:02:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
+In-Reply-To: <cfb8a321-1f6e-8d0f-65c4-e7f73a1b111d@web.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <48e6d644-c4aa-2754-9d06-22133987b3be@redhat.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OohkZzPxSmNGzyOyybqr82LifHUI4ucB0eJ+rK1T0boTHPB49K8
+ ceRYMhs8rsVFm51VWa67IkLG4/LqXFU06Wmt9YmmF5MNTHMeFJ8H5zu+sLyk4zssnDgxqCe
+ gRinVzmFZHwcd6RBYRi3Q+INDX8sIjrmZrq32ghm5FdozytFEBbDKmEmKKDKqEWDu8TotOP
+ NcyciE7WHSrQ5JH7jo2QQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aK3w7VUrrwQ=:CgPJCviPZkcOguvmDJcAnA
+ Hp6QafgElSdLlwFX5gdOWC/wb7Z+B1q9g/ahzG3oN2dBzRwuya3r4spTfupWuyIp+mcksTKyj
+ RVZ9Ix4uriQpbrgHxvUlWZxGdgkuQ1popVcZJzxtJET07DJsTQ74QEcSzyU4W+qwtvYyxgLR+
+ wFhsPNH04P2Wvjm5v4NO84Of7vt5tlt0cd9nxvb4dWvsCAp4gR0ptsOAuAtIM4APhAJ4ManMg
+ Istw1y4fLIbtYjT7Hfm2vUH3pNr8uotyInCibU0jRAQ6oKkioJy+dpcGnpBUb+SizcirsMSqq
+ OlCD7ec6j/T6UY1Le7mwnFkO5b2MtoYr4aFoVwJL2iD8OvHG4y2sJEOUVgJTLePIQLsEIeCGp
+ 9LzVSxe+kLfx+2dLhoQuiGuj+BKm7A+3rah/z8pxgIYxMacoRKF4rxWsBV1v1niWiSG6jbFOo
+ NYng8OwiT/WA69TPZi4Wp/TKvXliocmzqzELj8vF4kczC6hdkW9QgIP9fwnGCs//GFjWgANWW
+ 95DzQTO6PGLE479kT8Fl0mHSEMONj7zd1t70qRPeg6Xq5Y8iwCAEXHBUInv0d+GiQ5+Bv3VYO
+ NmJ5CTLdadr6/9FIPmhb1PI5TDcnPenh127TUMavAwQPgYDG25F77Q849LvCLeNLBxyP5hL4i
+ OS5M0eRDwIBMIaXDMc+qbsf7ZpepYQYo5es+N9rix+6c91XS0vwMLNano9oCVBk5iMQU53ERC
+ NtDpfERr/d0e60cNaj9oNwF/jjs4A2U9lwtWesHEPlQX1MUYR7jjLqkwxNzXvIwFXa7db7/uV
+ Lta86wsT733qmu8DDBaCXZCKsZA62eirsKhhPhpwFeFaK54j1Wjn8NZEri50X+yTU4I30G2v+
+ Z/pEHX3Sn9x1XtxEk7CRZiwCxtBqGw9rRA1PLVr1DLefJNk4p8Wn5wgzFmElKxvDAFBYwd8eP
+ gT5bTFAa+7fKXH7Oir+ZvMPlLw+4iCHdwVmD0aD80IfMLKOWQdwxeZAcWmIkazZib99yO/LvT
+ AUCHTgokuzkSBMFyovrHm9ZgHV4pRIxdNZRImjhjJZGnZHWzk/ASuiTqilHyNRkk/AUxgtLhU
+ LSnhtZGSI734XCPU6lQATIr/BsqvbMcHRSKX7A2xYt7D1eXZvAmKDkR/1q3n0KSwYgO3zeqTw
+ NniHDNlGsuIx0S4+WouGpjwe2JFx0F7qWDowvONMiMBpj1uRLYsoAH5OPh+hkJ2sJC/6R9IKu
+ 4RiyArrx5XkVCn1Zl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 03, 2020 at 08:04:45PM +0800, Jason Wang wrote:
-> 
-> On 2020/6/3 下午5:48, Michael S. Tsirkin wrote:
-> > On Wed, Jun 03, 2020 at 03:13:56PM +0800, Jason Wang wrote:
-> > > On 2020/6/2 下午9:05, Michael S. Tsirkin wrote:
-> 
-> 
-> [...]
-> 
-> 
-> > > > +
-> > > > +static int fetch_indirect_descs(struct vhost_virtqueue *vq,
-> > > > +				struct vhost_desc *indirect,
-> > > > +				u16 head)
-> > > > +{
-> > > > +	struct vring_desc desc;
-> > > > +	unsigned int i = 0, count, found = 0;
-> > > > +	u32 len = indirect->len;
-> > > > +	struct iov_iter from;
-> > > > +	int ret;
-> > > > +
-> > > > +	/* Sanity check */
-> > > > +	if (unlikely(len % sizeof desc)) {
-> > > > +		vq_err(vq, "Invalid length in indirect descriptor: "
-> > > > +		       "len 0x%llx not multiple of 0x%zx\n",
-> > > > +		       (unsigned long long)len,
-> > > > +		       sizeof desc);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	ret = translate_desc(vq, indirect->addr, len, vq->indirect,
-> > > > +			     UIO_MAXIOV, VHOST_ACCESS_RO);
-> > > > +	if (unlikely(ret < 0)) {
-> > > > +		if (ret != -EAGAIN)
-> > > > +			vq_err(vq, "Translation failure %d in indirect.\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +	iov_iter_init(&from, READ, vq->indirect, ret, len);
-> > > > +
-> > > > +	/* We will use the result as an address to read from, so most
-> > > > +	 * architectures only need a compiler barrier here. */
-> > > > +	read_barrier_depends();
-> > > > +
-> > > > +	count = len / sizeof desc;
-> > > > +	/* Buffers are chained via a 16 bit next field, so
-> > > > +	 * we can have at most 2^16 of these. */
-> > > > +	if (unlikely(count > USHRT_MAX + 1)) {
-> > > > +		vq_err(vq, "Indirect buffer length too big: %d\n",
-> > > > +		       indirect->len);
-> > > > +		return -E2BIG;
-> > > > +	}
-> > > > +	if (unlikely(vq->ndescs + count > vq->max_descs)) {
-> > > > +		vq_err(vq, "Too many indirect + direct descs: %d + %d\n",
-> > > > +		       vq->ndescs, indirect->len);
-> > > > +		return -E2BIG;
-> > > > +	}
-> > > > +
-> > > > +	do {
-> > > > +		if (unlikely(++found > count)) {
-> > > > +			vq_err(vq, "Loop detected: last one at %u "
-> > > > +			       "indirect size %u\n",
-> > > > +			       i, count);
-> > > > +			return -EINVAL;
-> > > > +		}
-> > > > +		if (unlikely(!copy_from_iter_full(&desc, sizeof(desc), &from))) {
-> > > > +			vq_err(vq, "Failed indirect descriptor: idx %d, %zx\n",
-> > > > +			       i, (size_t)indirect->addr + i * sizeof desc);
-> > > > +			return -EINVAL;
-> > > > +		}
-> > > > +		if (unlikely(desc.flags & cpu_to_vhost16(vq, VRING_DESC_F_INDIRECT))) {
-> > > > +			vq_err(vq, "Nested indirect descriptor: idx %d, %zx\n",
-> > > > +			       i, (size_t)indirect->addr + i * sizeof desc);
-> > > > +			return -EINVAL;
-> > > > +		}
-> > > > +
-> > > > +		push_split_desc(vq, &desc, head);
-> > > 
-> > > The error is ignored.
-> > See above:
-> > 
-> >       	if (unlikely(vq->ndescs + count > vq->max_descs))
-> > 
-> > So it can't fail here, we never fetch unless there's space.
-> > 
-> > I guess we can add a WARN_ON here.
-> 
-> 
-> Yes.
-> 
-> 
-> > 
-> > > > +	} while ((i = next_desc(vq, &desc)) != -1);
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int fetch_descs(struct vhost_virtqueue *vq)
-> > > > +{
-> > > > +	unsigned int i, head, found = 0;
-> > > > +	struct vhost_desc *last;
-> > > > +	struct vring_desc desc;
-> > > > +	__virtio16 avail_idx;
-> > > > +	__virtio16 ring_head;
-> > > > +	u16 last_avail_idx;
-> > > > +	int ret;
-> > > > +
-> > > > +	/* Check it isn't doing very strange things with descriptor numbers. */
-> > > > +	last_avail_idx = vq->last_avail_idx;
-> > > > +
-> > > > +	if (vq->avail_idx == vq->last_avail_idx) {
-> > > > +		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
-> > > > +			vq_err(vq, "Failed to access avail idx at %p\n",
-> > > > +				&vq->avail->idx);
-> > > > +			return -EFAULT;
-> > > > +		}
-> > > > +		vq->avail_idx = vhost16_to_cpu(vq, avail_idx);
-> > > > +
-> > > > +		if (unlikely((u16)(vq->avail_idx - last_avail_idx) > vq->num)) {
-> > > > +			vq_err(vq, "Guest moved used index from %u to %u",
-> > > > +				last_avail_idx, vq->avail_idx);
-> > > > +			return -EFAULT;
-> > > > +		}
-> > > > +
-> > > > +		/* If there's nothing new since last we looked, return
-> > > > +		 * invalid.
-> > > > +		 */
-> > > > +		if (vq->avail_idx == last_avail_idx)
-> > > > +			return vq->num;
-> > > > +
-> > > > +		/* Only get avail ring entries after they have been
-> > > > +		 * exposed by guest.
-> > > > +		 */
-> > > > +		smp_rmb();
-> > > > +	}
-> > > > +
-> > > > +	/* Grab the next descriptor number they're advertising */
-> > > > +	if (unlikely(vhost_get_avail_head(vq, &ring_head, last_avail_idx))) {
-> > > > +		vq_err(vq, "Failed to read head: idx %d address %p\n",
-> > > > +		       last_avail_idx,
-> > > > +		       &vq->avail->ring[last_avail_idx % vq->num]);
-> > > > +		return -EFAULT;
-> > > > +	}
-> > > > +
-> > > > +	head = vhost16_to_cpu(vq, ring_head);
-> > > > +
-> > > > +	/* If their number is silly, that's an error. */
-> > > > +	if (unlikely(head >= vq->num)) {
-> > > > +		vq_err(vq, "Guest says index %u > %u is available",
-> > > > +		       head, vq->num);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	i = head;
-> > > > +	do {
-> > > > +		if (unlikely(i >= vq->num)) {
-> > > > +			vq_err(vq, "Desc index is %u > %u, head = %u",
-> > > > +			       i, vq->num, head);
-> > > > +			return -EINVAL;
-> > > > +		}
-> > > > +		if (unlikely(++found > vq->num)) {
-> > > > +			vq_err(vq, "Loop detected: last one at %u "
-> > > > +			       "vq size %u head %u\n",
-> > > > +			       i, vq->num, head);
-> > > > +			return -EINVAL;
-> > > > +		}
-> > > > +		ret = vhost_get_desc(vq, &desc, i);
-> > > > +		if (unlikely(ret)) {
-> > > > +			vq_err(vq, "Failed to get descriptor: idx %d addr %p\n",
-> > > > +			       i, vq->desc + i);
-> > > > +			return -EFAULT;
-> > > > +		}
-> > > > +		ret = push_split_desc(vq, &desc, head);
-> > > > +		if (unlikely(ret)) {
-> > > > +			vq_err(vq, "Failed to save descriptor: idx %d\n", i);
-> > > > +			return -EINVAL;
-> > > > +		}
-> > > > +	} while ((i = next_desc(vq, &desc)) != -1);
-> > > > +
-> > > > +	last = peek_split_desc(vq);
-> > > > +	if (unlikely(last->flags & VRING_DESC_F_INDIRECT)) {
-> > > > +		pop_split_desc(vq);
-> > > > +		ret = fetch_indirect_descs(vq, last, head);
-> > > 
-> > > Note that this means we don't supported chained indirect descriptors which
-> > > complies the spec but we support this in vhost_get_vq_desc().
-> > Well the spec says:
-> > 	A driver MUST NOT set both VIRTQ_DESC_F_INDIRECT and VIRTQ_DESC_F_NEXT in flags.
-> > 
-> > Did I miss anything?
-> > 
-> 
-> No, but I meant current vhost_get_vq_desc() supports chained indirect
-> descriptor. Not sure if there's an application that depends on this
-> silently.
-> 
-> Thanks
-> 
+>> Coccinelle is not able to optimize its search process
+>
+> The software contains some limitations which might be changeable.
+>
+>
+>> according to the information in constraints.
+>
+> Will related solution ideas become more interesting?
 
-I don't think we need to worry about that unless this actually
-surfaces.
+I propose to move parts of the mentioned concerns out of the way.
 
--- 
-MST
 
+The software performs a source file pre-selection.
+https://github.com/coccinelle/coccinelle/blob/7cf2c23e64066d5249a64a316cc5=
+347831f7a63f/docs/manual/spatch_options.tex#L183
+
+File indexes can become involved according to search tools like
+=E2=80=9CGLIMPSE=E2=80=9D and =E2=80=9CGNU idutils=E2=80=9D.
+They can restrict the support for desired queries on file contents.
+
+I got the impression that SmPL constraint variants can be specified in way=
+s
+which would fit also to such data format restrictions.
+
+Higher level SmPL constraints can be more challenging to map to advanced q=
+ueries.
+
+
+How are the chances to improve the software situation here?
+
+Regards,
+Markus
