@@ -2,109 +2,180 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F21DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A66C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1BE206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:04:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPgD1798"
+	by mail.kernel.org (Postfix) with ESMTP id 594512065C
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 09:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgFGJEP (ORCPT
+        id S1726441AbgFGJKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 05:04:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgFGJEP (ORCPT
+        Sun, 7 Jun 2020 05:10:19 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:55586 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbgFGJKS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 05:04:15 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09925C08C5C2;
-        Sun,  7 Jun 2020 02:04:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w20so7314428pga.6;
-        Sun, 07 Jun 2020 02:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=D/y4hFvvwLwiTdep1fp13E4p8rqYN4Onjhusy+MPIlk=;
-        b=IPgD1798WEOvPTQJv93A2sSB0k2hIXax2eT0h1qLpRkeaO+NNhcAU/DCOyU51du8i0
-         O6KC6vv/cjNkQKibf+GuNS05i7prDi9B0CHldlexo3BXidalYHDub7fMnW/aJlK80DL4
-         Eod8PU4Sa/q0T8F4C7KUvM5tLA9P9MJA8GOGscDi1uJUzX7C9kjFhgzaKti28kYpW9dR
-         zuvwjF899STWFG2c/9zPf4f8AJMnUKTvM7ZbxbWMxam2aXhCpkQGcWfhMlqp8Q29CLJz
-         WfUqSHBY2P7xqr9VCCZI5A7oV4T27GbuGqOQe/3pxYYLnd9YZzAY2UiFVUEKeibfBp4x
-         p6rQ==
+        Sun, 7 Jun 2020 05:10:18 -0400
+Received: by mail-il1-f198.google.com with SMTP id l20so9365599ilk.22
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 02:10:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=D/y4hFvvwLwiTdep1fp13E4p8rqYN4Onjhusy+MPIlk=;
-        b=UK3dbo6hcL5ZFgNnys6pfhUSADbdexHy3iWmy3qtM7/uLydyHkOYx8s5dHW60Rp98e
-         Vw5BeE3c+UVQNDi8T4PmXbFP0ZG+9IYYgPkXWfd0Bn5c3ZTscPKs/NKgVbjjz17rZZsC
-         7lLgpvUEjfqXZ0SV2nKImKrr/ortlGVBYbcSTXTxyGCEjxZqSAeEszpKp8ShAPy+o9Jt
-         /8ELQtnA25iZv8QimR5BH6GXToZpJbywqj29FJT8L0ffkPKswb/oUhp5Iht09GpXbBNM
-         7hioHwsfFVrDY8fovEIaRIXYkzvuzaIlKs4VO5FYDqlOw1OdbuqROiSXIeoFTzmhAWRd
-         w2ew==
-X-Gm-Message-State: AOAM531lBA5anHzmyHaG7vnWLngQulC9qtOO0rVQCMvOEoqZjoEgi5re
-        jsK5Gm6pvKpZF2BzgznVYOI=
-X-Google-Smtp-Source: ABdhPJzWPwHWWH0oqsFWe2lIIBV1npm9Sno+uSIRNbNNDtL7gTVaNTS27Zwv+9AMOBnfn3s8Cq5yXA==
-X-Received: by 2002:a63:fe0e:: with SMTP id p14mr15727719pgh.126.1591520652408;
-        Sun, 07 Jun 2020 02:04:12 -0700 (PDT)
-Received: from ubuntu.localdomain ([220.116.27.194])
-        by smtp.gmail.com with ESMTPSA id w5sm3871158pfn.22.2020.06.07.02.04.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 02:04:11 -0700 (PDT)
-From:   youngjun <her0gyugyu@gmail.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        youngjun <her0gyugyu@gmail.com>
-Subject: [PATCH] overlay: remove not necessary lock check.
-Date:   Sun,  7 Jun 2020 02:04:06 -0700
-Message-Id: <20200607090406.129012-1-her0gyugyu@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Ui/zAEDfK90KrltMW5xg+UzIIlbJSijIM/qfQmLPS5s=;
+        b=ESE0GojERnzyVBEhB2xfwDjN3Zo9arVika//prqMfHSPwjZDPtI0aooZUFC/yoWViz
+         BJCaGasNE29vAcM+G7KekogFvXqCFzUEjTNXZFWgIZTlag2H+16LImLiwWWHjHsxaqkD
+         byhhNI/qxJzQ9z65y/IKuYPs1OsO9sYgpx+1nXKbCUem9vSiwnpP14l9hRsiD/jyYgC2
+         PevFTaZpeRM42eXkMpZVOuEX3zG9iHwDC1HjM5swjWJ3t32SBXm+jiumBJELbC1bEO/V
+         EozihD9mTFKucFNFSYWWE+gN0kaU+88lFP6oss2+k+UF0VjtZamSrUyiGXRzGLubg5Xl
+         ODoA==
+X-Gm-Message-State: AOAM532EYIyWGB9E+/85RtIybn1PeeOxr/O0BwJeza7BlxceXgj87jpU
+        NbLkB3sTIq6YcOsbDF1IjzNIhnN+g+TEt5KFscs5qHdwEPGM
+X-Google-Smtp-Source: ABdhPJw0e3NJwysfxMm6yR80gJYmJSMsrKxAo1PuB7fK3kPaZDupYG5BtoZOTOk+9TWGFgP8dt8M4cb7uLDBt1xasEE0iAKb/a4M
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:d05:: with SMTP id q5mr16196892jaj.2.1591521017199;
+ Sun, 07 Jun 2020 02:10:17 -0700 (PDT)
+Date:   Sun, 07 Jun 2020 02:10:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e2105b05a77adc57@google.com>
+Subject: KASAN: use-after-free Write in start_creating
+From:   syzbot <syzbot+ee19362d7c0417910752@syzkaller.appspotmail.com>
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dir is always locked until "out_unlock" label.
-So lock check is not needed.
+Hello,
 
-Signed-off-by: youngjun <her0gyugyu@gmail.com>
+syzbot found the following crash on:
+
+HEAD commit:    7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1441c9de100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+dashboard link: https://syzkaller.appspot.com/bug?extid=ee19362d7c0417910752
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ee19362d7c0417910752@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in atomic64_set include/asm-generic/atomic-instrumented.h:854 [inline]
+BUG: KASAN: use-after-free in atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+BUG: KASAN: use-after-free in rwsem_set_owner kernel/locking/rwsem.c:176 [inline]
+BUG: KASAN: use-after-free in __down_write kernel/locking/rwsem.c:1391 [inline]
+BUG: KASAN: use-after-free in down_write+0xdb/0x150 kernel/locking/rwsem.c:1532
+Write of size 8 at addr ffff8880277496e8 by task syz-executor.3/17503
+
+CPU: 1 PID: 17503 Comm: syz-executor.3 Not tainted 5.7.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:186 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:192
+ atomic64_set include/asm-generic/atomic-instrumented.h:854 [inline]
+ atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+ rwsem_set_owner kernel/locking/rwsem.c:176 [inline]
+ __down_write kernel/locking/rwsem.c:1391 [inline]
+ down_write+0xdb/0x150 kernel/locking/rwsem.c:1532
+ inode_lock include/linux/fs.h:799 [inline]
+ start_creating+0xa8/0x250 fs/debugfs/inode.c:334
+ __debugfs_create_file+0x62/0x400 fs/debugfs/inode.c:383
+ kvm_arch_create_vcpu_debugfs+0x52/0x200 arch/x86/kvm/debugfs.c:48
+ kvm_create_vcpu_debugfs arch/x86/kvm/../../../virt/kvm/kvm_main.c:3012 [inline]
+ kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3089 [inline]
+ kvm_vm_ioctl+0x1c0b/0x2440 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3617
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
+ __do_sys_ioctl fs/ioctl.c:780 [inline]
+ __se_sys_ioctl fs/ioctl.c:778 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca69
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f40f5451c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004e7400 RCX: 000000000045ca69
+RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000005
+RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000396 R14: 00000000004c6306 R15: 00007f40f54526d4
+
+Allocated by task 17503:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
+ slab_post_alloc_hook mm/slab.h:586 [inline]
+ slab_alloc mm/slab.c:3320 [inline]
+ kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
+ alloc_inode+0x164/0x1e0 fs/inode.c:234
+ new_inode_pseudo+0x14/0xe0 fs/inode.c:928
+ new_inode+0x1b/0x40 fs/inode.c:957
+ debugfs_get_inode+0x1a/0x130 fs/debugfs/inode.c:67
+ debugfs_create_dir+0x71/0x390 fs/debugfs/inode.c:544
+ kvm_create_vcpu_debugfs arch/x86/kvm/../../../virt/kvm/kvm_main.c:3009 [inline]
+ kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3089 [inline]
+ kvm_vm_ioctl+0x1bd8/0x2440 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3617
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:771
+ __do_sys_ioctl fs/ioctl.c:780 [inline]
+ __se_sys_ioctl fs/ioctl.c:778 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:778
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Freed by task 2478:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kmem_cache_free+0x7f/0x320 mm/slab.c:3694
+ i_callback+0x3f/0x70 fs/inode.c:221
+ rcu_do_batch kernel/rcu/tree.c:2396 [inline]
+ rcu_core+0x59f/0x1370 kernel/rcu/tree.c:2623
+ __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
+
+The buggy address belongs to the object at ffff888027749600
+ which belongs to the cache inode_cache of size 1024
+The buggy address is located 232 bytes inside of
+ 1024-byte region [ffff888027749600, ffff888027749a00)
+The buggy address belongs to the page:
+page:ffffea00009dd240 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888027749ffd
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0001412e48 ffffea00009db2c8 ffff8880aa201380
+raw: ffff888027749ffd ffff888027749180 0000000100000003 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888027749580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888027749600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888027749680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                          ^
+ ffff888027749700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888027749780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- fs/overlayfs/super.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index 732ad5495c92..43257c18fe26 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -615,10 +615,8 @@ static struct dentry *ovl_workdir_create(struct ovl_fs *ofs,
- 	struct dentry *work;
- 	int err;
- 	bool retried = false;
--	bool locked = false;
- 
- 	inode_lock_nested(dir, I_MUTEX_PARENT);
--	locked = true;
- 
- retry:
- 	work = lookup_one_len(name, ofs->workbasedir, strlen(name));
-@@ -680,9 +678,7 @@ static struct dentry *ovl_workdir_create(struct ovl_fs *ofs,
- 		goto out_err;
- 	}
- out_unlock:
--	if (locked)
--		inode_unlock(dir);
--
-+	inode_unlock(dir);
- 	return work;
- 
- out_dput:
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
