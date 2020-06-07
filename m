@@ -2,139 +2,139 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C224BC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA632074B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5F22074B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 20:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="KdOyqU9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgFGUjp (ORCPT
+        id S1728009AbgFGUjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 16:39:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34018 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgFGUjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 16:39:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 21CEDABCE;
-        Sun,  7 Jun 2020 20:39:45 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id A7FA8602EB; Sun,  7 Jun 2020 22:39:40 +0200 (CEST)
-Date:   Sun, 7 Jun 2020 22:39:40 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "John W. Linville" <linville@tuxdriver.com>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        Petr Machata <petrm@mellanox.com>
-Subject: Re: [PATCH v2 2/3] netlink: add master/slave configuration support
-Message-ID: <20200607203940.7ayqe4otoop7mpuw@lion.mk-sys.cz>
-References: <20200528115414.11516-1-o.rempel@pengutronix.de>
- <20200528115414.11516-3-o.rempel@pengutronix.de>
+        Sun, 7 Jun 2020 16:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbgFGUjv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 16:39:51 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B04C08C5C4
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 13:39:51 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id gl26so15978933ejb.11
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 13:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=cxAlOko9t8uVXP+cvSgKgh4pcthYDznq/xdMjGJwWF8=;
+        b=KdOyqU9ND3HG5d87XzvYCfQ2uByF1009R35nYXeDDMLn3vhVJNmlnwuNBXc0HasUMj
+         LyKvjV0OHT0/GFgDE/03M8ppq31jNA/14gxV99DDyqL8qAre2/OHH5LtP6yQKvfznyX2
+         LROlH2K/f/dx1Vn/5b4xOX0oA7ArWmNxLbjZ1JVMq+Vnt/1ms3tCRN/hGC71MCrsqjUd
+         GIPFEFAU/eZqHJivwmZWwKWtr3PRkJqQ1obBpY+x+MD2ytvfqSzxenTN/wm1iaf4iXcG
+         kNiefj+tDTqhRm+1eJYp0/rg7yaWUj0T9E5B1oGeYm2hbTCHEqv2buK6/vOkL0BGK6WX
+         fsQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=cxAlOko9t8uVXP+cvSgKgh4pcthYDznq/xdMjGJwWF8=;
+        b=oRyx+Rlx7otKRbr9zTAqgodfSL2HHJ3lnZ5+J0TsVcI1G2gQxk9mOVP/80fcxoGfIw
+         caT57Brgi26P+SJfOvyxzCt3Xyi3uq1xp0RtM3bd2Az5FprK7ZX6C/aCgh8+mxxUXQ1v
+         cNX3/Cdtcw8qHBjyQrRXapmH5tzAABsevw1WRGenntKArIolDL0dxABNiYNWhcjaJ4EG
+         w8oKZllmQsVNkhIxQOU0gqtx2Tay8XBd5F+XeyQ636CRHEMoi3sbAnJ6/CPljFRhs9SL
+         NtzqBYtkAKZxmb0fZ7WbcfmOSJkrgGJ6wU4+zBe+CEZn9w8SMfex61nFE/KvEWlXXchq
+         uSEQ==
+X-Gm-Message-State: AOAM531vAg55U6JM0jOAEyL/TdIhEygIW/lBURaA508MEfjVKEVl8Oe7
+        iJQNew3+7g3ho85NMb/m3NSQ/w==
+X-Google-Smtp-Source: ABdhPJxhaSuBhybacMUdhNX3W1cQmnqaVuUYl4vqsJiFOjecWMYGoz4GLI7EUeGpnCcBDZ6WR7g6xQ==
+X-Received: by 2002:a17:906:a387:: with SMTP id k7mr19195332ejz.408.1591562389607;
+        Sun, 07 Jun 2020 13:39:49 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id v29sm10754839edb.62.2020.06.07.13.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 13:39:48 -0700 (PDT)
+References: <20200604171216.60043-1-colin.king@canonical.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Colin King <colin.king@canonical.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: meson: fix memory leak of links if allocation of ldata fails
+In-reply-to: <20200604171216.60043-1-colin.king@canonical.com>
+Date:   Sun, 07 Jun 2020 22:39:47 +0200
+Message-ID: <1j7dwik3u4.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l7kwu7ebk7fahgx4"
-Content-Disposition: inline
-In-Reply-To: <20200528115414.11516-3-o.rempel@pengutronix.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---l7kwu7ebk7fahgx4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu 04 Jun 2020 at 19:12, Colin King <colin.king@canonical.com> wrote:
 
-On Thu, May 28, 2020 at 01:54:13PM +0200, Oleksij Rempel wrote:
-> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
-> auto-negotiation support, we needed to be able to configure the
-> MASTER-SLAVE role of the port manually or from an application in user
-> space.
->=20
-> The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
-> force MASTER or SLAVE role. See IEEE 802.3-2018:
-> 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
-> 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
-> 40.5.2 MASTER-SLAVE configuration resolution
-> 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
-> 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
->=20
-> The MASTER-SLAVE role affects the clock configuration:
->=20
-> -------------------------------------------------------------------------=
-------
-> When the  PHY is configured as MASTER, the PMA Transmit function shall
-> source TX_TCLK from a local clock source. When configured as SLAVE, the
-> PMA Transmit function shall source TX_TCLK from the clock recovered from
-> data stream provided by MASTER.
->=20
-> iMX6Q                     KSZ9031                XXX
-> ------\                /-----------\        /------------\
->       |                |           |        |            |
->  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
->       |<--- 125 MHz ---+-<------/  |        | \          |
-> ------/                \-----------/        \------------/
->                                                ^
->                                                 \-TX_TCLK
->=20
-> -------------------------------------------------------------------------=
-------
->=20
-> Since some clock or link related issues are only reproducible in a
-> specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
-> to provide generic (not 100BASE-T1 specific) interface to the user space
-> for configuration flexibility and trouble shooting.
->=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Currently if the allocation of ldata fails the error return path
+> does not kfree the allocated links object.  Fix this by adding
+> an error exit return path that performs the necessary kfree'ing.
+>
+> Addresses-Coverity: ("Resource leak")
+> Fixes: 7864a79f37b5 ("ASoC: meson: add axg sound card support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Looks good, Thx
+
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+
 > ---
+>  sound/soc/meson/meson-card-utils.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>
+> diff --git a/sound/soc/meson/meson-card-utils.c b/sound/soc/meson/meson-card-utils.c
+> index 2ca8c98e204f..5a4a91c88734 100644
+> --- a/sound/soc/meson/meson-card-utils.c
+> +++ b/sound/soc/meson/meson-card-utils.c
+> @@ -49,19 +49,26 @@ int meson_card_reallocate_links(struct snd_soc_card *card,
+>  	links = krealloc(priv->card.dai_link,
+>  			 num_links * sizeof(*priv->card.dai_link),
+>  			 GFP_KERNEL | __GFP_ZERO);
+> +	if (!links)
+> +		goto err_links;
+> +
+>  	ldata = krealloc(priv->link_data,
+>  			 num_links * sizeof(*priv->link_data),
+>  			 GFP_KERNEL | __GFP_ZERO);
+> -
+> -	if (!links || !ldata) {
+> -		dev_err(priv->card.dev, "failed to allocate links\n");
+> -		return -ENOMEM;
+> -	}
+> +	if (!ldata)
+> +		goto err_ldata;
+>  
+>  	priv->card.dai_link = links;
+>  	priv->link_data = ldata;
+>  	priv->card.num_links = num_links;
+>  	return 0;
+> +
+> +err_ldata:
+> +	kfree(links);
+> +err_links:
+> +	dev_err(priv->card.dev, "failed to allocate links\n");
+> +	return -ENOMEM;
+> +
+>  }
+>  EXPORT_SYMBOL_GPL(meson_card_reallocate_links);
 
-The patch looks good from technical point of view but I don't like the
-inconsistency of user interface:
-
-1. Similar to what we discussed earlier on kernel side, you use "Port
-mode" in "ethtool <dev>" output but the corresponding command line
-argument for "ethtool -s <dev> ..." is "master-slave". Even if it's
-documented, it's rather confusing for users.
-
-2. The values for "master-slave" parameter are "master-preferred" and
-"master-force" (and the same for "slave"). Please use the same form for
-both, i.e. either "prefer / force" or "preferred / forced". Also, it
-would be friendlier to users to make the values consistent with
-"ethtool <dev>" output, e.g. if it says "preferred Master", setting
-should use something as close as possible, i.e. "preferred-master".
-
-Michal
-
---l7kwu7ebk7fahgx4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl7dUIwACgkQ538sG/LR
-dpUmpQgAwWvl06RefAuj2JRXHp/zqo4YSDZo1qtI7EshQfSeZJ2v0q+aHpTXbxfd
-QSDSqyDAYHWB1W5jpcnylaRBzASWzeeHLuOf7JHkud5WqnM+tj/gpOkDNWcZVn7Z
-KbanU+3GqZwSbtwHue9SaYS+FAPX/W38GZ8Jdc6PJdq0kkqmGSpwse61IdcMc2oD
-2ovpaRibYqvhsyAdRTNIAbksSO2jbIubnNsscqoeRti3PwNbsldmIiLIOEv3CZ36
-h/WQOTNOlYfCcQ9nK6S/ZBpDhEVR1UckoyhNFQfkZl6yj34QUchADiRZD2bsAOTA
-Q1Ri0Bo3iWaEfGqHDmt+uFsBxf/cEQ==
-=+bKp
------END PGP SIGNATURE-----
-
---l7kwu7ebk7fahgx4--
