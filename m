@@ -2,82 +2,100 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F921C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ABFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13B99206D5
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE7920723
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 05:23:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ViwkInPN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANJJ44nm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgFGFNS (ORCPT
+        id S1726344AbgFGFXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 01:13:18 -0400
-Received: from m12-17.163.com ([220.181.12.17]:46121 "EHLO m12-17.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgFGFNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 01:13:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ZO7p3
-        p3ByhDzJyx816+feQ76oRubAg/S9uBFNb4/ZaI=; b=ViwkInPN9yZ3I6zBq2zvC
-        INV8dy7zX/9LpEe94fjX00paYYHfuE0PGBvURdqzDnpf/JzDO4yqeOHJlmAnrbxX
-        QLVI6tqQ5AJg6bxJXVE72fKpnha11rrtN2y3F6PC+7NzALK+g2ryXBMQxqyh3T2z
-        hfpEGa2gZEXcS8jzLBzXlU=
-Received: from localhost.localdomain (unknown [125.82.15.164])
-        by smtp13 (Coremail) with SMTP id EcCowAAnDTdQd9xeHoO6GA--.62079S4;
-        Sun, 07 Jun 2020 13:12:49 +0800 (CST)
-From:   Hu Haowen <xianfengting221@163.com>
-To:     saeedm@mellanox.com, leon@kernel.org, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hu Haowen <xianfengting221@163.com>
-Subject: [PATCH] net/mlx5: Add a missing macro undefinition
-Date:   Sun,  7 Jun 2020 13:12:40 +0800
-Message-Id: <20200607051241.5375-1-xianfengting221@163.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 7 Jun 2020 01:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgFGFXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 01:23:11 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7740FC08C5C2;
+        Sat,  6 Jun 2020 22:23:11 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k8so2670487iol.13;
+        Sat, 06 Jun 2020 22:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n1rAhK2vpYhhSS7qNist3vUD6d7xH+k7+PemlonaN7I=;
+        b=ANJJ44nm5qnTCUd/ugVEe9HWmiFSGppsCnYzSAhaas1xqc2lDJfFLDthbaTkeV1XsQ
+         3v9kihCXiw1nq0dJIw67wno4lu1BMl6JQQj4WyjIUpPnVANy7bQVTiOpBe2nhGQAMcam
+         0kVXWrTY5YbW7qEtGPCWigtuh/p6qalxlhXPYKfA0lSx+RUehWe8CmUYAitwCzm6w+Zl
+         tTfibQn1f6cwmXRpFEDX/mS+eCVoypVPwITlktqtq1lZ8fGnP8rMwExPvNc8I9LZIkml
+         I778/pJujQxmmKPXO8pyVFKHEEE7ST+n7GCEyyBHuLDZJAh5tT2vQywNHDIgM+jUuJVS
+         ECoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n1rAhK2vpYhhSS7qNist3vUD6d7xH+k7+PemlonaN7I=;
+        b=p5vTmNW6LLYCmlKp+Uy0Y+rObLuFJ8wUfXzdpy1Cf5j2NwsWMe+c3hSK/9SGney6+v
+         4G2cs5T5d1vYQN0p9PlPsiZeUtqPUklCbktDvJdLinbCeSuDYPgQNWorxHuOcmFVvy4z
+         upVqxN2GVHQJxkPNOPY2DU7wyQVdbXgS4obE9tUGCXTtvNojj9ndds4tEhuYPLnzh1Xx
+         fiFZ4qh+sFzKqJli1fFEwXl0Vb3zbKCZ6tNNkY+oTVSbVg28zmrUko9Tn1sU/aHqWXy5
+         0z8HAeFnAMD+Gi3MnlAMpcWtecobtsp2IrdkfQ0NqkFpwmCECh/zPNQZNuPGobA/ICif
+         pUMw==
+X-Gm-Message-State: AOAM533QkuehgGVc+24T7CrSa4ZXXltBgCCu352/ZGVrHkw66xxenMBc
+        NvlxP7bTkqUBE9gfVm6icjKxAya/GX9LS/SP5OSrrmP9
+X-Google-Smtp-Source: ABdhPJy8iaoNU8DwquVEb1WhYWjNVUGdRlOmkCNoDTzXn4X+wVgf7IIb8ZeEFt4i9oGPQtZuoP3VfbFY10ACHOvISDo=
+X-Received: by 2002:a05:6602:34f:: with SMTP id w15mr15737135iou.2.1591507389595;
+ Sat, 06 Jun 2020 22:23:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: EcCowAAnDTdQd9xeHoO6GA--.62079S4
-X-Coremail-Antispam: 1Uf129KBjvdXoWrZrW8Ar43Ar1xXw18WryrCrg_yoWfJFb_Kw
-        1DZF13Wa1DArnIkr1Igrs8KFW0kw1qg39agFW7KFWYy3W29r1xJ34xW34SqF1rWFWIyFZr
-        tF12yayYv34UWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU88wI3UUUUU==
-X-Originating-IP: [125.82.15.164]
-X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiWxE8AFSInEs9XQAAsd
+References: <20200316125006.GA415@syed.domain.name> <20200318021802.GB45571@icarus>
+In-Reply-To: <20200318021802.GB45571@icarus>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Sun, 7 Jun 2020 10:52:57 +0530
+Message-ID: <CACG_h5qwXxA0EthdCjz3jNbW0Lgtdy7ycCvt8xCHLh8dog-Xqw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] counter: 104-quad-8: Add lock guards -
+ differential encoder
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The macro ODP_CAP_SET_MAX is only used in function handle_hca_cap_odp()
-in file main.c, so it should be undefined when there are no more uses
-of it.
+On Wed, Mar 18, 2020 at 7:48 AM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+>
+> On Mon, Mar 16, 2020 at 06:20:06PM +0530, Syed Nayyar Waris wrote:
+> > Add lock protection from race conditions to 104-quad-8 counter driver
+> > for differential encoder status code changes. Mutex lock calls used for
+> > protection.
+> >
+> > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> > ---
+> > Changes in v5:
+> >  - Change spin lock calls to mutex lock calls.
+> >  - Modify the title description.
+>
+> Looks like the Fixes tags were dropped in these last two patches. I
+> suppose they aren't really necessary though since these features haven't
+> yet made it out of the IIO tree, so no need to backport these fixes.
+>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-Signed-off-by: Hu Haowen <xianfengting221@163.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/main.c | 2 ++
- 1 file changed, 2 insertions(+)
+Adding the 'Fixes' tag:
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index df46b1fce3a7..1143297eccaa 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -489,6 +489,8 @@ static int handle_hca_cap_odp(struct mlx5_core_dev *dev, void *set_ctx)
- 	ODP_CAP_SET_MAX(dev, dc_odp_caps.read);
- 	ODP_CAP_SET_MAX(dev, dc_odp_caps.atomic);
- 
-+#undef ODP_CAP_SET_MAX
-+
- 	if (!do_set)
- 		return 0;
- 
--- 
-2.25.1
+Fixes: bbef69e088c3 ("counter: 104-quad-8: Support Differential
+Encoder Cable Status")
 
-
+Regards
+Syed Nayyar Waris
