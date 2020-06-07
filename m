@@ -2,94 +2,133 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10121C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37852067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F93C2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bj1vX63E"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yr6/QSsZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgFGVuU (ORCPT
+        id S1727912AbgFGVxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 17:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57382 "EHLO
+        Sun, 7 Jun 2020 17:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgFGVuT (ORCPT
+        with ESMTP id S1726920AbgFGVxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 17:50:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD86C08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 14:50:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=qzT28bPo7SQhdysImYQOC48d1IlfGj87pYL9CAPSWNY=; b=Bj1vX63EPMrQNNxtjYWoAOMdr3
-        NTqPsBih+gp1SihTA7w2c0CKK/3KP++t8oy5HOwSFpmTWfmv8um0t+PnVAyw6/1xN+a/NwqzkIeQM
-        hYYXuR+IZaBWAvl3W3qfsUqT28EPOCJJw8CgiUYPbI1G8b7I1YjXVM6wM0schCuVoYIBAA6JcHHOK
-        P/gtz0Bjva0l3qlaW1cf5yDwkYHGUF6Y53ezD8m+HhvTs6ZYF2gAYOCBhtDTotvPlIlqhPhI/mdoZ
-        RbGYPiO61L09Pd7CqNgUBcVeW9sDaf60B+98vhCtLU/6NwMtWS6PTz+RcSwTnBL9HyV7AG1Z+Gla+
-        jIVAaKnQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ji3BG-0007K3-Jc; Sun, 07 Jun 2020 21:50:14 +0000
-Subject: Re: [PATCH] fs: ocfs2: fix spelling mistake
-To:     Keyur Patel <iamkeyur96@gmail.com>
-Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20200607212115.99278-1-iamkeyur96@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <037d3c9a-2abe-1e4e-eb91-a14f2e84e629@infradead.org>
-Date:   Sun, 7 Jun 2020 14:50:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 7 Jun 2020 17:53:34 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B0DC08C5C3
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 14:53:34 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id j12so9017333lfh.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 14:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I1Uqb8YGlNDQxJScCH5PVUrrLere1ZfraaH/U8kZZlA=;
+        b=Yr6/QSsZNA1gSHrMvpWG0UCFTZOZ4P+N4NJulQQ+NjRDIK4TfRR/6jenhKD0TCNQFX
+         wxKdKAF/zF861egM0KZATyn/V/5hszd4GKSEuRilzZWgI4IiEskvzW11SaFg3a0arrhm
+         k7CDeTLzFmWdn/Fqibxs4p0iebd6QamdfpyYGIiuY08LWFhDvVCtqkOO6WUqSJt2OlgV
+         3mL9K/dh2ca9NKP0/l16yOypZmfuCFuDjyTjCOsZLrJKDOv76cgYdE9CEQyZJ5kLsE+z
+         GG6S4vBi3e3NfL9adt9MGe9R/PYdEKwovFNBNWFQOKkNoZ+NtAwUG5BDlrlQezQHtYWg
+         /izw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=I1Uqb8YGlNDQxJScCH5PVUrrLere1ZfraaH/U8kZZlA=;
+        b=Ld3Ea1H2lLtha5nKdt6Z535FR85Fy3LSjJkGjpP0HWjloS5MbTd783v9i61YAXq2Fp
+         kiDdn3uviBIw5YbQoPuWFOmqiLw6bI8Ndz+aii+YuKd9iYzOVZ80HS54Pfwll9jfDflG
+         2xI+XijFZizr/nWz/aSQ8qSdW1yC71NDoUq9SHMTEzVLNGdlHF7MfuJRuBYGgeUIowli
+         rphqKTX09Ez7OADzk1LQPORH7QTOz150Sv+j/YpyijGKOG2CKkrZ4GpnWvKRg4ORYCeL
+         aLylp8XRAu7clDP8ue9/e5C0lyKnl+T52GKShxIleEXn6VFuc+27tpm7G5EQVv9mWSj5
+         wNKw==
+X-Gm-Message-State: AOAM532FHAMFVP415b3Gkio/8YwHYik2Nzr68Ck9o9y6peMgDYzVOpbB
+        eEEsXUEdEirNTmo9g0+/LnN7ag==
+X-Google-Smtp-Source: ABdhPJwt9sPGo2V3vTfl9vfv3FYXGjaQsYlMfpHsGgc7DfIkOHww+LiXy5SKyGOQW9XOe6tQ99rgBg==
+X-Received: by 2002:a05:6512:3208:: with SMTP id d8mr10990169lfe.38.1591566812384;
+        Sun, 07 Jun 2020 14:53:32 -0700 (PDT)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id l7sm1975609ljj.55.2020.06.07.14.53.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 14:53:31 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] irqchip: vic: Drop cascaded intialization call
+Date:   Sun,  7 Jun 2020 23:51:23 +0200
+Message-Id: <20200607215124.48638-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20200607212115.99278-1-iamkeyur96@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/20 2:21 PM, Keyur Patel wrote:
-> ./ocfs2/mmap.c:65: bebongs ==> belongs
-> 
-> Signed-off-by: Keyur Patel <iamkeyur96@gmail.com>
-> ---
->  fs/ocfs2/mmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ocfs2/mmap.c b/fs/ocfs2/mmap.c
-> index 3a44e461828a..39a77e903fdf 100644
-> --- a/fs/ocfs2/mmap.c
-> +++ b/fs/ocfs2/mmap.c
-> @@ -62,7 +62,7 @@ static vm_fault_t __ocfs2_page_mkwrite(struct file *file,
->  	last_index = (size - 1) >> PAGE_SHIFT;
->  
->  	/*
-> -	 * There are cases that lead to the page no longer bebongs to the
-> +	 * There are cases that lead to the page no longer belongs to the
+We got rid of the last user of the cascaded intialization
+from board files so drop this API.
 
-I would say                                      no longer belonging to the
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/irqchip/irq-vic.c       | 21 ---------------------
+ include/linux/irqchip/arm-vic.h |  2 --
+ 2 files changed, 23 deletions(-)
 
->  	 * mapping.
->  	 * 1) pagecache truncates locally due to memory pressure.
->  	 * 2) pagecache truncates when another is taking EX lock against 
-> 
-
-Please fix your To: line:
-
-(no To-header on input) <>
-
+diff --git a/drivers/irqchip/irq-vic.c b/drivers/irqchip/irq-vic.c
+index 3c87d925f74c..927ff2c1bf67 100644
+--- a/drivers/irqchip/irq-vic.c
++++ b/drivers/irqchip/irq-vic.c
+@@ -481,27 +481,6 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
+ 	__vic_init(base, 0, irq_start, vic_sources, resume_sources, NULL);
+ }
+ 
+-/**
+- * vic_init_cascaded() - initialise a cascaded vectored interrupt controller
+- * @base: iomem base address
+- * @parent_irq: the parent IRQ we're cascaded off
+- * @vic_sources: bitmask of interrupt sources to allow
+- * @resume_sources: bitmask of interrupt sources to allow for resume
+- *
+- * This returns the base for the new interrupts or negative on error.
+- */
+-int __init vic_init_cascaded(void __iomem *base, unsigned int parent_irq,
+-			      u32 vic_sources, u32 resume_sources)
+-{
+-	struct vic_device *v;
+-
+-	v = &vic_devices[vic_id];
+-	__vic_init(base, parent_irq, 0, vic_sources, resume_sources, NULL);
+-	/* Return out acquired base */
+-	return v->irq;
+-}
+-EXPORT_SYMBOL_GPL(vic_init_cascaded);
+-
+ #ifdef CONFIG_OF
+ static int __init vic_of_init(struct device_node *node,
+ 			      struct device_node *parent)
+diff --git a/include/linux/irqchip/arm-vic.h b/include/linux/irqchip/arm-vic.h
+index a158b97242c7..2a4b6a5d8522 100644
+--- a/include/linux/irqchip/arm-vic.h
++++ b/include/linux/irqchip/arm-vic.h
+@@ -19,7 +19,5 @@ struct pt_regs;
+ void __vic_init(void __iomem *base, int parent_irq, int irq_start,
+ 		u32 vic_sources, u32 resume_sources, struct device_node *node);
+ void vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources, u32 resume_sources);
+-int vic_init_cascaded(void __iomem *base, unsigned int parent_irq,
+-		      u32 vic_sources, u32 resume_sources);
+ 
+ #endif
 -- 
-~Randy
+2.25.4
 
