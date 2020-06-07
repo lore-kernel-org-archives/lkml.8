@@ -2,70 +2,74 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 06:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 06:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA163206F6
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 06:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C4A206F6
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 06:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591511802;
+	bh=CQtxtcDJBMRX+osmArf8Mom4xa/l6e4FZSbPN3AB5Go=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GmI3Ol4SmJbdJsW2JRMTfINyLKpEVS4OiAVJZJJJfaHt7hTve6vN86ZJAmzeQX5Vh
+	 etgbi03SW3xzPEUWLiHKu5OqKHunpuTVFH/odLgmVF65p0nOq5IW+9wJkxKgiEhf29
+	 H8ox2vyxAOHXvFPT34FWh4dJLO+a5ORvsuqEeflY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgFGGSf (ORCPT
+        id S1726396AbgFGGgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 02:18:35 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:57224 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726192AbgFGGSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 02:18:33 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Sun, 7 Jun 2020 14:18:15
- +0800 (GMT+08:00)
-X-Originating-IP: [10.192.85.18]
-Date:   Sun, 7 Jun 2020 14:18:15 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Marek Vasut" <marek.vasut@gmail.com>
-Cc:     kjlu@umn.edu,
-        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        "Rob Herring" <robh@kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] PCI: rcar: fix runtime pm imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <5cf73d31-33ab-b9ba-c9d5-faa3977484eb@gmail.com>
-References: <20200520082228.26881-1-dinghao.liu@zju.edu.cn>
- <5cf73d31-33ab-b9ba-c9d5-faa3977484eb@gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Sun, 7 Jun 2020 02:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726192AbgFGGgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 02:36:39 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1DD6206D5;
+        Sun,  7 Jun 2020 06:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591511799;
+        bh=CQtxtcDJBMRX+osmArf8Mom4xa/l6e4FZSbPN3AB5Go=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lRtQHxFBGzAI/gLGcUpeN7+AwzFbWuWVFRAISBh2Lk/1TLaVB2MXJhdyTn1ZCLAKl
+         fnFAiJryk+F3iYGUROtZx5sQOfiT8lLshLkD2aPfcyyibNTV3TvrdIeNp3H19ieiHF
+         Lv8+jQkIHvf8gpxdAanhegAtGZBdQgPwcBRDu/MU=
+Date:   Sun, 7 Jun 2020 09:36:35 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Hu Haowen <xianfengting221@163.com>
+Cc:     saeedm@mellanox.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/mlx5: Add a missing macro undefinition
+Message-ID: <20200607063635.GD164174@unreal>
+References: <20200607051241.5375-1-xianfengting221@163.com>
 MIME-Version: 1.0
-Message-ID: <176a80c.fc77b.1728d6dfd9b.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgDnX0OnhtxeMzVaAA--.20998W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUABlZdtOcIbQAQss
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUblCS07vEb7Iv0x
-        C_Jr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkI7II2jI8vz4vEwIxGrwCS07vE42xK82IY6x8ErcxFaV
-        Av8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lV2xY
-        6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14v26r106r1rMIAIbVC2zV
-        AF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE14v26r1j6r1xMIAIbVCI42IY
-        6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
-        0DMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2z280aVCY1x0267AKxVWU
-        JVW8JbIYCTnIWIevJa73U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200607051241.5375-1-xianfengting221@163.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+ICAKPiA+ICBlcnJfcG1fcHV0Ogo+IAo+IFlvdSBtaWdodCB3YW50IHRvIHJlbW92ZSB0aGlz
-IGxhYmVsIHRvby4KClRoYW5rIHlvdSBmb3IgcG9pbnRpbmcgb3V0IHRoaXMhIEkgd2lsbCBmaXgg
-dGhpcyBpbiB0aGUgCm5leHQgdmVyc2lvbiBvZiBwYXRjaC4K
+On Sun, Jun 07, 2020 at 01:12:40PM +0800, Hu Haowen wrote:
+> The macro ODP_CAP_SET_MAX is only used in function handle_hca_cap_odp()
+> in file main.c, so it should be undefined when there are no more uses
+> of it.
+>
+> Signed-off-by: Hu Haowen <xianfengting221@163.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/main.c | 2 ++
+>  1 file changed, 2 insertions(+)
+
+"should be undefined" is s little bit over statement, but overall
+the patch is good.
+
+Fixes: fca22e7e595f ("net/mlx5: ODP support for XRC transport is not enabled by default in FW")
+
+Thanks,
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
