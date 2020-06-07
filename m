@@ -7,68 +7,70 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7329EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F93C2067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485FE2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 21:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yr6/QSsZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gDj5vRtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgFGVxf (ORCPT
+        id S1727940AbgFGVyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 17:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57878 "EHLO
+        Sun, 7 Jun 2020 17:54:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgFGVxe (ORCPT
+        with ESMTP id S1726833AbgFGVyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 17:53:34 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B0DC08C5C3
-        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 14:53:34 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id j12so9017333lfh.0
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 14:53:33 -0700 (PDT)
+        Sun, 7 Jun 2020 17:54:49 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6B6C08C5C3
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 14:54:45 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z9so18031870ljh.13
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 14:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I1Uqb8YGlNDQxJScCH5PVUrrLere1ZfraaH/U8kZZlA=;
-        b=Yr6/QSsZNA1gSHrMvpWG0UCFTZOZ4P+N4NJulQQ+NjRDIK4TfRR/6jenhKD0TCNQFX
-         wxKdKAF/zF861egM0KZATyn/V/5hszd4GKSEuRilzZWgI4IiEskvzW11SaFg3a0arrhm
-         k7CDeTLzFmWdn/Fqibxs4p0iebd6QamdfpyYGIiuY08LWFhDvVCtqkOO6WUqSJt2OlgV
-         3mL9K/dh2ca9NKP0/l16yOypZmfuCFuDjyTjCOsZLrJKDOv76cgYdE9CEQyZJ5kLsE+z
-         GG6S4vBi3e3NfL9adt9MGe9R/PYdEKwovFNBNWFQOKkNoZ+NtAwUG5BDlrlQezQHtYWg
-         /izw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qK9kBq4blNXo7I1d5/dLedRzfEwPwXrnOkEFQSQpfAg=;
+        b=gDj5vRtBsBNuoC0/YZrGtdzDgTkcJVLvwoHI4sirFsHpd7TWw1eIwi7foAbrMdne77
+         MDUV/LKS9y4hHXGlA6MTqVzlasVZIiyULeC5EU4khJjSRlFRVqTNXV5ni9MDH+2MPkGH
+         RVXgVMTva3P9mv3XC+dWJPdR6sG+QjIF45ScahvvWHe9I7AXDvAKMSlQzAUC+CJCNf+D
+         Zx67pgDADXYAQk7aIFY3CkwV7YYkdvKP+diW/5x9QFxN4/+VVuncB6bx63rBRS4+yMWj
+         pyCLLzlmdz7CUxV7Szx7l55QtTjIfreQhEMbkLRV7/8oHsuz/NQllY/WCmJ/3IR2xmgC
+         v0dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=I1Uqb8YGlNDQxJScCH5PVUrrLere1ZfraaH/U8kZZlA=;
-        b=Ld3Ea1H2lLtha5nKdt6Z535FR85Fy3LSjJkGjpP0HWjloS5MbTd783v9i61YAXq2Fp
-         kiDdn3uviBIw5YbQoPuWFOmqiLw6bI8Ndz+aii+YuKd9iYzOVZ80HS54Pfwll9jfDflG
-         2xI+XijFZizr/nWz/aSQ8qSdW1yC71NDoUq9SHMTEzVLNGdlHF7MfuJRuBYGgeUIowli
-         rphqKTX09Ez7OADzk1LQPORH7QTOz150Sv+j/YpyijGKOG2CKkrZ4GpnWvKRg4ORYCeL
-         aLylp8XRAu7clDP8ue9/e5C0lyKnl+T52GKShxIleEXn6VFuc+27tpm7G5EQVv9mWSj5
-         wNKw==
-X-Gm-Message-State: AOAM532FHAMFVP415b3Gkio/8YwHYik2Nzr68Ck9o9y6peMgDYzVOpbB
-        eEEsXUEdEirNTmo9g0+/LnN7ag==
-X-Google-Smtp-Source: ABdhPJwt9sPGo2V3vTfl9vfv3FYXGjaQsYlMfpHsGgc7DfIkOHww+LiXy5SKyGOQW9XOe6tQ99rgBg==
-X-Received: by 2002:a05:6512:3208:: with SMTP id d8mr10990169lfe.38.1591566812384;
-        Sun, 07 Jun 2020 14:53:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qK9kBq4blNXo7I1d5/dLedRzfEwPwXrnOkEFQSQpfAg=;
+        b=Vy6fDVWkMjQ5Tu2cPA5dQUo/5UQya1ZgrNw5sk/UC5QRCf6GxtxMPUclprobKvwvxe
+         FiIWdsl+es41SzIERKJ7gEBIPDw6s9sDyTyHIwKGldB5NcKAMh2EntoAxLYMlqqRrA/B
+         o2HC5IkGi1MBYVI810mFtI+4RKA4/CsFs67js5gQq4VAsR+PdBKuetGOqj0jciTuFx5D
+         04JGtlogPC5jTJLl2+5UmDuwYn03noqYwbeCpZh5VWg6CM8NIrSqLnnfkRpQCbvMICjo
+         bQXmp1iYTpfjGPABqPf8ZhBZ3OUlu7V5JtexpU8w9EjJWEuF8jwqXRzFXctquAaRDG3K
+         X15Q==
+X-Gm-Message-State: AOAM5335uzE9Lbo0K207A+hK0pGIg8RJO1oniEVo9Ck6pqlt6CL/bSjW
+        SaIeCC3usyTIR+XDtconP3ZFuPCu40k=
+X-Google-Smtp-Source: ABdhPJyxZV1k2GXE9kxAdp66ysDNkfhGGulaIftD8Gw8zkBid3fDBx4xJGsPVkQouJKGgTEqxOjcAg==
+X-Received: by 2002:a2e:a16d:: with SMTP id u13mr1817108ljl.362.1591566883738;
+        Sun, 07 Jun 2020 14:54:43 -0700 (PDT)
 Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id l7sm1975609ljj.55.2020.06.07.14.53.30
+        by smtp.gmail.com with ESMTPSA id l7sm1975609ljj.55.2020.06.07.14.54.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 14:53:31 -0700 (PDT)
+        Sun, 07 Jun 2020 14:54:43 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>,
         Jason Cooper <jason@lakedaemon.net>
 Cc:     linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] irqchip: vic: Drop cascaded intialization call
-Date:   Sun,  7 Jun 2020 23:51:23 +0200
-Message-Id: <20200607215124.48638-1-linus.walleij@linaro.org>
+Subject: [PATCH 2/2] irqchip: vic: Cut down the external API
+Date:   Sun,  7 Jun 2020 23:51:24 +0200
+Message-Id: <20200607215124.48638-2-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200607215124.48638-1-linus.walleij@linaro.org>
+References: <20200607215124.48638-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,57 +78,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We got rid of the last user of the cascaded intialization
-from board files so drop this API.
+There are registers and functions in the header file
+that are only used inside the driver. Move these into
+the driver.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/irqchip/irq-vic.c       | 21 ---------------------
- include/linux/irqchip/arm-vic.h |  2 --
- 2 files changed, 23 deletions(-)
+ drivers/irqchip/irq-vic.c       | 5 ++++-
+ include/linux/irqchip/arm-vic.h | 9 ---------
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/irqchip/irq-vic.c b/drivers/irqchip/irq-vic.c
-index 3c87d925f74c..927ff2c1bf67 100644
+index 927ff2c1bf67..bc235db8a4c5 100644
 --- a/drivers/irqchip/irq-vic.c
 +++ b/drivers/irqchip/irq-vic.c
-@@ -481,27 +481,6 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
- 	__vic_init(base, 0, irq_start, vic_sources, resume_sources, NULL);
+@@ -27,7 +27,10 @@
+ 
+ #define VIC_IRQ_STATUS			0x00
+ #define VIC_FIQ_STATUS			0x04
++#define VIC_RAW_STATUS			0x08
+ #define VIC_INT_SELECT			0x0c	/* 1 = FIQ, 0 = IRQ */
++#define VIC_INT_ENABLE			0x10	/* 1 = enable, 0 = disable */
++#define VIC_INT_ENABLE_CLEAR		0x14
+ #define VIC_INT_SOFT			0x18
+ #define VIC_INT_SOFT_CLEAR		0x1c
+ #define VIC_PROTECT			0x20
+@@ -428,7 +431,7 @@ static void __init vic_init_st(void __iomem *base, unsigned int irq_start,
+ 	vic_register(base, 0, irq_start, vic_sources, 0, node);
  }
  
--/**
-- * vic_init_cascaded() - initialise a cascaded vectored interrupt controller
-- * @base: iomem base address
-- * @parent_irq: the parent IRQ we're cascaded off
-- * @vic_sources: bitmask of interrupt sources to allow
-- * @resume_sources: bitmask of interrupt sources to allow for resume
-- *
-- * This returns the base for the new interrupts or negative on error.
-- */
--int __init vic_init_cascaded(void __iomem *base, unsigned int parent_irq,
--			      u32 vic_sources, u32 resume_sources)
--{
--	struct vic_device *v;
--
--	v = &vic_devices[vic_id];
--	__vic_init(base, parent_irq, 0, vic_sources, resume_sources, NULL);
--	/* Return out acquired base */
--	return v->irq;
--}
--EXPORT_SYMBOL_GPL(vic_init_cascaded);
--
- #ifdef CONFIG_OF
- static int __init vic_of_init(struct device_node *node,
- 			      struct device_node *parent)
+-void __init __vic_init(void __iomem *base, int parent_irq, int irq_start,
++static void __init __vic_init(void __iomem *base, int parent_irq, int irq_start,
+ 			      u32 vic_sources, u32 resume_sources,
+ 			      struct device_node *node)
+ {
 diff --git a/include/linux/irqchip/arm-vic.h b/include/linux/irqchip/arm-vic.h
-index a158b97242c7..2a4b6a5d8522 100644
+index 2a4b6a5d8522..f2b11d1df23d 100644
 --- a/include/linux/irqchip/arm-vic.h
 +++ b/include/linux/irqchip/arm-vic.h
-@@ -19,7 +19,5 @@ struct pt_regs;
- void __vic_init(void __iomem *base, int parent_irq, int irq_start,
- 		u32 vic_sources, u32 resume_sources, struct device_node *node);
+@@ -9,15 +9,6 @@
+ 
+ #include <linux/types.h>
+ 
+-#define VIC_RAW_STATUS			0x08
+-#define VIC_INT_ENABLE			0x10	/* 1 = enable, 0 = disable */
+-#define VIC_INT_ENABLE_CLEAR		0x14
+-
+-struct device_node;
+-struct pt_regs;
+-
+-void __vic_init(void __iomem *base, int parent_irq, int irq_start,
+-		u32 vic_sources, u32 resume_sources, struct device_node *node);
  void vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources, u32 resume_sources);
--int vic_init_cascaded(void __iomem *base, unsigned int parent_irq,
--		      u32 vic_sources, u32 resume_sources);
  
  #endif
 -- 
