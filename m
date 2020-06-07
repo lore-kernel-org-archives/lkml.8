@@ -2,111 +2,88 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0032C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48F72064C
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ARi2s5xQ"
+	by mail.kernel.org (Postfix) with ESMTP id 59FBF20663
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 13:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgFGNDJ (ORCPT
+        id S1726570AbgFGNDv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 09:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgFGNDI (ORCPT
+        Sun, 7 Jun 2020 09:03:51 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:35725 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726517AbgFGNDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 09:03:08 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B03E4C08C5C2;
-        Sun,  7 Jun 2020 06:03:07 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id n21so780895ejg.3;
-        Sun, 07 Jun 2020 06:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sz9gBVVeMmCOLNwfNEr8y0q2MmnBrNbnLVxb2Hv4PU0=;
-        b=ARi2s5xQ5Lsat1eRCYPXeFBJ06VCGZ6cXtLmcoYjte5ZtXv0dj3FczN5JWPBzVZt+p
-         sGAK5EbjlR8dodw9v0TMJi/JUvpCP8kgnbat4Maeu2QcTFZTv5NEox6crNHPQLgojHia
-         488Wz13L3SLutQ8wH9XUOFxaJ83r3KOBnTELPrEJPjLx/WCxT1TwWQ0q2lxGheQATHjM
-         oxncJ9/xtXHiNsbC8LpbeJ69NyCwzReao2RAYxzdvcJOZz7RwDyo+6UU7+KVrIR01CZH
-         9e1o+EIpiSlkR8/4K0meYbL1EDgebzIifl5KZtNqCWrbFqJkUWtuE/TfqSYRmaZWl9Ns
-         nSuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Sz9gBVVeMmCOLNwfNEr8y0q2MmnBrNbnLVxb2Hv4PU0=;
-        b=uTFnOeapvmaiBkriHxSHTgOLkY60I/wSds6MRVKV9v3oCmwgtcawk4/6dq0GDof8fp
-         +g7toG/vVBStWLhlkuCEuzDP0BB/DF01qujNP1QfvGx8HUtqvbRcv1t1Fd1y9bWbJha9
-         rBDmp7T3L3rogwZfJBSPbG6jDhGEwVJTCTWfipzHCt2/bxOWue4vMI98b09wa26gAgCc
-         jrsNNaVhtLOKR53+7jqvrgm8cDzWCqvq2PZ7Z9pY7xLNFCjeANpMTtIjRzSOieywLpxQ
-         l67RcDcdJecbEg/+o38Dv9NtvlNaoYl3S/ggKUzuO7LeoC+DGW2ZqMYkFCi+xrQ2YjZQ
-         FCNA==
-X-Gm-Message-State: AOAM533Yf1lasHdPt3cxCxDHCw1Vb4uE5dTnxzo9vwo06Inh+bAofRBw
-        7KA5fcinJcMtOEu17ahgue4=
-X-Google-Smtp-Source: ABdhPJwdy0HIwwfTUs9lnh2a8Ajb3MOjrSbkREmlPVg91dTI+wf9sPUDsdMtsr6lXoxqJmB7ppnVYA==
-X-Received: by 2002:a17:906:b55:: with SMTP id v21mr15930486ejg.298.1591534984853;
-        Sun, 07 Jun 2020 06:03:04 -0700 (PDT)
-Received: from localhost.localdomain (p200300f137189200428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3718:9200:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id ew9sm8588784ejb.121.2020.06.07.06.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 06:03:04 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     hauke@hauke-m.de, netdev@vger.kernel.org
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH net v1] net: dsa: lantiq_gswip: fix and improve the unsupported interface error
-Date:   Sun,  7 Jun 2020 15:02:58 +0200
-Message-Id: <20200607130258.3020392-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 7 Jun 2020 09:03:50 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-34-niSo_StSOpacK4VCKZ_DvA-1; Sun, 07 Jun 2020 14:03:46 +0100
+X-MC-Unique: niSo_StSOpacK4VCKZ_DvA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 7 Jun 2020 14:03:45 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 7 Jun 2020 14:03:45 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Herbert Xu' <herbert@gondor.apana.org.au>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        wangzhou1 <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>
+Subject: RE: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
+Thread-Topic: [PATCH] crypto: hisilicon - fix strncpy warning with strlcpy
+Thread-Index: AQHWOzNKRLAtoxLytEmaiwfeMuNV66jNIJ6A
+Date:   Sun, 7 Jun 2020 13:03:45 +0000
+Message-ID: <8c0d8f4e21794d8b80d0a3852830debb@AcuMS.aculab.com>
+References: <202006032110.BEbKqovX%lkp@intel.com>
+ <1591241524-6452-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200604033918.GA2286@gondor.apana.org.au>
+ <b6ad8af2-1cb7-faac-0446-5e09e97f3616@linaro.org>
+ <20200604061811.GA28759@gondor.apana.org.au>
+ <b23433f8-d95d-8142-c830-fb92e5ccd4a1@linaro.org>
+ <20200604065009.GA29822@gondor.apana.org.au>
+ <f8dceec5-6835-c064-bb43-fd12668c2dbb@linaro.org>
+ <20200605121703.GA3792@gondor.apana.org.au>
+In-Reply-To: <20200605121703.GA3792@gondor.apana.org.au>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While trying to use the lantiq_gswip driver on one of my boards I made
-a mistake when specifying the phy-mode (because the out-of-tree driver
-wants phy-mode "gmii" or "mii" for the internal PHYs). In this case the
-following error is printed multiple times:
-  Unsupported interface: 3
+From: Herbert Xu
+> Sent: 05 June 2020 13:17
+...
+> Better yet use strscpy which will even return an error for you.
 
-While it gives at least a hint at what may be wrong it is not very user
-friendly. Print the human readable phy-mode and also which port is
-configured incorrectly (this hardware supports ports 0..6) to improve
-the cases where someone made a mistake.
+It really ought to return the buffer length on truncation.
+Then you can loop:
+	while(...)
+		buf += strxxxcpy(buf, src, buf_end - buf);
+and only check right at the end.
 
-Fixes: 14fceff4771e51 ("net: dsa: Add Lantiq / Intel DSA driver for vrx200")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/net/dsa/lantiq_gswip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+	David
 
-diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswip.c
-index cf6fa8fede33..521ebc072903 100644
---- a/drivers/net/dsa/lantiq_gswip.c
-+++ b/drivers/net/dsa/lantiq_gswip.c
-@@ -1452,7 +1452,8 @@ static void gswip_phylink_validate(struct dsa_switch *ds, int port,
- 
- unsupported:
- 	bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
--	dev_err(ds->dev, "Unsupported interface: %d\n", state->interface);
-+	dev_err(ds->dev, "Unsupported interface '%s' for port %d\n",
-+		phy_modes(state->interface), port);
- 	return;
- }
- 
--- 
-2.27.0
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
