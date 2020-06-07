@@ -2,228 +2,93 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33438C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F21BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A2820748
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391BF2076C
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 18:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="puekgSe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgFGSma (ORCPT
+        id S1727058AbgFGSqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 14:42:30 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:27483 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728462AbgFGSmC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 14:42:02 -0400
-X-IronPort-AV: E=Sophos;i="5.73,485,1583161200"; 
-   d="scan'208";a="48826677"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 08 Jun 2020 03:42:01 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5E07440CCFCF;
-        Mon,  8 Jun 2020 03:41:59 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 07/11] arm64: dts: renesas: hihope-rzg2-ex: Separate out lvds specific nodes into common file
-Date:   Sun,  7 Jun 2020 19:41:03 +0100
-Message-Id: <1591555267-21822-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1591555267-21822-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Sun, 7 Jun 2020 14:46:07 -0400
+Received: from www.zeus03.de ([194.117.254.33]:59774 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726881AbgFGSqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 14:46:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=KMLSh2UfURcetn72D61oTlOE6OdF
+        ooRMz6SLcFP6dQk=; b=puekgSe8QJadZ5X8CG/NdjPsGlJKr2ZcX9G07PRuRXVD
+        fT+5LGKMr1ELMIeM7R25Ih8rnAdvfogowIXZvNvWf7OrsMbSbJRBAcsf1SBssaZX
+        5v+EI755xxXz5MitKTBtGk15cejAekr+UaL8Re2eAAdteVUc++n1QQJDhp/YjGs=
+Received: (qmail 2771393 invoked from network); 7 Jun 2020 20:46:04 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Jun 2020 20:46:04 +0200
+X-UD-Smtp-Session: l3s3148p1@FAEV6IKneKkgAwDPXy3ZACQyXnoVRx3W
+Date:   Sun, 7 Jun 2020 20:46:04 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Max Staudt <max@enpas.org>
+Cc:     linux-i2c@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] i2c: icy: Fix build with CONFIG_AMIGA_PCMCIA=n
+Message-ID: <20200607184604.GA12911@ninjato>
+References: <20200607182812.9438-1-max@enpas.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+Content-Disposition: inline
+In-Reply-To: <20200607182812.9438-1-max@enpas.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Separate out LVDS specific nodes into common file
-hihope-rzg2-ex-lvds.dtsi so that this can be re-used by RZ/G2M[N]
-variants.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- .../boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi | 52 +++++++++++++++++++
- .../boot/dts/renesas/hihope-rzg2-ex.dtsi      | 37 -------------
- ...a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts | 39 +-------------
- 3 files changed, 53 insertions(+), 75 deletions(-)
- create mode 100644 arch/arm64/boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi
-new file mode 100644
-index 000000000000..40c5e8d6d841
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex-lvds.dtsi
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the RZ/G2[MN] HiHope sub board LVDS common parts
-+ *
-+ * Copyright (C) 2020 Renesas Electronics Corp.
-+ */
-+
-+/ {
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm0 0 50000>;
-+
-+		brightness-levels = <0 2 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+	};
-+};
-+
-+&gpio1 {
-+	/*
-+	 * When GP1_20 is LOW LVDS0 is connected to the LVDS connector
-+	 * When GP1_20 is HIGH LVDS0 is connected to the LT8918L
-+	 */
-+	lvds-connector-en-gpio {
-+		gpio-hog;
-+		gpios = <20 GPIO_ACTIVE_HIGH>;
-+		output-low;
-+		line-name = "lvds-connector-en-gpio";
-+	};
-+};
-+
-+&lvds0 {
-+	ports {
-+		port@1 {
-+			lvds_connector: endpoint {
-+			};
-+		};
-+	};
-+};
-+
-+&pfc {
-+	pwm0_pins: pwm0 {
-+		groups = "pwm0";
-+		function = "pwm0";
-+	};
-+};
-+
-+&pwm0 {
-+	pinctrl-0 = <&pwm0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-index 28fe17e3bc4e..acfcfd050a6c 100644
---- a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-@@ -13,14 +13,6 @@
- 	chosen {
- 		bootargs = "ignore_loglevel rw root=/dev/nfs ip=on";
- 	};
--
--	backlight {
--		compatible = "pwm-backlight";
--		pwms = <&pwm0 0 50000>;
--
--		brightness-levels = <0 2 8 16 32 64 128 255>;
--		default-brightness-level = <6>;
--	};
- };
- 
- &avb {
-@@ -51,35 +43,6 @@
- 	status = "okay";
- };
- 
--&gpio1 {
--	/*
--	 * When GP1_20 is LOW LVDS0 is connected to the LVDS connector
--	 * When GP1_20 is HIGH LVDS0 is connected to the LT8918L
--	 */
--	lvds-connector-en-gpio {
--		gpio-hog;
--		gpios = <20 GPIO_ACTIVE_HIGH>;
--		output-low;
--		line-name = "lvds-connector-en-gpio";
--	};
--};
--
--&lvds0 {
--	/*
--	 * Please include the LVDS panel .dtsi file and uncomment the below line
--	 * to enable LVDS panel connected to RZ/G2[MN] boards.
--	 */
--
--	/* status = "okay"; */
--
--	ports {
--		port@1 {
--			lvds_connector: endpoint {
--			};
--		};
--	};
--};
--
- &pciec0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
-index 3a1dcc914985..c0e9d8ca4a8c 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-rev2-ex-idk-1110wr.dts
-@@ -7,46 +7,9 @@
-  */
- 
- #include "r8a774a1-hihope-rzg2m-rev2-ex.dts"
-+#include "hihope-rzg2-ex-lvds.dtsi"
- #include "rzg2-advantech-idk-1110wr-panel.dtsi"
- 
--/ {
--	backlight {
--		compatible = "pwm-backlight";
--		pwms = <&pwm0 0 50000>;
--
--		brightness-levels = <0 2 8 16 32 64 128 255>;
--		default-brightness-level = <6>;
--	};
--
--};
--
--&gpio1 {
--	/*
--	 * When GP1_20 is LOW LVDS0 is connected to the LVDS connector
--	 * When GP1_20 is HIGH LVDS0 is connected to the LT8918L
--	 */
--	lvds-connector-en-gpio {
--		gpio-hog;
--		gpios = <20 GPIO_ACTIVE_HIGH>;
--		output-low;
--		line-name = "lvds-connector-en-gpio";
--	};
--};
--
- &lvds0 {
- 	status = "okay";
- };
--
--&pfc {
--	pwm0_pins: pwm0 {
--		groups = "pwm0";
--		function = "pwm0";
--	};
--};
--
--&pwm0 {
--	pinctrl-0 = <&pwm0_pins>;
--	pinctrl-names = "default";
--
--	status = "okay";
--};
--- 
-2.17.1
+On Sun, Jun 07, 2020 at 08:28:12PM +0200, Max Staudt wrote:
+> This has been found by the Kernel Test Robot:
+> http://lkml.iu.edu/hypermail/linux/kernel/2006.0/06862.html
+>=20
+> With CONFIG_AMIGA_PCMCIA=3Dn, io_mm.h does not pull in amigahw.h and
+> ZTWO_VADDR is undefined. Add forgotten include to i2c-icy.c
+>=20
+> Fixes: 4768e90ecaec ("i2c: Add i2c-icy for I2C on m68k/Amiga")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Max Staudt <max@enpas.org>
 
+Applied to for-next (i.e. for-5.8), thanks!
+
+
+--EVF5PPMfhYS0aIcm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7dNecACgkQFA3kzBSg
+KbYwoxAArfkCxw9qH+Qy6A6Slh2+plQr6o4BywjoAJoolZ2/AleathzwM/rH7+g4
+QkAuwn/daVjBkDk3BC4HGLh/1iHycpo5agr/EpBxAWGS+cLA58IKS1M4uUVFzOcV
+DN1eUVUTTBj+XNzWYQwBngaE6ovbDobFGw82V1q98wmBSSt4vzXRZxLr+XAK+iz0
+YzihJa6/K24CRQJOgrsOxCtibUkUkI+yJSb6WzG3QeDUVi78fgBwoO9CK7/As09t
+kQfOPFaPPUFG38HyEM3FkfRvksYGi5f0/pekmcsm87B3CVEsOdho22rUAruCEl5F
+mmMn0b9r8uqf11oSTHDQ4KsjmqeBcr8wzcQXyYtv6uFdmd5YkSQOFzRNfgmHwV1t
+glafoz54RciFXmfuRNgOcJePQuqTYPS9Rd+8EwT2bDhqeV8I1jVRQt9txefYHvOv
+h20o8PasqqxooLN0oLFZ1Um389IM8wllhs2mYM6o7BoswAztLSrtwaRNZbTdAwQd
+gqfbJLd0xHtHS3Y7fthi7wLazDMSXFm/yzCQtk7LqzYPmhSCAJOVpnWWaprukp+v
+hE9GedHD4LHzswVgznAH9fcTByulDwb/uIrY+L+7b0XVV4FZWYPu2xgNUdVnLKqD
+ZMVLZwE+BE4F32uUu/e/hE7wpGYVI20Zjasu2YQ4OXQssJ/ZLCE=
+=NyL2
+-----END PGP SIGNATURE-----
+
+--EVF5PPMfhYS0aIcm--
