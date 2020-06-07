@@ -2,98 +2,220 @@ Return-Path: <SRS0=HPGY=7U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A09AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF872067B
-	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0EE2067B
+	for <linux-kernel@archiver.kernel.org>; Sun,  7 Jun 2020 15:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PURl8DuP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rdzL/B/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgFGPnO (ORCPT
+        id S1726715AbgFGPnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 11:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
+        Sun, 7 Jun 2020 11:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgFGPnN (ORCPT
+        with ESMTP id S1726595AbgFGPno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 11:43:13 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DDCC08C5C3;
-        Sun,  7 Jun 2020 08:43:13 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id gl26so15464778ejb.11;
-        Sun, 07 Jun 2020 08:43:13 -0700 (PDT)
+        Sun, 7 Jun 2020 11:43:44 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C83EC08C5C3;
+        Sun,  7 Jun 2020 08:43:44 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 82so8683622lfh.2;
+        Sun, 07 Jun 2020 08:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QCe7MTPBluIQ+Z4ZBffv4cvKmqrkB70PcCAPj5Z/6/M=;
-        b=PURl8DuPm18P85nvRkNFBSVL56dyuzstSURexfOKdBK8mcAm3gyieRPV3BlgVa3SSE
-         N0wW8j4f11D+ttsY+i3qVNHBnXa39L8BSI62z7AM6JWKDZE+/gQzBa5Z6CHtV9xpgxV7
-         YkTVmcgCjU5DylWKrmJycRLfWKDJKvzUlt/Ul9DK/Q73l8RjJ8oWNTrbRqhifmZinZYM
-         jyMRBvVpbieP7ndnOv/6WHW9S3AZtGWDaH7O2U7ldJ/u97UESY9HZrWYYQYjOtV620+3
-         Lot10ftS5416syWttEH5NflrM0/vix58FQefD1dNP3lUa3aeRpDscZwAdI7GCmt5v4KS
-         2Smw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yf0dEFF4gM5Mo+qgJBi/+O4Rqtdvpn0aIjyyfWdfUss=;
+        b=rdzL/B/NTFMDcIyE9x46i8/VP8ZDtvuQnZzv/NqEyasF4oS+AQhHpkYn79LedVrjjC
+         15yA0ihyRuJEmtMbMxZp1kt19pW8LhQABL+en/a9rXu/TbQlPISORQcSVizV5D5KcbOW
+         CEOfG9UbPhUFt9zruPyPMcrbWVSnGI83ynIKo1HoQC/1jnGL3bXAWpTu2R99QU3NBiLr
+         lARgTlQbWIXW8GlNuhFGHbcDHRu1HJUejsAOU2HW9DmzScflzF3Vy8aYjWoDISH6lsCm
+         SyECbnyD3n0m543Dou54ALQdeXoaCqa3cQ/Y+r2nZBntXyDzFaTqnRtbcjWklK5AFL/I
+         p0mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QCe7MTPBluIQ+Z4ZBffv4cvKmqrkB70PcCAPj5Z/6/M=;
-        b=EFFdoPEPLa5yuS2RbUMXsq0tq7HV1UPMf4IMuGznoy3nRJRAlZKulB/1bJh0QglsVW
-         KPRyFtnP1CZPsrE+FsPmOD5Ov7K/5QKYT7xJF6wKD2wXLAMmZlQ0wmdvTEk2WQcdLHSc
-         FQwgoRhCDVdSB+2sJ7XXYlsx4nyzatyZxYBdBQTOz8K5r3KG+HD3d4KBJ0aIvNZxV8j4
-         M869kppJWRJ7DqzfwoOpiKQCTto91giuU6XTvBRZIGnNXQHGclSoDnRyVjT3l25ZX74A
-         ry/kr9ipIS8k04FU93oU56wPzfNX8ocUMXNWe+rjRbxN98H/8SJDyInRurvGpORxJww6
-         1qnA==
-X-Gm-Message-State: AOAM530alrlj7rd7xqXoOZnU2ff9xT97jjgZpsXr2TbbVwZRGPhuTrKU
-        mChn7f0FIsAczIsW1oZklMEDo16cs6wGIw==
-X-Google-Smtp-Source: ABdhPJxNQ9+nxJwOsJeEozyjH/xmSciV4dHlbIHLKHmqctmbT0MNAgwDY4ybECcF32Vz8qtYUYKbKw==
-X-Received: by 2002:a17:907:20e5:: with SMTP id rh5mr17929162ejb.80.1591544591522;
-        Sun, 07 Jun 2020 08:43:11 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id ce16sm8638425ejb.76.2020.06.07.08.43.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yf0dEFF4gM5Mo+qgJBi/+O4Rqtdvpn0aIjyyfWdfUss=;
+        b=n8epqCWJ/pP70IztNx2vW/PN7sgYfCJMtGpSbPlu8NOX4BDeNoNzG/ME4QyixuHvrz
+         libQIbmiOUmgtbP5P0l+AGIswkRRamz3AqPg5xZZ3K5pfTZGjA5JB0feoRrH28GxSe1Q
+         vi45K1YbrkaYweRQp0mJrdCLssSS9fXHsg2t0o5KAoqJM4zzq/hqfwkgcAznokfm1zSJ
+         QG+4u4bo0OVI4C6tyOkhw7ZJTdEwHZJ7Eib54F+sm5FxpItgsoMPCuYUHPSZIo6kO/tz
+         3ybNof0gQwytsX7qRnx1sU5GgeLfdiiVrVsbtUB4OVOdrsrIUsM+BtjGxqaj5SQBzfDN
+         u+RA==
+X-Gm-Message-State: AOAM531RoRCjxlPbVFYg1ajgdJqZqSdqMtu8cIDKnSMihMHc2jJ2J6/a
+        GIAFnbQU4lXL9pJJjKj2RfjAJuDI
+X-Google-Smtp-Source: ABdhPJzUFS4Eb6QJjqYM34BQpqAHEVGYG+dflN+FllMgiuCmXhJcw89AsXRT7c9Xq71ZT+TpfeU01w==
+X-Received: by 2002:ac2:54b4:: with SMTP id w20mr10350572lfk.48.1591544622724;
+        Sun, 07 Jun 2020 08:43:42 -0700 (PDT)
+Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
+        by smtp.gmail.com with ESMTPSA id a7sm3592234lfm.4.2020.06.07.08.43.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 08:43:10 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 17:42:59 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Nuno Das Neves <nuno.das@microsoft.com>
-Subject: Re: [RFC PATCH 0/2] VMBus channel interrupts re-balancing
-Message-ID: <20200607154259.GA10780@andrea>
-References: <20200526223218.184057-1-parri.andrea@gmail.com>
+        Sun, 07 Jun 2020 08:43:41 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>,
+        Zack Pearsall <zpearsall@yahoo.com>
+Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7 devices
+Date:   Sun,  7 Jun 2020 18:43:21 +0300
+Message-Id: <20200607154327.18589-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526223218.184057-1-parri.andrea@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> These changes originated from (and address /try to resolve) two known
-> limitations of the current interrupts-to-CPUs mapping scheme, that is,
-> (1) the "static" nature of this mapping scheme (that, e.g., can end up
-> preventing the hot removal of certain CPUs) and (2) the lack of global
-> visibility in such scheme (where devices/channels are mapped only "one
-> at a time"/as they are offered, with the end result that globally the
-> various interrupts are not always evenly spread across CPUs).
+Hello,
 
-One thing I didn't mention here is that, well, we probably don't want
-any of this when CONFIG_SMP=n:  clearly, I didn't pay much attention
-to (optimize) this config in this RFC (FWIW, neither seems to do the
-current mapping scheme) but I'll look into this if there is interest
-on this regard (once back from vacation of course  ;-) and, probably,
-at the cost of adding some #ifdeffery to this RFC).
+This series introduces upstream kernel support for Acer Iconia Tab A500
+and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
+in advance.
 
-Thanks,
-  Andrea
+Changelog:
+
+v9: - Nexus 7 memory timings are moved out to a separate dtsi file to ease
+      reviewing of the device-trees since the sparse definition of the timings
+      within multiple DT files created some unnecessary confusion.
+      Thanks to Michał Mirosław for the suggestion.
+
+v8: - The eMMC voltage regulator is now marked as always-ON in all
+      device-trees because turned out that some bootloader versions have
+      assumption about the enabled regulator at a boot time. This fixes
+      machine hanging on a warm reboot, it's also matching the downstream
+      kernel regulator configuration.
+
+    - The core regulator of the Ti PMIC Nexus 7 variant is now limited
+      to a 1.35V, which is a more realistic limit than 1.5V that was borrowed
+      from the Cardhu device-tree. Now both Maxim and Ti variants have the
+      common limits.
+
+    - Added acks from Rob Herring.
+
+v7: - This version brings support for a Nexus 7 variant that uses Ti PMIC
+      instead of the Maxim PMIC. Previously we assumed that variant with
+      the Ti PMIC doesn't exist in a wild, but turned out that it was a
+      wrong assumption. In a result the device-trees are separated into
+      more DTSI pieces, which combined together form the final device-tree.
+      Thanks to Zack Pearsall for testing the Ti version!
+
+    - The camera voltage regulator is now preset to a correct 1.8v in the
+      Nexus 7 device-tree.
+
+v6: - Corrected PMIC's RTC alias in the DTs. Sometime ago I renamed the
+      PMIC's node to match the modern upstream styling, but forgot to change
+      the RTC alias. Now PMIC RTC alias uses node's handle instead of string.
+
+    - Removed "panel: " handle from device trees, which became unused after
+      v5 and I just missed to remove it.
+
+v5: - After spending some more time on adding LVDS encoder bridge support
+      to the Tegra DRM driver, I'm now having a second thought and agree
+      with Thierry Reding that in a longer run it should be better not to
+      mix old nvidia,panel with new output graph in device-tree. So the
+      nvidia,panel phandle is removed now in both A500 and Nexus 7 DTs.
+
+v4: - Corrected CPU's thermal zone on both A500 and Nexus 7, which
+      should use the remote thermal sensor (Tegra chip) instead of the
+      local ("skin" temperature).
+
+    - Added default PMIC pinmux state on Nexus 7, for completeness.
+
+    - Added PMIC cpu_pwr_req GPIO hog on Nexus 7, for completeness.
+
+    - Renamed thermal sensor node label to NCT72 on Nexus 7 to match the
+      actual hardware (NCT72 is compatible with NCT1008). For completeness.
+
+    - Added always-on USB AVDD regulator on Nexus 7, which is controlled by
+      the PMIC GPIO. For completeness.
+
+    - Added PMIC GPIO enable-control to the 3v3_sys regulator on Nexus 7,
+      for completeness.
+
+    - Added CONFIG_NAMESPACES, CONFIG_USER_NS, CONFIG_SECCOMP and
+      CONFIG_PINCTRL_MAX77620 to the tegra_defconfig. The first three
+      options are must-have for the modern userspace, the last is somewhat
+      actual now since the default PMIC pinmux state is added to the N7 DT.
+
+v3: - Improved device-tree node-names in accordance to review comments that
+      were made by Thierry Reding to v2.
+
+    - Corrected LVDS encoder powerdown-GPIO polarity on both A500 and Nexus 7
+      because I implemented the DRM bridges support in the Tegra DRM driver
+      and found that there was a mistake in the device-trees. The updated
+      polarity also matches the boards schematics. Now DRM bridges support
+      becomes mandatory since LVDS is getting disabled during of the encoder
+      driver probing. I'll send the DRM patch separately from this series.
+
+    - Replaced recently deprecated CONFIG_DRM_LVDS_ENCODER with the new
+      CONFIG_DRM_LVDS_CODEC in tegra_defconfig.
+
+    - Added more config options to tegra_defconfig, like pstore and thermal.
+
+    - Added atmel,cfg_name to the A500 DT, which is a new upcoming property
+      in 5.8+ that allows to specify the per-board hardware config file name.
+
+v2: - Corrected "volume down" key-label in the grouper's device-tree and
+      improved some other names in device-trees.
+
+    - Added optional (upcoming in 5.8+) VDD/AVDD regulators to the touchscreen
+      node in A500 device-tree.
+
+Dmitry Osipenko (6):
+  ARM: tegra: Add device-tree for Acer Iconia Tab A500
+  ARM: tegra: Add device-tree for ASUS Google Nexus 7
+  dt-bindings: Add vendor prefix for Acer Inc.
+  dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
+  dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
+  ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
+
+ .../devicetree/bindings/arm/tegra.yaml        |   10 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ arch/arm/boot/dts/Makefile                    |    4 +
+ .../boot/dts/tegra20-acer-a500-picasso.dts    | 1458 +++++++++++++++
+ .../dts/tegra30-asus-nexus7-grouper-E1565.dts |    9 +
+ .../dts/tegra30-asus-nexus7-grouper-PM269.dts |    9 +
+ .../tegra30-asus-nexus7-grouper-common.dtsi   | 1249 +++++++++++++
+ ...egra30-asus-nexus7-grouper-maxim-pmic.dtsi |  188 ++
+ ...30-asus-nexus7-grouper-memory-timings.dtsi | 1565 +++++++++++++++++
+ .../tegra30-asus-nexus7-grouper-ti-pmic.dtsi  |  151 ++
+ .../boot/dts/tegra30-asus-nexus7-grouper.dtsi |  149 ++
+ .../dts/tegra30-asus-nexus7-tilapia-E1565.dts |    9 +
+ ...30-asus-nexus7-tilapia-memory-timings.dtsi |  325 ++++
+ .../boot/dts/tegra30-asus-nexus7-tilapia.dtsi |  235 +++
+ arch/arm/configs/tegra_defconfig              |   42 +
+ 15 files changed, 5405 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-E1565.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-PM269.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-maxim-pmic.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-memory-timings.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-ti-pmic.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-E1565.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia-memory-timings.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dtsi
+
+-- 
+2.26.0
+
