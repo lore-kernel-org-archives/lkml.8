@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F61CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25D7E20774
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C6220774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663600;
-	bh=MHM7Fdo3PdvDzgIUfO+YIaHewyH4D4uZ7SHnfgDihPg=;
+	s=default; t=1591663607;
+	bh=328IPl57uqoaTxlo/TjMr4hOM4xvcNmtfCE2JqOZE+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePoR1ZR1KJOE12uoTIQFQdx7OybON8zsfKfnqT+Rv1+8xEqnNeorEtzrCMCHgpSWo
-	 iCh7F6Ed5TCCSjg7lbUoKfASYj/tXKu2UE80GgD8brs+iUprPP8r2Y0Ko5s92KAP+d
-	 1caBYO+ssOH/vQk4Coo3rtC+FfB5Px6N9CMWDh1M=
+	b=FAOgxUpyG3dbtMq8b1h9Q8dE7k51LnG9fmruR8c3tgy34Mk6FMwdSAn0XxcIl03Ge
+	 FHhAogt6o5+enHC6RaOdl4aCAFt9D8E+QnPZtDPT9necyYsIOc+k8z2CDl+VBaWZcV
+	 MacUIZhjU82bsq0PAzGkG0xQa2wBNiC4At0gYs3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732879AbgFIAqj (ORCPT
+        id S1728913AbgFHXLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58518 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728921AbgFHXLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:34 -0400
+        id S1728538AbgFHXJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC4520B80;
-        Mon,  8 Jun 2020 23:11:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CF020890;
+        Mon,  8 Jun 2020 23:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657894;
-        bh=MHM7Fdo3PdvDzgIUfO+YIaHewyH4D4uZ7SHnfgDihPg=;
+        s=default; t=1591657796;
+        bh=328IPl57uqoaTxlo/TjMr4hOM4xvcNmtfCE2JqOZE+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iluAK68K3XCbUd6pabxdzmQnvDv1UPkro4P5up3qXriIlofEhweh7ViGvBSbKgSUF
-         4dVe2MKovDO/1FDnca0DKbzJf6bpP/veWPa53lmQeS9djduk0B7EAn3eCCXCCQJzlo
-         SIysFlyzDNyrfccFjriX67ukmYF8eECR/jR4hU+M=
+        b=zOTv3K+FSm+p9+o2kM6zaryVbykf4kxOTWbcrdNOiKOQeLlwu0xZXcgM4YwiznkhO
+         BPYcmgrf2vzY0451xhrXyfqS7ik5daMGwdLO3nyiEpjwyq+xtRIwegj+lqFDApcg3r
+         MUANMwg9GPpvXSeMS+O5saKgT6GTcl9H3TVO6BuM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Bruce Chang <brucechang@via.com.tw>,
-        Harald Welte <HaraldWelte@viatech.com>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 249/274] mmc: via-sdmmc: Respect the cmd->busy_timeout from the mmc core
-Date:   Mon,  8 Jun 2020 19:05:42 -0400
-Message-Id: <20200608230607.3361041-249-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 175/274] platform/x86: intel-vbtn: Use acpi_evaluate_integer()
+Date:   Mon,  8 Jun 2020 19:04:28 -0400
+Message-Id: <20200608230607.3361041-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,63 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 966244ccd2919e28f25555a77f204cd1c109cad8 ]
+[ Upstream commit 18937875a231d831c309716d6d8fc358f8381881 ]
 
-Using a fixed 1s timeout for all commands (and data transfers) is a bit
-problematic.
+Use acpi_evaluate_integer() instead of open-coding it.
 
-For some commands it means waiting longer than needed for the timer to
-expire, which may not a big issue, but still. For other commands, like for
-an erase (CMD38) that uses a R1B response, may require longer timeouts than
-1s. In these cases, we may end up treating the command as it failed, while
-it just needed some more time to complete successfully.
+This is a preparation patch for adding a intel_vbtn_has_switches()
+helper function.
 
-Fix the problem by respecting the cmd->busy_timeout, which is provided by
-the mmc core.
-
-Cc: Bruce Chang <brucechang@via.com.tw>
-Cc: Harald Welte <HaraldWelte@viatech.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Link: https://lore.kernel.org/r/20200414161413.3036-17-ulf.hansson@linaro.org
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/via-sdmmc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel-vbtn.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/mmc/host/via-sdmmc.c b/drivers/mmc/host/via-sdmmc.c
-index e48bddd95ce6..ef95bce50889 100644
---- a/drivers/mmc/host/via-sdmmc.c
-+++ b/drivers/mmc/host/via-sdmmc.c
-@@ -319,6 +319,8 @@ struct via_crdr_mmc_host {
- /* some devices need a very long delay for power to stabilize */
- #define VIA_CRDR_QUIRK_300MS_PWRDELAY	0x0001
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index b5880936d785..191894d648bb 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -119,28 +119,21 @@ static void detect_tablet_mode(struct platform_device *device)
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+-	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *obj;
++	unsigned long long vgbs;
+ 	acpi_status status;
+ 	int m;
  
-+#define VIA_CMD_TIMEOUT_MS		1000
-+
- static const struct pci_device_id via_ids[] = {
- 	{PCI_VENDOR_ID_VIA, PCI_DEVICE_ID_VIA_9530,
- 	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0,},
-@@ -551,14 +553,17 @@ static void via_sdc_send_command(struct via_crdr_mmc_host *host,
- {
- 	void __iomem *addrbase;
- 	struct mmc_data *data;
-+	unsigned int timeout_ms;
- 	u32 cmdctrl = 0;
+ 	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
+-		goto out;
++		return;
  
- 	WARN_ON(host->cmd);
+-	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	if (ACPI_FAILURE(status))
+-		goto out;
+-
+-	obj = vgbs_output.pointer;
+-	if (!(obj && obj->type == ACPI_TYPE_INTEGER))
+-		goto out;
++		return;
  
- 	data = cmd->data;
--	mod_timer(&host->timer, jiffies + HZ);
- 	host->cmd = cmd;
+-	m = !(obj->integer.value & TABLET_MODE_FLAG);
++	m = !(vgbs & TABLET_MODE_FLAG);
+ 	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
+-	m = (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
++	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
+ 	input_report_switch(priv->input_dev, SW_DOCK, m);
+-out:
+-	kfree(vgbs_output.pointer);
+ }
  
-+	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout : VIA_CMD_TIMEOUT_MS;
-+	mod_timer(&host->timer, jiffies + msecs_to_jiffies(timeout_ms));
-+
- 	/*Command index*/
- 	cmdctrl = cmd->opcode << 8;
- 
+ static int intel_vbtn_probe(struct platform_device *device)
 -- 
 2.25.1
 
