@@ -2,186 +2,89 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA9FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C68C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465D720775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462042076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGd3ubY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgFHLW0 (ORCPT
+        id S1729711AbgFHLYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729437AbgFHLWY (ORCPT
+        Mon, 8 Jun 2020 07:24:01 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33903 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729576AbgFHLYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:22:24 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413CBC08C5C2;
-        Mon,  8 Jun 2020 04:22:24 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id EEEA02A35BA
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        kernel@collabora.com
-Subject: [PATCH v4 0/7] Support inhibiting input devices
-Date:   Mon,  8 Jun 2020 13:22:04 +0200
-Message-Id: <20200608112211.12125-1-andrzej.p@collabora.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+        Mon, 8 Jun 2020 07:24:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591615439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zpkcgamnoQZWwxd6fU5WrGz2mHKzjvnnrxEBUwMVz5w=;
+        b=aGd3ubY7Ag39eRW0mFbwYGa7rxYcODMHssippt/bp5fJ7DCsScwItsuTP8rmiqGlKohQpU
+        O960DIRs9cVPYof5P+3w0o8ZNN/YxIkAAERAPbKcaUFgA8E+4tm+A5MXNKMynxDRT1YhaI
+        tieRQw2FFEThM5+5RDbIh9i7+7pVrrM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-3wVxRvGdORmKEV7ifNC61Q-1; Mon, 08 Jun 2020 07:23:58 -0400
+X-MC-Unique: 3wVxRvGdORmKEV7ifNC61Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFE56107ACF2;
+        Mon,  8 Jun 2020 11:23:56 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DF5335D9E4;
+        Mon,  8 Jun 2020 11:23:47 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Marcelo Bandeira Condotta <mcondotta@redhat.com>,
+        Makarand Sonare <makarandsonare@google.com>,
+        Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] KVM: selftests: Add x86_64/debug_regs to .gitignore
+Date:   Mon,  8 Jun 2020 13:23:45 +0200
+Message-Id: <20200608112346.593513-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a quick respin of v3, with just two small changes, please see
-the changelog below.
+Add x86_64/debug_regs to .gitignore.
 
-Userspace might want to implement a policy to temporarily disregard input
-from certain devices.
+Reported-by: Marcelo Bandeira Condotta <mcondotta@redhat.com>
+Fixes: 449aa906e67e ("KVM: selftests: Add KVM_SET_GUEST_DEBUG test")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ tools/testing/selftests/kvm/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-An example use case is a convertible laptop, whose keyboard can be folded
-under the screen to create tablet-like experience. The user then must hold
-the laptop in such a way that it is difficult to avoid pressing the keyboard
-keys. It is therefore desirable to temporarily disregard input from the
-keyboard, until it is folded back. This obviously is a policy which should
-be kept out of the kernel, but the kernel must provide suitable means to
-implement such a policy.
-
-Due to interactions with suspend/resume, a helper has been added for drivers
-to decide if the device is being used or not (PATCH 1/7) and it has been
-applied to relevant drivers (PATCH 2,4,5,6/7).
-
-PATCH 7/7 adds support for inhibiting input devices.
-
-This work is inspired by:
-
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/45c2d7bb398f74adfae0017e20b224152fde3822
-
-and
-
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/4ce0e8a3697edb8fd071110b3af65014512061c7
-
-In this respin the elan_i2c patch is dropped and converting it will be
-addressed later.
-
-v3..v4:
-- updated the comment in input_open_device() (Hans)
-- used more straightforward locking pattern in adc/exynos (Michał)
-
-v2..v3:
-- ignored autorepeat events in input_get_disposition() if a key is not
-pressed (Hans)
-- dropped inhibit()/uninhibit() driver callbacks (Hans)
-- split ACPI button patch into taking the lock and using the helper (Rafael)
-- dropped the elan_i2c conversion
-- fixed typos in exynos adc
-
-v1..v2:
-- added input_device_enabled() helper and used it in drivers (Dmitry)
-- the fact of open() and close() being called in inhibit/uninhibit paths has
-been emphasized in the commit message of PATCH 6/7 (Dmitry)
-
-Andrzej Pietrasiewicz (6):
-  Input: add input_device_enabled()
-  Input: use input_device_enabled()
-  ACPI: button: Access input device's users under appropriate mutex
-  ACPI: button: Use input_device_enabled() helper
-  iio: adc: exynos: Use input_device_enabled()
-  platform/x86: thinkpad_acpi: Use input_device_enabled()
-
-Patrik Fimml (1):
-  Input: Add "inhibited" property
-
- drivers/acpi/button.c                       |   7 +-
- drivers/iio/adc/exynos_adc.c                |   6 +-
- drivers/input/input.c                       | 125 ++++++++++++++++++--
- drivers/input/joystick/xpad.c               |   4 +-
- drivers/input/keyboard/ep93xx_keypad.c      |   2 +-
- drivers/input/keyboard/gpio_keys.c          |   4 +-
- drivers/input/keyboard/imx_keypad.c         |   4 +-
- drivers/input/keyboard/ipaq-micro-keys.c    |   2 +-
- drivers/input/keyboard/lpc32xx-keys.c       |   4 +-
- drivers/input/keyboard/pmic8xxx-keypad.c    |   4 +-
- drivers/input/keyboard/pxa27x_keypad.c      |   2 +-
- drivers/input/keyboard/samsung-keypad.c     |   4 +-
- drivers/input/keyboard/spear-keyboard.c     |   8 +-
- drivers/input/keyboard/st-keyscan.c         |   4 +-
- drivers/input/keyboard/tegra-kbc.c          |   4 +-
- drivers/input/misc/drv260x.c                |   4 +-
- drivers/input/misc/drv2665.c                |   4 +-
- drivers/input/misc/drv2667.c                |   4 +-
- drivers/input/misc/gp2ap002a00f.c           |   4 +-
- drivers/input/misc/kxtj9.c                  |   4 +-
- drivers/input/misc/sirfsoc-onkey.c          |   2 +-
- drivers/input/mouse/navpoint.c              |   4 +-
- drivers/input/touchscreen/ad7879.c          |   6 +-
- drivers/input/touchscreen/atmel_mxt_ts.c    |   4 +-
- drivers/input/touchscreen/auo-pixcir-ts.c   |   8 +-
- drivers/input/touchscreen/bu21029_ts.c      |   4 +-
- drivers/input/touchscreen/chipone_icn8318.c |   4 +-
- drivers/input/touchscreen/cyttsp_core.c     |   4 +-
- drivers/input/touchscreen/eeti_ts.c         |   4 +-
- drivers/input/touchscreen/ektf2127.c        |   4 +-
- drivers/input/touchscreen/imx6ul_tsc.c      |   4 +-
- drivers/input/touchscreen/ipaq-micro-ts.c   |   2 +-
- drivers/input/touchscreen/iqs5xx.c          |   4 +-
- drivers/input/touchscreen/lpc32xx_ts.c      |   4 +-
- drivers/input/touchscreen/melfas_mip4.c     |   4 +-
- drivers/input/touchscreen/mms114.c          |   6 +-
- drivers/input/touchscreen/pixcir_i2c_ts.c   |   8 +-
- drivers/input/touchscreen/ucb1400_ts.c      |   4 +-
- drivers/input/touchscreen/wm97xx-core.c     |  14 ++-
- drivers/input/touchscreen/zforce_ts.c       |   8 +-
- drivers/platform/x86/thinkpad_acpi.c        |   4 +-
- include/linux/input.h                       |  14 ++-
- 42 files changed, 228 insertions(+), 96 deletions(-)
-
-
-base-commit: 3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162
+diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+index f159718f90c0..452787152748 100644
+--- a/tools/testing/selftests/kvm/.gitignore
++++ b/tools/testing/selftests/kvm/.gitignore
+@@ -3,6 +3,7 @@
+ /s390x/resets
+ /s390x/sync_regs_test
+ /x86_64/cr4_cpuid_sync_test
++/x86_64/debug_regs
+ /x86_64/evmcs_test
+ /x86_64/hyperv_cpuid
+ /x86_64/mmio_warning_test
 -- 
-2.17.1
+2.25.4
 
