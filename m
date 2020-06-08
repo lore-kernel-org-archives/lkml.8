@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C270C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33118C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3DE207FB
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEAB2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662539;
-	bh=SCfhZTIaHqAp/kDN9R0eV/qpGB7J/zlJUu4kD5LbpR4=;
+	s=default; t=1591662552;
+	bh=RfxFKmhgcRkNvGD3wM7B5OoR3tKuCY7MGRl46QgFn9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OP2Z7v/GuefsJWDpSCRUiYvVNygyMx42C7fzZ7s7JcHDaodiWZyg3n5QWzAP+onT5
-	 1sOOF4yjlLR6oyVIhjmnZ2OA7TieolK7AGo9VVmbyNuhC9QN14L+vUVj9etiTBfW3t
-	 AzhAiqXbVFQdK9pU9WLIZr6OFGQC5dNgbU0FloAQ=
+	b=xyMC6mgekSSRo/A6lq/WhdojlxiQyhLBcOugva3FNjb0Plo1SIuAuWc4G12LCbiby
+	 qEjEItxOBsmGUcN5Vucx/J2jw+OSjWJv2S/2bLkZBC01UV8B5Zugs4Q60uwuJVMprY
+	 EyRqUzhRXDoD7es51Ud2GNKtYZvee5+Sh0fhZeeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732974AbgFIA25 (ORCPT
+        id S2387726AbgFIA3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbgFHXQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:17 -0400
+        id S1730191AbgFHXQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3D220870;
-        Mon,  8 Jun 2020 23:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4139920823;
+        Mon,  8 Jun 2020 23:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658176;
-        bh=SCfhZTIaHqAp/kDN9R0eV/qpGB7J/zlJUu4kD5LbpR4=;
+        s=default; t=1591658172;
+        bh=RfxFKmhgcRkNvGD3wM7B5OoR3tKuCY7MGRl46QgFn9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlDhpgY3zdcxammlDi8Szyi/2zvJ7gXCxtW6Sj36eBLjcVLWP8V0YZzSg+3m1gA9m
-         CSVMqQGDB3WdER5VEAm3VKPmQ6SogVBPMEi5POAlcXYptnXQ1GPLA8WJLD3LHNm6Oa
-         BMON3MP4ROd0jd18g6uM9jR/fV13LPqWfQ5QsVZg=
+        b=IXp3jO3EmyvQiUhEoU2xKvj94o7fpn2tCLM3xnQzEF82EPAHnIZSCnZhENsyTBJ1s
+         bqJ46zEtT1sBH8kO/ze6iqR1ah/0iUBHxnnifbV9MA3H1H2wnBYcXsepT9YdsaLCiF
+         cbAt/CGTSDPcT1+r6oa/vGaN2FFIOQDGS4bn+DBs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>, Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 202/606] bpf: Prevent mmap()'ing read-only maps as writable
-Date:   Mon,  8 Jun 2020 19:05:27 -0400
-Message-Id: <20200608231211.3363633-202-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH AUTOSEL 5.6 199/606] x86/unwind/orc: Fix unwind_get_return_address_ptr() for inactive tasks
+Date:   Mon,  8 Jun 2020 19:05:24 -0400
+Message-Id: <20200608231211.3363633-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,110 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit dfeb376dd4cb2c5004aeb625e2475f58a5ff2ea7 ]
+commit 187b96db5ca79423618dfa29a05c438c34f9e1f0 upstream.
 
-As discussed in [0], it's dangerous to allow mapping BPF map, that's meant to
-be frozen and is read-only on BPF program side, because that allows user-space
-to actually store a writable view to the page even after it is frozen. This is
-exacerbated by BPF verifier making a strong assumption that contents of such
-frozen map will remain unchanged. To prevent this, disallow mapping
-BPF_F_RDONLY_PROG mmap()'able BPF maps as writable, ever.
+Normally, show_trace_log_lvl() scans the stack, looking for text
+addresses to print.  In parallel, it unwinds the stack with
+unwind_next_frame().  If the stack address matches the pointer returned
+by unwind_get_return_address_ptr() for the current frame, the text
+address is printed normally without a question mark.  Otherwise it's
+considered a breadcrumb (potentially from a previous call path) and it's
+printed with a question mark to indicate that the address is unreliable
+and typically can be ignored.
 
-  [0] https://lore.kernel.org/bpf/CAEf4BzYGWYhXdp6BJ7_=9OQPJxQpgug080MMjdSB72i9R+5c6g@mail.gmail.com/
+Since the following commit:
 
-Fixes: fc9702273e2e ("bpf: Add mmap() support for BPF_MAP_TYPE_ARRAY")
-Suggested-by: Jann Horn <jannh@google.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/bpf/20200519053824.1089415-1-andriin@fb.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
+
+... for inactive tasks, show_trace_log_lvl() prints *only* unreliable
+addresses (prepended with '?').
+
+That happens because, for the first frame of an inactive task,
+unwind_get_return_address_ptr() returns the wrong return address
+pointer: one word *below* the task stack pointer.  show_trace_log_lvl()
+starts scanning at the stack pointer itself, so it never finds the first
+'reliable' address, causing only guesses to being printed.
+
+The first frame of an inactive task isn't a normal stack frame.  It's
+actually just an instance of 'struct inactive_task_frame' which is left
+behind by __switch_to_asm().  Now that this inactive frame is actually
+exposed to callers, fix unwind_get_return_address_ptr() to interpret it
+properly.
+
+Fixes: f1d9a2abff66 ("x86/unwind/orc: Don't skip the first frame for inactive tasks")
+Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200522135435.vbxs7umku5pyrdbk@treble
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/bpf/syscall.c                          | 17 ++++++++++++++---
- tools/testing/selftests/bpf/prog_tests/mmap.c | 13 ++++++++++++-
- tools/testing/selftests/bpf/progs/test_mmap.c |  8 ++++++++
- 3 files changed, 34 insertions(+), 4 deletions(-)
+ arch/x86/kernel/unwind_orc.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index e04ea4c8f935..c0ab9bfdf28a 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -629,9 +629,20 @@ static int bpf_map_mmap(struct file *filp, struct vm_area_struct *vma)
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 9414f02a55ea..1a90abeca5f3 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -314,12 +314,19 @@ EXPORT_SYMBOL_GPL(unwind_get_return_address);
  
- 	mutex_lock(&map->freeze_mutex);
+ unsigned long *unwind_get_return_address_ptr(struct unwind_state *state)
+ {
++	struct task_struct *task = state->task;
++
+ 	if (unwind_done(state))
+ 		return NULL;
  
--	if ((vma->vm_flags & VM_WRITE) && map->frozen) {
--		err = -EPERM;
--		goto out;
-+	if (vma->vm_flags & VM_WRITE) {
-+		if (map->frozen) {
-+			err = -EPERM;
-+			goto out;
-+		}
-+		/* map is meant to be read-only, so do not allow mapping as
-+		 * writable, because it's possible to leak a writable page
-+		 * reference and allows user-space to still modify it after
-+		 * freezing, while verifier will assume contents do not change
-+		 */
-+		if (map->map_flags & BPF_F_RDONLY_PROG) {
-+			err = -EACCES;
-+			goto out;
-+		}
- 	}
+ 	if (state->regs)
+ 		return &state->regs->ip;
  
- 	/* set default open/close callbacks */
-diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
-index b0e789678aa4..5495b669fccc 100644
---- a/tools/testing/selftests/bpf/prog_tests/mmap.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
-@@ -19,7 +19,7 @@ void test_mmap(void)
- 	const size_t map_sz = roundup_page(sizeof(struct map_data));
- 	const int zero = 0, one = 1, two = 2, far = 1500;
- 	const long page_size = sysconf(_SC_PAGE_SIZE);
--	int err, duration = 0, i, data_map_fd;
-+	int err, duration = 0, i, data_map_fd, rdmap_fd;
- 	struct bpf_map *data_map, *bss_map;
- 	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp1, *tmp2;
- 	struct test_mmap__bss *bss_data;
-@@ -36,6 +36,17 @@ void test_mmap(void)
- 	data_map = skel->maps.data_map;
- 	data_map_fd = bpf_map__fd(data_map);
- 
-+	rdmap_fd = bpf_map__fd(skel->maps.rdonly_map);
-+	tmp1 = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, rdmap_fd, 0);
-+	if (CHECK(tmp1 != MAP_FAILED, "rdonly_write_mmap", "unexpected success\n")) {
-+		munmap(tmp1, 4096);
-+		goto cleanup;
++	if (task != current && state->sp == task->thread.sp) {
++		struct inactive_task_frame *frame = (void *)task->thread.sp;
++		return &frame->ret_addr;
 +	}
-+	/* now double-check if it's mmap()'able at all */
-+	tmp1 = mmap(NULL, 4096, PROT_READ, MAP_SHARED, rdmap_fd, 0);
-+	if (CHECK(tmp1 == MAP_FAILED, "rdonly_read_mmap", "failed: %d\n", errno))
-+		goto cleanup;
 +
- 	bss_mmaped = mmap(NULL, bss_sz, PROT_READ | PROT_WRITE, MAP_SHARED,
- 			  bpf_map__fd(bss_map), 0);
- 	if (CHECK(bss_mmaped == MAP_FAILED, "bss_mmap",
-diff --git a/tools/testing/selftests/bpf/progs/test_mmap.c b/tools/testing/selftests/bpf/progs/test_mmap.c
-index 6239596cd14e..4eb42cff5fe9 100644
---- a/tools/testing/selftests/bpf/progs/test_mmap.c
-+++ b/tools/testing/selftests/bpf/progs/test_mmap.c
-@@ -7,6 +7,14 @@
+ 	if (state->sp)
+ 		return (unsigned long *)state->sp - 1;
  
- char _license[] SEC("license") = "GPL";
- 
-+struct {
-+	__uint(type, BPF_MAP_TYPE_ARRAY);
-+	__uint(max_entries, 4096);
-+	__uint(map_flags, BPF_F_MMAPABLE | BPF_F_RDONLY_PROG);
-+	__type(key, __u32);
-+	__type(value, char);
-+} rdonly_map SEC(".maps");
-+
- struct {
- 	__uint(type, BPF_MAP_TYPE_ARRAY);
- 	__uint(max_entries, 512 * 4); /* at least 4 pages of data */
 -- 
 2.25.1
 
