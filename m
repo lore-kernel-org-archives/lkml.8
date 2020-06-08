@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8339DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE7AD20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6536620760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659942;
-	bh=qwUWf6gPEAo0RWe2h0rpmiMF6XJTd6r4hEWaMEbOJBU=;
+	s=default; t=1591659951;
+	bh=KKLwxl/ZfJ4twlLSEGeuu76jQlodASbwQcAU9WHc2Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EiAaYXxgEOrl3GA1YfWI+ckGNbxZ7VqPgRr0SAGZ5S7GCrq+ro5DrqoB97JEbxeFt
-	 hwyDTBmFMWZNnNY4ih7lOWVM32G7wRKHTYFnDl+74YuFbZcGojFoWjL4RKjGnOrs3w
-	 smNi7+iYIB3C8x41/cgZ18UMBvH7h27r7RxKk1J0=
+	b=aWTMisPi4iYjTYa5ke5ChyuIH4BNOXxfAGdxfSePN0r6eMvmelX17ULAsYStQjJqh
+	 k1wm4gbWMCnWcgTuciJ9z8Mqi0bFMpuj+9augpEUVdhdO5WAXPUj2rQUDieSxsFMN+
+	 SFbYc1ufPBmkxU6eIWgveJyhVIsAEhlzB9RW9/Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbgFHXpj (ORCPT
+        id S1732463AbgFHXpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54300 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:45:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731997AbgFHX0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:36 -0400
+        id S1731991AbgFHX0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:26:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C454D2078D;
-        Mon,  8 Jun 2020 23:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5D9520853;
+        Mon,  8 Jun 2020 23:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658796;
-        bh=qwUWf6gPEAo0RWe2h0rpmiMF6XJTd6r4hEWaMEbOJBU=;
+        s=default; t=1591658795;
+        bh=KKLwxl/ZfJ4twlLSEGeuu76jQlodASbwQcAU9WHc2Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J6G3QVILLq7sUxxjl/Etm6vxsO/2FMQRCTH72f6cayd5APDe0oZZrF6QT0a+yamI6
-         KKYEWUxGXNr7tGi81Mj/Odm913ug9yPAEhsI00Rx1/1EiNkfNA0ISdBgOysaq4YWjU
-         dQWm4VS6d2L2Vl7asDezlA5C0wfsozPgzsTFzngQ=
+        b=Wh/R8GLCfn6b/YmKNOIdugeLLZJ6v8r3wbrP2TP1EYtJ5x8V2C4iuf0CJucCahgig
+         YzIMWCoDAMkd2NfqMo4V5wPzWg/zVxKAHmdG2WJ71eooX3X9KRH46ZI546SlvIkFC7
+         ayvQ8KLUmmfedxx+scVArNYXV+hHQHv6d17uYbz4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 70/72] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
-Date:   Mon,  8 Jun 2020 19:24:58 -0400
-Message-Id: <20200608232500.3369581-70-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 69/72] cpuidle: Fix three reference count leaks
+Date:   Mon,  8 Jun 2020 19:24:57 -0400
+Message-Id: <20200608232500.3369581-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -59,42 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 5cdc45ed3948042f0d73c6fec5ee9b59e637d0d2 ]
+[ Upstream commit c343bf1ba5efcbf2266a1fe3baefec9cc82f867f ]
 
-First of all, unsigned long can overflow u32 value on 64-bit machine.
-Second, simple_strtoul() doesn't check for overflow in the input.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-Convert simple_strtoul() to kstrtou32() to eliminate above issues.
+Previous commit "b8eb718348b8" fixed a similar problem.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+[ rjw: Subject ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wmi.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/cpuidle/sysfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 06a3c1ef8eee..952544ca0d84 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -474,8 +474,14 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
- static ssize_t als_store(struct device *dev, struct device_attribute *attr,
- 			 const char *buf, size_t count)
- {
--	u32 tmp = simple_strtoul(buf, NULL, 10);
--	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
-+	u32 tmp;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 10, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
- 				       sizeof(tmp), sizeof(tmp));
- 	if (ret)
- 		return ret < 0 ? ret : -EINVAL;
+diff --git a/drivers/cpuidle/sysfs.c b/drivers/cpuidle/sysfs.c
+index ae948b1da93a..909bd2255978 100644
+--- a/drivers/cpuidle/sysfs.c
++++ b/drivers/cpuidle/sysfs.c
+@@ -414,7 +414,7 @@ static int cpuidle_add_state_sysfs(struct cpuidle_device *device)
+ 		ret = kobject_init_and_add(&kobj->kobj, &ktype_state_cpuidle,
+ 					   &kdev->kobj, "state%d", i);
+ 		if (ret) {
+-			kfree(kobj);
++			kobject_put(&kobj->kobj);
+ 			goto error_state;
+ 		}
+ 		kobject_uevent(&kobj->kobj, KOBJ_ADD);
+@@ -544,7 +544,7 @@ static int cpuidle_add_driver_sysfs(struct cpuidle_device *dev)
+ 	ret = kobject_init_and_add(&kdrv->kobj, &ktype_driver_cpuidle,
+ 				   &kdev->kobj, "driver");
+ 	if (ret) {
+-		kfree(kdrv);
++		kobject_put(&kdrv->kobj);
+ 		return ret;
+ 	}
+ 
+@@ -638,7 +638,7 @@ int cpuidle_add_sysfs(struct cpuidle_device *dev)
+ 	error = kobject_init_and_add(&kdev->kobj, &ktype_cpuidle, &cpu_dev->kobj,
+ 				   "cpuidle");
+ 	if (error) {
+-		kfree(kdev);
++		kobject_put(&kdev->kobj);
+ 		return error;
+ 	}
+ 
 -- 
 2.25.1
 
