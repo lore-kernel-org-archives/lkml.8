@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE9FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C63AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3243220C56
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6526208B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657795;
-	bh=fK82cI40GO1yH3Ip1kLba1zXWfkLTxYg+MFpEbXh69w=;
+	s=default; t=1591657800;
+	bh=fe6JlMkedmaY+Fx6mlPmGF1n1tIJcCuXDwOukd/h1yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hvwY4XhFjoEW2x4SZJfGHUwJeOpeTTXG7QWZ8v4JtEWqombYpkxvKeFICMdEXF0kF
-	 jnsKO9eyUljF/6uzvYrYQo70UY5KJinqVgw4DgVcfqxrwKiI1ZLhWf51oQ5aIUOF9T
-	 glPWBMaK9LpNGHWU3qm0jIn4ui3oRQEnHehWkDs8=
+	b=xLDGQWnTRmJCV8yE+C3loGmGTl17Rc/9tvflJnc+l+8gzOGmssKj88VMlYo4TPNo8
+	 jmMeqGFYo1dJYwJUReMgjaL56pBsk51xC5qGcUJn8yiXDQNVq/vAo1KJ2DFWVtBEB9
+	 baN1k6WjbRQeUSyln/ZdYZAS5FwUr/H0MyAZ2Xxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgFHXJx (ORCPT
+        id S1728539AbgFHXJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54422 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:09:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727000AbgFHXIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:53 -0400
+        id S1728282AbgFHXIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:08:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ED9D2085B;
-        Mon,  8 Jun 2020 23:08:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A9BB208B6;
+        Mon,  8 Jun 2020 23:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657732;
-        bh=fK82cI40GO1yH3Ip1kLba1zXWfkLTxYg+MFpEbXh69w=;
+        s=default; t=1591657734;
+        bh=fe6JlMkedmaY+Fx6mlPmGF1n1tIJcCuXDwOukd/h1yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AB2x00QQzebqBsUwR4YxJzpr5+xeA8I+kaWTScWv1pvzB4lZ32TZQhAQ72rT/0Htb
-         iYMGZaiSMGr4z7ARXLCAUdlKvhYOxRin5QoowGhMP6wiqZswdRHKYnI2JDZ92dWtE7
-         6L5THfCOknEfk/y7lgBM629S6VtZ+NFlKLGNfXbU=
+        b=PKn5jX7dIGmba3l9J/1JuUoIlobHcVR7Y24KQowsnG2bojfmF6gOU7LXjMlYQBYbL
+         kn8RberEpnIz4gtEQnTWPZrCcFgV9+BFBMBdNi9V6KJRle2wuoG7rv5azTsWftpgDl
+         BvXLQrJw8nmg0k3z+XPfo3BIjgEfthyOSuQjYrUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luke Nelson <lukenels@cs.washington.edu>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Xi Wang <xi.wang@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 123/274] bpf, riscv: Fix tail call count off by one in RV32 BPF JIT
-Date:   Mon,  8 Jun 2020 19:03:36 -0400
-Message-Id: <20200608230607.3361041-123-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 125/274] ath11k: use GFP_ATOMIC under spin lock
+Date:   Mon,  8 Jun 2020 19:03:38 -0400
+Message-Id: <20200608230607.3361041-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,46 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 745abfaa9eafa597d31fdf24a3249e5206a98768 ]
+[ Upstream commit 69c93f9674c97dc439cdc0527811f8ad104c2e35 ]
 
-This patch fixes an off by one error in the RV32 JIT handling for BPF
-tail call. Currently, the code decrements TCC before checking if it
-is less than zero. This limits the maximum number of tail calls to 32
-instead of 33 as in other JITs. The fix is to instead check the old
-value of TCC before decrementing.
+A spin lock is taken here so we should use GFP_ATOMIC.
 
-Fixes: 5f316b65e99f ("riscv, bpf: Add RV32G eBPF JIT")
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Xi Wang <xi.wang@gmail.com>
-Link: https://lore.kernel.org/bpf/20200421002804.5118-1-luke.r.nels@gmail.com
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200427092417.56236-1-weiyongjun1@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/net/bpf_jit_comp32.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath11k/dp_rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/net/bpf_jit_comp32.c b/arch/riscv/net/bpf_jit_comp32.c
-index 302934177760..11083d4d5f2d 100644
---- a/arch/riscv/net/bpf_jit_comp32.c
-+++ b/arch/riscv/net/bpf_jit_comp32.c
-@@ -770,12 +770,13 @@ static int emit_bpf_tail_call(int insn, struct rv_jit_context *ctx)
- 	emit_bcc(BPF_JGE, lo(idx_reg), RV_REG_T1, off, ctx);
+diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
+index f74a0e74bf3e..34b1e8e6a7fb 100644
+--- a/drivers/net/wireless/ath/ath11k/dp_rx.c
++++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
+@@ -892,7 +892,7 @@ int ath11k_peer_rx_tid_setup(struct ath11k *ar, const u8 *peer_mac, int vdev_id,
+ 	else
+ 		hw_desc_sz = ath11k_hal_reo_qdesc_size(DP_BA_WIN_SZ_MAX, tid);
  
- 	/*
--	 * if ((temp_tcc = tcc - 1) < 0)
-+	 * temp_tcc = tcc - 1;
-+	 * if (tcc < 0)
- 	 *   goto out;
- 	 */
- 	emit(rv_addi(RV_REG_T1, RV_REG_TCC, -1), ctx);
- 	off = (tc_ninsn - (ctx->ninsns - start_insn)) << 2;
--	emit_bcc(BPF_JSLT, RV_REG_T1, RV_REG_ZERO, off, ctx);
-+	emit_bcc(BPF_JSLT, RV_REG_TCC, RV_REG_ZERO, off, ctx);
- 
- 	/*
- 	 * prog = array->ptrs[index];
+-	vaddr = kzalloc(hw_desc_sz + HAL_LINK_DESC_ALIGN - 1, GFP_KERNEL);
++	vaddr = kzalloc(hw_desc_sz + HAL_LINK_DESC_ALIGN - 1, GFP_ATOMIC);
+ 	if (!vaddr) {
+ 		spin_unlock_bh(&ab->base_lock);
+ 		return -ENOMEM;
 -- 
 2.25.1
 
