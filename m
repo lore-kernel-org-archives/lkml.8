@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D21C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16559C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BE320823
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A9C20870
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658199;
-	bh=WqI1PTDKZAdRarwsH99PbqlFFjL5B6QoYx6yi1O0fD8=;
+	s=default; t=1591658203;
+	bh=PEqJ5eyUtSxJhYnhnCrIAr5eo6UL8Kd/34b2Bw2Fusg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjriAAyb8cYGmL2hypqBRb5skQVlZbuXh22brzPkLjVOMksCk6ZJ9kxdQ9umqkb/p
-	 wp3Pn0JthWpDsBfig4w0Lq1TG/Y3hNaEsJMieanJEwr2qFKv4Yqx+O23bK3ayTSxYX
-	 rLExjT6fWkNykjCwnT9DMzJsxdx+PEg/ZsnG/glE=
+	b=x6B14MGMphgEyH84712dvA6IBluWZylvnK4xbqR3Yn3xymbFIW8QOeAszyFZvcgWS
+	 cX2HjTsKDkPb5j/q263AmnDttbFP8m7wG6UXPJ8zRmKWk1JVhHrl3xqi3JIUN7XwHG
+	 FWiApysj+bEpkljeDXvnQJmSAYAGkC6jTNwwpXIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgFHXQh (ORCPT
+        id S1730310AbgFHXQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33592 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbgFHXNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:44 -0400
+        id S1729615AbgFHXNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E70EC21527;
-        Mon,  8 Jun 2020 23:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5673821527;
+        Mon,  8 Jun 2020 23:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658023;
-        bh=WqI1PTDKZAdRarwsH99PbqlFFjL5B6QoYx6yi1O0fD8=;
+        s=default; t=1591658031;
+        bh=PEqJ5eyUtSxJhYnhnCrIAr5eo6UL8Kd/34b2Bw2Fusg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1s+xWP9LgVw9/isBtjxfhwugcTK7rTZPzpJmJPB2zr76w5JXxeTY+Yk5TcyXbBWw
-         LBxkBeteZX/ePRtZZekNGnQM0z/VLdSTapagFU3gd9G/uKtwQsuVd2nU3EG8vD88wn
-         2VB8ufKlM1jGQ6WX2mBFrg3f8rekKSxpKXIutPdk=
+        b=TOPdiM5vRSJossSVMACGCX9VTNDMH+7/XUPzb539+Ba+IVj2bGzQnwtiC9cTU8xWS
+         gUC5AJ2Ho4smMKaw5XFoYcID9OzSups7AdBLKv+9nNbH/QHmLwB/xEyH1mS1RYE7Xm
+         Qg0s6Y5MU1kXS06qF0/4WrGRjJCxwkMQ21kBWPFc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 076/606] selftests/bpf: Enforce returning 0 for fentry/fexit programs
-Date:   Mon,  8 Jun 2020 19:03:21 -0400
-Message-Id: <20200608231211.3363633-76-sashal@kernel.org>
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 082/606] ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
+Date:   Mon,  8 Jun 2020 19:03:27 -0400
+Message-Id: <20200608231211.3363633-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,44 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 6d74f64b922b8394dccc52576659cb0dc0a1da7b upstream.
+[ Upstream commit 0014cc04e8ec077dc482f00c87dfd949cfe2b98f ]
 
-There are a few fentry/fexit programs returning non-0.
-The tests with these programs will break with the previous
-patch which enfoced return-0 rules. Fix them properly.
+Commit a408e4a86b36 ("ima: open a new file instance if no read
+permissions") tries to create a new file descriptor to calculate a file
+digest if the file has not been opened with O_RDONLY flag. However, if a
+new file descriptor cannot be obtained, it sets the FMODE_READ flag to
+file->f_flags instead of file->f_mode.
 
-Fixes: ac065870d928 ("selftests/bpf: Add BPF_PROG, BPF_KPROBE, and BPF_KRETPROBE macros")
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200514053207.1298479-1-yhs@fb.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch fixes this issue by replacing f_flags with f_mode as it was
+before that commit.
+
+Cc: stable@vger.kernel.org # 4.20.x
+Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/progs/test_overhead.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_crypto.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/progs/test_overhead.c b/tools/testing/selftests/bpf/progs/test_overhead.c
-index bfe9fbcb9684..e15c7589695e 100644
---- a/tools/testing/selftests/bpf/progs/test_overhead.c
-+++ b/tools/testing/selftests/bpf/progs/test_overhead.c
-@@ -33,13 +33,13 @@ int prog3(struct bpf_raw_tracepoint_args *ctx)
- SEC("fentry/__set_task_comm")
- int BPF_PROG(prog4, struct task_struct *tsk, const char *buf, bool exec)
- {
--	return !tsk;
-+	return 0;
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 7967a6904851..e8fa23cd4a6c 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -413,7 +413,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+ 	loff_t i_size;
+ 	int rc;
+ 	struct file *f = file;
+-	bool new_file_instance = false, modified_flags = false;
++	bool new_file_instance = false, modified_mode = false;
+ 
+ 	/*
+ 	 * For consistency, fail file's opened with the O_DIRECT flag on
+@@ -433,13 +433,13 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+ 		f = dentry_open(&file->f_path, flags, file->f_cred);
+ 		if (IS_ERR(f)) {
+ 			/*
+-			 * Cannot open the file again, lets modify f_flags
++			 * Cannot open the file again, lets modify f_mode
+ 			 * of original and continue
+ 			 */
+ 			pr_info_ratelimited("Unable to reopen file for reading.\n");
+ 			f = file;
+-			f->f_flags |= FMODE_READ;
+-			modified_flags = true;
++			f->f_mode |= FMODE_READ;
++			modified_mode = true;
+ 		} else {
+ 			new_file_instance = true;
+ 		}
+@@ -457,8 +457,8 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+ out:
+ 	if (new_file_instance)
+ 		fput(f);
+-	else if (modified_flags)
+-		f->f_flags &= ~FMODE_READ;
++	else if (modified_mode)
++		f->f_mode &= ~FMODE_READ;
+ 	return rc;
  }
  
- SEC("fexit/__set_task_comm")
- int BPF_PROG(prog5, struct task_struct *tsk, const char *buf, bool exec)
- {
--	return !tsk;
-+	return 0;
- }
- 
- char _license[] SEC("license") = "GPL";
 -- 
 2.25.1
 
