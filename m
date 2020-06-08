@@ -2,57 +2,52 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7591C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0B820659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0368F20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660060;
-	bh=VBKWQ5iLv1fYJthBSpg/mc/0FfYgJ1CTvw8ww/USsgc=;
+	s=default; t=1591660067;
+	bh=qRpGoHHYzAVtaKwfm0+sO3dDW/r3U/cexmDYzuFn13o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f18vLjkfRINSE+icjvnMyGakXV02C5ltT3i1kdi7YxRPjycXketic7tX5UV0mHA/v
-	 bpB4jL0c8SO9RGo5+XKAqH7JO42tAY12hZlHsGSaWXPZSC/UfPWa6Cp4SYTMrnD4+m
-	 8OXTwm1p36kZQAvxqa/MMZjW96uouvAX9/MoYIvU=
+	b=zKBHeQyAqu56RJ0zsAWiMavuEeeUg+p/RRBHzEucT2435INj/pxoOpGDCCszqep/L
+	 t2kyNyKiWpoh6OoiiFmKSsGsfWHFTndi7j0yUlxqT35dn0dmyYXrROCKWBtZdhkDhn
+	 wzYCsaQasffUC4i6XL0J2b/FaEYj5Ib4ug295s6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387993AbgFHXri (ORCPT
+        id S1731519AbgFHXrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731910AbgFHX0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:02 -0400
+        id S1731900AbgFHX0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:26:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C833820812;
-        Mon,  8 Jun 2020 23:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CFC22076A;
+        Mon,  8 Jun 2020 23:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658762;
-        bh=VBKWQ5iLv1fYJthBSpg/mc/0FfYgJ1CTvw8ww/USsgc=;
+        s=default; t=1591658760;
+        bh=qRpGoHHYzAVtaKwfm0+sO3dDW/r3U/cexmDYzuFn13o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDvCcc243dK4VR4pUUfaJkujDEygfpycmvqc027JfPClzgMi2LCWrDKNJ7mBP+stB
-         FGe1F43mWDiBnp+HaUWue6jO8XlSn+JIULbovCJ9iJDV+dQIOx6IPZtyC5fK8CNtBX
-         L3QEUx/D3p8kzqIrQG7vy01mSm6ywJ6W7A7sFZfk=
+        b=bX4UaeJECC52i9Cix0G1xSoqVzKhDgAzIJl49j2FmbxTdr+O1lp+y1ux4Mc/II4vH
+         HEhFOZTjHk+xA8S+gMUQcPRIlrES2/ShE2BL7m5RvusCsbTLVVl6tPZNV1kRzDPzcZ
+         wazEKqXI37SprFscyTvSSH1fXW/0/tXI8Cq+xTpY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 45/72] MIPS: Truncate link address into 32bit for 32bit kernel
-Date:   Mon,  8 Jun 2020 19:24:33 -0400
-Message-Id: <20200608232500.3369581-45-sashal@kernel.org>
+Cc:     Devulapally Shiva Krishna <shiva@chelsio.com>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 44/72] Crypto/chcr: fix for ccm(aes) failed test
+Date:   Mon,  8 Jun 2020 19:24:32 -0400
+Message-Id: <20200608232500.3369581-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -65,86 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+From: Devulapally Shiva Krishna <shiva@chelsio.com>
 
-[ Upstream commit ff487d41036035376e47972c7c522490b839ab37 ]
+[ Upstream commit 10b0c75d7bc19606fa9a62c8ab9180e95c0e0385 ]
 
-LLD failed to link vmlinux with 64bit load address for 32bit ELF
-while bfd will strip 64bit address into 32bit silently.
-To fix LLD build, we should truncate load address provided by platform
-into 32bit for 32bit kernel.
+The ccm(aes) test fails when req->assoclen > ~240bytes.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/786
-Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-Reviewed-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: Maciej W. Rozycki <macro@linux-mips.org>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+The problem is the value assigned to auth_offset is wrong.
+As auth_offset is unsigned char, it can take max value as 255.
+So fix it by making it unsigned int.
+
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Devulapally Shiva Krishna <shiva@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/Makefile                 | 13 ++++++++++++-
- arch/mips/boot/compressed/Makefile |  2 +-
- arch/mips/kernel/vmlinux.lds.S     |  2 +-
- 3 files changed, 14 insertions(+), 3 deletions(-)
+ drivers/crypto/chelsio/chcr_algo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 5977884b008e..a4a06d173858 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -279,12 +279,23 @@ ifdef CONFIG_64BIT
-   endif
- endif
+diff --git a/drivers/crypto/chelsio/chcr_algo.c b/drivers/crypto/chelsio/chcr_algo.c
+index 8d39f3a07bf8..99c3827855c7 100644
+--- a/drivers/crypto/chelsio/chcr_algo.c
++++ b/drivers/crypto/chelsio/chcr_algo.c
+@@ -2201,7 +2201,7 @@ static void fill_sec_cpl_for_aead(struct cpl_tx_sec_pdu *sec_cpl,
+ 	unsigned int mac_mode = CHCR_SCMD_AUTH_MODE_CBCMAC;
+ 	unsigned int c_id = chcrctx->dev->rx_channel_id;
+ 	unsigned int ccm_xtra;
+-	unsigned char tag_offset = 0, auth_offset = 0;
++	unsigned int tag_offset = 0, auth_offset = 0;
+ 	unsigned int assoclen;
  
-+# When linking a 32-bit executable the LLVM linker cannot cope with a
-+# 32-bit load address that has been sign-extended to 64 bits.  Simply
-+# remove the upper 32 bits then, as it is safe to do so with other
-+# linkers.
-+ifdef CONFIG_64BIT
-+	load-ld			= $(load-y)
-+else
-+	load-ld			= $(subst 0xffffffff,0x,$(load-y))
-+endif
-+
- KBUILD_AFLAGS	+= $(cflags-y)
- KBUILD_CFLAGS	+= $(cflags-y)
--KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
-+KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
- KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
- 
- bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
-+		  LINKER_LOAD_ADDRESS=$(load-ld) \
- 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
- 		  PLATFORM="$(platform-y)" \
- 		  ITS_INPUTS="$(its-y)"
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index baa34e4deb78..516e593a8ee9 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -87,7 +87,7 @@ ifneq ($(zload-y),)
- VMLINUZ_LOAD_ADDRESS := $(zload-y)
- else
- VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
--		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
-+		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
- endif
- UIMAGE_LOADADDR = $(VMLINUZ_LOAD_ADDRESS)
- 
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index 36f2e860ba3e..be63fff95b2a 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -50,7 +50,7 @@ SECTIONS
- 	/* . = 0xa800000000300000; */
- 	. = 0xffffffff80300000;
- #endif
--	. = VMLINUX_LOAD_ADDRESS;
-+	. = LINKER_LOAD_ADDRESS;
- 	/* read-only */
- 	_text = .;	/* Text and read-only data */
- 	.text : {
+ 	if (get_aead_subtype(tfm) == CRYPTO_ALG_SUB_TYPE_AEAD_RFC4309)
 -- 
 2.25.1
 
