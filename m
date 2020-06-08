@@ -2,155 +2,234 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E796EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4F6620774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:45:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KvqwU7fM"
+	by mail.kernel.org (Postfix) with ESMTP id B395D2067B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgFHCp6 (ORCPT
+        id S1728834AbgFHCqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 22:45:58 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:14485 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728502AbgFHCp4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 22:45:56 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200608024554epoutp01ef77f509c4b116339773fcee6d767fc3~WcYmUX_te1904719047epoutp01L
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 02:45:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200608024554epoutp01ef77f509c4b116339773fcee6d767fc3~WcYmUX_te1904719047epoutp01L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1591584354;
-        bh=C6kwEPVrZicQMVqPRY7G0nedp5JPKJuMGfwc+qpyuwA=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=KvqwU7fMbbAyxQmaB0nq6GE23hGELJQG+OFDXmz5F1jBV9oU/JvyEvwfTyewPBDw3
-         io2uL1uF1fKnCmrzp6/8NKge26qpTkVFsVwx5iDZxMALZxA/NdS6L2gkFYleYBE8RF
-         8/KfSle/yfI+yYe8SMvSvQC6aV1Np2Bu4v0IajX4=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200608024553epcas5p3e04e585e4600019179baa620f295bad9~WcYl3-Llg0786907869epcas5p3C;
-        Mon,  8 Jun 2020 02:45:53 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        32.1E.09475.166ADDE5; Mon,  8 Jun 2020 11:45:53 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200608024553epcas5p31ec99c061aee14aa8362dcd8c110efc2~WcYllvBRC1438514385epcas5p3G;
-        Mon,  8 Jun 2020 02:45:53 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200608024553epsmtrp1fb2b062906712c143df9d0b6797046dd~WcYlgPQbI1169511695epsmtrp1-;
-        Mon,  8 Jun 2020 02:45:53 +0000 (GMT)
-X-AuditID: b6c32a4b-389ff70000002503-89-5edda6619c7b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        ED.E6.08303.066ADDE5; Mon,  8 Jun 2020 11:45:53 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200608024549epsmtip2a0a64a9e6e85eb65ccb898cdea3fba22~WcYidqe4w2506325063epsmtip2Y;
-        Mon,  8 Jun 2020 02:45:49 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        <robh@kernel.org>, "'Kishon Vijay Abraham I'" <kishon@ti.com>
-Cc:     <krzk@kernel.org>, <linux-samsung-soc@vger.kernel.org>,
-        <avri.altman@wdc.com>, <stanley.chu@mediatek.com>,
-        <linux-scsi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <cang@codeaurora.org>,
-        <devicetree@vger.kernel.org>, <kwmad.kim@samsung.com>,
-        <linux-kernel@vger.kernel.org>, "'Vinod Koul'" <vkoul@kernel.org>
-In-Reply-To: <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
-Subject: RE: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-Date:   Mon, 8 Jun 2020 08:15:47 +0530
-Message-ID: <013a01d63d3e$ecf404d0$c6dc0e70$@samsung.com>
+        Sun, 7 Jun 2020 22:46:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37022 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728409AbgFHCqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 22:46:10 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 60D6635DC1AD4DCFF537;
+        Mon,  8 Jun 2020 10:46:08 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 8 Jun 2020
+ 10:46:06 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: add F2FS_IOC_TRIM_FILE ioctl
+To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
+CC:     Daeho Jeong <daehojeong@google.com>
+References: <20200605042746.201180-1-daeho43@gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <fd9bd76c-1864-2cfc-bf86-ef705c8a407d@huawei.com>
+Date:   Mon, 8 Jun 2020 10:46:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200605042746.201180-1-daeho43@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQNA14zZ9KpC6NxovY65uGX80LQ4kgIpylB3AdlmWUOl2LNuQA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmlm7isrtxBrM/yFm8/HmVzeLT+mWs
-        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
-        P9DNFMAZxWWTkpqTWZZapG+XwJVx5l8Xc0EjZ8XfE9/YGhgPsncxcnJICJhILJ79nRXEFhLY
-        zShx4oBwFyMXkP2JUeLw+qeMEM5nRonvnztYYDouNe5ngUjsYpT4dewpK4TzhlFi3b5rYFVs
-        AroSOxa3sXUxcnCICFRIrFgmAVLDLHCOSWLeh23sIHFOAXeJr79jQcqFBZwkXq/YwwQSZhFQ
-        kfg3IxAkzCtgKdHVsZUJwhaUODnzCdh0ZgF5ie1v5zBD3KMg8fPpMrAPRIDGfP1xBapGXOLo
-        zx5mkLUSAi84JLa8Pgz1sovEpMt3WCFsYYlXx7dAxaUkXva3gZ0mIZAt0bPLGCJcI7F03jGo
-        3+0lDlyZwwJSwiygKbF+lz7EKj6J3t9PmCA6eSU62oQgqlUlmt9dheqUlpjY3c0KUeIh0dck
-        OoFRcRaSv2Yh+WsWkvtnIexawMiyilEytaA4Nz212LTAOC+1XK84Mbe4NC9dLzk/dxMjONVp
-        ee9gfPTgg94hRiYOxkOMEhzMSiK81Q/uxAnxpiRWVqUW5ccXleakFh9ilOZgURLnVfpxJk5I
-        ID2xJDU7NbUgtQgmy8TBKdXAxDZJpEV/hW7fgeL70f17uLiCqxJ33LBhv/Hq3NG5DZbTQ1ki
-        Z063k0+ac/zlHO45+589+rq8dMLv3BcORYnOIZz2mtn20zpyTm4Mf2f87Kp84tOUa1mTRL/b
-        yC8qig9iVpC5lBYzaUL1jv+Ck+Rl1Hc6nd2QUbksYkXqdl6xff29ESsZ4r5V6CYuPce26EWs
-        QEDN7OcCYtaL/0zTPXa2L/7P78j5a6bOlFGwspf8teV48bT9YTbKvufO21lzp6jX23j8vPd5
-        YW+GGp9OjO3fk4IPa8vj2vPs3jlfzd/qJjR7i8I7w2lBDwVzFV6Hxnmp3lrU/UemPSci/ZPr
-        pf9cscFrj0m8+Xxg2+bLhxsUlViKMxINtZiLihMBkily0+QDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsWy7bCSvG7isrtxBit3Mlu8/HmVzeLT+mWs
-        FvOPnGO1uPC0h83i/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
-        sXTrTUaLnXdOMDvweVzu62Xy2LSqk81j85J6j5aT+1k8Pj69xeLRt2UVo8fxG9uZPD5vkvNo
-        P9DNFMAZxWWTkpqTWZZapG+XwJVx5l8Xc0EjZ8XfE9/YGhgPsncxcnJICJhIXGrcz9LFyMUh
-        JLCDUeL7ogMsEAlpiesbJ0AVCUus/PcczBYSeMUo8W+mO4jNJqArsWNxGxuILSJQJfHvyHt2
-        kEHMAjeYJK73roGaepJR4vTs+0xdjBwcnALuEl9/x4I0CAs4SbxesQcszCKgIvFvRiBImFfA
-        UqKrYysThC0ocXLmE7B7mAX0JNavn8MIYctLbH87hxniNgWJn0+XsULc4CTx9ccVqHpxiaM/
-        e5gnMArPQjJqFpJRs5CMmoWkZQEjyypGydSC4tz03GLDAqO81HK94sTc4tK8dL3k/NxNjODI
-        1dLawbhn1Qe9Q4xMHIyHGCU4mJVEeKsf3IkT4k1JrKxKLcqPLyrNSS0+xCjNwaIkzvt11sI4
-        IYH0xJLU7NTUgtQimCwTB6dUA9O635bbZs88s1Xvwiljh9aE5Y2lYnETHu2/paX5ev02lxbm
-        7ZVt7S4le9g2FeR7+J+uO+At4uWowHqq/++aK3/ehn+cJseW/UtFX36f9vd9B46az+Zn3iz7
-        6aLYjUu75P/Mk5/veOp0WYYIQ2Ti65n7Z6h5dLvXLKlc+P+0AqO0wQGdYLfbjgF7RdeuMdll
-        Epmkat8x6Uxv9vGYh79NNzlv0hc6pzbj/d/jCvlmgjPLHQPOlSaZOVmedC/Oqw8X2vJyjtap
-        iOmX/RZv9n+yPDTOy8ugyv/6u4SMDa6J9veUOk72Pdncu+bK9t+7m6Qc73F0rNn7am+GO3t8
-        1SSfDLO2K9Zhk/+2z8xwMVvU0qfEUpyRaKjFXFScCAACFD+lSwMAAA==
-X-CMS-MailID: 20200608024553epcas5p31ec99c061aee14aa8362dcd8c110efc2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200528013223epcas5p2be85fa8803326b49a905fb7225992cad
-References: <CGME20200528013223epcas5p2be85fa8803326b49a905fb7225992cad@epcas5p2.samsung.com>
-        <20200528011658.71590-1-alim.akhtar@samsung.com>
-        <159114947915.26776.12485309894552696104.b4-ty@oracle.com>
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/6/5 12:27, Daeho Jeong wrote:
+> From: Daeho Jeong <daehojeong@google.com>
+> 
+> Added a new ioctl to send discard commands to whole data area of
+> a regular file for security reason.
 
+I guess this interface is introduced for security key destruction, if I'm
+right, however, IIRC, discard(erase) semantics in eMMC/UFS spec won't
+guarantee that data which was discard could be zeroed out, so after discard,
+the key still have risk of exposure. So instead, should we use sb_issue_zeroout()?
 
-> -----Original Message-----
-> From: Martin K. Petersen <martin.petersen@oracle.com>
-> Sent: 03 June 2020 08:02
-> To: robh@kernel.org; Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: Martin K . Petersen <martin.petersen@oracle.com>; krzk@kernel.org;
-linux-
-> samsung-soc@vger.kernel.org; avri.altman@wdc.com;
-> stanley.chu@mediatek.com; linux-scsi@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; cang@codeaurora.org;
-devicetree@vger.kernel.org;
-> kwmad.kim@samsung.com; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v10 00/10] exynos-ufs: Add support for UFS HCI
-> 
-> On Thu, 28 May 2020 06:46:48 +0530, Alim Akhtar wrote:
-> 
-> > This patch-set introduces UFS (Universal Flash Storage) host
-> > controller support for Samsung family SoC. Mostly, it consists of UFS
-> > PHY and host specific driver.
-> > [...]
-> 
-> Applied [1,2,3,4,5,9] to 5.9/scsi-queue. The series won't show up in my
-public
-> tree until shortly after -rc1 is released.
-> 
-Thanks Martin,
-Hi Rob and Kishon/Vinod
-Can you please pickup dt-bindings and PHY driver respectively?
+Thanks,
 
-> Thanks!
 > 
-> --
-> Martin K. Petersen	Oracle Linux Engineering
-
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> ---
+>  fs/f2fs/f2fs.h |   1 +
+>  fs/f2fs/file.c | 129 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 130 insertions(+)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index c812fb8e2d9c..9ae81d0fefa0 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -434,6 +434,7 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>  					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+>  #define F2FS_IOC_RESERVE_COMPRESS_BLOCKS				\
+>  					_IOR(F2FS_IOCTL_MAGIC, 19, __u64)
+> +#define F2FS_IOC_TRIM_FILE		_IO(F2FS_IOCTL_MAGIC, 20)
+>  
+>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index dfa1ac2d751a..58507bb5649c 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -3749,6 +3749,132 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>  	return ret;
+>  }
+>  
+> +static int f2fs_trim_file(struct file *filp)
+> +{
+> +	struct inode *inode = file_inode(filp);
+> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> +	struct address_space *mapping = inode->i_mapping;
+> +	struct bio *bio = NULL;
+> +	struct block_device *prev_bdev = NULL;
+> +	loff_t file_size;
+> +	pgoff_t index, pg_start = 0, pg_end;
+> +	block_t prev_block = 0, len = 0;
+> +	int ret = 0;
+> +
+> +	if (!f2fs_hw_support_discard(sbi))
+> +		return -EOPNOTSUPP;
+> +
+> +	if (!S_ISREG(inode->i_mode) || f2fs_is_atomic_file(inode) ||
+> +			f2fs_compressed_file(inode))
+> +		return -EINVAL;
+> +
+> +	if (f2fs_readonly(sbi->sb))
+> +		return -EROFS;
+> +
+> +	ret = mnt_want_write_file(filp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	inode_lock(inode);
+> +
+> +	file_size = i_size_read(inode);
+> +	if (!file_size)
+> +		goto err;
+> +	pg_end = (pgoff_t)round_up(file_size, PAGE_SIZE) >> PAGE_SHIFT;
+> +
+> +	ret = f2fs_convert_inline_inode(inode);
+> +	if (ret)
+> +		goto err;
+> +
+> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> +	down_write(&F2FS_I(inode)->i_mmap_sem);
+> +
+> +	ret = filemap_write_and_wait(mapping);
+> +	if (ret)
+> +		goto out;
+> +
+> +	truncate_inode_pages(mapping, 0);
+> +
+> +	for (index = pg_start; index < pg_end;) {
+> +		struct dnode_of_data dn;
+> +		unsigned int end_offset;
+> +
+> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+> +		ret = f2fs_get_dnode_of_data(&dn, index, LOOKUP_NODE);
+> +		if (ret)
+> +			goto out;
+> +
+> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+> +		if (pg_end < end_offset + index)
+> +			end_offset = pg_end - index;
+> +
+> +		for (; dn.ofs_in_node < end_offset;
+> +				dn.ofs_in_node++, index++) {
+> +			struct block_device *cur_bdev;
+> +			block_t blkaddr = f2fs_data_blkaddr(&dn);
+> +
+> +			if (__is_valid_data_blkaddr(blkaddr)) {
+> +				if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
+> +					blkaddr, DATA_GENERIC_ENHANCE)) {
+> +					ret = -EFSCORRUPTED;
+> +					goto out;
+> +				}
+> +			} else
+> +				continue;
+> +
+> +			cur_bdev = f2fs_target_device(sbi, blkaddr, NULL);
+> +			if (f2fs_is_multi_device(sbi)) {
+> +				int i = f2fs_target_device_index(sbi, blkaddr);
+> +
+> +				blkaddr -= FDEV(i).start_blk;
+> +			}
+> +
+> +			if (len) {
+> +				if (prev_bdev == cur_bdev &&
+> +					blkaddr == prev_block + len) {
+> +					len++;
+> +				} else {
+> +					ret = __blkdev_issue_discard(prev_bdev,
+> +						SECTOR_FROM_BLOCK(prev_block),
+> +						SECTOR_FROM_BLOCK(len),
+> +						GFP_NOFS, 0, &bio);
+> +					if (ret)
+> +						goto out;
+> +> +					len = 0;
+> +				}
+> +			}
+> +
+> +			if (!len) {
+> +				prev_bdev = cur_bdev;
+> +				prev_block = blkaddr;
+> +				len = 1;
+> +			}
+> +		}
+> +
+> +		f2fs_put_dnode(&dn);
+> +	}
+> +
+> +	if (len)
+> +		ret = __blkdev_issue_discard(prev_bdev,
+> +					SECTOR_FROM_BLOCK(prev_block),
+> +					SECTOR_FROM_BLOCK(len),
+> +					GFP_NOFS, 0, &bio);
+> +out:
+> +	if (bio) {
+> +		ret = submit_bio_wait(bio);
+> +		bio_put(bio);
+> +	}
+> +
+> +	up_write(&F2FS_I(inode)->i_mmap_sem);
+> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> +err:
+> +	inode_unlock(inode);
+> +	mnt_drop_write_file(filp);
+> +
+> +	return ret;
+> +}
+> +
+>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  {
+>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+> @@ -3835,6 +3961,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		return f2fs_release_compress_blocks(filp, arg);
+>  	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+>  		return f2fs_reserve_compress_blocks(filp, arg);
+> +	case F2FS_IOC_TRIM_FILE:
+> +		return f2fs_trim_file(filp);
+>  	default:
+>  		return -ENOTTY;
+>  	}
+> @@ -4004,6 +4132,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+>  	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+>  	case F2FS_IOC_RESERVE_COMPRESS_BLOCKS:
+> +	case F2FS_IOC_TRIM_FILE:
+>  		break;
+>  	default:
+>  		return -ENOIOCTLCMD;
+> 
