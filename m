@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B906C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5497121655
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E398E21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658096;
-	bh=oX/tieRFaB/cwnlPqM+xp17g7FUizixhpkom2w5vXmE=;
+	s=default; t=1591658099;
+	bh=cgUYMErB9r6HbfGLgWyshyjnWnZmYU1Bzyo9r7qAdR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IqU7zWljtJUfWi2oXj2MuKlbimeXmQl+r5+AaoAp45plFXGOk4t1p3WJ9uwwSOWrW
-	 Q9LPKb/kv/RvhwqzWheL1gNFnOxia3f7shLNDSe8zSUSp14vk03ji19AzXy/kfyFuX
-	 xt8KIjp7r/U32c5OpMSmam+zlkrIy+6aBHuz2eE8=
+	b=dOIO2QV68Qv35mU7S+Tv6DLNKvP4wIY+ehRM54ZFrvWlfyTBdfAhSUhyQXpZ+rK4o
+	 nHOrnExlmNHr+1qUwPMgKh3wJNIE/rl2A+eqs+/dRA3anOCDYmAk3BvhZZ9I2N0Hyu
+	 Ea3GiZBorToynTVaRZ4iNGLXN//KG+vRY3TIlgLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgFHXOz (ORCPT
+        id S1729953AbgFHXO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59794 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:14:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729088AbgFHXM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:26 -0400
+        id S1729093AbgFHXM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F5520B80;
-        Mon,  8 Jun 2020 23:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A4FC212CC;
+        Mon,  8 Jun 2020 23:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657946;
-        bh=oX/tieRFaB/cwnlPqM+xp17g7FUizixhpkom2w5vXmE=;
+        s=default; t=1591657948;
+        bh=cgUYMErB9r6HbfGLgWyshyjnWnZmYU1Bzyo9r7qAdR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bccYW7XpXNETmRf22l/qPSkXb8um4JLq0kqabKwmFs4b6tF5x1oXBYCLG/9eMJo3z
-         /WYedBIP/wm37669YXtLHFRHh95inSiqA0ptD2mxvL8GN6E74agIAeYxJWoXXwqUl5
-         mZfMqSyrxtKok3ruw//XG8YfkR9heyoFGbF/+0Vk=
+        b=SONunF+N7KKsA8pEWawqYoXtKHpIQGrROsGlbMZHT9WBx0vb1bshs6lwDjJ6pz0Ic
+         ZXaDdeuQLhGN3LxZrTeRYovUJy6MrNQoPJVFu+XNehKsgN02cYp1WcrZXuZLuemLmD
+         NEvV3amieVOVdXr97ymNH7wdFO95A2za1US+UATs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 011/606] gcc-10: disable 'zero-length-bounds' warning for now
-Date:   Mon,  8 Jun 2020 19:02:16 -0400
-Message-Id: <20200608231211.3363633-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 013/606] gcc-10: disable 'stringop-overflow' warning for now
+Date:   Mon,  8 Jun 2020 19:02:18 -0400
+Message-Id: <20200608231211.3363633-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,42 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 5c45de21a2223fe46cf9488c99a7fbcf01527670 upstream.
+commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 upstream.
 
-This is a fine warning, but we still have a number of zero-length arrays
-in the kernel that come from the traditional gcc extension.  Yes, they
-are getting converted to flexible arrays, but in the meantime the gcc-10
-warning about zero-length bounds is very verbose, and is hiding other
-issues.
+This is the final array bounds warning removal for gcc-10 for now.
 
-I missed one actual build failure because it was hidden among hundreds
-of lines of warning.  Thankfully I caught it on the second go before
-pushing things out, but it convinced me that I really need to disable
-the new warnings for now.
-
-We'll hopefully be all done with our conversion to flexible arrays in
-the not too distant future, and we can then re-enable this warning.
+Again, the warning is good, and we should re-enable all these warnings
+when we have converted all the legacy array declaration cases to
+flexible arrays. But in the meantime, it's just noise.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Makefile b/Makefile
-index d4938ac6ebbf..b1ce2a7a25b0 100644
+index e7c2811856f1..8584003bfbca 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -857,6 +857,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- # disable stringop warnings in gcc 8+
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+@@ -860,6 +860,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
-+# We'll want to enable this eventually, but it's not going away for 5.7 at least
-+KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+
  # Enabled with W=2, disabled by default as noisy
  KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
- 
 -- 
 2.25.1
 
