@@ -2,110 +2,161 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37363C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2093820888
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50DED20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:12:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGbti0/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgFHSMJ (ORCPT
+        id S1726089AbgFHSMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:12:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23974 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725797AbgFHSMI (ORCPT
+        Mon, 8 Jun 2020 14:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgFHSMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:12:08 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058I2ui4130692;
-        Mon, 8 Jun 2020 14:12:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g77qcgjf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 14:12:05 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058I3920132054;
-        Mon, 8 Jun 2020 14:12:05 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g77qcghw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 14:12:05 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058I4gLV029043;
-        Mon, 8 Jun 2020 18:12:04 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma02wdc.us.ibm.com with ESMTP id 31g2s8cght-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 18:12:03 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058IC37O8520544
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 18:12:03 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89E3BAE05C;
-        Mon,  8 Jun 2020 18:12:03 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC77EAE063;
-        Mon,  8 Jun 2020 18:12:02 +0000 (GMT)
-Received: from [9.211.140.245] (unknown [9.211.140.245])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jun 2020 18:12:02 +0000 (GMT)
-Subject: Re: [PATCH 2/2] i2c: fsi: Prevent adding adapters for ports without
- dts nodes
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wsa@kernel.org, Joel Stanley <joel@jms.id.au>
-References: <20200608160544.7134-1-eajames@linux.ibm.com>
- <20200608160544.7134-3-eajames@linux.ibm.com>
- <CAHp75VfRj4kA1yrhkqak9zMJuES8Udk3YuzMKHXyh+hwrB6rSQ@mail.gmail.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <cab1dd65-e746-d861-3aef-696294bf496b@linux.ibm.com>
-Date:   Mon, 8 Jun 2020 13:12:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 8 Jun 2020 14:12:31 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B15CC08C5C3;
+        Mon,  8 Jun 2020 11:12:30 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w1so18209109qkw.5;
+        Mon, 08 Jun 2020 11:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=z154RMOSTrXqb2CRDUiw56xx556gz0WSpn0WRRUM9uc=;
+        b=hGbti0/L5HXU/Ps4jKVXu3Zx4uuYL3OuZ0gXWUlGL+hAIZPW3f0SdkkNzi2pu7S35M
+         8W8aeo0w4u7CoN9mfBLv4vjKgYxY/VkVy0SqzzsAIG/fg4L7hewJyE7nCY9kXdBXuIX/
+         N6lGCtklb00LTSHYYuMwIqKSD6oa2DvOZ/I2EtNgvWD1X4R8NSGmAtaPRwmlwgf5zF8N
+         fuQPZ9Azv0h/KFe9pTsJO/na0kUaMDf55+Iopc0v6u7d/hUUA8aKR9+z0ne0CSYmuyyB
+         mHBV1qujGVEINjeqWBV1YiDj0sWpXk7gHNO2LZXeH8nwTPCwf5DIxylH9p2W1J6LoCij
+         go1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=z154RMOSTrXqb2CRDUiw56xx556gz0WSpn0WRRUM9uc=;
+        b=kk1YNLXgCVPhsJ448uuCxhC8+YDEAX1riVyIBty39GClKcy2w5MRX8pck1Zw3DyDzM
+         OkPE9jz/6d5nehLaI+MJxM9gzZnjubhPD+Y+9K5w4wd4wQQHH3ftkBjXsDMUchCfjlDy
+         pLDQPZQsyGihQkiSXSe9Z47ZrvXIe4aI15smaqjUz52Dy5fMfvKzkyKEKiTAUKPrHfxt
+         t4t23Ga5MtH7MwTwBlQzWGy78MBQGI+l+I05pb33qX1RyNdFkfQtL7V/D9ea6tCb97Mt
+         42fVYMryZo+5uaFeRpr/9VNPL+zshJ3EpokmogFphMFz04pTKnr398Uj+bmh+kZqpKMU
+         LmhA==
+X-Gm-Message-State: AOAM532rz/Qrk3kUv7Zd4IS6ez1gxSYzEDoeZzdv13ZeKjkvkIZnJpYN
+        8kSv6ZZKR5KBKBq8xP7wd94=
+X-Google-Smtp-Source: ABdhPJy1OkcL9UjkEis9IyIjboP1KXpSxXx+e8nNZ7FzbXjUwl2rKoEdJnUXhq68pqRXmUbX0+lJyw==
+X-Received: by 2002:a37:a8c4:: with SMTP id r187mr23415214qke.69.1591639949626;
+        Mon, 08 Jun 2020 11:12:29 -0700 (PDT)
+Received: from [192.168.86.185] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id m126sm6791923qke.99.2020.06.08.11.12.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Jun 2020 11:12:29 -0700 (PDT)
+Date:   Mon, 08 Jun 2020 15:12:03 -0300
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAEf4BzbEcV6YaezP4yY8J=kYSBhh0cRHCvgCUe9xvB12mF08qg@mail.gmail.com>
+References: <20200608161150.GA3073@kernel.org> <CAEf4BzbEcV6YaezP4yY8J=kYSBhh0cRHCvgCUe9xvB12mF08qg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfRj4kA1yrhkqak9zMJuES8Udk3YuzMKHXyh+hwrB6rSQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_17:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 impostorscore=0 mlxscore=0 adultscore=0 clxscore=1015
- cotscore=-2147483648 malwarescore=0 spamscore=0 phishscore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080129
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: libbpf's hashmap use of __WORDSIZE
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Irina Tirdea <irina.tirdea@intel.com>,
+        bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Message-ID: <1BB90A3B-1372-487E-9E96-193AAAEBC095@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mi
 
-On 6/8/20 11:31 AM, Andy Shevchenko wrote:
-> On Mon, Jun 8, 2020 at 7:05 PM Eddie James <eajames@linux.ibm.com> wrote:
->> Ports should be defined in the devicetree if they are to be enabled on
->> the system.
-> ...
+On June 8, 2020 2:32:16 PM GMT-03:00, Andrii Nakryiko <andrii=2Enakryiko@g=
+mail=2Ecom> wrote:
+>On Mon, Jun 8, 2020 at 9:11 AM Arnaldo Carvalho de Melo
+><arnaldo=2Emelo@gmail=2Ecom> wrote:
+>>
+>> Hi Andrii,
+>>
+>>         We've got that hashmap=2E[ch] copy from libbpf so that we can
+>> build perf in systems where libbpf isn't available, and to make it
+>build
+>> in all the containers I regularly test build perf I had to add the
+>patch
+>> below, I test build with many versions of both gcc and clang and
+>> multiple libcs=2E
+>>
+>>   https://gcc=2Egnu=2Eorg/onlinedocs/cpp/Common-Predefined-Macros=2Ehtm=
+l
+>>
+>> The way that tools/include/linux/bitops=2Eh has been doing since 2012
+>is
+>> explained in:
+>>
+>>   http://git=2Ekernel=2Eorg/torvalds/c/3f34f6c0233ae055b5
+>>
+>> Please take a look and see if you find it acceptable,
+>>
+>> Thanks,
+>>
+>> - Arnaldo
+>>
+>>   Warning: Kernel ABI header at 'tools/perf/util/hashmap=2Eh' differs
+>from latest version at 'tools/lib/bpf/hashmap=2Eh'
+>>   diff -u tools/perf/util/hashmap=2Eh tools/lib/bpf/hashmap=2Eh
+>>
+>> $ diff -u tools/lib/bpf/hashmap=2Eh tools/perf/util/hashmap=2Eh
+>> --- tools/lib/bpf/hashmap=2Eh     2020-06-05 13:25:27=2E822079838 -0300
+>> +++ tools/perf/util/hashmap=2Eh   2020-06-05 13:25:27=2E838079794 -0300
+>> @@ -10,10 +10,9 @@
+>>
+>>  #include <stdbool=2Eh>
+>>  #include <stddef=2Eh>
+>> -#ifdef __GLIBC__
+>> -#include <bits/wordsize=2Eh>
+>> -#else
+>> -#include <bits/reg=2Eh>
+>> +#include <limits=2Eh>
+>> +#ifndef __WORDSIZE
+>> +#define __WORDSIZE (__SIZEOF_LONG__ * 8)
+>>  #endif
 >
->>          for (port_no = 0; port_no < ports; port_no++) {
->>                  np = fsi_i2c_find_port_of_node(dev->of_node, port_no);
->> -               if (np && !of_device_is_available(np))
->> +               /* Do not add port if it is not described in the device tree */
->> +               if (!np)
->> +                       continue;
-> I believe this is redundant, since below will do the same second time.
-
-
-Good point, thanks, I'll update that.
-
-
+>This looks fine, I also build-tested it in Travis CI, so all good=2E
+>There is actually __SIZEOF_SIZE_T__, which is more directly what
+>hash_bits work with, but I don't think it matters for any reasonable
+>system in use :)
 >
->> +               /* Do not add port if it is described as disabled */
->> +               if (!of_device_is_available(np))
->>                          continue;
+>So yeah,
+>
+>Acked-by: Andrii Nakryiko <andriin@fb=2Ecom>
+>
+>Are you going to do this change for libbpf's variant, or should I
+>submit a separate patch?
+
+I'll send the patch later,
+
+Thanks for checking,
+
+- Arnaldo
+>
+>>
+>>  static inline size_t hash_bits(size_t h, int bits)
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
