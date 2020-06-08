@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A2CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE58C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21115206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E267206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663071;
-	bh=cxtuvjAdp9f4Te01/+BlbAfNdOyNnBZ251CMnNbZcN4=;
+	s=default; t=1591663076;
+	bh=dJ1hCS/0idj37Jg+kplr64FvDLejwmC8xrXgcbyyO7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AeYBYBb/3/IOpsylY3wqWWLkDUqoG0FwnOIc8nSYMEB+jnA3SOgKe5KWybpLnpSAp
-	 xyvBNtG+kujo9S3I9b97VY4cazE8+inRsuVW+vXjoybREzDY3Patf7KIoads5SueDv
-	 Hpv9j/OJlrH9VplHxZq7BMHj79vvsjJGlmFyM4yo=
+	b=Uj0lTBBsDGjKLlKRQEYnWZln9cFuTPxgB0TbKmNHGMF5AF+Cn+W3ZqMQEEuLlBUaP
+	 X+PpGdSGBVGIEEQ9VNgX95wLV39u6qbs1EQOlo/jYX4ySHhtkGhDD+9kCXoOVxctGt
+	 0l5/egWr0PxYWoyQcTokQWd9ZBNDLwChWJh/Xo8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgFHXNl (ORCPT
+        id S1730033AbgFIAhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:37:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728902AbgFHXLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:25 -0400
+        id S1727829AbgFHXNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 538F020B80;
-        Mon,  8 Jun 2020 23:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E2C20B80;
+        Mon,  8 Jun 2020 23:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657885;
-        bh=cxtuvjAdp9f4Te01/+BlbAfNdOyNnBZ251CMnNbZcN4=;
+        s=default; t=1591658017;
+        bh=dJ1hCS/0idj37Jg+kplr64FvDLejwmC8xrXgcbyyO7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UXZE9uecEFG/RGV1hTcN/ZpNH6INmOv/mvA2v97cy0oMqxE0AfL/WcerD2RGhHLKU
-         oybdXOHZJq6ZbWnOPOsjBhm6LzU7D+27vHd0dfY7RnbrpxwcgGHMDbJlmioMpQV7qs
-         Na+Kew31n3rbNPZDP/M/oYCXI4zoIiynRzZN+iyE=
+        b=Mq5w/Nzre5XkqQxl12nVgav4v+WlfgXAmgTWFb1N13JFQlUI/kDgQb0XATrPhwI/E
+         76PT9G7Rre+oCweJ46oV/vsTjJt++uEKcTG/78K3oFUWjiC30iyoKnQom6ScXzL/eX
+         n+cARVNm9tlW3x/vkQgXLhqM9KvaeB4HG2U/kGHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 241/274] bcache: fix refcount underflow in bcache_device_free()
-Date:   Mon,  8 Jun 2020 19:05:34 -0400
-Message-Id: <20200608230607.3361041-241-sashal@kernel.org>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 071/606] RDMA/uverbs: Do not discard the IB_EVENT_DEVICE_FATAL event
+Date:   Mon,  8 Jun 2020 19:03:16 -0400
+Message-Id: <20200608231211.3363633-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,90 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit 86da9f736740eba602389908574dfbb0f517baa5 ]
+commit c485b19d52c4ba269dfd027945dee81755fdd530 upstream.
 
-The problematic code piece in bcache_device_free() is,
+The commit below moved all of the destruction to the disassociate step and
+cleaned up the event channel during destroy_uobj.
 
- 785 static void bcache_device_free(struct bcache_device *d)
- 786 {
- 787     struct gendisk *disk = d->disk;
- [snipped]
- 799     if (disk) {
- 800             if (disk->flags & GENHD_FL_UP)
- 801                     del_gendisk(disk);
- 802
- 803             if (disk->queue)
- 804                     blk_cleanup_queue(disk->queue);
- 805
- 806             ida_simple_remove(&bcache_device_idx,
- 807                               first_minor_to_idx(disk->first_minor));
- 808             put_disk(disk);
- 809         }
- [snipped]
- 816 }
+However, when ib_uverbs_free_hw_resources() pushes IB_EVENT_DEVICE_FATAL
+and then immediately goes to destroy all uobjects this causes
+ib_uverbs_free_event_queue() to discard the queued event if userspace
+hasn't already read() it.
 
-At line 808, put_disk(disk) may encounter kobject refcount of 'disk'
-being underflow.
+Unlike all other event queues async FD needs to defer the
+ib_uverbs_free_event_queue() until FD release. This still unregisters the
+handler from the IB device during disassociation.
 
-Here is how to reproduce the issue,
-- Attche the backing device to a cache device and do random write to
-  make the cache being dirty.
-- Stop the bcache device while the cache device has dirty data of the
-  backing device.
-- Only register the backing device back, NOT register cache device.
-- The bcache device node /dev/bcache0 won't show up, because backing
-  device waits for the cache device shows up for the missing dirty
-  data.
-- Now echo 1 into /sys/fs/bcache/pendings_cleanup, to stop the pending
-  backing device.
-- After the pending backing device stopped, use 'dmesg' to check kernel
-  message, a use-after-free warning from KASA reported the refcount of
-  kobject linked to the 'disk' is underflow.
-
-The dropping refcount at line 808 in the above code piece is added by
-add_disk(d->disk) in bch_cached_dev_run(). But in the above condition
-the cache device is not registered, bch_cached_dev_run() has no chance
-to be called and the refcount is not added. The put_disk() for a non-
-added refcount of gendisk kobject triggers a underflow warning.
-
-This patch checks whether GENHD_FL_UP is set in disk->flags, if it is
-not set then the bcache device was not added, don't call put_disk()
-and the the underflow issue can be avoided.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 3e032c0e92aa ("RDMA/core: Make ib_uverbs_async_event_file into a uobject")
+Link: https://lore.kernel.org/r/20200507063348.98713-2-leon@kernel.org
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/bcache/super.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/rdma_core.c           |  3 ++-
+ drivers/infiniband/core/uverbs.h              |  1 +
+ drivers/infiniband/core/uverbs_main.c         |  2 +-
+ .../core/uverbs_std_types_async_fd.c          | 26 ++++++++++++++++++-
+ 4 files changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index d98354fa28e3..4d8bf731b118 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -797,7 +797,9 @@ static void bcache_device_free(struct bcache_device *d)
- 		bcache_device_detach(d);
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index 177333d8bcda..bf8e149d3191 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -459,7 +459,8 @@ alloc_begin_fd_uobject(const struct uverbs_api_object *obj,
+ 	struct ib_uobject *uobj;
+ 	struct file *filp;
  
- 	if (disk) {
--		if (disk->flags & GENHD_FL_UP)
-+		bool disk_added = (disk->flags & GENHD_FL_UP) != 0;
+-	if (WARN_ON(fd_type->fops->release != &uverbs_uobject_fd_release))
++	if (WARN_ON(fd_type->fops->release != &uverbs_uobject_fd_release &&
++		    fd_type->fops->release != &uverbs_async_event_release))
+ 		return ERR_PTR(-EINVAL);
+ 
+ 	new_fd = get_unused_fd_flags(O_CLOEXEC);
+diff --git a/drivers/infiniband/core/uverbs.h b/drivers/infiniband/core/uverbs.h
+index 7df71983212d..2673cb1cd655 100644
+--- a/drivers/infiniband/core/uverbs.h
++++ b/drivers/infiniband/core/uverbs.h
+@@ -219,6 +219,7 @@ void ib_uverbs_init_event_queue(struct ib_uverbs_event_queue *ev_queue);
+ void ib_uverbs_init_async_event_file(struct ib_uverbs_async_event_file *ev_file);
+ void ib_uverbs_free_event_queue(struct ib_uverbs_event_queue *event_queue);
+ void ib_uverbs_flow_resources_free(struct ib_uflow_resources *uflow_res);
++int uverbs_async_event_release(struct inode *inode, struct file *filp);
+ 
+ int ib_alloc_ucontext(struct uverbs_attr_bundle *attrs);
+ int ib_init_ucontext(struct uverbs_attr_bundle *attrs);
+diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+index 17fc25db0311..cb5b59123d8f 100644
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -346,7 +346,7 @@ const struct file_operations uverbs_async_event_fops = {
+ 	.owner	 = THIS_MODULE,
+ 	.read	 = ib_uverbs_async_event_read,
+ 	.poll    = ib_uverbs_async_event_poll,
+-	.release = uverbs_uobject_fd_release,
++	.release = uverbs_async_event_release,
+ 	.fasync  = ib_uverbs_async_event_fasync,
+ 	.llseek	 = no_llseek,
+ };
+diff --git a/drivers/infiniband/core/uverbs_std_types_async_fd.c b/drivers/infiniband/core/uverbs_std_types_async_fd.c
+index 82ec0806b34b..462deb506b16 100644
+--- a/drivers/infiniband/core/uverbs_std_types_async_fd.c
++++ b/drivers/infiniband/core/uverbs_std_types_async_fd.c
+@@ -26,10 +26,34 @@ static int uverbs_async_event_destroy_uobj(struct ib_uobject *uobj,
+ 		container_of(uobj, struct ib_uverbs_async_event_file, uobj);
+ 
+ 	ib_unregister_event_handler(&event_file->event_handler);
+-	ib_uverbs_free_event_queue(&event_file->ev_queue);
+ 	return 0;
+ }
+ 
++int uverbs_async_event_release(struct inode *inode, struct file *filp)
++{
++	struct ib_uverbs_async_event_file *event_file;
++	struct ib_uobject *uobj = filp->private_data;
++	int ret;
 +
-+		if (disk_added)
- 			del_gendisk(disk);
- 
- 		if (disk->queue)
-@@ -805,7 +807,8 @@ static void bcache_device_free(struct bcache_device *d)
- 
- 		ida_simple_remove(&bcache_device_idx,
- 				  first_minor_to_idx(disk->first_minor));
--		put_disk(disk);
-+		if (disk_added)
-+			put_disk(disk);
- 	}
- 
- 	bioset_exit(&d->bio_split);
++	if (!uobj)
++		return uverbs_uobject_fd_release(inode, filp);
++
++	event_file =
++		container_of(uobj, struct ib_uverbs_async_event_file, uobj);
++
++	/*
++	 * The async event FD has to deliver IB_EVENT_DEVICE_FATAL even after
++	 * disassociation, so cleaning the event list must only happen after
++	 * release. The user knows it has reached the end of the event stream
++	 * when it sees IB_EVENT_DEVICE_FATAL.
++	 */
++	uverbs_uobject_get(uobj);
++	ret = uverbs_uobject_fd_release(inode, filp);
++	ib_uverbs_free_event_queue(&event_file->ev_queue);
++	uverbs_uobject_put(uobj);
++	return ret;
++}
++
+ DECLARE_UVERBS_NAMED_METHOD(
+ 	UVERBS_METHOD_ASYNC_EVENT_ALLOC,
+ 	UVERBS_ATTR_FD(UVERBS_ATTR_ASYNC_EVENT_ALLOC_FD_HANDLE,
 -- 
 2.25.1
 
