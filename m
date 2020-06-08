@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA865C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A96C020872
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45C02074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660993;
-	bh=Hqb3JCTnyLZlBBfWXKLb88KwmLzBABnD3JY3uKw1hDQ=;
+	s=default; t=1591660999;
+	bh=wbYwXQ9fZ1bUQK204E1Xiyk8j1I9U0O1glk0foaH9KA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVybv4dH32Njtxdu6qOWAfyuA9hBtxJ5y8Bnw7NqvKD+AK27AqlFTIzbWPlm9CWzs
-	 fufSxkxvi+qMAxEr0yLrjW7JW9wde2PXwvmYU/mtFDzlvQ8yHUyJCXhlZctQqLR4W2
-	 ud0gLO1GXzrloSWuM95afdVkeNCgJnLOGhxAQSfs=
+	b=vr0CdjQG7EzUlcm8b/DmBnG9py11hg3tmYzxPJdU7ynk0syBdedDS/evAbSuztFzB
+	 8u2x6xeJPAexTk6S6t4DaoSpLdyagTvj5YBuikZZNAHNbbfxmlZijLNmlWR6ZSIIH1
+	 QyTNNZnaFY2Db3eyrBCnsnwrv9lhsU4ic7iA1xYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732303AbgFIADM (ORCPT
+        id S1731234AbgFHXV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:03:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46382 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730847AbgFHXV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:59 -0400
+        id S1730454AbgFHXR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:17:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82F9B2089D;
-        Mon,  8 Jun 2020 23:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED9C8208A7;
+        Mon,  8 Jun 2020 23:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658519;
-        bh=Hqb3JCTnyLZlBBfWXKLb88KwmLzBABnD3JY3uKw1hDQ=;
+        s=default; t=1591658249;
+        bh=wbYwXQ9fZ1bUQK204E1Xiyk8j1I9U0O1glk0foaH9KA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+S4BDD0WIXqw8XxemUKew6NKbNcrWVM7gVEmrB3awo/MypafECEYF2CuD6EeMQY/
-         IxMkGrz0BDroUB80klR92fU10FdvBFyzWnqsIyPRwC3NOTk/uH6UiP4LvnP5xyyhKK
-         HFpfgN1vd14+dikFZM0iFDc/uTN4pVzPWcbaO9yo=
+        b=0SEASelfM+C4d7IkTd1PyTfI/m0wLDoT4NIA+2laqkibphSVPLEjms4TQyesUPhGG
+         tk6J53OiVwijcsstg4GFAHwpAvQnlAXsKDi69BN+bJL8hKcKINyx9WKg9HhHtTkPBE
+         RYNB36HLXSVLfTRfvlF2QSAS0HSwUwMBs3oJOLRc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 145/175] btrfs: qgroup: mark qgroup inconsistent if we're inherting snapshot to a new qgroup
-Date:   Mon,  8 Jun 2020 19:18:18 -0400
-Message-Id: <20200608231848.3366970-145-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 259/606] ARM: dts: omap4-droid4: Fix flakey wlan by disabling internal pull for gpio
+Date:   Mon,  8 Jun 2020 19:06:24 -0400
+Message-Id: <20200608231211.3363633-259-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,121 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit cbab8ade585a18c4334b085564d9d046e01a3f70 ]
+[ Upstream commit 30fa60c678eaa27b8f2a531920d77f7184658f73 ]
 
-[BUG]
-For the following operation, qgroup is guaranteed to be screwed up due
-to snapshot adding to a new qgroup:
+The wlan on droid4 is flakey on some devices, and experiments have shown this
+gets fixed if we disable the internal pull for wlan gpio interrupt line.
 
-  # mkfs.btrfs -f $dev
-  # mount $dev $mnt
-  # btrfs qgroup en $mnt
-  # btrfs subv create $mnt/src
-  # xfs_io -f -c "pwrite 0 1m" $mnt/src/file
-  # sync
-  # btrfs qgroup create 1/0 $mnt/src
-  # btrfs subv snapshot -i 1/0 $mnt/src $mnt/snapshot
-  # btrfs qgroup show -prce $mnt/src
-  qgroupid         rfer         excl     max_rfer     max_excl parent  child
-  --------         ----         ----     --------     -------- ------  -----
-  0/5          16.00KiB     16.00KiB         none         none ---     ---
-  0/257         1.02MiB     16.00KiB         none         none ---     ---
-  0/258         1.02MiB     16.00KiB         none         none 1/0     ---
-  1/0             0.00B        0.00B         none         none ---     0/258
-	        ^^^^^^^^^^^^^^^^^^^^
+The symptoms are that the wlan connection is very slow and almost useless
+with lots of wlcore firmware reboot warnings in the dmesg.
 
-[CAUSE]
-The problem is in btrfs_qgroup_inherit(), we don't have good enough
-check to determine if the new relation would break the existing
-accounting.
+In addition to configuring the wlan gpio pulls, let's also configure the rest
+of the wlan sd pins. We have not configured those eariler as we're booting
+using kexec.
 
-Unlike btrfs_add_qgroup_relation(), which has proper check to determine
-if we can do quick update without a rescan, in btrfs_qgroup_inherit() we
-can even assign a snapshot to multiple qgroups.
-
-[FIX]
-Fix it by manually marking qgroup inconsistent for snapshot inheritance.
-
-For subvolume creation, since all its extents are exclusively owned, we
-don't need to rescan.
-
-In theory, we should call relation check like quick_update_accounting()
-when doing qgroup inheritance and inform user about qgroup accounting
-inconsistency.
-
-But we don't have good mechanism to relay that back to the user in the
-snapshot creation context, thus we can only silently mark the qgroup
-inconsistent.
-
-Anyway, user shouldn't use qgroup inheritance during snapshot creation,
-and should add qgroup relationship after snapshot creation by 'btrfs
-qgroup assign', which has a much better UI to inform user about qgroup
-inconsistent and kick in rescan automatically.
-
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../boot/dts/motorola-mapphone-common.dtsi    | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 590defdf8860..b94f6f99e90d 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -2636,6 +2636,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 	struct btrfs_root *quota_root;
- 	struct btrfs_qgroup *srcgroup;
- 	struct btrfs_qgroup *dstgroup;
-+	bool need_rescan = false;
- 	u32 level_size = 0;
- 	u64 nums;
+diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+index 9067e0ef4240..01ea9a1e2c86 100644
+--- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
++++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+@@ -367,6 +367,8 @@ &mmc2 {
+ };
  
-@@ -2779,6 +2780,13 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 				goto unlock;
- 		}
- 		++i_qgroups;
+ &mmc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc3_pins>;
+ 	vmmc-supply = <&wl12xx_vmmc>;
+ 	/* uart2_tx.sdmmc3_dat1 pad as wakeirq */
+ 	interrupts-extended = <&wakeupgen GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH
+@@ -472,6 +474,37 @@ OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)
+ 		>;
+ 	};
+ 
++	/*
++	 * Android uses PIN_OFF_INPUT_PULLDOWN | PIN_INPUT_PULLUP | MUX_MODE3
++	 * for gpio_100, but the internal pull makes wlan flakey on some
++	 * devices. Off mode value should be tested if we have off mode working
++	 * later on.
++	 */
++	mmc3_pins: pinmux_mmc3_pins {
++		pinctrl-single,pins = <
++		/* 0x4a10008e gpmc_wait2.gpio_100 d23 */
++		OMAP4_IOPAD(0x08e, PIN_INPUT | MUX_MODE3)
 +
-+		/*
-+		 * If we're doing a snapshot, and adding the snapshot to a new
-+		 * qgroup, the numbers are guaranteed to be incorrect.
-+		 */
-+		if (srcid)
-+			need_rescan = true;
- 	}
- 
- 	for (i = 0; i <  inherit->num_ref_copies; ++i, i_qgroups += 2) {
-@@ -2798,6 +2806,9 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 
- 		dst->rfer = src->rfer - level_size;
- 		dst->rfer_cmpr = src->rfer_cmpr - level_size;
++		/* 0x4a100102 abe_mcbsp1_dx.sdmmc3_dat2 ab25 */
++		OMAP4_IOPAD(0x102, PIN_INPUT_PULLUP | MUX_MODE1)
 +
-+		/* Manually tweaking numbers certainly needs a rescan */
-+		need_rescan = true;
- 	}
- 	for (i = 0; i <  inherit->num_excl_copies; ++i, i_qgroups += 2) {
- 		struct btrfs_qgroup *src;
-@@ -2816,6 +2827,7 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- 
- 		dst->excl = src->excl + level_size;
- 		dst->excl_cmpr = src->excl_cmpr + level_size;
-+		need_rescan = true;
- 	}
- 
- unlock:
-@@ -2823,6 +2835,8 @@ int btrfs_qgroup_inherit(struct btrfs_trans_handle *trans, u64 srcid,
- out:
- 	if (!committing)
- 		mutex_unlock(&fs_info->qgroup_ioctl_lock);
-+	if (need_rescan)
-+		fs_info->qgroup_flags |= BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT;
- 	return ret;
- }
- 
++		/* 0x4a100104 abe_mcbsp1_fsx.sdmmc3_dat3 ac27 */
++		OMAP4_IOPAD(0x104, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a100118 uart2_cts.sdmmc3_clk ab26 */
++		OMAP4_IOPAD(0x118, PIN_INPUT | MUX_MODE1)
++
++		/* 0x4a10011a uart2_rts.sdmmc3_cmd ab27 */
++		OMAP4_IOPAD(0x11a, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a10011c uart2_rx.sdmmc3_dat0 aa25 */
++		OMAP4_IOPAD(0x11c, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a10011e uart2_tx.sdmmc3_dat1 aa26 */
++		OMAP4_IOPAD(0x11e, PIN_INPUT_PULLUP | MUX_MODE1)
++		>;
++	};
++
+ 	/* gpmc_ncs0.gpio_50 */
+ 	poweroff_gpio: pinmux_poweroff_pins {
+ 		pinctrl-single,pins = <
 -- 
 2.25.1
 
