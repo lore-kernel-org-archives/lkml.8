@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8415FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2044C20B80
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6489B20897
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657934;
-	bh=aEP02lQk8Eppzu1tPNyW3ofaAG76xRvKQ1rxZav90zY=;
+	s=default; t=1591657938;
+	bh=XzVd0lZiloehEKPbTGLt3ZQh1nAHtnKqZP4nBXUXmCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XbRajNW/7w263vQ5XD+CnigNku+K6nxr2yMQ4MuOJJIsGPDM1smUWqjF0R175V/rY
-	 KPH/fzExBJmWkqxATytCt+U/YpL+wNa+fdQbYqsn/5lTfL3w/cBuFUWoMuOgRC2kHL
-	 nMnE/Rr36dx1fZ3FD00S4BCCXWpi2xrPJaU7aEBo=
+	b=xuYbibWK3D1Rnr3gymzIqDjGSiouaZCpLWlzMm40b53m6SJDHrY3MELt+hSIOMllU
+	 mT0+IuIr3o+8Bkmaol5ZvaOV5NlztpXLa33KxMFWgVGFanKkKI1DDJcDwlioLM2SCH
+	 xLlHq20YuBuXwjcaiTxpc0xQYMUlvJZfh98Q2yTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgFHXMM (ORCPT
+        id S1728257AbgFHXMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbgFHXK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:29 -0400
+        id S1728691AbgFHXKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B357820890;
-        Mon,  8 Jun 2020 23:10:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B157A208C7;
+        Mon,  8 Jun 2020 23:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657828;
-        bh=aEP02lQk8Eppzu1tPNyW3ofaAG76xRvKQ1rxZav90zY=;
+        s=default; t=1591657833;
+        bh=XzVd0lZiloehEKPbTGLt3ZQh1nAHtnKqZP4nBXUXmCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RN1ZzCl/uy+FObuqj9NMPHO8W7ohiTIPEnNAty/mSt0vLElMlmMnJGh69nTOwpB0+
-         zVDu+wwlt5nnU7OYfTfzbJFatO7xQS9l/07C9Pp4H2VvLyaPtcMhqcXiw7dmSPfB+s
-         Ygip7gNhC1eJPVJ68WrERCCJ+p2BrBX4+uNk6mMM=
+        b=obkwcwzbpIbWtaeuj3uZqhjNZKUyVz44iNhHIHkj+DqV3nn32cMLZrpqauoctFwGE
+         /Mjp6ugZhc93HLt1aAfzqTyz4DjZkp57qbikKyhxqVoZAcu0BXFnBXTUUX4ecsenGh
+         ZOwc/pCSHZIag9Ng1l6vTv8VJVoZDIIeZZdLN1Ho=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 199/274] md: don't flush workqueue unconditionally in md_open
-Date:   Mon,  8 Jun 2020 19:04:52 -0400
-Message-Id: <20200608230607.3361041-199-sashal@kernel.org>
+Cc:     Vlad Buslov <vladbu@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 203/274] selftests: fix flower parent qdisc
+Date:   Mon,  8 Jun 2020 19:04:56 -0400
+Message-Id: <20200608230607.3361041-203-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,161 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+From: Vlad Buslov <vladbu@mellanox.com>
 
-[ Upstream commit f6766ff6afff70e2aaf39e1511e16d471de7c3ae ]
+[ Upstream commit 0531b0357ba37464e5c0033e1b7c69bbf5ecd8fb ]
 
-We need to check mddev->del_work before flush workqueu since the purpose
-of flush is to ensure the previous md is disappeared. Otherwise the similar
-deadlock appeared if LOCKDEP is enabled, it is due to md_open holds the
-bdev->bd_mutex before flush workqueue.
+Flower tests used to create ingress filter with specified parent qdisc
+"parent ffff:" but dump them on "ingress". With recent commit that fixed
+tcm_parent handling in dump those are not considered same parent anymore,
+which causes iproute2 tc to emit additional "parent ffff:" in first line of
+filter dump output. The change in output causes filter match in tests to
+fail.
 
-kernel: [  154.522645] ======================================================
-kernel: [  154.522647] WARNING: possible circular locking dependency detected
-kernel: [  154.522650] 5.6.0-rc7-lp151.27-default #25 Tainted: G           O
-kernel: [  154.522651] ------------------------------------------------------
-kernel: [  154.522653] mdadm/2482 is trying to acquire lock:
-kernel: [  154.522655] ffff888078529128 ((wq_completion)md_misc){+.+.}, at: flush_workqueue+0x84/0x4b0
-kernel: [  154.522673]
-kernel: [  154.522673] but task is already holding lock:
-kernel: [  154.522675] ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
-kernel: [  154.522691]
-kernel: [  154.522691] which lock already depends on the new lock.
-kernel: [  154.522691]
-kernel: [  154.522694]
-kernel: [  154.522694] the existing dependency chain (in reverse order) is:
-kernel: [  154.522696]
-kernel: [  154.522696] -> #4 (&bdev->bd_mutex){+.+.}:
-kernel: [  154.522704]        __mutex_lock+0x87/0x950
-kernel: [  154.522706]        __blkdev_get+0x79/0x590
-kernel: [  154.522708]        blkdev_get+0x65/0x140
-kernel: [  154.522709]        blkdev_get_by_dev+0x2f/0x40
-kernel: [  154.522716]        lock_rdev+0x3d/0x90 [md_mod]
-kernel: [  154.522719]        md_import_device+0xd6/0x1b0 [md_mod]
-kernel: [  154.522723]        new_dev_store+0x15e/0x210 [md_mod]
-kernel: [  154.522728]        md_attr_store+0x7a/0xc0 [md_mod]
-kernel: [  154.522732]        kernfs_fop_write+0x117/0x1b0
-kernel: [  154.522735]        vfs_write+0xad/0x1a0
-kernel: [  154.522737]        ksys_write+0xa4/0xe0
-kernel: [  154.522745]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522748]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522749]
-kernel: [  154.522749] -> #3 (&mddev->reconfig_mutex){+.+.}:
-kernel: [  154.522752]        __mutex_lock+0x87/0x950
-kernel: [  154.522756]        new_dev_store+0xc9/0x210 [md_mod]
-kernel: [  154.522759]        md_attr_store+0x7a/0xc0 [md_mod]
-kernel: [  154.522761]        kernfs_fop_write+0x117/0x1b0
-kernel: [  154.522763]        vfs_write+0xad/0x1a0
-kernel: [  154.522765]        ksys_write+0xa4/0xe0
-kernel: [  154.522767]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522769]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522770]
-kernel: [  154.522770] -> #2 (kn->count#253){++++}:
-kernel: [  154.522775]        __kernfs_remove+0x253/0x2c0
-kernel: [  154.522778]        kernfs_remove+0x1f/0x30
-kernel: [  154.522780]        kobject_del+0x28/0x60
-kernel: [  154.522783]        mddev_delayed_delete+0x24/0x30 [md_mod]
-kernel: [  154.522786]        process_one_work+0x2a7/0x5f0
-kernel: [  154.522788]        worker_thread+0x2d/0x3d0
-kernel: [  154.522793]        kthread+0x117/0x130
-kernel: [  154.522795]        ret_from_fork+0x3a/0x50
-kernel: [  154.522796]
-kernel: [  154.522796] -> #1 ((work_completion)(&mddev->del_work)){+.+.}:
-kernel: [  154.522800]        process_one_work+0x27e/0x5f0
-kernel: [  154.522802]        worker_thread+0x2d/0x3d0
-kernel: [  154.522804]        kthread+0x117/0x130
-kernel: [  154.522806]        ret_from_fork+0x3a/0x50
-kernel: [  154.522807]
-kernel: [  154.522807] -> #0 ((wq_completion)md_misc){+.+.}:
-kernel: [  154.522813]        __lock_acquire+0x1392/0x1690
-kernel: [  154.522816]        lock_acquire+0xb4/0x1a0
-kernel: [  154.522818]        flush_workqueue+0xab/0x4b0
-kernel: [  154.522821]        md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522823]        __blkdev_get+0xea/0x590
-kernel: [  154.522825]        blkdev_get+0x65/0x140
-kernel: [  154.522828]        do_dentry_open+0x1d1/0x380
-kernel: [  154.522831]        path_openat+0x567/0xcc0
-kernel: [  154.522834]        do_filp_open+0x9b/0x110
-kernel: [  154.522836]        do_sys_openat2+0x201/0x2a0
-kernel: [  154.522838]        do_sys_open+0x57/0x80
-kernel: [  154.522840]        do_syscall_64+0x64/0x2b0
-kernel: [  154.522842]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522844]
-kernel: [  154.522844] other info that might help us debug this:
-kernel: [  154.522844]
-kernel: [  154.522846] Chain exists of:
-kernel: [  154.522846]   (wq_completion)md_misc --> &mddev->reconfig_mutex --> &bdev->bd_mutex
-kernel: [  154.522846]
-kernel: [  154.522850]  Possible unsafe locking scenario:
-kernel: [  154.522850]
-kernel: [  154.522852]        CPU0                    CPU1
-kernel: [  154.522853]        ----                    ----
-kernel: [  154.522854]   lock(&bdev->bd_mutex);
-kernel: [  154.522856]                                lock(&mddev->reconfig_mutex);
-kernel: [  154.522858]                                lock(&bdev->bd_mutex);
-kernel: [  154.522860]   lock((wq_completion)md_misc);
-kernel: [  154.522861]
-kernel: [  154.522861]  *** DEADLOCK ***
-kernel: [  154.522861]
-kernel: [  154.522864] 1 lock held by mdadm/2482:
-kernel: [  154.522865]  #0: ffff88804efa9338 (&bdev->bd_mutex){+.+.}, at: __blkdev_get+0x79/0x590
-kernel: [  154.522868]
-kernel: [  154.522868] stack backtrace:
-kernel: [  154.522873] CPU: 1 PID: 2482 Comm: mdadm Tainted: G           O      5.6.0-rc7-lp151.27-default #25
-kernel: [  154.522875] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-kernel: [  154.522878] Call Trace:
-kernel: [  154.522881]  dump_stack+0x8f/0xcb
-kernel: [  154.522884]  check_noncircular+0x194/0x1b0
-kernel: [  154.522888]  ? __lock_acquire+0x1392/0x1690
-kernel: [  154.522890]  __lock_acquire+0x1392/0x1690
-kernel: [  154.522893]  lock_acquire+0xb4/0x1a0
-kernel: [  154.522895]  ? flush_workqueue+0x84/0x4b0
-kernel: [  154.522898]  flush_workqueue+0xab/0x4b0
-kernel: [  154.522900]  ? flush_workqueue+0x84/0x4b0
-kernel: [  154.522905]  ? md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522908]  md_open+0xb6/0xc0 [md_mod]
-kernel: [  154.522910]  __blkdev_get+0xea/0x590
-kernel: [  154.522912]  ? bd_acquire+0xc0/0xc0
-kernel: [  154.522914]  blkdev_get+0x65/0x140
-kernel: [  154.522916]  ? bd_acquire+0xc0/0xc0
-kernel: [  154.522918]  do_dentry_open+0x1d1/0x380
-kernel: [  154.522921]  path_openat+0x567/0xcc0
-kernel: [  154.522923]  ? __lock_acquire+0x380/0x1690
-kernel: [  154.522926]  do_filp_open+0x9b/0x110
-kernel: [  154.522929]  ? __alloc_fd+0xe5/0x1f0
-kernel: [  154.522935]  ? kmem_cache_alloc+0x28c/0x630
-kernel: [  154.522939]  ? do_sys_openat2+0x201/0x2a0
-kernel: [  154.522941]  do_sys_openat2+0x201/0x2a0
-kernel: [  154.522944]  do_sys_open+0x57/0x80
-kernel: [  154.522946]  do_syscall_64+0x64/0x2b0
-kernel: [  154.522948]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-kernel: [  154.522951] RIP: 0033:0x7f98d279d9ae
+Prevent parent qdisc output when dumping filters in flower tests by always
+correctly specifying "ingress" parent both when creating and dumping
+filters.
 
-And md_alloc also flushed the same workqueue, but the thing is different
-here. Because all the paths call md_alloc don't hold bdev->bd_mutex, and
-the flush is necessary to avoid race condition, so leave it as it is.
-
-Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: a7df4870d79b ("net_sched: fix tcm_parent in tc filter dump")
+Signed-off-by: Vlad Buslov <vladbu@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../selftests/tc-testing/tc-tests/filters/tests.json        | 6 +++---
+ tools/testing/selftests/tc-testing/tdc_batch.py             | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 271e8a587354..41eead9cbee9 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -7752,7 +7752,8 @@ static int md_open(struct block_device *bdev, fmode_t mode)
- 		 */
- 		mddev_put(mddev);
- 		/* Wait until bdev->bd_disk is definitely gone */
--		flush_workqueue(md_misc_wq);
-+		if (work_pending(&mddev->del_work))
-+			flush_workqueue(md_misc_wq);
- 		/* Then retry the open from the top */
- 		return -ERESTARTSYS;
- 	}
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+index 8877f7b2b809..12aa4bc1f6a0 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/filters/tests.json
+@@ -32,7 +32,7 @@
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 parent ffff: handle 0xffffffff flower action ok",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip pref 1 ingress handle 0xffffffff flower action ok",
+         "expExitCode": "0",
+         "verifyCmd": "$TC filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower.*handle 0xffffffff",
+@@ -77,9 +77,9 @@
+         },
+         "setup": [
+             "$TC qdisc add dev $DEV2 ingress",
+-            "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
++            "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop"
+         ],
+-        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 parent ffff: flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
++        "cmdUnderTest": "$TC filter add dev $DEV2 protocol ip prio 1 ingress flower dst_mac e4:11:22:11:4a:51 src_mac e4:11:22:11:4a:50 ip_proto tcp src_ip 1.1.1.1 dst_ip 2.2.2.2 action drop",
+         "expExitCode": "2",
+         "verifyCmd": "$TC -s filter show dev $DEV2 ingress",
+         "matchPattern": "filter protocol ip pref 1 flower chain 0 handle",
+diff --git a/tools/testing/selftests/tc-testing/tdc_batch.py b/tools/testing/selftests/tc-testing/tdc_batch.py
+index 6a2bd2cf528e..995f66ce43eb 100755
+--- a/tools/testing/selftests/tc-testing/tdc_batch.py
++++ b/tools/testing/selftests/tc-testing/tdc_batch.py
+@@ -72,21 +72,21 @@ mac_prefix = args.mac_prefix
+ 
+ def format_add_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter add dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter add dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
+ 
+ 
+ def format_rep_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter replace dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter replace dev {} {} protocol ip ingress handle {} "
+             " flower {} src_mac {} dst_mac {} action drop {}".format(
+                 device, prio, handle, skip, src_mac, dst_mac, share_action))
+ 
+ 
+ def format_del_filter(device, prio, handle, skip, src_mac, dst_mac,
+                       share_action):
+-    return ("filter del dev {} {} protocol ip parent ffff: handle {} "
++    return ("filter del dev {} {} protocol ip ingress handle {} "
+             "flower".format(device, prio, handle))
+ 
+ 
 -- 
 2.25.1
 
