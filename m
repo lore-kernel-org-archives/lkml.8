@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD836C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F092A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11802078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664820;
-	bh=qKFBRQ81UcIuTIqoYgZMaUlWh2lfDV9p7Zr182yEqCk=;
+	s=default; t=1591664826;
+	bh=y7lqrBx/D7jiTGIX4ToNnfEsGw9sMUvRFXEY8rjU3Xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLwRS42Pzz6CzORQoTS7XdAyr2eLhaiSXum8BHa//GCif7ZEkwWTinxV6mdsfavOG
-	 yLajfZ5JqdPTVU9NvxQCSkuMbGr3Y0RNRJvrQIwImCD05H6m2RSbbcpLVxQZYOUfR/
-	 FZEA3tOdinK3vPOGt+kid8qKB14L7/SfBUOyVdsM=
+	b=f4W7DyOkQgiWSVMOFS42PCtC4qKzXKhO2eZYqa2+1UrixlcoQC7OWzpCgYHDPES4Q
+	 fZB0e0+2zseqUAtX6U8pPYQW10lYR7s3mKW6Wf/Eg5CoAGDenPf6tC/HQRPLQJ2tNM
+	 YNmiKZeN4bPLNRMBBehP4HYfw6v+AwIq4LQuIEIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgFHXHG (ORCPT
+        id S2388184AbgFIBHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49982 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 21:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgFHXGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:40 -0400
+        id S1727788AbgFHXHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BDC22078C;
-        Mon,  8 Jun 2020 23:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D0F62089D;
+        Mon,  8 Jun 2020 23:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657599;
-        bh=qKFBRQ81UcIuTIqoYgZMaUlWh2lfDV9p7Zr182yEqCk=;
+        s=default; t=1591657625;
+        bh=y7lqrBx/D7jiTGIX4ToNnfEsGw9sMUvRFXEY8rjU3Xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHoSNLueWKRyrz7VJJg1kLdM4tsHszdCF1tmjmiU9U7ACp0uKVOFBVpKWSp8smY09
-         m3bQEyTnRlZO7U+EHcW42NJlGspQRySYBBrCi70hcSsHLfKrmr4uTkWHMtjwbkWU1w
-         biCJYns9VMn5rqw7VfTIEITQ5V1fr2IOBXJljvBo=
+        b=Pc1+/Q9FKAGVZ85Rh1do+eVuQUk0X3EifDv3hkq+8TgwJKUZwlAa1Idg6pwFz5YCO
+         xWoLYi6WLoxtvfyZJ96vfaGDtL471eO5N++p3t0rHHdFvoa0DgSKjGK41eXrYRVJCs
+         1+iKFTTds88VqGsHIKqNtyc0v+1YT415lVUs21sQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Green <evgreen@chromium.org>,
-        Shobhit Srivastava <shobhit.srivastava@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 025/274] spi: pxa2xx: Apply CS clk quirk to BXT
-Date:   Mon,  8 Jun 2020 19:01:58 -0400
-Message-Id: <20200608230607.3361041-25-sashal@kernel.org>
+Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
+        Bart van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 045/274] block: reset mapping if failed to update hardware queue count
+Date:   Mon,  8 Jun 2020 19:02:18 -0400
+Message-Id: <20200608230607.3361041-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -62,42 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Weiping Zhang <zhangweiping@didiglobal.com>
 
-[ Upstream commit 6eefaee4f2d366a389da0eb95e524ba82bf358c4 ]
+[ Upstream commit aa880ad690ab6d4c53934af85fb5a43e69ecb0f5 ]
 
-With a couple allies at Intel, and much badgering, I got confirmation
-from Intel that at least BXT suffers from the same SPI chip-select
-issue as Cannonlake (and beyond). The issue being that after going
-through runtime suspend/resume, toggling the chip-select line without
-also sending data does nothing.
+When we increase hardware queue count, blk_mq_update_queue_map will
+reset the mapping between cpu and hardware queue base on the hardware
+queue count(set->nr_hw_queues). The mapping cannot be reset if it
+encounters error in blk_mq_realloc_hw_ctxs, but the fallback flow will
+continue using it, then blk_mq_map_swqueue will touch a invalid memory,
+because the mapping points to a wrong hctx.
 
-Add the quirk to BXT to briefly toggle dynamic clock gating off and
-on, forcing the fabric to wake up enough to notice the CS register
-change.
+blktest block/030:
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Cc: Shobhit Srivastava <shobhit.srivastava@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20200427163238.1.Ib1faaabe236e37ea73be9b8dcc6aa034cb3c8804@changeid
-Signed-off-by: Mark Brown <broonie@kernel.org>
+null_blk: module loaded
+Increasing nr_hw_queues to 8 fails, fallback to 1
+==================================================================
+BUG: KASAN: null-ptr-deref in blk_mq_map_swqueue+0x2f2/0x830
+Read of size 8 at addr 0000000000000128 by task nproc/8541
+
+CPU: 5 PID: 8541 Comm: nproc Not tainted 5.7.0-rc4-dbg+ #3
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.13.0-0-gf21b5a4-rebuilt.opensuse.org 04/01/2014
+Call Trace:
+dump_stack+0xa5/0xe6
+__kasan_report.cold+0x65/0xbb
+kasan_report+0x45/0x60
+check_memory_region+0x15e/0x1c0
+__kasan_check_read+0x15/0x20
+blk_mq_map_swqueue+0x2f2/0x830
+__blk_mq_update_nr_hw_queues+0x3df/0x690
+blk_mq_update_nr_hw_queues+0x32/0x50
+nullb_device_submit_queues_store+0xde/0x160 [null_blk]
+configfs_write_file+0x1c4/0x250 [configfs]
+__vfs_write+0x4c/0x90
+vfs_write+0x14b/0x2d0
+ksys_write+0xdd/0x180
+__x64_sys_write+0x47/0x50
+do_syscall_64+0x6f/0x310
+entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
+Tested-by: Bart van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 73d2a65d0b6e..20dcbd35611a 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -150,6 +150,7 @@ static const struct lpss_config lpss_platforms[] = {
- 		.tx_threshold_hi = 48,
- 		.cs_sel_shift = 8,
- 		.cs_sel_mask = 3 << 8,
-+		.cs_clk_stays_gated = true,
- 	},
- 	{	/* LPSS_CNL_SSP */
- 		.offset = 0x200,
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index b1772de26a74..98a702761e2c 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3353,8 +3353,8 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+ 
+ 	prev_nr_hw_queues = set->nr_hw_queues;
+ 	set->nr_hw_queues = nr_hw_queues;
+-	blk_mq_update_queue_map(set);
+ fallback:
++	blk_mq_update_queue_map(set);
+ 	list_for_each_entry(q, &set->tag_list, tag_set_list) {
+ 		blk_mq_realloc_hw_ctxs(set, q);
+ 		if (q->nr_hw_queues != set->nr_hw_queues) {
 -- 
 2.25.1
 
