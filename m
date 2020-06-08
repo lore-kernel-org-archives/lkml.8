@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B89206C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527ED206C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662640;
-	bh=NIvfnbAIw5QiLc2iBkfIAXHTrtRPZKfqnsnYAz9ZcoA=;
+	s=default; t=1591662654;
+	bh=akfoKOdXJ3nxOOg0mrjcJjFqNX/LMUB2tLMlgEKl0Ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a7Ot8QF/0Zs7+c89g30TbSNCvL3bjExJXgBGtdlMEPbkfqegW8Bpd0IC4Q0caZxjr
-	 mg7JXWu7ZgCspDXFjoBewSqDL57a0hQDZR0rxDGUJhNjfUOhP0y3yNPAKvauz8tnOa
-	 7QUHCWA9duF1jDyeqtAVslqqKQ9wA93o86wc/EMQ=
+	b=C7RtyPI3yhjF37rl/RDNks9H8iwEpHuU/ZMEqpadqc+4+7EQOQ6wgk67WRXTepCrH
+	 h/TEPcajMZBJCqHyg+yOjEPOKEXQAY+J8QbnuSL5XwZZi4szfAM2P3rfLfDn8SAUYd
+	 9CBlwJa7l4fxWCfQic7FJKIodEIamDaEy8bTk5uA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgFIAai (ORCPT
+        id S2387792AbgFIAau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbgFHXPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:44 -0400
+        id S1728689AbgFHXPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3B9220659;
-        Mon,  8 Jun 2020 23:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38AF920774;
+        Mon,  8 Jun 2020 23:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658144;
-        bh=NIvfnbAIw5QiLc2iBkfIAXHTrtRPZKfqnsnYAz9ZcoA=;
+        s=default; t=1591658141;
+        bh=akfoKOdXJ3nxOOg0mrjcJjFqNX/LMUB2tLMlgEKl0Ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zAxxxOiPCejfHMqXscA2CSRKCvkRBq0/TkIGlgCdQbm4O9rOx60/9FHTj+D9Hcm/H
-         2MdfuaqIumRBfCjavvluZ2v6QX8VH+RV9sFfdZtlZfa8thuzxoObCsw+v85XT4zL0U
-         KhN36uMRH3HNZf0Hc9S6c52bnAxw6006N2JDdHWs=
+        b=yHYX2tjLt64JrKpstAgIYB3y2WKt+EoK+gr5w43MnY5l3NzXaT7KsTfzOt1Jq4vc5
+         ngIpXJdKbUnjIKDVi75n/FvuXjeg2mnnBb7lAV6P2NDAW/9HyXbeSckUmTcC7QymeD
+         8UAxJhKdOx+IBqfZoFp1ECxDk3LNSE/dMqpx4x40=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stable@vger.kernel.org,
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 177/606] iio: adc: ti-ads8344: Fix channel selection
-Date:   Mon,  8 Jun 2020 19:05:02 -0400
-Message-Id: <20200608231211.3363633-177-sashal@kernel.org>
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 174/606] iio: adc: stm32-dfsdm: fix device used to request dma
+Date:   Mon,  8 Jun 2020 19:04:59 -0400
+Message-Id: <20200608231211.3363633-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,71 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit bcfa1e253d2e329e1ebab5c89f3c73f6dd17606c upstream.
+commit b455d06e6fb3c035711e8aab1ca18082ccb15d87 upstream.
 
-During initial submission the selection of the channel was done using
-the scan_index member of the iio_chan_spec structure. It was an abuse
-because this member is supposed to be used with a buffer so it was
-removed.
+DMA channel request should use device struct from platform device struct.
+Currently it's using iio device struct. But at this stage when probing,
+device struct isn't yet registered (e.g. device_register is done in
+iio_device_register). Since commit 71723a96b8b1 ("dmaengine: Create
+symlinks between DMA channels and slaves"), a warning message is printed
+as the links in sysfs can't be created, due to device isn't yet registered:
+- Cannot create DMA slave symlink
+- Cannot create DMA dma:rx symlink
 
-However there was still the need to be able to known how to select a
-channel, the correct member to store this information is address.
+Fix this by using device struct from platform device to request dma chan.
 
-Thanks to this it is possible to select any other channel than the
-channel 0.
+Fixes: eca949800d2d ("IIO: ADC: add stm32 DFSDM support for PDM microphone")
 
-Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iio/adc/ti-ads8344.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/iio/adc/ti-ads8344.c b/drivers/iio/adc/ti-ads8344.c
-index abe4b56c847c..8a8792010c20 100644
---- a/drivers/iio/adc/ti-ads8344.c
-+++ b/drivers/iio/adc/ti-ads8344.c
-@@ -32,16 +32,17 @@ struct ads8344 {
- 	u8 rx_buf[3];
+diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+index 76a60d93fe23..506bf519f64c 100644
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -62,7 +62,7 @@ enum sd_converter_type {
+ 
+ struct stm32_dfsdm_dev_data {
+ 	int type;
+-	int (*init)(struct iio_dev *indio_dev);
++	int (*init)(struct device *dev, struct iio_dev *indio_dev);
+ 	unsigned int num_channels;
+ 	const struct regmap_config *regmap_cfg;
  };
+@@ -1365,11 +1365,12 @@ static void stm32_dfsdm_dma_release(struct iio_dev *indio_dev)
+ 	}
+ }
  
--#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
-+#define ADS8344_VOLTAGE_CHANNEL(chan, addr)				\
- 	{								\
- 		.type = IIO_VOLTAGE,					\
- 		.indexed = 1,						\
- 		.channel = chan,					\
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.address = addr,					\
+-static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
++static int stm32_dfsdm_dma_request(struct device *dev,
++				   struct iio_dev *indio_dev)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+ 
+-	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
++	adc->dma_chan = dma_request_chan(dev, "rx");
+ 	if (IS_ERR(adc->dma_chan)) {
+ 		int ret = PTR_ERR(adc->dma_chan);
+ 
+@@ -1425,7 +1426,7 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
+ 					  &adc->dfsdm->ch_list[ch->channel]);
+ }
+ 
+-static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
++static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+@@ -1452,10 +1453,10 @@ static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
+ 	indio_dev->num_channels = 1;
+ 	indio_dev->channels = ch;
+ 
+-	return stm32_dfsdm_dma_request(indio_dev);
++	return stm32_dfsdm_dma_request(dev, indio_dev);
+ }
+ 
+-static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
++static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
+ {
+ 	struct iio_chan_spec *ch;
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
+@@ -1499,17 +1500,17 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
+ 	init_completion(&adc->completion);
+ 
+ 	/* Optionally request DMA */
+-	ret = stm32_dfsdm_dma_request(indio_dev);
++	ret = stm32_dfsdm_dma_request(dev, indio_dev);
+ 	if (ret) {
+ 		if (ret != -ENODEV) {
+ 			if (ret != -EPROBE_DEFER)
+-				dev_err(&indio_dev->dev,
++				dev_err(dev,
+ 					"DMA channel request failed with %d\n",
+ 					ret);
+ 			return ret;
+ 		}
+ 
+-		dev_dbg(&indio_dev->dev, "No DMA support\n");
++		dev_dbg(dev, "No DMA support\n");
+ 		return 0;
  	}
  
--#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
-+#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, addr)		\
- 	{								\
- 		.type = IIO_VOLTAGE,					\
- 		.indexed = 1,						\
-@@ -50,6 +51,7 @@ struct ads8344 {
- 		.differential = 1,					\
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.address = addr,					\
- 	}
+@@ -1622,7 +1623,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
+ 		adc->dfsdm->fl_list[adc->fl_id].sync_mode = val;
  
- static const struct iio_chan_spec ads8344_channels[] = {
-@@ -105,7 +107,7 @@ static int ads8344_read_raw(struct iio_dev *iio,
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 		mutex_lock(&adc->lock);
--		*value = ads8344_adc_conversion(adc, channel->scan_index,
-+		*value = ads8344_adc_conversion(adc, channel->address,
- 						channel->differential);
- 		mutex_unlock(&adc->lock);
- 		if (*value < 0)
+ 	adc->dev_data = dev_data;
+-	ret = dev_data->init(iio);
++	ret = dev_data->init(dev, iio);
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.25.1
 
