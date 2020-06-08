@@ -2,164 +2,73 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F71FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73826C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA5A2076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 582EA20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgFHJhi (ORCPT
+        id S1729232AbgFHJhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:37:38 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:37165 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728956AbgFHJhf (ORCPT
+        Mon, 8 Jun 2020 05:37:36 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:16558 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729144AbgFHJhe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:37:35 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Jun 2020 02:37:33 -0700
+        Mon, 8 Jun 2020 05:37:34 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 08 Jun 2020 02:37:33 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 08 Jun 2020 02:37:31 -0700
+  by ironmsg04-sd.qualcomm.com with ESMTP; 08 Jun 2020 02:37:30 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 7B811217EC; Mon,  8 Jun 2020 15:07:29 +0530 (IST)
+        id 3D25B217F6; Mon,  8 Jun 2020 15:07:29 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         jassisinghbrar@gmail.com, sivaprak@codeaurora.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V3 3/4] mailbox: qcom: Add clock driver name in apcs mailbox driver data
-Date:   Mon,  8 Jun 2020 15:07:26 +0530
-Message-Id: <1591609047-29995-4-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V3 0/4] Add ipq6018 apcs mailbox driver
+Date:   Mon,  8 Jun 2020 15:07:23 +0530
+Message-Id: <1591609047-29995-1-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591609047-29995-1-git-send-email-sivaprak@codeaurora.org>
-References: <1591609047-29995-1-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some apcs mailbox devices supports a clock driver, the compatible
-strings of devices supporting clock driver along with the clock driver
-name are maintained in a separate structure within the mailbox driver.
-And the clock driver is added based on device match.
+The ipq6018 devices has apcs block for ipc interrupts, this block also
+provides a clock controller which provides cpu clocks.
 
-With increase in number of devices supporting the clock feature move the
-clock driver name inside the driver data. so that we can use a single
-API to get the register offset of mailbox driver and clock driver name
-together, and the clock driver will be added based on the driver data.
+This series adds support for the apcs block found in ipq6018 devices.
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 56 ++++++++++++++++++++++-----------
- 1 file changed, 38 insertions(+), 18 deletions(-)
+This series was originally part of ipq6018 apss clock controller series
+https://lkml.org/lkml/2020/5/27/637
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index eeebafd..49eebb5 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -24,6 +24,31 @@ struct qcom_apcs_ipc {
- 	struct platform_device *clk;
- };
- 
-+struct qcom_apcs_ipc_data {
-+	int offset;
-+	char *clk_name;
-+};
-+
-+static const struct qcom_apcs_ipc_data ipq8074_apcs_data = {
-+	.offset = 8, .clk_name = NULL
-+};
-+
-+static const struct qcom_apcs_ipc_data msm8916_apcs_data = {
-+	.offset = 8, .clk_name = "qcom-apcs-msm8916-clk"
-+};
-+
-+static const struct qcom_apcs_ipc_data msm8996_apcs_data = {
-+	.offset = 16, .clk_name = NULL
-+};
-+
-+static const struct qcom_apcs_ipc_data msm8998_apcs_data = {
-+	.offset = 8, .clk_name = NULL
-+};
-+
-+static const struct qcom_apcs_ipc_data apps_shared_apcs_data = {
-+	.offset = 12, .clk_name = NULL
-+};
-+
- static const struct regmap_config apcs_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
-@@ -48,17 +73,12 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
- static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- {
- 	struct qcom_apcs_ipc *apcs;
-+	const struct qcom_apcs_ipc_data *apcs_data;
- 	struct regmap *regmap;
- 	struct resource *res;
--	unsigned long offset;
- 	void __iomem *base;
- 	unsigned long i;
- 	int ret;
--	const struct of_device_id apcs_clk_match_table[] = {
--		{ .compatible = "qcom,msm8916-apcs-kpss-global", },
--		{ .compatible = "qcom,qcs404-apcs-apps-global", },
--		{}
--	};
- 
- 	apcs = devm_kzalloc(&pdev->dev, sizeof(*apcs), GFP_KERNEL);
- 	if (!apcs)
-@@ -73,10 +93,10 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	offset = (unsigned long)of_device_get_match_data(&pdev->dev);
-+	apcs_data = of_device_get_match_data(&pdev->dev);
- 
- 	apcs->regmap = regmap;
--	apcs->offset = offset;
-+	apcs->offset = apcs_data->offset;
- 
- 	/* Initialize channel identifiers */
- 	for (i = 0; i < ARRAY_SIZE(apcs->mbox_chans); i++)
-@@ -93,9 +113,9 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	if (of_match_device(apcs_clk_match_table, &pdev->dev)) {
-+	if (apcs_data->clk_name) {
- 		apcs->clk = platform_device_register_data(&pdev->dev,
--							  "qcom-apcs-msm8916-clk",
-+							  apcs_data->clk_name,
- 							  PLATFORM_DEVID_NONE,
- 							  NULL, 0);
- 		if (IS_ERR(apcs->clk))
-@@ -119,14 +139,14 @@ static int qcom_apcs_ipc_remove(struct platform_device *pdev)
- 
- /* .data is the offset of the ipc register within the global block */
- static const struct of_device_id qcom_apcs_ipc_of_match[] = {
--	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = (void *)8 },
--	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
--	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
--	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
--	{ .compatible = "qcom,sc7180-apss-shared", .data = (void *)12 },
--	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
--	{ .compatible = "qcom,sm8150-apss-shared", .data = (void *)12 },
--	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = (void *)8 },
-+	{ .compatible = "qcom,ipq8074-apcs-apps-global", .data = &ipq8074_apcs_data },
-+	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = &msm8916_apcs_data },
-+	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = &msm8996_apcs_data },
-+	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = &msm8998_apcs_data },
-+	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = &msm8916_apcs_data },
-+	{ .compatible = "qcom,sc7180-apss-shared", .data = &apps_shared_apcs_data },
-+	{ .compatible = "qcom,sdm845-apss-shared", .data = &apps_shared_apcs_data },
-+	{ .compatible = "qcom,sm8150-apss-shared", .data = &apps_shared_apcs_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
+[V3]
+ * Divided mailbox driver into two patches, patch 3 will re-arrange the code.
+   patch 4 adds support for ipq6018 apcs
+[V2]
+ * Addressed Bjorn's review comment, created a new structure for driver
+   data.
+ * Re-arranged compatible string based on sort order.
+ * dropped dts patch from this series, will send it separately
+
+Sivaprakash Murugesan (3):
+  dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
+  dt-bindings: mailbox: Add dt-bindings for ipq6018 apcs global block
+  mailbox: qcom: Add ipq6018 apcs compatible
+
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 88 -------------------
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 99 ++++++++++++++++++++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            | 61 +++++++++----
+ 3 files changed, 142 insertions(+), 106 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+
 -- 
 2.7.4
 
