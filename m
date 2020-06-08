@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE48C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B07C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48EC20812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D469C20774
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663556;
-	bh=jBjbkxP1iiBAvE6/2yxT7Dz+8SrZGpJOC8QuAynfkJg=;
+	s=default; t=1591663559;
+	bh=3RrjVjucjaQRqQ0XpzGPy0vis0dtQ3RxxAdXgJmrAC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7u0tHQmjFqQGlfmoL5L53GxXrB0BU1xBAs0BCgNoX1inU9vm+KKYAirJIhzGTVKE
-	 bZp9X5jyBJ6jfOLLwkTwP6YPGDla5A2OKLD2Z5mLS4lENxfpHlGIX3DZDJGwZt35qJ
-	 KQEB1hQFAWTM8pOkcB5O3nQDkAYJrk0Pk6StXN0I=
+	b=XJuFCuQ3JUuf5AEw3pll//9lx+h5Mqp4DMx37ANlrRFRH0SJ8b5NSV8/7BBtv3/95
+	 tZxB84ToeZBqI29E3wtF32inZwK0HFQGkdsf8GCDxImMvFQoh63xlZKHzKz7mbcnKz
+	 FGbJmo+x4XOAY/mB+JPux3GMdLwql4oWpBSfNJPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgFHXLp (ORCPT
+        id S1730864AbgFIAp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56160 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:45:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728575AbgFHXKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:07 -0400
+        id S1728234AbgFHXLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 085FD21475;
-        Mon,  8 Jun 2020 23:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3648D21508;
+        Mon,  8 Jun 2020 23:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657806;
-        bh=jBjbkxP1iiBAvE6/2yxT7Dz+8SrZGpJOC8QuAynfkJg=;
+        s=default; t=1591657903;
+        bh=3RrjVjucjaQRqQ0XpzGPy0vis0dtQ3RxxAdXgJmrAC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iJlh3yd5WIbE+DTy8OIJfwMVrSYJl8biQCYJWZyD20KTjGH2NXiBjc9rZ4EYBC9cQ
-         lQB/UKzKyZB1ieVanEytud1jIow5c258sIFYgfcVHG/aV8h5h0Fz2Dyppoh1kzxsyM
-         jZsYVdALjx97LIW3Ix9hw8o4I5WXGuoeQSI/UvxY=
+        b=nJZYs9AHcvtBqOZ/0evyRmorFpTprlg5EB1khVH8jcjf+InDEJUCWRnzCRNPIMCB2
+         +JHYBI2xMHDPNgrjU08S3odzdDSLWU5jym3aRwbC6Bpla/46ivNxNo+R1BeLlAZGwo
+         ATPhWgygZm9NucV5o+h3AMTvg/UzOIRGJiLSoVYo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 183/274] nvme-tcp: use bh_lock in data_ready
-Date:   Mon,  8 Jun 2020 19:04:36 -0400
-Message-Id: <20200608230607.3361041-183-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 256/274] cpuidle: Fix three reference count leaks
+Date:   Mon,  8 Jun 2020 19:05:49 -0400
+Message-Id: <20200608230607.3361041-256-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -59,40 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 386e5e6e1aa90b479fcf0467935922df8524393d ]
+[ Upstream commit c343bf1ba5efcbf2266a1fe3baefec9cc82f867f ]
 
-data_ready may be invoked from send context or from
-softirq, so need bh locking for that.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-Fixes: 3f2304f8c6d6 ("nvme-tcp: add NVMe over TCP host driver")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Previous commit "b8eb718348b8" fixed a similar problem.
+
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+[ rjw: Subject ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cpuidle/sysfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index c15a92163c1f..4862fa962011 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -794,11 +794,11 @@ static void nvme_tcp_data_ready(struct sock *sk)
- {
- 	struct nvme_tcp_queue *queue;
+diff --git a/drivers/cpuidle/sysfs.c b/drivers/cpuidle/sysfs.c
+index cdeedbf02646..55107565b319 100644
+--- a/drivers/cpuidle/sysfs.c
++++ b/drivers/cpuidle/sysfs.c
+@@ -515,7 +515,7 @@ static int cpuidle_add_state_sysfs(struct cpuidle_device *device)
+ 		ret = kobject_init_and_add(&kobj->kobj, &ktype_state_cpuidle,
+ 					   &kdev->kobj, "state%d", i);
+ 		if (ret) {
+-			kfree(kobj);
++			kobject_put(&kobj->kobj);
+ 			goto error_state;
+ 		}
+ 		cpuidle_add_s2idle_attr_group(kobj);
+@@ -646,7 +646,7 @@ static int cpuidle_add_driver_sysfs(struct cpuidle_device *dev)
+ 	ret = kobject_init_and_add(&kdrv->kobj, &ktype_driver_cpuidle,
+ 				   &kdev->kobj, "driver");
+ 	if (ret) {
+-		kfree(kdrv);
++		kobject_put(&kdrv->kobj);
+ 		return ret;
+ 	}
  
--	read_lock(&sk->sk_callback_lock);
-+	read_lock_bh(&sk->sk_callback_lock);
- 	queue = sk->sk_user_data;
- 	if (likely(queue && queue->rd_enabled))
- 		queue_work_on(queue->io_cpu, nvme_tcp_wq, &queue->io_work);
--	read_unlock(&sk->sk_callback_lock);
-+	read_unlock_bh(&sk->sk_callback_lock);
- }
+@@ -740,7 +740,7 @@ int cpuidle_add_sysfs(struct cpuidle_device *dev)
+ 	error = kobject_init_and_add(&kdev->kobj, &ktype_cpuidle, &cpu_dev->kobj,
+ 				   "cpuidle");
+ 	if (error) {
+-		kfree(kdev);
++		kobject_put(&kdev->kobj);
+ 		return error;
+ 	}
  
- static void nvme_tcp_write_space(struct sock *sk)
 -- 
 2.25.1
 
