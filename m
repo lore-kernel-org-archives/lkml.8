@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D04C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE8A20810
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17F820853
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663749;
-	bh=Loi2gZDSbCrROCbcd1K6A4WD/voItVzsRtt0yXur1NA=;
+	s=default; t=1591663759;
+	bh=dvPNjkEX0FRyQBVGbL9mveFmQllKPKlqmbk8N+PJ+1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CyZMOMpdW/grcWzYcYm4d6tURldif2WvdV1B3AwUKHvSt8SmeTGL2kGgcnvJeLc0F
-	 jinnObAiV+TtWlKeqm70VK1jjn4AKRJgtI0DwaDspKdFZYBZWlilww7/dvZT1lnU6Z
-	 CVejPnzsQw9ZRsbaXA6WKB1VNzgyzguU/urLVKEk=
+	b=fUtBxZMkqbsN0OGKV8/ahuRXo/STR+RM0U28Q03mDCP3NRr4mO99Z+oj5XZX56O8G
+	 6csfRwBmzZXiE9QEwLrWVUg000VWMbxyZvI31hffPYS7TaaBItN8HWfx0AqwFBd+WT
+	 WD9l51Sll/oJkofNH6T4wgQYsaz5Ms9GcgCFllUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387703AbgFIAtI (ORCPT
+        id S1728107AbgFIAtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57240 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbgFHXKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:50 -0400
+        id S1728773AbgFHXKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:10:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C64A7208C7;
-        Mon,  8 Jun 2020 23:10:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B6A20897;
+        Mon,  8 Jun 2020 23:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657849;
-        bh=Loi2gZDSbCrROCbcd1K6A4WD/voItVzsRtt0yXur1NA=;
+        s=default; t=1591657848;
+        bh=dvPNjkEX0FRyQBVGbL9mveFmQllKPKlqmbk8N+PJ+1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1E6owgM8CFu4BVrfqMfNwKpYtI2LnpUAeUBupYRG43OS374qsOgi0P5QzUbTPhSHA
-         0TviYxSv133O8z5LScWYlHrzXCiI1QLw2qV2lpXq0UrXAtmaFQAsvdS81Xif0bSQKv
-         mGoSR/tjl8bX1f+Mv6xBTxTO84LD5BcvGDv9Shn8=
+        b=tbqZljDgp0br6CsAunnVnprxXiFjawfgh8pSeJWATURW6D24Yytg59ZlOmgpi1aQx
+         jTBzbG3rwYKjIQ+24+hPtJFg0aYhHY9YuYDGIhmKZkV3n13pgMEpjJIGaQkwg1TXkI
+         2oXidCR8sJc/FxZQrUNSWqbRNndqUNF/cK+71Jac=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huaixin Chang <changhuaixin@linux.alibaba.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Segall <bsegall@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 215/274] sched: Defend cfs and rt bandwidth quota against overflow
-Date:   Mon,  8 Jun 2020 19:05:08 -0400
-Message-Id: <20200608230607.3361041-215-sashal@kernel.org>
+Cc:     Brian Foster <bfoster@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 214/274] xfs: don't fail verifier on empty attr3 leaf block
+Date:   Mon,  8 Jun 2020 19:05:07 -0400
+Message-Id: <20200608230607.3361041-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -60,106 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huaixin Chang <changhuaixin@linux.alibaba.com>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit d505b8af58912ae1e1a211fabc9995b19bd40828 ]
+[ Upstream commit f28cef9e4daca11337cb9f144cdebedaab69d78c ]
 
-When users write some huge number into cpu.cfs_quota_us or
-cpu.rt_runtime_us, overflow might happen during to_ratio() shifts of
-schedulable checks.
+The attr fork can transition from shortform to leaf format while
+empty if the first xattr doesn't fit in shortform. While this empty
+leaf block state is intended to be transient, it is technically not
+due to the transactional implementation of the xattr set operation.
 
-to_ratio() could be altered to avoid unnecessary internal overflow, but
-min_cfs_quota_period is less than 1 << BW_SHIFT, so a cutoff would still
-be needed. Set a cap MAX_BW for cfs_quota_us and rt_runtime_us to
-prevent overflow.
+We historically have a couple of bandaids to work around this
+problem. The first is to hold the buffer after the format conversion
+to prevent premature writeback of the empty leaf buffer and the
+second is to bypass the xattr count check in the verifier during
+recovery. The latter assumes that the xattr set is also in the log
+and will be recovered into the buffer soon after the empty leaf
+buffer is reconstructed. This is not guaranteed, however.
 
-Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Link: https://lkml.kernel.org/r/20200425105248.60093-1-changhuaixin@linux.alibaba.com
+If the filesystem crashes after the format conversion but before the
+xattr set that induced it, only the format conversion may exist in
+the log. When recovered, this creates a latent corrupted state on
+the inode as any subsequent attempts to read the buffer fail due to
+verifier failure. This includes further attempts to set xattrs on
+the inode or attempts to destroy the attr fork, which prevents the
+inode from ever being removed from the unlinked list.
+
+To avoid this condition, accept that an empty attr leaf block is a
+valid state and remove the count check from the verifier. This means
+that on rare occasions an attr fork might exist in an unexpected
+state, but is otherwise consistent and functional. Note that we
+retain the logic to avoid racing with metadata writeback to reduce
+the window where this can occur.
+
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c  |  8 ++++++++
- kernel/sched/rt.c    | 12 +++++++++++-
- kernel/sched/sched.h |  2 ++
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_attr_leaf.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0bbf387d0f19..5eccfb816d23 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7386,6 +7386,8 @@ static DEFINE_MUTEX(cfs_constraints_mutex);
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index 1d67cc9f4209..5d0b55281f9d 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -308,14 +308,6 @@ xfs_attr3_leaf_verify(
+ 	if (fa)
+ 		return fa;
  
- const u64 max_cfs_quota_period = 1 * NSEC_PER_SEC; /* 1s */
- static const u64 min_cfs_quota_period = 1 * NSEC_PER_MSEC; /* 1ms */
-+/* More than 203 days if BW_SHIFT equals 20. */
-+static const u64 max_cfs_runtime = MAX_BW * NSEC_PER_USEC;
- 
- static int __cfs_schedulable(struct task_group *tg, u64 period, u64 runtime);
- 
-@@ -7413,6 +7415,12 @@ static int tg_set_cfs_bandwidth(struct task_group *tg, u64 period, u64 quota)
- 	if (period > max_cfs_quota_period)
- 		return -EINVAL;
- 
-+	/*
-+	 * Bound quota to defend quota against overflow during bandwidth shift.
-+	 */
-+	if (quota != RUNTIME_INF && quota > max_cfs_runtime)
-+		return -EINVAL;
-+
+-	/*
+-	 * In recovery there is a transient state where count == 0 is valid
+-	 * because we may have transitioned an empty shortform attr to a leaf
+-	 * if the attr didn't fit in shortform.
+-	 */
+-	if (!xfs_log_in_recovery(mp) && ichdr.count == 0)
+-		return __this_address;
+-
  	/*
- 	 * Prevent race between setting of cfs_rq->runtime_enabled and
- 	 * unthrottle_offline_cfs_rqs().
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index df11d88c9895..6d60ba21ed29 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -9,6 +9,8 @@
- 
- int sched_rr_timeslice = RR_TIMESLICE;
- int sysctl_sched_rr_timeslice = (MSEC_PER_SEC / HZ) * RR_TIMESLICE;
-+/* More than 4 hours if BW_SHIFT equals 20. */
-+static const u64 max_rt_runtime = MAX_BW;
- 
- static int do_sched_rt_period_timer(struct rt_bandwidth *rt_b, int overrun);
- 
-@@ -2585,6 +2587,12 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
- 	if (rt_period == 0)
- 		return -EINVAL;
+ 	 * firstused is the block offset of the first name info structure.
+ 	 * Make sure it doesn't go off the block or crash into the header.
+@@ -331,6 +323,13 @@ xfs_attr3_leaf_verify(
+ 	    (char *)bp->b_addr + ichdr.firstused)
+ 		return __this_address;
  
 +	/*
-+	 * Bound quota to defend quota against overflow during bandwidth shift.
-+	 */
-+	if (rt_runtime != RUNTIME_INF && rt_runtime > max_rt_runtime)
-+		return -EINVAL;
-+
- 	mutex_lock(&rt_constraints_mutex);
- 	err = __rt_schedulable(tg, rt_period, rt_runtime);
- 	if (err)
-@@ -2702,7 +2710,9 @@ static int sched_rt_global_validate(void)
- 		return -EINVAL;
- 
- 	if ((sysctl_sched_rt_runtime != RUNTIME_INF) &&
--		(sysctl_sched_rt_runtime > sysctl_sched_rt_period))
-+		((sysctl_sched_rt_runtime > sysctl_sched_rt_period) ||
-+		 ((u64)sysctl_sched_rt_runtime *
-+			NSEC_PER_USEC > max_rt_runtime)))
- 		return -EINVAL;
- 
- 	return 0;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index db3a57675ccf..1f58677a8f23 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1918,6 +1918,8 @@ extern void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se);
- #define BW_SHIFT		20
- #define BW_UNIT			(1 << BW_SHIFT)
- #define RATIO_SHIFT		8
-+#define MAX_BW_BITS		(64 - BW_SHIFT)
-+#define MAX_BW			((1ULL << MAX_BW_BITS) - 1)
- unsigned long to_ratio(u64 period, u64 runtime);
- 
- extern void init_entity_runnable_average(struct sched_entity *se);
++	 * NOTE: This verifier historically failed empty leaf buffers because
++	 * we expect the fork to be in another format. Empty attr fork format
++	 * conversions are possible during xattr set, however, and format
++	 * conversion is not atomic with the xattr set that triggers it. We
++	 * cannot assume leaf blocks are non-empty until that is addressed.
++	*/
+ 	buf_end = (char *)bp->b_addr + mp->m_attr_geo->blksize;
+ 	for (i = 0, ent = entries; i < ichdr.count; ent++, i++) {
+ 		fa = xfs_attr3_leaf_verify_entry(mp, buf_end, leaf, &ichdr,
 -- 
 2.25.1
 
