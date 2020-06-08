@@ -2,99 +2,109 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC54C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45FCC20774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0593D2076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:16:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G0nx0Gf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgFHOP6 (ORCPT
+        id S1729994AbgFHOQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:15:58 -0400
-Received: from www62.your-server.de ([213.133.104.62]:38058 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgFHOP6 (ORCPT
+        Mon, 8 Jun 2020 10:16:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37280 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729969AbgFHOQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:15:58 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jiIYy-0006tM-It; Mon, 08 Jun 2020 16:15:44 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jiIYy-000EuU-4N; Mon, 08 Jun 2020 16:15:44 +0200
-Subject: Re: [PATCH] bpf_stats_record: Add null check after malloc
-To:     gaurav singh <gaurav1086@gmail.com>, ast@kernel.org, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        davem@davemloft.net, kuba@kernel.org, awk@kernel.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <CAFAFadBRhEwuFCa-kMNPgRF8+gHycVvWcGfvbX0Pmjb6wt4SZA@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <f26fa159-f850-5a21-14ab-a8b9cc48a125@iogearbox.net>
-Date:   Mon, 8 Jun 2020 16:15:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 8 Jun 2020 10:16:49 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058EGinr019012;
+        Mon, 8 Jun 2020 14:16:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=hMtLnsxq3vYQ/tEpRoQzUmipcu6sgK4LnOH203zQx4E=;
+ b=G0nx0Gf8Uh4VA+1LxkU7UFWjNI4PFoOuDQYk+OW8H7SPy0W34qSHbPUy+xkbj8j01ubd
+ +4SD65KiM4eoppE+Ri8s2TKSZL+xv6doW5KSbuII4spO/MEE8/v4GiqSmlSATGelvH64
+ HRdE5ysljtGBGKd+kj05ARJRLC00TUgVzLaUXQeoGj/UichKPpzLKQ90YpP9yN2ZoAzb
+ avszYLXSbuPEbFog3QTn6cKPhg6wABjE8FmOYckPL3W2mFhhqJXfWO8swIKas+DS8GWh
+ nhFg1nsXj4xAs9/f8YBNRnwpGC4JgiK1Kldl7dqBILudJ1Uk5HoLmxoeLbUrC1aYvyo6 tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31g33ky435-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 08 Jun 2020 14:16:44 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058E4NNa057384;
+        Mon, 8 Jun 2020 14:16:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 31gmwq0dyp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jun 2020 14:16:39 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 058EGaS2004302;
+        Mon, 8 Jun 2020 14:16:37 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 07:16:36 -0700
+Date:   Mon, 8 Jun 2020 17:16:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        Tetsuhiro Kohada <kohada.t2@gmail.com>
+Cc:     Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] exfat: Fix pontential use after free in
+ exfat_load_upcase_table()
+Message-ID: <20200608141629.GA1912173@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <CAFAFadBRhEwuFCa-kMNPgRF8+gHycVvWcGfvbX0Pmjb6wt4SZA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25837/Mon Jun  8 14:50:11 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 spamscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 adultscore=0 spamscore=0
+ cotscore=-2147483648 malwarescore=0 phishscore=0 mlxscore=0 clxscore=1011
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006080106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/7/20 1:46 AM, gaurav singh wrote:
-> Hi,
-> 
-> The memset call is made right after malloc call. To fix this, add the null
-> check right after malloc and then do memset.
-> 
-> Please find the patch below.
-> 
-> Thanks and regards,
-> Gaurav.
+This code calls brelse(bh) and then dereferences "bh" on the next line
+resulting in a possible use after free.  The brelse() should just be
+moved down a line.
 
-Hello Gaurav, your patch is whitespace damaged. Please try and resubmit with git-send-email.
+Fixes: b676fdbcf4c8 ("exfat: standardize checksum calculation")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ fs/exfat/nls.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  From 8083a35f85c6047f0377883ed66ae147f85fd3a9 Mon Sep 17 00:00:00 2001
-> From: Gaurav Singh <gaurav1086@gmail.com>
-> Date: Sat, 6 Jun 2020 19:42:53 -0400
-> Subject: [PATCH] bpf_stats_record: Add null check after malloc
-> 
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->   samples/bpf/xdp_rxq_info_user.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/samples/bpf/xdp_rxq_info_user.c
-> b/samples/bpf/xdp_rxq_info_user.c
-> index 4fe47502ebed..c44b9a844066 100644
-> --- a/samples/bpf/xdp_rxq_info_user.c
-> +++ b/samples/bpf/xdp_rxq_info_user.c
-> @@ -233,11 +233,11 @@ static struct stats_record *alloc_stats_record(void)
->    int i;
-> 
->    rec = malloc(sizeof(*rec));
-> - memset(rec, 0, sizeof(*rec));
->    if (!rec) {
->    fprintf(stderr, "Mem alloc error\n");
->    exit(EXIT_FAIL_MEM);
->    }
-> + memset(rec, 0, sizeof(*rec));
->    rec->rxq = alloc_record_per_rxq();
->    for (i = 0; i < nr_rxqs; i++)
->    rec->rxq[i].cpu = alloc_record_per_cpu();
-> 
+diff --git a/fs/exfat/nls.c b/fs/exfat/nls.c
+index c1ec056954974..57b5a7a4d1f7a 100644
+--- a/fs/exfat/nls.c
++++ b/fs/exfat/nls.c
+@@ -692,8 +692,8 @@ static int exfat_load_upcase_table(struct super_block *sb,
+ 				index++;
+ 			}
+ 		}
+-		brelse(bh);
+ 		chksum = exfat_calc_chksum32(bh->b_data, i, chksum, CS_DEFAULT);
++		brelse(bh);
+ 	}
+ 
+ 	if (index >= 0xFFFF && utbl_checksum == chksum)
+-- 
+2.26.2
 
