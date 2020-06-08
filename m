@@ -7,49 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0ABB2078D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A461320659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660734;
-	bh=9/zpqtvcvi/aDsfbxPRxBceob0fFvjcGLgPlCn/Du6Y=;
+	s=default; t=1591660740;
+	bh=Q2Jr5bwK7AWpm1F1YiVCtAdICbovuPznWwL2R1tA0v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLI1Jr5m3hNyJocPQ4WYRDMc8oQNdBuC1tvGQhhCnXmI6Ox5F35A77z49K0hAGPXs
-	 9PhPeS2lFL9uHL1GULQzLhlvixrV1ge0+iWjysNqWhuaxgxc2lEuYjOHMKAe8GGo27
-	 uSjCRTnRJggUJT6uf/d24pRCKz33Im5DJj7blppI=
+	b=PBpi+/ntZXFq+YNIbLGX4mSy1rS1Mzze7Fx6XJMKK9W9IVo8SLRN0z+hTO2nrphq0
+	 vPtxIkIVr4xAiyge4Pg84wjhRGhZ14gQBFQc1tbJF67VH0u4gucXzqPPeBJdMYweMk
+	 7v6GfExQRno9+E+vRaj52xJbTBsM59ak+dH0mEK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbgFHXXH (ORCPT
+        id S1732196AbgFHX67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40308 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729070AbgFHXSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:11 -0400
+        id S1730718AbgFHXXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB5052083E;
-        Mon,  8 Jun 2020 23:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D69C2086A;
+        Mon,  8 Jun 2020 23:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658291;
-        bh=9/zpqtvcvi/aDsfbxPRxBceob0fFvjcGLgPlCn/Du6Y=;
+        s=default; t=1591658583;
+        bh=Q2Jr5bwK7AWpm1F1YiVCtAdICbovuPznWwL2R1tA0v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ksueB7PYm8KRNguIr9Q/tkdu0AOoxKY6JLEv3vNoOJbMQ3t226RBmsVNR97BvIMJn
-         lZxzOomoVWQfQYMiJzQ4YXK8x78tE4BGyRP/HPglS5nx/eGx96T6As0WX/z5bMvkZJ
-         KhYXMaQGGCCSOvDTBfWmgaVr8bEPIc506OgSg7ww=
+        b=T6ZPwhjHnUG+HJTAv5VX5exKm4h71SgkAOj/H8Mabw7/UoSW/8dQHoOYbEKOeXFvi
+         KxsS2S7kznvBZKqSnUIVwDJy/dLvsh4BJk4yMo+4ZZh6ZlhIW0j3HM34Dhjd/q2GUU
+         zPp0mwj25SspzSfl2Kg7bQzH9YLzUBQ0zLV7Vavo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Green <evgreen@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 295/606] Input: synaptics-rmi4 - really fix attn_data use-after-free
-Date:   Mon,  8 Jun 2020 19:07:00 -0400
-Message-Id: <20200608231211.3363633-295-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 020/106] spi: dw: Enable interrupts in accordance with DMA xfer mode
+Date:   Mon,  8 Jun 2020 19:21:12 -0400
+Message-Id: <20200608232238.3368589-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,47 +68,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit d5a5e5b5fa7b86c05bf073acc0ba98fa280174ec ]
+[ Upstream commit 43dba9f3f98c2b184a19f856f06fe22817bfd9e0 ]
 
-Fix a use-after-free noticed by running with KASAN enabled. If
-rmi_irq_fn() is run twice in a row, then rmi_f11_attention() (among
-others) will end up reading from drvdata->attn_data.data, which was
-freed and left dangling in rmi_irq_fn().
+It's pointless to track the Tx overrun interrupts if Rx-only SPI
+transfer is issued. Similarly there is no need in handling the Rx
+overrun/underrun interrupts if Tx-only SPI transfer is executed.
+So lets unmask the interrupts only if corresponding SPI
+transactions are implied.
 
-Commit 55edde9fff1a ("Input: synaptics-rmi4 - prevent UAF reported by
-KASAN") correctly identified and analyzed this bug. However the attempted
-fix only NULLed out a local variable, missing the fact that
-drvdata->attn_data is a struct, not a pointer.
-
-NULL out the correct pointer in the driver data to prevent the attention
-functions from copying from it.
-
-Fixes: 55edde9fff1a ("Input: synaptics-rmi4 - prevent UAF reported by KASAN")
-Fixes: b908d3cd812a ("Input: synaptics-rmi4 - allow to add attention data")
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200427145537.1.Ic8f898e0147beeee2c005ee7b20f1aebdef1e7eb@changeid
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Link: https://lore.kernel.org/r/20200522000806.7381-3-Sergey.Semin@baikalelectronics.ru
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/rmi4/rmi_driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-dw-mid.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index 190b9974526b..c18e1a25bca6 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -205,7 +205,7 @@ static irqreturn_t rmi_irq_fn(int irq, void *dev_id)
+diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+index f7ec8b98e6db..e1b34ef9a31c 100644
+--- a/drivers/spi/spi-dw-mid.c
++++ b/drivers/spi/spi-dw-mid.c
+@@ -228,19 +228,23 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
  
- 	if (count) {
- 		kfree(attn_data.data);
--		attn_data.data = NULL;
-+		drvdata->attn_data.data = NULL;
- 	}
+ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
+ {
+-	u16 dma_ctrl = 0;
++	u16 imr = 0, dma_ctrl = 0;
  
- 	if (!kfifo_is_empty(&drvdata->attn_fifo))
+ 	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
+ 	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
+ 
+-	if (xfer->tx_buf)
++	if (xfer->tx_buf) {
+ 		dma_ctrl |= SPI_DMA_TDMAE;
+-	if (xfer->rx_buf)
++		imr |= SPI_INT_TXOI;
++	}
++	if (xfer->rx_buf) {
+ 		dma_ctrl |= SPI_DMA_RDMAE;
++		imr |= SPI_INT_RXUI | SPI_INT_RXOI;
++	}
+ 	dw_writel(dws, DW_SPI_DMACR, dma_ctrl);
+ 
+ 	/* Set the interrupt mask */
+-	spi_umask_intr(dws, SPI_INT_TXOI | SPI_INT_RXUI | SPI_INT_RXOI);
++	spi_umask_intr(dws, imr);
+ 
+ 	dws->transfer_handler = dma_transfer;
+ 
 -- 
 2.25.1
 
