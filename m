@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94186C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 432F721556
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A42F21532
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658103;
-	bh=dCH3TA1DCiaFdQ1F7bwY/Y5DKvvY+zxPYFzhURPkjUM=;
+	s=default; t=1591658110;
+	bh=nppkGNsgd8sT4knkdEAZDk058TvFrYu7+dw5e2lghy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qn9xSv2dmYe0DFri3DztFmcohtQMd74DnzDMhnny74dvv3gaeTNfrGcjTSMSWvQom
-	 kbS7/wvzw0wJY3sCOZaiIg+D7wbv0EBUgorW3DgaRWIJwdF7oFJERbkOT2pjGmbmAA
-	 OGw0t92M5gn1vJNRAKhy20EiovsyOCDBwjexZ9nk=
+	b=YoG0tL45yDTz21haDQxR/eA8WRWmo0CQb7Eh0PZzRXVT6UjxyzPoNc98IsPOpa4hC
+	 vFg/0XKvm1orBfteO4wmcn05oY8AUZGxL8M/BJV5M7zsJUa8/cm89AlttOmzJ9ohP1
+	 x6LmYWfKPIpOoel2ZiK4iKBWyh2LeXFYugbfB648=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgFHXPC (ORCPT
+        id S1729990AbgFHXPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:15:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729107AbgFHXM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:29 -0400
+        id S1729149AbgFHXMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2D120897;
-        Mon,  8 Jun 2020 23:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE75620C09;
+        Mon,  8 Jun 2020 23:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657949;
-        bh=dCH3TA1DCiaFdQ1F7bwY/Y5DKvvY+zxPYFzhURPkjUM=;
+        s=default; t=1591657954;
+        bh=nppkGNsgd8sT4knkdEAZDk058TvFrYu7+dw5e2lghy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NQ+tn1mlFxMw1n+s0+rRdP9kEDIVtLaQF9lQEiS6hdBw+O8J1cJMg2d9RI2ht/L7V
-         uxuRcTy6KkNmmgGZeckd37wZUiaO9CULQD7MMK6JRW1FtTWUyMOv9vcqQkIgBuN+Oy
-         w2TTiK1jMkB0pVJpLRouUPh+3T7TWcHvYnDDMhMI=
+        b=P24vqFSG/WfAilz2gceX1IdeT1TaSjpYVx4l4ufBQqxOW7wEexUL5dw8zVuCi5S7D
+         e4uiE7nCL1YXKmKvI6KyJSD/n8loPvnttKsGJHQcV02uLI5uymcQ16R33v+jY5lh6H
+         dnwrKV71UXIXWK/53sLBV4QoFPFFHDHLw8StGmMs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 014/606] gcc-10: disable 'restrict' warning for now
-Date:   Mon,  8 Jun 2020 19:02:19 -0400
-Message-Id: <20200608231211.3363633-14-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH AUTOSEL 5.6 019/606] bootconfig: Fix to prevent warning message if no bootconfig option
+Date:   Mon,  8 Jun 2020 19:02:24 -0400
+Message-Id: <20200608231211.3363633-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -59,68 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit adc71920969870dfa54e8f40dac8616284832d02 upstream.
+commit 611d0a95d46b0977a530b4d538948c69d447b001 upstream.
 
-gcc-10 now warns about passing aliasing pointers to functions that take
-restricted pointers.
+Commit de462e5f1071 ("bootconfig: Fix to remove bootconfig
+data from initrd while boot") causes a cosmetic regression
+on dmesg, which warns "no bootconfig data" message without
+bootconfig cmdline option.
 
-That's actually a great warning, and if we ever start using 'restrict'
-in the kernel, it might be quite useful.  But right now we don't, and it
-turns out that the only thing this warns about is an idiom where we have
-declared a few functions to be "printf-like" (which seems to make gcc
-pick up the restricted pointer thing), and then we print to the same
-buffer that we also use as an input.
+Fix setup_boot_config() by moving no bootconfig check after
+commandline option check.
 
-And people do that as an odd concatenation pattern, with code like this:
+Link: http://lkml.kernel.org/r/9b1ba335-071d-c983-89a4-2677b522dcc8@molgen.mpg.de
+Link: http://lkml.kernel.org/r/158916116468.21787.14558782332170588206.stgit@devnote2
 
-    #define sysfs_show_gen_prop(buffer, fmt, ...) \
-        snprintf(buffer, PAGE_SIZE, "%s"fmt, buffer, __VA_ARGS__)
-
-where we have 'buffer' as both the destination of the final result, and
-as the initial argument.
-
-Yes, it's a bit questionable.  And outside of the kernel, people do have
-standard declarations like
-
-    int snprintf( char *restrict buffer, size_t bufsz,
-                  const char *restrict format, ... );
-
-where that output buffer is marked as a restrict pointer that cannot
-alias with any other arguments.
-
-But in the context of the kernel, that 'use snprintf() to concatenate to
-the end result' does work, and the pattern shows up in multiple places.
-And we have not marked our own version of snprintf() as taking restrict
-pointers, so the warning is incorrect for now, and gcc picks it up on
-its own.
-
-If we do start using 'restrict' in the kernel (and it might be a good
-idea if people find places where it matters), we'll need to figure out
-how to avoid this issue for snprintf and friends.  But in the meantime,
-this warning is not useful.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: de462e5f1071 ("bootconfig: Fix to remove bootconfig data from initrd while boot")
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ init/main.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 8584003bfbca..955b57a8ec15 100644
---- a/Makefile
-+++ b/Makefile
-@@ -862,6 +862,9 @@ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
- KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+diff --git a/init/main.c b/init/main.c
+index ee0345e7e9f1..8ee04f875b21 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -398,9 +398,8 @@ static void __init setup_boot_config(const char *cmdline)
+ 	char *data, *copy;
+ 	int ret;
  
-+# Another good warning that we'll want to enable eventually
-+KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
++	/* Cut out the bootconfig data even if we have no bootconfig option */
+ 	data = get_boot_config_from_initrd(&size, &csum);
+-	if (!data)
+-		goto not_found;
+ 
+ 	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+ 	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
+@@ -409,6 +408,11 @@ static void __init setup_boot_config(const char *cmdline)
+ 	if (!bootconfig_found)
+ 		return;
+ 
++	if (!data) {
++		pr_err("'bootconfig' found on command line, but no bootconfig found\n");
++		return;
++	}
 +
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 	if (size >= XBC_DATA_MAX) {
+ 		pr_err("bootconfig size %d greater than max size %d\n",
+ 			size, XBC_DATA_MAX);
+@@ -440,8 +444,6 @@ static void __init setup_boot_config(const char *cmdline)
+ 		extra_init_args = xbc_make_cmdline("init");
+ 	}
+ 	return;
+-not_found:
+-	pr_err("'bootconfig' found on command line, but no bootconfig found\n");
+ }
  
+ #else
 -- 
 2.25.1
 
