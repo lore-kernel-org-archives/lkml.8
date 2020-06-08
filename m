@@ -2,156 +2,340 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F012068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fii8ZR3Z"
+	by mail.kernel.org (Postfix) with ESMTP id 5264A20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591659771;
+	bh=p64kvqwdHjvutBUyLKF79Z35nfL8WtrSF/yQ7hkXSUQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v4rTv6oBpQwlemVZBVCRUVXMwcTJR6aCXrwBzQLBGfG2v33KAuu8vo5RvA9hbA79e
+	 1IUJ1YU+kAkK5Kwhc4jcwzyTx5c1GImPd5E0Lj4oeDXfD2Tluk39OgAMXF9NlHWDlP
+	 ImB2ecp5Qw+yc2H9T+UnQi5k/CGI6M5MX3cTc3v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732369AbgFHXmp (ORCPT
+        id S1732381AbgFHXmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732123AbgFHX1W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:22 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14266C08C5C2;
-        Mon,  8 Jun 2020 16:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=xyZktwFw/PfsepqoistGI2Zu+WjsJE4jBtC4bLVR/g8=; b=Fii8ZR3Zn1fZFppUKCqm/mn0Dq
-        UBpNtB5T+cpC0wr3Jrs+s3i2idqfUkLdYq3lL1Hpk4JwBtRwFfaQAfSxvrpA+d48EU7sEc5DRYe6i
-        grcj1T87C4EgzRG2XZOSpnd5ggrc6vqRoM2NSrS4v9EIxFPRPaPdYbry4SBd0XNPbQx0ioKUUDJbK
-        B9l4Ib84cCkXQ5zeUEjxX0bugeeii4iwsxTAuswXTW4DTJL7Vf0Q9ZCAEcLESx9GqbxV001Dguhz1
-        XafVgjFI/Uqab7m9UfW4kOIDyf2tJnQh9ATHNZf4X789rri0PyEipT/zjeWrXvQ8GSMIOPOsF5bLb
-        3rXV9wNw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiRAe-000826-92; Mon, 08 Jun 2020 23:27:12 +0000
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-To:     Y Paritcher <y.linux@paritcher.com>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Mario.Limonciello@dell.com
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
-Date:   Mon, 8 Jun 2020 16:27:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 8 Jun 2020 19:42:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732115AbgFHX1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062972078D;
+        Mon,  8 Jun 2020 23:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591658839;
+        bh=p64kvqwdHjvutBUyLKF79Z35nfL8WtrSF/yQ7hkXSUQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JwD3Vluw56S2UsLNgbawsF4NalKa+IfKTS5QIPLfzLgPHJT8E8/4fgMhrII14DDPm
+         3zzlk5Hy71TPlxDhmgL62JkfQMw9gldBiNGR+NzcgZhfsUsdUQtZ/D/qlaN8UhreO5
+         onLRjmLV1LZlJSkRlt4g0v2zgZZbaFsd8E/+cs3U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 29/50] powerpc/spufs: fix copy_to_user while atomic
+Date:   Mon,  8 Jun 2020 19:26:19 -0400
+Message-Id: <20200608232640.3370262-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
+References: <20200608232640.3370262-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi--
+From: Jeremy Kerr <jk@ozlabs.org>
 
-On 6/8/20 4:05 PM, Y Paritcher wrote:
-> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
-> keycode) to allow for a new keycode 0xffff, this silences the following
-> messages being logged at startup on a Dell Inspiron 5593:
-> 
->     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
->     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
-> 
-> as per this code comment:
-> 
->    Log if we find an entry in the DMI table that we don't
->    understand.  If this happens, we should figure out what
->    the entry means and add it to bios_to_linux_keycode.
-> 
-> These are keycodes included in the 0xB2 DMI table, for which the
-> corosponding keys are not known.
+[ Upstream commit 88413a6bfbbe2f648df399b62f85c934460b7a4d ]
 
-  corresponding
+Currently, we may perform a copy_to_user (through
+simple_read_from_buffer()) while holding a context's register_lock,
+while accessing the context save area.
 
-> 
-> Now when a user will encounter this key, a proper message wil be printed:
-> 
->     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
-> 
-> This will then allow the key to be identified properly.
-> 
-> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 6b510f8431a3..dae1db96b5a0 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -196,7 +196,7 @@ struct dell_dmi_results {
->  };
->  
->  /* Uninitialized entries here are KEY_RESERVED == 0. */
-> -static const u16 bios_to_linux_keycode[256] = {
-> +static const u16 bios_to_linux_keycode[65536] = {
+This change uses a temporary buffer for the context save area data,
+which we then pass to simple_read_from_buffer.
 
-It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
-just to handle one special case.  Can't it be handled in code as a
-special case?
+Includes changes from Christoph Hellwig <hch@lst.de>.
 
->  	[0]	= KEY_MEDIA,
->  	[1]	= KEY_NEXTSONG,
->  	[2]	= KEY_PLAYPAUSE,
-> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
->  	[37]	= KEY_UNKNOWN,
->  	[38]	= KEY_MICMUTE,
->  	[255]	= KEY_PROG3,
-> +	[65535]	= KEY_UNKNOWN,
->  };
->  
->  /*
-> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
->  					&table->keymap[i];
->  
->  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
-> -		u16 keycode = (bios_entry->keycode <
-> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> -			bios_to_linux_keycode[bios_entry->keycode] :
-> -			KEY_RESERVED;
-> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
->  
->  		/*
->  		 * Log if we find an entry in the DMI table that we don't
-> 
+Fixes: bf1ab978be23 ("[POWERPC] coredump: Add SPU elf notes to coredump.")
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+[hch: renamed to function to avoid ___-prefixes]
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/platforms/cell/spufs/file.c | 113 +++++++++++++++--------
+ 1 file changed, 75 insertions(+), 38 deletions(-)
 
-Something like:
-
-		u16 keycode;
-
-		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
-			(bios_entry->keycode <
-			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-			bios_to_linux_keycode[bios_entry->keycode] :
-			KEY_RESERVED;
-
-
-
-Also please fix this:
-(no To-header on input) <>
-
+diff --git a/arch/powerpc/platforms/cell/spufs/file.c b/arch/powerpc/platforms/cell/spufs/file.c
+index 06254467e4dd..f12b00a056cb 100644
+--- a/arch/powerpc/platforms/cell/spufs/file.c
++++ b/arch/powerpc/platforms/cell/spufs/file.c
+@@ -2044,8 +2044,9 @@ static ssize_t __spufs_mbox_info_read(struct spu_context *ctx,
+ static ssize_t spufs_mbox_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+-	int ret;
+ 	struct spu_context *ctx = file->private_data;
++	u32 stat, data;
++	int ret;
+ 
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+ 		return -EFAULT;
+@@ -2054,11 +2055,16 @@ static ssize_t spufs_mbox_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_mbox_info_read(ctx, buf, len, pos);
++	stat = ctx->csa.prob.mb_stat_R;
++	data = ctx->csa.prob.pu_mb_R;
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	/* EOF if there's no entry in the mbox */
++	if (!(stat & 0x0000ff))
++		return 0;
++
++	return simple_read_from_buffer(buf, len, pos, &data, sizeof(data));
+ }
+ 
+ static const struct file_operations spufs_mbox_info_fops = {
+@@ -2085,6 +2091,7 @@ static ssize_t spufs_ibox_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
++	u32 stat, data;
+ 	int ret;
+ 
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+@@ -2094,11 +2101,16 @@ static ssize_t spufs_ibox_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_ibox_info_read(ctx, buf, len, pos);
++	stat = ctx->csa.prob.mb_stat_R;
++	data = ctx->csa.priv2.puint_mb_R;
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	/* EOF if there's no entry in the ibox */
++	if (!(stat & 0xff0000))
++		return 0;
++
++	return simple_read_from_buffer(buf, len, pos, &data, sizeof(data));
+ }
+ 
+ static const struct file_operations spufs_ibox_info_fops = {
+@@ -2107,6 +2119,11 @@ static const struct file_operations spufs_ibox_info_fops = {
+ 	.llseek  = generic_file_llseek,
+ };
+ 
++static size_t spufs_wbox_info_cnt(struct spu_context *ctx)
++{
++	return (4 - ((ctx->csa.prob.mb_stat_R & 0x00ff00) >> 8)) * sizeof(u32);
++}
++
+ static ssize_t __spufs_wbox_info_read(struct spu_context *ctx,
+ 			char __user *buf, size_t len, loff_t *pos)
+ {
+@@ -2115,7 +2132,7 @@ static ssize_t __spufs_wbox_info_read(struct spu_context *ctx,
+ 	u32 wbox_stat;
+ 
+ 	wbox_stat = ctx->csa.prob.mb_stat_R;
+-	cnt = 4 - ((wbox_stat & 0x00ff00) >> 8);
++	cnt = spufs_wbox_info_cnt(ctx);
+ 	for (i = 0; i < cnt; i++) {
+ 		data[i] = ctx->csa.spu_mailbox_data[i];
+ 	}
+@@ -2128,7 +2145,8 @@ static ssize_t spufs_wbox_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
+-	int ret;
++	u32 data[ARRAY_SIZE(ctx->csa.spu_mailbox_data)];
++	int ret, count;
+ 
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+ 		return -EFAULT;
+@@ -2137,11 +2155,13 @@ static ssize_t spufs_wbox_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_wbox_info_read(ctx, buf, len, pos);
++	count = spufs_wbox_info_cnt(ctx);
++	memcpy(&data, &ctx->csa.spu_mailbox_data, sizeof(data));
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	return simple_read_from_buffer(buf, len, pos, &data,
++				count * sizeof(u32));
+ }
+ 
+ static const struct file_operations spufs_wbox_info_fops = {
+@@ -2150,27 +2170,33 @@ static const struct file_operations spufs_wbox_info_fops = {
+ 	.llseek  = generic_file_llseek,
+ };
+ 
+-static ssize_t __spufs_dma_info_read(struct spu_context *ctx,
+-			char __user *buf, size_t len, loff_t *pos)
++static void spufs_get_dma_info(struct spu_context *ctx,
++		struct spu_dma_info *info)
+ {
+-	struct spu_dma_info info;
+-	struct mfc_cq_sr *qp, *spuqp;
+ 	int i;
+ 
+-	info.dma_info_type = ctx->csa.priv2.spu_tag_status_query_RW;
+-	info.dma_info_mask = ctx->csa.lscsa->tag_mask.slot[0];
+-	info.dma_info_status = ctx->csa.spu_chnldata_RW[24];
+-	info.dma_info_stall_and_notify = ctx->csa.spu_chnldata_RW[25];
+-	info.dma_info_atomic_command_status = ctx->csa.spu_chnldata_RW[27];
++	info->dma_info_type = ctx->csa.priv2.spu_tag_status_query_RW;
++	info->dma_info_mask = ctx->csa.lscsa->tag_mask.slot[0];
++	info->dma_info_status = ctx->csa.spu_chnldata_RW[24];
++	info->dma_info_stall_and_notify = ctx->csa.spu_chnldata_RW[25];
++	info->dma_info_atomic_command_status = ctx->csa.spu_chnldata_RW[27];
+ 	for (i = 0; i < 16; i++) {
+-		qp = &info.dma_info_command_data[i];
+-		spuqp = &ctx->csa.priv2.spuq[i];
++		struct mfc_cq_sr *qp = &info->dma_info_command_data[i];
++		struct mfc_cq_sr *spuqp = &ctx->csa.priv2.spuq[i];
+ 
+ 		qp->mfc_cq_data0_RW = spuqp->mfc_cq_data0_RW;
+ 		qp->mfc_cq_data1_RW = spuqp->mfc_cq_data1_RW;
+ 		qp->mfc_cq_data2_RW = spuqp->mfc_cq_data2_RW;
+ 		qp->mfc_cq_data3_RW = spuqp->mfc_cq_data3_RW;
+ 	}
++}
++
++static ssize_t __spufs_dma_info_read(struct spu_context *ctx,
++			char __user *buf, size_t len, loff_t *pos)
++{
++	struct spu_dma_info info;
++
++	spufs_get_dma_info(ctx, &info);
+ 
+ 	return simple_read_from_buffer(buf, len, pos, &info,
+ 				sizeof info);
+@@ -2180,6 +2206,7 @@ static ssize_t spufs_dma_info_read(struct file *file, char __user *buf,
+ 			      size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
++	struct spu_dma_info info;
+ 	int ret;
+ 
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+@@ -2189,11 +2216,12 @@ static ssize_t spufs_dma_info_read(struct file *file, char __user *buf,
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_dma_info_read(ctx, buf, len, pos);
++	spufs_get_dma_info(ctx, &info);
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	return simple_read_from_buffer(buf, len, pos, &info,
++				sizeof(info));
+ }
+ 
+ static const struct file_operations spufs_dma_info_fops = {
+@@ -2202,13 +2230,31 @@ static const struct file_operations spufs_dma_info_fops = {
+ 	.llseek = no_llseek,
+ };
+ 
++static void spufs_get_proxydma_info(struct spu_context *ctx,
++		struct spu_proxydma_info *info)
++{
++	int i;
++
++	info->proxydma_info_type = ctx->csa.prob.dma_querytype_RW;
++	info->proxydma_info_mask = ctx->csa.prob.dma_querymask_RW;
++	info->proxydma_info_status = ctx->csa.prob.dma_tagstatus_R;
++
++	for (i = 0; i < 8; i++) {
++		struct mfc_cq_sr *qp = &info->proxydma_info_command_data[i];
++		struct mfc_cq_sr *puqp = &ctx->csa.priv2.puq[i];
++
++		qp->mfc_cq_data0_RW = puqp->mfc_cq_data0_RW;
++		qp->mfc_cq_data1_RW = puqp->mfc_cq_data1_RW;
++		qp->mfc_cq_data2_RW = puqp->mfc_cq_data2_RW;
++		qp->mfc_cq_data3_RW = puqp->mfc_cq_data3_RW;
++	}
++}
++
+ static ssize_t __spufs_proxydma_info_read(struct spu_context *ctx,
+ 			char __user *buf, size_t len, loff_t *pos)
+ {
+ 	struct spu_proxydma_info info;
+-	struct mfc_cq_sr *qp, *puqp;
+ 	int ret = sizeof info;
+-	int i;
+ 
+ 	if (len < ret)
+ 		return -EINVAL;
+@@ -2216,18 +2262,7 @@ static ssize_t __spufs_proxydma_info_read(struct spu_context *ctx,
+ 	if (!access_ok(VERIFY_WRITE, buf, len))
+ 		return -EFAULT;
+ 
+-	info.proxydma_info_type = ctx->csa.prob.dma_querytype_RW;
+-	info.proxydma_info_mask = ctx->csa.prob.dma_querymask_RW;
+-	info.proxydma_info_status = ctx->csa.prob.dma_tagstatus_R;
+-	for (i = 0; i < 8; i++) {
+-		qp = &info.proxydma_info_command_data[i];
+-		puqp = &ctx->csa.priv2.puq[i];
+-
+-		qp->mfc_cq_data0_RW = puqp->mfc_cq_data0_RW;
+-		qp->mfc_cq_data1_RW = puqp->mfc_cq_data1_RW;
+-		qp->mfc_cq_data2_RW = puqp->mfc_cq_data2_RW;
+-		qp->mfc_cq_data3_RW = puqp->mfc_cq_data3_RW;
+-	}
++	spufs_get_proxydma_info(ctx, &info);
+ 
+ 	return simple_read_from_buffer(buf, len, pos, &info,
+ 				sizeof info);
+@@ -2237,17 +2272,19 @@ static ssize_t spufs_proxydma_info_read(struct file *file, char __user *buf,
+ 				   size_t len, loff_t *pos)
+ {
+ 	struct spu_context *ctx = file->private_data;
++	struct spu_proxydma_info info;
+ 	int ret;
+ 
+ 	ret = spu_acquire_saved(ctx);
+ 	if (ret)
+ 		return ret;
+ 	spin_lock(&ctx->csa.register_lock);
+-	ret = __spufs_proxydma_info_read(ctx, buf, len, pos);
++	spufs_get_proxydma_info(ctx, &info);
+ 	spin_unlock(&ctx->csa.register_lock);
+ 	spu_release_saved(ctx);
+ 
+-	return ret;
++	return simple_read_from_buffer(buf, len, pos, &info,
++				sizeof(info));
+ }
+ 
+ static const struct file_operations spufs_proxydma_info_fops = {
 -- 
-~Randy
+2.25.1
 
