@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A251C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66AC320760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070BD207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662714;
-	bh=6tDz6kz3EWPvtiMKUTe9UWYLirmxVR7ibzaVILkuUvg=;
+	s=default; t=1591662722;
+	bh=/6Yym6/jbfvFrev0s9zJQ2WWMadt26Bf3Cl6vOMcbv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XiD008HmcIXWkNNZRYMp7zeYTZVYMHANTXbQchgsfLHhr6Vf61pfBxka4xlLqbbtg
-	 uhA6W8uky141xmANoDk5hTxuG5qj8MqgWII7ayIXvZxLyVlENK/brDn1jyV87NqohF
-	 bEe8M0+uFf0B9fpmtnMez2RC0AkRvZvKXKg83KTQ=
+	b=FtNtHPonKosD2G87ScbH3q/wSvnigWEXlUB6Gwv9UsmI88uGnNIpg96kTbHDcZdDh
+	 H5UA5KgRBP6q1uhjeyQuchBhMMTvTICUQYt5ktMaKcLYaynWTfVaxNBimUXCDU6U9o
+	 bc0ooz/0/kqw4t05pOO82ovgNce+xZkHeGqyASFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbgFIAbv (ORCPT
+        id S1731274AbgFIAcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:31:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:32:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730031AbgFHXPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:25 -0400
+        id S1728520AbgFHXPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 853DA2076A;
-        Mon,  8 Jun 2020 23:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA7C2076C;
+        Mon,  8 Jun 2020 23:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658125;
-        bh=6tDz6kz3EWPvtiMKUTe9UWYLirmxVR7ibzaVILkuUvg=;
+        s=default; t=1591658122;
+        bh=/6Yym6/jbfvFrev0s9zJQ2WWMadt26Bf3Cl6vOMcbv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLrAYinYQ1fy7K92Z6S1ikd/09nbUBxo6s+mqNwRHdYrRku9csj9bVz57tqD+TiXL
-         E0Z/qYG8FvPXzQylJgABHXqxFqRVz3ZMezSriEz9wkglS6y4C65z82EmauRHAMgIfa
-         H4PdABZ9V1OtliWlCRKgOYy+nNAjWGF9kypRNfkw=
+        b=SIz8AeGMU8C4IOQV66I3L+KYRVHggI96+wucJesvSfOvtN0gdzFw1p0JZkbsyBChw
+         KiZ+D87xrWK2K18hCrcaDWtFcrx1SY4QqpWCDj2KOF91jxSdP63+nfxD8xRcAZVMzl
+         DCA8fdLk4kGLJ35XFiTQeD1wDj8ct2mKWN3pbTvw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Dryomov <idryomov@gmail.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH AUTOSEL 5.6 161/606] vsprintf: don't obfuscate NULL and error pointers
-Date:   Mon,  8 Jun 2020 19:04:46 -0400
-Message-Id: <20200608231211.3363633-161-sashal@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        Sanjay Kumar <sanjay.k.kumar@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 159/606] dmaengine: idxd: fix interrupt completion after unmasking
+Date:   Mon,  8 Jun 2020 19:04:44 -0400
+Message-Id: <20200608231211.3363633-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,126 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Dave Jiang <dave.jiang@intel.com>
 
-commit 7bd57fbc4a4ddedc664cad0bbced1b469e24e921 upstream.
+commit 4f302642b70c1348773fe7e3ded9fc315fa92990 upstream.
 
-I don't see what security concern is addressed by obfuscating NULL
-and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-of sites where %p is used (over 10000) and the fact that NULL pointers
-aren't uncommon, it probably wouldn't take long for an attacker to
-find the hash that corresponds to 0.  Although harder, the same goes
-for most common error values, such as -1, -2, -11, -14, etc.
+The current implementation may miss completions after we unmask the
+interrupt. In order to make sure we process all competions, we need to:
+1. Do an MMIO read from the device as a barrier to ensure that all PCI
+   writes for completions have arrived.
+2. Check for any additional completions that we missed.
 
-The NULL part actually fixes a regression: NULL pointers weren't
-obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-dereferencing invalid pointers") which went into 5.2.  I'm tacking
-the IS_ERR() part on here because error pointers won't leak kernel
-addresses and printing them as pointers shouldn't be any different
-from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-debugging based on existing pr_debug and friends excruciating.
+Fixes: 8f47d1a5e545 ("dmaengine: idxd: connect idxd to dmaengine subsystem")
 
-Note that the "always print 0's for %pK when kptr_restrict == 2"
-behaviour which goes way back is left as is.
-
-Example output with the patch applied:
-
-                             ptr         error-ptr              NULL
- %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
- %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
- %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
- %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
- %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
-
-Fixes: 3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers")
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/158834641769.35613.1341160109892008587.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- lib/test_printf.c | 19 ++++++++++++++++++-
- lib/vsprintf.c    |  7 +++++++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/dma/idxd/device.c |  7 +++++++
+ drivers/dma/idxd/irq.c    | 26 +++++++++++++++++++-------
+ 2 files changed, 26 insertions(+), 7 deletions(-)
 
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 2d9f520d2f27..6b1622f4d7c2 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -214,6 +214,7 @@ test_string(void)
- #define PTR_STR "ffff0123456789ab"
- #define PTR_VAL_NO_CRNG "(____ptrval____)"
- #define ZEROS "00000000"	/* hex 32 zero bits */
-+#define ONES "ffffffff"		/* hex 32 one bits */
- 
- static int __init
- plain_format(void)
-@@ -245,6 +246,7 @@ plain_format(void)
- #define PTR_STR "456789ab"
- #define PTR_VAL_NO_CRNG "(ptrval)"
- #define ZEROS ""
-+#define ONES ""
- 
- static int __init
- plain_format(void)
-@@ -330,14 +332,28 @@ test_hashed(const char *fmt, const void *p)
- 	test(buf, fmt, p);
- }
- 
-+/*
-+ * NULL pointers aren't hashed.
-+ */
- static void __init
- null_pointer(void)
- {
--	test_hashed("%p", NULL);
-+	test(ZEROS "00000000", "%p", NULL);
- 	test(ZEROS "00000000", "%px", NULL);
- 	test("(null)", "%pE", NULL);
- }
- 
-+/*
-+ * Error pointers aren't hashed.
-+ */
-+static void __init
-+error_pointer(void)
-+{
-+	test(ONES "fffffff5", "%p", ERR_PTR(-11));
-+	test(ONES "fffffff5", "%px", ERR_PTR(-11));
-+	test("(efault)", "%pE", ERR_PTR(-11));
-+}
-+
- #define PTR_INVALID ((void *)0x000000ab)
- 
- static void __init
-@@ -649,6 +665,7 @@ test_pointer(void)
- {
- 	plain();
- 	null_pointer();
-+	error_pointer();
- 	invalid_pointer();
- 	symbol_ptr();
- 	kernel_ptr();
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 532b6606a18a..7c47ad52ce2f 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -794,6 +794,13 @@ static char *ptr_to_id(char *buf, char *end, const void *ptr,
- 	unsigned long hashval;
- 	int ret;
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index f6f49f0f6fae..8d79a8787104 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -62,6 +62,13 @@ int idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id)
+ 	perm.ignore = 0;
+ 	iowrite32(perm.bits, idxd->reg_base + offset);
  
 +	/*
-+	 * Print the real pointer value for NULL and error pointers,
-+	 * as they are not actual addresses.
++	 * A readback from the device ensures that any previously generated
++	 * completion record writes are visible to software based on PCI
++	 * ordering rules.
 +	 */
-+	if (IS_ERR_OR_NULL(ptr))
-+		return pointer_string(buf, end, ptr, spec);
++	perm.bits = ioread32(idxd->reg_base + offset);
 +
- 	/* When debugging early boot use non-cryptographically secure hash. */
- 	if (unlikely(debug_boot_weak_hash)) {
- 		hashval = hash_long((unsigned long)ptr, 32);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index d6fcd2e60103..6510791b9921 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -173,6 +173,7 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
+ 	struct llist_node *head;
+ 	int queued = 0;
+ 
++	*processed = 0;
+ 	head = llist_del_all(&irq_entry->pending_llist);
+ 	if (!head)
+ 		return 0;
+@@ -197,6 +198,7 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+ 	struct list_head *node, *next;
+ 	int queued = 0;
+ 
++	*processed = 0;
+ 	if (list_empty(&irq_entry->work_list))
+ 		return 0;
+ 
+@@ -218,10 +220,9 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+ 	return queued;
+ }
+ 
+-irqreturn_t idxd_wq_thread(int irq, void *data)
++static int idxd_desc_process(struct idxd_irq_entry *irq_entry)
+ {
+-	struct idxd_irq_entry *irq_entry = data;
+-	int rc, processed = 0, retry = 0;
++	int rc, processed, total = 0;
+ 
+ 	/*
+ 	 * There are two lists we are processing. The pending_llist is where
+@@ -244,15 +245,26 @@ irqreturn_t idxd_wq_thread(int irq, void *data)
+ 	 */
+ 	do {
+ 		rc = irq_process_work_list(irq_entry, &processed);
+-		if (rc != 0) {
+-			retry++;
++		total += processed;
++		if (rc != 0)
+ 			continue;
+-		}
+ 
+ 		rc = irq_process_pending_llist(irq_entry, &processed);
+-	} while (rc != 0 && retry != 10);
++		total += processed;
++	} while (rc != 0);
++
++	return total;
++}
++
++irqreturn_t idxd_wq_thread(int irq, void *data)
++{
++	struct idxd_irq_entry *irq_entry = data;
++	int processed;
+ 
++	processed = idxd_desc_process(irq_entry);
+ 	idxd_unmask_msix_vector(irq_entry->idxd, irq_entry->id);
++	/* catch anything unprocessed after unmasking */
++	processed += idxd_desc_process(irq_entry);
+ 
+ 	if (processed == 0)
+ 		return IRQ_NONE;
 -- 
 2.25.1
 
