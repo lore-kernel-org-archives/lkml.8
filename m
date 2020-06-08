@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08629C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20CB820659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD94B20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660564;
-	bh=joHfT7bcauPIx7wZQqsTyIJ76SF7kDA5AvCTJjZoit0=;
+	s=default; t=1591660573;
+	bh=c9lNOa5f4PM28KYvAvQhiHQM1QkkevK3wIQFfznxuAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vfQA523D785QDhPTG7pnPjOL5iEJhEhtm/2KYrGURN4Tss9XICngcQqve28nWtKxs
-	 RlFAYAWvb5urz7HpPtpXQy0VyeNE4UEGEnZg9EvjSXadZL6/1Tfd1NzpdizNfgPfPX
-	 X8raQ6xNeWoBSlnav9d7fkxbWI9EgARNdYPyk5nc=
+	b=Oi4wp5apM5n/l0EzzMFTXMOxlcnqVvYPvdTwd8AHjXJmiEUZDDv+Jo05SYMMhkqN4
+	 ayzHMG0uDVT3IvjCrlkNHWElZIOWB1n3h5hW77v2Z7YIx+SG9CvtLlvLbMPBIya/Vz
+	 NvcybX8/OjqKEOax6cOAwuUSWGHQBbG2zitFxKJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732116AbgFHX4C (ORCPT
+        id S1732593AbgFHX4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:56:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730828AbgFHXXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:49 -0400
+        id S1730201AbgFHXXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA9D32074B;
-        Mon,  8 Jun 2020 23:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E4C2072F;
+        Mon,  8 Jun 2020 23:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658629;
-        bh=joHfT7bcauPIx7wZQqsTyIJ76SF7kDA5AvCTJjZoit0=;
+        s=default; t=1591658628;
+        bh=c9lNOa5f4PM28KYvAvQhiHQM1QkkevK3wIQFfznxuAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=txjB6elzn7/AJAM9EwIbnXKd5PDtrBm1pgTH2LmGcoItfggNpOLtLy4IhatWNHziM
-         HeDkrc3fVgzJPENpiux3qk9UCndUShbAi0id5AJfQkm0OySf+qqUc+2VsWTHxxdTk7
-         jNVPl1OGDeGoAW19v1y2h2NuXkut45khSpfObWyM=
+        b=EQipey9U+/nOMQe7Ao0wtm7Pt6xfq3G7RqUHvDZKXA4/dIdTi3cPKXkAPZAcRtp9a
+         WwwHpIt2mNhkIHHVxun2eYiCK99TWODMQ/OItfpZTjL/oKdoA3l1IWKI3OkEpUYMEG
+         H62/lihtl+uQACPBDAiBHdY+0a22/eb08sV7maRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunjian Wang <wangyunjian@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 053/106] net: allwinner: Fix use correct return type for ndo_start_xmit()
-Date:   Mon,  8 Jun 2020 19:21:45 -0400
-Message-Id: <20200608232238.3368589-53-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 052/106] media: cec: silence shift wrapping warning in __cec_s_log_addrs()
+Date:   Mon,  8 Jun 2020 19:21:44 -0400
+Message-Id: <20200608232238.3368589-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -60,43 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
+[ Upstream commit 3b5af3171e2d5a73ae6f04965ed653d039904eb6 ]
 
-The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
-the ndo function to use the correct type. And emac_start_xmit() can
-leak one skb if 'channel' == 3.
+The log_addrs->log_addr_type[i] value is a u8 which is controlled by
+the user and comes from the ioctl.  If it's over 31 then that results in
+undefined behavior (shift wrapping) and that leads to a Smatch static
+checker warning.  We already cap the value later so we can silence the
+warning just by re-ordering the existing checks.
 
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+I think the UBSan checker will also catch this bug at runtime and
+generate a warning.  But otherwise the bug is harmless.
+
+Fixes: 9881fe0ca187 ("[media] cec: add HDMI CEC framework (adapter)")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/cec/cec-adap.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
-index 3143de45baaa..c458b81ba63a 100644
---- a/drivers/net/ethernet/allwinner/sun4i-emac.c
-+++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
-@@ -433,7 +433,7 @@ static void emac_timeout(struct net_device *dev)
- /* Hardware start transmission.
-  * Send a packet to media from the upper layer.
-  */
--static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
-+static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct emac_board_info *db = netdev_priv(dev);
- 	unsigned long channel;
-@@ -441,7 +441,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
+index ba7e976bf6dc..60b20ae02b05 100644
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -1668,6 +1668,10 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
+ 		unsigned j;
  
- 	channel = db->tx_fifo_stat & 3;
- 	if (channel == 3)
--		return 1;
-+		return NETDEV_TX_BUSY;
- 
- 	channel = (channel == 1 ? 1 : 0);
- 
+ 		log_addrs->log_addr[i] = CEC_LOG_ADDR_INVALID;
++		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
++			dprintk(1, "unknown logical address type\n");
++			return -EINVAL;
++		}
+ 		if (type_mask & (1 << log_addrs->log_addr_type[i])) {
+ 			dprintk(1, "duplicate logical address type\n");
+ 			return -EINVAL;
+@@ -1688,10 +1692,6 @@ int __cec_s_log_addrs(struct cec_adapter *adap,
+ 			dprintk(1, "invalid primary device type\n");
+ 			return -EINVAL;
+ 		}
+-		if (log_addrs->log_addr_type[i] > CEC_LOG_ADDR_TYPE_UNREGISTERED) {
+-			dprintk(1, "unknown logical address type\n");
+-			return -EINVAL;
+-		}
+ 		for (j = 0; j < feature_sz; j++) {
+ 			if ((features[j] & 0x80) == 0) {
+ 				if (op_is_dev_features)
 -- 
 2.25.1
 
