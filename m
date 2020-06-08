@@ -2,150 +2,126 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63203C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB31720775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C92A2078B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 18:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fk4/Bs3D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L4tNUQw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbgFHSPa (ORCPT
+        id S1726053AbgFHSQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 14:15:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgFHSPX (ORCPT
+        Mon, 8 Jun 2020 14:16:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58760 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725797AbgFHSQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 14:15:23 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF744C08C5C2;
-        Mon,  8 Jun 2020 11:15:22 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id t18so18465547wru.6;
-        Mon, 08 Jun 2020 11:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WUHwJX2N9pIy9QeRXyEGGmeeCpsJdb22/OGUgYWDaZs=;
-        b=fk4/Bs3DeNtMcKi5ch5N3gpQpdWFBxPVM5RpcJ9t3FMxoEzjHxmaaepAJ2zymcHdJh
-         yXspphw1FR6n2VP/gjGRziTn3+pDXuYrsdHOlip2Wnc5BCa8y+pugec77hOnp2Rvj7hS
-         mqD387luzCWwASTbyj8Tf5GSUZgR1ehDBUW75Pcvk7UErUGFeXnJvbZuy3VdX0h3XA6U
-         3tpfwxzfzdyysGaEKNBcP/V9egoxB022Jy2HJ0fvM1BMr3MySiYa749JJJ52B79MhP0w
-         GbzyVtlx+pjyYwab+AEKZtZrl7zmdG1Xblue0/O7FFw7i2qOi1GAc3/n0d77+npoTtrr
-         37tA==
+        Mon, 8 Jun 2020 14:16:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591640186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oIo80SnB/PSIWlFE9jQ3/SK9wb3PpgcPr98lQXyYwj4=;
+        b=L4tNUQw3uGDtfyy7foSVer/tEXKWNRmJuYSsNaN6hs5boUfN8eEghtqkXW8TBA3jl0dBLj
+        VEE3s7ESIxHJyM2rjmVi0yhI8cZMJZ4uKtUOi2p5yNLVvuwI1e8iVWum5LhgurofksT860
+        9zAxBEHqpghEPYJpch4v4mBq5pX5d5Q=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-_NqeFH-KO-GlhwrTIN2a7w-1; Mon, 08 Jun 2020 14:15:54 -0400
+X-MC-Unique: _NqeFH-KO-GlhwrTIN2a7w-1
+Received: by mail-ej1-f70.google.com with SMTP id t4so6346636ejj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 11:15:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WUHwJX2N9pIy9QeRXyEGGmeeCpsJdb22/OGUgYWDaZs=;
-        b=FrCMqjM/nWdpjCgTfkbbWRxNb0ni6F7zgjB8tfjudbPbB6B8Mh1p+lwPe2lgeqXm6W
-         ab0MwTlH/uGpIHhHSwUG2rtGCEWZhA5p/Ed5hYbbKc6/lbsIcT7TMizDisgoP/3Ga1Zu
-         uFJdUMirzzn9hnLN2bcFZVAihqCt61chK1JlT3JU22g9N3MRws3qTL02lzk8Cx3cDxhU
-         JQvglvSDKcUqHJHSAfNllhBbhPb1fK2WUr5S6ergrFHmUxL2W6Y6MBzHKWu+XOiTVWPy
-         9CbtK/iHeC+xHX+iuKeSCPskPMor71IQ4JLscE1WeRRFrkR+b1Ingsy4R/cX9ZMvFKGk
-         IAwg==
-X-Gm-Message-State: AOAM531F0FVktxF2frduNIMju9EYDThliYCjOWBO1GuQV5M9V6KBmpab
-        EFgLUS+pba77t27KXovJSFpbR/6M
-X-Google-Smtp-Source: ABdhPJw1Y9Cnn6+Gh+ZM06NjCC6ogM3zVdBvUQGmts4uKhxrr8q5BZlddYmxosKY33dC7K1RoL4sgQ==
-X-Received: by 2002:adf:b198:: with SMTP id q24mr85376wra.368.1591640121560;
-        Mon, 08 Jun 2020 11:15:21 -0700 (PDT)
-Received: from [192.168.43.208] ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id w17sm463831wra.71.2020.06.08.11.15.20
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=oIo80SnB/PSIWlFE9jQ3/SK9wb3PpgcPr98lQXyYwj4=;
+        b=kX3G3HsvD7OOG8yMpOtbphXKmdpcXJVGiT0+KaZ08INURG+FnbE1oICeloyPfrEwQW
+         UnR23naVkkCkPcqQNk4+FlQBxQcLWzXcZzamezDO96hgMLzC5UCqo5XxPWYdRjU+XB2M
+         5XRv4N+Ta69RC+eBs2ldbE6SMmqgD/f32uNW9bcdpezAts3XMQVuGynXL0oJSSVltE6K
+         pRlmEJrH/NJdLkoMaClL6il4MtZK1XwtdRpM+bQvfBVw6KTn365q8D2gwyBzuP8ZzsOc
+         m2C/l7076lUQCiXfTA0klwZMBNuV6M7MM9aYdXNDyxu+midHyHUsX+yAUCpR99Z+qqln
+         4WoA==
+X-Gm-Message-State: AOAM530ZqX3i34mOFOHuIHP9H/jUyFKDoQmjGRINIVvSZTKhKwxufeWo
+        MZB1L2fYM9q0ToK4Yi+UGvlbLt9xslDfrV8Q/xs35XpPmG4ZiWEXECwv12guVCBPtDrUKFfrwFs
+        90ihT5cWeCyh+PzzL5PXb3gdd
+X-Received: by 2002:a50:ac84:: with SMTP id x4mr23961537edc.124.1591640153199;
+        Mon, 08 Jun 2020 11:15:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwFuIoKxqy0jjsfx01sqRkTEypgRvXwuITW6/q5hDponWWttStC6KsdShp0bZjj0Gw9JwhjrQ==
+X-Received: by 2002:a50:ac84:: with SMTP id x4mr23961498edc.124.1591640152969;
+        Mon, 08 Jun 2020 11:15:52 -0700 (PDT)
+Received: from [192.168.3.122] (p5b0c659c.dip0.t-ipconnect.de. [91.12.101.156])
+        by smtp.gmail.com with ESMTPSA id k3sm13152866edi.60.2020.06.08.11.15.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 11:15:21 -0700 (PDT)
-Subject: Re: [PATCH 0/4] remove work.func
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-Cc:     Jens Axboe <axboe@kernel.dk>
-References: <cover.1591637070.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <18e05c85-a626-82a9-b60e-d24d1c40682e@gmail.com>
-Date:   Mon, 8 Jun 2020 21:14:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <cover.1591637070.git.asml.silence@gmail.com>
+        Mon, 08 Jun 2020 11:15:52 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v15 01/14] mm/page_ext: Export lookup_page_ext() to GPL modules
+Date:   Mon, 8 Jun 2020 20:15:50 +0200
+Message-Id: <320E495A-1A3E-423B-A3E7-088004771E45@redhat.com>
+References: <20200608154917.GA8408@infradead.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org,
+        SeongJae Park <sjpark@amazon.de>, jonathan.cameron@huawei.com,
+        aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, dwmw@amazon.com, foersleo@amazon.de,
+        irogers@google.com, jolsa@redhat.com, kirill@shutemov.name,
+        mark.rutland@arm.com, mgorman@suse.de, minchan@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        rdunlap@infradead.org, riel@surriel.com, rientjes@google.com,
+        rostedt@goodmis.org, sblbir@amazon.com, shakeelb@google.com,
+        shuah@kernel.org, sj38.park@gmail.com, snu@amazon.de,
+        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200608154917.GA8408@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/2020 21:08, Pavel Begunkov wrote:
-> As discussed, removing ->func from io_wq_work and moving
-> it into io-wq.
 
-Xiaoguang Wang, until Jens goes back and picks this up, I'll
-also keep the patchset in my github [1]. Just in case you'd
-want to play with it.
 
-https://github.com/isilence/linux/commits/rem_work_func
+> Am 08.06.2020 um 18:11 schrieb Christoph Hellwig <hch@infradead.org>:
+>=20
+> =EF=BB=BFOn Mon, Jun 08, 2020 at 01:53:23PM +0200, David Hildenbrand wrote=
+:
+>>> @@ -131,6 +131,7 @@ struct page_ext *lookup_page_ext(const struct page *=
+page)
+>>>                    MAX_ORDER_NR_PAGES);
+>>>    return get_entry(base, index);
+>>> }
+>>> +EXPORT_SYMBOL_GPL(lookup_page_ext);
+>>>=20
+>>> static int __init alloc_node_page_ext(int nid)
+>>> {
+>>>=20
+>>=20
+>> I've been told to always smuggle new EXPORTs into the patch that
+>> actually needs it (and cc relevant people on that patch instead).
+>=20
+> A separate patch for anything remotely controversial really helps it
+> to stick out, so I think keeping it separate is a very good practice.
+>=20
 
-> 
-> Pavel Begunkov (4):
->   io_uring: don't derive close state from ->func
->   io_uring: remove custom ->func handlers
->   io_uring: don't arm a timeout through work.func
->   io_wq: add per-wq work handler instead of per work
-> 
->  fs/io-wq.c    |  10 ++-
->  fs/io-wq.h    |   7 +-
->  fs/io_uring.c | 221 +++++++++++++++-----------------------------------
->  3 files changed, 74 insertions(+), 164 deletions(-)
-> 
+That used to be my approach until Michal told me to do it differently. And t=
+here is a good point for it: Reviewers actually understand in which context i=
+t is used and if it is really required.
 
--- 
-Pavel Begunkov
+Having that said, I don=E2=80=98t have a strong opinion on this.=
+
