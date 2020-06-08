@@ -2,319 +2,110 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E195C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321FA2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hYPJa+l5"
+	by mail.kernel.org (Postfix) with ESMTP id A75C22078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591664710;
+	bh=HvvRqZwkh6QFAxuP2/osGSKcmwJD2DscUKII0BRZplw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=s77qp3FSn39IuaicDmK5sm69zCbXM7MU/r+ZTv34wCEasr9AxEA29IQ0ommdWFGkJ
+	 TPZS4AYl2XzHkGxCUZm6KyLcBTnLN4UiXRBr9leSdChB4PDnvR0YbU/nudVcD1z34a
+	 lRDDtFuijeC40J4cODaTUPZ/h3qsNsnyK35UblbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgFIBFE (ORCPT
+        id S1727855AbgFHXHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:05:04 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:2850 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727844AbgFHXHU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 8 Jun 2020 19:07:20 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058N44IK003415
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=dq7ndjL+/YvFB0JTWvrPx7CHSynyv1qP/99B/rlzImk=;
- b=hYPJa+l5Tz7h+dgpb6+IFggpk8ePeGkVgC7nQuoMDge3+lzqNhKc5ic+zSDZxNKpOZBS
- vBLWqsbBVsfTrKM9U/y27y1I4MVhd13N0//ekgvS5WFszambbDAOeYNK85rut2jOMk90
- tzZshB0kgDbNa00AVs7GXUDJVQa5oH5F7TU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31gu4r7n0k-14
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:20 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 8 Jun 2020 16:07:13 -0700
-Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 705D71D8FE58; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v6 15/19] mm: memcg/slab: deprecate slab_root_caches
-Date:   Mon, 8 Jun 2020 16:06:50 -0700
-Message-ID: <20200608230654.828134-16-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200608230654.828134-1-guro@fb.com>
-References: <20200608230654.828134-1-guro@fb.com>
+Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726993AbgFHXGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D46420853;
+        Mon,  8 Jun 2020 23:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657601;
+        bh=HvvRqZwkh6QFAxuP2/osGSKcmwJD2DscUKII0BRZplw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=swwSbdITupFVkO66bA/IrlyzbWeKGZFDEQTNEShqwzkAfRTrR/gE+PiczdQZ15tlb
+         wtfPUv+fJ+2hpfPnXCIFYhHm7L1mh2rFISJ9Woti9x1IUt7edM6d+Y/Pir2PmpQzzI
+         JvZPIrQgyCm+J82hK5sNb3iX/xrVgiDm7LDnwBpM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Huaixin Chang <changhuaixin@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Segall <bsegall@google.com>, Phil Auld <pauld@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 027/274] sched/fair: Refill bandwidth before scaling
+Date:   Mon,  8 Jun 2020 19:02:00 -0400
+Message-Id: <20200608230607.3361041-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- cotscore=-2147483648 mlxlogscore=669 lowpriorityscore=0 malwarescore=0
- bulkscore=0 spamscore=0 clxscore=1015 adultscore=0 mlxscore=0
- impostorscore=0 phishscore=0 suspectscore=2 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080160
-X-FB-Internal: deliver
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there are two lists of kmem_caches:
-1) slab_caches, which contains all kmem_caches,
-2) slab_root_caches, which contains only root kmem_caches.
+From: Huaixin Chang <changhuaixin@linux.alibaba.com>
 
-And there is some preprocessor magic to have a single list
-if CONFIG_MEMCG_KMEM isn't enabled.
+[ Upstream commit 5a6d6a6ccb5f48ca8cf7c6d64ff83fd9c7999390 ]
 
-It was required earlier because the number of non-root kmem_caches
-was proportional to the number of memory cgroups and could reach
-really big values. Now, when it cannot exceed the number of root
-kmem_caches, there is really no reason to maintain two lists.
+In order to prevent possible hardlockup of sched_cfs_period_timer()
+loop, loop count is introduced to denote whether to scale quota and
+period or not. However, scale is done between forwarding period timer
+and refilling cfs bandwidth runtime, which means that period timer is
+forwarded with old "period" while runtime is refilled with scaled
+"quota".
 
-We never iterate over the slab_root_caches list on any hot paths,
-so it's perfectly fine to iterate over slab_caches and filter out
-non-root kmem_caches.
+Move do_sched_cfs_period_timer() before scaling to solve this.
 
-It allows to remove a lot of config-dependent code and two pointers
-from the kmem_cache structure.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Fixes: 2e8e19226398 ("sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup")
+Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Reviewed-by: Phil Auld <pauld@redhat.com>
+Link: https://lkml.kernel.org/r/20200420024421.22442-3-changhuaixin@linux.alibaba.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c        |  1 -
- mm/slab.h        | 17 -----------------
- mm/slab_common.c | 37 ++++++++-----------------------------
- mm/slub.c        |  1 -
- 4 files changed, 8 insertions(+), 48 deletions(-)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 7e8d0f62f30b..18a782bacd1b 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1239,7 +1239,6 @@ void __init kmem_cache_init(void)
- 				  nr_node_ids * sizeof(struct kmem_cache_node *),
- 				  SLAB_HWCACHE_ALIGN, 0, 0);
- 	list_add(&kmem_cache->list, &slab_caches);
--	memcg_link_cache(kmem_cache);
- 	slab_state =3D PARTIAL;
-=20
- 	/*
-diff --git a/mm/slab.h b/mm/slab.h
-index f4033298a776..c49a863adb63 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -44,14 +44,12 @@ struct kmem_cache {
-  *
-  * @memcg_cache: pointer to memcg kmem cache, used by all non-root memor=
-y
-  *		cgroups.
-- * @root_caches_node: list node for slab_root_caches list.
-  * @work: work struct used to create the non-root cache.
-  */
- struct memcg_cache_params {
- 	struct kmem_cache *root_cache;
-=20
- 	struct kmem_cache *memcg_cache;
--	struct list_head __root_caches_node;
- 	struct work_struct work;
- };
- #endif /* CONFIG_SLOB */
-@@ -235,11 +233,6 @@ static inline int cache_vmstat_idx(struct kmem_cache=
- *s)
- }
-=20
- #ifdef CONFIG_MEMCG_KMEM
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index da3e5b54715b..2ae7e30ccb33 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5170,6 +5170,8 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 		if (!overrun)
+ 			break;
+ 
++		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
++
+ 		if (++count > 3) {
+ 			u64 new, old = ktime_to_ns(cfs_b->period);
+ 
+@@ -5199,8 +5201,6 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 			/* reset count so we don't come right back in here */
+ 			count = 0;
+ 		}
 -
--/* List of all root caches. */
--extern struct list_head		slab_root_caches;
--#define root_caches_node	memcg_params.__root_caches_node
--
- static inline bool is_root_cache(struct kmem_cache *s)
- {
- 	return !s->memcg_params.root_cache;
-@@ -415,14 +408,8 @@ static inline void memcg_slab_free_hook(struct kmem_=
-cache *s, struct page *page,
- }
-=20
- extern void slab_init_memcg_params(struct kmem_cache *);
--extern void memcg_link_cache(struct kmem_cache *s);
-=20
- #else /* CONFIG_MEMCG_KMEM */
--
--/* If !memcg, all caches are root. */
--#define slab_root_caches	slab_caches
--#define root_caches_node	list
--
- static inline bool is_root_cache(struct kmem_cache *s)
- {
- 	return true;
-@@ -491,10 +478,6 @@ static inline void slab_init_memcg_params(struct kme=
-m_cache *s)
- {
- }
-=20
--static inline void memcg_link_cache(struct kmem_cache *s)
--{
--}
--
- #endif /* CONFIG_MEMCG_KMEM */
-=20
- static inline struct kmem_cache *virt_to_cache(const void *obj)
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index f8874a159637..c045afb9724e 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -129,9 +129,6 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp=
-_t flags, size_t nr,
- }
-=20
- #ifdef CONFIG_MEMCG_KMEM
--
--LIST_HEAD(slab_root_caches);
--
- static void memcg_kmem_cache_create_func(struct work_struct *work)
- {
- 	struct kmem_cache *cachep =3D container_of(work, struct kmem_cache,
-@@ -154,27 +151,11 @@ static void init_memcg_params(struct kmem_cache *s,
- 	else
- 		slab_init_memcg_params(s);
- }
--
--void memcg_link_cache(struct kmem_cache *s)
--{
--	if (is_root_cache(s))
--		list_add(&s->root_caches_node, &slab_root_caches);
--}
--
--static void memcg_unlink_cache(struct kmem_cache *s)
--{
--	if (is_root_cache(s))
--		list_del(&s->root_caches_node);
--}
- #else
- static inline void init_memcg_params(struct kmem_cache *s,
- 				     struct kmem_cache *root_cache)
- {
- }
--
--static inline void memcg_unlink_cache(struct kmem_cache *s)
--{
--}
- #endif /* CONFIG_MEMCG_KMEM */
-=20
- /*
-@@ -251,7 +232,7 @@ struct kmem_cache *find_mergeable(unsigned int size, =
-unsigned int align,
- 	if (flags & SLAB_NEVER_MERGE)
- 		return NULL;
-=20
--	list_for_each_entry_reverse(s, &slab_root_caches, root_caches_node) {
-+	list_for_each_entry_reverse(s, &slab_caches, list) {
- 		if (slab_unmergeable(s))
- 			continue;
-=20
-@@ -310,7 +291,6 @@ static struct kmem_cache *create_cache(const char *na=
-me,
-=20
- 	s->refcount =3D 1;
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
- out:
- 	if (err)
- 		return ERR_PTR(err);
-@@ -505,7 +485,6 @@ static int shutdown_cache(struct kmem_cache *s)
- 	if (__kmem_cache_shutdown(s) !=3D 0)
- 		return -EBUSY;
-=20
--	memcg_unlink_cache(s);
- 	list_del(&s->list);
-=20
- 	if (s->flags & SLAB_TYPESAFE_BY_RCU) {
-@@ -749,7 +728,6 @@ struct kmem_cache *__init create_kmalloc_cache(const =
-char *name,
-=20
- 	create_boot_cache(s, name, size, flags, useroffset, usersize);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
- 	s->refcount =3D 1;
- 	return s;
- }
-@@ -1090,12 +1068,12 @@ static void print_slabinfo_header(struct seq_file=
- *m)
- void *slab_start(struct seq_file *m, loff_t *pos)
- {
- 	mutex_lock(&slab_mutex);
--	return seq_list_start(&slab_root_caches, *pos);
-+	return seq_list_start(&slab_caches, *pos);
- }
-=20
- void *slab_next(struct seq_file *m, void *p, loff_t *pos)
- {
--	return seq_list_next(p, &slab_root_caches, pos);
-+	return seq_list_next(p, &slab_caches, pos);
- }
-=20
- void slab_stop(struct seq_file *m, void *p)
-@@ -1148,11 +1126,12 @@ static void cache_show(struct kmem_cache *s, stru=
-ct seq_file *m)
-=20
- static int slab_show(struct seq_file *m, void *p)
- {
--	struct kmem_cache *s =3D list_entry(p, struct kmem_cache, root_caches_n=
-ode);
-+	struct kmem_cache *s =3D list_entry(p, struct kmem_cache, list);
-=20
--	if (p =3D=3D slab_root_caches.next)
-+	if (p =3D=3D slab_caches.next)
- 		print_slabinfo_header(m);
--	cache_show(s, m);
-+	if (is_root_cache(s))
-+		cache_show(s, m);
- 	return 0;
- }
-=20
-@@ -1254,7 +1233,7 @@ static int memcg_slabinfo_show(struct seq_file *m, =
-void *unused)
- 	mutex_lock(&slab_mutex);
- 	seq_puts(m, "# <name> <css_id[:dead|deact]> <active_objs> <num_objs>");
- 	seq_puts(m, " <active_slabs> <num_slabs>\n");
--	list_for_each_entry(s, &slab_root_caches, root_caches_node) {
-+	list_for_each_entry(s, &slab_caches, list) {
- 		/*
- 		 * Skip kmem caches that don't have the memcg cache.
- 		 */
-diff --git a/mm/slub.c b/mm/slub.c
-index 6761e40e2c2e..891ae2716df1 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4292,7 +4292,6 @@ static struct kmem_cache * __init bootstrap(struct =
-kmem_cache *static_cache)
+-		idle = do_sched_cfs_period_timer(cfs_b, overrun, flags);
  	}
- 	slab_init_memcg_params(s);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
- 	return s;
- }
-=20
---=20
-2.25.4
+ 	if (idle)
+ 		cfs_b->period_active = 0;
+-- 
+2.25.1
 
