@@ -2,128 +2,133 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB74BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35B5B2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB70D206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 09:28:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nprEhsuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgFHJ2O (ORCPT
+        id S1729208AbgFHJ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 05:28:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:32944 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgFHJ2L (ORCPT
+        Mon, 8 Jun 2020 05:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729138AbgFHJ2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:28:11 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id CEE412A10C1
-Subject: Re: [PATCH v3 0/7] Support inhibiting input devices
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com
-References: <20200604072853.GP89269@dtor-ws>
- <20200605173335.13753-1-andrzej.p@collabora.com> <20200607202414.GB13138@amd>
- <20200608053737.GS89269@dtor-ws>
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Message-ID: <b1b282ed-ddea-fdd8-bf1a-3e918653f1e3@collabora.com>
-Date:   Mon, 8 Jun 2020 11:28:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 8 Jun 2020 05:28:40 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9CCC08C5C3;
+        Mon,  8 Jun 2020 02:28:38 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id c71so14598348wmd.5;
+        Mon, 08 Jun 2020 02:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zpW4ldQgtWr6e60zpYiLkfjKjsub3mqIjp9lUDBs9Lc=;
+        b=nprEhsuPcx2W5AMM0OqjLGb+owEEq+0KLA71gLV2fTq/B7mVPCssqzpAn98c266ebU
+         OVgFJb37xyEwAVBdwe+/U6oDUij0r5HW95PuIbSJmyQa5om0E+3bCedKcle5KfVYDJXN
+         W/rzWxCoD22IHgSxjtp/P2OyZvbGsQmaUzop9mXYg2Vk352O6nTvmPZzti0ONJqXFzwC
+         zYGLIpz6smGElz/W4hZXHVllI7CrOh09UEsaqWrFbfyX83pMPCZJl007oPLKXTKQWyIa
+         DiF8ns8fo4OhQWUl1BRP8Zge1M79/Cwx7tzFenSPdGBX7V6zn+9gyrJdPXJVJ62NT3f4
+         jbGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zpW4ldQgtWr6e60zpYiLkfjKjsub3mqIjp9lUDBs9Lc=;
+        b=bXkIcvVv5uLuRUr6Xn7dXjVCcGvFPV0UQQDl2eP6SwBB58injyG+ehsmAUiC60Q6/p
+         yliqpFNzQPtHuwqn8xChCQEWk+J5E3C+BcifbXWp+agxOFS59vtlVy7gBZJZVr1ZhPll
+         ngUL2vpnT9zVJzh0KI1cYCSWImouWsSUUWzM/iFC/YnClVa7sPo0ABNrg8k/wpeg33A8
+         wjFBoDCnj+TqDnUEanSxiXemutFIiqiUFxBS2vrNV+G9GdJj2OpvTrtJ7YfASZvAsVO4
+         44kx82Diag10eUoYsRGqHGtXHRK9DJUbwaufb+dC9oKCB++eNPwjd4Gak4aKeQfEiUCX
+         LgmQ==
+X-Gm-Message-State: AOAM5336y/aT5vZiuknoCayY0ygBxiPvooWybZxQPYZCLsvnv8KbNHLm
+        KeT0i9dkLAl1lOCrs/Jif8I=
+X-Google-Smtp-Source: ABdhPJyUA36lnoRXlk8KkiYJyzRhtLivy3TSuijUYNgv+dWPltHeM5dYr2IDichDx9OmB9Tfx0C8Zw==
+X-Received: by 2002:a1c:7917:: with SMTP id l23mr16823230wme.117.1591608517282;
+        Mon, 08 Jun 2020 02:28:37 -0700 (PDT)
+Received: from skynet.lan (28.red-83-49-61.dynamicip.rima-tde.net. [83.49.61.28])
+        by smtp.gmail.com with ESMTPSA id p16sm24516605wru.27.2020.06.08.02.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 02:28:36 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     tsbogend@alpha.franken.de, f.fainelli@gmail.com,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH] MIPS: BCM63xx: improve CFE version detection
+Date:   Mon,  8 Jun 2020 11:28:35 +0200
+Message-Id: <20200608092835.3377581-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200608053737.GS89269@dtor-ws>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
+There are some CFE variants that start with 'cfe-vd' instead of 'cfe-v', such
+as the one used in the Huawei HG556a: "cfe-vd081.5003". In this case, the CFE
+version is stored as is (string vs number bytes).
 
-W dniu 08.06.2020 o 07:37, Dmitry Torokhov pisze:
-> On Sun, Jun 07, 2020 at 10:24:14PM +0200, Pavel Machek wrote:
->> On Fri 2020-06-05 19:33:28, Andrzej Pietrasiewicz wrote:
->>> Userspace might want to implement a policy to temporarily disregard input
->>> from certain devices.
->>
->> Wow, you certainly cc a lot of lists.
->>
->>> An example use case is a convertible laptop, whose keyboard can be folded
->>> under the screen to create tablet-like experience. The user then must hold
->>> the laptop in such a way that it is difficult to avoid pressing the keyboard
->>> keys. It is therefore desirable to temporarily disregard input from the
->>> keyboard, until it is folded back. This obviously is a policy which should
->>> be kept out of the kernel, but the kernel must provide suitable means to
->>> implement such a policy.
->>>
->>> Due to interactions with suspend/resume, a helper has been added for drivers
->>> to decide if the device is being used or not (PATCH 1/7) and it has been
->>> applied to relevant drivers (PATCH 2,4,5,6/7).
->>
->> But is that a right way to implement it?
->>
->> We want this for cellphones, too -- touchscreen should be disabled
->> while the device is locked in the pocket -- but we really want the
->> touchscreen hardware to be powered down in that case (because it keeps
->> SoC busy and eats a _lot_ of electricity).
->>
->> But simplistic "receive an event and then drop it if device is
->> inhibited" does not allow that...
-> 
-> I do not think you read the entirety of this patch series...
-> 
+Some newer devices have an additional version number, such as the Comtrend
+VR-3032u: "1.0.38-112.118-11".
 
-Yeah, kindly read the whole thread. Long story short: Inhibiting _is_ about
-ignoring events from inhibited devices. Obviously we can do better than
-just that. Indeed, the open() and close() callbacks (which are called at
-uninhibiting/inhibiting) mean "start providing events" and "stop providing
-events", respectively. How that translates into driver operation is highly
-driver-specific and cannot be handled at the input subsystem level, but it
-is the place where power savings can be realized: whenever the driver knows
-that nobody wants events from it it can do whatever it considers appropriate,
-including transitioning the device into low power mode, for example using
-PM runtime.
+Finally, print the string as is if the version doesn't start with "cfe-v" or
+"cfe-vd", but starts with "cfe-".
 
-Regards,
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+---
+ arch/mips/bcm63xx/boards/board_bcm963xx.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-Andrzej
+diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+index 36ec3dc2c999..38f812383998 100644
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+@@ -763,11 +763,25 @@ void __init board_prom_init(void)
+ 
+ 	/* dump cfe version */
+ 	cfe = boot_addr + BCM963XX_CFE_VERSION_OFFSET;
+-	if (!memcmp(cfe, "cfe-v", 5))
+-		snprintf(cfe_version, sizeof(cfe_version), "%u.%u.%u-%u.%u",
+-			 cfe[5], cfe[6], cfe[7], cfe[8], cfe[9]);
+-	else
++	if (strstarts(cfe, "cfe-")) {
++		if(cfe[4] == 'v') {
++			if(cfe[5] == 'd')
++				snprintf(cfe_version, 11, "%s",
++					 (char *) &cfe[5]);
++			else if (cfe[10] > 0)
++				snprintf(cfe_version, sizeof(cfe_version),
++					 "%u.%u.%u-%u.%u-%u", cfe[5], cfe[6],
++					 cfe[7], cfe[8], cfe[9], cfe[10]);
++			else
++				snprintf(cfe_version, sizeof(cfe_version),
++					 "%u.%u.%u-%u.%u", cfe[5], cfe[6],
++					 cfe[7], cfe[8], cfe[9]);
++		} else {
++			snprintf(cfe_version, 12, "%s", (char *) &cfe[4]);
++		}
++	} else {
+ 		strcpy(cfe_version, "unknown");
++	}
+ 	pr_info("CFE version: %s\n", cfe_version);
+ 
+ 	bcm63xx_nvram_init(boot_addr + BCM963XX_NVRAM_OFFSET);
+-- 
+2.26.2
+
