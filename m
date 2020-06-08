@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19389C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7354FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D3E21501
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B9521534
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657990;
-	bh=6fIE5Hz8OMymYYjrHzCdvXBjcqLLwBhH7L5RJjvcvQE=;
+	s=default; t=1591658004;
+	bh=eJYsUxMVZMlCzNovHosZ1/Ch8LyEdLb+TE+MJxS0lv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFISN+OrzRinsahJVG/DO4h7LwejEobJA8jBZy5ACPvmM+33Q9c/kyhPTaAb1lhjM
-	 9QoM0mBaWL0rRLph0x5iXJI1iweMIfDQzSb4rT3WpxnIMCAWGZqKOcjc/EiLNWiawe
-	 HKyymGVrIysjzguyTKRs9KhkjpP9yAXYl+Gf6HG8=
+	b=h2UiGWhtp+0I1s0SfWVXp79LKobw8nTBqGAFPlfJJDFpxk16RcrqcCOMu+QowRKnB
+	 wBqOowUtWMod2UGcyv9vfnLtXTKffEOlmubSCKFjdi2cuoeu6jbr69ackDIrVPXyu1
+	 78Ub6ktedUCJBCuhN6V1wrtS991Ily1gZ4j7fu3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgFHXNH (ORCPT
+        id S1727902AbgFHXNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:13:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57742 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbgFHXLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:11:06 -0400
+        id S1728863AbgFHXLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:11:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1363208C3;
-        Mon,  8 Jun 2020 23:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95E15208C3;
+        Mon,  8 Jun 2020 23:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657865;
-        bh=6fIE5Hz8OMymYYjrHzCdvXBjcqLLwBhH7L5RJjvcvQE=;
+        s=default; t=1591657873;
+        bh=eJYsUxMVZMlCzNovHosZ1/Ch8LyEdLb+TE+MJxS0lv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYbWLxxvK9ivZvtiu8s6oL5eQdrn22qHgS1qaWgQ7T+mELIGhOBRl2LHl1qAdclF3
-         2L/AhDXdCgY5fF2BlbgbM6/UzV+Hx29wBLYjDPesTYa3+IWO2NfP9277UwwtGpZAR/
-         Gak2arc2J+btCK72vzSNEYT/2liVYOVyIICAOwsI=
+        b=CVFaYyxa1VmTMOn2DMomla4OMSiXwyN2EtEhE6ANaVLlgjYSrqaVln/aazBT/xMzn
+         ujt4dhjch2GVz5N5Q5ihtKlxHvna/fZquYibskzuPcJFLrySzSsF1ny2GW2sVbQyc0
+         WCf0rObJn6oZgm1cOh3gps2b6+LL2mLo8EnBt2lA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brett Creeley <brett.creeley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 227/274] ice: Fix Tx timeout when link is toggled on a VF's interface
-Date:   Mon,  8 Jun 2020 19:05:20 -0400
-Message-Id: <20200608230607.3361041-227-sashal@kernel.org>
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 5.7 231/274] m68k: mac: Don't call via_flush_cache() on Mac IIfx
+Date:   Mon,  8 Jun 2020 19:05:24 -0400
+Message-Id: <20200608230607.3361041-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,108 +62,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 4dc926d3a59e73b8c4adf51b261f1a1bbd48a989 ]
+[ Upstream commit bcc44f6b74106b31f0b0408b70305a40360d63b7 ]
 
-Currently if the iavf is loaded and a VF link transitions from up to
-down to up again a Tx timeout will be triggered. This happens because
-Tx/Rx queue interrupts are only enabled when receiving the
-VIRTCHNL_OP_CONFIG_MAP_IRQ message, which happens on reset or initial
-iavf driver load, but not when bringing link up. This is problematic
-because they are disabled on the VIRTCHNL_OP_DISABLE_QUEUES message,
-which is part of bringing a VF's link down. However, they are not
-enabled on the VIRTCHNL_OP_ENABLE_QUEUES message, which is part of
-bringing a VF's link up.
+There is no VIA2 chip on the Mac IIfx, so don't call via_flush_cache().
+This avoids a boot crash which appeared in v5.4.
 
-Fix this by re-enabling the VF's Rx and Tx queue interrupts when they
-were previously configured. This is done by first checking to make
-sure the previous value in QINT_[R|T]QCTL.MSIX_INDX is not 0, which
-is used to represent the OICR in the VF's interrupt space. If the
-MSIX_INDX is non-zero then enable the interrupt by setting the
-QINT_[R|T]CTL.CAUSE_ENA bit to 1.
+printk: console [ttyS0] enabled
+printk: bootconsole [debug0] disabled
+printk: bootconsole [debug0] disabled
+Calibrating delay loop... 9.61 BogoMIPS (lpj=48064)
+pid_max: default: 32768 minimum: 301
+Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+devtmpfs: initialized
+random: get_random_u32 called from bucket_table_alloc.isra.27+0x68/0x194 with crng_init=0
+clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+futex hash table entries: 256 (order: -1, 3072 bytes, linear)
+NET: Registered protocol family 16
+Data read fault at 0x00000000 in Super Data (pc=0x8a6a)
+BAD KERNEL BUSERR
+Oops: 00000000
+Modules linked in:
+PC: [<00008a6a>] via_flush_cache+0x12/0x2c
+SR: 2700  SP: 01c1fe3c  a2: 01c24000
+d0: 00001119    d1: 0000000c    d2: 00012000    d3: 0000000f
+d4: 01c06840    d5: 00033b92    a0: 00000000    a1: 00000000
+Process swapper (pid: 1, task=01c24000)
+Frame format=B ssw=0755 isc=0200 isb=fff7 daddr=00000000 dobuf=01c1fed0
+baddr=00008a6e dibuf=0000004e ver=f
+Stack from 01c1fec4:
+        01c1fed0 00007d7e 00010080 01c1fedc 0000792e 00000001 01c1fef4 00006b40
+        01c80000 00040000 00000006 00000003 01c1ff1c 004a545e 004ff200 00040000
+        00000000 00000003 01c06840 00033b92 004a5410 004b6c88 01c1ff84 000021e2
+        00000073 00000003 01c06840 00033b92 0038507a 004bb094 004b6ca8 004b6c88
+        004b6ca4 004b6c88 000021ae 00020002 00000000 01c0685d 00000000 01c1ffb4
+        0049f938 00409c85 01c06840 0045bd40 00000073 00000002 00000002 00000000
+Call Trace: [<00007d7e>] mac_cache_card_flush+0x12/0x1c
+ [<00010080>] fix_dnrm+0x2/0x18
+ [<0000792e>] cache_push+0x46/0x5a
+ [<00006b40>] arch_dma_prep_coherent+0x60/0x6e
+ [<00040000>] switched_to_dl+0x76/0xd0
+ [<004a545e>] dma_atomic_pool_init+0x4e/0x188
+ [<00040000>] switched_to_dl+0x76/0xd0
+ [<00033b92>] parse_args+0x0/0x370
+ [<004a5410>] dma_atomic_pool_init+0x0/0x188
+ [<000021e2>] do_one_initcall+0x34/0x1be
+ [<00033b92>] parse_args+0x0/0x370
+ [<0038507a>] strcpy+0x0/0x1e
+ [<000021ae>] do_one_initcall+0x0/0x1be
+ [<00020002>] do_proc_dointvec_conv+0x54/0x74
+ [<0049f938>] kernel_init_freeable+0x126/0x190
+ [<0049f94c>] kernel_init_freeable+0x13a/0x190
+ [<004a5410>] dma_atomic_pool_init+0x0/0x188
+ [<00041798>] complete+0x0/0x3c
+ [<000b9b0c>] kfree+0x0/0x20a
+ [<0038df98>] schedule+0x0/0xd0
+ [<0038d604>] kernel_init+0x0/0xda
+ [<0038d610>] kernel_init+0xc/0xda
+ [<0038d604>] kernel_init+0x0/0xda
+ [<00002d38>] ret_from_kernel_thread+0xc/0x14
+Code: 0000 2079 0048 10da 2279 0048 10c8 d3c8 <1011> 0200 fff7 1280 d1f9 0048 10c8 1010 0000 0008 1080 4e5e 4e75 4e56 0000 2039
+Disabling lock debugging due to kernel taint
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
 
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Thanks to Stan Johnson for capturing the console log and running git
+bisect.
+
+Git bisect said commit 8e3a68fb55e0 ("dma-mapping: make
+dma_atomic_pool_init self-contained") is the first "bad" commit. I don't
+know why. Perhaps mach_l2_flush first became reachable with that commit.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/b8bbeef197d6b3898e82ed0d231ad08f575a4b34.1589949122.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/intel/ice/ice_virtchnl_pf.c  | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/m68k/include/asm/mac_via.h |  1 +
+ arch/m68k/mac/config.c          | 21 ++-------------------
+ arch/m68k/mac/via.c             |  6 +++++-
+ 3 files changed, 8 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-index c9c281167873..f1fdb4d4c826 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-@@ -2118,6 +2118,52 @@ static bool ice_vc_validate_vqs_bitmaps(struct virtchnl_queue_select *vqs)
- 	return true;
+diff --git a/arch/m68k/include/asm/mac_via.h b/arch/m68k/include/asm/mac_via.h
+index de1470c4d829..1149251ea58d 100644
+--- a/arch/m68k/include/asm/mac_via.h
++++ b/arch/m68k/include/asm/mac_via.h
+@@ -257,6 +257,7 @@ extern int rbv_present,via_alt_mapping;
+ 
+ struct irq_desc;
+ 
++extern void via_l2_flush(int writeback);
+ extern void via_register_interrupts(void);
+ extern void via_irq_enable(int);
+ extern void via_irq_disable(int);
+diff --git a/arch/m68k/mac/config.c b/arch/m68k/mac/config.c
+index 611f73bfc87c..d0126ab01360 100644
+--- a/arch/m68k/mac/config.c
++++ b/arch/m68k/mac/config.c
+@@ -59,7 +59,6 @@ extern void iop_preinit(void);
+ extern void iop_init(void);
+ extern void via_init(void);
+ extern void via_init_clock(irq_handler_t func);
+-extern void via_flush_cache(void);
+ extern void oss_init(void);
+ extern void psc_init(void);
+ extern void baboon_init(void);
+@@ -130,21 +129,6 @@ int __init mac_parse_bootinfo(const struct bi_record *record)
+ 	return unknown;
  }
  
-+/**
-+ * ice_vf_ena_txq_interrupt - enable Tx queue interrupt via QINT_TQCTL
-+ * @vsi: VSI of the VF to configure
-+ * @q_idx: VF queue index used to determine the queue in the PF's space
-+ */
-+static void ice_vf_ena_txq_interrupt(struct ice_vsi *vsi, u32 q_idx)
-+{
-+	struct ice_hw *hw = &vsi->back->hw;
-+	u32 pfq = vsi->txq_map[q_idx];
-+	u32 reg;
-+
-+	reg = rd32(hw, QINT_TQCTL(pfq));
-+
-+	/* MSI-X index 0 in the VF's space is always for the OICR, which means
-+	 * this is most likely a poll mode VF driver, so don't enable an
-+	 * interrupt that was never configured via VIRTCHNL_OP_CONFIG_IRQ_MAP
-+	 */
-+	if (!(reg & QINT_TQCTL_MSIX_INDX_M))
-+		return;
-+
-+	wr32(hw, QINT_TQCTL(pfq), reg | QINT_TQCTL_CAUSE_ENA_M);
-+}
-+
-+/**
-+ * ice_vf_ena_rxq_interrupt - enable Tx queue interrupt via QINT_RQCTL
-+ * @vsi: VSI of the VF to configure
-+ * @q_idx: VF queue index used to determine the queue in the PF's space
-+ */
-+static void ice_vf_ena_rxq_interrupt(struct ice_vsi *vsi, u32 q_idx)
-+{
-+	struct ice_hw *hw = &vsi->back->hw;
-+	u32 pfq = vsi->rxq_map[q_idx];
-+	u32 reg;
-+
-+	reg = rd32(hw, QINT_RQCTL(pfq));
-+
-+	/* MSI-X index 0 in the VF's space is always for the OICR, which means
-+	 * this is most likely a poll mode VF driver, so don't enable an
-+	 * interrupt that was never configured via VIRTCHNL_OP_CONFIG_IRQ_MAP
-+	 */
-+	if (!(reg & QINT_RQCTL_MSIX_INDX_M))
-+		return;
-+
-+	wr32(hw, QINT_RQCTL(pfq), reg | QINT_RQCTL_CAUSE_ENA_M);
-+}
-+
- /**
-  * ice_vc_ena_qs_msg
-  * @vf: pointer to the VF info
-@@ -2178,6 +2224,7 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8 *msg)
- 			goto error_param;
- 		}
+-/*
+- * Flip into 24bit mode for an instant - flushes the L2 cache card. We
+- * have to disable interrupts for this. Our IRQ handlers will crap
+- * themselves if they take an IRQ in 24bit mode!
+- */
+-
+-static void mac_cache_card_flush(int writeback)
+-{
+-	unsigned long flags;
+-
+-	local_irq_save(flags);
+-	via_flush_cache();
+-	local_irq_restore(flags);
+-}
+-
+ void __init config_mac(void)
+ {
+ 	if (!MACH_IS_MAC)
+@@ -175,9 +159,8 @@ void __init config_mac(void)
+ 	 * not.
+ 	 */
  
-+		ice_vf_ena_rxq_interrupt(vsi, vf_q_id);
- 		set_bit(vf_q_id, vf->rxq_ena);
- 	}
+-	if (macintosh_config->ident == MAC_MODEL_IICI
+-	    || macintosh_config->ident == MAC_MODEL_IIFX)
+-		mach_l2_flush = mac_cache_card_flush;
++	if (macintosh_config->ident == MAC_MODEL_IICI)
++		mach_l2_flush = via_l2_flush;
+ }
  
-@@ -2193,6 +2240,7 @@ static int ice_vc_ena_qs_msg(struct ice_vf *vf, u8 *msg)
- 		if (test_bit(vf_q_id, vf->txq_ena))
- 			continue;
  
-+		ice_vf_ena_txq_interrupt(vsi, vf_q_id);
- 		set_bit(vf_q_id, vf->txq_ena);
- 	}
+diff --git a/arch/m68k/mac/via.c b/arch/m68k/mac/via.c
+index 3c2cfcb74982..1f0fad2a98a0 100644
+--- a/arch/m68k/mac/via.c
++++ b/arch/m68k/mac/via.c
+@@ -294,10 +294,14 @@ void via_debug_dump(void)
+  * the system into 24-bit mode for an instant.
+  */
  
+-void via_flush_cache(void)
++void via_l2_flush(int writeback)
+ {
++	unsigned long flags;
++
++	local_irq_save(flags);
+ 	via2[gBufB] &= ~VIA2B_vMode32;
+ 	via2[gBufB] |= VIA2B_vMode32;
++	local_irq_restore(flags);
+ }
+ 
+ /*
 -- 
 2.25.1
 
