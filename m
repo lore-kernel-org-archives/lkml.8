@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF71CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C05CF2072F
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABC42072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661159;
-	bh=K2YU//ZLvZNkYLg+KDV0DbTG8YJHfFJJ2wGbc+BUzfo=;
+	s=default; t=1591661175;
+	bh=3u92HUvB5djMZFtYjTEdweV4YD2qNfDehCX6IHumBeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KBCuOa16pDvXHPVC8OVdSZ4l16lB6Tmu/OtEhTztRVIGWhPyVZjkaDjwc3n8+xV7H
-	 C4zqEmgSmJo5TUDMKCeByBwG3L3u9NERWERtdCQ2mCuXHP2jQqGJBvjaDp7WhbODyJ
-	 /tsPgBu9DyYdc5H8sSD2pmJm/LxFDf8KJcIGiuNg=
+	b=qyfXNJfGlkcgoby6LT4ss1FoQfyF6JFzo/kZwUnh2N3vCwAITE+OW4lAB526kWnLG
+	 KGP93ppYCCIzr3uk1BMbZnHwFxFt2kW1n4WtSVzF/k+ZzzDZR6wLzU8eC+P/2uIPFU
+	 Pj91brPsBLyrFleTn26G+KQyeq7bht72N8MEcfc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbgFIAF6 (ORCPT
+        id S1732829AbgFIAGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:06:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgFHXVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:16 -0400
+        id S1728439AbgFHXVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F9220870;
-        Mon,  8 Jun 2020 23:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 677F420897;
+        Mon,  8 Jun 2020 23:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658476;
-        bh=K2YU//ZLvZNkYLg+KDV0DbTG8YJHfFJJ2wGbc+BUzfo=;
+        s=default; t=1591658474;
+        bh=3u92HUvB5djMZFtYjTEdweV4YD2qNfDehCX6IHumBeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8CP6XXgfABEKi+amc5HQ0aPpAED47zxRxwx/CUrToeG5qFxpil4yulOI2E6Aqr23
-         50+i9alodR3OYF1mVkKzqArTBfpKYOUlkUL4/fl9/Uvn9I0L8XqTbATv5wwQzN/M7q
-         0tOAXyhSFPSmvqhiRrv7BgEYmF3GVyM4Phh+FyBk=
+        b=pFBkmDfEtu7npelHMDqO4NrUfjOdpKI21RqR3Dq4p/az9Y6JrT3d8MqDdQjRR7tUf
+         14hMk9I5xvuxN5j2ur+t1Q/OXFqiBNHw6WFTXcf5dI2z574gBl/nQzdpQY2rQbP98C
+         5aF5bytlqGzKZxrySaQGTtUHLry0gsDhDo4mRwk0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 113/175] nvme: refine the Qemu Identify CNS quirk
-Date:   Mon,  8 Jun 2020 19:17:46 -0400
-Message-Id: <20200608231848.3366970-113-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <Mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 111/175] platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types
+Date:   Mon,  8 Jun 2020 19:17:44 -0400
+Message-Id: <20200608231848.3366970-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -59,57 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit b9a5c3d4c34d8bd9fd75f7f28d18a57cb68da237 ]
+[ Upstream commit 1fac39fd0316b19c3e57a182524332332d1643ce ]
 
-Add a helper to check if we can use Identify CNS values > 1, and refine
-the Qemu quirk to not apply to reported versions larger than 1.1, as the
-Qemu implementation had been fixed by then.
+Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
+reporting SW_TABLET_MODE = 1 to userspace on laptops.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+interface to report if they are in tablet mode (keyboard detached) or not,
+report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
+
+Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
+The Dell Venue 11 Pro 7130 is an example of this.
+
+Extend the DMI chassis-type check to also accept Portables and Detachables
+so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
+
+Note the chassis-type check was originally added to avoid a false-positive
+tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
+that laptop is using a chassis-type of 9 / "Laptop", so after this commit
+we still ignore the tablet-switch for that chassis-type.
+
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f0e0af3aa714..d4b388793f40 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1032,6 +1032,19 @@ void nvme_stop_keep_alive(struct nvme_ctrl *ctrl)
- }
- EXPORT_SYMBOL_GPL(nvme_stop_keep_alive);
- 
-+/*
-+ * In NVMe 1.0 the CNS field was just a binary controller or namespace
-+ * flag, thus sending any new CNS opcodes has a big chance of not working.
-+ * Qemu unfortunately had that bug after reporting a 1.1 version compliance
-+ * (but not for any later version).
-+ */
-+static bool nvme_ctrl_limited_cns(struct nvme_ctrl *ctrl)
-+{
-+	if (ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)
-+		return ctrl->vs < NVME_VS(1, 2, 0);
-+	return ctrl->vs < NVME_VS(1, 1, 0);
-+}
-+
- static int nvme_identify_ctrl(struct nvme_ctrl *dev, struct nvme_id_ctrl **id)
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index ab33349035b1..5acfa08b5dac 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -157,12 +157,22 @@ static void detect_tablet_mode(struct platform_device *device)
+ static bool intel_vbtn_has_switches(acpi_handle handle)
  {
- 	struct nvme_command c = { };
-@@ -3740,8 +3753,7 @@ static void nvme_scan_work(struct work_struct *work)
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
++	unsigned long chassis_type_int;
+ 	unsigned long long vgbs;
+ 	acpi_status status;
  
- 	mutex_lock(&ctrl->scan_lock);
- 	nn = le32_to_cpu(id->nn);
--	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
--	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
-+	if (!nvme_ctrl_limited_cns(ctrl)) {
- 		if (!nvme_scan_ns_list(ctrl, nn))
- 			goto out_free_id;
- 	}
+-	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
++	if (kstrtoul(chassis_type, 10, &chassis_type_int))
+ 		return false;
+ 
++	switch (chassis_type_int) {
++	case  8: /* Portable */
++	case 31: /* Convertible */
++	case 32: /* Detachable */
++		break;
++	default:
++		return false;
++	}
++
+ 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	return ACPI_SUCCESS(status);
+ }
 -- 
 2.25.1
 
