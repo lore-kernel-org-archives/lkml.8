@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9258C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B93E3207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02C6207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662347;
-	bh=gLF5uCXPjoIpUHk9Bdl4KupUF7xVSv7T6/M91PSrJpQ=;
+	s=default; t=1591662359;
+	bh=tCDU294vHgqdHXvCxz4OlF4gb8RXAG9Zx8N65jO1Vss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TZdy5pkYmcXQjl8bdosMQpZfW0Lrk991m957rKP0aiEBxwrzzQBbl/qsXHKYSbGyr
-	 +nYTf/OlqMZ0D5H8tajzMDDhulBHMBslMzb/JdS2WWDKGuAfrshwIjYvprCG1maSY7
-	 aXPveedDPbL3Vk20K3F2J2mkKSy9O/yMze17+Zfo=
+	b=EK9wOHcj4k7AvLRIhUsiJHf3hs6O4mtuFLV/BUS8r7kg6gbxMrGSuNdilEmd6BiyM
+	 cA6CnQ2W6K3jd9Cf1SR9AW6f6xW0+ES03deDt/G05IrdkF6dvykIwgBLP6BBVBnc47
+	 j9S0EmsfHYh5+y1UjEgUpca8DlhZoLTV0/qSIFwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733018AbgFIAZr (ORCPT
+        id S1729271AbgFIAZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38338 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:25:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730359AbgFHXQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:55 -0400
+        id S1730353AbgFHXQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55AF320775;
-        Mon,  8 Jun 2020 23:16:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15ECA20842;
+        Mon,  8 Jun 2020 23:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658215;
-        bh=gLF5uCXPjoIpUHk9Bdl4KupUF7xVSv7T6/M91PSrJpQ=;
+        s=default; t=1591658213;
+        bh=tCDU294vHgqdHXvCxz4OlF4gb8RXAG9Zx8N65jO1Vss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOPqZIaFkzgvnLFnv5oSKnxFsRqVYQSw8y5rXmcybfbf//IRhQ1UGoKCH0iVBKgaA
-         ejEKKZVW0la5YKNPwPCJHJShy9LVD9BGHDarBSS7HNOH2ZsonzAtLRkqkyaCRvOsHl
-         GoCnNppVtSO9W0MfgKQG9/gXgG4vUjBUtJM8IeiI=
+        b=G7zhENoQUBm1qQ8s0jlX3KE/NCJl+5skzgkLLn+K+NxtYZDO7u2Jxni3/b7AZ1oFU
+         CTFv6DcU8vEy3WYKdmxD89z1AZrRH53wFFX7TsDNYPgqqnHXmolJpa4AUhezGXivPc
+         XzzGtjQYYAkylT/jnvc5Gio6e1ZKyxHhhy9hdb1k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
+Cc:     Roi Dayan <roid@mellanox.com>, Vlad Buslov <vladbu@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         netdev@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 231/606] net/mlx5: Fix memory leak in mlx5_events_init
-Date:   Mon,  8 Jun 2020 19:05:56 -0400
-Message-Id: <20200608231211.3363633-231-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 230/606] net/mlx5e: Fix inner tirs handling
+Date:   Mon,  8 Jun 2020 19:05:55 -0400
+Message-Id: <20200608231211.3363633-230-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,39 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit df14ad1eccb04a4a28c90389214dbacab085b244 ]
+[ Upstream commit a16b8e0dcf7043bee46174bed0553cc9e36b63a5 ]
 
-Fix memory leak in mlx5_events_init(), in case
-create_single_thread_workqueue() fails, events
-struct should be freed.
+In the cited commit inner_tirs argument was added to create and destroy
+inner tirs, and no indication was added to mlx5e_modify_tirs_hash()
+function. In order to have a consistent handling, use
+inner_indir_tir[0].tirn in tirs destroy/modify function as an indication
+to whether inner tirs are created.
+Inner tirs are not created for representors and before this commit,
+a call to mlx5e_modify_tirs_hash() was sending HW commands to
+modify non-existent inner tirs.
 
-Fixes: 5d3c537f9070 ("net/mlx5: Handle event of power detection in the PCIE slot")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Fixes: 46dc933cee82 ("net/mlx5e: Provide explicit directive if to create inner indirect tirs")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/events.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h         |  2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c    | 12 +++++++-----
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c     |  4 ++--
+ .../net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c    |  4 ++--
+ 4 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/events.c b/drivers/net/ethernet/mellanox/mlx5/core/events.c
-index 8bcf3426b9c6..3ce17c3d7a00 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/events.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/events.c
-@@ -346,8 +346,10 @@ int mlx5_events_init(struct mlx5_core_dev *dev)
- 	events->dev = dev;
- 	dev->priv.events = events;
- 	events->wq = create_singlethread_workqueue("mlx5_events");
--	if (!events->wq)
-+	if (!events->wq) {
-+		kfree(events);
- 		return -ENOMEM;
-+	}
- 	INIT_WORK(&events->pcie_core_work, mlx5_pcie_event);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 5a5e6a21c6e1..80c579948152 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1104,7 +1104,7 @@ void mlx5e_close_drop_rq(struct mlx5e_rq *drop_rq);
+ int mlx5e_create_indirect_rqt(struct mlx5e_priv *priv);
  
- 	return 0;
+ int mlx5e_create_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
+-void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
++void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv);
+ 
+ int mlx5e_create_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
+ void mlx5e_destroy_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index d02db5aebac4..4fef7587165c 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -2747,7 +2747,8 @@ void mlx5e_modify_tirs_hash(struct mlx5e_priv *priv, void *in, int inlen)
+ 		mlx5_core_modify_tir(mdev, priv->indir_tir[tt].tirn, in, inlen);
+ 	}
+ 
+-	if (!mlx5e_tunnel_inner_ft_supported(priv->mdev))
++	/* Verify inner tirs resources allocated */
++	if (!priv->inner_indir_tir[0].tirn)
+ 		return;
+ 
+ 	for (tt = 0; tt < MLX5E_NUM_INDIR_TIRS; tt++) {
+@@ -3394,14 +3395,15 @@ int mlx5e_create_direct_tirs(struct mlx5e_priv *priv, struct mlx5e_tir *tirs)
+ 	return err;
+ }
+ 
+-void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc)
++void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
+ 		mlx5e_destroy_tir(priv->mdev, &priv->indir_tir[i]);
+ 
+-	if (!inner_ttc || !mlx5e_tunnel_inner_ft_supported(priv->mdev))
++	/* Verify inner tirs resources allocated */
++	if (!priv->inner_indir_tir[0].tirn)
+ 		return;
+ 
+ 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
+@@ -5107,7 +5109,7 @@ static int mlx5e_init_nic_rx(struct mlx5e_priv *priv)
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -5126,7 +5128,7 @@ static void mlx5e_cleanup_nic_rx(struct mlx5e_priv *priv)
+ 	mlx5e_destroy_direct_tirs(priv, priv->xsk_tir);
+ 	mlx5e_destroy_direct_rqts(priv, priv->xsk_tir);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index 2ad0d09cc9bd..c3c3d89d9153 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -1667,7 +1667,7 @@ static int mlx5e_init_rep_rx(struct mlx5e_priv *priv)
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, false);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -1684,7 +1684,7 @@ static void mlx5e_cleanup_rep_rx(struct mlx5e_priv *priv)
+ 	mlx5_del_flow_rules(rpriv->vport_rx_rule);
+ 	mlx5e_destroy_ttc_table(priv, &priv->fs.ttc);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, false);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
+index 56078b23f1a0..0a334ceba7b1 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
+@@ -396,7 +396,7 @@ static int mlx5i_init_rx(struct mlx5e_priv *priv)
+ err_destroy_direct_tirs:
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+ err_destroy_indirect_tirs:
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ err_destroy_direct_rqts:
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ err_destroy_indirect_rqts:
+@@ -412,7 +412,7 @@ static void mlx5i_cleanup_rx(struct mlx5e_priv *priv)
+ {
+ 	mlx5i_destroy_flow_steering(priv);
+ 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
+-	mlx5e_destroy_indirect_tirs(priv, true);
++	mlx5e_destroy_indirect_tirs(priv);
+ 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
+ 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
+ 	mlx5e_close_drop_rq(&priv->drop_rq);
 -- 
 2.25.1
 
