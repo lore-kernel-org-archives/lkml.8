@@ -2,112 +2,107 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F845C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1C020737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664615;
-	bh=1S5Q9TpFA1WJBMNsZ9T26wr84UeMbZz/aKxvsdAw2F8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XkMxUBpwY3sathEkPE4d8jdhEyyTAW/Xj58qM7bYRINeOic24k93E5UM4f3IUuSjh
-	 q/iG831CLc1i1ZEqzp3Avno76bnPhfhrZS/JKd3GZyE6vSnMUYAoeTc5a+sazdNxIl
-	 wbZA8L1W7QYxR6jA3mZ6JlmgSFQ8T0XcGTfWeDus=
+	by mail.kernel.org (Postfix) with ESMTP id 6A71520737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NocHiOsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgFIBDe (ORCPT
+        id S2388086AbgFIBDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbgFHXHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E56B2087E;
-        Mon,  8 Jun 2020 23:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657656;
-        bh=1S5Q9TpFA1WJBMNsZ9T26wr84UeMbZz/aKxvsdAw2F8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=km9GvmngdZq79C+MzaGB8nqr2G2hUBnj764Y6Zvkg9+Zad9q6VXVq+tQZO+tGbLA6
-         0uGO41lNP0N3zDpyaSyAzmzRmYIu0dz/taCQ5p/XlEw9tGkXFwH3A2AZUj3Owmu4c5
-         VxKXWEhxvsY9Yu+UdwX4e49GE/6BuCMK+juDu/0E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Rosin <peda@axentia.se>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 069/274] spi: mux: repair mux usage
-Date:   Mon,  8 Jun 2020 19:02:42 -0400
-Message-Id: <20200608230607.3361041-69-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        Mon, 8 Jun 2020 21:03:16 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:15684 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727988AbgFHXHp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:45 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058N0rbe022442
+        for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=zcj5cOhikHZGYmyFMPbMGzx/9MYXkskZJ2rJF+Ro4jw=;
+ b=NocHiOsjw9jTPBS/c+d55kE77oTboZehrmtF4vNJ63lmc6Cc2pqOhsY6kGEc8jwcuTNm
+ yXw+P1E+aaj0DU+iKy1LAIv6zug/9Z+ahumLCxsKMrYfInvwaedL2hY9VIXwSCxm4Vet
+ 5j+fd25Y4kTk2rAmzLF1Bvth8cbfK+/CYNg= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 31gtucqnb6-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:45 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 8 Jun 2020 16:07:08 -0700
+Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
+        id 74E821D8FE5A; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: vll0c01
+Subject: [PATCH v6 16/19] mm: memcg/slab: remove redundant check in memcg_accumulate_slabinfo()
+Date:   Mon, 8 Jun 2020 16:06:51 -0700
+Message-ID: <20200608230654.828134-17-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200608230654.828134-1-guro@fb.com>
+References: <20200608230654.828134-1-guro@fb.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 cotscore=-2147483648 spamscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 mlxlogscore=782
+ clxscore=1015 phishscore=0 mlxscore=0 impostorscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080160
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+memcg_accumulate_slabinfo() is never called with a non-root
+kmem_cache as a first argument, so the is_root_cache(s) check
+is redundant and can be removed without any functional change.
 
-[ Upstream commit a2b02e4623fb127fa65a13e4ac5aa56e4ae16291 ]
-
-It is not valid to cache/short out selection of the mux.
-
-mux_control_select() only locks the mux until mux_control_deselect()
-is called. mux_control_deselect() may put the mux in some low power
-state or some other user of the mux might select it for other purposes.
-These things are probably not happening in the original setting where
-this driver was developed, but it is said to be a generic SPI mux.
-
-Also, the mux framework will short out the actual low level muxing
-operation when/if that is possible.
-
-Fixes: e9e40543ad5b ("spi: Add generic SPI multiplexer")
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Link: https://lore.kernel.org/r/20200525104352.26807-1-peda@axentia.se
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- drivers/spi/spi-mux.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ mm/slab_common.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
-index 4f94c9127fc1..cc9ef371db14 100644
---- a/drivers/spi/spi-mux.c
-+++ b/drivers/spi/spi-mux.c
-@@ -51,6 +51,10 @@ static int spi_mux_select(struct spi_device *spi)
- 	struct spi_mux_priv *priv = spi_controller_get_devdata(spi->controller);
- 	int ret;
- 
-+	ret = mux_control_select(priv->mux, spi->chip_select);
-+	if (ret)
-+		return ret;
-+
- 	if (priv->current_cs == spi->chip_select)
- 		return 0;
- 
-@@ -62,10 +66,6 @@ static int spi_mux_select(struct spi_device *spi)
- 	priv->spi->mode = spi->mode;
- 	priv->spi->bits_per_word = spi->bits_per_word;
- 
--	ret = mux_control_select(priv->mux, spi->chip_select);
--	if (ret)
--		return ret;
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index c045afb9724e..52164ad0f197 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1087,9 +1087,6 @@ memcg_accumulate_slabinfo(struct kmem_cache *s, str=
+uct slabinfo *info)
+ 	struct kmem_cache *c;
+ 	struct slabinfo sinfo;
+=20
+-	if (!is_root_cache(s))
+-		return;
 -
- 	priv->current_cs = spi->chip_select;
- 
- 	return 0;
--- 
-2.25.1
+ 	c =3D memcg_cache(s);
+ 	if (c) {
+ 		memset(&sinfo, 0, sizeof(sinfo));
+--=20
+2.25.4
 
