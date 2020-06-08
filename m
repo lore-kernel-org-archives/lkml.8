@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16559C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9A9C20870
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7716F20872
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591658203;
-	bh=PEqJ5eyUtSxJhYnhnCrIAr5eo6UL8Kd/34b2Bw2Fusg=;
+	s=default; t=1591658208;
+	bh=OSIyjFeWmXecL53OVI8UGmOLm+YGOusPJaisg9IFerw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6B14MGMphgEyH84712dvA6IBluWZylvnK4xbqR3Yn3xymbFIW8QOeAszyFZvcgWS
-	 cX2HjTsKDkPb5j/q263AmnDttbFP8m7wG6UXPJ8zRmKWk1JVhHrl3xqi3JIUN7XwHG
-	 FWiApysj+bEpkljeDXvnQJmSAYAGkC6jTNwwpXIc=
+	b=ZuW7pqHKoS2lUnMth47wS17lrDiKIHBl9WXQ7JGZrR/b0/2t/WJnLogoypDz1T+Wb
+	 EqEFrgw2BvNeqq54vW2KQQheb8+aIiAf2P5KoH4YC/6c5T/emlUI9Qn0J5KjZckv4C
+	 iKHCGc19hodsbLDBa2amveP4kuXeFw1Y0J79VllA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbgFHXQl (ORCPT
+        id S1730342AbgFHXQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:16:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33780 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbgFHXNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:51 -0400
+        id S1728799AbgFHXNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:13:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5673821527;
-        Mon,  8 Jun 2020 23:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EC9621508;
+        Mon,  8 Jun 2020 23:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658031;
-        bh=PEqJ5eyUtSxJhYnhnCrIAr5eo6UL8Kd/34b2Bw2Fusg=;
+        s=default; t=1591658034;
+        bh=OSIyjFeWmXecL53OVI8UGmOLm+YGOusPJaisg9IFerw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOPdiM5vRSJossSVMACGCX9VTNDMH+7/XUPzb539+Ba+IVj2bGzQnwtiC9cTU8xWS
-         gUC5AJ2Ho4smMKaw5XFoYcID9OzSups7AdBLKv+9nNbH/QHmLwB/xEyH1mS1RYE7Xm
-         Qg0s6Y5MU1kXS06qF0/4WrGRjJCxwkMQ21kBWPFc=
+        b=r0CyB6Wv9ntcJb8uRrEkdQr9q8g9TvE+LCOqaWDLE/Dz+vE6SphJ1Akncw7qM+Sbg
+         ln2S7i/onmE9dx++yzsnrHi1P+w0daRC4jzmW/PgWRXpLXt33Ff/PvU64ZO5MhEd+z
+         qdtiHkYBxJIxxktceAHg3TeTOzuOGRO69vlTvC2o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 082/606] ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
-Date:   Mon,  8 Jun 2020 19:03:27 -0400
-Message-Id: <20200608231211.3363633-82-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-unionfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 085/606] ovl: potential crash in ovl_fid_to_fh()
+Date:   Mon,  8 Jun 2020 19:03:30 -0400
+Message-Id: <20200608231211.3363633-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -62,70 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0014cc04e8ec077dc482f00c87dfd949cfe2b98f ]
+[ Upstream commit 9aafc1b0187322fa4fd4eb905d0903172237206c ]
 
-Commit a408e4a86b36 ("ima: open a new file instance if no read
-permissions") tries to create a new file descriptor to calculate a file
-digest if the file has not been opened with O_RDONLY flag. However, if a
-new file descriptor cannot be obtained, it sets the FMODE_READ flag to
-file->f_flags instead of file->f_mode.
+The "buflen" value comes from the user and there is a potential that it
+could be zero.  In do_handle_to_path() we know that "handle->handle_bytes"
+is non-zero and we do:
 
-This patch fixes this issue by replacing f_flags with f_mode as it was
-before that commit.
+	handle_dwords = handle->handle_bytes >> 2;
 
-Cc: stable@vger.kernel.org # 4.20.x
-Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+So values 1-3 become zero.  Then in ovl_fh_to_dentry() we do:
+
+	int len = fh_len << 2;
+
+So now len is in the "0,4-128" range and a multiple of 4.  But if
+"buflen" is zero it will try to copy negative bytes when we do the
+memcpy in ovl_fid_to_fh().
+
+	memcpy(&fh->fb, fid, buflen - OVL_FH_WIRE_OFFSET);
+
+And that will lead to a crash.  Thanks to Amir Goldstein for his help
+with this patch.
+
+Fixes: cbe7fba8edfc ("ovl: make sure that real fid is 32bit aligned in memory")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+Cc: <stable@vger.kernel.org> # v5.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_crypto.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/overlayfs/export.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7967a6904851..e8fa23cd4a6c 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -413,7 +413,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 	loff_t i_size;
- 	int rc;
- 	struct file *f = file;
--	bool new_file_instance = false, modified_flags = false;
-+	bool new_file_instance = false, modified_mode = false;
+diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
+index 6f54d70cef27..e605017031ee 100644
+--- a/fs/overlayfs/export.c
++++ b/fs/overlayfs/export.c
+@@ -777,6 +777,9 @@ static struct ovl_fh *ovl_fid_to_fh(struct fid *fid, int buflen, int fh_type)
+ 	if (fh_type != OVL_FILEID_V0)
+ 		return ERR_PTR(-EINVAL);
  
- 	/*
- 	 * For consistency, fail file's opened with the O_DIRECT flag on
-@@ -433,13 +433,13 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 		f = dentry_open(&file->f_path, flags, file->f_cred);
- 		if (IS_ERR(f)) {
- 			/*
--			 * Cannot open the file again, lets modify f_flags
-+			 * Cannot open the file again, lets modify f_mode
- 			 * of original and continue
- 			 */
- 			pr_info_ratelimited("Unable to reopen file for reading.\n");
- 			f = file;
--			f->f_flags |= FMODE_READ;
--			modified_flags = true;
-+			f->f_mode |= FMODE_READ;
-+			modified_mode = true;
- 		} else {
- 			new_file_instance = true;
- 		}
-@@ -457,8 +457,8 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- out:
- 	if (new_file_instance)
- 		fput(f);
--	else if (modified_flags)
--		f->f_flags &= ~FMODE_READ;
-+	else if (modified_mode)
-+		f->f_mode &= ~FMODE_READ;
- 	return rc;
- }
- 
++	if (buflen <= OVL_FH_WIRE_OFFSET)
++		return ERR_PTR(-EINVAL);
++
+ 	fh = kzalloc(buflen, GFP_KERNEL);
+ 	if (!fh)
+ 		return ERR_PTR(-ENOMEM);
 -- 
 2.25.1
 
