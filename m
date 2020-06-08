@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1419FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB27C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E055220801
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF7220801
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661564;
-	bh=MR39vtB/C9XrQbTfXckuJXqd4TZpcXNPYMB/BQEKY5Q=;
+	s=default; t=1591661569;
+	bh=9ARbGD5hH1cGXAdbi3g8ZxYL3XHkazo9g99L1YSsr3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0yXOHkzUUFaj+3YouOyZDnjiAU6C9zDGI+i9OattMVHh0N9ULx/ReyHLSXV+XNe33
-	 OIU2ZuOI2c9PNmOjnSoLdO4l7dBOCwT/B7R+WF30wD46xGD55AQ8mD8h+RQYamyV1y
-	 hy5Q7VZLoYMTBxlbocJ205f9g/lB2dbQK2B5T+Oo=
+	b=wMdDfYA/qdnsYCM3eb/YdjRROkSQaxDri3dStMJcvmyNApItWHIVoN5dAYaWqg7oF
+	 J00SY1kJnAZBwXkaOd8/5fQPFcFrMUTAWzICY2FExLG3ldWYBWXfga4SG6QZMR6Jaf
+	 IFl6fLA5pRg53jMfFc2aEYGsARHFU9NeOxX4ZH50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387402AbgFIAMi (ORCPT
+        id S2388030AbgFIAMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42658 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730491AbgFHXTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:19:41 -0400
+        id S1730439AbgFHXTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D31E520842;
-        Mon,  8 Jun 2020 23:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B22242087E;
+        Mon,  8 Jun 2020 23:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658380;
-        bh=MR39vtB/C9XrQbTfXckuJXqd4TZpcXNPYMB/BQEKY5Q=;
+        s=default; t=1591658378;
+        bh=9ARbGD5hH1cGXAdbi3g8ZxYL3XHkazo9g99L1YSsr3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwVYBgie9M3UW4xz+qmE0pMIWtEXXau7rIW6MP3DrUmCkWCPwLFQXzTLSUpnKznjN
-         46Je7Dr4+Anzt6km9+0nQqL2ABhilVloXGNO09y/kJlvkR/H2Xr+WuISIkvwL6HxU4
-         i/uPMHUOqejYC+kVDt7UUxk57S494Vw81xroxJ2Q=
+        b=buIiLcnwfzkiYMldM9PanY7xlFRAEuvLQc1n+ltcp2ik/Kl2KVPfyf6uGpW+fKlxV
+         5IsMdJaqNb7PUk04zY1ov7uiJiWgFFoaI/m91m5VDp3HM/vCU7MlLBcSb1xbVLXXD9
+         R+XPIPN0+q+MTRt1VlbZTx5FQNA4th4uJfcN/leo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
-        Hanjun Guo <guoahanjun@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 042/175] ACPI/IORT: Fix PMCG node single ID mapping handling
-Date:   Mon,  8 Jun 2020 19:16:35 -0400
-Message-Id: <20200608231848.3366970-42-sashal@kernel.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 040/175] kgdb: Prevent infinite recursive entries to the debugger
+Date:   Mon,  8 Jun 2020 19:16:33 -0400
+Message-Id: <20200608231848.3366970-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -61,52 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuan Phan <tuanphan@os.amperecomputing.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 50c8ab8d9fbf5b18d5162a797ca26568afc0af1a ]
+[ Upstream commit 3ca676e4ca60d1834bb77535dafe24169cadacef ]
 
-An IORT PMCG node can have no ID mapping if its overflow interrupt is
-wire based therefore the code that parses the PMCG node can not assume
-the node will always have a single mapping present at index 0.
+If we detect that we recursively entered the debugger we should hack
+our I/O ops to NULL so that the panic() in the next line won't
+actually cause another recursion into the debugger.  The first line of
+kgdb_panic() will check this and return.
 
-Fix iort_get_id_mapping_index() by checking for an overflow interrupt
-and mapping count.
-
-Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
-
-Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
-Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Link: https://lore.kernel.org/r/1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Link: https://lore.kernel.org/r/20200507130644.v4.6.I89de39f68736c9de610e6f241e68d8dbc44bc266@changeid
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/arm64/iort.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/debug/debug_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index 5a7551d060f2..bc95a5eebd13 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -361,6 +361,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
- static int iort_get_id_mapping_index(struct acpi_iort_node *node)
- {
- 	struct acpi_iort_smmu_v3 *smmu;
-+	struct acpi_iort_pmcg *pmcg;
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index d0d557c0ceff..7d54c7c28054 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -501,6 +501,7 @@ static int kgdb_reenter_check(struct kgdb_state *ks)
  
- 	switch (node->type) {
- 	case ACPI_IORT_NODE_SMMU_V3:
-@@ -388,6 +389,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+ 	if (exception_level > 1) {
+ 		dump_stack();
++		kgdb_io_module_registered = false;
+ 		panic("Recursive entry to debugger");
+ 	}
  
- 		return smmu->id_mapping_index;
- 	case ACPI_IORT_NODE_PMCG:
-+		pmcg = (struct acpi_iort_pmcg *)node->node_data;
-+		if (pmcg->overflow_gsiv || node->mapping_count == 0)
-+			return -EINVAL;
-+
- 		return 0;
- 	default:
- 		return -EINVAL;
 -- 
 2.25.1
 
