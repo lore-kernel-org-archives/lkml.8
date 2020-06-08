@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86586C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035A520737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A61207ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591663356;
-	bh=73KsjooSBJpJiiH+QOeAQXNpAvN1RJ9iKUFTKw70dcU=;
+	s=default; t=1591663363;
+	bh=ZTIsX73d20iSdcbXGG9Igm0SR8pILM4kweFvdrEtmjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eBXjfzbUI+aXzux4CYX888ViNncC5Ghf8dEm/ejloZuJSXPl2d4v4YaKIFDbOtxdQ
-	 PdUb2PIVos809zo/uNK8CJ1QdLuRQw8E2PecUz81l4O86rN60xsbg8SRj1PY6U6Una
-	 +b0hyyzytFbiG3S1+yQ5zhBw8DXoeO1WJJVcQCaY=
+	b=bP43Hh+0I0UYbfRQR+iMBi747GVMOTwE7MS3yv0rqHr76a/0K7ZDmkPOSV1UQ7Guj
+	 NW5pfqwGcfx5iofcCP+yY20cD3FQqxBL4B5SPKZSc8Vvf1ENnQ1VmUlbAkbaHlKLdO
+	 H1ds/Rg1ISBqISgV25zo9VD4S3Gbtgx0w1Syk3PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgFHXM2 (ORCPT
+        id S1728713AbgFIAml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56738 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbgFHXKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:10:36 -0400
+        id S1729089AbgFHXM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C4F20890;
-        Mon,  8 Jun 2020 23:10:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8075120C09;
+        Mon,  8 Jun 2020 23:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657836;
-        bh=73KsjooSBJpJiiH+QOeAQXNpAvN1RJ9iKUFTKw70dcU=;
+        s=default; t=1591657947;
+        bh=ZTIsX73d20iSdcbXGG9Igm0SR8pILM4kweFvdrEtmjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0KciWcBM2kpYve8pyLzVAxScAx6+scfH6ot15zpKsh/6l2jOU5Zy6grIDlCgZ6uY
-         /ySlNXhU519zSc9a9PmiXoEZVQ1Dm4FqP0+/bKAWgGYOS7GmC6ANWt/dRhEthEHesP
-         JwBcB0a4QvEkOv7C2tTOavgkOIAb89xJgqfp9iH8=
+        b=MJku1xQVUPrQzzGidFLR3WXAUh5rkt3HMvlto2k6xXJ1EjtkTC9hI9EiXXUEHp3Ci
+         V4s3WwxueyVGP4QBWafSgOrNOhdnlKVKqC0JSitewq0kPUN+2jwnvE2Uk12Hp45Zwn
+         kqz8zmixBnarkJ200Jb8pIJTkakClo0gIFwgsCOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 205/274] crypto: blake2b - Fix clang optimization for ARMv7-M
-Date:   Mon,  8 Jun 2020 19:04:58 -0400
-Message-Id: <20200608230607.3361041-205-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 012/606] gcc-10: disable 'array-bounds' warning for now
+Date:   Mon,  8 Jun 2020 19:02:17 -0400
+Message-Id: <20200608231211.3363633-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,42 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 0c0408e86dbe8f44d4b27bf42130e8ac905361d6 ]
+commit 44720996e2d79e47d508b0abe99b931a726a3197 upstream.
 
-When building for ARMv7-M, clang-9 or higher tries to unroll some loops,
-which ends up confusing the register allocator to the point of generating
-rather bad code and using more than the warning limit for stack frames:
+This is another fine warning, related to the 'zero-length-bounds' one,
+but hitting the same historical code in the kernel.
 
-warning: stack frame size of 1200 bytes in function 'blake2b_compress' [-Wframe-larger-than=]
+Because C didn't historically support flexible array members, we have
+code that instead uses a one-sized array, the same way we have cases of
+zero-sized arrays.
 
-Forcing it to not unroll the final loop avoids this problem.
+The one-sized arrays come from either not wanting to use the gcc
+zero-sized array extension, or from a slight convenience-feature, where
+particularly for strings, the size of the structure now includes the
+allocation for the final NUL character.
 
-Fixes: 91d689337fe8 ("crypto: blake2b - add blake2b generic implementation")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So with a "char name[1];" at the end of a structure, you can do things
+like
+
+       v = my_malloc(sizeof(struct vendor) + strlen(name));
+
+and avoid the "+1" for the terminator.
+
+Yes, the modern way to do that is with a flexible array, and using
+'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
+also technically gets the size "more correct" in that it avoids any
+alignment (and thus padding) issues, but this is another long-term
+cleanup thing that will not happen for 5.7.
+
+So disable the warning for now, even though it's potentially quite
+useful.  Having a slew of warnings that then hide more urgent new issues
+is not an improvement.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- crypto/blake2b_generic.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/crypto/blake2b_generic.c b/crypto/blake2b_generic.c
-index 1d262374fa4e..0ffd8d92e308 100644
---- a/crypto/blake2b_generic.c
-+++ b/crypto/blake2b_generic.c
-@@ -129,7 +129,9 @@ static void blake2b_compress(struct blake2b_state *S,
- 	ROUND(9);
- 	ROUND(10);
- 	ROUND(11);
--
-+#ifdef CONFIG_CC_IS_CLANG
-+#pragma nounroll /* https://bugs.llvm.org/show_bug.cgi?id=45803 */
-+#endif
- 	for (i = 0; i < 8; ++i)
- 		S->h[i] = S->h[i] ^ v[i] ^ v[i + 8];
- }
+diff --git a/Makefile b/Makefile
+index b1ce2a7a25b0..e7c2811856f1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -859,6 +859,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ 
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+ 
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
 -- 
 2.25.1
 
