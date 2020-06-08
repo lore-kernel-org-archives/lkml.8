@@ -2,187 +2,204 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5033BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22D042076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7F4206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsHQRk7T"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wkt0uBkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgFHHsS (ORCPT
+        id S1729094AbgFHHtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36596 "EHLO
+        Mon, 8 Jun 2020 03:49:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729008AbgFHHsR (ORCPT
+        with ESMTP id S1728995AbgFHHtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:48:17 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88715C08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:48:17 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q8so16333159qkm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:48:17 -0700 (PDT)
+        Mon, 8 Jun 2020 03:49:06 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA170C08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:49:05 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id p70so14414256oic.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+JCPS19CaUQP630TLP6xE2eKVXHvtdh4rKflyJaXzUI=;
-        b=dsHQRk7TzE4W5RbnT2gIPvqgUUDKglPc0Wg87phfkVYr0rH7NcOLAFihdA8PeCfiTi
-         Agea6ODCgvLz6CPommjxw4kTsrJAZtyJogo9aW27PNDtT8Syp0gX93Q5Jislx0yz2Axy
-         c34qFLnAwfoRoI9LuiGEYNOn61R5bZSyNCQn0CNJTiADJ8Bd3/MGNeAAPW83PEoMn8Pt
-         ptUWyJKC3P+dq+3073FozGzka9XfrfasZcebBH4qXdKEfB17ER0if7vYGzPgfrBGvIi3
-         7m6WTnltZbqocZ6ZsbtEnDwwRdEVzpqnKBvK9G+90lLIccwnf94iiKonWkV9RpnLcsC1
-         C6iQ==
+        bh=+1dlHdbQCWrUXJ4LO9gAGKWP7TZEvzQ6RBz5kvhjOak=;
+        b=Wkt0uBkwUAxfBRLrzlmD0ucIjhGrgODvzdm0rMS/ZQsy/1nQbft12LUNDJ+NRH7z4V
+         yf6kVuWAAbvCEcFGnkQq02XvpIsHmdwcIypYYSKwW3TttXY76QnT0rPOGqjMdiMthC/v
+         WSG9UE9DBbbKfNQ7TiLbOcZigVzyOfUKVjgrlpeGD05l6ciuyHvxc1jv+Lqt2QkJWEy/
+         N1daS10OWPJhh96DCT7qocvSgJYJG93ojsGP986nHXQtV5u+6t2zjEEMQwKASnLPKncY
+         kwmMwgDMgUp40PzMBhEOb3q1WfrleEFBQYiJDd8zp8P42jX+Hv5wm4tP34HFFHHomuNh
+         5DQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+JCPS19CaUQP630TLP6xE2eKVXHvtdh4rKflyJaXzUI=;
-        b=k+NKYQxMmmOScuiSv+BhEb10nRIMCNkty2eZpeqwRlNyTLbiO/2z5O1s6sPA4IB3J3
-         fySEhWB2gtqoq9RWx6KPGXqR+JJQO+7SLXOcPrvUYtUWlqIe45aERqaqNDj9m8JBIGRT
-         /76TfO4tTPZ8pT2ejEOWlKbXaxBw/17uX0dsYrA6XvWn5N8vf72YG5u4DAUwXcKKTn0r
-         ukcifzKX1bViuZq+1dS1gw3VZEuQS6QP70Pvg//7bXRDBcJlhYfTgGc4czORlsStxuzz
-         PeG9jl6i/VoKX6OOEkdBvkwMX7a6G4xIjLVlVmr/ll4NuNXecJ5FjiFa0Xtd3H/7ntK5
-         yZtg==
-X-Gm-Message-State: AOAM530lMxD5DdDWMm+SKlTmzWnpAGDQsZD3NHukkBGvqowfK6LDwXPb
-        cJ8uJKqcf8WXKHoZoxLhfyPcTzVjJ/PJEii3EQ/FLTZ0VAc=
-X-Google-Smtp-Source: ABdhPJzwNAFfdKKL21CZ9LTCApzUFZdweCIK8eT8vBkDN0LUfY+yBScG98/QWKmhwQuSBW95rZwdnJD9Aipxp1MW86A=
-X-Received: by 2002:a05:620a:1428:: with SMTP id k8mr20254266qkj.43.1591602496315;
- Mon, 08 Jun 2020 00:48:16 -0700 (PDT)
+        bh=+1dlHdbQCWrUXJ4LO9gAGKWP7TZEvzQ6RBz5kvhjOak=;
+        b=iJWWPk+r25O1uAt3+y5r77gaYxpsjAdD/ovsv/HKZYA2uMyZt1LrjaiNDJAiFT3GrI
+         XMpbfgXSe35llesfee4wDOPafznX0Gme+N4q/mtTNSjqv6t3IgiW52WtuiaEIl3gSIqb
+         ds/qU488gDftRmoXu4t+jzLR5Jzb+PeEXXquRTbmA3mrV+ebiPQLrjoSdwpdG4jNZ73J
+         BnUJJcxqQcDf9eWUl6ttQhl+qUWJJu8Nq8tILuLso9aP186fdxDo/BDeibjX4esqH96K
+         DkXZSQfnpFi2uvgmiHpRcR/skg4tAZbNhsMBIN2WXC4oMwFAdHG6cdKDKwBc2Zt7OgPd
+         NUlA==
+X-Gm-Message-State: AOAM530Eq7LAPAS2VMXJzH9SFRpwMVlfp6YwZKUGtO9Rw5n9sstLa/Jy
+        AzIV/iqyvfxxh/gEY4rfRnfhOLoMcid6MRYI2BIfjA==
+X-Google-Smtp-Source: ABdhPJwLqijfm2Q0w3pSZlhc0UUs8xt8qClwv2WceTOat5I4msKQIZQzjgWnO1ioUR6JfGh71Nkd4tqQd+IJUAddxKY=
+X-Received: by 2002:aca:ebc5:: with SMTP id j188mr9979761oih.70.1591602544808;
+ Mon, 08 Jun 2020 00:49:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
- <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200528110646.GC11286@linux-b0ei> <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
- <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
- <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
- <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
- <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
- <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
- <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
- <19d377d3-8037-8090-0f99-447f72cc1d8c@i-love.sakura.ne.jp> <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
-In-Reply-To: <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 8 Jun 2020 09:48:05 +0200
-Message-ID: <CACT4Y+Z58Z8u1g8SBy-i1WxLMrdmXvggsLFAhfbLc8D=uffPyA@mail.gmail.com>
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
+References: <20200605082839.226418-1-elver@google.com> <CACT4Y+ZqdZD0YsPHf8UFJT94yq5KGgbDOXSiJYS0+pjgYDsx+A@mail.gmail.com>
+ <20200605120352.GJ3976@hirez.programming.kicks-ass.net> <CAAeHK+zErjaB64bTRqjH3qHyo9QstDSHWiMxqvmNYwfPDWSuXQ@mail.gmail.com>
+ <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
+In-Reply-To: <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 8 Jun 2020 09:48:52 +0200
+Message-ID: <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
+Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions noinstr-compatible
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 3:27 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
+On Sun, 7 Jun 2020 at 11:37, Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> Hello, Dmitry.
+> On Fri, Jun 5, 2020 at 3:25 PM 'Andrey Konovalov' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
+> > > On Fri, Jun 05, 2020 at 12:57:15PM +0200, Dmitry Vyukov wrote:
+> > > > On Fri, Jun 5, 2020 at 10:28 AM Marco Elver <elver@google.com> wrote:
+> > > > >
+> > > > > While we lack a compiler attribute to add to noinstr that would disable
+> > > > > KCOV, make the KCOV runtime functions return if the caller is in a
+> > > > > noinstr section, and mark them noinstr.
+> > > > >
+> > > > > Declare write_comp_data() as __always_inline to ensure it is inlined,
+> > > > > which also reduces stack usage and removes one extra call from the
+> > > > > fast-path.
+> > > > >
+> > > > > In future, our compilers may provide an attribute to implement
+> > > > > __no_sanitize_coverage, which can then be added to noinstr, and the
+> > > > > checks added in this patch can be guarded by an #ifdef checking if the
+> > > > > compiler has such an attribute or not.
+> > > >
+> > > > Adding noinstr attribute to instrumentation callbacks looks fine to me.
+> > > >
+> > > > But I don't understand the within_noinstr_section part.
+> > > > As the cover letter mentions, kcov callbacks don't do much and we
+> > > > already have it inserted and called. What is the benefit of bailing
+> > > > out a bit earlier rather than letting it run to completion?
+> > > > Is the only reason for potential faults on access to the vmalloc-ed
+> > > > region?
+> > >
+> > > Vmalloc faults (on x86, the only arch that had them IIRC) are gone, per
+> > > this merge window.
+> > >
+> > > The reason I mentioned them is because it is important that they are
+> > > gone, and that this hard relies on them being gone, and the patch didn't
+> > > call that out.
+> > >
+> > > There is one additional issue though; you can set hardware breakpoint on
+> > > vmalloc space, and that would trigger #DB and then we'd be dead when we
+> > > were already in #DB (IST recursion FTW).
+> > >
+> > > And that is not something you can trivially fix, because you can set the
+> > > breakpoint before the allocation (or perhaps on a previous allocation).
+> > >
+> > > That said; we already have this problem with task_struct (and
+> > > task_stack). IIRC Andy wants to fix the task_stack issue by making all
+> > > of noinstr run on the entry stack, but we're not there yet.
+> > >
+> > > There are no good proposals for random allocations like task_struct or
+> > > in your case kcov_area.
+> > >
+> > > > Andrey, Mark, do you know if it's possible to pre-fault these areas?
+> > >
+> > > Under the assumption that vmalloc faults are still a thing:
+> > >
+> > > You cannot pre-fault the remote area thing, kernel threads use the mm of
+> > > the previous user task, and there is no guarantee that mm will have had
+> > > the vmalloc fault.
+> >
+> > To clarify this part AFAIU it, even if we try to prefault the whole
+> > remote area each time kcov_remote_start() is called, then (let alone
+> > the performance impact) the kernel thread can be rescheduled between
+> > kcov_remote_start() and kcov_remote_stop(), and then it might be
+> > running with a different mm than the one that was used when
+> > kcov_remote_start() happened.
 >
-> Linus is asking me to avoid build-time switching based on kernel config options,
-> and is suggesting me to use boot-time switching based on boot-config file feature
-> (which is available since 5.6). I have several concerns about use of boot-config file
-> feature in syzkaller.
+> Ugh, this is nasty. But this has also gone, which I am happy about :)
 >
-> (1) To use boot-config file, syzkaller will need to add "bootconfig" option
->     to the kernel command line. This will be doable by patching
->     https://github.com/google/syzkaller/tree/master/dashboard/config/ *.cmdline
->     files.
-
-Hello Tetsuo,
-
-Yes, command line arguments are easily changeable. Please send pull
-requests to syzkaller, if you want to change something.
-
-
-> (2) The boot-config file is embedded into initramfs file. Since syzkaller builds
->     kernels with almost-allyesconfig, booting syzkaller kernels do not require
->     initramfs for loading kernel modules needed for mounting the root partition.
->     In fact, according to "unexpected kernel reboot" report which contains boot messages,
->     I can't find "Unpacking initramfs..." message. It seems that syzkaller kernels do not
->     use initramfs file.
+> Why I am looking at this is because with coverage instrumentation
+> __sanitizer_cov_trace_pc is the hottest function in the kernel and we
+> are adding additional branches to it.
 >
->     Is it possible for syzkaller to enforce performing steps for creating an initramfs,
->     embedding the boot-config file
->     ( https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config),
->     and loading that initramfs whenever booting the syzkaller kernels?
->     By the way, I do worry that people forget to perform these steps when they do
->     their tests without asking syzbot...
+> Can we touch at least some per-cpu data within noinstr code?
+> If yes, we could try to affect the existing
+> in_task()/in_serving_softirq() check.
+> If not, it would be useful to have a comment clarifying that
+> within_noinstr_section check must happen before we touch anything
+> else.
 
-I think we have some confusion between syzkaller and syzbot here.
-syzkaller itself does not enforce/require any kernel configuration,
-hardware nor use or not use of initramfs. In fact, qemu VM type
-supports initramfs today. Or syzkaller can work with bare machines
-where all setup is up to the user.
-syzbot is just one deployment of syzkaller with a particular
-configuration/hardware.
+I don't think this will get us anywhere. If anything this will require
+introducing code outside KCOV, and I think that makes the whole
+situation even worse. My guess is also we can't even read per-CPU
+data, but Peter would have to comment on this.
 
-If this feature is useful for any linux kernel fuzzing, then we need
-to have a plan for all users and setups.
+> I assume objtool can now also detect all violations. How bad is it now
+> without within_noinstr_section check? I am assuming we marking noinstr
+> functions to not be instrumented, but we are getting some stray
+> instrumentation from inlined functions or something, right? How many
+> are there? Is it fixable/unfixable? Marco, do you know the list, or
+> could you please collect the list of violations?
 
-And, yes, an additional context is kernel developers reproducing bugs.
-Not all of them may be happy about any additional steps, nor will
-follow them.
+It's everywhere. We cannot mark noinstr functions to not be
+instrumented by KCOV/-fsanitize-coverage, because no compiler provides
+an attribute to do so. GCC doesn't have
+__attribute__((no_sanitize_coverage)) and Clang doesn't have
+__attribute__((no_sanitize("coverage")), and therefore we can't have
+__no_sanitize_coverage.
 
-Answering your question, syzkaller can do some sanity checking of the
-provided machine/kernel and reject working with it. If you tell me
-what exactly needs to be checked, I can think where this code should
-go.
-However, again, I am not sure if one is using, say, Android phones and
-they don't envision use of initramfs, then what?
+My plan would be to now go and implement the attributes, at the very
+least in Clang. Then what we can do is make wihin_noinstr_section a
+noop (just return false) if we have CONFIG_CC_HAS_NOSANITIZE_COVERAGE
+or something.
 
-For syzbot, the build happens here:
-https://github.com/google/syzkaller/blob/7751efd04aebb07bc82b5c0e8eeaca07be1ae112/pkg/build/linux.go#L72
-I don't know if initramfs is supported with GCE machines and what
-exactly is required.
+Unfortunately, without this patch, we won't have a reliable kernel
+with KCOV until we get compiler support.
+
+The thing is that this slowdown is temporary if we add the attributes
+to the compiler.
 
 
-> (3) Since syzkaller keeps track of "kernel tree", "commit of the kernel tree", and
->     "commit of the syzkaller tree" in order to guarantee reproducibility, it would be
->     possible to identify the "your-config" file used for tools/bootconfig/bootconfig
->     command. But since "#syz test" command currently accepts only "kernel tree" and
->     "commit of the kernel tree" arguments, we might fail to use intended "your-config"
->     file when doing reproducibility test. Can syzbot solve this concern?
-
-Most likely it's possible.
-
-> (4) Of course, "your-config" file would not change so frequently, but "#syz test" command
->     relies on external file in "syzkaller tree" makes it impossible to try different
->     configuration when I have to ask syzbot to test. (Since I don't have hardware which
->     syzbot is reporting problems, I have to ask syzbot when I can't reproduce the problem
->     in my environment.)
+> Is there any config that disables #DB? We could well disable it on
+> syzbot, I think we already disable some production hardening/debugging
+> confings, which are not too useful for testing setup.
+> E.g. we support RANDOMIZE_BASE, no problem, but if one disables it
+> (which we do), that becomes no-op:
 >
->     https://syzkaller.appspot.com/text?tag=Patch&x=135f254a100000 is an example of
->     need to enforce CONFIG_DEBUG_INFO_BTF=n in order to workaround build failure during
->     "#syz test" command. If we bring "which twist options should be enabled" to an external
->     boot-config file, I can't ask syzbot to try different twist options (except directly
->     patching the kernel source which handles "which twist options should be enabled").
->     Can syzbot solve this concern?
-
-The CONFIG_DEBUG_INFO_BTF relates to build config. This can't be
-solved during boot, right? So what is the relation?
-
-> (5) Anything else?
-
-Reading:
-https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config
-It seems that boot config is just a more complex way to provide
-command line arguments. syzbot already supports command line
-arguments, and it looks much simpler and no additional work required.
-Why do we want to use boot config?
-
-Next quarter we will be additionally busy with interns, so I can't
-promise any time availability for syzbot improvements. But pull
-requests are welcome.
+> #ifdef CONFIG_RANDOMIZE_BASE
+>     ip -= kaslr_offset();
+> #endif
+>     return ip;
