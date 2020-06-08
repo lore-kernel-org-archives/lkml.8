@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2901FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC198C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0694320775
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F8E2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661389;
-	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+	s=default; t=1591661395;
+	bh=aabELFPpLNSTh/+hI9W6tY2XbTcKlJNwu4snZepzc7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VwuVTi/T+LcvAlnzeZZOmKUFl+0GnZ+h808ytQ0jUkbhZAS4uMN/xuxaXGSYixTv7
-	 AtGVZQLK+OxubKsA1hudvaYA3ylCQ0j9NpcNN5C9K3RqwiNUeoaDlABpSTLYfNC4uo
-	 ifTpAJjJa8ER90jDtqi0jh63zM5UcCxlTU7dIkgA=
+	b=y/O8XVLXrh7z2b3NYRG/My03VEpRzAY16sW/X4AZH6y/Td7yiRDf2Jq0Lhaa8Vgb3
+	 NtHZlITzgx1a5H6kABsnr8ecTYWlInqfgwSJCG9coJSJnd2g/S3KKL+FuPEes+xEFV
+	 Go/em0m1TcPNjvVcEk08ce9LOiNYFo5SBfsXd60A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732787AbgFIAJr (ORCPT
+        id S2388020AbgFIAJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:09:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44004 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730962AbgFHXUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:20:25 -0400
+        id S1729578AbgFHXUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:20:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D78A620814;
-        Mon,  8 Jun 2020 23:20:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77C0620842;
+        Mon,  8 Jun 2020 23:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658425;
-        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+        s=default; t=1591658421;
+        bh=aabELFPpLNSTh/+hI9W6tY2XbTcKlJNwu4snZepzc7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5RIdsHWsmMNxjVpWQiQnDb44mD2oG2KJ4cozkb548SisLZQLa1I2jsWJk9tg6x8F
-         qqSsPOqNPQ75Flfc7W+Yb2+rTj/62glJFcnSXu+noD/iVEYx6IgiaXIscsL1qT2On6
-         GZwJm2X9I/K7eFhNOeeq+ihGNCg8FKkUg0em2+/8=
+        b=SHLetaPTwpEiWu1MEvNrs2mps8EN5TeRHZVxKSWqar+hA/Pu8P4QdEGxISoQ9jf88
+         IWoQaeUoa5lbcjJ9h42xXMdY0x7CaogTubP5zsUSFxO9SZjvFYZxIV1T5zZDUrSHil
+         l9FeFKIEQt+c0Ahg0IKXs9GYqI1JK7TM6ZQsPUG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh@kernel.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 071/175] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Mon,  8 Jun 2020 19:17:04 -0400
-Message-Id: <20200608231848.3366970-71-sashal@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 068/175] regulator: qcom-rpmh: Fix typos in pm8150 and pm8150l
+Date:   Mon,  8 Jun 2020 19:17:01 -0400
+Message-Id: <20200608231848.3366970-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -62,46 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
+[ Upstream commit 906746ba26d0b45688f4c3b730c35f765dc958ba ]
 
-Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
-Set the dpi pins to gpio mode and output-low to avoid leakage current
-when dpi disabled.
+Fix typos in pm8150 l13/l16/l17 and pm8150l ldo8 supplies.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Fixes: 06369bcc15a1 ("regulator: qcom-rpmh: Add support for SM8150")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200415053708.717623-1-bjorn.andersson@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/regulator/qcom-rpmh-regulator.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-index b6a7e7397b8b..b944fe067188 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-@@ -16,6 +16,9 @@ Required properties:
-   Documentation/devicetree/bindings/graph.txt. This port should be connected
-   to the input port of an attached HDMI or LVDS encoder chip.
- 
-+Optional properties:
-+- pinctrl-names: Contain "default" and "sleep".
-+
- Example:
- 
- dpi0: dpi@1401d000 {
-@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
- 		 <&mmsys CLK_MM_DPI_ENGINE>,
- 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
- 	clock-names = "pixel", "engine", "pll";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&dpi_pin_func>;
-+	pinctrl-1 = <&dpi_pin_idle>;
- 
- 	port {
- 		dpi0_out: endpoint {
+diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
+index 0246b6f99fb5..f11e4bfbc91b 100644
+--- a/drivers/regulator/qcom-rpmh-regulator.c
++++ b/drivers/regulator/qcom-rpmh-regulator.c
+@@ -832,11 +832,11 @@ static const struct rpmh_vreg_init_data pm8150_vreg_data[] = {
+ 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l2-l10"),
+ 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_nldo,      "vdd-l1-l8-l11"),
+ 	RPMH_VREG("ldo12",  "ldo%s12", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
+-	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l6-l17"),
++	RPMH_VREG("ldo13",  "ldo%s13", &pmic5_pldo,      "vdd-l13-l16-l17"),
+ 	RPMH_VREG("ldo14",  "ldo%s14", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
+ 	RPMH_VREG("ldo15",  "ldo%s15", &pmic5_pldo_lv,   "vdd-l7-l12-l14-l15"),
+-	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l6-l17"),
+-	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l6-l17"),
++	RPMH_VREG("ldo16",  "ldo%s16", &pmic5_pldo,      "vdd-l13-l16-l17"),
++	RPMH_VREG("ldo17",  "ldo%s17", &pmic5_pldo,      "vdd-l13-l16-l17"),
+ 	RPMH_VREG("ldo18",  "ldo%s18", &pmic5_nldo,      "vdd-l3-l4-l5-l18"),
+ 	{},
+ };
+@@ -857,7 +857,7 @@ static const struct rpmh_vreg_init_data pm8150l_vreg_data[] = {
+ 	RPMH_VREG("ldo5",   "ldo%s5",  &pmic5_pldo,      "vdd-l4-l5-l6"),
+ 	RPMH_VREG("ldo6",   "ldo%s6",  &pmic5_pldo,      "vdd-l4-l5-l6"),
+ 	RPMH_VREG("ldo7",   "ldo%s7",  &pmic5_pldo,      "vdd-l7-l11"),
+-	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8-l11"),
++	RPMH_VREG("ldo8",   "ldo%s8",  &pmic5_pldo_lv,   "vdd-l1-l8"),
+ 	RPMH_VREG("ldo9",   "ldo%s9",  &pmic5_pldo,      "vdd-l9-l10"),
+ 	RPMH_VREG("ldo10",  "ldo%s10", &pmic5_pldo,      "vdd-l9-l10"),
+ 	RPMH_VREG("ldo11",  "ldo%s11", &pmic5_pldo,      "vdd-l7-l11"),
 -- 
 2.25.1
 
