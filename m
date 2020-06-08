@@ -2,116 +2,202 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A483CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B1D20812
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2562075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 00:57:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gkSeJ0OI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgFHAvH (ORCPT
+        id S1728157AbgFHA5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 20:51:07 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2102 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728001AbgFHAvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 20:51:07 -0400
-Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 434C31893322DC83ADAA;
-        Mon,  8 Jun 2020 08:51:03 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.10]) by
- dggemi402-hub.china.huawei.com ([10.3.17.135]) with mapi id 14.03.0487.000;
- Mon, 8 Jun 2020 08:50:56 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Roman Gushchin <guro@fb.com>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>
-Subject: RE: [PATCH 2/3] arm64: mm: reserve hugetlb CMA after numa_init
-Thread-Topic: [PATCH 2/3] arm64: mm: reserve hugetlb CMA after numa_init
-Thread-Index: AQHWOVDqOQ5Ue+21CU6BOgFAT6Yo26jFs6GAgAdkKACAANEJQA==
-Date:   Mon, 8 Jun 2020 00:50:56 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD24E1ED7@DGGEMI525-MBS.china.huawei.com>
-References: <20200603024231.61748-1-song.bao.hua@hisilicon.com>
- <20200603024231.61748-3-song.bao.hua@hisilicon.com>
- <20200603032219.GA548147@carbon.lan>
- <bad059a3-c564-30a1-198f-1c92de601aed@gmail.com>
-In-Reply-To: <bad059a3-c564-30a1-198f-1c92de601aed@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.203.95]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 7 Jun 2020 20:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728001AbgFHA5W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 7 Jun 2020 20:57:22 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 551BBC08C5C3
+        for <linux-kernel@vger.kernel.org>; Sun,  7 Jun 2020 17:57:22 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ga6so5046345pjb.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jun 2020 17:57:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=3OG+06AXNGyPUKWS0CfV/HeZ0RO1YmM6taoaSNJTNb0=;
+        b=gkSeJ0OIv2Q9f9FRVfE/AY8wMB38EFl+MYiI5yaKaPhEUiyngpAIcMhkxlnCORyMyE
+         Uveq79eksjSRCjISzVOLOoEbNZaz3AmzBK3S3qBUH12jXGcO/vlpP6OZdCybjL0a8W9b
+         BcXM6vFwCivhVdeJ4XAIZ3Vfmdig1cGbRDlWCeALmVxJbsvIEm0X5czHcAWUiCYXCqvK
+         65ZoOHtbiiAqZwk0Pxe5PDeJq1Yfry5V7Cv5QdSMLueKqjWcMqH0nBA17Tsdk34Ag96R
+         MnBQE34BM6D6oXMTNn6ppMGHJbVNgWNxSUEfJHVi9ipciMqbFU5f/Nlt8V9ZJUWnXmew
+         ixAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=3OG+06AXNGyPUKWS0CfV/HeZ0RO1YmM6taoaSNJTNb0=;
+        b=tg/WmK21Em5Bfa+1NLeP6d4jlUvlIvKbIaiM7jGRIheiYC2aaC5MWVti4emP/7LXFx
+         VUZzPED7VArET8xyrfDYtQVnHx5JDbLbYhbTpb/lJ/x7rQ96X7VU2YVeZ26NpcHrGFeX
+         EQPLKuqcsn9wMkXt27xecar6AIO09psJiGQz13/yl3mlsXh3tr8GghH56fmUQHqrRwN0
+         hoJQC7z5XGp3qsxb/0GdufA9bFUofqjhA8g0CpggHChh+3a+FQXI1+aKlqsK13ROY0Tb
+         HgbVf0GJ4Q3hBAlfoGFHUnmfR+uvN0tlSynEm8Z+c8Fj2Wh9/9V/uOiY6RXJ1xYt8QUj
+         RPew==
+X-Gm-Message-State: AOAM531JRtEwvfn89tA1Yho9eMBCdvxYpG1il5X1XrsxdDuCe3l62FyP
+        7OstlmEXER0tOjS+mtB4B0r1Zw==
+X-Google-Smtp-Source: ABdhPJyXDIv4C8INThRvIT6Bf/nmSYOBdcjapxN3vhwx5zwiBCZ+TSCVAAbMEZwmiMDg7g1WKK/YNQ==
+X-Received: by 2002:a17:90a:950b:: with SMTP id t11mr15266617pjo.35.1591577841542;
+        Sun, 07 Jun 2020 17:57:21 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id 19sm4382556pgh.21.2020.06.07.17.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2020 17:57:20 -0700 (PDT)
+Date:   Sun, 7 Jun 2020 17:57:20 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+cc:     alsa-devel@alsa-project.org, bp@alien8.de, hch@infradead.org,
+        hch@lst.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, perex@perex.cz, tglx@linutronix.de,
+        tiwai@suse.com, x86@kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: Re: 82fef0ad811f "x86/mm: unencrypted non-blocking DMA allocations
+ use coherent pools" was Re: next-0519 on thinkpad x60: sound related? window
+ manager crash
+In-Reply-To: <1591570155.2tn9o40h95.none@localhost>
+Message-ID: <alpine.DEB.2.22.394.2006071756040.138746@chino.kir.corp.google.com>
+References: <20200520111136.GA3802@amd> <1591545088.74ii116nf2.none@localhost> <20200607163803.GA10303@duo.ucw.cz> <alpine.DEB.2.22.394.2006071209470.84952@chino.kir.corp.google.com> <1591570155.2tn9o40h95.none@localhost>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWF0dGhpYXMgQnJ1Z2dl
-ciBbbWFpbHRvOm1hdHRoaWFzLmJnZ0BnbWFpbC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgSnVuZSA4
-LCAyMDIwIDg6MTUgQU0NCj4gVG86IFJvbWFuIEd1c2hjaGluIDxndXJvQGZiLmNvbT47IFNvbmcg
-QmFvIEh1YSAoQmFycnkgU29uZykNCj4gPHNvbmcuYmFvLmh1YUBoaXNpbGljb24uY29tPg0KPiBD
-YzogY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IEpvaG4gR2FycnkgPGpvaG4uZ2FycnlAaHVhd2Vp
-LmNvbT47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IExpbnV4YXJtIDxsaW51eGFy
-bUBodWF3ZWkuY29tPjsNCj4gaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmc7IFplbmd0
-YW8gKEIpIDxwcmltZS56ZW5nQGhpc2lsaWNvbi5jb20+Ow0KPiBKb25hdGhhbiBDYW1lcm9uIDxq
-b25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+Ow0KPiByb2Jpbi5tdXJwaHlAYXJtLmNvbTsgaGNo
-QGxzdC5kZTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBtLnN6eXBy
-b3dza2lAc2Ftc3VuZy5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIGFybTY0OiBtbTog
-cmVzZXJ2ZSBodWdldGxiIENNQSBhZnRlciBudW1hX2luaXQNCj4gDQo+IA0KPiANCj4gT24gMDMv
-MDYvMjAyMCAwNToyMiwgUm9tYW4gR3VzaGNoaW4gd3JvdGU6DQo+ID4gT24gV2VkLCBKdW4gMDMs
-IDIwMjAgYXQgMDI6NDI6MzBQTSArMTIwMCwgQmFycnkgU29uZyB3cm90ZToNCj4gPj4gaHVnZXRs
-Yl9jbWFfcmVzZXJ2ZSgpIGlzIGNhbGxlZCBhdCB0aGUgd3JvbmcgcGxhY2UuIG51bWFfaW5pdCBo
-YXMgbm90IGJlZW4NCj4gPj4gZG9uZSB5ZXQuIHNvIGFsbCByZXNlcnZlZCBtZW1vcnkgd2lsbCBi
-ZSBsb2NhdGVkIGF0IG5vZGUwLg0KPiA+Pg0KPiA+PiBDYzogUm9tYW4gR3VzaGNoaW4gPGd1cm9A
-ZmIuY29tPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBCYXJyeSBTb25nIDxzb25nLmJhby5odWFAaGlz
-aWxpY29uLmNvbT4NCj4gPg0KPiA+IEFja2VkLWJ5OiBSb21hbiBHdXNoY2hpbiA8Z3Vyb0BmYi5j
-b20+DQo+ID4NCj4gDQo+IFdoZW4gZGlkIHRoaXMgYnJlYWsgb3Igd2FzIGl0IGJyb2tlbiBzaW5j
-ZSB0aGUgYmVnaW5uaW5nPw0KPiBJbiBhbnkgY2FzZSwgY291bGQgeW91IHByb3ZpZGUgYSAiRml4
-ZXMiIHRhZyBmb3IgaXQsIHNvIHRoYXQgaXQgY2FuIGVhc2lseSBiZQ0KPiBiYWNrcG9ydGVkIHRv
-IG9sZGVyIHJlbGVhc2VzLg0KDQpJIGd1ZXNzIGl0IHdhcyBicm9rZW4gYXQgdGhlIGZpcnN0IGJl
-Z2lubmluZy4NCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
-L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPWNmMTFlODVmYzA4Y2MNCg0KRml4ZXM6IGNm
-MTFlODVmYzA4YyAoIm1tOiBodWdldGxiOiBvcHRpb25hbGx5IGFsbG9jYXRlIGdpZ2FudGljIGh1
-Z2VwYWdlcyB1c2luZyBjbWEiKQ0KDQpXb3VsZCB5b3UgdGhpbmsgaXQgaXMgYmV0dGVyIGZvciBt
-ZSB0byBzZW5kIHYyIGZvciB0aGlzIHBhdGNoIHNlcGFyYXRlbHkgd2l0aCB0aGlzIHRhZyBhbmQg
-dGFrZSB0aGlzIG91dCBvZiBteSBvcmlnaW5hbCBwYXRjaCBzZXQgZm9yIHBlci1udW1hIENNQT8N
-ClBsZWFzZSBnaXZlIHlvdXIgc3VnZ2VzdGlvbi4NCg0KQmVzdCBSZWdhcmRzDQpCYXJyeQ0KDQo+
-IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCj4gPiBUaGFua3MhDQo+ID4NCj4gPj4gLS0t
-DQo+ID4+ICBhcmNoL2FybTY0L21tL2luaXQuYyB8IDEwICsrKysrLS0tLS0NCj4gPj4gIDEgZmls
-ZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybTY0L21tL2luaXQuYyBiL2FyY2gvYXJtNjQvbW0vaW5pdC5jDQo+
-ID4+IGluZGV4IGU0MjcyN2UzNTY4ZS4uOGYwZTcwZWJiNDlkIDEwMDY0NA0KPiA+PiAtLS0gYS9h
-cmNoL2FybTY0L21tL2luaXQuYw0KPiA+PiArKysgYi9hcmNoL2FybTY0L21tL2luaXQuYw0KPiA+
-PiBAQCAtNDU4LDExICs0NTgsNiBAQCB2b2lkIF9faW5pdCBhcm02NF9tZW1ibG9ja19pbml0KHZv
-aWQpDQo+ID4+ICAJaGlnaF9tZW1vcnkgPSBfX3ZhKG1lbWJsb2NrX2VuZF9vZl9EUkFNKCkgLSAx
-KSArIDE7DQo+ID4+DQo+ID4+ICAJZG1hX2NvbnRpZ3VvdXNfcmVzZXJ2ZShhcm02NF9kbWEzMl9w
-aHlzX2xpbWl0KTsNCj4gPj4gLQ0KPiA+PiAtI2lmZGVmIENPTkZJR19BUk02NF80S19QQUdFUw0K
-PiA+PiAtCWh1Z2V0bGJfY21hX3Jlc2VydmUoUFVEX1NISUZUIC0gUEFHRV9TSElGVCk7DQo+ID4+
-IC0jZW5kaWYNCj4gPj4gLQ0KPiA+PiAgfQ0KPiA+Pg0KPiA+PiAgdm9pZCBfX2luaXQgYm9vdG1l
-bV9pbml0KHZvaWQpDQo+ID4+IEBAIC00NzgsNiArNDczLDExIEBAIHZvaWQgX19pbml0IGJvb3Rt
-ZW1faW5pdCh2b2lkKQ0KPiA+PiAgCW1pbl9sb3dfcGZuID0gbWluOw0KPiA+Pg0KPiA+PiAgCWFy
-bTY0X251bWFfaW5pdCgpOw0KPiA+PiArDQo+ID4+ICsjaWZkZWYgQ09ORklHX0FSTTY0XzRLX1BB
-R0VTDQo+ID4+ICsJaHVnZXRsYl9jbWFfcmVzZXJ2ZShQVURfU0hJRlQgLSBQQUdFX1NISUZUKTsN
-Cj4gPj4gKyNlbmRpZg0KPiA+PiArDQo+ID4+ICAJLyoNCj4gPj4gIAkgKiBTcGFyc2VtZW0gdHJp
-ZXMgdG8gYWxsb2NhdGUgYm9vdG1lbSBpbiBtZW1vcnlfcHJlc2VudCgpLCBzbyBtdXN0DQo+IGJl
-DQo+ID4+ICAJICogZG9uZSBhZnRlciB0aGUgZml4ZWQgcmVzZXJ2YXRpb25zLg0KPiA+PiAtLQ0K
-PiA+PiAyLjIzLjANCg0K
+On Sun, 7 Jun 2020, Alex Xu (Hello71) wrote:
+
+> > On Sun, 7 Jun 2020, Pavel Machek wrote:
+> > 
+> >> > I have a similar issue, caused between aaa2faab4ed8 and b170290c2836.
+> >> > 
+> >> > [   20.263098] BUG: unable to handle page fault for address: ffffb2b582cc2000
+> >> > [   20.263104] #PF: supervisor write access in kernel mode
+> >> > [   20.263105] #PF: error_code(0x000b) - reserved bit violation
+> >> > [   20.263107] PGD 3fd03b067 P4D 3fd03b067 PUD 3fd03c067 PMD 3f8822067 PTE 8000273942ab2163
+> >> > [   20.263113] Oops: 000b [#1] PREEMPT SMP
+> >> > [   20.263117] CPU: 3 PID: 691 Comm: mpv Not tainted 5.7.0-11262-gb170290c2836 #1
+> >> > [   20.263119] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./B450 Pro4, BIOS P4.10 03/05/2020
+> >> > [   20.263125] RIP: 0010:__memset+0x24/0x30
+> >> > [   20.263128] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89 d1 83 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
+> >> > [   20.263131] RSP: 0018:ffffb2b583d07e10 EFLAGS: 00010216
+> >> > [   20.263133] RAX: 0000000000000000 RBX: ffff8b8000102c00 RCX: 0000000000004000
+> >> > [   20.263134] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb2b582cc2000
+> >> > [   20.263136] RBP: ffff8b8000101000 R08: 0000000000000000 R09: ffffb2b582cc2000
+> >> > [   20.263137] R10: 0000000000005356 R11: ffff8b8000102c18 R12: 0000000000000000
+> >> > [   20.263139] R13: 0000000000000000 R14: ffff8b8039944200 R15: ffffffff9794daa0
+> >> > [   20.263141] FS:  00007f41aa4b4200(0000) GS:ffff8b803ecc0000(0000) knlGS:0000000000000000
+> >> > [   20.263143] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> > [   20.263144] CR2: ffffb2b582cc2000 CR3: 00000003b6731000 CR4: 00000000003406e0
+> >> > [   20.263146] Call Trace:
+> >> > [   20.263151]  ? snd_pcm_hw_params+0x3f3/0x47a
+> >> > [   20.263154]  ? snd_pcm_common_ioctl+0xf2/0xf73
+> >> > [   20.263158]  ? snd_pcm_ioctl+0x1e/0x29
+> >> > [   20.263161]  ? ksys_ioctl+0x77/0x91
+> >> > [   20.263163]  ? __x64_sys_ioctl+0x11/0x14
+> >> > [   20.263166]  ? do_syscall_64+0x3d/0xf5
+> >> > [   20.263170]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >> > [   20.263173] Modules linked in: uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l2 videodev snd_usb_audio videobuf2_common snd_hwdep snd_usbmidi_lib input_leds snd_rawmidi led_class
+> >> > [   20.263182] CR2: ffffb2b582cc2000
+> >> > [   20.263184] ---[ end trace c6b47a774b91f0a0 ]---
+> >> > [   20.263187] RIP: 0010:__memset+0x24/0x30
+> >> > [   20.263190] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89 d1 83 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
+> >> > [   20.263192] RSP: 0018:ffffb2b583d07e10 EFLAGS: 00010216
+> >> > [   20.263193] RAX: 0000000000000000 RBX: ffff8b8000102c00 RCX: 0000000000004000
+> >> > [   20.263195] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffb2b582cc2000
+> >> > [   20.263196] RBP: ffff8b8000101000 R08: 0000000000000000 R09: ffffb2b582cc2000
+> >> > [   20.263197] R10: 0000000000005356 R11: ffff8b8000102c18 R12: 0000000000000000
+> >> > [   20.263199] R13: 0000000000000000 R14: ffff8b8039944200 R15: ffffffff9794daa0
+> >> > [   20.263201] FS:  00007f41aa4b4200(0000) GS:ffff8b803ecc0000(0000) knlGS:0000000000000000
+> >> > [   20.263202] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> > [   20.263204] CR2: ffffb2b582cc2000 CR3: 00000003b6731000 CR4: 00000000003406e0
+> >> > 
+> >> > I bisected this to 82fef0ad811f "x86/mm: unencrypted non-blocking DMA 
+> >> > allocations use coherent pools". Reverting 1ee18de92927 resolves the 
+> >> > issue.
+> >> > 
+> >> > Looks like Thinkpad X60 doesn't have VT-d, but could still be DMA 
+> >> > related.
+> >> 
+> >> Note that newer -next releases seem to behave okay for me. The commit
+> >> pointed out by siection is really simple:
+> >> 
+> >> AFAIK you could verify it is responsible by turning off
+> >> CONFIG_AMD_MEM_ENCRYPT on latest kernel...
+> >> 
+> >> Best regards,
+> >> 								Pavel
+> >> 
+> >> index 1d6104ea8af0..2bf2222819d3 100644
+> >> --- a/arch/x86/Kconfig
+> >> +++ b/arch/x86/Kconfig
+> >> @@ -1520,6 +1520,7 @@ config X86_CPA_STATISTICS
+> >>  config AMD_MEM_ENCRYPT
+> >>         bool "AMD Secure Memory Encryption (SME) support"
+> >>         depends on X86_64 && CPU_SUP_AMD
+> >> +       select DMA_COHERENT_POOL
+> >>         select DYNAMIC_PHYSICAL_MASK
+> >>         select ARCH_USE_MEMREMAP_PROT
+> >>         select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+> > 
+> > Thanks for the report!
+> > 
+> > Besides CONFIG_AMD_MEM_ENCRYPT, do you have CONFIG_DMA_DIRECT_REMAP 
+> > enabled?  If so, it may be caused by the virtual address passed to the 
+> > set_memory_{decrypted,encrypted}() functions.
+> > 
+> > And I assume you are enabling SME by using mem_encrypt=on on the kernel 
+> > command line or CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT is enabled.
+> > 
+> > We likely need an atomic pool for devices that support DMA to addresses in 
+> > sme_me_mask as well.  I can test this tomorrow, but wanted to get it out 
+> > early to see if it helps?
+> 
+> This patch doesn't seem to help. I have the same problem (kernel page 
+> fault, __memset, snd_pcm_hw_params...).
+> 
+> I don't have CONFIG_DMA_DIRECT_REMAP enabled, and AFAICT it doesn't seem 
+> to be selectable currently on x86, unless there are some patches 
+> floating around for that.
+> 
+
+Thanks for trying it out, Alex.  Would you mind sending your .config and 
+command line?  I assume either mem_encrypt=on or 
+CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT is enabled.
+
+Could you also give this a try?
+
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -99,10 +99,11 @@ static inline bool dma_should_alloc_from_pool(struct device *dev, gfp_t gfp,
+ static inline bool dma_should_free_from_pool(struct device *dev,
+ 					     unsigned long attrs)
+ {
+-	if (IS_ENABLED(CONFIG_DMA_COHERENT_POOL))
++	if (!IS_ENABLED(CONFIG_DMA_COHERENT_POOL))
++		return false;
++	if (force_dma_unencrypted(dev))
+ 		return true;
+-	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+-	    !force_dma_unencrypted(dev))
++	if (attrs & DMA_ATTR_NO_KERNEL_MAPPING)
+ 		return false;
+ 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP))
+ 		return true;
