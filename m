@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A797C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC12E20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDB120659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659775;
-	bh=eJYsUxMVZMlCzNovHosZ1/Ch8LyEdLb+TE+MJxS0lv0=;
+	s=default; t=1591659782;
+	bh=b/50F7gkO3+K/pAR6DbtLDdBm4g7DWks/GCUmwikn3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bG4h9/nPbOItBK9wAaYWUG2iTBHbrUp5Ofp2Fh3ck/Q6VCJreXXKHcrOkWI5/i75k
-	 270Ru3GfL3Sn58zpBMHKkgElZbKIplei8Yz9T/nfGZ/OmPns/sGuMeFGMo1ToSP4dr
-	 3mZTV/vBE2VpntS19sUWg1xLNpjtWchIkRYc4/sc=
+	b=ctqvWvpBzX+97aaS1r0UUWvMCGrtVrfYCtofHB4ynUL/yY1hdEVk3r5pc6xX/aiwi
+	 C2mhd635Ph5+FWReEHmDwnXWOKpsYs96BPdkYTJ/kStwOw/dz56fcrpQBG1dVkc+kU
+	 I3ZYO9g2raRuLb6Vo7bAv+q7X1tTg367s/RQw3do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732111AbgFHX1T (ORCPT
+        id S2387523AbgFHXnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46344 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730854AbgFHXV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:21:57 -0400
+        id S1730843AbgFHX1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C9520872;
-        Mon,  8 Jun 2020 23:21:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB6D62068D;
+        Mon,  8 Jun 2020 23:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658516;
-        bh=eJYsUxMVZMlCzNovHosZ1/Ch8LyEdLb+TE+MJxS0lv0=;
+        s=default; t=1591658838;
+        bh=b/50F7gkO3+K/pAR6DbtLDdBm4g7DWks/GCUmwikn3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxzUOwSeruoNo3q+byQBD+Yv/+fYWlQNDF0vMjMkC7Q+r1N0Y24mJeHMW3o4BFliP
-         KWc3cmCefjnnXSV1hxl2wL/x6vOc2vsJfeSThWuLZN69j6zd5HO3kYlqeY+bzNqQsB
-         KxB5436JAx3c+cXKPIzmwrByHyCxPp50k14ksrxE=
+        b=XGO/MVwr8XPzhx44SHeVtaRTszJj72a9SrKf2g0uRPjw3YHeF7bpT0m7Fax9j3qDj
+         07iRMIzWTksoBQBU0lF/yIfij+shWO/RS/ErAQiDL2FHRQaeiyf3EUkDRYWblfvOs4
+         j/1DUtbxRs6hI2R/CpWPYIodgpH+BCugiPXdeFYE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 5.4 143/175] m68k: mac: Don't call via_flush_cache() on Mac IIfx
-Date:   Mon,  8 Jun 2020 19:18:16 -0400
-Message-Id: <20200608231848.3366970-143-sashal@kernel.org>
+Cc:     Yunjian Wang <wangyunjian@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 28/50] net: allwinner: Fix use correct return type for ndo_start_xmit()
+Date:   Mon,  8 Jun 2020 19:26:18 -0400
+Message-Id: <20200608232640.3370262-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
+References: <20200608232640.3370262-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,169 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-[ Upstream commit bcc44f6b74106b31f0b0408b70305a40360d63b7 ]
+[ Upstream commit 09f6c44aaae0f1bdb8b983d7762676d5018c53bc ]
 
-There is no VIA2 chip on the Mac IIfx, so don't call via_flush_cache().
-This avoids a boot crash which appeared in v5.4.
+The method ndo_start_xmit() returns a value of type netdev_tx_t. Fix
+the ndo function to use the correct type. And emac_start_xmit() can
+leak one skb if 'channel' == 3.
 
-printk: console [ttyS0] enabled
-printk: bootconsole [debug0] disabled
-printk: bootconsole [debug0] disabled
-Calibrating delay loop... 9.61 BogoMIPS (lpj=48064)
-pid_max: default: 32768 minimum: 301
-Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
-devtmpfs: initialized
-random: get_random_u32 called from bucket_table_alloc.isra.27+0x68/0x194 with crng_init=0
-clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
-futex hash table entries: 256 (order: -1, 3072 bytes, linear)
-NET: Registered protocol family 16
-Data read fault at 0x00000000 in Super Data (pc=0x8a6a)
-BAD KERNEL BUSERR
-Oops: 00000000
-Modules linked in:
-PC: [<00008a6a>] via_flush_cache+0x12/0x2c
-SR: 2700  SP: 01c1fe3c  a2: 01c24000
-d0: 00001119    d1: 0000000c    d2: 00012000    d3: 0000000f
-d4: 01c06840    d5: 00033b92    a0: 00000000    a1: 00000000
-Process swapper (pid: 1, task=01c24000)
-Frame format=B ssw=0755 isc=0200 isb=fff7 daddr=00000000 dobuf=01c1fed0
-baddr=00008a6e dibuf=0000004e ver=f
-Stack from 01c1fec4:
-        01c1fed0 00007d7e 00010080 01c1fedc 0000792e 00000001 01c1fef4 00006b40
-        01c80000 00040000 00000006 00000003 01c1ff1c 004a545e 004ff200 00040000
-        00000000 00000003 01c06840 00033b92 004a5410 004b6c88 01c1ff84 000021e2
-        00000073 00000003 01c06840 00033b92 0038507a 004bb094 004b6ca8 004b6c88
-        004b6ca4 004b6c88 000021ae 00020002 00000000 01c0685d 00000000 01c1ffb4
-        0049f938 00409c85 01c06840 0045bd40 00000073 00000002 00000002 00000000
-Call Trace: [<00007d7e>] mac_cache_card_flush+0x12/0x1c
- [<00010080>] fix_dnrm+0x2/0x18
- [<0000792e>] cache_push+0x46/0x5a
- [<00006b40>] arch_dma_prep_coherent+0x60/0x6e
- [<00040000>] switched_to_dl+0x76/0xd0
- [<004a545e>] dma_atomic_pool_init+0x4e/0x188
- [<00040000>] switched_to_dl+0x76/0xd0
- [<00033b92>] parse_args+0x0/0x370
- [<004a5410>] dma_atomic_pool_init+0x0/0x188
- [<000021e2>] do_one_initcall+0x34/0x1be
- [<00033b92>] parse_args+0x0/0x370
- [<0038507a>] strcpy+0x0/0x1e
- [<000021ae>] do_one_initcall+0x0/0x1be
- [<00020002>] do_proc_dointvec_conv+0x54/0x74
- [<0049f938>] kernel_init_freeable+0x126/0x190
- [<0049f94c>] kernel_init_freeable+0x13a/0x190
- [<004a5410>] dma_atomic_pool_init+0x0/0x188
- [<00041798>] complete+0x0/0x3c
- [<000b9b0c>] kfree+0x0/0x20a
- [<0038df98>] schedule+0x0/0xd0
- [<0038d604>] kernel_init+0x0/0xda
- [<0038d610>] kernel_init+0xc/0xda
- [<0038d604>] kernel_init+0x0/0xda
- [<00002d38>] ret_from_kernel_thread+0xc/0x14
-Code: 0000 2079 0048 10da 2279 0048 10c8 d3c8 <1011> 0200 fff7 1280 d1f9 0048 10c8 1010 0000 0008 1080 4e5e 4e75 4e56 0000 2039
-Disabling lock debugging due to kernel taint
-Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-
-Thanks to Stan Johnson for capturing the console log and running git
-bisect.
-
-Git bisect said commit 8e3a68fb55e0 ("dma-mapping: make
-dma_atomic_pool_init self-contained") is the first "bad" commit. I don't
-know why. Perhaps mach_l2_flush first became reachable with that commit.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-and-tested-by: Stan Johnson <userm57@yahoo.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/b8bbeef197d6b3898e82ed0d231ad08f575a4b34.1589949122.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/mac_via.h |  1 +
- arch/m68k/mac/config.c          | 21 ++-------------------
- arch/m68k/mac/via.c             |  6 +++++-
- 3 files changed, 8 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/allwinner/sun4i-emac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/m68k/include/asm/mac_via.h b/arch/m68k/include/asm/mac_via.h
-index de1470c4d829..1149251ea58d 100644
---- a/arch/m68k/include/asm/mac_via.h
-+++ b/arch/m68k/include/asm/mac_via.h
-@@ -257,6 +257,7 @@ extern int rbv_present,via_alt_mapping;
- 
- struct irq_desc;
- 
-+extern void via_l2_flush(int writeback);
- extern void via_register_interrupts(void);
- extern void via_irq_enable(int);
- extern void via_irq_disable(int);
-diff --git a/arch/m68k/mac/config.c b/arch/m68k/mac/config.c
-index 611f73bfc87c..d0126ab01360 100644
---- a/arch/m68k/mac/config.c
-+++ b/arch/m68k/mac/config.c
-@@ -59,7 +59,6 @@ extern void iop_preinit(void);
- extern void iop_init(void);
- extern void via_init(void);
- extern void via_init_clock(irq_handler_t func);
--extern void via_flush_cache(void);
- extern void oss_init(void);
- extern void psc_init(void);
- extern void baboon_init(void);
-@@ -130,21 +129,6 @@ int __init mac_parse_bootinfo(const struct bi_record *record)
- 	return unknown;
- }
- 
--/*
-- * Flip into 24bit mode for an instant - flushes the L2 cache card. We
-- * have to disable interrupts for this. Our IRQ handlers will crap
-- * themselves if they take an IRQ in 24bit mode!
-- */
--
--static void mac_cache_card_flush(int writeback)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	via_flush_cache();
--	local_irq_restore(flags);
--}
--
- void __init config_mac(void)
- {
- 	if (!MACH_IS_MAC)
-@@ -175,9 +159,8 @@ void __init config_mac(void)
- 	 * not.
- 	 */
- 
--	if (macintosh_config->ident == MAC_MODEL_IICI
--	    || macintosh_config->ident == MAC_MODEL_IIFX)
--		mach_l2_flush = mac_cache_card_flush;
-+	if (macintosh_config->ident == MAC_MODEL_IICI)
-+		mach_l2_flush = via_l2_flush;
- }
- 
- 
-diff --git a/arch/m68k/mac/via.c b/arch/m68k/mac/via.c
-index 3c2cfcb74982..1f0fad2a98a0 100644
---- a/arch/m68k/mac/via.c
-+++ b/arch/m68k/mac/via.c
-@@ -294,10 +294,14 @@ void via_debug_dump(void)
-  * the system into 24-bit mode for an instant.
+diff --git a/drivers/net/ethernet/allwinner/sun4i-emac.c b/drivers/net/ethernet/allwinner/sun4i-emac.c
+index 6ffdff68bfc4..672a8212c8d9 100644
+--- a/drivers/net/ethernet/allwinner/sun4i-emac.c
++++ b/drivers/net/ethernet/allwinner/sun4i-emac.c
+@@ -412,7 +412,7 @@ static void emac_timeout(struct net_device *dev)
+ /* Hardware start transmission.
+  * Send a packet to media from the upper layer.
   */
- 
--void via_flush_cache(void)
-+void via_l2_flush(int writeback)
+-static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
  {
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
- 	via2[gBufB] &= ~VIA2B_vMode32;
- 	via2[gBufB] |= VIA2B_vMode32;
-+	local_irq_restore(flags);
- }
+ 	struct emac_board_info *db = netdev_priv(dev);
+ 	unsigned long channel;
+@@ -420,7 +420,7 @@ static int emac_start_xmit(struct sk_buff *skb, struct net_device *dev)
  
- /*
+ 	channel = db->tx_fifo_stat & 3;
+ 	if (channel == 3)
+-		return 1;
++		return NETDEV_TX_BUSY;
+ 
+ 	channel = (channel == 1 ? 1 : 0);
+ 
 -- 
 2.25.1
 
