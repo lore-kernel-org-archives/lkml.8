@@ -2,54 +2,55 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B64C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33531C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD722078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB63B20659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660620;
-	bh=t/B+Z7/pj/drMxYa0MXWdU4i0KnwS+kev2e8ibieyrA=;
+	s=default; t=1591660628;
+	bh=4p3kFaNwbjzRd7XMk2dV+c7fRUlfKlHkAbQyxboRuws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w3Zf1FWhxOT0Nl7Lj7FbNSEN4F5WuetNsFbKRtVSgMVmfzxszTVGklHTNih4iz+JV
-	 fh8/pbeubOcQqurFAAChFlG+dYF+o52aPQwByhFiXIn2cdFyRZ6rh0ag72tKaqSjY1
-	 U4GvBFE0SlFAe//G2FT4vBbepGj4R3aqj4oPY4AU=
+	b=ZJrT8isoIO7BuSIGQZTewXy2eNJOOBFoNBgQ76EjLgEuwaml0a+Lp9hQup+COOn4i
+	 WrtNGWKYE1SqKeCnm19uhYD9qNcSPabpCctjBZpJbLKiNjLS3d6xoZP1pB8xHYhicz
+	 SGqEIA3g9ojxrSXbVxuaLPU4cpl4TkHlKoNxw73c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731516AbgFHXXf (ORCPT
+        id S2387994AbgFHX5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:23:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:57:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729071AbgFHXS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:29 -0400
+        id S1731170AbgFHXXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:23:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A21420884;
-        Mon,  8 Jun 2020 23:18:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0F4A20872;
+        Mon,  8 Jun 2020 23:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658309;
-        bh=t/B+Z7/pj/drMxYa0MXWdU4i0KnwS+kev2e8ibieyrA=;
+        s=default; t=1591658615;
+        bh=4p3kFaNwbjzRd7XMk2dV+c7fRUlfKlHkAbQyxboRuws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m+M+pXLjTDL8jysAAQ0n64fWbKvHzU+GaD1q4eADDB1Pg++NT0qTNZhbCtukua4RK
-         oUA5js1DxiFsPY0gbIViWxfuv6ZburjI7psLKQUvP7zeGHLFh6xnesc3Mr4XbPoEkT
-         z+zNFyh3wLzYduOTbYSGkVU8jpbAXya8pkeeD3rg=
+        b=bMr9AhyIspDlK2o0MbcRPmEnVCvsrfcLOb4VS+bp+JBod4MDUYrGIlKB39t++5MBV
+         z1FgPGiRXg4yzIlkfG6MbiD0ZDIyqtu8cxtZUrgT51e/F+U3ATZCw4CYYxr59jHdGZ
+         OjEZvjTkCuitiBkKVTeXGHWhfPlNuy4NIgTAnvIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Arnd Bergmann <arnd@arndb.de>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 310/606] ARM: dts: mmp3: Use the MMP3 compatible string for /clocks
-Date:   Mon,  8 Jun 2020 19:07:15 -0400
-Message-Id: <20200608231211.3363633-310-sashal@kernel.org>
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 041/106] Bluetooth: btbcm: Add 2 missing models to subver tables
+Date:   Mon,  8 Jun 2020 19:21:33 -0400
+Message-Id: <20200608232238.3368589-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,36 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit ec7d12faf81de983efce8ff23f41c5d1bff14c41 ]
+[ Upstream commit c03ee9af4e07112bd3fc688daca9e654f41eca93 ]
 
-Clocks are in fact slightly different on MMP3. In particular, PLL2 is
-fixed to a different frequency, there's an extra PLL3, and the GPU
-clocks are configured differently.
+Currently the bcm_uart_subver_ and bcm_usb_subver_table-s lack entries
+for the BCM4324B5 and BCM20703A1 chipsets. This makes the code use just
+"BCM" as prefix for the filename to pass to request-firmware, making it
+harder for users to figure out which firmware they need. This especially
+is problematic with the UART attached BCM4324B5 where this leads to the
+filename being just "BCM.hcd".
 
-Link: https://lore.kernel.org/r/20200419171157.672999-15-lkundrak@v3.sk
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Add the 2 missing devices to subver tables. This has been tested on:
+
+1. A Dell XPS15 9550 where this makes btbcm.c try to load
+"BCM20703A1-0a5c-6410.hcd" before it tries to load "BCM-0a5c-6410.hcd".
+
+2. A Thinkpad 8 where this makes btbcm.c try to load
+"BCM4324B5.hcd" before it tries to load "BCM.hcd"
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/mmp3.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/btbcm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-index 59a108e49b41..3e28f0dc9df4 100644
---- a/arch/arm/boot/dts/mmp3.dtsi
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -531,7 +531,7 @@ l2: l2-cache-controller@d0020000 {
- 		};
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index e3e4d929e74f..ff6203c331ff 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -324,6 +324,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
+ 	{ 0x4103, "BCM4330B1"	},	/* 002.001.003 */
+ 	{ 0x410e, "BCM43341B0"	},	/* 002.001.014 */
+ 	{ 0x4406, "BCM4324B3"	},	/* 002.004.006 */
++	{ 0x4606, "BCM4324B5"	},	/* 002.006.006 */
+ 	{ 0x6109, "BCM4335C0"	},	/* 003.001.009 */
+ 	{ 0x610c, "BCM4354"	},	/* 003.001.012 */
+ 	{ 0x2122, "BCM4343A0"	},	/* 001.001.034 */
+@@ -334,6 +335,7 @@ static const struct bcm_subver_table bcm_uart_subver_table[] = {
+ };
  
- 		soc_clocks: clocks@d4050000 {
--			compatible = "marvell,mmp2-clock";
-+			compatible = "marvell,mmp3-clock";
- 			reg = <0xd4050000 0x1000>,
- 			      <0xd4282800 0x400>,
- 			      <0xd4015000 0x1000>;
+ static const struct bcm_subver_table bcm_usb_subver_table[] = {
++	{ 0x2105, "BCM20703A1"	},	/* 001.001.005 */
+ 	{ 0x210b, "BCM43142A0"	},	/* 001.001.011 */
+ 	{ 0x2112, "BCM4314A0"	},	/* 001.001.018 */
+ 	{ 0x2118, "BCM20702A0"	},	/* 001.001.024 */
 -- 
 2.25.1
 
