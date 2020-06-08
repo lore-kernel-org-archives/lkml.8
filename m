@@ -2,87 +2,64 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1628C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B423C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D58206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72813206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgFHHkI (ORCPT
+        id S1729060AbgFHHkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:40:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36036 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgFHHkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:40:05 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 97so1498213otg.3;
-        Mon, 08 Jun 2020 00:40:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aDfs1F4OdafycBApWUDwkkf2j85MeirTmfPU3v1iT58=;
-        b=gNG5Mbw3UmCuTySLt83VBAhd8r9VPz7xnAJW1303GSE3htiAzdBaQPTYmpx+DTK9kQ
-         z9cSiAra/4GVlGqiMtYRz3GUhTOokgAFERBePf0vJEiwOK1cUHBJ0r1c231+NJFuW2DK
-         bm6osqyuchCy4YH2QTzYxRfw1BAeY3B3Oo210ETMcyC7KZ2ENRL42mdqB7updHJdCKfy
-         qx9RtkyoI37ioda4jVe4D6uBRa4A5GRO1txDHe2jNlYq9rA3KH1B0oAeFz15IT/A3yyR
-         fzkzG4tQCPCb1oHaA8xd4Tt6Efr8Sp/jN+7H8PlXVpnuHOWDPcwNx8MgpEbQmHuP1vRm
-         t4fw==
-X-Gm-Message-State: AOAM5317dVcrijgHPoSZJlP4a6yeq9c0Hezh313PqieNy45ZOwRSH6zz
-        1xgLmq6YMVhSA/TbCnCqVHvp6/F6Nwl7disC0hM=
-X-Google-Smtp-Source: ABdhPJw6LZWyQO6k6m3npgne3D8qld9e6+4z6U9SP4XxGKdCCB8U4lEcsrneeJ2rC4AB/koN4Y/A8y8u1I0/WujGk1A=
-X-Received: by 2002:a9d:c29:: with SMTP id 38mr15599146otr.107.1591602002975;
- Mon, 08 Jun 2020 00:40:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200523115426.19285-1-dinghao.liu@zju.edu.cn>
- <20200608015456.GJ22208@pendragon.ideasonboard.com> <20200608015753.GK22208@pendragon.ideasonboard.com>
- <7b79863f.f636d.17291e1ff94.Coremail.dinghao.liu@zju.edu.cn>
-In-Reply-To: <7b79863f.f636d.17291e1ff94.Coremail.dinghao.liu@zju.edu.cn>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 8 Jun 2020 09:39:51 +0200
-Message-ID: <CAMuHMdUDcpCxmgdJtMRX7K9NvDxj+tDu33ebax0TOMBNZaygDw@mail.gmail.com>
-Subject: Re: Re: [PATCH] media: vsp1: Fix runtime PM imbalance in vsp1_probe
-To:     dinghao.liu@zju.edu.cn
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kangjie Lu <kjlu@umn.edu>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 8 Jun 2020 03:40:55 -0400
+Received: from mga07.intel.com ([134.134.136.100]:65193 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgFHHkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 03:40:55 -0400
+IronPort-SDR: vTDbiM1BYHyDPhsb+Ky3Izm9dA8HhWegU645Sj2i6EPWyF0WsAh//eLmdJdp7zWDcZqNgIy4ej
+ dxh96N5OF+hA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 00:40:54 -0700
+IronPort-SDR: NrnnaUFZQnglYJ7xhrb1fkBHT4kAaILlzQY9NFUOJPDv2JRivbzEAlwQsVjdVKqsQtzoask8c8
+ qOOrmJ83SLJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="270426496"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga003.jf.intel.com with ESMTP; 08 Jun 2020 00:40:50 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH 0/2][RFC v2] Change trace point to cover all runtime usage count
+Date:   Mon,  8 Jun 2020 15:41:41 +0800
+Message-Id: <cover.1591600914.git.yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dinghao,
+Currently some code flow of runtime usage count changes is not covered by 
+the rpm_runtime_usage tracepoints. Adjust corresponding tracepoints to monitor
+all the runtime usage count changes.
 
-On Mon, Jun 8, 2020 at 5:03 AM <dinghao.liu@zju.edu.cn> wrote:
-> > > I wonder how many bugs we have today, and how many bugs will keep
-> > > appearing in the future, due to this historical design mistake :-(
->
-> Good question. It's hard to say if this is a design mistake (some use
-> of this API does not check its return value and expects it always to
-> increment the usage counter). But it does make developers misuse it easier.
+Chen Yu (2):
+  PM-runtime: Move all runtime usage related function to runtime.c
+  PM-runtime: change the tracepoints to cover all usage_count
 
-On Renesas SoCs, I believe these can only fail if there's something
-seriously wrong, which means the system could never have gotten this far
-in the boot sequence anyway.  That's why I tend not to check the result
-of pm_runtime_get_sync() at all (on drivers for Renesas SoCs).
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ drivers/base/power/runtime.c | 50 ++++++++++++++++++++++++++----------
+ include/linux/pm_runtime.h   | 12 ++-------
+ 2 files changed, 38 insertions(+), 24 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
