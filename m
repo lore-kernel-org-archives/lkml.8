@@ -2,103 +2,126 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA08C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B85CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84107206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591643922;
-	bh=cq5cB7Ned8f4SgZcuXcGhLjXaV3doJN/U5BT85nQWPM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AbbLAQP2Sc2JjoNh2ETd38cw7VLcZfK2qpEy5of8qFlUAnZdQgYpr4CXlthF3N4Ae
-	 4STM9oiIJ4Kbrqo7R22rR/kBHV7tmaQOsdAtfVhzL5r0o5RXHK7AUeH3nNDz1QGiRd
-	 yV4tx6bWFFkTyaUni4k6BH3oJvPjgUHcISnBnCJE=
+	by mail.kernel.org (Postfix) with ESMTP id 09F74206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgFHTSl (ORCPT
+        id S1726575AbgFHTTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbgFHTSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:18:40 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31F4C08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 12:18:37 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id j18so8888724lji.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 12:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5+aTf2gj2lOJ6qgTzBTSu7Nj1KO1oLISUQJXCwIgKPw=;
-        b=XycGSfymrTt81KEthuu69tnYBVTU4/J3hiH1z1OY7eG4VVaSI6wY1sNsf3vhH1zEOS
-         dZXPuBt2VedjgwEjaYyqKGA7dFvG4VByaiDcz9wEBUo5Wdk675sUio3QpzXNo5zQfjkB
-         Fdj//4grkPz8ALLWOhe7NYdYjv8ulkjsZ2EH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5+aTf2gj2lOJ6qgTzBTSu7Nj1KO1oLISUQJXCwIgKPw=;
-        b=LHozDts/noAvD3cZywGuAEQjtAIKEl+LvOrm4vLSRryWAZOkUe7JhZnbNBli1IpBL2
-         ZUsRww4HDDvCtKBKapPaIwzqqNVDSvvVSKlqvJpTFetgT5lGfXoHuQImD/e/L9RNTnN4
-         bccdMDi2hGOisdjTvP3MHuxx4Ja7j/iRCm2OY5Ty90G1tFj2VB3yDraMCiHQOJ7fK9iA
-         C3XJHpNzzNWUqaE7EzZQFaxb8+QnXLvF3LYY6EPUhEu/SM29WXXRs9xydXDQ2nElbYsn
-         QEJB9FgQVr56FCGS7Iq5dZpNnLZ0+7sRzTC/kVG7Kz6Plkv5QcgQWwZOmYlUCnS5hY6J
-         Ga+g==
-X-Gm-Message-State: AOAM530Px9xB9ngJY//JU+7jyly+n3YS3yb4qGdoguTgyYWE1bcXvEBD
-        MaGEQ+5vnXSiDnjNEioBibIiZrbeQ4o=
-X-Google-Smtp-Source: ABdhPJwc+bwPF16FdfgcP/S7179lc9r4aHWgV6sSVcGA3MGtU9n+67v0U0oLb3Pv8ivMvmFm8gvZ7w==
-X-Received: by 2002:a2e:884a:: with SMTP id z10mr11065330ljj.208.1591643915482;
-        Mon, 08 Jun 2020 12:18:35 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id k12sm3871907lja.35.2020.06.08.12.18.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 12:18:34 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id c17so21927541lji.11
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 12:18:34 -0700 (PDT)
-X-Received: by 2002:a2e:974e:: with SMTP id f14mr11451625ljj.102.1591643914040;
- Mon, 08 Jun 2020 12:18:34 -0700 (PDT)
+        Mon, 8 Jun 2020 15:19:00 -0400
+Received: from mga02.intel.com ([134.134.136.20]:41852 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726409AbgFHTS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 15:18:59 -0400
+IronPort-SDR: TX0auy171xg/88bbdvUy0RNU/eN06UqdDle9Lx8xatxU3JYUVM9CEqS8nogwL0wpdeNqXVMwn7
+ xCntn4YniymQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 12:18:59 -0700
+IronPort-SDR: WIvzDvt6qXPnDtoGlEHqhyfaeHGmYNE6iID2/o8ODo6ZAgHRcxd0ILtw4JJz9RY545QtW3RS/V
+ PzvkvaUlqvhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
+   d="scan'208";a="446851097"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga005.jf.intel.com with ESMTP; 08 Jun 2020 12:18:58 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>,
+        Oliver Upton <oupton@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>
+Subject: [PATCH v2] KVM: nVMX: Consult only the "basic" exit reason when routing nested exit
+Date:   Mon,  8 Jun 2020 12:18:57 -0700
+Message-Id: <20200608191857.30319-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
- <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com>
- <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk> <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
- <CAHk-=widT2tV+sVPzNQWijtUz4JA=CS=EaJRfC3_9ymuQXQS8Q@mail.gmail.com> <20200608020522.GN23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200608020522.GN23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 8 Jun 2020 12:18:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjBT80kcCTh8fpuYBr6D7O_THew4-KTr2jeMhYfoCd9hg@mail.gmail.com>
-Message-ID: <CAHk-=wjBT80kcCTh8fpuYBr6D7O_THew4-KTr2jeMhYfoCd9hg@mail.gmail.com>
-Subject: Re: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 7, 2020 at 7:05 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
->         return mask & deny ? -EACCES : 0;
+Consult only the basic exit reason, i.e. bits 15:0 of vmcs.EXIT_REASON,
+when determining whether a nested VM-Exit should be reflected into L1 or
+handled by KVM in L0.
 
-I agree that 'deny' would be simpler to read here, but in other places
-it would look odd. ie the IS_POSIXACL() thing that checks for "are
-group bits set" still wants the mode.
+For better or worse, the switch statements nested_vmx_l0_wants_exit()
+and nested_vmx_l1_wants_exit() default to reflecting the VM-Exit into L1
+for any nested VM-Exit without dedicated logic.  Because the case
+statements only contain the basic exit reason, any VM-Exit with modifier
+bits set will be reflected to L1, even if KVM intended to handle it in
+L0.
 
-And I'd hate to have us use code that then mixes 'deny' and 'mode'
-when they are directly related to each other.
+Practically speaking, this only affects EXIT_REASON_MCE_DURING_VMENTRY,
+i.e. a #MC that occurs on nested VM-Enter would be incorrectly routed to
+L1, as "failed VM-Entry" is the only modifier that KVM can currently
+encounter.  The SMM modifiers will never be generated as KVM doesn't
+support/employ a SMI Transfer Monitor.  Ditto for "exit from enclave",
+as KVM doesn't yet support virtualizing SGX, i.e. it's impossible to
+enter an enclave in a KVM guest (L1 or L2).
 
-Anyway, I merged the patch as-is, I guess we can make future changes
-to this if you feel strongly about it.
+Note, the original version of this fix[*] is functionally equivalent and
+far more suited to backporting as the affected code was refactored since
+the original patch was posted.
 
-              Linus
+[*] https://lkml.kernel.org/r/20200227174430.26371-1-sean.j.christopherson@intel.com
+
+Fixes: 644d711aa0e1 ("KVM: nVMX: Deciding if L0 or L1 should handle an L2 exit")
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: stable@vger.kernel.org
+Cc: Oliver Upton <oupton@google.com>
+Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+
+Another wounded soldier. 
+
+Oliver, Krish, and Miaohe all provided reviews for v1, but I didn't feel
+comfortable adding the tags to v2 because this is far from a straight
+rebase.
+
+v2: Rebased to kvm/queue, commit fb7333dfd812 ("KVM: SVM: fix calls ...").
+
+ arch/x86/kvm/vmx/nested.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index bcb50724be38..adb11b504d5c 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5672,7 +5672,7 @@ static bool nested_vmx_l0_wants_exit(struct kvm_vcpu *vcpu, u32 exit_reason)
+ {
+ 	u32 intr_info;
+ 
+-	switch (exit_reason) {
++	switch ((u16)exit_reason) {
+ 	case EXIT_REASON_EXCEPTION_NMI:
+ 		intr_info = vmx_get_intr_info(vcpu);
+ 		if (is_nmi(intr_info))
+@@ -5733,7 +5733,7 @@ static bool nested_vmx_l1_wants_exit(struct kvm_vcpu *vcpu, u32 exit_reason)
+ 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+ 	u32 intr_info;
+ 
+-	switch (exit_reason) {
++	switch ((u16)exit_reason) {
+ 	case EXIT_REASON_EXCEPTION_NMI:
+ 		intr_info = vmx_get_intr_info(vcpu);
+ 		if (is_nmi(intr_info))
+-- 
+2.26.0
+
