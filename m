@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7849C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8491920775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1602020B80
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659042;
-	bh=FR0GBdXZRS3MESMaSu9Hju37YGFee3H+3/6KHSvEvTA=;
+	s=default; t=1591659049;
+	bh=CKS5+HdSoST1TSqe2wRB6hzz6m7D616MmSXTHXlLY/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uA8ojN5vDEWKGoJjJ9IGX1ZPqgLhmJuvrYIpZsx8IApRfoRFXYtY5GprH5WiffU7Z
-	 MMQHXTGKH+2iKdbJoj8e+nTodI9ESwoNdIHyue6S/gpBWpPTKU5ytxFzgC0UoP/R/u
-	 E86/Zw4sfv36WUfhiBFS3K/euhakvoeJ7AQvUQfE=
+	b=szNBXpg4IsuntiEUJPQrwXh1ckbv3nKfArKf+Ki/hdoxXnKx0713VhR8XilHMn8b/
+	 S68EwE1DiF0Soau6ffQmFPcV5zrmJBJ9qXSIZAk7cDq9cMS9/BqNzmSEasypF8N70P
+	 HuTl1xlz+F3K54OU2CjXsqa/RnZBtFjSgV+8Gpq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbgFHXal (ORCPT
+        id S1732069AbgFHXar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:30:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731648AbgFHXYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:41 -0400
+        id S1731662AbgFHXYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:24:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D93120842;
-        Mon,  8 Jun 2020 23:24:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3637120CC7;
+        Mon,  8 Jun 2020 23:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658680;
-        bh=FR0GBdXZRS3MESMaSu9Hju37YGFee3H+3/6KHSvEvTA=;
+        s=default; t=1591658685;
+        bh=CKS5+HdSoST1TSqe2wRB6hzz6m7D616MmSXTHXlLY/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXQRbD3QG+I8fZQyXPqAhzRmYviW4VPltqdN2vY1i8laMnz9J0Zskmw1NLDSKhwgY
-         crZoG08RtZ9fUwPB+9QUNJMeTQGyEis53qhYkXm7RxX+/70Kn5ydLR7Sbj6BGF37jv
-         bpjEcK3cqQ3tlvOyMI8Ma6h95HlvvDesRSF1fvLo=
+        b=XmLBg/WQOV+iJGb0yqusIY3WcS6mxwmnZ0jDs/U1ocCzJjf27VfyNedwerEUtnsUw
+         m9pZcs3wmFMcoJFMxxS/9q7wX0946BcvPsseF+mV7jz3Tyy48Dl3J2JnOacOiwvoq2
+         fjoUCaPbTvX+e7I5XMfnVEhDkjToh7OnwPNUvJow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 091/106] bcache: fix refcount underflow in bcache_device_free()
-Date:   Mon,  8 Jun 2020 19:22:23 -0400
-Message-Id: <20200608232238.3368589-91-sashal@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, Sasha Levin <sashal@kernel.org>,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 095/106] staging: greybus: sdio: Respect the cmd->busy_timeout from the mmc core
+Date:   Mon,  8 Jun 2020 19:22:27 -0400
+Message-Id: <20200608232238.3368589-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -58,90 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 86da9f736740eba602389908574dfbb0f517baa5 ]
+[ Upstream commit a389087ee9f195fcf2f31cd771e9ec5f02c16650 ]
 
-The problematic code piece in bcache_device_free() is,
+Using a fixed 1s timeout for all commands is a bit problematic.
 
- 785 static void bcache_device_free(struct bcache_device *d)
- 786 {
- 787     struct gendisk *disk = d->disk;
- [snipped]
- 799     if (disk) {
- 800             if (disk->flags & GENHD_FL_UP)
- 801                     del_gendisk(disk);
- 802
- 803             if (disk->queue)
- 804                     blk_cleanup_queue(disk->queue);
- 805
- 806             ida_simple_remove(&bcache_device_idx,
- 807                               first_minor_to_idx(disk->first_minor));
- 808             put_disk(disk);
- 809         }
- [snipped]
- 816 }
+For some commands it means waiting longer than needed for the timeout to
+expire, which may not a big issue, but still. For other commands, like for
+an erase (CMD38) that uses a R1B response, may require longer timeouts than
+1s. In these cases, we may end up treating the command as it failed, while
+it just needed some more time to complete successfully.
 
-At line 808, put_disk(disk) may encounter kobject refcount of 'disk'
-being underflow.
+Fix the problem by respecting the cmd->busy_timeout, which is provided by
+the mmc core.
 
-Here is how to reproduce the issue,
-- Attche the backing device to a cache device and do random write to
-  make the cache being dirty.
-- Stop the bcache device while the cache device has dirty data of the
-  backing device.
-- Only register the backing device back, NOT register cache device.
-- The bcache device node /dev/bcache0 won't show up, because backing
-  device waits for the cache device shows up for the missing dirty
-  data.
-- Now echo 1 into /sys/fs/bcache/pendings_cleanup, to stop the pending
-  backing device.
-- After the pending backing device stopped, use 'dmesg' to check kernel
-  message, a use-after-free warning from KASA reported the refcount of
-  kobject linked to the 'disk' is underflow.
-
-The dropping refcount at line 808 in the above code piece is added by
-add_disk(d->disk) in bch_cached_dev_run(). But in the above condition
-the cache device is not registered, bch_cached_dev_run() has no chance
-to be called and the refcount is not added. The put_disk() for a non-
-added refcount of gendisk kobject triggers a underflow warning.
-
-This patch checks whether GENHD_FL_UP is set in disk->flags, if it is
-not set then the bcache device was not added, don't call put_disk()
-and the the underflow issue can be avoided.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Alex Elder <elder@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greybus-dev@lists.linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200414161413.3036-20-ulf.hansson@linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/staging/greybus/sdio.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 5b5cbfadd003..68ebc2759c2e 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -775,7 +775,9 @@ static void bcache_device_free(struct bcache_device *d)
- 		bcache_device_detach(d);
- 
- 	if (disk) {
--		if (disk->flags & GENHD_FL_UP)
-+		bool disk_added = (disk->flags & GENHD_FL_UP) != 0;
-+
-+		if (disk_added)
- 			del_gendisk(disk);
- 
- 		if (disk->queue)
-@@ -783,7 +785,8 @@ static void bcache_device_free(struct bcache_device *d)
- 
- 		ida_simple_remove(&bcache_device_idx,
- 				  first_minor_to_idx(disk->first_minor));
--		put_disk(disk);
-+		if (disk_added)
-+			put_disk(disk);
+diff --git a/drivers/staging/greybus/sdio.c b/drivers/staging/greybus/sdio.c
+index 38e85033fc4b..afb2e5e5111a 100644
+--- a/drivers/staging/greybus/sdio.c
++++ b/drivers/staging/greybus/sdio.c
+@@ -411,6 +411,7 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 	struct gb_sdio_command_request request = {0};
+ 	struct gb_sdio_command_response response;
+ 	struct mmc_data *data = host->mrq->data;
++	unsigned int timeout_ms;
+ 	u8 cmd_flags;
+ 	u8 cmd_type;
+ 	int i;
+@@ -469,9 +470,12 @@ static int gb_sdio_command(struct gb_sdio_host *host, struct mmc_command *cmd)
+ 		request.data_blksz = cpu_to_le16(data->blksz);
  	}
  
- 	bioset_exit(&d->bio_split);
+-	ret = gb_operation_sync(host->connection, GB_SDIO_TYPE_COMMAND,
+-				&request, sizeof(request), &response,
+-				sizeof(response));
++	timeout_ms = cmd->busy_timeout ? cmd->busy_timeout :
++		GB_OPERATION_TIMEOUT_DEFAULT;
++
++	ret = gb_operation_sync_timeout(host->connection, GB_SDIO_TYPE_COMMAND,
++					&request, sizeof(request), &response,
++					sizeof(response), timeout_ms);
+ 	if (ret < 0)
+ 		goto out;
+ 
 -- 
 2.25.1
 
