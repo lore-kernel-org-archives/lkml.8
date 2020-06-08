@@ -2,85 +2,96 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59422C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6F92053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:50:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="WIBIrIjA"
+	by mail.kernel.org (Postfix) with ESMTP id CA1F120760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgFHQur (ORCPT
+        id S1730652AbgFHQup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:50:47 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:65270 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgFHQun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:50:43 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49gfQ936Zrz9Y;
-        Mon,  8 Jun 2020 18:50:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1591635041; bh=jarQlXIMyEgpDzCHnwhZ/Ic2auBBKSklH+JwJ3xa7B4=;
-        h=Date:From:Subject:In-Reply-To:To:Cc:From;
-        b=WIBIrIjAnzgKDgG6E50IKD77VgKzVIV8iGsIicqtwyayhblgJCDpssMGVGb/e9f3Q
-         /L/Rm/NAJETHnUPdke3Ps44VsduuhUW/Fzta2QM5AvGLrDnxMlmdIR74cMlgZwyfKh
-         nCo7zoOqxB1MVIpBbDgs2gyc6DTwyF/ZsO+yKF8k5dJXovvNPnk9tQAuqChINds6S9
-         NUc+zFDdLdRknF8msc3kZfihqczV5tR+yJL+wwU3wqtg/asdXvuc02vC9g7PFDv95F
-         R1kJBfR40X1Hx98FG5ajsIp5DR1bHue0BBA0lsVFkxKQLW4mCD1w+frrNl7NyOnTxu
-         5MHfL6Api4IGg==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Mon, 08 Jun 2020 18:50:39 +0200
-Message-Id: <89c4a2487609a0ed6af3ecf01cc972bdc59a7a2d.1591634956.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2] ALSA: pcm: disallow linking stream to itself
+        Mon, 8 Jun 2020 12:50:45 -0400
+Received: from outbound-smtp02.blacknight.com ([81.17.249.8]:35207 "EHLO
+        outbound-smtp02.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730629AbgFHQuo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:50:44 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp02.blacknight.com (Postfix) with ESMTPS id 0A7C9BAB35
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 17:50:42 +0100 (IST)
+Received: (qmail 26177 invoked from network); 8 Jun 2020 16:50:41 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 8 Jun 2020 16:50:41 -0000
+Date:   Mon, 8 Jun 2020 17:50:40 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
+ there is no watcher
+Message-ID: <20200608165040.GI3127@techsingularity.net>
+References: <20200608140557.GG3127@techsingularity.net>
+ <20200608151943.GA861@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <s5h4krl67vb.wl-tiwai@suse.de>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200608151943.GA861@quack2.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prevent SNDRV_PCM_IOCTL_LINK linking stream to itself - the code
-can't handle it. Fixed commit is not where bug was introduced, but
-changes the context significantly.
+On Mon, Jun 08, 2020 at 05:19:43PM +0200, Jan Kara wrote:
+> > This is showing that the latencies are improved by roughly 2-9%. The
+> > variability is not shown but some of these results are within the noise
+> > as this workload heavily overloads the machine. That said, the system CPU
+> > usage is reduced by quite a bit so it makes sense to avoid the overhead
+> > even if it is a bit tricky to detect at times. A perf profile of just 1
+> > group of tasks showed that 5.14% of samples taken were in either fsnotify()
+> > or fsnotify_parent(). With the patch, 2.8% of samples were in fsnotify,
+> > mostly function entry and the initial check for watchers.  The check for
+> > watchers is complicated enough that inlining it may be controversial.
+> > 
+> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> 
+> Thanks for the patch! I have to tell I'm surprised this small reordering
+> helps so much. For pipe inode we will bail on:
+> 
+>        if (!to_tell->i_fsnotify_marks && !sb->s_fsnotify_marks &&
+>            (!mnt || !mnt->mnt_fsnotify_marks))
+>                return 0;
+> 
+> So what we save with the reordering is sb->s_fsnotify_mask and
+> mnt->mnt_fsnotify_mask fetch but that should be the same cacheline as
+> sb->s_fsnotify_marks and mnt->mnt_fsnotify_marks, respectively.
 
-Cc: stable@vger.kernel.org
-Fixes: 0888c321de70 ("pcm_native: switch to fdget()/fdput()")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
-v2: EDEADLK -> EINVAL
----
- sound/core/pcm_native.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+It is likely that the contribution of that change is marginal relative
+to the fsnotify_parent() call. I'll know by tomorrow morning at the latest.
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index aef860256278..434e7b604bad 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -2166,6 +2166,12 @@ static int snd_pcm_link(struct snd_pcm_substream *substream, int fd)
- 	}
- 	pcm_file = f.file->private_data;
- 	substream1 = pcm_file->substream;
-+
-+	if (substream == substream1) {
-+		res = -EINVAL;
-+		goto _badf;
-+	}
-+
- 	group = kzalloc(sizeof(*group), GFP_KERNEL);
- 	if (!group) {
- 		res = -ENOMEM;
+> We also
+> save a function call of fsnotify_parent() but I would think that is very
+> cheap (compared to the whole write path) as well.
+> 
+
+To be fair, it is cheap but with this particular workload, we call
+vfs_write() a *lot* and the path is not that long so it builds up to 5%
+of samples overall. Given that these were anonymous pipes, it surprised
+me to see fsnotify at all which is why I took a closer look.
+
+> The patch is simple enough so I have no problem merging it but I'm just
+> surprised by the results... Hum, maybe the structure randomization is used
+> in the builds and so e.g. sb->s_fsnotify_mask and sb->s_fsnotify_marks
+> don't end up in the same cacheline? But I don't think we enable that in
+> SUSE builds?
+> 
+
+Correct, GCC_PLUGIN_RANDSTRUCT was not set.
+
 -- 
-2.20.1
-
+Mel Gorman
+SUSE Labs
