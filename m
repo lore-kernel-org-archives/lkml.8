@@ -2,53 +2,57 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4808EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B1720775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B7220823
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659227;
-	bh=J/+l/UZTLwjwA2JlavVjEHcDdD1pl6zF5wuk5/A+ZGY=;
+	s=default; t=1591659231;
+	bh=diiyOjNq8LrZxMGiR/Bwi79RN46XE7pZtYMsDouPzUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=141TkBYI2WZQBvstxHaCIpts7PnnG9fud9ZX3pCQeprSTINsIO4iRNl39J+azP/Qr
-	 jXzdBj/t48UZI/az7q/H45jAQtYcJDDUCryHgtmTps54F9Rs5HVMp90F1pS4kcwPPd
-	 qfjHX4gGa7iIfoJ8dUDi4cy1jW8rklMWpG5iSyJE=
+	b=xdQHhjblDHhUGN89YTH+ab4oX/4GHrJ7/d2GmnhDqWKRxQw/UJlwiZBKVgTwMmYd8
+	 L8q3pZYtiIqlf5Z6d+8a6IDqtonDSF/7P1WDrm4Ng+FaWkx8Y8VxnrtwrUTK6sU/Yv
+	 40gOM7238OYFBGrhvNLextsMy2asW/igKEeruwsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732598AbgFHXdq (ORCPT
+        id S1732607AbgFHXdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55742 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732119AbgFHX1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:21 -0400
+        id S1731522AbgFHX1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EE8020812;
-        Mon,  8 Jun 2020 23:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8963B20853;
+        Mon,  8 Jun 2020 23:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658841;
-        bh=J/+l/UZTLwjwA2JlavVjEHcDdD1pl6zF5wuk5/A+ZGY=;
+        s=default; t=1591658842;
+        bh=diiyOjNq8LrZxMGiR/Bwi79RN46XE7pZtYMsDouPzUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XC9SuIKCd50Op3/AenxGzztUMGUdc5UormBIkVi2Qy6xEMPNVrWx3VkTLoepHdhUD
-         9bR+eDo9RlfVj1dBQ5AVuxGkv7LHeQ4AHkHEhLKrpONxvzxEYwmp46dTWph8i2xNxB
-         HD0/u5pgem4t3Wn/NOSdZ5zmG7C/tcG2VbI4HgDg=
+        b=hkyTOvJJrr4YZth3YhNylXFu1VBKJwoieiNgAuTvfAOUT3ibZPStq9sEozTx6/JO4
+         r6W9WeAUZE9bkWdlvbnGlEYpD8MEhl6c6lDgPkXUhXO/ZGC0RIItnFuhUCbTeN9bXx
+         F663pOqgWWvqKl4FP/VhI8xAwVcfyq/HLqMLyOvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masashi Honma <masashi.honma@gmail.com>,
-        Denis <pro.denis@protonmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 30/50] ath9k_htc: Silence undersized packet warnings
-Date:   Mon,  8 Jun 2020 19:26:20 -0400
-Message-Id: <20200608232640.3370262-30-sashal@kernel.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 31/50] MIPS: Truncate link address into 32bit for 32bit kernel
+Date:   Mon,  8 Jun 2020 19:26:21 -0400
+Message-Id: <20200608232640.3370262-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
 References: <20200608232640.3370262-1-sashal@kernel.org>
@@ -61,47 +65,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masashi Honma <masashi.honma@gmail.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit 450edd2805982d14ed79733a82927d2857b27cac ]
+[ Upstream commit ff487d41036035376e47972c7c522490b839ab37 ]
 
-Some devices like TP-Link TL-WN722N produces this kind of messages
-frequently.
+LLD failed to link vmlinux with 64bit load address for 32bit ELF
+while bfd will strip 64bit address into 32bit silently.
+To fix LLD build, we should truncate load address provided by platform
+into 32bit for 32bit kernel.
 
-kernel: ath: phy0: Short RX data len, dropping (dlen: 4)
-
-This warning is useful for developers to recognize that the device
-(Wi-Fi dongle or USB hub etc) is noisy but not for general users. So
-this patch make this warning to debug message.
-
-Reported-By: Denis <pro.denis@protonmail.com>
-Ref: https://bugzilla.kernel.org/show_bug.cgi?id=207539
-Fixes: cd486e627e67 ("ath9k_htc: Discard undersized packets")
-Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200504214443.4485-1-masashi.honma@gmail.com
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/786
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+Reviewed-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/mips/Makefile                 | 13 ++++++++++++-
+ arch/mips/boot/compressed/Makefile |  2 +-
+ arch/mips/kernel/vmlinux.lds.S     |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-index 52b42ecee621..2eb169b204f8 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-@@ -998,9 +998,9 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	 * which are not PHY_ERROR (short radar pulses have a length of 3)
- 	 */
- 	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
--		ath_warn(common,
--			 "Short RX data len, dropping (dlen: %d)\n",
--			 rs_datalen);
-+		ath_dbg(common, ANY,
-+			"Short RX data len, dropping (dlen: %d)\n",
-+			rs_datalen);
- 		goto rx_next;
- 	}
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 1a6bac7b076f..25f3bfef9b39 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -256,12 +256,23 @@ ifdef CONFIG_64BIT
+   endif
+ endif
  
++# When linking a 32-bit executable the LLVM linker cannot cope with a
++# 32-bit load address that has been sign-extended to 64 bits.  Simply
++# remove the upper 32 bits then, as it is safe to do so with other
++# linkers.
++ifdef CONFIG_64BIT
++	load-ld			= $(load-y)
++else
++	load-ld			= $(subst 0xffffffff,0x,$(load-y))
++endif
++
+ KBUILD_AFLAGS	+= $(cflags-y)
+ KBUILD_CFLAGS	+= $(cflags-y)
+-KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y)
++KBUILD_CPPFLAGS += -DVMLINUX_LOAD_ADDRESS=$(load-y) -DLINKER_LOAD_ADDRESS=$(load-ld)
+ KBUILD_CPPFLAGS += -DDATAOFFSET=$(if $(dataoffset-y),$(dataoffset-y),0)
+ 
+ bootvars-y	= VMLINUX_LOAD_ADDRESS=$(load-y) \
++		  LINKER_LOAD_ADDRESS=$(load-ld) \
+ 		  VMLINUX_ENTRY_ADDRESS=$(entry-y) \
+ 		  PLATFORM="$(platform-y)"
+ ifdef CONFIG_32BIT
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index 2f77e250b91d..0fa91c981658 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -87,7 +87,7 @@ ifneq ($(zload-y),)
+ VMLINUZ_LOAD_ADDRESS := $(zload-y)
+ else
+ VMLINUZ_LOAD_ADDRESS = $(shell $(obj)/calc_vmlinuz_load_addr \
+-		$(obj)/vmlinux.bin $(VMLINUX_LOAD_ADDRESS))
++		$(obj)/vmlinux.bin $(LINKER_LOAD_ADDRESS))
+ endif
+ 
+ vmlinuzobjs-y += $(obj)/piggy.o
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index 2d965d91fee4..612b2b301280 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -49,7 +49,7 @@ SECTIONS
+ 	/* . = 0xa800000000300000; */
+ 	. = 0xffffffff80300000;
+ #endif
+-	. = VMLINUX_LOAD_ADDRESS;
++	. = LINKER_LOAD_ADDRESS;
+ 	/* read-only */
+ 	_text = .;	/* Text and read-only data */
+ 	.text : {
 -- 
 2.25.1
 
