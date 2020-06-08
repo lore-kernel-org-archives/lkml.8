@@ -2,152 +2,187 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5033BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D73206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D042076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsHQRk7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgFHHr0 (ORCPT
+        id S1729092AbgFHHsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36454 "EHLO
+        Mon, 8 Jun 2020 03:48:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbgFHHrW (ORCPT
+        with ESMTP id S1729008AbgFHHsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:47:22 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D50C08C5C4
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:47:22 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jiCV4-0006sX-7w; Mon, 08 Jun 2020 09:47:18 +0200
-Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jiCV3-0002be-PR; Mon, 08 Jun 2020 09:47:17 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org, kernel@pengutronix.de,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Date:   Mon,  8 Jun 2020 09:47:16 +0200
-Message-Id: <20200608074716.9975-1-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.27.0
+        Mon, 8 Jun 2020 03:48:17 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88715C08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 00:48:17 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q8so16333159qkm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 00:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+JCPS19CaUQP630TLP6xE2eKVXHvtdh4rKflyJaXzUI=;
+        b=dsHQRk7TzE4W5RbnT2gIPvqgUUDKglPc0Wg87phfkVYr0rH7NcOLAFihdA8PeCfiTi
+         Agea6ODCgvLz6CPommjxw4kTsrJAZtyJogo9aW27PNDtT8Syp0gX93Q5Jislx0yz2Axy
+         c34qFLnAwfoRoI9LuiGEYNOn61R5bZSyNCQn0CNJTiADJ8Bd3/MGNeAAPW83PEoMn8Pt
+         ptUWyJKC3P+dq+3073FozGzka9XfrfasZcebBH4qXdKEfB17ER0if7vYGzPgfrBGvIi3
+         7m6WTnltZbqocZ6ZsbtEnDwwRdEVzpqnKBvK9G+90lLIccwnf94iiKonWkV9RpnLcsC1
+         C6iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+JCPS19CaUQP630TLP6xE2eKVXHvtdh4rKflyJaXzUI=;
+        b=k+NKYQxMmmOScuiSv+BhEb10nRIMCNkty2eZpeqwRlNyTLbiO/2z5O1s6sPA4IB3J3
+         fySEhWB2gtqoq9RWx6KPGXqR+JJQO+7SLXOcPrvUYtUWlqIe45aERqaqNDj9m8JBIGRT
+         /76TfO4tTPZ8pT2ejEOWlKbXaxBw/17uX0dsYrA6XvWn5N8vf72YG5u4DAUwXcKKTn0r
+         ukcifzKX1bViuZq+1dS1gw3VZEuQS6QP70Pvg//7bXRDBcJlhYfTgGc4czORlsStxuzz
+         PeG9jl6i/VoKX6OOEkdBvkwMX7a6G4xIjLVlVmr/ll4NuNXecJ5FjiFa0Xtd3H/7ntK5
+         yZtg==
+X-Gm-Message-State: AOAM530lMxD5DdDWMm+SKlTmzWnpAGDQsZD3NHukkBGvqowfK6LDwXPb
+        cJ8uJKqcf8WXKHoZoxLhfyPcTzVjJ/PJEii3EQ/FLTZ0VAc=
+X-Google-Smtp-Source: ABdhPJzwNAFfdKKL21CZ9LTCApzUFZdweCIK8eT8vBkDN0LUfY+yBScG98/QWKmhwQuSBW95rZwdnJD9Aipxp1MW86A=
+X-Received: by 2002:a05:620a:1428:: with SMTP id k8mr20254266qkj.43.1591602496315;
+ Mon, 08 Jun 2020 00:48:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
+ <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200528110646.GC11286@linux-b0ei> <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+ <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
+ <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
+ <13b0a475-e70e-c490-d34d-0c7a34facf7c@i-love.sakura.ne.jp>
+ <CAHk-=wjj9ooYACNvO2P_Gr_=aN0g=iEqtg0TwBJo18wbn4gthg@mail.gmail.com>
+ <6116ed2e-cee1-d82f-6b68-ddb1bbb6abe2@i-love.sakura.ne.jp>
+ <CAHk-=wiVQUo_RJAaivHU5MFdznNOX4GKgJH1xrFc83e9oLnuvQ@mail.gmail.com>
+ <19d377d3-8037-8090-0f99-447f72cc1d8c@i-love.sakura.ne.jp> <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
+In-Reply-To: <38df9737-3c04-dca2-0df4-115a9c1634e5@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 8 Jun 2020 09:48:05 +0200
+Message-ID: <CACT4Y+Z58Z8u1g8SBy-i1WxLMrdmXvggsLFAhfbLc8D=uffPyA@mail.gmail.com>
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-called DRSGMII.
+On Fri, May 29, 2020 at 3:27 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> Hello, Dmitry.
+>
+> Linus is asking me to avoid build-time switching based on kernel config options,
+> and is suggesting me to use boot-time switching based on boot-config file feature
+> (which is available since 5.6). I have several concerns about use of boot-config file
+> feature in syzkaller.
+>
+> (1) To use boot-config file, syzkaller will need to add "bootconfig" option
+>     to the kernel command line. This will be doable by patching
+>     https://github.com/google/syzkaller/tree/master/dashboard/config/ *.cmdline
+>     files.
 
-This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-from DT. The MVNETA then configures the SERDES protocol value
-accordingly.
+Hello Tetsuo,
 
-It was successfully tested on a MV78460 connected to a FPGA.
+Yes, command line arguments are easily changeable. Please send pull
+requests to syzkaller, if you want to change something.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- .../devicetree/bindings/net/ethernet-controller.yaml       | 1 +
- drivers/net/ethernet/marvell/mvneta.c                      | 7 ++++++-
- include/linux/phy.h                                        | 3 +++
- 3 files changed, 10 insertions(+), 1 deletion(-)
 
-This patch has already been sent 3 years ago here:
-https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20170123142206.5390-1-jlu@pengutronix.de/
-Since then the driver has evolved a lot. 2.5Gbps is properly configured in the
-MAC now.
+> (2) The boot-config file is embedded into initramfs file. Since syzkaller builds
+>     kernels with almost-allyesconfig, booting syzkaller kernels do not require
+>     initramfs for loading kernel modules needed for mounting the root partition.
+>     In fact, according to "unexpected kernel reboot" report which contains boot messages,
+>     I can't find "Unpacking initramfs..." message. It seems that syzkaller kernels do not
+>     use initramfs file.
+>
+>     Is it possible for syzkaller to enforce performing steps for creating an initramfs,
+>     embedding the boot-config file
+>     ( https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config),
+>     and loading that initramfs whenever booting the syzkaller kernels?
+>     By the way, I do worry that people forget to perform these steps when they do
+>     their tests without asking syzbot...
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-index ac471b60ed6ae..4eead3c89bd3e 100644
---- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-@@ -66,6 +66,7 @@ properties:
-       - gmii
-       - sgmii
-       - qsgmii
-+      - drsgmii
-       - tbi
-       - rev-mii
-       - rmii
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 51889770958d8..807c698576c74 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -109,6 +109,7 @@
- #define MVNETA_SERDES_CFG			 0x24A0
- #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-+#define      MVNETA_DRSGMII_SERDES_PROTO	 0x1107
- #define MVNETA_TYPE_PRIO                         0x24bc
- #define      MVNETA_FORCE_UNI                    BIT(21)
- #define MVNETA_TXQ_CMD_1                         0x24e4
-@@ -3734,10 +3735,11 @@ static void mvneta_validate(struct phylink_config *config,
- 	struct mvneta_port *pp = netdev_priv(ndev);
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
- 
--	/* We only support QSGMII, SGMII, 802.3z and RGMII modes */
-+	/* We only support QSGMII, SGMII, DRSGMII, 802.3z and RGMII modes */
- 	if (state->interface != PHY_INTERFACE_MODE_NA &&
- 	    state->interface != PHY_INTERFACE_MODE_QSGMII &&
- 	    state->interface != PHY_INTERFACE_MODE_SGMII &&
-+	    state->interface != PHY_INTERFACE_MODE_DRSGMII &&
- 	    !phy_interface_mode_is_8023z(state->interface) &&
- 	    !phy_interface_mode_is_rgmii(state->interface)) {
- 		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
-@@ -3851,6 +3853,7 @@ static void mvneta_mac_config(struct phylink_config *config, unsigned int mode,
- 
- 	if (state->interface == PHY_INTERFACE_MODE_QSGMII ||
- 	    state->interface == PHY_INTERFACE_MODE_SGMII ||
-+	    state->interface == PHY_INTERFACE_MODE_DRSGMII ||
- 	    phy_interface_mode_is_8023z(state->interface))
- 		new_ctrl2 |= MVNETA_GMAC2_PCS_ENABLE;
- 
-@@ -4968,6 +4971,8 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- 	else if (phy_mode == PHY_INTERFACE_MODE_SGMII ||
- 		 phy_interface_mode_is_8023z(phy_mode))
- 		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_SGMII_SERDES_PROTO);
-+	else if (phy_mode == PHY_INTERFACE_MODE_DRSGMII)
-+		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_DRSGMII_SERDES_PROTO);
- 	else if (!phy_interface_mode_is_rgmii(phy_mode))
- 		return -EINVAL;
- 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 2432ca463ddc0..bf3276b330f9e 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -109,6 +109,7 @@ typedef enum {
- 	PHY_INTERFACE_MODE_USXGMII,
- 	/* 10GBASE-KR - with Clause 73 AN */
- 	PHY_INTERFACE_MODE_10GKR,
-+	PHY_INTERFACE_MODE_DRSGMII,
- 	PHY_INTERFACE_MODE_MAX,
- } phy_interface_t;
- 
-@@ -190,6 +191,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "usxgmii";
- 	case PHY_INTERFACE_MODE_10GKR:
- 		return "10gbase-kr";
-+	case PHY_INTERFACE_MODE_DRSGMII:
-+		return "drsgmii";
- 	default:
- 		return "unknown";
- 	}
--- 
-2.27.0
+I think we have some confusion between syzkaller and syzbot here.
+syzkaller itself does not enforce/require any kernel configuration,
+hardware nor use or not use of initramfs. In fact, qemu VM type
+supports initramfs today. Or syzkaller can work with bare machines
+where all setup is up to the user.
+syzbot is just one deployment of syzkaller with a particular
+configuration/hardware.
 
+If this feature is useful for any linux kernel fuzzing, then we need
+to have a plan for all users and setups.
+
+And, yes, an additional context is kernel developers reproducing bugs.
+Not all of them may be happy about any additional steps, nor will
+follow them.
+
+Answering your question, syzkaller can do some sanity checking of the
+provided machine/kernel and reject working with it. If you tell me
+what exactly needs to be checked, I can think where this code should
+go.
+However, again, I am not sure if one is using, say, Android phones and
+they don't envision use of initramfs, then what?
+
+For syzbot, the build happens here:
+https://github.com/google/syzkaller/blob/7751efd04aebb07bc82b5c0e8eeaca07be1ae112/pkg/build/linux.go#L72
+I don't know if initramfs is supported with GCE machines and what
+exactly is required.
+
+
+> (3) Since syzkaller keeps track of "kernel tree", "commit of the kernel tree", and
+>     "commit of the syzkaller tree" in order to guarantee reproducibility, it would be
+>     possible to identify the "your-config" file used for tools/bootconfig/bootconfig
+>     command. But since "#syz test" command currently accepts only "kernel tree" and
+>     "commit of the kernel tree" arguments, we might fail to use intended "your-config"
+>     file when doing reproducibility test. Can syzbot solve this concern?
+
+Most likely it's possible.
+
+> (4) Of course, "your-config" file would not change so frequently, but "#syz test" command
+>     relies on external file in "syzkaller tree" makes it impossible to try different
+>     configuration when I have to ask syzbot to test. (Since I don't have hardware which
+>     syzbot is reporting problems, I have to ask syzbot when I can't reproduce the problem
+>     in my environment.)
+>
+>     https://syzkaller.appspot.com/text?tag=Patch&x=135f254a100000 is an example of
+>     need to enforce CONFIG_DEBUG_INFO_BTF=n in order to workaround build failure during
+>     "#syz test" command. If we bring "which twist options should be enabled" to an external
+>     boot-config file, I can't ask syzbot to try different twist options (except directly
+>     patching the kernel source which handles "which twist options should be enabled").
+>     Can syzbot solve this concern?
+
+The CONFIG_DEBUG_INFO_BTF relates to build config. This can't be
+solved during boot, right? So what is the relation?
+
+> (5) Anything else?
+
+Reading:
+https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html#boot-kernel-with-a-boot-config
+It seems that boot config is just a more complex way to provide
+command line arguments. syzbot already supports command line
+arguments, and it looks much simpler and no additional work required.
+Why do we want to use boot config?
+
+Next quarter we will be additionally busy with interns, so I can't
+promise any time availability for syzbot improvements. But pull
+requests are welcome.
