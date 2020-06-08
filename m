@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D953C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63FFC20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1986A20801
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659820;
-	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+	s=default; t=1591659827;
+	bh=HXy9QkS4DekEeRywjSWFzBjwCqscsZtP1slMzTKcyMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0LcA7/juDABjl6P5BeoG++Bb/zwrYgNrN2T/DTU+oE8rc/mI39/PTUEO0tN76xwDC
-	 3KICslxALlXBjMBXwybjJGZ6iVzQY/whPA/WSGg+lwfERCOltuVr/CyuYbcA0KiX2k
-	 8aS0JOyP1kvyVNKsXeVS2voYIounbasX4mTak5KE=
+	b=usynzfPLlUbo6UyonxR6rpGpSr3BxnzyYU/Wcg6/3k0SbYIi84YH8Fr5+hCmBah6F
+	 B9oyiw/4jcV51g9oKnhgX3iHquEMeCzZ3yMfkg8XhL73KqbKXqRghZASbY87oXQVEx
+	 OZIOofv8BlMpvgy8OEKf35CjSKMyyqLIXFAGaOd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbgFHXnj (ORCPT
+        id S1732094AbgFHX1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:27:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387594AbgFHX1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:08 -0400
+        id S1731200AbgFHXVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:21:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E212078D;
-        Mon,  8 Jun 2020 23:27:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8327020842;
+        Mon,  8 Jun 2020 23:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658828;
-        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
+        s=default; t=1591658501;
+        bh=HXy9QkS4DekEeRywjSWFzBjwCqscsZtP1slMzTKcyMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOPe+DPouTkMogf9DFV/c2fHeFf+WNPF6+pdll2L2mq/McZb0hPqXkknU1U55+18e
-         6gjcX7zAj/XldOLb73XZxbbexm+3tf+XHqmKAD4fqcAPRZExEyd/1vy26QYnxV+wxX
-         EPP4DNt1xLYpltfD1nfYGZnRHnaIO2Fj5g2q6k5U=
+        b=G1COJ0fXv2w1eFX5Z8oujBQ8Yn7/+GmJNmiSAmt4gAqiGI6DhV7EHMrGsT9eJ63Rg
+         nFzz2ybafH1IHnGQ+rakwew1AA7k8nMMw0JMp14yzElKPvAuRTsvKRj6rRookH05da
+         esxvYckb6D7jNBozlaBsva6Juyqwrc7A6mOe6rNI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh@kernel.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 19/50] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
-Date:   Mon,  8 Jun 2020 19:26:09 -0400
-Message-Id: <20200608232640.3370262-19-sashal@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 133/175] mips: MAAR: Use more precise address mask
+Date:   Mon,  8 Jun 2020 19:18:06 -0400
+Message-Id: <20200608231848.3366970-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
-References: <20200608232640.3370262-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,46 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
+[ Upstream commit bbb5946eb545fab8ad8f46bce8a803e1c0c39d47 ]
 
-Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
-Set the dpi pins to gpio mode and output-low to avoid leakage current
-when dpi disabled.
+Indeed according to the MIPS32 Privileged Resource Architecgture the MAAR
+pair register address field either takes [12:31] bits for non-XPA systems
+and [12:55] otherwise. In any case the current address mask is just
+wrong for 64-bit and 32-bits XPA chips. So lets extend it to 59-bits
+of physical address value. This shall cover the 64-bits architecture and
+systems with XPA enabled, and won't cause any problem for non-XPA 32-bit
+systems, since address values exceeding the architecture specific MAAR
+mask will be just truncated with setting zeros in the unsupported upper
+bits.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/mips/include/asm/mipsregs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-index b6a7e7397b8b..b944fe067188 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-@@ -16,6 +16,9 @@ Required properties:
-   Documentation/devicetree/bindings/graph.txt. This port should be connected
-   to the input port of an attached HDMI or LVDS encoder chip.
+diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
+index bdbdc19a2b8f..3afdb39d092a 100644
+--- a/arch/mips/include/asm/mipsregs.h
++++ b/arch/mips/include/asm/mipsregs.h
+@@ -750,7 +750,7 @@
  
-+Optional properties:
-+- pinctrl-names: Contain "default" and "sleep".
-+
- Example:
- 
- dpi0: dpi@1401d000 {
-@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
- 		 <&mmsys CLK_MM_DPI_ENGINE>,
- 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
- 	clock-names = "pixel", "engine", "pll";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&dpi_pin_func>;
-+	pinctrl-1 = <&dpi_pin_idle>;
- 
- 	port {
- 		dpi0_out: endpoint {
+ /* MAAR bit definitions */
+ #define MIPS_MAAR_VH		(_U64CAST_(1) << 63)
+-#define MIPS_MAAR_ADDR		((BIT_ULL(BITS_PER_LONG - 12) - 1) << 12)
++#define MIPS_MAAR_ADDR		GENMASK_ULL(55, 12)
+ #define MIPS_MAAR_ADDR_SHIFT	12
+ #define MIPS_MAAR_S		(_ULCAST_(1) << 1)
+ #define MIPS_MAAR_VL		(_ULCAST_(1) << 0)
 -- 
 2.25.1
 
