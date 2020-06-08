@@ -2,193 +2,162 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512892072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:44:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="qtGVhKAM"
+	by mail.kernel.org (Postfix) with ESMTP id CE13A2072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgFHMoa (ORCPT
+        id S1729224AbgFHMpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:44:30 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:47663 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726660AbgFHMo0 (ORCPT
+        Mon, 8 Jun 2020 08:45:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1454 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727052AbgFHMpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:44:26 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id iH8VjR7zuCKzeiH8YjmFnO; Mon, 08 Jun 2020 14:44:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1591620263; bh=gF581gTEUympfVx+AW0UuyWGtPAlwAJVJujGyvGSLJY=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=qtGVhKAMAf54+7aOkzEd4YU368vd0L3sPBElYst13pnASFyV4CufNNiPKNZ8kzv6E
-         tg2HcRlzAEh9w1pC0o+h/knlh7To9HA9uW5VGOAKsbe1tsWIOyi0jbTAhgxJw1q83J
-         NnlHN7AO/uIUPWB4t53SVUoSVlcEqFlkyFrTWfeVGEw6hKvKfRVkF2sfsZWQnasArh
-         HhH6rZ4lF1KYMktuxC7YnmnmHdHDqBosHAed7f0zZG0cUmn6opLY97+zK5qpG2kdOE
-         Crqcgm0Tyngw+gLjRj3egHbyMRTefARUNcLLJFpmQGTLkj+kP/CS3drfc0fZXjUAk0
-         /1a0zUm4uf2zw==
-Subject: Re: [RFC PATCH] vimc: Add colors' order over test image
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        linux-media@vger.kernel.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com
-References: <20200607135325.GA16838@kaaira-HP-Pavilion-Notebook>
- <5866f6c9-36c7-ffe3-41b3-94f184cd9e5d@collabora.com>
- <38db03a4-6b22-c341-103c-ed0d4dcce856@xs4all.nl>
- <20200608121238.GB5896@pendragon.ideasonboard.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <6d29fefd-65cc-20a6-3c3a-b8144d7b3dc3@xs4all.nl>
-Date:   Mon, 8 Jun 2020 14:44:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 8 Jun 2020 08:45:09 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058CYG9p039911;
+        Mon, 8 Jun 2020 08:44:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g41dryjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 08:44:42 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058CYfGw042717;
+        Mon, 8 Jun 2020 08:44:41 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g41drygf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 08:44:41 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058CfLi6030267;
+        Mon, 8 Jun 2020 12:44:38 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7uyqy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 12:44:38 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058CialR6422786
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 12:44:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8076C4C05A;
+        Mon,  8 Jun 2020 12:44:36 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CE6E4C04E;
+        Mon,  8 Jun 2020 12:44:35 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.56.93])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  8 Jun 2020 12:44:35 +0000 (GMT)
+Date:   Mon, 8 Jun 2020 14:44:34 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
+Subject: Re: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian
+ archs
+Message-ID: <20200608124433.GA28369@oc3871087118.ibm.com>
+References: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
+ <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200608121238.GB5896@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJwaXKFuYKOvZEtYyiiAu67YQuhMDw5vqI1AbvF/kUnN81ZKlw+W/e6iY/SOu4ziq9fWTsQuPBeeAeGCyy/rDHh8Hom3CPRoyL8KjPt1QtqaAUuKJr5c
- tt4L7wblEBelq5sWFFF5JLlHCba4IDD5vDhjN+5+xbyVZoaPtQGm8R1CEINQWyEoG5qd4NI8HVdmazYHQMcSdyAxLL6b5YjEnT5+uvxeNLCGSdBbFR2IX6U5
- vbcDlYImF7FMTIW8YpHcvgAtwEGiyMqSQbdUrmTAy01BsQyEWJ9yf9gwAyryo/CamzSeq2nkDUl5wHLe11Ch0CdTfl+LkkufvbpJMMxpPxvlkT3ru5pjw+yD
- Wrqu1JrAU5VZ1n4PopHEE22ChTC6G/ONVM+D5jUVDmHIXogNXkTYl6T/gggN/ITrxIpEtlr76Jv/dCDgIPByl+yqc7zWliO89y/ZleCPbMn/c/p7+BetXwvm
- gjWd9plum86Wid/WjiREDiL0HjDd+H3ue3SNCw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_12:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ adultscore=0 malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=999
+ bulkscore=0 suspectscore=0 cotscore=-2147483648 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/2020 14:12, Laurent Pinchart wrote:
-> Hello,
+On Mon, Jun 08, 2020 at 03:03:05PM +0300, Andy Shevchenko wrote:
+> On Mon, Jun 8, 2020 at 1:26 PM Alexander Gordeev <agordeev@linux.ibm.com> wrote:
+> >
+> > Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
+> > take into account order of halfwords on 64-bit big endian
+> > architectures. As result (at least) Receive Packet Steering,
+> > IRQ affinity masks and runtime kernel test "test_bitmap" get
+> > broken on s390.
 > 
-> On Mon, Jun 08, 2020 at 11:33:21AM +0200, Hans Verkuil wrote:
->> On 08/06/2020 09:10, Dafna Hirschfeld wrote:
->>> On 07.06.20 15:53, Kaaira Gupta wrote:
->>>> Currently there is no method to know if the test image generated by vimc
->>>> is correct (except for comparing it with a known 'correct' image). Add
->>>> text over the test image, representing the correct order of colors.
->>>>
->>>> I have sent it as an RFC because we can add the text as an optional
->>>> control, and maybe we can print some other useful information as well
->>>> (like vivid does).
->>>
->>> Yes, it seems like a good idea to add it as a control of the sensor.
->>>
->>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
->>>> --->   drivers/media/test-drivers/vimc/Kconfig       | 2 ++
->>>>   drivers/media/test-drivers/vimc/vimc-core.c   | 9 +++++++++
->>>>   drivers/media/test-drivers/vimc/vimc-sensor.c | 8 ++++++++
->>>>   3 files changed, 19 insertions(+)
->>>>
->>>> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
->>>> index 4068a67585f9..da4b2ad6e40c 100644
->>>> --- a/drivers/media/test-drivers/vimc/Kconfig
->>>> +++ b/drivers/media/test-drivers/vimc/Kconfig
->>>> @@ -2,6 +2,8 @@
->>>>   config VIDEO_VIMC
->>>>   	tristate "Virtual Media Controller Driver (VIMC)"
->>>>   	depends on VIDEO_DEV && VIDEO_V4L2
->>>> +	select FONT_SUPPORT
->>>> +	select FONT_8x16
->>>>   	select MEDIA_CONTROLLER
->>>>   	select VIDEO_V4L2_SUBDEV_API
->>>>   	select VIDEOBUF2_VMALLOC
->>>> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
->>>> index 11210aaa2551..8142bfbcbd49 100644
->>>> --- a/drivers/media/test-drivers/vimc/vimc-core.c
->>>> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
->>>> @@ -5,10 +5,12 @@
->>>>    * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
->>>>    */
->>>>   
->>>> +#include <linux/font.h>
->>>>   #include <linux/init.h>
->>>>   #include <linux/module.h>
->>>>   #include <linux/platform_device.h>
->>>>   #include <media/media-device.h>
->>>> +#include <media/tpg/v4l2-tpg.h>
->>>>   #include <media/v4l2-device.h>
->>>>   
->>>>   #include "vimc-common.h"
->>>> @@ -265,7 +267,14 @@ static int vimc_probe(struct platform_device *pdev)
->>>>   {
->>>>   	struct vimc_device *vimc;
->>>>   	int ret;
->>>> +	const struct font_desc *font = find_font("VGA8x16");
->>>>   
->>>> +	if (font == NULL) {
->>>> +		pr_err("vimc: could not find font\n");
->>>> +		return -ENODEV;
->>>> +	}
->>>> +
->>>> +	tpg_set_font(font->data);
->>>
->>> I think the code that set the format should move to the
->>> code that registers the sensor in vimc-sensor.c
->>>
->>>>   	dev_dbg(&pdev->dev, "probe");
->>>>   
->>>>   	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
->>>> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
->>>> index a2f09ac9a360..4b13955c502a 100644
->>>> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
->>>> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
->>>> @@ -185,10 +185,18 @@ static const struct v4l2_subdev_pad_ops vimc_sen_pad_ops = {
->>>>   static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
->>>>   				    const void *sink_frame)
->>>>   {
->>>> +	u8 *basep[TPG_MAX_PLANES][2];
->>>> +	char str[100];
->>>>   	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
->>>>   						    ved);
->>>>   
->>>> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
->>>>   	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
->>>> +
->>>> +	snprintf(str, sizeof(str),
->>>> +		 "Order: white, yellow, cyan, green, magenta, red, blue, black");
->>> The colors are generated by the tpg, so I think it should be a feature of the tpg to print the colors.
->>
->> I agree. The tpg knows where each color is and based on the width and height it can
->> print the text. A tpg_gen_pattern_text() function that does the work would be very
->> nice.
+> ...
 > 
-> Could we go one step further, and print the colour name on each colour
-> bar ?
-
-I think we mean the same thing: tpg_gen_pattern_text() would write the name of the
-color on each color bar.
-
-Regards,
-
-	Hans
-
+> > +#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
 > 
->> It also doesn't make sense for all patterns, so this is really a nice feature to
->> incorporate into the TPG itself and enable it via a vivid and vimc control.
->>
->>> For example, a function in v4l2-tpg-core.c that get the pattern as an argument and return
->>> this string, or maybe returns a const pointer to the array of colors, or something like that.
->>> Then maybe we can add a control in vivid for the same tpg feature.
->>>
->>> Note also that the sensor has a control to change the pattern: vimc_sen_ctrl_test_pattern
->>> So the string depends on that pattern.
->>>
->>>> +	tpg_gen_text(&vsen->tpg, basep, 1, 1, str);
->>>> +
->>>>   	return vsen->frame;
->>>>   }
->>>>   
+> I think it's better to re-use existing patterns.
 > 
+> ipc/sem.c:1682:#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
+> 
+> > +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> > +{
+> > +       maskp += (chunk_idx / 2);
+> > +       ((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
+> > +}
+> > +#else
+> > +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> > +{
+> > +       ((u32 *)maskp)[chunk_idx] = chunk;
+> > +}
+> > +#endif
+> 
+> See below.
+> 
+> ...
+> 
+> > -               end = bitmap_get_x32_reverse(start, end, bitmap++);
+> > +               end = bitmap_get_x32_reverse(start, end, &chunk);
+> >                 if (IS_ERR(end))
+> >                         return PTR_ERR(end);
+> > +
+> > +               save_x32_chunk(maskp, chunk, chunk_idx++);
+> 
+> Can't we simple do
+> 
+>         int chunk_index = 0;
+>         ...
+>         do {
+> #if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
+>                end = bitmap_get_x32_reverse(start, end,
+> bitmap[chunk_index ^ 1]);
+> #else
+>                end = bitmap_get_x32_reverse(start, end, bitmap[chunk_index]);
+> #endif
+>         ...
+>         } while (++chunk_index);
+> 
+> ?
 
+Well, unless we ignore coding style 21) Conditional Compilation
+we could. Do you still insist it would be better?
+
+Thanks for the review!
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
