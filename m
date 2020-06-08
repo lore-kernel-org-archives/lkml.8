@@ -3,56 +3,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0315E20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173AE2072F
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662615;
-	bh=BNvDn/c37fRzH+yDqVcvmJifUx/6tklM+D/+BV8N+oI=;
+	s=default; t=1591662624;
+	bh=RyU8bCmCzVxSV2P47dF/Ddb+fy18hma9gz8vKz6FU4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rFKdA+hWsNanDOlNgqR202x+Jiq8wiB/RdRDf5OzPw6TPsAHBDGGS5r2AFKFT7sx8
-	 nYRMJcMVaLXJbRoadbXU+7vWRHxw4wY8cfniOiubvKFEmckOiC/jkEYUgNxUGud1HB
-	 +3Rm0AYCqTdtXS4w4z7rDfdWjYs2Aj8p+bY4yeao=
+	b=cGrtuGL9HcnGKSuKM6kazSm7d42UQfzH2M7hTnc3hNfGQvTxfp4n7N+XhfnP0/4Hn
+	 OGTisAK1157BkHS6G4Ume9a1HN2S5yCh1bxsRIzqhy5UKi8gDPL7BtwIbWdb1huFRG
+	 of//h0YGczNWZHvGKnUxpPivZ96PafJFG9ruqnuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgFHXP4 (ORCPT
+        id S1730796AbgFIAaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729271AbgFHXNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:19 -0400
+        id S1730119AbgFHXPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 187A720C09;
-        Mon,  8 Jun 2020 23:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE242076A;
+        Mon,  8 Jun 2020 23:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657998;
-        bh=BNvDn/c37fRzH+yDqVcvmJifUx/6tklM+D/+BV8N+oI=;
+        s=default; t=1591658154;
+        bh=RyU8bCmCzVxSV2P47dF/Ddb+fy18hma9gz8vKz6FU4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GBGF+ET8TEmr78EQWOvzLpVDFATDWpxx5Pfu9lg/TsZCVckbH+eYEq39mL2Og/Zzp
-         5OZnj7xI7kyL8LmU9K48KlRi+epLTw3AcxPIociRoYMP5Buzz63RX+82Jss+YA4VNd
-         IYaayO5viUf+dFGQP3bnP4M+0pRS8TVOj62DBeZY=
+        b=i9/1dbXIPdp39E9OwOyyPDCNsWx1RMQtvSu4w8JY168NaNjgKA7aGG3jocoAtfWyI
+         BI12xEQxIl+fdlB13lw2LzoNUV9qwQRDMcRINzhHaD9iW31bse4zkdzp5eD9jnvDES
+         ax7s4S5MTgb3aJWWj4BtGdTquH+0RtmvgX7BYP5s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+Cc:     David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 056/606] clk: Unlink clock if failed to prepare or enable
-Date:   Mon,  8 Jun 2020 19:03:01 -0400
-Message-Id: <20200608231211.3363633-56-sashal@kernel.org>
+        linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.6 186/606] device-dax: don't leak kernel memory to user space after unloading kmem
+Date:   Mon,  8 Jun 2020 19:05:11 -0400
+Message-Id: <20200608231211.3363633-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,44 +66,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: David Hildenbrand <david@redhat.com>
 
-commit 018d4671b9bbd4a5c55cf6eab3e1dbc70a50b66e upstream.
+commit 60858c00e5f018eda711a3aa84cf62214ef62d61 upstream.
 
-On failing to prepare or enable a clock, remove the core structure
-from the list it has been inserted as it is about to be freed.
+Assume we have kmem configured and loaded:
 
-This otherwise leads to random crashes when subsequent clocks get
-registered, during which parsing of the clock tree becomes adventurous.
+  [root@localhost ~]# cat /proc/iomem
+  ...
+  140000000-33fffffff : Persistent Memory$
+    140000000-1481fffff : namespace0.0
+    150000000-33fffffff : dax0.0
+      150000000-33fffffff : System RAM
 
-Observed with QEMU's RPi-3 emulation.
+Assume we try to unload kmem. This force-unloading will work, even if
+memory cannot get removed from the system.
 
-Fixes: 12ead77432f2 ("clk: Don't try to enable critical clocks if prepare failed")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Link: https://lkml.kernel.org/r/20200505140953.409430-1-maz@kernel.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+  [root@localhost ~]# rmmod kmem
+  [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
+  ...
+  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
+
+Now, we can reconfigure the namespace:
+
+  [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
+  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
+  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
+  ...
+
+This fails as expected due to the busy memory resource, and the memory
+cannot be used.  However, the dax0.0 device is removed, and along its
+name.
+
+The name of the memory resource now points at freed memory (name of the
+device):
+
+  [root@localhost ~]# cat /proc/iomem
+  ...
+  140000000-33fffffff : Persistent Memory
+    140000000-1481fffff : namespace0.0
+    150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
+    150000000-33fffffff : System RAM
+
+We have to make sure to duplicate the string.  While at it, remove the
+superfluous setting of the name and fixup a stale comment.
+
+Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <stable@vger.kernel.org>	[5.3]
+Link: http://lkml.kernel.org/r/20200508084217.9160-2-david@redhat.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/clk/clk.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dax/kmem.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 305544b68b8a..f22b7aed6e64 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3512,6 +3512,9 @@ static int __clk_core_init(struct clk_core *core)
- out:
- 	clk_pm_runtime_put(core);
- unlock:
-+	if (ret)
-+		hlist_del_init(&core->child_node);
-+
- 	clk_prepare_unlock();
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index 3d0a7e702c94..1e678bdf5aed 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -22,6 +22,7 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	resource_size_t kmem_size;
+ 	resource_size_t kmem_end;
+ 	struct resource *new_res;
++	const char *new_res_name;
+ 	int numa_node;
+ 	int rc;
  
- 	if (!ret)
+@@ -48,11 +49,16 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	kmem_size &= ~(memory_block_size_bytes() - 1);
+ 	kmem_end = kmem_start + kmem_size;
+ 
+-	/* Region is permanently reserved.  Hot-remove not yet implemented. */
+-	new_res = request_mem_region(kmem_start, kmem_size, dev_name(dev));
++	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
++	if (!new_res_name)
++		return -ENOMEM;
++
++	/* Region is permanently reserved if hotremove fails. */
++	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
+ 	if (!new_res) {
+ 		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
+ 			 &kmem_start, &kmem_end);
++		kfree(new_res_name);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -63,12 +69,12 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	 * unknown to us that will break add_memory() below.
+ 	 */
+ 	new_res->flags = IORESOURCE_SYSTEM_RAM;
+-	new_res->name = dev_name(dev);
+ 
+ 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+ 	if (rc) {
+ 		release_resource(new_res);
+ 		kfree(new_res);
++		kfree(new_res_name);
+ 		return rc;
+ 	}
+ 	dev_dax->dax_kmem_res = new_res;
+@@ -83,6 +89,7 @@ static int dev_dax_kmem_remove(struct device *dev)
+ 	struct resource *res = dev_dax->dax_kmem_res;
+ 	resource_size_t kmem_start = res->start;
+ 	resource_size_t kmem_size = resource_size(res);
++	const char *res_name = res->name;
+ 	int rc;
+ 
+ 	/*
+@@ -102,6 +109,7 @@ static int dev_dax_kmem_remove(struct device *dev)
+ 	/* Release and free dax resources */
+ 	release_resource(res);
+ 	kfree(res);
++	kfree(res_name);
+ 	dev_dax->dax_kmem_res = NULL;
+ 
+ 	return 0;
 -- 
 2.25.1
 
