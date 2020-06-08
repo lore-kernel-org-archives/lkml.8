@@ -2,139 +2,263 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F012C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3290C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A59206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FF1206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 15:04:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+tkp4Gi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgFHPBY (ORCPT
+        id S1730152AbgFHPEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 11:01:24 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42159 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730161AbgFHPBU (ORCPT
+        Mon, 8 Jun 2020 11:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730050AbgFHPEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 11:01:20 -0400
-Received: by mail-lf1-f67.google.com with SMTP id x27so10399819lfg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 08:01:19 -0700 (PDT)
+        Mon, 8 Jun 2020 11:04:09 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DEAC08C5C2;
+        Mon,  8 Jun 2020 08:04:08 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id c8so18999209iob.6;
+        Mon, 08 Jun 2020 08:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IKg092FM8nOBsMkoVGfOAuOoOxJvRFEOkDF1Wddgy1c=;
+        b=I+tkp4GiKHrdiCOyXu4oNBzulEv0moonjmERLW2u2b/MhSFJvRNcFz1eylQ9+k3BAc
+         mB5erpOVQqohtMP08ONvsuoIef0SN1Octpktf+yjojY5NGoUmnFBQHO5Xmmmf3iuyRaq
+         8r+7AlF4+nHtwmAgMvZBd81ynqNM5+Tc+18uDCT9PyMcfDmHyKbbDNx/BEV48LezXCCK
+         MOFQb4GJHzxYFlltzdTJb4iUemTy0s5RUFT+qcBsJuZkso+P84xTZ3eZbAgR92ATHhw+
+         OozNi0x/ws4Xi99kaqxQZQAI9gQe7y1BQ0jxNm+VkcbSzvHTOAQozDyVJYCheUw5Jtwd
+         XKoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=i3uqReldNyB0HkYkJlYcEfBw/J6TVeoQE4OBnMgY2IY=;
-        b=pNLp5tQylCo58kUKazHE4J9sIJuhKaHjHh4r60BsioXGMA7Lh5Uz3F3FeBAM+Eg92N
-         hMz1cP8JX2u6YNdxuIF8rX9ABvkSN5nugZ04Ei9Zcc14IRd9B6QsAd69b1ZBsJsmEdBF
-         zTfCQK+ElHhZA44cnK6GkF7i44B190nbaTDSlJc55zwqC/1TTxkMXVK+vOlJwu2C3GD5
-         3s1fhuAXhmA8BZoBdJK5eMVQOE0aoE3uxMt+m4LA1/c/AVNbcX2bmO0C+4q5iPl0qYey
-         HBSmcwOqDtUAGDufUjTfg8bHVkte2RhoN/w59eZjr3IsqYfJT6p3+BzKkbTq+qOjNOou
-         azaw==
-X-Gm-Message-State: AOAM530VrV565CFOh92/ggQz5bOnW9CK306BS3psZaQ3hFKKfGINfl84
-        pIu5BmxZ66pjM87Qz3O/hN4=
-X-Google-Smtp-Source: ABdhPJyWHCy8/wE7hsGBSEHPGpnmsLlvNzzsjxBBdtrx0lMViIRDO2Nho7AT/kAF5ExIu70kR018cQ==
-X-Received: by 2002:a19:cb05:: with SMTP id b5mr12963374lfg.108.1591628478293;
-        Mon, 08 Jun 2020 08:01:18 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.137.116])
-        by smtp.googlemail.com with ESMTPSA id r16sm279228ljn.106.2020.06.08.08.01.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 08:01:17 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <Julia.Lawall@lip6.fr>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        cocci@systeme.lip6.fr
-Subject: [PATCH v2 2/4] coccinelle: api: extend memdup_user rule with vmemdup_user()
-Date:   Mon,  8 Jun 2020 18:00:36 +0300
-Message-Id: <20200608150038.223747-3-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200608150038.223747-1-efremov@linux.com>
-References: <20200608150038.223747-1-efremov@linux.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IKg092FM8nOBsMkoVGfOAuOoOxJvRFEOkDF1Wddgy1c=;
+        b=UlffUtCok5YP1KU18XBpC1Wg0jkFTjBPdWzHNrE7b2SDa9QIF2GtERbPlMacg+lwtF
+         ZgOZoVnQEnqr9k6E2RpE7zZVrsYRb746ERKQ53u3JA9IBpsZdMCp2+XlWFHbeRLzXJD8
+         QOMpOmjE8WWzzhIONAuKsmHFLHBrOuxCjMBoR5H6HvlRITKGYNTeqdUf05tWgg7v5JIk
+         b7/JdiYTuhObQ47CNcpZCAQ+qRyH7CA+8nGYEJyY/LD+CVkyR/siXK7TcOM1YwbhYOE5
+         pAcJ3Rz2pPszbZyonPqt8ovtsYsiF7deYSikYgWpcGdi73z+wIWdOVin7ND+x1CYeegF
+         jl9A==
+X-Gm-Message-State: AOAM531PB6IGXBMqKNbqqByzSQN+Itys5H2gufg/HHLlYT3wZ+W1CtUc
+        B433bxxp7o+ppDe2uxOsWzrDY7lohLeszL9g6G4=
+X-Google-Smtp-Source: ABdhPJyK+v0tWak5HsfxNui7cgsUn4EmrDiW6M5jmgP4ZFUNWcROVvTsF4mRb8R9+d7QjiRW/N0bMvmT0p17B7TXHyo=
+X-Received: by 2002:a05:6638:a0a:: with SMTP id 10mr6959378jan.30.1591628647854;
+ Mon, 08 Jun 2020 08:04:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200608140557.GG3127@techsingularity.net>
+In-Reply-To: <20200608140557.GG3127@techsingularity.net>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 8 Jun 2020 18:03:56 +0300
+Message-ID: <CAOQ4uxhb1p5_rO9VjNb6assCczwQRx3xdAOXZ9S=mOA1g-0JVg@mail.gmail.com>
+Subject: Re: [PATCH] fsnotify: Rearrange fast path to minimise overhead when
+ there is no watcher
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vmemdup_user() transformations to the memdup_user.cocci rule.
-Commit 50fd2f298bef ("new primitive: vmemdup_user()") introduced
-vmemdup_user(). The function uses kvmalloc with GPF_USER flag.
+On Mon, Jun 8, 2020 at 5:05 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> The fsnotify paths are trivial to hit even when there are no watchers and
+> they are surprisingly expensive. For example, every successful vfs_write()
+> hits fsnotify_modify which calls both fsnotify_parent and fsnotify unless
+> FMODE_NONOTIFY is set which is an internal flag invisible to userspace.
+> As it stands, fsnotify_parent is a guaranteed functional call even if there
+> are no watchers and fsnotify() does a substantial amount of unnecessary
+> work before it checks if there are any watchers. A perf profile showed
+> that applying mnt->mnt_fsnotify_mask in fnotify() was almost half of the
+> total samples taken in that function during a test. This patch rearranges
+> the fast paths to reduce the amount of work done when there are no watchers.
+>
+> The test motivating this was "perf bench sched messaging --pipe". Despite
+> the fact the pipes are anonymous, fsnotify is still called a lot and
+> the overhead is noticable even though it's completely pointless. It's
+> likely the overhead is negligible for real IO so this is an extreme
+> example. This is a comparison of hackbench using processes and pipes on
+> a 1-socket machine with 8 CPU threads without fanotify watchers.
+>
+>                               5.7.0                  5.7.0
+>                             vanilla      fastfsnotify-v1r1
+> Amean     1       0.4837 (   0.00%)      0.4630 *   4.27%*
+> Amean     3       1.5447 (   0.00%)      1.4557 (   5.76%)
+> Amean     5       2.6037 (   0.00%)      2.4363 (   6.43%)
+> Amean     7       3.5987 (   0.00%)      3.4757 (   3.42%)
+> Amean     12      5.8267 (   0.00%)      5.6983 (   2.20%)
+> Amean     18      8.4400 (   0.00%)      8.1327 (   3.64%)
+> Amean     24     11.0187 (   0.00%)     10.0290 *   8.98%*
+> Amean     30     13.1013 (   0.00%)     12.8510 (   1.91%)
+> Amean     32     13.9190 (   0.00%)     13.2410 (   4.87%)
+>
+>                        5.7.0       5.7.0
+>                      vanilla fastfsnotify-v1r1
+> Duration User         157.05      152.79
+> Duration System      1279.98     1219.32
+> Duration Elapsed      182.81      174.52
+>
+> This is showing that the latencies are improved by roughly 2-9%. The
+> variability is not shown but some of these results are within the noise
+> as this workload heavily overloads the machine. That said, the system CPU
+> usage is reduced by quite a bit so it makes sense to avoid the overhead
+> even if it is a bit tricky to detect at times. A perf profile of just 1
+> group of tasks showed that 5.14% of samples taken were in either fsnotify()
+> or fsnotify_parent(). With the patch, 2.8% of samples were in fsnotify,
+> mostly function entry and the initial check for watchers.  The check for
+> watchers is complicated enough that inlining it may be controversial.
+>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- scripts/coccinelle/api/memdup_user.cocci | 45 ++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Hi Mel,
 
-diff --git a/scripts/coccinelle/api/memdup_user.cocci b/scripts/coccinelle/api/memdup_user.cocci
-index cadcc2e87881..d15c061a34ab 100644
---- a/scripts/coccinelle/api/memdup_user.cocci
-+++ b/scripts/coccinelle/api/memdup_user.cocci
-@@ -39,6 +39,28 @@ identifier l1,l2;
- -    ...+>
- -  }
- 
-+@depends on patch@
-+expression from,to,size;
-+identifier l1,l2;
-+@@
-+
-+-  to = \(kvmalloc\|kvzalloc\)(size,\(GFP_KERNEL\|GFP_USER\));
-++  to = vmemdup_user(from,size);
-+   if (
-+-      to==NULL
-++      IS_ERR(to)
-+                 || ...) {
-+   <+... when != goto l1;
-+-  -ENOMEM
-++  PTR_ERR(to)
-+   ...+>
-+   }
-+-  if (copy_from_user(to, from, size) != 0) {
-+-    <+... when != goto l2;
-+-    -EFAULT
-+-    ...+>
-+-  }
-+
- @r depends on !patch@
- expression from,to,size;
- position p;
-@@ -52,6 +74,17 @@ statement S1,S2;
-    if (copy_from_user(to, from, size) != 0)
-    S2
- 
-+@rv depends on !patch@
-+expression from,to,size;
-+position p;
-+statement S1,S2;
-+@@
-+
-+*  to = \(kvmalloc@p\|kvzalloc@p\)(size,\(GFP_KERNEL\|GFP_USER\));
-+   if (to==NULL || ...) S1
-+   if (copy_from_user(to, from, size) != 0)
-+   S2
-+
- @script:python depends on org@
- p << r.p;
- @@
-@@ -63,3 +96,15 @@ p << r.p;
- @@
- 
- coccilib.report.print_report(p[0], "WARNING opportunity for memdup_user")
-+
-+@script:python depends on org@
-+p << rv.p;
-+@@
-+
-+coccilib.org.print_todo(p[0], "WARNING opportunity for vmemdup_user")
-+
-+@script:python depends on report@
-+p << rv.p;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING opportunity for vmemdup_user")
--- 
-2.26.2
+Thanks for looking into this
 
+> ---
+>  fs/notify/fsnotify.c             | 25 +++++++++++++++----------
+>  include/linux/fsnotify.h         | 10 ++++++++++
+>  include/linux/fsnotify_backend.h |  4 ++--
+>  3 files changed, 27 insertions(+), 12 deletions(-)
+>
+> diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
+> index 72d332ce8e12..de7bbfd973c0 100644
+> --- a/fs/notify/fsnotify.c
+> +++ b/fs/notify/fsnotify.c
+> @@ -143,7 +143,7 @@ void __fsnotify_update_child_dentry_flags(struct inode *inode)
+>  }
+>
+>  /* Notify this dentry's parent about a child's events. */
+> -int fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
+> +int __fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
+>                     int data_type)
+>  {
+>         struct dentry *parent;
+> @@ -174,7 +174,7 @@ int fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
+>
+>         return ret;
+>  }
+> -EXPORT_SYMBOL_GPL(fsnotify_parent);
+> +EXPORT_SYMBOL_GPL(__fsnotify_parent);
+>
+>  static int send_to_group(struct inode *to_tell,
+>                          __u32 mask, const void *data,
+> @@ -315,17 +315,12 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
+>         struct fsnotify_iter_info iter_info = {};
+>         struct super_block *sb = to_tell->i_sb;
+>         struct mount *mnt = NULL;
+> -       __u32 mnt_or_sb_mask = sb->s_fsnotify_mask;
+> +       __u32 mnt_or_sb_mask;
+>         int ret = 0;
+> -       __u32 test_mask = (mask & ALL_FSNOTIFY_EVENTS);
+> +       __u32 test_mask;
+>
+> -       if (path) {
+> +       if (path)
+>                 mnt = real_mount(path->mnt);
+> -               mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
+> -       }
+> -       /* An event "on child" is not intended for a mount/sb mark */
+> -       if (mask & FS_EVENT_ON_CHILD)
+> -               mnt_or_sb_mask = 0;
+>
+>         /*
+>          * Optimization: srcu_read_lock() has a memory barrier which can
+> @@ -337,11 +332,21 @@ int fsnotify(struct inode *to_tell, __u32 mask, const void *data, int data_is,
+>         if (!to_tell->i_fsnotify_marks && !sb->s_fsnotify_marks &&
+>             (!mnt || !mnt->mnt_fsnotify_marks))
+>                 return 0;
+> +
+> +       /* An event "on child" is not intended for a mount/sb mark */
+> +       mnt_or_sb_mask = 0;
+> +       if (!(mask & FS_EVENT_ON_CHILD)) {
+> +               mnt_or_sb_mask = sb->s_fsnotify_mask;
+> +               if (path)
+> +                       mnt_or_sb_mask |= mnt->mnt_fsnotify_mask;
+> +       }
+> +
+
+Are you sure that loading ->_fsnotify_mask is so much more expensive
+than only checking ->_fsnotify_marks? They are surely on the same cache line.
+Isn't it possible that you just moved the penalty to ->_fsnotify_marks check
+with this change?
+Did you test performance with just the fsnotify_parent() change alone?
+
+In any case, this hunk seriously conflicts with a patch set I am working on,
+so I would rather not merging this change as is.
+
+If you provide me the feedback that testing ->_fsnotify_marks before loading
+->_fsnotify_mask is beneficial on its own, then I will work this change into
+my series.
+
+>         /*
+>          * if this is a modify event we may need to clear the ignored masks
+>          * otherwise return if neither the inode nor the vfsmount/sb care about
+>          * this type of event.
+>          */
+> +       test_mask = (mask & ALL_FSNOTIFY_EVENTS);
+>         if (!(mask & FS_MODIFY) &&
+>             !(test_mask & (to_tell->i_fsnotify_mask | mnt_or_sb_mask)))
+>                 return 0;
+> diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
+> index 5ab28f6c7d26..508f6bb0b06b 100644
+> --- a/include/linux/fsnotify.h
+> +++ b/include/linux/fsnotify.h
+> @@ -44,6 +44,16 @@ static inline void fsnotify_dirent(struct inode *dir, struct dentry *dentry,
+>         fsnotify_name(dir, mask, d_inode(dentry), &dentry->d_name, 0);
+>  }
+>
+> +/* Notify this dentry's parent about a child's events. */
+> +static inline int fsnotify_parent(struct dentry *dentry, __u32 mask,
+> +                                 const void *data, int data_type)
+> +{
+> +       if (!(dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED))
+> +               return 0;
+> +
+> +       return __fsnotify_parent(dentry, mask, data, data_type);
+> +}
+> +
+
+This change looks good as is, but I'm afraid my series is going to
+make it obsolete.
+It may very well be that my series will introduce more performance
+penalty to your workload.
+
+It would be very much appreciated if you could run a test for me.
+I will gladly work in some more optimizations into my series.
+
+You can find the relevant part of my work at:
+https://github.com/amir73il/linux/commits/fsnotify_name
+
+What this work does essentially is two things:
+1. Call backend once instead of twice when both inode and parent are
+    watching.
+2. Snapshot name and parent inode to pass to backend not only when
+    parent is watching, but also when an sb/mnt mark exists which
+    requests to get file names with events.
+
+Compared to the existing implementation of fsnotify_parent(),
+my code needs to also test bits in inode->i_fsnotify_mask,
+inode->i_sb->s_fsnotify_mask and mnt->mnt_fsnotify_mask
+before the fast path can be taken.
+So its back to square one w.r.t your optimizations.
+
+I could add the same optimization as in fsnotify() to check
+->_fsnotify_marks before ->_fsnotify_mask if you can provide
+me some concrete numbers.
+
+Thanks,
+Amir.
