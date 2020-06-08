@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2879C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F00C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE17204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F6520820
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660114;
-	bh=gurwdtib4L861NscFcX0tABfxzET9woljcbtDY2AjP4=;
+	s=default; t=1591660119;
+	bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Js6rJcTPJDrCXdgCCdJUJQokbjbHT5CL/1OQYSFTQVXND1+NBzxKnB/RsFi6qyDY8
-	 OcYE5PLJDcRJAjHqSQuPCCZhWTz6a8rkurSy+2SuEDkymR8lUPMV6EW1L+k6DdJwXe
-	 ZK+7GrAwS/t4fEBgOlhpKZ9hsA6DpVX2LFF2sqBc=
+	b=oj1aBE6hLf8O2EO4Y6FQAEdqRV2eNfuWcXeMy8rb6M+81/eRvp40yLxkjhpKrd9va
+	 mWQu0T2Vwqw0ewrMttOHkmb7e8/FsHdgF+4ORgV9weqBqJ8xXouBPVs3hzPOGtisZQ
+	 ikfEz+VRlPuRw2STfAk2IxSpDQG6yrC8Ep+h0MZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731925AbgFHXsb (ORCPT
+        id S2387706AbgFHXsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:48:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52540 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731332AbgFHXZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:25:45 -0400
+        id S1731009AbgFHXZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:25:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B6E20812;
-        Mon,  8 Jun 2020 23:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A782068D;
+        Mon,  8 Jun 2020 23:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658745;
-        bh=gurwdtib4L861NscFcX0tABfxzET9woljcbtDY2AjP4=;
+        s=default; t=1591658741;
+        bh=JpyXvZPwGmhcDX7HBvEqn00iZ7V++vRJV0NKykGQJf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJjd5vCRnVZM8opQB2aMIgc9oDwPrwADeQTlIw5NxVWN7kv6cJ6i1T2kI7C1Jilb9
-         4ivg0Z1y4elic79nDzXq9BPWGCEfHGY7lu3azYDlNacsNLwvKEFCmS467bxliodRmY
-         KqcmiRqh/fLDU0FVFsM1sgauvwfi1a3j73fN7TK0=
+        b=LgDqXEugXZxBsJ3+mB+L37oN17ysmYnq1nFUbbqdvmTcS1H+Q7G93OK+3kuvtI9fG
+         ZTZ7vRXyZs8MT8znJHeL47jg0+6tRamcekmGX20PtqOkawlh+H2le3WJqj3BCp/ebh
+         tV0Bx2WAVh2g1D/pFo7qC8GYHHI1aDyeCWtWCMZk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 31/72] media: platform: fcp: Set appropriate DMA parameters
-Date:   Mon,  8 Jun 2020 19:24:19 -0400
-Message-Id: <20200608232500.3369581-31-sashal@kernel.org>
+Cc:     Jitao Shi <jitao.shi@mediatek.com>, Rob Herring <robh@kernel.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 28/72] dt-bindings: display: mediatek: control dpi pins mode to avoid leakage
+Date:   Mon,  8 Jun 2020 19:24:16 -0400
+Message-Id: <20200608232500.3369581-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -62,69 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
 
-[ Upstream commit dd844fb8e50b12e65bbdc5746c9876c6735500df ]
+[ Upstream commit b0ff9b590733079f7f9453e5976a9dd2630949e3 ]
 
-Enabling CONFIG_DMA_API_DEBUG=y and CONFIG_DMA_API_DEBUG_SG=y will
-enable extra validation on DMA operations ensuring that the size
-restraints are met.
+Add property "pinctrl-names" to swap pin mode between gpio and dpi mode.
+Set the dpi pins to gpio mode and output-low to avoid leakage current
+when dpi disabled.
 
-When using the FCP in conjunction with the VSP1/DU, and display frames,
-the size of the DMA operations is larger than the default maximum
-segment size reported by the DMA core (64K). With the DMA debug enabled,
-this produces a warning such as the following:
-
-"DMA-API: rcar-fcp fea27000.fcp: mapping sg segment longer than device
-claims to support [len=3145728] [max=65536]"
-
-We have no specific limitation on the segment size which isn't already
-handled by the VSP1/DU which actually handles the DMA allcoations and
-buffer management, so define a maximum segment size of up to 4GB (a 32
-bit mask).
-
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Fixes: 7b49235e83b2 ("[media] v4l: Add Renesas R-Car FCP driver")
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar-fcp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/display/mediatek/mediatek,dpi.txt   | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/platform/rcar-fcp.c b/drivers/media/platform/rcar-fcp.c
-index 2988031d285d..0047d144c932 100644
---- a/drivers/media/platform/rcar-fcp.c
-+++ b/drivers/media/platform/rcar-fcp.c
-@@ -12,6 +12,7 @@
-  */
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+index b6a7e7397b8b..b944fe067188 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+@@ -16,6 +16,9 @@ Required properties:
+   Documentation/devicetree/bindings/graph.txt. This port should be connected
+   to the input port of an attached HDMI or LVDS encoder chip.
  
- #include <linux/device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-@@ -24,6 +25,7 @@
- struct rcar_fcp_device {
- 	struct list_head list;
- 	struct device *dev;
-+	struct device_dma_parameters dma_parms;
- };
- 
- static LIST_HEAD(fcp_devices);
-@@ -139,6 +141,9 @@ static int rcar_fcp_probe(struct platform_device *pdev)
- 
- 	fcp->dev = &pdev->dev;
- 
-+	fcp->dev->dma_parms = &fcp->dma_parms;
-+	dma_set_max_seg_size(fcp->dev, DMA_BIT_MASK(32));
++Optional properties:
++- pinctrl-names: Contain "default" and "sleep".
 +
- 	pm_runtime_enable(&pdev->dev);
+ Example:
  
- 	mutex_lock(&fcp_lock);
+ dpi0: dpi@1401d000 {
+@@ -26,6 +29,9 @@ dpi0: dpi@1401d000 {
+ 		 <&mmsys CLK_MM_DPI_ENGINE>,
+ 		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+ 	clock-names = "pixel", "engine", "pll";
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&dpi_pin_func>;
++	pinctrl-1 = <&dpi_pin_idle>;
+ 
+ 	port {
+ 		dpi0_out: endpoint {
 -- 
 2.25.1
 
