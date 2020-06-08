@@ -2,95 +2,92 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8649CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 636AC2076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591617453;
-	bh=nAtsiXTcR+OAIznew/hWTw3IpqmB5O6uM3hw6iSU2Fo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kM1iL6qrCnBlA12QhQEeukd2WKqQnq6tWhzXCpqRscuoMBK3uQy0zmuXY8N1T9M1h
-	 K2BuCuAdTWmnKl77pE0mCIWg//eYU+RVRzM9GBdfCG04RxnzqCpaiPgAgEAXEoN2w1
-	 USVw8U2gexS3IhY75MPKhAuIi7H90VcjZ9pp02gs=
+	by mail.kernel.org (Postfix) with ESMTP id DE2E52072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:58:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W/PQ7iAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbgFHL5c (ORCPT
+        id S1729769AbgFHL6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:57:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729549AbgFHL5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:57:31 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Mon, 8 Jun 2020 07:58:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729549AbgFHL6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 07:58:03 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA18C08C5C2;
+        Mon,  8 Jun 2020 04:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=VMeCjq5pB2mlhYrwj1qUoEnDE395x17IC3jK6gcC+QQ=; b=W/PQ7iANIEicjFcoxgsAIm7fP9
+        b7Oxeqp3v3JXpsG+cfsl8rw30CGpuebvSaxJPyev8TSHAo8dN3l6cRD9BO9kMmKgCwRS1y3gUa+Ef
+        F5F6Prg+7+wZpvfHz2tRWi9DZWDzLyYeVFHGbki/hcTdDpYQjxEOGYlk/u5dgtZdFmd2ZW4N8LyOF
+        bJuXjOw2fiUNuTWrY/xoxHzzzyR2DF/PyPd8zV/BrtZkUMukkmyp6+a1SvxBvSC0+LcKuECabNrFA
+        a8MnJ7wIPEaNs0H8TZ3RXit/KfZbEpsmKMVjdlndJxKVdiBmdGXpb8uDvFmXTb7RUIDIB2mx3icxK
+        B4Ha6X2w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jiGPi-0006l1-BG; Mon, 08 Jun 2020 11:58:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2632072F;
-        Mon,  8 Jun 2020 11:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591617450;
-        bh=nAtsiXTcR+OAIznew/hWTw3IpqmB5O6uM3hw6iSU2Fo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TsEbl3mitixyjIOjM1w4hUKYXomkdL5t+OU2sRkL262ye+9PR8XJjj0hkwTzmqgn+
-         Vr54CwuaIDyBn0Dpkgi88bsn/Wuo22C1848vdbbCcvzqaf4q4xDP/eAarZWeOnzyZ9
-         L8VOzwy/UDGDFapO3M6kRTPBLJDvOphztk1rlTZ0=
-Date:   Mon, 8 Jun 2020 12:57:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     jbrunet@baylibre.com, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, khilman@baylibre.com, alsa-devel@alsa-project.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org
-Subject: Re: [PATCH] soc/meson: add missing free_irq() in error path
-Message-ID: <20200608115728.GF4593@sirena.org.uk>
-References: <20200606153103.GA17905@amd>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A6B643019CE;
+        Mon,  8 Jun 2020 13:58:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8EF1D202436EE; Mon,  8 Jun 2020 13:58:00 +0200 (CEST)
+Date:   Mon, 8 Jun 2020 13:58:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     frederic@kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: blk-softirq vs smp_call_function_single_async()
+Message-ID: <20200608115800.GA2531@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TeJTyD9hb8KJN2Jy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200606153103.GA17905@amd>
-X-Cookie: I'm rated PG-34!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jens,
 
---TeJTyD9hb8KJN2Jy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've been going through smp_call_function_single_async() users and
+stumbled upon blk-softirq.c, which has:
 
-On Sat, Jun 06, 2020 at 05:31:03PM +0200, Pavel Machek wrote:
-> free_irq() is missing in case of error, fix that.
->=20
-> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
->=20
-> diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
+static int raise_blk_irq(int cpu, struct request *rq)
+{
+	if (cpu_online(cpu)) {
+		call_single_data_t *data = &rq->csd;
 
-In addition to the subject line issue your Signed-off-by does not match
-the From: in the e-mail and there's no From: in the body, please
-resubmit with these issues fixed.
+		data->func = trigger_softirq;
+		data->info = rq;
+		data->flags = 0;
 
---TeJTyD9hb8KJN2Jy
-Content-Type: application/pgp-signature; name="signature.asc"
+		smp_call_function_single_async(cpu, data);
+		return 0;
+	}
 
------BEGIN PGP SIGNATURE-----
+	return 1;
+}
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7eJ6cACgkQJNaLcl1U
-h9D/cQf+L7dper1ZvO7kYwre40pI8oRGB48niTj/ZkjOhATMnrDe60Nd5z4m792w
-YoAXr9IELC+RF9XqtLINNvFb90CrXIkpG947Gmz7HRAG/6RHgomLQDhpx0nvu3b3
-9CNRkiAx/cFTyI06laUaxVbUMVfqTZ1t6TQl5/Zj6ZBGqTkpRfF/D+z837DdhcAU
-DR3pZxR+d3K79tFmzhMbp1LoCCXnTYHW8jUMxZNe6X2sumd/WkinCAZZV/JyS+k1
-WTwS8Zumd/FdDu6p2ukRbQmo9jPw1t/vBCUm3l2il9Rlm0NgqkPigCZi3xNWUEBc
-rdhd4zkQxoQqUzquhAnsdDcXwm3zwA==
-=TJnD
------END PGP SIGNATURE-----
+What, if anything, guarantees rq->csd is not already in use at that
+time?
 
---TeJTyD9hb8KJN2Jy--
+The purpose of that CSD is to make the BLOCK_SOFTIRQ go, but there's
+plenty of other ways to tickle that, afaict. So if that races vs someone
+else, and that completes whatever was needed, then can't we get to
+raise_blk_irq() again, even though the csd is still enqueued?
+
+Worse; it has: data->flags = 0; so our early exit will not happen, even
+when it should.
