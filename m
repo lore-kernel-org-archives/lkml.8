@@ -2,149 +2,115 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE91C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBFCF2076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9ED0206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 16:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZqCLTomY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U3EfLuu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387452AbgFHQtA (ORCPT
+        id S2387463AbgFHQtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 12:49:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60552 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbgFHQs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 12:48:58 -0400
-Received: from zn.tnic (p200300ec2f26d700bd0154d6acadb88d.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:d700:bd01:54d6:acad:b88d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E5621EC0350;
-        Mon,  8 Jun 2020 18:48:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591634936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=rOKfoU0ZC5rCSSB2Qb9KKfq8usShNnx2QQldAkXS4EM=;
-        b=ZqCLTomYIeFVP6pAHyLYVb8funu9IPaoBC2N2NcUdP192rj9HzH9QQDm/YK5N3ssFTrzjS
-        fSKpGcqgIA1nkuFSdYvZv5pWEuaTv9bn4yz39iBRgrBLlwc33caYd3zWHGXrBTvgHWlHlH
-        Uqm92VAq/HnLwDS4rrG/HXb5gMrFXQk=
-From:   Borislav Petkov <bp@alien8.de>
-To:     X86 ML <x86@kernel.org>
-Cc:     Huang Rui <ray.huang@amd.com>, linux-hwmon@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/msr: Lift AMD family 0x15 power-specific MSRs
-Date:   Mon,  8 Jun 2020 18:48:47 +0200
-Message-Id: <20200608164847.14232-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 8 Jun 2020 12:49:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387453AbgFHQtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 12:49:17 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A0DC08C5C3
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 09:49:15 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id y5so16057644qtd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 09:49:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=4cSXd/WEBOMmjBzHT5V64B0CdBFXvfK/YmpOS865C/E=;
+        b=U3EfLuu7JaLkGMY8hL5QIb1XxjOTvGLy8smtkMre6qK5eYxBLb2UL/zFO2wglyhsMu
+         UvezhXn9mhrv0A7/FhCf8JnkEJTlV1VLNsipBdO/UsRGBq7OU4cvXBok03qi61RIPwYY
+         cPFbpx7piIlTZzGtkW8/4i7sum2DbqS2EbzkDwEB3fJwkusvralu/xdeCEm1jeCCTR5I
+         hgQLAlzmiNsYiwK8xuG6S/FSqj9OtLCIfPL3Ux2nlm4a+ru9sgaOfJjtOfYfH4CFwTEx
+         mqp0KagzuygvTokeurbn2I3y+aupyDOmqHa0WNO3I2RH1aXp9uX80NDRvqN3aNVp0vHm
+         OWaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=4cSXd/WEBOMmjBzHT5V64B0CdBFXvfK/YmpOS865C/E=;
+        b=tr+VB8ryNYPmZO7YDof6hOV0N010/o1UksQx3JS8snWE7jCnyqE/iUpfEuX0t0dQOU
+         3ATgJUow6dNF1xpMaNBb24EEZ4CBgtTmTiXmsZWMnJPKCtKghHJR9fCPk6d8e9mbZR1R
+         nN1LOL4KEzSrivLcQHZ17uoymR0bD6n947oZKVw2GOR3hfqB7IJldPiV4QJNEN9orNoV
+         Ef18b9zP0gSrjmrRGKALKcJ7slVgP6J6sV2RlYEOZ2nS9hl+Wa6LjgJrdIudkJ9bOOAw
+         7BPOpkU9qlLVd79XfPNdpXDACcYC600cSxMUJsg+hA7offC9CQPmH5O3cInv1+LKHNnV
+         HTpQ==
+X-Gm-Message-State: AOAM5333p7FbRBzxzn4uHGlrZjxRhT52gRymsOFTgy4We5uVLYqr9Hey
+        6VSoKsTBWLZiIHlysZGlOQ5oMms=
+X-Google-Smtp-Source: ABdhPJw3SF/yeOWoX1y6fxdX9jvAKFUnJPCziJIZcvXIyleiG6G/g3vMRpIR6CTI4d5n5FeYtiZMXjs=
+X-Received: by 2002:a0c:f991:: with SMTP id t17mr23459051qvn.123.1591634954981;
+ Mon, 08 Jun 2020 09:49:14 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 09:49:13 -0700
+In-Reply-To: <CAADnVQL3iBoem4T6CxYeZRCJwS7qRwjjbW+8ip5r3-LCt_eRXQ@mail.gmail.com>
+Message-Id: <20200608164913.GA142074@google.com>
+Mime-Version: 1.0
+References: <20200424064338.538313-1-hch@lst.de> <20200424064338.538313-6-hch@lst.de>
+ <1fc7ce08-26a7-59ff-e580-4e6c22554752@oracle.com> <20200608065120.GA17859@lst.de>
+ <c0f216d1-edc1-68e6-7f3e-c00e33452707@oracle.com> <20200608130503.GA22898@lst.de>
+ <CAADnVQL3iBoem4T6CxYeZRCJwS7qRwjjbW+8ip5r3-LCt_eRXQ@mail.gmail.com>
+Subject: Re: WARNING: CPU: 1 PID: 52 at mm/page_alloc.c:4826
+ __alloc_pages_nodemask (Re: [PATCH 5/5] sysctl: pass kernel pointers to ->proc_handler)
+From:   sdf@google.com
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        Andrey Ignatov <rdna@fb.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+On 06/08, Alexei Starovoitov wrote:
+> On Mon, Jun 8, 2020 at 6:05 AM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Mon, Jun 08, 2020 at 09:45:49AM +0200, Vegard Nossum wrote:
+> > > Just a test case.
+> > >
+> > > Allowing the kernel to allocate an unbounded amount of memory on  
+> behalf
+> > > of userspace is an easy DOS.
+> > >
+> > > All the length checks were already in there, e.g.
+> > >
+> > >  static int cmm_timeout_handler(struct ctl_table *ctl, int write,
+> > >                               void __user *buffer, size_t *lenp,  
+> loff_t
+> > > *ppos)
+> > >  {
+> > >         char buf[64], *p;
+> > > [...]
+> > >                 len = min(*lenp, sizeof(buf));
+> > >                 if (copy_from_user(buf, buffer, len))
+> > >                         return -EFAULT;
+> >
+> > Doesn't help if we don't know the exact limit yet.  But we can put
+> > some arbitrary but reasonable limit like KMALLOC_MAX_SIZE on the
+> > sysctls and see if this sticks.
 
-... into the global msr-index.h header because they're used in multiple
-compilation units. Sort the MSR list a bit. Update the msr-index.h copy
-in tools.
-
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/events/amd/power.c            | 4 ----
- arch/x86/include/asm/msr-index.h       | 5 ++++-
- drivers/hwmon/fam15h_power.c           | 4 ----
- tools/arch/x86/include/asm/msr-index.h | 5 ++++-
- 4 files changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/events/amd/power.c b/arch/x86/events/amd/power.c
-index 43b09e9c93a2..16a2369c586e 100644
---- a/arch/x86/events/amd/power.c
-+++ b/arch/x86/events/amd/power.c
-@@ -13,10 +13,6 @@
- #include <asm/cpu_device_id.h>
- #include "../perf_event.h"
- 
--#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
--#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
--#define MSR_F15H_PTSC			0xc0010280
--
- /* Event code: LSB 8 bits, passed in attr->config any other bit is reserved. */
- #define AMD_POWER_EVENT_MASK		0xFFULL
- 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index ef452b817f44..7dfd45bb6cdb 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -414,15 +414,18 @@
- #define MSR_AMD64_PATCH_LEVEL		0x0000008b
- #define MSR_AMD64_TSC_RATIO		0xc0000104
- #define MSR_AMD64_NB_CFG		0xc001001f
--#define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_PATCH_LOADER		0xc0010020
- #define MSR_AMD_PERF_CTL		0xc0010062
- #define MSR_AMD_PERF_STATUS		0xc0010063
- #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
-+#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-+#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
-+#define MSR_F15H_PTSC			0xc0010280
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
-+#define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_LS_CFG		0xc0011020
- #define MSR_AMD64_DC_CFG		0xc0011022
- #define MSR_AMD64_BU_CFG2		0xc001102a
-diff --git a/drivers/hwmon/fam15h_power.c b/drivers/hwmon/fam15h_power.c
-index 267eac00a3fb..29f5fed28c2a 100644
---- a/drivers/hwmon/fam15h_power.c
-+++ b/drivers/hwmon/fam15h_power.c
-@@ -41,10 +41,6 @@ MODULE_LICENSE("GPL");
- /* set maximum interval as 1 second */
- #define MAX_INTERVAL			1000
- 
--#define MSR_F15H_CU_PWR_ACCUMULATOR	0xc001007a
--#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR	0xc001007b
--#define MSR_F15H_PTSC			0xc0010280
--
- #define PCI_DEVICE_ID_AMD_15H_M70H_NB_F4 0x15b4
- 
- struct fam15h_power_data {
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index ef452b817f44..7dfd45bb6cdb 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -414,15 +414,18 @@
- #define MSR_AMD64_PATCH_LEVEL		0x0000008b
- #define MSR_AMD64_TSC_RATIO		0xc0000104
- #define MSR_AMD64_NB_CFG		0xc001001f
--#define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_PATCH_LOADER		0xc0010020
- #define MSR_AMD_PERF_CTL		0xc0010062
- #define MSR_AMD_PERF_STATUS		0xc0010063
- #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
-+#define MSR_F15H_CU_PWR_ACCUMULATOR     0xc001007a
-+#define MSR_F15H_CU_MAX_PWR_ACCUMULATOR 0xc001007b
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
-+#define MSR_F15H_PTSC			0xc0010280
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
-+#define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_LS_CFG		0xc0011020
- #define MSR_AMD64_DC_CFG		0xc0011022
- #define MSR_AMD64_BU_CFG2		0xc001102a
--- 
-2.21.0
-
+> adding Stanislav. I think he's looking into this already.
+Yeah, I'm looking at it from the get/setsockopt point of view.
+I'm currently trying to bypass allocating a buffer if it's greater
+than PAGE_SIZE.
+I suppose for sysctls we should try to do something similar?
