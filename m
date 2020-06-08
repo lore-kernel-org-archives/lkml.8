@@ -2,202 +2,124 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4940D204EF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA2C2085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660039;
-	bh=KeY8v4RJ7yN+WDz+J0DVALBSxCJOqAb2txDykQhp+Vw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsGqw5f898KFItQTncDF1lPhLNUYM5AcYDWuZdPsflJn7JaVXhDia9fjy4ApbCUUn
-	 sFLI1ePxo1J8rHdN7ruc2S+3849POtPpagrYaPJnAw2JnEG5gBM9MFeuWk4Zvn3QAl
-	 zFctavdY4WJfyrDFztxgAv5f4g1QHweS9cGkVhH8=
+	s=default; t=1591660045;
+	bh=JfeR1OvUTiZ0lO8gFO9nXXNApbqP7Edk3LbRreh8u6o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=HT1c+1TD6xprAI+KPFAMBcSR5VpYi+3/P1jDCDFujFJ6URvi1U0IcPaKY+rGNN78h
+	 ZG4U83wouxVMWcaKql2YKmT62LDAzh91zzz7MsmWW5T0PAGP60UyaDBp0O4nGxeTfK
+	 6kgMN//EX8ChuWVyOQb8HhMHu/NL4VBU+SMlYPBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387976AbgFHXrR (ORCPT
+        id S2387990AbgFHXrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:47:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53190 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:47:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731572AbgFHX0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S2387930AbgFHXrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:47:15 -0400
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC622076C;
-        Mon,  8 Jun 2020 23:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE15420842;
+        Mon,  8 Jun 2020 23:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658768;
-        bh=KeY8v4RJ7yN+WDz+J0DVALBSxCJOqAb2txDykQhp+Vw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOoDeOO5Cr1gI3R1rv2KQanJbgzP6ypNA6qxwuzVv2Mi5triXYyHAeCOmPe9kQcc2
-         Esc7geLnc+A1Wxq8QWuTW4eWyzwtq1sr04E8fiPWUzgm1ksJCA5WpQurnFG1iliEVC
-         C55r53VBWLm4c6e0Ehu7CrmSCJ5RTAPhrAo0WvQY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org,
-        Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2@marvell.com,
-        Manish Chopra <manishc@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 50/72] net: qed*: Reduce RX and TX default ring count when running inside kdump kernel
-Date:   Mon,  8 Jun 2020 19:24:38 -0400
-Message-Id: <20200608232500.3369581-50-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
-References: <20200608232500.3369581-1-sashal@kernel.org>
+        s=default; t=1591660034;
+        bh=JfeR1OvUTiZ0lO8gFO9nXXNApbqP7Edk3LbRreh8u6o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ywVQtU9EpMa3kP7TzlTaYd3MC12ox9PdByU6JDD/+1ap9wTefo28zwbDbtquuTTXs
+         q4SPNj+fsG+okq4AuKRockpnZdiBNJVW/msRnFgduqIe/mcn6dRp+arC+1RK8sGZ2j
+         E8yZNl7fH+hOZqypdm+lPKFtCbiHHwk4e9Hqv1bw=
+Received: by mail-oo1-f52.google.com with SMTP id 7so3818488oof.8;
+        Mon, 08 Jun 2020 16:47:14 -0700 (PDT)
+X-Gm-Message-State: AOAM5313IxO3b+ngWsMl/aLyQSIZnHRLKeHaf9QodYpbmaeNnmAwenuE
+        kj6SZgiGXeLD4dwgSmnYnoLu2PmH0tC5LWQn5g==
+X-Google-Smtp-Source: ABdhPJz3gIjlkhZ2RmMRXkIMPB6UylOzQLyhAs6ndsfed5PFu+br/5Z+8Z79xY7reJQ2jrwzMbD3741AqHxlS9Wo3LE=
+X-Received: by 2002:a4a:345b:: with SMTP id n27mr19140154oof.25.1591660034065;
+ Mon, 08 Jun 2020 16:47:14 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527153046.6172-3-Sergey.Semin@baikalelectronics.ru> <20200527153351.rmzguymz7lm6gvsx@mobilestation>
+ <20200529181338.GA2676189@bogus> <20200529182256.3bp4uvvrvz3ddlrq@mobilestation>
+ <20200529184201.GX1634618@smile.fi.intel.com> <20200529184534.wyyv5i7hcto5y3d3@mobilestation>
+ <20200529185824.o2vcpxe4f63aw465@mobilestation>
+In-Reply-To: <20200529185824.o2vcpxe4f63aw465@mobilestation>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 8 Jun 2020 17:46:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZjYF2Jrvcd8BAHsMfm5-S1J11NVoc6o2q5zE5ekmRTw@mail.gmail.com>
+Message-ID: <CAL_JsqKZjYF2Jrvcd8BAHsMfm5-S1J11NVoc6o2q5zE5ekmRTw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhupesh Sharma <bhsharma@redhat.com>
+On Fri, May 29, 2020 at 12:58 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+>
+> On Fri, May 29, 2020 at 09:45:37PM +0300, Serge Semin wrote:
+> > On Fri, May 29, 2020 at 09:42:01PM +0300, Andy Shevchenko wrote:
+> > > On Fri, May 29, 2020 at 09:22:56PM +0300, Serge Semin wrote:
+> > > > On Fri, May 29, 2020 at 12:13:38PM -0600, Rob Herring wrote:
+> > > > > On Wed, May 27, 2020 at 06:33:51PM +0300, Serge Semin wrote:
+> > >
+> > > > > you're sending
+> > > > > new versions too fast. Give people time to review.
+> > > >
+> > > > Yeah, you did. Sorry for sending the new versions very fast. Normally I prefer
+> > > > to keep up with comments so to past a particular maintainer review as fast as
+> > > > possible without long delays. In my experience the longer you wait, the lesser
+> > > > maintainers remember about your patchset, the harder for one to continue the
+> > > > next versions review.
+> > >
+> >
+>
+> > > Documentation/process/submitting-patches.rst:
+> > >
+> > > "Wait for a minimum of one week before resubmitting or pinging reviewers -
+> > > possibly longer during busy times like merge windows."
+> >
+> > Good to know what I already know.) How much do you personally wait before
+> > resubmitting? In my experience reviewing your DW APB GPIO patches, no longer
+> > than a few hours.
+>
+> Moreover the statement you cited is about the patches, which doesn't get any
+> attention from the maintainers/reviewers for quite some time. In this case I
+> normally resubmit the patches no sooner than a week. I was talking about the
+> situation when you get the review comments, which need to be addressed.
 
-[ Upstream commit 73e030977f7884dbe1be0018bab517e8d02760f8 ]
+There's not going to be any rule that always works. It takes
+judgement. I'd say the greater the rework from review comments, the
+sooner you can resend. But then if it's multiple
+subsystems/maintainers, you need to give all of them time.
 
-Normally kdump kernel(s) run under severe memory constraint with the
-basic idea being to save the crashdump vmcore reliably when the primary
-kernel panics/hangs.
+I go in date order mostly. You send a new version, then you go to the
+back of the queue. So if you want it reviewed the soonest, send it 2
+weeks ago. ;) There's also the strategy of reviewing other patches in
+front of yours. Sometimes I go by version numbers, but send version 50
+and I might be suspicious. And that's rewarding folks who are sloppy
+or keep sending broken stuff. The real solution is I just need more
+help reviewing things.
 
-Currently the qed* ethernet driver ends up consuming a lot of memory in
-the kdump kernel, leading to kdump kernel panic when one tries to save
-the vmcore via ssh/nfs (thus utilizing the services of the underlying
-qed* network interfaces).
-
-An example OOM message log seen in the kdump kernel can be seen here
-[1], with crashkernel size reservation of 512M.
-
-Using tools like memstrack (see [2]), we can track the modules taking up
-the bulk of memory in the kdump kernel and organize the memory usage
-output as per 'highest allocator first'. An example log for the OOM case
-indicates that the qed* modules end up allocating approximately 216M
-memory, which is a large part of the total crashkernel size:
-
- dracut-pre-pivot[676]: ======== Report format module_summary: ========
- dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
- dracut-pre-pivot[676]: Module qede using 65.3MB (1045 pages), peak allocation 65.3MB (1045 pages)
-
-This patch reduces the default RX and TX ring count from 1024 to 64
-when running inside kdump kernel, which leads to a significant memory
-saving.
-
-An example log with the patch applied shows the reduced memory
-allocation in the kdump kernel:
- dracut-pre-pivot[674]: ======== Report format module_summary: ========
- dracut-pre-pivot[674]: Module qed using 141.8MB (2268 pages), peak allocation 141.8MB (2268 pages)
- <..snip..>
-[dracut-pre-pivot[674]: Module qede using 4.8MB (76 pages), peak allocation 4.9MB (78 pages)
-
-Tested crashdump vmcore save via ssh/nfs protocol using underlying qed*
-network interface after applying this patch.
-
-[1] OOM log:
-------------
-
- kworker/0:6: page allocation failure: order:6,
- mode:0x60c0c0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO), nodemask=(null)
- kworker/0:6 cpuset=/ mems_allowed=0
- CPU: 0 PID: 145 Comm: kworker/0:6 Not tainted 4.18.0-109.el8.aarch64 #1
- Hardware name: To be filled by O.E.M. Saber/Saber, BIOS 0ACKL025
- 01/18/2019
- Workqueue: events work_for_cpu_fn
- Call trace:
-  dump_backtrace+0x0/0x188
-  show_stack+0x24/0x30
-  dump_stack+0x90/0xb4
-  warn_alloc+0xf4/0x178
-  __alloc_pages_nodemask+0xcac/0xd58
-  alloc_pages_current+0x8c/0xf8
-  kmalloc_order_trace+0x38/0x108
-  qed_iov_alloc+0x40/0x248 [qed]
-  qed_resc_alloc+0x224/0x518 [qed]
-  qed_slowpath_start+0x254/0x928 [qed]
-   __qede_probe+0xf8/0x5e0 [qede]
-  qede_probe+0x68/0xd8 [qede]
-  local_pci_probe+0x44/0xa8
-  work_for_cpu_fn+0x20/0x30
-  process_one_work+0x1ac/0x3e8
-  worker_thread+0x44/0x448
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x18
-  Cannot start slowpath
-  qede: probe of 0000:05:00.1 failed with error -12
-
-[2]. Memstrack tool: https://github.com/ryncsn/memstrack
-
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: GR-everest-linux-l2@marvell.com
-Cc: Manish Chopra <manishc@marvell.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
- drivers/net/ethernet/qlogic/qede/qede_main.c | 11 +++++++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index a80531b5aecc..c132b08cefde 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -528,12 +528,14 @@ void qede_update_rx_prod(struct qede_dev *edev, struct qede_rx_queue *rxq);
- #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
- #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
- #define NUM_RX_BDS_MIN		128
-+#define NUM_RX_BDS_KDUMP_MIN	63
- #define NUM_RX_BDS_DEF		((u16)BIT(10) - 1)
- 
- #define TX_RING_SIZE_POW	13
- #define TX_RING_SIZE		((u16)BIT(TX_RING_SIZE_POW))
- #define NUM_TX_BDS_MAX		(TX_RING_SIZE - 1)
- #define NUM_TX_BDS_MIN		128
-+#define NUM_TX_BDS_KDUMP_MIN	63
- #define NUM_TX_BDS_DEF		NUM_TX_BDS_MAX
- 
- #define QEDE_MIN_PKT_LEN		64
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index dab202f343c6..8bb734486bf3 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -29,6 +29,7 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  */
-+#include <linux/crash_dump.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/version.h>
-@@ -624,8 +625,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
- 	edev->dp_module = dp_module;
- 	edev->dp_level = dp_level;
- 	edev->ops = qed_ops;
--	edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
--	edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
-+
-+	if (is_kdump_kernel()) {
-+		edev->q_num_rx_buffers = NUM_RX_BDS_KDUMP_MIN;
-+		edev->q_num_tx_buffers = NUM_TX_BDS_KDUMP_MIN;
-+	} else {
-+		edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
-+		edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
-+	}
- 
- 	DP_INFO(edev, "Allocated netdev with %d tx queues and %d rx queues\n",
- 		info->num_queues, info->num_queues);
--- 
-2.25.1
-
+Rob
