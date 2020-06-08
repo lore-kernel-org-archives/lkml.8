@@ -2,105 +2,146 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF81C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55637C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99FD220760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B522076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:46:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="LOXuySGW"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="TPMOfmMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgFHVpU (ORCPT
+        id S1726840AbgFHVqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53322 "EHLO
+        Mon, 8 Jun 2020 17:46:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgFHVpT (ORCPT
+        with ESMTP id S1726705AbgFHVq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:45:19 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B07C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 14:45:17 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id mb16so20050254ejb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 14:45:17 -0700 (PDT)
+        Mon, 8 Jun 2020 17:46:29 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6926CC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 14:46:29 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id c12so15983573qtq.11
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 14:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Igh1IwPinYOHclngfiWXcdsSPSUfVMy900DjvDtZXdE=;
-        b=LOXuySGWu6oAFpGSLwRnURotT4T7GHHSY8T9C0/cwfQxalBA7tF1N8cu7f0k4Vd7je
-         2No1nZdIXfZBnRgD9v81wSb36UQ5bjRNEbUXERvVtplQxTrxs8dvo4A6Mtj+6t6MuDzi
-         ZPhVp9z/CE+pLdK4Zo5eEp5VKji/83r2UQmLRNH/pOJxDdHWL1lEtlYwDBnmwE22ei2e
-         VQq4KTiFCLaSadosS5Zvc+cH8vt4rjRvXGRHit6il9pQWF2iKmhaynrEo6pO8pp/HJ+s
-         B/pvew9eTKduP1472XSQBRUT6f8V9ztWio0h6GyyWcS+SWRPCE8iWR/zDxiCEZPGa39s
-         A/RQ==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2SoI77pqTaGvRTzdFLL+4cUrlHtHWwOHJ2bi4DD4V5I=;
+        b=TPMOfmMkjAWQpRvyAWNgKS8CVQx+KxepR6CXLYdLa00P09Flq/2SFRbVkWJmu6glEa
+         KedbQ+EqBoxVRl9Vgoowwyr/0+352H/yslstu6p5r8C8zEvuP9bVfxOtl37Ds8XkZliA
+         EJkYqOEqI+SSs6uVixnBNLA4KylTLEMr2onNKRD2034LvTo/x9X4M+JxfT6/HBjX/92g
+         ctMfXzYRsAoVH8aI4UyZVot2U9Ez0wY07NhuUf7MqE1DyQZ+pc3A5ODHclRxcNSBXUgX
+         yVr8OlycGfXzK663N6yXJtdlm779EA+Ny18/JxzDBOoCEk7dhQcPWTxb2H7oiCr+DVrN
+         OGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Igh1IwPinYOHclngfiWXcdsSPSUfVMy900DjvDtZXdE=;
-        b=kbph+TCKL/75lGXbk0t66VfNLoEBpJKIKQhntmp21awzxlqj/q5+AaiDsH6EtclBhl
-         hxFZo0EpCUcKm1X7ax4Ya2kjjLH1o4Qbqrq7hFgPR3a7MxtBat7wpR8i71QNB7HHLloL
-         /aB0Z2M7DfvK8xth4QfaqpOhBcPi5Dydcwfioi3VwCScPbIdKDpNxgvOw5biCemNgABJ
-         YFQHtbT20Errx7eDxNaftcjn5kCoCdCvto6jgJbV+sb2JVkZhhnPuz5e5N3VkKJs9aUR
-         se7trHyMtV+fS0JgNTjruX7ueeqDXt4v+YJEhfmxXaBkNVN/e9GG7UoHlmZwgMPtLC2b
-         HcIA==
-X-Gm-Message-State: AOAM530V4w6gDodEfdV2/F5CuxoiZ9+PGVYDts+TIkYe9jtTGrBiWoBK
-        g84rH7tODm7S5g/uNI0As9kNAh8EcVjEt9Tq/WVG
-X-Google-Smtp-Source: ABdhPJzM1blhuSfAtHWQKHod1napq/wyiCDkQzMZK14COSUGFvoq3xTJ7+bH9cmWhMvSg5A2bYc3wf0KPT0tdU0HpE0=
-X-Received: by 2002:a17:906:2b81:: with SMTP id m1mr21816983ejg.488.1591652716065;
- Mon, 08 Jun 2020 14:45:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2SoI77pqTaGvRTzdFLL+4cUrlHtHWwOHJ2bi4DD4V5I=;
+        b=SGI5HHCVHstFb1XWlh6tvcatX7cXnTUkKxCS4kWlpHox9e9mBLBLM2RDCpMRXf5PON
+         Ru05ej/jHxFCt7Erwkvi7ycmsXf/gEJnIxkCejd+iVj2PimOH2Zaw5uLb6SthqxRH7X4
+         Sn5pRRWtnh/RZXTjoHVeFVyi5yBV14j2XrU6MMVxlkvm6W7XAqWF72L3znpjIbgqSVl6
+         r/bPkvQBBueDm1by5Pn5MY5UrlzOw/RM/9ucbXqdMvqsEJ9wXcoJEN4rbxFRtDpGyQtJ
+         uc6VmqCS73hUBudJFJuBOJrZEl1QntsYx4Ma7n4488C1D60lZTqmZpgpJwFviapCGaAh
+         DZPQ==
+X-Gm-Message-State: AOAM53128+0UW/kXPyxP9k4ztPRPmoJJmM2keeXpGgLPVixq4rUX7K3x
+        E0JAgD7frgyfxRgMuADOwS2j8w==
+X-Google-Smtp-Source: ABdhPJyL821xsu8dJkNsdy3Q3az4y/x5eRBCArOM2hadFlL5rouQD7KkmT0pFW/ifQxNfyIoUEpbdA==
+X-Received: by 2002:ac8:4542:: with SMTP id z2mr24184885qtn.90.1591652788659;
+        Mon, 08 Jun 2020 14:46:28 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id x41sm9373670qtb.76.2020.06.08.14.46.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 14:46:28 -0700 (PDT)
+Subject: Re: [PATCH 4/5] soundwire: qcom: avoid dependency on CONFIG_SLIMBUS
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
+References: <20200608204347.19685-1-jonathan@marek.ca>
+ <20200608204347.19685-5-jonathan@marek.ca>
+ <33017798-9546-12dc-b857-493f56c3d557@linux.intel.com>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <a6153b51-22c4-e065-8e9e-e458b15fe4a4@marek.ca>
+Date:   Mon, 8 Jun 2020 17:46:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200607221449.2837-1-nramas@linux.microsoft.com> <1591617171.4638.33.camel@linux.ibm.com>
-In-Reply-To: <1591617171.4638.33.camel@linux.ibm.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 8 Jun 2020 17:45:05 -0400
-Message-ID: <CAHC9VhQpK+Shy2b2tv+vrTS+a8+zZbsrRG=pjzoMK0LApJg1Sg@mail.gmail.com>
-Subject: Re: [PATCH v2] IMA: Add audit log for failure conditions
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org, linux-audit@redhat.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <33017798-9546-12dc-b857-493f56c3d557@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 8, 2020 at 7:52 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> Hi Lakshmi,
->
-> On Sun, 2020-06-07 at 15:14 -0700, Lakshmi Ramasubramanian wrote:
-> > The final log statement in process_buffer_measurement() for failure
-> > condition is at debug level. This does not log the message unless
-> > the system log level is raised which would significantly increase
-> > the messages in the system log. Change this log message to an audit
-> > message for better triaging failures in the function.
-> >
-> > ima_alloc_key_entry() does not log a message for failure condition.
-> > Add an audit message for failure condition in this function.
-> >
-> > Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
->
-> Audit messages should be at a higher level.  For example,
-> "hashing_error", "collect_data", "invalid_pcr".  In the "invalid_pcr"
-> case, the audit log contains the reason - "ToMToU" or "open_writers" -
-> as to why the measurement list doesn't match the PCR.
->
-> Here you would want "measuring_keys", "measuring_boot_cmdline" with
-> the reason it failed, not the function name
-> "process_buffer_measurement".
->
-> Userspace needs to be aware of the new audit messages.  Maybe include
-> samples of them in the cover letter.
+On 6/8/20 5:20 PM, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 6/8/20 3:43 PM, Jonathan Marek wrote:
+>> The driver may be used without slimbus, so don't depend on slimbus.
+>>
+>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+>> ---
+>>   drivers/soundwire/Kconfig | 1 -
+>>   drivers/soundwire/qcom.c  | 5 +++++
+>>   2 files changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
+>> index fa2b4ab92ed9..d121cf739090 100644
+>> --- a/drivers/soundwire/Kconfig
+>> +++ b/drivers/soundwire/Kconfig
+>> @@ -33,7 +33,6 @@ config SOUNDWIRE_INTEL
+>>   config SOUNDWIRE_QCOM
+>>       tristate "Qualcomm SoundWire Master driver"
+>> -    depends on SLIMBUS
+>>       depends on SND_SOC
+>>       help
+>>         SoundWire Qualcomm Master driver.
+>> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+>> index 14334442615f..ac81c64768ea 100644
+>> --- a/drivers/soundwire/qcom.c
+>> +++ b/drivers/soundwire/qcom.c
+>> @@ -769,13 +769,18 @@ static int qcom_swrm_probe(struct 
+>> platform_device *pdev)
+>>       if (!ctrl)
+>>           return -ENOMEM;
+>> +#ifdef CONFIG_SLIMBUS
+>>       if (dev->parent->bus == &slimbus_bus) {
+>> +#else
+>> +    if (false) {
+>> +#endif
+> 
+> 
+> maybe:
+> 
+> if (IS_ENABLED(CONFIG_SLIMBUS) &&
+>      dev->parent->bus == &slimbus_bus)
+> 
+> 
 
-Yes, examples of the audit record in the commit description (the cover
-letter isn't recorded in the git log), are encouraged.
+It won't compile like this, because "slimbus_bus" is not defined when 
+CONFIG_SLIMBUS is disabled.
 
--- 
-paul moore
-www.paul-moore.com
+>>           ctrl->reg_read = qcom_swrm_ahb_reg_read;
+>>           ctrl->reg_write = qcom_swrm_ahb_reg_write;
+>>           ctrl->regmap = dev_get_regmap(dev->parent, NULL);
+>>           if (!ctrl->regmap)
+>>               return -EINVAL;
+>>       } else {
+>> +
+>>           res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>           ctrl->reg_read = qcom_swrm_cpu_reg_read;
+>>
