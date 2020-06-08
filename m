@@ -2,55 +2,51 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36145C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F00207C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E565420737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664127;
-	bh=7DFggtfaa27p7/NZef20x2yJCZHD8VK+NnqtcggjuAk=;
+	s=default; t=1591664137;
+	bh=x0MXilqjWFoGf1w3AwECfY3U95b1XL8ugjDvAzAarPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e3JSg68991KdFBBonYbMFWOUZ65gk26wnAIvuvjeQVO+CNx+HAsrA1P52KsRhX+H2
-	 UofzRwhYeRrGBvUBdzDbVcUqi67iHTD851Mm/M13uafjyGPsS6gqTAz5v8MylQZ/9b
-	 nUl4Glfv6bLcbVIM9a/lz5SW3m8XMJ6b0h6Zj7So=
+	b=O7Gq69GauNdHkRy+zQZ5bdfzUvZk4r1hOu027vLj5w6VZdXxVZxa2iPUUhJOCqiIJ
+	 WzjiEUV04zTkDuwMmQYSflc+42ubtilSmC5FGnoa1Fvs1qizRLOF/BoHoshVlVLuDo
+	 CMJ8yhEQgwpxqTP/LJx6ekHXyhWfsQks7VMCFeTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgFHXJU (ORCPT
+        id S1728497AbgFIAzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:09:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53364 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728125AbgFHXIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:08:17 -0400
+        id S1728393AbgFHXJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADFD720774;
-        Mon,  8 Jun 2020 23:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3FF208C3;
+        Mon,  8 Jun 2020 23:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657696;
-        bh=7DFggtfaa27p7/NZef20x2yJCZHD8VK+NnqtcggjuAk=;
+        s=default; t=1591657760;
+        bh=x0MXilqjWFoGf1w3AwECfY3U95b1XL8ugjDvAzAarPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJpeDJeqs1oyrCyu+OtANd99eAbpyp3QYTPTRpBQahsDENrUhC+7EtwjxJh/P1j6l
-         DNY0n8qBv6ZWzvsDagNv7O1w511Gqb/BilIDF7KBJtap1c0tv3Bett/OaRon/4QUmf
-         zBathXCbIShdWEqJti5OOf2B+OFkeqVu1xqasrD0=
+        b=ScuVlswDwbZXNFWxcfqguRUqLjW52cU7lAWYb5/tb6UyPhqf+oUjH2sHjfsAUsXy5
+         e1X+Uh4x0KUvEH29vKjpWRQ32YlkCj7G/9F+F+4pv0rVQUyW5VUeh81HLhloZDQ6Gj
+         ut7YdfMOgh2cOD/v9yxGvRAQycr45LArQkXF8KCI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bingbu Cao <bingbu.cao@intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.7 096/274] media: staging/intel-ipu3: Implement lock for stream on/off operations
-Date:   Mon,  8 Jun 2020 19:03:09 -0400
-Message-Id: <20200608230607.3361041-96-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 145/274] sched/core: Fix illegal RCU from offline CPUs
+Date:   Mon,  8 Jun 2020 19:03:58 -0400
+Message-Id: <20200608230607.3361041-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -63,152 +59,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bingbu Cao <bingbu.cao@intel.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 33e3c349b2bf1235be458df09fb8d237141486c4 ]
+[ Upstream commit bf2c59fce4074e55d622089b34be3a6bc95484fb ]
 
-Currently concurrent stream off operations on ImgU nodes are not
-synchronized, leading to use-after-free bugs (as reported by KASAN).
+In the CPU-offline process, it calls mmdrop() after idle entry and the
+subsequent call to cpuhp_report_idle_dead(). Once execution passes the
+call to rcu_report_dead(), RCU is ignoring the CPU, which results in
+lockdep complaining when mmdrop() uses RCU from either memcg or
+debugobjects below.
 
-[  250.090724] BUG: KASAN: use-after-free in
-ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
-[  250.090726] Read of size 8 at addr ffff888127b29bc0 by task
-yavta/18836
-[  250.090731] Hardware name: HP Soraka/Soraka, BIOS
-Google_Soraka.10431.17.0 03/22/2018
-[  250.090732] Call Trace:
-[  250.090735]  dump_stack+0x6a/0xb1
-[  250.090739]  print_address_description+0x8e/0x279
-[  250.090743]  ? ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
-[  250.090746]  kasan_report+0x260/0x28a
-[  250.090750]  ipu3_dmamap_free+0xc5/0x116 [ipu3_imgu]
-[  250.090754]  ipu3_css_pool_cleanup+0x24/0x37 [ipu3_imgu]
-[  250.090759]  ipu3_css_pipeline_cleanup+0x61/0xb9 [ipu3_imgu]
-[  250.090763]  ipu3_css_stop_streaming+0x1f2/0x321 [ipu3_imgu]
-[  250.090768]  imgu_s_stream+0x94/0x443 [ipu3_imgu]
-[  250.090772]  ? ipu3_vb2_buf_queue+0x280/0x280 [ipu3_imgu]
-[  250.090775]  ? vb2_dma_sg_unmap_dmabuf+0x16/0x6f [videobuf2_dma_sg]
-[  250.090778]  ? vb2_buffer_in_use+0x36/0x58 [videobuf2_common]
-[  250.090782]  ipu3_vb2_stop_streaming+0xf9/0x135 [ipu3_imgu]
+Fix it by cleaning up the active_mm state from BP instead. Every arch
+which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
+from AP. The only exception is parisc because it switches them to
+&init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
+but the patch will still work there because it calls mmgrab(&init_mm) in
+smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
 
-Implemented a lock to synchronize imgu stream on / off operations and
-the modification of streaming flag (in struct imgu_device), to prevent
-these issues.
+  WARNING: suspicious RCU usage
+  -----------------------------
+  kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
 
-Reported-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
-Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+  other info that might help us debug this:
+
+  RCU used illegally from offline CPU!
+  Call Trace:
+   dump_stack+0xf4/0x164 (unreliable)
+   lockdep_rcu_suspicious+0x140/0x164
+   get_work_pool+0x110/0x150
+   __queue_work+0x1bc/0xca0
+   queue_work_on+0x114/0x120
+   css_release+0x9c/0xc0
+   percpu_ref_put_many+0x204/0x230
+   free_pcp_prepare+0x264/0x570
+   free_unref_page+0x38/0xf0
+   __mmdrop+0x21c/0x2c0
+   idle_task_exit+0x170/0x1b0
+   pnv_smp_cpu_kill_self+0x38/0x2e0
+   cpu_die+0x48/0x64
+   arch_cpu_idle_dead+0x30/0x50
+   do_idle+0x2f4/0x470
+   cpu_startup_entry+0x38/0x40
+   start_secondary+0x7a8/0xa80
+   start_secondary_resume+0x10/0x14
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Link: https://lkml.kernel.org/r/20200401214033.8448-1-cai@lca.pw
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/ipu3/ipu3-v4l2.c | 10 ++++++++++
- drivers/staging/media/ipu3/ipu3.c      |  3 +++
- drivers/staging/media/ipu3/ipu3.h      |  4 ++++
- 3 files changed, 17 insertions(+)
+ arch/powerpc/platforms/powernv/smp.c |  1 -
+ include/linux/sched/mm.h             |  2 ++
+ kernel/cpu.c                         | 18 +++++++++++++++++-
+ kernel/sched/core.c                  |  5 +++--
+ 4 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/ipu3/ipu3-v4l2.c b/drivers/staging/media/ipu3/ipu3-v4l2.c
-index 09c8ede1457c..db8b5d13631a 100644
---- a/drivers/staging/media/ipu3/ipu3-v4l2.c
-+++ b/drivers/staging/media/ipu3/ipu3-v4l2.c
-@@ -367,8 +367,10 @@ static void imgu_vb2_buf_queue(struct vb2_buffer *vb)
+diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
+index 13e251699346..b2ba3e95bda7 100644
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
+ 	/* Standard hot unplug procedure */
  
- 	vb2_set_plane_payload(vb, 0, need_bytes);
- 
-+	mutex_lock(&imgu->streaming_lock);
- 	if (imgu->streaming)
- 		imgu_queue_buffers(imgu, false, node->pipe);
-+	mutex_unlock(&imgu->streaming_lock);
- 
- 	dev_dbg(&imgu->pci_dev->dev, "%s for pipe %u node %u", __func__,
- 		node->pipe, node->id);
-@@ -468,10 +470,13 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	dev_dbg(dev, "%s node name %s pipe %u id %u", __func__,
- 		node->name, node->pipe, node->id);
- 
-+	mutex_lock(&imgu->streaming_lock);
- 	if (imgu->streaming) {
- 		r = -EBUSY;
-+		mutex_unlock(&imgu->streaming_lock);
- 		goto fail_return_bufs;
- 	}
-+	mutex_unlock(&imgu->streaming_lock);
- 
- 	if (!node->enabled) {
- 		dev_err(dev, "IMGU node is not enabled");
-@@ -498,9 +503,11 @@ static int imgu_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
- 
- 	/* Start streaming of the whole pipeline now */
- 	dev_dbg(dev, "IMGU streaming is ready to start");
-+	mutex_lock(&imgu->streaming_lock);
- 	r = imgu_s_stream(imgu, true);
- 	if (!r)
- 		imgu->streaming = true;
-+	mutex_unlock(&imgu->streaming_lock);
- 
- 	return 0;
- 
-@@ -532,6 +539,7 @@ static void imgu_vb2_stop_streaming(struct vb2_queue *vq)
- 		dev_err(&imgu->pci_dev->dev,
- 			"failed to stop subdev streaming\n");
- 
-+	mutex_lock(&imgu->streaming_lock);
- 	/* Was this the first node with streaming disabled? */
- 	if (imgu->streaming && imgu_all_nodes_streaming(imgu, node)) {
- 		/* Yes, really stop streaming now */
-@@ -542,6 +550,8 @@ static void imgu_vb2_stop_streaming(struct vb2_queue *vq)
- 	}
- 
- 	imgu_return_all_buffers(imgu, node, VB2_BUF_STATE_ERROR);
-+	mutex_unlock(&imgu->streaming_lock);
-+
- 	media_pipeline_stop(&node->vdev.entity);
+ 	idle_task_exit();
+-	current->active_mm = NULL; /* for sanity */
+ 	cpu = smp_processor_id();
+ 	DBG("CPU%d offline\n", cpu);
+ 	generic_set_cpu_dead(cpu);
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index c49257a3b510..a132d875d351 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
+ 		__mmdrop(mm);
  }
  
-diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
-index 7a1d1881483b..ee1bba6bdcac 100644
---- a/drivers/staging/media/ipu3/ipu3.c
-+++ b/drivers/staging/media/ipu3/ipu3.c
-@@ -675,6 +675,7 @@ static int imgu_pci_probe(struct pci_dev *pci_dev,
- 		return r;
- 
- 	mutex_init(&imgu->lock);
-+	mutex_init(&imgu->streaming_lock);
- 	atomic_set(&imgu->qbuf_barrier, 0);
- 	init_waitqueue_head(&imgu->buf_drain_wq);
- 
-@@ -738,6 +739,7 @@ static int imgu_pci_probe(struct pci_dev *pci_dev,
- out_css_powerdown:
- 	imgu_css_set_powerdown(&pci_dev->dev, imgu->base);
- out_mutex_destroy:
-+	mutex_destroy(&imgu->streaming_lock);
- 	mutex_destroy(&imgu->lock);
- 
- 	return r;
-@@ -755,6 +757,7 @@ static void imgu_pci_remove(struct pci_dev *pci_dev)
- 	imgu_css_set_powerdown(&pci_dev->dev, imgu->base);
- 	imgu_dmamap_exit(imgu);
- 	imgu_mmu_exit(imgu->mmu);
-+	mutex_destroy(&imgu->streaming_lock);
- 	mutex_destroy(&imgu->lock);
++void mmdrop(struct mm_struct *mm);
++
+ /*
+  * This has to be called after a get_task_mm()/mmget_not_zero()
+  * followed by taking the mmap_sem for writing before modifying the
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 2371292f30b0..244d30544377 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -3,6 +3,7 @@
+  *
+  * This code is licenced under the GPL.
+  */
++#include <linux/sched/mm.h>
+ #include <linux/proc_fs.h>
+ #include <linux/smp.h>
+ #include <linux/init.h>
+@@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
+ 	return bringup_wait_for_ap(cpu);
  }
  
-diff --git a/drivers/staging/media/ipu3/ipu3.h b/drivers/staging/media/ipu3/ipu3.h
-index 73b123b2b8a2..8cd6a0077d99 100644
---- a/drivers/staging/media/ipu3/ipu3.h
-+++ b/drivers/staging/media/ipu3/ipu3.h
-@@ -146,6 +146,10 @@ struct imgu_device {
- 	 * vid_buf.list and css->queue
- 	 */
- 	struct mutex lock;
++static int finish_cpu(unsigned int cpu)
++{
++	struct task_struct *idle = idle_thread_get(cpu);
++	struct mm_struct *mm = idle->active_mm;
 +
-+	/* Lock to protect writes to streaming flag in this struct */
-+	struct mutex streaming_lock;
++	/*
++	 * idle_task_exit() will have switched to &init_mm, now
++	 * clean up any remaining active_mm state.
++	 */
++	if (mm != &init_mm)
++		idle->active_mm = &init_mm;
++	mmdrop(mm);
++	return 0;
++}
 +
- 	/* Forbid streaming and buffer queuing during system suspend. */
- 	atomic_t qbuf_barrier;
- 	/* Indicate if system suspend take place while imgu is streaming. */
+ /*
+  * Hotplug state machine related functions
+  */
+@@ -1549,7 +1565,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
+ 	[CPUHP_BRINGUP_CPU] = {
+ 		.name			= "cpu:bringup",
+ 		.startup.single		= bringup_cpu,
+-		.teardown.single	= NULL,
++		.teardown.single	= finish_cpu,
+ 		.cant_stop		= true,
+ 	},
+ 	/* Final state before CPU kills itself */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9a2fbf98fd6f..0bbf387d0f19 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6190,13 +6190,14 @@ void idle_task_exit(void)
+ 	struct mm_struct *mm = current->active_mm;
+ 
+ 	BUG_ON(cpu_online(smp_processor_id()));
++	BUG_ON(current != this_rq()->idle);
+ 
+ 	if (mm != &init_mm) {
+ 		switch_mm(mm, &init_mm, current);
+-		current->active_mm = &init_mm;
+ 		finish_arch_post_lock_switch();
+ 	}
+-	mmdrop(mm);
++
++	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
+ }
+ 
+ /*
 -- 
 2.25.1
 
