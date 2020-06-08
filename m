@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02C6207ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481E82078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591662359;
-	bh=tCDU294vHgqdHXvCxz4OlF4gb8RXAG9Zx8N65jO1Vss=;
+	s=default; t=1591662375;
+	bh=UcSFkiTpAfG5jGUQL8B1t65YGL3zYNSNTnWb01RrQ0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EK9wOHcj4k7AvLRIhUsiJHf3hs6O4mtuFLV/BUS8r7kg6gbxMrGSuNdilEmd6BiyM
-	 cA6CnQ2W6K3jd9Cf1SR9AW6f6xW0+ES03deDt/G05IrdkF6dvykIwgBLP6BBVBnc47
-	 j9S0EmsfHYh5+y1UjEgUpca8DlhZoLTV0/qSIFwA=
+	b=O/oU1rdex2gNe8I3Y93ITObJry0tkL2P6XkiuHEiD/3+YLh7K86dsZnjNU4XUBgL+
+	 NJnxRFvSag2WijTlIVGW8D8Yo/DC60puD1H1XcJb/11GbslRzc4xLHrHdUYR9urtQS
+	 fXkSLjoEN1GRUgEH8tgdTuVOp7Cl0E1cyZ31tl/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgFIAZ6 (ORCPT
+        id S1733057AbgFIA0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730353AbgFHXQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:54 -0400
+        id S1730346AbgFHXQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:16:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15ECA20842;
-        Mon,  8 Jun 2020 23:16:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954B520823;
+        Mon,  8 Jun 2020 23:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658213;
-        bh=tCDU294vHgqdHXvCxz4OlF4gb8RXAG9Zx8N65jO1Vss=;
+        s=default; t=1591658208;
+        bh=UcSFkiTpAfG5jGUQL8B1t65YGL3zYNSNTnWb01RrQ0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7zhENoQUBm1qQ8s0jlX3KE/NCJl+5skzgkLLn+K+NxtYZDO7u2Jxni3/b7AZ1oFU
-         CTFv6DcU8vEy3WYKdmxD89z1AZrRH53wFFX7TsDNYPgqqnHXmolJpa4AUhezGXivPc
-         XzzGtjQYYAkylT/jnvc5Gio6e1ZKyxHhhy9hdb1k=
+        b=hbWDq0aoREFY6cIOoSg7NM6jSXuvvNPgyfLK7YO4ZOk+23qo9W6uHVOsMCyepilPC
+         Y38ROQbBPrwNq6jCv0G48jVPva8cILrTbKopNnVtAJuJQtX/c7gt4nNFkO/2zTic6t
+         Z0lcU5yR5clng8Ea0A6sJu1NsCHUItGOsZu4JMC8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roi Dayan <roid@mellanox.com>, Vlad Buslov <vladbu@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+Cc:     Neil Horman <nhorman@tuxdriver.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, jere.leppanen@nokia.com,
+        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 230/606] net/mlx5e: Fix inner tirs handling
-Date:   Mon,  8 Jun 2020 19:05:55 -0400
-Message-Id: <20200608231211.3363633-230-sashal@kernel.org>
+        linux-sctp@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 226/606] sctp: Don't add the shutdown timer if its already been added
+Date:   Mon,  8 Jun 2020 19:05:51 -0400
+Message-Id: <20200608231211.3363633-226-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -60,138 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Neil Horman <nhorman@tuxdriver.com>
 
-[ Upstream commit a16b8e0dcf7043bee46174bed0553cc9e36b63a5 ]
+[ Upstream commit 20a785aa52c82246055a089e55df9dac47d67da1 ]
 
-In the cited commit inner_tirs argument was added to create and destroy
-inner tirs, and no indication was added to mlx5e_modify_tirs_hash()
-function. In order to have a consistent handling, use
-inner_indir_tir[0].tirn in tirs destroy/modify function as an indication
-to whether inner tirs are created.
-Inner tirs are not created for representors and before this commit,
-a call to mlx5e_modify_tirs_hash() was sending HW commands to
-modify non-existent inner tirs.
+This BUG halt was reported a while back, but the patch somehow got
+missed:
 
-Fixes: 46dc933cee82 ("net/mlx5e: Provide explicit directive if to create inner indirect tirs")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+PID: 2879   TASK: c16adaa0  CPU: 1   COMMAND: "sctpn"
+ #0 [f418dd28] crash_kexec at c04a7d8c
+ #1 [f418dd7c] oops_end at c0863e02
+ #2 [f418dd90] do_invalid_op at c040aaca
+ #3 [f418de28] error_code (via invalid_op) at c08631a5
+    EAX: f34baac0  EBX: 00000090  ECX: f418deb0  EDX: f5542950  EBP: 00000000
+    DS:  007b      ESI: f34ba800  ES:  007b      EDI: f418dea0  GS:  00e0
+    CS:  0060      EIP: c046fa5e  ERR: ffffffff  EFLAGS: 00010286
+ #4 [f418de5c] add_timer at c046fa5e
+ #5 [f418de68] sctp_do_sm at f8db8c77 [sctp]
+ #6 [f418df30] sctp_primitive_SHUTDOWN at f8dcc1b5 [sctp]
+ #7 [f418df48] inet_shutdown at c080baf9
+ #8 [f418df5c] sys_shutdown at c079eedf
+ #9 [f418df70] sys_socketcall at c079fe88
+    EAX: ffffffda  EBX: 0000000d  ECX: bfceea90  EDX: 0937af98
+    DS:  007b      ESI: 0000000c  ES:  007b      EDI: b7150ae4
+    SS:  007b      ESP: bfceea7c  EBP: bfceeaa8  GS:  0033
+    CS:  0073      EIP: b775c424  ERR: 00000066  EFLAGS: 00000282
+
+It appears that the side effect that starts the shutdown timer was processed
+multiple times, which can happen as multiple paths can trigger it.  This of
+course leads to the BUG halt in add_timer getting called.
+
+Fix seems pretty straightforward, just check before the timer is added if its
+already been started.  If it has mod the timer instead to min(current
+expiration, new expiration)
+
+Its been tested but not confirmed to fix the problem, as the issue has only
+occured in production environments where test kernels are enjoined from being
+installed.  It appears to be a sane fix to me though.  Also, recentely,
+Jere found a reproducer posted on list to confirm that this resolves the
+issues
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+CC: Vlad Yasevich <vyasevich@gmail.com>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: jere.leppanen@nokia.com
+CC: marcelo.leitner@gmail.com
+CC: netdev@vger.kernel.org
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h         |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c    | 12 +++++++-----
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c     |  4 ++--
- .../net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c    |  4 ++--
- 4 files changed, 12 insertions(+), 10 deletions(-)
+ net/sctp/sm_sideeffect.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 5a5e6a21c6e1..80c579948152 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -1104,7 +1104,7 @@ void mlx5e_close_drop_rq(struct mlx5e_rq *drop_rq);
- int mlx5e_create_indirect_rqt(struct mlx5e_priv *priv);
+diff --git a/net/sctp/sm_sideeffect.c b/net/sctp/sm_sideeffect.c
+index 2bc29463e1dc..9f36fe911d08 100644
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -1523,9 +1523,17 @@ static int sctp_cmd_interpreter(enum sctp_event_type event_type,
+ 			timeout = asoc->timeouts[cmd->obj.to];
+ 			BUG_ON(!timeout);
  
- int mlx5e_create_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
--void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc);
-+void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv);
+-			timer->expires = jiffies + timeout;
+-			sctp_association_hold(asoc);
+-			add_timer(timer);
++			/*
++			 * SCTP has a hard time with timer starts.  Because we process
++			 * timer starts as side effects, it can be hard to tell if we
++			 * have already started a timer or not, which leads to BUG
++			 * halts when we call add_timer. So here, instead of just starting
++			 * a timer, if the timer is already started, and just mod
++			 * the timer with the shorter of the two expiration times
++			 */
++			if (!timer_pending(timer))
++				sctp_association_hold(asoc);
++			timer_reduce(timer, jiffies + timeout);
+ 			break;
  
- int mlx5e_create_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
- void mlx5e_destroy_direct_rqts(struct mlx5e_priv *priv, struct mlx5e_tir *tirs);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index d02db5aebac4..4fef7587165c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -2747,7 +2747,8 @@ void mlx5e_modify_tirs_hash(struct mlx5e_priv *priv, void *in, int inlen)
- 		mlx5_core_modify_tir(mdev, priv->indir_tir[tt].tirn, in, inlen);
- 	}
- 
--	if (!mlx5e_tunnel_inner_ft_supported(priv->mdev))
-+	/* Verify inner tirs resources allocated */
-+	if (!priv->inner_indir_tir[0].tirn)
- 		return;
- 
- 	for (tt = 0; tt < MLX5E_NUM_INDIR_TIRS; tt++) {
-@@ -3394,14 +3395,15 @@ int mlx5e_create_direct_tirs(struct mlx5e_priv *priv, struct mlx5e_tir *tirs)
- 	return err;
- }
- 
--void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv, bool inner_ttc)
-+void mlx5e_destroy_indirect_tirs(struct mlx5e_priv *priv)
- {
- 	int i;
- 
- 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
- 		mlx5e_destroy_tir(priv->mdev, &priv->indir_tir[i]);
- 
--	if (!inner_ttc || !mlx5e_tunnel_inner_ft_supported(priv->mdev))
-+	/* Verify inner tirs resources allocated */
-+	if (!priv->inner_indir_tir[0].tirn)
- 		return;
- 
- 	for (i = 0; i < MLX5E_NUM_INDIR_TIRS; i++)
-@@ -5107,7 +5109,7 @@ static int mlx5e_init_nic_rx(struct mlx5e_priv *priv)
- err_destroy_direct_tirs:
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
- err_destroy_indirect_tirs:
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- err_destroy_direct_rqts:
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- err_destroy_indirect_rqts:
-@@ -5126,7 +5128,7 @@ static void mlx5e_cleanup_nic_rx(struct mlx5e_priv *priv)
- 	mlx5e_destroy_direct_tirs(priv, priv->xsk_tir);
- 	mlx5e_destroy_direct_rqts(priv, priv->xsk_tir);
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
- 	mlx5e_close_drop_rq(&priv->drop_rq);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-index 2ad0d09cc9bd..c3c3d89d9153 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -1667,7 +1667,7 @@ static int mlx5e_init_rep_rx(struct mlx5e_priv *priv)
- err_destroy_direct_tirs:
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
- err_destroy_indirect_tirs:
--	mlx5e_destroy_indirect_tirs(priv, false);
-+	mlx5e_destroy_indirect_tirs(priv);
- err_destroy_direct_rqts:
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- err_destroy_indirect_rqts:
-@@ -1684,7 +1684,7 @@ static void mlx5e_cleanup_rep_rx(struct mlx5e_priv *priv)
- 	mlx5_del_flow_rules(rpriv->vport_rx_rule);
- 	mlx5e_destroy_ttc_table(priv, &priv->fs.ttc);
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
--	mlx5e_destroy_indirect_tirs(priv, false);
-+	mlx5e_destroy_indirect_tirs(priv);
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
- 	mlx5e_close_drop_rq(&priv->drop_rq);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-index 56078b23f1a0..0a334ceba7b1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c
-@@ -396,7 +396,7 @@ static int mlx5i_init_rx(struct mlx5e_priv *priv)
- err_destroy_direct_tirs:
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
- err_destroy_indirect_tirs:
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- err_destroy_direct_rqts:
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- err_destroy_indirect_rqts:
-@@ -412,7 +412,7 @@ static void mlx5i_cleanup_rx(struct mlx5e_priv *priv)
- {
- 	mlx5i_destroy_flow_steering(priv);
- 	mlx5e_destroy_direct_tirs(priv, priv->direct_tir);
--	mlx5e_destroy_indirect_tirs(priv, true);
-+	mlx5e_destroy_indirect_tirs(priv);
- 	mlx5e_destroy_direct_rqts(priv, priv->direct_tir);
- 	mlx5e_destroy_rqt(priv, &priv->indir_rqt);
- 	mlx5e_close_drop_rq(&priv->drop_rq);
+ 		case SCTP_CMD_TIMER_RESTART:
 -- 
 2.25.1
 
