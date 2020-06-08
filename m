@@ -2,93 +2,233 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE9E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441FB206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 17:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aHeeXl+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387583AbgFHR3X (ORCPT
+        id S1729214AbgFHRaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 13:29:23 -0400
-Received: from mga11.intel.com ([192.55.52.93]:12672 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730697AbgFHR3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 13:29:22 -0400
-IronPort-SDR: TkRODIQiUQCJlXzq7ghxlfdz+jDAX14ny9tZ6sz4B54ceGJeLgtUb6Fe7P0Fwlb9oSwZ7+MV+2
- Hqb3RqJ92eGA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 10:29:21 -0700
-IronPort-SDR: qptkctbUJUSvQAC1ycvjADfEDhUrhHOX5yl1OzzQxI56au3vxE+MjQ88fkKwTx8lv1vlJ4i/FY
- fWhF3aO1hQDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="258747153"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Jun 2020 10:29:21 -0700
-Date:   Mon, 8 Jun 2020 10:29:21 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Liam Merwick <liam.merwick@oracle.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Brad Campbell <lists2009@fnarfbargle.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/cpu: Reinitialize IA32_FEAT_CTL MSR on BSP during
- wakeup
-Message-ID: <20200608172921.GC8223@linux.intel.com>
-References: <20200605200728.10145-1-sean.j.christopherson@intel.com>
- <b2ac2400-dbc1-f6bc-a397-17f1ae10bd83@oracle.com>
+        Mon, 8 Jun 2020 13:30:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27966 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387589AbgFHRac (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 13:30:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591637429;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CydLNuieMFXuTeLFl9DAS3JoZAu9uEAH3zDcoHjZ+rw=;
+        b=aHeeXl+q56AQPJhlUi+GwAsJoE1uMUPzPepF1+HzEqknlog8PkO0ukdrHpbKBgl0Tn2nVh
+        sbwBSTuWxfK2yfTJYN6gEH5HGUKHUgSjQ4vMjS+8zsQjU8hUaeikbWWKRRN63RnAJ7z3tP
+        qCDLluiwlJJA8Qp5jPljMfIRuD9ysjM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-Iy_uPyU1Pl6teQrH6xe-Cg-1; Mon, 08 Jun 2020 13:30:24 -0400
+X-MC-Unique: Iy_uPyU1Pl6teQrH6xe-Cg-1
+Received: by mail-wr1-f70.google.com with SMTP id r5so7460737wrt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 10:30:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CydLNuieMFXuTeLFl9DAS3JoZAu9uEAH3zDcoHjZ+rw=;
+        b=ZbPY12OU1gKOsn2ygfNFxztaRPhqMAQekQAR+93oOWfGNAKSkJ2p4L1RPpRPW+nkvi
+         l+MXKGImI0H4bcZw3XMrHdxn5EgEJ9yF7BSluKyGYiKWTMPC49cuEKkSUILzROrPzfeG
+         dV8n3C3H3GlDI/txAJ47IJkugkKErSMPbEtzgfsalItVNlH7IEHSt/1BbaN2vugHAGJp
+         LoUxRxF4D0s/ZhMESSYtEYGWMGS0/pckn/juw+hNXiM3Mt539jjrwOmycSg3YbNQnp+d
+         d0yj4L9dK3qQQMtlMRL/N9o2tkJQ2RgWMAT1pDVhpC+jJdPyH+9KrKbapOO890BbrxPK
+         7bPQ==
+X-Gm-Message-State: AOAM531azIX/nSm5My8+RznjNrFjwVPoeY36A+aINCbl6uuliRKezQDx
+        UBzZlCsVY8JHIcmhRwdwueD0u2eZ8MRcIAlgOoa54I2WG7iuMXnCeiN7kRQf+9exIArqCaKO/ml
+        xvNnoY74bNxH/sGtRdAmGVcvc
+X-Received: by 2002:a1c:1983:: with SMTP id 125mr370293wmz.43.1591637421981;
+        Mon, 08 Jun 2020 10:30:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxawQBk2KuedCoeq45qKTknHdFZ/Hzdg0iNXD3UZKIwvVktz96TcUIMIJ1pKhk0TcTZ2sCXUw==
+X-Received: by 2002:a1c:1983:: with SMTP id 125mr370264wmz.43.1591637421518;
+        Mon, 08 Jun 2020 10:30:21 -0700 (PDT)
+Received: from steredhat ([79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id v19sm219936wml.26.2020.06.08.10.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 10:30:20 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 19:30:18 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        eperezma@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH RFC v6 00/11] vhost: ring format independence
+Message-ID: <20200608173018.2l5wywnscyinf4w7@steredhat>
+References: <20200608125238.728563-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b2ac2400-dbc1-f6bc-a397-17f1ae10bd83@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200608125238.728563-1-mst@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 11:12:35AM +0100, Liam Merwick wrote:
-> On 05/06/2020 21:07, Sean Christopherson wrote:
-> >Reinitialize IA32_FEAT_CTL on the BSP during wakeup to handle the case
-> >where firmware doesn't initialize or save/restore across S3.  This fixes
-> >a bug where IA32_FEAT_CTL is left uninitialized and results in VMXON
-> >taking a #GP due to VMX not being fully enabled, i.e. breaks KVM.
-> >
-> >Use init_ia32_feat_ctl() to "restore" IA32_FEAT_CTL as it already deals
-> >with the case where the MSR is locked, and because APs already redo
-> >init_ia32_feat_ctl() during suspend by virtue of the SMP boot flow being
-> >used to reinitialize APs upon wakeup.  Do the call in the early wakeup
-> >flow to avoid dependencies in the syscore_ops chain, e.g. simply adding
-> >a resume hook is not guaranteed to work, as KVM does VMXON in its own
-> >resume hook, kvm_resume(), when KVM has active guests.
-> >
-> >Reported-by: Brad Campbell <lists2009@fnarfbargle.com>
-> >Cc: Maxim Levitsky <mlevitsk@redhat.com>
-> >Cc: Paolo Bonzini <pbonzini@redhat.com>
-> >Cc: kvm@vger.kernel.org
+Hi Michael,
+
+On Mon, Jun 08, 2020 at 08:52:51AM -0400, Michael S. Tsirkin wrote:
 > 
-> Should it have the following tag since it fixes a commit introduced in 5.6?
-> Cc: stable@vger.kernel.org # v5.6
-
-It definitely warrants a backport to v5.6.  I didn't include a Cc to stable
-because I swear I had seen an email fly by that stated an explicit Cc is
-unnecessary/unwanted for tip-tree patches, but per a recent statement from
-Boris it looks like I'm simply confused[*].  I'll add the Cc in v2.
-
-[*] https://lkml.kernel.org/r/20200417164752.GF7322@zn.tnic
-
-> >Fixes: 21bd3467a58e ("KVM: VMX: Drop initialization of IA32_FEAT_CTL MSR")
-> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> Reviewed-by: Liam Merwick <liam.merwick@oracle.com>
+> This adds infrastructure required for supporting
+> multiple ring formats.
+> 
+> The idea is as follows: we convert descriptors to an
+> independent format first, and process that converting to
+> iov later.
+> 
+> Used ring is similar: we fetch into an independent struct first,
+> convert that to IOV later.
+> 
+> The point is that we have a tight loop that fetches
+> descriptors, which is good for cache utilization.
+> This will also allow all kind of batching tricks -
+> e.g. it seems possible to keep SMAP disabled while
+> we are fetching multiple descriptors.
+> 
+> For used descriptors, this allows keeping track of the buffer length
+> without need to rescan IOV.
+> 
+> This seems to perform exactly the same as the original
+> code based on a microbenchmark.
+> Lightly tested.
+> More testing would be very much appreciated.
+
+while testing the vhost-vsock I found some issues in vhost-net (the VM
+had also a virtio-net device).
+
+This is the dmesg of the host (it is a QEMU VM):
+
+[  171.860074] CPU: 0 PID: 16613 Comm: vhost-16595 Not tainted 5.7.0-ste-12703-gaf7b4801030c-dirty #6
+[  171.862210] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+[  171.865998] Call Trace:
+[  171.866440]  <IRQ>
+[  171.866817]  dump_stack+0x57/0x7a
+[  171.867440]  nmi_cpu_backtrace.cold+0x14/0x54
+[  171.868233]  ? lapic_can_unplug_cpu.cold+0x3b/0x3b
+[  171.869153]  nmi_trigger_cpumask_backtrace+0x85/0x92
+[  171.870143]  arch_trigger_cpumask_backtrace+0x19/0x20
+[  171.871134]  rcu_dump_cpu_stacks+0xa0/0xd2
+[  171.872203]  rcu_sched_clock_irq.cold+0x23a/0x41c
+[  171.873098]  update_process_times+0x2c/0x60
+[  171.874119]  tick_sched_timer+0x59/0x160
+[  171.874777]  ? tick_switch_to_oneshot.cold+0x79/0x79
+[  171.875602]  __hrtimer_run_queues+0x10d/0x290
+[  171.876317]  hrtimer_interrupt+0x109/0x220
+[  171.877025]  smp_apic_timer_interrupt+0x76/0x150
+[  171.877875]  apic_timer_interrupt+0xf/0x20
+[  171.878563]  </IRQ>
+[  171.878897] RIP: 0010:vhost_get_avail_buf+0x5f8/0x860 [vhost]
+[  171.879951] Code: 48 8b bb 88 00 00 00 48 85 ff 0f 84 ad 00 00 00 be 01 00 00 00 44 89 45 80 e8 24 52 08 c1 8b 43 68 44 8b 45 80 e9 e9 fb ff ff <45> 85 c0 0f 85 48 fd ff ff 48 8b 43 38 48 83 bb 38 45 00 00 00 48
+[  171.889938] RSP: 0018:ffffc90000397c40 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+[  171.896828] RAX: 0000000000000040 RBX: ffff88822c3f4688 RCX: ffff888231090000
+[  171.898903] RDX: 0000000000000440 RSI: ffff888231090000 RDI: ffffc90000397c80
+[  171.901025] RBP: ffffc90000397ce8 R08: 0000000000000001 R09: ffffc90000397dc4
+[  171.903136] R10: 000000231edc461f R11: 0000000000000003 R12: 0000000000000001
+[  171.905213] R13: 0000000000000001 R14: ffffc90000397dd4 R15: ffff88822c3f87a8
+[  171.907553]  get_tx_bufs+0x49/0x180 [vhost_net]
+[  171.909142]  handle_tx_copy+0xb4/0x5c0 [vhost_net]
+[  171.911495]  ? update_curr+0x67/0x160
+[  171.913376]  handle_tx+0xb0/0xe0 [vhost_net]
+[  171.916451]  handle_tx_kick+0x15/0x20 [vhost_net]
+[  171.919912]  vhost_worker+0xb3/0x110 [vhost]
+[  171.923379]  kthread+0x106/0x140
+[  171.925314]  ? __vhost_add_used_n+0x1c0/0x1c0 [vhost]
+[  171.933388]  ? kthread_park+0x90/0x90
+[  171.936148]  ret_from_fork+0x22/0x30
+[  234.859212] rcu: INFO: rcu_sched self-detected stall on CPU
+[  234.860036] rcu: 	0-....: (20981 ticks this GP) idle=962/1/0x4000000000000002 softirq=15513/15513 fqs=10340
+[  234.861547] 	(t=21003 jiffies g=24773 q=2390)
+[  234.862158] NMI backtrace for cpu 0
+[  234.862638] CPU: 0 PID: 16613 Comm: vhost-16595 Not tainted 5.7.0-ste-12703-gaf7b4801030c-dirty #6
+[  234.864008] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+[  234.866084] Call Trace:
+[  234.866395]  <IRQ>
+[  234.866648]  dump_stack+0x57/0x7a
+[  234.867079]  nmi_cpu_backtrace.cold+0x14/0x54
+[  234.867679]  ? lapic_can_unplug_cpu.cold+0x3b/0x3b
+[  234.868322]  nmi_trigger_cpumask_backtrace+0x85/0x92
+[  234.869013]  arch_trigger_cpumask_backtrace+0x19/0x20
+[  234.869747]  rcu_dump_cpu_stacks+0xa0/0xd2
+[  234.870267]  rcu_sched_clock_irq.cold+0x23a/0x41c
+[  234.870960]  update_process_times+0x2c/0x60
+[  234.871578]  tick_sched_timer+0x59/0x160
+[  234.872148]  ? tick_switch_to_oneshot.cold+0x79/0x79
+[  234.872949]  __hrtimer_run_queues+0x10d/0x290
+[  234.873711]  hrtimer_interrupt+0x109/0x220
+[  234.874271]  smp_apic_timer_interrupt+0x76/0x150
+[  234.874913]  apic_timer_interrupt+0xf/0x20
+[  234.876507]  </IRQ>
+[  234.876799] RIP: 0010:vhost_get_avail_buf+0x8a/0x860 [vhost]
+[  234.877828] Code: 8d 72 06 00 00 85 c0 0f 85 fb 02 00 00 8b 57 70 89 d0 2d 00 04 00 00 0f 88 72 06 00 00 45 31 c0 4c 8d bb 20 41 00 00 4d 89 ee <44> 0f b7 a3 08 01 00 00 66 44 3b a3 0a 01 00 00 0f 84 58 05 00 00
+[  234.882059] RSP: 0018:ffffc90000397c40 EFLAGS: 00000283 ORIG_RAX: ffffffffffffff13
+[  234.883227] RAX: 0000000000000040 RBX: ffff88822c3f4688 RCX: ffff888231090000
+[  234.884317] RDX: 0000000000000440 RSI: ffff888231090000 RDI: ffffc90000397c80
+[  234.886531] RBP: ffffc90000397ce8 R08: 0000000000000001 R09: ffffc90000397dc4
+[  234.891840] R10: 000000231edc461f R11: 0000000000000003 R12: 0000000000000001
+[  234.896670] R13: 0000000000000001 R14: ffffc90000397dd4 R15: ffff88822c3f87a8
+[  234.900918]  get_tx_bufs+0x49/0x180 [vhost_net]
+[  234.904280]  handle_tx_copy+0xb4/0x5c0 [vhost_net]
+[  234.916402]  ? update_curr+0x67/0x160
+[  234.917688]  handle_tx+0xb0/0xe0 [vhost_net]
+[  234.918865]  handle_tx_kick+0x15/0x20 [vhost_net]
+[  234.920366]  vhost_worker+0xb3/0x110 [vhost]
+[  234.921500]  kthread+0x106/0x140
+[  234.922219]  ? __vhost_add_used_n+0x1c0/0x1c0 [vhost]
+[  234.923595]  ? kthread_park+0x90/0x90
+[  234.924442]  ret_from_fork+0x22/0x30
+[  297.870095] rcu: INFO: rcu_sched self-detected stall on CPU
+[  297.871352] rcu: 	0-....: (36719 ticks this GP) idle=962/1/0x4000000000000002 softirq=15513/15513 fqs=18087
+[  297.873585] 	(t=36756 jiffies g=24773 q=2853)
+[  297.874478] NMI backtrace for cpu 0
+[  297.875229] CPU: 0 PID: 16613 Comm: vhost-16595 Not tainted 5.7.0-ste-12703-gaf7b4801030c-dirty #6
+[  297.877204] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+[  297.881644] Call Trace:
+[  297.882185]  <IRQ>
+[  297.882621]  dump_stack+0x57/0x7a
+[  297.883387]  nmi_cpu_backtrace.cold+0x14/0x54
+[  297.884390]  ? lapic_can_unplug_cpu.cold+0x3b/0x3b
+[  297.885568]  nmi_trigger_cpumask_backtrace+0x85/0x92
+[  297.886746]  arch_trigger_cpumask_backtrace+0x19/0x20
+[  297.888260]  rcu_dump_cpu_stacks+0xa0/0xd2
+[  297.889508]  rcu_sched_clock_irq.cold+0x23a/0x41c
+[  297.890803]  update_process_times+0x2c/0x60
+[  297.893357]  tick_sched_timer+0x59/0x160
+[  297.895143]  ? tick_switch_to_oneshot.cold+0x79/0x79
+[  297.897832]  __hrtimer_run_queues+0x10d/0x290
+[  297.899841]  hrtimer_interrupt+0x109/0x220
+[  297.900909]  smp_apic_timer_interrupt+0x76/0x150
+[  297.903543]  apic_timer_interrupt+0xf/0x20
+[  297.906509]  </IRQ>
+[  297.908004] RIP: 0010:vhost_get_avail_buf+0x92/0x860 [vhost]
+[  297.911536] Code: 85 fb 02 00 00 8b 57 70 89 d0 2d 00 04 00 00 0f 88 72 06 00 00 45 31 c0 4c 8d bb 20 41 00 00 4d 89 ee 44 0f b7 a3 08 01 00 00 <66> 44 3b a3 0a 01 00 00 0f 84 58 05 00 00 8b 43 28 83 e8 01 41 21
+[  297.930274] RSP: 0018:ffffc90000397c40 EFLAGS: 00000283 ORIG_RAX: ffffffffffffff13
+[  297.934056] RAX: 0000000000000040 RBX: ffff88822c3f4688 RCX: ffff888231090000
+[  297.938371] RDX: 0000000000000440 RSI: ffff888231090000 RDI: ffffc90000397c80
+[  297.944222] RBP: ffffc90000397ce8 R08: 0000000000000001 R09: ffffc90000397dc4
+[  297.953817] R10: 000000231edc461f R11: 0000000000000003 R12: 0000000000000001
+[  297.956453] R13: 0000000000000001 R14: ffffc90000397dd4 R15: ffff88822c3f87a8
+[  297.960873]  get_tx_bufs+0x49/0x180 [vhost_net]
+[  297.964163]  handle_tx_copy+0xb4/0x5c0 [vhost_net]
+[  297.965871]  ? update_curr+0x67/0x160
+[  297.966893]  handle_tx+0xb0/0xe0 [vhost_net]
+[  297.968442]  handle_tx_kick+0x15/0x20 [vhost_net]
+[  297.971327]  vhost_worker+0xb3/0x110 [vhost]
+[  297.974275]  kthread+0x106/0x140
+[  297.976141]  ? __vhost_add_used_n+0x1c0/0x1c0 [vhost]
+[  297.979518]  ? kthread_park+0x90/0x90
+[  297.981665]  ret_from_fork+0x22/0x30
+
