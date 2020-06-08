@@ -2,113 +2,105 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19692C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 305002076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5EA420659
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 14:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Cp8DftuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgFHOo2 (ORCPT
+        id S1730060AbgFHOqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 10:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbgFHOo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 10:44:28 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E75206C3;
-        Mon,  8 Jun 2020 14:44:25 +0000 (UTC)
-Date:   Mon, 8 Jun 2020 10:44:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ben Segall <bsegall@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fs <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT
- default boost value
-Message-ID: <20200608104424.10781990@gandalf.local.home>
-In-Reply-To: <20200608123102.6sdhdhit7lac5cfl@e107158-lin.cambridge.arm.com>
-References: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
-        <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
-        <20200528161112.GI2483@worktop.programming.kicks-ass.net>
-        <20200529100806.GA3070@suse.de>
-        <edd80c0d-b7c8-4314-74da-08590170e6f5@arm.com>
-        <87v9k84knx.derkling@matbug.net>
-        <20200603101022.GG3070@suse.de>
-        <CAKfTPtAvMvPk5Ea2kaxXE8GzQ+Nc_PS+EKB1jAa03iJwQORSqA@mail.gmail.com>
-        <20200603165200.v2ypeagziht7kxdw@e107158-lin.cambridge.arm.com>
-        <CAKfTPtC6TvUL83VdWuGfbKm0CkXB85YQ5qkagK9aiDB8Hqrn_Q@mail.gmail.com>
-        <20200608123102.6sdhdhit7lac5cfl@e107158-lin.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 8 Jun 2020 10:46:35 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:55598 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729958AbgFHOqe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 10:46:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058EcDgU096384;
+        Mon, 8 Jun 2020 14:46:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=WbGBBzWBgaHtrxRJxw5NrKuajctvYp+XZBeYx3b9Yg4=;
+ b=Cp8DftuEj1YZh+zqAwz4YO1DTouUjbm9oLTDid3ZKuIBr46JNdQLIVnp6Y8tWAfw2Pbm
+ TEbWeDGQJyoQuzNBLnAKUIE/uqnlv14V96bJMSEp1+ZlGr9+94cKhcbxM+LnJa45fvTW
+ h06SbUaXiI6MrfZJ8+TlaGxU+DWnjC6Wn4Nhg480/ammGdBh8wKCKFA5zfhBM+vXC5jm
+ hrNQFCvaJiRCdx1/Y55xDErGWDrjQALOeVvvsizZ6dGQAlLTQ4mmetX9MtdyiweRBLWJ
+ T9oUq0XuOk/34gm+XGgyksSyTE2f6rxejs+4FyJ0JCgP+hhBcmZh9fh9UYC9//M6uNPC Bg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 31g2jqy9gy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 08 Jun 2020 14:46:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 058EgIAn132818;
+        Mon, 8 Jun 2020 14:46:28 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 31gn22yn8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Jun 2020 14:46:28 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 058EkP4U021311;
+        Mon, 8 Jun 2020 14:46:25 GMT
+Received: from ca-common-hq.us.oracle.com (/10.211.9.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 08 Jun 2020 07:46:25 -0700
+From:   Divya Indi <divya.indi@oracle.com>
+To:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>, Kaike Wan <kaike.wan@intel.com>
+Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Review Request 
+Date:   Mon,  8 Jun 2020 07:46:15 -0700
+Message-Id: <1591627576-920-1-git-send-email-divya.indi@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2 mlxscore=0
+ phishscore=0 adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=940
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006080110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9645 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ cotscore=-2147483648 priorityscore=1501 spamscore=0 suspectscore=2
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=976 malwarescore=0 mlxscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006080109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 13:31:03 +0100
-Qais Yousef <qais.yousef@arm.com> wrote:
+[PATCH v3] IB/sa: Resolving use-after-free in ib_nl_send_msg
 
-> I admit I don't know how much of these numbers is ftrace overhead. When trying
+Hi,
 
-Note, if you want to get a better idea of how long a function runs, put it
-into set_ftrace_filter, and then trace it. That way you remove the overhead
-of the function graph tracer when its nesting within a function.
+Please review the patch that follows. 
 
-> to capture similar runs for uclamp, the numbers didn't add up compared to
-> running the test without ftrace generating the graph. If juno is suffering from
-> bad branching costs in this path, then I suspect ftrace will amplify this as
-> AFAIU it'll cause extra jumps on entry and exit.
-> 
-> 
-> 
->       sched-pipe-6532  [001]  9407.276302: funcgraph_entry:                   |  deactivate_task() {
->       sched-pipe-6532  [001]  9407.276302: funcgraph_entry:                   |    dequeue_task_fair() {
->       sched-pipe-6532  [001]  9407.276303: funcgraph_entry:                   |      update_curr() {
->       sched-pipe-6532  [001]  9407.276304: funcgraph_entry:        0.780 us   |        update_min_vruntime();
->       sched-pipe-6532  [001]  9407.276306: funcgraph_entry:                   |        cpuacct_charge() {
->       sched-pipe-6532  [001]  9407.276306: funcgraph_entry:        0.820 us   |          __rcu_read_lock();
->       sched-pipe-6532  [001]  9407.276308: funcgraph_entry:        0.740 us   |          __rcu_read_unlock();
+v3 addresses the previously raised concerns. Changes include -
 
-The above is more accurate than...
+1. To resolve the race where the timer can kick in before request
+has been sent out, we now add the request to the list after sending out
+the request.
 
->       sched-pipe-6532  [001]  9407.276309: funcgraph_exit:         3.980 us   |        }
+2. To handle the race where the response can come in before we got a 
+chance to add the req to the list, sending and adding the request to
+request list is done under spinlock - request_lock.
 
-this one. Because this one has nested tracing within it.
+3. To make sure there is no blocking op/delay while holding the spinlock,
+using GFP_NOWAIT for memory allocation.
 
--- Steve
+Thanks Jason for providing your valuable feedback. 
 
+Let me know if you have any suggestions or concerns.
 
->       sched-pipe-6532  [001]  9407.276310: funcgraph_entry:        0.720 us   |        __rcu_read_lock();
->       sched-pipe-6532  [001]  9407.276312: funcgraph_entry:        0.720 us   |        __rcu_read_unlock();
->       sched-pipe-6532  [001]  9407.276313: funcgraph_exit:         9.840 us   |      }
->       sched-pipe-6532  [001]  9407.276314: funcgraph_entry:                   |      __update_load_avg_se() {
->       sched-pipe-6532  [001]  9407.276315: funcgraph_entry:        0.720 us   |        __accumulate_pelt_segments();
->       sched-pipe-6532  [001]  9407.276316: funcgraph_exit:         2.260 us   |      }
->       sched-pipe-6532  [001]  9407.276317: funcgraph_entry:                   |      __update_load_avg_cfs_rq() {
->       sched-pipe-6532  [001]  9407.276318: funcgraph_entry:        0.860 us   |        __accumulate_pelt_segments();
->       sched-pipe-6532  [001]  9407.276319: funcgraph_exit:         2.340 us   |      }
+Thanks,
+Divya
