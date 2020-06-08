@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC0F920659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8B82078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660756;
-	bh=gwHOTiEwrXbrhoFntqQY0pMO4V4hlL1dCJ8i+b9GK68=;
+	s=default; t=1591660760;
+	bh=1NwQk1K6lLsrqLB6IY13pY0x8Cx6AXaH8S5+lSyieKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBS/lWjy0DKk+S3hyVM37ZOfGDSb4hor92e+ZW5l/kKQ+VgbC4+vUWsn8K/ZCIexr
-	 ma1QY1a8ave22hQDSyAFbauW9m1Jdd8QM0rqILpcfI+SDDIN/VVVcyVlbY9pFIZu9L
-	 SpAcHzTMJ3YLsub8dazz+oIujWuXf4z6bmySMC60=
+	b=pw3QKvs7yqFTnIyWc6KtQ41ybNhIJrUQH54H/Ip6S32Sd+mj/DdQNo3owItFi9WMu
+	 I0ux4maTp5RAj+4R/AyHzd4bYo7wgNLLtT2VYkeVAjRtPwB0G5NMbYkPwTE4mNd/gQ
+	 iM4XpVgwOUh1GcidaScXrphhJG3YAHv2BLy+e8vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbgFHX7P (ORCPT
+        id S1732756AbgFHX7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:59:15 -0400
+        Mon, 8 Jun 2020 19:59:18 -0400
 Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbgFHXXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:23:00 -0400
+        id S1730142AbgFHXW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:22:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1086C20842;
-        Mon,  8 Jun 2020 23:22:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C997C2074B;
+        Mon,  8 Jun 2020 23:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658580;
-        bh=gwHOTiEwrXbrhoFntqQY0pMO4V4hlL1dCJ8i+b9GK68=;
+        s=default; t=1591658578;
+        bh=1NwQk1K6lLsrqLB6IY13pY0x8Cx6AXaH8S5+lSyieKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bayEzrATFAzGgDtKbhAOUCxfRwTm4KcOvfY+7l36f6d1QZ3c77vZ7rgc0cyd0f7Oo
-         ikwbPvnk5HKDCWLfJd4NupP7aJfcHP4HSW1zZFKDIgU4WOCkFNlTbM+B9X3fXZpaoX
-         PXLS1A1khn3y7bNQbp66ny0HTlplq2Cs3o73jdI8=
+        b=IiDePbPgtOggi5oTTaiSVQgD664YpduKcn6YQAYYS/eVtauMoU0ENTecVsubUuZHG
+         I+LNHsN+LffWGEZlWMHD4a3+LwdAkFs2+4R1yUbIhnolvy36+wD50iSvdxMHLWZDsh
+         qd2XlTOHYgdPl3Kkn84LoSA64+8RcXrwwOgkax7w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 018/106] kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb
-Date:   Mon,  8 Jun 2020 19:21:10 -0400
-Message-Id: <20200608232238.3368589-18-sashal@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 016/106] MIPS: Loongson: Build ATI Radeon GPU driver as module
+Date:   Mon,  8 Jun 2020 19:21:08 -0400
+Message-Id: <20200608232238.3368589-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
@@ -61,72 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 202164fbfa2b2ffa3e66b504e0f126ba9a745006 ]
+[ Upstream commit a44de7497f91834df0b8b6d459e259788ba66794 ]
 
-In commit 81eaadcae81b ("kgdboc: disable the console lock when in
-kgdb") we avoided the WARN_CONSOLE_UNLOCKED() yell when we were in
-kgdboc.  That still works fine, but it turns out that we get a similar
-yell when using other I/O drivers.  One example is the "I/O driver"
-for the kgdb test suite (kgdbts).  When I enabled that I again got the
-same yells.
+When ATI Radeon GPU driver has been compiled directly into the kernel
+instead of as a module, we should make sure the firmware for the model
+(check available ones in /lib/firmware/radeon) is built-in to the kernel
+as well, otherwise there exists the following fatal error during GPU init,
+change CONFIG_DRM_RADEON=y to CONFIG_DRM_RADEON=m to fix it.
 
-Even though "kgdbts" doesn't actually interact with the user over the
-console, using it still causes kgdb to print to the consoles.  That
-trips the same warning:
-  con_is_visible+0x60/0x68
-  con_scroll+0x110/0x1b8
-  lf+0x4c/0xc8
-  vt_console_print+0x1b8/0x348
-  vkdb_printf+0x320/0x89c
-  kdb_printf+0x68/0x90
-  kdb_main_loop+0x190/0x860
-  kdb_stub+0x2cc/0x3ec
-  kgdb_cpu_enter+0x268/0x744
-  kgdb_handle_exception+0x1a4/0x200
-  kgdb_compiled_brk_fn+0x34/0x44
-  brk_handler+0x7c/0xb8
-  do_debug_exception+0x1b4/0x228
+[    1.900997] [drm] Loading RS780 Microcode
+[    1.905077] radeon 0000:01:05.0: Direct firmware load for radeon/RS780_pfp.bin failed with error -2
+[    1.914140] r600_cp: Failed to load firmware "radeon/RS780_pfp.bin"
+[    1.920405] [drm:r600_init] *ERROR* Failed to load firmware!
+[    1.926069] radeon 0000:01:05.0: Fatal error during GPU init
+[    1.931729] [drm] radeon: finishing device.
 
-Let's increment/decrement the "ignore_console_lock_warning" variable
-all the time when we enter the debugger.
-
-This will allow us to later revert commit 81eaadcae81b ("kgdboc:
-disable the console lock when in kgdb").
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20200507130644.v4.1.Ied2b058357152ebcc8bf68edd6f20a11d98d7d4e@changeid
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Fixes: 024e6a8b5bb1 ("MIPS: Loongson: Add a Loongson-3 default config file")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/debug_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/mips/configs/loongson3_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 94aa9ae0007a..d2799767aab8 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -577,6 +577,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	if (kgdb_skipexception(ks->ex_vector, ks->linux_regs))
- 		goto kgdb_restore;
- 
-+	atomic_inc(&ignore_console_lock_warning);
-+
- 	/* Call the I/O driver's pre_exception routine */
- 	if (dbg_io_ops->pre_exception)
- 		dbg_io_ops->pre_exception();
-@@ -649,6 +651,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
- 	if (dbg_io_ops->post_exception)
- 		dbg_io_ops->post_exception();
- 
-+	atomic_dec(&ignore_console_lock_warning);
-+
- 	if (!kgdb_single_step) {
- 		raw_spin_unlock(&dbg_slave_lock);
- 		/* Wait till all the CPUs have quit from the debugger. */
+diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+index 324dfee23dfb..c871e40b8878 100644
+--- a/arch/mips/configs/loongson3_defconfig
++++ b/arch/mips/configs/loongson3_defconfig
+@@ -250,7 +250,7 @@ CONFIG_MEDIA_CAMERA_SUPPORT=y
+ CONFIG_MEDIA_USB_SUPPORT=y
+ CONFIG_USB_VIDEO_CLASS=m
+ CONFIG_DRM=y
+-CONFIG_DRM_RADEON=y
++CONFIG_DRM_RADEON=m
+ CONFIG_FB_RADEON=y
+ CONFIG_LCD_CLASS_DEVICE=y
+ CONFIG_LCD_PLATFORM=m
 -- 
 2.25.1
 
