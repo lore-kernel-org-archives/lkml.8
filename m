@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C48C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E90920775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2F820775
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659258;
-	bh=w96C5JcmLJzPwAqpvSgNRFgF+RlRL5FkxBIIA1WKEbA=;
+	s=default; t=1591659262;
+	bh=ePq/fBYgkru+4gDc00SaMaz/zDT+26mobWEOghmA9Bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4VszfTjpJtvU8MxIFH3emP7Y6kWoiqb7lEW1LM+LdwX6/PkFyacW0ZB9FkNrmkqv
-	 nqJTmGMzRzr5y3i2allbUcV/hM7fHyFOUShXXGujWa7ihnQVV4n1glHaPa7Fs5e/T8
-	 Nzs9H5/kCmpHLKI2wY+2chV2SgUq9TcoAZenRJB8=
+	b=0UStp+WNC6dX9AkMaDFMFgsorjWR2NX2xYsNFdAJ3ki3vMD0YS3PkheP1/jyJ0jTo
+	 1HFqsJ6eClO9uVWAQjXV6dhcjpTM1FAmm8knJY5A13I//pJAadkYnmzaLbDpFIHQyG
+	 /OSyYYUaVaSARm3WhpYneZYbscEinPLiyZENs770=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387664AbgFHXeR (ORCPT
+        id S1731199AbgFHXeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56464 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732152AbgFHX1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:27:45 -0400
+        id S1732165AbgFHX1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:27:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46FF62076C;
-        Mon,  8 Jun 2020 23:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6074620853;
+        Mon,  8 Jun 2020 23:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658865;
-        bh=w96C5JcmLJzPwAqpvSgNRFgF+RlRL5FkxBIIA1WKEbA=;
+        s=default; t=1591658868;
+        bh=ePq/fBYgkru+4gDc00SaMaz/zDT+26mobWEOghmA9Bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W1Ti9rV/3Ohrg5OcnuiwoUOlCwtAIlxV+oqXuyvtEIdYsjg1/301fzRGgaYhEiBId
-         5keuRLCN2Ad4s4kJY1t5LqCnmi3J4Vt68pxFCvLurTElz1jO+HSkADNGDDE8PtQgGI
-         mwOYOS8y6Sxf8PWqfhMnk8p+H1TdUFaoeRFSFBcc=
+        b=aB/D4mNq4pyVNJPWH5GZgceXdyXAeAEL8p2EqNUrWTLF3HjeQpGoQga+7CsDzhKPe
+         RqyzMqwk6TGFDbaURYwzGoo8fvpI9G+SL85RN+Jf9r5WjikE79Bv3JR521FRNXXpUm
+         R7jJ9XHXBsxxrLVKqVxPdb0CVcOm1H2FH+NyvmX0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haibo Chen <haibo.chen@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 47/50] mmc: sdhci-esdhc-imx: fix the mask for tuning start point
-Date:   Mon,  8 Jun 2020 19:26:37 -0400
-Message-Id: <20200608232640.3370262-47-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 49/50] cpuidle: Fix three reference count leaks
+Date:   Mon,  8 Jun 2020 19:26:39 -0400
+Message-Id: <20200608232640.3370262-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232640.3370262-1-sashal@kernel.org>
 References: <20200608232640.3370262-1-sashal@kernel.org>
@@ -60,35 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haibo Chen <haibo.chen@nxp.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 1194be8c949b8190b2882ad8335a5d98aa50c735 ]
+[ Upstream commit c343bf1ba5efcbf2266a1fe3baefec9cc82f867f ]
 
-According the RM, the bit[6~0] of register ESDHC_TUNING_CTRL is
-TUNING_START_TAP, bit[7] of this register is to disable the command
-CRC check for standard tuning. So fix it here.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-Fixes: d87fc9663688 ("mmc: sdhci-esdhc-imx: support setting tuning start point")
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-Link: https://lore.kernel.org/r/1590488522-9292-1-git-send-email-haibo.chen@nxp.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Previous commit "b8eb718348b8" fixed a similar problem.
+
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+[ rjw: Subject ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-esdhc-imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpuidle/sysfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 445fc47dc3e7..b4336534f628 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -79,7 +79,7 @@
- #define ESDHC_STD_TUNING_EN		(1 << 24)
- /* NOTE: the minimum valid tuning start tap for mx6sl is 1 */
- #define ESDHC_TUNING_START_TAP_DEFAULT	0x1
--#define ESDHC_TUNING_START_TAP_MASK	0xff
-+#define ESDHC_TUNING_START_TAP_MASK	0x7f
- #define ESDHC_TUNING_STEP_MASK		0x00070000
- #define ESDHC_TUNING_STEP_SHIFT		16
+diff --git a/drivers/cpuidle/sysfs.c b/drivers/cpuidle/sysfs.c
+index 9e98a5fbbc1d..e7e92ed34f0c 100644
+--- a/drivers/cpuidle/sysfs.c
++++ b/drivers/cpuidle/sysfs.c
+@@ -412,7 +412,7 @@ static int cpuidle_add_state_sysfs(struct cpuidle_device *device)
+ 		ret = kobject_init_and_add(&kobj->kobj, &ktype_state_cpuidle,
+ 					   &kdev->kobj, "state%d", i);
+ 		if (ret) {
+-			kfree(kobj);
++			kobject_put(&kobj->kobj);
+ 			goto error_state;
+ 		}
+ 		kobject_uevent(&kobj->kobj, KOBJ_ADD);
+@@ -542,7 +542,7 @@ static int cpuidle_add_driver_sysfs(struct cpuidle_device *dev)
+ 	ret = kobject_init_and_add(&kdrv->kobj, &ktype_driver_cpuidle,
+ 				   &kdev->kobj, "driver");
+ 	if (ret) {
+-		kfree(kdrv);
++		kobject_put(&kdrv->kobj);
+ 		return ret;
+ 	}
+ 
+@@ -636,7 +636,7 @@ int cpuidle_add_sysfs(struct cpuidle_device *dev)
+ 	error = kobject_init_and_add(&kdev->kobj, &ktype_cpuidle, &cpu_dev->kobj,
+ 				   "cpuidle");
+ 	if (error) {
+-		kfree(kdev);
++		kobject_put(&kdev->kobj);
+ 		return error;
+ 	}
  
 -- 
 2.25.1
