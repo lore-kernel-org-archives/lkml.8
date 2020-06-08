@@ -2,146 +2,107 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A153BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F10C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA0220774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:13:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WWZRVtYp"
+	by mail.kernel.org (Postfix) with ESMTP id 35BC52076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 13:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgFHNNZ (ORCPT
+        id S1729169AbgFHNQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 09:13:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44557 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729130AbgFHNNV (ORCPT
+        Mon, 8 Jun 2020 09:16:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60246 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728955AbgFHNQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:13:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591621999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aE4uxEFzisXgU373/MFQA+2UMs2/qJwN6z64o4N5Dt4=;
-        b=WWZRVtYpu9ySuOKBqXCV/LROPoHRC8m6l4DyYCK2fmx+5w0HeE0J4CjbdJz/ZDPT+V6GLW
-        fQ0hmdp9BLq9NbOF1zxRm8ilw/jbxMcuHAXu/8VKT9SwggcX0LlsHpl5JbMAQieXnciRyO
-        A9qJO3iw39Q/R4UZi440JNXfZfd72bI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-4bvbmqNUMOGyBy3NnguoGQ-1; Mon, 08 Jun 2020 09:13:13 -0400
-X-MC-Unique: 4bvbmqNUMOGyBy3NnguoGQ-1
-Received: by mail-wr1-f71.google.com with SMTP id j16so7087294wre.22
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 06:13:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aE4uxEFzisXgU373/MFQA+2UMs2/qJwN6z64o4N5Dt4=;
-        b=Kqf94LswCZSyVN2hpf0ZuTzuVqTov2TlA9jccL/KgbRNVbxr6NiW2Z+b0brhy/BOXk
-         pL2+zqZ6yLogMihD7hYwFur7YF9dAoVpk26YIhcv0su5YrDmTA8pGsy5b09j9MRSrZa3
-         kWyNQP/+Q8LhqMP62+m3ZmI3uuGYtGz04/iRPsuBynFiAms0l+f9rdoanBQixJjcSU1g
-         7zGHD6kT6i3V0dIBS2fvJpP60c0ZSj0qu+6U7uxnbMbjk5/nOr14YHFB/mIMOZZcZJ0z
-         pHKatTr5bn6ZpHjLTQZCJhntc4jhryNYllq3XybxdUG/CyW8YCBHnsZghZW7xYvdNnH7
-         0AAQ==
-X-Gm-Message-State: AOAM532ygyenaNdb6Ud0y9w46NXcq9ectD5YtBPvXwXuvY/e7hvuERzO
-        f8WS4qJFKRHYOzkJAZahnCY/Euz0Sq7c+4Oi9Y0k8daxoWA+km76gCI6R6NNq03leiSmMUzDDWW
-        nJH0boz4ZlwCVPmfCg+ZTKB+l
-X-Received: by 2002:adf:9163:: with SMTP id j90mr23117170wrj.65.1591621992172;
-        Mon, 08 Jun 2020 06:13:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyFKKUfkK+tx2dyjLJychJAOnf6ou8lGUS/UM9N0R8J5nM/pSwyG9zl28UmZ6GGRGsYFCgLVg==
-X-Received: by 2002:adf:9163:: with SMTP id j90mr23117143wrj.65.1591621991883;
-        Mon, 08 Jun 2020 06:13:11 -0700 (PDT)
-Received: from [192.168.178.58] ([151.30.87.23])
-        by smtp.gmail.com with ESMTPSA id u4sm23511562wmb.48.2020.06.08.06.13.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 06:13:11 -0700 (PDT)
-Subject: Re: [RFC PATCH] KVM: x86: Fix APIC page invalidation race
-To:     Eiichi Tsukata <eiichi.tsukata@nutanix.com>,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     felipe.franciosi@nutanix.com, rkrcmar@redhat.com,
-        Andrea Arcangeli <aarcange@redhat.com>
-References: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0d9b3313-5d4c-9ef3-63e4-ba08ddbbe7a1@redhat.com>
-Date:   Mon, 8 Jun 2020 15:13:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200606042627.61070-1-eiichi.tsukata@nutanix.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 8 Jun 2020 09:16:22 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058D31Mh024598;
+        Mon, 8 Jun 2020 09:15:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g77q4s53-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 09:15:04 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058D3hrN029505;
+        Mon, 8 Jun 2020 09:15:04 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g77q4s3g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 09:15:04 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058DAG8R011919;
+        Mon, 8 Jun 2020 13:15:02 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03fra.de.ibm.com with ESMTP id 31g2s81mc7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 13:15:01 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058DExbF59834450
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 13:14:59 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B033B11C04C;
+        Mon,  8 Jun 2020 13:14:59 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1D6511C04A;
+        Mon,  8 Jun 2020 13:14:58 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.178.150])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jun 2020 13:14:58 +0000 (GMT)
+Message-ID: <1591622098.4638.67.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: Remove __init annotation from ima_pcrread()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        torvalds@linux-foundation.org
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        silviu.vlasceanu@huawei.com, stable@vger.kernel.org,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        "Bruno E. O. Meneguele" <bmeneg@redhat.com>
+Date:   Mon, 08 Jun 2020 09:14:58 -0400
+In-Reply-To: <20200607210029.30601-1-roberto.sassu@huawei.com>
+References: <20200607210029.30601-1-roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_12:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 impostorscore=0 mlxscore=0 adultscore=0 clxscore=1015
+ cotscore=-2147483648 malwarescore=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxlogscore=984 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/06/20 06:26, Eiichi Tsukata wrote:
-> Commit b1394e745b94 ("KVM: x86: fix APIC page invalidation") tried to
-> fix inappropriate APIC page invalidation by re-introducing arch specific
-> kvm_arch_mmu_notifier_invalidate_range() and calling it from
-> kvm_mmu_notifier_invalidate_range_start. But threre could be the
-> following race because VMCS APIC address cache can be updated
-> *before* it is unmapped.
+Hi Roberto,
+
+On Sun, 2020-06-07 at 23:00 +0200, Roberto Sassu wrote:
+> Commit 6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in
+> ima_eventdigest_init()") added a call to ima_calc_boot_aggregate() so that
+> the digest can be recalculated for the boot_aggregate measurement entry if
+> the 'd' template field has been requested. For the 'd' field, only SHA1 and
+> MD5 digests are accepted.
 > 
-> Race:
->   (Invalidator) kvm_mmu_notifier_invalidate_range_start()
->   (Invalidator) kvm_make_all_cpus_request(kvm, KVM_REQ_APIC_PAGE_RELOAD)
->   (KVM VCPU) vcpu_enter_guest()
->   (KVM VCPU) kvm_vcpu_reload_apic_access_page()
->   (Invalidator) actually unmap page
+> Given that ima_eventdigest_init() does not have the __init annotation, all
+> functions called should not have it. This patch removes __init from
+> ima_pcrread().
 > 
-> Symptom:
->   The above race can make Guest OS see already freed page and Guest OS
-> will see broken APIC register values.
+> Cc: stable@vger.kernel.org
+> Fixes:  6cc7c266e5b4 ("ima: Call ima_calc_boot_aggregate() in ima_eventdigest_init()")
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-This is not exactly the issue.  The values in the APIC-access page do
-not really matter, the problem is that the host physical address values
-won't match between the page tables and the APIC-access page address.
-Then the processor will not trap APIC accesses, and will instead show
-the raw contents of the APIC-access page (zeroes), and cause the crash
-as you mention below.
+Thank you for fixing this so quickly!  Jerry, Bruno, thank you for the
+Reviews.  This patch is in Linus' tree as: 8b8c704d913b ("ima: Remove
+__init annotation from ima_pcrread()".
 
-Still, the race explains the symptoms and the patch matches this text in
-include/linux/mmu_notifier.h:
-
-	 * If the subsystem
-         * can't guarantee that no additional references are taken to
-         * the pages in the range, it has to implement the
-         * invalidate_range() notifier to remove any references taken
-         * after invalidate_range_start().
-
-where the "additional reference" is in the VMCS: because we have to
-account for kvm_vcpu_reload_apic_access_page running between
-invalidate_range_start() and invalidate_range_end(), we need to
-implement invalidate_range().
-
-The patch seems good, but I'd like Andrea Arcangeli to take a look as
-well so I've CCed him.
-
-Thank you very much!
-
-Paolo
-
-> Especially, Windows OS checks
-> LAPIC modification so it can cause BSOD crash with BugCheck
-> CRITICAL_STRUCTURE_CORRUPTION (109). These symptoms are the same as we
-> previously saw in https://bugzilla.kernel.org/show_bug.cgi?id=197951 and
-> we are currently seeing in
-> https://bugzilla.redhat.com/show_bug.cgi?id=1751017.
-> 
-> To prevent Guest OS from accessing already freed page, this patch calls
-> kvm_arch_mmu_notifier_invalidate_range() from
-> kvm_mmu_notifier_invalidate_range() instead of ..._range_start().
-
+Mimi
