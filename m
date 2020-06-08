@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FEAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B22D32074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D15920801
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660881;
-	bh=wJyh5j0fx3dTdY/TvsFuOEKeXxSb+H8xonC0coZh0V0=;
+	s=default; t=1591660885;
+	bh=fkfXndqxh4AQ+gd8Jrw7nvbRge50YW+KBgsDLiMt3sE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCa+zLq2QS4REZR3Kn9MPvwjBQ2aStPXnbaDSeNnUJI5NV333CwsQT4M+xSNv+iTF
-	 aIkASHj+zFAy3qtnlGWQgmQNUIGAxPlrCPTCPTDOxzbMLvhCTmHOJZFY/Ky38vQLjg
-	 pqulojw6GLcl2Pv7ZNDVXNYInMry889FaQtxYLbA=
+	b=gtZl033wRro6mipNNKyG3ROnV1I/oRjdGlKf7tEQukBZJcOxluFpUpAZEa2SJYlNf
+	 9Nzj8sBc4b3lkA273weh+tN9uAOx4yv7mpPhfeLcD0HsUZz82kJ5AboiCJnNF3TtL1
+	 KDsA4Hpa7O5QuY4wqs4JuxdJkh0i0ymw8hO8I+Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387491AbgFIABT (ORCPT
+        id S1732219AbgFIABY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47082 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:01:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730946AbgFHXW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:22:28 -0400
+        id S1731316AbgFHXW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:22:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9F1E208B8;
-        Mon,  8 Jun 2020 23:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 596B920814;
+        Mon,  8 Jun 2020 23:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658548;
-        bh=wJyh5j0fx3dTdY/TvsFuOEKeXxSb+H8xonC0coZh0V0=;
+        s=default; t=1591658547;
+        bh=fkfXndqxh4AQ+gd8Jrw7nvbRge50YW+KBgsDLiMt3sE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywm0/pZwDZcF+0gSsWQd2lp21yqA9KL/sqOgacny5NDQYwTZdtndliWpLCB1iqptj
-         OuzHMDtTeGa7zJr/UlApwL2mhEj3UNIpArL+rbUMrsyXs5FaL736ZO6lfaJHnmA5NJ
-         MbbNPFlNFpI7xe5iJguvW+jRBkVTb596sso5kPw8=
+        b=gVFE+KqDnx6Y3GdO2prr0DnT49WQDMW+xPPxoRK8AJLi5hgt9bUjI7IsIPFg5YMfS
+         yUy2auXeN8Jc84me6YdiGAPLZXwbAt+0L3gbEmOo3cuAv9duGTf3xINqkaJL68k5T8
+         Wi6Q89meJ9oLtq8MXEFnlvKn/Kri/QsEBYSI+QFA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anton Protopopov <a.s.protopopov@gmail.com>,
+Cc:     Eelco Chaudron <echaudro@redhat.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 169/175] bpf: Fix map permissions check
-Date:   Mon,  8 Jun 2020 19:18:42 -0400
-Message-Id: <20200608231848.3366970-169-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 168/175] libbpf: Fix perf_buffer__free() API for sparse allocs
+Date:   Mon,  8 Jun 2020 19:18:41 -0400
+Message-Id: <20200608231848.3366970-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
 References: <20200608231848.3366970-1-sashal@kernel.org>
@@ -61,37 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Protopopov <a.s.protopopov@gmail.com>
+From: Eelco Chaudron <echaudro@redhat.com>
 
-[ Upstream commit 1ea0f9120c8ce105ca181b070561df5cbd6bc049 ]
+[ Upstream commit 601b05ca6edb0422bf6ce313fbfd55ec7bbbc0fd ]
 
-The map_lookup_and_delete_elem() function should check for both FMODE_CAN_WRITE
-and FMODE_CAN_READ permissions because it returns a map element to user space.
+In case the cpu_bufs are sparsely allocated they are not all
+free'ed. These changes will fix this.
 
-Fixes: bd513cd08f10 ("bpf: add MAP_LOOKUP_AND_DELETE_ELEM syscall")
-Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+Fixes: fb84b8224655 ("libbpf: add perf buffer API")
+Signed-off-by: Eelco Chaudron <echaudro@redhat.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200527185700.14658-5-a.s.protopopov@gmail.com
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/159056888305.330763.9684536967379110349.stgit@ebuild
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/lib/bpf/libbpf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 946cfdd3b2cc..e7af1ac69d75 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1118,7 +1118,8 @@ static int map_lookup_and_delete_elem(union bpf_attr *attr)
- 	map = __bpf_map_get(f);
- 	if (IS_ERR(map))
- 		return PTR_ERR(map);
--	if (!(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
-+	if (!(map_get_sys_perms(map, f) & FMODE_CAN_READ) ||
-+	    !(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
- 		err = -EPERM;
- 		goto err_put;
- 	}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 281cc65276e0..2a1dbf52fc9a 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -5358,9 +5358,12 @@ void perf_buffer__free(struct perf_buffer *pb)
+ 	if (!pb)
+ 		return;
+ 	if (pb->cpu_bufs) {
+-		for (i = 0; i < pb->cpu_cnt && pb->cpu_bufs[i]; i++) {
++		for (i = 0; i < pb->cpu_cnt; i++) {
+ 			struct perf_cpu_buf *cpu_buf = pb->cpu_bufs[i];
+ 
++			if (!cpu_buf)
++				continue;
++
+ 			bpf_map_delete_elem(pb->map_fd, &cpu_buf->map_key);
+ 			perf_buffer__free_cpu_buf(pb, cpu_buf);
+ 		}
 -- 
 2.25.1
 
