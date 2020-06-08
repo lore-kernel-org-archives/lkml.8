@@ -2,91 +2,112 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B30C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13073C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F522076A
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591600182;
-	bh=rjBLjDjW1O9fGRBJf6kjv/K3zXOgcWg6SA2GxlenQUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bxWUtlAgl63BEpNxkVgjcR7mdnAT1IlP51yGdURpfYLHguwp3RYERJceqaQ4lZjqb
-	 RqmP9Uy2iy7Q8HuWDtVmY9ykFsz8cSVxHiAiobMNCtVaAeChq75WG1D/1ylDD18vov
-	 4GPkOe0QAF/hPMZsmOzkwlFChoXi+VfUqirGMHfg=
+	by mail.kernel.org (Postfix) with ESMTP id DCE472076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 07:09:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VS2lrjRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgFHHJl (ORCPT
+        id S1729030AbgFHHJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 03:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgFHHJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 03:09:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92FE204EF;
-        Mon,  8 Jun 2020 07:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591600177;
-        bh=rjBLjDjW1O9fGRBJf6kjv/K3zXOgcWg6SA2GxlenQUo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pV7zn0HjBkPTH1rFr/cRU+ZpTXJyYcNmWp+gw0iMmCCAAh/ir+o04fbw3JuqBDR81
-         Kxp8krRzNTiB2yteIVm77VaSqGr7xthU4h/vQ+OR2nvGkId4m/0itdRo1Obwd69XIi
-         nEbWRIadXESsfCcJN0lTqzbyBCZrbiTu+TysZzRQ=
-Date:   Mon, 8 Jun 2020 08:09:30 +0100
-From:   Will Deacon <will@kernel.org>
-To:     syzbot <syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com>
-Cc:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, dsahern@gmail.com,
-        ebiederm@xmission.com, edumazet@google.com, eric.dumazet@gmail.com,
-        hawk@kernel.org, jiri@mellanox.com, johannes.berg@intel.com,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        kuba@kernel.org, leon@kernel.org, linux-kernel@vger.kernel.org,
-        mkubecek@suse.cz, netdev@vger.kernel.org,
-        saiprakash.ranjan@codeaurora.org, songliubraving@fb.com,
-        suzuki.poulose@arm.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: WARNING in dev_change_net_namespace
-Message-ID: <20200608070930.GA555@willie-the-truck>
-References: <000000000000c54420059e4f08ff@google.com>
- <00000000000011eb1705a76ad69d@google.com>
+        Mon, 8 Jun 2020 03:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727966AbgFHHJx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 03:09:53 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6AD3C08C5C3;
+        Mon,  8 Jun 2020 00:09:52 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id a13so15740078ilh.3;
+        Mon, 08 Jun 2020 00:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=nf9dHqg6+XQwKpI8ou9xSgbseHLRO6vjwPKJ056sGMw=;
+        b=VS2lrjRYg1vBSVU3Lym8CjazMJrZEuwL3D8SPYJNftC0tECW7uS4NmwyHmJjskGcme
+         W2iSbSaI5Icy9RRBVFAbtvAguBG3LSJTWQsMZw9DSilcCgjumwYXEtMi3rfm4GvfAJ7l
+         Lg9kfOqGlbDMqBJHUxWLiKIerNSfmHjQe5NQ9EJkXLHHGSuTE0h0CC77RNEjHhJO3qgM
+         fDVv6mEYZfvlV13g0f/c+sBMPAjdJ5Jo7z8LMo1OxFNzabbd4Zr0geiR9y40ryRQ+cw5
+         Ks+tsPaRQopanhM5Zkg0dRy19oR+fuM4WyFlniLnQ39Dh0nbDZjfvnTxXSLbqGOh9QfB
+         JUrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=nf9dHqg6+XQwKpI8ou9xSgbseHLRO6vjwPKJ056sGMw=;
+        b=Dn4dfcgRap3NqOrRVvBZb9SNWhSGckFy+KyaUR96VIJS5b6eTgDuMKmFlNyMZZQJlz
+         Xk1MhAKMuCoM9nvgukhGtvLAco4XDvETNd8gBabP+6NDZl6MriRUAGbeVu4xCDcnV3Hn
+         r5i5avVijhwBkCHwDWeQ+2E+EB8BUWVqGpN78bULXS0bugEtPg/QCk0vtxjzBzsFsZVN
+         GnnOju32StYFdrwjhL5cSMdVgmZ2WoHWXC2hR8SLfK9HQin3M89wravZZo7ZZVyYi1S2
+         sqYv9jd0nHy3ZYhX4FR0RsWjvU/14OW/GUtEs0cpkhag6WcLn1ltGz0NxKr9oWXg5qbV
+         R4ZA==
+X-Gm-Message-State: AOAM532MTow0BVXE86PrsMmIeWEqHdoyd14QQUM6ztsbZMh34iNhp4wu
+        18nQLOKgHVu7iEuVHBGNbvbK1gGT5n6uPSIk4lg=
+X-Google-Smtp-Source: ABdhPJwi5Bw+CdttQXg1msL1Y4l1HLgGn2IsguTqKPOLJfTGo37VbE9laPCTQYH5xzzCfqY1Cfwy242nwDJ549M6nDU=
+X-Received: by 2002:a92:7311:: with SMTP id o17mr21691800ilc.176.1591600192183;
+ Mon, 08 Jun 2020 00:09:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000011eb1705a76ad69d@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200608020557.31668-1-yanaijie@huawei.com> <20200608061502.GB17366@lst.de>
+ <CA+icZUUks4oJGJLhiRLTJTzyNxfsT_TZQ12MMvBVLXSaR8t0zA@mail.gmail.com> <CA+icZUXg2H7a4BVLpPXiw2D5Xzpy=Nxj8OJyw96giDvjNuBt+w@mail.gmail.com>
+In-Reply-To: <CA+icZUXg2H7a4BVLpPXiw2D5Xzpy=Nxj8OJyw96giDvjNuBt+w@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 8 Jun 2020 09:09:40 +0200
+Message-ID: <CA+icZUWYJ70W9E=Y-Cx92Ywd=pVgj9RAf2KsdapiVsXQwLDAnw@mail.gmail.com>
+Subject: Re: [PATCH v4] block: Fix use-after-free in blkdev_get()
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Yan <yanaijie@huawei.com>, viro@zeniv.linux.org.uk,
+        axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>, Jan Kara <jack@suse.cz>,
+        Hulk Robot <hulkci@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 07:03:03AM -0700, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 13dc4d836179444f0ca90188cfccd23f9cd9ff05
-> Author: Will Deacon <will@kernel.org>
-> Date:   Tue Apr 21 14:29:18 2020 +0000
-> 
->     arm64: cpufeature: Remove redundant call to id_aa64pfr0_32bit_el0()
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=109aa3b1100000
-> start commit:   7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=129aa3b1100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=149aa3b1100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=be4578b3f1083656
-> dashboard link: https://syzkaller.appspot.com/bug?extid=830c6dbfc71edc4f0b8f
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12032832100000
-> 
-> Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
-> Fixes: 13dc4d836179 ("arm64: cpufeature: Remove redundant call to id_aa64pfr0_32bit_el0()")
+On Mon, Jun 8, 2020 at 8:52 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Mon, Jun 8, 2020 at 8:47 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Mon, Jun 8, 2020 at 8:18 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > Looks good,
+> > >
+> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > >
+> > > Can you dig into the history for a proper fixes tag?
+> >
+> > [ CC Dan ]
+> >
+> > Dan gave the hint for the Fixes: tag in reply to the first patch:
+> >
+> > > The Fixes tag is a good idea though:
+> > >
+> > > Fixes: 89e524c04fa9 ("loop: Fix mount(2) failure due to race with LOOP_SET_FD")
+> >
+> > > It broke last July.  Before that, we used to check if __blkdev_get()
+> > > failed before dereferencing "bdev".
+> >
+>
+> Here is the Link.
+>
+> https://www.spinics.net/lists/linux-block/msg54825.html
+>
 
+Really CC Dan in 3rd attempt.
 
-Yeah... I doubt that very much.
+OMG, I need a coffee - urgently.
 
-Will
+- Sedat -
