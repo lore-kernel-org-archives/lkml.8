@@ -2,53 +2,53 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C512C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621AD207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5E1207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591659166;
-	bh=nvgbRfzR8VCuy4iYcmNPWSPTPLMDk7u16hUJ9OkYZOs=;
+	s=default; t=1591659168;
+	bh=b+1XwEzr+DhqZxYeCU1uBZSVUHjkJ8suceoDvYlayho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1DqWXIkyaV6dFmllDcrjRXX3Gw2SYR6O4IMEF/A+NNMGUzcPG5xZZCSf3HVyTrLT
-	 8OvPEf+aiItVqyEf1YADUijZN0iwpS5Y8NQu09FWQE4TZjwolzPBM7is7Ta+QJsO+P
-	 +5TooHS1sIXYq3kq4uZEigsphWJAhEoYjWnjs5dM=
+	b=PQ9KRF7nKBj6T8KVJtfg73wXhXX0wyrdsn5gmuVEgxknytcJgdgmqjxGQua0Co668
+	 CrJxhRWhcImgollBMNMjPMYqYtGkB5uc1Quwyu3PkWHo+6TJ0Bd91CfeOac0FUgVXn
+	 sao2+1YZZlJ2F1Cy8twFHsLNQolzwdzreNeAD61w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732492AbgFHXcp (ORCPT
+        id S1732499AbgFHXcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53604 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387565AbgFHX0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:26:18 -0400
+        id S1731976AbgFHX0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:26:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 166FC20814;
-        Mon,  8 Jun 2020 23:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DA32068D;
+        Mon,  8 Jun 2020 23:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658777;
-        bh=nvgbRfzR8VCuy4iYcmNPWSPTPLMDk7u16hUJ9OkYZOs=;
+        s=default; t=1591658791;
+        bh=b+1XwEzr+DhqZxYeCU1uBZSVUHjkJ8suceoDvYlayho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uE/yosWelANK++BcvSld5QhWzsr+/6CwRim7vWC4cwXY7gfSO3Z/p9t+wz14Ap+1j
-         iz06xWdQEBNUlvJ/HSYTzK0oKxTMzs7BTvZwoXrqLULCcfJgQzNTnT3rJ3JN2EtzvS
-         tdcR3LETg5hdVcFHJkGPtjuXdAiogIoAakGmK5zo=
+        b=KsbycBKbM1HBeGxRNrEYWW+kWtmBiFIuD5N6bi9Q6Wol04XPTmXgi/0AxCdfXl1M7
+         xj3shZazXRxCTQbmT/pDhtGGo//4R8OscL8ddyxgEwlL+bh6Gpot9kWUKQZjYxR71c
+         fUd3xhGpJA8gGeZlhy9LZpeuvZlIoO8qDptfPfdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 57/72] x86/mm: Stop printing BRK addresses
-Date:   Mon,  8 Jun 2020 19:24:45 -0400
-Message-Id: <20200608232500.3369581-57-sashal@kernel.org>
+Cc:     Xie XiuQi <xiexiuqi@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 66/72] ixgbe: fix signed-integer-overflow warning
+Date:   Mon,  8 Jun 2020 19:24:54 -0400
+Message-Id: <20200608232500.3369581-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
 References: <20200608232500.3369581-1-sashal@kernel.org>
@@ -61,35 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <nivedita@alum.mit.edu>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-[ Upstream commit 67d631b7c05eff955ccff4139327f0f92a5117e5 ]
+[ Upstream commit 3b70683fc4d68f5d915d9dc7e5ba72c732c7315c ]
 
-This currently leaks kernel physical addresses into userspace.
+ubsan report this warning, fix it by adding a unsigned suffix.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Link: https://lkml.kernel.org/r/20200229231120.1147527-1-nivedita@alum.mit.edu
+UBSAN: signed-integer-overflow in
+drivers/net/ethernet/intel/ixgbe/ixgbe_common.c:2246:26
+65535 * 65537 cannot be represented in type 'int'
+CPU: 21 PID: 7 Comm: kworker/u256:0 Not tainted 5.7.0-rc3-debug+ #39
+Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 03/27/2020
+Workqueue: ixgbe ixgbe_service_task [ixgbe]
+Call trace:
+ dump_backtrace+0x0/0x3f0
+ show_stack+0x28/0x38
+ dump_stack+0x154/0x1e4
+ ubsan_epilogue+0x18/0x60
+ handle_overflow+0xf8/0x148
+ __ubsan_handle_mul_overflow+0x34/0x48
+ ixgbe_fc_enable_generic+0x4d0/0x590 [ixgbe]
+ ixgbe_service_task+0xc20/0x1f78 [ixgbe]
+ process_one_work+0x8f0/0xf18
+ worker_thread+0x430/0x6d0
+ kthread+0x218/0x238
+ ret_from_fork+0x10/0x18
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/init.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 32bb38f6fc18..8039a951db8f 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -112,8 +112,6 @@ __ref void *alloc_low_pages(unsigned int num)
- 	} else {
- 		pfn = pgt_buf_end;
- 		pgt_buf_end += num;
--		printk(KERN_DEBUG "BRK [%#010lx, %#010lx] PGTABLE\n",
--			pfn << PAGE_SHIFT, (pgt_buf_end << PAGE_SHIFT) - 1);
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+index 815284fe9324..6b5662674c75 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_common.c
+@@ -2267,7 +2267,7 @@ s32 ixgbe_fc_enable_generic(struct ixgbe_hw *hw)
  	}
  
- 	for (i = 0; i < num; i++) {
+ 	/* Configure pause time (2 TCs per register) */
+-	reg = hw->fc.pause_time * 0x00010001;
++	reg = hw->fc.pause_time * 0x00010001U;
+ 	for (i = 0; i < (MAX_TRAFFIC_CLASS / 2); i++)
+ 		IXGBE_WRITE_REG(hw, IXGBE_FCTTV(i), reg);
+ 
 -- 
 2.25.1
 
