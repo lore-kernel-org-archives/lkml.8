@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E116EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB3F420812
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6BD2089D
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591661962;
-	bh=AWFsAvNlKIn/ZedZ0Pog+zp8GiCTc+cGaZND5IMT7g0=;
+	s=default; t=1591661966;
+	bh=2ZPjej86uWTbLn4JuUOXaDIYjHQwrcYDh8zvLp7nqxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJRCZt3SLM36w0gAxwWny9kjMKA1wThaU7akKFuJM10YCrhIhvRa2uXe/z/b4P0Fr
-	 SMd72PC06LudYG9tGX6ORM43VByXSseYplQ2DqvLCTCm8zv+k2BjUbq2ViRRAF95CG
-	 mewJRaaAI5TwcBZyB5GmQ/nqSmYzqBVmdkb0ewNs=
+	b=xJI653sbFw01ez6aQ8pIGr/LLgIYumwG21OX6TQkqD++fa2WAmjcfx8YLVxfEAZst
+	 s0MHoA0tpYozT0OK+97zccXH5++PRvh7XblpmUXB7EJNPAUuTIhbrL4N4e4Ugrh25m
+	 +Oem4BqLKs9iTFQWXjx0GEnIX1wUx32hl5o9yDqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732620AbgFIATU (ORCPT
+        id S1731200AbgFIATY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40484 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:19:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730601AbgFHXST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:19 -0400
+        id S1728044AbgFHXSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8520720814;
-        Mon,  8 Jun 2020 23:18:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64B6E20872;
+        Mon,  8 Jun 2020 23:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658299;
-        bh=AWFsAvNlKIn/ZedZ0Pog+zp8GiCTc+cGaZND5IMT7g0=;
+        s=default; t=1591658297;
+        bh=2ZPjej86uWTbLn4JuUOXaDIYjHQwrcYDh8zvLp7nqxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zqMtlIqFiFQMSNJ/LtnH5OYt0Yl0NYmsppZA2GTlwGX7/DRyGXQhnJw3Fq3686xUH
-         GC8Kz2sHWgNn3VbVWZU/j8PTuohi4SquY5cB2KvWIMdAsPsOiJnHlPFWusHeLM/G+3
-         O6/deCf2762OxMB+FtONveW82DHt0lGL7heuqeh0=
+        b=r5pLLdMr5V1BY6o4CYK/Lm869JZMWnufo46j9/GM41sLyjGRegaNDyw8XCaWotltq
+         nlKEWEzEnEhHiCclqt3AnztWEQQ2Tuip5BYCA+9Pz1VJah3XtDysGJsti58gdtLzme
+         t7oaPYIrTd9sB+5NZvoTMPyufTdZjqgl8f+5Sq/M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 302/606] arm64: dts: mt8173: fix vcodec-enc clock
-Date:   Mon,  8 Jun 2020 19:07:07 -0400
-Message-Id: <20200608231211.3363633-302-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Tomas Paukrt <tomas.paukrt@advantech.cz>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 300/606] ARM: uaccess: fix DACR mismatch with nested exceptions
+Date:   Mon,  8 Jun 2020 19:07:05 -0400
+Message-Id: <20200608231211.3363633-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -61,52 +60,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 3b1f6c5e4dfaf767f6f2f120cd93b347b5a9f1aa ]
+[ Upstream commit 71f8af1110101facfad68989ff91f88f8e2c3e22 ]
 
-Fix the assigned-clock-parents to higher frequency clock to avoid h264
-encode timeout:
+Tomas Paukrt reports that his SAM9X60 based system (ARM926, ARMv5TJ)
+fails to fix up alignment faults, eventually resulting in a kernel
+oops.
 
-[  134.763465] mtk_vpu 10020000.vpu: vpu ipi 4 ack time out !
-[  134.769008] [MTK_VCODEC][ERROR][18]: vpu_enc_send_msg() vpu_ipi_send msg_id c002 len 32 fail -5
-[  134.777707] [MTK_VCODEC][ERROR][18]: vpu_enc_encode() AP_IPIMSG_ENC_ENCODE 0 fail
+The problem occurs when using CONFIG_CPU_USE_DOMAINS with commit
+e6978e4bf181 ("ARM: save and reset the address limit when entering an
+exception").  This is because the address limit is set back to
+TASK_SIZE on exception entry, and, although it is restored on exception
+exit, the domain register is not.
 
-venc_sel is the clock used by h264 encoder, and venclt_sel is the clock
-used by vp8 encoder. Assign venc_sel to vcodecpll_ck and venclt_sel to
-vcodecpll_370p5.
+Hence, this sequence can occur:
 
-    vcodecpll                         1482000000
-       vcodecpll_ck                    494000000
-          venc_sel                     494000000
-...
-       vcodecpll_370p5                 370500000
-          venclt_sel                   370500000
+  interrupt
+    pt_regs->addr_limit = addr_limit		// USER_DS
+    addr_limit = USER_DS
+    alignment exception
+    __probe_kernel_read()
+      old_fs = get_fs()				// USER_DS
+      set_fs(KERNEL_DS)
+        addr_limit = KERNEL_DS
+        dacr.kernel = DOMAIN_MANAGER
+        interrupt
+          pt_regs->addr_limit = addr_limit	// KERNEL_DS
+          addr_limit = USER_DS
+          alignment exception
+          __probe_kernel_read()
+            old_fs = get_fs()			// USER_DS
+            set_fs(KERNEL_DS)
+              addr_limit = KERNEL_DS
+              dacr.kernel = DOMAIN_MANAGER
+            ...
+            set_fs(old_fs)
+              addr_limit = USER_DS
+              dacr.kernel = DOMAIN_CLIENT
+          ...
+          addr_limit = pt_regs->addr_limit	// KERNEL_DS
+        interrupt returns
 
-Fixes: fbbad0287cec ("arm64: dts: Using standard CCF interface to set vcodec clk")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Link: https://lore.kernel.org/r/20200504124442.208004-1-hsinyi@chromium.org
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+At this point, addr_limit is correctly restored to KERNEL_DS for
+__probe_kernel_read() to continue execution, but dacr.kernel is not,
+it has been reset by the set_fs(old_fs) to DOMAIN_CLIENT.
+
+This would not have happened prior to the mentioned commit, because
+addr_limit would remain KERNEL_DS, so get_fs() would have returned
+KERNEL_DS, and so would correctly nest.
+
+This commit fixes the problem by also saving the DACR on exception
+entry if either CONFIG_CPU_SW_DOMAIN_PAN or CONFIG_CPU_USE_DOMAINS are
+enabled, and resetting the DACR appropriately on exception entry to
+match addr_limit and PAN settings.
+
+Fixes: e6978e4bf181 ("ARM: save and reset the address limit when entering an exception")
+Reported-by: Tomas Paukrt <tomas.paukrt@advantech.cz>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/include/asm/uaccess-asm.h | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 8b4e806d5119..125c78321ab4 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -1401,8 +1401,8 @@ vcodec_enc: vcodec@18002000 {
- 				      "venc_lt_sel";
- 			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
- 					  <&topckgen CLK_TOP_VENC_LT_SEL>;
--			assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
--						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL>,
-+						 <&topckgen CLK_TOP_VCODECPLL_370P5>;
- 		};
+diff --git a/arch/arm/include/asm/uaccess-asm.h b/arch/arm/include/asm/uaccess-asm.h
+index e46468b91eaa..907571fd05c6 100644
+--- a/arch/arm/include/asm/uaccess-asm.h
++++ b/arch/arm/include/asm/uaccess-asm.h
+@@ -67,15 +67,21 @@
+ #endif
+ 	.endm
  
- 		jpegdec: jpegdec@18004000 {
+-#ifdef CONFIG_CPU_SW_DOMAIN_PAN
++#if defined(CONFIG_CPU_SW_DOMAIN_PAN) || defined(CONFIG_CPU_USE_DOMAINS)
+ #define DACR(x...)	x
+ #else
+ #define DACR(x...)
+ #endif
+ 
+ 	/*
+-	 * Save the address limit on entry to a privileged exception and
+-	 * if using PAN, save and disable usermode access.
++	 * Save the address limit on entry to a privileged exception.
++	 *
++	 * If we are using the DACR for kernel access by the user accessors
++	 * (CONFIG_CPU_USE_DOMAINS=y), always reset the DACR kernel domain
++	 * back to client mode, whether or not \disable is set.
++	 *
++	 * If we are using SW PAN, set the DACR user domain to no access
++	 * if \disable is set.
+ 	 */
+ 	.macro	uaccess_entry, tsk, tmp0, tmp1, tmp2, disable
+ 	ldr	\tmp1, [\tsk, #TI_ADDR_LIMIT]
+@@ -84,8 +90,17 @@
+  DACR(	mrc	p15, 0, \tmp0, c3, c0, 0)
+  DACR(	str	\tmp0, [sp, #SVC_DACR])
+ 	str	\tmp1, [sp, #SVC_ADDR_LIMIT]
+-	.if \disable
+-	uaccess_disable \tmp0
++	.if \disable && IS_ENABLED(CONFIG_CPU_SW_DOMAIN_PAN)
++	/* kernel=client, user=no access */
++	mov	\tmp2, #DACR_UACCESS_DISABLE
++	mcr	p15, 0, \tmp2, c3, c0, 0
++	instr_sync
++	.elseif IS_ENABLED(CONFIG_CPU_USE_DOMAINS)
++	/* kernel=client */
++	bic	\tmp2, \tmp0, #domain_mask(DOMAIN_KERNEL)
++	orr	\tmp2, \tmp2, #domain_val(DOMAIN_KERNEL, DOMAIN_CLIENT)
++	mcr	p15, 0, \tmp2, c3, c0, 0
++	instr_sync
+ 	.endif
+ 	.endm
+ 
 -- 
 2.25.1
 
