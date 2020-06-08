@@ -2,119 +2,201 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB36C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515352074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B2C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:21:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="C3n5QzrX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CRqLZ1Mu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgFHLTG (ORCPT
+        id S1729543AbgFHLV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
+        Mon, 8 Jun 2020 07:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbgFHLTF (ORCPT
+        with ESMTP id S1729437AbgFHLV4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:19:05 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66AA6C08C5C3
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 04:19:05 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id m32so7909815ede.8
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 04:19:05 -0700 (PDT)
+        Mon, 8 Jun 2020 07:21:56 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7105AC08C5C2
+        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 04:21:54 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x13so16972429wrv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 04:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4xfA41RF7LMfRQKRnVMDXuzv0Fq5jkQXyGGuULSz9PU=;
-        b=C3n5QzrXpqqu4lMi7DZ1ifSqTYvef4TqFhQlqbzjLtSRBwxaz0Hyx0vBe+SxiduLcG
-         +rbQpGQJI/XuIU3us35k9SO9bIFEWmXkH0Z5Ve7+/vZPC97F8tkrjwf9XT0filJkeg/N
-         nDsoExyEmh/gW8uICQYNLnWZ8gpoM0NZE5PuWTIwa3BtKdibUkVLBNbG3wJ1FfzZpG4O
-         mXenZBuhHgSomsuYcOBzxa+vavjPzPdQ9FlV07ulitgVBtfhJjQz0kzwd1LLoHQUYLb9
-         eP7+0wWIxw2Mafs9IbnwHemFTQ3I6NnuJaGtILgsJhi49Nc+C3rqMy3Fk97ZAgN0ioHw
-         AMXA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7JmnrVrM4jkbvqvmDrON3ernI9z2Q/Y9U63X+bmDAOc=;
+        b=CRqLZ1MuGY1z2cGvlwtskR4dOsxSsAi20t5GbQzQ0udQ+qbKVQkCJIyS1gJrq3sS7b
+         LKgq0PLbbuJvp8P56G5pUBv/PcCEBmziZiwAqEiRRSBWmfRowixyqjKblYQfkZb1gbmg
+         iWhuZ/s/e5AUiqOMXBKVF/2JFAKGaHZ1+ykkXYo5B2IUNcNRV13ip9nXISHCPw9vr+xm
+         g9PrAspMRyM6KU+XcEzam6SEhZRlFRMwVZHHr+DqohLelGHFQ00fmw0yXDpHD5izupoh
+         eFoE7VUvm5VSpmNPil+lOrgv2J/5eLs3Xzw75UywDdPxdmusdBVYzGAXMBah+DuuhtU9
+         3LeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4xfA41RF7LMfRQKRnVMDXuzv0Fq5jkQXyGGuULSz9PU=;
-        b=tWyeRl34uqjThTKsN5fSaqdR0i6DACy+zfa1RNOHWyW8ro3IZvp+ksdHlGI+itnNAU
-         e6xzmMRoFWwULBp4UYPaun29FvVslBnE4ZtCEHkGjAKNiKCHrnTyjHqTAzQd5jxS+sku
-         vmfIU1/AqPi4wnXVsCXJLR15qYIHz4S/JuJsSPDb8SOSuCXo87FktJmmeD7LUw4MLSV9
-         LtljtluBa5VPC5pCSKTxpwHmvQETTxNOZVovxT6VYjMWDMsjP7I+T3opb9+eZn0ov1PV
-         8Ktkbn1B81yZlbcPdTw/Y7T+2wjFNVBZxFuYd5a7HFI5qNxYrnFAdMnVm/OI8Dp7zou5
-         YuWg==
-X-Gm-Message-State: AOAM530ETmjiH4rjWT4zCDsnEt2nUWyGoivGjjMKdG++JpUyG/W66f4q
-        jcvhxu/2FcIi34QpflOsa+U4Qkytf/M=
-X-Google-Smtp-Source: ABdhPJyZHaAfFAODcpmnhSe+6/nyareVtjYJA5+jXfGDl8rLkWsH6C6XtuRxaYZVCfLq+JKuRDph8Q==
-X-Received: by 2002:aa7:d158:: with SMTP id r24mr21077281edo.272.1591615143840;
-        Mon, 08 Jun 2020 04:19:03 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([79.132.248.22])
-        by smtp.gmail.com with ESMTPSA id bg21sm10684985ejb.90.2020.06.08.04.19.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jun 2020 04:19:03 -0700 (PDT)
-Subject: Re: [PATCH net v2] mptcp: bugfix for RM_ADDR option parsing
-To:     Geliang Tang <geliangtang@gmail.com>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Peter Krystad <peter.krystad@linux.intel.com>
-Cc:     netdev@vger.kernel.org, mptcp@lists.01.org,
-        linux-kernel@vger.kernel.org
-References: <5ec9759a19d4eba5f7f9006354da2cfeb39fa839.1591612830.git.geliangtang@gmail.com>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <983bab97-ed03-c84b-5bbb-b79b5dc5afb0@tessares.net>
-Date:   Mon, 8 Jun 2020 13:19:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7JmnrVrM4jkbvqvmDrON3ernI9z2Q/Y9U63X+bmDAOc=;
+        b=FYYToChSJ4gw5gu9KeKm/M30vZNlw9e5MwSbR8Qs90BeIX54yjTI+iisNHsaFkoGZk
+         dOzBZvffaxehYSF6BeZb7oPOfarS0VgocElmEuy7xQVQADvZmRRqdCmjktMqbWDGmdtx
+         9QJGYiu6DWZIGmOtGXHXYw4Y+FWTESmZgftJkzjPtf68S42hPfCLfTHlO3Jvg3acmHnM
+         1yXYAi70tzcGfzCBB+4QU9A9zDzvLBNcRZNceORlV9Ta4rCpNT/cMNu1QqWQSMvjWeEc
+         ver7hyEOWRLpvlMQ/muVb9iO2dQquzDdYH9VEMk3lLV0lKkyy3HPEMgDsCB07rGXqaIn
+         1WSA==
+X-Gm-Message-State: AOAM531XVKwTq18ERXL88ONMBIrv+bXM886WL5VmqDs44ptpR9G2w+mj
+        BvunYUaRRCdLg+gMKgF7SesuIWJGC+0=
+X-Google-Smtp-Source: ABdhPJy4vr6BsQajdSAzDMV3idbn19bJt8HGtRYVkfzgDxowIPBiwVFrBubghoPsSC4idFsaDnxhGA==
+X-Received: by 2002:adf:a34d:: with SMTP id d13mr22107475wrb.270.1591615313014;
+        Mon, 08 Jun 2020 04:21:53 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id f185sm12437862wmf.43.2020.06.08.04.21.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 04:21:52 -0700 (PDT)
+Date:   Mon, 8 Jun 2020 12:21:50 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Jim Cromie <jim.cromie@gmail.com>
+Cc:     jbaron@akamai.com, linux-kernel@vger.kernel.org,
+        akpm@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH 03/16] dyndbg: refine debug verbosity; 1 is basic, 2 more
+ chatty
+Message-ID: <20200608112150.7ohrax6pzpi7ss2l@holly.lan>
+References: <20200605162645.289174-1-jim.cromie@gmail.com>
+ <20200605162645.289174-4-jim.cromie@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5ec9759a19d4eba5f7f9006354da2cfeb39fa839.1591612830.git.geliangtang@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605162645.289174-4-jim.cromie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geliang,
+On Fri, Jun 05, 2020 at 10:26:32AM -0600, Jim Cromie wrote:
+> The verbose/debug logging done for `cat $MNT/dynamic_debug/control` is
+> voluminous (2 per control file entry + 2 per PAGE).  Moreover, it just
+> prints pointer and sequence, which is not useful to a dyndbg user.
+> So just drop them.
 
-On 08/06/2020 12:47, Geliang Tang wrote:
-> In MPTCPOPT_RM_ADDR option parsing, the pointer "ptr" pointed to the
-> "Subtype" octet, the pointer "ptr+1" pointed to the "Address ID" octet:
+I'd assumed these messages where to help the dyndbg implementer rather
+than the dyndbg user. If the verbose messages really are useful to help
+users who (mis)configure .../control then should the enable/disable
+control be shadowed in debugfs to make it easy to find?
+
+
+Daniel.
+
 > 
->    +-------+-------+---------------+
->    |Subtype|(resvd)|   Address ID  |
->    +-------+-------+---------------+
->    |               |
->   ptr            ptr+1
+> Also require verbose>=2 for several other debug printks that are a bit
+> too chatty for typical needs;
 > 
-> We should set mp_opt->rm_id to the value of "ptr+1", not "ptr". This patch
-> will fix this bug.
+> ddebug_change() prints changes, once per modified callsite.  Since
+> queries like "+p" will enable ~2300 callsites in a typical laptop, a
+> user probably doesnt need to see them often.  ddebug_exec_queries()
+> still summarizes with verbose=1.
 > 
-> Fixes: 3df523ab582c ("mptcp: Add ADD_ADDR handling")
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> ddebug_(add|remove)_module() also print 1 line per action on a module,
+> not needed by typical modprobe user.
+> 
+> This leaves verbose=1 better focussed on the >control parsing process.
+> 
+> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 > ---
->   Changes in v2:
->    - Add "-net" subject and "Fixes" tag as Matt suggested.
-
-Thanks for this v2! LGTM!
-
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-
-Cheers,
-Matt
--- 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts@tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+>  lib/dynamic_debug.c | 21 ++++++++-------------
+>  1 file changed, 8 insertions(+), 13 deletions(-)
+> 
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index b877774dba96..5900c043e979 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -105,12 +105,15 @@ static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
+>  	return buf;
+>  }
+>  
+> -#define vpr_info(fmt, ...)					\
+> +#define vnpr_info(lvl, fmt, ...)				\
+>  do {								\
+> -	if (verbose)						\
+> +	if (verbose >= lvl)					\
+>  		pr_info(fmt, ##__VA_ARGS__);			\
+>  } while (0)
+>  
+> +#define vpr_info(fmt, ...)	vnpr_info(1, fmt, ##__VA_ARGS__)
+> +#define v2pr_info(fmt, ...)	vnpr_info(2, fmt, ##__VA_ARGS__)
+> +
+>  static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
+>  {
+>  	/* trim any trailing newlines */
+> @@ -198,7 +201,7 @@ static int ddebug_change(const struct ddebug_query *query,
+>  				static_branch_enable(&dp->key.dd_key_true);
+>  #endif
+>  			dp->flags = newflags;
+> -			vpr_info("changed %s:%d [%s]%s =%s\n",
+> +			v2pr_info("changed %s:%d [%s]%s =%s\n",
+>  				 trim_prefix(dp->filename), dp->lineno,
+>  				 dt->mod_name, dp->function,
+>  				 ddebug_describe_flags(dp, flagbuf,
+> @@ -771,8 +774,6 @@ static void *ddebug_proc_start(struct seq_file *m, loff_t *pos)
+>  	struct _ddebug *dp;
+>  	int n = *pos;
+>  
+> -	vpr_info("called m=%p *pos=%lld\n", m, (unsigned long long)*pos);
+> -
+>  	mutex_lock(&ddebug_lock);
+>  
+>  	if (!n)
+> @@ -795,9 +796,6 @@ static void *ddebug_proc_next(struct seq_file *m, void *p, loff_t *pos)
+>  	struct ddebug_iter *iter = m->private;
+>  	struct _ddebug *dp;
+>  
+> -	vpr_info("called m=%p p=%p *pos=%lld\n",
+> -		 m, p, (unsigned long long)*pos);
+> -
+>  	if (p == SEQ_START_TOKEN)
+>  		dp = ddebug_iter_first(iter);
+>  	else
+> @@ -818,8 +816,6 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+>  	struct _ddebug *dp = p;
+>  	char flagsbuf[10];
+>  
+> -	vpr_info("called m=%p p=%p\n", m, p);
+> -
+>  	if (p == SEQ_START_TOKEN) {
+>  		seq_puts(m,
+>  			 "# filename:lineno [module]function flags format\n");
+> @@ -842,7 +838,6 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+>   */
+>  static void ddebug_proc_stop(struct seq_file *m, void *p)
+>  {
+> -	vpr_info("called m=%p p=%p\n", m, p);
+>  	mutex_unlock(&ddebug_lock);
+>  }
+>  
+> @@ -905,7 +900,7 @@ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
+>  	list_add_tail(&dt->link, &ddebug_tables);
+>  	mutex_unlock(&ddebug_lock);
+>  
+> -	vpr_info("%u debug prints in module %s\n", n, dt->mod_name);
+> +	v2pr_info("%u debug prints in module %s\n", n, dt->mod_name);
+>  	return 0;
+>  }
+>  
+> @@ -964,7 +959,7 @@ int ddebug_remove_module(const char *mod_name)
+>  	struct ddebug_table *dt, *nextdt;
+>  	int ret = -ENOENT;
+>  
+> -	vpr_info("removing module \"%s\"\n", mod_name);
+> +	v2pr_info("removing module \"%s\"\n", mod_name);
+>  
+>  	mutex_lock(&ddebug_lock);
+>  	list_for_each_entry_safe(dt, nextdt, &ddebug_tables, link) {
+> -- 
+> 2.26.2
+> 
