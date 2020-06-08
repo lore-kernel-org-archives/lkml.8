@@ -2,169 +2,70 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3376FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87B9F20760
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8C82076A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 10:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgFHKYX (ORCPT
+        id S1729335AbgFHK1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 06:24:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2220 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726660AbgFHKYW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:24:22 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058A2qJS184709;
-        Mon, 8 Jun 2020 06:24:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n7rhbm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 06:23:59 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058A3F09187332;
-        Mon, 8 Jun 2020 06:23:59 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7n7rhas-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 06:23:59 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058AK6eM006411;
-        Mon, 8 Jun 2020 10:23:56 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma05fra.de.ibm.com with ESMTP id 31g2s7sgv3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 10:23:56 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058ANsgV57213166
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 10:23:54 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12942A4060;
-        Mon,  8 Jun 2020 10:23:54 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E92FA405B;
-        Mon,  8 Jun 2020 10:23:53 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.56.93])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  8 Jun 2020 10:23:53 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>
-Subject: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian archs
-Date:   Mon,  8 Jun 2020 12:23:49 +0200
-Message-Id: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_07:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- priorityscore=1501 clxscore=1015 adultscore=0 lowpriorityscore=0
- mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxlogscore=999
- suspectscore=1 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080073
+        Mon, 8 Jun 2020 06:27:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50124 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgFHK1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 06:27:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DADCDB181;
+        Mon,  8 Jun 2020 10:27:07 +0000 (UTC)
+Date:   Mon, 8 Jun 2020 12:27:03 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Yannick Cote <ycote@redhat.com>, live-patching@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, joe.lawrence@redhat.com,
+        linux-kernel@vger.kernel.org, kamalesh@linux.vnet.ibm.com
+Subject: Re: [PATCH v2 1/4] selftests/livepatch: simplify test-klp-callbacks
+ busy target tests
+Message-ID: <20200608102703.GA3728@linux-b0ei>
+References: <20200603182058.109470-1-ycote@redhat.com>
+ <20200603182058.109470-2-ycote@redhat.com>
+ <alpine.LSU.2.21.2006051505230.23532@pobox.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2006051505230.23532@pobox.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
-take into account order of halfwords on 64-bit big endian
-architectures. As result (at least) Receive Packet Steering,
-IRQ affinity masks and runtime kernel test "test_bitmap" get
-broken on s390.
+On Fri 2020-06-05 15:05:55, Miroslav Benes wrote:
+> On Wed, 3 Jun 2020, Yannick Cote wrote:
+> 
+> > From: Joe Lawrence <joe.lawrence@redhat.com>
+> > 
+> > The test-klp-callbacks script includes a few tests which rely on kernel
+> > task timings that may not always execute as expected under system load.
+> > These may generate out of sequence kernel log messages that result in
+> > test failure.
+> > 
+> > Instead of using sleep timing windows to orchestrate these tests, add a
+> > block_transition module parameter to communicate the test purpose and
+> > utilize flush_queue() to serialize the test module's task output.
+> > 
+> > Suggested-by: Petr Mladek <pmladek@suse.com>
+> > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> 
+> Acked-by: Miroslav Benes <mbenes@suse.cz>
 
-Fixes: 2d6261583be0 ("lib: rework bitmap_parse()")
-Cc: stable@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Amritha Nambiar <amritha.nambiar@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Miklos Szeredi <mszeredi@redhat.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: "Tobin C . Harding" <tobin@kernel.org>
-Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- lib/bitmap.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+JFYI, this patchset is committed in livepatching.git, branch
+for-5.9/selftests-cleanup.
 
-diff --git a/lib/bitmap.c b/lib/bitmap.c
-index 89260aa342d6..a725e4612984 100644
---- a/lib/bitmap.c
-+++ b/lib/bitmap.c
-@@ -717,6 +717,19 @@ static const char *bitmap_get_x32_reverse(const char *start,
- 	return end;
- }
- 
-+#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
-+static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-+{
-+	maskp += (chunk_idx / 2);
-+	((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
-+}
-+#else
-+static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-+{
-+	((u32 *)maskp)[chunk_idx] = chunk;
-+}
-+#endif
-+
- /**
-  * bitmap_parse - convert an ASCII hex string into a bitmap.
-  * @start: pointer to buffer containing string.
-@@ -738,7 +751,8 @@ int bitmap_parse(const char *start, unsigned int buflen,
- {
- 	const char *end = strnchrnul(start, buflen, '\n') - 1;
- 	int chunks = BITS_TO_U32(nmaskbits);
--	u32 *bitmap = (u32 *)maskp;
-+	int chunk_idx = 0;
-+	u32 chunk;
- 	int unset_bit;
- 
- 	while (1) {
-@@ -749,9 +763,11 @@ int bitmap_parse(const char *start, unsigned int buflen,
- 		if (!chunks--)
- 			return -EOVERFLOW;
- 
--		end = bitmap_get_x32_reverse(start, end, bitmap++);
-+		end = bitmap_get_x32_reverse(start, end, &chunk);
- 		if (IS_ERR(end))
- 			return PTR_ERR(end);
-+
-+		save_x32_chunk(maskp, chunk, chunk_idx++);
- 	}
- 
- 	unset_bit = (BITS_TO_U32(nmaskbits) - chunks) * 32;
--- 
-2.23.0
-
+Best Regards,
+Petr
