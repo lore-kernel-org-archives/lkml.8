@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79238C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6791C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5842620659
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9623E20737
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591660415;
-	bh=ZTU3zThxyPlECEFoIX7cZNwQcTmXBmQX+MGobFN3YjM=;
+	s=default; t=1591660417;
+	bh=ye9M/0tVTCzeqMpqUDp2Qo4XygW2XkTFYGKE45wRBAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0zDB+XBIGyhBHz1506xdHSoKzcYkPV/DI8zzjbgQfeEKPwExH5tfqS1+xgHagwwD
-	 dr7gV0fv1aO5HVnf0lvWklfbEFMKYANIBLWnOJoWpWc0hqKPLrZ+FHgx96BubG92VJ
-	 vB6b0VbY0rWdqiZNv+OHPYRvYPeG8XM5ZK1/7Tn0=
+	b=Jd3QbfcwnDSgM9sflK66yoTK+vJZ6tWS+bwtfzgG+nKzFRrPni6dvPfX3fVa5dkJM
+	 ftJPczpByCPG01N+Or+ukh8uQkdVcbqWHT+U9hoI3GxcDV1fYkBsdbUJppTWWEMbsL
+	 pVr/IakddgVGVQ3vr+CUvR2zPRPa/fuqs7jkaKxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbgFHXxe (ORCPT
+        id S1729464AbgFHXYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50468 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbgFHXY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:24:26 -0400
+        id S1729935AbgFHXTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:19:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50ED920842;
-        Mon,  8 Jun 2020 23:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 170032085B;
+        Mon,  8 Jun 2020 23:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658666;
-        bh=ZTU3zThxyPlECEFoIX7cZNwQcTmXBmQX+MGobFN3YjM=;
+        s=default; t=1591658350;
+        bh=ye9M/0tVTCzeqMpqUDp2Qo4XygW2XkTFYGKE45wRBAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nB+Q/mFTAL2xjSt/5L/FycPrNM8nC05QXpVJezZrn1aTd+7XEVEfhoXOGStI1802w
-         gNgyUcrZevRtSlFdoD1L7DsoWGloF8TafXI6E0g1q4muIAvsb6fBYijc8v1t4EYMk2
-         LDkQI1FjXZxal1YN8BefWCYKt2DstP9Jm5k26Ons=
+        b=GrHs514Bjx9wOKPP0Gtk+Sd51/wpNA9isSKbeTQlPwZKulqFPsdDuyPBC20dSLsV1
+         fko+Tl083xYr118iRkebxbDpKd7sRxtKliPZYrfrXz/CBhyWa/X1pF0CBNg15oTx6z
+         lQ3eQBwrS97A07b5ZJWPg7JpuSNTyQByEFpCr9Dc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Toromanoff <nicolas.toromanoff@st.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 081/106] crypto: stm32/crc32 - fix ext4 chksum BUG_ON()
-Date:   Mon,  8 Jun 2020 19:22:13 -0400
-Message-Id: <20200608232238.3368589-81-sashal@kernel.org>
+Cc:     Evan Green <evgreen@chromium.org>,
+        Shobhit Srivastava <shobhit.srivastava@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 017/175] spi: pxa2xx: Apply CS clk quirk to BXT
+Date:   Mon,  8 Jun 2020 19:16:10 -0400
+Message-Id: <20200608231848.3366970-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+References: <20200608231848.3366970-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,181 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Toromanoff <nicolas.toromanoff@st.com>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit 49c2c082e00e0bc4f5cbb7c21c7f0f873b35ab09 ]
+[ Upstream commit 6eefaee4f2d366a389da0eb95e524ba82bf358c4 ]
 
-Allow use of crc_update without prior call to crc_init.
-And change (and fix) driver to use CRC device even on unaligned buffers.
+With a couple allies at Intel, and much badgering, I got confirmation
+from Intel that at least BXT suffers from the same SPI chip-select
+issue as Cannonlake (and beyond). The issue being that after going
+through runtime suspend/resume, toggling the chip-select line without
+also sending data does nothing.
 
-Fixes: b51dbe90912a ("crypto: stm32 - Support for STM32 CRC32 crypto module")
+Add the quirk to BXT to briefly toggle dynamic clock gating off and
+on, forcing the fabric to wake up enough to notice the CS register
+change.
 
-Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Cc: Shobhit Srivastava <shobhit.srivastava@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200427163238.1.Ib1faaabe236e37ea73be9b8dcc6aa034cb3c8804@changeid
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/stm32/stm32_crc32.c | 98 +++++++++++++++---------------
- 1 file changed, 48 insertions(+), 50 deletions(-)
+ drivers/spi/spi-pxa2xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/crypto/stm32/stm32_crc32.c b/drivers/crypto/stm32/stm32_crc32.c
-index 29d2095d9dfd..749b51762b18 100644
---- a/drivers/crypto/stm32/stm32_crc32.c
-+++ b/drivers/crypto/stm32/stm32_crc32.c
-@@ -28,8 +28,10 @@
- 
- /* Registers values */
- #define CRC_CR_RESET            BIT(0)
--#define CRC_CR_REVERSE          (BIT(7) | BIT(6) | BIT(5))
- #define CRC_INIT_DEFAULT        0xFFFFFFFF
-+#define CRC_CR_REV_IN_WORD      (BIT(6) | BIT(5))
-+#define CRC_CR_REV_IN_BYTE      BIT(5)
-+#define CRC_CR_REV_OUT          BIT(7)
- 
- #define CRC_AUTOSUSPEND_DELAY	50
- 
-@@ -38,8 +40,6 @@ struct stm32_crc {
- 	struct device    *dev;
- 	void __iomem     *regs;
- 	struct clk       *clk;
--	u8               pending_data[sizeof(u32)];
--	size_t           nb_pending_bytes;
- };
- 
- struct stm32_crc_list {
-@@ -59,7 +59,6 @@ struct stm32_crc_ctx {
- 
- struct stm32_crc_desc_ctx {
- 	u32    partial; /* crc32c: partial in first 4 bytes of that struct */
--	struct stm32_crc *crc;
- };
- 
- static int stm32_crc32_cra_init(struct crypto_tfm *tfm)
-@@ -101,25 +100,22 @@ static int stm32_crc_init(struct shash_desc *desc)
- 	struct stm32_crc *crc;
- 
- 	spin_lock_bh(&crc_list.lock);
--	list_for_each_entry(crc, &crc_list.dev_list, list) {
--		ctx->crc = crc;
--		break;
--	}
-+	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
- 	spin_unlock_bh(&crc_list.lock);
- 
--	pm_runtime_get_sync(ctx->crc->dev);
-+	pm_runtime_get_sync(crc->dev);
- 
- 	/* Reset, set key, poly and configure in bit reverse mode */
--	writel_relaxed(bitrev32(mctx->key), ctx->crc->regs + CRC_INIT);
--	writel_relaxed(bitrev32(mctx->poly), ctx->crc->regs + CRC_POL);
--	writel_relaxed(CRC_CR_RESET | CRC_CR_REVERSE, ctx->crc->regs + CRC_CR);
-+	writel_relaxed(bitrev32(mctx->key), crc->regs + CRC_INIT);
-+	writel_relaxed(bitrev32(mctx->poly), crc->regs + CRC_POL);
-+	writel_relaxed(CRC_CR_RESET | CRC_CR_REV_IN_WORD | CRC_CR_REV_OUT,
-+		       crc->regs + CRC_CR);
- 
- 	/* Store partial result */
--	ctx->partial = readl_relaxed(ctx->crc->regs + CRC_DR);
--	ctx->crc->nb_pending_bytes = 0;
-+	ctx->partial = readl_relaxed(crc->regs + CRC_DR);
- 
--	pm_runtime_mark_last_busy(ctx->crc->dev);
--	pm_runtime_put_autosuspend(ctx->crc->dev);
-+	pm_runtime_mark_last_busy(crc->dev);
-+	pm_runtime_put_autosuspend(crc->dev);
- 
- 	return 0;
- }
-@@ -128,31 +124,49 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
- 			    unsigned int length)
- {
- 	struct stm32_crc_desc_ctx *ctx = shash_desc_ctx(desc);
--	struct stm32_crc *crc = ctx->crc;
--	u32 *d32;
--	unsigned int i;
-+	struct stm32_crc_ctx *mctx = crypto_shash_ctx(desc->tfm);
-+	struct stm32_crc *crc;
-+
-+	spin_lock_bh(&crc_list.lock);
-+	crc = list_first_entry(&crc_list.dev_list, struct stm32_crc, list);
-+	spin_unlock_bh(&crc_list.lock);
- 
- 	pm_runtime_get_sync(crc->dev);
- 
--	if (unlikely(crc->nb_pending_bytes)) {
--		while (crc->nb_pending_bytes != sizeof(u32) && length) {
--			/* Fill in pending data */
--			crc->pending_data[crc->nb_pending_bytes++] = *(d8++);
-+	/*
-+	 * Restore previously calculated CRC for this context as init value
-+	 * Restore polynomial configuration
-+	 * Configure in register for word input data,
-+	 * Configure out register in reversed bit mode data.
-+	 */
-+	writel_relaxed(bitrev32(ctx->partial), crc->regs + CRC_INIT);
-+	writel_relaxed(bitrev32(mctx->poly), crc->regs + CRC_POL);
-+	writel_relaxed(CRC_CR_RESET | CRC_CR_REV_IN_WORD | CRC_CR_REV_OUT,
-+		       crc->regs + CRC_CR);
-+
-+	if (d8 != PTR_ALIGN(d8, sizeof(u32))) {
-+		/* Configure for byte data */
-+		writel_relaxed(CRC_CR_REV_IN_BYTE | CRC_CR_REV_OUT,
-+			       crc->regs + CRC_CR);
-+		while (d8 != PTR_ALIGN(d8, sizeof(u32)) && length) {
-+			writeb_relaxed(*d8++, crc->regs + CRC_DR);
- 			length--;
- 		}
--
--		if (crc->nb_pending_bytes == sizeof(u32)) {
--			/* Process completed pending data */
--			writel_relaxed(*(u32 *)crc->pending_data,
--				       crc->regs + CRC_DR);
--			crc->nb_pending_bytes = 0;
--		}
-+		/* Configure for word data */
-+		writel_relaxed(CRC_CR_REV_IN_WORD | CRC_CR_REV_OUT,
-+			       crc->regs + CRC_CR);
- 	}
- 
--	d32 = (u32 *)d8;
--	for (i = 0; i < length >> 2; i++)
--		/* Process 32 bits data */
--		writel_relaxed(*(d32++), crc->regs + CRC_DR);
-+	for (; length >= sizeof(u32); d8 += sizeof(u32), length -= sizeof(u32))
-+		writel_relaxed(*((u32 *)d8), crc->regs + CRC_DR);
-+
-+	if (length) {
-+		/* Configure for byte data */
-+		writel_relaxed(CRC_CR_REV_IN_BYTE | CRC_CR_REV_OUT,
-+			       crc->regs + CRC_CR);
-+		while (length--)
-+			writeb_relaxed(*d8++, crc->regs + CRC_DR);
-+	}
- 
- 	/* Store partial result */
- 	ctx->partial = readl_relaxed(crc->regs + CRC_DR);
-@@ -160,22 +174,6 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
- 	pm_runtime_mark_last_busy(crc->dev);
- 	pm_runtime_put_autosuspend(crc->dev);
- 
--	/* Check for pending data (non 32 bits) */
--	length &= 3;
--	if (likely(!length))
--		return 0;
--
--	if ((crc->nb_pending_bytes + length) >= sizeof(u32)) {
--		/* Shall not happen */
--		dev_err(crc->dev, "Pending data overflow\n");
--		return -EINVAL;
--	}
--
--	d8 = (const u8 *)d32;
--	for (i = 0; i < length; i++)
--		/* Store pending data */
--		crc->pending_data[crc->nb_pending_bytes++] = *(d8++);
--
- 	return 0;
- }
- 
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 723145673206..36b837fc7e4b 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -148,6 +148,7 @@ static const struct lpss_config lpss_platforms[] = {
+ 		.tx_threshold_hi = 48,
+ 		.cs_sel_shift = 8,
+ 		.cs_sel_mask = 3 << 8,
++		.cs_clk_stays_gated = true,
+ 	},
+ 	{	/* LPSS_CNL_SSP */
+ 		.offset = 0x200,
 -- 
 2.25.1
 
