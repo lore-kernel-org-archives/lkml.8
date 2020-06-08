@@ -2,102 +2,79 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E91C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98639C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F8520774
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxgYn4mb"
+	by mail.kernel.org (Postfix) with ESMTP id 70E432075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 02:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgFHCDA (ORCPT
+        id S1728646AbgFHCF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 7 Jun 2020 22:03:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40080 "EHLO
+        Sun, 7 Jun 2020 22:05:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbgFHCC7 (ORCPT
+        with ESMTP id S1726662AbgFHCF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 7 Jun 2020 22:02:59 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1FCC08C5C3;
-        Sun,  7 Jun 2020 19:02:59 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so5334768pjd.1;
-        Sun, 07 Jun 2020 19:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Mfx3Sj9FRZgAlKkU0LzGyYtv3vZ3jXxU4QX6vPSwotg=;
-        b=IxgYn4mbhc2Vf8FRFIdJSbwmU25ArLjINBY8TBskXSLat97ACPvXWS0SKINAt4CaoW
-         nyX+Gl3bJ5FHby9ApeiQfU33sdZTC1k42aDMgLj1597DADpUw5iFm+KYmCwAvJNLdpAK
-         57ErAZuWqF7yp2lh6E1GrT48T9yPfCQU3ATtYqS87MGh1zSzEzh0EqATPAqC3P66Esud
-         QuiN1xBGfFafr7O5HpevEvKJ1pAvB0Bg4mHh2yVBftuRq+FIgwgloz3jGQq/aSZ31GQV
-         smDLe9Phelu8Km3zCfi/0iFPcx8kojUSuWc1qOuA/c/FptpXRDJY1vka/9TpVkmAOv3N
-         fbHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mfx3Sj9FRZgAlKkU0LzGyYtv3vZ3jXxU4QX6vPSwotg=;
-        b=d5ykE8AwD1VJk4O/YxQGO0BTdZVinVycVXYdcR/1DbxSwY8zIdWOWWFkImdjRqqoll
-         BgpbuwhX9q54qdUxSjuBUpmoSxNqFXKLD/gNGo+PIJf2lAyez970ObVfRG04N7ELi1I5
-         VdKiwR3349vhtc08LLSX8fVnk7VrUZDDVeQqvdCyaVALgglVZLmM0mTnuCrV8U9rpsRw
-         wqLkn5VActpgztFmN5h4rQUhzwnJzP5/XgBcrbltJvx/6or8xFcCNZCbxgTu3krytoGK
-         /fTWqAS8BsBgp0XhhR7jjqfbHkY//H4GOtiiILaj8q8O5+/vsX7rhIdYE9OZxcCy+U3y
-         Y5/g==
-X-Gm-Message-State: AOAM532xVD1ruYNhqsW7Tsy4FyeK2hNj8otfSStgoP/5ep7yIp4apYT2
-        LORIAwNHXtlDvxxx8W9lxaM=
-X-Google-Smtp-Source: ABdhPJz5Hw6n77EW+y5qbhGjqDx6DdppXlDgnOcBMJ+4oJCDmD81ehMUbDIJ++zS6FMiYvZqXIy9ag==
-X-Received: by 2002:a17:902:6906:: with SMTP id j6mr19601835plk.261.1591581778370;
-        Sun, 07 Jun 2020 19:02:58 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e127sm5405462pfe.45.2020.06.07.19.02.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 07 Jun 2020 19:02:57 -0700 (PDT)
-Date:   Sun, 7 Jun 2020 19:02:56 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: make module name conflict fatal error
-Message-ID: <20200608020256.GA256950@roeck-us.net>
-References: <20200511042149.1712876-1-masahiroy@kernel.org>
+        Sun, 7 Jun 2020 22:05:26 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9C2C08C5C3;
+        Sun,  7 Jun 2020 19:05:26 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1ji7AA-004wgp-2Q; Mon, 08 Jun 2020 02:05:22 +0000
+Date:   Mon, 8 Jun 2020 03:05:22 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH resend] fs/namei.c: micro-optimize acl_permission_check
+Message-ID: <20200608020522.GN23230@ZenIV.linux.org.uk>
+References: <20200605142300.14591-1-linux@rasmusvillemoes.dk>
+ <CAHk-=wgz68f2u7bFPZCWgbsbEJw+2HWTJFXSg_TguY+xJ8WrNw@mail.gmail.com>
+ <dcd7516b-0a1f-320d-018d-f3990e771f37@rasmusvillemoes.dk>
+ <CAHk-=wixdSUWFf6BoT7rJUVRmjUv+Lir_Rnh81xx7e2wnzgKbg@mail.gmail.com>
+ <CAHk-=widT2tV+sVPzNQWijtUz4JA=CS=EaJRfC3_9ymuQXQS8Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511042149.1712876-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHk-=widT2tV+sVPzNQWijtUz4JA=CS=EaJRfC3_9ymuQXQS8Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, Jun 07, 2020 at 12:48:53PM -0700, Linus Torvalds wrote:
 
-On Mon, May 11, 2020 at 01:21:49PM +0900, Masahiro Yamada wrote:
-> I think all the warnings have been fixed by now. Make it a fatal error.
+> Rasmus, say the word and I'll mark you for authorship on the first one.
 > 
+> Comments? Can you find something else wrong here, or some other fixup to do?
+> 
+> Al, any reaction?
 
-Not entirely. With this patch in the tree, I get:
+It's correct, but this
 
-Building sparc64:allmodconfig ... failed
---------------
-Error log:
-error: the following would cause module name conflict:
-  drivers/char/adi.ko
-  drivers/input/joystick/adi.ko
-make[1]: *** [modules_check] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [__sub-make] Error 2
+> +	if (mask & (mode ^ (mode >> 3))) {
+> +		if (in_group_p(inode->i_gid))
+> +			mode >>= 3;
+> +	}
+> +
+> +	/* Bits in 'mode' clear that we require? */
+> +	return (mask & ~mode) ? -EACCES : 0;
 
-Reverting this patch fixes the problem.
+might be easier to follow if we had, from the very beginning done
+	unsigned int deny = ~inode->i_mode;
+and turned that into
 
-Guenter
+	// for group the bits 3..5 apply, for others - 0..2
+	// we only care which to use when they do not
+	// agree anyway.
+	if (mask & (deny ^ (deny >> 3))) // mask & deny != mask & (deny >> 3)
+		if (in_...
+			deny >>= 3;
+	return mask & deny ? -EACCES : 0;
+
+Hell knows...
