@@ -2,167 +2,102 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3953BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6902074B
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75EDB2074B
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALqSfBi4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SW8D7gsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbgFHMVb (ORCPT
+        id S1729731AbgFHMWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:21:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38806 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729628AbgFHMV3 (ORCPT
+        Mon, 8 Jun 2020 08:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729628AbgFHMWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:21:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591618887;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=gYYB9Ly3dQUty4Eb8fhA0MNTLhKQm7egUF4xyawly9U=;
-        b=ALqSfBi4YfmGDf5GX5h1eQzPAY2fzzq3NjVOjqKuwbNVVOBNeLg7EvukboPE8WgC1Nn2an
-        YEHi0yaFM5zBDm7MIv/a3jWmFyqLmMa5NTkDTwDLgbsUzYgA+sBYo38RGLaz3U202Frpp9
-        O9z6Tvw/8PZIwCh/PvGnGJvwZXr1vc8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-FBsco_4rN5Oi0ULOYSkAvQ-1; Mon, 08 Jun 2020 08:21:23 -0400
-X-MC-Unique: FBsco_4rN5Oi0ULOYSkAvQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67401107ACCD;
-        Mon,  8 Jun 2020 12:21:21 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8716E1002397;
-        Mon,  8 Jun 2020 12:21:19 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prarit Bhargava <prarit@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH v2] x86/split_lock: Sanitize userspace and guest error output
-Date:   Mon,  8 Jun 2020 08:21:14 -0400
-Message-Id: <20200608122114.13043-1-prarit@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Mon, 8 Jun 2020 08:22:02 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E27C08C5C2;
+        Mon,  8 Jun 2020 05:22:01 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 10so2604717pfx.8;
+        Mon, 08 Jun 2020 05:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HDxho5qgH/ZNs1hwouSLFAzSS6Ya6IXAFD99ObdyT2U=;
+        b=SW8D7gsAlHDtxyd8A/lLyC0s9kXr1vPCLo4wGsWfQOgnAw2y0SomQpam6DVE20cx4G
+         pGClR37CIUCmo0HVoo1Aupipewj1E4JYe7uPjhf3wf6fgT9ugod8M3qShjyNg665Aqxl
+         xbwTktjbLIN5qbaoyRF4G5HfXrfDfVa19TZWErDO2pWWY8CY4AyUBlfePgjUH0HYOpji
+         hzcxlbSeQsmcZjRZ86qZAqeowtgrZYtWX8nHpl7AiN34tIeYpWfCFOu5tWbqWMGASZhK
+         dBPuJoDmiANdj2K/F4d4Rk/x4Scw5qBUEm9MyRdXwiLQnZejrRv80JPIjlZuslxF1k5o
+         AVWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HDxho5qgH/ZNs1hwouSLFAzSS6Ya6IXAFD99ObdyT2U=;
+        b=U3DGD5XKqkBXWPEawHTkrMnCDPLs4+mGvJVjYeQ4LXBu0rVWbzL5xa+E3oIiACIq28
+         fPdbaSlBAZJjNmIXrjUZ9IotjbS0XBfacm3Hoi1rAWSXg29zR/TNJBICMQCQWf5yGVk8
+         23ZKEbyiwpQ/Dbq0WqEk8GCoMORFgMuUK3V6mZ5mHDHeZ0pV0CkNlOSilIr1k/dwOgkJ
+         tvkCtd+Fb9+R11UbRwusQRbrt1fbX6p+PXFQyg2qD6f2JMM8kYmPMUWXF/AT+M4+W/tI
+         52sCErAdVXejTr8w/ZxaL2AWCDV4CoKDxTsq2vfhG0H559qA6LSH4FwEmWeqPn3ZMUVy
+         PUCw==
+X-Gm-Message-State: AOAM5300tPL9dJvt99mQxHC2ZcJmK+k0L6TpIcgDasrznkZS3z/mPPKn
+        BPCuYRSrF+tSP7PcRgxrQBoKWNrg
+X-Google-Smtp-Source: ABdhPJwMhWCzEK/UeGQzspWpga1Pqrnmfx1UaWD/aQi3RYJ9+jsb3BBeRs5aBHPb3r/reQoTC/L+5Q==
+X-Received: by 2002:a62:36c5:: with SMTP id d188mr3677066pfa.120.1591618920957;
+        Mon, 08 Jun 2020 05:22:00 -0700 (PDT)
+Received: from localhost.localdomain ([45.135.186.34])
+        by smtp.gmail.com with ESMTPSA id g29sm6975584pfr.47.2020.06.08.05.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 05:22:00 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     baolin.wang7@gmail.com, baohua@kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwspinlock: sirf: Remove the redundant 'of_match_ptr'
+Date:   Mon,  8 Jun 2020 20:20:28 +0800
+Message-Id: <250d35cb489c3c4c066f7ce256d27f36712a1979.1591618255.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two problems with kernel messages in fatal mode that
-were found during testing of guests and userspace programs.
+Remove the the redundant 'of_match_ptr' macro to fix below warning
+when the CONFIG_OF is not selected.
 
-The first is that no kernel message is output when the split lock detector
-is triggered with a userspace program.  As a result the userspace process
-dies from receiving SIGBUS with no indication to the user of what caused
-the process to die.
+All warnings:
+drivers/hwspinlock/sirf_hwspinlock.c:87:34: warning: unused variable
+'sirf_hwpinlock_ids' [-Wunused-const-variable]
 
-The second problem is that only the first triggering guest causes a kernel
-message to be output because the message is output with pr_warn_once().
-This also results in a loss of information to the user.
-
-While fixing these I noticed that the same message was being output
-three times so I'm cleaning that up too.
-
-Fix fatal mode output, and use consistent messages for fatal and
-warn modes for both userspace and guests.
-
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
-v2: Do not output a message if CPL 3 Alignment Check is turned on (xiaoyao.li)
+ drivers/hwspinlock/sirf_hwspinlock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/x86/kernel/cpu/intel.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 166d7c355896..e02ec81fe1eb 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1074,10 +1074,17 @@ static void split_lock_init(void)
- 	split_lock_verify_msr(sld_state != sld_off);
- }
+diff --git a/drivers/hwspinlock/sirf_hwspinlock.c b/drivers/hwspinlock/sirf_hwspinlock.c
+index 823d3c4f621e..a3f77120bad7 100644
+--- a/drivers/hwspinlock/sirf_hwspinlock.c
++++ b/drivers/hwspinlock/sirf_hwspinlock.c
+@@ -94,7 +94,7 @@ static struct platform_driver sirf_hwspinlock_driver = {
+ 	.probe = sirf_hwspinlock_probe,
+ 	.driver = {
+ 		.name = "atlas7_hwspinlock",
+-		.of_match_table = of_match_ptr(sirf_hwpinlock_ids),
++		.of_match_table = sirf_hwpinlock_ids,
+ 	},
+ };
  
--static void split_lock_warn(unsigned long ip)
-+static bool split_lock_warn(unsigned long ip, int fatal_no_warn)
- {
--	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
--			    current->comm, current->pid, ip);
-+	if (fatal_no_warn)
-+		return false;
-+
-+	pr_warn_ratelimited("#AC: %s/%d %ssplit_lock trap at address: 0x%lx\n",
-+			    current->comm, current->pid,
-+			    sld_state == sld_fatal ? "fatal " : "", ip);
-+
-+	if (sld_state == sld_fatal)
-+		return false;
- 
- 	/*
- 	 * Disable the split lock detection for this task so it can make
-@@ -1086,18 +1093,13 @@ static void split_lock_warn(unsigned long ip)
- 	 */
- 	sld_update_msr(false);
- 	set_tsk_thread_flag(current, TIF_SLD);
-+	return true;
- }
- 
- bool handle_guest_split_lock(unsigned long ip)
- {
--	if (sld_state == sld_warn) {
--		split_lock_warn(ip);
-+	if (split_lock_warn(ip, 0))
- 		return true;
--	}
--
--	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
--		     current->comm, current->pid,
--		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
- 
- 	current->thread.error_code = 0;
- 	current->thread.trap_nr = X86_TRAP_AC;
-@@ -1108,10 +1110,7 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
- 
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- {
--	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
--		return false;
--	split_lock_warn(regs->ip);
--	return true;
-+	return split_lock_warn(regs->ip, regs->flags & X86_EFLAGS_AC);
- }
- 
- /*
 -- 
-2.21.3
+2.17.1
 
