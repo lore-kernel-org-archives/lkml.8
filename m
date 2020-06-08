@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8396C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8995D20760
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BBD20737
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 00:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591664158;
-	bh=9Xe4Sx5w74/rmD8c1252EWSqEacJPDGX8bb4wGGi3ZQ=;
+	s=default; t=1591664172;
+	bh=7qRrtypSSmzWLdDkp9783c/owwEwmGd/9SP07NiOk2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZeRjifysqrkPLFW5r5/Hycrq1v1Xi/O7Zwbqc3ssOspATCPYIME3R4fufKAdtsF7U
-	 KDjpr1+1IYtfFaQ8tLpQv2koM2evAp1mzRRzIqKtSld0RRbbop0IpXQAFXvR4MM3R2
-	 S9Hh/R3pZQv691rTPARDb23XgyzGGKLO2zNF69H8=
+	b=FrQN8+MeLlV2o4o9WpjlzcYOIM3aatsgIVPLFRPbO1FEIdu27irxyy6bqfsnwFIiK
+	 LQXFM+mOOLs6xhb/4UtXWjYYe45qrlnXjUCZFgcYL9PFF2vmKe5Aggek1mf3mB4Do4
+	 MprNMhm7GyFgHvIGCjWeRhjJzsAhjN6/P51ESpdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729859AbgFIAz6 (ORCPT
+        id S1730808AbgFIA4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 20:55:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54878 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 20:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728367AbgFHXJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:09:12 -0400
+        id S1728342AbgFHXJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:09:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B33A20CC7;
-        Mon,  8 Jun 2020 23:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D81F208C9;
+        Mon,  8 Jun 2020 23:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657751;
-        bh=9Xe4Sx5w74/rmD8c1252EWSqEacJPDGX8bb4wGGi3ZQ=;
+        s=default; t=1591657748;
+        bh=7qRrtypSSmzWLdDkp9783c/owwEwmGd/9SP07NiOk2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tgfPkNMgvrVt1p6LND8sY3HJRuPjGcW/yXFyZTH4/owneW9v7dY0vz4os1ND9TMbX
-         mwN21jKI9Bn93SzlNe0vH5z6m64pf0Ln9JCFxRm+RqDR8QIvJ5rgmPtUPOrRS34Xdg
-         OMyfPXDTMgoKp672lSHzWtDrxTUmmd9BC43BN9Bw=
+        b=RPOGdBSXEHTJ9BjQyX7JAFlmdStNtE5CcFM/TDR0O77+gY9WGx6XW2W5FUIZMc+1Q
+         H8SG7qjhA0L8Wnp3gQMk5YPjGbJfC9XX7VsBqKo7/2x7FWwPY3/G8Md/g8Ygi5hT8F
+         o8IloG+sZrYZ1sXXNAt1yf8YYXeaL7kzynH/QAHU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Veronika Kabatova <vkabatov@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 138/274] drm/bridge: fix stack usage warning on old gcc
-Date:   Mon,  8 Jun 2020 19:03:51 -0400
-Message-Id: <20200608230607.3361041-138-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 135/274] selftests/bpf: Add runqslower binary to .gitignore
+Date:   Mon,  8 Jun 2020 19:03:48 -0400
+Message-Id: <20200608230607.3361041-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,52 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 78b0d99a68ecdc84728c99f4fef71942e9ecf35a ]
+[ Upstream commit e4e8f4d047fdcf7ac7d944e266e85d8041f16cd6 ]
 
-Some older versions of gcc badly optimize code that passes
-an inline function argument into another function by reference,
-causing huge stack usage:
+With recent changes, runqslower is being copied into selftests/bpf root
+directory. So add it into .gitignore.
 
-drivers/gpu/drm/bridge/tc358768.c: In function 'tc358768_bridge_pre_enable':
-drivers/gpu/drm/bridge/tc358768.c:840:1: error: the frame size of 2256 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-
-Use a temporary variable as a workaround and add a comment pointing
-to the gcc bug.
-
-Fixes: ff1ca6397b1d ("drm/bridge: Add tc358768 driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200428215408.4111675-1-arnd@arndb.de
+Fixes: b26d1e2b6028 ("selftests/bpf: Copy runqslower to OUTPUT directory")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Veronika Kabatova <vkabatov@redhat.com>
+Link: https://lore.kernel.org/bpf/20200429012111.277390-12-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358768.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/.gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
-index 1b39e8d37834..6650fe4cfc20 100644
---- a/drivers/gpu/drm/bridge/tc358768.c
-+++ b/drivers/gpu/drm/bridge/tc358768.c
-@@ -178,6 +178,8 @@ static int tc358768_clear_error(struct tc358768_priv *priv)
- 
- static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
- {
-+	/* work around https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715 */
-+	int tmpval = val;
- 	size_t count = 2;
- 
- 	if (priv->error)
-@@ -187,7 +189,7 @@ static void tc358768_write(struct tc358768_priv *priv, u32 reg, u32 val)
- 	if (reg < 0x100 || reg >= 0x600)
- 		count = 1;
- 
--	priv->error = regmap_bulk_write(priv->regmap, reg, &val, count);
-+	priv->error = regmap_bulk_write(priv->regmap, reg, &tmpval, count);
- }
- 
- static void tc358768_read(struct tc358768_priv *priv, u32 reg, u32 *val)
+diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+index c30079c86998..35a577ca0226 100644
+--- a/tools/testing/selftests/bpf/.gitignore
++++ b/tools/testing/selftests/bpf/.gitignore
+@@ -39,4 +39,4 @@ test_cpp
+ /no_alu32
+ /bpf_gcc
+ /tools
+-
++/runqslower
 -- 
 2.25.1
 
