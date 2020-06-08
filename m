@@ -2,129 +2,216 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7975F206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Swx/mncb"
+	by mail.kernel.org (Postfix) with ESMTP id 2423720760
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 21:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591651924;
+	bh=iGJ/S85SGw3PjfMmtAFIqmA+qqnezwwkvYQUyMOy1Sw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=GLwATxGSKEyYxZ4piGVdyBdcfFNWrCDuA6LZBHGhVg66YNg2UfoWDvGX1t36ijkQF
+	 PmXQ1BcYkWdQENldC3FgxveQediosSuKE2q/Dok6q1wGg9QgCimtUA07oEPpgAnXdn
+	 M2tq8S2FNtENPaUnC9RvIIQY6TNJDEFkAG+8OPWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgFHVaD (ORCPT
+        id S1726818AbgFHVcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 17:30:03 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46176 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbgFHVaC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 17:30:02 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BC9B62C9;
-        Mon,  8 Jun 2020 23:29:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591651800;
-        bh=5648b7zLWqMKR5MbS2MpnHHlZD+5zBO3a0GztfnN9s0=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Swx/mncbCCeCY3s9gmp/Kg9vFqKn3uGXqIwzumYd/BGYjbpKLdGkl5YTVs0Lf9JMU
-         b70JvRt5/kHzCorFR6BeVE8xagLHUM5dHDx0pjQz5S9H6kze3uszPUFU9tEoNsiueP
-         8utZUFXIdQLA1izbWrsYXb4P0yT+BkBgaFvhPA4k=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH] [v2] media: vsp1: Fix runtime PM imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200608052919.4984-1-dinghao.liu@zju.edu.cn>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <dad95caa-0cbc-7df2-8187-af5f38dee1da@ideasonboard.com>
-Date:   Mon, 8 Jun 2020 22:29:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 8 Jun 2020 17:32:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbgFHVcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 17:32:02 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6C91206D5;
+        Mon,  8 Jun 2020 21:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591651921;
+        bh=iGJ/S85SGw3PjfMmtAFIqmA+qqnezwwkvYQUyMOy1Sw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=1AnJXR2EkjQSi8iIsA5aD0FJDk7uxo3n2xHI5pkz2MWUT8buGdP02LiZv/+1csY3q
+         4oqdq6NhOiCiRzM8qBg2jzbG7KRDPmZYjCrgT3SemeqUSuqleF3IU+wUitrEvnQVPc
+         ljMS7xhdGhK912rvW8x/vDpXWGWY8O9DZIVBEC/M=
+Date:   Mon, 8 Jun 2020 16:37:11 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v3] docs: deprecated.rst: Add zero-length and one-element
+ arrays
+Message-ID: <20200608213711.GA22271@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200608052919.4984-1-dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dinghao,
+Add zero-length and one-element arrays to the list.
 
-On 08/06/2020 06:29, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
-> 
+While I continue replacing zero-length and one-element arrays with
+flexible-array members, I need a reference to point people to, so
+they don't introduce more instances of such arrays. And while here,
+add a note to the "open-coded arithmetic in allocator arguments"
+section, on the use of struct_size() and the arrays-to-deprecate
+mentioned here.
 
-Looks good to me:
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v3:
+ - Add changes written by Kees.
+ - Add Co-developed-by tag to include Kees in the changelog text.
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Changes in v2:
+ - Adjust some markup links for readability.
 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
-> 
-> Changelog:
-> 
-> v2: - Fix the imbalance in vsp1_device_get().
->       Use vsp1_device_get() and vsp1_device_put()
->       to replace pm_runtime_get_sync() and
->       pm_runtime_put_sync() in vsp1_probe().
+ Documentation/process/deprecated.rst | 118 +++++++++++++++++++++++++++
+ 1 file changed, 118 insertions(+)
 
-That looks like a helpful addition!
-
-> ---
->  drivers/media/platform/vsp1/vsp1_drv.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vsp1/vsp1_drv.c b/drivers/media/platform/vsp1/vsp1_drv.c
-> index c650e45bb0ad..dc62533cf32c 100644
-> --- a/drivers/media/platform/vsp1/vsp1_drv.c
-> +++ b/drivers/media/platform/vsp1/vsp1_drv.c
-> @@ -562,7 +562,12 @@ int vsp1_device_get(struct vsp1_device *vsp1)
->  	int ret;
->  
->  	ret = pm_runtime_get_sync(vsp1->dev);
-> -	return ret < 0 ? ret : 0;
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(vsp1->dev);
-
-Hrm... I was going to query the _noidle here, as I presume the device is
-likely already idle ... but actually this looks like it simply adds
-protection against decrementing the refcnt below zero, so it is likely
-useful.
-
-
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  /*
-> @@ -845,12 +850,12 @@ static int vsp1_probe(struct platform_device *pdev)
->  	/* Configure device parameters based on the version register. */
->  	pm_runtime_enable(&pdev->dev);
->  
-> -	ret = pm_runtime_get_sync(&pdev->dev);
-> +	ret = vsp1_device_get(vsp1);
->  	if (ret < 0)
->  		goto done;
->  
->  	vsp1->version = vsp1_read(vsp1, VI6_IP_VERSION);
-> -	pm_runtime_put_sync(&pdev->dev);
-> +	vsp1_device_put(vsp1);
->  
->  	for (i = 0; i < ARRAY_SIZE(vsp1_device_infos); ++i) {
->  		if ((vsp1->version & VI6_IP_VERSION_MODEL_MASK) ==
-> 
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 652e2aa02a66c..bd4c92244de31 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -85,6 +85,11 @@ Instead, use the helper::
+ 
+ 	header = kzalloc(struct_size(header, item, count), GFP_KERNEL);
+ 
++.. note:: If you are using struct_size() on a structure containing a zero-length
++        or a one-element array as a trailing array member, please refactor such
++        array usage and switch to a `flexible array member
++        <#zero-length-and-one-element-arrays>`_ instead.
++
+ See array_size(), array3_size(), and struct_size(),
+ for more details as well as the related check_add_overflow() and
+ check_mul_overflow() family of functions.
+@@ -200,3 +205,116 @@ All switch/case blocks must end in one of:
+ * continue;
+ * goto <label>;
+ * return [expression];
++
++Zero-length and one-element arrays
++----------------------------------
++There is a regular need in the kernel to provide a way to declare having
++a dynamically sized set of trailing elements in a structure. Kernel code
++should always use `"flexible array members" <https://en.wikipedia.org/wiki/Flexible_array_member>`_
++for these cases. The older style of one-element or zero-length arrays should
++no longer be used.
++
++In older C code, dynamically sized trailing elements were done by specifying
++a one-element array at the end of a structure::
++
++        struct something {
++                size_t count;
++                struct foo items[1];
++        };
++
++This led to fragile size calculations via sizeof() (which would need to
++remove the size of the single trailing element to get a correct size of
++the "header"). A `GNU C extension <https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_
++was introduced to allow for zero-length arrays, to avoid these kinds of
++size problems::
++
++        struct something {
++                size_t count;
++                struct foo items[0];
++        };
++
++But this led to other problems, and didn't solve some problems shared by
++both styles, like not being able to detect when such an array is accidentally
++being used _not_ at the end of a structure (which could happen directly, or
++when such a struct was in unions, structs of structs, etc).
++
++C99 introduced "flexible array members", which lacks a numeric size for
++the array declaration entirely::
++
++        struct something {
++                size_t count;
++                struct foo items[];
++        };
++
++This is the way the kernel expects dynamically sized trailing elements
++to be declared. It allows the compiler to generate errors when the
++flexible array does not occur last in the structure, which helps to prevent
++some kind of `undefined behavior
++<https://git.kernel.org/linus/76497732932f15e7323dc805e8ea8dc11bb587cf>`_
++bugs from being inadvertently introduced to the codebase. It also allows
++the compiler to correctly analyze array sizes (via sizeof(),
++`CONFIG_FORTIFY_SOURCE`, and `CONFIG_UBSAN_BOUNDS`). For instance,
++there is no mechanism that warns us that the following application of the
++sizeof() operator to a zero-length array always results in zero::
++
++        struct something {
++                size_t count;
++                struct foo items[0];
++        };
++
++        struct something *instance;
++
++        instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
++        instance->count = count;
++
++        size = sizeof(instance->items) * instance->count;
++        memcpy(instance->items, source, size);
++
++At the last line of code above, ``size`` turns out to be ``zero``, when one might
++have thought it represents the total size in bytes of the dynamic memory recently
++allocated for the trailing array ``items``. Here are a couple examples of this
++issue: `link 1
++<https://git.kernel.org/linus/f2cd32a443da694ac4e28fbf4ac6f9d5cc63a539>`_,
++`link 2
++<https://git.kernel.org/linus/ab91c2a89f86be2898cee208d492816ec238b2cf>`_.
++Instead, `flexible array members have incomplete type, and so the sizeof()
++operator may not be applied <https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
++so any misuse of such operators will be immediately noticed at build time.
++
++With respect to one-element arrays, one has to be acutely aware that `such arrays
++occupy at least as much space as a single object of the type
++<https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html>`_,
++hence they contribute to the size of the enclosing structure. This is prone
++to error every time people want to calculate the total size of dynamic memory
++to allocate for a structure containing an array of this kind as a member::
++
++        struct something {
++                size_t count;
++                struct foo items[1];
++        };
++
++        struct something *instance;
++
++        instance = kmalloc(struct_size(instance, items, count - 1), GFP_KERNEL);
++        instance->count = count;
++
++        size = sizeof(instance->items) * instance->count;
++        memcpy(instance->items, source, size);
++
++In the example above, we had to remember to calculate ``count - 1`` when using
++the struct_size() helper, otherwise we would have --unintentionally-- allocated
++memory for one too many ``items`` objects. The cleanest and least error-prone way
++to implement this is through the use of a `flexible array member`::
++
++        struct something {
++                size_t count;
++                struct foo items[];
++        };
++
++        struct something *instance;
++
++        instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
++        instance->count = count;
++
++        size = sizeof(instance->items[0]) * instance->count;
++        memcpy(instance->items, source, size);
+-- 
+2.27.0
 
