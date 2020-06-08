@@ -2,143 +2,129 @@ Return-Path: <SRS0=F/Af=7W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69D8020737
-	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="La7ndp1z"
+	by mail.kernel.org (Postfix) with ESMTP id EB21820760
+	for <linux-kernel@archiver.kernel.org>; Tue,  9 Jun 2020 01:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591664585;
+	bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zrNx3aNGASvBE7RnriImwx75Dik7DXWLIR6AnWi6p2F3oB0avX8ZSPk5iIy9uEMD1
+	 HDaM3Xs/S5MG+kdBo9AuEX6VwVCDRyW2IYqA/CNzHHEgVy44lS9yo5zzsbk21+ycW8
+	 6BLdOardTK0whh3bzIFOVmAnUYBVIC0CtxrZKZRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732886AbgFIBCu (ORCPT
+        id S1728126AbgFIBDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 21:02:50 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:1122 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728030AbgFHXHx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:07:53 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 058N7nsM011966
-        for <linux-kernel@vger.kernel.org>; Mon, 8 Jun 2020 16:07:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=aw2JqdYwqSovvsbhgTUEXmGIP1a1tjkCctbxqrIdK7w=;
- b=La7ndp1zrMWNN3lIA6dnzd2xQheUOVwHFIZ2fWGzfPH2FkWW+VjAENGgvxYXMmKSs6K8
- /3UHLPDJi5sErELuBgpslT3svDk5pAf4tvY3DB6zUnuSAtqZQMV7F2VbXtokZ2A2ziSN
- HzP7MbUJVAAjWZIPVT1xL7HyXxKhNtzVR3s= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 31g6tkjf3v-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jun 2020 16:07:51 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 8 Jun 2020 16:07:13 -0700
-Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 5B9481D8FE50; Mon,  8 Jun 2020 16:07:00 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v6 11/19] mm: memcg/slab: move memcg_kmem_bypass() to memcontrol.h
-Date:   Mon, 8 Jun 2020 16:06:46 -0700
-Message-ID: <20200608230654.828134-12-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200608230654.828134-1-guro@fb.com>
-References: <20200608230654.828134-1-guro@fb.com>
+        Mon, 8 Jun 2020 21:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728012AbgFHXHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:07:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B99522086A;
+        Mon,  8 Jun 2020 23:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591657668;
+        bh=PRuINvBRZW2mZwEv6yL9odErB1I7qLxkutEUY51xAFc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UJUV0YaVsV7c2Vo+aIuG2esMjFNttNQCp9gIq4S37E3DtsvCslivS0wX9BbEzutp7
+         R+MecZQAIJQVSV18Zcl27yUJK3bRB5drN9AJ/uH0PF2Uev8v5oKqGMNHsOIOfeyJN4
+         2h+BXF0Os6EALcOKpvCzC4JTZNDh54fhQpDaqhg4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 078/274] Bluetooth: btmtkuart: Improve exception handling in btmtuart_probe()
+Date:   Mon,  8 Jun 2020 19:02:51 -0400
+Message-Id: <20200608230607.3361041-78-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_18:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- phishscore=0 spamscore=0 priorityscore=1501 mlxlogscore=998
- impostorscore=0 bulkscore=0 clxscore=1015 cotscore=-2147483648
- adultscore=0 lowpriorityscore=0 suspectscore=0 mlxscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006080161
-X-FB-Internal: deliver
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To make the memcg_kmem_bypass() function available outside of
-the memcontrol.c, let's move it to memcontrol.h. The function
-is small and nicely fits into static inline sort of functions.
+From: Chuhong Yuan <hslester96@gmail.com>
 
-It will be used from the slab code.
+[ Upstream commit 4803c54ca24923a30664bea2a7772db6e7303c51 ]
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Calls of the functions clk_disable_unprepare() and hci_free_dev()
+were missing for the exception handling.
+Thus add the missed function calls together with corresponding
+jump targets.
+
+Fixes: 055825614c6b ("Bluetooth: btmtkuart: add an implementation for clock osc property")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/memcontrol.h | 12 ++++++++++++
- mm/memcontrol.c            | 12 ------------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/bluetooth/btmtkuart.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index c63473fffdda..ba7065c0922a 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1440,6 +1440,18 @@ static inline bool memcg_kmem_enabled(void)
- 	return static_branch_unlikely(&memcg_kmem_enabled_key);
+diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
+index e11169ad8247..8a81fbca5c9d 100644
+--- a/drivers/bluetooth/btmtkuart.c
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -1015,7 +1015,7 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	if (btmtkuart_is_standalone(bdev)) {
+ 		err = clk_prepare_enable(bdev->osc);
+ 		if (err < 0)
+-			return err;
++			goto err_hci_free_dev;
+ 
+ 		if (bdev->boot) {
+ 			gpiod_set_value_cansleep(bdev->boot, 1);
+@@ -1028,10 +1028,8 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 
+ 		/* Power on */
+ 		err = regulator_enable(bdev->vcc);
+-		if (err < 0) {
+-			clk_disable_unprepare(bdev->osc);
+-			return err;
+-		}
++		if (err < 0)
++			goto err_clk_disable_unprepare;
+ 
+ 		/* Reset if the reset-gpios is available otherwise the board
+ 		 * -level design should be guaranteed.
+@@ -1063,7 +1061,6 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	err = hci_register_dev(hdev);
+ 	if (err < 0) {
+ 		dev_err(&serdev->dev, "Can't register HCI device\n");
+-		hci_free_dev(hdev);
+ 		goto err_regulator_disable;
+ 	}
+ 
+@@ -1072,6 +1069,11 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ err_regulator_disable:
+ 	if (btmtkuart_is_standalone(bdev))
+ 		regulator_disable(bdev->vcc);
++err_clk_disable_unprepare:
++	if (btmtkuart_is_standalone(bdev))
++		clk_disable_unprepare(bdev->osc);
++err_hci_free_dev:
++	hci_free_dev(hdev);
+ 
+ 	return err;
  }
-=20
-+static inline bool memcg_kmem_bypass(void)
-+{
-+	if (in_interrupt())
-+		return true;
-+
-+	/* Allow remote memcg charging in kthread contexts. */
-+	if ((!current->mm || (current->flags & PF_KTHREAD)) &&
-+	     !current->active_memcg)
-+		return true;
-+	return false;
-+}
-+
- static inline int memcg_kmem_charge_page(struct page *page, gfp_t gfp,
- 					 int order)
- {
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 004a31941a88..51e85d05095c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2943,18 +2943,6 @@ static void memcg_schedule_kmem_cache_create(struc=
-t mem_cgroup *memcg,
- 	queue_work(memcg_kmem_cache_wq, &cw->work);
- }
-=20
--static inline bool memcg_kmem_bypass(void)
--{
--	if (in_interrupt())
--		return true;
--
--	/* Allow remote memcg charging in kthread contexts. */
--	if ((!current->mm || (current->flags & PF_KTHREAD)) &&
--	     !current->active_memcg)
--		return true;
--	return false;
--}
--
- /**
-  * memcg_kmem_get_cache: select the correct per-memcg cache for allocati=
-on
-  * @cachep: the original global kmem cache
---=20
-2.25.4
+-- 
+2.25.1
 
