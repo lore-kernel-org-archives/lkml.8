@@ -2,81 +2,145 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F401C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 390FD2068D
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB9720812
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 19:43:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KtM+79hH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeSuA/P6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgFHTmy (ORCPT
+        id S1726595AbgFHTnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 15:42:54 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55758 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbgFHTmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 15:42:53 -0400
-Received: from zn.tnic (p200300ec2f26d700ade61a8be514ef2f.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:d700:ade6:1a8b:e514:ef2f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A2EEF1EC02B1;
-        Mon,  8 Jun 2020 21:42:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1591645372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dCPdfHY3b4SJMjy1igOIQZqz+WhDVbR2ecXgIC5dVPI=;
-        b=KtM+79hHUbFa7x/eC4H4e2fQ/16JDwfETDFBD3HxVvxhIlU+rvVjkY7WJ03nTCQdu8DuwU
-        /IMewNXZSkxOkDFirrKsXQN8bkZoUH+XRe2da0m0eCwnfiwjTFzTBblKGF/85W6jspdSAf
-        /2a2k/cWPRtxQLRoRRHp932c1INvVA0=
-Date:   Mon, 8 Jun 2020 21:42:45 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Benjamin Thiel <b.thiel@posteo.de>,
-        Juergen Gross <jgross@suse.com>, x86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/xen: Fix a -Wmissing prototypes warning for
- xen_start_kernel()
-Message-ID: <20200608194245.GC21538@zn.tnic>
-References: <20200606142721.19486-1-b.thiel@posteo.de>
- <21d6821e-e488-138e-a0be-2177c4aa13b2@oracle.com>
+        Mon, 8 Jun 2020 15:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgFHTnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 15:43:50 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96355C08C5C2;
+        Mon,  8 Jun 2020 12:43:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y17so18740078wrn.11;
+        Mon, 08 Jun 2020 12:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eEhDs2ggMl3f7hmWAszT3Wg5EUHjiX8ZgjgQtEPz3Ew=;
+        b=SeSuA/P6scbWq1Qmh2zpCSo7IcLTN9rnSoi07mfc7qWyYZK3Q3DYVo1VijgnOfNSdj
+         r3vywNV9pCi0Afub1pOlwByjOut9ps2B/DjTMiU5XIHXPtx+bTupvONWl3wUj4GIE7XN
+         7jmRn6U7u8Pw/6rqoy/LtoA1lwlByDxJbr48VQnlu+vjMfCDHjLY9HJJNEbvNCOb1HQq
+         TYmx6d3y0qxRkn+koJEEJZLsxEDTZ7IqpiKn8n2+Si8QeluqpJvK+HQ9Jdmp0U6KjUMa
+         Kdj9DY+26aXNWHArUb4TSzFok6Mz7H+tkNNgznU8lsMAe76hlbeSdAtfqawe6Y879Sf8
+         khgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eEhDs2ggMl3f7hmWAszT3Wg5EUHjiX8ZgjgQtEPz3Ew=;
+        b=QrpnTQhx3uIB+ojPsXS8T+TW+5IVIqXZZfypcnSqaoAb301zdGUGb8WL5EFdX4fMwC
+         DSU1p0FxznQ+RN7enY/WYbDyPLcur0i2ermKFxNR+2ff1eAfPIxRpJDHMEKSj+VcO8sr
+         sXs0ALua6OJLw6RRa80F0fnfU86pRYPOMuU4LpLvZv0XXDzTqfaMEpFH74IczoSlaX88
+         amZ7ZkXGva2gcWrXb8+wm91Hj/EvV3hWMTIHf6QXj1QojZMLCVo7On7gNdNhMX++56+U
+         UtsDTkAVzVmrrGqZb15hyIfQRwUpWh5iX+n7Gnsj4/5Kr3JQe+jRTTiZ2Xqeb+7MeARo
+         QvaA==
+X-Gm-Message-State: AOAM531TGQJ6lYUA69y3RNz49CT8PJuM3oL9YvhDGj4qancL2EOBCfwF
+        KBvsaQYX+YsqJ6Ps4EHqQ2g=
+X-Google-Smtp-Source: ABdhPJzbDt2pJwcpzdBFvHOLRZ0TDUp8Aq/TBRc5TkHGktIAfaGaZUxUEu/MKNMBoXEBH6K2qQduMg==
+X-Received: by 2002:a5d:4b47:: with SMTP id w7mr385678wrs.234.1591645429157;
+        Mon, 08 Jun 2020 12:43:49 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id t129sm538664wmf.41.2020.06.08.12.43.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2020 12:43:48 -0700 (PDT)
+Subject: Re: [PATCH 5/9] usb: xhci-pci: Add support for reset controllers
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        robh@kernel.org, mathias.nyman@linux.intel.com,
+        Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, tim.gover@raspberrypi.org,
+        helgaas@kernel.org, lorenzo.pieralisi@arm.com
+References: <20200608192701.18355-1-nsaenzjulienne@suse.de>
+ <20200608192701.18355-6-nsaenzjulienne@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <5d3200cc-17cc-026f-1dfe-c10ec949f9ad@gmail.com>
+Date:   Mon, 8 Jun 2020 12:43:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200608192701.18355-6-nsaenzjulienne@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <21d6821e-e488-138e-a0be-2177c4aa13b2@oracle.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 03:30:13PM -0400, Boris Ostrovsky wrote:
-> TBH I am not sure it's worth a new header file for a routine that is
-> only called from assembly (and never returns). I'd just add the
-> prototype right above function definition, with a comment describing
-> why. 
 
-Right, that works too.
 
-> I see a few examples of this in the tree. Or maybe we even have an
-> attribute for this case?
+On 6/8/2020 12:26 PM, Nicolas Saenz Julienne wrote:
+> Some atypical users of xhci-pci might need to manually reset their xHCI
+> controller before starting the HCD setup. Check if a reset controller
+> device is available to the PCI bus and trigger a reset.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/usb/host/xhci-pci.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index ef513c2fb843..45f70facdfcd 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+>  #include <linux/acpi.h>
+> +#include <linux/reset.h>
+>  
+>  #include "xhci.h"
+>  #include "xhci-trace.h"
+> @@ -339,6 +340,7 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	struct xhci_hcd *xhci;
+>  	struct usb_hcd *hcd;
+>  	struct xhci_driver_data *driver_data;
+> +	struct reset_control *reset;
+>  
+>  	driver_data = (struct xhci_driver_data *)id->driver_data;
+>  	if (driver_data && driver_data->quirks & XHCI_RENESAS_FW_QUIRK) {
+> @@ -347,6 +349,13 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  			return retval;
+>  	}
+>  
+> +	reset = devm_reset_control_get(&dev->bus->dev, NULL);
 
-Not that I'm aware of.
+Should not this be devm_reset_control_get_optional()?
 
-> (I also suspect the same may be needed for xen_prepare_pvh() BTW).
-
-Yeah, Benni is working through the rest of them. Btw, the final goal of
-this whole work is to enable -Wmissing-prototypes by default on x86.
-
-Thx.
+> +	if (IS_ERR(reset)) {
+> +		retval = PTR_ERR(reset);
+> +		return retval;
+> +	}
+> +	reset_control_reset(reset);
+> +
+>  	/* Prevent runtime suspending between USB-2 and USB-3 initialization */
+>  	pm_runtime_get_noresume(&dev->dev);
+>  
+> 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Florian
