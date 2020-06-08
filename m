@@ -2,129 +2,185 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB18C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6C8B2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:51:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VDKUeP5n"
+	by mail.kernel.org (Postfix) with ESMTP id 8CEC12072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgFHLvd (ORCPT
+        id S1729642AbgFHLxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:51:33 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57561 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729568AbgFHLvb (ORCPT
+        Mon, 8 Jun 2020 07:53:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1314 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729535AbgFHLxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:51:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591617089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fnLQOqCm9fYymeAqY+q40GtLrdA7AapZIlufFwxKbYQ=;
-        b=VDKUeP5nqNIsA+/hE+IKj27HN0yLPsTVyh8a1wyp2ctZ0Lqx+nKYXu+qprhtEppVpL9+H6
-        emefCeUbWDGdJltYy9q6thIaSBnvDIenXVB6gO3gEgqg9LNgMcBNYATkdKW6mbKWHbcso0
-        sW3TyawGtrI8MXtuE3B+ocRau5E4+po=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-rEMiqG34PUu2h8InmVOLCQ-1; Mon, 08 Jun 2020 07:51:26 -0400
-X-MC-Unique: rEMiqG34PUu2h8InmVOLCQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93900107ACCD;
-        Mon,  8 Jun 2020 11:51:24 +0000 (UTC)
-Received: from elisabeth (unknown [10.36.110.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3E6B5C1C5;
-        Mon,  8 Jun 2020 11:51:21 +0000 (UTC)
-Date:   Mon, 8 Jun 2020 13:51:14 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] lib: Add test for bitmap_cut()
-Message-ID: <20200608135114.44ae7962@elisabeth>
-In-Reply-To: <CAHp75Vfvx6wKJUKfgDjyEcPthT9BicoZqfZmaS8eKMFwgvVphg@mail.gmail.com>
-References: <cover.1591606281.git.sbrivio@redhat.com>
-        <3e3ab7a4756df2ecf8fb012f16c375d4cd714552.1591606281.git.sbrivio@redhat.com>
-        <20200608101214.GE2428291@smile.fi.intel.com>
-        <20200608122702.034c8c80@redhat.com>
-        <CAHp75Vfvx6wKJUKfgDjyEcPthT9BicoZqfZmaS8eKMFwgvVphg@mail.gmail.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Mon, 8 Jun 2020 07:53:00 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058BWOKU100710;
+        Mon, 8 Jun 2020 07:52:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31g59rbqjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 07:52:57 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058BWJgl100209;
+        Mon, 8 Jun 2020 07:52:57 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31g59rbqj1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 07:52:56 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058BjE7m014959;
+        Mon, 8 Jun 2020 11:52:55 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7uvm7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 11:52:55 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058Bqr3X6685134
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 11:52:53 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02110A405B;
+        Mon,  8 Jun 2020 11:52:53 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5CF67A4051;
+        Mon,  8 Jun 2020 11:52:52 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.178.150])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jun 2020 11:52:52 +0000 (GMT)
+Message-ID: <1591617171.4638.33.camel@linux.ibm.com>
+Subject: Re: [PATCH v2] IMA: Add audit log for failure conditions
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        paul@paul-moore.com
+Cc:     linux-integrity@vger.kernel.org, linux-audit@redhat.com,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 08 Jun 2020 07:52:51 -0400
+In-Reply-To: <20200607221449.2837-1-nramas@linux.microsoft.com>
+References: <20200607221449.2837-1-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_07:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 clxscore=1015 adultscore=0 spamscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 cotscore=-2147483648 bulkscore=0
+ suspectscore=2 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006080084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jun 2020 14:31:02 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Hi Lakshmi,
 
-> On Mon, Jun 8, 2020 at 1:29 PM Stefano Brivio <sbrivio@redhat.com> wrote:
-> > On Mon, 8 Jun 2020 13:12:14 +0300
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> > > On Mon, Jun 08, 2020 at 11:13:29AM +0200, Stefano Brivio wrote:  
-> > > > Based on an original patch by Yury Norov: introduce a test for
-> > > > bitmap_cut() that also makes sure functionality is as described for
-> > > > partially overlapping src and dst.  
-> > >  
-> > > > Co-authored-by: Yury Norov <yury.norov@gmail.com>  
-> > >
-> > > Co-developed-by (and it requires Yury's SoB as well).  
-> >
-> > Oops, sorry, I didn't remember this part from submitting-patches.rst
-> > correctly. Thanks for pointing this out.
-> >
-> > Yury, let me know if I should re-post with both Co-authored-by: and  
+On Sun, 2020-06-07 at 15:14 -0700, Lakshmi Ramasubramanian wrote:
+> The final log statement in process_buffer_measurement() for failure
+> condition is at debug level. This does not log the message unless
+> the system log level is raised which would significantly increase
+> the messages in the system log. Change this log message to an audit
+> message for better triaging failures in the function.
 > 
-> Co-developed-by: :-)
-
-Grrr. That! :)
-
-> > Signed-off-by: you -- otherwise I'll repost without both.  
+> ima_alloc_key_entry() does not log a message for failure condition.
+> Add an audit message for failure condition in this function.
 > 
-> ...
-> 
-> > > > +           if (!bitmap_equal(out, t->expected, t->nbits)) {
-> > > > +                   pr_err("bitmap_cut failed: expected %*pb, got %*pb\n",
-> > > > +                          t->nbits, t->expected, t->nbits, out);
-> > > > +           }  
-> > >
-> > > Perhaps
-> > >
-> > >       if (bitmap_equal(...))
-> > >               continue;
-> > >
-> > >       ...
-> > >
-> > > ?  
-> >
-> > That's five lines instead of four (I can't get pr_err() on one line
-> > anyway) and it looks less straightforward: "if it doesn't match we have
-> > an error" vs. "if it matches go to next case. We have an error". Any
-> > specific reason I'm missing?  
-> 
-> Actually, please use one of suitable expect_eq_*() macro or add your
-> own. Because above has an inconsistent format with the rest.
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-Whoops, I see now. Yes, expect_eq_bitmap() will do, I'll change this in
-v2.
+Audit messages should be at a higher level.  For example,
+"hashing_error", "collect_data", "invalid_pcr".  In the "invalid_pcr"
+case, the audit log contains the reason - "ToMToU" or "open_writers" -
+as to why the measurement list doesn't match the PCR.
 
--- 
-Stefano
+Here you would want "measuring_keys", "measuring_boot_cmdline" with
+the reason it failed, not the function name
+"process_buffer_measurement".
+
+Userspace needs to be aware of the new audit messages.  Maybe include
+samples of them in the cover letter.
+
+thanks,
+
+Mimi
+
+> ---
+>  security/integrity/ima/ima_main.c       | 17 ++++++++++++-----
+>  security/integrity/ima/ima_queue_keys.c |  4 ++++
+>  2 files changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 800fb3bba418..1225198fceb1 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -739,6 +739,7 @@ void process_buffer_measurement(const void *buf, int size,
+>  				int pcr, const char *keyring)
+>  {
+>  	int ret = 0;
+> +	const char *audit_cause = "ENOMEM";
+>  	struct ima_template_entry *entry = NULL;
+>  	struct integrity_iint_cache iint = {};
+>  	struct ima_event_data event_data = {.iint = &iint,
+> @@ -793,21 +794,27 @@ void process_buffer_measurement(const void *buf, int size,
+>  	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
+>  
+>  	ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		audit_cause = "calc_buffer_hash";
+>  		goto out;
+> +	}
+>  
+>  	ret = ima_alloc_init_template(&event_data, &entry, template);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		audit_cause = "alloc_init_template";
+>  		goto out;
+> +	}
+>  
+>  	ret = ima_store_template(entry, violation, NULL, buf, pcr);
+> -
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		audit_cause = "store_template";
+>  		ima_free_template_entry(entry);
+> +	}
+>  
+>  out:
+>  	if (ret < 0)
+> -		pr_devel("%s: failed, result: %d\n", __func__, ret);
+> +		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL, eventname,
+> +				    __func__, audit_cause, ret, 0);
+>  
+>  	return;
+>  }
+> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+> index cb3e3f501593..fa606ce68f87 100644
+> --- a/security/integrity/ima/ima_queue_keys.c
+> +++ b/security/integrity/ima/ima_queue_keys.c
+> @@ -68,6 +68,7 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+>  						 size_t payload_len)
+>  {
+>  	int rc = 0;
+> +	const char *audit_cause = "ENOMEM";
+>  	struct ima_key_entry *entry;
+>  
+>  	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+> @@ -88,6 +89,9 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+>  
+>  out:
+>  	if (rc) {
+> +		integrity_audit_msg(AUDIT_INTEGRITY_PCR, NULL,
+> +				    keyring->description, __func__,
+> +				    audit_cause, rc, 0);
+>  		ima_free_key_entry(entry);
+>  		entry = NULL;
+>  	}
 
