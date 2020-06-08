@@ -2,91 +2,90 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7471BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 480ED20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NV5cY9XI"
+	by mail.kernel.org (Postfix) with ESMTP id 804122076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 11:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1591614099;
+	bh=x49fyr0xuV1XEupCgRZKXrj5qYCz0FvfqLfcYZx0Mwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oB8++vTPxOmO3/SjWPxMiaZaTinmfQ/f75FZ+vmLETS5HKzE3AG+iF1ShoPEht9eK
+	 184qMqbrSIiMDpc+MJ+JMr+NURAL+ASqT+lHP+bztng0v7fq5v/3Lf3WlNROXv73rL
+	 gFH6oipyGNJJSx9lid2oiEWXzDSwxYNQ23UwE8vE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgFHLBc (ORCPT
+        id S1729538AbgFHLBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 07:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbgFHLBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 07:01:30 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20C8C08C5C2
-        for <linux-kernel@vger.kernel.org>; Mon,  8 Jun 2020 04:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=K/s5mZYe0D3JGCoeAasezBJ22Tds6PXDtFml58Tk67I=; b=NV5cY9XIrtGE8IEwqFs+sXr9sT
-        vFEjzVsCyTj2I0GfXcvg8uYL6kLuxZKx7yLrjBjHIbK6C4lPqZtgBJz9nmcSfD++hSaTq7H9jGMc5
-        ob3OrF/ELz5wGyeSjaJ8u0xxSOSe0vs1UsypYjLsO1w+9zu2SL5bQPvmCqxwX3moMXIZ3FZbVEDaO
-        gTUKbvEgLys6K+3LpF8Q8jLNXqNT/ZUryK3ndSycV3mwju6roSwzaeQYm8eVXOvxfzdoNQfqD04VK
-        vbQ8423NHttN8zTU+kkeBY4H/VTcNSV66pnArqssCAGI7G9uKdboFSW4TtdyJgdFCcqRerGEADkxt
-        PFBhEQkA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jiFWh-0002iJ-Of; Mon, 08 Jun 2020 11:01:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 8 Jun 2020 07:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729398AbgFHLBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 07:01:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 13313301A7A;
-        Mon,  8 Jun 2020 13:01:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DB50A21A7523D; Mon,  8 Jun 2020 13:01:08 +0200 (CEST)
-Date:   Mon, 8 Jun 2020 13:01:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH -tip v3 1/2] kcov: Make runtime functions
- noinstr-compatible
-Message-ID: <20200608110108.GB2497@hirez.programming.kicks-ass.net>
-References: <20200605082839.226418-1-elver@google.com>
- <CACT4Y+ZqdZD0YsPHf8UFJT94yq5KGgbDOXSiJYS0+pjgYDsx+A@mail.gmail.com>
- <20200605120352.GJ3976@hirez.programming.kicks-ass.net>
- <CAAeHK+zErjaB64bTRqjH3qHyo9QstDSHWiMxqvmNYwfPDWSuXQ@mail.gmail.com>
- <CACT4Y+Zwm47qs8yco0nNoD_hFzHccoGyPznLHkBjAeg9REZ3gA@mail.gmail.com>
- <CANpmjNPNa2f=kAF6c199oYVJ0iSyirQRGxeOBLxa9PmakSXRbA@mail.gmail.com>
- <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EF082076A;
+        Mon,  8 Jun 2020 11:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591614098;
+        bh=x49fyr0xuV1XEupCgRZKXrj5qYCz0FvfqLfcYZx0Mwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1erz/OSTvA+nNa+hbzuS12qIiYPDOK/A7oX19gP0yaHEuSzY4YNDA58qfi9cxY67L
+         td1KwKMqD9dQCq0hqorYhfjSgvoqswcApfuvbhjXIKA+Zb3ywA6XYtLAfup/xd+D+C
+         6w5WDm1Z8sOlFpFuTSXxBN1R/eR8qj8131HhLEGc=
+Date:   Mon, 8 Jun 2020 13:01:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Qiang Zhang <Qiang.Zhang@windriver.com>
+Cc:     linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <balbi@kernel.org>,
+        Kyungtae Kim <kt0755@gmail.com>
+Subject: Re: usb: gadget: function: printer: Fix use-after-free in
+ __lock_acquire()
+Message-ID: <20200608110132.GA296162@kroah.com>
+References: <5207d179-0a7d-b5ff-af34-102fb21028b5@web.de>
+ <DM5PR11MB205835FB50BA296232BC3163FF850@DM5PR11MB2058.namprd11.prod.outlook.com>
+ <ae59cac9-d770-36bd-ccb2-e5e442bd5e0a@web.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+Z+FFHFGSgEJGkd+zCBgUOck_odOf9_=5YQLNJQVMGNdw@mail.gmail.com>
+In-Reply-To: <ae59cac9-d770-36bd-ccb2-e5e442bd5e0a@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 09:57:39AM +0200, Dmitry Vyukov wrote:
+On Mon, Jun 08, 2020 at 12:55:13PM +0200, Markus Elfring wrote:
+> > I don't need to add Fix tag to view the code.
+> 
+> I have got understanding difficulties for this kind of feedback.
+> How much do you care for corresponding patch review concerns?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=af7b4801030c07637840191c69eb666917e4135d#n183
 
-> As a crazy idea: is it possible to employ objtool (linker script?) to
-> rewrite all coverage calls to nops in the noinstr section? Or relocate
-> to nop function?
-> What we are trying to do is very static, it _should_ have been done
-> during build. We don't have means in existing _compilers_ to do this,
-> but maybe we could do it elsewhere during build?...
+Hi,
 
-Let me try and figure out how to make objtool actually rewrite code.
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+
+Markus, you seem to have sent a nonsensical or otherwise pointless review
+comment to a patch submission on a Linux kernel developer mailing list.
+I strongly suggest that you not do this anymore.  Please do not bother
+developers who are actively working to produce patches and features with
+comments that, in the end, are a waste of time.
+
+Patch submitter, please ignore Markus's suggestion; you do not needed
+to follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and inability
+to adapt to feedback.  Please feel free to also ignore emails from them.
+
+thanks,
+
+greg k-h's patch email bot
