@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59776C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8675AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3010620885
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6768B2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 23:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1591657580;
-	bh=PGlP+JP7FvYzxdcy4SX9/FZl2RROoPdsSLINcj/iE2A=;
+	s=default; t=1591657583;
+	bh=Mo/LmzV2QH5IQjVnMsc7iY/hSjl6NooGCziyrango3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UMN3sYuxNU82eC5723qlNDy+7JnRb/yaKvFO6GyKimqRAjHXY8Eb9bgt3sMCBNdUC
-	 gf14XaAh9/yQUmvWrbiMMWzveHOpbr/n/8rnGUDMmC9idILK+uzFesn1MKVzDaoNCe
-	 tpSfIfXdmJ9XOSl+QYlH+MDsN+1mpLO69jyInJmE=
+	b=ABKRQyw0yGfNIrf/jg3atabreuFWqsMAjakP0EvcAfiUo73hAPTbQ1i3SDelglrG8
+	 tQrrlxo9QjlV6XmkT9QKxQ1echSMtH3TqETjdGqIgLv2mDQvANJXrhvchxUlFNXJhy
+	 8NFBKdmY8vDKTDWlZih3BSjvK2+WAptL1dPsU4DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgFHXGS (ORCPT
+        id S1726956AbgFHXGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 19:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48960 "EHLO mail.kernel.org"
+        Mon, 8 Jun 2020 19:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726746AbgFHXGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:06:11 -0400
+        id S1726933AbgFHXGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:06:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0076520774;
-        Mon,  8 Jun 2020 23:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83AF82078B;
+        Mon,  8 Jun 2020 23:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657570;
-        bh=PGlP+JP7FvYzxdcy4SX9/FZl2RROoPdsSLINcj/iE2A=;
+        s=default; t=1591657578;
+        bh=Mo/LmzV2QH5IQjVnMsc7iY/hSjl6NooGCziyrango3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCWSXN3TdKUS3TAvBj9b4DTpRFhfWFUyMUA+BaF7WWO3aSDvoaX2L8FA4m2J9rNhI
-         OoF+hkDfrJicKBX3kfOBWT8ayUgP1j1k/epyxff9hPc4QvCXfTH0h31MEbTZ7xpsEN
-         yPU5eUgWx5ZuQ86f06+qj0/D42YKnUngRwFM1Ow8=
+        b=PaZI19HqaswJ2RRRfF6TMBox4I5+8A9tCnSqXso92wcV+bTthSBYnR8N4jlrXOGrm
+         +qK4Z82ucPg1pQqh4rwciI61DEpr+JnSvOQUbxGW8/NrnpS5vWMmT3Ec0/NWAim8uu
+         ndu3d3CjJfQLVuuTdLlf8hyOCGV1oFRLHY69EwlI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maharaja Kennadyrajan <mkenna@codeaurora.org>,
-        Govindaraj Saminathan <gsamin@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 002/274] ath10k: Fix the race condition in firmware dump work queue
-Date:   Mon,  8 Jun 2020 19:01:35 -0400
-Message-Id: <20200608230607.3361041-2-sashal@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 008/274] media: imx: imx7-mipi-csis: Cleanup and fix subdev pad format handling
+Date:   Mon,  8 Jun 2020 19:01:41 -0400
+Message-Id: <20200608230607.3361041-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
@@ -61,41 +62,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maharaja Kennadyrajan <mkenna@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[ Upstream commit 3d1c60460fb2823a19ead9e6ec8f184dd7271aa7 ]
+[ Upstream commit d321dd233b9f2bb407b8e6b4759408f09ec207c3 ]
 
-There is a race condition, when the user writes 'hw-restart' and
-'hard' in the simulate_fw_crash debugfs file without any delay.
-In the above scenario, the firmware dump work queue(scheduled by
-'hard') should be handled gracefully, while the target is in the
-'hw-restart'.
+The subdev set pad format operation currently misbehaves in multiple ways:
 
-Tested HW: QCA9984
-Tested FW: 10.4-3.9.0.2-00044
+- mipi_csis_try_format() unconditionally stores the format in the device
+  state, even for V4L2_SUBDEV_FORMAT_TRY.
 
-Co-developed-by: Govindaraj Saminathan <gsamin@codeaurora.org>
-Signed-off-by: Govindaraj Saminathan <gsamin@codeaurora.org>
-Signed-off-by: Maharaja Kennadyrajan <mkenna@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/1585213077-28439-1-git-send-email-mkenna@codeaurora.org
+- The format is never stored in the pad cfg, but the pad cfg format
+  always overwrites the format requested by the user.
+
+- The sink format is not propagated to the source.
+
+Fix all this by reworking the set format operation as follows:
+
+1. For the source pad, turn set() into get() as the source format is not
+   modifiable.
+2. Validate the requested format and updated the stored format
+   accordingly.
+3. Return the format actually set.
+4. Propagate the format from sink to source.
+
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/pci.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/media/imx/imx7-mipi-csis.c | 82 ++++++++++------------
+ 1 file changed, 37 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index ded7a220a4aa..cd1c5d60261f 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -2074,6 +2074,7 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 	ath10k_pci_irq_sync(ar);
- 	napi_synchronize(&ar->napi);
- 	napi_disable(&ar->napi);
-+	cancel_work_sync(&ar_pci->dump_work);
+diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+index fbc1a924652a..6318f0aebb4b 100644
+--- a/drivers/staging/media/imx/imx7-mipi-csis.c
++++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+@@ -669,28 +669,6 @@ static int mipi_csis_init_cfg(struct v4l2_subdev *mipi_sd,
+ 	return 0;
+ }
  
- 	/* Most likely the device has HTT Rx ring configured. The only way to
- 	 * prevent the device from accessing (and possible corrupting) host
+-static struct csis_pix_format const *
+-mipi_csis_try_format(struct v4l2_subdev *mipi_sd, struct v4l2_mbus_framefmt *mf)
+-{
+-	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
+-	struct csis_pix_format const *csis_fmt;
+-
+-	csis_fmt = find_csis_format(mf->code);
+-	if (!csis_fmt)
+-		csis_fmt = &mipi_csis_formats[0];
+-
+-	v4l_bound_align_image(&mf->width, 1, CSIS_MAX_PIX_WIDTH,
+-			      csis_fmt->pix_width_alignment,
+-			      &mf->height, 1, CSIS_MAX_PIX_HEIGHT, 1,
+-			      0);
+-
+-	state->format_mbus.code = csis_fmt->code;
+-	state->format_mbus.width = mf->width;
+-	state->format_mbus.height = mf->height;
+-
+-	return csis_fmt;
+-}
+-
+ static struct v4l2_mbus_framefmt *
+ mipi_csis_get_format(struct csi_state *state,
+ 		     struct v4l2_subdev_pad_config *cfg,
+@@ -703,53 +681,67 @@ mipi_csis_get_format(struct csi_state *state,
+ 	return &state->format_mbus;
+ }
+ 
+-static int mipi_csis_set_fmt(struct v4l2_subdev *mipi_sd,
++static int mipi_csis_get_fmt(struct v4l2_subdev *mipi_sd,
+ 			     struct v4l2_subdev_pad_config *cfg,
+ 			     struct v4l2_subdev_format *sdformat)
+ {
+ 	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
+-	struct csis_pix_format const *csis_fmt;
+ 	struct v4l2_mbus_framefmt *fmt;
+ 
+-	if (sdformat->pad >= CSIS_PADS_NUM)
+-		return -EINVAL;
+-
+-	fmt = mipi_csis_get_format(state, cfg, sdformat->which, sdformat->pad);
+-
+ 	mutex_lock(&state->lock);
+-	if (sdformat->pad == CSIS_PAD_SOURCE) {
+-		sdformat->format = *fmt;
+-		goto unlock;
+-	}
+-
+-	csis_fmt = mipi_csis_try_format(mipi_sd, &sdformat->format);
+-
++	fmt = mipi_csis_get_format(state, cfg, sdformat->which, sdformat->pad);
+ 	sdformat->format = *fmt;
+-
+-	if (csis_fmt && sdformat->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+-		state->csis_fmt = csis_fmt;
+-	else
+-		cfg->try_fmt = sdformat->format;
+-
+-unlock:
+ 	mutex_unlock(&state->lock);
+ 
+ 	return 0;
+ }
+ 
+-static int mipi_csis_get_fmt(struct v4l2_subdev *mipi_sd,
++static int mipi_csis_set_fmt(struct v4l2_subdev *mipi_sd,
+ 			     struct v4l2_subdev_pad_config *cfg,
+ 			     struct v4l2_subdev_format *sdformat)
+ {
+ 	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
++	struct csis_pix_format const *csis_fmt;
+ 	struct v4l2_mbus_framefmt *fmt;
+ 
+-	mutex_lock(&state->lock);
++	/*
++	 * The CSIS can't transcode in any way, the source format can't be
++	 * modified.
++	 */
++	if (sdformat->pad == CSIS_PAD_SOURCE)
++		return mipi_csis_get_fmt(mipi_sd, cfg, sdformat);
++
++	if (sdformat->pad != CSIS_PAD_SINK)
++		return -EINVAL;
+ 
+ 	fmt = mipi_csis_get_format(state, cfg, sdformat->which, sdformat->pad);
+ 
++	mutex_lock(&state->lock);
++
++	/* Validate the media bus code and clamp the size. */
++	csis_fmt = find_csis_format(sdformat->format.code);
++	if (!csis_fmt)
++		csis_fmt = &mipi_csis_formats[0];
++
++	fmt->code = csis_fmt->code;
++	fmt->width = sdformat->format.width;
++	fmt->height = sdformat->format.height;
++
++	v4l_bound_align_image(&fmt->width, 1, CSIS_MAX_PIX_WIDTH,
++			      csis_fmt->pix_width_alignment,
++			      &fmt->height, 1, CSIS_MAX_PIX_HEIGHT, 1, 0);
++
+ 	sdformat->format = *fmt;
+ 
++	/* Propagate the format from sink to source. */
++	fmt = mipi_csis_get_format(state, cfg, sdformat->which,
++				   CSIS_PAD_SOURCE);
++	*fmt = sdformat->format;
++
++	/* Store the CSIS format descriptor for active formats. */
++	if (sdformat->which == V4L2_SUBDEV_FORMAT_ACTIVE)
++		state->csis_fmt = csis_fmt;
++
+ 	mutex_unlock(&state->lock);
+ 
+ 	return 0;
 -- 
 2.25.1
 
