@@ -2,76 +2,101 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A956C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DECA206D5
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF49E20774
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 08:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgFHIAq (ORCPT
+        id S1729065AbgFHIC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 04:00:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:2645 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgFHIAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 04:00:46 -0400
-IronPort-SDR: zx2WAlW5SnhD3da3BJ+BHVxwDC0dcXcIOdl3jNulpRtn39oH3ZpfQzBTv3Il7XbOhATE+LCdnr
- beuSd5fp5XXQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 01:00:44 -0700
-IronPort-SDR: kn4gR5HrN4iNxo0LPh7RU5ZNfKt9QdfZfM0OAB5AMXCUTL1nmkqIJ3jmYfCbVyGLD3xkfwsnYq
- OeojOBGAHxdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="270430320"
-Received: from aantonov-mobl.ccr.corp.intel.com (HELO [10.249.230.126]) ([10.249.230.126])
-  by orsmga003.jf.intel.com with ESMTP; 08 Jun 2020 01:00:40 -0700
-Subject: Re: [PATCH v10 0/3] perf x86: Exposing IO stack to IO PMON mapping
- through sysfs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, ak@linux.intel.com,
-        kan.liang@linux.intel.com, lkp@intel.com
-References: <20200601083543.30011-1-alexander.antonov@linux.intel.com>
- <20200605175314.GQ2750@hirez.programming.kicks-ass.net>
-From:   "Antonov, Alexander" <alexander.antonov@linux.intel.com>
-Message-ID: <8ffcdb0d-1f2d-1a64-63d8-8064ee42afc3@linux.intel.com>
-Date:   Mon, 8 Jun 2020 11:00:38 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 8 Jun 2020 04:02:27 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:53930 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725840AbgFHICZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 04:02:25 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id ED924634C87;
+        Mon,  8 Jun 2020 11:00:42 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jiCi3-0004mZ-3R; Mon, 08 Jun 2020 11:00:43 +0300
+Date:   Mon, 8 Jun 2020 11:00:43 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     mchehab@kernel.org, manivannan.sadhasivam@linaro.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH v3 08/10] media: i2c: imx290: Add support to enumerate
+ all frame sizes
+Message-ID: <20200608080043.GN9947@valkosipuli.retiisi.org.uk>
+References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
+ <20200524192505.20682-9-andrey.konovalov@linaro.org>
+ <20200526091716.GJ8214@valkosipuli.retiisi.org.uk>
+ <effee6cc-680f-3234-2e56-2f6b24d107cd@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200605175314.GQ2750@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <effee6cc-680f-3234-2e56-2f6b24d107cd@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Sun, Jun 07, 2020 at 07:28:56PM +0300, Andrey Konovalov wrote:
+> Hi Sakari,
+> 
+> Thank you for the review!
+> 
+> On 26.05.2020 12:17, Sakari Ailus wrote:
+> > Hi Andrey,
+> > 
+> > On Sun, May 24, 2020 at 10:25:03PM +0300, Andrey Konovalov wrote:
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
+> > > Add support to enumerate all frame sizes supported by IMX290. This is
+> > > required for using with userspace tools such as libcamera.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> > > ---
+> > >   drivers/media/i2c/imx290.c | 20 ++++++++++++++++++++
+> > >   1 file changed, 20 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> > > index 6e70ff22bc5f..88850f3b1427 100644
+> > > --- a/drivers/media/i2c/imx290.c
+> > > +++ b/drivers/media/i2c/imx290.c
+> > > @@ -471,6 +471,25 @@ static int imx290_enum_mbus_code(struct v4l2_subdev *sd,
+> > >   	return 0;
+> > >   }
+> > > +static int imx290_enum_frame_size(struct v4l2_subdev *subdev,
+> > > +				  struct v4l2_subdev_pad_config *cfg,
+> > > +				  struct v4l2_subdev_frame_size_enum *fse)
+> > > +{
+> > > +	if ((fse->code != imx290_formats[0].code) &&
+> > > +	    (fse->code != imx290_formats[1].code))
+> > > +		return -EINVAL;
+> > 
+> > Please skip the modes that do not have the code specified by the user. They
+> > should not be enumerated here.
+> 
+> I've double checked this part of the code, and it doesn't seem to need changes.
+> The reason is that for the both codes the set of the modes and the frame sizes is
+> exactly the same. And the fse->code check above just guards against the codes not
+> supported by the driver at all.
 
-Greg Kroah-Hartman had comments for earlier versions of this patch set.
-All his comments were addressed, for example in according his remarks
-the mapping procedure was reworked to use attr_update flow for new
-optional attributes. Also the way of exposing of I/O stacks through
-sysfs was redesigned to show up a single file for each mapping of IIO
-PMON block to die.
+Indeed. Please then ignore the comment.
 
-Thanks,
-Alexander
-
-
-On 6/5/2020 8:53 PM, Peter Zijlstra wrote:
-> On Mon, Jun 01, 2020 at 11:35:40AM +0300, alexander.antonov@linux.intel.com wrote:
->
-> Didn't GregKH have comments on earlier versions of these patches? I
-> don't see him on Cc anymore. Were all his comments addressed?
+-- 
+Sakari Ailus
