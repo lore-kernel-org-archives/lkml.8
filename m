@@ -2,166 +2,145 @@ Return-Path: <SRS0=Cjtw=7V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0281C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35897C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1F3C2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D322072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  8 Jun 2020 12:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlaI/X2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgFHMBS (ORCPT
+        id S1729705AbgFHMDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 8 Jun 2020 08:01:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5868 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726202AbgFHMBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 8 Jun 2020 08:01:18 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E392661657CC450BC7D6;
-        Mon,  8 Jun 2020 20:01:15 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 8 Jun 2020 20:01:09 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: allow writeback on error status filesystem
-Date:   Mon, 8 Jun 2020 20:01:07 +0800
-Message-ID: <20200608120107.6336-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Mon, 8 Jun 2020 08:03:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgFHMDS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 8 Jun 2020 08:03:18 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36BBC08C5C2;
+        Mon,  8 Jun 2020 05:03:18 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so6573384plo.7;
+        Mon, 08 Jun 2020 05:03:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pM5X2YtapFWuSkDwXFYHOUc12hO3c2lItIisPiXHQGY=;
+        b=hlaI/X2BEdu5DgSxAm6kB07OPe7M25Gvh52cfold8MS6AFOumejiu9RPBd5jcVPDTg
+         2pt5Ihb8e+UJUm042qK+Wch8QmNHdF1RJQpe9lh6SVMe97OWd0QiduR/hXS+wWgyDOvP
+         AKOvCNve69T9GXxz2aMRXRIozw8kkWrtRSipFStp5SYG5lO4K0oT9qFXsl/2jkBVKaU7
+         OmOnFW/Pbaxgl/KZP1HzbQ4ArzR1YJLVihKRvjHD/SMJZNirBsrzJYMKCq13Eft5gsU/
+         HTZ0E2/sgsj1TJbmiE68ZnMteRg0odb/O0fYprG6bWydeoH5IM+LEJjIFnvjK/3SfP+3
+         y/AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pM5X2YtapFWuSkDwXFYHOUc12hO3c2lItIisPiXHQGY=;
+        b=e/zjVNw3g86UhG+Jcxg5DfpDWLT2+FKTh6a35H+vaQslaIHZ1bg3cvOcbNbMbE3/kK
+         cPx3mpHETVj6utjl8GTaI/XP4Svwig64bU87+CBeBu94/WWdLHgz8tyV7v2Mu+GLRKhK
+         0dMCsgfaM+F+fYTGw7y3a3mA5gSGX6HS+WUYs/W5KF58xbP92pw3tgVbmCZYFBCNmmAo
+         h5MRIiej2GTZgGvakby505guTnbwyqI18zCYEeB15ct25mA769dEa0jGyCVyUDSuvj2T
+         iFHY4Q2/cHR0vNeXYA5XBFjFxWVndDWUEZ4miqgAWnnNnGVaCo6C7zqdh8827Kk4hwHn
+         RBTw==
+X-Gm-Message-State: AOAM530bhfy9t+tjBMKBsMsX1Y5Fc7NUSI4w1ENI9ImbNRQg7j3UVD8F
+        Ec03pLHym7X7qxvoFGWf144SLl7+3rmC49ogYJQ=
+X-Google-Smtp-Source: ABdhPJzy6nnYdAQTRPWCex6+8jSc+Wso/vIgnHDy7gsVnQJzj+ADZ8ojZnrCRPnZO2B9QhUqv5R1pbDzd9PTeN79vlc=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr17147126pjq.228.1591617797903;
+ Mon, 08 Jun 2020 05:03:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+References: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
+In-Reply-To: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 15:03:05 +0300
+Message-ID: <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
+Subject: Re: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian archs
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
-            |
-             --71.06%--wb_writeback
-                       |
-                       |--68.96%--__writeback_inodes_wb
-                       |          |
-                       |           --68.95%--writeback_sb_inodes
-                       |                     |
-                       |                     |--65.08%--__writeback_single_inode
-                       |                     |          |
-                       |                     |           --64.35%--do_writepages
-                       |                     |                     |
-                       |                     |                     |--59.83%--f2fs_write_node_pages
-                       |                     |                     |          |
-                       |                     |                     |           --59.74%--f2fs_sync_node_pages
-                       |                     |                     |                     |
-                       |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
-                       |                     |                     |                     |          |
-                       |                     |                     |                     |           --27.90%--find_get_pages_range_tag
+On Mon, Jun 8, 2020 at 1:26 PM Alexander Gordeev <agordeev@linux.ibm.com> wrote:
+>
+> Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
+> take into account order of halfwords on 64-bit big endian
+> architectures. As result (at least) Receive Packet Steering,
+> IRQ affinity masks and runtime kernel test "test_bitmap" get
+> broken on s390.
 
-If filesystem was injected checkpoint errror, before umount, kworker will
-always hold one core in order to writeback a large number of node pages,
-that looks not reasonable, to avoid that, we can allow data/node write in
-such case, since we can force all data/node writes with OPU mode, and
-clear recovery flag on node, and checkpoint is not allowed as well, so we
-don't need to worry about writeback's effect on data/node in previous
-checkpoint, then with this way, it can decrease memory footprint cost by
-node/data pages and avoid looping into data/node writeback process.
+...
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/checkpoint.c |  7 +++++++
- fs/f2fs/data.c       | 22 +++++++++++++++-------
- fs/f2fs/node.c       |  7 +++++--
- 3 files changed, 27 insertions(+), 9 deletions(-)
+> +#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index 236064930251..1bb8278a1c4a 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1238,6 +1238,13 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		goto retry_flush_nodes;
- 	}
- 
-+	if (unlikely(f2fs_cp_error(sbi))) {
-+		up_write(&sbi->node_write);
-+		up_write(&sbi->node_change);
-+		f2fs_unlock_all(sbi);
-+		return -EIO;
-+	}
-+
- 	/*
- 	 * sbi->node_change is used only for AIO write_begin path which produces
- 	 * dirty node blocks and some checkpoint values by block allocation.
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 267b5e76a02b..808e7734db19 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2508,6 +2508,8 @@ bool f2fs_should_update_outplace(struct inode *inode, struct f2fs_io_info *fio)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 
-+	if (unlikely(f2fs_cp_error(sbi)))
-+		return true;
- 	if (f2fs_lfs_mode(sbi))
- 		return true;
- 	if (S_ISDIR(inode->i_mode))
-@@ -2691,13 +2693,19 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
- 	/* we should bypass data pages to proceed the kworkder jobs */
- 	if (unlikely(f2fs_cp_error(sbi))) {
- 		mapping_set_error(page->mapping, -EIO);
--		/*
--		 * don't drop any dirty dentry pages for keeping lastest
--		 * directory structure.
--		 */
--		if (S_ISDIR(inode->i_mode))
--			goto redirty_out;
--		goto out;
-+
-+		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE))
-+			goto out;
-+
-+		if (has_not_enough_free_secs(sbi, 0, 0)) {
-+			/*
-+			 * don't drop any dirty dentry pages for keeping lastest
-+			 * directory structure.
-+			 */
-+			if (S_ISDIR(inode->i_mode))
-+				goto redirty_out;
-+			goto out;
-+		}
- 	}
- 
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 03e24df1c84f..372c04efad38 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1527,7 +1527,10 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 			unlock_page(page);
- 			return 0;
- 		}
--		goto redirty_out;
-+		if (has_not_enough_free_secs(sbi, 0, 0))
-+			goto redirty_out;
-+		set_fsync_mark(page, 0);
-+		set_dentry_mark(page, 0);
- 	}
- 
- 	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-@@ -1568,7 +1571,7 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
- 		goto redirty_out;
- 	}
- 
--	if (atomic && !test_opt(sbi, NOBARRIER))
-+	if (atomic && !test_opt(sbi, NOBARRIER) && !f2fs_cp_error(sbi))
- 		fio.op_flags |= REQ_PREFLUSH | REQ_FUA;
- 
- 	/* should add to global list before clearing PAGECACHE status */
+I think it's better to re-use existing patterns.
+
+ipc/sem.c:1682:#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
+
+> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> +{
+> +       maskp += (chunk_idx / 2);
+> +       ((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
+> +}
+> +#else
+> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> +{
+> +       ((u32 *)maskp)[chunk_idx] = chunk;
+> +}
+> +#endif
+
+See below.
+
+...
+
+> -               end = bitmap_get_x32_reverse(start, end, bitmap++);
+> +               end = bitmap_get_x32_reverse(start, end, &chunk);
+>                 if (IS_ERR(end))
+>                         return PTR_ERR(end);
+> +
+> +               save_x32_chunk(maskp, chunk, chunk_idx++);
+
+Can't we simple do
+
+        int chunk_index = 0;
+        ...
+        do {
+#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
+               end = bitmap_get_x32_reverse(start, end,
+bitmap[chunk_index ^ 1]);
+#else
+               end = bitmap_get_x32_reverse(start, end, bitmap[chunk_index]);
+#endif
+        ...
+        } while (++chunk_index);
+
+?
+
 -- 
-2.18.0.rc1
-
+With Best Regards,
+Andy Shevchenko
